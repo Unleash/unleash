@@ -1,12 +1,9 @@
 import supertest from 'supertest';
-import { EventEmitter } from 'events';
 import createStores from '../../../test/fixtures/store';
 import permissions from '../../../test/fixtures/permissions';
 import getApp from '../../app';
 import { createTestConfig } from '../../../test/config/test-config';
 import { createServices } from '../../services';
-
-const eventBus = new EventEmitter();
 
 function getSetup() {
     const stores = createStores();
@@ -15,7 +12,7 @@ function getSetup() {
         preRouterHook: perms.hook,
     });
     const services = createServices(stores, config);
-    const app = getApp(config, stores, services, eventBus);
+    const app = getApp(config, stores, services);
 
     return {
         request: supertest(app),
@@ -44,77 +41,15 @@ afterEach(() => {
     destroy();
 });
 
-test('should return seen toggles even when there is nothing', () => {
-    expect.assertions(1);
-    return request
-        .get('/api/admin/metrics/seen-toggles')
-        .expect(200)
-        .expect((res) => {
-            expect(res.body.length === 0).toBe(true);
-        });
+test('/api/admin/metrics/seen-toggles is deprecated', () => {
+    return request.get('/api/admin/metrics/seen-toggles').expect(410);
 });
 
-test('should return list of seen-toggles per app', () => {
-    expect.assertions(3);
-    const appName = 'asd!23';
-    stores.clientMetricsStore.emit('metrics', {
-        appName,
-        instanceId: 'instanceId',
-        bucket: {
-            start: new Date(),
-            stop: new Date(),
-            toggles: {
-                toggleX: { yes: 123, no: 0 },
-                toggleY: { yes: 123, no: 0 },
-            },
-        },
-    });
-
-    return request
-        .get('/api/admin/metrics/seen-toggles')
-        .expect(200)
-        .expect((res) => {
-            const seenAppsWithToggles = res.body;
-            expect(seenAppsWithToggles.length === 1).toBe(true);
-            expect(seenAppsWithToggles[0].appName === appName).toBe(true);
-            expect(seenAppsWithToggles[0].seenToggles.length === 2).toBe(true);
-        });
-});
-
-test('should return feature-toggles metrics even when there is nothing', () => {
-    expect.assertions(0);
-    return request.get('/api/admin/metrics/feature-toggles').expect(200);
-});
-
-test('should return metrics for all toggles', () => {
-    expect.assertions(2);
-    const appName = 'asd!23';
-    stores.clientMetricsStore.emit('metrics', {
-        appName,
-        instanceId: 'instanceId',
-        bucket: {
-            start: new Date(),
-            stop: new Date(),
-            toggles: {
-                toggleX: { yes: 123, no: 0 },
-                toggleY: { yes: 123, no: 0 },
-            },
-        },
-    });
-
-    return request
-        .get('/api/admin/metrics/feature-toggles')
-        .expect(200)
-        .expect((res) => {
-            const metrics = res.body;
-            expect(metrics.lastHour !== undefined).toBe(true);
-            expect(metrics.lastMinute !== undefined).toBe(true);
-        });
+test('/api/admin/metrics/feature-toggles is deprecated', () => {
+    return request.get('/api/admin/metrics/feature-toggles').expect(410);
 });
 
 test('should return empty list of client applications', () => {
-    expect.assertions(1);
-
     return request
         .get('/api/admin/metrics/applications')
         .expect(200)

@@ -38,13 +38,7 @@ function createApp(
     const unleashSession = sessionDb(config, undefined);
     const emitter = new EventEmitter();
     emitter.setMaxListeners(0);
-    const app = getApp(
-        config,
-        stores,
-        services,
-        new EventEmitter(),
-        unleashSession,
-    );
+    const app = getApp(config, stores, services, unleashSession);
     const request = supertest.agent(app);
 
     const destroy = async () => {

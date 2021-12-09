@@ -11,6 +11,7 @@ import {
     FEATURE_STRATEGY_REMOVE,
     FEATURE_STRATEGY_UPDATE,
     FEATURE_UPDATED,
+    CLIENT_METRICS,
 } from './types/events';
 import { IUnleashConfig } from './types/option';
 import { IUnleashStores } from './types/stores';
@@ -38,13 +39,8 @@ export default class MetricsMonitor {
             return;
         }
 
-        const {
-            eventStore,
-            clientMetricsStore,
-            featureToggleStore,
-            userStore,
-            projectStore,
-        } = stores;
+        const { eventStore, featureToggleStore, userStore, projectStore } =
+            stores;
 
         client.collectDefaultMetrics();
 
@@ -148,7 +144,7 @@ export default class MetricsMonitor {
             featureToggleUpdateTotal.labels(featureName).inc();
         });
 
-        clientMetricsStore.on('metrics', (m) => {
+        eventBus.on(CLIENT_METRICS, (m) => {
             // eslint-disable-next-line no-restricted-syntax
             for (const entry of Object.entries(m.bucket.toggles)) {
                 featureToggleUsageTotal

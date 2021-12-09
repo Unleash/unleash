@@ -156,6 +156,18 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
             .orderBy('app_name');
     }
 
+    async getSeenTogglesForApp(
+        appName: string,
+        hoursBack: number = 24,
+    ): Promise<string[]> {
+        return this.db<ClientMetricsEnvTable>(TABLE)
+            .distinct()
+            .where({ app_name: appName })
+            .andWhereRaw(`timestamp >= NOW() - INTERVAL '${hoursBack} hours'`)
+            .pluck('feature_name')
+            .orderBy('feature_name');
+    }
+
     async clearMetrics(hoursAgo: number): Promise<void> {
         return this.db<ClientMetricsEnvTable>(TABLE)
             .whereRaw(`timestamp <= NOW() - INTERVAL '${hoursAgo} hours'`)

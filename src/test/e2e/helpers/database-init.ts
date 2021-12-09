@@ -1,4 +1,3 @@
-import { EventEmitter } from 'events';
 import { migrateDb } from '../../../migrator';
 import { createStores } from '../../../lib/db';
 import { createDb } from '../../../lib/db/db-pool';
@@ -92,7 +91,6 @@ export default async function init(
     });
 
     const db = createDb(config);
-    const eventBus = new EventEmitter();
 
     await db.raw(`DROP SCHEMA IF EXISTS ${config.db.schema} CASCADE`);
     await db.raw(`CREATE SCHEMA IF NOT EXISTS ${config.db.schema}`);
@@ -100,8 +98,7 @@ export default async function init(
     await migrateDb({ ...config, databaseSchema: config.db.schema });
     await db.destroy();
     const testDb = createDb(config);
-    const stores = await createStores(config, eventBus, testDb);
-    stores.clientMetricsStore.setMaxListeners(0);
+    const stores = await createStores(config, testDb);
     stores.eventStore.setMaxListeners(0);
     await resetDatabase(testDb);
     await setupDatabase(stores);
@@ -113,10 +110,9 @@ export default async function init(
             await setupDatabase(stores);
         },
         destroy: async () => {
-            const { clientInstanceStore, clientMetricsStore } = stores;
+            const { clientInstanceStore } = stores;
             return new Promise<void>((resolve, reject) => {
                 clientInstanceStore.destroy();
-                clientMetricsStore.destroy();
                 testDb.destroy((error) => (error ? reject(error) : resolve()));
             });
         },

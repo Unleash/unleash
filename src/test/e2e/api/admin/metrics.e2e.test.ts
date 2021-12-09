@@ -52,24 +52,6 @@ beforeEach(async () => {
         started: clientStartedDate,
         interval: 10,
     });
-    await app.services.clientMetricsService.addPayload({
-        appName: 'demo-app-1',
-        instanceId: '123',
-        bucket: {
-            start: Date.now(),
-            stop: Date.now(),
-            toggles: {
-                someToggle: {
-                    yes: 100,
-                    no: 0,
-                },
-                anotherToggle: {
-                    yes: 0,
-                    no: 1,
-                },
-            },
-        },
-    });
 });
 
 afterAll(async () => {
@@ -83,7 +65,6 @@ afterEach(async () => {
 });
 
 test('should get application details', async () => {
-    expect.assertions(2);
     return app.request
         .get('/api/admin/metrics/applications/demo-app-1')
         .expect('Content-Type', /json/)
@@ -102,51 +83,6 @@ test('should get list of applications', async () => {
         .expect(200)
         .expect((res) => {
             expect(res.body.applications).toHaveLength(3);
-        });
-});
-
-test('should get list of seen seen-apps', async () => {
-    return app.request
-        .get('/api/admin/metrics/seen-apps')
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .expect((res) => {
-            expect(res.body.someToggle).toBeDefined();
-        });
-});
-
-test('should get list of seen seen-toggles', async () => {
-    return app.request
-        .get('/api/admin/metrics/seen-toggles')
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .expect((res) => {
-            expect(res.body).toHaveLength(1);
-            expect(res.body[0].seenToggles).toContain('someToggle');
-        });
-});
-
-test('should get list of feature-toggle metrics', async () => {
-    return app.request
-        .get('/api/admin/metrics/feature-toggles')
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .expect((res) => {
-            expect(res.body.lastHour).toBeDefined();
-            expect(res.body.lastHour.anotherToggle).toBeDefined();
-            expect(res.body.lastMinute).toBeDefined();
-            expect(res.body.lastMinute.anotherToggle).toBeDefined();
-        });
-});
-
-test('should get feature-toggle metrics', async () => {
-    return app.request
-        .get('/api/admin/metrics/feature-toggles/anotherToggle')
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .expect((res) => {
-            expect(res.body.lastHour).toBeDefined();
-            expect(res.body.lastMinute).toBeDefined();
         });
 });
 

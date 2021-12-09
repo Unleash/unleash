@@ -1,6 +1,7 @@
 import ClientMetricsService from '../../../lib/services/client-metrics';
 import { IClientApp } from '../../../lib/types/model';
 import { secondsToMilliseconds } from 'date-fns';
+import EventEmitter from 'events';
 
 const faker = require('faker');
 const dbInit = require('../helpers/database-init');
@@ -14,13 +15,14 @@ let clientMetricsService;
 beforeAll(async () => {
     db = await dbInit('client_metrics_service_serial', getLogger);
     stores = db.stores;
+    const eventBus = new EventEmitter();
 
     const bulkInterval = secondsToMilliseconds(0.5);
     const announcementInterval = secondsToMilliseconds(2);
 
     clientMetricsService = new ClientMetricsService(
         stores,
-        { getLogger },
+        { getLogger, eventBus },
         bulkInterval,
         announcementInterval,
     );

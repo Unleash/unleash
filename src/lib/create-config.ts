@@ -20,6 +20,7 @@ import { getDefaultLogProvider, LogLevel, validateLogProvider } from './logger';
 import { defaultCustomAuthDenyAll } from './default-custom-auth-deny-all';
 import { formatBaseUri } from './util/format-base-uri';
 import { minutesToMilliseconds, secondsToMilliseconds } from 'date-fns';
+import EventEmitter from 'events';
 
 const safeToUpper = (s: string) => (s ? s.toUpperCase() : s);
 
@@ -275,6 +276,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         preRouterHook: options.preRouterHook,
         eventHook: options.eventHook,
         enterpriseVersion: options.enterpriseVersion,
+        eventBus: new EventEmitter(),
     };
 }
 

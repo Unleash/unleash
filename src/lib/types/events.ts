@@ -58,6 +58,8 @@ export const USER_DELETED = 'user-deleted';
 export const DROP_ENVIRONMENTS = 'drop-environments';
 export const ENVIRONMENT_IMPORT = 'environment-import';
 
+export const CLIENT_METRICS = 'client-metrics';
+
 export interface IBaseEvent {
     type: string;
     createdBy: string;

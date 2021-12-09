@@ -1,3 +1,4 @@
+import EventEmitter from 'events';
 import { LogLevel, LogProvider } from '../logger';
 
 export type EventHook = (eventName: string, data: object) => void;
@@ -151,4 +152,5 @@ export interface IUnleashConfig {
     preRouterHook?: Function;
     eventHook?: EventHook;
     enterpriseVersion?: string;
+    eventBus: EventEmitter;
 }

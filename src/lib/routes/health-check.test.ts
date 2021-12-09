@@ -1,5 +1,4 @@
 import supertest from 'supertest';
-import { EventEmitter } from 'events';
 import { createServices } from '../services';
 import { createTestConfig } from '../../test/config/test-config';
 
@@ -8,13 +7,11 @@ import getLogger from '../../test/fixtures/no-logger';
 import getApp from '../app';
 import { IUnleashStores } from '../types';
 
-const eventBus = new EventEmitter();
-
 function getSetup() {
     const stores = createStores();
     const config = createTestConfig();
     const services = createServices(stores, config);
-    const app = getApp(config, stores, services, eventBus);
+    const app = getApp(config, stores, services);
 
     return {
         request: supertest(app),
@@ -57,7 +54,7 @@ test('should give 500 when db is failing', () => {
     // @ts-ignore
     const services = createServices(failingStores, config);
     // @ts-ignore
-    const app = getApp(createTestConfig(), failingStores, services, eventBus);
+    const app = getApp(createTestConfig(), failingStores, services);
     request = supertest(app);
     getLogger.setMuteError(true);
     expect.assertions(2);

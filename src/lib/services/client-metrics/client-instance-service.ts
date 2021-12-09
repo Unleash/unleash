@@ -1,6 +1,5 @@
 import { applicationSchema } from './metrics-schema';
-import { clientMetricsSchema } from './client-metrics-schema';
-import { APPLICATION_CREATED, CLIENT_METRICS } from '../../types/events';
+import { APPLICATION_CREATED } from '../../types/events';
 import { IApplication } from './models';
 import { IUnleashStores } from '../../types/stores';
 import { IUnleashConfig } from '../../types/option';
@@ -17,8 +16,8 @@ import { IClientApp } from '../../types/model';
 import { clientRegisterSchema } from './register-schema';
 
 import { minutesToMilliseconds, secondsToMilliseconds } from 'date-fns';
-import EventEmitter from 'events';
 import { IClientMetricsStoreV2 } from '../../types/stores/client-metrics-store-v2';
+import { clientMetricsSchema } from './client-metrics-schema';
 
 export default class ClientInstanceService {
     apps = {};
@@ -45,8 +44,6 @@ export default class ClientInstanceService {
 
     private announcementInterval: number;
 
-    private eventBus: EventEmitter;
-
     constructor(
         {
             clientMetricsStoreV2,
@@ -64,7 +61,7 @@ export default class ClientInstanceService {
             | 'clientInstanceStore'
             | 'eventStore'
         >,
-        { getLogger, eventBus }: Pick<IUnleashConfig, 'getLogger' | 'eventBus'>,
+        { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
         bulkInterval = secondsToMilliseconds(5),
         announcementInterval = minutesToMilliseconds(5),
     ) {
@@ -74,9 +71,10 @@ export default class ClientInstanceService {
         this.clientApplicationsStore = clientApplicationsStore;
         this.clientInstanceStore = clientInstanceStore;
         this.eventStore = eventStore;
-        this.eventBus = eventBus;
 
-        this.logger = getLogger('/services/client-metrics/index.ts');
+        this.logger = getLogger(
+            '/services/client-metrics/client-instance-service.ts',
+        );
 
         this.bulkInterval = bulkInterval;
         this.announcementInterval = announcementInterval;
@@ -96,20 +94,11 @@ export default class ClientInstanceService {
         clientIp: string,
     ): Promise<void> {
         const value = await clientMetricsSchema.validateAsync(data);
-
         await this.clientInstanceStore.insert({
             appName: value.appName,
             instanceId: value.instanceId,
             clientIp,
         });
-
-        // TODO: move to new service
-        const toggleNames = Object.keys(value.bucket.toggles);
-        if (toggleNames.length > 0) {
-            await this.featureToggleStore.setLastSeen(toggleNames);
-        }
-
-        this.eventBus.emit(CLIENT_METRICS, value);
     }
 
     public async registerClient(

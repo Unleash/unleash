@@ -1,5 +1,4 @@
 import FakeFeatureStrategiesStore from './fake-feature-strategies-store';
-import FakeClientMetricsStore from './fake-client-metrics-store';
 import FakeClientInstanceStore from './fake-client-instance-store';
 import FakeClientApplicationsStore from './fake-client-applications-store';
 import FakeFeatureToggleStore from './fake-feature-toggle-store';
@@ -36,7 +35,6 @@ const createStores: () => IUnleashStores = () => {
     return {
         db,
         clientApplicationsStore: new FakeClientApplicationsStore(),
-        clientMetricsStore: new FakeClientMetricsStore(),
         clientMetricsStoreV2: new FakeClientMetricsStoreV2(),
         clientInstanceStore: new FakeClientInstanceStore(),
         featureToggleStore: new FakeFeatureToggleStore(),

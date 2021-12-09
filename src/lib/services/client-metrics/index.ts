@@ -1,8 +1,7 @@
 import { applicationSchema } from './metrics-schema';
-import { Projection } from './projection';
 import { clientMetricsSchema } from './client-metrics-schema';
-import { APPLICATION_CREATED, IBaseEvent } from '../../types/events';
-import { IApplication, IYesNoCount } from './models';
+import { APPLICATION_CREATED, CLIENT_METRICS } from '../../types/events';
+import { IApplication } from './models';
 import { IUnleashStores } from '../../types/stores';
 import { IUnleashConfig } from '../../types/option';
 import { IEventStore } from '../../types/stores/event-store';
@@ -12,45 +11,25 @@ import {
 } from '../../types/stores/client-applications-store';
 import { IFeatureToggleStore } from '../../types/stores/feature-toggle-store';
 import { IStrategyStore } from '../../types/stores/strategy-store';
-import { IClientMetricsStore } from '../../types/stores/client-metrics-store';
 import { IClientInstanceStore } from '../../types/stores/client-instance-store';
 import { IApplicationQuery } from '../../types/query';
-import { IClientApp, IMetricCounts, IMetricsBucket } from '../../types/model';
+import { IClientApp } from '../../types/model';
 import { clientRegisterSchema } from './register-schema';
 
-import {
-    minutesToMilliseconds,
-    parseISO,
-    secondsToMilliseconds,
-} from 'date-fns';
-import TTLList from './ttl-list';
+import { minutesToMilliseconds, secondsToMilliseconds } from 'date-fns';
+import EventEmitter from 'events';
+import { IClientMetricsStoreV2 } from '../../types/stores/client-metrics-store-v2';
 
 export default class ClientMetricsService {
-    globalCount = 0;
-
     apps = {};
 
-    lastHourProjection = new Projection();
-
-    lastMinuteProjection = new Projection();
-
-    lastHourList = new TTLList<IMetricCounts>({
-        interval: secondsToMilliseconds(10),
-    });
-
     logger = null;
-
-    lastMinuteList = new TTLList<IMetricCounts>({
-        interval: secondsToMilliseconds(10),
-        expireType: 'minutes',
-        expireAmount: 1,
-    });
 
     seenClients: Record<string, IClientApp> = {};
 
     private timers: NodeJS.Timeout[] = [];
 
-    private clientMetricsStore: IClientMetricsStore;
+    private clientMetricsStoreV2: IClientMetricsStoreV2;
 
     private strategyStore: IStrategyStore;
 
@@ -66,9 +45,11 @@ export default class ClientMetricsService {
 
     private announcementInterval: number;
 
+    private eventBus: EventEmitter;
+
     constructor(
         {
-            clientMetricsStore,
+            clientMetricsStoreV2,
             strategyStore,
             featureToggleStore,
             clientInstanceStore,
@@ -76,46 +57,29 @@ export default class ClientMetricsService {
             eventStore,
         }: Pick<
             IUnleashStores,
-            | 'clientMetricsStore'
+            | 'clientMetricsStoreV2'
             | 'strategyStore'
             | 'featureToggleStore'
             | 'clientApplicationsStore'
             | 'clientInstanceStore'
             | 'eventStore'
         >,
-        { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
+        { getLogger, eventBus }: Pick<IUnleashConfig, 'getLogger' | 'eventBus'>,
         bulkInterval = secondsToMilliseconds(5),
         announcementInterval = minutesToMilliseconds(5),
     ) {
-        this.clientMetricsStore = clientMetricsStore;
+        this.clientMetricsStoreV2 = clientMetricsStoreV2;
         this.strategyStore = strategyStore;
         this.featureToggleStore = featureToggleStore;
         this.clientApplicationsStore = clientApplicationsStore;
         this.clientInstanceStore = clientInstanceStore;
         this.eventStore = eventStore;
+        this.eventBus = eventBus;
 
         this.logger = getLogger('/services/client-metrics/index.ts');
 
         this.bulkInterval = bulkInterval;
         this.announcementInterval = announcementInterval;
-
-        this.lastHourList.on('expire', (toggles) => {
-            Object.keys(toggles).forEach((toggleName) => {
-                this.lastHourProjection.substract(
-                    toggleName,
-                    this.createCountObject(toggles[toggleName]),
-                );
-            });
-        });
-        this.lastMinuteList.on('expire', (toggles) => {
-            Object.keys(toggles).forEach((toggleName) => {
-                this.lastMinuteProjection.substract(
-                    toggleName,
-                    this.createCountObject(toggles[toggleName]),
-                );
-            });
-        });
-
         this.timers.push(
             setInterval(() => this.bulkAdd(), this.bulkInterval).unref(),
         );
@@ -125,26 +89,37 @@ export default class ClientMetricsService {
                 this.announcementInterval,
             ).unref(),
         );
-        clientMetricsStore.on('metrics', (m) => this.addPayload(m));
     }
 
-    async registerClientMetrics(
+    public async registerClientMetrics(
         data: IClientApp,
         clientIp: string,
     ): Promise<void> {
         const value = await clientMetricsSchema.validateAsync(data);
-        const toggleNames = Object.keys(value.bucket.toggles);
-
-        if (toggleNames.length > 0) {
-            await this.featureToggleStore.setLastSeen(toggleNames);
-            await this.clientMetricsStore.insert(value);
-        }
 
         await this.clientInstanceStore.insert({
             appName: value.appName,
             instanceId: value.instanceId,
             clientIp,
         });
+
+        // TODO: move to new service
+        const toggleNames = Object.keys(value.bucket.toggles);
+        if (toggleNames.length > 0) {
+            await this.featureToggleStore.setLastSeen(toggleNames);
+        }
+
+        this.eventBus.emit(CLIENT_METRICS, value);
+    }
+
+    public async registerClient(
+        data: IClientApp,
+        clientIp: string,
+    ): Promise<void> {
+        const value = await clientRegisterSchema.validateAsync(data);
+        value.clientIp = clientIp;
+        value.createdBy = clientIp;
+        this.seenClients[this.clientKey(value)] = value;
     }
 
     async announceUnannounced(): Promise<void> {
@@ -160,13 +135,6 @@ export default class ClientMetricsService {
                 await this.eventStore.batchStore(events);
             }
         }
-    }
-
-    async registerClient(data: IClientApp, clientIp: string): Promise<void> {
-        const value = await clientRegisterSchema.validateAsync(data);
-        value.clientIp = clientIp;
-        value.createdBy = clientIp;
-        this.seenClients[this.clientKey(value)] = value;
     }
 
     clientKey(client: IClientApp): string {
@@ -202,51 +170,6 @@ export default class ClientMetricsService {
         }
     }
 
-    appToEvent(app: IClientApp): IBaseEvent {
-        return {
-            type: APPLICATION_CREATED,
-            createdBy: app.clientIp,
-            data: app,
-        };
-    }
-
-    getAppsWithToggles(): IClientApp[] {
-        const apps = [];
-        Object.keys(this.apps).forEach((appName) => {
-            const seenToggles = Object.keys(this.apps[appName].seenToggles);
-            const metricsCount = this.apps[appName].count;
-            apps.push({ appName, seenToggles, metricsCount });
-        });
-        return apps;
-    }
-
-    getSeenTogglesByAppName(appName: string): string[] {
-        return this.apps[appName]
-            ? Object.keys(this.apps[appName].seenToggles)
-            : [];
-    }
-
-    async getSeenApps(): Promise<Record<string, IApplication[]>> {
-        const seenApps = this.getSeenAppsPerToggle();
-        const applications: IClientApplication[] =
-            await this.clientApplicationsStore.getAll();
-        const metaData = applications.reduce((result, entry) => {
-            // eslint-disable-next-line no-param-reassign
-            result[entry.appName] = entry;
-            return result;
-        }, {});
-
-        Object.keys(seenApps).forEach((key) => {
-            seenApps[key] = seenApps[key].map((entry) => {
-                if (metaData[entry.appName]) {
-                    return { ...entry, ...metaData[entry.appName] };
-                }
-                return entry;
-            });
-        });
-        return seenApps;
-    }
-
     async getApplications(
         query: IApplicationQuery,
     ): Promise<IClientApplication[]> {
@@ -254,9 +177,9 @@ export default class ClientMetricsService {
     }
 
     async getApplication(appName: string): Promise<IApplication> {
-        const seenToggles = this.getSeenTogglesByAppName(appName);
-        const [application, instances, strategies, features] =
+        const [seenToggles, application, instances, strategies, features] =
             await Promise.all([
+                this.clientMetricsStoreV2.getSeenTogglesForApp(appName),
                 this.clientApplicationsStore.get(appName),
                 this.clientInstanceStore.getByAppName(appName),
                 this.strategyStore.getAll(),
@@ -285,90 +208,6 @@ export default class ClientMetricsService {
         };
     }
 
-    getSeenAppsPerToggle(): Record<string, IApplication[]> {
-        const toggles = {};
-        Object.keys(this.apps).forEach((appName) => {
-            Object.keys(this.apps[appName].seenToggles).forEach(
-                (seenToggleName) => {
-                    if (!toggles[seenToggleName]) {
-                        toggles[seenToggleName] = [];
-                    }
-                    toggles[seenToggleName].push({ appName });
-                },
-            );
-        });
-        return toggles;
-    }
-
-    getTogglesMetrics(): Record<string, Record<string, IYesNoCount>> {
-        return {
-            lastHour: this.lastHourProjection.getProjection(),
-            lastMinute: this.lastMinuteProjection.getProjection(),
-        };
-    }
-
-    addPayload(data: IClientApp): void {
-        const { appName, bucket } = data;
-        const app = this.getApp(appName);
-        this.addBucket(app, bucket);
-    }
-
-    getApp(appName: string): IClientApp {
-        this.apps[appName] = this.apps[appName] || {
-            seenToggles: {},
-            count: 0,
-        };
-        return this.apps[appName];
-    }
-
-    createCountObject(entry: IMetricCounts): IYesNoCount {
-        let yes = typeof entry.yes === 'number' ? entry.yes : 0;
-        let no = typeof entry.no === 'number' ? entry.no : 0;
-
-        if (entry.variants) {
-            Object.entries(entry.variants).forEach(([key, value]) => {
-                if (key === 'disabled') {
-                    no += value;
-                } else {
-                    yes += value;
-                }
-            });
-        }
-
-        return { yes, no };
-    }
-
-    addBucket(app: IClientApp, bucket: IMetricsBucket): void {
-        let count = 0;
-        // TODO stop should be createdAt
-        const { stop, toggles } = bucket;
-
-        const toggleNames = Object.keys(toggles);
-
-        toggleNames.forEach((n) => {
-            const countObj = this.createCountObject(toggles[n]);
-            this.lastHourProjection.add(n, countObj);
-            this.lastMinuteProjection.add(n, countObj);
-            count += countObj.yes + countObj.no;
-        });
-
-        const timestamp = typeof stop === 'string' ? parseISO(stop) : stop;
-        this.lastHourList.add(toggles, timestamp);
-        this.lastMinuteList.add(toggles, timestamp);
-
-        this.globalCount += count;
-        // eslint-disable-next-line no-param-reassign
-        app.count += count;
-        this.addSeenToggles(app, toggleNames);
-    }
-
-    addSeenToggles(app: IClientApp, toggleNames: string[]): void {
-        toggleNames.forEach((t) => {
-            // eslint-disable-next-line no-param-reassign
-            app.seenToggles[t] = true;
-        });
-    }
-
     async deleteApplication(appName: string): Promise<void> {
         await this.clientInstanceStore.deleteForApplication(appName);
         await this.clientApplicationsStore.delete(appName);
@@ -380,8 +219,6 @@ export default class ClientMetricsService {
     }
 
     destroy(): void {
-        this.lastHourList.destroy();
-        this.lastMinuteList.destroy();
         this.timers.forEach(clearInterval);
     }
 }

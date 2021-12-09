@@ -1,5 +1,4 @@
 import supertest from 'supertest';
-import { EventEmitter } from 'events';
 import { createServices } from '../services';
 import { createTestConfig } from '../../test/config/test-config';
 
@@ -8,8 +7,6 @@ import ossAuth from './oss-authentication';
 import getApp from '../app';
 import User from '../types/user';
 import sessionDb from './session-db';
-
-const eventBus = new EventEmitter();
 
 function getSetup(preRouterHook) {
     const base = `/random${Math.round(Math.random() * 1000)}`;
@@ -26,7 +23,7 @@ function getSetup(preRouterHook) {
     const stores = createStores();
     const services = createServices(stores, config);
     const unleashSession = sessionDb(config, undefined);
-    const app = getApp(config, stores, services, eventBus, unleashSession);
+    const app = getApp(config, stores, services, unleashSession);
 
     return {
         base,

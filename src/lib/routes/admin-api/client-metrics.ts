@@ -30,7 +30,7 @@ class ClientMetricsController extends Controller {
         const data = await this.metrics.getClientMetricsForToggle(name);
         res.json({
             version: 1,
-            maturity: 'experimental',
+            maturity: 'stable',
             data,
         });
     }
@@ -40,7 +40,7 @@ class ClientMetricsController extends Controller {
         const data = await this.metrics.getFeatureToggleMetricsSummary(name);
         res.json({
             version: 1,
-            maturity: 'experimental',
+            maturity: 'stable',
             ...data,
         });
     }

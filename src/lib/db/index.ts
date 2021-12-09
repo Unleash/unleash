@@ -8,8 +8,6 @@ import FeatureToggleStore from './feature-toggle-store';
 import FeatureTypeStore from './feature-type-store';
 import StrategyStore from './strategy-store';
 import ClientInstanceStore from './client-instance-store';
-import { ClientMetricsDb } from './client-metrics-db';
-import { ClientMetricsStore } from './client-metrics-store';
 import ClientApplicationsStore from './client-applications-store';
 import ContextFieldStore from './context-field-store';
 import SettingStore from './setting-store';
@@ -33,12 +31,10 @@ import UserSplashStore from './user-splash-store';
 
 export const createStores = (
     config: IUnleashConfig,
-    eventBus: EventEmitter,
     db: Knex,
 ): IUnleashStores => {
-    const { getLogger } = config;
+    const { getLogger, eventBus } = config;
     const eventStore = new EventStore(db, getLogger);
-    const clientMetricsDb = new ClientMetricsDb(db, getLogger);
 
     return {
         eventStore,
@@ -51,11 +47,6 @@ export const createStores = (
             getLogger,
         ),
         clientInstanceStore: new ClientInstanceStore(db, eventBus, getLogger),
-        clientMetricsStore: new ClientMetricsStore(
-            clientMetricsDb,
-            eventBus,
-            getLogger,
-        ),
         clientMetricsStoreV2: new ClientMetricsStoreV2(db, getLogger),
         contextFieldStore: new ContextFieldStore(db, getLogger),
         settingStore: new SettingStore(db, getLogger),

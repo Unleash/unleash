@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/lines-between-class-members */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import EventEmitter from 'events';
-import { IClientMetric } from '../../lib/types/stores/client-metrics-db';
 import {
     IClientMetricsEnv,
     IClientMetricsEnvKey,
@@ -17,6 +16,12 @@ export default class FakeClientMetricsStoreV2
     constructor() {
         super();
         this.setMaxListeners(0);
+    }
+    getSeenTogglesForApp(
+        appName: string,
+        hoursBack?: number,
+    ): Promise<string[]> {
+        throw new Error('Method not implemented.');
     }
     clearMetrics(hoursBack: number): Promise<void> {
         return Promise.resolve();
@@ -50,7 +55,7 @@ export default class FakeClientMetricsStoreV2
         throw new Error('Method not implemented.');
     }
 
-    async getMetricsLastHour(): Promise<IClientMetric[]> {
+    async getMetricsLastHour(): Promise<[]> {
         return Promise.resolve([]);
     }
 

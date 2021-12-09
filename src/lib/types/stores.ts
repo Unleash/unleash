@@ -4,7 +4,6 @@ import { IFeatureTypeStore } from './stores/feature-type-store';
 import { IStrategyStore } from './stores/strategy-store';
 import { IClientApplicationsStore } from './stores/client-applications-store';
 import { IClientInstanceStore } from './stores/client-instance-store';
-import { IClientMetricsStore } from './stores/client-metrics-store';
 import { IFeatureToggleStore } from './stores/feature-toggle-store';
 import { IContextFieldStore } from './stores/context-field-store';
 import { ISettingStore } from './stores/settings-store';
@@ -31,7 +30,6 @@ export interface IUnleashStores {
     apiTokenStore: IApiTokenStore;
     clientApplicationsStore: IClientApplicationsStore;
     clientInstanceStore: IClientInstanceStore;
-    clientMetricsStore: IClientMetricsStore;
     clientMetricsStoreV2: IClientMetricsStoreV2;
     contextFieldStore: IContextFieldStore;
     environmentStore: IEnvironmentStore;

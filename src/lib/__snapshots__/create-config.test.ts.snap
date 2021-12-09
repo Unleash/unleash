@@ -39,6 +39,12 @@ Object {
   },
   "enableOAS": false,
   "enterpriseVersion": undefined,
+  "eventBus": EventEmitter {
+    "_events": Object {},
+    "_eventsCount": 0,
+    "_maxListeners": undefined,
+    Symbol(kCapture): false,
+  },
   "eventHook": undefined,
   "experimental": Object {},
   "getLogger": [Function],

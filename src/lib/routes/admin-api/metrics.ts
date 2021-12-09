@@ -22,10 +22,13 @@ class MetricsController extends Controller {
 
         this.metrics = clientMetricsService;
 
-        this.get('/seen-toggles', this.getSeenToggles);
-        this.get('/seen-apps', this.getSeenApps);
-        this.get('/feature-toggles', this.getFeatureToggles);
-        this.get('/feature-toggles/:name', this.getFeatureToggle);
+        // deprecated routes
+        this.get('/seen-toggles', this.deprecated);
+        this.get('/seen-apps', this.deprecated);
+        this.get('/feature-toggles', this.deprecated);
+        this.get('/feature-toggles/:name', this.deprecated);
+
+        // in use
         this.post(
             '/applications/:appName',
             this.createApplication,
@@ -40,29 +43,11 @@ class MetricsController extends Controller {
         this.get('/applications/:appName', this.getApplication);
     }
 
-    async getSeenToggles(req: Request, res: Response): Promise<void> {
-        const seenAppToggles = await this.metrics.getAppsWithToggles();
-        res.json(seenAppToggles);
-    }
-
-    async getSeenApps(req: Request, res: Response): Promise<void> {
-        const seenApps = await this.metrics.getSeenApps();
-        res.json(seenApps);
-    }
-
-    async getFeatureToggles(req: Request, res: Response): Promise<void> {
-        const toggles = await this.metrics.getTogglesMetrics();
-        res.json(toggles);
-    }
-
-    async getFeatureToggle(req: Request, res: Response): Promise<void> {
-        const { name } = req.params;
-        const data = await this.metrics.getTogglesMetrics();
-        const lastHour = data.lastHour[name] || {};
-        const lastMinute = data.lastMinute[name] || {};
-        res.json({
-            lastHour,
-            lastMinute,
+    async deprecated(req: Request, res: Response): Promise<void> {
+        res.status(410).json({
+            lastHour: {},
+            lastMinute: {},
+            maturity: 'deprecated',
         });
     }
 
@@ -95,4 +80,3 @@ class MetricsController extends Controller {
     }
 }
 export default MetricsController;
-module.exports = MetricsController;

@@ -1,4 +1,3 @@
-import EventEmitter from 'events';
 import stoppable, { StoppableServer } from 'stoppable';
 import { promisify } from 'util';
 import version from './util/version';
@@ -33,9 +32,8 @@ async function createApp(
     // Database dependencies (stateful)
     const logger = config.getLogger('server-impl.js');
     const serverVersion = version;
-    const eventBus = new EventEmitter();
     const db = createDb(config);
-    const stores = createStores(config, eventBus, db);
+    const stores = createStores(config, db);
     const services = createServices(stores, config);
 
     const metricsMonitor = createMetricsMonitor();
@@ -49,7 +47,6 @@ async function createApp(
         }
         metricsMonitor.stopMonitoring();
         stores.clientInstanceStore.destroy();
-        stores.clientMetricsStore.destroy();
         services.clientMetricsServiceV2.destroy();
         await db.destroy();
     };
@@ -59,15 +56,21 @@ async function createApp(
         // eslint-disable-next-line no-param-reassign
         config.server.secret = secret;
     }
-    const app = getApp(config, stores, services, eventBus, unleashSession);
+    const app = getApp(config, stores, services, unleashSession);
 
     if (typeof config.eventHook === 'function') {
         addEventHook(config.eventHook, stores.eventStore);
     }
-    metricsMonitor.startMonitoring(config, stores, serverVersion, eventBus, db);
+    metricsMonitor.startMonitoring(
+        config,
+        stores,
+        serverVersion,
+        config.eventBus,
+        db,
+    );
     const unleash: Omit<IUnleash, 'stop'> = {
         stores,
-        eventBus,
+        eventBus: config.eventBus,
         services,
         app,
         config,

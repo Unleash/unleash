@@ -23,5 +23,9 @@ export interface IClientMetricsStoreV2
         featureName: string,
         hoursBack?: number,
     ): Promise<string[]>;
+    getSeenTogglesForApp(
+        appName: string,
+        hoursBack?: number,
+    ): Promise<string[]>;
     clearMetrics(hoursAgo: number): Promise<void>;
 }

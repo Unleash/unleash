@@ -1,6 +1,5 @@
 import { publicFolder } from 'unleash-frontend';
 import fs from 'fs';
-import EventEmitter from 'events';
 import express, { Application, RequestHandler } from 'express';
 import cors from 'cors';
 import compression from 'compression';
@@ -29,7 +28,6 @@ export default function getApp(
     config: IUnleashConfig,
     stores: IUnleashStores,
     services: IUnleashServices,
-    eventBus?: EventEmitter,
     unleashSession?: RequestHandler,
 ): Application {
     const app = express();
@@ -47,8 +45,8 @@ export default function getApp(
     app.set('port', config.server.port);
     app.locals.baseUriPath = baseUriPath;
 
-    if (config.server.serverMetrics && eventBus) {
-        app.use(responseTimeMetrics(eventBus));
+    if (config.server.serverMetrics && config.eventBus) {
+        app.use(responseTimeMetrics(config.eventBus));
     }
 
     app.use(requestLogger(config));

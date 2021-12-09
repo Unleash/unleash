@@ -1,12 +1,10 @@
 import supertest from 'supertest';
-import { EventEmitter } from 'events';
 import { createTestConfig } from '../../../test/config/test-config';
 import createStores from '../../../test/fixtures/store';
 import permissions from '../../../test/fixtures/permissions';
 import getApp from '../../app';
 import { createServices } from '../../services';
 
-const eventBus = new EventEmitter();
 let destroy;
 
 function getSetup() {
@@ -18,7 +16,7 @@ function getSetup() {
         preRouterHook: perms.hook,
     });
     const services = createServices(stores, config);
-    const app = getApp(config, stores, services, eventBus);
+    const app = getApp(config, stores, services);
 
     destroy = () => {
         services.versionService.destroy();

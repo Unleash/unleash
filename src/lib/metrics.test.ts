@@ -2,7 +2,7 @@ import { register } from 'prom-client';
 import EventEmitter from 'events';
 import { createTestConfig } from '../test/config/test-config';
 import { REQUEST_TIME, DB_TIME } from './metric-events';
-import { FEATURE_UPDATED } from './types/events';
+import { CLIENT_METRICS, FEATURE_UPDATED } from './types/events';
 import { createMetricsMonitor } from './metrics';
 import createStores from '../test/fixtures/store';
 
@@ -64,7 +64,7 @@ test('should collect metrics for updated toggles', async () => {
 });
 
 test('should collect metrics for client metric reports', async () => {
-    stores.clientMetricsStore.emit('metrics', {
+    eventBus.emit(CLIENT_METRICS, {
         bucket: {
             toggles: {
                 TestToggle: {

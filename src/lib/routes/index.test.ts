@@ -1,11 +1,8 @@
 import supertest from 'supertest';
-import { EventEmitter } from 'events';
 import { createTestConfig } from '../../test/config/test-config';
 import createStores from '../../test/fixtures/store';
 import getApp from '../app';
 import { createServices } from '../services';
-
-const eventBus = new EventEmitter();
 
 function getSetup() {
     const base = `/random${Math.round(Math.random() * 1000)}`;
@@ -14,7 +11,7 @@ function getSetup() {
         server: { baseUriPath: base },
     });
     const services = createServices(stores, config);
-    const app = getApp(config, stores, services, eventBus);
+    const app = getApp(config, stores, services);
 
     return {
         base,

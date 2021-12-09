@@ -27,6 +27,10 @@ export default class FakeClientInstanceStore implements IClientInstanceStore {
         );
     }
 
+    setLastSeen(): Promise<void> {
+        return;
+    }
+
     async deleteAll(): Promise<void> {
         this.instances = [];
     }

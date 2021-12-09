@@ -77,6 +77,19 @@ export default class ClientInstanceStore implements IClientInstanceStore {
         }
     }
 
+    async setLastSeen({
+        appName,
+        instanceId,
+        environment,
+        clientIp,
+    }: INewClientInstance): Promise<void> {
+        await this.db(TABLE)
+            .update({ last_seen: new Date(), client_ip: clientIp })
+            .where({ app_name: appName, instance_id: instanceId, environment })
+            .onConflict(['app_name', 'instance_id', 'environment'])
+            .ignore();
+    }
+
     async bulkUpsert(instances: INewClientInstance[]): Promise<void> {
         const rows = instances.map(mapToDb);
         await this.db(TABLE)

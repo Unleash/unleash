@@ -66,7 +66,7 @@ If you see an item marked with a ❌ that you would find useful, feel free to re
 | **Category: Built-in strategies**                                                                   |      |         |     |        |      |      |     |                      |
 | [standard](../user_guide/activation_strategy#standard)                                              | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
 | [`flexibleRollout`](../user_guide/activation_strategy#gradual-rollout)                              | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
-| [`flexibleRollout`: custom stickiness](../user_guide/activation_strategy#customize-stickiness-beta) | ✅   | ✅      | ⭕  | ✅     | ⭕   | ?    | ✅  | ✅                   |
+| [`flexibleRollout`: custom stickiness](../user_guide/activation_strategy#customize-stickiness-beta) | ✅   | ✅      | ⭕  | ✅     | ⭕   | ✅    | ✅  | ✅                   |
 | [`userWithID`](../user_guide/activation_strategy#userids)                                           | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
 | [`remoteAddress`](../user_guide/activation_strategy#ips)                                            | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
 | `remoteAddress`: CIDR syntax                                                                        | ✅   | ✅      | ✅  | ✅     | ⭕   | ⭕   | ⭕  | ✅                   |

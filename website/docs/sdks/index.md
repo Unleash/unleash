@@ -67,27 +67,27 @@ If you see an item marked with a ❌ that you would find useful, feel free to re
 | [standard](../user_guide/activation_strategy#standard)                                              | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
 | [`flexibleRollout`](../user_guide/activation_strategy#gradual-rollout)                              | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
 | [`flexibleRollout`: custom stickiness](../user_guide/activation_strategy#customize-stickiness-beta) | ✅   | ✅      | ⭕  | ✅     | ⭕   | ?    | ✅  | ✅                   |
-| [`userWithID`](../user_guide/activation_strategy#userids)                                                                                        | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
-| [`remoteAddress`](../user_guide/activation_strategy#ips)                                                                                     | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
+| [`userWithID`](../user_guide/activation_strategy#userids)                                           | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
+| [`remoteAddress`](../user_guide/activation_strategy#ips)                                            | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
 | `remoteAddress`: CIDR syntax                                                                        | ✅   | ✅      | ✅  | ✅     | ⭕   | ⭕   | ⭕  | ✅                   |
-| [`applicationHostname`](../user_guide/activation_strategy#hostnames)                                                                               | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
-| **Category: [Custom strategies](../advanced/custom_activation_strategy)**                                                                     |      |         |     |        |      |      |     |                      |
+| [`applicationHostname`](../user_guide/activation_strategy#hostnames)                                | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
+| **Category: [Custom strategies](../advanced/custom_activation_strategy)**                           |      |         |     |        |      |      |     |                      |
 | Basic support                                                                                       | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
-| **Category: [Strategy constraints](../advanced/strategy_constraints)**                                                                   |      |         |     |        |      |      |     |                      |
+| **Category: [Strategy constraints](../advanced/strategy_constraints)**                              |      |         |     |        |      |      |     |                      |
 | Basic support (`IN`, `NOT_IN` operators)                                                            | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
-| **Category: [Unleash Context](../user_guide/unleash_context)**                                                                       |      |         |     |        |      |      |     |                      |
+| **Category: [Unleash Context](../user_guide/unleash_context)**                                      |      |         |     |        |      |      |     |                      |
 | Static fields (`environment`, `appName`)                                                            | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
 | Defined fields                                                                                      | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
 | Custom properties                                                                                   | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
-| **Category: [`isEnabled`](../client-specification#implementation-of-isenabled)**                                                                           |      |         |     |        |      |      |     |                      |
+| **Category: [`isEnabled`](../client-specification#implementation-of-isenabled)**                    |      |         |     |        |      |      |     |                      |
 | Can take context                                                                                    | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
 | Override fallback value                                                                             | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
 | Fallback function                                                                                   | ✅   | ✅      | ✅  | ✅     | ✅   | ⭕   | ⭕  | ✅                   |
-| **Category: [Variants](../advanced/toggle_variants)**                                                                              |      |         |     |        |      |      |     |                      |
+| **Category: [Variants](../advanced/toggle_variants)**                                               |      |         |     |        |      |      |     |                      |
 | Basic support                                                                                       | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
 | Custom fallback variant                                                                             | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
 | Custom weight                                                                                       | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
-| [Custom stickiness (beta)](../advanced/stickiness#custom-stickiness-beta)                                                                            | ✅   | ✅      | ⭕  | ✅     | ⭕   | ⭕   | ✅  | ✅                   |
+| [Custom stickiness (beta)](../advanced/stickiness#custom-stickiness-beta)                           | ✅   | ✅      | ⭕  | ✅     | ⭕   | ⭕   | ✅  | ✅                   |
 | **Category: Local backup**                                                                          |      |         |     |        |      |      |     |                      |
 | File based backup                                                                                   | ✅   | ✅      | ✅  | ✅     | ✅   | ✅   | ✅  | ✅                   |
 | **Category: Usage metrics**                                                                         |      |         |     |        |      |      |     |                      |

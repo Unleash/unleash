@@ -20,7 +20,7 @@ function getSetup() {
         perms,
         destroy: () => {
             services.versionService.destroy();
-            services.clientMetricsService.destroy();
+            services.clientInstanceService.destroy();
             services.apiTokenService.destroy();
         },
     };

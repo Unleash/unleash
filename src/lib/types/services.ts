@@ -5,7 +5,7 @@ import StateService from '../services/state-service';
 import StrategyService from '../services/strategy-service';
 import TagTypeService from '../services/tag-type-service';
 import TagService from '../services/tag-service';
-import ClientMetricsService from '../services/client-metrics';
+import ClientInstanceService from '../services/client-metrics/client-instance-service';
 import ContextService from '../services/context-service';
 import VersionService from '../services/version-service';
 import { ApiTokenService } from '../services/api-token-service';
@@ -29,7 +29,7 @@ export interface IUnleashServices {
     accessService: AccessService;
     addonService: AddonService;
     apiTokenService: ApiTokenService;
-    clientMetricsService: ClientMetricsService;
+    clientInstanceService: ClientInstanceService;
     clientMetricsServiceV2: ClientMetricsServiceV2;
     contextService: ContextService;
     emailService: EmailService;

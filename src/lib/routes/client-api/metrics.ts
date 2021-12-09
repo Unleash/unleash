@@ -2,7 +2,7 @@ import { Response } from 'express';
 import Controller from '../controller';
 import { IUnleashServices } from '../../types';
 import { IUnleashConfig } from '../../types/option';
-import ClientMetricsService from '../../services/client-metrics';
+import ClientInstanceService from '../../services/client-metrics/client-instance-service';
 import { Logger } from '../../logger';
 import { IAuthRequest } from '../unleash-types';
 import ApiUser from '../../types/api-user';
@@ -15,17 +15,17 @@ import { NONE } from '../../types/permissions';
 export default class ClientMetricsController extends Controller {
     logger: Logger;
 
-    metrics: ClientMetricsService;
+    clientInstanceService: ClientInstanceService;
 
     metricsV2: ClientMetricsServiceV2;
 
     constructor(
         {
-            clientMetricsService,
+            clientInstanceService,
             clientMetricsServiceV2,
         }: Pick<
             IUnleashServices,
-            'clientMetricsService' | 'clientMetricsServiceV2'
+            'clientInstanceService' | 'clientMetricsServiceV2'
         >,
         config: IUnleashConfig,
     ) {
@@ -33,7 +33,7 @@ export default class ClientMetricsController extends Controller {
         const { getLogger } = config;
 
         this.logger = getLogger('/api/client/metrics');
-        this.metrics = clientMetricsService;
+        this.clientInstanceService = clientInstanceService;
         this.metricsV2 = clientMetricsServiceV2;
 
         this.post('/', this.registerMetrics, NONE);
@@ -53,7 +53,7 @@ export default class ClientMetricsController extends Controller {
     async registerMetrics(req: IAuthRequest, res: Response): Promise<void> {
         const { body: data, ip: clientIp, user } = req;
         data.environment = this.resolveEnvironment(user, data);
-        await this.metrics.registerClientMetrics(data, clientIp);
+        await this.clientInstanceService.registerInstance(data, clientIp);
 
         await this.metricsV2.registerClientMetrics(data, clientIp);
 

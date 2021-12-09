@@ -4,23 +4,23 @@ import { UPDATE_APPLICATION } from '../../types/permissions';
 import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
 import { Logger } from '../../logger';
-import ClientMetricsService from '../../services/client-metrics';
+import ClientInstanceService from '../../services/client-metrics/client-instance-service';
 
 class MetricsController extends Controller {
     private logger: Logger;
 
-    private metrics: ClientMetricsService;
+    private clientInstanceService: ClientInstanceService;
 
     constructor(
         config: IUnleashConfig,
         {
-            clientMetricsService,
-        }: Pick<IUnleashServices, 'clientMetricsService'>,
+            clientInstanceService,
+        }: Pick<IUnleashServices, 'clientInstanceService'>,
     ) {
         super(config);
         this.logger = config.getLogger('/admin-api/metrics.ts');
 
-        this.metrics = clientMetricsService;
+        this.clientInstanceService = clientInstanceService;
 
         // deprecated routes
         this.get('/seen-toggles', this.deprecated);
@@ -54,13 +54,13 @@ class MetricsController extends Controller {
     async deleteApplication(req: Request, res: Response): Promise<void> {
         const { appName } = req.params;
 
-        await this.metrics.deleteApplication(appName);
+        await this.clientInstanceService.deleteApplication(appName);
         res.status(200).end();
     }
 
     async createApplication(req: Request, res: Response): Promise<void> {
         const input = { ...req.body, appName: req.params.appName };
-        await this.metrics.createApplication(input);
+        await this.clientInstanceService.createApplication(input);
         res.status(202).end();
     }
 
@@ -68,14 +68,18 @@ class MetricsController extends Controller {
         const query = req.query.strategyName
             ? { strategyName: req.query.strategyName as string }
             : {};
-        const applications = await this.metrics.getApplications(query);
+        const applications = await this.clientInstanceService.getApplications(
+            query,
+        );
         res.json({ applications });
     }
 
     async getApplication(req: Request, res: Response): Promise<void> {
         const { appName } = req.params;
 
-        const appDetails = await this.metrics.getApplication(appName);
+        const appDetails = await this.clientInstanceService.getApplication(
+            appName,
+        );
         res.json(appDetails);
     }
 }

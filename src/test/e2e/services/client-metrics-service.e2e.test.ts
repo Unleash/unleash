@@ -1,4 +1,4 @@
-import ClientMetricsService from '../../../lib/services/client-metrics';
+import ClientInstanceService from '../../../lib/services/client-metrics/client-instance-service';
 import { IClientApp } from '../../../lib/types/model';
 import { secondsToMilliseconds } from 'date-fns';
 import EventEmitter from 'events';
@@ -10,7 +10,7 @@ const { APPLICATION_CREATED } = require('../../../lib/types/events');
 
 let stores;
 let db;
-let clientMetricsService;
+let clientInstanceService;
 
 beforeAll(async () => {
     db = await dbInit('client_metrics_service_serial', getLogger);
@@ -20,7 +20,7 @@ beforeAll(async () => {
     const bulkInterval = secondsToMilliseconds(0.5);
     const announcementInterval = secondsToMilliseconds(2);
 
-    clientMetricsService = new ClientMetricsService(
+    clientInstanceService = new ClientInstanceService(
         stores,
         { getLogger, eventBus },
         bulkInterval,
@@ -29,7 +29,7 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-    await clientMetricsService.destroy();
+    await clientInstanceService.destroy();
     await db.destroy();
 });
 test('Apps registered should be announced', async () => {
@@ -54,12 +54,12 @@ test('Apps registered should be announced', async () => {
         description: faker.company.catchPhrase(),
         color: faker.internet.color(),
     };
-    await clientMetricsService.registerClient(clientRegistration, '127.0.0.1');
-    await clientMetricsService.registerClient(differentClient, '127.0.0.1');
+    await clientInstanceService.registerClient(clientRegistration, '127.0.0.1');
+    await clientInstanceService.registerClient(differentClient, '127.0.0.1');
     await new Promise((res) => setTimeout(res, 1200));
     const first = await stores.clientApplicationsStore.getUnannounced();
     expect(first.length).toBe(2);
-    await clientMetricsService.registerClient(clientRegistration, '127.0.0.1');
+    await clientInstanceService.registerClient(clientRegistration, '127.0.0.1');
     await new Promise((res) => setTimeout(res, secondsToMilliseconds(2)));
     const second = await stores.clientApplicationsStore.getUnannounced();
     expect(second.length).toBe(0);

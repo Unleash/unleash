@@ -3,7 +3,7 @@ import Controller from '../controller';
 import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
 import { Logger } from '../../logger';
-import ClientMetricsServiceV2 from '../../services/client-metrics/client-metrics-service-v2';
+import ClientMetricsServiceV2 from '../../services/client-metrics/metrics-service-v2';
 
 class ClientMetricsController extends Controller {
     private logger: Logger;

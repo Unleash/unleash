@@ -1,4 +1,4 @@
-import ClientInstanceService from './client-instance-service';
+import ClientInstanceService from './instance-service';
 import getLogger from '../../../test/fixtures/no-logger';
 import { IClientApp } from '../../types/model';
 import { secondsToMilliseconds } from 'date-fns';

@@ -1,4 +1,4 @@
-import ClientInstanceService from '../../../lib/services/client-metrics/client-instance-service';
+import ClientInstanceService from '../../../lib/services/client-metrics/instance-service';
 import { IClientApp } from '../../../lib/types/model';
 import { secondsToMilliseconds } from 'date-fns';
 

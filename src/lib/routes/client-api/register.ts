@@ -3,7 +3,7 @@ import Controller from '../controller';
 import { IUnleashServices } from '../../types';
 import { IUnleashConfig } from '../../types/option';
 import { Logger } from '../../logger';
-import ClientInstanceService from '../../services/client-metrics/client-instance-service';
+import ClientInstanceService from '../../services/client-metrics/instance-service';
 import { IAuthRequest, User } from '../../server-impl';
 import { IClientApp } from '../../types/model';
 import ApiUser from '../../types/api-user';

@@ -5,7 +5,7 @@ import StateService from '../services/state-service';
 import StrategyService from '../services/strategy-service';
 import TagTypeService from '../services/tag-type-service';
 import TagService from '../services/tag-service';
-import ClientInstanceService from '../services/client-metrics/client-instance-service';
+import ClientInstanceService from '../services/client-metrics/instance-service';
 import ContextService from '../services/context-service';
 import VersionService from '../services/version-service';
 import { ApiTokenService } from '../services/api-token-service';
@@ -22,7 +22,7 @@ import FeatureToggleService from '../services/feature-toggle-service';
 import EnvironmentService from '../services/environment-service';
 import FeatureTagService from '../services/feature-tag-service';
 import ProjectHealthService from '../services/project-health-service';
-import ClientMetricsServiceV2 from '../services/client-metrics/client-metrics-service-v2';
+import ClientMetricsServiceV2 from '../services/client-metrics/metrics-service-v2';
 import UserSplashService from '../services/user-splash-service';
 
 export interface IUnleashServices {

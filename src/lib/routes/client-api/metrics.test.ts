@@ -2,7 +2,7 @@ import supertest from 'supertest';
 import createStores from '../../../test/fixtures/store';
 import getApp from '../../app';
 import { createTestConfig } from '../../../test/config/test-config';
-import { clientMetricsSchema } from '../../services/client-metrics/client-metrics-schema';
+import { clientMetricsSchema } from '../../services/client-metrics/schema';
 import { createServices } from '../../services';
 import { IUnleashStores } from '../../types';
 import { IUnleashOptions } from '../../server-impl';

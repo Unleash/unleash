@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { TableCell, TableRow } from '@material-ui/core';
 import { useHistory } from 'react-router';
 
@@ -17,6 +17,8 @@ import useProject from '../../../../hooks/api/getters/useProject/useProject';
 import { UPDATE_FEATURE } from '../../../providers/AccessProvider/permissions';
 import PermissionSwitch from '../../../common/PermissionSwitch/PermissionSwitch';
 import { Link } from 'react-router-dom';
+import { ENVIRONMENT_STRATEGY_ERROR } from '../../../../constants/apiErrors';
+import EnvironmentStrategyDialog from '../../../common/EnvironmentStrategiesDialog/EnvironmentStrategyDialog';
 
 interface IFeatureToggleListNewItemProps {
     name: string;
@@ -46,6 +48,12 @@ const FeatureToggleListNewItem = ({
     const styles = useStyles();
     const history = useHistory();
     const ref = useRef(null);
+    const [showInfoBox, setShowInfoBox] = useState(false);
+    const [environmentName, setEnvironmentName] = useState('');
+
+    const closeInfoBox = () => {
+        setShowInfoBox(false);
+    };
 
     const onClick = (e: SyntheticEvent) => {
         if (!ref.current?.contains(e.target)) {
@@ -53,7 +61,7 @@ const FeatureToggleListNewItem = ({
         }
     };
 
-    const handleToggle = (env: IEnvironments, e: SyntheticEvent) => {
+    const handleToggle = (env: IEnvironments) => {
         toggleFeatureByEnvironment(env.name, env.enabled)
             .then(() => {
                 setToastData({
@@ -64,11 +72,15 @@ const FeatureToggleListNewItem = ({
                 refetch();
             })
             .catch(e => {
-                setToastData({
-                    show: true,
-                    type: 'error',
-                    text: e.message,
-                });
+                if (e.message === ENVIRONMENT_STRATEGY_ERROR) {
+                    setShowInfoBox(true);
+                } else {
+                    setToastData({
+                        show: true,
+                        type: 'error',
+                        text: e.message,
+                    });
+                }
             });
     };
 
@@ -140,7 +152,10 @@ const FeatureToggleListNewItem = ({
                                     projectId={projectId}
                                     permission={UPDATE_FEATURE}
                                     ref={ref}
-                                    onClick={handleToggle.bind(this, env)}
+                                    onClick={() => {
+                                        handleToggle(env);
+                                        setEnvironmentName(env.name);
+                                    }}
                                 />
                             </span>
                         </TableCell>
@@ -148,6 +163,13 @@ const FeatureToggleListNewItem = ({
                 })}
             </TableRow>
             {toast}
+            <EnvironmentStrategyDialog
+                open={showInfoBox}
+                onClose={closeInfoBox}
+                projectId={projectId}
+                featureId={name}
+                environmentName={environmentName}
+            />
         </>
     );
 };

@@ -48,11 +48,4 @@ export const useStyles = makeStyles(theme => ({
         textDecoration: 'none',
         color: 'inherit',
     },
-    envName: {
-        display: 'inline-block',
-        width: '90px',
-        textOverflow: 'ellipsis',
-        overflow: 'hidden',
-        whiteSpace: 'nowrap',
-    },
 }));

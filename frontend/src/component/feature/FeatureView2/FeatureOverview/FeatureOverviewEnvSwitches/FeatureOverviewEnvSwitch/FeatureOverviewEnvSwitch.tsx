@@ -1,4 +1,5 @@
 import { useParams } from 'react-router';
+import { ENVIRONMENT_STRATEGY_ERROR } from '../../../../../../constants/apiErrors';
 import useFeatureApi from '../../../../../../hooks/api/actions/useFeatureApi/useFeatureApi';
 import useFeature from '../../../../../../hooks/api/getters/useFeature/useFeature';
 import { TSetToastData } from '../../../../../../hooks/useToast';
@@ -13,6 +14,7 @@ interface IFeatureOverviewEnvSwitchProps {
     setToastData: TSetToastData;
     callback?: () => void;
     text?: string;
+    showInfoBox?: () => void;
 }
 
 const FeatureOverviewEnvSwitch = ({
@@ -20,6 +22,7 @@ const FeatureOverviewEnvSwitch = ({
     setToastData,
     callback,
     text,
+    showInfoBox,
 }: IFeatureOverviewEnvSwitchProps) => {
     const { featureId, projectId } = useParams<IFeatureViewParams>();
     const { toggleFeatureEnvironmentOn, toggleFeatureEnvironmentOff } =
@@ -39,11 +42,15 @@ const FeatureOverviewEnvSwitch = ({
                 callback();
             }
         } catch (e: any) {
-            setToastData({
-                show: true,
-                type: 'error',
-                text: e.toString(),
-            });
+            if (e.message === ENVIRONMENT_STRATEGY_ERROR) {
+                showInfoBox(true);
+            } else {
+                setToastData({
+                    show: true,
+                    type: 'error',
+                    text: e.message,
+                });
+            }
         }
     };
 

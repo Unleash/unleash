@@ -7,10 +7,9 @@ import {
     ListItem,
     ListItemText,
     ListItemAvatar,
-    Switch,
     Typography,
 } from '@material-ui/core';
-import { Report, Extension, Timeline } from '@material-ui/icons';
+import { Report, Extension, Timeline, FlagRounded } from '@material-ui/icons';
 
 import { shorten } from '../common';
 import {
@@ -33,7 +32,7 @@ function ApplicationView({
             show={
                 <ListItem key={`not_found_${name}`}>
                     <ListItemAvatar>
-                        <Report />
+                        <Report style={{color: 'red'}} />
                     </ListItemAvatar>
                     <ListItemText
                         primary={<Link to={`${createUrl}`}>{name}</Link>}
@@ -59,19 +58,13 @@ function ApplicationView({
     const foundListItem = ({
         viewUrl,
         name,
-        showSwitch,
-        enabled,
         description,
+        Icon,
         i,
     }) => (
         <ListItem key={`found_${name}-${i}`}>
             <ListItemAvatar>
-                <ConditionallyRender
-                    key={`conditional_avatar_${name}`}
-                    condition={showSwitch}
-                    show={<Switch disabled value={!!enabled} />}
-                    elseShow={<Extension />}
-                />
+                <Icon />
             </ListItemAvatar>
             <ListItemText
                 primary={
@@ -91,14 +84,14 @@ function ApplicationView({
                 <List>
                     {seenToggles.map(
                         (
-                            { name, description, enabled, notFound, project },
+                            { name, description, notFound, project },
                             i
                         ) => (
                             <ConditionallyRender
                                 key={`toggle_conditional_${name}`}
                                 condition={notFound}
                                 show={notFoundListItem({
-                                    createUrl: `/projects/default/create-toggle?name=${name}`,
+                                    createUrl: `/projects/default/create-toggle2?name=${name}`,
                                     name,
                                     permission: CREATE_FEATURE,
                                     i,
@@ -106,9 +99,8 @@ function ApplicationView({
                                 elseShow={foundListItem({
                                     viewUrl: getTogglePath(project, name),
                                     name,
-                                    showSwitch: true,
-                                    enabled,
                                     description,
+                                    Icon: FlagRounded,
                                     i,
                                 })}
                             />
@@ -135,7 +127,7 @@ function ApplicationView({
                             elseShow={foundListItem({
                                 viewUrl: '/strategies/view',
                                 name,
-                                showSwitch: false,
+                                Icon: Extension,
                                 enabled: undefined,
                                 description,
                                 i,

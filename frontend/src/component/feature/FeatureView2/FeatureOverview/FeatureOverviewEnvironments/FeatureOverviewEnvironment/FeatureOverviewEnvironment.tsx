@@ -60,11 +60,11 @@ const FeatureOverviewEnvironment = ({
                             enabled={env.enabled}
                             className={styles.headerIcon}
                         />
-                        Toggle execution for&nbsp;
+                        Feature toggle execution for&nbsp;
                         <StringTruncator
                             text={env.name}
                             className={styles.truncator}
-                            maxWidth="120"
+                            maxWidth="100"
                         />
                         <ConditionallyRender
                             condition={!env.enabled}

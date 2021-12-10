@@ -1,4 +1,4 @@
-import PieChart from '@material-ui/icons/PieChart';
+import { FiberManualRecord } from '@material-ui/icons';
 import { IFeatureEnvironmentMetrics } from '../../../../../../../interfaces/featureToggle';
 import { calculatePercentage } from '../../../../../../../utils/calculate-percentage';
 import PercentageCircle from '../../../../../../common/PercentageCircle/PercentageCircle';
@@ -30,7 +30,7 @@ const FeatureOverviewEnvironmentMetrics = ({
                         No one has received this feature in the last hour.
                     </p>
                 </div>
-                <PieChart
+                <FiberManualRecord
                     className={styles.icon}
                     style={{ transform: 'scale(1.1)' }}
                     data-loading

@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 export const useStyles = makeStyles(theme => ({
     container: {
         borderRadius: '10px',
-        backgroundColor: '#fff',
+        backgroundColor: theme.palette.primary.light,
         display: 'flex',
         flexDirection: 'column',
         marginRight: '1rem',
@@ -28,6 +28,13 @@ export const useStyles = makeStyles(theme => ({
     tagChip: {
         marginRight: '0.25rem',
         marginTop: '0.5rem',
+        backgroundColor: '#fff',
         fontSize: theme.fontSizes.smallBody,
+    },
+    closeIcon: {
+        color: theme.palette.primary.light,
+        '&:hover': {
+            color: theme.palette.primary.light,
+        },
     },
 }));

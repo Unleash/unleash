@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import PercentageCircle from '../../../../common/PercentageCircle/PercentageCircle';
 import { useStyles } from './FeatureEnvironmentMetrics.styles';
-import PieChartIcon from '@material-ui/icons/PieChart';
+import {FiberManualRecord} from '@material-ui/icons';
 import { useMediaQuery } from '@material-ui/core';
 import { IFeatureEnvironmentMetrics } from '../../../../../interfaces/featureToggle';
 import { parseISO } from 'date-fns';
@@ -75,7 +75,7 @@ const FeatureEnvironmentMetrics = ({
                     </div>
 
                     <div className={styles.chartContainer}>
-                        <PieChartIcon
+                        <FiberManualRecord
                             style={{ transform: 'scale(1.4)' }}
                             className={styles.icon}
                             data-loading

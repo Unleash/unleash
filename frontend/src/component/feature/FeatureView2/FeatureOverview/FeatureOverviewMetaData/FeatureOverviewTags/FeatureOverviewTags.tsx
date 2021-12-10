@@ -1,6 +1,6 @@
 import { useState, useContext } from 'react';
 import { Chip } from '@material-ui/core';
-import { Label } from '@material-ui/icons';
+import { Label, Close } from '@material-ui/icons';
 import { useParams } from 'react-router-dom';
 import useTags from '../../../../../../hooks/api/getters/useTags/useTags';
 import { IFeatureViewParams } from '../../../../../../interfaces/params';
@@ -101,6 +101,7 @@ const FeatureOverviewTags = () => {
             data-loading
             label={t.value}
             key={`${t.type}:${t.value}`}
+            deleteIcon={<Close className={styles.closeIcon} />}
             onDelete={
                 canDeleteTag
                     ? () => {

@@ -1,4 +1,4 @@
-import { capitalize, IconButton } from '@material-ui/core';
+import { capitalize } from '@material-ui/core';
 import classnames from 'classnames';
 import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
@@ -51,7 +51,7 @@ const FeatureOverviewMetaData = () => {
                                         component={Link}
                                         to={`/projects/${projectId}/features2/${featureId}/settings`}
                                     >
-                                        <Edit />
+                                        <Edit className={styles.editIcon} />
                                     </PermissionIconButton>
                                 </div>
                             </span>
@@ -60,12 +60,14 @@ const FeatureOverviewMetaData = () => {
                             <span data-loading>
                                 <div className={styles.descriptionContainer}>
                                     No description.{' '}
-                                    <IconButton
+                                    <PermissionIconButton
+                                        projectId={projectId}
+                                        permission={UPDATE_FEATURE}
                                         component={Link}
                                         to={`/projects/${projectId}/features2/${featureId}/settings`}
                                     >
-                                        <Edit />
-                                    </IconButton>
+                                        <Edit className={styles.editIcon} />
+                                    </PermissionIconButton>
                                 </div>
                             </span>
                         }

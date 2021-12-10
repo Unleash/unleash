@@ -33,7 +33,7 @@ The simplest A/B experiments use a control group and a single treatment group, b
 
 ### Potential pitfalls
 
-A thing to keep in mind when running experiments like this or in other cases where you're optimizing for a single metric is whether this is damaging to certain other metrics. Does more sign-ups also lead to more people (relatively) cancelling their membership? Does it decrease engagement with other parts of your product?
+A thing to keep in mind when running experiments like this or in other cases where you're optimizing for a single metric is whether this is damaging to certain other metrics. Do more sign-ups also lead to more people (relatively) cancelling their membership? Does it decrease engagement with other parts of your product?
 
 Don't do yourself a disservice by chasing one metric above all else. Keep an eye on other metrics at the same time and see if they are affected — always maintain a holistic view of things.
 

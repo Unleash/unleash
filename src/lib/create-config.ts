@@ -236,7 +236,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         options.authentication
             ? removeUndefinedKeys(options.authentication)
             : options.authentication,
-        initApiTokens,
+        { initApiTokens },
     ]);
 
     const importSetting: IImportOption = mergeAll([

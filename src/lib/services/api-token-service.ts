@@ -61,7 +61,7 @@ export class ApiTokenService {
 
     private async initApiTokens(tokens: string[]) {
         const tokenCount = await this.store.count();
-        if (!tokenCount) {
+        if (tokenCount) {
             return;
         }
         try {

@@ -4,6 +4,7 @@ import { Store } from './store';
 export interface ICustomRoleInsert {
     name: string;
     description: string;
+    roleType: string;
 }
 
 export interface IRoleStore extends Store<ICustomRole, number> {

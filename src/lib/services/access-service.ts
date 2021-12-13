@@ -10,10 +10,10 @@ import { IUserStore } from '../types/stores/user-store';
 import { Logger } from '../logger';
 import { IUnleashStores } from '../types/stores';
 import {
+    IAvailablePermissions,
     IPermission,
     IRoleData,
     IUserWithRole,
-    PermissionType,
     RoleName,
     RoleType,
 } from '../types/model';
@@ -63,12 +63,12 @@ export class AccessService {
         this.store = accessStore;
         this.userStore = userStore;
         this.logger = getLogger('/services/access-service.ts');
-        this.permissions = Object.values(permissions).map((p) => ({
-            name: p,
-            type: isProjectPermission(p)
-                ? PermissionType.project
-                : PermissionType.root,
-        }));
+        // this.permissions = Object.values(permissions).map((p) => ({
+        //     name: p,
+        //     type: isProjectPermission(p)
+        //         ? PermissionType.project
+        //         : PermissionType.root,
+        // }));
     }
 
     /**
@@ -90,6 +90,8 @@ export class AccessService {
 
         try {
             const userP = await this.getPermissionsForUser(user);
+            console.log('My checks are', permission, projectId, environment);
+            console.log('My permissions for user are', userP);
 
             return userP
                 .filter(
@@ -126,12 +128,16 @@ export class AccessService {
         return this.store.getPermissionsForUser(user.id);
     }
 
-    getPermissions(): IPermission[] {
-        return this.permissions;
+    async getPermissions(): Promise<IAvailablePermissions> {
+        return this.store.getAvailablePermissions();
     }
 
-    async addUserToRole(userId: number, roleId: number): Promise<void> {
-        return this.store.addUserToRole(userId, roleId);
+    async addUserToRole(
+        userId: number,
+        roleId: number,
+        projectId: string,
+    ): Promise<void> {
+        return this.store.addUserToRole(userId, roleId, projectId);
     }
 
     async setUserRootRole(
@@ -139,14 +145,17 @@ export class AccessService {
         role: number | RoleName,
     ): Promise<void> {
         const newRootRole = await this.resolveRootRole(role);
-
         if (newRootRole) {
             try {
                 await this.store.removeRolesOfTypeForUser(
                     userId,
                     RoleType.ROOT,
                 );
-                await this.store.addUserToRole(userId, newRootRole.id);
+                await this.store.addUserToRole(
+                    userId,
+                    newRootRole.id,
+                    ALL_PROJECTS,
+                );
             } catch (error) {
                 throw new Error(
                     `Could not add role=${newRootRole.name} to userId=${userId}`,
@@ -251,7 +260,6 @@ export class AccessService {
         const ownerRole = await this.store.createRole(
             RoleName.OWNER,
             RoleType.PROJECT,
-            projectId,
             PROJECT_DESCRIPTION.OWNER,
         );
         await this.store.addPermissionsToRole(
@@ -265,7 +273,7 @@ export class AccessService {
             this.logger.info(
                 `Making ${owner.id} admin of ${projectId} via roleId=${ownerRole.id}`,
             );
-            await this.store.addUserToRole(owner.id, ownerRole.id);
+            await this.store.addUserToRole(owner.id, ownerRole.id, projectId);
         }
         const memberRole = await this.store.createRole(
             RoleName.MEMBER,

@@ -300,7 +300,7 @@ export default class ProjectService {
             throw new Error(`User already has access to project=${projectId}`);
         }
 
-        await this.accessService.addUserToRole(userId, role.id);
+        await this.accessService.addUserToRole(userId, role.id, projectId);
     }
 
     // TODO: should be an event too

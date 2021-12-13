@@ -38,7 +38,13 @@ export default class RoleStore {
     }
 
     async create(role: ICustomRoleInsert): Promise<ICustomRole> {
-        const row = await this.db(TABLE).insert(role).returning('*');
+        const row = await this.db(TABLE)
+            .insert({
+                name: role.name,
+                description: role.description,
+                type: role.roleType,
+            })
+            .returning('*');
         return this.mapRow(row[0]);
     }
 
@@ -47,12 +53,7 @@ export default class RoleStore {
     }
 
     async get(id: number): Promise<ICustomRole> {
-        const rows = await this.db
-            .select(COLUMNS)
-            .from(TABLE)
-            .where({ id })
-            .orderBy('name', 'asc');
-
+        const rows = await this.db.select(COLUMNS).from(TABLE).where({ id });
         return this.mapRow(rows[0]);
     }
 

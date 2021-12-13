@@ -15,6 +15,7 @@ export default class FakeRoleStore implements IRoleStore {
             createdAt: new Date(),
         });
     }
+
     async getAll(): Promise<ICustomRole[]> {
         return Promise.resolve([
             {

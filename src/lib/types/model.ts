@@ -227,7 +227,7 @@ export interface IPermission {
 }
 
 export interface IEnvironmentPermission {
-    environmentName: string;
+    name: string;
     permissions: IPermission[];
 }
 

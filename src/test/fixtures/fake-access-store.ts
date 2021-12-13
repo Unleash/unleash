@@ -9,6 +9,13 @@ import {
 import { IAvailablePermissions, IPermission } from 'lib/types/model';
 
 class AccessStoreMock implements IAccessStore {
+    addEnvironmentPermissionsToRole(
+        role_id: number,
+        permissions: IPermission[],
+    ): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+
     setupPermissionsForEnvironment(
         environmentName: string,
         permissions: string[],

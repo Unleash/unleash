@@ -13,6 +13,10 @@ export default class FakeApiTokenStore implements IApiTokenStore {
         );
     }
 
+    async count(): Promise<number> {
+        return this.tokens.length;
+    }
+
     async deleteAll(): Promise<void> {
         this.tokens = [];
     }

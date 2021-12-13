@@ -6,4 +6,5 @@ export interface IApiTokenStore extends Store<IApiToken, string> {
     insert(newToken: IApiTokenCreate): Promise<IApiToken>;
     setExpiry(secret: string, expiresAt: Date): Promise<IApiToken>;
     markSeenAt(secrets: string[]): Promise<void>;
+    count(): Promise<number>;
 }

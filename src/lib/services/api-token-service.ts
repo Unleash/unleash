@@ -60,9 +60,23 @@ export class ApiTokenService {
     }
 
     private async initApiTokens(tokens: string[]) {
+        const tokenCount = await this.store.count();
+        if (!tokenCount) {
+            return;
+        }
         try {
             for (const token of tokens) {
-                await this.insertNewApiToken(token);
+                const tokenParts = token.split(':');
+                const newToken: IApiToken = {
+                    createdAt: undefined,
+                    project: tokenParts[0],
+                    environment: tokenParts[1],
+                    secret: `${tokenParts[0]}:${tokenParts[1]}.${tokenParts[2]}`,
+                    type: ApiTokenType.ADMIN,
+                    username: 'admin',
+                };
+                this.validateNewApiToken(newToken);
+                await this.insertNewApiToken(newToken);
             }
         } catch (e) {
             this.logger.error('Unable to create default API tokens');
@@ -127,7 +141,9 @@ export class ApiTokenService {
         return this.insertNewApiToken(createNewToken);
     }
 
-    private async insertNewApiToken(newApiToken): Promise<IApiToken> {
+    private async insertNewApiToken(
+        newApiToken: IApiTokenCreate,
+    ): Promise<IApiToken> {
         try {
             const token = await this.store.insert(newApiToken);
             this.activeTokens.push(token);
@@ -135,11 +151,10 @@ export class ApiTokenService {
         } catch (error) {
             if (error.code === FOREIGN_KEY_VIOLATION) {
                 let { message } = error;
-                const tokenParts = newApiToken.split(':');
                 if (error.constraint === 'api_tokens_project_fkey') {
-                    message = `Project=${tokenParts[0]} does not exist`;
+                    message = `Project=${newApiToken.project} does not exist`;
                 } else if (error.constraint === 'api_tokens_environment_fkey') {
-                    message = `Environment=${tokenParts[1]} does not exist`;
+                    message = `Environment=${newApiToken.environment} does not exist`;
                 }
                 throw new BadDataError(message);
             }

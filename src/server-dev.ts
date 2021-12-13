@@ -30,6 +30,9 @@ process.nextTick(async () => {
                         enabled: true,
                     },
                 },
+                authentication: {
+                    initApiTokens: ['*:*:964a287e1b728cb5f4f3e0120df92cb5'],
+                },
             }),
         );
     } catch (error) {

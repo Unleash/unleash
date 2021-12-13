@@ -227,11 +227,16 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         options.versionCheck,
     ]);
 
+    let initApiTokens = [];
+    if (process.env.INIT_API_TOKENS) {
+        initApiTokens = process.env.INIT_API_TOKENS.split(',');
+    }
     const authentication: IAuthOption = mergeAll([
         defaultAuthentication,
         options.authentication
             ? removeUndefinedKeys(options.authentication)
             : options.authentication,
+        initApiTokens,
     ]);
 
     const importSetting: IImportOption = mergeAll([

@@ -66,6 +66,9 @@ module.exports = {
             'advanced/sso-saml-keycloak',
             'advanced/sso-google',
         ],
+        'Topic guides': [
+            'topics/a-b-testing'
+        ]
     },
     api: {
         Introduction: [

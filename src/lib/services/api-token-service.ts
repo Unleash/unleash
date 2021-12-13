@@ -26,7 +26,7 @@ export class ApiTokenService {
 
     constructor(
         { apiTokenStore }: Pick<IUnleashStores, 'apiTokenStore'>,
-        config: Pick<IUnleashConfig, 'getLogger'>,
+        config: Pick<IUnleashConfig, 'getLogger' | 'authentication'>,
     ) {
         this.store = apiTokenStore;
         this.logger = config.getLogger('/services/api-token-service.ts');
@@ -35,6 +35,11 @@ export class ApiTokenService {
             () => this.fetchActiveTokens(),
             minutesToMilliseconds(1),
         ).unref();
+        if (config.authentication && config.authentication.initApiTokens) {
+            process.nextTick(() =>
+                this.initApiTokens(config.authentication.initApiTokens),
+            );
+        }
     }
 
     private async fetchActiveTokens(): Promise<void> {
@@ -52,6 +57,16 @@ export class ApiTokenService {
 
     public async getAllActiveTokens(): Promise<IApiToken[]> {
         return this.store.getAllActive();
+    }
+
+    private async initApiTokens(tokens: string[]) {
+        try {
+            for (const token of tokens) {
+                await this.insertNewApiToken(token);
+            }
+        } catch (e) {
+            this.logger.error('Unable to create default API tokens');
+        }
     }
 
     public getUserForToken(secret: string): ApiUser | undefined {
@@ -109,18 +124,22 @@ export class ApiTokenService {
 
         const secret = this.generateSecretKey(newToken);
         const createNewToken = { ...newToken, secret };
+        return this.insertNewApiToken(createNewToken);
+    }
 
+    private async insertNewApiToken(newApiToken): Promise<IApiToken> {
         try {
-            const token = await this.store.insert(createNewToken);
+            const token = await this.store.insert(newApiToken);
             this.activeTokens.push(token);
             return token;
         } catch (error) {
             if (error.code === FOREIGN_KEY_VIOLATION) {
                 let { message } = error;
+                const tokenParts = newApiToken.split(':');
                 if (error.constraint === 'api_tokens_project_fkey') {
-                    message = `Project=${newToken.project} does not exist`;
+                    message = `Project=${tokenParts[0]} does not exist`;
                 } else if (error.constraint === 'api_tokens_environment_fkey') {
-                    message = `Environment=${newToken.environment} does not exist`;
+                    message = `Environment=${tokenParts[1]} does not exist`;
                 }
                 throw new BadDataError(message);
             }

@@ -53,6 +53,7 @@ export interface IAuthOption {
     type: IAuthType;
     customAuthHandler?: Function;
     createAdminUser: boolean;
+    initApiTokens?: Array<string>;
 }
 
 export interface IImportOption {

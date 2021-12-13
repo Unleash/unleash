@@ -218,6 +218,10 @@ export class AccessService {
         return { role, permissions: rolePerms, users };
     }
 
+    async getProjectRoles(): Promise<IRole[]> {
+        return this.store.getProjectRoles();
+    }
+
     async getRolesForProject(projectId: string): Promise<IRole[]> {
         return this.store.getRolesForProject(projectId);
     }
@@ -226,8 +230,14 @@ export class AccessService {
         return this.store.getRolesForUserId(userId);
     }
 
-    async getUsersForRole(roleId: number): Promise<IUser[]> {
-        const userIdList = await this.store.getUserIdsForRole(roleId);
+    async getUsersForRole(
+        roleId: number,
+        projectId?: string,
+    ): Promise<IUser[]> {
+        const userIdList = await this.store.getUserIdsForRole(
+            roleId,
+            projectId,
+        );
         if (userIdList.length > 0) {
             return this.userStore.getAllWithId(userIdList);
         }
@@ -238,11 +248,11 @@ export class AccessService {
     async getProjectRoleUsers(
         projectId: string,
     ): Promise<[IRole[], IUserWithRole[]]> {
-        const roles = await this.store.getRolesForProject(projectId);
+        const roles = await this.store.getProjectRoles();
 
         const users = await Promise.all(
             roles.map(async (role) => {
-                const usrs = await this.getUsersForRole(role.id);
+                const usrs = await this.getUsersForRole(role.id, projectId);
                 return usrs.map((u) => ({ ...u, roleId: role.id }));
             }),
         );

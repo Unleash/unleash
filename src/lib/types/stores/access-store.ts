@@ -24,10 +24,11 @@ export interface IAccessStore extends Store<IRole, number> {
     getPermissionsForRole(roleId: number): Promise<IUserPermission[]>;
     getRoles(): Promise<IRole[]>;
     getRolesForProject(projectId: string): Promise<IRole[]>;
+    getProjectRoles(): Promise<IRole[]>;
     getRootRoles(): Promise<IRole[]>;
     removeRolesForProject(projectId: string): Promise<void>;
     getRolesForUserId(userId: number): Promise<IRole[]>;
-    getUserIdsForRole(roleId: number): Promise<number[]>;
+    getUserIdsForRole(roleId: number, projectId?: string): Promise<number[]>;
     addEnvironmentPermissionsToRole(
         role_id: number,
         permissions: IPermission[],

@@ -9,6 +9,10 @@ import {
 import { IAvailablePermissions, IPermission } from 'lib/types/model';
 
 class AccessStoreMock implements IAccessStore {
+    getProjectRoles(): Promise<IRole[]> {
+        throw new Error('Method not implemented.');
+    }
+
     addEnvironmentPermissionsToRole(
         role_id: number,
         permissions: IPermission[],
@@ -59,7 +63,7 @@ class AccessStoreMock implements IAccessStore {
         return Promise.resolve([]);
     }
 
-    getUserIdsForRole(roleId: number): Promise<number[]> {
+    getUserIdsForRole(roleId: number, projectId: string): Promise<number[]> {
         throw new Error('Method not implemented.');
     }
 

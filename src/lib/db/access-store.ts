@@ -170,6 +170,13 @@ export class AccessStore implements IAccessStore {
             .from<IRole>(T.ROLES);
     }
 
+    async getProjectRoles(): Promise<IRole[]> {
+        return this.db
+            .select(['id', 'name', 'type', 'description'])
+            .from<IRole>(T.ROLES)
+            .andWhere('type', 'project');
+    }
+
     async getRolesForProject(projectId: string): Promise<IRole[]> {
         return this.db
             .select(['id', 'name', 'type', 'project', 'description'])
@@ -201,11 +208,15 @@ export class AccessStore implements IAccessStore {
             .where('ru.user_id', '=', userId);
     }
 
-    async getUserIdsForRole(roleId: number): Promise<number[]> {
+    async getUserIdsForRole(
+        roleId: number,
+        projectId?: string,
+    ): Promise<number[]> {
         const rows = await this.db
             .select(['user_id'])
             .from<IRole>(T.ROLE_USER)
-            .where('role_id', roleId);
+            .where('role_id', roleId)
+            .andWhere('project', projectId);
         return rows.map((r) => r.user_id);
     }
 

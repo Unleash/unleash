@@ -89,7 +89,7 @@
     "redux-thunk": "2.4.1",
     "sass": "1.44.0",
     "swr": "1.0.1",
-    "typescript": "4.5.3",
+    "typescript": "4.5.4",
     "web-vitals": "2.1.2"
   },
   "jest": {

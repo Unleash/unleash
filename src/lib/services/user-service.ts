@@ -133,14 +133,19 @@ class UserService {
                 const user = await this.store.insert({
                     username: 'admin',
                 });
+                this.logger.info(`Did the thing"`);
                 const passwordHash = await bcrypt.hash(pwd, saltRounds);
+                this.logger.info(`Bcrypted that beast"`);
                 await this.store.setPasswordHash(user.id, passwordHash);
-
+                this.logger.info(`Set the hash"`);
                 await this.accessService.setUserRootRole(
                     user.id,
                     RoleName.ADMIN,
                 );
             } catch (e) {
+                console.log(`My error ${e}`);
+                console.log(e);
+                this.logger.error(e);
                 this.logger.error('Unable to create default user "admin"');
             }
         }

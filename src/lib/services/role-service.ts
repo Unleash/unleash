@@ -21,6 +21,10 @@ export default class RoleService {
         return this.store.getAll();
     }
 
+    async get(id: number): Promise<ICustomRole> {
+        return this.store.get(id);
+    }
+
     async create(role: ICustomRoleInsert): Promise<ICustomRole> {
         return this.store.create(role);
     }

@@ -215,9 +215,20 @@ export interface IRoleData {
     permissions: IUserPermission[];
 }
 
+export interface IAvailablePermissions {
+    project: IPermission[];
+    environments: IEnvironmentPermission[];
+}
+
 export interface IPermission {
+    id: number;
     name: string;
-    type: PermissionType;
+    displayName: string;
+}
+
+export interface IEnvironmentPermission {
+    environmentName: string;
+    permissions: IPermission[];
 }
 
 export enum PermissionType {

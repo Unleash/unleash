@@ -6,11 +6,23 @@ import {
     IUserPermission,
     IUserRole,
 } from '../../lib/types/stores/access-store';
+import { IAvailablePermissions, IPermission } from 'lib/types/model';
 
 class AccessStoreMock implements IAccessStore {
+    setupPermissionsForEnvironment(
+        environmentName: string,
+        permissions: string[],
+    ): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+
     userPermissions: IUserPermission[] = [];
 
     roles: IRole[] = [];
+
+    getAvailablePermissions(): Promise<IAvailablePermissions> {
+        throw new Error('Method not implemented.');
+    }
 
     getPermissionsForUser(userId: Number): Promise<IUserPermission[]> {
         return Promise.resolve([]);

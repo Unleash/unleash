@@ -1,3 +1,4 @@
+import { IAvailablePermissions } from '../model';
 import { Store } from './store';
 
 export interface IUserPermission {
@@ -11,7 +12,6 @@ export interface IRole {
     name: string;
     description?: string;
     type: string;
-    project?: string;
 }
 
 export interface IUserRole {
@@ -19,6 +19,7 @@ export interface IUserRole {
     userId: number;
 }
 export interface IAccessStore extends Store<IRole, number> {
+    getAvailablePermissions(): Promise<IAvailablePermissions>;
     getPermissionsForUser(userId: number): Promise<IUserPermission[]>;
     getPermissionsForRole(roleId: number): Promise<IUserPermission[]>;
     getRoles(): Promise<IRole[]>;
@@ -27,7 +28,15 @@ export interface IAccessStore extends Store<IRole, number> {
     removeRolesForProject(projectId: string): Promise<void>;
     getRolesForUserId(userId: number): Promise<IRole[]>;
     getUserIdsForRole(roleId: number): Promise<number[]>;
-    addUserToRole(userId: number, roleId: number): Promise<void>;
+    setupPermissionsForEnvironment(
+        environmentName: string,
+        permissions: string[],
+    ): Promise<void>;
+    addUserToRole(
+        userId: number,
+        roleId: number,
+        projectId: string,
+    ): Promise<void>;
     removeUserFromRole(userId: number, roleId: number): Promise<void>;
     removeRolesOfTypeForUser(userId: number, roleType: string): Promise<void>;
     createRole(
@@ -39,7 +48,6 @@ export interface IAccessStore extends Store<IRole, number> {
     addPermissionsToRole(
         role_id: number,
         permissions: string[],
-        projectId?: string,
         environment?: string,
     ): Promise<void>;
     removePermissionFromRole(

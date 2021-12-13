@@ -24,7 +24,7 @@ let readRole;
 const createUserEditorAccess = async (name, email) => {
     const { userStore } = stores;
     const user = await userStore.insert({ name, email });
-    await accessService.addUserToRole(user.id, editorRole.id);
+    await accessService.addUserToRole(user.id, editorRole.id, ALL_PROJECTS);
     return user;
 };
 
@@ -34,7 +34,7 @@ const createSuperUser = async () => {
         name: 'Alice Admin',
         email: 'admin@getunleash.io',
     });
-    await accessService.addUserToRole(user.id, adminRole.id);
+    await accessService.addUserToRole(user.id, adminRole.id, ALL_PROJECTS);
     return user;
 };
 
@@ -384,27 +384,6 @@ test('should return role with permissions and users', async () => {
     expect(roleWithPermission.users.length > 2).toBe(true);
 });
 
-test('should return list of permissions', async () => {
-    const p = await accessService.getPermissions();
-
-    const findPerm = (perm) => p.find((_) => _.name === perm);
-
-    const {
-        DELETE_FEATURE,
-        UPDATE_FEATURE,
-        CREATE_FEATURE,
-        UPDATE_PROJECT,
-        CREATE_PROJECT,
-    } = permissions;
-
-    expect(p.length > 2).toBe(true);
-    expect(findPerm(CREATE_PROJECT).type).toBe('root');
-    expect(findPerm(UPDATE_PROJECT).type).toBe('project');
-    expect(findPerm(CREATE_FEATURE).type).toBe('project');
-    expect(findPerm(UPDATE_FEATURE).type).toBe('project');
-    expect(findPerm(DELETE_FEATURE).type).toBe('project');
-});
-
 test('should set root role for user', async () => {
     const { userStore } = stores;
     const user = await userStore.insert({
@@ -468,20 +447,16 @@ test('should support permission with "ALL" environment requirement', async () =>
     const customRole = await accessStore.createRole(
         'Power user',
         'custom',
-        'default',
         'Grants access to modify all environments',
     );
 
     const { CREATE_FEATURE_STRATEGY } = permissions;
-
     await accessStore.addPermissionsToRole(
         customRole.id,
         [CREATE_FEATURE_STRATEGY],
-        'default',
-        ALL_PROJECTS,
+        'production',
     );
-
-    await accessStore.addUserToRole(user.id, customRole.id);
+    await accessStore.addUserToRole(user.id, customRole.id, ALL_PROJECTS);
 
     const hasAccess = await accessService.hasPermission(
         user,
@@ -498,7 +473,7 @@ test('should support permission with "ALL" environment requirement', async () =>
         'default',
         'development',
     );
-    expect(hasNotAccess).toBe(true);
+    expect(hasNotAccess).toBe(false);
 });
 
 test('Should have access to create a strategy in an environment', async () => {

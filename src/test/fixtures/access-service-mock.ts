@@ -4,7 +4,11 @@ import { AccessService } from '../../lib/services/access-service';
 import User from '../../lib/types/user';
 import noLoggerProvider from './no-logger';
 import { IRole } from '../../lib/types/stores/access-store';
-import { IPermission, IRoleData, IUserWithRole } from '../../lib/types/model';
+import {
+    IAvailablePermissions,
+    IRoleData,
+    IUserWithRole,
+} from '../../lib/types/model';
 
 class AccessServiceMock extends AccessService {
     constructor() {
@@ -22,7 +26,7 @@ class AccessServiceMock extends AccessService {
         throw new Error('Method not implemented.');
     }
 
-    getPermissions(): IPermission[] {
+    getPermissions(): Promise<IAvailablePermissions> {
         throw new Error('Method not implemented.');
     }
 

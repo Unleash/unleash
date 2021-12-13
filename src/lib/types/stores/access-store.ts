@@ -1,4 +1,4 @@
-import { IAvailablePermissions } from '../model';
+import { IAvailablePermissions, IPermission } from '../model';
 import { Store } from './store';
 
 export interface IUserPermission {
@@ -28,6 +28,10 @@ export interface IAccessStore extends Store<IRole, number> {
     removeRolesForProject(projectId: string): Promise<void>;
     getRolesForUserId(userId: number): Promise<IRole[]>;
     getUserIdsForRole(roleId: number): Promise<number[]>;
+    addEnvironmentPermissionsToRole(
+        role_id: number,
+        permissions: IPermission[],
+    ): Promise<void>;
     setupPermissionsForEnvironment(
         environmentName: string,
         permissions: string[],

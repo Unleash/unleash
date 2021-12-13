@@ -113,7 +113,7 @@ export class AccessStore implements IAccessStore {
             Array.from(rawEnvironments).map(
                 ([environmentName, environmentPermissions]) => {
                     return {
-                        environmentName: environmentName,
+                        name: environmentName,
                         permissions: environmentPermissions.map(
                             this.mapPermission,
                         ),
@@ -262,6 +262,19 @@ export class AccessStore implements IAccessStore {
             description,
             type,
         };
+    }
+
+    async addEnvironmentPermissionsToRole(
+        role_id: number,
+        permissions: IPermission[],
+    ): Promise<void> {
+        const rows = permissions.map((x) => {
+            return {
+                role_id,
+                permission_id: x.id,
+            };
+        });
+        this.db.batchInsert(T.ROLE_PERMISSION, rows);
     }
 
     async addPermissionsToRole(

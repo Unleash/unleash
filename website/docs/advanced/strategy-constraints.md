@@ -10,12 +10,6 @@ title: Strategy Constraints
 
 Strategy constraints allow you to set pre-conditions on activation strategies that needs to be satisfied for the activation strategies to take effect.
 
-## Constrain on a specific environment {#constrain-on-a-specific-environment}
-
-The most common use case for strategy constraints is that you want an activation strategy to only take effect in a specific environment. For example, you could enable the feature for everyone in development, while you only expose the new feature to a few percent of users in production.
-
-![Strategy constraints](/img/strategy-constraints.png)
-
 ## Constrain on custom context fields {#constrain-on-custom-context-fields}
 
 It is also possible to constrain an activation strategy configuration on custom context fields. A common use case is a multi-tenant service where you want to control roll-out on a tenant identifier. This allows you to decide which customer should get access to your new feature.
@@ -52,3 +46,7 @@ Next you can define your new context field. The minimum requirement is to give i
 Legal values defines all possible values for the context field. this will be used in Unleash Admin UI to guide users when working with context fields to make sure they only use legal values.
 
 ![New context fields](/img/constraints_legal_values.png)
+
+## [Deprecated]: Constrain on a specific environment {#constrain-on-a-specific-environment}
+
+Before Unleash 4.3, using strategy constraints was the recommended way to have different toggle configurations per environment. Now that Unleash has environment support built in, we no longer recommend you use strategy constraints for this. Instead, see the [environments documentation](../user_guide/environments).

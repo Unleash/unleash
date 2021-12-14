@@ -23,7 +23,7 @@ The built-in activation strategies:
 
 When you create a new feature toggle you will get the standard activation strategy, if you don’t configure any specific strategies. The standard activation strategy will always evaluate to true, given that the feature toggle is enabled.
 
-![Default activation strategy](/img/control_rollout_standard_strategy.png)
+![A UI element describing the \"standard\" strategy. It says \"The standard strategy is strictly on / off for your entire userbase\".](/img/control_rollout_standard_strategy.png)
 
 ## The UserIDs strategy {#the-userids-strategy}
 
@@ -31,15 +31,15 @@ When we have deployed some new code to production it would be nice to enable the
 
 A userId is how you identify users in your system (email, UUID, etc) and is provided as part of the Unleash Context to the client SDK.
 
-![UserWithId activation strategy](/img/control_rollout_userid_strategy.png)
+![A UI element showing the user ID strategy. It has an active list of two user IDs: \"productlead@mycompany.com\" and \"me@mycompany.com\".](/img/control_rollout_userid_strategy.png)
 
 ## Multiple activation strategies {#multiple-activation-strategies}
 
 In order to increase the exposure of the feature which is protected with the feature toggle you can configure multiple activation strategies on the same feature toggle.
 
-![Multiple activation strategy](/img/control_rollout_multiple_strategies.png)
+![A feature toggle with two active strategies: a user ID strategy and a gradual rollout strategy.](/img/control_rollout_multiple_strategies.png)
 
-In the example above we have to configure two activation strategies, **userWithId** and **flexibleRollout**. If one of them evaluates to true the feature toggle is considered enabled. In the example we have enabled the feature toggle for usersWithId (_productlead@mycompany.com and me@mycompany.com_) in addition to 75% of the traffic.
+In the example above we have to configure two activation strategies, **userWithId** and **flexibleRollout**. If one of them evaluates to true the feature toggle is considered enabled. In the example we have enabled the feature toggle for usersWithId (*productlead@mycompany.com* and *me@mycompany.com*) in addition to 75% of the traffic.
 
 ## Summary {#summary}
 

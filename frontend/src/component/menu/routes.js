@@ -426,7 +426,8 @@ export const routes = [
         component: ProjectRoles,
         type: 'protected',
         layout: 'main',
-        menu: { adminSettings: true },
+        menu: {},
+        hidden: true,
     },
     {
         path: '/admin',

@@ -41,7 +41,31 @@ exports.up = function (db, cb) {
         ALTER TABLE role_permission
         DROP COLUMN project,
         DROP COLUMN permission,
-        DROP COLUMN environment
+        DROP COLUMN environment;
+
+        UPDATE permissions SET display_name = 'Admin' where permission = 'ADMIN';
+        UPDATE permissions SET display_name = 'Create Strategies' where permission = 'CREATE_STRATEGY';
+        UPDATE permissions SET display_name = 'Create Addons' where permission = 'CREATE_ADDON';
+        UPDATE permissions SET display_name = 'Delete Addons' where permission = 'DELETE_ADDON';
+        UPDATE permissions SET display_name = 'Update Addons' where permission = 'UPDATE_ADDON';
+        UPDATE permissions SET display_name = 'Create Feature Toggles' where permission = 'CREATE_FEATURE';
+        UPDATE permissions SET display_name = 'Update Feature Toggles' where permission = 'UPDATE_FEATURE';
+        UPDATE permissions SET display_name = 'Delete Feature Toggles' where permission = 'DELETE_FEATURE';
+        UPDATE permissions SET display_name = 'Update Applications' where permission = 'UPDATE_APPLICATION';
+        UPDATE permissions SET display_name = 'Update Tag Types' where permission = 'UPDATE_TAG_TYPE';
+        UPDATE permissions SET display_name = 'Delete Tag Types' where permission = 'DELETE_TAG_TYPE';
+        UPDATE permissions SET display_name = 'Create Projects' where permission = 'CREATE_PROJECT';
+        UPDATE permissions SET display_name = 'Update Projects' where permission = 'UPDATE_PROJECT';
+        UPDATE permissions SET display_name = 'Delete Projects' where permission = 'DELETE_PROJECT';
+        UPDATE permissions SET display_name = 'Update Strategies on Toggles' where permission = 'UPDATE_FEATURE_STRATEGY';
+        UPDATE permissions SET display_name = 'Add Strategies to Toggles' where permission = 'CREATE_FEATURE_STRATEGY';
+        UPDATE permissions SET display_name = 'Remove Strategies from Toggles' where permission = 'DELETE_FEATURE_STRATEGY';
+        UPDATE permissions SET display_name = 'Update Strategies' where permission = 'UPDATE_STRATEGY';
+        UPDATE permissions SET display_name = 'Delete Strategies' where permission = 'DELETE_STRATEGY';
+        UPDATE permissions SET display_name = 'Enable/Disable Toggles for Environments' where permission = 'UPDATE_FEATURE_ENVIRONMENT';
+        UPDATE permissions SET display_name = 'Update Context Fields' where permission = 'UPDATE_CONTEXT_FIELD';
+        UPDATE permissions SET display_name = 'Create Context Fields' where permission = 'CREATE_CONTEXT_FIELD';
+        UPDATE permissions SET display_name = 'Delete Context Fields' where permission = 'DELETE_CONTEXT_FIELD';
         `,
         cb,
     );

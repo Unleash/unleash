@@ -3,16 +3,16 @@ id: audit_log
 title: The audit log
 ---
 
-When something is not working as expected it is important to be able to track what changed when, and who performed the change.
+The audit log lets you track changes in Unleash. It lists _what_ changed _when_ it changed, and _who_ performed the change.
 
-## Audit log per feature toggle {#audit-log-per-feature-toggle}
+## Feature toggle log {#audit-log-per-feature-toggle}
 
-Unleash comes with a audit log, available on a feature toggle level. You access the audit log via the “history” tab in the feature toggle view.
+Each feature toggle has its own audit log. The audit log is available under the "Event log" tab in the tab view.
 
-![Audit log](/img/unleash-toggle-history.png)
+![The event log for a feature toggle. The \"Event log\" tab is highlighted and the UI shows the most recent changes, including a JSON diff and the change details.](/img/unleash-toggle-history.png)
 
 ## Global Audit Log {#global-audit-log}
 
-Unleash also keeps an audit log across all toggles and activation strategies, tracking all changes. You access the global audit log via the “Event history”, which you can find in the drawer menu.
+Unleash also keeps an audit log across all toggles and activation strategies, tracking all changes. You access the global audit log via the “Event history”, which you can find in the drawer menu. The global audit log is only accessible by users with instance admin access.
 
-![Global audit log](/img/global_audit_log.png)
+![The global event log and how to get there. It shows a number of events and their changes as well as the navigation steps: use the admin menu and navigate to "event history".](/img/global_audit_log.png)

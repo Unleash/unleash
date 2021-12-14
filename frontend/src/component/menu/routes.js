@@ -23,11 +23,11 @@ import CreateTag from '../../page/tags/create';
 import Addons from '../../page/addons';
 import AddonsCreate from '../../page/addons/create';
 import AddonsEdit from '../../page/addons/edit';
-import Admin from '../../page/admin';
-import AdminApi from '../../page/admin/api';
-import AdminUsers from '../../page/admin/users';
-import AdminInvoice from '../../page/admin/invoice';
-import AdminAuth from '../../page/admin/auth';
+import Admin from '../admin';
+import AdminApi from '../admin/api';
+import AdminUsers from '../admin/users';
+import AdminInvoice from '../admin/invoice';
+import AdminAuth from '../admin/auth';
 import Login from '../user/Login/Login';
 import { P, C, E, EEA } from '../common/flags';
 import NewUser from '../user/NewUser';
@@ -41,6 +41,7 @@ import EnvironmentList from '../environments/EnvironmentList/EnvironmentList';
 import CreateEnvironment from '../environments/CreateEnvironment/CreateEnvironment';
 import FeatureView2 from '../feature/FeatureView2/FeatureView2';
 import FeatureCreate from '../feature/FeatureCreate/FeatureCreate';
+import ProjectRoles from '../admin/ProjectRolesv1/ProjectRoles';
 
 export const routes = [
     // Project
@@ -414,6 +415,15 @@ export const routes = [
         title: 'Invoices',
         component: AdminInvoice,
         hidden: true,
+        type: 'protected',
+        layout: 'main',
+        menu: { adminSettings: true },
+    },
+    {
+        path: '/admin/roles',
+        parent: '/admin',
+        title: 'Project Roles',
+        component: ProjectRoles,
         type: 'protected',
         layout: 'main',
         menu: { adminSettings: true },

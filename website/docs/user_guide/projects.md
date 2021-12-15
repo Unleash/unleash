@@ -47,11 +47,11 @@ To keep your feature toggles clean, removing deprecated projects is important. F
 1. In the top right of the project card, find the project menu represented by three vertical dots.
 
 
-![A list of projects. Each project has three vertical dots — a kebab-menu — next to it.](/img/projects_menu_button.png)
+![A list of projects. Each project has three vertical dots — a kebab menu — next to it.](/img/projects_menu_button.png)
 
 2. Click on Delete Project
 
-![A list of projects. Each project has three vertical dots — a kebab-menu — next to it, which exposes a menu with the \"Edit project\" and \"Delete project\" options when interacted with.](/img/projects_delete_button.png)
+![A list of projects. Each project has three vertical dots — a kebab menu — next to it, which exposes a menu with the \"Edit project\" and \"Delete project\" options when interacted with.](/img/projects_delete_button.png)
 
 ## Filter feature toggles on projects {#filter-feature-toggles-on-projects}
 

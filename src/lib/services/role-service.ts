@@ -8,7 +8,6 @@ import { Logger } from '../logger';
 interface IRoleCreation {
     name: string;
     description: string;
-    roleType: string;
     permissions?: IPermission[];
 }
 
@@ -43,7 +42,7 @@ export default class RoleService {
         const baseRole = {
             name: role.name,
             description: role.description,
-            roleType: role.roleType,
+            roleType: 'custom',
         };
         const permissions = role.permissions;
         const newRole = await this.store.create(baseRole);

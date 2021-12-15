@@ -13,6 +13,7 @@ import {
 import ApiUser from '../../../../../lib/types/api-user';
 import { ApiTokenType } from '../../../../../lib/types/models/api-token';
 import IncompatibleProjectError from '../../../../../lib/error/incompatible-project-error';
+import { IVariant, WeightType } from '../../../../../lib/types/model';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -1826,4 +1827,50 @@ test('Should allow changing project to target project with the same enabled envi
             'default',
         ),
     ).resolves;
+});
+
+test(`a feature's variants should be sorted by name in increasing order`, async () => {
+    const featureName = 'variants.are.sorted';
+    const project = 'default';
+    await app.request
+        .post(`/api/admin/projects/${project}/features`)
+        .send({
+            name: featureName,
+        })
+        .expect(201);
+
+    const newVariants: IVariant[] = [
+        {
+            name: 'z',
+            stickiness: 'default',
+            weight: 250,
+            weightType: WeightType.FIX,
+        },
+        {
+            name: 'f',
+            stickiness: 'default',
+            weight: 375,
+            weightType: WeightType.VARIABLE,
+        },
+        {
+            name: 'a',
+            stickiness: 'default',
+            weight: 450,
+            weightType: WeightType.VARIABLE,
+        },
+    ];
+
+    await app.request
+        .put(`/api/admin/projects/${project}/features/${featureName}/variants`)
+        .send(newVariants)
+        .expect(200);
+
+    await app.request
+        .get(`/api/admin/projects/${project}/features/${featureName}`)
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.variants[0].name).toBe('a');
+            expect(res.body.variants[1].name).toBe('f');
+            expect(res.body.variants[2].name).toBe('z');
+        });
 });

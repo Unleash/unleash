@@ -287,6 +287,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 return e;
             });
             featureToggle.variants = featureToggle.variants || [];
+            featureToggle.variants.sort((a, b) => a.name.localeCompare(b.name));
             featureToggle.archived = archived;
             return featureToggle;
         }

@@ -11,7 +11,9 @@ Please refer to [Create token](../user_guide/api-token) on how to create an API 
 
 Please note that it may take up to 60 seconds for the new key to propagate to all Unleash instances due to eager caching.
 
-> If you need an API token to use in a client SDK you should create a "client token" as these have less access.
+:::note
+If you need an API token to use in a client SDK you should create a "client token" as these have fewer access rights.
+:::
 
 ## Step 2: Use Admin API {#step-2-use-admin-api}
 
@@ -20,12 +22,14 @@ Now that you have an access token with admin privileges we can use that to perfo
 In the example below we will use the [Unleash Admin API](../api/admin/features) to enable the “Demo” feature toggle using curl.
 
 ```sh
-curl -X POST -H "Content-Type: application/json" -H "Authorization: admintoken" https://app.unleash-hosted.com/demo/api/admin/features/Demo/toggle/on
+curl -X POST -H "Content-Type: application/json" \
+     -H "Authorization: admintoken" \
+     https://app.unleash-hosted.com/demo/api/admin/features/Demo/toggle/on
 ```
 
 **Great success!** We have now enabled the feature toggle. We can also verify that it was actually changed by the API user by navigating to the history (audit log) for this feature toggle.
 
-![Create token](/img/api_access_history.png)
+![A feature toggle's event log showing that it was last updated by \"admin-api\".](/img/api_access_history.png)
 
 ## API overview {#api-overview}
 

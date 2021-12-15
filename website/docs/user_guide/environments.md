@@ -25,7 +25,7 @@ Despite this being a shift in how Unleash works, everything will continue to wor
 
 
 
-![Environments Overview](/img/environments_overview.svg "A feature toggle exists across all environments, but take different activation strategies per environment.")
+![A graph showing how environments work. Each project can have multiple features, and each feature can have different activation strategies in each of its environments.](/img/environments_overview.svg "A feature toggle exists across all environments, but take different activation strategies per environment.")
 
 
 ## How to start using environments
@@ -45,7 +45,7 @@ Navigate to the project and choose the “environments” tab.
 
 
 
-![Configure environment for this project](/img/environments_configure.png "Configure environment for this project")
+![A project view showing the Environments tab. The UI displays three environment toggles: \"default\", \"development\", and \"production\". The \"default\" environment is enabled.](/img/environments_configure.png "Configure environment for this project")
 
 
 ### Step 2: Configure activation strategies for the new environment
@@ -54,7 +54,7 @@ From the “feature toggle view” you will now be able to configure activation 
 
 
 
-![Add strategy configuration per environment](/img/environments_strategies.png "Add strategy configuration per environment")
+![A feature toggle strategies tab showing three different environments, of which one is active. The UI displays data about the currently selected environment, ](/img/environments_strategies.png "Add strategy configuration per environment")
 
 
 ### Step 3: Create environment specific API keys
@@ -63,7 +63,7 @@ In order for the SDK to download the feature toggle configuration for the correc
 
 
 
-![Create Environment specific API Keys](/img/environments_api_keys.png "Create Environment specific API Keys")
+![An API key creation form. The form's fields are \"username\", \"token type\", \"project\", and, crucially, \"environment\". The development environment is selected.](/img/environments_api_keys.png "Create Environment specific API Keys")
 
 
 
@@ -76,7 +76,7 @@ If you're currently using strategy constraints together with the “environment�
 
 
 
-![You will not use strategy constraints for environments any more.](/img/environments_strategy_constraints.png "You will not use strategy constraints for environments any more.")
+![A strategy constraint using the environment field of the unleash context.](/img/environments_strategy_constraints.png "You will not use strategy constraints for environments any more.")
 
 
 

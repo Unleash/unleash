@@ -68,7 +68,10 @@ module.exports = {
         ],
         'Topic guides': [
             'topics/a-b-testing'
-        ]
+        ],
+        'FAQ': [
+            'faq/unleash-proxy'
+        ],
     },
     api: {
         Introduction: [

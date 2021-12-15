@@ -6,7 +6,7 @@ title: Strategy Constraints
 <div class="alert alert--info" role="alert">
   Strategy constraints are part of Unleash Pro and Enterprise.
 </div>
-<BR />
+<br />
 
 Strategy constraints allow you to set preconditions on activation strategies that must be satisfied for the activation strategy to take effect. For example, you might want a strategy to only trigger if a user belongs to a specific group or is in a specific country.
 

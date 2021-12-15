@@ -125,6 +125,7 @@ export class AccessService {
                 permission: p,
             }));
         }
+        console.log('Checking perms for user id', user.id);
         return this.store.getPermissionsForUser(user.id);
     }
 
@@ -171,8 +172,12 @@ export class AccessService {
         return userRoles.filter((r) => r.type === RoleType.ROOT);
     }
 
-    async removeUserFromRole(userId: number, roleId: number): Promise<void> {
-        return this.store.removeUserFromRole(userId, roleId);
+    async removeUserFromRole(
+        userId: number,
+        roleId: number,
+        projectId: string,
+    ): Promise<void> {
+        return this.store.removeUserFromRole(userId, roleId, projectId);
     }
 
     async addPermissionToRole(
@@ -230,11 +235,23 @@ export class AccessService {
         return this.store.getRolesForUserId(userId);
     }
 
-    async getUsersForRole(
+    async unlinkUserRoles(userId: number): Promise<void> {
+        return this.store.unlinkUserRoles(userId);
+    }
+
+    async getUsersForRole(roleId: number): Promise<IUser[]> {
+        const userIdList = await this.store.getUserIdsForRole(roleId);
+        if (userIdList.length > 0) {
+            return this.userStore.getAllWithId(userIdList);
+        }
+        return [];
+    }
+
+    async getProjectUsersForRole(
         roleId: number,
         projectId?: string,
     ): Promise<IUser[]> {
-        const userIdList = await this.store.getUserIdsForRole(
+        const userIdList = await this.store.getProjectUserIdsForRole(
             roleId,
             projectId,
         );
@@ -250,9 +267,13 @@ export class AccessService {
     ): Promise<[IRole[], IUserWithRole[]]> {
         const roles = await this.store.getProjectRoles();
 
+        console.log('GOt the following roles bacl', roles);
         const users = await Promise.all(
             roles.map(async (role) => {
-                const usrs = await this.getUsersForRole(role.id, projectId);
+                const usrs = await this.getProjectUsersForRole(
+                    role.id,
+                    projectId,
+                );
                 return usrs.map((u) => ({ ...u, roleId: role.id }));
             }),
         );
@@ -267,11 +288,8 @@ export class AccessService {
             throw new Error('ProjectId cannot be empty');
         }
 
-        const ownerRole = await this.store.createRole(
-            RoleName.OWNER,
-            RoleType.PROJECT,
-            PROJECT_DESCRIPTION.OWNER,
-        );
+        const ownerRole = await this.store.getRoleByName(RoleName.OWNER);
+
         await this.store.addPermissionsToRole(
             ownerRole.id,
             PROJECT_ADMIN,
@@ -285,12 +303,9 @@ export class AccessService {
             );
             await this.store.addUserToRole(owner.id, ownerRole.id, projectId);
         }
-        const memberRole = await this.store.createRole(
-            RoleName.MEMBER,
-            RoleType.PROJECT,
-            projectId,
-            PROJECT_DESCRIPTION.MEMBER,
-        );
+
+        const memberRole = await this.store.getRoleByName(RoleName.MEMBER);
+
         await this.store.addPermissionsToRole(
             memberRole.id,
             PROJECT_REGULAR,

@@ -25,7 +25,7 @@ import { IFeatureTypeStore } from '../types/stores/feature-type-store';
 import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
 import { IFeatureEnvironmentStore } from '../types/stores/feature-environment-store';
 import { IProjectQuery, IProjectStore } from '../types/stores/project-store';
-import { IRole } from '../types/stores/access-store';
+import { IRoleDescriptor } from '../types/stores/access-store';
 import { IEventStore } from '../types/stores/event-store';
 import FeatureToggleService from './feature-toggle-service';
 import { CREATE_FEATURE, UPDATE_FEATURE } from '../types/permissions';
@@ -38,7 +38,7 @@ const DEFAULT_PROJECT = 'default';
 
 export interface UsersWithRoles {
     users: IUserWithRole[];
-    roles: IRole[];
+    roles: IRoleDescriptor[];
 }
 
 export default class ProjectService {
@@ -271,6 +271,7 @@ export default class ProjectService {
         const [roles, users] = await this.accessService.getProjectRoleUsers(
             projectId,
         );
+        console.log('Got the following response', roles, users);
 
         return {
             roles,
@@ -324,7 +325,7 @@ export default class ProjectService {
             }
         }
 
-        await this.accessService.removeUserFromRole(userId, role.id);
+        await this.accessService.removeUserFromRole(userId, role.id, projectId);
     }
 
     async getMembers(projectId: string): Promise<number> {

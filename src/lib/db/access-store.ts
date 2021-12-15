@@ -20,6 +20,7 @@ const T = {
     ROLES: 'roles',
     ROLE_PERMISSION: 'role_permission',
     PERMISSIONS: 'permissions',
+    PERMISSION_TYPES: 'permission_types',
 };
 
 interface IPermissionRow {
@@ -60,6 +61,10 @@ export class AccessStore implements IAccessStore {
         await this.db.batchInsert(T.PERMISSIONS, rows);
     }
 
+    async getRoleByName(name: string): Promise<IRole> {
+        return this.db(T.ROLES).where({ name }).first();
+    }
+
     async delete(key: number): Promise<void> {
         await this.db(T.ROLES).where({ id: key }).del();
     }
@@ -93,8 +98,20 @@ export class AccessStore implements IAccessStore {
 
     async getAvailablePermissions(): Promise<IAvailablePermissions> {
         const rows = await this.db
-            .select(['id', 'permission', 'environment', 'display_name'])
-            .from(T.PERMISSIONS);
+            .select([
+                'p.id',
+                'p.permission',
+                'p.environment',
+                'pt.display_name',
+            ])
+            .join(
+                `${T.PERMISSION_TYPES} AS pt`,
+                'pt.permission',
+                'p.permission',
+            )
+            .where('pt.type', 'project')
+            .orWhere('pt.type', 'environment')
+            .from(`${T.PERMISSIONS} as p`);
 
         let projectPermissions: IPermission[] = [];
         let rawEnvironments = new Map<string, IPermissionRow[]>();
@@ -174,15 +191,24 @@ export class AccessStore implements IAccessStore {
         return this.db
             .select(['id', 'name', 'type', 'description'])
             .from<IRole>(T.ROLES)
-            .andWhere('type', 'project');
+            .where('type', 'custom')
+            .orWhere('type', 'project');
     }
 
     async getRolesForProject(projectId: string): Promise<IRole[]> {
         return this.db
-            .select(['id', 'name', 'type', 'project', 'description'])
-            .from<IRole>(T.ROLES)
-            .where('project', projectId)
-            .andWhere('type', 'project');
+            .select(['r.id', 'r.name', 'r.type', 'ru.project', 'r.description'])
+            .from<IRole>(`${T.ROLE_USER} as ru`)
+            .innerJoin(`${T.ROLES} as r`, 'ru.role_id', 'r.id')
+            .where('project', projectId);
+    }
+
+    async unlinkUserRoles(userId: number): Promise<void> {
+        return this.db(T.ROLE_USER)
+            .where({
+                user_id: userId,
+            })
+            .delete();
     }
 
     async getRootRoles(): Promise<IRole[]> {
@@ -208,15 +234,25 @@ export class AccessStore implements IAccessStore {
             .where('ru.user_id', '=', userId);
     }
 
-    async getUserIdsForRole(
-        roleId: number,
-        projectId?: string,
-    ): Promise<number[]> {
+    async getUserIdsForRole(roleId: number): Promise<number[]> {
         const rows = await this.db
             .select(['user_id'])
             .from<IRole>(T.ROLE_USER)
-            .where('role_id', roleId)
-            .andWhere('project', projectId);
+            .where('role_id', roleId);
+        return rows.map((r) => r.user_id);
+    }
+
+    async getProjectUserIdsForRole(
+        roleId: number,
+        projectId?: string,
+    ): Promise<number[]> {
+        console.log('Checking for', roleId, projectId);
+        const rows = await this.db
+            .select(['user_id'])
+            .from<IRole>(`${T.ROLE_USER} AS ru`)
+            .join(`${T.ROLES} as r`, 'ru.role_id', 'id')
+            .where('r.id', roleId)
+            .andWhere('ru.project', projectId);
         return rows.map((r) => r.user_id);
     }
 
@@ -232,11 +268,16 @@ export class AccessStore implements IAccessStore {
         });
     }
 
-    async removeUserFromRole(userId: number, roleId: number): Promise<void> {
+    async removeUserFromRole(
+        userId: number,
+        roleId: number,
+        projectId: string,
+    ): Promise<void> {
         return this.db(T.ROLE_USER)
             .where({
                 user_id: userId,
                 role_id: roleId,
+                project: projectId,
             })
             .delete();
     }

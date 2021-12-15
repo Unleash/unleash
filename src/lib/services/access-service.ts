@@ -152,11 +152,31 @@ export class AccessService {
                     userId,
                     RoleType.ROOT,
                 );
-                await this.store.addUserToRole(
-                    userId,
-                    newRootRole.id,
-                    ALL_PROJECTS,
+
+                const editorRole = await this.store.getRoleByName(
+                    RoleName.EDITOR,
                 );
+                if (newRootRole.id === editorRole.id) {
+                    const viewerRole = await this.store.getRoleByName(
+                        RoleName.VIEWER,
+                    );
+                    await this.store.addUserToRole(
+                        userId,
+                        editorRole.id,
+                        'default',
+                    );
+                    await this.store.addUserToRole(
+                        userId,
+                        viewerRole.id,
+                        ALL_PROJECTS,
+                    );
+                } else {
+                    await this.store.addUserToRole(
+                        userId,
+                        newRootRole.id,
+                        ALL_PROJECTS,
+                    );
+                }
             } catch (error) {
                 throw new Error(
                     `Could not add role=${newRootRole.name} to userId=${userId}`,

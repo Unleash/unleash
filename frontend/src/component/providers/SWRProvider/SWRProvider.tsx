@@ -9,6 +9,8 @@ interface ISWRProviderProps {
     isUnauthorized: () => boolean;
 }
 
+const INVALID_TOKEN_ERROR = 'InvalidTokenError';
+
 const SWRProvider: React.FC<ISWRProviderProps> = ({
     children,
     setToastData,
@@ -20,10 +22,15 @@ const SWRProvider: React.FC<ISWRProviderProps> = ({
 
     const handleFetchError = error => {
         setShowLoader(false);
+        console.log(error.info.name);
         if (error.status === 401) {
             cache.clear();
             const path = location.pathname;
-            mutate(USER_CACHE_KEY, { ...error.info }, false);
+            // Only populate user with authDetails if 401 and
+            // error is not invalid token
+            if (error?.info?.name !== INVALID_TOKEN_ERROR) {
+                mutate(USER_CACHE_KEY, { ...error.info }, false);
+            }
             if (path === '/login') {
                 return;
             }

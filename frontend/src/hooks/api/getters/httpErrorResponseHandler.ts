@@ -17,6 +17,7 @@ const handleErrorResponses = (target: string) => async (res: Response) => {
         error.statusText = res.statusText;
         throw error;
     }
+
     return res;
 };
 

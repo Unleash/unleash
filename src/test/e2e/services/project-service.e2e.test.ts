@@ -53,7 +53,12 @@ afterEach(async () => {
         .map(async (env) => {
             await stores.environmentStore.delete(env.name);
         });
+    const users = await stores.userStore.getAll();
+    const wipeUserPermissions = users.map(async (u) => {
+        await stores.accessStore.unlinkUserRoles(u.id);
+    });
     await Promise.allSettled(deleteEnvs);
+    await Promise.allSettled(wipeUserPermissions);
 });
 
 test('should have default project', async () => {
@@ -240,13 +245,10 @@ test('should get list of users with access to project', async () => {
         description: 'Blah',
     };
     await projectService.createProject(project, user);
-    const { roles, users } = await projectService.getUsersWithAccess(
-        project.id,
-        user,
-    );
+    const { users } = await projectService.getUsersWithAccess(project.id, user);
 
-    const owner = roles.find((role) => role.name === RoleName.OWNER);
-    const member = roles.find((role) => role.name === RoleName.MEMBER);
+    const member = await stores.accessStore.getRoleByName(RoleName.MEMBER);
+    const owner = await stores.accessStore.getRoleByName(RoleName.OWNER);
 
     expect(users).toHaveLength(1);
     expect(users[0].id).toBe(user.id);
@@ -272,8 +274,7 @@ test('should add a member user to the project', async () => {
         email: 'member2@getunleash.io',
     });
 
-    const roles = await stores.accessStore.getRolesForProject(project.id);
-    const memberRole = roles.find((r) => r.name === RoleName.MEMBER);
+    const memberRole = await stores.accessStore.getRoleByName(RoleName.MEMBER);
 
     await projectService.addUser(project.id, memberRole.id, projectMember1.id);
     await projectService.addUser(project.id, memberRole.id, projectMember2.id);
@@ -305,10 +306,7 @@ test('should add admin users to the project', async () => {
         email: 'admin2@getunleash.io',
     });
 
-    const projectRoles = await stores.accessStore.getRolesForProject(
-        project.id,
-    );
-    const ownerRole = projectRoles.find((r) => r.name === RoleName.OWNER);
+    const ownerRole = await stores.accessStore.getRoleByName(RoleName.OWNER);
 
     await projectService.addUser(project.id, ownerRole.id, projectAdmin1.id);
     await projectService.addUser(project.id, ownerRole.id, projectAdmin2.id);
@@ -325,8 +323,7 @@ test('should add admin users to the project', async () => {
 });
 
 test('add user only accept to add users to project roles', async () => {
-    const roles = await accessService.getRoles();
-    const memberRole = roles.find((r) => r.name === RoleName.MEMBER);
+    const memberRole = await stores.accessStore.getRoleByName(RoleName.MEMBER);
 
     await expect(async () => {
         await projectService.addUser('some-id', memberRole.id, user.id);
@@ -346,8 +343,7 @@ test('add user should fail if user already have access', async () => {
         email: 'member42@getunleash.io',
     });
 
-    const roles = await stores.accessStore.getRolesForProject(project.id);
-    const memberRole = roles.find((r) => r.name === RoleName.MEMBER);
+    const memberRole = await stores.accessStore.getRoleByName(RoleName.MEMBER);
 
     await projectService.addUser(project.id, memberRole.id, projectMember1.id);
 
@@ -371,8 +367,7 @@ test('should remove user from the project', async () => {
         email: 'member99@getunleash.io',
     });
 
-    const roles = await stores.accessStore.getRolesForProject(project.id);
-    const memberRole = roles.find((r) => r.name === RoleName.MEMBER);
+    const memberRole = await stores.accessStore.getRoleByName(RoleName.MEMBER);
 
     await projectService.addUser(project.id, memberRole.id, projectMember1.id);
     await projectService.removeUser(

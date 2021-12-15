@@ -5,11 +5,16 @@ exports.up = function (db, cb) {
         (   id              SERIAL PRIMARY KEY,
             permission      VARCHAR(255) NOT NULL,
             environment     VARCHAR(255),
-            display_name    TEXT,
             created_at      TIMESTAMP WITH TIME ZONE DEFAULT now()
         );
 
-        INSERT INTO permissions (permission, environment, display_name) (SELECT DISTINCT permission, environment, '' from role_permission);
+        CREATE TABLE IF NOT EXISTS permission_types (
+            permission      VARCHAR(255),
+            display_name    TEXT,
+            type            VARCHAR(255)
+        );
+
+        INSERT INTO permissions (permission, environment) (select distinct permission,environment from role_permission);
 
         ALTER TABLE role_user ADD COLUMN
         project        VARCHAR(255);
@@ -18,6 +23,9 @@ exports.up = function (db, cb) {
             SET project = roles.project
             FROM roles
             WHERE role_user.role_id = roles.id;
+
+        ALTER TABLE role_user DROP CONSTRAINT role_user_pkey;
+        ALTER TABLE role_user ADD PRIMARY KEY (role_id, user_id, project);
 
         ALTER TABLE roles DROP COLUMN project;
 
@@ -29,7 +37,7 @@ exports.up = function (db, cb) {
         ADD COLUMN
             permission_id INTEGER;
 
-            UPDATE role_permission
+        UPDATE role_permission
             SET permission_id = permissions.id
             FROM permissions
             WHERE
@@ -43,29 +51,30 @@ exports.up = function (db, cb) {
         DROP COLUMN permission,
         DROP COLUMN environment;
 
-        UPDATE permissions SET display_name = 'Admin' where permission = 'ADMIN';
-        UPDATE permissions SET display_name = 'Create Strategies' where permission = 'CREATE_STRATEGY';
-        UPDATE permissions SET display_name = 'Create Addons' where permission = 'CREATE_ADDON';
-        UPDATE permissions SET display_name = 'Delete Addons' where permission = 'DELETE_ADDON';
-        UPDATE permissions SET display_name = 'Update Addons' where permission = 'UPDATE_ADDON';
-        UPDATE permissions SET display_name = 'Create Feature Toggles' where permission = 'CREATE_FEATURE';
-        UPDATE permissions SET display_name = 'Update Feature Toggles' where permission = 'UPDATE_FEATURE';
-        UPDATE permissions SET display_name = 'Delete Feature Toggles' where permission = 'DELETE_FEATURE';
-        UPDATE permissions SET display_name = 'Update Applications' where permission = 'UPDATE_APPLICATION';
-        UPDATE permissions SET display_name = 'Update Tag Types' where permission = 'UPDATE_TAG_TYPE';
-        UPDATE permissions SET display_name = 'Delete Tag Types' where permission = 'DELETE_TAG_TYPE';
-        UPDATE permissions SET display_name = 'Create Projects' where permission = 'CREATE_PROJECT';
-        UPDATE permissions SET display_name = 'Update Projects' where permission = 'UPDATE_PROJECT';
-        UPDATE permissions SET display_name = 'Delete Projects' where permission = 'DELETE_PROJECT';
-        UPDATE permissions SET display_name = 'Update Strategies on Toggles' where permission = 'UPDATE_FEATURE_STRATEGY';
-        UPDATE permissions SET display_name = 'Add Strategies to Toggles' where permission = 'CREATE_FEATURE_STRATEGY';
-        UPDATE permissions SET display_name = 'Remove Strategies from Toggles' where permission = 'DELETE_FEATURE_STRATEGY';
-        UPDATE permissions SET display_name = 'Update Strategies' where permission = 'UPDATE_STRATEGY';
-        UPDATE permissions SET display_name = 'Delete Strategies' where permission = 'DELETE_STRATEGY';
-        UPDATE permissions SET display_name = 'Enable/Disable Toggles for Environments' where permission = 'UPDATE_FEATURE_ENVIRONMENT';
-        UPDATE permissions SET display_name = 'Update Context Fields' where permission = 'UPDATE_CONTEXT_FIELD';
-        UPDATE permissions SET display_name = 'Create Context Fields' where permission = 'CREATE_CONTEXT_FIELD';
-        UPDATE permissions SET display_name = 'Delete Context Fields' where permission = 'DELETE_CONTEXT_FIELD';
+        INSERT INTO permission_types (permission, display_name, type) VALUES ('ADMIN', 'Admin', 'root');
+        INSERT INTO permission_types (permission, display_name, type) VALUES ('CLIENT', 'Client', 'root');
+        INSERT INTO permission_types (permission, display_name, type) VALUES ('CREATE_STRATEGY','Create Strategies', 'root');
+        INSERT INTO permission_types (permission, display_name, type) VALUES ('CREATE_ADDON', 'Create Addons', 'root');
+        INSERT INTO permission_types (permission, display_name, type) VALUES ('DELETE_ADDON', 'Delete Addons', 'root');
+        INSERT INTO permission_types (permission, display_name, type) VALUES ('UPDATE_ADDON', 'Update Addons', 'root');
+        INSERT INTO permission_types (permission, display_name, type) VALUES ('CREATE_FEATURE', 'Create Feature Toggles', 'project');
+        INSERT INTO permission_types (permission, display_name, type) VALUES ('UPDATE_FEATURE', 'Update Feature Toggles', 'project');
+        INSERT INTO permission_types (permission, display_name, type) VALUES ('DELETE_FEATURE', 'Delete Feature Toggles', 'project');
+        INSERT INTO permission_types (permission, display_name, type) VALUES ('UPDATE_APPLICATION', 'Update Applications', 'root');
+        INSERT INTO permission_types (permission, display_name, type) VALUES ('UPDATE_TAG_TYPE', 'Update Tag Types', 'root');
+        INSERT INTO permission_types (permission, display_name, type) VALUES ('DELETE_TAG_TYPE', 'Delete Tag Types', 'root');
+        INSERT INTO permission_types (permission, display_name, type) VALUES ('CREATE_PROJECT', 'Create Projects', 'root');
+        INSERT INTO permission_types (permission, display_name, type) VALUES ('UPDATE_PROJECT', 'Update Projects', 'project');
+        INSERT INTO permission_types (permission, display_name, type) VALUES ('DELETE_PROJECT', 'Delete Projects', 'project');
+        INSERT INTO permission_types (permission, display_name, type) VALUES ('UPDATE_FEATURE_STRATEGY', 'Update Strategies on Toggles', 'environment');
+        INSERT INTO permission_types (permission, display_name, type) VALUES ('CREATE_FEATURE_STRATEGY', 'Add Strategies to Toggles', 'environment');
+        INSERT INTO permission_types (permission, display_name, type) VALUES ('DELETE_FEATURE_STRATEGY', 'Remove Strategies from Toggles', 'environment');
+        INSERT INTO permission_types (permission, display_name, type) VALUES ('UPDATE_STRATEGY', 'Update Strategies', 'root');
+        INSERT INTO permission_types (permission, display_name, type) VALUES ('DELETE_STRATEGY', 'Delete Strategies', 'root');
+        INSERT INTO permission_types (permission, display_name, type) VALUES ('UPDATE_FEATURE_ENVIRONMENT', 'Enable/Disable Toggles for Environments', 'environment');
+        INSERT INTO permission_types (permission, display_name, type) VALUES ('UPDATE_CONTEXT_FIELD', 'Update Context Fields', 'root');
+        INSERT INTO permission_types (permission, display_name, type) VALUES ('CREATE_CONTEXT_FIELD', 'Create Context Fields', 'root');
+        INSERT INTO permission_types (permission, display_name, type) VALUES ('DELETE_CONTEXT_FIELD', 'Delete Context Fields', 'root');
         `,
         cb,
     );

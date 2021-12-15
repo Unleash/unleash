@@ -264,12 +264,7 @@ class UserService {
 
     async deleteUser(userId: number, updatedBy?: User): Promise<void> {
         const user = await this.store.get(userId);
-        const roles = await this.accessService.getRolesForUser(userId);
-        await Promise.all(
-            roles.map((role) =>
-                this.accessService.removeUserFromRole(userId, role.id),
-            ),
-        );
+        await this.accessService.unlinkUserRoles(userId);
         await this.sessionService.deleteSessionsForUser(userId);
 
         await this.store.delete(userId);

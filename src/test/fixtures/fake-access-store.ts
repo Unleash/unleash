@@ -9,6 +9,21 @@ import {
 import { IAvailablePermissions, IPermission } from 'lib/types/model';
 
 class AccessStoreMock implements IAccessStore {
+    unlinkUserRoles(userId: number): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+
+    getRoleByName(name: string): Promise<IRole> {
+        throw new Error('Method not implemented.');
+    }
+
+    getProjectUserIdsForRole(
+        roleId: number,
+        projectId?: string,
+    ): Promise<number[]> {
+        throw new Error('Method not implemented.');
+    }
+
     getProjectRoles(): Promise<IRole[]> {
         throw new Error('Method not implemented.');
     }

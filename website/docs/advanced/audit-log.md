@@ -3,7 +3,7 @@ id: audit_log
 title: The audit log
 ---
 
-The audit log lets you track changes in Unleash. It lists _what_ changed _when_ it changed, and _who_ performed the change.
+The audit log lets you track changes in Unleash. It lists _what_ changed, _when_ it changed, and _who_ performed the change.
 
 ## Feature toggle log {#audit-log-per-feature-toggle}
 

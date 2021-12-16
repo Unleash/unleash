@@ -7,6 +7,8 @@ import { Request, Response } from 'express';
 import { Operation } from 'fast-json-patch';
 import { UPDATE_FEATURE } from '../../../types/permissions';
 import { IVariant } from '../../../types/model';
+import { extractUsername } from '../../../util/extract-user';
+import { IAuthRequest } from '../../unleash-types';
 
 const PREFIX = '/:projectId/features/:featureName/variants';
 
@@ -47,13 +49,17 @@ export default class VariantsController extends Controller {
     }
 
     async patchVariants(
-        req: Request<FeatureParams, any, Operation[], any>,
+        req: IAuthRequest<FeatureParams, any, Operation[]>,
         res: Response,
     ): Promise<void> {
-        const { featureName } = req.params;
+        const { projectId, featureName } = req.params;
+        const userName = extractUsername(req);
+
         const updatedFeature = await this.featureService.updateVariants(
             featureName,
+            projectId,
             req.body,
+            userName,
         );
         res.status(200).json({
             version: '1',
@@ -62,13 +68,16 @@ export default class VariantsController extends Controller {
     }
 
     async overwriteVariants(
-        req: Request<FeatureParams, any, IVariant[], any>,
+        req: IAuthRequest<FeatureParams, any, IVariant[], any>,
         res: Response,
     ): Promise<void> {
-        const { featureName } = req.params;
+        const { projectId, featureName } = req.params;
+        const userName = extractUsername(req);
         const updatedFeature = await this.featureService.saveVariants(
             featureName,
+            projectId,
             req.body,
+            userName,
         );
         res.status(200).json({
             version: '1',

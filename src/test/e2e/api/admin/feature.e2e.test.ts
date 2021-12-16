@@ -38,10 +38,14 @@ beforeAll(async () => {
     const createVariants = async (
         featureName: string,
         variants: IVariant[],
+        projectId: string = 'default',
+        username: string = 'test',
     ) => {
         await app.services.featureToggleServiceV2.saveVariants(
             featureName,
+            projectId,
             variants,
+            username,
         );
     };
 

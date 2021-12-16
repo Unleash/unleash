@@ -1,4 +1,4 @@
-import { FeatureToggle, IStrategyConfig, ITag } from './model';
+import { FeatureToggle, IStrategyConfig, ITag, IVariant } from './model';
 
 export const APPLICATION_CREATED = 'application-created';
 
@@ -7,6 +7,7 @@ export const FEATURE_CREATED = 'feature-created';
 export const FEATURE_DELETED = 'feature-deleted';
 export const FEATURE_UPDATED = 'feature-updated';
 export const FEATURE_METADATA_UPDATED = 'feature-metadata-updated';
+export const FEATURE_VARIANTS_UPDATED = 'feature-variants-updated';
 export const FEATURE_PROJECT_CHANGE = 'feature-project-change';
 export const FEATURE_ARCHIVED = 'feature-archived';
 export const FEATURE_REVIVED = 'feature-revived';
@@ -137,6 +138,31 @@ export class FeatureEnvironmentEvent extends BaseEvent {
         this.project = p.project;
         this.featureName = p.featureName;
         this.environment = p.environment;
+    }
+}
+
+export class FeatureVariantEvent extends BaseEvent {
+    readonly project: string;
+
+    readonly featureName: string;
+
+    readonly data: {
+        oldVariants: IVariant[];
+        newVariants: IVariant[];
+    };
+
+    constructor(p: {
+        project: string;
+        featureName: string;
+        createdBy: string;
+        tags: ITag[];
+        oldVariants: IVariant[];
+        newVariants: IVariant[];
+    }) {
+        super(FEATURE_VARIANTS_UPDATED, p.createdBy, p.tags);
+        this.project = p.project;
+        this.featureName = p.featureName;
+        this.data = { oldVariants: p.oldVariants, newVariants: p.newVariants };
     }
 }
 

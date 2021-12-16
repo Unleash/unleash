@@ -18,6 +18,7 @@ export interface IFeatureToggleStore extends Store<FeatureToggle, string> {
     getAll(query?: Partial<IFeatureToggleQuery>): Promise<FeatureToggle[]>;
     getVariants(featureName: string): Promise<IVariant[]>;
     saveVariants(
+        project: string,
         featureName: string,
         newVariants: IVariant[],
     ): Promise<FeatureToggle>;

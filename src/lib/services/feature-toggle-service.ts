@@ -11,6 +11,7 @@ import {
     variantsArraySchema,
 } from '../schema/feature-schema';
 import {
+    FEATURE_UPDATED,
     FeatureArchivedEvent,
     FeatureChangeProjectEvent,
     FeatureCreatedEvent,
@@ -22,7 +23,7 @@ import {
     FeatureStrategyAddEvent,
     FeatureStrategyRemoveEvent,
     FeatureStrategyUpdateEvent,
-    FEATURE_UPDATED,
+    FeatureVariantEvent,
 } from '../types/events';
 import NotFoundError from '../error/notfound-error';
 import {
@@ -36,8 +37,8 @@ import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
 import {
     FeatureToggle,
     FeatureToggleDTO,
-    FeatureToggleWithEnvironment,
     FeatureToggleLegacy,
+    FeatureToggleWithEnvironment,
     IEnvironmentDetail,
     IFeatureEnvironmentInfo,
     IFeatureOverview,
@@ -232,6 +233,7 @@ class FeatureToggleService {
             throw e;
         }
     }
+
     /**
      * PUT /api/admin/projects/:projectId/features/:featureName/strategies/:strategyId ?
      * {
@@ -910,20 +912,43 @@ class FeatureToggleService {
 
     async updateVariants(
         featureName: string,
+        project: string,
         newVariants: Operation[],
+        createdBy: string,
     ): Promise<FeatureToggle> {
         const oldVariants = await this.getVariants(featureName);
         const { newDocument } = await applyPatch(oldVariants, newVariants);
-        return this.saveVariants(featureName, newDocument);
+        return this.saveVariants(featureName, project, newDocument, createdBy);
     }
 
     async saveVariants(
         featureName: string,
+        project: string,
         newVariants: IVariant[],
+        createdBy: string,
     ): Promise<FeatureToggle> {
         await variantsArraySchema.validateAsync(newVariants);
         const fixedVariants = this.fixVariantWeights(newVariants);
-        return this.featureToggleStore.saveVariants(featureName, fixedVariants);
+        const oldVariants = await this.featureToggleStore.getVariants(
+            featureName,
+        );
+        const featureToggle = await this.featureToggleStore.saveVariants(
+            project,
+            featureName,
+            fixedVariants,
+        );
+        const tags = await this.tagStore.getAllTagsForFeature(featureName);
+        await this.eventStore.store(
+            new FeatureVariantEvent({
+                project,
+                featureName,
+                createdBy,
+                tags,
+                oldVariants,
+                newVariants: featureToggle.variants,
+            }),
+        );
+        return featureToggle;
     }
 
     fixVariantWeights(variants: IVariant[]): IVariant[] {

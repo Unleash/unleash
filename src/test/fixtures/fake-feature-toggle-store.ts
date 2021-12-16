@@ -134,6 +134,7 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
     }
 
     async saveVariants(
+        project: string,
         featureName: string,
         newVariants: IVariant[],
     ): Promise<FeatureToggle> {

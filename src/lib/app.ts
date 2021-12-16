@@ -33,12 +33,13 @@ export default function getApp(
     const app = express();
 
     const baseUriPath = config.server.baseUriPath || '';
+    const cdnPrefix = config.server.cdnPrefix;
 
     let indexHTML = fs
         .readFileSync(path.join(publicFolder, 'index.html'))
         .toString();
 
-    indexHTML = rewriteHTML(indexHTML, baseUriPath);
+    indexHTML = rewriteHTML(indexHTML, baseUriPath, cdnPrefix);
 
     app.set('trust proxy', true);
     app.disable('x-powered-by');

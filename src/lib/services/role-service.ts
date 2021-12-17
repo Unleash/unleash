@@ -14,6 +14,12 @@ interface IRoleCreation {
     permissions?: IPermission[];
 }
 
+interface IRoleUpdate {
+    id: number;
+    name: string;
+    description: string;
+    permissions?: IPermission[];
+}
 export default class RoleService {
     private logger: Logger;
 
@@ -57,6 +63,25 @@ export default class RoleService {
         const permissions = role.permissions;
         const newRole = await this.store.create(baseRole);
         if (permissions) {
+            this.accessStore.addEnvironmentPermissionsToRole(
+                newRole.id,
+                permissions,
+            );
+        }
+        return newRole;
+    }
+
+    async update(role: IRoleUpdate): Promise<ICustomRole> {
+        const baseRole = {
+            id: role.id,
+            name: role.name,
+            description: role.description,
+            roleType: 'custom',
+        };
+        const permissions = role.permissions;
+        const newRole = await this.store.update(baseRole);
+        if (permissions) {
+            this.accessStore.wipePermissionsFromRole(newRole.id);
             this.accessStore.addEnvironmentPermissionsToRole(
                 newRole.id,
                 permissions,

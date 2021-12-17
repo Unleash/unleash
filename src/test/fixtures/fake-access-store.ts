@@ -9,6 +9,10 @@ import {
 import { IAvailablePermissions, IPermission } from 'lib/types/model';
 
 class AccessStoreMock implements IAccessStore {
+    wipePermissionsFromRole(role_id: number): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+
     unlinkUserRoles(userId: number): Promise<void> {
         throw new Error('Method not implemented.');
     }

@@ -1,5 +1,9 @@
 import { ICustomRole } from 'lib/types/model';
-import { ICustomRoleInsert, IRoleStore } from 'lib/types/stores/role-store';
+import {
+    ICustomRoleInsert,
+    ICustomRoleUpdate,
+    IRoleStore,
+} from 'lib/types/stores/role-store';
 import {
     IUserFeedback,
     IUserFeedbackKey,
@@ -7,6 +11,10 @@ import {
 } from '../../lib/types/stores/user-feedback-store';
 
 export default class FakeRoleStore implements IRoleStore {
+    async update(role: ICustomRoleUpdate): Promise<ICustomRole> {
+        throw new Error('Method not implemented.');
+    }
+
     async get(key: number): Promise<ICustomRole> {
         return Promise.resolve({
             id: 1,

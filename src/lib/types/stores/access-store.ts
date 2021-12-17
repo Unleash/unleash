@@ -42,6 +42,7 @@ export interface IAccessStore extends Store<IRole, number> {
     getRolesForUserId(userId: number): Promise<IRole[]>;
     getProjectUserIdsForRole(roleId: number, projectId?: string);
     getUserIdsForRole(roleId: number, projectId?: string): Promise<number[]>;
+    wipePermissionsFromRole(role_id: number): Promise<void>;
     addEnvironmentPermissionsToRole(
         role_id: number,
         permissions: IPermission[],

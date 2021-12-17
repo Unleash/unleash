@@ -379,15 +379,20 @@ export class AccessStore implements IAccessStore {
             [environment, permission],
         );
 
-        console.log('Gett results for ', environment, permission);
-        console.log('My result is', result);
-
         const permissionId = result.first();
 
         return this.db(T.ROLE_PERMISSION)
             .where({
                 role_id,
                 permissionId,
+            })
+            .delete();
+    }
+
+    async wipePermissionsFromRole(role_id: number): Promise<void> {
+        return this.db(T.ROLE_PERMISSION)
+            .where({
+                role_id,
             })
             .delete();
     }

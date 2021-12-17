@@ -3,7 +3,10 @@ import { Knex } from 'knex';
 import { Logger, LogProvider } from '../logger';
 import NotFoundError from '../error/notfound-error';
 import { ICustomRole } from 'lib/types/model';
-import { ICustomRoleInsert } from 'lib/types/stores/role-store';
+import {
+    ICustomRoleInsert,
+    ICustomRoleUpdate,
+} from 'lib/types/stores/role-store';
 
 const TABLE = 'roles';
 const COLUMNS = ['id', 'name', 'description', 'type'];
@@ -57,6 +60,20 @@ export default class RoleStore {
         return this.mapRow(rows[0]);
     }
 
+    async update(role: ICustomRoleUpdate): Promise<ICustomRole> {
+        const rows = await this.db(TABLE)
+            .where({
+                id: role.id,
+            })
+            .update({
+                id: role.id,
+                name: role.name,
+                description: role.description,
+            })
+            .returning('*');
+        return this.mapRow(rows[0]);
+    }
+
     async exists(id: number): Promise<boolean> {
         const result = await this.db.raw(
             `SELECT EXISTS (SELECT 1 FROM ${TABLE} WHERE id = ?) AS present`,
@@ -72,7 +89,7 @@ export default class RoleStore {
 
     mapRow(row: IRoleRow): ICustomRole {
         if (!row) {
-            throw new NotFoundError('No project found');
+            throw new NotFoundError('No row');
         }
 
         return {

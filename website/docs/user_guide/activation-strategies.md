@@ -47,11 +47,14 @@ This strategy has the following modelling name in the code:
 
 - **flexibleRollout**
 
-### Customize stickiness (beta) {#customize-stickiness-beta}
+### Custom stickiness (beta) {#custom-stickiness}
 
-By enabling the stickiness option on a custom context field you can use it together with the gradual rollout strategy. This will guarantee a consistent behavior for specific values of this context field. NB! this feature is currently only supported by the following SDKs:
+:::note
+This feature is currently in beta and is not yet supported by all our SDKs. Check out the [SDK compatibility table](../sdks/index.md#server-side-sdk-compatibility-table) to see what SDKs support it at the moment.
+:::
 
-- [unleash-client-node](https://github.com/Unleash/unleash-client-node) (from v3.6.0)
+By enabling the stickiness option on a custom context field you can use the custom context field to group users with the gradual rollout strategy. This will guarantee a consistent behavior for specific values of this context field.
+
 
 ## IPs {#ips}
 

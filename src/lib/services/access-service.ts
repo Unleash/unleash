@@ -198,14 +198,18 @@ export class AccessService {
     async addPermissionToRole(
         roleId: number,
         permission: string,
-        projectId?: string,
+        environment?: string,
     ): Promise<void> {
-        if (isProjectPermission(permission) && !projectId) {
+        if (isProjectPermission(permission) && !environment) {
             throw new Error(
                 `ProjectId cannot be empty for permission=${permission}`,
             );
         }
-        return this.store.addPermissionsToRole(roleId, [permission], projectId);
+        return this.store.addPermissionsToRole(
+            roleId,
+            [permission],
+            environment,
+        );
     }
 
     async removePermissionFromRole(

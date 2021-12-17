@@ -6,13 +6,13 @@ import { ICustomRole } from 'lib/types/model';
 import { ICustomRoleInsert } from 'lib/types/stores/role-store';
 
 const TABLE = 'roles';
-const COLUMNS = ['id', 'name', 'description', 'created_at'];
+const COLUMNS = ['id', 'name', 'description', 'type'];
 
 interface IRoleRow {
     id: number;
     name: string;
     description: string;
-    created_at: Date;
+    type: string;
 }
 
 export default class RoleStore {
@@ -79,7 +79,7 @@ export default class RoleStore {
             id: row.id,
             name: row.name,
             description: row.description,
-            createdAt: row.created_at,
+            type: row.type,
         };
     }
 

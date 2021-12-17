@@ -13,6 +13,7 @@ import {
     FEATURE_METADATA_UPDATED,
     FEATURE_PROJECT_CHANGE,
     IEvent,
+    FEATURE_VARIANTS_UPDATED,
 } from '../types/events';
 
 export interface FeatureEventFormatter {
@@ -108,6 +109,8 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
                 return 'created';
             case FEATURE_UPDATED:
                 return 'updated';
+            case FEATURE_VARIANTS_UPDATED:
+                return 'updated variants for';
             default:
                 return type;
         }

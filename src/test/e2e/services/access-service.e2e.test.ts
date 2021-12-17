@@ -4,6 +4,7 @@ import getLogger from '../../fixtures/no-logger';
 // eslint-disable-next-line import/no-unresolved
 import {
     AccessService,
+    ALL_ENVS,
     ALL_PROJECTS,
 } from '../../../lib/services/access-service';
 
@@ -177,13 +178,13 @@ test('should remove CREATE_FEATURE on all projects', async () => {
     await accessService.addPermissionToRole(
         editorRole.id,
         permissions.CREATE_FEATURE,
-        ALL_PROJECTS,
+        ALL_ENVS,
     );
 
     await accessService.removePermissionFromRole(
         editorRole.id,
         permissions.CREATE_FEATURE,
-        ALL_PROJECTS,
+        ALL_ENVS,
     );
 
     expect(

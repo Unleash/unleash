@@ -1,7 +1,10 @@
 import { IUnleashConfig } from 'lib/server-impl';
 import { IUnleashStores } from 'lib/types';
 import { ICustomRole, IPermission } from 'lib/types/model';
-import { IAccessStore } from 'lib/types/stores/access-store';
+import {
+    IAccessStore,
+    IRoleWithPermissions,
+} from 'lib/types/stores/access-store';
 import { IRoleStore } from 'lib/types/stores/role-store';
 import { Logger } from '../logger';
 
@@ -34,8 +37,15 @@ export default class RoleService {
         return this.store.getAll();
     }
 
-    async get(id: number): Promise<ICustomRole> {
-        return this.store.get(id);
+    async get(id: number): Promise<IRoleWithPermissions> {
+        const role = await this.store.get(id);
+        const permissions = await this.accessStore.getPermissionsForRole(
+            role.id,
+        );
+        return {
+            ...role,
+            permissions,
+        };
     }
 
     async create(role: IRoleCreation): Promise<ICustomRole> {

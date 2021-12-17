@@ -12,7 +12,7 @@ export default class FakeRoleStore implements IRoleStore {
             id: 1,
             name: 'Role',
             description: 'Hello',
-            createdAt: new Date(),
+            type: 'custom',
         });
     }
 
@@ -22,7 +22,7 @@ export default class FakeRoleStore implements IRoleStore {
                 id: 1,
                 name: 'Role',
                 description: 'Hello',
-                createdAt: new Date(),
+                type: 'custom',
             },
         ]);
     }
@@ -36,7 +36,7 @@ export default class FakeRoleStore implements IRoleStore {
             id: 1,
             name: 'Role',
             description: 'Hello',
-            createdAt: new Date(),
+            type: 'custom',
         });
     }
 

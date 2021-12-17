@@ -1,6 +1,6 @@
 import { ITagType } from './stores/tag-type-store';
 import { LogProvider } from '../logger';
-import { IRole, IUserPermission } from './stores/access-store';
+import { IRole } from './stores/access-store';
 import { IUser } from './user';
 
 export interface IConstraint {
@@ -212,7 +212,7 @@ export interface IUserWithRole {
 export interface IRoleData {
     role: IRole;
     users: IUser[];
-    permissions: IUserPermission[];
+    permissions: IPermission[];
 }
 
 export interface IAvailablePermissions {
@@ -224,6 +224,7 @@ export interface IPermission {
     id: number;
     name: string;
     displayName: string;
+    environment?: string;
 }
 
 export interface IEnvironmentPermission {
@@ -328,7 +329,7 @@ export interface ICustomRole {
     id: number;
     name: string;
     description: string;
-    createdAt: Date;
+    type: string;
 }
 
 export interface IProjectWithCount extends IProject {

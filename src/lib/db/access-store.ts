@@ -163,14 +163,27 @@ export class AccessStore implements IAccessStore {
         return rows;
     }
 
-    async getPermissionsForRole(roleId: number): Promise<IUserPermission[]> {
+    async getPermissionsForRole(roleId: number): Promise<IPermission[]> {
         const stopTimer = this.timer('getPermissionsForRole');
         const rows = await this.db
-            .select('project', 'permission', 'environment')
-            .from<IUserPermission>(`${T.ROLE_PERMISSION}`)
-            .where('role_id', '=', roleId);
+            .select('p.id', 'p.permission', 'p.environment', 'pt.display_name')
+            .from<IPermission>(`${T.ROLE_PERMISSION} as rp`)
+            .join(`${T.PERMISSIONS} as p`, 'p.id', 'rp.permission_id')
+            .join(
+                `${T.PERMISSION_TYPES} as pt`,
+                'pt.permission',
+                'p.permission',
+            )
+            .where('rp.role_id', '=', roleId);
         stopTimer();
-        return rows;
+        return rows.map((permission) => {
+            return {
+                id: permission.id,
+                name: permission.permission,
+                environment: permission.environment,
+                displayName: permission.display_name,
+            };
+        });
     }
 
     async getRoles(): Promise<IRole[]> {
@@ -338,6 +351,13 @@ export class AccessStore implements IAccessStore {
             `SELECT id FROM ${T.PERMISSIONS} where environment = ? and permission = ANY(?)`,
             [environment, permissions],
         );
+
+        console.log(
+            'Adding permissions to table',
+            role_id,
+            permissions,
+            environment,
+        );
         const ids = result.rows.map((x) => x.id);
 
         const rows = ids.map((permission_id) => ({
@@ -345,19 +365,29 @@ export class AccessStore implements IAccessStore {
             permission_id,
         }));
 
+        console.log('Final inssert', rows);
         return this.db.batchInsert(T.ROLE_PERMISSION, rows);
     }
 
     async removePermissionFromRole(
-        roleId: number,
+        role_id: number,
         permission: string,
-        projectId?: string,
+        environment?: string,
     ): Promise<void> {
+        const result = await this.db.raw(
+            `SELECT id FROM ${T.PERMISSIONS} where environment = ? and permission = ?`,
+            [environment, permission],
+        );
+
+        console.log('Gett results for ', environment, permission);
+        console.log('My result is', result);
+
+        const permissionId = result.first();
+
         return this.db(T.ROLE_PERMISSION)
             .where({
-                role_id: roleId,
-                permission,
-                project: projectId,
+                role_id,
+                permissionId,
             })
             .delete();
     }

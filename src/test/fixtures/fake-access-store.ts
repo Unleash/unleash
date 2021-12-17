@@ -54,7 +54,7 @@ class AccessStoreMock implements IAccessStore {
         return Promise.resolve([]);
     }
 
-    getPermissionsForRole(roleId: number): Promise<IUserPermission[]> {
+    getPermissionsForRole(roleId: number): Promise<IPermission[]> {
         throw new Error('Method not implemented.');
     }
 

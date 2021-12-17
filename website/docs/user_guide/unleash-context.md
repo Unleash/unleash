@@ -61,4 +61,6 @@ If a context field has a defined set of legal values, the Unleash Admin UI will 
 
 Using a custom context field called _region_ as an example: if you define the field's legal values as _Africa_, _Asia_, _Europe_, and _North America_, then you would only be allowed to use one or more of those four values when using the custom context field as a [strategy constraint](../advanced/strategy-constraints.md).
 
+### Custom stickiness
+
 [^1]: If you're on Unleash 4.3 or higher, you'll probably want to use [the environments feature](../user_guide/environments.md) instead of relying on the `environment` context field when working with environments.

@@ -85,9 +85,6 @@ export class AccessService {
 
         try {
             const userP = await this.getPermissionsForUser(user);
-            console.log('My checks are', permission, projectId, environment);
-            console.log('My permissions for user are', userP);
-
             return userP
                 .filter(
                     (p) =>
@@ -120,7 +117,6 @@ export class AccessService {
                 permission: p,
             }));
         }
-        console.log('Checking perms for user id', user.id);
         return this.store.getPermissionsForUser(user.id);
     }
 
@@ -134,6 +130,10 @@ export class AccessService {
         projectId: string,
     ): Promise<void> {
         return this.store.addUserToRole(userId, roleId, projectId);
+    }
+
+    async getRoleByName(roleName: string): Promise<IRole> {
+        return this.store.getRoleByName(roleName);
     }
 
     async setUserRootRole(

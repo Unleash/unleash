@@ -271,7 +271,6 @@ export default class ProjectService {
         const [roles, users] = await this.accessService.getProjectRoleUsers(
             projectId,
         );
-        console.log('Got the following response', roles, users);
 
         return {
             roles,

@@ -12,7 +12,7 @@ process.nextTick(async () => {
                     password: 'passord',
                     host: 'localhost',
                     port: 5432,
-                    database: 'unleash3',
+                    database: 'unleash',
                     ssl: false,
                 },
                 server: {

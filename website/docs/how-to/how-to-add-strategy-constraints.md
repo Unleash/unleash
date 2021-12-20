@@ -1,5 +1,5 @@
 ---
-title: How to add strategy constraints to a feature toggle
+title: How to add strategy constraints
 ---
 
 :::info Availability

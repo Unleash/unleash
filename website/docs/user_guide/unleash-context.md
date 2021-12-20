@@ -57,7 +57,7 @@ See ["how to define custom context fields"](../how-to/how-to-define-custom-conte
 ### Legal values
 
 By using the **legal values** option when creating a context field, you can create a set of valid options for a context field's values.
-If a context field has a defined set of legal values, the Unleash Admin UI will only allow users to enter one or more of the specified values.If a context field _doesn't_ have any defined legal values, the user can enter whatever they want.
+If a context field has a defined set of legal values, the Unleash Admin UI will only allow users to enter one or more of the specified values. If a context field _doesn't_ have any defined legal values, the user can enter whatever they want.
 
 Using a custom context field called _region_ as an example: if you define the field's legal values as _Africa_, _Asia_, _Europe_, and _North America_, then you would only be allowed to use one or more of those four values when using the custom context field as a [strategy constraint](../advanced/strategy-constraints.md).
 
@@ -66,6 +66,8 @@ Using a custom context field called _region_ as an example: if you define the fi
 :::note
 This feature is currently in beta and is not yet supported by all our SDKs. Check out the [SDK compatibility table](../sdks/index.md#server-side-sdk-compatibility-table) to see what SDKs support it at the moment.
 :::
+
+Any context field _can_ be used to [calculate custom stickiness](../advanced/stickiness.md#custom-stickiness). However, you need to explicitly tell Unleash that you want a field to be used for custom stickiness for it to be possible. You can enable this functionality either when you create the context field or at any later point. For steps on how to do this, see [the _How to define custom context fields_ guide](../how-to/how-to-define-custom-context-fields).
 
 
 

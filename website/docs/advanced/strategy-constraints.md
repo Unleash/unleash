@@ -36,12 +36,11 @@ If, on the other hand, you would like to ensure the strategy is never evaluated 
 This section gives a brief overview over to use the client SDKs to interact with strategy constraints. The exact steps will vary depending on which client you are using, so make sure to consult the documentation for your specific client SDK.
 :::
 
-For the [Unleash client SDKs](../sdks/index.md) to use a strategy constraint during strategy evaluation, they must also receive the current Unleash context.
+Strategy constraints require [the Unleash Context](../user_guide/unleash_context) to work. All official [Unleash client SDKs](../sdks/index.md) support the option to pass [dynamic context values](../user_guide/unleash_context#structure "Unleash Context, section: structure") to the `isEnabled` function (or the SDKs equivalent).
 
+If the strategy constraint uses a [**standard Unleash Context field**](../user_guide/unleash_context#structure), set the context field to the value you wish to give it.
 
-In the
-
-Refer to the individual SDK's docs for exact examples, but the gist of it is that the context field must be filled out, either as a constant or as a custom field (`properties`), and that you must pass the unleash context to the evaluation.
+If the strategy constraint uses a [**custom context field**](../user_guide/unleash_context#custom-context-fields), use the Unleash Context's `properties` field. Use the name of the custom context field as a key and set the value to your desired string.
 
 ## Prerequisites
 

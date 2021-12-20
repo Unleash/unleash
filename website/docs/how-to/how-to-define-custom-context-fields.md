@@ -3,7 +3,7 @@ title: How to define custom context fields
 ---
 
 :::info Availability
-Custom context fields are an Enterprise-only feature and were introduced in Unleash 3.2.28.
+Custom context fields are available to Pro and Enterprise users. They were introduced in Unleash 3.2.28.
 :::
 
 This guide shows you how to create [custom context field for the Unleash Context](../user_guide/unleash-context.md#custom-context-fields). You can use custom context fields for [strategy constraints](../advanced/strategy-constraints.md) and for [custom stickiness calculations](../advanced/stickiness.md#custom-stickiness). If there are [standard Unleash Context fields](../user_guide/unleash-context.md#structure) missing from the context fields page, you can use the same steps to add them too.

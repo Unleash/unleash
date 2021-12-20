@@ -43,7 +43,7 @@ As an example: You've created a custom field called `groupId`. You know group ID
 ## Custom context fields
 
 :::info Availability
-Custom context fields are an Enterprise-only feature.
+Custom context fields are available to Pro and Enterprise users.
 :::
 
 Custom context fields allow you to extend the Unleash Context with more data that is applicable to your situation. Each context field definition consists of a name and an optional description. Additionally, you can choose to define a set of [_legal values_](#legal-values "legal values for custom context fields"), and you can choose whether or not the context field can be used in [custom stickiness calculations](../advanced/stickiness.md#custom-stickiness) for the [gradual rollout strategy](activation-strategies.md#customize-stickiness-beta) and for [feature toggle variants](../advanced/feature-toggle-variants.md).

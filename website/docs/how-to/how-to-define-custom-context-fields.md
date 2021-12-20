@@ -2,40 +2,32 @@
 title: How to define custom context fields
 ---
 
+:::info Availability
+Custom context fields are an Enterprise-only feature and were introduced in Unleash 3.2.28.
+:::
 
-## Constrain on custom context fields {#constrain-on-custom-context-fields}
+This guide shows you how to create [custom context field for the Unleash Context](../user_guide/unleash-context.md#custom-context-fields). You can use custom context fields for [strategy constraints](../advanced/strategy-constraints.md) and for [custom stickiness calculations](../advanced/stickiness.md#custom-stickiness).
 
-It is also possible to constrain an activation strategy configuration on custom context fields. A common use case is a multi-tenant service where you want to control roll-out on a tenant identifier. This allows you to decide which customer should get access to your new feature.
+## Step 1: Navigate to the context field creation form {#step-1-navigate-to-context-fields}
 
-![Custom constraints](/img/custom-constraints.png)
+In the Unleash Admin UI, navigate to the _context fields_  page:
+1. Click the "Configure" button in the top menu to open the configuration dropdown menu.
+2. Click the "Context fields" menu item.
 
-## Define your own custom fields {#define-your-own-custom-fields}
+    ![A visual representation of the tutorial steps described in the preceding paragraph, showing the interaction points in the admin UI in order.](/img/context-fields.png)
 
-> Starting with Unleash-enterprise version 3.2.28 customers can define their custom context fields via the user interface.
+3. On the context fields page, click the "add new context field" button.
 
-You can also define your own custom context fields that you can use together with strategy constraints. We have seen customers use multiple variants of custom context fields to control their feature roll-out:
+    ![The ]( /img/context-field-create-button.png)
 
-- region
-- country
-- customerType
-- tenantId
+## Step 2: Define the new context field {#step-2-define-new-context-field}
 
-Combining strategy constraints with the “flexibleRollout” allows you to do a gradual roll-out to a specific segment of your user base.
+Define the custom context field by filling out the form. You must at least the field a unique _name_. Everything else is optional. Refer to the [custom context field reference guide](../user_guide/unleash-context.md#custom-context-fields) for a full overview of the parameters and their functions and requirements.
 
-#### Step 1: Navigate to “Context Fields“ {#step-1-navigate-to-context-fields}
-
-Locate “context fields in the menu
-
-![Context fields](/img/context-fields.png)
-
-#### Step 2: Define new context field {#step-2-define-new-context-field}
-
-Next you can define your new context field. The minimum requirement is to give it a unique _name_. In addition, you can give it a description and define the legal values.
+When you are satisfied with the context field's values, use the "Create" button to submit the form and save the context field.
 
 ![New context fields](/img/new_context_field.png)
 
 #### What is “legal values”? {#what-is-legal-values}
 
 Legal values defines all possible values for the context field. this will be used in Unleash Admin UI to guide users when working with context fields to make sure they only use legal values.
-
-![New context fields](/img/constraints_legal_values.png)

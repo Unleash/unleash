@@ -7,7 +7,6 @@ import {
     IAccessStore,
     IRole,
     IUserPermission,
-    IUserRole,
 } from '../types/stores/access-store';
 import {
     IAvailablePermissions,
@@ -59,10 +58,6 @@ export class AccessStore implements IAccessStore {
             };
         });
         await this.db.batchInsert(T.PERMISSIONS, rows);
-    }
-
-    async getRoleByName(name: string): Promise<IRole> {
-        return this.db(T.ROLES).where({ name }).first();
     }
 
     async delete(key: number): Promise<void> {
@@ -186,34 +181,17 @@ export class AccessStore implements IAccessStore {
         });
     }
 
-    async getRoles(): Promise<IRole[]> {
-        return this.db
-            .select(['id', 'name', 'type', 'description'])
-            .from<IRole>(T.ROLES);
-    }
-
-    async getRoleWithId(id: number): Promise<IRole> {
-        return this.db
-            .select(['id', 'name', 'type', 'description'])
-            .where('id', id)
-            .first()
-            .from<IRole>(T.ROLES);
-    }
-
-    async getProjectRoles(): Promise<IRole[]> {
-        return this.db
-            .select(['id', 'name', 'type', 'description'])
-            .from<IRole>(T.ROLES)
-            .where('type', 'custom')
-            .orWhere('type', 'project');
-    }
-
-    async getRolesForProject(projectId: string): Promise<IRole[]> {
-        return this.db
-            .select(['r.id', 'r.name', 'r.type', 'ru.project', 'r.description'])
-            .from<IRole>(`${T.ROLE_USER} as ru`)
-            .innerJoin(`${T.ROLES} as r`, 'ru.role_id', 'r.id')
-            .where('project', projectId);
+    async addEnvironmentPermissionsToRole(
+        role_id: number,
+        permissions: IPermission[],
+    ): Promise<void> {
+        const rows = permissions.map((x) => {
+            return {
+                role_id,
+                permission_id: x.id,
+            };
+        });
+        this.db.batchInsert(T.ROLE_PERMISSION, rows);
     }
 
     async unlinkUserRoles(userId: number): Promise<void> {
@@ -224,19 +202,17 @@ export class AccessStore implements IAccessStore {
             .delete();
     }
 
-    async getRootRoles(): Promise<IRole[]> {
-        return this.db
-            .select(['id', 'name', 'type', 'description'])
-            .from<IRole>(T.ROLES)
-            .andWhere('type', 'root');
-    }
-
-    async removeRolesForProject(projectId: string): Promise<void> {
-        return this.db(T.ROLE_USER)
-            .where({
-                project: projectId,
-            })
-            .delete();
+    async getProjectUserIdsForRole(
+        roleId: number,
+        projectId?: string,
+    ): Promise<number[]> {
+        const rows = await this.db
+            .select(['user_id'])
+            .from<IRole>(`${T.ROLE_USER} AS ru`)
+            .join(`${T.ROLES} as r`, 'ru.role_id', 'id')
+            .where('r.id', roleId)
+            .andWhere('ru.project', projectId);
+        return rows.map((r) => r.user_id);
     }
 
     async getRolesForUserId(userId: number): Promise<IRole[]> {
@@ -252,19 +228,6 @@ export class AccessStore implements IAccessStore {
             .select(['user_id'])
             .from<IRole>(T.ROLE_USER)
             .where('role_id', roleId);
-        return rows.map((r) => r.user_id);
-    }
-
-    async getProjectUserIdsForRole(
-        roleId: number,
-        projectId?: string,
-    ): Promise<number[]> {
-        const rows = await this.db
-            .select(['user_id'])
-            .from<IRole>(`${T.ROLE_USER} AS ru`)
-            .join(`${T.ROLES} as r`, 'ru.role_id', 'id')
-            .where('r.id', roleId)
-            .andWhere('ru.project', projectId);
         return rows.map((r) => r.user_id);
     }
 
@@ -306,39 +269,6 @@ export class AccessStore implements IAccessStore {
             .where({ user_id: userId })
             .whereIn('role_id', rolesToRemove)
             .delete();
-    }
-
-    async createRole(
-        name: string,
-        type: string,
-        description?: string,
-    ): Promise<IRole> {
-        const [id] = await this.db(T.ROLES)
-            .insert({
-                name,
-                description,
-                type,
-            })
-            .returning('id');
-        return {
-            id,
-            name,
-            description,
-            type,
-        };
-    }
-
-    async addEnvironmentPermissionsToRole(
-        role_id: number,
-        permissions: IPermission[],
-    ): Promise<void> {
-        const rows = permissions.map((x) => {
-            return {
-                role_id,
-                permission_id: x.id,
-            };
-        });
-        this.db.batchInsert(T.ROLE_PERMISSION, rows);
     }
 
     async addPermissionsToRole(
@@ -387,19 +317,5 @@ export class AccessStore implements IAccessStore {
                 role_id,
             })
             .delete();
-    }
-
-    async getRootRoleForAllUsers(): Promise<IUserRole[]> {
-        const rows = await this.db
-            .select('id', 'user_id')
-            .distinctOn('user_id')
-            .from(`${T.ROLES} AS r`)
-            .leftJoin(`${T.ROLE_USER} AS ru`, 'r.id', 'ru.role_id')
-            .where('r.type', '=', 'root');
-
-        return rows.map((row) => ({
-            roleId: +row.id,
-            userId: +row.user_id,
-        }));
     }
 }

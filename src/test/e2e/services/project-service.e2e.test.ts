@@ -3,12 +3,7 @@ import getLogger from '../../fixtures/no-logger';
 import FeatureToggleService from '../../../lib/services/feature-toggle-service';
 import ProjectService from '../../../lib/services/project-service';
 import { AccessService } from '../../../lib/services/access-service';
-import {
-    CREATE_FEATURE,
-    UPDATE_FEATURE,
-    UPDATE_PROJECT,
-} from '../../../lib/types/permissions';
-import NotFoundError from '../../../lib/error/notfound-error';
+import { CREATE_FEATURE, UPDATE_FEATURE } from '../../../lib/types/permissions';
 import { createTestConfig } from '../../config/test-config';
 import { RoleName } from '../../../lib/types/model';
 
@@ -216,8 +211,8 @@ test('should get list of users with access to project', async () => {
     await projectService.createProject(project, user);
     const { users } = await projectService.getUsersWithAccess(project.id, user);
 
-    const member = await stores.accessStore.getRoleByName(RoleName.MEMBER);
-    const owner = await stores.accessStore.getRoleByName(RoleName.OWNER);
+    const member = await stores.roleStore.getRoleByName(RoleName.MEMBER);
+    const owner = await stores.roleStore.getRoleByName(RoleName.OWNER);
 
     expect(users).toHaveLength(1);
     expect(users[0].id).toBe(user.id);
@@ -243,7 +238,7 @@ test('should add a member user to the project', async () => {
         email: 'member2@getunleash.io',
     });
 
-    const memberRole = await stores.accessStore.getRoleByName(RoleName.MEMBER);
+    const memberRole = await stores.roleStore.getRoleByName(RoleName.MEMBER);
 
     await projectService.addUser(project.id, memberRole.id, projectMember1.id);
     await projectService.addUser(project.id, memberRole.id, projectMember2.id);
@@ -275,7 +270,7 @@ test('should add admin users to the project', async () => {
         email: 'admin2@getunleash.io',
     });
 
-    const ownerRole = await stores.accessStore.getRoleByName(RoleName.OWNER);
+    const ownerRole = await stores.roleStore.getRoleByName(RoleName.OWNER);
 
     await projectService.addUser(project.id, ownerRole.id, projectAdmin1.id);
     await projectService.addUser(project.id, ownerRole.id, projectAdmin2.id);
@@ -304,7 +299,7 @@ test('add user should fail if user already have access', async () => {
         email: 'member42@getunleash.io',
     });
 
-    const memberRole = await stores.accessStore.getRoleByName(RoleName.MEMBER);
+    const memberRole = await stores.roleStore.getRoleByName(RoleName.MEMBER);
 
     await projectService.addUser(project.id, memberRole.id, projectMember1.id);
 
@@ -328,7 +323,7 @@ test('should remove user from the project', async () => {
         email: 'member99@getunleash.io',
     });
 
-    const memberRole = await stores.accessStore.getRoleByName(RoleName.MEMBER);
+    const memberRole = await stores.roleStore.getRoleByName(RoleName.MEMBER);
 
     await projectService.addUser(project.id, memberRole.id, projectMember1.id);
     await projectService.removeUser(
@@ -351,7 +346,7 @@ test('should not remove user from the project', async () => {
     };
     await projectService.createProject(project, user);
 
-    const roles = await stores.accessStore.getRolesForProject(project.id);
+    const roles = await stores.roleStore.getRolesForProject(project.id);
     const ownerRole = roles.find((r) => r.name === RoleName.OWNER);
 
     await expect(async () => {

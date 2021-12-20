@@ -3,6 +3,7 @@ import User, { IUser } from '../types/user';
 import {
     IAccessStore,
     IRole,
+    IRoleWithPermissions,
     IUserPermission,
     IUserRole,
 } from '../types/stores/access-store';
@@ -11,12 +12,14 @@ import { Logger } from '../logger';
 import { IUnleashStores } from '../types/stores';
 import {
     IAvailablePermissions,
+    ICustomRole,
     IPermission,
     IRoleData,
     IUserWithRole,
     RoleName,
     RoleType,
 } from '../types/model';
+import { IRoleStore } from 'lib/types/stores/role-store';
 
 export const ALL_PROJECTS = '*';
 export const ALL_ENVS = '*';
@@ -37,6 +40,19 @@ const PROJECT_REGULAR = [
     permissions.DELETE_FEATURE,
 ];
 
+interface IRoleCreation {
+    name: string;
+    description: string;
+    permissions?: IPermission[];
+}
+
+interface IRoleUpdate {
+    id: number;
+    name: string;
+    description: string;
+    permissions?: IPermission[];
+}
+
 const isProjectPermission = (permission) => PROJECT_ADMIN.includes(permission);
 
 export class AccessService {
@@ -44,26 +60,22 @@ export class AccessService {
 
     private userStore: IUserStore;
 
-    private logger: Logger;
+    private roleStore: IRoleStore;
 
-    private permissions: IPermission[];
+    private logger: Logger;
 
     constructor(
         {
             accessStore,
             userStore,
-        }: Pick<IUnleashStores, 'accessStore' | 'userStore'>,
+            roleStore,
+        }: Pick<IUnleashStores, 'accessStore' | 'userStore' | 'roleStore'>,
         { getLogger }: { getLogger: Function },
     ) {
         this.store = accessStore;
         this.userStore = userStore;
+        this.roleStore = roleStore;
         this.logger = getLogger('/services/access-service.ts');
-        // this.permissions = Object.values(permissions).map((p) => ({
-        //     name: p,
-        //     type: isProjectPermission(p)
-        //         ? PermissionType.project
-        //         : PermissionType.root,
-        // }));
     }
 
     /**
@@ -133,7 +145,7 @@ export class AccessService {
     }
 
     async getRoleByName(roleName: string): Promise<IRole> {
-        return this.store.getRoleByName(roleName);
+        return this.roleStore.getRoleByName(roleName);
     }
 
     async setUserRootRole(
@@ -148,11 +160,11 @@ export class AccessService {
                     RoleType.ROOT,
                 );
 
-                const editorRole = await this.store.getRoleByName(
+                const editorRole = await this.roleStore.getRoleByName(
                     RoleName.EDITOR,
                 );
                 if (newRootRole.id === editorRole.id) {
-                    const viewerRole = await this.store.getRoleByName(
+                    const viewerRole = await this.roleStore.getRoleByName(
                         RoleName.VIEWER,
                     );
                     await this.store.addUserToRole(
@@ -230,10 +242,19 @@ export class AccessService {
     }
 
     async getRoles(): Promise<IRole[]> {
-        return this.store.getRoles();
+        return this.roleStore.getRoles();
     }
 
-    async getRole(roleId: number): Promise<IRoleData> {
+    async getRole(id: number): Promise<IRoleWithPermissions> {
+        const role = await this.store.get(id);
+        const rolePermissions = await this.store.getPermissionsForRole(role.id);
+        return {
+            ...role,
+            permissions: rolePermissions,
+        };
+    }
+
+    async getRoleData(roleId: number): Promise<IRoleData> {
         const [role, rolePerms, users] = await Promise.all([
             this.store.get(roleId),
             this.store.getPermissionsForRole(roleId),
@@ -243,11 +264,11 @@ export class AccessService {
     }
 
     async getProjectRoles(): Promise<IRole[]> {
-        return this.store.getProjectRoles();
+        return this.roleStore.getProjectRoles();
     }
 
     async getRolesForProject(projectId: string): Promise<IRole[]> {
-        return this.store.getRolesForProject(projectId);
+        return this.roleStore.getRolesForProject(projectId);
     }
 
     async getRolesForUser(userId: number): Promise<IRole[]> {
@@ -284,7 +305,7 @@ export class AccessService {
     async getProjectRoleUsers(
         projectId: string,
     ): Promise<[IRole[], IUserWithRole[]]> {
-        const roles = await this.store.getProjectRoles();
+        const roles = await this.roleStore.getProjectRoles();
 
         const users = await Promise.all(
             roles.map(async (role) => {
@@ -306,7 +327,7 @@ export class AccessService {
             throw new Error('ProjectId cannot be empty');
         }
 
-        const ownerRole = await this.store.getRoleByName(RoleName.OWNER);
+        const ownerRole = await this.roleStore.getRoleByName(RoleName.OWNER);
 
         await this.store.addPermissionsToRole(
             ownerRole.id,
@@ -322,7 +343,7 @@ export class AccessService {
             await this.store.addUserToRole(owner.id, ownerRole.id, projectId);
         }
 
-        const memberRole = await this.store.getRoleByName(RoleName.MEMBER);
+        const memberRole = await this.roleStore.getRoleByName(RoleName.MEMBER);
 
         await this.store.addPermissionsToRole(
             memberRole.id,
@@ -336,15 +357,15 @@ export class AccessService {
         projectId: string,
     ): Promise<void> {
         this.logger.info(`Removing project roles for ${projectId}`);
-        return this.store.removeRolesForProject(projectId);
+        return this.roleStore.removeRolesForProject(projectId);
     }
 
     async getRootRoleForAllUsers(): Promise<IUserRole[]> {
-        return this.store.getRootRoleForAllUsers();
+        return this.roleStore.getRootRoleForAllUsers();
     }
 
     async getRootRoles(): Promise<IRole[]> {
-        return this.store.getRootRoles();
+        return this.roleStore.getRootRoles();
     }
 
     public async resolveRootRole(rootRole: number | RoleName): Promise<IRole> {
@@ -359,7 +380,51 @@ export class AccessService {
     }
 
     async getRootRole(roleName: RoleName): Promise<IRole> {
-        const roles = await this.store.getRootRoles();
+        const roles = await this.roleStore.getRootRoles();
         return roles.find((r) => r.name === roleName);
+    }
+
+    async getAllRoles(): Promise<ICustomRole[]> {
+        return this.roleStore.getAll();
+    }
+
+    async createRole(role: IRoleCreation): Promise<ICustomRole> {
+        const baseRole = {
+            name: role.name,
+            description: role.description,
+            roleType: 'custom',
+        };
+        const rolePermissions = role.permissions;
+        const newRole = await this.roleStore.create(baseRole);
+        if (rolePermissions) {
+            this.store.addEnvironmentPermissionsToRole(
+                newRole.id,
+                rolePermissions,
+            );
+        }
+        return newRole;
+    }
+
+    async updateRole(role: IRoleUpdate): Promise<ICustomRole> {
+        const baseRole = {
+            id: role.id,
+            name: role.name,
+            description: role.description,
+            roleType: 'custom',
+        };
+        const rolePermissions = role.permissions;
+        const newRole = await this.roleStore.update(baseRole);
+        if (rolePermissions) {
+            this.store.wipePermissionsFromRole(newRole.id);
+            this.store.addEnvironmentPermissionsToRole(
+                newRole.id,
+                rolePermissions,
+            );
+        }
+        return newRole;
+    }
+
+    async deleteRole(id: number): Promise<void> {
+        return this.roleStore.delete(id);
     }
 }

@@ -1,62 +1,70 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ICustomRole } from 'lib/types/model';
+import { IRole, IUserRole } from 'lib/types/stores/access-store';
 import {
     ICustomRoleInsert,
     ICustomRoleUpdate,
     IRoleStore,
 } from 'lib/types/stores/role-store';
-import {
-    IUserFeedback,
-    IUserFeedbackKey,
-    IUserFeedbackStore,
-} from '../../lib/types/stores/user-feedback-store';
 
 export default class FakeRoleStore implements IRoleStore {
-    async update(role: ICustomRoleUpdate): Promise<ICustomRole> {
+    getAll(): Promise<ICustomRole[]> {
         throw new Error('Method not implemented.');
     }
 
-    async get(key: number): Promise<ICustomRole> {
-        return Promise.resolve({
-            id: 1,
-            name: 'Role',
-            description: 'Hello',
-            type: 'custom',
-        });
-    }
-
-    async getAll(): Promise<ICustomRole[]> {
-        return Promise.resolve([
-            {
-                id: 1,
-                name: 'Role',
-                description: 'Hello',
-                type: 'custom',
-            },
-        ]);
-    }
-
-    async exists(): Promise<boolean> {
-        return Promise.resolve(true);
-    }
-
     create(role: ICustomRoleInsert): Promise<ICustomRole> {
-        return Promise.resolve({
-            id: 1,
-            name: 'Role',
-            description: 'Hello',
-            type: 'custom',
-        });
+        throw new Error('Method not implemented.');
+    }
+
+    update(role: ICustomRoleUpdate): Promise<ICustomRole> {
+        throw new Error('Method not implemented.');
     }
 
     delete(id: number): Promise<void> {
-        return Promise.resolve();
+        throw new Error('Method not implemented.');
     }
 
-    destroy(): Promise<void> {
-        return Promise.resolve();
+    getRoles(): Promise<IRole[]> {
+        throw new Error('Method not implemented.');
+    }
+
+    getRoleByName(name: string): Promise<IRole> {
+        throw new Error('Method not implemented.');
+    }
+
+    getRolesForProject(projectId: string): Promise<IRole[]> {
+        throw new Error('Method not implemented.');
+    }
+
+    removeRolesForProject(projectId: string): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+
+    getProjectRoles(): Promise<IRole[]> {
+        throw new Error('Method not implemented.');
+    }
+
+    getRootRoles(): Promise<IRole[]> {
+        throw new Error('Method not implemented.');
+    }
+
+    getRootRoleForAllUsers(): Promise<IUserRole[]> {
+        throw new Error('Method not implemented.');
+    }
+
+    get(key: number): Promise<ICustomRole> {
+        throw new Error('Method not implemented.');
+    }
+
+    exists(key: number): Promise<boolean> {
+        throw new Error('Method not implemented.');
     }
 
     deleteAll(): Promise<void> {
-        return Promise.resolve();
+        throw new Error('Method not implemented.');
+    }
+
+    destroy(): void {
+        throw new Error('Method not implemented.');
     }
 }

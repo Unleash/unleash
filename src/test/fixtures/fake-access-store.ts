@@ -94,15 +94,6 @@ class AccessStoreMock implements IAccessStore {
         throw new Error('Method not implemented.');
     }
 
-    createRole(
-        name: string,
-        type: string,
-        project?: string,
-        description?: string,
-    ): Promise<IRole> {
-        throw new Error('Method not implemented.');
-    }
-
     addPermissionsToRole(
         role_id: number,
         permissions: string[],

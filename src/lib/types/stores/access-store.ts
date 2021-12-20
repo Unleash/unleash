@@ -29,16 +29,10 @@ export interface IUserRole {
     userId: number;
 }
 export interface IAccessStore extends Store<IRole, number> {
-    getRoleByName(name: string): Promise<IRole>;
     getAvailablePermissions(): Promise<IAvailablePermissions>;
     getPermissionsForUser(userId: number): Promise<IUserPermission[]>;
     getPermissionsForRole(roleId: number): Promise<IPermission[]>;
-    getRoles(): Promise<IRole[]>;
-    getRolesForProject(projectId: string): Promise<IRole[]>;
     unlinkUserRoles(userId: number): Promise<void>;
-    getProjectRoles(): Promise<IRole[]>;
-    getRootRoles(): Promise<IRole[]>;
-    removeRolesForProject(projectId: string): Promise<void>;
     getRolesForUserId(userId: number): Promise<IRole[]>;
     getProjectUserIdsForRole(roleId: number, projectId?: string);
     getUserIdsForRole(roleId: number, projectId?: string): Promise<number[]>;
@@ -62,12 +56,6 @@ export interface IAccessStore extends Store<IRole, number> {
         projectId: string,
     ): Promise<void>;
     removeRolesOfTypeForUser(userId: number, roleType: string): Promise<void>;
-    createRole(
-        name: string,
-        type: string,
-        project?: string,
-        description?: string,
-    ): Promise<IRole>;
     addPermissionsToRole(
         role_id: number,
         permissions: string[],
@@ -78,5 +66,4 @@ export interface IAccessStore extends Store<IRole, number> {
         permission: string,
         projectId?: string,
     ): Promise<void>;
-    getRootRoleForAllUsers(): Promise<IUserRole[]>;
 }

@@ -63,4 +63,10 @@ Using a custom context field called _region_ as an example: if you define the fi
 
 ### Custom stickiness
 
+:::note
+This feature is currently in beta and is not yet supported by all our SDKs. Check out the [SDK compatibility table](../sdks/index.md#server-side-sdk-compatibility-table) to see what SDKs support it at the moment.
+:::
+
+
+
 [^1]: If you're on Unleash 4.3 or higher, you'll probably want to use [the environments feature](../user_guide/environments.md) instead of relying on the `environment` context field when working with environments.

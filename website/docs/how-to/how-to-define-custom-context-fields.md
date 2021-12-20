@@ -18,16 +18,12 @@ In the Unleash Admin UI, navigate to the _context fields_  page:
 
 3. On the context fields page, click the "add new context field" button.
 
-    ![The ]( /img/context-field-create-button.png)
+    ![The "context fields" page with the "add new context field" button highlighted.]( /img/context-field-create-button.png)
 
 ## Step 2: Define the new context field {#step-2-define-new-context-field}
 
 Define the custom context field by filling out the form. You must at least the field a unique _name_. Everything else is optional. Refer to the [custom context field reference guide](../user_guide/unleash-context.md#custom-context-fields) for a full overview of the parameters and their functions and requirements.
 
-When you are satisfied with the context field's values, use the "Create" button to submit the form and save the context field.
+When you are satisfied with the context field's values, use the "create" button to submit the form and save the context field.
 
-![New context fields](/img/new_context_field.png)
-
-#### What is “legal values”? {#what-is-legal-values}
-
-Legal values defines all possible values for the context field. this will be used in Unleash Admin UI to guide users when working with context fields to make sure they only use legal values.
+![A "create context field" form. It contains data for a custom context field called "region". Its description is "allows you to constrain on specific regions" and its legal values are "Africa", "Asia", "Europe", and "North America". Its custom stickiness value is not shown.](/img/new_context_field.png)

@@ -207,37 +207,6 @@ test('should give error when getting unknown project', async () => {
     }
 });
 
-test('(TODO: v4): should create roles for new project if userId is missing', async () => {
-    const project = {
-        id: 'test-roles-no-id',
-        name: 'New project',
-        description: 'Blah',
-    };
-    await projectService.createProject(project, {
-        username: 'random-user',
-    });
-    const roles = await stores.accessStore.getRolesForProject(project.id);
-
-    expect(roles).toHaveLength(2);
-    expect(
-        await accessService.hasPermission(user, UPDATE_PROJECT, project.id),
-    ).toBe(false);
-});
-
-test('should create roles when project is created', async () => {
-    const project = {
-        id: 'test-roles',
-        name: 'New project',
-        description: 'Blah',
-    };
-    await projectService.createProject(project, user);
-    const roles = await stores.accessStore.getRolesForProject(project.id);
-    expect(roles).toHaveLength(2);
-    expect(
-        await accessService.hasPermission(user, UPDATE_PROJECT, project.id),
-    ).toBe(true);
-});
-
 test('should get list of users with access to project', async () => {
     const project = {
         id: 'test-roles-access',
@@ -320,14 +289,6 @@ test('should add admin users to the project', async () => {
     expect(adminUsers[1].name).toBe(projectAdmin1.name);
     expect(adminUsers[2].id).toBe(projectAdmin2.id);
     expect(adminUsers[2].name).toBe(projectAdmin2.name);
-});
-
-test('add user only accept to add users to project roles', async () => {
-    const memberRole = await stores.accessStore.getRoleByName(RoleName.MEMBER);
-
-    await expect(async () => {
-        await projectService.addUser('some-id', memberRole.id, user.id);
-    }).rejects.toThrowError(NotFoundError);
 });
 
 test('add user should fail if user already have access', async () => {

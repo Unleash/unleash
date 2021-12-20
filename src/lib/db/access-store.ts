@@ -232,7 +232,7 @@ export class AccessStore implements IAccessStore {
     }
 
     async removeRolesForProject(projectId: string): Promise<void> {
-        return this.db(T.ROLES)
+        return this.db(T.ROLE_USER)
             .where({
                 project: projectId,
             })
@@ -259,7 +259,6 @@ export class AccessStore implements IAccessStore {
         roleId: number,
         projectId?: string,
     ): Promise<number[]> {
-        console.log('Checking for', roleId, projectId);
         const rows = await this.db
             .select(['user_id'])
             .from<IRole>(`${T.ROLE_USER} AS ru`)
@@ -352,12 +351,6 @@ export class AccessStore implements IAccessStore {
             [environment, permissions],
         );
 
-        console.log(
-            'Adding permissions to table',
-            role_id,
-            permissions,
-            environment,
-        );
         const ids = result.rows.map((x) => x.id);
 
         const rows = ids.map((permission_id) => ({
@@ -365,7 +358,6 @@ export class AccessStore implements IAccessStore {
             permission_id,
         }));
 
-        console.log('Final inssert', rows);
         return this.db.batchInsert(T.ROLE_PERMISSION, rows);
     }
 

@@ -13,7 +13,11 @@ import {
 class AccessServiceMock extends AccessService {
     constructor() {
         super(
-            { accessStore: undefined, userStore: undefined },
+            {
+                accessStore: undefined,
+                userStore: undefined,
+                roleStore: undefined,
+            },
             { getLogger: noLoggerProvider },
         );
     }
@@ -59,10 +63,6 @@ class AccessServiceMock extends AccessService {
     }
 
     getRoles(): Promise<IRole[]> {
-        throw new Error('Method not implemented.');
-    }
-
-    getRole(roleId: number): Promise<IRoleData> {
         throw new Error('Method not implemented.');
     }
 

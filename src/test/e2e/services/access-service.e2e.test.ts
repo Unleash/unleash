@@ -366,7 +366,7 @@ test('should return role with permissions and users', async () => {
 
     await accessService.addUserToRole(user.id, editorRole.id, 'default');
 
-    const roleWithPermission = await accessService.getRole(editorRole.id);
+    const roleWithPermission = await accessService.getRoleData(editorRole.id);
 
     expect(roleWithPermission.role.name).toBe(RoleName.EDITOR);
     expect(roleWithPermission.permissions.length > 2).toBe(true);
@@ -436,7 +436,7 @@ test('should not crash if user does not have permission', async () => {
 });
 
 test('should support permission with "ALL" environment requirement', async () => {
-    const { userStore, accessStore } = stores;
+    const { userStore, roleStore, accessStore } = stores;
 
     const user = await userStore.insert({
         name: 'Some User',
@@ -445,11 +445,11 @@ test('should support permission with "ALL" environment requirement', async () =>
 
     await accessService.setUserRootRole(user.id, readRole.id);
 
-    const customRole = await accessStore.createRole(
-        'Power user',
-        'custom',
-        'Grants access to modify all environments',
-    );
+    const customRole = await roleStore.create({
+        name: 'Power user',
+        roleType: 'custom',
+        description: 'Grants access to modify all environments',
+    });
 
     const { CREATE_FEATURE_STRATEGY } = permissions;
     await accessStore.addPermissionsToRole(

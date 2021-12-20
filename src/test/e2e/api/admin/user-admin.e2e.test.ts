@@ -6,10 +6,11 @@ import {
     USER_DELETED,
     USER_UPDATED,
 } from '../../../../lib/types/events';
-import { IAccessStore, IRole } from '../../../../lib/types/stores/access-store';
+import { IRole } from '../../../../lib/types/stores/access-store';
 import { IEventStore } from '../../../../lib/types/stores/event-store';
 import { IUserStore } from '../../../../lib/types/stores/user-store';
 import { RoleName } from '../../../../lib/types/model';
+import { IRoleStore } from 'lib/types/stores/role-store';
 
 let stores;
 let db;
@@ -17,7 +18,7 @@ let app;
 
 let userStore: IUserStore;
 let eventStore: IEventStore;
-let accessStore: IAccessStore;
+let roleStore: IRoleStore;
 let editorRole: IRole;
 let adminRole: IRole;
 
@@ -27,9 +28,9 @@ beforeAll(async () => {
     app = await setupApp(stores);
 
     userStore = stores.userStore;
-    accessStore = stores.accessStore;
     eventStore = stores.eventStore;
-    const roles = await accessStore.getRootRoles();
+    roleStore = stores.roleStore;
+    const roles = await roleStore.getRootRoles();
     editorRole = roles.find((r) => r.name === RoleName.EDITOR);
     adminRole = roles.find((r) => r.name === RoleName.ADMIN);
 });

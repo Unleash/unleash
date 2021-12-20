@@ -351,7 +351,7 @@ class UserService {
             token,
         );
         const user = await this.getUser(userId);
-        const role = await this.accessService.getRole(user.rootRole);
+        const role = await this.accessService.getRoleData(user.rootRole);
         return {
             token,
             createdBy,

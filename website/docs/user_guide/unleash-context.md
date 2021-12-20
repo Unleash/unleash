@@ -50,9 +50,11 @@ Custom context fields allow you to extend the Unleash Context with more data tha
 
 When interacting with custom context fields in code, they must be accessed via the Unleash Context's `properties` map, using the context field's name as the key.
 
-Common custom context fields include _region_, _country_, _customerType_, and _tentantId_.
+### Creating and updating custom context fields
 
-See ["how to define custom context fields"](../how-to/how-to-define-custom-context-fields) for information on how you create your own custom context fields.
+You can create as many custom context fields as you wish. Refer to ["how to define custom context fields"](../how-to/how-to-define-custom-context-fields) for information on how you define your own custom context fields.
+
+You can update custom context fields after they have been created. You can change everything about the definition except for the name.
 
 ### Legal values
 

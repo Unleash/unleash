@@ -88,6 +88,15 @@ export default class RoleStore {
         return present;
     }
 
+    async roleExists(name: string): Promise<boolean> {
+        const result = await this.db.raw(
+            `SELECT EXISTS (SELECT 1 FROM ${T.ROLES} WHERE name = ?) AS present`,
+            [name],
+        );
+        const { present } = result.rows[0];
+        return present;
+    }
+
     async deleteAll(): Promise<void> {
         return this.db(T.ROLES).del();
     }

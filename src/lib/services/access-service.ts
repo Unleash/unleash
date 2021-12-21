@@ -20,6 +20,7 @@ import {
     RoleType,
 } from '../types/model';
 import { IRoleStore } from 'lib/types/stores/role-store';
+import NameExistsError from '../error/name-exists-error';
 
 export const ALL_PROJECTS = '*';
 export const ALL_ENVS = '*';
@@ -97,6 +98,7 @@ export class AccessService {
 
         try {
             const userP = await this.getPermissionsForUser(user);
+            console.log('My user permissions are', userP);
             return userP
                 .filter(
                     (p) =>
@@ -389,6 +391,7 @@ export class AccessService {
     }
 
     async createRole(role: IRoleCreation): Promise<ICustomRole> {
+        await this.validateRole(role);
         const baseRole = {
             name: role.name,
             description: role.description,
@@ -406,6 +409,7 @@ export class AccessService {
     }
 
     async updateRole(role: IRoleUpdate): Promise<ICustomRole> {
+        await this.validateRole(role);
         const baseRole = {
             id: role.id,
             name: role.name,
@@ -426,5 +430,20 @@ export class AccessService {
 
     async deleteRole(id: number): Promise<void> {
         return this.roleStore.delete(id);
+    }
+
+    async validateRoleIsUnique(roleName: string): Promise<void> {
+        const exists = await this.roleStore.roleExists(roleName);
+        if (exists) {
+            throw new NameExistsError(
+                `There already exists a role with the name ${roleName}`,
+            );
+        }
+        return Promise.resolve();
+    }
+
+    async validateRole(role: IRoleCreation): Promise<void> {
+        await this.validateRoleIsUnique(role.name);
+        //Handle schema validation here...
     }
 }

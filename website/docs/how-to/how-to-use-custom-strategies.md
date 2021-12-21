@@ -2,9 +2,11 @@
 title: How to use custom activation strategies
 ---
 
+This guide takes you through how to use [custom activation strategies](../advanced/custom-activation-strategy.md) with Unleash. We'll go through how you define them in the admin UI and look at an implementation example in a [client SDK](../sdks/index.md).
+
 In this example we want to define an activation strategy offers a scheduled release of a feature toggle. This means that we want the feature toggle to be activated after a given date and time.
 
-## Define custom strategy {#define-custom-strategy}
+## Step 1: Define your custom strategy {#step-1}
 
 First we need to "define" our new strategy. To add a new "Strategy", open the Strategies tab from the sidebar.
 
@@ -12,14 +14,13 @@ First we need to "define" our new strategy. To add a new "Strategy", open the St
 
 We name our strategy `TimeStamp` and add one required parameter of type string, which we call `enableAfter`.
 
-## Use custom strategy {#use-custom-strategy}
-
-After we have created the strategy definition, we can now decide to use that activation strategy for our feature toggle.
-
-![The strategy configuration screen for the custom "TimeStamp" strategy. The "enableAfter" field says "2021-12-25 00:00".](/img/timestamp_use_strategy.png)
+## Step 2: Apply your custom strategy to a feature toggle {#step-2}
 
 In the example we want to use our custom strategy for the feature toggle named `demo.TimeStampRollout`.
 
+## Step 3 Option A: Implement the strategy for a server SDK {#step-3-a}
+## Step 3 Option B: Implement the strategy for a front-end SDK {#step-3-b}
+### The Unleash Proxy
 ## Client implementation {#client-implementation}
 
 All official client SDK's for Unleash provides abstractions for you to implement support for custom strategies.

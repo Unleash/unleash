@@ -55,6 +55,10 @@ Each parameter has one of five different parameter types. A parameter's type imp
 
 ## Implementation
 
+:::note
+If you have not implemented the strategy in your client SDK, the check will always return `false` because the client doesn't recognize the strategy.
+:::
+
 While custom strategies are _defined_ on the Unleash server, they must be _implemented_ on the client. All official Unleash client SDKs provide a way for you to implement custom strategies. You should refer to the individual SDK's documentation for specifics, but for an example, you can have a look at the [_Node.js client implementation_ section in the _how to use custom strategies_ guide](../how-to/how-to-use-custom-strategies.md#client-implementation).
 
 The exact method for implementing custom strategies will vary between SDKs, but the server SDKs follow the same patterns. For front-end client SDKs ([Android](../sdks/android-proxy.md), [JavaScript](../sdks/proxy-javascript.md), [React](../sdks/proxy-react.md), [iOS](../sdks/proxy-ios.md)), the custom activation strategy must be implemented in the [Unleash Proxy](../sdks/unleash-proxy.md).

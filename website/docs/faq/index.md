@@ -12,3 +12,11 @@ Optionally, for non-enterprise, use a custom strategy.
 ## What's `UNLEASH_PROXY_SECRETS` and `clientKey`
 
 ...
+
+## Does pricing depend on MAU? Is there a cap?
+
+No!
+
+## Does Unleash hosted do any rate limiting?
+
+...nnnnooo?

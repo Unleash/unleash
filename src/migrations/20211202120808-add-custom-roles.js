@@ -25,6 +25,7 @@ exports.up = function (db, cb) {
             WHERE role_user.role_id = roles.id;
 
         ALTER TABLE role_user DROP CONSTRAINT role_user_pkey;
+        UPDATE role_user SET project = '*' WHERE project IS NULL;
         ALTER TABLE role_user ADD PRIMARY KEY (role_id, user_id, project);
 
         ALTER TABLE roles DROP COLUMN project;

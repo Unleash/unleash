@@ -347,7 +347,7 @@ test('should return role with users', async () => {
 
     await accessService.addUserToRole(user.id, editorRole.id, 'default');
 
-    const roleWithUsers = await accessService.getRole(editorRole.id);
+    const roleWithUsers = await accessService.getRoleData(editorRole.id);
 
     expect(roleWithUsers.role.name).toBe(RoleName.EDITOR);
     expect(roleWithUsers.users.length > 2).toBe(true);

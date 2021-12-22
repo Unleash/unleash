@@ -68,6 +68,10 @@ module.exports = {
         ],
         'Topic guides': [
             'topics/a-b-testing'
+        ],
+        "How-to guides": [
+            "how-to/how-to-add-strategy-constraints",
+            "how-to/how-to-define-custom-context-fields",
         ]
     },
     api: {

@@ -83,7 +83,7 @@ The steps to implement a custom strategy for your client depend on the kind of c
 
 ### Option B: Implement the strategy for a front-end client SDK {#step-3-b}
 
-Front-end client SDK don't evaluate strategies directly, so you need to implement the **custom strategy in the [Unleash Proxy](../sdks/unleash-proxy.md)**. The below steps assume you're running the Unleash Proxy as a Docker container.
+Front-end client SDK don't evaluate strategies directly, so you need to implement the **custom strategy in the [Unleash Proxy](../sdks/unleash-proxy.md)**. The below steps assume you're running the Unleash Proxy as a Docker container. If you're running the Unleash Proxy via Node directly, follow the steps for [server-side SDKs](#step-3-a "Step 3 option A: implement the strategy for a server-side client SDK") instead.
 
 Strategies are stored in separate JavaScript files and loaded into the container at startup. Refer to [the Unleash Proxy documentation](../sdks/unleash-proxy.md) for a full overview of all the options.
 

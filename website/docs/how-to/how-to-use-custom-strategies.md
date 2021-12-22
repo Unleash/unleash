@@ -120,9 +120,9 @@ Strategies are stored in separate JavaScript files and loaded into the container
        -e UNLEASH_PROXY_SECRETS=some-secret \
        -e UNLEASH_URL='http://unleash:4242/api/' \
        -e UNLEASH_API_TOKEN=${API_TOKEN} \
-           # highlight-start
+       # highlight-start
        -e UNLEASH_CUSTOM_STRATEGIES_FILE=/strategies/timestamp.js \
        --mount type=bind,source="$(pwd)"/strategies,target=/strategies \
-           # highlight-end
+       # highlight-end
        -p 3000:3000 --network unleash unleashorg/unleash-proxy
    ```

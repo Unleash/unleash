@@ -27,7 +27,8 @@ const FeatureOverviewEnvironmentMetrics = ({
                         {percentage}%
                     </p>
                     <p className={styles.infoParagraph} data-loading>
-                        No one has received this feature in the last hour.
+                        The feature has been requested <b>0 times</b> and
+                        exposed<b> 0 times</b> in the last hour
                     </p>
                 </div>
                 <FiberManualRecord
@@ -44,8 +45,10 @@ const FeatureOverviewEnvironmentMetrics = ({
             <div className={styles.info}>
                 <p className={styles.percentage}>{percentage}%</p>
                 <p className={styles.infoParagraph}>
-                    {environmentMetric.yes} users have received the feature in
-                    the last hour.
+                    The feature has been requested{' '}
+                    <b>{environmentMetric.yes + environmentMetric.no} times</b>{' '}
+                    and exposed <b>{environmentMetric.yes} times</b> in the last
+                    hour
                 </p>
             </div>
             <PercentageCircle

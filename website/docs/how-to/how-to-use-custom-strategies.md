@@ -2,74 +2,92 @@
 title: How to use custom activation strategies
 ---
 
-This guide takes you through how to use [custom activation strategies](../advanced/custom-activation-strategy.md) with Unleash. We'll go through how you define them in the admin UI and look at an implementation example in a [client SDK](../sdks/index.md).
+This guide takes you through how to use [custom activation strategies](../advanced/custom-activation-strategy.md) with Unleash. We'll go through how you define a custom strategy in the admin UI, how you add it to a toggle, and how you'd implement it in a [client SDK](../sdks/index.md).
 
 In this example we want to define an activation strategy offers a scheduled release of a feature toggle. This means that we want the feature toggle to be activated after a given date and time.
 
 ## Step 1: Define your custom strategy {#step-1}
 
-First we need to "define" our new strategy. To add a new "Strategy", open the Strategies tab from the sidebar.
+1. **Navigate to the strategies view**. Interact with the "Configure" button in the page header and then go to the "Strategies" link in the dropdown menu that appears.
 
-![A strategy creation form. It has fields labeled "strategy name" — "TimeStamp" — and "description" — "activate toggle after a given timestamp". It also has fields for a parameter named "enableAfter". The parameter is of type "string" and the parameter description is "Expected format: YYYY-MM-DD HH:MM". The parameter is required.](/img/timestamp_create_strategy.png)
+    ![A visual guide for how to navigate to the strategies page in the Unleash admin UI. It shows the steps described in the preceding paragraph.](/img/custom-strategy-navigation.png)
 
-We name our strategy `TimeStamp` and add one required parameter of type string, which we call `enableAfter`.
+2. **Define your strategy**. Use the "Add new strategy" button to open the strategy creation form. Fill in the form to define your strategy. Refer to [the custom strategy reference documentation](../advanced/custom-activation-strategy.md#definition) for a full list of options.
+
+   ![A strategy creation form. It has fields labeled "strategy name" — "TimeStamp" — and "description" — "activate toggle after a given timestamp". It also has fields for a parameter named "enableAfter". The parameter is of type "string" and the parameter description is "Expected format: YYYY-MM-DD HH:MM". The parameter is required.](/img/timestamp_create_strategy.png)
+
 
 ## Step 2: Apply your custom strategy to a feature toggle {#step-2}
 
-In the example we want to use our custom strategy for the feature toggle named `demo.TimeStampRollout`.
+**Navigate to your feature toggle** and **apply the strategy** you just created.
 
-## Step 3 Option A: Implement the strategy for a server SDK {#step-3-a}
-## Step 3 Option B: Implement the strategy for a front-end SDK {#step-3-b}
-### The Unleash Proxy
-## Client implementation {#client-implementation}
+![The strategy configuration screen for the custom "TimeStamp" strategy from the previous step. The "enableAfter" field says "2021-12-25 00:00".](/img/timestamp_use_strategy.png)
 
-All official client SDK's for Unleash provides abstractions for you to implement support for custom strategies.
+## Step 3: Implement the strategy in your client SDK {#step-3}
 
-> Before you have provided support for the custom strategy; the client will return false, because it does not understand the activation strategy.
+The steps to implement a custom strategy for your client depend on the kind of client SDK you're using:
 
-In Node.js the implementation for the `TimeStampStrategy` would be:
+- if you're using a server-side client SDK, follow the steps in [option A](#step-3-a "Step 3 option A: implement the strategy for a server-side client SDK").
+- if you're using a front-end client SDK ([Android](../sdks/android-proxy.md), [JavaScript](../sdks/proxy-javascript.md), [React](../sdks/proxy-react.md), [iOS](../sdks/proxy-ios.md)), follow the steps in [option B](#step-3-b "Step 3 option B: implementing the strategy for a front-end client SDK")
 
-```javascript
-class TimeStampStrategy extends Strategy {
-  constructor() {
-    super('TimeStamp');
-  }
+### Step 3 Option A: Implement the strategy for a server-side client SDK {#step-3-a}
 
-  isEnabled(parameters, context) {
-    return Date.parse(parameters.enableAfter) < Date.now();
-  }
-}
-```
+1. **Implement the custom strategy** in your [client SDK](../sdks/index.md). The exact way to do this will vary depending on the specific SDK you're using, so refer to the SDK's documentation. The example below shows an example of how you'd implement a custom strategy called "TimeStamp" for the [Node.js client SDK](../sdks/node.md).
 
-In the example implementation we make use of the library called moment to parse the timestamp and verify that current time is after the specified `enabledAfter` parameter.
+   ```js
+   const { Strategy } = require('unleash-client');
 
-All parameter injected to the strategy are handled as `string` objects. This means that the strategies needs to parse it to a more suitable format. In this example we just parse it directly to a `Date` type and do the comparison directly. You might want to also consider timezone in a real implementation.
+   class TimeStampStrategy extends Strategy {
+     constructor() {
+       super('TimeStamp');
+     }
 
-We also have to remember to register the custom strategy when initializing the Unleash client. Full working code example:
+     isEnabled(parameters, context) {
+       return Date.parse(parameters.enableAfter) > Date.now();
+     }
+   }
+   ```
 
-```javascript
-const { Strategy, initialize, isEnabled } = require('unleash-client');
+2. **Register the custom strategy with the Unleash Client**.  When instantiating the Unleash Client, provide it with a list of the custom strategies you'd like to use — again: refer to _your_ client SDK's docs for the specifics.
 
-class TimeStampStrategy extends Strategy {
-  constructor() {
-    super('TimeStamp');
-  }
+   Here's a full, working example for Node.js:
 
-  isEnabled(parameters, context) {
-    return Date.parse(parameters.enableAfter) < Date.now();
-  }
-}
+   ```js
+   const { Strategy, initialize, isEnabled } = require('unleash-client');
 
-const instance = initialize({
-  url: 'http://unleash.herokuapp.com/api/',
-  appName: 'unleash-demo',
-  instanceId: '1',
-  strategies: [new TimeStampStrategy()],
-});
+   class TimeStampStrategy extends Strategy {
+     constructor() {
+       super('TimeStamp');
+     }
 
-instance.on('ready', () => {
-  setInterval(() => {
-    console.log(isEnabled('demo.TimeStampRollout'));
-  }, 1000);
-});
-```
+     isEnabled(parameters, context) {
+       return Date.parse(parameters.enableAfter) > Date.now();
+     }
+   }
+
+   const instance = initialize({
+     url: 'http://unleash.herokuapp.com/api/',
+     appName: 'unleash-demo',
+     instanceId: '1',
+     strategies: [new TimeStampStrategy()],
+   });
+
+   instance.on('ready', () => {
+     setInterval(() => {
+       console.log(isEnabled('demo.TimeStampRollout'));
+     }, 1000);
+   });
+
+   ```
+
+:::note
+this is different for the Unleash proxy
+:::
+
+p
+Depending on the client SDK you're working with, choose one of the below options. If you're using
+
+
+### Step 3 Option B: Implement the strategy for a front-end client SDK {#step-3-b}
+
+#### The Unleash Proxy

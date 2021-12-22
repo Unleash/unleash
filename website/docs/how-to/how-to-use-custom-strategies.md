@@ -30,7 +30,7 @@ The steps to implement a custom strategy for your client depend on the kind of c
 - if you're using a server-side client SDK, follow the steps in [option A](#step-3-a "Step 3 option A: implement the strategy for a server-side client SDK").
 - if you're using a front-end client SDK ([Android](../sdks/android-proxy.md), [JavaScript](../sdks/proxy-javascript.md), [React](../sdks/proxy-react.md), [iOS](../sdks/proxy-ios.md)), follow the steps in [option B](#step-3-b "Step 3 option B: implementing the strategy for a front-end client SDK")
 
-### Step 3 Option A: Implement the strategy for a server-side client SDK {#step-3-a}
+### Option A: Implement the strategy for a server-side client SDK {#step-3-a}
 
 1. **Implement the custom strategy** in your [client SDK](../sdks/index.md). The exact way to do this will vary depending on the specific SDK you're using, so refer to the SDK's documentation. The example below shows an example of how you'd implement a custom strategy called "TimeStamp" for the [Node.js client SDK](../sdks/node.md).
 
@@ -50,7 +50,7 @@ The steps to implement a custom strategy for your client depend on the kind of c
 
 2. **Register the custom strategy with the Unleash Client**.  When instantiating the Unleash Client, provide it with a list of the custom strategies you'd like to use — again: refer to _your_ client SDK's docs for the specifics.
 
-   Here's a full, working example for Node.js:
+   Here's a full, working example for Node.js. Notice the `strategies` property being passed to the `initialize` function.
 
    ```js
    const { Strategy, initialize, isEnabled } = require('unleash-client');
@@ -69,6 +69,7 @@ The steps to implement a custom strategy for your client depend on the kind of c
      url: 'http://unleash.herokuapp.com/api/',
      appName: 'unleash-demo',
      instanceId: '1',
+     // highlight-next-line
      strategies: [new TimeStampStrategy()],
    });
 
@@ -80,14 +81,48 @@ The steps to implement a custom strategy for your client depend on the kind of c
 
    ```
 
-:::note
-this is different for the Unleash proxy
-:::
+### Option B: Implement the strategy for a front-end client SDK {#step-3-b}
 
-p
-Depending on the client SDK you're working with, choose one of the below options. If you're using
+Front-end client SDK don't evaluate strategies directly, so you need to implement the **custom strategy in the [Unleash Proxy](../sdks/unleash-proxy.md)**. The below steps assume you're running the Unleash Proxy as a Docker container.
 
+Strategies are stored in separate JavaScript files and loaded into the container at startup. Refer to [the Unleash Proxy documentation](../sdks/unleash-proxy.md) for a full overview of all the options.
 
-### Step 3 Option B: Implement the strategy for a front-end client SDK {#step-3-b}
+1. **Create a strategies directory.** Create a directory that Docker has access to where you can store your strategies. The next steps assume you called it `strategies`
+2. **Initialize a node project** and **install the Unleash Client**:
 
-#### The Unleash Proxy
+   ``` shell
+   npm init -y && \
+   npm install unleash-client
+   ```
+
+3. **Create a strategy file** and **implement your strategies**. Remember to **export your list of strategies**. The next steps will assume you called the file `timestamp.js`.  An example implementation looks like this:
+
+   ``` js
+   const { Strategy } = require('unleash-client');
+
+   class TimeStampStrategy extends Strategy {
+     constructor() {
+       super('TimeStamp');
+     }
+
+     isEnabled(parameters, context) {
+       return Date.parse(parameters.enableAfter) > Date.now();
+     }
+   }
+
+   module.exports = [new TimeStampStrategy()]; // <- export strategies
+   ```
+
+4. **Mount the strategies directory** and **point the [Unleash Proxy docker container](https://hub.docker.com/r/unleashorg/unleash-proxy) at your strategies file**. The highlighted lines below show the extra options you need to add. The following command assumes that your strategies directory is a direct subdirectory of your current working directory. Modify the rest of the command to suit your needs.
+
+   ``` shell
+   docker run --name unleash-proxy --pull=always \
+           -e UNLEASH_PROXY_SECRETS=some-secret \
+           -e UNLEASH_URL='http://unleash:4242/api/' \
+           -e UNLEASH_API_TOKEN=${API_TOKEN} \
+   	# highlight-start
+           -e UNLEASH_CUSTOM_STRATEGIES_FILE=/strategies/timestamp.js \
+           --mount type=bind,source="$(pwd)"/strategies,target=/strategies \
+   	# highlight-end
+           -p 3000:3000 --network unleash unleashorg/unleash-proxy
+   ```

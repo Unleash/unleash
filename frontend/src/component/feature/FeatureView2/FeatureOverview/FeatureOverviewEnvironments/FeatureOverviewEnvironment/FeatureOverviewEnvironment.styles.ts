@@ -70,8 +70,8 @@ export const useStyles = makeStyles(theme => ({
         alignItems: 'center',
     },
     percentageContainer: {
-        width: '50px',
-        height: '50px',
+        width: '90px',
+        height: '90px',
         border: `2px solid ${theme.palette.primary.light}`,
         borderRadius: '50%',
         display: 'flex',
@@ -95,6 +95,7 @@ export const useStyles = makeStyles(theme => ({
     requestText: {
         textAlign: 'center',
         marginTop: '1rem',
+        fontSize: theme.fontSizes.smallBody,
     },
     linkContainer: {
         display: 'flex',
@@ -135,6 +136,9 @@ export const useStyles = makeStyles(theme => ({
         truncator: {
             textAlign: 'center',
         },
+        resultContainer: {
+            flexWrap: 'wrap',
+        },
     },
     [theme.breakpoints.down(400)]: {
         accordionHeader: {
@@ -144,5 +148,21 @@ export const useStyles = makeStyles(theme => ({
         accordionBodyInnerContainer: {
             padding: '0.5rem',
         },
+    },
+    resultContainer: {
+        display: 'flex',
+        width: '100%',
+        justifyContent: 'space-around',
+    },
+    dataContainer: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignContent: 'center',
+        alignItems: 'center',
+        padding: '0px 15px',
+    },
+    resultTitle: {
+        color: theme.palette.primary.main,
     },
 }));

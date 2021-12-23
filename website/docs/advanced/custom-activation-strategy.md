@@ -49,7 +49,7 @@ Values of *all types* have an empty string (`""`) as the default value. As such,
 | type name  | code representation                    | example value | UI control               |
 |------------|----------------------------------------|---------------|--------------------------|
 | string     | `string`                               | `"a string"`  | A standard input field   |
-| percentage | an `int` between 0 and 100 (inclusive) | `99`         | A value slider           |
+| percentage | an `int` between 0 and 100 (inclusive) | `99`          | A value slider           |
 | list       | `string` (values are comma-separated)  | `"one,two"`   | A multi-input text field |
 | number     | `string`                               | `"123"`       | A numeric text field     |
 | boolean    | `"true"` or `"false"`                  | `"true"`      | An on/off toggle         |

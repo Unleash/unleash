@@ -38,15 +38,21 @@ Each parameter consists of three parts:
 
 #### Parameter types
 
-Each parameter has one of five different parameter types. A parameter's type impacts the kind of controls shown in the admin UI and also changes how the value is represented in code.
+Each parameter has one of five different parameter types. A parameter's type impacts the kind of controls shown in the admin UI and how it's represented in code.
 
-| type name  | code representation[^1] | UI control               |
-|------------|-------------------------|--------------------------|
-| string     | `string`                | A standard input field   |
-| percentage | `int` between 0 and 100 | A value slider           |
-| list       | `string[]`              | A multi-input text field |
-| number     | `int`                   | A numeric text field     |
-| boolean    | `boolean`               | An on/off toggle         |
+Here's an overview over how the types are represented in the JSON payload returned from the Unleash server. The exact types will vary based on your programming language's type system.
+
+:::note Unset values
+Values of *all types* have an empty string (`""`) as the default value. As such, if you don't interact with a control or otherwise set a value, the value will be an empty string, regardless of the value's type.
+:::
+
+| type name  | code representation                    | example value | UI control               |
+|------------|----------------------------------------|---------------|--------------------------|
+| string     | `string`                               | `"a string"`  | A standard input field   |
+| percentage | an `int` between 0 and 100 (inclusive) | `99`         | A value slider           |
+| list       | `string` (values are comma-separated)  | `"one,two"`   | A multi-input text field |
+| number     | `string`                               | `"123"`       | A numeric text field     |
+| boolean    | `"true"` or `"false"`                  | `"true"`      | An on/off toggle         |
 
 
 ![A strategy with five parameters, one of each type.](/img/strategy-parameters-ui-controls.png)
@@ -63,6 +69,3 @@ The exact method for implementing custom strategies will vary between SDKs, but 
 
 
 When implementing a strategy in your client, you will get access to the strategy's parameters and the Unleash Context. Again, refer to your specific SDK's documentation for more details.
-
-
-[^1]: The exact type representation in code will vary depending on the language and its type system. See the docs for your client SDKs for specifics.

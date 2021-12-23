@@ -27,9 +27,7 @@ The strategy **name** is the only required parameter, but adding a good **descri
 
 ![The strategy configuration screen for the custom "TimeStamp" strategy. The "enableAfter" field says "2021-12-25 00:00".](/img/timestamp_use_strategy.png)
 
-Parameters let you provide arguments to your strategy that it can access for evaluation. When creating a strategy, each parameter can be either required or optional.
-
-If a strategy has a required parameter and you don't give it a value when creating the strategy, the strategy will not activate?
+Parameters let you provide arguments to your strategy that it can access for evaluation. When creating a strategy, each parameter can be either required or optional. This marking is to help the user understand what they need to fill out; they can still save the strategy without filling out a required field.
 
 Each parameter consists of three parts:
 

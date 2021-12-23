@@ -123,7 +123,7 @@ If you want to set up your own instance for testing purposes you can easily do s
 
 > You'll receive $100 in free credits if you are a new DigitalOcean user using this link.
 
-[![Deploy to DigitalOcean](https://www.deploytodo.com/do-btn-blue.svg)](https://cloud.digitalocean.com/apps/new?repo=https://github.com/Unleash/unleash/tree/master&refcode=0e1d75187044)
+[![Deploy to DigitalOcean](https://www.deploytodo.com/do-btn-blue.svg)](https://cloud.digitalocean.com/apps/new?repo=https://github.com/Unleash/unleash/tree/main&refcode=0e1d75187044)
 
 ### Accessing your new instance
 

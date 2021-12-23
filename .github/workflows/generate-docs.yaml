@@ -3,7 +3,7 @@ name: Generate documentation
 on:
   push:
     branches:
-      - master
+      - main
     paths:
       - website/**
 
@@ -24,4 +24,4 @@ jobs:
         GH_NAME: 'ivarconr'
         GH_EMAIL: 'ivarconr@gmail.com'
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        DEPLOYMENT_BRANCH: 'master'
+        DEPLOYMENT_BRANCH: 'main'

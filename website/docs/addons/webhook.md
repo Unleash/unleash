@@ -7,7 +7,7 @@ title: Webhook
 
 The Webhook Addon introduces a generic way to post messages from Unleash to third party services. Unleash allows you to define a webhook which listens changes in Unleash and post them to a third party services.
 
-The webhook will perform a single retry if the HTTP POST call fails (either a 50x or network error). Duplicate events may happen,m and you should never assume events always comes in order.
+The webhook will perform a single retry if the HTTP POST call fails (either a 50x or network error). Duplicate events may happen, and you should never assume events always comes in order.
 
 ## Configuration {#configuration}
 

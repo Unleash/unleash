@@ -235,9 +235,7 @@ class UserService {
         { id, name, email, rootRole }: IUpdateUser,
         updatedBy?: User,
     ): Promise<IUser> {
-        if (email) {
-            Joi.assert(email, Joi.string().email(), 'Email');
-        }
+        Joi.assert(email, Joi.string().email(), 'Email');
 
         const preUser = await this.store.get(id);
 

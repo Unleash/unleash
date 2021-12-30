@@ -1,7 +1,13 @@
 import { useState } from 'react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
-import { Button, TextField } from '@material-ui/core';
+import {
+    Button,
+    TextField,
+    InputAdornment,
+    IconButton,
+} from '@material-ui/core';
+import { Visibility, VisibilityOff } from '@material-ui/icons';
 import ConditionallyRender from '../../common/ConditionallyRender';
 import { useHistory } from 'react-router';
 import { useCommonStyles } from '../../../common.styles';
@@ -25,10 +31,19 @@ const PasswordAuth = ({ authDetails, passwordLogin }) => {
     const params = useQueryParams();
     const [username, setUsername] = useState(params.get('email') || '');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [errors, setErrors] = useState({
         usernameError: '',
         passwordError: '',
     });
+
+    const handleClickShowPassword = () => {
+        setShowPassword(!showPassword);
+    };
+
+    const handleMouseDownPassword = e => {
+        e.preventDefault();
+    };
 
     const handleSubmit = async evt => {
         evt.preventDefault();
@@ -120,8 +135,30 @@ const PasswordAuth = ({ authDetails, passwordLogin }) => {
                                 label="Password"
                                 onChange={evt => setPassword(evt.target.value)}
                                 name="password"
-                                type="password"
+                                type={showPassword ? 'text' : 'password'}                                
                                 value={password}
+                                InputProps={{
+                                    style:{
+                                        paddingRight: 0
+                                    },
+                                    endAdornment: (
+                                        <InputAdornment position="end" className={commonStyles.adornedEnd}>
+                                        <IconButton
+                                            aria-label="toggle password visibility"
+                                            onClick={handleClickShowPassword}
+                                            onMouseDown={
+                                                handleMouseDownPassword
+                                            }
+                                        >
+                                            {showPassword ? (
+                                                <Visibility />
+                                            ) : (
+                                                <VisibilityOff />
+                                            )}
+                                        </IconButton>
+                                    </InputAdornment>
+                                    )
+                                  }}
                                 error={!!passwordError}
                                 helperText={passwordError}
                                 variant="outlined"

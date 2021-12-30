@@ -1,5 +1,6 @@
 import { SyntheticEvent, useState } from 'react';
-import { Button, TextField, Typography } from '@material-ui/core';
+import { Button, TextField, Typography, IconButton, InputAdornment } from '@material-ui/core';
+import { Visibility, VisibilityOff } from '@material-ui/icons';
 import classnames from 'classnames';
 import { useStyles } from './EditProfile.styles';
 import { useCommonStyles } from '../../../../common.styles';
@@ -33,7 +34,16 @@ const EditProfile = ({
     const [error, setError] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const ref = useLoading(loading);
+
+    const handleClickShowPassword = () => {
+        setShowPassword(!showPassword);
+    };
+
+    const handleMouseDownPassword = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+    };
 
     const submit = async (e: SyntheticEvent) => {
         e.preventDefault();
@@ -54,7 +64,7 @@ const EditProfile = ({
                     credentials: 'include',
                 });
                 handleResponse(res);
-            } catch (e) {
+            } catch (e: any) {
                 setError(e);
             }
         }
@@ -117,7 +127,27 @@ const EditProfile = ({
                     variant="outlined"
                     size="small"
                     label="Password"
-                    type="password"
+                    type={showPassword ? 'text' : 'password'}
+                    InputProps={{
+                        style:{
+                            paddingRight: 0
+                        },
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <IconButton
+                                    aria-label="toggle password visibility"
+                                    onClick={handleClickShowPassword}
+                                    onMouseDown={handleMouseDownPassword}
+                                >
+                                    {showPassword ? (
+                                        <Visibility />
+                                    ) : (
+                                        <VisibilityOff />
+                                    )}
+                                </IconButton>
+                            </InputAdornment>
+                        ),
+                    }}
                     name="password"
                     value={password}
                     autoComplete="on"
@@ -128,7 +158,24 @@ const EditProfile = ({
                     variant="outlined"
                     size="small"
                     label="Confirm password"
-                    type="password"
+                    type={showPassword ? 'text' : 'password'}
+                    InputProps={{
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <IconButton
+                                    aria-label="toggle password visibility"
+                                    onClick={handleClickShowPassword}
+                                    onMouseDown={handleMouseDownPassword}
+                                >
+                                    {showPassword ? (
+                                        <Visibility />
+                                    ) : (
+                                        <VisibilityOff />
+                                    )}
+                                </IconButton>
+                            </InputAdornment>
+                        ),
+                    }}
                     name="confirmPassword"
                     value={confirmPassword}
                     autoComplete="on"

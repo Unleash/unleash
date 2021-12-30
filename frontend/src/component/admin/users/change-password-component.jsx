@@ -1,7 +1,14 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import { TextField, Typography, Avatar } from '@material-ui/core';
+import {
+    TextField,
+    Typography,
+    Avatar,
+    InputAdornment,
+    IconButton,
+} from '@material-ui/core';
+import { Visibility, VisibilityOff } from '@material-ui/icons';
 import { trim } from '../../common/util';
 import { modalStyles } from './util';
 import Dialogue from '../../common/Dialogue/Dialogue';
@@ -20,7 +27,16 @@ function ChangePassword({
     const [data, setData] = useState({});
     const [error, setError] = useState({});
     const [validPassword, setValidPassword] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const commonStyles = useCommonStyles();
+
+    const handleClickShowPassword = () => {
+        setShowPassword(!showPassword);
+    };
+
+    const handleMouseDownPassword = e => {
+        e.preventDefault();
+    };
 
     const updateField = e => {
         setError({});
@@ -112,23 +128,63 @@ function ChangePassword({
                 <TextField
                     label="New password"
                     name="password"
-                    type="password"
+                    type={showPassword ? 'text' : 'password'}
                     value={data.password}
                     helperText={error.password}
                     onChange={updateField}
                     variant="outlined"
                     size="small"
+                    InputProps={{
+                        style:{
+                            paddingRight: 0
+                        },
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <IconButton
+                                    aria-label="toggle password visibility"
+                                    onClick={handleClickShowPassword}
+                                    onMouseDown={handleMouseDownPassword}
+                                >
+                                    {showPassword ? (
+                                        <Visibility />
+                                    ) : (
+                                        <VisibilityOff />
+                                    )}
+                                </IconButton>
+                            </InputAdornment>
+                        ),
+                    }}
                 />
                 <TextField
                     label="Confirm password"
                     name="confirm"
-                    type="password"
+                    type={showPassword ? 'text' : 'password'}
                     value={data.confirm}
                     error={error.confirm !== undefined}
                     helperText={error.confirm}
                     onChange={updateField}
                     variant="outlined"
                     size="small"
+                    InputProps={{
+                        style:{
+                            paddingRight: 0
+                        },
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <IconButton
+                                    aria-label="toggle password visibility"
+                                    onClick={handleClickShowPassword}
+                                    onMouseDown={handleMouseDownPassword}
+                                >
+                                    {showPassword ? (
+                                        <Visibility />
+                                    ) : (
+                                        <VisibilityOff />
+                                    )}
+                                </IconButton>
+                            </InputAdornment>
+                        ),
+                    }}
                 />
                 <PasswordMatcher
                     started={data.password && data.confirm}

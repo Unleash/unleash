@@ -1,4 +1,10 @@
-import { Button, TextField } from '@material-ui/core';
+import {
+    Button,
+    TextField,
+    IconButton,
+    InputAdornment,
+} from '@material-ui/core';
+import { Visibility, VisibilityOff } from '@material-ui/icons';
 import classnames from 'classnames';
 import {
     SyntheticEvent,
@@ -32,6 +38,7 @@ const ResetPasswordForm = ({ token, setLoading }: IResetPasswordProps) => {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [matchingPasswords, setMatchingPasswords] = useState(false);
     const [validOwaspPassword, setValidOwaspPassword] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const history = useHistory();
 
     const submittable = matchingPasswords && validOwaspPassword;
@@ -39,6 +46,14 @@ const ResetPasswordForm = ({ token, setLoading }: IResetPasswordProps) => {
     const setValidOwaspPasswordMemo = useCallback(setValidOwaspPassword, [
         setValidOwaspPassword,
     ]);
+
+    const handleClickShowPassword = () => {
+        setShowPassword(!showPassword);
+    };
+
+    const handleMouseDownPassword = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+    };
 
     useEffect(() => {
         if (!password) {
@@ -110,7 +125,27 @@ const ResetPasswordForm = ({ token, setLoading }: IResetPasswordProps) => {
                 <TextField
                     variant="outlined"
                     size="small"
-                    type="password"
+                    type={showPassword ? 'text' : 'password'}
+                    InputProps={{
+                        style:{
+                            paddingRight: 0
+                        },
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <IconButton
+                                    aria-label="toggle password visibility"
+                                    onClick={handleClickShowPassword}
+                                    onMouseDown={handleMouseDownPassword}
+                                >
+                                    {showPassword ? (
+                                        <Visibility />
+                                    ) : (
+                                        <VisibilityOff />
+                                    )}
+                                </IconButton>
+                            </InputAdornment>
+                        ),
+                    }}
                     placeholder="Password"
                     value={password || ''}
                     onChange={e => setPassword(e.target.value)}
@@ -121,7 +156,27 @@ const ResetPasswordForm = ({ token, setLoading }: IResetPasswordProps) => {
                 <TextField
                     variant="outlined"
                     size="small"
-                    type="password"
+                    type={showPassword ? 'text' : 'password'}
+                    InputProps={{
+                        style:{
+                            paddingRight: 0
+                        },
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <IconButton
+                                    aria-label="toggle password visibility"
+                                    onClick={handleClickShowPassword}
+                                    onMouseDown={handleMouseDownPassword}
+                                >
+                                    {showPassword ? (
+                                        <Visibility />
+                                    ) : (
+                                        <VisibilityOff />
+                                    )}
+                                </IconButton>
+                            </InputAdornment>
+                        ),
+                    }}
                     value={confirmPassword || ''}
                     placeholder="Confirm password"
                     onChange={e => setConfirmPassword(e.target.value)}

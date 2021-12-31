@@ -135,7 +135,7 @@ The are numbers of ways you can run Unleash.
 docker network create unleash
 ```
 
-3. Start a postgres database:
+2. Start a postgres database:
 
 ```sh
 docker run -d -e POSTGRES_PASSWORD=some_password \

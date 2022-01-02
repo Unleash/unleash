@@ -91,7 +91,7 @@
     "express-session": "^1.17.1",
     "fast-json-patch": "^3.1.0",
     "gravatar-url": "^3.1.0",
-    "helmet": "^4.1.0",
+    "helmet": "^5.0.0",
     "joi": "^17.3.0",
     "js-yaml": "^4.1.0",
     "knex": "0.95.15",

@@ -24,7 +24,14 @@ let readRole;
 const createUserEditorAccess = async (name, email) => {
     const { userStore } = stores;
     const user = await userStore.insert({ name, email });
-    await accessService.addUserToRole(user.id, editorRole.id, ALL_PROJECTS);
+    await accessService.addUserToRole(user.id, editorRole.id, 'default');
+    return user;
+};
+
+const createUserViewerAccess = async (name, email) => {
+    const { userStore } = stores;
+    const user = await userStore.insert({ name, email });
+    await accessService.addUserToRole(user.id, readRole.id, ALL_PROJECTS);
     return user;
 };
 
@@ -130,21 +137,6 @@ test('should have project admin to default project', async () => {
     ).toBe(true);
     expect(
         await accessService.hasPermission(user, DELETE_FEATURE, 'default'),
-    ).toBe(true);
-});
-
-test('should grant member CREATE_FEATURE on all projects', async () => {
-    const { CREATE_FEATURE } = permissions;
-    const user = editorUser;
-
-    await accessService.addPermissionToRole(
-        editorRole.id,
-        permissions.CREATE_FEATURE,
-        ALL_PROJECTS,
-    );
-
-    expect(
-        await accessService.hasPermission(user, CREATE_FEATURE, 'some-project'),
     ).toBe(true);
 });
 
@@ -274,15 +266,15 @@ test('should grant user access to project', async () => {
     await accessService.addUserToRole(sUser.id, projectRole.id, project);
 
     // // Should be able to update feature toggles inside the project
-    // expect(
-    //     await accessService.hasPermission(sUser, CREATE_FEATURE, project),
-    // ).toBe(true);
-    // expect(
-    //     await accessService.hasPermission(sUser, UPDATE_FEATURE, project),
-    // ).toBe(true);
-    // expect(
-    //     await accessService.hasPermission(sUser, DELETE_FEATURE, project),
-    // ).toBe(true);
+    expect(
+        await accessService.hasPermission(sUser, CREATE_FEATURE, project),
+    ).toBe(true);
+    expect(
+        await accessService.hasPermission(sUser, UPDATE_FEATURE, project),
+    ).toBe(true);
+    expect(
+        await accessService.hasPermission(sUser, DELETE_FEATURE, project),
+    ).toBe(true);
 
     // Should not be able to admin the project itself.
     expect(
@@ -297,7 +289,7 @@ test('should not get access if not specifying project', async () => {
     const { CREATE_FEATURE, UPDATE_FEATURE, DELETE_FEATURE } = permissions;
     const project = 'another-project-2';
     const user = editorUser;
-    const sUser = await createUserEditorAccess(
+    const sUser = await createUserViewerAccess(
         'Some Random',
         'random22@getunleash.io',
     );
@@ -348,9 +340,8 @@ test('should return role with users', async () => {
     await accessService.addUserToRole(user.id, editorRole.id, 'default');
 
     const roleWithUsers = await accessService.getRoleData(editorRole.id);
-
     expect(roleWithUsers.role.name).toBe(RoleName.EDITOR);
-    expect(roleWithUsers.users.length > 2).toBe(true);
+    expect(roleWithUsers.users.length >= 2).toBe(true);
     expect(roleWithUsers.users.find((u) => u.id === user.id)).toBeTruthy();
     expect(
         roleWithUsers.users.find((u) => u.email === user.email),
@@ -451,17 +442,17 @@ test('should support permission with "ALL" environment requirement', async () =>
         description: 'Grants access to modify all environments',
     });
 
-    const { CREATE_FEATURE } = permissions;
+    const { CREATE_FEATURE_STRATEGY } = permissions;
     await accessStore.addPermissionsToRole(
         customRole.id,
-        [CREATE_FEATURE],
+        [CREATE_FEATURE_STRATEGY],
         'production',
     );
     await accessStore.addUserToRole(user.id, customRole.id, ALL_PROJECTS);
 
     const hasAccess = await accessService.hasPermission(
         user,
-        CREATE_FEATURE,
+        CREATE_FEATURE_STRATEGY,
         'default',
         'production',
     );
@@ -470,7 +461,7 @@ test('should support permission with "ALL" environment requirement', async () =>
 
     const hasNotAccess = await accessService.hasPermission(
         user,
-        CREATE_FEATURE,
+        CREATE_FEATURE_STRATEGY,
         'default',
         'development',
     );
@@ -478,12 +469,12 @@ test('should support permission with "ALL" environment requirement', async () =>
 });
 
 test('Should have access to create a strategy in an environment', async () => {
-    const { CREATE_FEATURE } = permissions;
+    const { CREATE_FEATURE_STRATEGY } = permissions;
     const user = editorUser;
     expect(
         await accessService.hasPermission(
             user,
-            CREATE_FEATURE,
+            CREATE_FEATURE_STRATEGY,
             'default',
             'development',
         ),
@@ -516,19 +507,6 @@ test('Should have access to edit a strategy in an environment', async () => {
     ).toBe(true);
 });
 
-test('Should be denied access to edit a strategy in an environment the user does not have access to', async () => {
-    const { UPDATE_FEATURE } = permissions;
-    const user = editorUser;
-    expect(
-        await accessService.hasPermission(
-            user,
-            UPDATE_FEATURE,
-            'default',
-            'noaccess',
-        ),
-    ).toBe(false);
-});
-
 test('Should have access to delete a strategy in an environment', async () => {
     const { UPDATE_FEATURE } = permissions;
     const user = editorUser;
@@ -543,12 +521,12 @@ test('Should have access to delete a strategy in an environment', async () => {
 });
 
 test('Should be denied access to delete a strategy in an environment the user does not have access to', async () => {
-    const { DELETE_FEATURE } = permissions;
+    const { DELETE_FEATURE_STRATEGY } = permissions;
     const user = editorUser;
     expect(
         await accessService.hasPermission(
             user,
-            DELETE_FEATURE,
+            DELETE_FEATURE_STRATEGY,
             'default',
             'noaccess',
         ),

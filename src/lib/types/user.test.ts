@@ -24,15 +24,13 @@ test('should create user, all fields', () => {
     );
 });
 
-test('should require email or username', () => {
-    expect(() => {
-        const user = new User({ id: 11 }); // eslint-disable-line
-    }).toThrowError(Error);
-    expect(() => {
-        const user = new User({ id: 11 }); // eslint-disable-line
-    }).toThrow('Username or Email is required');
-});
+test('Should create user with only id defined', () => {
+    const user = new User({ id: 123 });
 
+    expect(user.id).toBe(123);
+    expect(user.email).toBeUndefined();
+    expect(user.username).toBeUndefined();
+});
 test('Should create user with only email defined', () => {
     const user = new User({ id: 123, email: 'some@email.com' });
 

@@ -39,18 +39,11 @@ class AccessStoreMock implements IAccessStore {
         throw new Error('Method not implemented.');
     }
 
-    setupPermissionsForEnvironment(
-        environmentName: string,
-        permissions: string[],
-    ): Promise<void> {
-        throw new Error('Method not implemented.');
-    }
-
     userPermissions: IUserPermission[] = [];
 
     roles: IRole[] = [];
 
-    getAvailablePermissions(): Promise<IAvailablePermissions> {
+    getAvailablePermissions(): Promise<IPermission[]> {
         throw new Error('Method not implemented.');
     }
 

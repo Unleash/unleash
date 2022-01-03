@@ -21,6 +21,7 @@ import {
 } from '../types/model';
 import { IRoleStore } from 'lib/types/stores/role-store';
 import NameExistsError from '../error/name-exists-error';
+import { IEnvironmentStore } from 'lib/types/stores/environment-store';
 
 export const ALL_PROJECTS = '*';
 export const ALL_ENVS = '*';
@@ -63,6 +64,8 @@ export class AccessService {
 
     private roleStore: IRoleStore;
 
+    private environmentStore: IEnvironmentStore;
+
     private logger: Logger;
 
     constructor(
@@ -70,12 +73,17 @@ export class AccessService {
             accessStore,
             userStore,
             roleStore,
-        }: Pick<IUnleashStores, 'accessStore' | 'userStore' | 'roleStore'>,
+            environmentStore,
+        }: Pick<
+            IUnleashStores,
+            'accessStore' | 'userStore' | 'roleStore' | 'environmentStore'
+        >,
         { getLogger }: { getLogger: Function },
     ) {
         this.store = accessStore;
         this.userStore = userStore;
         this.roleStore = roleStore;
+        this.environmentStore = environmentStore;
         this.logger = getLogger('/services/access-service.ts');
     }
 
@@ -98,7 +106,8 @@ export class AccessService {
 
         try {
             const userP = await this.getPermissionsForUser(user);
-            console.log('My user permissions are', userP);
+            console.log('Got the following perms back', userP);
+
             return userP
                 .filter(
                     (p) =>
@@ -135,7 +144,30 @@ export class AccessService {
     }
 
     async getPermissions(): Promise<IAvailablePermissions> {
-        return this.store.getAvailablePermissions();
+        const bindablePermissions = await this.store.getAvailablePermissions();
+        const environments = await this.environmentStore.getAll();
+
+        const projectPermissions = bindablePermissions.filter((x) => {
+            return x.type === 'project';
+        });
+
+        const environmentPermissions = bindablePermissions.filter((perm) => {
+            return perm.type === 'environment';
+        });
+
+        const allEnvironmentPermissions = environments.map((env) => {
+            return {
+                name: env.name,
+                permissions: environmentPermissions.map((p) => {
+                    return { environment: env.name, ...p };
+                }),
+            };
+        });
+
+        return {
+            project: projectPermissions,
+            environments: allEnvironmentPermissions,
+        };
     }
 
     async addUserToRole(
@@ -331,12 +363,6 @@ export class AccessService {
 
         const ownerRole = await this.roleStore.getRoleByName(RoleName.OWNER);
 
-        await this.store.addPermissionsToRole(
-            ownerRole.id,
-            PROJECT_ADMIN,
-            projectId,
-        );
-
         // TODO: remove this when all users is guaranteed to have a unique id.
         if (owner.id) {
             this.logger.info(
@@ -344,14 +370,6 @@ export class AccessService {
             );
             await this.store.addUserToRole(owner.id, ownerRole.id, projectId);
         }
-
-        const memberRole = await this.roleStore.getRoleByName(RoleName.MEMBER);
-
-        await this.store.addPermissionsToRole(
-            memberRole.id,
-            PROJECT_REGULAR,
-            projectId,
-        );
     }
 
     async removeDefaultProjectRoles(
@@ -409,7 +427,7 @@ export class AccessService {
     }
 
     async updateRole(role: IRoleUpdate): Promise<ICustomRole> {
-        await this.validateRole(role);
+        // await this.validateRole(role);
         const baseRole = {
             id: role.id,
             name: role.name,

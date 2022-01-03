@@ -183,6 +183,7 @@ The Unleash Proxy accepts a `customStrategies` property as part of its initializ
        unleashApiToken: '*:default.56907a2fa53c1d16101d509a10b78e36190b0f918d9f122d',
        proxySecrets: ['proxy-secret', 'another-proxy-secret', 's1'],
        refreshInterval: 1000,
+       // highlight-next-line
        customStrategies: [new TimeStampStrategy()]
    });
 

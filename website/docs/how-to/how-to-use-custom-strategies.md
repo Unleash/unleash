@@ -83,7 +83,11 @@ The steps to implement a custom strategy for your client depend on the kind of c
 
 ### Option B: Implement the strategy for a front-end client SDK {#step-3-b}
 
-Front-end client SDK don't evaluate strategies directly, so you need to implement the **custom strategy in the [Unleash Proxy](../sdks/unleash-proxy.md)**. The below steps assume you're running the Unleash Proxy as a Docker container. If you're running the Unleash Proxy via Node directly, follow the steps for [server-side SDKs](#step-3-a "Step 3 option A: implement the strategy for a server-side client SDK") instead.
+Front-end client SDK don't evaluate strategies directly, so you need to implement the **custom strategy in the [Unleash Proxy](../sdks/unleash-proxy.md)**. Depending on how you run the Unleash Proxy, follow one of the below series of steps:
+- If you're running the Unleash Proxy as a Docker container, refer to the [steps for using a containerized Proxy](#step-3-b-docker).
+- If you're using the Unleash Proxy via Node.js, refer to the [steps for using custom strategies via Node.js](#step-3-b-node).
+
+#### With a containerized proxy {#step-3-b-docker}
 
 Strategies are stored in separate JavaScript files and loaded into the container at startup. Refer to [the Unleash Proxy documentation](../sdks/unleash-proxy.md) for a full overview of all the options.
 
@@ -126,3 +130,64 @@ Strategies are stored in separate JavaScript files and loaded into the container
        # highlight-end
        -p 3000:3000 --network unleash unleashorg/unleash-proxy
    ```
+
+#### When running the proxy with node {#step-3-b-node}
+
+The Unleash Proxy accepts a `customStrategies` property as part of its initialization options. Use this to pass it initialized strategies.
+
+
+
+
+1. **Install the `unleash-client` package**. You'll need this to implement the custom strategy:
+
+   ``` shell
+   npm install unleash-client
+   ```
+
+2. **Implement your strategy**. You can import it from a different file or put it in the same file as the Proxy initialization. For instance, a `TimeStampStrategy` could look like this:
+
+   ``` js
+   const { Strategy } = require('unleash-client');
+
+   class TimeStampStrategy extends Strategy {
+     constructor() {
+       super('TimeStamp');
+     }
+
+     isEnabled(parameters, context) {
+       return Date.parse(parameters.enableAfter) > Date.now();
+     }
+   }
+   ```
+
+3. **Pass the strategy to the Proxy Client** using the **`customStrategies`** option. A full code example:
+
+``` javascript
+const { createApp } = require('@unleash/proxy');
+const { Strategy } = require('unleash-client');
+
+class TimeStampStrategy extends Strategy {
+  constructor() {
+    super('TimeStamp');
+  }
+
+  isEnabled(parameters, context) {
+    return Date.parse(parameters.enableAfter) > Date.now();
+  }
+}
+
+const port = 3000;
+
+const app = createApp({
+    unleashUrl: 'https://app.unleash-hosted.com/demo/api/',
+    unleashApiToken: '*:default.56907a2fa53c1d16101d509a10b78e36190b0f918d9f122d',
+    proxySecrets: ['proxy-secret', 'another-proxy-secret', 's1'],
+    refreshInterval: 1000,
+    customStrategies: [new TimeStampStrategy()]
+});
+
+app.listen(port, () =>
+    // eslint-disable-next-line no-console
+    console.log(`Unleash Proxy listening on http://localhost:${port}/proxy`),
+);
+```

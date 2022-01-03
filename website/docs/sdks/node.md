@@ -11,7 +11,7 @@ In this guide we explain how to use feature toggles in a Node application using 
 
 First we must install Node.js dependency:
 
-```sh
+```shell npm2yarn
 npm install unleash-client
 ```
 

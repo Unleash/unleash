@@ -162,32 +162,32 @@ The Unleash Proxy accepts a `customStrategies` property as part of its initializ
 
 3. **Pass the strategy to the Proxy Client** using the **`customStrategies`** option. A full code example:
 
-``` javascript
-const { createApp } = require('@unleash/proxy');
-const { Strategy } = require('unleash-client');
+   ``` javascript
+   const { createApp } = require('@unleash/proxy');
+   const { Strategy } = require('unleash-client');
 
-class TimeStampStrategy extends Strategy {
-  constructor() {
-    super('TimeStamp');
-  }
+   class TimeStampStrategy extends Strategy {
+     constructor() {
+       super('TimeStamp');
+     }
 
-  isEnabled(parameters, context) {
-    return Date.parse(parameters.enableAfter) > Date.now();
-  }
-}
+     isEnabled(parameters, context) {
+       return Date.parse(parameters.enableAfter) > Date.now();
+     }
+   }
 
-const port = 3000;
+   const port = 3000;
 
-const app = createApp({
-    unleashUrl: 'https://app.unleash-hosted.com/demo/api/',
-    unleashApiToken: '*:default.56907a2fa53c1d16101d509a10b78e36190b0f918d9f122d',
-    proxySecrets: ['proxy-secret', 'another-proxy-secret', 's1'],
-    refreshInterval: 1000,
-    customStrategies: [new TimeStampStrategy()]
-});
+   const app = createApp({
+       unleashUrl: 'https://app.unleash-hosted.com/demo/api/',
+       unleashApiToken: '*:default.56907a2fa53c1d16101d509a10b78e36190b0f918d9f122d',
+       proxySecrets: ['proxy-secret', 'another-proxy-secret', 's1'],
+       refreshInterval: 1000,
+       customStrategies: [new TimeStampStrategy()]
+   });
 
-app.listen(port, () =>
-    // eslint-disable-next-line no-console
-    console.log(`Unleash Proxy listening on http://localhost:${port}/proxy`),
-);
-```
+   app.listen(port, () =>
+       // eslint-disable-next-line no-console
+       console.log(`Unleash Proxy listening on http://localhost:${port}/proxy`),
+   );
+   ```

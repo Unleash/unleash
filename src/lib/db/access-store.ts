@@ -8,11 +8,7 @@ import {
     IRole,
     IUserPermission,
 } from '../types/stores/access-store';
-import {
-    IAvailablePermissions,
-    IEnvironmentPermission,
-    IPermission,
-} from 'lib/types/model';
+import { IPermission } from 'lib/types/model';
 
 const T = {
     ROLE_USER: 'role_user',
@@ -26,7 +22,9 @@ interface IPermissionRow {
     id: number;
     permission: string;
     display_name: string;
-    environment: string;
+    environment?: string;
+    type: string;
+    project?: string;
 }
 
 export class AccessStore implements IAccessStore {
@@ -44,20 +42,6 @@ export class AccessStore implements IAccessStore {
                 store: 'access-store',
                 action,
             });
-    }
-
-    async setupPermissionsForEnvironment(
-        environmentName: string,
-        permissions: string[],
-    ): Promise<void> {
-        const rows = permissions.map((permission) => {
-            return {
-                permission: permission,
-                display_name: '',
-                environment: environmentName,
-            };
-        });
-        await this.db.batchInsert(T.PERMISSIONS, rows);
     }
 
     async delete(key: number): Promise<void> {
@@ -91,51 +75,49 @@ export class AccessStore implements IAccessStore {
         return Promise.resolve([]);
     }
 
-    async getAvailablePermissions(): Promise<IAvailablePermissions> {
+    async getAvailablePermissions(): Promise<IPermission[]> {
         const rows = await this.db
-            .select([
-                'p.id',
-                'p.permission',
-                'p.environment',
-                'pt.display_name',
-            ])
-            .join(
-                `${T.PERMISSION_TYPES} AS pt`,
-                'pt.permission',
-                'p.permission',
-            )
-            .where('pt.type', 'project')
-            .orWhere('pt.type', 'environment')
+            .select(['id', 'permission', 'type', 'display_name'])
+            .where('type', 'project')
+            .orWhere('type', 'environment')
             .from(`${T.PERMISSIONS} as p`);
+        return rows.map(this.mapPermission);
+        // .map(mapPermission)
+        // const rows = await this.db
+        //     .select(['p.id', 'p.permission', 'p.environment', 'p.display_name'])
+        //     .join(`${T.ROLE_PERMISSION} AS rp`, 'rp.permission_id', 'p.id')
+        //     .where('pt.type', 'project')
+        //     .orWhere('pt.type', 'environment')
+        //     .from(`${T.PERMISSIONS} as p`);
 
-        let projectPermissions: IPermission[] = [];
-        let rawEnvironments = new Map<string, IPermissionRow[]>();
+        // let projectPermissions: IPermission[] = [];
+        // let rawEnvironments = new Map<string, IPermissionRow[]>();
 
-        for (let permission of rows) {
-            if (!permission.environment) {
-                projectPermissions.push(this.mapPermission(permission));
-            } else {
-                if (!rawEnvironments.get(permission.environment)) {
-                    rawEnvironments.set(permission.environment, []);
-                }
-                rawEnvironments.get(permission.environment).push(permission);
-            }
-        }
-        let allEnvironmentPermissions: Array<IEnvironmentPermission> =
-            Array.from(rawEnvironments).map(
-                ([environmentName, environmentPermissions]) => {
-                    return {
-                        name: environmentName,
-                        permissions: environmentPermissions.map(
-                            this.mapPermission,
-                        ),
-                    };
-                },
-            );
-        return {
-            project: projectPermissions,
-            environments: allEnvironmentPermissions,
-        };
+        // for (let permission of rows) {
+        //     if (!permission.environment) {
+        //         projectPermissions.push(this.mapPermission(permission));
+        //     } else {
+        //         if (!rawEnvironments.get(permission.environment)) {
+        //             rawEnvironments.set(permission.environment, []);
+        //         }
+        //         rawEnvironments.get(permission.environment).push(permission);
+        //     }
+        // }
+        // let allEnvironmentPermissions: Array<IEnvironmentPermission> =
+        //     Array.from(rawEnvironments).map(
+        //         ([environmentName, environmentPermissions]) => {
+        //             return {
+        //                 name: environmentName,
+        //                 permissions: environmentPermissions.map(
+        //                     this.mapPermission,
+        //                 ),
+        //             };
+        //         },
+        //     );
+        // return {
+        //     project: projectPermissions,
+        //     environments: allEnvironmentPermissions,
+        // };
     }
 
     mapPermission(permission: IPermissionRow): IPermission {
@@ -143,32 +125,45 @@ export class AccessStore implements IAccessStore {
             id: permission.id,
             name: permission.permission,
             displayName: permission.display_name,
+            type: permission.type,
         };
     }
 
     async getPermissionsForUser(userId: number): Promise<IUserPermission[]> {
         const stopTimer = this.timer('getPermissionsForUser');
         const rows = await this.db
-            .select('project', 'permission', 'environment')
-            .from<IUserPermission>(`${T.ROLE_PERMISSION} AS rp`)
+            .select('project', 'permission', 'environment', 'type')
+            .from<IPermissionRow>(`${T.ROLE_PERMISSION} AS rp`)
             .join(`${T.ROLE_USER} AS ur`, 'ur.role_id', 'rp.role_id')
             .join(`${T.PERMISSIONS} AS p`, 'p.id', 'rp.permission_id')
             .where('ur.user_id', '=', userId);
         stopTimer();
-        return rows;
+        return rows.map(this.mapUserPermission);
+    }
+
+    mapUserPermission(row: IPermissionRow): IUserPermission {
+        const project = row.type !== 'root' ? row.project : undefined;
+        const environment =
+            row.type === 'environment' ? row.environment : undefined;
+        return {
+            project,
+            environment,
+            permission: row.permission,
+        };
     }
 
     async getPermissionsForRole(roleId: number): Promise<IPermission[]> {
         const stopTimer = this.timer('getPermissionsForRole');
         const rows = await this.db
-            .select('p.id', 'p.permission', 'p.environment', 'pt.display_name')
+            .select(
+                'p.id',
+                'p.permission',
+                'rp.environment',
+                'p.display_name',
+                'p.type',
+            )
             .from<IPermission>(`${T.ROLE_PERMISSION} as rp`)
             .join(`${T.PERMISSIONS} as p`, 'p.id', 'rp.permission_id')
-            .join(
-                `${T.PERMISSION_TYPES} as pt`,
-                'pt.permission',
-                'p.permission',
-            )
             .where('rp.role_id', '=', roleId);
         stopTimer();
         return rows.map((permission) => {
@@ -177,6 +172,7 @@ export class AccessStore implements IAccessStore {
                 name: permission.permission,
                 environment: permission.environment,
                 displayName: permission.display_name,
+                type: permission.type,
             };
         });
     }
@@ -189,6 +185,7 @@ export class AccessStore implements IAccessStore {
             return {
                 role_id,
                 permission_id: x.id,
+                environment: x.environment,
             };
         });
         this.db.batchInsert(T.ROLE_PERMISSION, rows);
@@ -276,19 +273,18 @@ export class AccessStore implements IAccessStore {
         permissions: string[],
         environment?: string,
     ): Promise<void> {
-        const result = await this.db.raw(
-            `SELECT id FROM ${T.PERMISSIONS} where environment = ? and permission = ANY(?)`,
-            [environment, permissions],
-        );
+        const rows = await this.db
+            .select('id as permissionId')
+            .from<number>(T.PERMISSIONS)
+            .whereIn('permission', permissions);
 
-        const ids = result.rows.map((x) => x.id);
-
-        const rows = ids.map((permission_id) => ({
+        const newRoles = rows.map((row) => ({
             role_id,
-            permission_id,
+            environment,
+            permission_id: row.permissionId,
         }));
 
-        return this.db.batchInsert(T.ROLE_PERMISSION, rows);
+        return this.db.batchInsert(T.ROLE_PERMISSION, newRoles);
     }
 
     async removePermissionFromRole(
@@ -296,17 +292,18 @@ export class AccessStore implements IAccessStore {
         permission: string,
         environment?: string,
     ): Promise<void> {
-        const result = await this.db.raw(
-            `SELECT id FROM ${T.PERMISSIONS} where environment = ? and permission = ?`,
-            [environment, permission],
-        );
+        const rows = await this.db
+            .select('id as permissionId')
+            .from<number>(T.PERMISSIONS)
+            .where('permission', permission);
 
-        const permissionId = result.first();
+        const permissionId = rows[0].permissionId;
 
         return this.db(T.ROLE_PERMISSION)
             .where({
                 role_id,
-                permissionId,
+                permission_id: permissionId,
+                environment,
             })
             .delete();
     }

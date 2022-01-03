@@ -224,6 +224,7 @@ export interface IPermission {
     id: number;
     name: string;
     displayName: string;
+    type: string;
     environment?: string;
 }
 

@@ -146,7 +146,7 @@ docker run -e POSTGRES_PASSWORD=some_password \
 3. Start Unleash via docker:
 
 ```sh
-docker run -d -p 4242:4242 \
+docker run -p 4242:4242 \
   -e DATABASE_HOST=postgres -e DATABASE_NAME=unleash \
   -e DATABASE_USERNAME=unleash_user -e DATABASE_PASSWORD=some_password \
   -e DATABASE_SSL=false \

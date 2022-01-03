@@ -43,7 +43,7 @@ The steps to implement a custom strategy for your client depend on the kind of c
      }
 
      isEnabled(parameters, context) {
-       return Date.parse(parameters.enableAfter) > Date.now();
+       return Date.parse(parameters.enableAfter) < Date.now();
      }
    }
    ```
@@ -61,7 +61,7 @@ The steps to implement a custom strategy for your client depend on the kind of c
      }
 
      isEnabled(parameters, context) {
-       return Date.parse(parameters.enableAfter) > Date.now();
+       return Date.parse(parameters.enableAfter) < Date.now();
      }
    }
 
@@ -110,7 +110,7 @@ Strategies are stored in separate JavaScript files and loaded into the container
      }
 
      isEnabled(parameters, context) {
-       return Date.parse(parameters.enableAfter) > Date.now();
+       return Date.parse(parameters.enableAfter) < Date.now();
      }
    }
 
@@ -155,7 +155,7 @@ The Unleash Proxy accepts a `customStrategies` property as part of its initializ
      }
 
      isEnabled(parameters, context) {
-       return Date.parse(parameters.enableAfter) > Date.now();
+       return Date.parse(parameters.enableAfter) < Date.now();
      }
    }
    ```
@@ -172,7 +172,7 @@ The Unleash Proxy accepts a `customStrategies` property as part of its initializ
      }
 
      isEnabled(parameters, context) {
-       return Date.parse(parameters.enableAfter) > Date.now();
+       return Date.parse(parameters.enableAfter) < Date.now();
      }
    }
 

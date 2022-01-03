@@ -244,7 +244,7 @@ test('should have project admin to default project as editor', async () => {
     ).toBe(true);
 });
 
-test('Editor should not have project admin to other projects', async () => {
+test('should not have project admin to other projects as editor', async () => {
     const projectName = 'unusedprojectname';
     const defaultEnv = 'default';
     const developmentEnv = 'development';

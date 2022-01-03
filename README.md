@@ -138,7 +138,7 @@ docker network create unleash
 2. Start a postgres database:
 
 ```sh
-docker run -d -e POSTGRES_PASSWORD=some_password \
+docker run -e POSTGRES_PASSWORD=some_password \
   -e POSTGRES_USER=unleash_user -e POSTGRES_DB=unleash \
   --network unleash --name postgres postgres
 ```

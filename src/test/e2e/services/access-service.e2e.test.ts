@@ -114,30 +114,264 @@ test('should not have admin permission', async () => {
     expect(await accessService.hasPermission(user, ADMIN)).toBe(false);
 });
 
-test('should have project admin to default project', async () => {
+test('should have project admin to default project as editor', async () => {
+    const projectName = 'default';
+    const defaultEnv = 'default';
+    const developmentEnv = 'development';
+    const productionEnv = 'production';
     const {
         DELETE_PROJECT,
         UPDATE_PROJECT,
         CREATE_FEATURE,
         UPDATE_FEATURE,
         DELETE_FEATURE,
+        CREATE_FEATURE_STRATEGY,
+        UPDATE_FEATURE_STRATEGY,
+        DELETE_FEATURE_STRATEGY,
+        UPDATE_FEATURE_ENVIRONMENT,
     } = permissions;
     const user = editorUser;
     expect(
-        await accessService.hasPermission(user, DELETE_PROJECT, 'default'),
+        await accessService.hasPermission(user, DELETE_PROJECT, projectName),
     ).toBe(true);
     expect(
-        await accessService.hasPermission(user, UPDATE_PROJECT, 'default'),
+        await accessService.hasPermission(user, UPDATE_PROJECT, projectName),
     ).toBe(true);
     expect(
-        await accessService.hasPermission(user, CREATE_FEATURE, 'default'),
+        await accessService.hasPermission(user, CREATE_FEATURE, projectName),
     ).toBe(true);
     expect(
-        await accessService.hasPermission(user, UPDATE_FEATURE, 'default'),
+        await accessService.hasPermission(user, UPDATE_FEATURE, projectName),
     ).toBe(true);
     expect(
-        await accessService.hasPermission(user, DELETE_FEATURE, 'default'),
+        await accessService.hasPermission(user, DELETE_FEATURE, projectName),
     ).toBe(true);
+    expect(
+        await accessService.hasPermission(
+            user,
+            CREATE_FEATURE_STRATEGY,
+            projectName,
+            defaultEnv,
+        ),
+    ).toBe(true);
+    expect(
+        await accessService.hasPermission(
+            user,
+            UPDATE_FEATURE_STRATEGY,
+            projectName,
+            defaultEnv,
+        ),
+    ).toBe(true);
+    expect(
+        await accessService.hasPermission(
+            user,
+            DELETE_FEATURE_STRATEGY,
+            projectName,
+            defaultEnv,
+        ),
+    ).toBe(true);
+    expect(
+        await accessService.hasPermission(
+            user,
+            UPDATE_FEATURE_ENVIRONMENT,
+            projectName,
+            defaultEnv,
+        ),
+    ).toBe(true);
+    expect(
+        await accessService.hasPermission(
+            user,
+            CREATE_FEATURE_STRATEGY,
+            projectName,
+            developmentEnv,
+        ),
+    ).toBe(true);
+    expect(
+        await accessService.hasPermission(
+            user,
+            UPDATE_FEATURE_STRATEGY,
+            projectName,
+            developmentEnv,
+        ),
+    ).toBe(true);
+    expect(
+        await accessService.hasPermission(
+            user,
+            DELETE_FEATURE_STRATEGY,
+            projectName,
+            developmentEnv,
+        ),
+    ).toBe(true);
+    expect(
+        await accessService.hasPermission(
+            user,
+            UPDATE_FEATURE_ENVIRONMENT,
+            projectName,
+            developmentEnv,
+        ),
+    ).toBe(true);
+    expect(
+        await accessService.hasPermission(
+            user,
+            CREATE_FEATURE_STRATEGY,
+            projectName,
+            productionEnv,
+        ),
+    ).toBe(true);
+    expect(
+        await accessService.hasPermission(
+            user,
+            UPDATE_FEATURE_STRATEGY,
+            projectName,
+            productionEnv,
+        ),
+    ).toBe(true);
+    expect(
+        await accessService.hasPermission(
+            user,
+            DELETE_FEATURE_STRATEGY,
+            projectName,
+            productionEnv,
+        ),
+    ).toBe(true);
+    expect(
+        await accessService.hasPermission(
+            user,
+            UPDATE_FEATURE_ENVIRONMENT,
+            projectName,
+            productionEnv,
+        ),
+    ).toBe(true);
+});
+
+test('Editor should not have project admin to other projects', async () => {
+    const projectName = 'unusedprojectname';
+    const defaultEnv = 'default';
+    const developmentEnv = 'development';
+    const productionEnv = 'production';
+    const {
+        DELETE_PROJECT,
+        UPDATE_PROJECT,
+        CREATE_FEATURE,
+        UPDATE_FEATURE,
+        DELETE_FEATURE,
+        CREATE_FEATURE_STRATEGY,
+        UPDATE_FEATURE_STRATEGY,
+        DELETE_FEATURE_STRATEGY,
+        UPDATE_FEATURE_ENVIRONMENT,
+    } = permissions;
+    const user = editorUser;
+    expect(
+        await accessService.hasPermission(user, DELETE_PROJECT, projectName),
+    ).toBe(false);
+    expect(
+        await accessService.hasPermission(user, UPDATE_PROJECT, projectName),
+    ).toBe(false);
+    expect(
+        await accessService.hasPermission(user, CREATE_FEATURE, projectName),
+    ).toBe(false);
+    expect(
+        await accessService.hasPermission(user, UPDATE_FEATURE, projectName),
+    ).toBe(false);
+    expect(
+        await accessService.hasPermission(user, DELETE_FEATURE, projectName),
+    ).toBe(false);
+    expect(
+        await accessService.hasPermission(
+            user,
+            CREATE_FEATURE_STRATEGY,
+            projectName,
+            defaultEnv,
+        ),
+    ).toBe(false);
+    expect(
+        await accessService.hasPermission(
+            user,
+            UPDATE_FEATURE_STRATEGY,
+            projectName,
+            defaultEnv,
+        ),
+    ).toBe(false);
+    expect(
+        await accessService.hasPermission(
+            user,
+            DELETE_FEATURE_STRATEGY,
+            projectName,
+            defaultEnv,
+        ),
+    ).toBe(false);
+    expect(
+        await accessService.hasPermission(
+            user,
+            UPDATE_FEATURE_ENVIRONMENT,
+            projectName,
+            defaultEnv,
+        ),
+    ).toBe(false);
+    expect(
+        await accessService.hasPermission(
+            user,
+            CREATE_FEATURE_STRATEGY,
+            projectName,
+            developmentEnv,
+        ),
+    ).toBe(false);
+    expect(
+        await accessService.hasPermission(
+            user,
+            UPDATE_FEATURE_STRATEGY,
+            projectName,
+            developmentEnv,
+        ),
+    ).toBe(false);
+    expect(
+        await accessService.hasPermission(
+            user,
+            DELETE_FEATURE_STRATEGY,
+            projectName,
+            developmentEnv,
+        ),
+    ).toBe(false);
+    expect(
+        await accessService.hasPermission(
+            user,
+            UPDATE_FEATURE_ENVIRONMENT,
+            projectName,
+            developmentEnv,
+        ),
+    ).toBe(false);
+    expect(
+        await accessService.hasPermission(
+            user,
+            CREATE_FEATURE_STRATEGY,
+            projectName,
+            productionEnv,
+        ),
+    ).toBe(false);
+    expect(
+        await accessService.hasPermission(
+            user,
+            UPDATE_FEATURE_STRATEGY,
+            projectName,
+            productionEnv,
+        ),
+    ).toBe(false);
+    expect(
+        await accessService.hasPermission(
+            user,
+            DELETE_FEATURE_STRATEGY,
+            projectName,
+            productionEnv,
+        ),
+    ).toBe(false);
+    expect(
+        await accessService.hasPermission(
+            user,
+            UPDATE_FEATURE_ENVIRONMENT,
+            projectName,
+            productionEnv,
+        ),
+    ).toBe(false);
 });
 
 test('cannot add CREATE_FEATURE without defining project', async () => {

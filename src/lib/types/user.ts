@@ -60,9 +60,6 @@ export default class User implements IUser {
         if (!id) {
             throw new TypeError('Id is required');
         }
-        if (!username && !email) {
-            throw new TypeError('Username or Email is required');
-        }
         Joi.assert(email, Joi.string().email(), 'Email');
         Joi.assert(username, Joi.string(), 'Username');
         Joi.assert(name, Joi.string(), 'Name');
@@ -78,7 +75,7 @@ export default class User implements IUser {
     }
 
     generateImageUrl(): string {
-        return gravatarUrl(this.email || this.username, {
+        return gravatarUrl(this.email || this.username || '' + this.id, {
             size: 42,
             default: 'retro',
         });

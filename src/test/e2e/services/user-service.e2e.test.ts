@@ -180,6 +180,27 @@ test("deleting a user should delete the user's sessions", async () => {
     ).rejects.toThrow(NotFoundError);
 });
 
+test('updating a user without an email should not strip the email', async () => {
+    const email = 'some@test.com';
+    const user = await userService.createUser({
+        email,
+        password: 'A very strange P4ssw0rd_',
+        rootRole: adminRole.id,
+    });
+
+    try {
+        await userService.updateUser({
+            id: user.id,
+            email: null,
+            name: 'some',
+        });
+    } catch (e) {}
+
+    const updatedUser = await userService.getUser(user.id);
+
+    expect(updatedUser.email).toBe(email);
+});
+
 test('should login and create user via SSO', async () => {
     const email = 'some@test.com';
     const user = await userService.loginUserSSO({

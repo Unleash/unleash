@@ -178,6 +178,19 @@ exports.up = function (db, cb) {
 exports.down = function (db, cb) {
     db.runSql(
         `
+        ALTER TABLE role_user DROP COLUMN project;
+
+        ALTER TABLE roles DROP COLUMN updated_at;
+
+        ALTER TABLE role_permission
+            DROP COLUMN
+                permission_id,
+            DROP COLUMN
+                environment;
+
+        ALTER TABLE role_permission
+            ADD COLUMN project TEXT,
+            ADD COLUMN permission TEXT;
   `,
         cb,
     );

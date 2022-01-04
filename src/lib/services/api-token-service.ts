@@ -79,7 +79,7 @@ export class ApiTokenService {
                 await this.insertNewApiToken(newToken);
             }
         } catch (e) {
-            this.logger.error('Unable to create default API tokens');
+            this.logger.error('Unable to create initial Admin API tokens');
         }
     }
 

@@ -92,7 +92,7 @@ Front-end client SDKs don't evaluate strategies directly, so you need to impleme
 Strategies are stored in separate JavaScript files and loaded into the container at startup. Refer to [the Unleash Proxy documentation](../sdks/unleash-proxy.md) for a full overview of all the options.
 
 1. **Create a strategies directory.** Create a directory that Docker has access to where you can store your strategies. The next steps assume you called it `strategies`
-2. **Initialize a node project** and **install the Unleash Client**:
+2. **Initialize a Node.js project** and **install the Unleash Client**:
 
    ``` shell
    npm init -y && \
@@ -131,12 +131,9 @@ Strategies are stored in separate JavaScript files and loaded into the container
        -p 3000:3000 --network unleash unleashorg/unleash-proxy
    ```
 
-#### When running the proxy with node {#step-3-b-node}
+#### When running the proxy with Node.js {#step-3-b-node}
 
 The Unleash Proxy accepts a `customStrategies` property as part of its initialization options. Use this to pass it initialized strategies.
-
-
-
 
 1. **Install the `unleash-client` package**. You'll need this to implement the custom strategy:
 

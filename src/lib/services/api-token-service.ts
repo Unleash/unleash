@@ -5,10 +5,10 @@ import { IUnleashStores } from '../types/stores';
 import { IUnleashConfig } from '../types/option';
 import ApiUser from '../types/api-user';
 import {
-    ALL,
     ApiTokenType,
     IApiToken,
     IApiTokenCreate,
+    validateApiToken,
 } from '../types/models/api-token';
 import { IApiTokenStore } from '../types/stores/api-token-store';
 import { FOREIGN_KEY_VIOLATION } from '../error/db-error';
@@ -35,8 +35,8 @@ export class ApiTokenService {
             () => this.fetchActiveTokens(),
             minutesToMilliseconds(1),
         ).unref();
-        if (config.authentication && config.authentication.initApiTokens) {
-            process.nextTick(() =>
+        if (config.authentication.initApiTokens.length > 0) {
+            process.nextTick(async () =>
                 this.initApiTokens(config.authentication.initApiTokens),
             );
         }
@@ -59,25 +59,14 @@ export class ApiTokenService {
         return this.store.getAllActive();
     }
 
-    private async initApiTokens(tokens: string[]) {
+    private async initApiTokens(tokens: IApiTokenCreate[]) {
         const tokenCount = await this.store.count();
-        if (tokenCount) {
+        if (tokenCount > 0) {
             return;
         }
         try {
-            for (const token of tokens) {
-                const tokenParts = token.split(':');
-                const newToken: IApiToken = {
-                    createdAt: undefined,
-                    project: tokenParts[0],
-                    environment: tokenParts[1],
-                    secret: `${tokenParts[0]}:${tokenParts[1]}.${tokenParts[2]}`,
-                    type: ApiTokenType.ADMIN,
-                    username: 'admin',
-                };
-                this.validateNewApiToken(newToken);
-                await this.insertNewApiToken(newToken);
-            }
+            const createAll = tokens.map((t) => this.insertNewApiToken(t));
+            await Promise.all(createAll);
         } catch (e) {
             this.logger.error('Unable to create initial Admin API tokens');
         }
@@ -111,30 +100,10 @@ export class ApiTokenService {
         return this.store.delete(secret);
     }
 
-    private validateNewApiToken({ type, project, environment }) {
-        if (type === ApiTokenType.ADMIN && project !== ALL) {
-            throw new BadDataError(
-                'Admin token cannot be scoped to single project',
-            );
-        }
-
-        if (type === ApiTokenType.ADMIN && environment !== ALL) {
-            throw new BadDataError(
-                'Admin token cannot be scoped to single environment',
-            );
-        }
-
-        if (type === ApiTokenType.CLIENT && environment === ALL) {
-            throw new BadDataError(
-                'Client token cannot be scoped to all environments',
-            );
-        }
-    }
-
     public async createApiToken(
         newToken: Omit<IApiTokenCreate, 'secret'>,
     ): Promise<IApiToken> {
-        this.validateNewApiToken(newToken);
+        validateApiToken(newToken);
 
         const secret = this.generateSecretKey(newToken);
         const createNewToken = { ...newToken, secret };

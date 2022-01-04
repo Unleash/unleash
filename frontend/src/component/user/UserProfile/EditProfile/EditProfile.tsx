@@ -1,6 +1,5 @@
 import { SyntheticEvent, useState } from 'react';
-import { Button, TextField, Typography, IconButton, InputAdornment } from '@material-ui/core';
-import { Visibility, VisibilityOff } from '@material-ui/icons';
+import { Button, Typography } from '@material-ui/core';
 import classnames from 'classnames';
 import { useStyles } from './EditProfile.styles';
 import { useCommonStyles } from '../../../../common.styles';
@@ -17,6 +16,7 @@ import {
     UNAUTHORIZED,
 } from '../../../../constants/statusCodes';
 import { formatApiPath } from '../../../../utils/format-path';
+import PasswordField from '../../../common/PasswordField/PasswordField';
 
 interface IEditProfileProps {
     setEditingProfile: React.Dispatch<React.SetStateAction<boolean>>;
@@ -34,16 +34,7 @@ const EditProfile = ({
     const [error, setError] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [showPassword, setShowPassword] = useState(false);
     const ref = useLoading(loading);
-
-    const handleClickShowPassword = () => {
-        setShowPassword(!showPassword);
-    };
-
-    const handleMouseDownPassword = (e: React.MouseEvent<HTMLButtonElement>) => {
-        e.preventDefault();
-    };
 
     const submit = async (e: SyntheticEvent) => {
         e.preventDefault();
@@ -122,64 +113,25 @@ const EditProfile = ({
                     callback={setValidPassword}
                     data-loading
                 />
-                <TextField
+                <PasswordField
                     data-loading
-                    variant="outlined"
-                    size="small"
                     label="Password"
-                    type={showPassword ? 'text' : 'password'}
-                    InputProps={{
-                        style:{
-                            paddingRight: 0
-                        },
-                        endAdornment: (
-                            <InputAdornment position="end">
-                                <IconButton
-                                    aria-label="toggle password visibility"
-                                    onClick={handleClickShowPassword}
-                                    onMouseDown={handleMouseDownPassword}
-                                >
-                                    {showPassword ? (
-                                        <Visibility />
-                                    ) : (
-                                        <VisibilityOff />
-                                    )}
-                                </IconButton>
-                            </InputAdornment>
-                        ),
-                    }}
                     name="password"
                     value={password}
                     autoComplete="on"
-                    onChange={e => setPassword(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setPassword(e.target.value)
+                    }
                 />
-                <TextField
+                <PasswordField
                     data-loading
-                    variant="outlined"
-                    size="small"
                     label="Confirm password"
-                    type={showPassword ? 'text' : 'password'}
-                    InputProps={{
-                        endAdornment: (
-                            <InputAdornment position="end">
-                                <IconButton
-                                    aria-label="toggle password visibility"
-                                    onClick={handleClickShowPassword}
-                                    onMouseDown={handleMouseDownPassword}
-                                >
-                                    {showPassword ? (
-                                        <Visibility />
-                                    ) : (
-                                        <VisibilityOff />
-                                    )}
-                                </IconButton>
-                            </InputAdornment>
-                        ),
-                    }}
                     name="confirmPassword"
                     value={confirmPassword}
                     autoComplete="on"
-                    onChange={e => setConfirmPassword(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setConfirmPassword(e.target.value)
+                    }
                 />
                 <PasswordMatcher
                     data-loading

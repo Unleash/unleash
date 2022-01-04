@@ -1,15 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
-import {
-    Button,
-    Grid,
-    TextField,
-    Typography,
-    InputAdornment,
-    IconButton,
-} from '@material-ui/core';
-import { Visibility, VisibilityOff } from '@material-ui/icons';
+import { Button, Grid, TextField, Typography } from '@material-ui/core';
 import { useHistory } from 'react-router';
 import { useCommonStyles } from '../../../common.styles';
 import { useStyles } from './HostedAuth.styles';
@@ -18,6 +10,7 @@ import AuthOptions from '../common/AuthOptions/AuthOptions';
 import DividerText from '../../common/DividerText/DividerText';
 import ConditionallyRender from '../../common/ConditionallyRender';
 import useUser from '../../../hooks/api/getters/useUser/useUser';
+import PasswordField from '../../common/PasswordField/PasswordField';
 
 const HostedAuth = ({ authDetails, passwordLogin }) => {
     const commonStyles = useCommonStyles();
@@ -27,19 +20,10 @@ const HostedAuth = ({ authDetails, passwordLogin }) => {
     const params = useQueryParams();
     const [username, setUsername] = useState(params.get('email') || '');
     const [password, setPassword] = useState('');
-    const [showPassword, setShowPassword] = useState(false);
     const [errors, setErrors] = useState({
         usernameError: '',
         passwordError: '',
     });
-
-    const handleClickShowPassword = () => {
-        setShowPassword(!showPassword);
-    };
-
-    const handleMouseDownPassword = e => {
-        e.preventDefault();
-    };
 
     const handleSubmit = async evt => {
         evt.preventDefault();
@@ -126,40 +110,13 @@ const HostedAuth = ({ authDetails, passwordLogin }) => {
                                 variant="outlined"
                                 size="small"
                             />
-                            <TextField
+                            <PasswordField
                                 label="Password"
                                 onChange={evt => setPassword(evt.target.value)}
                                 name="password"
-                                type={showPassword ? 'text' : 'password'}
                                 value={password}
                                 error={!!passwordError}
                                 helperText={passwordError}
-                                variant="outlined"
-                                size="small"
-                                InputProps={{
-                                    style:{
-                                        paddingRight: 0
-                                    },
-                                    endAdornment: (
-                                        <InputAdornment position="end">
-                                            <IconButton
-                                                aria-label="toggle password visibility"
-                                                onClick={
-                                                    handleClickShowPassword
-                                                }
-                                                onMouseDown={
-                                                    handleMouseDownPassword
-                                                }
-                                            >
-                                                {showPassword ? (
-                                                    <Visibility />
-                                                ) : (
-                                                    <VisibilityOff />
-                                                )}
-                                            </IconButton>
-                                        </InputAdornment>
-                                    ),
-                                }}
                             />
                             <Grid container>
                                 <Button

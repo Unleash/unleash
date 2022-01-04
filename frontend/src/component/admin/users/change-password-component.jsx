@@ -1,14 +1,7 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import {
-    TextField,
-    Typography,
-    Avatar,
-    InputAdornment,
-    IconButton,
-} from '@material-ui/core';
-import { Visibility, VisibilityOff } from '@material-ui/icons';
+import { Typography, Avatar } from '@material-ui/core';
 import { trim } from '../../common/util';
 import { modalStyles } from './util';
 import Dialogue from '../../common/Dialogue/Dialogue';
@@ -17,6 +10,7 @@ import { useCommonStyles } from '../../../common.styles';
 import PasswordMatcher from '../../user/common/ResetPasswordForm/PasswordMatcher/PasswordMatcher';
 import ConditionallyRender from '../../common/ConditionallyRender';
 import { Alert } from '@material-ui/lab';
+import PasswordField from '../../common/PasswordField/PasswordField';
 
 function ChangePassword({
     showDialog,
@@ -27,16 +21,7 @@ function ChangePassword({
     const [data, setData] = useState({});
     const [error, setError] = useState({});
     const [validPassword, setValidPassword] = useState(false);
-    const [showPassword, setShowPassword] = useState(false);
     const commonStyles = useCommonStyles();
-
-    const handleClickShowPassword = () => {
-        setShowPassword(!showPassword);
-    };
-
-    const handleMouseDownPassword = e => {
-        e.preventDefault();
-    };
 
     const updateField = e => {
         setError({});
@@ -125,66 +110,20 @@ function ChangePassword({
                 />
 
                 <p style={{ color: 'red' }}>{error.general}</p>
-                <TextField
+                <PasswordField
                     label="New password"
                     name="password"
-                    type={showPassword ? 'text' : 'password'}
                     value={data.password}
                     helperText={error.password}
                     onChange={updateField}
-                    variant="outlined"
-                    size="small"
-                    InputProps={{
-                        style:{
-                            paddingRight: 0
-                        },
-                        endAdornment: (
-                            <InputAdornment position="end">
-                                <IconButton
-                                    aria-label="toggle password visibility"
-                                    onClick={handleClickShowPassword}
-                                    onMouseDown={handleMouseDownPassword}
-                                >
-                                    {showPassword ? (
-                                        <Visibility />
-                                    ) : (
-                                        <VisibilityOff />
-                                    )}
-                                </IconButton>
-                            </InputAdornment>
-                        ),
-                    }}
                 />
-                <TextField
+                <PasswordField
                     label="Confirm password"
                     name="confirm"
-                    type={showPassword ? 'text' : 'password'}
                     value={data.confirm}
                     error={error.confirm !== undefined}
                     helperText={error.confirm}
                     onChange={updateField}
-                    variant="outlined"
-                    size="small"
-                    InputProps={{
-                        style:{
-                            paddingRight: 0
-                        },
-                        endAdornment: (
-                            <InputAdornment position="end">
-                                <IconButton
-                                    aria-label="toggle password visibility"
-                                    onClick={handleClickShowPassword}
-                                    onMouseDown={handleMouseDownPassword}
-                                >
-                                    {showPassword ? (
-                                        <Visibility />
-                                    ) : (
-                                        <VisibilityOff />
-                                    )}
-                                </IconButton>
-                            </InputAdornment>
-                        ),
-                    }}
                 />
                 <PasswordMatcher
                     started={data.password && data.confirm}

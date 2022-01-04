@@ -9,6 +9,7 @@ import {
     IUserPermission,
 } from '../types/stores/access-store';
 import { IPermission } from 'lib/types/model';
+import { roundToNearestMinutesWithOptions } from 'date-fns/fp';
 
 const T = {
     ROLE_USER: 'role_user',
@@ -25,8 +26,10 @@ interface IPermissionRow {
     environment?: string;
     type: string;
     project?: string;
+    role_id: number;
 }
 
+const EDITOR_ID = 2;
 export class AccessStore implements IAccessStore {
     private logger: Logger;
 
@@ -132,7 +135,13 @@ export class AccessStore implements IAccessStore {
     async getPermissionsForUser(userId: number): Promise<IUserPermission[]> {
         const stopTimer = this.timer('getPermissionsForUser');
         const rows = await this.db
-            .select('project', 'permission', 'environment', 'type')
+            .select(
+                'project',
+                'permission',
+                'environment',
+                'type',
+                'ur.role_id',
+            )
             .from<IPermissionRow>(`${T.ROLE_PERMISSION} AS rp`)
             .join(`${T.ROLE_USER} AS ur`, 'ur.role_id', 'rp.role_id')
             .join(`${T.PERMISSIONS} AS p`, 'p.id', 'rp.permission_id')
@@ -142,7 +151,16 @@ export class AccessStore implements IAccessStore {
     }
 
     mapUserPermission(row: IPermissionRow): IUserPermission {
-        const project = row.type !== 'root' ? row.project : undefined;
+        let project;
+        // Since the editor should have access to the default project,
+        // we map the project to the project and environment specific
+        // permissions that are connected to the editor role.
+        if (row.role_id === EDITOR_ID && row.type !== 'root') {
+            project = 'default';
+        } else if (row.type !== 'root') {
+            project = row.project ? row.project : undefined;
+        }
+
         const environment =
             row.type === 'environment' ? row.environment : undefined;
         return {

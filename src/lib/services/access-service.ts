@@ -409,7 +409,7 @@ export class AccessService {
     }
 
     async updateRole(role: IRoleUpdate): Promise<ICustomRole> {
-        // await this.validateRole(role);
+        await this.validateRole(role, role.id);
         const baseRole = {
             id: role.id,
             name: role.name,
@@ -432,8 +432,11 @@ export class AccessService {
         return this.roleStore.delete(id);
     }
 
-    async validateRoleIsUnique(roleName: string): Promise<void> {
-        const exists = await this.roleStore.roleExists(roleName);
+    async validateRoleIsUnique(
+        roleName: string,
+        existingId?: number,
+    ): Promise<void> {
+        const exists = await this.roleStore.nameInUse(roleName, existingId);
         if (exists) {
             throw new NameExistsError(
                 `There already exists a role with the name ${roleName}`,
@@ -442,8 +445,11 @@ export class AccessService {
         return Promise.resolve();
     }
 
-    async validateRole(role: IRoleCreation): Promise<void> {
-        await this.validateRoleIsUnique(role.name);
+    async validateRole(
+        role: IRoleCreation,
+        existingId?: number,
+    ): Promise<void> {
+        await this.validateRoleIsUnique(role.name, existingId);
         //Handle schema validation here...
     }
 }

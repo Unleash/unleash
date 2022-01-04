@@ -6,6 +6,7 @@ import { ICustomRole } from 'lib/types/model';
 import {
     ICustomRoleInsert,
     ICustomRoleUpdate,
+    IRoleStore,
 } from 'lib/types/stores/role-store';
 import { IRole, IUserRole } from 'lib/types/stores/access-store';
 
@@ -23,7 +24,7 @@ interface IRoleRow {
     type: string;
 }
 
-export default class RoleStore {
+export default class RoleStore implements IRoleStore {
     private logger: Logger;
 
     private eventBus: EventEmitter;
@@ -86,6 +87,15 @@ export default class RoleStore {
         );
         const { present } = result.rows[0];
         return present;
+    }
+
+    async nameInUse(name: string, existingId?: number): Promise<boolean> {
+        let query = this.db(T.ROLES).where({ name }).returning('id');
+        if (existingId) {
+            query = query.andWhereNot({ id: existingId });
+        }
+        const result = await query;
+        return result.length > 0;
     }
 
     async roleExists(name: string): Promise<boolean> {

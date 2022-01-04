@@ -17,14 +17,17 @@ export const useStyles = makeStyles(theme => ({
         width: '75px',
     },
     infoParagraph: {
-        maxWidth: '150px',
+        maxWidth: '215px',
         marginTop: '0.25rem',
         fontSize: theme.fontSizes.smallBody,
     },
     percentage: {
         color: theme.palette.primary.light,
-        textAlign: 'center',
+        textAlign: 'right',
         fontSize: theme.fontSizes.subHeader,
+    },
+    percentageCircle: {
+        transform: 'scale(0.85)',
     },
     [theme.breakpoints.down(700)]: {
         infoParagraph: {
@@ -35,8 +38,6 @@ export const useStyles = makeStyles(theme => ({
         icon: {
             display: 'none',
         },
-    },
-    [theme.breakpoints.down(400)]: {
         percentageCircle: {
             display: 'none',
         },

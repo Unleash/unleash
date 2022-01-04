@@ -3,7 +3,6 @@ import { makeStyles } from '@material-ui/core/styles';
 export const useStyles = makeStyles(theme => ({
     splashMainContainer: {
         backgroundColor: theme.palette.primary.light,
-        height: '100%',
         width: '100%',
         display: 'flex',
         justifyContent: 'center',

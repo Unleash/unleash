@@ -2,24 +2,38 @@ import {
     Accordion,
     AccordionDetails,
     AccordionSummary,
+    Tooltip,
 } from '@material-ui/core';
 import { ExpandMore } from '@material-ui/icons';
+import React from 'react';
 import { useParams } from 'react-router';
+import { useHistory } from 'react-router-dom';
 import useFeature from '../../../../../../hooks/api/getters/useFeature/useFeature';
 import useFeatureMetrics from '../../../../../../hooks/api/getters/useFeatureMetrics/useFeatureMetrics';
 import { IFeatureEnvironment } from '../../../../../../interfaces/featureToggle';
 import { IFeatureViewParams } from '../../../../../../interfaces/params';
 import { getFeatureMetrics } from '../../../../../../utils/get-feature-metrics';
+import {
+    getFeatureStrategyIcon,
+    getHumanReadableStrategyName,
+} from '../../../../../../utils/strategy-names';
 import ConditionallyRender from '../../../../../common/ConditionallyRender';
 import DisabledIndicator from '../../../../../common/DisabledIndicator/DisabledIndicator';
 import EnvironmentIcon from '../../../../../common/EnvironmentIcon/EnvironmentIcon';
+import PermissionButton from '../../../../../common/PermissionButton/PermissionButton';
 import StringTruncator from '../../../../../common/StringTruncator/StringTruncator';
+import { UPDATE_FEATURE } from '../../../../../providers/AccessProvider/permissions';
 
 import { useStyles } from './FeatureOverviewEnvironment.styles';
 import FeatureOverviewEnvironmentBody from './FeatureOverviewEnvironmentBody/FeatureOverviewEnvironmentBody';
 import FeatureOverviewEnvironmentFooter from './FeatureOverviewEnvironmentFooter/FeatureOverviewEnvironmentFooter';
 import FeatureOverviewEnvironmentMetrics from './FeatureOverviewEnvironmentMetrics/FeatureOverviewEnvironmentMetrics';
 
+interface IStrategyIconObject {
+    count: number;
+    Icon: React.ReactElement;
+    name: string;
+}
 interface IFeatureOverviewEnvironmentProps {
     env: IFeatureEnvironment;
 }
@@ -31,6 +45,7 @@ const FeatureOverviewEnvironment = ({
     const { projectId, featureId } = useParams<IFeatureViewParams>();
     const { metrics } = useFeatureMetrics(projectId, featureId);
     const { feature } = useFeature(projectId, featureId);
+    const history = useHistory();
 
     const featureMetrics = getFeatureMetrics(feature?.environments, metrics);
     const environmentMetric = featureMetrics.find(
@@ -48,6 +63,29 @@ const FeatureOverviewEnvironment = ({
         return `This environment is disabled, which means that none of your strategies are executing`;
     };
 
+    const strategiesLink = `/projects/${projectId}/features2/${featureId}/strategies?environment=${featureEnvironment?.name}&addStrategy=true`;
+
+    const getStrategyIcons = () => {
+        const strategyObjects = featureEnvironment?.strategies.reduce(
+            (acc, current) => {
+                if (acc[current.name]) {
+                    acc[current.name].count = acc[current.name].count + 1;
+                } else {
+                    acc[current.name] = {
+                        count: 1,
+                        Icon: getFeatureStrategyIcon(current.name),
+                    };
+                }
+                return acc;
+            },
+            {} as { [key: string]: IStrategyIconObject }
+        );
+
+        return Object.keys(strategyObjects).map(strategyName => {
+            return { ...strategyObjects[strategyName], name: strategyName };
+        });
+    };
+
     return (
         <div className={styles.featureOverviewEnvironment}>
             <Accordion style={{ boxShadow: 'none' }}>
@@ -55,17 +93,76 @@ const FeatureOverviewEnvironment = ({
                     className={styles.accordionHeader}
                     expandIcon={<ExpandMore />}
                 >
-                    <div className={styles.headerTitle} data-loading>
-                        <EnvironmentIcon
-                            enabled={env.enabled}
-                            className={styles.headerIcon}
-                        />
-                        Feature toggle execution for&nbsp;
-                        <StringTruncator
-                            text={env.name}
-                            className={styles.truncator}
-                            maxWidth="100"
-                        />
+                    <div className={styles.header} data-loading>
+                        <div className={styles.headerTitle}>
+                            <EnvironmentIcon
+                                enabled={env.enabled}
+                                className={styles.headerIcon}
+                            />
+                            Feature toggle execution for&nbsp;
+                            <StringTruncator
+                                text={env.name}
+                                className={styles.truncator}
+                                maxWidth="100"
+                            />
+                        </div>
+                        <div className={styles.container}>
+                            <PermissionButton
+                                permission={UPDATE_FEATURE}
+                                onClick={() => history.push(strategiesLink)}
+                                className={styles.addStrategyButton}
+                            >
+                                Add strategy
+                            </PermissionButton>
+                            <span className={styles.separtor}>|</span>
+                            <ConditionallyRender
+                                condition={
+                                    featureEnvironment?.strategies.length !== 0
+                                }
+                                show={
+                                    <div
+                                        className={
+                                            styles.stratigiesIconsContainer
+                                        }
+                                    >
+                                        {getStrategyIcons()?.map(
+                                            ({ name, Icon }) => (
+                                                <Tooltip
+                                                    title={getHumanReadableStrategyName(
+                                                        name
+                                                    )}
+                                                    arrow
+                                                >
+                                                    <div
+                                                        className={
+                                                            styles.strategyIconContainer
+                                                        }
+                                                    >
+                                                        <Icon
+                                                            className={
+                                                                styles.strategyIcon
+                                                            }
+                                                        />
+                                                    </div>
+                                                </Tooltip>
+                                            )
+                                        )}
+                                    </div>
+                                }
+                                elseShow={
+                                    <div
+                                        className={
+                                            styles.noStratigiesInfoContainer
+                                        }
+                                    >
+                                        <p className={styles.strategiesText}>
+                                            No strategies defined on this toggle
+                                        </p>
+                                    </div>
+                                }
+                            />
+                        </div>
+
                         <ConditionallyRender
                             condition={!env.enabled}
                             show={

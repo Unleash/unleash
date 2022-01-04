@@ -63,7 +63,7 @@ const FeatureStrategyExecution = ({
                     return (
                         <Fragment key={key}>
                             <p className={styles.text}>
-                                {parameters[key]}% of your user base{' '}
+                                {parameters[key]}% of your base{' '}
                                 {constraints.length > 0
                                     ? 'who match constraints'
                                     : ''}{' '}
@@ -146,8 +146,7 @@ const FeatureStrategyExecution = ({
                     return (
                         <Fragment key={param?.name}>
                             <p className={styles.text}>
-                                {strategy?.parameters[param.name]}% of your user
-                                base{' '}
+                                {strategy?.parameters[param.name]}% of your base{' '}
                                 {constraints?.length > 0
                                     ? 'who match constraints'
                                     : ''}{' '}

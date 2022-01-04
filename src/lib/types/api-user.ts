@@ -39,5 +39,3 @@ export default class ApiUser {
         this.type = type;
     }
 }
-
-module.exports = ApiUser;

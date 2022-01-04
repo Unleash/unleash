@@ -8,7 +8,7 @@ import {
 } from 'lib/types/stores/role-store';
 
 export default class FakeRoleStore implements IRoleStore {
-    roleExists(name: string): Promise<boolean> {
+    nameInUse(name: string, existingId: number): Promise<boolean> {
         throw new Error('Method not implemented.');
     }
 

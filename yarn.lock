@@ -802,10 +802,10 @@
   resolved "https://registry.yarnpkg.com/@types/json5/-/json5-0.0.29.tgz#ee28707ae94e11d2b827bcbe5270bcea7f3e71ee"
   integrity sha1-7ihweulOEdK4J7y+UnC86n8+ce4=
 
-"@types/memoizee@0.4.6":
-  version "0.4.6"
-  resolved "https://registry.yarnpkg.com/@types/memoizee/-/memoizee-0.4.6.tgz#a4ba7a3ea61fa45be916f148763bec2ca38c34cf"
-  integrity sha512-qJezGqoi3pW9Pset2w1Gfv8jATvmHHHnpO9Dq8x8pJGyYIpiUZJqRU0NM7xenmN0AcXEe7vqshI8H98KeFLYcg==
+"@types/memoizee@0.4.7":
+  version "0.4.7"
+  resolved "https://registry.yarnpkg.com/@types/memoizee/-/memoizee-0.4.7.tgz#fa0025b5ea1c8acb85fd52a76982c5a096c2c91e"
+  integrity sha512-EMtvWnRC/W0KYmXxbPJAMg/M1OXkFboSpd/IzkNMDXfoFPE4uom1RHFl8q7m/4R0y9eG1yaoaIPiMHk0vMA0eA==
 
 "@types/mime@2.0.3":
   version "2.0.3"

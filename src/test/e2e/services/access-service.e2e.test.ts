@@ -615,14 +615,10 @@ test('should set root role for user', async () => {
     await accessService.setUserRootRole(user.id, editorRole.id);
 
     const roles = await accessService.getRolesForUser(user.id);
-    roles.sort((x, y) => {
-        return x.name.localeCompare(y.name);
-    });
-
     //To have duplicated roles like this may not may not be a hack. Needs some thought
     expect(roles[0].name).toBe(RoleName.EDITOR);
-    expect(roles[1].name).toBe(RoleName.VIEWER);
-    expect(roles.length).toBe(2);
+
+    expect(roles.length).toBe(1);
 });
 
 test('should switch root role for user', async () => {

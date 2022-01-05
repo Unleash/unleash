@@ -10,6 +10,7 @@ import {
 } from '../types/stores/access-store';
 import { IPermission } from 'lib/types/model';
 import { roundToNearestMinutesWithOptions } from 'date-fns/fp';
+import NotFoundError from '../error/notfound-error';
 
 const T = {
     ROLE_USER: 'role_user',
@@ -67,11 +68,17 @@ export class AccessStore implements IAccessStore {
     }
 
     async get(key: number): Promise<IRole> {
-        return this.db
+        const role = await this.db
             .select(['id', 'name', 'type', 'description'])
             .where('id', key)
             .first()
             .from<IRole>(T.ROLES);
+
+        if (!role) {
+            throw new NotFoundError(`Could not find role with id: ${key}`);
+        }
+
+        return role;
     }
 
     async getAll(): Promise<IRole[]> {
@@ -85,42 +92,6 @@ export class AccessStore implements IAccessStore {
             .orWhere('type', 'environment')
             .from(`${T.PERMISSIONS} as p`);
         return rows.map(this.mapPermission);
-        // .map(mapPermission)
-        // const rows = await this.db
-        //     .select(['p.id', 'p.permission', 'p.environment', 'p.display_name'])
-        //     .join(`${T.ROLE_PERMISSION} AS rp`, 'rp.permission_id', 'p.id')
-        //     .where('pt.type', 'project')
-        //     .orWhere('pt.type', 'environment')
-        //     .from(`${T.PERMISSIONS} as p`);
-
-        // let projectPermissions: IPermission[] = [];
-        // let rawEnvironments = new Map<string, IPermissionRow[]>();
-
-        // for (let permission of rows) {
-        //     if (!permission.environment) {
-        //         projectPermissions.push(this.mapPermission(permission));
-        //     } else {
-        //         if (!rawEnvironments.get(permission.environment)) {
-        //             rawEnvironments.set(permission.environment, []);
-        //         }
-        //         rawEnvironments.get(permission.environment).push(permission);
-        //     }
-        // }
-        // let allEnvironmentPermissions: Array<IEnvironmentPermission> =
-        //     Array.from(rawEnvironments).map(
-        //         ([environmentName, environmentPermissions]) => {
-        //             return {
-        //                 name: environmentName,
-        //                 permissions: environmentPermissions.map(
-        //                     this.mapPermission,
-        //                 ),
-        //             };
-        //         },
-        //     );
-        // return {
-        //     project: projectPermissions,
-        //     environments: allEnvironmentPermissions,
-        // };
     }
 
     mapPermission(permission: IPermissionRow): IPermission {

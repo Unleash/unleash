@@ -115,6 +115,7 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "@babel/core": "^7.0.0",
     "@types/bcrypt": "5.0.0",
     "@types/express": "4.17.13",
     "@types/express-session": "1.17.4",
@@ -141,7 +142,7 @@
     "eslint-config-prettier": "8.3.0",
     "eslint-plugin-import": "2.25.4",
     "eslint-plugin-prettier": "4.0.0",
-    "faker": "6.6.6",
+    "faker": "5.5.3",
     "fetch-mock": "9.11.0",
     "husky": "7.0.4",
     "jest": "27.4.6",

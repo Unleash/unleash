@@ -21,14 +21,14 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: yarn
       working-directory: ./${{ github.workflow }}
-    - name: Get the version
-      id: get_version
-      run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
     - uses: aws-actions/configure-aws-credentials@v1
       with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+    - name: Get the version
+      id: get_version
+      run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
     - name: Deploy static assets to S3
       run: |
         aws s3 cp build/static s3://getunleash-static/unleash/${{ steps.get_version.outputs.VERSION }}/static --recursive

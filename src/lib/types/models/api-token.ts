@@ -1,3 +1,5 @@
+import BadDataError from '../../error/bad-data-error';
+
 export const ALL = '*';
 
 export enum ApiTokenType {
@@ -20,3 +22,27 @@ export interface IApiToken extends IApiTokenCreate {
     environment: string;
     project: string;
 }
+
+export const validateApiToken = ({
+    type,
+    project,
+    environment,
+}: Omit<IApiTokenCreate, 'secret'>): void => {
+    if (type === ApiTokenType.ADMIN && project !== ALL) {
+        throw new BadDataError(
+            'Admin token cannot be scoped to single project',
+        );
+    }
+
+    if (type === ApiTokenType.ADMIN && environment !== ALL) {
+        throw new BadDataError(
+            'Admin token cannot be scoped to single environment',
+        );
+    }
+
+    if (type === ApiTokenType.CLIENT && environment === ALL) {
+        throw new BadDataError(
+            'Client token cannot be scoped to all environments',
+        );
+    }
+};

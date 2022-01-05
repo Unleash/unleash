@@ -21,6 +21,7 @@ import { defaultCustomAuthDenyAll } from './default-custom-auth-deny-all';
 import { formatBaseUri } from './util/format-base-uri';
 import { minutesToMilliseconds, secondsToMilliseconds } from 'date-fns';
 import EventEmitter from 'events';
+import { ApiTokenType, validateApiToken } from './types/models/api-token';
 
 const safeToUpper = (s: string) => (s ? s.toUpperCase() : s);
 
@@ -132,6 +133,7 @@ const defaultAuthentication: IAuthOption = {
     type: authTypeFromString(process.env.AUTH_TYPE),
     customAuthHandler: defaultCustomAuthDenyAll,
     createAdminUser: true,
+    initApiTokens: [],
 };
 
 const defaultImport: IImportOption = {
@@ -177,6 +179,28 @@ const formatServerOptions = (
         ...serverOptions,
         baseUriPath: formatBaseUri(serverOptions.baseUriPath),
     };
+};
+
+const loadInitApiTokens = () => {
+    if (process.env.INIT_ADMIN_API_TOKENS) {
+        const initApiTokens = process.env.INIT_ADMIN_API_TOKENS.split(/,\s?/);
+        const tokens = initApiTokens.map((secret) => {
+            const [project = '*', environment = '*'] = secret.split(':');
+            const token = {
+                createdAt: undefined,
+                project,
+                environment,
+                secret,
+                type: ApiTokenType.ADMIN,
+                username: 'admin',
+            };
+            validateApiToken(token);
+            return token;
+        });
+        return tokens;
+    } else {
+        return [];
+    }
 };
 
 export function createConfig(options: IUnleashOptions): IUnleashConfig {
@@ -227,11 +251,14 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         options.versionCheck,
     ]);
 
+    const initApiTokens = loadInitApiTokens();
+
     const authentication: IAuthOption = mergeAll([
         defaultAuthentication,
         options.authentication
             ? removeUndefinedKeys(options.authentication)
             : options.authentication,
+        { initApiTokens: initApiTokens },
     ]);
 
     const importSetting: IImportOption = mergeAll([

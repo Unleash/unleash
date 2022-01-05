@@ -1,5 +1,6 @@
 import EventEmitter from 'events';
 import { LogLevel, LogProvider } from '../logger';
+import { IApiTokenCreate } from './models/api-token';
 
 export type EventHook = (eventName: string, data: object) => void;
 
@@ -53,6 +54,7 @@ export interface IAuthOption {
     type: IAuthType;
     customAuthHandler?: Function;
     createAdminUser: boolean;
+    initApiTokens: IApiTokenCreate[];
 }
 
 export interface IImportOption {

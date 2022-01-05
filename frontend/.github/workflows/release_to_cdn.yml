@@ -16,15 +16,11 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node-version }}
-    - name: yarn install & build
-      run: |
-        yarn && yarn build
-      working-directory: ./${{ github.workflow }}
-      env:
-        CI: true
+    - run: yarn
+    - run: yarn build
     - name: Get the version
       id: get_version
       run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}

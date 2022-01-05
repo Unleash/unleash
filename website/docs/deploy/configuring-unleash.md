@@ -95,10 +95,10 @@ unleash.start(unleashOptions);
 - **authentication** - (object) - An object for configuring/implementing custom admin authentication
   - enableApiToken (boolean) - Should unleash require API tokens for access? Defaults to `true`
   - type (string) What kind of authentication to use. Possible values
-    - `open-source` -
+    - `open-source` - Sign in with username and password. This is the default value.
     - `custom` - If implementing your own authentication hook, use this
     - `none` - Turn off authentication all together
-    - `demo` - Only requires an email to sign-in (was default in v3)
+    - `demo` - Only requires an email to sign in (was default in v3)
   - customAuthHandler: (function) - custom express middleware handling authentication. Used when type is set to `custom`
   - createAdminUser: (boolean) - whether to create an admin user with default password - Defaults to `true`
   - initApiTokens: (ApiTokens[]) - Array of API tokens to create on startup. The tokens will only be created if the database doesn't already contain any API tokens.
@@ -112,7 +112,9 @@ unleash.start(unleashOptions);
         username: 'some-user',
     }]
      ```
-    You can also use the environment variable `INIT_ADMIN_API_TOKENS`. This variable should be set to a comma-separated list of API tokens to initialize (for instance `*:*.some-random-string, *:*.some-other-token`). All admin tokens **must** target all environments and projects.
+      The tokens can be of any API token type. Note that _admin_ tokens **must** target all environments and projects (i.e. use `'*'` for `environments` and `project` and start the secret with `*:*.`).
+
+      You can also use the environment variable `INIT_ADMIN_API_TOKENS` to create API tokens on startup. This variable should be set to a comma-separated list of API tokens to initialize (for instance `*:*.some-random-string, *:*.some-other-token`). With the environment variable, all tokens will be created as admin tokens and Unleash will assign a username automatically.
 - **ui** (object) - Set of UI specific overrides. You may set the following keys: `environment`, `slogan`.
 - **getLogger** (function) - Used to register a [custom log provider](#how-do-i-configure-the-log-output).
 - **logLevel** (`debug` | `info` | `warn` | `error` | `fatal`) - The lowest level to log at, also configurable using environment variable `LOG_LEVEL`.

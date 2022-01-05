@@ -101,7 +101,7 @@ unleash.start(unleashOptions);
     - `demo` - Only requires an email to sign-in (was default in v3)
   - customAuthHandler: (function) - custom express middleware handling authentication. Used when type is set to `custom`
   - createAdminUser: (boolean) - whether to create an admin user with default password - Defaults to `true`
-  - initApiTokens: (ApiTokens[]) - Array of API Tokens to create on startup. Will only be applied if there are no existing API tokens in the database already. 
+  - initApiTokens: (ApiTokens[]) - Array of API tokens to create on startup. The tokens will only be created if the database doesn't already contain any API tokens.
       Example:
      ```ts
      [{
@@ -112,7 +112,7 @@ unleash.start(unleashOptions);
         username: 'some-user',
     }]
      ```
-     You may also use the environment variable `INIT_ADMIN_API_TOKENS` which takes a comma separated list of API Tokens to initialize. An example value for this variable could be: "`*:*:some-random-string, *:*:some-other-token`". NB: All Admin tokens must target all environments and projects.
+    You can also use the environment variable `INIT_ADMIN_API_TOKENS`. This variable should be set to a comma-separated list of API tokens to initialize (for instance `*:*:some-random-string, *:*:some-other-token`). All admin tokens **must** target all environments and projects.
 - **ui** (object) - Set of UI specific overrides. You may set the following keys: `environment`, `slogan`.
 - **getLogger** (function) - Used to register a [custom log provider](#how-do-i-configure-the-log-output).
 - **logLevel** (`debug` | `info` | `warn` | `error` | `fatal`) - The lowest level to log at, also configurable using environment variable `LOG_LEVEL`.

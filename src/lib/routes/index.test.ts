@@ -4,14 +4,14 @@ import createStores from '../../test/fixtures/store';
 import getApp from '../app';
 import { createServices } from '../services';
 
-function getSetup() {
+async function getSetup() {
     const base = `/random${Math.round(Math.random() * 1000)}`;
     const stores = createStores();
     const config = createTestConfig({
         server: { baseUriPath: base },
     });
     const services = createServices(stores, config);
-    const app = getApp(config, stores, services);
+    const app = await getApp(config, stores, services);
 
     return {
         base,
@@ -27,8 +27,8 @@ function getSetup() {
 let base;
 let request;
 let destroy;
-beforeEach(() => {
-    const setup = getSetup();
+beforeEach(async () => {
+    const setup = await getSetup();
     base = setup.base;
     request = setup.request;
     destroy = setup.destroy;

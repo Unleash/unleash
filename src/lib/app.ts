@@ -1,5 +1,4 @@
 import { publicFolder } from 'unleash-frontend';
-import fs from 'fs';
 import express, { Application, RequestHandler } from 'express';
 import cors from 'cors';
 import compression from 'compression';
@@ -22,25 +21,19 @@ import ossAuthentication from './middleware/oss-authentication';
 import noAuthentication from './middleware/no-authentication';
 import secureHeaders from './middleware/secure-headers';
 
-import { rewriteHTML } from './util/rewriteHTML';
+import { loadIndexHTML } from './util/load-index-html';
 
-export default function getApp(
+export default async function getApp(
     config: IUnleashConfig,
     stores: IUnleashStores,
     services: IUnleashServices,
     unleashSession?: RequestHandler,
-    indexHTMLOverride?: string,
-): Application {
+): Promise<Application> {
     const app = express();
 
     const baseUriPath = config.server.baseUriPath || '';
-    const cdnPrefix = config.server.cdnPrefix;
 
-    let indexHTML =
-        indexHTMLOverride ||
-        fs.readFileSync(path.join(publicFolder, 'index.html')).toString();
-
-    indexHTML = rewriteHTML(indexHTML, baseUriPath, cdnPrefix);
+    let indexHTML = await loadIndexHTML(config, publicFolder);
 
     app.set('trust proxy', true);
     app.disable('x-powered-by');

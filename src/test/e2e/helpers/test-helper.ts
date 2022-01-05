@@ -18,12 +18,12 @@ export interface IUnleashTest {
     services: IUnleashServices;
 }
 
-function createApp(
+async function createApp(
     stores,
     adminAuthentication = IAuthType.NONE,
     preHook?: Function,
     customOptions?: any,
-): IUnleashTest {
+): Promise<IUnleashTest> {
     const config = createTestConfig({
         authentication: {
             type: adminAuthentication,
@@ -38,7 +38,7 @@ function createApp(
     const unleashSession = sessionDb(config, undefined);
     const emitter = new EventEmitter();
     emitter.setMaxListeners(0);
-    const app = getApp(config, stores, services, unleashSession);
+    const app = await getApp(config, stores, services, unleashSession);
     const request = supertest.agent(app);
 
     const destroy = async () => {

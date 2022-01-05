@@ -8,7 +8,7 @@ import getApp from '../app';
 import User from '../types/user';
 import sessionDb from './session-db';
 
-function getSetup(preRouterHook) {
+async function getSetup(preRouterHook) {
     const base = `/random${Math.round(Math.random() * 1000)}`;
     const config = createTestConfig({
         server: { baseUriPath: base },
@@ -23,7 +23,7 @@ function getSetup(preRouterHook) {
     const stores = createStores();
     const services = createServices(stores, config);
     const unleashSession = sessionDb(config, undefined);
-    const app = getApp(config, stores, services, unleashSession);
+    const app = await getApp(config, stores, services, unleashSession);
 
     return {
         base,
@@ -31,17 +31,17 @@ function getSetup(preRouterHook) {
     };
 }
 
-test('should return 401 when missing user', () => {
+test('should return 401 when missing user', async () => {
     expect.assertions(0);
-    const { base, request } = getSetup(() => {});
+    const { base, request } = await getSetup(() => {});
 
     return request.get(`${base}/api/protectedResource`).expect(401);
 });
 
-test('should return 200 when user exists', () => {
+test('should return 200 when user exists', async () => {
     expect.assertions(0);
     const user = new User({ id: 1, email: 'some@mail.com' });
-    const { base, request } = getSetup((app) =>
+    const { base, request } = await getSetup((app) =>
         app.use((req, res, next) => {
             req.user = user;
             next();

@@ -6,21 +6,21 @@ import createStores from '../../../test/fixtures/store';
 
 import getApp from '../../app';
 
-function getSetup() {
+async function getSetup() {
     const base = `/random${Math.round(Math.random() * 1000)}`;
     const stores = createStores();
     const config = createTestConfig({
         server: { baseUriPath: base },
     });
     const services = createServices(stores, config);
-    const app = getApp(config, stores, services);
+    const app = await getApp(config, stores, services);
 
     return { base, eventStore: stores.eventStore, request: supertest(app) };
 }
 
-test('should get empty events list via admin', () => {
+test('should get empty events list via admin', async () => {
     expect.assertions(1);
-    const { request, base } = getSetup();
+    const { request, base } = await getSetup();
     return request
         .get(`${base}/api/admin/events`)
         .expect('Content-Type', /json/)

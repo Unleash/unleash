@@ -7,7 +7,7 @@ import { createServices } from '../../services';
 
 let destroy;
 
-function getSetup() {
+async function getSetup() {
     const randomBase = `/random${Math.round(Math.random() * 1000)}`;
     const perms = permissions();
     const stores = createStores();
@@ -16,7 +16,7 @@ function getSetup() {
         preRouterHook: perms.hook,
     });
     const services = createServices(stores, config);
-    const app = getApp(config, stores, services);
+    const app = await getApp(config, stores, services);
 
     destroy = () => {
         services.versionService.destroy();
@@ -36,8 +36,8 @@ afterEach(() => {
     destroy();
 });
 
-test('add version numbers for /strategies', () => {
-    const { request, base } = getSetup();
+test('add version numbers for /strategies', async () => {
+    const { request, base } = await getSetup();
     return request
         .get(`${base}/api/admin/strategies`)
         .expect('Content-Type', /json/)
@@ -47,8 +47,8 @@ test('add version numbers for /strategies', () => {
         });
 });
 
-test('require a name when creating a new strategy', () => {
-    const { request, base } = getSetup();
+test('require a name when creating a new strategy', async () => {
+    const { request, base } = await getSetup();
     return request
         .post(`${base}/api/admin/strategies`)
         .send({})
@@ -60,8 +60,8 @@ test('require a name when creating a new strategy', () => {
         });
 });
 
-test('require parameters array when creating a new stratey', () => {
-    const { request, base } = getSetup();
+test('require parameters array when creating a new strategy', async () => {
+    const { request, base } = await getSetup();
     return request
         .post(`${base}/api/admin/strategies`)
         .send({ name: 'TestStrat' })
@@ -74,15 +74,15 @@ test('require parameters array when creating a new stratey', () => {
 });
 
 test('create a new strategy with empty parameters', async () => {
-    const { request, base } = getSetup();
+    const { request, base } = await getSetup();
     return request
         .post(`${base}/api/admin/strategies`)
         .send({ name: 'TestStrat', parameters: [] })
         .expect(201);
 });
 
-test('not be possible to override name', () => {
-    const { request, base, strategyStore } = getSetup();
+test('not be possible to override name', async () => {
+    const { request, base, strategyStore } = await getSetup();
     strategyStore.createStrategy({ name: 'Testing', parameters: [] });
 
     return request
@@ -91,8 +91,8 @@ test('not be possible to override name', () => {
         .expect(409);
 });
 
-test('update strategy', () => {
-    const { request, base, strategyStore } = getSetup();
+test('update strategy', async () => {
+    const { request, base, strategyStore } = await getSetup();
     const name = 'AnotherStrat';
     strategyStore.createStrategy({ name, parameters: [] });
 
@@ -102,8 +102,8 @@ test('update strategy', () => {
         .expect(200);
 });
 
-test('not update unknown strategy', () => {
-    const { request, base } = getSetup();
+test('not update unknown strategy', async () => {
+    const { request, base } = await getSetup();
     const name = 'UnknownStrat';
     return request
         .put(`${base}/api/admin/strategies/${name}`)
@@ -111,8 +111,8 @@ test('not update unknown strategy', () => {
         .expect(404);
 });
 
-test('validate format when updating strategy', () => {
-    const { request, base, strategyStore } = getSetup();
+test('validate format when updating strategy', async () => {
+    const { request, base, strategyStore } = await getSetup();
     const name = 'AnotherStrat';
     strategyStore.createStrategy({ name, parameters: [] });
 
@@ -122,16 +122,16 @@ test('validate format when updating strategy', () => {
         .expect(400);
 });
 
-test('editable=false will stop delete request', () => {
+test('editable=false will stop delete request', async () => {
     jest.spyOn(global.console, 'error').mockImplementation(() => jest.fn());
-    const { request, base } = getSetup();
+    const { request, base } = await getSetup();
     const name = 'default';
     return request.delete(`${base}/api/admin/strategies/${name}`).expect(500);
 });
 
-test('editable=false will stop edit request', () => {
+test('editable=false will stop edit request', async () => {
     jest.spyOn(global.console, 'error').mockImplementation(() => jest.fn());
-    const { request, base } = getSetup();
+    const { request, base } = await getSetup();
     const name = 'default';
     return request
         .put(`${base}/api/admin/strategies/${name}`)
@@ -139,8 +139,8 @@ test('editable=false will stop edit request', () => {
         .expect(500);
 });
 
-test('editable=true will allow delete request', () => {
-    const { request, base, strategyStore } = getSetup();
+test('editable=true will allow delete request', async () => {
+    const { request, base, strategyStore } = await getSetup();
     const name = 'deleteStrat';
     strategyStore.createStrategy({ name, parameters: [] });
 
@@ -150,8 +150,8 @@ test('editable=true will allow delete request', () => {
         .expect(200);
 });
 
-test('editable=true will allow edit request', () => {
-    const { request, base, strategyStore } = getSetup();
+test('editable=true will allow edit request', async () => {
+    const { request, base, strategyStore } = await getSetup();
     const name = 'editStrat';
     strategyStore.createStrategy({ name, parameters: [] });
 
@@ -162,7 +162,7 @@ test('editable=true will allow edit request', () => {
 });
 
 test('deprecating a strategy works', async () => {
-    const { request, base, strategyStore } = getSetup();
+    const { request, base, strategyStore } = await getSetup();
     const name = 'editStrat';
     strategyStore.createStrategy({ name, parameters: [] });
 
@@ -177,8 +177,8 @@ test('deprecating a strategy works', async () => {
         .expect((res) => expect(res.body.deprecated).toBe(true));
 });
 
-test('deprecating a non-existent strategy yields 404', () => {
-    const { request, base } = getSetup();
+test('deprecating a non-existent strategy yields 404', async () => {
+    const { request, base } = await getSetup();
     return request
         .post(`${base}/api/admin/strategies/non-existent-strategy/deprecate`)
         .set('Content-Type', 'application/json')
@@ -186,7 +186,7 @@ test('deprecating a non-existent strategy yields 404', () => {
 });
 
 test('reactivating a strategy works', async () => {
-    const { request, base, strategyStore } = getSetup();
+    const { request, base, strategyStore } = await getSetup();
     const name = 'editStrat';
     strategyStore.createStrategy({ name, parameters: [] });
 
@@ -201,16 +201,16 @@ test('reactivating a strategy works', async () => {
         .expect((res) => expect(res.body.deprecated).toBe(false));
 });
 
-test('reactivating a non-existent strategy yields 404', () => {
-    const { request, base } = getSetup();
+test('reactivating a non-existent strategy yields 404', async () => {
+    const { request, base } = await getSetup();
     return request
         .post(`${base}/api/admin/strategies/non-existent-strategy/reactivate`)
         .set('Content-Type', 'application/json')
         .expect(404);
 });
-test("deprecating 'default' strategy will yield 403", () => {
+test("deprecating 'default' strategy will yield 403", async () => {
     jest.spyOn(global.console, 'error').mockImplementation(() => jest.fn());
-    const { request, base } = getSetup();
+    const { request, base } = await getSetup();
     return request
         .post(`${base}/api/admin/strategies/default/deprecate`)
         .set('Content-Type', 'application/json')

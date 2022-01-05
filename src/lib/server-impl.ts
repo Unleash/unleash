@@ -24,7 +24,6 @@ import * as permissions from './types/permissions';
 import * as eventType from './types/events';
 import { RoleName } from './types/model';
 import { SimpleAuthSettings } from './types/settings/simple-auth-settings';
-import fetch from 'node-fetch';
 
 async function createApp(
     config: IUnleashConfig,
@@ -36,13 +35,6 @@ async function createApp(
     const db = createDb(config);
     const stores = createStores(config, db);
     const services = createServices(stores, config);
-
-    const cdnPrefix = config.server.cdnPrefix;
-    let indexHTMLOverride: string;
-    if (cdnPrefix) {
-        const res = await fetch(`${cdnPrefix}/index.html`);
-        indexHTMLOverride = await res.text();
-    }
 
     const metricsMonitor = createMetricsMonitor();
     const unleashSession = sessionDb(config, db);
@@ -64,13 +56,7 @@ async function createApp(
         // eslint-disable-next-line no-param-reassign
         config.server.secret = secret;
     }
-    const app = getApp(
-        config,
-        stores,
-        services,
-        unleashSession,
-        indexHTMLOverride,
-    );
+    const app = await getApp(config, stores, services, unleashSession);
 
     if (typeof config.eventHook === 'function') {
         addEventHook(config.eventHook, stores.eventStore);

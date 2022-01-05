@@ -10,7 +10,7 @@ const uiConfig = {
     slogan: 'hello',
 };
 
-function getSetup() {
+async function getSetup() {
     const base = `/random${Math.round(Math.random() * 1000)}`;
     const config = createTestConfig({
         server: { baseUriPath: base },
@@ -19,7 +19,7 @@ function getSetup() {
     const stores = createStores();
     const services = createServices(stores, config);
 
-    const app = getApp(config, stores, services);
+    const app = await getApp(config, stores, services);
 
     return {
         base,
@@ -36,8 +36,8 @@ let request;
 let base;
 let destroy;
 
-beforeEach(() => {
-    const setup = getSetup();
+beforeEach(async () => {
+    const setup = await getSetup();
     request = setup.request;
     base = setup.base;
     destroy = setup.destroy;

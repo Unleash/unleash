@@ -20,7 +20,6 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: yarn
-      working-directory: ./${{ github.workflow }}
     - uses: aws-actions/configure-aws-credentials@v1
       with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -32,5 +31,4 @@ jobs:
     - name: Deploy static assets to S3
       run: |
         aws s3 cp build/static s3://getunleash-static/unleash/${{ steps.get_version.outputs.VERSION }}/static --recursive
-      working-directory: ./${{ github.workflow }}
 

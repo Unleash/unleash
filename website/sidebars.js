@@ -11,6 +11,8 @@
 
 module.exports = {
     documentation: {
+        'Tutorials': [            'user_guide/index'],
+        'Reference documentation': [            'user_guide/index'],
         'Getting started': [
             'user_guide/index',
             'user_guide/quickstart',

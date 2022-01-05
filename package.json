@@ -141,7 +141,7 @@
     "eslint-config-prettier": "8.3.0",
     "eslint-plugin-import": "2.25.4",
     "eslint-plugin-prettier": "4.0.0",
-    "faker": "5.5.3",
+    "faker": "6.6.6",
     "fetch-mock": "9.11.0",
     "husky": "7.0.4",
     "jest": "27.4.6",

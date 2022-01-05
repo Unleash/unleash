@@ -500,7 +500,52 @@ test('A newly created project only gets connected to enabled environments', asyn
     expect(connectedEnvs.some((e) => e === disabledEnv)).toBeFalsy();
 });
 
-test('deleting a project also deletes connected role entries', async () => {
+test('should add a user to the project with a custom role', async () => {
+    const project = {
+        id: 'add-users-custom-role',
+        name: 'New project',
+        description: 'Blah',
+    };
+    await projectService.createProject(project, user);
+
+    const projectMember1 = await stores.userStore.insert({
+        name: 'Custom',
+        email: 'custom@getunleash.io',
+    });
+
+    const customRole = await accessService.createRole({
+        name: 'Service Engineer2',
+        description: '',
+        permissions: [
+            {
+                id: 2,
+                name: 'CREATE_FEATURE',
+                environment: null,
+                displayName: 'Create Feature Toggles',
+                type: 'project',
+            },
+            {
+                id: 8,
+                name: 'DELETE_FEATURE',
+                environment: null,
+                displayName: 'Delete Feature Toggles',
+                type: 'project',
+            },
+        ],
+    });
+
+    await projectService.addUser(project.id, customRole.id, projectMember1.id);
+
+    const { users } = await projectService.getUsersWithAccess(project.id, user);
+
+    const customRoleMember = users.filter((u) => u.roleId === customRole.id);
+
+    expect(customRoleMember).toHaveLength(1);
+    expect(customRoleMember[0].id).toBe(projectMember1.id);
+    expect(customRoleMember[0].name).toBe(projectMember1.name);
+});
+
+test('should delete role entries when deleting project', async () => {
     const project = {
         id: 'test-delete-users-1',
         name: 'New project',
@@ -540,8 +585,8 @@ test('deleting a project also deletes connected role entries', async () => {
         ],
     });
 
-    await accessService.addUserToRole(user1.id, customRole.id, project.id);
-    await accessService.addUserToRole(user2.id, customRole.id, project.id);
+    await projectService.addUser(project.id, customRole.id, user1.id);
+    await projectService.addUser(project.id, customRole.id, user2.id);
 
     let usersForRole = await accessService.getUsersForRole(customRole.id);
     expect(usersForRole.length).toBe(2);

@@ -106,8 +106,6 @@ export class AccessService {
 
         try {
             const userP = await this.getPermissionsForUser(user);
-            console.log('checking against', permission, projectId, environment);
-            console.log('Got the following perms back', userP);
 
             return userP
                 .filter(

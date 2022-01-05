@@ -595,3 +595,60 @@ test('should delete role entries when deleting project', async () => {
     usersForRole = await accessService.getUsersForRole(customRole.id);
     expect(usersForRole.length).toBe(0);
 });
+
+test('should change a users role in the project', async () => {
+    const project = {
+        id: 'test-change-user-role',
+        name: 'New project',
+        description: 'Blah',
+    };
+
+    await projectService.createProject(project, user);
+
+    const projectUser = await stores.userStore.insert({
+        name: 'Projectuser3',
+        email: 'project3@getunleash.io',
+    });
+
+    const customRole = await accessService.createRole({
+        name: 'Service Engineer3',
+        description: '',
+        permissions: [
+            {
+                id: 2,
+                name: 'CREATE_FEATURE',
+                environment: null,
+                displayName: 'Create Feature Toggles',
+                type: 'project',
+            },
+            {
+                id: 8,
+                name: 'DELETE_FEATURE',
+                environment: null,
+                displayName: 'Delete Feature Toggles',
+                type: 'project',
+            },
+        ],
+    });
+    const member = await stores.roleStore.getRoleByName(RoleName.MEMBER);
+
+    await projectService.addUser(project.id, member.id, projectUser.id);
+    const { users } = await projectService.getUsersWithAccess(project.id, user);
+    let memberUser = users.filter((u) => u.roleId === member.id);
+
+    expect(memberUser).toHaveLength(1);
+    expect(memberUser[0].id).toBe(projectUser.id);
+    expect(memberUser[0].name).toBe(projectUser.name);
+    await projectService.removeUser(project.id, member.id, projectUser.id);
+    await projectService.addUser(project.id, customRole.id, projectUser.id);
+
+    let { users: updatedUsers } = await projectService.getUsersWithAccess(
+        project.id,
+        user,
+    );
+    const customUser = updatedUsers.filter((u) => u.roleId === customRole.id);
+
+    expect(customUser).toHaveLength(1);
+    expect(customUser[0].id).toBe(projectUser.id);
+    expect(customUser[0].name).toBe(projectUser.name);
+});

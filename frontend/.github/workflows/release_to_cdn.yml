@@ -30,5 +30,5 @@ jobs:
       run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
     - name: Deploy static assets to S3
       run: |
-        aws s3 cp build/static s3://getunleash-static/unleash/${{ steps.get_version.outputs.VERSION }}/static --recursive
+        aws s3 cp build/ s3://getunleash-static/unleash/${{ steps.get_version.outputs.VERSION }} --recursive
 

@@ -95,10 +95,10 @@ unleash.start(unleashOptions);
 - **authentication** - (object) - An object for configuring/implementing custom admin authentication
   - enableApiToken (boolean) - Should unleash require API tokens for access? Defaults to `true`
   - type (string) What kind of authentication to use. Possible values
-    - `open-source` -
+    - `open-source` - Sign in with username and password. This is the default value.
     - `custom` - If implementing your own authentication hook, use this
     - `none` - Turn off authentication all together
-    - `demo` - Only requires an email to sign-in (was default in v3)
+    - `demo` - Only requires an email to sign in (was default in v3)
   - customAuthHandler: (function) - custom express middleware handling authentication. Used when type is set to `custom`
   - createAdminUser: (boolean) - whether to create an admin user with default password - Defaults to `true`
   - initApiTokens: (ApiTokens[]) - Array of API tokens to create on startup. The tokens will only be created if the database doesn't already contain any API tokens.

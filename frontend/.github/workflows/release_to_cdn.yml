@@ -20,7 +20,6 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: yarn
-    - run: yarn build
     - name: Get the version
       id: get_version
       run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
@@ -29,11 +28,8 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-    - name: Copy shared files
+    - name: Deploy static assets to S3
       run: |
         aws s3 cp build/static s3://getunleash-static/unleash/${{ steps.get_version.outputs.VERSION }}/static --recursive
-    - name: Deploy to AWS
-      run:
-        ./deploy.sh ${{ github.workflow }}
       working-directory: ./${{ github.workflow }}
 

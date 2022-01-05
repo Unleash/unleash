@@ -29,15 +29,16 @@ export default function getApp(
     stores: IUnleashStores,
     services: IUnleashServices,
     unleashSession?: RequestHandler,
+    indexHTMLOverride?: string,
 ): Application {
     const app = express();
 
     const baseUriPath = config.server.baseUriPath || '';
     const cdnPrefix = config.server.cdnPrefix;
 
-    let indexHTML = fs
-        .readFileSync(path.join(publicFolder, 'index.html'))
-        .toString();
+    let indexHTML =
+        indexHTMLOverride ||
+        fs.readFileSync(path.join(publicFolder, 'index.html')).toString();
 
     indexHTML = rewriteHTML(indexHTML, baseUriPath, cdnPrefix);
 
@@ -68,8 +69,11 @@ export default function getApp(
     }
     app.use(secureHeaders(config));
     app.use(express.urlencoded({ extended: true }));
-    app.use(favicon(path.join(publicFolder, 'favicon.ico')));
-
+    app.use(baseUriPath, favicon(path.join(publicFolder, 'favicon.ico')));
+    app.use(
+        `${baseUriPath}/static`,
+        favicon(path.join(publicFolder, 'favicon.ico')),
+    );
     app.use(baseUriPath, express.static(publicFolder, { index: false }));
 
     if (config.enableOAS) {
@@ -152,4 +156,3 @@ export default function getApp(
     });
     return app;
 }
-module.exports = getApp;

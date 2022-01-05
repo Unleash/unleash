@@ -185,7 +185,8 @@ const loadInitApiTokens = () => {
     if (process.env.INIT_ADMIN_API_TOKENS) {
         const initApiTokens = process.env.INIT_ADMIN_API_TOKENS.split(/,\s?/);
         const tokens = initApiTokens.map((secret) => {
-            const [project = '*', environment = '*'] = secret.split(':');
+            const [project = '*', rest] = secret.split(':');
+            const [environment = '*'] = rest.split('.');
             const token = {
                 createdAt: undefined,
                 project,

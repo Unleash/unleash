@@ -22,7 +22,7 @@ test('should add initApiToken from options', async () => {
     const token = {
         environment: '*',
         project: '*',
-        secret: '*:*:some-random-string',
+        secret: '*:*.some-random-string',
         type: ApiTokenType.ADMIN,
         username: 'admin',
     };
@@ -53,7 +53,7 @@ test('should add initApiToken from options', async () => {
 });
 
 test('should add initApiToken from env var', async () => {
-    process.env.INIT_ADMIN_API_TOKENS = '*:*:some-token1, *:*:some-token2';
+    process.env.INIT_ADMIN_API_TOKENS = '*:*.some-token1, *:*.some-token2';
 
     const config = createConfig({
         db: {
@@ -75,7 +75,7 @@ test('should add initApiToken from env var', async () => {
         ApiTokenType.ADMIN,
     );
     expect(config.authentication.initApiTokens[1].secret).toBe(
-        '*:*:some-token2',
+        '*:*.some-token2',
     );
 
     delete process.env.INIT_ADMIN_API_TOKENS;
@@ -92,11 +92,11 @@ test('should validate initApiToken from env var', async () => {
 });
 
 test('should merge initApiToken from options and env vars', async () => {
-    process.env.INIT_ADMIN_API_TOKENS = '*:*:some-token1, *:*:some-token2';
+    process.env.INIT_ADMIN_API_TOKENS = '*:*.some-token1, *:*.some-token2';
     const token = {
         environment: '*',
         project: '*',
-        secret: '*:*:some-random-string',
+        secret: '*:*.some-random-string',
         type: ApiTokenType.ADMIN,
         username: 'admin',
     };

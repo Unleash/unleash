@@ -36,7 +36,7 @@ process.nextTick(async () => {
                         {
                             environment: '*',
                             project: '*',
-                            secret: '*:*:964a287e1b728cb5f4f3e0120df92cb5',
+                            secret: '*:*.964a287e1b728cb5f4f3e0120df92cb5',
                             type: ApiTokenType.ADMIN,
                             username: 'some-user',
                         },

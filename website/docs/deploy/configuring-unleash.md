@@ -101,7 +101,7 @@ unleash.start(unleashOptions);
     - `demo` - Only requires an email to sign-in (was default in v3)
   - customAuthHandler: (function) - custom express middleware handling authentication. Used when type is set to `custom`
   - createAdminUser: (boolean) - whether to create an admin user with default password - Defaults to `true`
-  - initApiTokens: (ApiTokens[]) - Array of Api Tokens to create on startup. Will only be applied if there does not exist any API tokens in the database from before. 
+  - initApiTokens: (ApiTokens[]) - Array of API Tokens to create on startup. Will only be applied if there are no existing API tokens in the database already. 
       Example:
      ```ts
      [{

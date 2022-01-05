@@ -112,7 +112,7 @@ unleash.start(unleashOptions);
         username: 'some-user',
     }]
      ```
-     You may also use the environment variable `INIT_ADMIN_API_TOKENS` which takes a comma separated list of Api Tokens to initialize. Example value of this variable could be: "`*:*:some-random-string, *:*:some-other-token`". PS! It is required that all Admin tokens target all environments and projects.
+     You may also use the environment variable `INIT_ADMIN_API_TOKENS` which takes a comma separated list of API Tokens to initialize. An example value for this variable could be: "`*:*:some-random-string, *:*:some-other-token`". NB: All Admin tokens must target all environments and projects.
 - **ui** (object) - Set of UI specific overrides. You may set the following keys: `environment`, `slogan`.
 - **getLogger** (function) - Used to register a [custom log provider](#how-do-i-configure-the-log-output).
 - **logLevel** (`debug` | `info` | `warn` | `error` | `fatal`) - The lowest level to log at, also configurable using environment variable `LOG_LEVEL`.

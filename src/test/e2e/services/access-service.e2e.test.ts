@@ -10,11 +10,15 @@ import {
 import * as permissions from '../../../lib/types/permissions';
 import { RoleName } from '../../../lib/types/model';
 import { IUnleashStores } from '../../../lib/types';
+import FeatureToggleService from '../../../lib/services/feature-toggle-service';
+import ProjectService from '../../../lib/services/project-service';
+import { createTestConfig } from '../../config/test-config';
 
 let db: ITestDb;
 let stores: IUnleashStores;
 let accessService;
-
+let featureToggleService;
+let projectService;
 let editorUser;
 let superUser;
 let editorRole;
@@ -182,11 +186,23 @@ beforeAll(async () => {
     db = await dbInit('access_service_serial', getLogger);
     stores = db.stores;
     // projectStore = stores.projectStore;
+    const config = createTestConfig({
+        getLogger,
+        // @ts-ignore
+        experimental: { environments: { enabled: true } },
+    });
     accessService = new AccessService(stores, { getLogger });
     const roles = await accessService.getRootRoles();
     editorRole = roles.find((r) => r.name === RoleName.EDITOR);
     adminRole = roles.find((r) => r.name === RoleName.ADMIN);
     readRole = roles.find((r) => r.name === RoleName.VIEWER);
+    featureToggleService = new FeatureToggleService(stores, config);
+    projectService = new ProjectService(
+        stores,
+        config,
+        accessService,
+        featureToggleService,
+    );
 
     editorUser = await createUserEditorAccess('Bob Test', 'bob@getunleash.io');
     superUser = await createSuperUser();
@@ -603,4 +619,51 @@ test('Should be denied access to delete a strategy in an environment the user do
             'noaccess',
         ),
     ).toBe(false);
+});
+
+test('Should be denied access to delete a role that is in use', async () => {
+    const user = editorUser;
+
+    const project = {
+        id: 'projectToUseRole',
+        name: 'New project',
+        description: 'Blah',
+    };
+    await projectService.createProject(project, user.id);
+
+    const projectMember = await stores.userStore.insert({
+        name: 'CustomProjectMember',
+        email: 'custom@getunleash.io',
+    });
+
+    const customRole = await accessService.createRole({
+        name: 'RoleInUse',
+        description: '',
+        permissions: [
+            {
+                id: 2,
+                name: 'CREATE_FEATURE',
+                environment: null,
+                displayName: 'Create Feature Toggles',
+                type: 'project',
+            },
+            {
+                id: 8,
+                name: 'DELETE_FEATURE',
+                environment: null,
+                displayName: 'Delete Feature Toggles',
+                type: 'project',
+            },
+        ],
+    });
+
+    await projectService.addUser(project.id, customRole.id, projectMember.id);
+
+    try {
+        await accessService.deleteRole(customRole.id);
+    } catch (e) {
+        expect(e.toString()).toBe(
+            'RoleInUseError: Role is in use by more than one user. You cannot delete a role that is in use without first removing the role from the users.',
+        );
+    }
 });

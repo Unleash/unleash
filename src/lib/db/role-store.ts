@@ -63,6 +63,9 @@ export default class RoleStore implements IRoleStore {
 
     async get(id: number): Promise<ICustomRole> {
         const rows = await this.db.select(COLUMNS).from(T.ROLES).where({ id });
+        if (rows.length === 0) {
+            throw new NotFoundError(`Could not find role with id: ${id}`);
+        }
         return this.mapRow(rows[0]);
     }
 

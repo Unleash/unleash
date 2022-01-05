@@ -141,9 +141,8 @@ exports.up = function (db, cb) {
         SELECT
             (SELECT id as role_id from roles WHERE name = 'Owner' LIMIT 1),
             p.id as permission_id,
-            e.name as environment
+            null as environment
         FROM permissions p
-        CROSS JOIN environments e
         WHERE p.permission IN
             ('UPDATE_PROJECT',
             'DELETE_PROJECT',
@@ -155,9 +154,8 @@ exports.up = function (db, cb) {
         SELECT
             (SELECT id as role_id from roles WHERE name = 'Member' LIMIT 1),
             p.id as permission_id,
-            e.name as environment
+            null as environment
         FROM permissions p
-        CROSS JOIN environments e
         WHERE p.permission IN
             ('CREATE_FEATURE',
             'UPDATE_FEATURE',

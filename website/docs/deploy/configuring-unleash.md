@@ -88,8 +88,8 @@ unleash.start(unleashOptions);
   - _serverMetrics_ (boolean) - use this option to turn on/off prometheus metrics.
   - _baseUriPath_ (string) - use to register a base path for all routes on the application. For example `/my/unleash/base` (note the starting /). Defaults to `/`. Can also be configured through the environment variable `BASE_URI_PATH`.
   - _unleashUrl_ (string) - Used to specify the official URL this instance of Unleash can be accessed at for an end user. Can also be configured through the environment variable `UNLEASH_URL`.
-  - \_gracefulShutdownEnable: (boolean) - Used to control if Unleash should shutdown gracefully (close connections, stop tasks,). Defaults to true. `GRACEFUL_SHUTDOWN_ENABLE`
-  - \_gracefulShutdownTimeout: (number) - Used to control the timeout, in milliseconds, for shutdown Unleash gracefully. Will kill all connections regardless if this timeout is exceeded. Defaults to 1000ms `GRACEFUL_SHUTDOWN_TIMEOUT`
+  - _gracefulShutdownEnable_: (boolean) - Used to control if Unleash should shutdown gracefully (close connections, stop tasks,). Defaults to true. `GRACEFUL_SHUTDOWN_ENABLE`
+  - _gracefulShutdownTimeout_: (number) - Used to control the timeout, in milliseconds, for shutdown Unleash gracefully. Will kill all connections regardless if this timeout is exceeded. Defaults to 1000ms `GRACEFUL_SHUTDOWN_TIMEOUT`
 - **preHook** (function) - this is a hook if you need to provide any middlewares to express before `unleash` adds any. Express app instance is injected as first argument.
 - **preRouterHook** (function) - use this to register custom express middlewares before the `unleash` specific routers are added.
 - **authentication** - (object) - An object for configuring/implementing custom admin authentication
@@ -101,6 +101,18 @@ unleash.start(unleashOptions);
     - `demo` - Only requires an email to sign-in (was default in v3)
   - customAuthHandler: (function) - custom express middleware handling authentication. Used when type is set to `custom`
   - createAdminUser: (boolean) - whether to create an admin user with default password - Defaults to `true`
+  - initApiTokens: (ApiTokens[]) - Array of Api Tokens to create on startup. Will only be applied if there does not exist any API tokens in the database from before. 
+      Example:
+     ```ts
+     [{
+        environment: '*',
+        project: '*',
+        secret: '*:*:964a287e1b728cb5f4f3e0120df92cb5',
+        type: ApiTokenType.ADMIN,
+        username: 'some-user',
+    }]
+     ```
+     You may also use the environment variable `INIT_ADMIN_API_TOKENS` which takes a comma separated list of Api Tokens to initialize. Example value of this variable could be: "`*:*:some-random-string, *:*:some-other-token`". PS! It is required that all Admin tokens target all environments and projects.
 - **ui** (object) - Set of UI specific overrides. You may set the following keys: `environment`, `slogan`.
 - **getLogger** (function) - Used to register a [custom log provider](#how-do-i-configure-the-log-output).
 - **logLevel** (`debug` | `info` | `warn` | `error` | `fatal`) - The lowest level to log at, also configurable using environment variable `LOG_LEVEL`.

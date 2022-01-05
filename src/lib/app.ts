@@ -69,11 +69,8 @@ export default function getApp(
     }
     app.use(secureHeaders(config));
     app.use(express.urlencoded({ extended: true }));
+    app.use(favicon(path.join(publicFolder, 'favicon.ico')));
     app.use(baseUriPath, favicon(path.join(publicFolder, 'favicon.ico')));
-    app.use(
-        `${baseUriPath}/static`,
-        favicon(path.join(publicFolder, 'favicon.ico')),
-    );
     app.use(baseUriPath, express.static(publicFolder, { index: false }));
 
     if (config.enableOAS) {

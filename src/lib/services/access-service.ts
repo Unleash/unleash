@@ -22,6 +22,7 @@ import {
 import { IRoleStore } from 'lib/types/stores/role-store';
 import NameExistsError from '../error/name-exists-error';
 import { IEnvironmentStore } from 'lib/types/stores/environment-store';
+import RoleInUseError from '../error/role-in-use-error';
 
 export const ALL_PROJECTS = '*';
 export const ALL_ENVS = '*';
@@ -427,6 +428,14 @@ export class AccessService {
     }
 
     async deleteRole(id: number): Promise<void> {
+        const roleUsers = await this.getUsersForRole(id);
+
+        if (roleUsers.length > 0) {
+            throw new RoleInUseError(
+                'Role is in use by more than one user. You cannot delete a role that is in use without first removing the role from the users.',
+            );
+        }
+
         return this.roleStore.delete(id);
     }
 

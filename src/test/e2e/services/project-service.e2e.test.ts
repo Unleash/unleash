@@ -499,3 +499,54 @@ test('A newly created project only gets connected to enabled environments', asyn
     expect(connectedEnvs.some((e) => e === enabledEnv)).toBeTruthy();
     expect(connectedEnvs.some((e) => e === disabledEnv)).toBeFalsy();
 });
+
+test('deleting a project also deletes connected role entries', async () => {
+    const project = {
+        id: 'test-delete-users-1',
+        name: 'New project',
+        description: 'Blah',
+    };
+
+    await projectService.createProject(project, user);
+
+    const user1 = await stores.userStore.insert({
+        name: 'Projectuser1',
+        email: 'project1@getunleash.io',
+    });
+
+    const user2 = await stores.userStore.insert({
+        name: 'Projectuser2',
+        email: 'project2@getunleash.io',
+    });
+
+    const customRole = await accessService.createRole({
+        name: 'Service Engineer',
+        description: '',
+        permissions: [
+            {
+                id: 2,
+                name: 'CREATE_FEATURE',
+                environment: null,
+                displayName: 'Create Feature Toggles',
+                type: 'project',
+            },
+            {
+                id: 8,
+                name: 'DELETE_FEATURE',
+                environment: null,
+                displayName: 'Delete Feature Toggles',
+                type: 'project',
+            },
+        ],
+    });
+
+    await accessService.addUserToRole(user1.id, customRole.id, project.id);
+    await accessService.addUserToRole(user2.id, customRole.id, project.id);
+
+    let usersForRole = await accessService.getUsersForRole(customRole.id);
+    expect(usersForRole.length).toBe(2);
+
+    await projectService.deleteProject(project.id, user);
+    usersForRole = await accessService.getUsersForRole(customRole.id);
+    expect(usersForRole.length).toBe(0);
+});

@@ -346,13 +346,7 @@ test('should require name when create default roles to project', async () => {
 });
 
 test('should grant user access to project', async () => {
-    const {
-        DELETE_PROJECT,
-        UPDATE_PROJECT,
-        CREATE_FEATURE,
-        UPDATE_FEATURE,
-        DELETE_FEATURE,
-    } = permissions;
+    const { DELETE_PROJECT, UPDATE_PROJECT } = permissions;
     const project = 'another-project';
     const user = editorUser;
     const sUser = await createUserViewerAccess(

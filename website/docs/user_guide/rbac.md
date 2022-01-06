@@ -45,7 +45,7 @@ It is important to highlight that we have not introduced a Viewer role on the pr
 ### Custom Project Roles {#custom-roles}
 
 :::info availability
-Custom project roles were introduced in Unleash 4.5 and are only available in Unleash Enterprise.
+Custom project roles were introduced in **Unleash 4.6** and are only available in Unleash Enterprise.
 :::
 
 Custom project roles give you fine-grained control over permissions across your unleash instance. Roles are assigned on a **per-project basis** by default, but can also be further customized to differ between a project's environments.

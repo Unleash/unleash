@@ -143,7 +143,7 @@ You can also pass these options into the `unleash.start()` entry point.
 
 ### Import files via environment variables
 
-Use the `IMPORT_FILE` environment variable to set the path to the import file, e.g.
+Use the `IMPORT_FILE` environment variable to set the path to the import file. For instance:
 
 ``` shell
 IMPORT_FILE=configuration.yml

@@ -35,7 +35,7 @@ class AccessServiceMock extends AccessService {
         throw new Error('Method not implemented.');
     }
 
-    addUserToProjectRole(userId: number, roleId: number): Promise<void> {
+    addUserToRole(userId: number, roleId: number): Promise<void> {
         throw new Error('Method not implemented.');
     }
 

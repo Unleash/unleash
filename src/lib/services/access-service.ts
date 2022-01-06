@@ -170,12 +170,12 @@ export class AccessService {
         };
     }
 
-    async addUserToProjectRole(
+    async addUserToRole(
         userId: number,
         roleId: number,
         projectId: string,
     ): Promise<void> {
-        return this.store.addUserToProjectRole(userId, roleId, projectId);
+        return this.store.addUserToRole(userId, roleId, projectId);
     }
 
     async getRoleByName(roleName: string): Promise<IRole> {
@@ -194,7 +194,7 @@ export class AccessService {
                     RoleType.ROOT,
                 );
 
-                await this.store.addUserToProjectRole(
+                await this.store.addUserToRole(
                     userId,
                     newRootRole.id,
                     ALL_PROJECTS,
@@ -214,14 +214,15 @@ export class AccessService {
         return userRoles.filter((r) => r.type === RoleType.ROOT);
     }
 
-    async removeUserFromProjectRole(
+    async removeUserFromRole(
         userId: number,
         roleId: number,
         projectId: string,
     ): Promise<void> {
-        return this.store.removeUserFromProjectRole(userId, roleId, projectId);
+        return this.store.removeUserFromRole(userId, roleId, projectId);
     }
 
+    //This actually only exists for testing purposes
     async addPermissionToRole(
         roleId: number,
         permission: string,
@@ -239,6 +240,7 @@ export class AccessService {
         );
     }
 
+    //This actually only exists for testing purposes
     async removePermissionFromRole(
         roleId: number,
         permission: string,
@@ -324,11 +326,11 @@ export class AccessService {
 
         const users = await Promise.all(
             roles.map(async (role) => {
-                const usrs = await this.getProjectUsersForRole(
+                const projectUsers = await this.getProjectUsersForRole(
                     role.id,
                     projectId,
                 );
-                return usrs.map((u) => ({ ...u, roleId: role.id }));
+                return projectUsers.map((u) => ({ ...u, roleId: role.id }));
             }),
         );
         return [roles, users.flat()];
@@ -349,11 +351,7 @@ export class AccessService {
             this.logger.info(
                 `Making ${owner.id} admin of ${projectId} via roleId=${ownerRole.id}`,
             );
-            await this.store.addUserToProjectRole(
-                owner.id,
-                ownerRole.id,
-                projectId,
-            );
+            await this.store.addUserToRole(owner.id, ownerRole.id, projectId);
         }
     }
 

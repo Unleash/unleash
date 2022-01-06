@@ -42,10 +42,23 @@ Per project two roles are now available:
 
 It is important to highlight that we have not introduced a Viewer role on the project level. We believe that all users in Unleash should be able to to View all feature toggles and configuration within an organization. (If we learn this not to be the case we can add a separate role for READ access later).
 
-### Custom Roles {#custom-roles}
+### Custom Project Roles {#custom-roles}
 
-> Will only be introduced for Unleash Enterprise.
+:::info availability
+Custom project roles were introduced in Unleash 4.5 and are only available in Unleash Enterprise.
+:::
 
-In a later iteration we will introduce the concept of "custom roles". This will allow full customization to meet internal needs of larger organisations. We believe these should be able to define access across both “root resources” and specific projects resources. We need further investigation with customers before we land custom roles.
+Custom project roles give you fine-grained control over permissions across your unleash instance. Roles are assigned on a **per-project basis** by default, but can also be further customized to differ between a project's environments.
 
-Please let us know if you have feedback or ideas on how custom roles should work in order to solve your company needs.
+By default, **every member of your organization is assigned the viewer** role. Users with this role can access all projects and see all feature toggles, strategies, etc., but cannot add, remove, or update anything.
+
+These roles are available by default:
+- role1
+- role2
+
+#### Creating your own roles
+
+
+You can create your own custom roles if the default roles don't fulfill your needs. For a step-by-step walkthrough of how you create and assign custom roles, see the how-to guide.
+
+When creating a custom role of your own, the available options are ...

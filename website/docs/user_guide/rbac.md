@@ -63,11 +63,11 @@ You can assign the following project permissions. The permissions will be valid 
 
 - **create feature toggles within the project**
 
-  Lets the user create feature toggles within the project. Note that they **can not assign strategies** to toggles without having the _create feature toggle_ permission for the corresponding environment.
+  Lets the user create feature toggles within the project and create variants for said toggle. Note that they **can not assign strategies** to toggles without having the _create feature toggle_ permission for the corresponding environment.
 
 - **update feature toggles within the project**
 
-  Lets the user update feature toggle descriptions, variants, settings, etc. within the project.
+  Lets the user update feature toggle descriptions; mark toggles as stale / not stale; add, update, and remove toggle tags; and update toggle variants within the project.
 
 - **delete feature toggles within the project**
 

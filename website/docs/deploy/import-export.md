@@ -5,11 +5,15 @@ title: Import & Export
 
 _since v3.3.0_
 
-Unleash supports import and export of feature-toggles and strategies at startup and during runtime. The import mechanism will guarantee that all imported features will be non-archived, as well as updates to strategies and features are included in the event history.
+Unleash supports import and export of feature toggles and strategies at startup and during runtime. The import mechanism guarantees that:
+- all imported features will be non-archived
+- existing updates to strategies and features are included in the event history
 
 All import mechanisms support a `drop` parameter which will clean the database before import (all strategies and features will be removed).
 
-> You should be careful when using `drop` parameter in production environments, as it will clean current state.
+:::caution Dropping in production
+Be careful when using the `drop` parameter in production environments: cleaning the database could lead to unintended loss of data.
+:::
 
 ## Runtime import & export {#runtime-import--export}
 
@@ -36,7 +40,7 @@ It is also possible to not override existing feature toggles (and strategies) by
 
 ### API Export {#api-export}
 
-The api endpoint `/api/admin/state/export` will export feature-toggles and strategies as json by default.\
+The api endpoint `/api/admin/state/export` will export feature-toggles and strategies as json by default.
 You can customize the export with query parameters:
 
 | Parameter | Default | Description |
@@ -105,16 +109,48 @@ curl -X POST -H "Content-Type: application/json" \
 
 ## Startup import {#startup-import}
 
+You can import toggles and strategies on startup by using an import file in JSON or YAML format. As with other forms of imports, you can also choose to remove the current toggle and strategy configuration in the database before importing.
+
+Unleash lets you do this both via configuration parameters and environment variables. The relevant parameters/variables are:
+
+| config parameter   | environment variable        | default | value                                                   |
+|--------------------|-----------------------------|---------|---------------------------------------------------------|
+| `importFile`       | `IMPORT_FILE`               | none    | path to the configuration file                          |
+| `dropBeforeImport` | `IMPORT_DROP_BEFORE_IMPORT` | `false` | whether to clean the database before importing the file |
+
 ### Import files via config parameter {#import-files-via-config-parameter}
 
-You can import a json or yaml file via the configuration option `importFile`.
+To import strategies and toggles from a file (`configuration.yml` in the examples), you use the `importFile` parameter:
 
-Example usage: `unleash-server --databaseUrl ... --importFile export.yml`.
+``` shell
+unleash-server --databaseUrl [...] \
+	       --importFile configuration.yml
+```
 
-If you want the database to be cleaned before import (all strategies and features will be removed), specify the `dropBeforeImport` option.
+To clean the database before import (all strategies and features will be removed), add the `dropBeforeImport` flag:
 
-> You should never use this in production environments.
+:::caution
+You should never use this in production environments.
+:::
 
-Example usage: `unleash-server --databaseUrl ... --importFile export.yml --dropBeforeImport`.
+``` shell
+unleash-server --databaseUrl [...] \
+	       --importFile configuration.yml \
+	       --dropBeforeImport
+```
 
-These options can also be passed into the `unleash.start()` entrypoint.
+You can also pass these options into the `unleash.start()` entry point.
+
+### Import files via environment variables
+
+Use the `IMPORT_FILE` environment variable to set the path to the import file. For instance:
+
+``` shell
+IMPORT_FILE=configuration.yml
+```
+
+To clean the database before import, set the `IMPORT_DROP_BEFORE_IMPORT` (note the leading `IMPORT_`) variable to `true`, `t`, or `1`. The variable is case-sensitive.
+
+``` shell
+IMPORT_DROP_BEFORE_IMPORT=true
+```

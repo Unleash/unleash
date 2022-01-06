@@ -53,17 +53,42 @@ Each custom project role consists of:
 
 You can assign the following project permissions. The permissions will be valid across all of the project's environments.
 
-- update the project
-- delete the project
-- create feature toggles within the project
-- update feature toggles within the project
-- delete feature toggles within the project
+- **update the project**
+
+  Lets the user update project settings, such as enabling/disabling environments, add users, etc.
+
+- **delete the project**
+
+  Lets the user delete the project.
+
+- **create feature toggles within the project**
+
+  Lets the user create feature toggles within the project. Note that they **can not assign strategies** to toggles without having the _create feature toggle_ permission for the corresponding environment.
+
+- **update feature toggles within the project**
+
+  Lets the user update feature toggle descriptions, variants, settings, etc. within the project.
+
+- **delete feature toggles within the project**
+
+  Lets the user delete feature toggles within the project.
 
 ### Environment permissions
 
 You can assign the following permissions on a per-environment level within the project:
 
-- create feature strategies
-- update feature strategies
-- delete feature strategies
-- enable/disable toggles
+- **create feature strategies**
+
+  Lets the user assign feature toggle strategies within the environment.
+
+- **update feature strategies**
+
+  Lets the user update feature toggle strategies within the environment.
+
+- **delete feature strategies**
+
+  Lets the user delete feature toggle strategies within the environment.
+
+- **enable/disable toggles**
+
+  Lets the user enable and disable toggles within the environment.

@@ -28,14 +28,18 @@ let readRole;
 const createUserEditorAccess = async (name, email) => {
     const { userStore } = stores;
     const user = await userStore.insert({ name, email });
-    await accessService.addUserToRole(user.id, editorRole.id, 'default');
+    await accessService.addUserToProjectRole(user.id, editorRole.id, 'default');
     return user;
 };
 
 const createUserViewerAccess = async (name, email) => {
     const { userStore } = stores;
     const user = await userStore.insert({ name, email });
-    await accessService.addUserToRole(user.id, readRole.id, ALL_PROJECTS);
+    await accessService.addUserToProjectRole(
+        user.id,
+        readRole.id,
+        ALL_PROJECTS,
+    );
     return user;
 };
 
@@ -178,7 +182,11 @@ const createSuperUser = async () => {
         name: 'Alice Admin',
         email: 'admin@getunleash.io',
     });
-    await accessService.addUserToRole(user.id, adminRole.id, ALL_PROJECTS);
+    await accessService.addUserToProjectRole(
+        user.id,
+        adminRole.id,
+        ALL_PROJECTS,
+    );
     return user;
 };
 
@@ -372,7 +380,7 @@ test('should grant user access to project', async () => {
     await accessService.createDefaultProjectRoles(user, project);
 
     const projectRole = await accessService.getRoleByName(RoleName.MEMBER);
-    await accessService.addUserToRole(sUser.id, projectRole.id, project);
+    await accessService.addUserToProjectRole(sUser.id, projectRole.id, project);
 
     // // Should be able to update feature toggles inside the project
     hasCommonProjectAccess(sUser, project, true);
@@ -397,7 +405,7 @@ test('should not get access if not specifying project', async () => {
 
     const projectRole = await accessService.getRoleByName(RoleName.MEMBER);
 
-    await accessService.addUserToRole(sUser.id, projectRole.id, project);
+    await accessService.addUserToProjectRole(sUser.id, projectRole.id, project);
 
     // Should not be able to update feature toggles outside project
     hasCommonProjectAccess(sUser, undefined, false);
@@ -410,14 +418,18 @@ test('should remove user from role', async () => {
         email: 'random123@getunleash.io',
     });
 
-    await accessService.addUserToRole(user.id, editorRole.id, 'default');
+    await accessService.addUserToProjectRole(user.id, editorRole.id, 'default');
 
     // check user has one role
     const userRoles = await accessService.getRolesForUser(user.id);
     expect(userRoles.length).toBe(1);
     expect(userRoles[0].name).toBe(RoleName.EDITOR);
 
-    await accessService.removeUserFromRole(user.id, editorRole.id, 'default');
+    await accessService.removeUserFromProjectRole(
+        user.id,
+        editorRole.id,
+        'default',
+    );
     const userRolesAfterRemove = await accessService.getRolesForUser(user.id);
     expect(userRolesAfterRemove.length).toBe(0);
 });
@@ -429,7 +441,7 @@ test('should return role with users', async () => {
         email: 'random2223@getunleash.io',
     });
 
-    await accessService.addUserToRole(user.id, editorRole.id, 'default');
+    await accessService.addUserToProjectRole(user.id, editorRole.id, 'default');
 
     const roleWithUsers = await accessService.getRoleData(editorRole.id);
     expect(roleWithUsers.role.name).toBe(RoleName.EDITOR);
@@ -447,7 +459,7 @@ test('should return role with permissions and users', async () => {
         email: 'random2244@getunleash.io',
     });
 
-    await accessService.addUserToRole(user.id, editorRole.id, 'default');
+    await accessService.addUserToProjectRole(user.id, editorRole.id, 'default');
 
     const roleWithPermission = await accessService.getRoleData(editorRole.id);
 
@@ -536,7 +548,11 @@ test('should support permission with "ALL" environment requirement', async () =>
         [CREATE_FEATURE_STRATEGY],
         'production',
     );
-    await accessStore.addUserToRole(user.id, customRole.id, ALL_PROJECTS);
+    await accessStore.addUserToProjectRole(
+        user.id,
+        customRole.id,
+        ALL_PROJECTS,
+    );
 
     const hasAccess = await accessService.hasPermission(
         user,
@@ -666,4 +682,18 @@ test('Should be denied access to delete a role that is in use', async () => {
             'RoleInUseError: Role is in use by more than one user. You cannot delete a role that is in use without first removing the role from the users.',
         );
     }
+});
+
+test('Should be given full access to project created by user', async () => {
+    const user = editorUser;
+    const newProjectName = 'AWholeNewProject';
+
+    const project = {
+        id: newProjectName,
+        name: newProjectName,
+        description: 'Blah',
+    };
+    await projectService.createProject(project, user.id);
+
+    hasFullProjectAccess(user, newProjectName, true);
 });

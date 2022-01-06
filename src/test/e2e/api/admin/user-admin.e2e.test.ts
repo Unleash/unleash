@@ -54,7 +54,7 @@ test('returns empty list of users', async () => {
 });
 
 test('creates and returns all users', async () => {
-    const createUserRequests = [...Array(20).keys()].map((i) =>
+    const createUserRequests = [...Array(10).keys()].map((i) =>
         app.request
             .post('/api/admin/user-admin')
             .send({
@@ -72,7 +72,7 @@ test('creates and returns all users', async () => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect((res) => {
-            expect(res.body.users.length).toBe(20);
+            expect(res.body.users.length).toBe(10);
             expect(res.body.users[2].rootRole).toBe(editorRole.id);
         });
 });

@@ -1,4 +1,5 @@
 import { RequestHandler } from 'express';
+import { is } from 'type-is';
 
 const DEFAULT_ACCEPTED_CONTENT_TYPE = 'application/json';
 
@@ -12,23 +13,16 @@ const DEFAULT_ACCEPTED_CONTENT_TYPE = 'application/json';
 export default function requireContentType(
     ...acceptedContentTypes: string[]
 ): RequestHandler {
+    console.log(acceptedContentTypes);
+    if (acceptedContentTypes.length === 0) {
+        acceptedContentTypes.push(DEFAULT_ACCEPTED_CONTENT_TYPE);
+    }
     return (req, res, next) => {
         const contentType = req.header('Content-Type');
-        if (
-            Array.isArray(acceptedContentTypes) &&
-            acceptedContentTypes.length > 0
-        ) {
-            if (acceptedContentTypes.includes(contentType)) {
-                next();
-            } else {
-                res.status(415).end();
-            }
-        } else if (DEFAULT_ACCEPTED_CONTENT_TYPE === contentType) {
+        if (is(contentType, acceptedContentTypes)) {
             next();
         } else {
             res.status(415).end();
         }
     };
 }
-
-module.exports = requireContentType;

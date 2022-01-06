@@ -122,6 +122,7 @@ export class EmailService {
             this.logger.warn(
                 'No mailer is configured. Please read the docs on how to configure an emailservice',
             );
+            this.logger.debug('Reset link: ', resetLink);
             res({
                 from: this.sender,
                 to: recipient,

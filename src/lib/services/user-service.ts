@@ -1,5 +1,5 @@
 import assert from 'assert';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import owasp from 'owasp-password-strength-test';
 import Joi from 'joi';
 

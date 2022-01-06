@@ -73,6 +73,7 @@ module.exports = {
             "how-to/how-to-add-strategy-constraints",
             "how-to/how-to-define-custom-context-fields",
             "how-to/how-to-use-custom-strategies",
+            "how-to/how-to-work-with-custom-project-roles",
         ]
     },
     api: {

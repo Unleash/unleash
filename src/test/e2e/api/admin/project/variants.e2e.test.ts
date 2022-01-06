@@ -20,17 +20,15 @@ afterAll(async () => {
 test('Can get variants for a feature', async () => {
     const featureName = 'feature-variants';
     const variantName = 'fancy-variant';
-    await db.stores.featureToggleStore.create('default', {
-        name: featureName,
-        variants: [
-            {
-                name: variantName,
-                stickiness: 'default',
-                weight: 1000,
-                weightType: WeightType.VARIABLE,
-            },
-        ],
-    });
+    await db.stores.featureToggleStore.create('default', { name: featureName });
+    await db.stores.featureToggleStore.saveVariants('default', featureName, [
+        {
+            name: variantName,
+            stickiness: 'default',
+            weight: 1000,
+            weightType: WeightType.VARIABLE,
+        },
+    ]);
     await app.request
         .get(`/api/admin/projects/default/features/${featureName}/variants`)
         .expect(200)
@@ -90,8 +88,12 @@ test('Can patch variants for a feature and get a response of new variant', async
 
     await db.stores.featureToggleStore.create('default', {
         name: featureName,
-        variants,
     });
+    await db.stores.featureToggleStore.saveVariants(
+        'default',
+        featureName,
+        variants,
+    );
 
     const observer = jsonpatch.observe(variants);
     variants[0].name = expectedVariantName;
@@ -123,8 +125,12 @@ test('Can add variant for a feature', async () => {
 
     await db.stores.featureToggleStore.create('default', {
         name: featureName,
-        variants,
     });
+    await db.stores.featureToggleStore.saveVariants(
+        'default',
+        featureName,
+        variants,
+    );
 
     const observer = jsonpatch.observe(variants);
     variants.push({
@@ -167,8 +173,12 @@ test('Can remove variant for a feature', async () => {
 
     await db.stores.featureToggleStore.create('default', {
         name: featureName,
-        variants,
     });
+    await db.stores.featureToggleStore.saveVariants(
+        'default',
+        featureName,
+        variants,
+    );
 
     const observer = jsonpatch.observe(variants);
     variants.pop();
@@ -200,8 +210,12 @@ test('PUT overwrites current variant on feature', async () => {
     ];
     await db.stores.featureToggleStore.create('default', {
         name: featureName,
-        variants,
     });
+    await db.stores.featureToggleStore.saveVariants(
+        'default',
+        featureName,
+        variants,
+    );
 
     const newVariants: IVariant[] = [
         {
@@ -646,17 +660,23 @@ test('If sum of fixed variant weight equals 1000 variable variants gets weight 0
 
 test('PATCH endpoint validates uniqueness of variant names', async () => {
     const featureName = 'variants-uniqueness-names';
+    const variants = [
+        {
+            name: 'variant1',
+            weight: 1000,
+            weightType: WeightType.VARIABLE,
+            stickiness: 'default',
+        },
+    ];
     await db.stores.featureToggleStore.create('default', {
         name: featureName,
-        variants: [
-            {
-                name: 'variant1',
-                weight: 1000,
-                weightType: WeightType.VARIABLE,
-                stickiness: 'default',
-            },
-        ],
     });
+
+    await db.stores.featureToggleStore.saveVariants(
+        'default',
+        featureName,
+        variants,
+    );
 
     const newVariants: IVariant[] = [];
 
@@ -689,7 +709,6 @@ test('PUT endpoint validates uniqueness of variant names', async () => {
     const featureName = 'variants-put-uniqueness-names';
     await db.stores.featureToggleStore.create('default', {
         name: featureName,
-        variants: [],
     });
     await app.request
         .put(`/api/admin/projects/default/features/${featureName}/variants`)

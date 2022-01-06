@@ -23,7 +23,7 @@ export interface FeaturesTable {
     description: string;
     type: string;
     stale: boolean;
-    variants: string;
+    variants?: string;
     project: string;
     last_seen_at?: Date;
     created_at?: Date;
@@ -187,13 +187,6 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             project,
             archived: data.archived || false,
             stale: data.stale,
-            variants: data.variants
-                ? JSON.stringify(
-                      data.variants.sort((a, b) =>
-                          a.name.localeCompare(b.name),
-                      ),
-                  )
-                : JSON.stringify([]),
             created_at: data.createdAt,
         };
         if (!row.created_at) {

@@ -324,17 +324,20 @@ export default class StateService {
             features
                 .filter(filterExisting(keepExisting, oldToggles))
                 .filter(filterEqual(oldToggles))
-                .map((feature) =>
-                    this.toggleStore
-                        .create(feature.project, feature)
-                        .then(() => {
-                            this.eventStore.store({
-                                type: FEATURE_IMPORT,
-                                createdBy: userName,
-                                data: feature,
-                            });
-                        }),
-                ),
+                .map(async (feature) => {
+                    const { name, project, variants = [] } = feature;
+                    await this.toggleStore.create(feature.project, feature);
+                    await this.toggleStore.saveVariants(
+                        project,
+                        name,
+                        variants,
+                    );
+                    await this.eventStore.store({
+                        type: FEATURE_IMPORT,
+                        createdBy: userName,
+                        data: feature,
+                    });
+                }),
         );
     }
 

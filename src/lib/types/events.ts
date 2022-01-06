@@ -146,23 +146,23 @@ export class FeatureVariantEvent extends BaseEvent {
 
     readonly featureName: string;
 
-    readonly data: {
-        oldVariants: IVariant[];
-        newVariants: IVariant[];
-    };
+    readonly data: { variants: IVariant[] };
+
+    readonly preData: { variants: IVariant[] };
 
     constructor(p: {
         project: string;
         featureName: string;
         createdBy: string;
         tags: ITag[];
-        oldVariants: IVariant[];
         newVariants: IVariant[];
+        oldVariants: IVariant[];
     }) {
         super(FEATURE_VARIANTS_UPDATED, p.createdBy, p.tags);
         this.project = p.project;
         this.featureName = p.featureName;
-        this.data = { oldVariants: p.oldVariants, newVariants: p.newVariants };
+        this.data = { variants: p.newVariants };
+        this.preData = { variants: p.oldVariants };
     }
 }
 

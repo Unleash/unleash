@@ -2,15 +2,23 @@ import { IApiTokenStore } from '../../lib/types/stores/api-token-store';
 import { IApiToken, IApiTokenCreate } from '../../lib/types/models/api-token';
 
 import NotFoundError from '../../lib/error/notfound-error';
+import EventEmitter from 'events';
 
-export default class FakeApiTokenStore implements IApiTokenStore {
-    tokens: IApiToken[];
+export default class FakeApiTokenStore
+    extends EventEmitter
+    implements IApiTokenStore
+{
+    tokens: IApiToken[] = [];
 
     async delete(key: string): Promise<void> {
         this.tokens.splice(
             this.tokens.findIndex((t) => t.secret === key),
             1,
         );
+    }
+
+    async count(): Promise<number> {
+        return this.tokens.length;
     }
 
     async deleteAll(): Promise<void> {
@@ -45,6 +53,7 @@ export default class FakeApiTokenStore implements IApiTokenStore {
             ...newToken,
         };
         this.tokens.push(apiToken);
+        this.emit('insert');
         return apiToken;
     }
 

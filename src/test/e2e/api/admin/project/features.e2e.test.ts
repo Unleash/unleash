@@ -537,6 +537,46 @@ test('Should patch feature toggle', async () => {
     expect(updateForOurToggle.data.type).toBe('kill-switch');
 });
 
+test('Should patch feature toggle and not remove variants', async () => {
+    const url = '/api/admin/projects/default/features';
+    const name = 'new.toggle.variants';
+    await app.request
+        .post(url)
+        .send({ name, description: 'some', type: 'release' })
+        .expect(201);
+    await app.request
+        .put(`${url}/${name}/variants`)
+        .send([
+            {
+                name: 'variant1',
+                weightType: 'variable',
+                weight: 500,
+                stickiness: 'default',
+            },
+            {
+                name: 'variant2',
+                weightType: 'variable',
+                weight: 500,
+                stickiness: 'default',
+            },
+        ])
+        .expect(200);
+    await app.request
+        .patch(`${url}/${name}`)
+        .send([
+            { op: 'replace', path: '/description', value: 'New desc' },
+            { op: 'replace', path: '/type', value: 'kill-switch' },
+        ])
+        .expect(200);
+
+    const { body: toggle } = await app.request.get(`${url}/${name}`);
+
+    expect(toggle.name).toBe(name);
+    expect(toggle.description).toBe('New desc');
+    expect(toggle.type).toBe('kill-switch');
+    expect(toggle.variants).toHaveLength(2);
+});
+
 test('Patching feature toggles to stale should trigger FEATURE_STALE_ON event', async () => {
     const url = '/api/admin/projects/default/features';
     const name = 'toggle.stale.on.patch';

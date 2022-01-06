@@ -49,7 +49,6 @@ test('Can connect environment to project', async () => {
         type: 'release',
         description: '',
         stale: false,
-        variants: [],
     });
     await service.addEnvironmentToProject('test-connection', 'default');
     const overview = await stores.featureStrategiesStore.getFeatureOverview(

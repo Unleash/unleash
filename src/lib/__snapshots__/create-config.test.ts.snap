@@ -6,6 +6,7 @@ Object {
     "createAdminUser": true,
     "customAuthHandler": [Function],
     "enableApiToken": true,
+    "initApiTokens": Array [],
     "type": "open-source",
   },
   "db": Object {

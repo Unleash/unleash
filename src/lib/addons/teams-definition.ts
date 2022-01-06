@@ -12,6 +12,7 @@ import {
     FEATURE_STRATEGY_ADD,
     FEATURE_METADATA_UPDATED,
     FEATURE_PROJECT_CHANGE,
+    FEATURE_VARIANTS_UPDATED,
 } from '../types/events';
 import { IAddonDefinition } from '../types/model';
 
@@ -42,6 +43,7 @@ const teamsDefinition: IAddonDefinition = {
         FEATURE_STRATEGY_UPDATE,
         FEATURE_STRATEGY_ADD,
         FEATURE_METADATA_UPDATED,
+        FEATURE_VARIANTS_UPDATED,
         FEATURE_PROJECT_CHANGE,
     ],
 };

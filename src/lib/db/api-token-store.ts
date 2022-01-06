@@ -64,6 +64,12 @@ export class ApiTokenStore implements IApiTokenStore {
             });
     }
 
+    count(): Promise<number> {
+        return this.db(TABLE)
+            .count('*')
+            .then((res) => Number(res[0].count));
+    }
+
     async getAll(): Promise<IApiToken[]> {
         const stopTimer = this.timer('getAll');
         const rows = await this.db<ITokenTable>(TABLE);

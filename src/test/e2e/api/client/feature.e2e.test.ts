@@ -77,22 +77,27 @@ beforeAll(async () => {
         {
             name: 'feature.with.variants',
             description: 'A feature toggle with variants',
-            variants: [
-                {
-                    name: 'control',
-                    weight: 50,
-                    weightType: 'fix',
-                    stickiness: 'default',
-                },
-                {
-                    name: 'new',
-                    weight: 50,
-                    weightType: 'fix',
-                    stickiness: 'default',
-                },
-            ],
         },
         'test',
+    );
+    await app.services.featureToggleServiceV2.saveVariants(
+        'feature.with.variants',
+        'default',
+        [
+            {
+                name: 'control',
+                weight: 50,
+                weightType: 'fix',
+                stickiness: 'default',
+            },
+            {
+                name: 'new',
+                weight: 50,
+                weightType: 'variable',
+                stickiness: 'default',
+            },
+        ],
+        'ivar',
     );
 });
 

@@ -141,9 +141,9 @@ class FeatureController extends Controller {
         const toggle = req.body;
 
         const validatedToggle = await featureSchema.validateAsync(toggle);
-        const { enabled } = validatedToggle;
+        const { enabled, project, name, variants = [] } = validatedToggle;
         const createdFeature = await this.service.createFeatureToggle(
-            validatedToggle.project,
+            project,
             validatedToggle,
             userName,
             true,
@@ -153,8 +153,8 @@ class FeatureController extends Controller {
                 this.service.createStrategy(
                     s,
                     {
-                        projectId: createdFeature.project,
-                        featureName: createdFeature.name,
+                        projectId: project,
+                        featureName: name,
                         environment: DEFAULT_ENV,
                     },
                     userName,
@@ -162,15 +162,17 @@ class FeatureController extends Controller {
             ),
         );
         await this.service.updateEnabled(
-            createdFeature.project,
-            createdFeature.name,
+            project,
+            name,
             DEFAULT_ENV,
             enabled,
             userName,
         );
+        await this.service.saveVariants(name, project, variants, userName);
 
         res.status(201).json({
             ...createdFeature,
+            variants,
             enabled,
             strategies,
         });
@@ -183,7 +185,7 @@ class FeatureController extends Controller {
 
         updatedFeature.name = featureName;
 
-        const projectId = await this.service.getProjectId(updatedFeature.name);
+        const projectId = await this.service.getProjectId(featureName);
         const value = await featureSchema.validateAsync(updatedFeature);
 
         await this.service.updateFeatureToggle(projectId, value, userName);
@@ -203,9 +205,15 @@ class FeatureController extends Controller {
         }
         await this.service.updateEnabled(
             projectId,
-            updatedFeature.name,
+            featureName,
             DEFAULT_ENV,
             updatedFeature.enabled,
+            userName,
+        );
+        await this.service.saveVariants(
+            featureName,
+            projectId,
+            value.variants || [],
             userName,
         );
 

@@ -101,7 +101,7 @@ class FeatureToggleService {
         >,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
     ) {
-        this.logger = getLogger('services/feature-toggle-service-v2.ts');
+        this.logger = getLogger('services/feature-toggle-service.ts');
         this.featureStrategiesStore = featureStrategiesStore;
         this.featureToggleStore = featureToggleStore;
         this.featureToggleClientStore = featureToggleClientStore;

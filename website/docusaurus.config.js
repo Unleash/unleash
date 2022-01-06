@@ -110,6 +110,9 @@ module.exports = {
                     editUrl:
                         'https://github.com/Unleash/unleash/edit/master/website/',
                     routeBasePath: '/',
+                    remarkPlugins: [
+                        [require('@docusaurus/remark-plugin-npm2yarn'), {sync: true}]
+                    ]
                 },
                 theme: {
                     customCss: require.resolve('./src/css/custom.css'),

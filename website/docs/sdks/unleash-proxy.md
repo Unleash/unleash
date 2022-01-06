@@ -102,6 +102,42 @@ Keep-Alive: timeout=5
 
 There are multiple more configuration options available. You find all [available options on github](https://github.com/Unleash/unleash-proxy#available-options).
 
+## Custom activation strategies
+
+The Unleash Proxy can load [custom activation strategies](../advanced/custom-activation-strategy.md) for front-end client SDKs ([Android](../sdks/android-proxy.md), [JavaScript](../sdks/proxy-javascript.md), [React](../sdks/proxy-react.md), [iOS](../sdks/proxy-ios.md)). For a step-by-step guide, refer to the [_how to use custom strategies_ guide](../how-to/how-to-use-custom-strategies.md#step-3-b).
+
+To load custom strategies, use either of these two options:
+- the **`customStrategies`** option: use this if you're running the Unleash Proxy via Node directly.
+- the **`UNLEASH_CUSTOM_STRATEGIES_FILE`** environment variable: use this if you're running the proxy as a container.
+
+Both options take a list of file paths to JavaScript files that export custom strategy implementations.
+
+### Custom activation strategy files format
+
+Each strategy file must export a list of instantiated strategies. A file can export as many strategies as you'd like.
+
+Here's an example file that exports two custom strategies:
+
+``` js
+const { Strategy } = require('unleash-client');
+
+class MyCustomStrategy extends Strategy {
+  // ... strategy implementation
+}
+
+class MyOtherCustomStrategy extends Strategy {
+  // ... strategy implementation
+}
+
+// export strategies
+module.exports = [
+    new MyCustomStrategy(),
+    new MyOtherCustomStrategy()
+];
+```
+
+Refer the [custom activation strategy documentation](../advanced/custom-activation-strategy.md#implementation) for more details on how to implement a custom activation strategy.
+
 ## Unleash Proxy API {#unleash-proxy-api}
 
 The Unleash Proxy has a very simple API. It takes the [Unleash Context](../user_guide/unleash_context) as input and will return the feature toggles relevant for that specific context.

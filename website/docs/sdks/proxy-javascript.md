@@ -15,7 +15,7 @@ For single-page apps we have a tiny proxy-client in JavaScript, without any exte
 
 **Step 1: Install**
 
-```
+```shell npm2yarn
 npm install unleash-proxy-client
 ```
 

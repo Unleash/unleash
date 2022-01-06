@@ -129,7 +129,12 @@ The are numbers of ways you can run Unleash.
 
 ### Run from Docker
 
-1. Create a network by running docker network create unleash
+1. Create a network by running the following command:
+
+```sh
+docker network create unleash
+```
+
 2. Start a postgres database:
 
 ```sh

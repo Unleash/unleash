@@ -5,10 +5,10 @@ import { IUnleashStores } from '../types/stores';
 import { IUnleashConfig } from '../types/option';
 import ApiUser from '../types/api-user';
 import {
-    ALL,
     ApiTokenType,
     IApiToken,
     IApiTokenCreate,
+    validateApiToken,
 } from '../types/models/api-token';
 import { IApiTokenStore } from '../types/stores/api-token-store';
 import { FOREIGN_KEY_VIOLATION } from '../error/db-error';
@@ -26,7 +26,7 @@ export class ApiTokenService {
 
     constructor(
         { apiTokenStore }: Pick<IUnleashStores, 'apiTokenStore'>,
-        config: Pick<IUnleashConfig, 'getLogger'>,
+        config: Pick<IUnleashConfig, 'getLogger' | 'authentication'>,
     ) {
         this.store = apiTokenStore;
         this.logger = config.getLogger('/services/api-token-service.ts');
@@ -35,6 +35,11 @@ export class ApiTokenService {
             () => this.fetchActiveTokens(),
             minutesToMilliseconds(1),
         ).unref();
+        if (config.authentication.initApiTokens.length > 0) {
+            process.nextTick(async () =>
+                this.initApiTokens(config.authentication.initApiTokens),
+            );
+        }
     }
 
     private async fetchActiveTokens(): Promise<void> {
@@ -52,6 +57,19 @@ export class ApiTokenService {
 
     public async getAllActiveTokens(): Promise<IApiToken[]> {
         return this.store.getAllActive();
+    }
+
+    private async initApiTokens(tokens: IApiTokenCreate[]) {
+        const tokenCount = await this.store.count();
+        if (tokenCount > 0) {
+            return;
+        }
+        try {
+            const createAll = tokens.map((t) => this.insertNewApiToken(t));
+            await Promise.all(createAll);
+        } catch (e) {
+            this.logger.error('Unable to create initial Admin API tokens');
+        }
     }
 
     public getUserForToken(secret: string): ApiUser | undefined {
@@ -82,45 +100,30 @@ export class ApiTokenService {
         return this.store.delete(secret);
     }
 
-    private validateNewApiToken({ type, project, environment }) {
-        if (type === ApiTokenType.ADMIN && project !== ALL) {
-            throw new BadDataError(
-                'Admin token cannot be scoped to single project',
-            );
-        }
-
-        if (type === ApiTokenType.ADMIN && environment !== ALL) {
-            throw new BadDataError(
-                'Admin token cannot be scoped to single environment',
-            );
-        }
-
-        if (type === ApiTokenType.CLIENT && environment === ALL) {
-            throw new BadDataError(
-                'Client token cannot be scoped to all environments',
-            );
-        }
-    }
-
     public async createApiToken(
         newToken: Omit<IApiTokenCreate, 'secret'>,
     ): Promise<IApiToken> {
-        this.validateNewApiToken(newToken);
+        validateApiToken(newToken);
 
         const secret = this.generateSecretKey(newToken);
         const createNewToken = { ...newToken, secret };
+        return this.insertNewApiToken(createNewToken);
+    }
 
+    private async insertNewApiToken(
+        newApiToken: IApiTokenCreate,
+    ): Promise<IApiToken> {
         try {
-            const token = await this.store.insert(createNewToken);
+            const token = await this.store.insert(newApiToken);
             this.activeTokens.push(token);
             return token;
         } catch (error) {
             if (error.code === FOREIGN_KEY_VIOLATION) {
                 let { message } = error;
                 if (error.constraint === 'api_tokens_project_fkey') {
-                    message = `Project=${newToken.project} does not exist`;
+                    message = `Project=${newApiToken.project} does not exist`;
                 } else if (error.constraint === 'api_tokens_environment_fkey') {
-                    message = `Environment=${newToken.environment} does not exist`;
+                    message = `Environment=${newApiToken.environment} does not exist`;
                 }
                 throw new BadDataError(message);
             }

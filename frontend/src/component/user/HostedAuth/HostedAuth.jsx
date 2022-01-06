@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import { Button, Grid, TextField, Typography } from '@material-ui/core';
@@ -10,6 +10,7 @@ import AuthOptions from '../common/AuthOptions/AuthOptions';
 import DividerText from '../../common/DividerText/DividerText';
 import ConditionallyRender from '../../common/ConditionallyRender';
 import useUser from '../../../hooks/api/getters/useUser/useUser';
+import PasswordField from '../../common/PasswordField/PasswordField';
 
 const HostedAuth = ({ authDetails, passwordLogin }) => {
     const commonStyles = useCommonStyles();
@@ -109,16 +110,13 @@ const HostedAuth = ({ authDetails, passwordLogin }) => {
                                 variant="outlined"
                                 size="small"
                             />
-                            <TextField
+                            <PasswordField
                                 label="Password"
                                 onChange={evt => setPassword(evt.target.value)}
                                 name="password"
-                                type="password"
                                 value={password}
                                 error={!!passwordError}
                                 helperText={passwordError}
-                                variant="outlined"
-                                size="small"
                             />
                             <Grid container>
                                 <Button

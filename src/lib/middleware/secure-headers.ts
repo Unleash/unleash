@@ -13,21 +13,28 @@ const secureHeaders: (config: IUnleashConfig) => RequestHandler = (config) => {
             },
             contentSecurityPolicy: {
                 directives: {
-                    defaultSrc: ["'self'"],
+                    defaultSrc: ["'self'", 'cdn.getunleash.io'],
                     fontSrc: [
                         "'self'",
+                        'cdn.getunleash.io',
                         'fonts.googleapis.com',
                         'fonts.gstatic.com',
                     ],
                     styleSrc: [
                         "'self'",
                         "'unsafe-inline'",
+                        'cdn.getunleash.io',
                         'fonts.googleapis.com',
                         'fonts.gstatic.com',
                         'data:',
                     ],
-                    scriptSrc: ["'self'"],
-                    imgSrc: ["'self'", 'data:', 'gravatar.com'],
+                    scriptSrc: ["'self'", 'cdn.getunleash.io'],
+                    imgSrc: [
+                        "'self'",
+                        'data:',
+                        'cdn.getunleash.io',
+                        'gravatar.com',
+                    ],
                 },
             },
         });

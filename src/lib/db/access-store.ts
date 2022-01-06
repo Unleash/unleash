@@ -11,6 +11,10 @@ import {
 import { IPermission } from 'lib/types/model';
 import { roundToNearestMinutesWithOptions } from 'date-fns/fp';
 import NotFoundError from '../error/notfound-error';
+import {
+    ENVIRONMENT_PERMISSION_TYPE,
+    ROOT_PERMISSION_TYPE,
+} from 'lib/util/constants';
 
 const T = {
     ROLE_USER: 'role_user',
@@ -126,14 +130,17 @@ export class AccessStore implements IAccessStore {
         // Since the editor should have access to the default project,
         // we map the project to the project and environment specific
         // permissions that are connected to the editor role.
-        if (row.role_id === EDITOR_ID && row.type !== 'root') {
+        if (row.role_id === EDITOR_ID && row.type !== ROOT_PERMISSION_TYPE) {
             project = 'default';
-        } else if (row.type !== 'root') {
+        } else if (row.type !== ROOT_PERMISSION_TYPE) {
             project = row.project ? row.project : undefined;
         }
 
         const environment =
-            row.type === 'environment' ? row.environment : undefined;
+            row.type === ENVIRONMENT_PERMISSION_TYPE
+                ? row.environment
+                : undefined;
+
         return {
             project,
             environment,
@@ -170,11 +177,11 @@ export class AccessStore implements IAccessStore {
         role_id: number,
         permissions: IPermission[],
     ): Promise<void> {
-        const rows = permissions.map((x) => {
+        const rows = permissions.map((permission) => {
             return {
                 role_id,
-                permission_id: x.id,
-                environment: x.environment,
+                permission_id: permission.id,
+                environment: permission.environment,
             };
         });
         this.db.batchInsert(T.ROLE_PERMISSION, rows);
@@ -217,7 +224,7 @@ export class AccessStore implements IAccessStore {
         return rows.map((r) => r.user_id);
     }
 
-    async addUserToRole(
+    async addUserToProjectRole(
         userId: number,
         roleId: number,
         projecId: string,
@@ -229,7 +236,7 @@ export class AccessStore implements IAccessStore {
         });
     }
 
-    async removeUserFromRole(
+    async removeUserFromProjectRole(
         userId: number,
         roleId: number,
         projectId: string,

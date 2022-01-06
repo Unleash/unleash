@@ -41,12 +41,12 @@ export interface IAccessStore extends Store<IRole, number> {
         role_id: number,
         permissions: IPermission[],
     ): Promise<void>;
-    addUserToRole(
+    addUserToProjectRole(
         userId: number,
         roleId: number,
         projectId: string,
     ): Promise<void>;
-    removeUserFromRole(
+    removeUserFromProjectRole(
         userId: number,
         roleId: number,
         projectId: string,

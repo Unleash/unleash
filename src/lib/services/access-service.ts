@@ -158,8 +158,8 @@ export class AccessService {
         const allEnvironmentPermissions = environments.map((env) => {
             return {
                 name: env.name,
-                permissions: environmentPermissions.map((p) => {
-                    return { environment: env.name, ...p };
+                permissions: environmentPermissions.map((permission) => {
+                    return { environment: env.name, ...permission };
                 }),
             };
         });
@@ -170,12 +170,12 @@ export class AccessService {
         };
     }
 
-    async addUserToRole(
+    async addUserToProjectRole(
         userId: number,
         roleId: number,
         projectId: string,
     ): Promise<void> {
-        return this.store.addUserToRole(userId, roleId, projectId);
+        return this.store.addUserToProjectRole(userId, roleId, projectId);
     }
 
     async getRoleByName(roleName: string): Promise<IRole> {
@@ -194,7 +194,7 @@ export class AccessService {
                     RoleType.ROOT,
                 );
 
-                await this.store.addUserToRole(
+                await this.store.addUserToProjectRole(
                     userId,
                     newRootRole.id,
                     ALL_PROJECTS,
@@ -214,12 +214,12 @@ export class AccessService {
         return userRoles.filter((r) => r.type === RoleType.ROOT);
     }
 
-    async removeUserFromRole(
+    async removeUserFromProjectRole(
         userId: number,
         roleId: number,
         projectId: string,
     ): Promise<void> {
-        return this.store.removeUserFromRole(userId, roleId, projectId);
+        return this.store.removeUserFromProjectRole(userId, roleId, projectId);
     }
 
     async addPermissionToRole(
@@ -242,9 +242,9 @@ export class AccessService {
     async removePermissionFromRole(
         roleId: number,
         permission: string,
-        projectId?: string,
+        environment?: string,
     ): Promise<void> {
-        if (isProjectPermission(permission) && !projectId) {
+        if (isProjectPermission(permission) && !environment) {
             throw new Error(
                 `ProjectId cannot be empty for permission=${permission}`,
             );
@@ -252,7 +252,7 @@ export class AccessService {
         return this.store.removePermissionFromRole(
             roleId,
             permission,
-            projectId,
+            environment,
         );
     }
 
@@ -349,7 +349,11 @@ export class AccessService {
             this.logger.info(
                 `Making ${owner.id} admin of ${projectId} via roleId=${ownerRole.id}`,
             );
-            await this.store.addUserToRole(owner.id, ownerRole.id, projectId);
+            await this.store.addUserToProjectRole(
+                owner.id,
+                ownerRole.id,
+                projectId,
+            );
         }
     }
 

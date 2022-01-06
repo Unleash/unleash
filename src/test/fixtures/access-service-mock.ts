@@ -35,16 +35,12 @@ class AccessServiceMock extends AccessService {
         throw new Error('Method not implemented.');
     }
 
-    addUserToRole(userId: number, roleId: number): Promise<void> {
+    addUserToProjectRole(userId: number, roleId: number): Promise<void> {
         throw new Error('Method not implemented.');
     }
 
     setUserRootRole(userId: number, roleId: number): Promise<void> {
         return Promise.resolve();
-    }
-
-    removeUserFromRole(userId: number, roleId: number): Promise<void> {
-        throw new Error('Method not implemented.');
     }
 
     addPermissionToRole(

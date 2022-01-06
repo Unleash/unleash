@@ -300,7 +300,11 @@ export default class ProjectService {
             throw new Error(`User already has access to project=${projectId}`);
         }
 
-        await this.accessService.addUserToRole(userId, role.id, projectId);
+        await this.accessService.addUserToProjectRole(
+            userId,
+            role.id,
+            projectId,
+        );
     }
 
     // TODO: should be an event too
@@ -324,7 +328,11 @@ export default class ProjectService {
             }
         }
 
-        await this.accessService.removeUserFromRole(userId, role.id, projectId);
+        await this.accessService.removeUserFromProjectRole(
+            userId,
+            role.id,
+            projectId,
+        );
     }
 
     async getMembers(projectId: string): Promise<number> {

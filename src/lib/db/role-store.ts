@@ -101,15 +101,6 @@ export default class RoleStore implements IRoleStore {
         return result.length > 0;
     }
 
-    async roleExists(name: string): Promise<boolean> {
-        const result = await this.db.raw(
-            `SELECT EXISTS (SELECT 1 FROM ${T.ROLES} WHERE name = ?) AS present`,
-            [name],
-        );
-        const { present } = result.rows[0];
-        return present;
-    }
-
     async deleteAll(): Promise<void> {
         return this.db(T.ROLES).del();
     }
@@ -181,8 +172,8 @@ export default class RoleStore implements IRoleStore {
             .where('r.type', '=', 'root');
 
         return rows.map((row) => ({
-            roleId: +row.id,
-            userId: +row.user_id,
+            roleId: Number(row.id),
+            userId: Number(row.user_id),
         }));
     }
 

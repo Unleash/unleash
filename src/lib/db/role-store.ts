@@ -183,5 +183,3 @@ export default class RoleStore implements IRoleStore {
 
     destroy(): void {}
 }
-
-module.exports = RoleStore;

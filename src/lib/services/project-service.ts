@@ -324,11 +324,7 @@ export default class ProjectService {
             }
         }
 
-        await this.accessService.removeUserFromRole(
-            userId,
-            role.id,
-            projectId,
-        );
+        await this.accessService.removeUserFromRole(userId, role.id, projectId);
     }
 
     async getMembers(projectId: string): Promise<number> {

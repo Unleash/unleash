@@ -35,11 +35,7 @@ const createUserEditorAccess = async (name, email) => {
 const createUserViewerAccess = async (name, email) => {
     const { userStore } = stores;
     const user = await userStore.insert({ name, email });
-    await accessService.addUserToRole(
-        user.id,
-        readRole.id,
-        ALL_PROJECTS,
-    );
+    await accessService.addUserToRole(user.id, readRole.id, ALL_PROJECTS);
     return user;
 };
 
@@ -182,11 +178,7 @@ const createSuperUser = async () => {
         name: 'Alice Admin',
         email: 'admin@getunleash.io',
     });
-    await accessService.addUserToRole(
-        user.id,
-        adminRole.id,
-        ALL_PROJECTS,
-    );
+    await accessService.addUserToRole(user.id, adminRole.id, ALL_PROJECTS);
     return user;
 };
 
@@ -425,11 +417,7 @@ test('should remove user from role', async () => {
     expect(userRoles.length).toBe(1);
     expect(userRoles[0].name).toBe(RoleName.EDITOR);
 
-    await accessService.removeUserFromRole(
-        user.id,
-        editorRole.id,
-        'default',
-    );
+    await accessService.removeUserFromRole(user.id, editorRole.id, 'default');
     const userRolesAfterRemove = await accessService.getRolesForUser(user.id);
     expect(userRolesAfterRemove.length).toBe(0);
 });
@@ -678,18 +666,4 @@ test('Should be denied access to delete a role that is in use', async () => {
             'RoleInUseError: Role is in use by more than one user. You cannot delete a role that is in use without first removing the role from the users.',
         );
     }
-});
-
-test('Should be given full access to project created by user', async () => {
-    const user = editorUser;
-    const newProjectName = 'AWholeNewProject';
-
-    const project = {
-        id: newProjectName,
-        name: newProjectName,
-        description: 'Blah',
-    };
-    await projectService.createProject(project, user.id);
-
-    hasFullProjectAccess(user, newProjectName, true);
 });

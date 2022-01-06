@@ -21,4 +21,3 @@ class RoleInUseError extends Error {
 }
 
 export default RoleInUseError;
-module.exports = RoleInUseError;

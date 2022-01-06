@@ -14,7 +14,7 @@ import NotFoundError from '../error/notfound-error';
 import {
     ENVIRONMENT_PERMISSION_TYPE,
     ROOT_PERMISSION_TYPE,
-} from 'lib/util/constants';
+} from '../util/constants';
 
 const T = {
     ROLE_USER: 'role_user',

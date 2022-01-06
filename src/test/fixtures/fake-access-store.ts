@@ -9,7 +9,7 @@ import {
 import { IAvailablePermissions, IPermission } from 'lib/types/model';
 
 class AccessStoreMock implements IAccessStore {
-    removeUserFromProjectRole(
+    removeUserFromRole(
         userId: number,
         roleId: number,
         projectId: string,
@@ -87,7 +87,7 @@ class AccessStoreMock implements IAccessStore {
         throw new Error('Method not implemented.');
     }
 
-    addUserToProjectRole(userId: number, roleId: number): Promise<void> {
+    addUserToRole(userId: number, roleId: number): Promise<void> {
         throw new Error('Method not implemented.');
     }
 

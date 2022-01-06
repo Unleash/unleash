@@ -224,10 +224,10 @@ export class AccessStore implements IAccessStore {
         return rows.map((r) => r.user_id);
     }
 
-    async addUserToProjectRole(
+    async addUserToRole(
         userId: number,
         roleId: number,
-        projecId: string,
+        projecId?: string,
     ): Promise<void> {
         return this.db(T.ROLE_USER).insert({
             user_id: userId,
@@ -236,10 +236,10 @@ export class AccessStore implements IAccessStore {
         });
     }
 
-    async removeUserFromProjectRole(
+    async removeUserFromRole(
         userId: number,
         roleId: number,
-        projectId: string,
+        projectId?: string,
     ): Promise<void> {
         return this.db(T.ROLE_USER)
             .where({

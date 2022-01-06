@@ -5,11 +5,11 @@ title: Role-based Access control
 
 This document forms the specifications for [Role-Based Access Control](https://en.wikipedia.org/wiki/Role-based_access_control) which was introduced as part of the **Unleash v4 release**.
 
-### Core principles {#core-principles}
+## Core principles {#core-principles}
 
 Unleash has two levels in it’s hierarchy of resources:
 
-1. **Root resources** - Everything that lives across the entire Unleash instance. Examples of this includes:
+1. **Global resources** - Everything that lives across the entire Unleash instance. Examples of this includes:
    - activation strategies
    - context field definitions
    - addon configurations
@@ -19,46 +19,51 @@ Unleash has two levels in it’s hierarchy of resources:
 
 ![RBAC overview](/img/rbac.png)
 
-Unleash v4 allows you control access to both "root resources" and individual project resources.
+Unleash v4 allows you control access to both global resources and individual project resources.
 
-### Root Roles {#root-roles}
+## Standard roles
 
-> Available for Unleash Open-Source and Unleash Enterprise.
+Unleash comes with a set of built-in roles that you can use. The _global roles_ are available to all Unleash users, while the _project-based roles_ are only available to Pro and Enterprise users. The below table lists the roles, what they do, and what plans they are available in. Additionally, enterprise users can create their own [custom project roles](#custom-project-roles).
 
-Unleash will come with three "root" role out of the box:
+When you add a new user, you can assign them one of the global roles listed below.
 
-- **Admin** - Used to administer the Unleash instance. Is allowed to add/remove users, add them to roles and update role permissions.
-- **Editor** - Represent users with typical read and write access to Unleash. They will typically be allowed to create new projects (for enterprise), create feature toggles on the "default" project, configure context fields etc. They will not be able to add/remove users or roles.
-- **Viewer** - Users with this role are only allowed to read resources in Unleash. They might be added as collaborators to specific projects.
+| Role       | Scope   | Description                                                                                                                                                                                                                                                         | Availability       |
+|------------|---------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------|
+| **Admin**  | Global  | Users with the global admin role have superuser access to Unleash and can perform any operation within the Unleash platform.                                                                                                                                        | All versions       |
+| **Editor** | Global  | Users with the editor role have access to most features in Unleash but can not manage users and roles in the global scope. Editors will be added as project owners when creating projects and get superuser rights within the context of these projects.            | All versions       |
+| **Viewer** | Global  | Users with the viewer role can read global resources in Unleash.                                                                                                                                                                                                    | All versions       |
+| **Owner**  | Project | Users with this the project owner role have full control over the project, and can add and manage other users within the project context; manage feature toggles within the project; and control advanced project features like archiving and deleting the project. | Pro and Enterprise |
+| **Member** | Project | Users with the project member role are allowed to view, create, and update feature toggles within a project, but have limited permissions in regards to managing the project's user access and can not archive or delete the project.                               | Pro and Enterprise |
 
-### Project {#project}
-
-> Project roles are part of Unleash Enterprise.
-
-Per project two roles are now available:
-
-- **Owner** - Allowed to update the project. This includes adding and removing project members and their role.
-- **Member** - Allowed to create and update feature toggles within the project. They can not update the project itself
-
-It is important to highlight that we have not introduced a Viewer role on the project level. We believe that all users in Unleash should be able to to View all feature toggles and configuration within an organization. (If we learn this not to be the case we can add a separate role for READ access later).
-
-### Custom Project Roles {#custom-roles}
+## Custom Project Roles
 
 :::info availability
 Custom project roles were introduced in **Unleash 4.6** and are only available in Unleash Enterprise.
 :::
 
-Custom project roles give you fine-grained control over permissions across your unleash instance. Roles are assigned on a **per-project basis** by default, but can also be further customized to differ between a project's environments.
+Custom project roles let you define your own roles with a specific set of project permissions down to the environment level. The roles can then be assigned to users in specific projects. All users have viewer access to all projects and resources, but must be assigned a project role to be allowed to edit a project's resources. For a step-by-step walkthrough of how to create and assign custom project roles, see the {linked how-to guide}(Thomas will put a link here before this goes out 🤞).
 
-By default, **every member of your organization is assigned the viewer** role. Users with this role can access all projects and see all feature toggles, strategies, etc., but cannot add, remove, or update anything.
+Each custom project role consists of:
+- a **name** (required)
+- a **role description** (optional)
+- a set of **project permissions** (optional)
+- a set of **environment permissions** (optional)
 
-These roles are available by default:
-- role1
-- role2
+### Project permissions
 
-#### Creating your own roles
+You can assign the following project permissions. The permissions will be valid across all of the project's environments.
 
+- update the project
+- delete the project
+- create feature toggles within the project
+- update feature toggles within the project
+- delete feature toggles within the project
 
-You can create your own custom roles if the default roles don't fulfill your needs. For a step-by-step walkthrough of how you create and assign custom roles, see the how-to guide.
+### Environment permissions
 
-When creating a custom role of your own, the available options are ...
+You can assign the following permissions on a per-environment level within the project:
+
+- create feature strategies
+- update feature strategies
+- delete feature strategies
+- enable/disable toggles

@@ -9,7 +9,6 @@ import {
     IUserPermission,
 } from '../types/stores/access-store';
 import { IPermission } from 'lib/types/model';
-import { roundToNearestMinutesWithOptions } from 'date-fns/fp';
 import NotFoundError from '../error/notfound-error';
 import {
     ENVIRONMENT_PERMISSION_TYPE,

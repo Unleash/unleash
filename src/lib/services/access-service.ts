@@ -37,12 +37,6 @@ const PROJECT_ADMIN = [
     permissions.DELETE_FEATURE,
 ];
 
-const PROJECT_REGULAR = [
-    permissions.CREATE_FEATURE,
-    permissions.UPDATE_FEATURE,
-    permissions.DELETE_FEATURE,
-];
-
 interface IRoleCreation {
     name: string;
     description: string;

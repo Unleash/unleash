@@ -70,6 +70,7 @@ export interface IServerOption {
     keepAliveTimeout: number;
     headersTimeout: number;
     baseUriPath: string;
+    cdnPrefix?: string;
     unleashUrl: string;
     serverMetrics: boolean;
     enableRequestLogger: boolean;

@@ -63,6 +63,7 @@ Object {
   "secureHeaders": false,
   "server": Object {
     "baseUriPath": "",
+    "cdnPrefix": undefined,
     "enableRequestLogger": false,
     "gracefulShutdownEnable": true,
     "gracefulShutdownTimeout": 1000,

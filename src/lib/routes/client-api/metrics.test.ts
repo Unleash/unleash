@@ -7,12 +7,12 @@ import { createServices } from '../../services';
 import { IUnleashStores } from '../../types';
 import { IUnleashOptions } from '../../server-impl';
 
-function getSetup(opts?: IUnleashOptions) {
+async function getSetup(opts?: IUnleashOptions) {
     const stores = createStores();
 
     const config = createTestConfig(opts);
     const services = createServices(stores, config);
-    const app = getApp(config, stores, services);
+    const app = await getApp(config, stores, services);
 
     return {
         request: supertest(app),
@@ -29,8 +29,8 @@ let request;
 let stores: IUnleashStores;
 let destroy;
 
-beforeEach(() => {
-    const setup = getSetup();
+beforeEach(async () => {
+    const setup = await getSetup();
     request = setup.request;
     stores = setup.stores;
     destroy = setup.destroy;
@@ -83,7 +83,7 @@ test('should accept client metrics with yes/no', () => {
 });
 
 test('should accept client metrics with yes/no with metricsV2', async () => {
-    const testRunner = getSetup({
+    const testRunner = await getSetup({
         experimental: { metricsV2: { enabled: true } },
     });
     await testRunner.request

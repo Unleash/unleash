@@ -5,7 +5,7 @@ import { createServices } from '../../services';
 import permissions from '../../../test/fixtures/permissions';
 import getApp from '../../app';
 
-function getSetup() {
+async function getSetup() {
     const base = `/random${Math.round(Math.random() * 1000)}`;
     const perms = permissions();
     const config = createTestConfig({
@@ -15,7 +15,7 @@ function getSetup() {
     const stores = createStores();
 
     const services = createServices(stores, config);
-    const app = getApp(config, stores, services);
+    const app = await getApp(config, stores, services);
 
     return {
         base,
@@ -32,8 +32,8 @@ let base;
 let request;
 let destroy;
 
-beforeEach(() => {
-    const setup = getSetup();
+beforeEach(async () => {
+    const setup = await getSetup();
     base = setup.base;
     request = setup.request;
     destroy = setup.destroy;

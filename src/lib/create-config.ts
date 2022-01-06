@@ -107,6 +107,7 @@ const defaultServerOption: IServerOption = {
     host: process.env.HTTP_HOST,
     port: safeNumber(process.env.HTTP_PORT || process.env.PORT, 4242),
     baseUriPath: formatBaseUri(process.env.BASE_URI_PATH),
+    cdnPrefix: process.env.CDN_PREFIX,
     unleashUrl: process.env.UNLEASH_URL || 'http://localhost:4242',
     serverMetrics: true,
     keepAliveTimeout: minutesToMilliseconds(1),

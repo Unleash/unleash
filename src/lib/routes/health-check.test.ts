@@ -7,11 +7,11 @@ import getLogger from '../../test/fixtures/no-logger';
 import getApp from '../app';
 import { IUnleashStores } from '../types';
 
-function getSetup() {
+async function getSetup() {
     const stores = createStores();
     const config = createTestConfig();
     const services = createServices(stores, config);
-    const app = getApp(config, stores, services);
+    const app = await getApp(config, stores, services);
 
     return {
         request: supertest(app),
@@ -26,8 +26,8 @@ function getSetup() {
 let request;
 let destroy;
 let stores;
-beforeEach(() => {
-    const setup = getSetup();
+beforeEach(async () => {
+    const setup = await getSetup();
     request = setup.request;
     destroy = setup.destroy;
     stores = setup.stores;
@@ -38,7 +38,7 @@ afterEach(() => {
     getLogger.setMuteError(false);
 });
 
-test('should give 500 when db is failing', () => {
+test('should give 500 when db is failing', async () => {
     jest.spyOn(global.console, 'error').mockImplementation(() => jest.fn());
     const config = createTestConfig();
     const failingStores: Partial<IUnleashStores> = {
@@ -54,7 +54,7 @@ test('should give 500 when db is failing', () => {
     // @ts-ignore
     const services = createServices(failingStores, config);
     // @ts-ignore
-    const app = getApp(createTestConfig(), failingStores, services);
+    const app = await getApp(createTestConfig(), failingStores, services);
     request = supertest(app);
     getLogger.setMuteError(true);
     expect.assertions(2);

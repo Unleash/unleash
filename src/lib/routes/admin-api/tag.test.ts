@@ -5,7 +5,7 @@ import getApp from '../../app';
 import { createTestConfig } from '../../../test/config/test-config';
 import { createServices } from '../../services';
 
-function getSetup() {
+async function getSetup() {
     const base = `/random${Math.round(Math.random() * 1000)}`;
     const stores = createStores();
     const perms = permissions();
@@ -14,7 +14,7 @@ function getSetup() {
         preRouterHook: perms.hook,
     });
     const services = createServices(stores, config);
-    const app = getApp(config, stores, services);
+    const app = await getApp(config, stores, services);
 
     return {
         base,
@@ -34,8 +34,8 @@ let tagStore;
 let request;
 let destroy;
 
-beforeEach(() => {
-    const setup = getSetup();
+beforeEach(async () => {
+    const setup = await getSetup();
     base = setup.base;
     tagStore = setup.tagStore;
     request = setup.request;

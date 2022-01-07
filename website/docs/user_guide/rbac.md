@@ -41,7 +41,7 @@ When you add a new user, you can assign them one of the global roles listed belo
 Custom project roles were introduced in **Unleash 4.6** and are only available in Unleash Enterprise.
 :::
 
-Custom project roles let you define your own roles with a specific set of project permissions down to the environment level. The roles can then be assigned to users in specific projects. All users have viewer access to all projects and resources, but must be assigned a project role to be allowed to edit a project's resources. For a step-by-step walkthrough of how to create and assign custom project roles, see the {linked how-to guide}(Thomas will put a link here before this goes out 🤞).
+Custom project roles let you define your own roles with a specific set of project permissions down to the environment level. The roles can then be assigned to users in specific projects. All users have viewer access to all projects and resources, but must be assigned a project role to be allowed to edit a project's resources. For a step-by-step walkthrough of how to create and assign custom project roles, see [_how to create and assign custom project roles_](../how-to/how-to-create-and-assign-custom-project-roles.md).
 
 Each custom project role consists of:
 - a **name** (required)

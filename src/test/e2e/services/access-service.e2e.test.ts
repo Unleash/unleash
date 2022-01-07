@@ -52,6 +52,7 @@ const hasCommonProjectAccess = async (user, projectName, condition) => {
         UPDATE_FEATURE_STRATEGY,
         DELETE_FEATURE_STRATEGY,
         UPDATE_FEATURE_ENVIRONMENT,
+        UPDATE_FEATURE_VARIANTS,
     } = permissions;
     expect(
         await accessService.hasPermission(user, CREATE_FEATURE, projectName),
@@ -61,6 +62,13 @@ const hasCommonProjectAccess = async (user, projectName, condition) => {
     ).toBe(condition);
     expect(
         await accessService.hasPermission(user, DELETE_FEATURE, projectName),
+    ).toBe(condition);
+    expect(
+        await accessService.hasPermission(
+            user,
+            UPDATE_FEATURE_VARIANTS,
+            projectName,
+        ),
     ).toBe(condition);
     expect(
         await accessService.hasPermission(

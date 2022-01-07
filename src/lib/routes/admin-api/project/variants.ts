@@ -5,10 +5,7 @@ import { IUnleashConfig } from '../../../types/option';
 import { IUnleashServices } from '../../../types';
 import { Request, Response } from 'express';
 import { Operation } from 'fast-json-patch';
-import {
-    UPDATE_FEATURE,
-    UPDATE_FEATURE_VARIANTS,
-} from '../../../types/permissions';
+import { UPDATE_FEATURE_VARIANTS } from '../../../types/permissions';
 import { IVariant } from '../../../types/model';
 import { extractUsername } from '../../../util/extract-user';
 import { IAuthRequest } from '../../unleash-types';

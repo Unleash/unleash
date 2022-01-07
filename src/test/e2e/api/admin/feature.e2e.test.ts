@@ -1,7 +1,11 @@
 import faker from 'faker';
 import { FeatureToggleDTO, IStrategyConfig, IVariant } from 'lib/types/model';
 import dbInit, { ITestDb } from '../../helpers/database-init';
-import { IUnleashTest, setupApp } from '../../helpers/test-helper';
+import {
+    IUnleashTest,
+    setupApp,
+    setupAppWithCustomConfig,
+} from '../../helpers/test-helper';
 import getLogger from '../../../fixtures/no-logger';
 import { DEFAULT_ENV } from '../../../../lib/util/constants';
 
@@ -679,4 +683,22 @@ test('marks feature toggle as stale', async () => {
     return app.request.get('/api/admin/features/featureZ').expect((res) => {
         expect(res.body.stale).toBe(true);
     });
+});
+
+test('should not hit endpoints if disable configuration is set', async () => {
+    const appWithDisabledLegacyFeatures = await setupAppWithCustomConfig(
+        db.stores,
+        {
+            disableLegacyFeaturesApi: true,
+        },
+    );
+
+    await appWithDisabledLegacyFeatures.request
+        .get('/api/admin/features')
+        .expect(404);
+
+    return appWithDisabledLegacyFeatures.request
+        .get('/api/admin/features/featureX')
+        .expect('Content-Type', /json/)
+        .expect(404);
 });

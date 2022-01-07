@@ -172,6 +172,12 @@ exports.up = function (db, cb) {
             '*' environment
         FROM permissions p
         WHERE p.permission = 'ADMIN';
+
+        ALTER TABLE role_permission
+            ADD CONSTRAINT fk_role_permission
+                FOREIGN KEY(role_id)
+                REFERENCES roles(id) ON DELETE CASCADE;
+
         `,
         cb,
     );

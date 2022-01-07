@@ -7,6 +7,7 @@ export const useStyles = makeStyles(theme => ({
         position: 'relative',
         width: '50px',
         height: '100%',
+        padding: '15px 0px',
     },
     vertical: {
         borderRadius: '1px',

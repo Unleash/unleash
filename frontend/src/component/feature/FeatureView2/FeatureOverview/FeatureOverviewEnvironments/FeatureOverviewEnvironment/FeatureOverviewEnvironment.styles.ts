@@ -19,6 +19,13 @@ export const useStyles = makeStyles(theme => ({
         position: 'relative',
         paddingBottom: '1rem',
     },
+    header: {
+        display: 'flex',
+        justifyContent: 'center',
+        flexDirection: 'column',
+
+        paddingTop: '1.5rem',
+    },
     headerTitle: {
         display: 'flex',
         alignItems: 'center',
@@ -70,8 +77,8 @@ export const useStyles = makeStyles(theme => ({
         alignItems: 'center',
     },
     percentageContainer: {
-        width: '50px',
-        height: '50px',
+        width: '90px',
+        height: '90px',
         border: `2px solid ${theme.palette.primary.light}`,
         borderRadius: '50%',
         display: 'flex',
@@ -95,6 +102,7 @@ export const useStyles = makeStyles(theme => ({
     requestText: {
         textAlign: 'center',
         marginTop: '1rem',
+        fontSize: theme.fontSizes.smallBody,
     },
     linkContainer: {
         display: 'flex',
@@ -114,6 +122,29 @@ export const useStyles = makeStyles(theme => ({
         fill: theme.palette.grey[400],
         marginBottom: '1rem',
     },
+    strategiesText: {
+        fontSize: '14px',
+        color: theme.palette.grey[700],
+    },
+    stratigiesInfoContainer: {
+        display: 'flex',
+    },
+    noStratigiesInfoContainer: {
+        top: '1px',
+        position: 'relative',
+    },
+    stratigiesIconsContainer: {
+        display: 'flex',
+        alignItems: 'center',
+        transform: 'scale(0.8)',
+        top: '3px',
+        left: '-10px',
+        position: 'relative',
+        [theme.breakpoints.down(560)]: {
+            marginLeft: '0px',
+            top: '5px',
+        },
+    },
     [theme.breakpoints.down(750)]: {
         accordionBodyFooter: {
             flexDirection: 'column',
@@ -124,7 +155,7 @@ export const useStyles = makeStyles(theme => ({
     },
     [theme.breakpoints.down(560)]: {
         disabledIndicatorPos: {
-            top: '-8px',
+            top: '13px',
         },
         headerTitle: {
             flexDirection: 'column',
@@ -135,6 +166,9 @@ export const useStyles = makeStyles(theme => ({
         truncator: {
             textAlign: 'center',
         },
+        resultContainer: {
+            flexWrap: 'wrap',
+        },
     },
     [theme.breakpoints.down(400)]: {
         accordionHeader: {
@@ -144,5 +178,61 @@ export const useStyles = makeStyles(theme => ({
         accordionBodyInnerContainer: {
             padding: '0.5rem',
         },
+    },
+    strategyIconContainer: {
+        marginRight: '5px',
+    },
+    strategyIcon: {
+        fill: theme.palette.grey[600],
+    },
+    container: {
+        display: 'flex',
+        alignItems: 'center',
+        marginLeft: '1.3rem',
+        [theme.breakpoints.down(560)]: {
+            flexDirection: 'column',
+            marginLeft: '0',
+        },
+    },
+    addStrategyButton: {
+        background: 'none',
+        textDecoration: 'none',
+        boxShadow: 'none',
+        color: theme.palette.primary.main,
+        fontWeight: 'normal',
+        '&:hover': {
+            background: 'none',
+            textDecoration: 'none',
+            boxShadow: 'none',
+            color: theme.palette.primary.main,
+            fontWeight: 'normal',
+        },
+        '&:disabled': {
+            margin: '0px 16px',
+            height: '35px'
+         },
+    },
+    separtor: {
+        marginLeft: '-10px',
+        marginRight: '9px',
+        [theme.breakpoints.down(560)]: {
+            display: 'none',
+        },
+    },
+    resultContainer: {
+        display: 'flex',
+        width: '100%',
+        justifyContent: 'space-around',
+    },
+    dataContainer: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignContent: 'center',
+        alignItems: 'center',
+        padding: '0px 15px',
+    },
+    resultTitle: {
+        color: theme.palette.primary.main,
     },
 }));

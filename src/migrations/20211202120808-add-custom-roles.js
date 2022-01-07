@@ -38,6 +38,7 @@ exports.up = function (db, cb) {
         INSERT INTO permissions (permission, display_name, type) VALUES ('UPDATE_FEATURE_STRATEGY', 'Update Feature Strategies', 'environment');
         INSERT INTO permissions (permission, display_name, type) VALUES ('DELETE_FEATURE_STRATEGY', 'Delete Feature Strategies', 'environment');
         INSERT INTO permissions (permission, display_name, type) VALUES ('UPDATE_FEATURE_ENVIRONMENT', 'Enable/disable Toggles in Environment', 'environment');
+        INSERT INTO permissions (permission, display_name, type) VALUES ('UPDATE_FEATURE_VARIANTS', 'Create/Edit variants', 'project');
 
         ALTER TABLE role_user ADD COLUMN
         project        VARCHAR(255);
@@ -135,7 +136,8 @@ exports.up = function (db, cb) {
             'UPDATE_FEATURE',
             'DELETE_FEATURE',
             'UPDATE_TAG_TYPE',
-            'DELETE_TAG_TYPE');
+            'DELETE_TAG_TYPE',
+            'UPDATE_FEATURE_VARIANTS');
 
         INSERT INTO role_permission (role_id, permission_id, environment)
         SELECT
@@ -148,7 +150,8 @@ exports.up = function (db, cb) {
             'DELETE_PROJECT',
             'CREATE_FEATURE',
             'UPDATE_FEATURE',
-            'DELETE_FEATURE');
+            'DELETE_FEATURE',
+            'UPDATE_FEATURE_VARIANTS');
 
         INSERT INTO role_permission (role_id, permission_id, environment)
         SELECT
@@ -159,7 +162,8 @@ exports.up = function (db, cb) {
         WHERE p.permission IN
             ('CREATE_FEATURE',
             'UPDATE_FEATURE',
-            'DELETE_FEATURE');
+            'DELETE_FEATURE',
+            'UPDATE_FEATURE_VARIANTS');
 
         INSERT INTO role_permission (role_id, permission_id, environment)
         SELECT

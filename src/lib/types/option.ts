@@ -98,6 +98,7 @@ export interface IUnleashOptions {
     preRouterHook?: Function;
     eventHook?: EventHook;
     enterpriseVersion?: string;
+    disableLegacyFeaturesApi?: boolean;
 }
 
 export interface IEmailOption {
@@ -153,4 +154,5 @@ export interface IUnleashConfig {
     eventHook?: EventHook;
     enterpriseVersion?: string;
     eventBus: EventEmitter;
+    disableLegacyFeaturesApi?: boolean;
 }

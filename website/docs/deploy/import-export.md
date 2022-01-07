@@ -118,39 +118,35 @@ Unleash lets you do this both via configuration parameters and environment varia
 | `importFile`       | `IMPORT_FILE`               | none    | path to the configuration file                          |
 | `dropBeforeImport` | `IMPORT_DROP_BEFORE_IMPORT` | `false` | whether to clean the database before importing the file |
 
-### Import files via config parameter {#import-files-via-config-parameter}
+### Importing files
 
-To import strategies and toggles from a file (`configuration.yml` in the examples), you use the `importFile` parameter:
+To import strategies and toggles from a file (called `configuration.yml` in the examples below), either
+- use the `importFile` parameter to point to the file (you can also passed this into the `unleash.start()` entry point)
+   ``` shell
+   unleash-server --databaseUrl [...] \
+   	       --importFile configuration.yml
+   ```
 
-``` shell
-unleash-server --databaseUrl [...] \
-	       --importFile configuration.yml
-```
+- set the `IMPORT_FILE` environment variable to the path of the file before starting Unleash
 
-To clean the database before import (all strategies and features will be removed), add the `dropBeforeImport` flag:
+   ``` shell
+   IMPORT_FILE=configuration.yml
+   ```
 
+### Drop before import
 :::caution
 You should never use this in production environments.
 :::
 
-``` shell
-unleash-server --databaseUrl [...] \
-	       --importFile configuration.yml \
-	       --dropBeforeImport
-```
+To remove pre-existing feature toggles and strategies in the database before importing the new ones, either:
+- add the `dropBeforeImport` flag to the `unleash-server` command (or to `unleash.start()`)
+   ``` shell
+   unleash-server --databaseUrl [...] \
+   	       --importFile configuration.yml \
+   	       --dropBeforeImport
+   ```
+- set the `IMPORT_DROP_BEFORE_IMPORT` environment variable (note the leading `IMPORT_`) to `true`, `t`, or `1`. The variable is case-sensitive.
 
-You can also pass these options into the `unleash.start()` entry point.
-
-### Import files via environment variables
-
-Use the `IMPORT_FILE` environment variable to set the path to the import file. For instance:
-
-``` shell
-IMPORT_FILE=configuration.yml
-```
-
-To clean the database before import, set the `IMPORT_DROP_BEFORE_IMPORT` (note the leading `IMPORT_`) variable to `true`, `t`, or `1`. The variable is case-sensitive.
-
-``` shell
-IMPORT_DROP_BEFORE_IMPORT=true
-```
+   ``` shell
+   IMPORT_DROP_BEFORE_IMPORT=true
+   ```

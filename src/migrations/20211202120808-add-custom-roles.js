@@ -167,7 +167,7 @@ exports.up = function (db, cb) {
             p.id as permission_id,
             '*' environment
         FROM permissions p
-        WHERE p.permission = 'ADMIN'
+        WHERE p.permission = 'ADMIN';
         `,
         cb,
     );

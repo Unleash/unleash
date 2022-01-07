@@ -23,6 +23,8 @@ import { IRoleStore } from 'lib/types/stores/role-store';
 import NameExistsError from '../error/name-exists-error';
 import { IEnvironmentStore } from 'lib/types/stores/environment-store';
 import RoleInUseError from '../error/role-in-use-error';
+import { roleSchema } from '../schema/role-schema';
+import { CUSTOM_ROLE_TYPE } from '../util/constants';
 
 export const ALL_PROJECTS = '*';
 export const ALL_ENVS = '*';
@@ -386,12 +388,11 @@ export class AccessService {
     }
 
     async createRole(role: IRoleCreation): Promise<ICustomRole> {
-        await this.validateRole(role);
         const baseRole = {
-            name: role.name,
-            description: role.description,
-            roleType: 'custom',
+            ...(await this.validateRole(role)),
+            roleType: CUSTOM_ROLE_TYPE,
         };
+
         const rolePermissions = role.permissions;
         const newRole = await this.roleStore.create(baseRole);
         if (rolePermissions) {
@@ -451,8 +452,9 @@ export class AccessService {
     async validateRole(
         role: IRoleCreation,
         existingId?: number,
-    ): Promise<void> {
+    ): Promise<IRoleCreation> {
+        const cleanedRole = await roleSchema.validateAsync(role);
         await this.validateRoleIsUnique(role.name, existingId);
-        //Handle schema validation here...
+        return cleanedRole;
     }
 }

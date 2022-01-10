@@ -41,7 +41,6 @@ module.exports = {
             'sdks/proxy-javascript',
             'sdks/proxy-react',
             'sdks/proxy-ios',
-            'sdks/community',
         ],
         Addons: [
             'addons/index',

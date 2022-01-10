@@ -22,7 +22,7 @@ const PasswordField = ({ ...rest }) => {
             type={showPassword ? 'text' : 'password'}
             InputProps={{
                 style: {
-                    paddingRight: '0px !important',
+                    paddingRight: '0px',
                 },
                 endAdornment: (
                     <InputAdornment position="end">

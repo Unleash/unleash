@@ -114,6 +114,8 @@ const PasswordAuth = ({ authDetails, passwordLogin }) => {
                                 helperText={usernameError}
                                 autoComplete="true"
                                 data-test={LOGIN_EMAIL_ID}
+                                variant="outlined"
+                                size="small"
                             />
                             <PasswordField
                                 label="Password"

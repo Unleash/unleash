@@ -27,9 +27,9 @@ Server-side clients run on your server and communicate directly with your Unleas
 
 For security and performance reasons, the front-end SDKs do not communicate directly with your Unleash instance. Instead, they go via the [Unleash Proxy](unleash-proxy.md).
 
-- [Javascript SDK](/sdks/proxy-javascript)
 - [Android SDK](/sdks/android_proxy_sdk)
 - [iOS Proxy SDK](/sdks/proxy-ios)
+- [Javascript SDK](/sdks/proxy-javascript)
 - [React Proxy SDK](/sdks/proxy-react)
 
 
@@ -103,14 +103,14 @@ If you see an item marked with a ❌ that you would find useful, feel free to re
 
 Here's some of the fantastic work our community has done to make Unleash work in even more contexts. If you still can't find your favorite language, let us know and we'd love to help you create the client for it!
 
-- [silvercar/unleash-client-kotlin](https://github.com/silvercar/unleash-client-kotlin) (Kotlin)
-- [uekoetter.dev/unleash-client-dart](https://pub.dev/packages/unleash) (Dart)
-- [minds/unleash-client-php](https://gitlab.com/minds/unleash-client-php) (PHP)
-- [Stogon/unleash-bundle](https://git.stogon.io/Stogon/unleash-bundle/) (PHP - Symfony)
 - [afontaine/unleash_ex](https://gitlab.com/afontaine/unleash_ex) (Elixir)
-- [mikefrancis/laravel-unleash](https://github.com/mikefrancis/laravel-unleash) (Laravel - PHP)
 - [AppsFlyer/clojure-unleash](https://github.com/AppsFlyer/unleash-client-clojure) (Clojure)
+- [mikefrancis/laravel-unleash](https://github.com/mikefrancis/laravel-unleash) (Laravel - PHP)
+- [minds/unleash-client-php](https://gitlab.com/minds/unleash-client-php) (PHP)
 - [pmb0/nestjs-unleash](https://github.com/pmb0/nestjs-unleash) (NestJS - Node.js)
+- [silvercar/unleash-client-kotlin](https://github.com/silvercar/unleash-client-kotlin) (Kotlin)
+- [Stogon/unleash-bundle](https://git.stogon.io/Stogon/unleash-bundle/) (PHP - Symfony)
+- [uekoetter.dev/unleash-client-dart](https://pub.dev/packages/unleash) (Dart)
 - _...your implementation for your favorite language._
 
 ### Implement your own SDK {#implement-your-own-sdk}

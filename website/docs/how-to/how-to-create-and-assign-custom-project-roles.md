@@ -11,9 +11,10 @@ This guide takes you through [how to create](#creating-custom-project-roles "how
 
 To create custom project roles:
 
-1. Navigate to the custom project roles page by using the admin menu (the gear symbol) and navigating to roles.
-2. Use the "new project role" button to open the role creation form.
-3. Give the role a name, an optional description, and the set of permissions you'd like it to have. For a full overview of all the options, consult the [custom project roles reference documentation](../user_guide/rbac.md#custom-project-roles).
+1. Navigate to the custom project roles page by using the admin menu (the gear symbol) and navigating to users.
+2. Navigate to the "roles" tab.
+3. Use the "new project role" button to open the role creation form.
+4. Give the role a name, an optional description, and the set of permissions you'd like it to have. For a full overview of all the options, consult the [custom project roles reference documentation](../user_guide/rbac.md#custom-project-roles).
 
 ## Assigning custom project roles
 

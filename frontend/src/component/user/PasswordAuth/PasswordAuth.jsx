@@ -16,6 +16,7 @@ import {
     LOGIN_EMAIL_ID,
 } from '../../../testIds';
 import useUser from '../../../hooks/api/getters/useUser/useUser';
+import PasswordField from '../../common/PasswordField/PasswordField';
 
 const PasswordAuth = ({ authDetails, passwordLogin }) => {
     const commonStyles = useCommonStyles();
@@ -111,22 +112,17 @@ const PasswordAuth = ({ authDetails, passwordLogin }) => {
                                 value={username}
                                 error={!!usernameError}
                                 helperText={usernameError}
-                                variant="outlined"
                                 autoComplete="true"
-                                size="small"
                                 data-test={LOGIN_EMAIL_ID}
                             />
-                            <TextField
+                            <PasswordField
                                 label="Password"
                                 onChange={evt => setPassword(evt.target.value)}
                                 name="password"
-                                type="password"
                                 value={password}
                                 error={!!passwordError}
                                 helperText={passwordError}
-                                variant="outlined"
                                 autoComplete="true"
-                                size="small"
                                 data-test={LOGIN_PASSWORD_ID}
                             />
                             <Button

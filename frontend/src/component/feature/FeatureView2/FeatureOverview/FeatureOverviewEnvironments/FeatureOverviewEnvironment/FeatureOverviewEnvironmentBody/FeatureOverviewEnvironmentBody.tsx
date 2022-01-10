@@ -1,4 +1,4 @@
-import { Link, useParams, useHistory } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { IFeatureViewParams } from '../../../../../../../interfaces/params';
 import ConditionallyRender from '../../../../../../common/ConditionallyRender';
 import NoItemsStrategies from '../../../../../../common/NoItems/NoItemsStrategies/NoItemsStrategies';
@@ -6,6 +6,9 @@ import FeatureOverviewEnvironmentStrategies from '../FeatureOverviewEnvironmentS
 
 import { useStyles } from '../FeatureOverviewEnvironment.styles';
 import { IFeatureEnvironment } from '../../../../../../../interfaces/featureToggle';
+import { UPDATE_FEATURE } from '../../../../../../providers/AccessProvider/permissions';
+import ResponsiveButton from '../../../../../../common/ResponsiveButton/ResponsiveButton';
+import { Add } from '@material-ui/icons';
 
 interface IFeatureOverviewEnvironmentBodyProps {
     getOverviewText: () => string;
@@ -39,7 +42,14 @@ const FeatureOverviewEnvironmentBody = ({
                     show={
                         <>
                             <div className={styles.linkContainer}>
-                                <Link to={strategiesLink}>Edit strategies</Link>
+                                <ResponsiveButton
+                                    Icon={Add}
+                                    onClick={() => history.push(strategiesLink)}
+                                    maxWidth="700px"
+                                    permission={UPDATE_FEATURE}
+                                >
+                                    Add strategy
+                                </ResponsiveButton>
                             </div>
                             <FeatureOverviewEnvironmentStrategies
                                 strategies={featureEnvironment?.strategies}

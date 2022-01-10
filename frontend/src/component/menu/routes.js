@@ -1,4 +1,3 @@
-import CreateFeatureToggle from '../../page/features/create';
 import CopyFeatureToggle from '../../page/features/copy';
 import ViewFeatureToggle from '../../page/features/show';
 import Features from '../../page/features';

@@ -14,13 +14,14 @@ Unleash provides official client SDKs for a number of programming language. Addi
 
 Server-side clients run on your server and communicate directly with your Unleash instance. We provide these official clients:
 
+- [.Net SDK](/sdks/dot_net_sdk)
+- [Go SDK](/sdks/go_sdk)
 - [Java SDK](/sdks/java_sdk)
 - [Node.js SDK](/sdks/node_sdk)
-- [Go SDK](/sdks/go_sdk)
-- [Ruby SDK](/sdks/ruby_sdk)
-- [Python SDK](/sdks/python_sdk)
-- [.Net SDK](/sdks/dot_net_sdk)
 - [PHP SDK](/sdks/php_sdk)
+- [Python SDK](/sdks/python_sdk)
+- [Ruby SDK](/sdks/ruby_sdk)
+- [Rust SDK](https://github.com/unleash/unleash-client-rust)
 
 ### Front-end SDKs
 
@@ -102,7 +103,6 @@ If you see an item marked with a ❌ that you would find useful, feel free to re
 
 Here's some of the fantastic work our community has done to make Unleash work in even more contexts. If you still can't find your favorite language, let us know and we'd love to help you create the client for it!
 
-- [cognitedata/unleash-client-rust](https://github.com/cognitedata/unleash-client-rust) (Rust)
 - [silvercar/unleash-client-kotlin](https://github.com/silvercar/unleash-client-kotlin) (Kotlin)
 - [uekoetter.dev/unleash-client-dart](https://pub.dev/packages/unleash) (Dart)
 - [minds/unleash-client-php](https://gitlab.com/minds/unleash-client-php) (PHP)

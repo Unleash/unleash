@@ -14,21 +14,22 @@ Unleash provides official client SDKs for a number of programming language. Addi
 
 Server-side clients run on your server and communicate directly with your Unleash instance. We provide these official clients:
 
+- [.Net SDK](/sdks/dot_net_sdk)
+- [Go SDK](/sdks/go_sdk)
 - [Java SDK](/sdks/java_sdk)
 - [Node.js SDK](/sdks/node_sdk)
-- [Go SDK](/sdks/go_sdk)
-- [Ruby SDK](/sdks/ruby_sdk)
-- [Python SDK](/sdks/python_sdk)
-- [.Net SDK](/sdks/dot_net_sdk)
 - [PHP SDK](/sdks/php_sdk)
+- [Python SDK](/sdks/python_sdk)
+- [Ruby SDK](/sdks/ruby_sdk)
+- [Rust SDK](https://github.com/unleash/unleash-client-rust)
 
 ### Front-end SDKs
 
 For security and performance reasons, the front-end SDKs do not communicate directly with your Unleash instance. Instead, they go via the [Unleash Proxy](unleash-proxy.md).
 
-- [Javascript SDK](/sdks/proxy-javascript)
 - [Android SDK](/sdks/android_proxy_sdk)
 - [iOS Proxy SDK](/sdks/proxy-ios)
+- [Javascript SDK](/sdks/proxy-javascript)
 - [React Proxy SDK](/sdks/proxy-react)
 
 
@@ -102,15 +103,14 @@ If you see an item marked with a ❌ that you would find useful, feel free to re
 
 Here's some of the fantastic work our community has done to make Unleash work in even more contexts. If you still can't find your favorite language, let us know and we'd love to help you create the client for it!
 
-- [cognitedata/unleash-client-rust](https://github.com/cognitedata/unleash-client-rust) (Rust)
-- [silvercar/unleash-client-kotlin](https://github.com/silvercar/unleash-client-kotlin) (Kotlin)
-- [uekoetter.dev/unleash-client-dart](https://pub.dev/packages/unleash) (Dart)
-- [minds/unleash-client-php](https://gitlab.com/minds/unleash-client-php) (PHP)
-- [Stogon/unleash-bundle](https://git.stogon.io/Stogon/unleash-bundle/) (PHP - Symfony)
 - [afontaine/unleash_ex](https://gitlab.com/afontaine/unleash_ex) (Elixir)
-- [mikefrancis/laravel-unleash](https://github.com/mikefrancis/laravel-unleash) (Laravel - PHP)
 - [AppsFlyer/clojure-unleash](https://github.com/AppsFlyer/unleash-client-clojure) (Clojure)
+- [mikefrancis/laravel-unleash](https://github.com/mikefrancis/laravel-unleash) (Laravel - PHP)
+- [minds/unleash-client-php](https://gitlab.com/minds/unleash-client-php) (PHP)
 - [pmb0/nestjs-unleash](https://github.com/pmb0/nestjs-unleash) (NestJS - Node.js)
+- [silvercar/unleash-client-kotlin](https://github.com/silvercar/unleash-client-kotlin) (Kotlin)
+- [Stogon/unleash-bundle](https://git.stogon.io/Stogon/unleash-bundle/) (PHP - Symfony)
+- [uekoetter.dev/unleash-client-dart](https://pub.dev/packages/unleash) (Dart)
 - _...your implementation for your favorite language._
 
 ### Implement your own SDK {#implement-your-own-sdk}

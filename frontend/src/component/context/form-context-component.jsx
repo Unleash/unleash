@@ -269,7 +269,7 @@ class AddContextComponent extends Component {
                             specific values of this context field. PS! Not all
                             client SDK's support this feature yet!{' '}
                             <a
-                                href="https://unleash.github.io/docs/activation_strategy#flexiblerollout"
+                                href="https://docs.getunleash.io/advanced/stickiness"
                                 target="_blank"
                                 rel="noreferrer"
                             >

@@ -14,6 +14,7 @@ import {
     ENVIRONMENT_PERMISSION_TYPE,
     ROOT_PERMISSION_TYPE,
 } from '../util/constants';
+import { DEFAULT_PROJECT } from 'lib/services/project-service';
 
 const T = {
     ROLE_USER: 'role_user',
@@ -130,7 +131,7 @@ export class AccessStore implements IAccessStore {
         // we map the project to the project and environment specific
         // permissions that are connected to the editor role.
         if (row.role_id === EDITOR_ID && row.type !== ROOT_PERMISSION_TYPE) {
-            project = 'default';
+            project = DEFAULT_PROJECT;
         } else if (row.type !== ROOT_PERMISSION_TYPE) {
             project = row.project ? row.project : undefined;
         }

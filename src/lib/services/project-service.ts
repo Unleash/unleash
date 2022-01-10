@@ -34,7 +34,7 @@ import IncompatibleProjectError from '../error/incompatible-project-error';
 
 const getCreatedBy = (user: User) => user.email || user.username;
 
-const DEFAULT_PROJECT = 'default';
+export const DEFAULT_PROJECT = 'default';
 
 export interface UsersWithRoles {
     users: IUserWithRole[];

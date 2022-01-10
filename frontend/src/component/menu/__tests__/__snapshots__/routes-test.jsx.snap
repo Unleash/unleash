@@ -62,17 +62,8 @@ Array [
     "layout": "main",
     "menu": Object {},
     "parent": "/projects/:id/features",
-    "path": "/projects/:projectId/create-toggle2",
-    "title": "Create feature toggle",
-    "type": "protected",
-  },
-  Object {
-    "component": [Function],
-    "layout": "main",
-    "menu": Object {},
-    "parent": "/projects",
     "path": "/projects/:projectId/create-toggle",
-    "title": "Create",
+    "title": "Create feature toggle",
     "type": "protected",
   },
   Object {

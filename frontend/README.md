@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/Unleash/unleash-frontend.svg?branch=master)](https://travis-ci.org/Unleash/unleash-frontend)
+[![Build Status](https://travis-ci.org/Unleash/unleash-frontend.svg?branch=main)](https://travis-ci.org/Unleash/unleash-frontend)
 
 # Developing
 

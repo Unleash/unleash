@@ -339,7 +339,7 @@ exports[`renders correctly with permissions 1`] = `
                       className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
                     >
                       <a
-                        href="/projects/default/create-toggle2?name=ToggleB"
+                        href="/projects/default/create-toggle?name=ToggleB"
                         onClick={[Function]}
                       >
                         ToggleB

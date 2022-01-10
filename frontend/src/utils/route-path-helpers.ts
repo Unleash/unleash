@@ -14,9 +14,7 @@ export const getCreateTogglePath = (
     newPath: boolean = false,
     query?: Object
 ) => {
-    const path = newPath
-        ? `/projects/${projectId}/create-toggle2`
-        : `/projects/${projectId}/create-toggle`;
+    const path = `/projects/${projectId}/create-toggle`;
 
     let queryString;
     if (query) {

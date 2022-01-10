@@ -1,4 +1,3 @@
-import CreateFeatureToggle from '../../page/features/create';
 import CopyFeatureToggle from '../../page/features/copy';
 import ViewFeatureToggle from '../../page/features/show';
 import Features from '../../page/features';
@@ -101,19 +100,10 @@ export const routes = [
         menu: {},
     },
     {
-        path: '/projects/:projectId/create-toggle2',
+        path: '/projects/:projectId/create-toggle',
         parent: '/projects/:id/features',
         title: 'Create feature toggle',
         component: FeatureCreate,
-        type: 'protected',
-        layout: 'main',
-        menu: {},
-    },
-    {
-        path: '/projects/:projectId/create-toggle',
-        parent: '/projects',
-        title: 'Create',
-        component: CreateFeatureToggle,
         type: 'protected',
         layout: 'main',
         menu: {},

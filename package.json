@@ -90,7 +90,7 @@
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "fast-json-patch": "^3.1.0",
-    "gravatar-url": "^3.1.0",
+    "gravatar-url": "^4.0.0",
     "helmet": "^5.0.0",
     "joi": "^17.3.0",
     "js-yaml": "^4.1.0",

@@ -146,6 +146,10 @@ module.exports = {
                         to: '/advanced/toggle_variants',
                         from: '/toggle_variants',
                     },
+                    {
+                        to: '/integrations'
+                        from: '/integrations/integrations'
+                    },
                 ],
                 createRedirects: function(toPath) {
                     if (

@@ -31,7 +31,7 @@ module.exports = {
                     activeBaseRegex: '(user_guide|sdks|addons|advanced)',
                 },
                 { to: 'deploy/getting_started', label: 'Deploy and manage' },
-                { to: 'integrations/integrations', label: 'Integrations' },
+                { to: 'integrations', label: 'Integrations' },
                 { to: '/api', label: 'API' },
                 {
                     href: 'https://www.getunleash.io/plans',

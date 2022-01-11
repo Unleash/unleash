@@ -146,6 +146,10 @@ module.exports = {
                         to: '/advanced/toggle_variants',
                         from: '/toggle_variants',
                     },
+                    {
+                        to: '/sdks',
+                        from: '/sdks/community'
+                    }
                 ],
                 createRedirects: function(toPath) {
                     if (

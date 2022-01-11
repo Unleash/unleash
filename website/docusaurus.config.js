@@ -132,6 +132,7 @@ module.exports = {
                             '/user_guide/client-sdk',
                             '/client-sdk',
                             '/user_guide/connect_sdk',
+                            '/sdks/community',
                         ],
                     },
                     {

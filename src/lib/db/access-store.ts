@@ -132,15 +132,14 @@ export class AccessStore implements IAccessStore {
         // we map the project to the project and environment specific
         // permissions that are connected to the editor role.
         console.log('before', row);
-        if (row.role_id === EDITOR_ROLE_ID && row.type !== ROOT_PERMISSION_TYPE) {
+        if (
+            row.role_id === EDITOR_ROLE_ID &&
+            row.type !== ROOT_PERMISSION_TYPE
+        ) {
             project = DEFAULT_PROJECT;
         } else if (row.type !== ROOT_PERMISSION_TYPE) {
             project = row.project ? row.project : undefined;
         }
-
-        console.log('row.role_id === EDITOR_ID', row.role_id === EDITOR_ROLE_ID);
-        console.log('row.type !== ROOT_PERMISSION_TYPE', row.type !== ROOT_PERMISSION_TYPE);
-        console.log('DEFAULT_PROJECT', DEFAULT_PROJECT);
 
         const environment =
             row.type === ENVIRONMENT_PERMISSION_TYPE

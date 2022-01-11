@@ -147,8 +147,8 @@ module.exports = {
                         from: '/toggle_variants',
                     },
                     {
-                        to: '/integrations'
-                        from: '/integrations/integrations'
+                        to: '/integrations',
+                        from: '/integrations/integrations',
                     },
                 ],
                 createRedirects: function(toPath) {

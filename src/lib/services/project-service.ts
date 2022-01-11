@@ -31,10 +31,9 @@ import FeatureToggleService from './feature-toggle-service';
 import { CREATE_FEATURE, UPDATE_FEATURE } from '../types/permissions';
 import NoAccessError from '../error/no-access-error';
 import IncompatibleProjectError from '../error/incompatible-project-error';
+import { DEFAULT_PROJECT } from '../types/project';
 
 const getCreatedBy = (user: User) => user.email || user.username;
-
-export const DEFAULT_PROJECT = 'default';
 
 export interface UsersWithRoles {
     users: IUserWithRole[];

@@ -8,13 +8,13 @@ import {
     IRole,
     IUserPermission,
 } from '../types/stores/access-store';
-import { IPermission } from '../../lib/types/model';
+import { IPermission } from '../types/model';
 import NotFoundError from '../error/notfound-error';
 import {
     ENVIRONMENT_PERMISSION_TYPE,
     ROOT_PERMISSION_TYPE,
 } from '../util/constants';
-import { DEFAULT_PROJECT } from '../../lib/services/project-service';
+import { DEFAULT_PROJECT } from '../types/project';
 
 const T = {
     ROLE_USER: 'role_user',
@@ -34,7 +34,8 @@ interface IPermissionRow {
     role_id: number;
 }
 
-const EDITOR_ID = 2;
+const EDITOR_ROLE_ID = 2;
+
 export class AccessStore implements IAccessStore {
     private logger: Logger;
 
@@ -126,26 +127,33 @@ export class AccessStore implements IAccessStore {
     }
 
     mapUserPermission(row: IPermissionRow): IUserPermission {
-        let project;
+        let project: string;
         // Since the editor should have access to the default project,
         // we map the project to the project and environment specific
         // permissions that are connected to the editor role.
-        if (row.role_id === EDITOR_ID && row.type !== ROOT_PERMISSION_TYPE) {
+        console.log('before', row);
+        if (row.role_id === EDITOR_ROLE_ID && row.type !== ROOT_PERMISSION_TYPE) {
             project = DEFAULT_PROJECT;
         } else if (row.type !== ROOT_PERMISSION_TYPE) {
             project = row.project ? row.project : undefined;
         }
+
+        console.log('row.role_id === EDITOR_ID', row.role_id === EDITOR_ROLE_ID);
+        console.log('row.type !== ROOT_PERMISSION_TYPE', row.type !== ROOT_PERMISSION_TYPE);
+        console.log('DEFAULT_PROJECT', DEFAULT_PROJECT);
 
         const environment =
             row.type === ENVIRONMENT_PERMISSION_TYPE
                 ? row.environment
                 : undefined;
 
-        return {
+        const result = {
             project,
             environment,
             permission: row.permission,
         };
+        console.log('after:', result);
+        return result;
     }
 
     async getPermissionsForRole(roleId: number): Promise<IPermission[]> {

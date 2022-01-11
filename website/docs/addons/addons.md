@@ -1,6 +1,6 @@
 ---
 id: index
-title: Introduction
+title: Addons
 ---
 
 > This feature was introduced in _Unleash v3.11.0_.

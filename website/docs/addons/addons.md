@@ -9,10 +9,10 @@ Unleash Addons allows you to extend Unleash with new functionality. Currently, a
 
 Currently Unleash support the following Addons out of the box:
 
-- [Webhook](./webhook) - A generic way to post messages from Unleash to third party services.
-- [Slack](./slack) - Allows Unleash to post updates to Slack.
-- [Microsoft Teams](./teams) - Allows Unleash to post updates to Microsoft Teams.
-- [Datadog](./datadog) -allows Unleash to post Updates to Datadog when a feature toggle is updated.
+- [Webhook](webhook.md) - A generic way to post messages from Unleash to third party services.
+- [Slack](slack.md) - Allows Unleash to post updates to Slack.
+- [Microsoft Teams](teams.md) - Allows Unleash to post updates to Microsoft Teams.
+- [Datadog](datadog.md) -allows Unleash to post Updates to Datadog when a feature toggle is updated.
 
 In future releases we plan to support community built addons.
 

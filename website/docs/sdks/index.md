@@ -99,7 +99,7 @@ If you see an item marked with a ❌ that you would find useful, feel free to re
 | Bootstrap from file                                                                               | ✅                     | ⭕                        | ⭕                 | ⭕                         | ⭕                     | ⭕                        | ⭕                   | ⭕                                       |
 | Custom Bootstrap implementation                                                                   | ✅                     | ⭕                        | ⭕                 | ⭕                         | ⭕                     | ⭕                        | ⭕                   | ⭕                                       |
 
-## Clients written by awesome enthusiasts {#clients-written-by-awesome-enthusiasts}
+## Community SDKs ❤️ {#community-sdks}
 
 Here's some of the fantastic work our community has done to make Unleash work in even more contexts. If you still can't find your favorite language, let us know and we'd love to help you create the client for it!
 
@@ -113,7 +113,7 @@ Here's some of the fantastic work our community has done to make Unleash work in
 - [uekoetter.dev/unleash-client-dart](https://pub.dev/packages/unleash) (Dart)
 - _...your implementation for your favorite language._
 
-### Implement your own SDK {#implement-your-own-sdk}
+## Implement your own SDK {#implement-your-own-sdk}
 
 If you can't find an SDK that fits your need, you can also develop your own SDK. To make implementation easier, check out these resources:
 

@@ -131,7 +131,6 @@ export class AccessStore implements IAccessStore {
         // Since the editor should have access to the default project,
         // we map the project to the project and environment specific
         // permissions that are connected to the editor role.
-        console.log('before', row);
         if (
             row.role_id === EDITOR_ROLE_ID &&
             row.type !== ROOT_PERMISSION_TYPE
@@ -151,7 +150,6 @@ export class AccessStore implements IAccessStore {
             environment,
             permission: row.permission,
         };
-        console.log('after:', result);
         return result;
     }
 

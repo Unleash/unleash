@@ -132,6 +132,7 @@ module.exports = {
                             '/user_guide/client-sdk',
                             '/client-sdk',
                             '/user_guide/connect_sdk',
+                            '/sdks/community',
                         ],
                     },
                     {
@@ -146,10 +147,6 @@ module.exports = {
                         to: '/advanced/toggle_variants',
                         from: '/toggle_variants',
                     },
-                    {
-                        to: '/sdks',
-                        from: '/sdks/community'
-                    }
                 ],
                 createRedirects: function(toPath) {
                     if (

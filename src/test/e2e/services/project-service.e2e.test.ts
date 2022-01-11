@@ -3,7 +3,7 @@ import getLogger from '../../fixtures/no-logger';
 import FeatureToggleService from '../../../lib/services/feature-toggle-service';
 import ProjectService from '../../../lib/services/project-service';
 import { AccessService } from '../../../lib/services/access-service';
-import { CREATE_FEATURE, UPDATE_FEATURE } from '../../../lib/types/permissions';
+import { MOVE_FEATURE_TOGGLE } from '../../../lib/types/permissions';
 import { createTestConfig } from '../../config/test-config';
 import { RoleName } from '../../../lib/types/model';
 
@@ -377,7 +377,7 @@ test('should not change project if feature toggle project does not match current
         );
     } catch (err) {
         expect(err.message).toBe(
-            `You need permission=${UPDATE_FEATURE} to perform this action`,
+            `You need permission=${MOVE_FEATURE_TOGGLE} to perform this action`,
         );
     }
 });
@@ -438,7 +438,7 @@ test('should fail if user is not authorized', async () => {
         );
     } catch (err) {
         expect(err.message).toBe(
-            `You need permission=${CREATE_FEATURE} to perform this action`,
+            `You need permission=${MOVE_FEATURE_TOGGLE} to perform this action`,
         );
     }
 });

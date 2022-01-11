@@ -28,7 +28,11 @@ import { IProjectQuery, IProjectStore } from '../types/stores/project-store';
 import { IRoleDescriptor } from '../types/stores/access-store';
 import { IEventStore } from '../types/stores/event-store';
 import FeatureToggleService from './feature-toggle-service';
-import { CREATE_FEATURE, UPDATE_FEATURE } from '../types/permissions';
+import {
+    CREATE_FEATURE,
+    MOVE_FEATURE_TOGGLE,
+    UPDATE_FEATURE,
+} from '../types/permissions';
 import NoAccessError from '../error/no-access-error';
 import IncompatibleProjectError from '../error/incompatible-project-error';
 import { DEFAULT_PROJECT } from '../types/project';
@@ -187,7 +191,7 @@ export default class ProjectService {
         const feature = await this.featureToggleStore.get(featureName);
 
         if (feature.project !== currentProjectId) {
-            throw new NoAccessError(UPDATE_FEATURE);
+            throw new NoAccessError(MOVE_FEATURE_TOGGLE);
         }
         const project = await this.getProject(newProjectId);
 
@@ -197,12 +201,12 @@ export default class ProjectService {
 
         const authorized = await this.accessService.hasPermission(
             user,
-            CREATE_FEATURE,
+            MOVE_FEATURE_TOGGLE,
             newProjectId,
         );
 
         if (!authorized) {
-            throw new NoAccessError(CREATE_FEATURE);
+            throw new NoAccessError(MOVE_FEATURE_TOGGLE);
         }
 
         const isCompatibleWithTargetProject =

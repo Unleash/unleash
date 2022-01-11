@@ -13,10 +13,42 @@ module.exports = {
     documentation: [
         'user_guide/index',
         {
-            Tutorials: ['user_guide/index'],
-            'Reference documentation': ['user_guide/index'],
+            Tutorials: [],
+            'Reference documentation': [
+                {
+                    type: 'category',
+                    link: { type: 'doc', id: 'addons/index' },
+                    items: [
+                        'addons/webhook',
+                        'addons/slack',
+                        'addons/teams',
+                        'addons/datadog',
+                    ],
+                    label: 'Addons',
+                },
+                {
+                    'Admin API': [
+                        'api/admin/features',
+                        'api/admin/projects',
+                        'api/admin/feature-toggles-v2',
+                        'api/admin/features-archive',
+                        'api/admin/strategies',
+                        'api/admin/metrics',
+                        'api/admin/events',
+                        'api/admin/state',
+                        'api/admin/feature-types',
+                        'api/admin/addons',
+                        'api/admin/context',
+                        'api/admin/user-admin',
+                    ],
+                    'Client SDK API': [
+                        'api/client/features',
+                        'api/client/register',
+                        'api/client/metrics',
+                    ],
+                },
+            ],
             'Getting started': [
-                'user_guide/index',
                 'user_guide/quickstart',
                 'user_guide/important-concepts',
                 'user_guide/v4-whats-new',
@@ -51,13 +83,6 @@ module.exports = {
                     href: '/sdks#community-sdks',
                 },
             ],
-            Addons: [
-                'addons/index',
-                'addons/webhook',
-                'addons/slack',
-                'addons/teams',
-                'addons/datadog',
-            ],
             Advanced: [
                 'advanced/strategy_constraints',
                 'advanced/custom_activation_strategy',
@@ -88,25 +113,6 @@ module.exports = {
             'api/internal/internal',
             'api/internal/health',
             'api/open_api',
-        ],
-        'Admin API': [
-            'api/admin/features',
-            'api/admin/projects',
-            'api/admin/feature-toggles-v2',
-            'api/admin/features-archive',
-            'api/admin/strategies',
-            'api/admin/metrics',
-            'api/admin/events',
-            'api/admin/state',
-            'api/admin/feature-types',
-            'api/admin/addons',
-            'api/admin/context',
-            'api/admin/user-admin',
-        ],
-        'Client SDK API': [
-            'api/client/features',
-            'api/client/register',
-            'api/client/metrics',
         ],
     },
     'Deploy and manage': {

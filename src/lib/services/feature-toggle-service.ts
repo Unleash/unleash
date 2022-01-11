@@ -834,28 +834,6 @@ class FeatureToggleService {
         return { ...legacyFeature, enabled, strategies };
     }
 
-    async changeProject(
-        featureName: string,
-        newProject: string,
-        createdBy: string,
-    ): Promise<void> {
-        const feature = await this.featureToggleStore.get(featureName);
-        const oldProject = feature.project;
-        feature.project = newProject;
-        await this.featureToggleStore.update(newProject, feature);
-
-        const tags = await this.tagStore.getAllTagsForFeature(featureName);
-        await this.eventStore.store(
-            new FeatureChangeProjectEvent({
-                createdBy,
-                oldProject,
-                newProject,
-                featureName,
-                tags,
-            }),
-        );
-    }
-
     async getArchivedFeatures(): Promise<FeatureToggle[]> {
         return this.getFeatureToggles({}, true);
     }

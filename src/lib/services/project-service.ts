@@ -6,6 +6,7 @@ import { nameType } from '../routes/util';
 import { projectSchema } from './project-schema';
 import NotFoundError from '../error/notfound-error';
 import {
+    FeatureChangeProjectEvent,
     PROJECT_CREATED,
     PROJECT_DELETED,
     PROJECT_UPDATED,
@@ -28,14 +29,11 @@ import { IProjectQuery, IProjectStore } from '../types/stores/project-store';
 import { IRoleDescriptor } from '../types/stores/access-store';
 import { IEventStore } from '../types/stores/event-store';
 import FeatureToggleService from './feature-toggle-service';
-import {
-    CREATE_FEATURE,
-    MOVE_FEATURE_TOGGLE,
-    UPDATE_FEATURE,
-} from '../types/permissions';
+import { MOVE_FEATURE_TOGGLE } from '../types/permissions';
 import NoAccessError from '../error/no-access-error';
 import IncompatibleProjectError from '../error/incompatible-project-error';
 import { DEFAULT_PROJECT } from '../types/project';
+import { IFeatureTagStore } from 'lib/types/stores/feature-tag-store';
 
 const getCreatedBy = (user: User) => user.email || user.username;
 
@@ -63,6 +61,8 @@ export default class ProjectService {
 
     private featureToggleService: FeatureToggleService;
 
+    private tagStore: IFeatureTagStore;
+
     constructor(
         {
             projectStore,
@@ -71,6 +71,7 @@ export default class ProjectService {
             featureTypeStore,
             environmentStore,
             featureEnvironmentStore,
+            featureTagStore,
         }: Pick<
             IUnleashStores,
             | 'projectStore'
@@ -79,6 +80,7 @@ export default class ProjectService {
             | 'featureTypeStore'
             | 'environmentStore'
             | 'featureEnvironmentStore'
+            | 'featureTagStore'
         >,
         config: IUnleashConfig,
         accessService: AccessService,
@@ -92,6 +94,7 @@ export default class ProjectService {
         this.featureToggleStore = featureToggleStore;
         this.featureTypeStore = featureTypeStore;
         this.featureToggleService = featureToggleService;
+        this.tagStore = featureTagStore;
         this.logger = config.getLogger('services/project-service.js');
     }
 
@@ -222,6 +225,17 @@ export default class ProjectService {
         await this.featureToggleService.updateFeatureStrategyProject(
             featureName,
             newProjectId,
+        );
+
+        const tags = await this.tagStore.getAllTagsForFeature(featureName);
+        await this.eventStore.store(
+            new FeatureChangeProjectEvent({
+                createdBy: user.username,
+                oldProject: currentProjectId,
+                newProject: newProjectId,
+                featureName,
+                tags,
+            }),
         );
 
         return updatedFeature;

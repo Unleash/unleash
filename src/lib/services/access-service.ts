@@ -25,6 +25,7 @@ import { IEnvironmentStore } from 'lib/types/stores/environment-store';
 import RoleInUseError from '../error/role-in-use-error';
 import { roleSchema } from '../schema/role-schema';
 import { CUSTOM_ROLE_TYPE } from '../util/constants';
+import { DEFAULT_PROJECT } from '../types/project';
 
 export const ALL_PROJECTS = '*';
 export const ALL_ENVS = '*';
@@ -193,7 +194,7 @@ export class AccessService {
                 await this.store.addUserToRole(
                     userId,
                     newRootRole.id,
-                    ALL_PROJECTS,
+                    DEFAULT_PROJECT,
                 );
             } catch (error) {
                 throw new Error(

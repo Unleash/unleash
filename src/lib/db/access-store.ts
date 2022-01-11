@@ -14,7 +14,6 @@ import {
     ENVIRONMENT_PERMISSION_TYPE,
     ROOT_PERMISSION_TYPE,
 } from '../util/constants';
-import { DEFAULT_PROJECT } from '../types/project';
 
 const T = {
     ROLE_USER: 'role_user',
@@ -33,8 +32,6 @@ interface IPermissionRow {
     project?: string;
     role_id: number;
 }
-
-const EDITOR_ROLE_ID = 2;
 
 export class AccessStore implements IAccessStore {
     private logger: Logger;
@@ -127,17 +124,12 @@ export class AccessStore implements IAccessStore {
     }
 
     mapUserPermission(row: IPermissionRow): IUserPermission {
-        let project: string;
+        let project: string = undefined;
         // Since the editor should have access to the default project,
         // we map the project to the project and environment specific
         // permissions that are connected to the editor role.
-        if (
-            row.role_id === EDITOR_ROLE_ID &&
-            row.type !== ROOT_PERMISSION_TYPE
-        ) {
-            project = DEFAULT_PROJECT;
-        } else if (row.type !== ROOT_PERMISSION_TYPE) {
-            project = row.project ? row.project : undefined;
+        if (row.type !== ROOT_PERMISSION_TYPE) {
+            project = row.project;
         }
 
         const environment =

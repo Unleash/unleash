@@ -13,8 +13,10 @@ module.exports = {
     documentation: [
         'user_guide/index',
         {
-            Tutorials: [],
-            'Reference documentation': [
+            label: 'Reference documentation',
+            type: 'category',
+            collapsible: false,
+            items: [
                 {
                     type: 'category',
                     link: { type: 'doc', id: 'addons/index' },
@@ -41,13 +43,47 @@ module.exports = {
                         'api/admin/context',
                         'api/admin/user-admin',
                     ],
-                    'Client SDK API': [
+                    'Client API': [
                         'api/client/features',
                         'api/client/register',
                         'api/client/metrics',
                     ],
+                    'Client SDKs': [
+                        'sdks/index',
+                        'sdks/java_sdk',
+                        'sdks/node_sdk',
+                        'sdks/dot_net_sdk',
+                        'sdks/go_sdk',
+                        'sdks/python_sdk',
+                        'sdks/ruby_sdk',
+                        'sdks/php_sdk',
+                        'sdks/unleash-proxy',
+                        'sdks/android_proxy_sdk',
+                        'sdks/proxy-javascript',
+                        'sdks/proxy-react',
+                        'sdks/proxy-ios',
+                        {
+                            label: 'Community SDKs',
+                            type: 'link',
+                            href: '/sdks#community-sdks',
+                        },
+                        ,
+                    ],
                 },
             ],
+        },
+        {
+            label: 'How-to guides',
+            type: 'category',
+            collapsible: true,
+            items: [
+                'how-to/how-to-add-strategy-constraints',
+                'how-to/how-to-define-custom-context-fields',
+                'how-to/how-to-use-custom-strategies',
+            ],
+        },
+        {
+            Tutorials: [],
             'Getting started': [
                 'user_guide/quickstart',
                 'user_guide/important-concepts',
@@ -62,26 +98,6 @@ module.exports = {
                 'user_guide/rbac',
                 'user_guide/api-token',
                 'user_guide/technical_debt',
-            ],
-            'Unleash SDKs': [
-                'sdks/index',
-                'sdks/java_sdk',
-                'sdks/node_sdk',
-                'sdks/dot_net_sdk',
-                'sdks/go_sdk',
-                'sdks/python_sdk',
-                'sdks/ruby_sdk',
-                'sdks/php_sdk',
-                'sdks/unleash-proxy',
-                'sdks/android_proxy_sdk',
-                'sdks/proxy-javascript',
-                'sdks/proxy-react',
-                'sdks/proxy-ios',
-                {
-                    label: 'Community SDKs',
-                    type: 'link',
-                    href: '/sdks#community-sdks',
-                },
             ],
             Advanced: [
                 'advanced/strategy_constraints',
@@ -100,11 +116,7 @@ module.exports = {
                 'advanced/sso-google',
             ],
             'Topic guides': ['topics/a-b-testing'],
-            'How-to guides': [
-                'how-to/how-to-add-strategy-constraints',
-                'how-to/how-to-define-custom-context-fields',
-                'how-to/how-to-use-custom-strategies',
-            ],
+            'How-to guides': [],
         },
     ],
     api: {

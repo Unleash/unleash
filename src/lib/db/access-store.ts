@@ -8,13 +8,13 @@ import {
     IRole,
     IUserPermission,
 } from '../types/stores/access-store';
-import { IPermission } from 'lib/types/model';
+import { IPermission } from '../../lib/types/model';
 import NotFoundError from '../error/notfound-error';
 import {
     ENVIRONMENT_PERMISSION_TYPE,
     ROOT_PERMISSION_TYPE,
 } from '../util/constants';
-import { DEFAULT_PROJECT } from 'lib/services/project-service';
+import { DEFAULT_PROJECT } from '../../lib/services/project-service';
 
 const T = {
     ROLE_USER: 'role_user',

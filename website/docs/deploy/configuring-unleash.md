@@ -104,6 +104,7 @@ unleash.start(unleashOptions);
     - _min_ - minimum connections in connections pool (defaults to 0) (`DATABASE_POOL_MIN`)
     - _max_ - maximum connections in connections pool (defaults to 4) (`DATABASE_POOL_MAX`)
     - _idleTimeoutMillis_ - time in milliseconds a connection must be idle before being marked as a candidate for eviction (defaults to 30000) (`DATABASE_POOL_IDLE_TIMEOUT_MS`)
+- **disableLegacyFeaturesApi** (boolean) - whether to disable the [legacy features API](../api/admin/feature-toggles-api.md). Defaults to `false` (`DISABLE_LEGACY_FEATURES_API`).
 - **email** - the email object configuring an SMTP server for sending welcome mails and password reset mails
   - `host` - The server URL to your SMTP server
   - `port` - Which port the SMTP server is running on. Defaults to 465 (Secure SMTP)

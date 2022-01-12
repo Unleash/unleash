@@ -17,7 +17,6 @@ module.exports = {
                 'user_guide/unleash_overview',
                 'user_guide/important-concepts',
                 'user_guide/quickstart',
-                'user_guide/v4-whats-new',
             ],
         },
         {

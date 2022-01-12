@@ -13,6 +13,33 @@ module.exports = {
     documentation: [
         'user_guide/index',
         {
+            'First steps 👶': [
+                'user_guide/unleash_overview',
+                'user_guide/important-concepts',
+                'user_guide/quickstart',
+                'user_guide/v4-whats-new',
+            ],
+        },
+        {
+            label: 'How-to guides 🪜',
+            type: 'category',
+            collapsible: true,
+            items: [
+                'how-to/how-to-add-strategy-constraints',
+                'how-to/how-to-define-custom-context-fields',
+                'how-to/how-to-use-custom-strategies',
+
+                'advanced/sso-open-id-connect',
+                'advanced/sso-saml',
+                'advanced/sso-saml-keycloak',
+                'advanced/sso-google',
+                'advanced/api_access',
+                'user_guide/api-token',
+                'user_guide/user-management',
+                'user_guide/create_feature_toggle',
+            ],
+        },
+        {
             label: 'Reference documentation 📜',
             type: 'category',
             collapsible: false,
@@ -29,25 +56,39 @@ module.exports = {
                     label: 'Addons',
                 },
                 {
-                    'Admin API': [
-                        'api/admin/features',
-                        'api/admin/projects',
-                        'api/admin/feature-toggles-v2',
-                        'api/admin/features-archive',
-                        'api/admin/strategies',
-                        'api/admin/metrics',
-                        'api/admin/events',
-                        'api/admin/state',
-                        'api/admin/feature-types',
-                        'api/admin/addons',
-                        'api/admin/context',
-                        'api/admin/user-admin',
+                    type: 'category',
+                    link: { type: 'doc', id: 'api/index' },
+                    label: 'APIs',
+                    items: [
+                        {
+                            'Admin API': [
+                                'api/admin/addons',
+                                'api/admin/context',
+                                'api/admin/events',
+                                'api/admin/feature-toggles-v2',
+                                'api/admin/feature-types',
+                                'api/admin/features',
+                                'api/admin/features-archive',
+                                'api/admin/metrics',
+                                'api/admin/projects',
+                                'api/admin/state',
+                                'api/admin/strategies',
+                                'api/admin/user-admin',
+                            ],
+                            'Client API': [
+                                'api/client/features',
+                                'api/client/metrics',
+                                'api/client/register',
+                            ],
+                            'System API': [
+                                'api/internal/internal',
+                                'api/internal/health',
+                            ],
+                        },
+                        'api/open_api',
                     ],
-                    'Client API': [
-                        'api/client/features',
-                        'api/client/register',
-                        'api/client/metrics',
-                    ],
+                },
+                {
                     'Client SDKs': [
                         'sdks/index',
                         'sdks/java_sdk',
@@ -86,66 +127,36 @@ module.exports = {
                         'advanced/tags',
                         'advanced/enterprise-authentication',
                     ],
+                    'Deploy and manage Unleash': [
+                        'deploy/getting_started',
+                        'deploy/configuring_unleash',
+                        'deploy/securing_unleash',
+                        'deploy/email',
+                        'deploy/google_auth',
+                        'deploy/database-setup',
+                        'deploy/database_backup',
+                        'deploy/migration_guide',
+                        'deploy/import_export',
+                    ],
+                },
+                {
+                    type: 'category',
+                    label: 'Integrations',
+                    link: { type: 'doc', id: 'integrations/integrations' },
+                    items: [
+                        {
+                            'Jira Server': [
+                                'integrations/jira_server_plugin_installation',
+                                'integrations/jira_server_plugin_usage',
+                            ],
+                        },
+                        ,
+                    ],
                 },
             ],
         },
         {
-            label: 'How-to guides 🦶',
-            type: 'category',
-            collapsible: true,
-            items: [
-                'how-to/how-to-add-strategy-constraints',
-                'how-to/how-to-define-custom-context-fields',
-                'how-to/how-to-use-custom-strategies',
-
-                'advanced/sso-open-id-connect',
-                'advanced/sso-saml',
-                'advanced/sso-saml-keycloak',
-                'advanced/sso-google',
-                'advanced/api_access',
-                'user_guide/api-token',
-                'user_guide/user-management',
-                'user_guide/create_feature_toggle',
-            ],
-        },
-        {
-            Tutorials: [],
-            'Getting started 🏁': [
-                'user_guide/quickstart',
-                'user_guide/important-concepts',
-                'user_guide/v4-whats-new',
-            ],
-            Advanced: [],
             'Topic guides 🤓': ['topics/a-b-testing'],
-            'How-to guides': [],
         },
     ],
-    api: {
-        Introduction: [
-            'api/index',
-            'api/internal/internal',
-            'api/internal/health',
-            'api/open_api',
-        ],
-    },
-    'Deploy and manage': {
-        'Deploy & configure': [
-            'deploy/getting_started',
-            'deploy/configuring_unleash',
-            'deploy/securing_unleash',
-            'deploy/email',
-            'deploy/google_auth',
-            'deploy/database-setup',
-            'deploy/database_backup',
-            'deploy/migration_guide',
-            'deploy/import_export',
-        ],
-    },
-    Integrations: {
-        Integrations: ['integrations/integrations'],
-        'Jira server': [
-            'integrations/jira_server_plugin_installation',
-            'integrations/jira_server_plugin_usage',
-        ],
-    },
 };

@@ -227,17 +227,6 @@ export default class ProjectService {
             newProjectId,
         );
 
-        const tags = await this.tagStore.getAllTagsForFeature(featureName);
-        await this.eventStore.store(
-            new FeatureChangeProjectEvent({
-                createdBy: user.username,
-                oldProject: currentProjectId,
-                newProject: newProjectId,
-                featureName,
-                tags,
-            }),
-        );
-
         return updatedFeature;
     }
 

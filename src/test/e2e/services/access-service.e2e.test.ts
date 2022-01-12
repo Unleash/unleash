@@ -169,7 +169,7 @@ const hasCommonProjectAccess = async (user, projectName, condition) => {
 };
 
 const hasFullProjectAccess = async (user, projectName, condition) => {
-    const { DELETE_PROJECT, UPDATE_PROJECT } = permissions;
+    const { DELETE_PROJECT, UPDATE_PROJECT, MOVE_FEATURE_TOGGLE } = permissions;
 
     expect(
         await accessService.hasPermission(user, DELETE_PROJECT, projectName),
@@ -177,6 +177,13 @@ const hasFullProjectAccess = async (user, projectName, condition) => {
     expect(
         await accessService.hasPermission(user, UPDATE_PROJECT, projectName),
     ).toBe(condition);
+    expect(
+        await accessService.hasPermission(
+            user,
+            MOVE_FEATURE_TOGGLE,
+            projectName,
+        ),
+    );
     hasCommonProjectAccess(user, projectName, condition);
 };
 
@@ -281,7 +288,7 @@ test('should have project admin to default project as editor', async () => {
 test('should not have project admin to other projects as editor', async () => {
     const projectName = 'unusedprojectname';
     const user = editorUser;
-    hasFullProjectAccess(projectName, user, false);
+    hasFullProjectAccess(user, projectName, false);
 });
 
 test('cannot add CREATE_FEATURE without defining project', async () => {
@@ -674,4 +681,78 @@ test('Should be denied access to delete a role that is in use', async () => {
             'RoleInUseError: Role is in use by more than one user. You cannot delete a role that is in use without first removing the role from the users.',
         );
     }
+});
+
+test('Should be denied move feature toggle to project where the user does not have access', async () => {
+    const user = editorUser;
+    const editorUser2 = await createUserEditorAccess(
+        'seconduser',
+        'bob2@gmail.com',
+    );
+
+    const projectOrigin = {
+        id: 'projectOrigin',
+        name: 'New project',
+        description: 'Blah',
+    };
+    const projectDest = {
+        id: 'projectDest',
+        name: 'New project',
+        description: 'Blah',
+    };
+    await projectService.createProject(projectOrigin, user.id);
+    await projectService.createProject(projectDest, editorUser2.id);
+
+    const featureToggle = { name: 'moveableToggle' };
+
+    await featureToggleService.createFeatureToggle(
+        projectOrigin.id,
+        featureToggle,
+        user.username,
+    );
+
+    try {
+        await projectService.changeProject(
+            projectDest.id,
+            featureToggle.name,
+            user,
+            projectOrigin.id,
+        );
+    } catch (e) {
+        expect(e.toString()).toBe(
+            'NoAccessError: You need permission=MOVE_FEATURE_TOGGLE to perform this action',
+        );
+    }
+});
+
+test('Should be allowed move feature toggle to project when the user has access', async () => {
+    const user = editorUser;
+
+    const projectOrigin = {
+        id: 'projectOrigin1',
+        name: 'New project',
+        description: 'Blah',
+    };
+    const projectDest = {
+        id: 'projectDest2',
+        name: 'New project',
+        description: 'Blah',
+    };
+    await projectService.createProject(projectOrigin, user);
+    await projectService.createProject(projectDest, user);
+
+    const featureToggle = { name: 'moveableToggle2' };
+
+    await featureToggleService.createFeatureToggle(
+        projectOrigin.id,
+        featureToggle,
+        user.username,
+    );
+
+    await projectService.changeProject(
+        projectDest.id,
+        featureToggle.name,
+        user,
+        projectOrigin.id,
+    );
 });

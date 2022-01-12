@@ -335,7 +335,10 @@ export default class ProjectService {
         }
 
         if (role.name === RoleName.OWNER) {
-            const users = await this.accessService.getUsersForRole(role.id);
+            const users = await this.accessService.getProjectUsersForRole(
+                role.id,
+                projectId,
+            );
             if (users.length < 2) {
                 throw new Error('A project must have at least one owner');
             }

@@ -151,6 +151,10 @@ module.exports = {
                         to: '/integrations',
                         from: '/integrations/integrations',
                     },
+                    {
+                        to: '/user_guide/activation_strategy',
+                        from: '/user_guide/control_rollout',
+                    },
                 ],
                 createRedirects: function(toPath) {
                     if (

@@ -26,6 +26,7 @@ import RoleInUseError from '../error/role-in-use-error';
 import { roleSchema } from '../schema/role-schema';
 import { CUSTOM_ROLE_TYPE } from '../util/constants';
 import { DEFAULT_PROJECT } from '../types/project';
+import InvalidOperationError from '../error/invalid-operation-error';
 
 export const ALL_PROJECTS = '*';
 export const ALL_ENVS = '*';
@@ -411,7 +412,7 @@ export class AccessService {
             id: role.id,
             name: role.name,
             description: role.description,
-            roleType: 'custom',
+            roleType: CUSTOM_ROLE_TYPE,
         };
         const rolePermissions = role.permissions;
         const newRole = await this.roleStore.update(baseRole);
@@ -450,11 +451,23 @@ export class AccessService {
         return Promise.resolve();
     }
 
+    async validateRoleIsNotBuiltIn(roleId: number): Promise<void> {
+        const role = await this.store.get(roleId);
+        if (role.type !== CUSTOM_ROLE_TYPE) {
+            throw new InvalidOperationError(
+                'You can not change built in roles.',
+            );
+        }
+    }
+
     async validateRole(
         role: IRoleCreation,
         existingId?: number,
     ): Promise<IRoleCreation> {
         const cleanedRole = await roleSchema.validateAsync(role);
+        if (existingId) {
+            await this.validateRoleIsNotBuiltIn(existingId);
+        }
         await this.validateRoleIsUnique(role.name, existingId);
         return cleanedRole;
     }

@@ -756,3 +756,22 @@ test('Should be allowed move feature toggle to project when the user has access'
         projectOrigin.id,
     );
 });
+
+test('Should not be allowed to edit a built in role', async () => {
+    expect.assertions(1);
+
+    const editRole = await accessService.getRoleByName(RoleName.EDITOR);
+    const roleUpdate = {
+        id: editRole.id,
+        name: 'NoLongerTheEditor',
+        description: 'Ha!',
+    };
+
+    try {
+        await accessService.updateRole(roleUpdate);
+    } catch (e) {
+        expect(e.toString()).toBe(
+            'InvalidOperationError: You can not change built in roles.',
+        );
+    }
+});

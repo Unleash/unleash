@@ -111,7 +111,7 @@
     "response-time": "^2.3.2",
     "serve-favicon": "^2.5.0",
     "stoppable": "^1.1.0",
-    "unleash-frontend": "4.6.0-beta.4",
+    "unleash-frontend": "4.6.0-beta.5",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

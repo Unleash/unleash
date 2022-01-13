@@ -53,19 +53,19 @@ class FeatureController extends Controller {
                 this.toggleOff,
                 UPDATE_FEATURE,
             );
-            this.delete(
-                '/:featureName/tags/:type/:value',
-                this.removeTag,
-                UPDATE_FEATURE,
-            );
+
             this.post('/:featureName/stale/on', this.staleOn, UPDATE_FEATURE);
             this.post('/:featureName/stale/off', this.staleOff, UPDATE_FEATURE);
         }
 
         this.post('/validate', this.validate, NONE);
-
         this.get('/:featureName/tags', this.listTags);
         this.post('/:featureName/tags', this.addTag, UPDATE_FEATURE);
+        this.delete(
+            '/:featureName/tags/:type/:value',
+            this.removeTag,
+            UPDATE_FEATURE,
+        );
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types

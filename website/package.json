@@ -32,7 +32,7 @@
     "browserslist": "^4.16.5",
     "set-value": "^4.0.1",
     "immer": "^9.0.6",
-    "ansi-regex": "^5.0.1",
+    "ansi-regex": "^6.0.0",
     "nth-check": "^2.0.1"
   },
   "browserslist": {

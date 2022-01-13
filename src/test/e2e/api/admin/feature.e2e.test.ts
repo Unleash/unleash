@@ -708,7 +708,7 @@ test('should not hit endpoints if disable configuration is set', async () => {
         .expect(404);
 });
 
-test('should hit stale and tags endpoint if legacy api is disabled', async () => {
+test('should hit validate and tags endpoint if legacy api is disabled', async () => {
     const appWithDisabledLegacyFeatures = await setupAppWithCustomConfig(
         db.stores,
         {

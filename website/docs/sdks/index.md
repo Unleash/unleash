@@ -49,7 +49,7 @@ If you see an item marked with a ❌ that you would find useful, feel free to re
 :::
 
 
-| Capability                                                                                        | [Java](/sdks/java_sdk) | [Node.js](/sdks/node_sdk) | [Go](/sdks/go_sdk) | [Python](/sdks/python_sdk) | [Ruby](/sdks/ruby_sdk) | [.Net](/sdks/dot_net_sdk) | [PHP](/sdks/php_sdk) | [Unleash Proxy Server](unleash-proxy.md) |
+| Capability                                                                                        | [Java](/sdks/java_sdk) | [Node.js](/sdks/node_sdk) | [Go](/sdks/go_sdk) | [Python](/sdks/python_sdk) | [Ruby](/sdks/ruby_sdk) | [.NET](/sdks/dot_net_sdk) | [PHP](/sdks/php_sdk) | [Unleash Proxy Server](unleash-proxy.md) |
 |---------------------------------------------------------------------------------------------------|:----------------------:|:-------------------------:|:------------------:|:--------------------------:|:----------------------:|:-------------------------:|:--------------------:|:----------------------------------------:|
 | **Category: Initialization**                                                                      |                        |                           |                    |                            |                        |                           |                      |                                          |
 | Async initialization                                                                              | ✅                     | ✅                        | ✅                 | ✅                         | ✅                     | ✅                        | ✅                   | N/A                                      |

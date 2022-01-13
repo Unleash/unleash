@@ -7,7 +7,13 @@ It is powerful to be able to turn a feature on and off instantaneously, without 
 
 The definition of an activation strategy lives in the Unleash API and can be created via the Unleash UI. The implementation of activation strategies lives in various client implementations.
 
-Unleash comes with a few common activation strategies. Some of them require the client to provide the [unleash-context](unleash-context.md), which gives the necessary context for Unleash.
+Unleash comes with a few common activation strategies. Some of them require the client to provide the [unleash-context](unleash-context.md), which gives the necessary context for Unleash. The built-in activation strategies are:
+
+- [Standard](#standard)
+- [UserIDs](#userids)
+- [Gradual Rollout](#gradual-rollout)
+- [IPs](#ips)
+- [Hostnames](#hostnames)
 
 ## Standard {#standard}
 
@@ -80,7 +86,18 @@ This strategy has the following modelling name in the code:
 
 - **applicationHostname**
 
-## gradualRolloutUserId (DEPRECATED from v4) - Use Gradual rollout instead {#gradualrolloutuserid-deprecated-from-v4---use-gradual-rollout-instead}
+
+## Multiple activation strategies {#multiple-activation-strategies}
+
+You can apply as many activation strategies to a toggle as you want. When a toggle has multiple strategies, Unleash will check each strategy in isolation. If any one of the strategies would enable the toggle for the current user, then the toggle is enabled.
+
+As an example, consider a case where you want to roll a feature out to 75% of your users. However, you also want to make sure that the you and your product lead get access to the feature. To achieve this, you would apply a **gradual rollout** strategy and set it to 75%. Additionally, you would add a **user IDs** strategy and add `engineer@mycompany.com` and `productlead@mycompany.com`.
+
+![A feature toggle with two active strategies: a user ID strategy and a gradual rollout strategy. The strategies are configured as described in the preceding paragraph.](/img/control_rollout_multiple_strategies.png)
+
+## Deprecated strategies
+
+### gradualRolloutUserId (DEPRECATED from v4) - Use Gradual rollout instead {#gradualrolloutuserid-deprecated-from-v4---use-gradual-rollout-instead}
 
 The `gradualRolloutUserId` strategy gradually activates a feature toggle for logged-in users. Stickiness is based on the user ID. The strategy guarantees that the same user gets the same experience every time across devices. It also assures that a user which is among the first 10% will also be among the first 20% of the users. That way, we ensure the users get the same experience, even if we gradually increase the number of users exposed to a particular feature. To achieve this, we hash the user ID and normalize the hash value to a number between 1 and 100 with a simple modulo operator.
 
@@ -93,7 +110,7 @@ Starting from v3.x all clients should use the 32-bit [MurmurHash3](https://en.wi
 - percentage - _The percentage (0-100) you want to enable the feature toggle for._
 - groupId - _Used to define an activation group, which allows you to correlate rollout across feature toggles._
 
-## gradualRolloutSessionId (DEPRECATED from v4) - Use Gradual rollout instead {#gradualrolloutsessionid-deprecated-from-v4---use-gradual-rollout-instead}
+### gradualRolloutSessionId (DEPRECATED from v4) - Use Gradual rollout instead {#gradualrolloutsessionid-deprecated-from-v4---use-gradual-rollout-instead}
 
 Similar to `gradualRolloutUserId` strategy, this strategy gradually activates a feature toggle, with the exception being that the stickiness is based on the session IDs. This makes it possible to target all users (not just logged-in users), guaranteeing that a user will get the same experience within a session.
 
@@ -102,7 +119,7 @@ Similar to `gradualRolloutUserId` strategy, this strategy gradually activates a 
 - percentage - _The percentage (0-100) you want to enable the feature toggle for._
 - groupId - _Used to define an activation group, which allows you to correlate rollout across feature toggles._
 
-## gradualRolloutRandom (DEPRECATED from v4) - Use Gradual rollout instead {#gradualrolloutrandom-deprecated-from-v4---use-gradual-rollout-instead}
+### gradualRolloutRandom (DEPRECATED from v4) - Use Gradual rollout instead {#gradualrolloutrandom-deprecated-from-v4---use-gradual-rollout-instead}
 
 The `gradualRolloutRandom` strategy randomly activates a feature toggle and has no stickiness. We have found this rollout strategy very useful in some scenarios, especially when we enable a feature which is not visible to the user. It is also the strategy we use to sample metrics and error reports.
 

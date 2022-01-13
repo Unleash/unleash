@@ -3,7 +3,6 @@
 ![Build & Tests](https://github.com/Unleash/unleash/workflows/Build%20%26%20Tests/badge.svg?branch=master) [![Coverage Status](https://coveralls.io/repos/github/Unleash/unleash/badge.svg?branch=master&)](https://coveralls.io/github/Unleash/unleash?branch=master) [![npm](https://img.shields.io/npm/v/unleash-server)](https://www.npmjs.com/package/unleash-server) [![Docker Pulls](https://img.shields.io/docker/pulls/unleashorg/unleash-server)](https://hub.docker.com/r/unleashorg/unleash-server)
 
 [![Deploy to Heroku](./.github/deploy-heroku-20.png)](https://www.heroku.com/deploy/?template=https://github.com/Unleash/unleash) [![Deploy to DigitalOcean](./.github/deploy-digital.svg)](https://cloud.digitalocean.com/apps/new?repo=https://github.com/Unleash/unleash/tree/master&refcode=0e1d75187044) [![Twitter Follow](https://img.shields.io/twitter/follow/getunleash)](https://twitter.com/intent/follow?screen_name=getunleash)
-    
 
 <a href="https://getunleash.io" title="Unleash - Create with freedom. Release with confidence">
     <img src="./.github/Logo_DarkBlue_Transparent_Portrait.svg" width="200">
@@ -11,7 +10,7 @@
 
 </div>
 
-Unleash is an open-source feature management platform. It provides a great overview of all feature toggles/flags across all your applications and services. Unleash enables software teams all over the world to take full control of how they enabled new functionality to end-users.
+Unleashs is an open-source feature management platform. It provides a great overview of all feature toggles/flags across all your applications and services. Unleash enables software teams all over the world to take full control of how they enabled new functionality to end-users.
 
 Unleash comes with [official client SDKs](https://docs.getunleash.io/sdks) for all the popular languages.
 
@@ -182,6 +181,7 @@ We know that learning a new tool can be hard and time-consuming. We have a growi
 - [Follow Unleash on Twitter](https://twitter.com/getunleash) if you want to stay updated on the latest progress of the Unleash project.
 
 # In the media
+
 - [Free Code Camp: Feature toggles - Why and how to add to your software](https://www.youtube.com/watch?v=-yHZ9uLVSp4)
 - [Feature toggling transient errors in load tests](https://nrkbeta.no/2021/08/23/feature-toggling-transient-errors-in-load-tests/) (English)
 - [The Code Kitchen Episode 7: Feature flags with Unleash](https://share.fireside.fm/episode/zD-4e4KI+Pr379KBv) (English)

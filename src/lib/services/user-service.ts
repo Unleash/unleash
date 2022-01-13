@@ -135,7 +135,6 @@ class UserService {
                 });
                 const passwordHash = await bcrypt.hash(pwd, saltRounds);
                 await this.store.setPasswordHash(user.id, passwordHash);
-
                 await this.accessService.setUserRootRole(
                     user.id,
                     RoleName.ADMIN,
@@ -257,12 +256,7 @@ class UserService {
 
     async deleteUser(userId: number, updatedBy?: User): Promise<void> {
         const user = await this.store.get(userId);
-        const roles = await this.accessService.getRolesForUser(userId);
-        await Promise.all(
-            roles.map((role) =>
-                this.accessService.removeUserFromRole(userId, role.id),
-            ),
-        );
+        await this.accessService.unlinkUserRoles(userId);
         await this.sessionService.deleteSessionsForUser(userId);
 
         await this.store.delete(userId);
@@ -355,7 +349,7 @@ class UserService {
             token,
         );
         const user = await this.getUser(userId);
-        const role = await this.accessService.getRole(user.rootRole);
+        const role = await this.accessService.getRoleData(user.rootRole);
         return {
             token,
             createdBy,

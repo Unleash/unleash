@@ -7,8 +7,12 @@ import FeatureToggleService from '../../../services/feature-toggle-service';
 import { Logger } from '../../../logger';
 import {
     CREATE_FEATURE,
+    CREATE_FEATURE_STRATEGY,
     DELETE_FEATURE,
+    DELETE_FEATURE_STRATEGY,
     UPDATE_FEATURE,
+    UPDATE_FEATURE_ENVIRONMENT,
+    UPDATE_FEATURE_STRATEGY,
 } from '../../../types/permissions';
 import {
     FeatureToggleDTO,
@@ -70,16 +74,40 @@ export default class ProjectFeaturesController extends Controller {
 
         // Environments
         this.get(`${PATH_ENV}`, this.getEnvironment);
-        this.post(`${PATH_ENV}/on`, this.toggleEnvironmentOn, UPDATE_FEATURE);
-        this.post(`${PATH_ENV}/off`, this.toggleEnvironmentOff, UPDATE_FEATURE);
+        this.post(
+            `${PATH_ENV}/on`,
+            this.toggleEnvironmentOn,
+            UPDATE_FEATURE_ENVIRONMENT,
+        );
+        this.post(
+            `${PATH_ENV}/off`,
+            this.toggleEnvironmentOff,
+            UPDATE_FEATURE_ENVIRONMENT,
+        );
 
         // activation strategies
         this.get(`${PATH_STRATEGIES}`, this.getStrategies);
-        this.post(`${PATH_STRATEGIES}`, this.addStrategy, UPDATE_FEATURE);
+        this.post(
+            `${PATH_STRATEGIES}`,
+            this.addStrategy,
+            CREATE_FEATURE_STRATEGY,
+        );
         this.get(`${PATH_STRATEGY}`, this.getStrategy);
-        this.put(`${PATH_STRATEGY}`, this.updateStrategy, UPDATE_FEATURE);
-        this.patch(`${PATH_STRATEGY}`, this.patchStrategy, UPDATE_FEATURE);
-        this.delete(`${PATH_STRATEGY}`, this.deleteStrategy, UPDATE_FEATURE);
+        this.put(
+            `${PATH_STRATEGY}`,
+            this.updateStrategy,
+            UPDATE_FEATURE_STRATEGY,
+        );
+        this.patch(
+            `${PATH_STRATEGY}`,
+            this.patchStrategy,
+            UPDATE_FEATURE_STRATEGY,
+        );
+        this.delete(
+            `${PATH_STRATEGY}`,
+            this.deleteStrategy,
+            DELETE_FEATURE_STRATEGY,
+        );
 
         // feature toggles
         this.get(PATH, this.getFeatures);

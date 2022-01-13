@@ -152,6 +152,7 @@ test('should verify permission for root resource', async () => {
         req.user,
         perms.ADMIN,
         undefined,
+        undefined,
     );
 });
 
@@ -181,6 +182,7 @@ test('should lookup projectId from params', async () => {
         req.user,
         perms.UPDATE_PROJECT,
         req.params.projectId,
+        undefined,
     );
 });
 
@@ -215,6 +217,7 @@ test('should lookup projectId from feature toggle', async () => {
         req.user,
         perms.UPDATE_FEATURE,
         projectId,
+        undefined,
     );
 });
 
@@ -249,6 +252,7 @@ test('should lookup projectId from data', async () => {
         req.user,
         perms.CREATE_FEATURE,
         projectId,
+        undefined,
     );
 });
 
@@ -275,6 +279,7 @@ test('Does not double check permission if not changing project when updating tog
         req.user,
         perms.UPDATE_FEATURE,
         oldProjectId,
+        undefined,
     );
 });
 
@@ -298,6 +303,7 @@ test('UPDATE_TAG_TYPE does not need projectId', async () => {
         req.user,
         perms.UPDATE_TAG_TYPE,
         undefined,
+        undefined,
     );
 });
 
@@ -320,6 +326,7 @@ test('DELETE_TAG_TYPE does not need projectId', async () => {
     expect(accessService.hasPermission).toHaveBeenCalledWith(
         req.user,
         perms.DELETE_TAG_TYPE,
+        undefined,
         undefined,
     );
 });

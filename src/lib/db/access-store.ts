@@ -7,14 +7,31 @@ import {
     IAccessStore,
     IRole,
     IUserPermission,
-    IUserRole,
 } from '../types/stores/access-store';
+import { IPermission } from '../types/model';
+import NotFoundError from '../error/notfound-error';
+import {
+    ENVIRONMENT_PERMISSION_TYPE,
+    ROOT_PERMISSION_TYPE,
+} from '../util/constants';
 
 const T = {
     ROLE_USER: 'role_user',
     ROLES: 'roles',
     ROLE_PERMISSION: 'role_permission',
+    PERMISSIONS: 'permissions',
+    PERMISSION_TYPES: 'permission_types',
 };
+
+interface IPermissionRow {
+    id: number;
+    permission: string;
+    display_name: string;
+    environment?: string;
+    type: string;
+    project?: string;
+    role_id: number;
+}
 
 export class AccessStore implements IAccessStore {
     private logger: Logger;
@@ -53,73 +70,139 @@ export class AccessStore implements IAccessStore {
     }
 
     async get(key: number): Promise<IRole> {
-        return this.db
+        const role = await this.db
             .select(['id', 'name', 'type', 'description'])
             .where('id', key)
             .first()
             .from<IRole>(T.ROLES);
+
+        if (!role) {
+            throw new NotFoundError(`Could not find role with id: ${key}`);
+        }
+
+        return role;
     }
 
     async getAll(): Promise<IRole[]> {
         return Promise.resolve([]);
     }
 
+    async getAvailablePermissions(): Promise<IPermission[]> {
+        const rows = await this.db
+            .select(['id', 'permission', 'type', 'display_name'])
+            .where('type', 'project')
+            .orWhere('type', 'environment')
+            .from(`${T.PERMISSIONS} as p`);
+        return rows.map(this.mapPermission);
+    }
+
+    mapPermission(permission: IPermissionRow): IPermission {
+        return {
+            id: permission.id,
+            name: permission.permission,
+            displayName: permission.display_name,
+            type: permission.type,
+        };
+    }
+
     async getPermissionsForUser(userId: number): Promise<IUserPermission[]> {
         const stopTimer = this.timer('getPermissionsForUser');
         const rows = await this.db
-            .select('project', 'permission')
-            .from<IUserPermission>(`${T.ROLE_PERMISSION} AS rp`)
-            .leftJoin(`${T.ROLE_USER} AS ur`, 'ur.role_id', 'rp.role_id')
+            .select(
+                'project',
+                'permission',
+                'environment',
+                'type',
+                'ur.role_id',
+            )
+            .from<IPermissionRow>(`${T.ROLE_PERMISSION} AS rp`)
+            .join(`${T.ROLE_USER} AS ur`, 'ur.role_id', 'rp.role_id')
+            .join(`${T.PERMISSIONS} AS p`, 'p.id', 'rp.permission_id')
             .where('ur.user_id', '=', userId);
         stopTimer();
-        return rows;
+        return rows.map(this.mapUserPermission);
     }
 
-    async getPermissionsForRole(roleId: number): Promise<IUserPermission[]> {
+    mapUserPermission(row: IPermissionRow): IUserPermission {
+        let project: string = undefined;
+        // Since the editor should have access to the default project,
+        // we map the project to the project and environment specific
+        // permissions that are connected to the editor role.
+        if (row.type !== ROOT_PERMISSION_TYPE) {
+            project = row.project;
+        }
+
+        const environment =
+            row.type === ENVIRONMENT_PERMISSION_TYPE
+                ? row.environment
+                : undefined;
+
+        const result = {
+            project,
+            environment,
+            permission: row.permission,
+        };
+        return result;
+    }
+
+    async getPermissionsForRole(roleId: number): Promise<IPermission[]> {
         const stopTimer = this.timer('getPermissionsForRole');
         const rows = await this.db
-            .select('project', 'permission')
-            .from<IUserPermission>(`${T.ROLE_PERMISSION}`)
-            .where('role_id', '=', roleId);
+            .select(
+                'p.id',
+                'p.permission',
+                'rp.environment',
+                'p.display_name',
+                'p.type',
+            )
+            .from<IPermission>(`${T.ROLE_PERMISSION} as rp`)
+            .join(`${T.PERMISSIONS} as p`, 'p.id', 'rp.permission_id')
+            .where('rp.role_id', '=', roleId);
         stopTimer();
-        return rows;
+        return rows.map((permission) => {
+            return {
+                id: permission.id,
+                name: permission.permission,
+                environment: permission.environment,
+                displayName: permission.display_name,
+                type: permission.type,
+            };
+        });
     }
 
-    async getRoles(): Promise<IRole[]> {
-        return this.db
-            .select(['id', 'name', 'type', 'description'])
-            .from<IRole>(T.ROLES);
+    async addEnvironmentPermissionsToRole(
+        role_id: number,
+        permissions: IPermission[],
+    ): Promise<void> {
+        const rows = permissions.map((permission) => {
+            return {
+                role_id,
+                permission_id: permission.id,
+                environment: permission.environment,
+            };
+        });
+        this.db.batchInsert(T.ROLE_PERMISSION, rows);
     }
 
-    async getRoleWithId(id: number): Promise<IRole> {
-        return this.db
-            .select(['id', 'name', 'type', 'description'])
-            .where('id', id)
-            .first()
-            .from<IRole>(T.ROLES);
-    }
-
-    async getRolesForProject(projectId: string): Promise<IRole[]> {
-        return this.db
-            .select(['id', 'name', 'type', 'project', 'description'])
-            .from<IRole>(T.ROLES)
-            .where('project', projectId)
-            .andWhere('type', 'project');
-    }
-
-    async getRootRoles(): Promise<IRole[]> {
-        return this.db
-            .select(['id', 'name', 'type', 'project', 'description'])
-            .from<IRole>(T.ROLES)
-            .andWhere('type', 'root');
-    }
-
-    async removeRolesForProject(projectId: string): Promise<void> {
-        return this.db(T.ROLES)
+    async unlinkUserRoles(userId: number): Promise<void> {
+        return this.db(T.ROLE_USER)
             .where({
-                project: projectId,
+                user_id: userId,
             })
             .delete();
+    }
+
+    async getProjectUserIdsForRole(
+        roleId: number,
+        projectId?: string,
+    ): Promise<number[]> {
+        const rows = await this.db
+            .select(['user_id'])
+            .from<IRole>(`${T.ROLE_USER} AS ru`)
+            .join(`${T.ROLES} as r`, 'ru.role_id', 'id')
+            .where('r.id', roleId)
+            .andWhere('ru.project', projectId);
+        return rows.map((r) => r.user_id);
     }
 
     async getRolesForUserId(userId: number): Promise<IRole[]> {
@@ -138,18 +221,28 @@ export class AccessStore implements IAccessStore {
         return rows.map((r) => r.user_id);
     }
 
-    async addUserToRole(userId: number, roleId: number): Promise<void> {
+    async addUserToRole(
+        userId: number,
+        roleId: number,
+        projecId?: string,
+    ): Promise<void> {
         return this.db(T.ROLE_USER).insert({
             user_id: userId,
             role_id: roleId,
+            project: projecId,
         });
     }
 
-    async removeUserFromRole(userId: number, roleId: number): Promise<void> {
+    async removeUserFromRole(
+        userId: number,
+        roleId: number,
+        projectId?: string,
+    ): Promise<void> {
         return this.db(T.ROLE_USER)
             .where({
                 user_id: userId,
                 role_id: roleId,
+                project: projectId,
             })
             .delete();
     }
@@ -168,67 +261,51 @@ export class AccessStore implements IAccessStore {
             .delete();
     }
 
-    async createRole(
-        name: string,
-        type: string,
-        project?: string,
-        description?: string,
-    ): Promise<IRole> {
-        const [id] = await this.db(T.ROLES)
-            .insert({
-                name,
-                description,
-                type,
-                project,
-            })
-            .returning('id');
-        return {
-            id,
-            name,
-            description,
-            type,
-            project,
-        };
-    }
-
     async addPermissionsToRole(
         role_id: number,
         permissions: string[],
-        projectId?: string,
+        environment?: string,
     ): Promise<void> {
-        const rows = permissions.map((permission) => ({
+        const rows = await this.db
+            .select('id as permissionId')
+            .from<number>(T.PERMISSIONS)
+            .whereIn('permission', permissions);
+
+        const newRoles = rows.map((row) => ({
             role_id,
-            project: projectId,
-            permission,
+            environment,
+            permission_id: row.permissionId,
         }));
-        return this.db.batchInsert(T.ROLE_PERMISSION, rows);
+
+        return this.db.batchInsert(T.ROLE_PERMISSION, newRoles);
     }
 
     async removePermissionFromRole(
-        roleId: number,
+        role_id: number,
         permission: string,
-        projectId?: string,
+        environment?: string,
     ): Promise<void> {
+        const rows = await this.db
+            .select('id as permissionId')
+            .from<number>(T.PERMISSIONS)
+            .where('permission', permission);
+
+        const permissionId = rows[0].permissionId;
+
         return this.db(T.ROLE_PERMISSION)
             .where({
-                role_id: roleId,
-                permission,
-                project: projectId,
+                role_id,
+                permission_id: permissionId,
+                environment,
             })
             .delete();
     }
 
-    async getRootRoleForAllUsers(): Promise<IUserRole[]> {
-        const rows = await this.db
-            .select('id', 'user_id')
-            .distinctOn('user_id')
-            .from(`${T.ROLES} AS r`)
-            .leftJoin(`${T.ROLE_USER} AS ru`, 'r.id', 'ru.role_id')
-            .where('r.type', '=', 'root');
-
-        return rows.map((row) => ({
-            roleId: +row.id,
-            userId: +row.user_id,
-        }));
+    async wipePermissionsFromRole(role_id: number): Promise<void> {
+        return this.db(T.ROLE_PERMISSION)
+            .where({
+                role_id,
+            })
+            .delete();
     }
 }

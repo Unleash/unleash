@@ -14,7 +14,6 @@ Unleash provides official client SDKs for a number of programming language. Addi
 
 Server-side clients run on your server and communicate directly with your Unleash instance. We provide these official clients:
 
-- [.Net SDK](/sdks/dot_net_sdk)
 - [Go SDK](/sdks/go_sdk)
 - [Java SDK](/sdks/java_sdk)
 - [Node.js SDK](/sdks/node_sdk)
@@ -22,6 +21,7 @@ Server-side clients run on your server and communicate directly with your Unleas
 - [Python SDK](/sdks/python_sdk)
 - [Ruby SDK](/sdks/ruby_sdk)
 - [Rust SDK](https://github.com/unleash/unleash-client-rust)
+- [.NET SDK](/sdks/dot_net_sdk)
 
 ### Front-end SDKs
 
@@ -49,7 +49,7 @@ If you see an item marked with a ❌ that you would find useful, feel free to re
 :::
 
 
-| Capability                                                                                        | [Java](/sdks/java_sdk) | [Node.js](/sdks/node_sdk) | [Go](/sdks/go_sdk) | [Python](/sdks/python_sdk) | [Ruby](/sdks/ruby_sdk) | [.Net](/sdks/dot_net_sdk) | [PHP](/sdks/php_sdk) | [Unleash Proxy Server](unleash-proxy.md) |
+| Capability                                                                                        | [Java](/sdks/java_sdk) | [Node.js](/sdks/node_sdk) | [Go](/sdks/go_sdk) | [Python](/sdks/python_sdk) | [Ruby](/sdks/ruby_sdk) | [.NET](/sdks/dot_net_sdk) | [PHP](/sdks/php_sdk) | [Unleash Proxy Server](unleash-proxy.md) |
 |---------------------------------------------------------------------------------------------------|:----------------------:|:-------------------------:|:------------------:|:--------------------------:|:----------------------:|:-------------------------:|:--------------------:|:----------------------------------------:|
 | **Category: Initialization**                                                                      |                        |                           |                    |                            |                        |                           |                      |                                          |
 | Async initialization                                                                              | ✅                     | ✅                        | ✅                 | ✅                         | ✅                     | ✅                        | ✅                   | N/A                                      |

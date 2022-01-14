@@ -30,18 +30,41 @@ module.exports = {
         'Unleash SDKs': [
             'sdks/index',
             'sdks/unleash-proxy',
-            'sdks/dot_net_sdk',
-            'sdks/android_proxy_sdk',
-            'sdks/go_sdk',
-            'sdks/proxy-ios',
-            'sdks/java_sdk',
-            'sdks/proxy-javascript',
-            'sdks/node_sdk',
-            'sdks/php_sdk',
-            'sdks/python_sdk',
-            'sdks/proxy-react',
-            'sdks/ruby_sdk',
-            { type: 'link', label: 'Community SDKs', href: '/sdks#community-sdks'}
+            {
+                type: 'category',
+                collapsible: false,
+                label: 'Server-side SDKs',
+                items: [
+                    'sdks/go_sdk',
+                    'sdks/java_sdk',
+                    'sdks/node_sdk',
+                    'sdks/php_sdk',
+                    'sdks/python_sdk',
+                    'sdks/ruby_sdk',
+                    {
+                        type: 'link',
+                        href: 'https://github.com/unleash/unleash-client-rust',
+                        label: 'Rust SDK',
+                    },
+                    'sdks/dot_net_sdk',
+                ],
+            },
+            {
+                type: 'category',
+                collapsible: false,
+                label: 'Client-side SDKs',
+                items: [
+                    'sdks/android_proxy_sdk',
+                    'sdks/proxy-ios',
+                    'sdks/proxy-javascript',
+                    'sdks/proxy-react',
+                ],
+            },
+            {
+                type: 'link',
+                label: 'Community SDKs',
+                href: '/sdks#community-sdks',
+            },
         ],
         Addons: [
             'addons/index',

@@ -30,7 +30,7 @@ When you add a new user, you can assign them one of the global roles listed belo
 | Role       | Scope   | Description                                                                                                                                                                                                                                                         | Availability       |
 |------------|---------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------|
 | **Admin**  | Global  | Users with the global admin role have superuser access to Unleash and can perform any operation within the Unleash platform.                                                                                                                                        | All versions       |
-| **Editor** | Global  | Users with the editor role have access to most features in Unleash but can not manage users and roles in the global scope. Editors will be added as project owners when creating projects and get superuser rights within the context of these projects.            | All versions       |
+| **Editor** | Global  | Users with the editor role have access to most features in Unleash but can not manage users and roles in the global scope. Editors will be added as project owners when creating projects and get superuser rights within the context of these projects. Users with the editor role will also get access to most permissions on the default project by default.           | All versions       |
 | **Viewer** | Global  | Users with the viewer role can read global resources in Unleash.                                                                                                                                                                                                    | All versions       |
 | **Owner**  | Project | Users with this the project owner role have full control over the project, and can add and manage other users within the project context; manage feature toggles within the project; and control advanced project features like archiving and deleting the project. | Pro and Enterprise |
 | **Member** | Project | Users with the project member role are allowed to view, create, and update feature toggles within a project, but have limited permissions in regards to managing the project's user access and can not archive or delete the project.                               | Pro and Enterprise |
@@ -63,7 +63,7 @@ You can assign the following project permissions. The permissions will be valid 
 
 - **create feature toggles within the project**
 
-  Lets the user create feature toggles within the project and create variants for said toggle. Note that they **can not assign strategies** to toggles without having the _create feature toggle_ permission for the corresponding environment.
+  Lets the user create feature toggles within the project and create variants for said toggle. Note that they **can not assign strategies** to toggles without having the _create activation strategy_ permission for the corresponding environment.
 
 - **update feature toggles within the project**
 

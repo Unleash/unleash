@@ -13,16 +13,22 @@ module.exports = {
     documentation: [
         'user_guide/index',
         {
-            'First steps 👶': [
+            '👶 First steps': [
                 'user_guide/unleash_overview',
                 'user_guide/important-concepts',
                 'user_guide/quickstart',
             ],
         },
         {
-            label: 'How-to guides 🪜',
+            label: '🛠 How-to guides',
             type: 'category',
             collapsible: true,
+            link: {
+                type: 'generated-index',
+                title: 'How-to guides',
+                description: 'Step-by-step recipes for you to follow',
+                slug: '/how-to',
+            },
             items: [
                 'how-to/how-to-add-strategy-constraints',
                 'how-to/how-to-define-custom-context-fields',
@@ -39,20 +45,28 @@ module.exports = {
             ],
         },
         {
-            label: 'Reference documentation 📜',
+            label: '📖 Reference documentation',
             type: 'category',
-            collapsible: false,
+            collapsible: true,
             items: [
                 {
-                    type: 'category',
-                    link: { type: 'doc', id: 'addons/index' },
-                    items: [
-                        'addons/webhook',
-                        'addons/slack',
-                        'addons/teams',
-                        'addons/datadog',
+                    'Unleash concepts': [
+                        'user_guide/activation_strategy',
+                        'advanced/archived_toggles',
+                        'advanced/audit_log',
+                        'advanced/custom_activation_strategy',
+                        'user_guide/environments',
+                        'advanced/feature_toggle_types',
+                        'advanced/toggle_variants',
+                        'user_guide/projects',
+                        'user_guide/rbac',
+                        'advanced/enterprise-authentication',
+                        'advanced/stickiness',
+                        'advanced/strategy_constraints',
+                        'advanced/tags',
+                        'user_guide/technical_debt',
+                        'user_guide/unleash_context',
                     ],
-                    label: 'Addons',
                 },
                 {
                     type: 'category',
@@ -93,7 +107,6 @@ module.exports = {
                         'sdks/unleash-proxy',
                         {
                             type: 'category',
-                            collapsible: false,
                             label: 'Server-side SDKs',
                             items: [
                                 'sdks/go_sdk',
@@ -112,7 +125,6 @@ module.exports = {
                         },
                         {
                             type: 'category',
-                            collapsible: false,
                             label: 'Client-side SDKs',
                             items: [
                                 'sdks/android_proxy_sdk',
@@ -127,23 +139,6 @@ module.exports = {
                             href: '/sdks#community-sdks',
                         },
                     ],
-                    'Unleash concepts': [
-                        'user_guide/activation_strategy',
-                        'advanced/archived_toggles',
-                        'advanced/audit_log',
-                        'advanced/custom_activation_strategy',
-                        'user_guide/environments',
-                        'advanced/feature_toggle_types',
-                        'advanced/toggle_variants',
-                        'user_guide/projects',
-                        'user_guide/rbac',
-                        'advanced/enterprise-authentication',
-                        'advanced/stickiness',
-                        'advanced/strategy_constraints',
-                        'advanced/tags',
-                        'user_guide/technical_debt',
-                        'user_guide/unleash_context',
-                    ],
                     'Deploy and manage Unleash': [
                         'deploy/getting_started',
                         'deploy/configuring_unleash',
@@ -155,6 +150,17 @@ module.exports = {
                         'deploy/migration_guide',
                         'deploy/import_export',
                     ],
+                },
+                {
+                    type: 'category',
+                    link: { type: 'doc', id: 'addons/index' },
+                    items: [
+                        'addons/webhook',
+                        'addons/slack',
+                        'addons/teams',
+                        'addons/datadog',
+                    ],
+                    label: 'Addons',
                 },
                 {
                     type: 'category',
@@ -173,7 +179,7 @@ module.exports = {
             ],
         },
         {
-            'Topic guides 🤓': ['topics/a-b-testing'],
+            '🤓 Topic guides': ['topics/a-b-testing'],
         },
     ],
 };

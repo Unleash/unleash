@@ -1,6 +1,6 @@
 ---
 id: index
-title: About the docs 📚
+title: 📚 About the docs
 slug: /
 sidebar_position: 1
 ---

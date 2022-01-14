@@ -30,18 +30,25 @@ module.exports = {
                 slug: '/how-to',
             },
             items: [
-                'how-to/how-to-add-strategy-constraints',
-                'how-to/how-to-define-custom-context-fields',
-                'how-to/how-to-use-custom-strategies',
-
-                'advanced/sso-open-id-connect',
-                'advanced/sso-saml',
-                'advanced/sso-saml-keycloak',
-                'advanced/sso-google',
-                'advanced/api_access',
-                'user_guide/api-token',
-                'user_guide/user-management',
-                'user_guide/create_feature_toggle',
+                {
+                    API: ['advanced/api_access', 'user_guide/api-token'],
+                    'Feature toggles, strategies, and related': [
+                        'how-to/how-to-add-strategy-constraints',
+                        'how-to/how-to-define-custom-context-fields',
+                        'how-to/how-to-use-custom-strategies',
+                        'user_guide/create_feature_toggle',
+                    ],
+                    'Users and permissions': [
+                        'how-to/how-to-create-and-assign-custom-project-roles',
+                        'user_guide/user-management',
+                    ],
+                    SSO: [
+                        'advanced/sso-open-id-connect',
+                        'advanced/sso-saml',
+                        'advanced/sso-saml-keycloak',
+                        'advanced/sso-google',
+                    ],
+                },
             ],
         },
         {

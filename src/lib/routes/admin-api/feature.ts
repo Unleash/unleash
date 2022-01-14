@@ -41,7 +41,6 @@ class FeatureController extends Controller {
         this.service = featureToggleServiceV2;
 
         if (!config.disableLegacyFeaturesApi) {
-            this.get('/', this.getAllToggles);
             this.post('/', this.createToggle, CREATE_FEATURE);
             this.get('/:featureName', this.getToggle);
             this.put('/:featureName', this.updateToggle, UPDATE_FEATURE);
@@ -58,6 +57,7 @@ class FeatureController extends Controller {
             this.post('/:featureName/stale/off', this.staleOff, UPDATE_FEATURE);
         }
 
+        this.get('/', this.getAllToggles);
         this.post('/validate', this.validate, NONE);
         this.get('/:featureName/tags', this.listTags);
         this.post('/:featureName/tags', this.addTag, UPDATE_FEATURE);

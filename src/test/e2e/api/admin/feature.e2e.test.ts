@@ -694,10 +694,6 @@ test('should not hit endpoints if disable configuration is set', async () => {
     );
 
     await appWithDisabledLegacyFeatures.request
-        .get('/api/admin/features')
-        .expect(404);
-
-    await appWithDisabledLegacyFeatures.request
         .get('/api/admin/features/featureX')
         .expect('Content-Type', /json/)
         .expect(404);
@@ -743,5 +739,18 @@ test('should hit validate and tags endpoint if legacy api is disabled', async ()
     await appWithDisabledLegacyFeatures.request
         .post('/api/admin/features/validate')
         .send({ name: 'validateThis' })
+        .expect(200);
+});
+
+test('should have access to the get all features endpoint even if api is disabled', async () => {
+    const appWithDisabledLegacyFeatures = await setupAppWithCustomConfig(
+        db.stores,
+        {
+            disableLegacyFeaturesApi: true,
+        },
+    );
+
+    await appWithDisabledLegacyFeatures.request
+        .get('/api/admin/features')
         .expect(200);
 });

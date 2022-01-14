@@ -30,9 +30,6 @@ module.exports = {
                     label: 'Documentation',
                     activeBaseRegex: '(user_guide|sdks|addons|advanced)',
                 },
-                { to: 'deploy/getting_started', label: 'Deploy and manage' },
-                { to: 'integrations', label: 'Integrations' },
-                { to: '/api', label: 'API' },
                 {
                     href: 'https://www.getunleash.io/plans',
                     label: 'Unleash Enterprise',

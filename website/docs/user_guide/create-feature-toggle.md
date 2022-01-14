@@ -1,6 +1,6 @@
 ---
 id: create_feature_toggle
-title: Create a feature toggle
+title: How to create a feature toggle
 ---
 
 In this guide you will learn how to create your first feature toggle using Unleash.

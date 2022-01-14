@@ -31,22 +31,22 @@ module.exports = {
             },
             items: [
                 {
-                    API: ['advanced/api_access', 'user_guide/api-token'],
-                    'Feature toggles, strategies, and related': [
+                    API: ['user_guide/api-token', 'advanced/api_access'],
+                    'Feature toggles, strategies, context': [
                         'how-to/how-to-add-strategy-constraints',
+                        'user_guide/create_feature_toggle',
                         'how-to/how-to-define-custom-context-fields',
                         'how-to/how-to-use-custom-strategies',
-                        'user_guide/create_feature_toggle',
                     ],
                     'Users and permissions': [
-                        'how-to/how-to-create-and-assign-custom-project-roles',
                         'user_guide/user-management',
+                        'how-to/how-to-create-and-assign-custom-project-roles',
                     ],
                     SSO: [
+                        'advanced/sso-google',
                         'advanced/sso-open-id-connect',
                         'advanced/sso-saml',
                         'advanced/sso-saml-keycloak',
-                        'advanced/sso-google',
                     ],
                 },
             ],
@@ -149,23 +149,23 @@ module.exports = {
                     'Deploy and manage Unleash': [
                         'deploy/getting_started',
                         'deploy/configuring_unleash',
-                        'deploy/securing_unleash',
-                        'deploy/email',
-                        'deploy/google_auth',
                         'deploy/database-setup',
                         'deploy/database_backup',
-                        'deploy/migration_guide',
+                        'deploy/email',
+                        'deploy/google_auth',
                         'deploy/import_export',
+                        'deploy/migration_guide',
+                        'deploy/securing_unleash',
                     ],
                 },
                 {
                     type: 'category',
                     link: { type: 'doc', id: 'addons/index' },
                     items: [
-                        'addons/webhook',
+                        'addons/datadog',
                         'addons/slack',
                         'addons/teams',
-                        'addons/datadog',
+                        'addons/webhook',
                     ],
                     label: 'Addons',
                 },

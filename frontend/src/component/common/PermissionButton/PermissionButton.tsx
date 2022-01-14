@@ -1,16 +1,17 @@
 import { Button, Tooltip } from '@material-ui/core';
-import { OverridableComponent } from '@material-ui/core/OverridableComponent';
 import { Lock } from '@material-ui/icons';
 import { useContext } from 'react';
 import AccessContext from '../../../contexts/AccessContext';
 import ConditionallyRender from '../ConditionallyRender';
 
-interface IPermissionIconButtonProps extends OverridableComponent<any> {
-    permission: string;
-    tooltip: string;
+interface IPermissionIconButtonProps
+    extends React.HTMLProps<HTMLButtonElement> {
+    permission: string | string[];
+    tooltip?: string;
     onClick?: (e: any) => void;
     disabled?: boolean;
     projectId?: string;
+    environmentId?: string;
 }
 
 const PermissionButton: React.FC<IPermissionIconButtonProps> = ({
@@ -20,13 +21,38 @@ const PermissionButton: React.FC<IPermissionIconButtonProps> = ({
     children,
     disabled,
     projectId,
+    environmentId,
     ...rest
 }) => {
     const { hasAccess } = useContext(AccessContext);
+    let access;
 
-    const access = projectId
-        ? hasAccess(permission, projectId)
-        : hasAccess(permission);
+    const handleAccess = () => {
+        let access;
+        if (Array.isArray(permission)) {
+            access = permission.some(permission => {
+                if (projectId && environmentId) {
+                    return hasAccess(permission, projectId, environmentId);
+                } else if (projectId) {
+                    return hasAccess(permission, projectId);
+                } else {
+                    return hasAccess(permission);
+                }
+            });
+        } else {
+            if (projectId && environmentId) {
+                access = hasAccess(permission, projectId, environmentId);
+            } else if (projectId) {
+                access = hasAccess(permission, projectId);
+            } else {
+                access = hasAccess(permission);
+            }
+        }
+
+        return access;
+    };
+
+    access = handleAccess();
 
     const tooltipText = access
         ? tooltip

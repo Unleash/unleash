@@ -20,7 +20,7 @@ import { useCommonStyles } from '../../../../../../common.styles';
 import Dialogue from '../../../../../common/Dialogue';
 import { trim, modalStyles } from '../../../../../common/util';
 import PermissionSwitch from '../../../../../common/PermissionSwitch/PermissionSwitch';
-import { UPDATE_FEATURE } from '../../../../../providers/AccessProvider/permissions';
+import { UPDATE_FEATURE_VARIANTS } from '../../../../../providers/AccessProvider/permissions';
 import useFeature from '../../../../../../hooks/api/getters/useFeature/useFeature';
 import { useParams } from 'react-router-dom';
 import { IFeatureViewParams } from '../../../../../../interfaces/params';
@@ -256,7 +256,10 @@ const AddVariant = ({
                 <Grid container>
                     {/* If we're editing, we need to have at least 2 existing variants, since we require at least 1 variable. If adding, we could be adding nr 2, and as such should be allowed to set weightType to variable */}
                     <ConditionallyRender
-                        condition={(editing && variants.length > 1) || (!editing && variants.length > 0)}
+                        condition={
+                            (editing && variants.length > 1) ||
+                            (!editing && variants.length > 0)
+                        }
                         show={
                             <Grid
                                 item
@@ -267,7 +270,10 @@ const AddVariant = ({
                                     <FormControlLabel
                                         control={
                                             <PermissionSwitch
-                                                permission={UPDATE_FEATURE}
+                                                permission={
+                                                    UPDATE_FEATURE_VARIANTS
+                                                }
+                                                projectId={projectId}
                                                 name="weightType"
                                                 checked={isFixWeight}
                                                 data-test={

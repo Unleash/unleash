@@ -14,6 +14,7 @@ import EnvironmentTypeSelector from '../form/EnvironmentTypeSelector/Environment
 import Input from '../../common/Input/Input';
 import useEnvironments from '../../../hooks/api/getters/useEnvironments/useEnvironments';
 import { Alert } from '@material-ui/lab';
+import useProjectRolePermissions from '../../../hooks/api/getters/useProjectRolePermissions/useProjectRolePermissions';
 
 const NAME_EXISTS_ERROR = 'Error: Environment';
 
@@ -27,7 +28,8 @@ const CreateEnvironment = () => {
     const { validateEnvName, createEnvironment, loading } = useEnvironmentApi();
     const { environments } = useEnvironments();
     const ref = useLoading(loading);
-    const { toast, setToastData } = useToast();
+    const { setToastApiError } = useToast();
+    const { refetch } = useProjectRolePermissions();
 
     const handleTypeChange = (event: React.FormEvent<HTMLInputElement>) => {
         setType(event.currentTarget.value);
@@ -72,9 +74,10 @@ const CreateEnvironment = () => {
 
             try {
                 await createEnvironment(environment);
+                refetch();
                 setCreateSucceess(true);
             } catch (e) {
-                setToastData({ show: true, type: 'error', text: e.toString() });
+                setToastApiError(e.toString());
             }
         }
     };
@@ -83,94 +86,107 @@ const CreateEnvironment = () => {
         <PageContent headerContent={<HeaderTitle title="Create environment" />}>
             <ConditionallyRender
                 condition={createSuccess}
-                show={
-                    <CreateEnvironmentSuccess
-                        name={envName}
-                        type={type}
-                    />
-                }
+                show={<CreateEnvironmentSuccess name={envName} type={type} />}
                 elseShow={
-                    <ConditionallyRender condition={canCreateMoreEnvs} show={
-                    <div ref={ref}>
-                        <p className={styles.helperText} data-loading>
-                            Environments allow you to manage your product
-                            lifecycle from local development through production.
-                            Your projects and feature toggles are accessible in
-                            all your environments, but they can take different
-                            configurations per environment. This means that you
-                            can enable a feature toggle in a development or test
-                            environment without enabling the feature toggle in
-                            the production environment.
-                        </p>
+                    <ConditionallyRender
+                        condition={canCreateMoreEnvs}
+                        show={
+                            <div ref={ref}>
+                                <p className={styles.helperText} data-loading>
+                                    Environments allow you to manage your
+                                    product lifecycle from local development
+                                    through production. Your projects and
+                                    feature toggles are accessible in all your
+                                    environments, but they can take different
+                                    configurations per environment. This means
+                                    that you can enable a feature toggle in a
+                                    development or test environment without
+                                    enabling the feature toggle in the
+                                    production environment.
+                                </p>
 
-                        <form onSubmit={handleSubmit}>
-                            <FormControl component="fieldset">
-                                <h3 className={styles.formHeader} data-loading>
-                                    Environment Id and name
-                                </h3>
+                                <form onSubmit={handleSubmit}>
+                                    <FormControl component="fieldset">
+                                        <h3
+                                            className={styles.formHeader}
+                                            data-loading
+                                        >
+                                            Environment Id and name
+                                        </h3>
 
-                                <div
-                                    data-loading
-                                    className={
-                                        styles.environmentDetailsContainer
-                                    }
-                                >
+                                        <div
+                                            data-loading
+                                            className={
+                                                styles.environmentDetailsContainer
+                                            }
+                                        >
+                                            <p>
+                                                Unique env name for SDK
+                                                configurations.
+                                            </p>
+                                            <Input
+                                                label="Environment Id"
+                                                onFocus={clearNameError}
+                                                placeholder="A unique name for your environment"
+                                                onBlur={validateEnvironmentName}
+                                                error={Boolean(nameError)}
+                                                errorText={nameError}
+                                                value={envName}
+                                                onChange={handleEnvNameChange}
+                                                className={styles.inputField}
+                                            />
+                                        </div>
+
+                                        <EnvironmentTypeSelector
+                                            onChange={handleTypeChange}
+                                            value={type}
+                                        />
+                                    </FormControl>
+                                    <div className={styles.btnContainer}>
+                                        <Button
+                                            className={styles.submitButton}
+                                            variant="contained"
+                                            color="primary"
+                                            type="submit"
+                                            data-loading
+                                        >
+                                            Submit
+                                        </Button>{' '}
+                                        <Button
+                                            className={styles.submitButton}
+                                            variant="outlined"
+                                            color="secondary"
+                                            onClick={goBack}
+                                            data-loading
+                                        >
+                                            Cancel
+                                        </Button>
+                                    </div>
+                                </form>
+                            </div>
+                        }
+                        elseShow={
+                            <>
+                                <Alert severity="error">
                                     <p>
-                                        Unique env name for SDK configurations.
+                                        Currently Unleash does not support more
+                                        than 5 environments. If you need more
+                                        please reach out.
                                     </p>
-                                    <Input
-                                        label="Environment Id"
-                                        onFocus={clearNameError}
-                                        placeholder="A unique name for your environment"
-                                        onBlur={validateEnvironmentName}
-                                        error={Boolean(nameError)}
-                                        errorText={nameError}
-                                        value={envName}
-                                        onChange={handleEnvNameChange}
-                                        className={styles.inputField}
-                                    />
-                                </div>
-
-                                <EnvironmentTypeSelector
-                                    onChange={handleTypeChange}
-                                    value={type}
-                                />
-                            </FormControl>
-                            <div className={styles.btnContainer}>
+                                </Alert>
+                                <br />
                                 <Button
-                                    className={styles.submitButton}
+                                    onClick={goBack}
                                     variant="contained"
                                     color="primary"
-                                    type="submit"
-                                    data-loading
                                 >
-                                    Submit
-                                </Button>{' '}
-                                <Button
-                                    className={styles.submitButton}
-                                    variant="outlined"
-                                    color="secondary"
-                                    onClick={goBack}
-                                    data-loading
-                                >
-                                    Cancel
+                                    Go back
                                 </Button>
-                            </div>
-                        </form>
-                    </div>
-                    } elseShow={
-                        <>
-                        <Alert severity="error">
-                            <p>Currently Unleash does not support more than 5 environments. If you need more please reach out.</p>
-                        </Alert>
-                        <br />
-                        <Button onClick={goBack}  variant="contained" color="primary">Go back</Button>
-                        </>
-                    } />
-                    
+                            </>
+                        }
+                    />
                 }
             />
-            {toast}
         </PageContent>
     );
 };

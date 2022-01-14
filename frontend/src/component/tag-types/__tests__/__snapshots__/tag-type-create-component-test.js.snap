@@ -43,60 +43,9 @@ exports[`it supports editMode 1`] = `
         className="addTagTypeForm contentSpacing"
         onSubmit={[Function]}
       >
-        <div
-          className="formButtons"
-        >
-          <div>
-            <button
-              className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
-              disabled={false}
-              onBlur={[Function]}
-              onDragLeave={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              onKeyUp={[Function]}
-              onMouseDown={[Function]}
-              onMouseLeave={[Function]}
-              onMouseUp={[Function]}
-              onTouchEnd={[Function]}
-              onTouchMove={[Function]}
-              onTouchStart={[Function]}
-              tabIndex={0}
-              type="submit"
-            >
-              <span
-                className="MuiButton-label"
-              >
-                Update
-              </span>
-            </button>
-             
-            <button
-              className="MuiButtonBase-root MuiButton-root MuiButton-text"
-              disabled={false}
-              onBlur={[Function]}
-              onClick={[Function]}
-              onDragLeave={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              onKeyUp={[Function]}
-              onMouseDown={[Function]}
-              onMouseLeave={[Function]}
-              onMouseUp={[Function]}
-              onTouchEnd={[Function]}
-              onTouchMove={[Function]}
-              onTouchStart={[Function]}
-              tabIndex={0}
-              type="cancel"
-            >
-              <span
-                className="MuiButton-label"
-              >
-                Cancel
-              </span>
-            </button>
-          </div>
-        </div>
+        <span>
+          You do not have permissions to save.
+        </span>
       </form>
     </section>
   </div>
@@ -146,60 +95,9 @@ exports[`renders correctly for creating 1`] = `
         className="addTagTypeForm contentSpacing"
         onSubmit={[Function]}
       >
-        <div
-          className="formButtons"
-        >
-          <div>
-            <button
-              className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
-              disabled={false}
-              onBlur={[Function]}
-              onDragLeave={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              onKeyUp={[Function]}
-              onMouseDown={[Function]}
-              onMouseLeave={[Function]}
-              onMouseUp={[Function]}
-              onTouchEnd={[Function]}
-              onTouchMove={[Function]}
-              onTouchStart={[Function]}
-              tabIndex={0}
-              type="submit"
-            >
-              <span
-                className="MuiButton-label"
-              >
-                Create
-              </span>
-            </button>
-             
-            <button
-              className="MuiButtonBase-root MuiButton-root MuiButton-text"
-              disabled={false}
-              onBlur={[Function]}
-              onClick={[Function]}
-              onDragLeave={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              onKeyUp={[Function]}
-              onMouseDown={[Function]}
-              onMouseLeave={[Function]}
-              onMouseUp={[Function]}
-              onTouchEnd={[Function]}
-              onTouchMove={[Function]}
-              onTouchStart={[Function]}
-              tabIndex={0}
-              type="cancel"
-            >
-              <span
-                className="MuiButton-label"
-              >
-                Cancel
-              </span>
-            </button>
-          </div>
-        </div>
+        <span>
+          You do not have permissions to save.
+        </span>
       </form>
     </section>
   </div>

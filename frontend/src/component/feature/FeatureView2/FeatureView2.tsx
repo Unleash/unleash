@@ -8,7 +8,11 @@ import useProject from '../../../hooks/api/getters/useProject/useProject';
 import useTabs from '../../../hooks/useTabs';
 import useToast from '../../../hooks/useToast';
 import { IFeatureViewParams } from '../../../interfaces/params';
-import { UPDATE_FEATURE } from '../../providers/AccessProvider/permissions';
+import {
+    CREATE_FEATURE,
+    DELETE_FEATURE,
+    UPDATE_FEATURE,
+} from '../../providers/AccessProvider/permissions';
 import Dialogue from '../../common/Dialogue';
 import PermissionIconButton from '../../common/PermissionIconButton/PermissionIconButton';
 import FeatureLog from './FeatureLog/FeatureLog';
@@ -33,7 +37,7 @@ const FeatureView2 = () => {
     const [openTagDialog, setOpenTagDialog] = useState(false);
     const { a11yProps } = useTabs(0);
     const { archiveFeatureToggle } = useFeatureApi();
-    const { toast, setToastData } = useToast();
+    const { setToastData, setToastApiError } = useToast();
     const [showDelDialog, setShowDelDialog] = useState(false);
     const [openStaleDialog, setOpenStaleDialog] = useState(false);
     const smallScreen = useMediaQuery(`(max-width:${500}px)`);
@@ -49,19 +53,15 @@ const FeatureView2 = () => {
         try {
             await archiveFeatureToggle(projectId, featureId);
             setToastData({
-                text: 'Feature archived',
+                text: 'Your feature toggle has been archived',
                 type: 'success',
-                show: true,
+                title: 'Feature archived',
             });
             setShowDelDialog(false);
             projectRefetch();
             history.push(`/projects/${projectId}`);
         } catch (e) {
-            setToastData({
-                show: true,
-                type: 'error',
-                text: e.toString(),
-            });
+            setToastApiError(e.toString());
             setShowDelDialog(false);
         }
     };
@@ -152,7 +152,7 @@ const FeatureView2 = () => {
 
                             <div className={styles.actions}>
                                 <PermissionIconButton
-                                    permission={UPDATE_FEATURE}
+                                    permission={CREATE_FEATURE}
                                     projectId={projectId}
                                     tooltip="Copy"
                                     data-loading
@@ -162,7 +162,7 @@ const FeatureView2 = () => {
                                     <FileCopy />
                                 </PermissionIconButton>
                                 <PermissionIconButton
-                                    permission={UPDATE_FEATURE}
+                                    permission={DELETE_FEATURE}
                                     projectId={projectId}
                                     tooltip="Archive feature toggle"
                                     data-loading
@@ -246,8 +246,6 @@ const FeatureView2 = () => {
                         open={openTagDialog}
                         setOpen={setOpenTagDialog}
                     />
-
-                    {toast}
                 </div>
             }
             elseShow={renderFeatureNotExist()}

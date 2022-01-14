@@ -10,6 +10,7 @@ interface IResponsiveButtonProps {
     disabled?: boolean;
     permission?: string;
     projectId?: string;
+    environmentId?: string;
     maxWidth: string;
 }
 
@@ -21,6 +22,7 @@ const ResponsiveButton: React.FC<IResponsiveButtonProps> = ({
     disabled = false,
     children,
     permission,
+    environmentId,
     projectId,
     ...rest
 }) => {
@@ -35,6 +37,7 @@ const ResponsiveButton: React.FC<IResponsiveButtonProps> = ({
                     onClick={onClick}
                     permission={permission}
                     projectId={projectId}
+                    environmentId={environmentId}
                     data-loading
                     {...rest}
                 >
@@ -49,6 +52,7 @@ const ResponsiveButton: React.FC<IResponsiveButtonProps> = ({
                     color="primary"
                     variant="contained"
                     disabled={disabled}
+                    environmentId={environmentId}
                     data-loading
                     {...rest}
                 >

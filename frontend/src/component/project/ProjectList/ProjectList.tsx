@@ -18,7 +18,6 @@ import { CREATE_PROJECT } from '../../providers/AccessProvider/permissions';
 
 import { Add } from '@material-ui/icons';
 import ApiError from '../../common/ApiError/ApiError';
-import useToast from '../../../hooks/useToast';
 import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
 
 type projectMap = {
@@ -47,7 +46,6 @@ function resolveCreateButtonData(isOss: boolean, hasAccess: boolean) {
 const ProjectListNew = () => {
     const { hasAccess } = useContext(AccessContext);
     const history = useHistory();
-    const { toast, setToastData } = useToast();
     const styles = useStyles();
     const { projects, loading, error, refetch } = useProjects();
     const [fetchedProjects, setFetchedProjects] = useState<projectMap>({});
@@ -103,7 +101,6 @@ const ProjectListNew = () => {
                         health={project?.health}
                         id={project?.id}
                         featureCount={project?.featureCount}
-                        setToastData={setToastData}
                     />
                 </Link>
             );
@@ -122,7 +119,6 @@ const ProjectListNew = () => {
                     memberCount={2}
                     health={95}
                     featureCount={4}
-                    setToastData={setToastData}
                 />
             );
         });
@@ -157,7 +153,6 @@ const ProjectListNew = () => {
                         elseShow={renderProjects()}
                     />
                 </div>
-                {toast}
             </PageContent>
         </div>
     );

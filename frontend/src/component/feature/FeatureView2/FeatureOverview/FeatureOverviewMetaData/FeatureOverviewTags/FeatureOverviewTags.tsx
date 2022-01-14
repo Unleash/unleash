@@ -14,11 +14,18 @@ import useFeatureApi from '../../../../../../hooks/api/actions/useFeatureApi/use
 import Dialogue from '../../../../../common/Dialogue';
 import { ITag } from '../../../../../../interfaces/tags';
 import useToast from '../../../../../../hooks/useToast';
-import { DELETE_TAG } from '../../../../../providers/AccessProvider/permissions';
+import { UPDATE_FEATURE } from '../../../../../providers/AccessProvider/permissions';
 import ConditionallyRender from '../../../../../common/ConditionallyRender';
 import AccessContext from '../../../../../../contexts/AccessContext';
 
-const FeatureOverviewTags = () => {
+interface IFeatureOverviewTagsProps extends React.HTMLProps<HTMLButtonElement> {
+    projectId: string;
+}
+
+const FeatureOverviewTags: React.FC<IFeatureOverviewTagsProps> = ({
+    projectId,
+    ...rest
+}) => {
     const [showDelDialog, setShowDelDialog] = useState(false);
     const [selectedTag, setSelectedTag] = useState<ITag>({
         value: '',
@@ -29,9 +36,9 @@ const FeatureOverviewTags = () => {
     const { tags, refetch } = useTags(featureId);
     const { tagTypes } = useTagTypes();
     const { deleteTagFromFeature } = useFeatureApi();
-    const { toast, setToastData } = useToast();
+    const { setToastData, setToastApiError } = useToast();
     const { hasAccess } = useContext(AccessContext);
-    const canDeleteTag = hasAccess(DELETE_TAG);
+    const canDeleteTag = hasAccess(UPDATE_FEATURE, projectId);
 
     const handleDelete = async () => {
         try {
@@ -43,15 +50,11 @@ const FeatureOverviewTags = () => {
             refetch();
             setToastData({
                 type: 'success',
-                show: true,
+                title: 'Tag deleted',
                 text: 'Successfully deleted tag',
             });
         } catch (e) {
-            setToastData({
-                show: true,
-                type: 'error',
-                text: e.toString(),
-            });
+            setToastApiError(e.message);
         }
     };
 
@@ -114,7 +117,7 @@ const FeatureOverviewTags = () => {
     );
 
     return (
-        <div className={styles.container}>
+        <div className={styles.container} {...rest}>
             <Dialogue
                 open={showDelDialog}
                 onClose={() => {
@@ -136,7 +139,6 @@ const FeatureOverviewTags = () => {
                     elseShow={<p data-loading>No tags to display</p>}
                 />
             </div>
-            {toast}
         </div>
     );
 };

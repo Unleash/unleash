@@ -30,7 +30,7 @@ const AddTagDialog = ({ open, setOpen }: IAddTagDialogProps) => {
     const { addTagToFeature, loading } = useFeatureApi();
     const { refetch } = useTags(featureId);
     const [errors, setErrors] = useState({ tagError: '' });
-    const { toast, setToastData } = useToast();
+    const { setToastData, setToastApiError } = useToast();
     const [tag, setTag] = useState(DEFAULT_TAG);
 
     const onCancel = () => {
@@ -58,10 +58,12 @@ const AddTagDialog = ({ open, setOpen }: IAddTagDialogProps) => {
             refetch();
             setToastData({
                 type: 'success',
-                show: true,
-                text: 'Successfully created tag',
+                title: 'Added tag to toggle',
+                text: 'We successfully added a tag to your toggle',
+                confetti: true,
             });
         } catch (e) {
+            setToastApiError(e.message);
             setErrors({ tagError: e.message });
         }
     };
@@ -108,7 +110,6 @@ const AddTagDialog = ({ open, setOpen }: IAddTagDialogProps) => {
                     </form>
                 </>
             </Dialogue>
-            {toast}
         </>
     );
 };

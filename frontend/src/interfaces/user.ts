@@ -13,6 +13,7 @@ export interface ISplash {
 export interface IPermission {
     permission: string;
     project: string;
+    displayName: string;
 }
 
 interface IAuthDetails {

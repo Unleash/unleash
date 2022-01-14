@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { useParams } from 'react-router';
 import useFeatureApi from '../../../../../hooks/api/actions/useFeatureApi/useFeatureApi';
 import useFeature from '../../../../../hooks/api/getters/useFeature/useFeature';
-import useToast from '../../../../../hooks/useToast';
 import { IFeatureViewParams } from '../../../../../interfaces/params';
 import EnvironmentStrategyDialog from '../../../../common/EnvironmentStrategiesDialog/EnvironmentStrategyDialog';
 import FeatureOverviewEnvSwitch from './FeatureOverviewEnvSwitch/FeatureOverviewEnvSwitch';
@@ -14,7 +13,7 @@ const FeatureOverviewEnvSwitches = () => {
     const { featureId, projectId } = useParams<IFeatureViewParams>();
     useFeatureApi();
     const { feature } = useFeature(projectId, featureId);
-    const { toast, setToastData } = useToast();
+
     const [showInfoBox, setShowInfoBox] = useState(false);
     const [environmentName, setEnvironmentName] = useState('');
 
@@ -28,7 +27,6 @@ const FeatureOverviewEnvSwitches = () => {
                 <FeatureOverviewEnvSwitch
                     key={env.name}
                     env={env}
-                    setToastData={setToastData}
                     showInfoBox={() => {
                         setEnvironmentName(env.name);
                         setShowInfoBox(true);
@@ -49,7 +47,6 @@ const FeatureOverviewEnvSwitches = () => {
                 </h3>
             </Tooltip>
             {renderEnvironmentSwitches()}
-            {toast}
             <EnvironmentStrategyDialog
                 open={showInfoBox}
                 onClose={closeInfoBox}

@@ -29,7 +29,7 @@ exports[`renders correctly with one feature 1`] = `
         }
       >
         <div
-          className="MuiChip-root makeStyles-chip-20 MuiChip-colorPrimary MuiChip-outlined MuiChip-outlinedPrimary"
+          className="MuiChip-root makeStyles-chip-21 MuiChip-colorPrimary MuiChip-outlined MuiChip-outlinedPrimary"
           onKeyDown={[Function]}
           onKeyUp={[Function]}
           title="Feature toggle is active."
@@ -52,44 +52,6 @@ exports[`renders correctly with one feature 1`] = `
           className="MuiTypography-root MuiTypography-body1"
         >
           another's description
-          <a
-            aria-disabled={false}
-            aria-label="toggle description edit"
-            className="MuiButtonBase-root MuiIconButton-root"
-            href="/#edit"
-            onBlur={[Function]}
-            onClick={[Function]}
-            onDragLeave={[Function]}
-            onFocus={[Function]}
-            onKeyDown={[Function]}
-            onKeyUp={[Function]}
-            onMouseDown={[Function]}
-            onMouseLeave={[Function]}
-            onMouseUp={[Function]}
-            onTouchEnd={[Function]}
-            onTouchMove={[Function]}
-            onTouchStart={[Function]}
-            role="button"
-            tabIndex={0}
-          >
-            <span
-              className="MuiIconButton-label"
-            >
-              <svg
-                aria-hidden={true}
-                className="MuiSvgIcon-root"
-                focusable="false"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
-                />
-              </svg>
-            </span>
-            <span
-              className="MuiTouchRipple-root"
-            />
-          </a>
         </p>
       </div>
       <div
@@ -105,18 +67,19 @@ exports[`renders correctly with one feature 1`] = `
             Feature type
           </label>
           <div
-            className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-formControl MuiInputBase-marginDense MuiOutlinedInput-marginDense"
+            className="MuiInputBase-root MuiOutlinedInput-root Mui-disabled Mui-disabled MuiInputBase-formControl MuiInputBase-marginDense MuiOutlinedInput-marginDense"
             onClick={[Function]}
           >
             <div
+              aria-disabled="true"
               aria-haspopup="listbox"
-              className="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiSelect-outlined MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMarginDense MuiOutlinedInput-inputMarginDense"
+              className="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiSelect-outlined MuiInputBase-input MuiOutlinedInput-input Mui-disabled Mui-disabled MuiInputBase-inputMarginDense MuiOutlinedInput-inputMarginDense Mui-disabled"
               onBlur={[Function]}
               onFocus={[Function]}
               onKeyDown={[Function]}
-              onMouseDown={[Function]}
+              onMouseDown={null}
               role="button"
-              tabIndex={0}
+              tabIndex={null}
             >
               Release
             </div>
@@ -131,7 +94,7 @@ exports[`renders correctly with one feature 1`] = `
             />
             <svg
               aria-hidden={true}
-              className="MuiSvgIcon-root MuiSelect-icon MuiSelect-iconOutlined"
+              className="MuiSvgIcon-root MuiSelect-icon MuiSelect-iconOutlined Mui-disabled"
               focusable="false"
               viewBox="0 0 24 24"
             >
@@ -141,10 +104,10 @@ exports[`renders correctly with one feature 1`] = `
             </svg>
             <fieldset
               aria-hidden={true}
-              className="PrivateNotchedOutline-root-21 MuiOutlinedInput-notchedOutline"
+              className="PrivateNotchedOutline-root-22 MuiOutlinedInput-notchedOutline"
             >
               <legend
-                className="PrivateNotchedOutline-legendLabelled-23 PrivateNotchedOutline-legendNotched-24"
+                className="PrivateNotchedOutline-legendLabelled-24 PrivateNotchedOutline-legendNotched-25"
               >
                 <span>
                   Feature type
@@ -200,10 +163,10 @@ exports[`renders correctly with one feature 1`] = `
             </svg>
             <fieldset
               aria-hidden={true}
-              className="PrivateNotchedOutline-root-21 MuiOutlinedInput-notchedOutline"
+              className="PrivateNotchedOutline-root-22 MuiOutlinedInput-notchedOutline"
             >
               <legend
-                className="PrivateNotchedOutline-legendLabelled-23 PrivateNotchedOutline-legendNotched-24"
+                className="PrivateNotchedOutline-legendLabelled-24 PrivateNotchedOutline-legendNotched-25"
               >
                 <span>
                   Project
@@ -234,8 +197,8 @@ exports[`renders correctly with one feature 1`] = `
         className="MuiSwitch-root"
       >
         <span
-          aria-disabled={false}
-          className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-25 MuiSwitch-switchBase MuiSwitch-colorSecondary"
+          aria-disabled={true}
+          className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-26 MuiSwitch-switchBase MuiSwitch-colorSecondary PrivateSwitchBase-disabled-28 Mui-disabled Mui-disabled Mui-disabled"
           onBlur={[Function]}
           onDragLeave={[Function]}
           onFocus={[Function]}
@@ -247,15 +210,15 @@ exports[`renders correctly with one feature 1`] = `
           onTouchEnd={[Function]}
           onTouchMove={[Function]}
           onTouchStart={[Function]}
-          tabIndex={null}
+          tabIndex={-1}
         >
           <span
             className="MuiIconButton-label"
           >
             <input
               checked={false}
-              className="PrivateSwitchBase-input-28 MuiSwitch-input"
-              disabled={false}
+              className="PrivateSwitchBase-input-29 MuiSwitch-input"
+              disabled={true}
               onChange={[Function]}
               type="checkbox"
             />
@@ -263,9 +226,6 @@ exports[`renders correctly with one feature 1`] = `
               className="MuiSwitch-thumb"
             />
           </span>
-          <span
-            className="MuiTouchRipple-root"
-          />
         </span>
         <span
           className="MuiSwitch-track"
@@ -280,8 +240,8 @@ exports[`renders correctly with one feature 1`] = `
         featureToggleName="Another"
       />
       <a
-        aria-disabled={false}
-        className="MuiButtonBase-root MuiButton-root MuiButton-text"
+        aria-disabled={true}
+        className="MuiButtonBase-root MuiButton-root MuiButton-text Mui-disabled Mui-disabled"
         href="/projects/default/features/Another/strategies/copy"
         onBlur={[Function]}
         onClick={[Function]}
@@ -296,7 +256,7 @@ exports[`renders correctly with one feature 1`] = `
         onTouchMove={[Function]}
         onTouchStart={[Function]}
         role="button"
-        tabIndex={0}
+        tabIndex={-1}
         title="Create new feature toggle by cloning configuration"
       >
         <span
@@ -304,9 +264,6 @@ exports[`renders correctly with one feature 1`] = `
         >
           Clone
         </span>
-        <span
-          className="MuiTouchRipple-root"
-        />
       </a>
       <button
         aria-controls="feature-stale-dropdown"
@@ -358,13 +315,10 @@ exports[`renders correctly with one feature 1`] = `
             </span>
           </span>
         </span>
-        <span
-          className="MuiTouchRipple-root"
-        />
       </button>
       <button
-        className="MuiButtonBase-root MuiButton-root MuiButton-text"
-        disabled={false}
+        className="MuiButtonBase-root MuiButton-root MuiButton-text Mui-disabled Mui-disabled"
+        disabled={true}
         onBlur={[Function]}
         onClick={[Function]}
         onDragLeave={[Function]}
@@ -382,7 +336,7 @@ exports[`renders correctly with one feature 1`] = `
             "flexShrink": 0,
           }
         }
-        tabIndex={0}
+        tabIndex={-1}
         title="Archive feature toggle"
         type="button"
       >
@@ -391,15 +345,12 @@ exports[`renders correctly with one feature 1`] = `
         >
           Archive
         </span>
-        <span
-          className="MuiTouchRipple-root"
-        />
       </button>
     </div>
   </div>
   <hr />
   <div
-    className="MuiPaper-root makeStyles-tabNav-29 MuiPaper-elevation1 MuiPaper-rounded"
+    className="MuiPaper-root makeStyles-tabNav-30 MuiPaper-elevation1 MuiPaper-rounded"
   >
     <div
       className="MuiTabs-root"
@@ -447,7 +398,8 @@ exports[`renders correctly with one feature 1`] = `
               Activation
             </span>
             <span
-              className="MuiTouchRipple-root"
+              className="PrivateTabIndicator-root-31 PrivateTabIndicator-colorPrimary-32 MuiTabs-indicator"
+              style={Object {}}
             />
           </button>
           <button
@@ -477,9 +429,6 @@ exports[`renders correctly with one feature 1`] = `
             >
               Metrics
             </span>
-            <span
-              className="MuiTouchRipple-root"
-            />
           </button>
           <button
             aria-controls="tabpanel-2"
@@ -508,9 +457,6 @@ exports[`renders correctly with one feature 1`] = `
             >
               Variants
             </span>
-            <span
-              className="MuiTouchRipple-root"
-            />
           </button>
           <button
             aria-controls="tabpanel-3"
@@ -539,20 +485,8 @@ exports[`renders correctly with one feature 1`] = `
             >
               Log
             </span>
-            <span
-              className="MuiTouchRipple-root"
-            />
           </button>
         </div>
-        <span
-          className="PrivateTabIndicator-root-30 PrivateTabIndicator-colorPrimary-31 MuiTabs-indicator"
-          style={
-            Object {
-              "left": 0,
-              "width": 0,
-            }
-          }
-        />
       </div>
     </div>
   </div>
@@ -566,7 +500,7 @@ exports[`renders correctly with one feature 1`] = `
       role="tabpanel"
     >
       <UpdateStrategiesComponent
-        editable={true}
+        editable={false}
         featureToggle={
           Object {
             "createdAt": "2018-02-04T20:27:52.127Z",

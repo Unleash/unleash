@@ -20,6 +20,7 @@ import ScrollToTop from './component/scroll-to-top';
 import { writeWarning } from './security-logger';
 import AccessProvider from './component/providers/AccessProvider/AccessProvider';
 import { getBasePath } from './utils/format-path';
+import UIProvider from './component/providers/UIProvider/UIProvider';
 
 let composeEnhancers;
 
@@ -41,18 +42,20 @@ const unleashStore = createStore(
 ReactDOM.render(
     <Provider store={unleashStore}>
         <DndProvider backend={HTML5Backend}>
-            <AccessProvider store={unleashStore}>
-                <Router basename={`${getBasePath()}`}>
-                    <ThemeProvider theme={mainTheme}>
-                        <StylesProvider injectFirst>
-                            <CssBaseline />
-                            <ScrollToTop>
-                                <Route path="/" component={App} />
-                            </ScrollToTop>
-                        </StylesProvider>
-                    </ThemeProvider>
-                </Router>
-            </AccessProvider>
+            <UIProvider>
+                <AccessProvider store={unleashStore}>
+                    <Router basename={`${getBasePath()}`}>
+                        <ThemeProvider theme={mainTheme}>
+                            <StylesProvider injectFirst>
+                                <CssBaseline />
+                                <ScrollToTop>
+                                    <Route path="/" component={App} />
+                                </ScrollToTop>
+                            </StylesProvider>
+                        </ThemeProvider>
+                    </Router>
+                </AccessProvider>
+            </UIProvider>
         </DndProvider>
     </Provider>,
     document.getElementById('app')

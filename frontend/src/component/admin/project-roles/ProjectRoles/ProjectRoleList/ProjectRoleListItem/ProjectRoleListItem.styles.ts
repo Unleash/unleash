@@ -6,8 +6,11 @@ export const useStyles = makeStyles(theme => ({
             backgroundColor: theme.palette.grey[200],
         },
     },
-    leftTableCell:{
+    leftTableCell: {
         textAlign: 'left',
-        maxWidth: '300px'
-    }
+        maxWidth: '300px',
+    },
+    icon: {
+        color: theme.palette.grey[600],
+    },
 }));

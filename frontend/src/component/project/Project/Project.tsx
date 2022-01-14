@@ -25,7 +25,7 @@ const Project = () => {
     const params = useQueryParams();
     const { project, error, loading, refetch } = useProject(id);
     const ref = useLoading(loading);
-    const { toast, setToastData } = useToast();
+    const { setToastData } = useToast();
     const commonStyles = useCommonStyles();
     const styles = useStyles();
     const history = useHistory();
@@ -80,9 +80,8 @@ const Project = () => {
         if (created || edited) {
             const text = created ? 'Project created' : 'Project updated';
             setToastData({
-                show: true,
                 type: 'success',
-                text,
+                title: text,
             });
         }
 
@@ -186,7 +185,6 @@ const Project = () => {
                 </div>
             </div>
             {renderTabContent()}
-            {toast}
         </div>
     );
 };

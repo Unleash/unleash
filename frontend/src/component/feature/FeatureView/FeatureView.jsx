@@ -69,7 +69,7 @@ const FeatureView = ({
     const { hasAccess } = useContext(AccessContext);
     const { project } = featureToggle || {};
     const { changeFeatureProject } = useFeatureApi();
-    const { toast, setToastData } = useToast();
+    const { setToastApiError, setToastData } = useToast();
     const archive = !Boolean(isFeatureView);
     const { uiConfig } = useUiConfig();
 
@@ -249,17 +249,13 @@ const FeatureView = ({
             .then(() => {
                 fetchFeatureToggles();
                 setToastData({
-                    show: true,
+                    title: 'Updated toggle project',
                     type: 'success',
                     text: 'Successfully updated toggle project.',
                 });
             })
             .catch(e => {
-                setToastData({
-                    show: true,
-                    type: 'error',
-                    text: e.toString(),
-                });
+                setToastApiError(e.toString());
             });
     };
 
@@ -435,7 +431,6 @@ const FeatureView = ({
                 }}
                 onClose={() => setDelDialog(false)}
             />
-            {toast}
         </Paper>
     );
 };

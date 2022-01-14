@@ -148,7 +148,10 @@ const FeatureToggleListItem = ({
                     <PermissionIconButton
                         permission={UPDATE_FEATURE}
                         projectId={project}
-                        disabled={!projectExists()}
+                        disabled={
+                            !hasAccess(UPDATE_FEATURE, project) ||
+                            !projectExists()
+                        }
                         onClick={reviveFeature}
                     >
                         <Undo />

@@ -6,4 +6,10 @@ interface IRole {
     type: string;
 }
 
+export interface IProjectRole {
+    id: number;
+    name: string;
+    description: string;
+}
+
 export default IRole;

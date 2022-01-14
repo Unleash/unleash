@@ -16,6 +16,7 @@ import {
 import theme from '../../../../themes/main-theme';
 import { createFakeStore } from '../../../../accessStoreFake';
 import AccessProvider from '../../../providers/AccessProvider/AccessProvider';
+import UIProvider from '../../../providers/UIProvider/UIProvider';
 
 jest.mock('../update-strategies-container', () => ({
     __esModule: true,
@@ -73,22 +74,24 @@ test('renders correctly with one feature', () => {
         <MemoryRouter>
             <Provider store={createStore(mockReducer, mockStore)}>
                 <ThemeProvider theme={theme}>
-                    <AccessProvider
-                        store={createFakeStore([{ permission: ADMIN }])}
-                    >
-                        <ViewFeatureToggleComponent
-                            activeTab={'strategies'}
-                            featureToggleName="another"
-                            features={[feature]}
-                            featureToggle={feature}
-                            fetchFeatureToggles={jest.fn()}
-                            history={{}}
-                            user={{ permissions: [] }}
-                            featureTags={[]}
-                            fetchTags={jest.fn()}
-                            untagFeature={jest.fn()}
-                        />
-                    </AccessProvider>
+                    <UIProvider>
+                        <AccessProvider
+                            store={createFakeStore([{ permission: ADMIN }])}
+                        >
+                            <ViewFeatureToggleComponent
+                                activeTab={'strategies'}
+                                featureToggleName="another"
+                                features={[feature]}
+                                featureToggle={feature}
+                                fetchFeatureToggles={jest.fn()}
+                                history={{}}
+                                user={{ permissions: [] }}
+                                featureTags={[]}
+                                fetchTags={jest.fn()}
+                                untagFeature={jest.fn()}
+                            />
+                        </AccessProvider>
+                    </UIProvider>
                 </ThemeProvider>
             </Provider>
         </MemoryRouter>

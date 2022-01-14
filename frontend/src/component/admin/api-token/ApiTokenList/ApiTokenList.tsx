@@ -54,7 +54,7 @@ const ApiTokenList = ({ location }: IApiTokenList) => {
     const { uiConfig } = useUiConfig();
     const [showDelete, setShowDelete] = useState(false);
     const [delToken, setDeleteToken] = useState<IApiToken>();
-    const { toast, setToastData } = useToast();
+    const { setToastData, setToastApiError } = useToast();
     const { tokens, loading, refetch, error } = useApiTokens();
     const { deleteToken, createToken } = useApiTokensApi();
     const ref = useLoading(loading);
@@ -80,19 +80,25 @@ const ApiTokenList = ({ location }: IApiTokenList) => {
     };
 
     const onCreateToken = async (token: IApiTokenCreate) => {
-        await createToken(token);
-        refetch();
-        setToastData({
-            type: 'success',
-            show: true,
-            text: 'Successfully created API token.',
-        });
+        try {
+            await createToken(token);
+            refetch();
+            setToastData({
+                type: 'success',
+                title: 'Created token',
+                text: 'Successfully created API token',
+                confetti: true,
+            });
+        } catch (e) {
+            setToastApiError(e.message);
+        }
     };
     const copyToken = (value: string) => {
         if (copy(value)) {
             setToastData({
                 type: 'success',
-                show: true,
+                title: 'Token copied',
+                confetti: true,
                 text: `Token is copied to clipboard`,
             });
         }
@@ -161,7 +167,10 @@ const ApiTokenList = ({ location }: IApiTokenList) => {
                 <TableBody>
                     {tokens.map(item => {
                         return (
-                            <TableRow key={item.secret} className={styles.tableRow}>
+                            <TableRow
+                                key={item.secret}
+                                className={styles.tableRow}
+                            >
                                 <TableCell
                                     align="left"
                                     className={styles.hideSM}
@@ -302,7 +311,7 @@ const ApiTokenList = ({ location }: IApiTokenList) => {
                         elseShow={renderApiTokens(tokens)}
                     />
                 </div>
-                {toast}
+
                 <ApiTokenCreate
                     showDialog={showDialog}
                     createToken={onCreateToken}

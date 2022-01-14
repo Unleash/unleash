@@ -19,6 +19,7 @@ import EnvironmentListItem from './EnvironmentListItem/EnvironmentListItem';
 import { mutate } from 'swr';
 import EditEnvironment from '../EditEnvironment/EditEnvironment';
 import EnvironmentToggleConfirm from './EnvironmentToggleConfirm/EnvironmentToggleConfirm';
+import useProjectRolePermissions from '../../../hooks/api/getters/useProjectRolePermissions/useProjectRolePermissions';
 
 const EnvironmentList = () => {
     const defaultEnv = {
@@ -31,6 +32,8 @@ const EnvironmentList = () => {
     };
     const { environments, refetch } = useEnvironments();
     const [editEnvironment, setEditEnvironment] = useState(false);
+    const { refetch: refetchProjectRolePermissions } =
+        useProjectRolePermissions();
 
     const [selectedEnv, setSelectedEnv] = useState(defaultEnv);
     const [delDialog, setDeldialogue] = useState(false);
@@ -38,7 +41,7 @@ const EnvironmentList = () => {
     const [confirmName, setConfirmName] = useState('');
 
     const history = useHistory();
-    const { toast, setToastData } = useToast();
+    const { setToastApiError, setToastData } = useToast();
     const {
         deleteEnvironment,
         changeSortOrder,
@@ -72,11 +75,7 @@ const EnvironmentList = () => {
             await sortOrderAPICall(sortOrder);
             refetch();
         } catch (e) {
-            setToastData({
-                show: true,
-                type: 'error',
-                text: e.toString(),
-            });
+            setToastApiError(e.toString());
         }
     };
 
@@ -84,28 +83,21 @@ const EnvironmentList = () => {
         try {
             await changeSortOrder(sortOrder);
         } catch (e) {
-            setToastData({
-                show: true,
-                type: 'error',
-                text: e.toString(),
-            });
+            setToastApiError(e.toString());
         }
     };
 
     const handleDeleteEnvironment = async () => {
         try {
             await deleteEnvironment(selectedEnv.name);
+            refetchProjectRolePermissions();
             setToastData({
-                show: true,
                 type: 'success',
-                text: 'Successfully deleted environment.',
+                title: 'Project environment deleted',
+                text: 'You have successfully deleted the project environment.',
             });
         } catch (e) {
-            setToastData({
-                show: true,
-                type: 'error',
-                text: e.toString(),
-            });
+            setToastApiError(e.toString());
         } finally {
             setDeldialogue(false);
             setSelectedEnv(defaultEnv);
@@ -125,17 +117,14 @@ const EnvironmentList = () => {
         try {
             await toggleEnvironmentOn(selectedEnv.name);
             setToggleDialog(false);
+
             setToastData({
-                show: true,
                 type: 'success',
-                text: 'Successfully enabled environment.',
+                title: 'Project environment enabled',
+                text: 'Your environment is enabled',
             });
         } catch (e) {
-            setToastData({
-                show: true,
-                type: 'error',
-                text: e.toString(),
-            });
+            setToastApiError(e.toString());
         } finally {
             refetch();
         }
@@ -146,16 +135,12 @@ const EnvironmentList = () => {
             await toggleEnvironmentOff(selectedEnv.name);
             setToggleDialog(false);
             setToastData({
-                show: true,
                 type: 'success',
-                text: 'Successfully disabled environment.',
+                title: 'Project environment disabled',
+                text: 'Your environment is disabled.',
             });
         } catch (e) {
-            setToastData({
-                show: true,
-                type: 'error',
-                text: e.toString(),
-            });
+            setToastApiError(e.toString());
         } finally {
             refetch();
         }
@@ -223,7 +208,6 @@ const EnvironmentList = () => {
                 setToggleDialog={setToggleDialog}
                 handleConfirmToggleEnvironment={handleConfirmToggleEnvironment}
             />
-            {toast}
         </PageContent>
     );
 };

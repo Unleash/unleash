@@ -28,7 +28,7 @@ import AdminUsers from '../admin/users';
 import AdminInvoice from '../admin/invoice';
 import AdminAuth from '../admin/auth';
 import Login from '../user/Login/Login';
-import { P, C, E, EEA } from '../common/flags';
+import { P, C, E, EEA, RE } from '../common/flags';
 import NewUser from '../user/NewUser';
 import ResetPassword from '../user/ResetPassword/ResetPassword';
 import ForgottenPassword from '../user/ForgottenPassword/ForgottenPassword';
@@ -40,10 +40,13 @@ import EnvironmentList from '../environments/EnvironmentList/EnvironmentList';
 import CreateEnvironment from '../environments/CreateEnvironment/CreateEnvironment';
 import FeatureView2 from '../feature/FeatureView2/FeatureView2';
 import FeatureCreate from '../feature/FeatureCreate/FeatureCreate';
-import ProjectRoles from '../admin/ProjectRolesv1/ProjectRoles';
+import ProjectRoles from '../admin/project-roles/ProjectRoles/ProjectRoles';
+import CreateProjectRole from '../admin/project-roles/CreateProjectRole/CreateProjectRole';
+import EditProjectRole from '../admin/project-roles/EditProjectRole/EditProjectRole';
 
 export const routes = [
     // Project
+
     {
         path: '/projects/create',
         parent: '/projects',
@@ -192,6 +195,7 @@ export const routes = [
         component: CreateContextField,
         type: 'protected',
         layout: 'main',
+        flag: C,
         menu: {},
     },
     {
@@ -201,6 +205,7 @@ export const routes = [
         component: EditContextField,
         type: 'protected',
         layout: 'main',
+        flag: C,
         menu: {},
     },
     {
@@ -374,6 +379,24 @@ export const routes = [
 
     // Admin
     {
+        path: '/admin/create-project-role',
+        title: 'Create',
+        component: CreateProjectRole,
+        type: 'protected',
+        layout: 'main',
+        menu: {},
+        flag: RE,
+    },
+    {
+        path: '/admin/roles/:id/edit',
+        title: 'Edit',
+        component: EditProjectRole,
+        type: 'protected',
+        layout: 'main',
+        menu: {},
+        flag: RE,
+    },
+    {
         path: '/admin/api',
         parent: '/admin',
         title: 'API access',
@@ -416,8 +439,8 @@ export const routes = [
         component: ProjectRoles,
         type: 'protected',
         layout: 'main',
-        menu: {},
-        hidden: true,
+        flag: RE,
+        menu: { adminSettings: true },
     },
     {
         path: '/admin',

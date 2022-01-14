@@ -24,7 +24,7 @@ const useFeatureStrategiesEnvironmentList = () => {
         featureCache,
     } = useContext(FeatureStrategiesUIContext);
 
-    const { toast, setToastData } = useToast();
+    const { setToastData, setToastApiError } = useToast();
     const [delDialog, setDelDialog] = useState({ strategyId: '', show: false });
     const [productionGuard, setProductionGuard] = useState({
         show: false,
@@ -65,7 +65,8 @@ const useFeatureStrategiesEnvironmentList = () => {
             );
 
             setToastData({
-                show: true,
+                title: 'Updates strategy',
+                confetti: true,
                 type: 'success',
                 text: `Successfully updated strategy`,
             });
@@ -85,11 +86,7 @@ const useFeatureStrategiesEnvironmentList = () => {
             history.replace(history.location.pathname);
             setFeatureCache(feature);
         } catch (e) {
-            setToastData({
-                show: true,
-                type: 'error',
-                text: e.toString(),
-            });
+            setToastApiError(e.message);
         }
     };
 
@@ -116,23 +113,18 @@ const useFeatureStrategiesEnvironmentList = () => {
 
             setDelDialog({ strategyId: '', show: false });
             setToastData({
-                show: true,
                 type: 'success',
+                title: 'Deleted strategy',
                 text: `Successfully deleted strategy from ${featureId}`,
             });
             history.replace(history.location.pathname);
         } catch (e) {
-            setToastData({
-                show: true,
-                type: 'error',
-                text: e.toString(),
-            });
+            setToastApiError(e.message);
         }
     };
 
     return {
         activeEnvironmentsRef,
-        toast,
         setToastData,
         deleteStrategy,
         updateStrategy,

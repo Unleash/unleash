@@ -13,12 +13,12 @@ import IAuthStatus from '../interfaces/user';
 import { useState, useEffect } from 'react';
 import NotFound from './common/NotFound/NotFound';
 import Feedback from './common/Feedback';
-import useToast from '../hooks/useToast';
 import SWRProvider from './providers/SWRProvider/SWRProvider';
 import ConditionallyRender from './common/ConditionallyRender';
 import EnvironmentSplash from './common/EnvironmentSplash/EnvironmentSplash';
 import Loader from './common/Loader/Loader';
 import useUser from '../hooks/api/getters/useUser/useUser';
+import ToastRenderer from './common/ToastRenderer/ToastRenderer';
 
 interface IAppProps extends RouteComponentProps {
     user: IAuthStatus;
@@ -26,9 +26,9 @@ interface IAppProps extends RouteComponentProps {
     feedback: any;
 }
 const App = ({ location, user, fetchUiBootstrap }: IAppProps) => {
-    const { toast, setToastData } = useToast();
     // because we need the userId when the component load.
     const { splash, user: userFromUseUser, authDetails } = useUser();
+
     const [showSplash, setShowSplash] = useState(false);
     const [showLoader, setShowLoader] = useState(false);
     useEffect(() => {
@@ -101,7 +101,6 @@ const App = ({ location, user, fetchUiBootstrap }: IAppProps) => {
 
     return (
         <SWRProvider
-            setToastData={setToastData}
             isUnauthorized={isUnauthorized}
             setShowLoader={setShowLoader}
         >
@@ -141,7 +140,7 @@ const App = ({ location, user, fetchUiBootstrap }: IAppProps) => {
                             }
                         />
 
-                        {toast}
+                        <ToastRenderer />
                     </div>
                 }
             />

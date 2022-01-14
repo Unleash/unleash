@@ -7,10 +7,9 @@ import cloneDeep from 'lodash.clonedeep';
 
 import { IFeatureViewParams } from '../../../../../interfaces/params';
 import { ADD_NEW_STRATEGY_ID } from '../../../../../testIds';
-import { UPDATE_FEATURE } from '../../../../providers/AccessProvider/permissions';
+import { CREATE_FEATURE_STRATEGY } from '../../../../providers/AccessProvider/permissions';
 
 import useFeature from '../../../../../hooks/api/getters/useFeature/useFeature';
-import useToast from '../../../../../hooks/useToast';
 import useTabs from '../../../../../hooks/useTabs';
 import useQueryParams from '../../../../../hooks/useQueryParams';
 
@@ -34,7 +33,6 @@ const FeatureStrategiesEnvironments = () => {
 
     const startingTabId = 0;
     const { projectId, featureId } = useParams<IFeatureViewParams>();
-    const { toast, setToastData } = useToast();
     const [showRefreshPrompt, setShowRefreshPrompt] = useState(false);
 
     const styles = useStyles();
@@ -45,6 +43,7 @@ const FeatureStrategiesEnvironments = () => {
     const { a11yProps, activeTabIdx, setActiveTab } = useTabs(startingTabId);
     const {
         setActiveEnvironment,
+        activeEnvironment,
         configureNewStrategy,
         expandedSidebar,
         setExpandedSidebar,
@@ -250,7 +249,11 @@ const FeatureStrategiesEnvironments = () => {
 
         const listContainerClasses = classNames(styles.listContainer, {
             [styles.listContainerFullWidth]: expandedSidebar,
-            [styles.listContainerWithoutSidebar]: !hasAccess(UPDATE_FEATURE),
+            [styles.listContainerWithoutSidebar]: !hasAccess(
+                CREATE_FEATURE_STRATEGY,
+                projectId,
+                activeEnvironment?.name
+            ),
         });
 
         return featureCache?.environments?.map((env, index) => {
@@ -276,7 +279,8 @@ const FeatureStrategiesEnvironments = () => {
                                         Icon={Add}
                                         maxWidth="700px"
                                         projectId={projectId}
-                                        permission={UPDATE_FEATURE}
+                                        environmentId={activeEnvironment.name}
+                                        permission={CREATE_FEATURE_STRATEGY}
                                     >
                                         Add new strategy
                                     </ResponsiveButton>
@@ -376,14 +380,9 @@ const FeatureStrategiesEnvironments = () => {
                             {renderTabPanels()}
                             <ConditionallyRender
                                 condition={configureNewStrategy}
-                                show={
-                                    <FeatureStrategiesConfigure
-                                        setToastData={setToastData}
-                                    />
-                                }
+                                show={<FeatureStrategiesConfigure />}
                             />
                         </div>
-                        {toast}
                     </>
                 }
             />

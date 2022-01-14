@@ -1,4 +1,4 @@
-import { UPDATE_FEATURE } from '../../../providers/AccessProvider/permissions';
+import { CREATE_FEATURE_STRATEGY } from '../../../providers/AccessProvider/permissions';
 import ConditionallyRender from '../../ConditionallyRender';
 import PermissionButton from '../../PermissionButton/PermissionButton';
 import StringTruncator from '../../StringTruncator/StringTruncator';
@@ -49,8 +49,9 @@ const NoItemsStrategies = ({
                 show={
                     <PermissionButton
                         variant="contained"
-                        permission={UPDATE_FEATURE}
+                        permission={CREATE_FEATURE_STRATEGY}
                         projectId={projectId}
+                        environmentId={envName}
                         color="primary"
                         onClick={onClick}
                     >

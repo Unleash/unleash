@@ -6,15 +6,12 @@ import useFeature from '../../../../../hooks/api/getters/useFeature/useFeature';
 import useUser from '../../../../../hooks/api/getters/useUser/useUser';
 import useToast from '../../../../../hooks/useToast';
 import { IFeatureViewParams } from '../../../../../interfaces/params';
-import { projectFilterGenerator } from '../../../../../utils/project-filter-generator';
-import {
-    CREATE_FEATURE,
-    UPDATE_FEATURE,
-} from '../../../../providers/AccessProvider/permissions';
+import { MOVE_FEATURE_TOGGLE } from '../../../../providers/AccessProvider/permissions';
 import ConditionallyRender from '../../../../common/ConditionallyRender';
 import PermissionButton from '../../../../common/PermissionButton/PermissionButton';
 import FeatureProjectSelect from './FeatureProjectSelect/FeatureProjectSelect';
 import FeatureSettingsProjectConfirm from './FeatureSettingsProjectConfirm/FeatureSettingsProjectConfirm';
+import { IPermission } from '../../../../../interfaces/user';
 
 const FeatureSettingsProject = () => {
     const { hasAccess } = useContext(AccessContext);
@@ -23,10 +20,10 @@ const FeatureSettingsProject = () => {
     const [project, setProject] = useState(feature.project);
     const [dirty, setDirty] = useState(false);
     const [showConfirmDialog, setShowConfirmDialog] = useState(false);
-    const editable = hasAccess(UPDATE_FEATURE, projectId);
+    const editable = hasAccess(MOVE_FEATURE_TOGGLE, projectId);
     const { permissions } = useUser();
     const { changeFeatureProject } = useFeatureApi();
-    const { toast, setToastData } = useToast();
+    const { setToastData, setToastApiError } = useToast();
     const history = useHistory();
 
     useEffect(() => {
@@ -38,13 +35,24 @@ const FeatureSettingsProject = () => {
         /* eslint-disable-next-line react-hooks/exhaustive-deps */
     }, [project]);
 
+    useEffect(() => {
+        const movableTargets = createMoveTargets();
+
+        if (!movableTargets[project]) {
+            setDirty(false);
+            setProject(projectId);
+        }
+        /* eslint-disable-next-line */
+    }, [permissions?.length]);
+
     const updateProject = async () => {
         const newProject = project;
         try {
             await changeFeatureProject(projectId, featureId, newProject);
             refetch();
             setToastData({
-                show: true,
+                title: 'Updated project',
+                confetti: true,
                 type: 'success',
                 text: 'Successfully updated toggle project.',
             });
@@ -54,14 +62,31 @@ const FeatureSettingsProject = () => {
                 `/projects/${newProject}/features2/${featureId}/settings`
             );
         } catch (e) {
-            setToastData({
-                show: true,
-                type: 'error',
-                text: e.toString(),
-            });
+            setToastApiError(e.message);
         }
     };
 
+    const createMoveTargets = () => {
+        return permissions.reduce(
+            (acc: { [key: string]: boolean }, permission: IPermission) => {
+                if (permission.permission === MOVE_FEATURE_TOGGLE) {
+                    acc[permission.project] = true;
+                }
+                return acc;
+            },
+            {}
+        );
+    };
+
+    const filterProjects = () => {
+        const validTargets = createMoveTargets();
+
+        return (project: string) => {
+            if (validTargets[project]) {
+                return project;
+            }
+        };
+    };
     return (
         <>
             <FeatureProjectSelect
@@ -69,13 +94,13 @@ const FeatureSettingsProject = () => {
                 onChange={e => setProject(e.target.value)}
                 label="Project"
                 enabled={editable}
-                filter={projectFilterGenerator({ permissions }, CREATE_FEATURE)}
+                filter={filterProjects()}
             />
             <ConditionallyRender
                 condition={dirty}
                 show={
                     <PermissionButton
-                        permission={UPDATE_FEATURE}
+                        permission={MOVE_FEATURE_TOGGLE}
                         tooltip="Update feature"
                         onClick={() => setShowConfirmDialog(true)}
                         projectId={projectId}
@@ -91,7 +116,6 @@ const FeatureSettingsProject = () => {
                 onClose={() => setShowConfirmDialog(false)}
                 onClick={updateProject}
             />
-            {toast}
         </>
     );
 };

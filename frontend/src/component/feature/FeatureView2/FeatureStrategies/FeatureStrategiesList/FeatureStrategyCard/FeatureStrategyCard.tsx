@@ -14,9 +14,10 @@ import {
     getFeatureStrategyIcon,
     getHumanReadableStrategyName,
 } from '../../../../../../utils/strategy-names';
-import { UPDATE_FEATURE } from '../../../../../providers/AccessProvider/permissions';
+import { CREATE_FEATURE_STRATEGY } from '../../../../../providers/AccessProvider/permissions';
 import ConditionallyRender from '../../../../../common/ConditionallyRender';
 import { useStyles } from './FeatureStrategyCard.styles';
+import PermissionIconButton from '../../../../../common/PermissionIconButton/PermissionIconButton';
 
 interface IFeatureStrategyCardProps {
     name: string;
@@ -33,15 +34,12 @@ const FeatureStrategyCard = ({
     configureNewStrategy,
     index,
 }: IFeatureStrategyCardProps) => {
-    const { featureId } = useParams<IFeatureViewParams>();
+    const { featureId, projectId } = useParams<IFeatureViewParams>();
     const { strategies } = useStrategies();
 
-    const { setConfigureNewStrategy, setExpandedSidebar } = useContext(
-        FeatureStrategiesUIContext
-    );
+    const { setConfigureNewStrategy, setExpandedSidebar, activeEnvironment } =
+        useContext(FeatureStrategiesUIContext);
     const { hasAccess } = useContext(AccessContext);
-    const canUpdateFeature = hasAccess(UPDATE_FEATURE);
-
     const handleClick = () => {
         const strategy = getStrategyObject(strategies, name, featureId);
         if (!strategy) return;
@@ -54,7 +52,11 @@ const FeatureStrategyCard = ({
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [_, drag] = useDrag({
         type: FEATURE_STRATEGIES_DRAG_TYPE,
-        canDrag: canUpdateFeature,
+        canDrag: hasAccess(
+            CREATE_FEATURE_STRATEGY,
+            projectId,
+            activeEnvironment?.name
+        ),
         item: () => {
             return { name };
         },
@@ -80,16 +82,18 @@ const FeatureStrategyCard = ({
                             </div>
                         </div>
                         <div className={styles.rightSection}>
-                            <IconButton
+                            <PermissionIconButton
                                 className={styles.addButton}
                                 onClick={handleClick}
                                 data-test={`${ADD_NEW_STRATEGY_CARD_BUTTON_ID}-${
                                     index + 1
                                 }`}
-                                disabled={!canUpdateFeature}
+                                permission={CREATE_FEATURE_STRATEGY}
+                                projectId={projectId}
+                                environmentId={activeEnvironment?.name}
                             >
                                 <Add />
-                            </IconButton>
+                            </PermissionIconButton>
                             <Tooltip title={readableName}>
                                 <p className={styles.title}>{readableName}</p>
                             </Tooltip>

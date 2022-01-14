@@ -9,6 +9,7 @@ interface IPermissionSwitchProps extends OverridableComponent<any> {
     onChange?: (e: any) => void;
     disabled?: boolean;
     projectId?: string;
+    environmentId?: string;
     checked: boolean;
 }
 
@@ -17,14 +18,21 @@ const PermissionSwitch: React.FC<IPermissionSwitchProps> = ({
     tooltip = '',
     disabled,
     projectId,
+    environmentId,
     checked,
     onChange,
     ...rest
 }) => {
     const { hasAccess } = useContext(AccessContext);
-    const access = projectId
-        ? hasAccess(permission, projectId)
-        : hasAccess(permission);
+
+    let access;
+    if (projectId && environmentId) {
+        access = hasAccess(permission, projectId, environmentId);
+    } else if (projectId) {
+        access = hasAccess(permission, projectId);
+    } else {
+        access = hasAccess(permission);
+    }
 
     const tooltipText = access
         ? tooltip

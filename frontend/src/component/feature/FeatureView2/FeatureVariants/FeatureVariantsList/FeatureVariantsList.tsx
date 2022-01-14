@@ -2,7 +2,14 @@ import classnames from 'classnames';
 import * as jsonpatch from 'fast-json-patch';
 
 import styles from './variants.module.scss';
-import { Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@material-ui/core';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+    Typography,
+} from '@material-ui/core';
 import AddVariant from './AddFeatureVariant/AddFeatureVariant';
 
 import { useContext, useEffect, useState } from 'react';
@@ -11,7 +18,7 @@ import { useParams } from 'react-router';
 import { IFeatureViewParams } from '../../../../../interfaces/params';
 import AccessContext from '../../../../../contexts/AccessContext';
 import FeatureVariantListItem from './FeatureVariantsListItem/FeatureVariantsListItem';
-import { UPDATE_FEATURE } from '../../../../providers/AccessProvider/permissions';
+import { UPDATE_FEATURE_VARIANTS } from '../../../../providers/AccessProvider/permissions';
 import ConditionallyRender from '../../../../common/ConditionallyRender';
 import useUnleashContext from '../../../../../hooks/api/getters/useUnleashContext/useUnleashContext';
 import GeneralSelect from '../../../../common/GeneralSelect/GeneralSelect';
@@ -31,7 +38,7 @@ const FeatureOverviewVariants = () => {
     const [variants, setVariants] = useState<IFeatureVariant[]>([]);
     const [editing, setEditing] = useState(false);
     const { context } = useUnleashContext();
-    const { toast, setToastData } = useToast();
+    const { setToastData, setToastApiError } = useToast();
     const { patchFeatureVariants } = useFeatureApi();
     const [editVariant, setEditVariant] = useState({});
     const [showAddVariant, setShowAddVariant] = useState(false);
@@ -54,7 +61,7 @@ const FeatureOverviewVariants = () => {
         setStickinessOptions(options);
     }, [context]);
 
-    const editable = hasAccess(UPDATE_FEATURE, projectId);
+    const editable = hasAccess(UPDATE_FEATURE_VARIANTS, projectId);
 
     const setClonedVariants = clonedVariants =>
         setVariants(cloneDeep(clonedVariants));
@@ -104,7 +111,7 @@ const FeatureOverviewVariants = () => {
         return (
             <section style={{ paddingTop: '16px' }}>
                 <GeneralSelect
-                    label='Stickiness'
+                    label="Stickiness"
                     options={options}
                     value={value}
                     onChange={onChange}
@@ -118,9 +125,9 @@ const FeatureOverviewVariants = () => {
                     is used to ensure consistent traffic allocation across
                     variants.{' '}
                     <a
-                        href='https://docs.getunleash.io/advanced/toggle_variants'
-                        target='_blank'
-                        rel='noreferrer'
+                        href="https://docs.getunleash.io/advanced/toggle_variants"
+                        target="_blank"
+                        rel="noreferrer"
                     >
                         Read more
                     </a>
@@ -144,16 +151,13 @@ const FeatureOverviewVariants = () => {
             const { variants } = await res.json();
             mutate(FEATURE_CACHE_KEY, { ...feature, variants }, false);
             setToastData({
-                show: true,
+                title: 'Updated variant',
+                confetti: true,
                 type: 'success',
                 text: 'Successfully updated variant stickiness',
             });
         } catch (e) {
-            setToastData({
-                show: true,
-                type: 'error',
-                text: e.toString(),
-            });
+            setToastApiError(e.message);
         }
     };
 
@@ -162,20 +166,16 @@ const FeatureOverviewVariants = () => {
         try {
             await updateVariants(
                 updatedVariants,
-                'Successfully removed variant',
+                'Successfully removed variant'
             );
         } catch (e) {
-            setToastData({
-                show: true,
-                type: 'error',
-                text: e.toString(),
-            });
+            setToastApiError(e.message);
         }
     };
     const updateVariant = async (variant: IFeatureVariant) => {
         const updatedVariants = cloneDeep(variants);
         const variantIdxToUpdate = updatedVariants.findIndex(
-            (v: IFeatureVariant) => v.name === variant.name,
+            (v: IFeatureVariant) => v.name === variant.name
         );
         updatedVariants[variantIdxToUpdate] = variant;
         await updateVariants(updatedVariants, 'Successfully updated variant');
@@ -190,13 +190,13 @@ const FeatureOverviewVariants = () => {
 
         await updateVariants(
             [...variants, variant],
-            'Successfully added a variant',
+            'Successfully added a variant'
         );
     };
 
     const updateVariants = async (
         variants: IFeatureVariant[],
-        successText: string,
+        successText: string
     ) => {
         const newVariants = updateWeight(variants, 1000);
         const patch = createPatch(newVariants);
@@ -208,18 +208,13 @@ const FeatureOverviewVariants = () => {
             const { variants } = await res.json();
             mutate(FEATURE_CACHE_KEY, { ...feature, variants }, false);
             setToastData({
-                show: true,
+                title: 'Updated variant',
                 type: 'success',
                 text: successText,
             });
         } catch (e) {
-            setToastData({
-                show: true,
-                type: 'error',
-                text: e.toString(),
-            });
+            setToastApiError(e.message);
         }
-
     };
 
     const validateName = (name: string) => {
@@ -241,7 +236,7 @@ const FeatureOverviewVariants = () => {
             removeVariant(delDialog.name);
             setDelDialog({ name: '', show: false });
             setToastData({
-                show: true,
+                title: 'Deleted variant',
                 type: 'success',
                 text: `Successfully deleted variant`,
             });
@@ -250,13 +245,12 @@ const FeatureOverviewVariants = () => {
     });
 
     const createPatch = (newVariants: IFeatureVariant[]) => {
-        return jsonpatch
-            .compare(feature.variants, newVariants);
+        return jsonpatch.compare(feature.variants, newVariants);
     };
 
     return (
         <section style={{ padding: '16px' }}>
-            <Typography variant='body1'>
+            <Typography variant="body1">
                 Variants allows you to return a variant object if the feature
                 toggle is considered enabled for the current request. When using
                 variants you should use the{' '}
@@ -298,12 +292,15 @@ const FeatureOverviewVariants = () => {
                     }}
                     className={styles.addVariantButton}
                     data-test={'ADD_VARIANT_BUTTON'}
-                    permission={UPDATE_FEATURE}
+                    permission={UPDATE_FEATURE_VARIANTS}
                     projectId={projectId}
                 >
                     Add variant
                 </PermissionButton>
-                {renderStickiness()}
+                <ConditionallyRender
+                    condition={editable}
+                    show={renderStickiness()}
+                />
             </div>
 
             <AddVariant
@@ -323,7 +320,6 @@ const FeatureOverviewVariants = () => {
                 title={editing ? 'Edit variant' : 'Add variant'}
             />
 
-            {toast}
             {delDialogueMarkup}
         </section>
     );

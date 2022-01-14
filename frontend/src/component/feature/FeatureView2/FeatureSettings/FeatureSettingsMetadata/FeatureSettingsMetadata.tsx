@@ -19,7 +19,7 @@ const FeatureSettingsMetadata = () => {
     const [description, setDescription] = useState(feature.description);
     const [type, setType] = useState(feature.type);
     const editable = hasAccess(UPDATE_FEATURE, projectId);
-    const { toast, setToastData } = useToast();
+    const { setToastData, setToastApiError } = useToast();
     const [dirty, setDirty] = useState(false);
     const { patchFeatureToggle } = useFeatureApi();
 
@@ -48,18 +48,14 @@ const FeatureSettingsMetadata = () => {
             const patch = createPatch();
             await patchFeatureToggle(projectId, featureId, patch);
             setToastData({
-                show: true,
+                title: 'Updated metadata',
                 type: 'success',
                 text: 'Successfully updated feature toggle metadata',
             });
             setDirty(false);
             refetch();
         } catch (e) {
-            setToastData({
-                show: true,
-                type: 'error',
-                text: e.toString(),
-            });
+            setToastApiError(e.toString());
         }
     };
 
@@ -95,8 +91,6 @@ const FeatureSettingsMetadata = () => {
                     </PermissionButton>
                 }
             />
-
-            {toast}
         </>
     );
 };

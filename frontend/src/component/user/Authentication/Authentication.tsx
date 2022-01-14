@@ -35,7 +35,6 @@ const Authentication = ({
     const params = useQueryParams();
 
     const error = params.get('errorMsg');
-
     if (!authDetails) return null;
 
     let content;

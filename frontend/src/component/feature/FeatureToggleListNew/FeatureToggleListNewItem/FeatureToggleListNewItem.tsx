@@ -14,7 +14,7 @@ import FeatureType from '../../FeatureView2/FeatureType/FeatureType';
 import classNames from 'classnames';
 import CreatedAt from './CreatedAt';
 import useProject from '../../../../hooks/api/getters/useProject/useProject';
-import { UPDATE_FEATURE } from '../../../providers/AccessProvider/permissions';
+import { UPDATE_FEATURE_ENVIRONMENT } from '../../../providers/AccessProvider/permissions';
 import PermissionSwitch from '../../../common/PermissionSwitch/PermissionSwitch';
 import { Link } from 'react-router-dom';
 import { ENVIRONMENT_STRATEGY_ERROR } from '../../../../constants/apiErrors';
@@ -37,7 +37,7 @@ const FeatureToggleListNewItem = ({
     projectId,
     createdAt,
 }: IFeatureToggleListNewItemProps) => {
-    const { toast, setToastData } = useToast();
+    const { setToastData, setToastApiError } = useToast();
     const { toggleFeatureByEnvironment } = useToggleFeatureByEnv(
         projectId,
         name
@@ -65,8 +65,8 @@ const FeatureToggleListNewItem = ({
         toggleFeatureByEnvironment(env.name, env.enabled)
             .then(() => {
                 setToastData({
-                    show: true,
                     type: 'success',
+                    title: 'Updated toggle status',
                     text: 'Successfully updated toggle status.',
                 });
                 refetch();
@@ -75,11 +75,7 @@ const FeatureToggleListNewItem = ({
                 if (e.message === ENVIRONMENT_STRATEGY_ERROR) {
                     setShowInfoBox(true);
                 } else {
-                    setToastData({
-                        show: true,
-                        type: 'error',
-                        text: e.message,
-                    });
+                    setToastApiError(e.message);
                 }
             });
     };
@@ -149,8 +145,9 @@ const FeatureToggleListNewItem = ({
                             <span data-loading style={{ display: 'block' }}>
                                 <PermissionSwitch
                                     checked={env.enabled}
+                                    environmentId={env.name}
                                     projectId={projectId}
-                                    permission={UPDATE_FEATURE}
+                                    permission={UPDATE_FEATURE_ENVIRONMENT}
                                     ref={ref}
                                     onClick={() => {
                                         handleToggle(env);
@@ -162,7 +159,6 @@ const FeatureToggleListNewItem = ({
                     );
                 })}
             </TableRow>
-            {toast}
             <EnvironmentStrategyDialog
                 open={showInfoBox}
                 onClose={closeInfoBox}

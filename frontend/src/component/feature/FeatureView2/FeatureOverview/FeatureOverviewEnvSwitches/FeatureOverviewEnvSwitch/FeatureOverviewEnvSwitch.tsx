@@ -2,16 +2,15 @@ import { useParams } from 'react-router';
 import { ENVIRONMENT_STRATEGY_ERROR } from '../../../../../../constants/apiErrors';
 import useFeatureApi from '../../../../../../hooks/api/actions/useFeatureApi/useFeatureApi';
 import useFeature from '../../../../../../hooks/api/getters/useFeature/useFeature';
-import { TSetToastData } from '../../../../../../hooks/useToast';
+import useToast from '../../../../../../hooks/useToast';
 import { IFeatureEnvironment } from '../../../../../../interfaces/featureToggle';
 import { IFeatureViewParams } from '../../../../../../interfaces/params';
 import PermissionSwitch from '../../../../../common/PermissionSwitch/PermissionSwitch';
 import StringTruncator from '../../../../../common/StringTruncator/StringTruncator';
-import { UPDATE_FEATURE } from '../../../../../providers/AccessProvider/permissions';
+import { UPDATE_FEATURE_ENVIRONMENT } from '../../../../../providers/AccessProvider/permissions';
 
 interface IFeatureOverviewEnvSwitchProps {
     env: IFeatureEnvironment;
-    setToastData: TSetToastData;
     callback?: () => void;
     text?: string;
     showInfoBox?: () => void;
@@ -19,7 +18,6 @@ interface IFeatureOverviewEnvSwitchProps {
 
 const FeatureOverviewEnvSwitch = ({
     env,
-    setToastData,
     callback,
     text,
     showInfoBox,
@@ -28,14 +26,15 @@ const FeatureOverviewEnvSwitch = ({
     const { toggleFeatureEnvironmentOn, toggleFeatureEnvironmentOff } =
         useFeatureApi();
     const { refetch } = useFeature(projectId, featureId);
+    const { setToastData, setToastApiError } = useToast();
 
     const handleToggleEnvironmentOn = async () => {
         try {
             await toggleFeatureEnvironmentOn(projectId, featureId, env.name);
             setToastData({
                 type: 'success',
-                show: true,
-                text: 'Successfully turned environment on.',
+                title: 'Environment turned on',
+                text: 'Successfully turned environment on. Strategies are executing in this environment.',
             });
             refetch();
             if (callback) {
@@ -45,11 +44,7 @@ const FeatureOverviewEnvSwitch = ({
             if (e.message === ENVIRONMENT_STRATEGY_ERROR) {
                 showInfoBox(true);
             } else {
-                setToastData({
-                    show: true,
-                    type: 'error',
-                    text: e.message,
-                });
+                setToastApiError(e.message);
             }
         }
     };
@@ -59,19 +54,15 @@ const FeatureOverviewEnvSwitch = ({
             await toggleFeatureEnvironmentOff(projectId, featureId, env.name);
             setToastData({
                 type: 'success',
-                show: true,
-                text: 'Successfully turned environment off.',
+                title: 'Environment turned off',
+                text: 'Successfully turned environment off. Strategies are no longer executing in this environment.',
             });
             refetch();
             if (callback) {
                 callback();
             }
         } catch (e: any) {
-            setToastData({
-                show: true,
-                type: 'error',
-                text: e.toString(),
-            });
+            setToastApiError(e.message);
         }
     };
 
@@ -97,10 +88,11 @@ const FeatureOverviewEnvSwitch = ({
     return (
         <div style={{ display: 'flex', alignItems: 'center' }}>
             <PermissionSwitch
-                permission={UPDATE_FEATURE}
+                permission={UPDATE_FEATURE_ENVIRONMENT}
                 projectId={projectId}
                 checked={env.enabled}
                 onChange={toggleEnvironment}
+                environmentId={env.name}
                 tooltip={''}
             />
             {content}

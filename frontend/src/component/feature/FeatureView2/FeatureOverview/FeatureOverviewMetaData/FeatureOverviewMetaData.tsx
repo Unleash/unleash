@@ -78,7 +78,7 @@ const FeatureOverviewMetaData = () => {
                 condition={tags.length > 0}
                 show={
                     <div className={styles.paddingContainerBottom}>
-                        <FeatureOverviewTags />
+                        <FeatureOverviewTags projectId={projectId} />
                     </div>
                 }
             />

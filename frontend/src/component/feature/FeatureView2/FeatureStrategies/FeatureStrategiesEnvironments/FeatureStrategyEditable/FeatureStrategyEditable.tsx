@@ -21,8 +21,10 @@ import {
     STRATEGY_ACCORDION_ID,
     UPDATE_STRATEGY_BUTTON_ID,
 } from '../../../../../../testIds';
-import AccessContext from '../../../../../../contexts/AccessContext';
-import { UPDATE_FEATURE } from '../../../../../providers/AccessProvider/permissions';
+import {
+    DELETE_FEATURE_STRATEGY,
+    UPDATE_FEATURE_STRATEGY,
+} from '../../../../../providers/AccessProvider/permissions';
 import useFeatureApi from '../../../../../../hooks/api/actions/useFeatureApi/useFeatureApi';
 import PermissionIconButton from '../../../../../common/PermissionIconButton/PermissionIconButton';
 import PermissionButton from '../../../../../common/PermissionButton/PermissionButton';
@@ -40,7 +42,6 @@ const FeatureStrategyEditable = ({
     setDelDialog,
     index,
 }: IFeatureStrategyEditable) => {
-    const { hasAccess } = useContext(AccessContext);
     const { loading } = useFeatureApi();
 
     const { projectId, featureId } = useParams<IFeatureViewParams>();
@@ -143,27 +144,23 @@ const FeatureStrategyEditable = ({
                 setStrategyConstraints={setStrategyConstraints}
                 dirty={dirty[strategy.id]}
                 actions={
-                    <ConditionallyRender
-                        condition={hasAccess(UPDATE_FEATURE)}
-                        show={
-                            <Tooltip title="Delete strategy">
-                                <PermissionIconButton
-                                    permission={UPDATE_FEATURE}
-                                    projectId={projectId}
-                                    data-test={`${DELETE_STRATEGY_ID}-${strategy.name}`}
-                                    onClick={e => {
-                                        e.stopPropagation();
-                                        setDelDialog({
-                                            strategyId: strategy.id,
-                                            show: true,
-                                        });
-                                    }}
-                                >
-                                    <Delete />
-                                </PermissionIconButton>
-                            </Tooltip>
-                        }
-                    />
+                    <Tooltip title="Delete strategy">
+                        <PermissionIconButton
+                            permission={DELETE_FEATURE_STRATEGY}
+                            projectId={projectId}
+                            environmentId={activeEnvironment.name}
+                            data-test={`${DELETE_STRATEGY_ID}-${strategy.name}`}
+                            onClick={e => {
+                                e.stopPropagation();
+                                setDelDialog({
+                                    strategyId: strategy.id,
+                                    show: true,
+                                });
+                            }}
+                        >
+                            <Delete />
+                        </PermissionIconButton>
+                    </Tooltip>
                 }
             >
                 <ConditionallyRender
@@ -172,8 +169,9 @@ const FeatureStrategyEditable = ({
                         <>
                             <div className={styles.buttonContainer}>
                                 <PermissionButton
-                                    permission={UPDATE_FEATURE}
+                                    permission={UPDATE_FEATURE_STRATEGY}
                                     projectId={projectId}
+                                    environmentId={activeEnvironment?.name}
                                     variant="contained"
                                     color="primary"
                                     className={styles.editButton}
@@ -189,8 +187,9 @@ const FeatureStrategyEditable = ({
                                     disabled={loading}
                                     color="tertiary"
                                     variant="text"
-                                    permission={UPDATE_FEATURE}
+                                    permission={UPDATE_FEATURE_STRATEGY}
                                     projectId={projectId}
+                                    environmentId={activeEnvironment?.name}
                                 >
                                     Discard changes
                                 </PermissionButton>

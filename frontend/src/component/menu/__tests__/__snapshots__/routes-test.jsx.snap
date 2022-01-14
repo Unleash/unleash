@@ -146,6 +146,7 @@ Array [
   },
   Object {
     "component": [Function],
+    "flag": "C",
     "layout": "main",
     "menu": Object {},
     "parent": "/context",
@@ -155,6 +156,7 @@ Array [
   },
   Object {
     "component": [Function],
+    "flag": "C",
     "layout": "main",
     "menu": Object {},
     "parent": "/context",
@@ -330,6 +332,24 @@ Array [
   },
   Object {
     "component": [Function],
+    "flag": "RE",
+    "layout": "main",
+    "menu": Object {},
+    "path": "/admin/create-project-role",
+    "title": "Create",
+    "type": "protected",
+  },
+  Object {
+    "component": [Function],
+    "flag": "RE",
+    "layout": "main",
+    "menu": Object {},
+    "path": "/admin/roles/:id/edit",
+    "title": "Edit",
+    "type": "protected",
+  },
+  Object {
+    "component": [Function],
     "layout": "main",
     "menu": Object {
       "advanced": true,
@@ -365,6 +385,18 @@ Array [
     "parent": "/admin",
     "path": "/admin/auth",
     "title": "Single Sign-On",
+    "type": "protected",
+  },
+  Object {
+    "component": [Function],
+    "flag": "RE",
+    "layout": "main",
+    "menu": Object {
+      "adminSettings": true,
+    },
+    "parent": "/admin",
+    "path": "/admin/roles",
+    "title": "Project Roles",
     "type": "protected",
   },
   Object {

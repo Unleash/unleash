@@ -16,14 +16,11 @@ import { PRODUCTION } from '../../../../../../constants/environmentTypes';
 import { ADD_NEW_STRATEGY_SAVE_ID } from '../../../../../../testIds';
 import useFeature from '../../../../../../hooks/api/getters/useFeature/useFeature';
 import { scrollToTop } from '../../../../../common/util';
+import useToast from '../../../../../../hooks/useToast';
 
-interface IFeatureStrategiesConfigure {
-    setToastData: React.Dispatch<React.SetStateAction<IToastType>>;
-}
-const FeatureStrategiesConfigure = ({
-    setToastData,
-}: IFeatureStrategiesConfigure) => {
+const FeatureStrategiesConfigure = () => {
     const history = useHistory();
+    const { setToastData, setToastApiError } = useToast();
 
     const { projectId, featureId } = useParams<IFeatureViewParams>();
     const { refetch } = useFeature(projectId, featureId);
@@ -89,19 +86,16 @@ const FeatureStrategiesConfigure = ({
             setConfigureNewStrategy(null);
             setExpandedSidebar(false);
             setToastData({
-                show: true,
                 type: 'success',
-                text: 'Successfully added strategy.',
+                text: 'Successfully added strategy',
+                title: 'Added strategy',
+                confetti: true,
             });
             history.replace(history.location.pathname);
             refetch();
             scrollToTop();
         } catch (e) {
-            setToastData({
-                show: true,
-                type: 'error',
-                text: e.toString(),
-            });
+            setToastApiError(e.message);
         }
     };
 

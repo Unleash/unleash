@@ -17,6 +17,7 @@ import { FormEvent } from 'react-router/node_modules/@types/react';
 import useLoading from '../../hooks/useLoading';
 import PermissionButton from '../common/PermissionButton/PermissionButton';
 import { UPDATE_PROJECT } from '../../store/project/actions';
+import useUser from '../../hooks/api/getters/useUser/useUser';
 
 interface ProjectFormComponentProps {
     editMode: boolean;
@@ -28,7 +29,7 @@ interface ProjectFormComponentProps {
 
 const ProjectFormComponent = (props: ProjectFormComponentProps) => {
     const { editMode } = props;
-
+    const { refetch } = useUser();
     const { hasAccess } = useContext(AccessContext);
     const [project, setProject] = useState(props.project || {});
     const [errors, setErrors] = useState<any>({});
@@ -97,6 +98,7 @@ const ProjectFormComponent = (props: ProjectFormComponentProps) => {
         if (valid) {
             const query = editMode ? 'edited=true' : 'created=true';
             await props.submit(project);
+            refetch();
             props.history.push(`/projects/${project.id}?${query}`);
         }
     };

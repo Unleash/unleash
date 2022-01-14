@@ -1,10 +1,9 @@
 import { USER_CACHE_KEY } from '../../../hooks/api/getters/useUser/useUser';
 import { mutate, SWRConfig, useSWRConfig } from 'swr';
 import { useHistory } from 'react-router';
-import { IToast } from '../../../hooks/useToast';
+import useToast from '../../../hooks/useToast';
 
 interface ISWRProviderProps {
-    setToastData: (toastData: IToast) => void;
     setShowLoader: React.Dispatch<React.SetStateAction<boolean>>;
     isUnauthorized: () => boolean;
 }
@@ -13,16 +12,15 @@ const INVALID_TOKEN_ERROR = 'InvalidTokenError';
 
 const SWRProvider: React.FC<ISWRProviderProps> = ({
     children,
-    setToastData,
     isUnauthorized,
     setShowLoader,
 }) => {
     const { cache } = useSWRConfig();
     const history = useHistory();
+    const { setToastApiError } = useToast();
 
     const handleFetchError = error => {
         setShowLoader(false);
-        console.log(error.info.name);
         if (error.status === 401) {
             cache.clear();
             const path = location.pathname;
@@ -40,11 +38,7 @@ const SWRProvider: React.FC<ISWRProviderProps> = ({
         }
 
         if (!isUnauthorized()) {
-            setToastData({
-                show: true,
-                type: 'error',
-                text: error.message,
-            });
+            setToastApiError(error.message);
         }
     };
 

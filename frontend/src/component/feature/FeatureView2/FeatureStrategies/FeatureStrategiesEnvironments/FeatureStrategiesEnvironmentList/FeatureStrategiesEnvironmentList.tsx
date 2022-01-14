@@ -34,7 +34,6 @@ const FeatureStrategiesEnvironmentList = ({
 
     const {
         activeEnvironmentsRef,
-        toast,
         setToastData,
         deleteStrategy,
         updateStrategy,
@@ -180,7 +179,6 @@ const FeatureStrategiesEnvironmentList = ({
                     />
 
                     {dropboxMarkup}
-                    {toast}
                     {delDialogueMarkup}
                     {productionGuardMarkup}
                 </div>

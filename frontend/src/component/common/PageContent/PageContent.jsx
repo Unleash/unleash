@@ -11,7 +11,7 @@ const PageContent = ({
     headerContent,
     disablePadding = false,
     disableBorder = false,
-    bodyClass = undefined,
+    bodyClass = '',
     ...rest
 }) => {
     const styles = useStyles();

@@ -31,7 +31,7 @@ const CopyFeature = props => {
     const [newToggleName, setNewToggleName] = useState();
     const { cloneFeatureToggle } = useFeatureApi();
     const inputRef = useRef();
-    const { name: copyToggleName, id: projectId  } = useParams();
+    const { name: copyToggleName, id: projectId } = useParams();
     const { feature } = useFeature(projectId, copyToggleName);
     const { uiConfig } = useUiConfig();
 
@@ -66,16 +66,15 @@ const CopyFeature = props => {
         }
 
         try {
-            await cloneFeatureToggle(
-                projectId,
-                copyToggleName,
-                { name: newToggleName, replaceGroupId }
-            );
+            await cloneFeatureToggle(projectId, copyToggleName, {
+                name: newToggleName,
+                replaceGroupId,
+            });
             props.history.push(
                 getTogglePath(projectId, newToggleName, uiConfig.flags.E)
-            )
+            );
         } catch (e) {
-            setApiError(e);
+            setApiError(e.toString());
         }
     };
 
@@ -98,7 +97,11 @@ const CopyFeature = props => {
                     You are about to create a new feature toggle by cloning the
                     configuration of feature toggle&nbsp;
                     <Link
-                        to={getTogglePath(projectId, copyToggleName, uiConfig.flags.E)}
+                        to={getTogglePath(
+                            projectId,
+                            copyToggleName,
+                            uiConfig.flags.E
+                        )}
                     >
                         {copyToggleName}
                     </Link>

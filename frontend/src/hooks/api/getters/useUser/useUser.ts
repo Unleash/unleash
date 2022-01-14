@@ -12,6 +12,7 @@ const useUser = (
         revalidateIfStale: false,
         revalidateOnFocus: false,
         revalidateOnReconnect: false,
+        refreshInterval: 15000,
     }
 ) => {
     const fetcher = () => {

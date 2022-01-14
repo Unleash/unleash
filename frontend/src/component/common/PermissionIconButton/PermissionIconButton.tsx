@@ -1,14 +1,15 @@
 import { IconButton, Tooltip } from '@material-ui/core';
-import { OverridableComponent } from '@material-ui/core/OverridableComponent';
 import { useContext } from 'react';
 import AccessContext from '../../../contexts/AccessContext';
 
-interface IPermissionIconButtonProps extends OverridableComponent<any> {
+interface IPermissionIconButtonProps
+    extends React.HTMLProps<HTMLButtonElement> {
     permission: string;
     Icon?: React.ElementType;
     tooltip: string;
     onClick?: (e: any) => void;
     projectId?: string;
+    environmentId?: string;
 }
 
 const PermissionIconButton: React.FC<IPermissionIconButtonProps> = ({
@@ -18,13 +19,19 @@ const PermissionIconButton: React.FC<IPermissionIconButtonProps> = ({
     onClick,
     projectId,
     children,
+    environmentId,
     ...rest
 }) => {
     const { hasAccess } = useContext(AccessContext);
+    let access;
 
-    const access = projectId
-        ? hasAccess(permission, projectId)
-        : hasAccess(permission);
+    if (projectId && environmentId) {
+        access = hasAccess(permission, projectId, environmentId);
+    } else if (projectId) {
+        access = hasAccess(permission, projectId);
+    } else {
+        access = hasAccess(permission);
+    }
 
     const tooltipText = access
         ? tooltip || ''

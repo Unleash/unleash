@@ -40,17 +40,25 @@ class FeatureController extends Controller {
         this.tagService = featureTagService;
         this.service = featureToggleServiceV2;
 
+        if (!config.disableLegacyFeaturesApi) {
+            this.post('/', this.createToggle, CREATE_FEATURE);
+            this.get('/:featureName', this.getToggle);
+            this.put('/:featureName', this.updateToggle, UPDATE_FEATURE);
+            this.delete('/:featureName', this.archiveToggle, DELETE_FEATURE);
+            this.post('/:featureName/toggle', this.toggle, UPDATE_FEATURE);
+            this.post('/:featureName/toggle/on', this.toggleOn, UPDATE_FEATURE);
+            this.post(
+                '/:featureName/toggle/off',
+                this.toggleOff,
+                UPDATE_FEATURE,
+            );
+
+            this.post('/:featureName/stale/on', this.staleOn, UPDATE_FEATURE);
+            this.post('/:featureName/stale/off', this.staleOff, UPDATE_FEATURE);
+        }
+
         this.get('/', this.getAllToggles);
-        this.post('/', this.createToggle, CREATE_FEATURE);
-        this.get('/:featureName', this.getToggle);
-        this.put('/:featureName', this.updateToggle, UPDATE_FEATURE);
-        this.delete('/:featureName', this.archiveToggle, DELETE_FEATURE);
         this.post('/validate', this.validate, NONE);
-        this.post('/:featureName/toggle', this.toggle, UPDATE_FEATURE);
-        this.post('/:featureName/toggle/on', this.toggleOn, UPDATE_FEATURE);
-        this.post('/:featureName/toggle/off', this.toggleOff, UPDATE_FEATURE);
-        this.post('/:featureName/stale/on', this.staleOn, UPDATE_FEATURE);
-        this.post('/:featureName/stale/off', this.staleOff, UPDATE_FEATURE);
         this.get('/:featureName/tags', this.listTags);
         this.post('/:featureName/tags', this.addTag, UPDATE_FEATURE);
         this.delete(

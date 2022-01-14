@@ -6,6 +6,7 @@ import { nameType } from '../routes/util';
 import { projectSchema } from './project-schema';
 import NotFoundError from '../error/notfound-error';
 import {
+    ProjectUserAddedEvent,
     PROJECT_CREATED,
     PROJECT_DELETED,
     PROJECT_UPDATED,
@@ -288,6 +289,7 @@ export default class ProjectService {
         projectId: string,
         roleId: number,
         userId: number,
+        createdBy: string,
     ): Promise<void> {
         const [roles, users] = await this.accessService.getProjectRoleUsers(
             projectId,
@@ -306,6 +308,14 @@ export default class ProjectService {
         }
 
         await this.accessService.addUserToRole(userId, role.id, projectId);
+
+        this.eventStore.store(
+            new ProjectUserAddedEvent({
+                project: projectId,
+                createdBy,
+                data: { roleId, userId },
+            }),
+        );
     }
 
     // TODO: should be an event too

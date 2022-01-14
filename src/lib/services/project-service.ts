@@ -7,6 +7,7 @@ import { projectSchema } from './project-schema';
 import NotFoundError from '../error/notfound-error';
 import {
     ProjectUserAddedEvent,
+    ProjectUserRemovedEvent,
     PROJECT_CREATED,
     PROJECT_DELETED,
     PROJECT_UPDATED,
@@ -284,12 +285,12 @@ export default class ProjectService {
         };
     }
 
-    // TODO: should be an event too
+    // TODO: Remove the optional nature of createdBy - this in place to make sure enterprise is compatible
     async addUser(
         projectId: string,
         roleId: number,
         userId: number,
-        createdBy: string,
+        createdBy?: string,
     ): Promise<void> {
         const [roles, users] = await this.accessService.getProjectRoleUsers(
             projectId,
@@ -309,20 +310,21 @@ export default class ProjectService {
 
         await this.accessService.addUserToRole(userId, role.id, projectId);
 
-        this.eventStore.store(
+        await this.eventStore.store(
             new ProjectUserAddedEvent({
                 project: projectId,
                 createdBy,
-                data: { roleId, userId },
+                data: { roleId, userId, roleName: role.name },
             }),
         );
     }
 
-    // TODO: should be an event too
+    // TODO: Remove the optional nature of createdBy - this in place to make sure enterprise is compatible
     async removeUser(
         projectId: string,
         roleId: number,
         userId: number,
+        createdBy?: string,
     ): Promise<void> {
         const roles = await this.accessService.getRolesForProject(projectId);
         const role = roles.find((r) => r.id === roleId);
@@ -343,6 +345,14 @@ export default class ProjectService {
         }
 
         await this.accessService.removeUserFromRole(userId, role.id, projectId);
+
+        await this.eventStore.store(
+            new ProjectUserRemovedEvent({
+                project: projectId,
+                createdBy,
+                preData: { roleId, userId, roleName: role.name },
+            }),
+        );
     }
 
     async getMembers(projectId: string): Promise<number> {

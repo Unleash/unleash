@@ -71,23 +71,31 @@ You can assign the following project permissions. The permissions will be valid 
 
 - **delete feature toggles within the project**
 
-  Lets the user delete feature toggles within the project.
+  Lets the user archive feature toggles within the project.
+
+- **change feature toggle project**
+
+  Lets the user move toggles to other projects they have access to.
+
+- **create/edit variants**
+
+  Lets the user create and edit variants within the project.
 
 ### Environment permissions
 
 You can assign the following permissions on a per-environment level within the project:
 
-- **create feature strategies**
+- **create activation strategies**
 
-  Lets the user assign feature toggle strategies within the environment.
+  Lets the user assign feature toggle activation strategies within the environment.
 
-- **update feature strategies**
+- **update activation strategies**
 
-  Lets the user update feature toggle strategies within the environment.
+  Lets the user update feature toggle activation strategies within the environment.
 
-- **delete feature strategies**
+- **delete activation strategies**
 
-  Lets the user delete feature toggle strategies within the environment.
+  Lets the user delete feature toggle activation strategies within the environment.
 
 - **enable/disable toggles**
 

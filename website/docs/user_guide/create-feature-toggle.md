@@ -32,7 +32,7 @@ The toggle is now created and ready to be used. The toggle does not have any met
 
 ## Step 4: Enable the feature toggle only for your boss! {#step-4-enable-the-feature-toggle-only-for-your-boss}
 
-The next step is to change the activation strategy to only target your boss. You can use the “userWithId”-strategy for that. Using the configuration shown below will only enable the feature toggle for “boss@company.com” and “me@company.com”. Thus, you can safely test your feature in production, without exposing it to your users. In [control roll-out](./control_rollout) with strategies we will go in to greater details on how to use activation strategies to gradually expose new features to your users.
+The next step is to change the activation strategy to only target your boss. You can use the “userIDs”-strategy for that. Using the configuration shown below will only enable the feature toggle for “boss@company.com” and “me@company.com”. Thus, you can safely test your feature in production, without exposing it to your users.
 
 ![Create a feature toggle](/img/create_feature_toggle_userIds.png)
 

@@ -427,6 +427,8 @@ export class AccessService {
     }
 
     async deleteRole(id: number): Promise<void> {
+        await this.validateRoleIsNotBuiltIn(id);
+
         const roleUsers = await this.getUsersForRole(id);
 
         if (roleUsers.length > 0) {
@@ -455,7 +457,7 @@ export class AccessService {
         const role = await this.store.get(roleId);
         if (role.type !== CUSTOM_ROLE_TYPE) {
             throw new InvalidOperationError(
-                'You can not change built in roles.',
+                'You cannot change built in roles.',
             );
         }
     }

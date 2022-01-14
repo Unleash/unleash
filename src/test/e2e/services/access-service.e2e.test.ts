@@ -757,21 +757,68 @@ test('Should be allowed move feature toggle to project when the user has access'
     );
 });
 
-test('Should not be allowed to edit a built in role', async () => {
+test('Should not be allowed to edit a root role', async () => {
     expect.assertions(1);
 
     const editRole = await accessService.getRoleByName(RoleName.EDITOR);
     const roleUpdate = {
         id: editRole.id,
         name: 'NoLongerTheEditor',
-        description: 'Ha!',
+        description: '',
     };
 
     try {
         await accessService.updateRole(roleUpdate);
     } catch (e) {
         expect(e.toString()).toBe(
-            'InvalidOperationError: You can not change built in roles.',
+            'InvalidOperationError: You cannot change built in roles.',
+        );
+    }
+});
+
+test('Should not be allowed to delete a root role', async () => {
+    expect.assertions(1);
+
+    const editRole = await accessService.getRoleByName(RoleName.EDITOR);
+
+    try {
+        await accessService.deleteRole(editRole.id);
+    } catch (e) {
+        expect(e.toString()).toBe(
+            'InvalidOperationError: You cannot change built in roles.',
+        );
+    }
+});
+
+test('Should not be allowed to edit a project role', async () => {
+    expect.assertions(1);
+
+    const ownerRole = await accessService.getRoleByName(RoleName.OWNER);
+    const roleUpdate = {
+        id: ownerRole.id,
+        name: 'NoLongerTheEditor',
+        description: '',
+    };
+
+    try {
+        await accessService.updateRole(roleUpdate);
+    } catch (e) {
+        expect(e.toString()).toBe(
+            'InvalidOperationError: You cannot change built in roles.',
+        );
+    }
+});
+
+test('Should not be allowed to delete a project role', async () => {
+    expect.assertions(1);
+
+    const ownerRole = await accessService.getRoleByName(RoleName.OWNER);
+
+    try {
+        await accessService.deleteRole(ownerRole.id);
+    } catch (e) {
+        expect(e.toString()).toBe(
+            'InvalidOperationError: You cannot change built in roles.',
         );
     }
 });

@@ -1,9 +1,11 @@
 import { connect } from 'react-redux';
-import Component from './access-component';
+import Component from './ProjectAccess/ProjectAccess';
 
 const mapStateToProps = (state, props) => {
     const projectBase = { id: '', name: '', description: '' };
-    const realProject = state.projects.toJS().find(n => n.id === props.projectId);
+    const realProject = state.projects
+        .toJS()
+        .find(n => n.id === props.projectId);
     const project = Object.assign(projectBase, realProject);
 
     return {

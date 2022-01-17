@@ -14,6 +14,7 @@ const FeatureProjectSelect = ({
     value,
     onChange,
     filter,
+    ...rest
 }: IFeatureProjectSelect) => {
     const { projects } = useProjects();
 
@@ -50,6 +51,7 @@ const FeatureProjectSelect = ({
             options={options}
             value={value}
             onChange={onChange}
+            {...rest}
         />
     );
 };

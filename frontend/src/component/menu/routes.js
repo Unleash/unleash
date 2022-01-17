@@ -43,6 +43,7 @@ import FeatureCreate from '../feature/FeatureCreate/FeatureCreate';
 import ProjectRoles from '../admin/project-roles/ProjectRoles/ProjectRoles';
 import CreateProjectRole from '../admin/project-roles/CreateProjectRole/CreateProjectRole';
 import EditProjectRole from '../admin/project-roles/EditProjectRole/EditProjectRole';
+import CreateApiToken from '../admin/api-token/CreateApiToken/CreateApiToken';
 
 export const routes = [
     // Project
@@ -378,6 +379,15 @@ export const routes = [
     },
 
     // Admin
+    {
+        path: '/admin/api/create-token',
+        parent: '/admin',
+        title: 'API access',
+        component: CreateApiToken,
+        type: 'protected',
+        layout: 'main',
+        menu: {},
+    },
     {
         path: '/admin/create-project-role',
         title: 'Create',

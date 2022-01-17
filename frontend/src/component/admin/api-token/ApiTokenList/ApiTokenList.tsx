@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import {
     Button,
     IconButton,
@@ -14,9 +14,7 @@ import useToast from '../../../../hooks/useToast';
 import useLoading from '../../../../hooks/useLoading';
 import useApiTokens from '../../../../hooks/api/getters/useApiTokens/useApiTokens';
 import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
-import useApiTokensApi, {
-    IApiTokenCreate,
-} from '../../../../hooks/api/actions/useApiTokensApi/useApiTokensApi';
+import useApiTokensApi from '../../../../hooks/api/actions/useApiTokensApi/useApiTokensApi';
 import ApiError from '../../../common/ApiError/ApiError';
 import PageContent from '../../../common/PageContent';
 import HeaderTitle from '../../../common/HeaderTitle';
@@ -29,7 +27,6 @@ import { useStyles } from './ApiTokenList.styles';
 import { formatDateWithLocale } from '../../../common/util';
 import Secret from './secret';
 import { Delete, FileCopy } from '@material-ui/icons';
-import ApiTokenCreate from '../ApiTokenCreate/ApiTokenCreate';
 import Dialogue from '../../../common/Dialogue';
 import { CREATE_API_TOKEN_BUTTON } from '../../../../testIds';
 import { Alert } from '@material-ui/lab';
@@ -54,20 +51,11 @@ const ApiTokenList = ({ location }: IApiTokenList) => {
     const { uiConfig } = useUiConfig();
     const [showDelete, setShowDelete] = useState(false);
     const [delToken, setDeleteToken] = useState<IApiToken>();
-    const { setToastData, setToastApiError } = useToast();
+    const { setToastData } = useToast();
     const { tokens, loading, refetch, error } = useApiTokens();
-    const { deleteToken, createToken } = useApiTokensApi();
+    const { deleteToken } = useApiTokensApi();
     const ref = useLoading(loading);
-
-    const [showDialog, setDialog] = useState(false);
-
-    const openDialog = () => {
-        setDialog(true);
-    };
-
-    const closeDialog = () => {
-        setDialog(false);
-    };
+    const history = useHistory();
 
     const renderError = () => {
         return (
@@ -79,26 +67,11 @@ const ApiTokenList = ({ location }: IApiTokenList) => {
         );
     };
 
-    const onCreateToken = async (token: IApiTokenCreate) => {
-        try {
-            await createToken(token);
-            refetch();
-            setToastData({
-                type: 'success',
-                title: 'Created token',
-                text: 'Successfully created API token',
-                confetti: true,
-            });
-        } catch (e) {
-            setToastApiError(e.message);
-        }
-    };
     const copyToken = (value: string) => {
         if (copy(value)) {
             setToastData({
                 type: 'success',
                 title: 'Token copied',
-                confetti: true,
                 text: `Token is copied to clipboard`,
             });
         }
@@ -271,7 +244,11 @@ const ApiTokenList = ({ location }: IApiTokenList) => {
                                     <Button
                                         variant="contained"
                                         color="primary"
-                                        onClick={openDialog}
+                                        onClick={() =>
+                                            history.push(
+                                                '/admin/api/create-token'
+                                            )
+                                        }
                                         data-test={CREATE_API_TOKEN_BUTTON}
                                     >
                                         Create API token
@@ -312,11 +289,6 @@ const ApiTokenList = ({ location }: IApiTokenList) => {
                     />
                 </div>
 
-                <ApiTokenCreate
-                    showDialog={showDialog}
-                    createToken={onCreateToken}
-                    closeDialog={closeDialog}
-                />
                 <Dialogue
                     open={showDelete}
                     onClick={onDeleteToken}

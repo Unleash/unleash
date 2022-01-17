@@ -332,6 +332,15 @@ Array [
   },
   Object {
     "component": [Function],
+    "layout": "main",
+    "menu": Object {},
+    "parent": "/admin",
+    "path": "/admin/api/create-token",
+    "title": "API access",
+    "type": "protected",
+  },
+  Object {
+    "component": [Function],
     "flag": "RE",
     "layout": "main",
     "menu": Object {},

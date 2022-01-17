@@ -8,7 +8,7 @@ export interface IApiTokenCreate {
 }
 
 const useApiTokensApi = () => {
-    const { makeRequest, createRequest, errors } = useAPI({
+    const { makeRequest, createRequest, errors, loading } = useAPI({
         propagateErrors: true,
     });
 
@@ -38,7 +38,7 @@ const useApiTokensApi = () => {
         }
     };
 
-    return { deleteToken, createToken, errors };
+    return { deleteToken, createToken, errors, loading };
 };
 
 export default useApiTokensApi;

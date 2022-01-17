@@ -41,7 +41,7 @@ Regardless of how you choose to run the it, the proxy will need access to these 
 
   When using an environment variable to set the proxy secrets, the value should be a comma-separated list of strings, such as `secret-one,secret-two`.
 
-There are many more configuration options available. You find all [available options on github](https://github.com/Unleash/unleash-proxy#available-options).
+There are many more configuration options available. You'll find all [available options on github](https://github.com/Unleash/unleash-proxy#available-options).
 
 
 ### Running the proxy via Docker
@@ -99,7 +99,7 @@ To run the Proxy via Node.js, you'll have to create your own Node.js project and
 
 ### Verify that the proxy is working
 
-In order to verify the proxy you can use curl and see that you get a few evaluated feature toggles back. Assuming that the proxy is running at port 3000 and that your proxy client key is `some-secret`, you could run this command :
+In order to verify the proxy you can use curl and see that you get a few evaluated feature toggles back. Assuming that the proxy is running on port 3000 and that your proxy client key is `some-secret`, you could run this command :
 
 ```bash
 curl http://localhost:3000/proxy -H "Authorization: some-secret"

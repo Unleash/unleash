@@ -17,6 +17,7 @@ import { getStrategyObject } from '../../../../../../utils/get-strategy-object';
 
 import { useStyles } from './FeatureStrategiesEnvironmentList.styles';
 import FeatureOverviewEnvSwitch from '../../../FeatureOverview/FeatureOverviewEnvSwitches/FeatureOverviewEnvSwitch/FeatureOverviewEnvSwitch';
+import { FEATURE_STRATEGY_PRODUCTION_GUARD_SETTING } from '../FeatureStrategiesProductionGuard/FeatureStrategiesProductionGuard';
 
 interface IFeatureStrategiesEnvironmentListProps {
     strategies: IFeatureStrategy[];
@@ -31,6 +32,10 @@ const FeatureStrategiesEnvironmentList = ({
 }: IFeatureStrategiesEnvironmentListProps) => {
     const styles = useStyles();
     const { strategies: selectableStrategies } = useStrategies();
+    const dontShow = JSON.parse(
+        localStorage.getItem(FEATURE_STRATEGY_PRODUCTION_GUARD_SETTING) ||
+            'false'
+    );
 
     const {
         activeEnvironmentsRef,
@@ -94,7 +99,7 @@ const FeatureStrategiesEnvironmentList = ({
     });
 
     const resolveUpdateStrategy = (strategy: IFeatureStrategy, callback) => {
-        if (activeEnvironmentsRef?.current?.type === PRODUCTION) {
+        if (activeEnvironmentsRef?.current?.type === PRODUCTION && !dontShow) {
             setProductionGuard({ show: true, strategy, callback });
             return;
         }

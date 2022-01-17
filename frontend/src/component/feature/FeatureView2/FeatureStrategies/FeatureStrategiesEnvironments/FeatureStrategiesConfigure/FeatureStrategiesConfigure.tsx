@@ -9,7 +9,9 @@ import FeatureStrategyAccordion from '../../FeatureStrategyAccordion/FeatureStra
 import useFeatureStrategyApi from '../../../../../../hooks/api/actions/useFeatureStrategyApi/useFeatureStrategyApi';
 
 import { useStyles } from './FeatureStrategiesConfigure.styles';
-import FeatureStrategiesProductionGuard from '../FeatureStrategiesProductionGuard/FeatureStrategiesProductionGuard';
+import FeatureStrategiesProductionGuard, {
+    FEATURE_STRATEGY_PRODUCTION_GUARD_SETTING,
+} from '../FeatureStrategiesProductionGuard/FeatureStrategiesProductionGuard';
 import { IFeatureViewParams } from '../../../../../../interfaces/params';
 import cloneDeep from 'lodash.clonedeep';
 import { PRODUCTION } from '../../../../../../constants/environmentTypes';
@@ -26,7 +28,10 @@ const FeatureStrategiesConfigure = () => {
     const { refetch } = useFeature(projectId, featureId);
 
     const [productionGuard, setProductionGuard] = useState(false);
-
+    const dontShow = JSON.parse(
+        localStorage.getItem(FEATURE_STRATEGY_PRODUCTION_GUARD_SETTING) ||
+            'false'
+    );
     const styles = useStyles();
     const {
         activeEnvironment,
@@ -51,7 +56,7 @@ const FeatureStrategiesConfigure = () => {
     };
 
     const resolveSubmit = () => {
-        if (activeEnvironment.type === PRODUCTION) {
+        if (activeEnvironment.type === PRODUCTION && !dontShow) {
             setProductionGuard(true);
             return;
         }

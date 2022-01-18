@@ -21,6 +21,7 @@ import { defaultCustomAuthDenyAll } from './default-custom-auth-deny-all';
 import { formatBaseUri } from './util/format-base-uri';
 import { minutesToMilliseconds, secondsToMilliseconds } from 'date-fns';
 import EventEmitter from 'events';
+import { ApiTokenType, validateApiToken } from './types/models/api-token';
 
 const safeToUpper = (s: string) => (s ? s.toUpperCase() : s);
 
@@ -106,6 +107,7 @@ const defaultServerOption: IServerOption = {
     host: process.env.HTTP_HOST,
     port: safeNumber(process.env.HTTP_PORT || process.env.PORT, 4242),
     baseUriPath: formatBaseUri(process.env.BASE_URI_PATH),
+    cdnPrefix: process.env.CDN_PREFIX,
     unleashUrl: process.env.UNLEASH_URL || 'http://localhost:4242',
     serverMetrics: true,
     keepAliveTimeout: minutesToMilliseconds(1),
@@ -132,6 +134,7 @@ const defaultAuthentication: IAuthOption = {
     type: authTypeFromString(process.env.AUTH_TYPE),
     customAuthHandler: defaultCustomAuthDenyAll,
     createAdminUser: true,
+    initApiTokens: [],
 };
 
 const defaultImport: IImportOption = {
@@ -177,6 +180,29 @@ const formatServerOptions = (
         ...serverOptions,
         baseUriPath: formatBaseUri(serverOptions.baseUriPath),
     };
+};
+
+const loadInitApiTokens = () => {
+    if (process.env.INIT_ADMIN_API_TOKENS) {
+        const initApiTokens = process.env.INIT_ADMIN_API_TOKENS.split(/,\s?/);
+        const tokens = initApiTokens.map((secret) => {
+            const [project = '*', rest] = secret.split(':');
+            const [environment = '*'] = rest.split('.');
+            const token = {
+                createdAt: undefined,
+                project,
+                environment,
+                secret,
+                type: ApiTokenType.ADMIN,
+                username: 'admin',
+            };
+            validateApiToken(token);
+            return token;
+        });
+        return tokens;
+    } else {
+        return [];
+    }
 };
 
 export function createConfig(options: IUnleashOptions): IUnleashConfig {
@@ -227,11 +253,14 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         options.versionCheck,
     ]);
 
+    const initApiTokens = loadInitApiTokens();
+
     const authentication: IAuthOption = mergeAll([
         defaultAuthentication,
         options.authentication
             ? removeUndefinedKeys(options.authentication)
             : options.authentication,
+        { initApiTokens: initApiTokens },
     ]);
 
     const importSetting: IImportOption = mergeAll([
@@ -258,6 +287,10 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
     const enableOAS =
         options.enableOAS || safeBoolean(process.env.ENABLE_OAS, false);
 
+    const disableLegacyFeaturesApi =
+        options.disableLegacyFeaturesApi ||
+        safeBoolean(process.env.DISABLE_LEGACY_FEATURES_API, false);
+
     return {
         db,
         session,
@@ -272,6 +305,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         email,
         secureHeaders,
         enableOAS,
+        disableLegacyFeaturesApi,
         preHook: options.preHook,
         preRouterHook: options.preRouterHook,
         eventHook: options.eventHook,

@@ -5,11 +5,15 @@ title: Import & Export
 
 _since v3.3.0_
 
-Unleash supports import and export of feature-toggles and strategies at startup and during runtime. The import mechanism will guarantee that all imported features will be non-archived, as well as updates to strategies and features are included in the event history.
+Unleash supports import and export of feature toggles and strategies at startup and during runtime. The import mechanism guarantees that:
+- all imported features will be non-archived
+- existing updates to strategies and features are included in the event history
 
 All import mechanisms support a `drop` parameter which will clean the database before import (all strategies and features will be removed).
 
-> You should be careful when using `drop` parameter in production environments, as it will clean current state.
+:::caution Dropping in production
+Be careful when using the `drop` parameter in production environments: cleaning the database could lead to unintended loss of data.
+:::
 
 ## Runtime import & export {#runtime-import--export}
 
@@ -36,7 +40,7 @@ It is also possible to not override existing feature toggles (and strategies) by
 
 ### API Export {#api-export}
 
-The api endpoint `/api/admin/state/export` will export feature-toggles and strategies as json by default.\
+The api endpoint `/api/admin/state/export` will export feature-toggles and strategies as json by default.
 You can customize the export with query parameters:
 
 | Parameter | Default | Description |
@@ -105,16 +109,44 @@ curl -X POST -H "Content-Type: application/json" \
 
 ## Startup import {#startup-import}
 
-### Import files via config parameter {#import-files-via-config-parameter}
+You can import toggles and strategies on startup by using an import file in JSON or YAML format. As with other forms of imports, you can also choose to remove the current toggle and strategy configuration in the database before importing.
 
-You can import a json or yaml file via the configuration option `importFile`.
+Unleash lets you do this both via configuration parameters and environment variables. The relevant parameters/variables are:
 
-Example usage: `unleash-server --databaseUrl ... --importFile export.yml`.
+| config parameter   | environment variable        | default | value                                                   |
+|--------------------|-----------------------------|---------|---------------------------------------------------------|
+| `importFile`       | `IMPORT_FILE`               | none    | path to the configuration file                          |
+| `dropBeforeImport` | `IMPORT_DROP_BEFORE_IMPORT` | `false` | whether to clean the database before importing the file |
 
-If you want the database to be cleaned before import (all strategies and features will be removed), specify the `dropBeforeImport` option.
+### Importing files
 
-> You should never use this in production environments.
+To import strategies and toggles from a file (called `configuration.yml` in the examples below), either
+- use the `importFile` parameter to point to the file (you can also passed this into the `unleash.start()` entry point)
+   ``` shell
+   unleash-server --databaseUrl [...] \
+   	       --importFile configuration.yml
+   ```
 
-Example usage: `unleash-server --databaseUrl ... --importFile export.yml --dropBeforeImport`.
+- set the `IMPORT_FILE` environment variable to the path of the file before starting Unleash
 
-These options can also be passed into the `unleash.start()` entrypoint.
+   ``` shell
+   IMPORT_FILE=configuration.yml
+   ```
+
+### Drop before import
+:::caution
+You should never use this in production environments.
+:::
+
+To remove pre-existing feature toggles and strategies in the database before importing the new ones, either:
+- add the `dropBeforeImport` flag to the `unleash-server` command (or to `unleash.start()`)
+   ``` shell
+   unleash-server --databaseUrl [...] \
+   	       --importFile configuration.yml \
+   	       --dropBeforeImport
+   ```
+- set the `IMPORT_DROP_BEFORE_IMPORT` environment variable (note the leading `IMPORT_`) to `true`, `t`, or `1`. The variable is case-sensitive.
+
+   ``` shell
+   IMPORT_DROP_BEFORE_IMPORT=true
+   ```

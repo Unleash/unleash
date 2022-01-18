@@ -11,32 +11,32 @@ jest.mock(
         },
 );
 
-const getApp = require('./app');
+const getApp = require('./app').default;
 
-test('should not throw when valid config', () => {
+test('should not throw when valid config', async () => {
     const config = createTestConfig();
-    const app = getApp(config, {}, {});
+    const app = await getApp(config, {}, {});
     expect(typeof app.listen).toBe('function');
 });
 
-test('should call preHook', () => {
+test('should call preHook', async () => {
     let called = 0;
     const config = createTestConfig({
         preHook: () => {
             called++;
         },
     });
-    getApp(config, {}, {});
+    await getApp(config, {}, {});
     expect(called).toBe(1);
 });
 
-test('should call preRouterHook', () => {
+test('should call preRouterHook', async () => {
     let called = 0;
     const config = createTestConfig({
         preRouterHook: () => {
             called++;
         },
     });
-    getApp(config, {}, {});
+    await getApp(config, {}, {});
     expect(called).toBe(1);
 });

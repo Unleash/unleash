@@ -29,19 +29,42 @@ module.exports = {
         ],
         'Unleash SDKs': [
             'sdks/index',
-            'sdks/java_sdk',
-            'sdks/node_sdk',
-            'sdks/dot_net_sdk',
-            'sdks/go_sdk',
-            'sdks/python_sdk',
-            'sdks/ruby_sdk',
-            'sdks/php_sdk',
             'sdks/unleash-proxy',
-            'sdks/android_proxy_sdk',
-            'sdks/proxy-javascript',
-            'sdks/proxy-react',
-            'sdks/proxy-ios',
-            'sdks/community',
+            {
+                type: 'category',
+                collapsible: false,
+                label: 'Server-side SDKs',
+                items: [
+                    'sdks/go_sdk',
+                    'sdks/java_sdk',
+                    'sdks/node_sdk',
+                    'sdks/php_sdk',
+                    'sdks/python_sdk',
+                    'sdks/ruby_sdk',
+                    {
+                        type: 'link',
+                        href: 'https://github.com/unleash/unleash-client-rust',
+                        label: 'Rust SDK',
+                    },
+                    'sdks/dot_net_sdk',
+                ],
+            },
+            {
+                type: 'category',
+                collapsible: false,
+                label: 'Client-side SDKs',
+                items: [
+                    'sdks/android_proxy_sdk',
+                    'sdks/proxy-ios',
+                    'sdks/proxy-javascript',
+                    'sdks/proxy-react',
+                ],
+            },
+            {
+                type: 'link',
+                label: 'Community SDKs',
+                href: '/sdks#community-sdks',
+            },
         ],
         Addons: [
             'addons/index',
@@ -71,7 +94,9 @@ module.exports = {
         ],
         "How-to guides": [
             "how-to/how-to-add-strategy-constraints",
+            "how-to/how-to-create-and-assign-custom-project-roles",
             "how-to/how-to-define-custom-context-fields",
+            "how-to/how-to-use-custom-strategies",
         ]
     },
     api: {

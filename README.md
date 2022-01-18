@@ -4,7 +4,6 @@
 
 [![Deploy to Heroku](./.github/deploy-heroku-20.png)](https://www.heroku.com/deploy/?template=https://github.com/Unleash/unleash) [![Deploy to DigitalOcean](./.github/deploy-digital.svg)](https://cloud.digitalocean.com/apps/new?repo=https://github.com/Unleash/unleash/tree/main&refcode=0e1d75187044) [![Twitter Follow](https://img.shields.io/twitter/follow/getunleash)](https://twitter.com/intent/follow?screen_name=getunleash)
 
-
 <a href="https://getunleash.io" title="Unleash - Create with freedom. Release with confidence">
     <img src="./.github/Logo_DarkBlue_Transparent_Portrait.svg" width="200">
 </a>
@@ -59,7 +58,7 @@ In order to connect your application to Unleash you need to use a client SDK for
 - [Go SDK](https://docs.getunleash.io/sdks/go_sdk)
 - [Ruby SDK](https://docs.getunleash.io/sdks/ruby_sdk)
 - [Python SDK](https://docs.getunleash.io/sdks/python_sdk)
-- [.Net SDK](https://docs.getunleash.io/sdks/dot_net_sdk)
+- [.NET SDK](https://docs.getunleash.io/sdks/dot_net_sdk)
 - [PHP SDK](https://docs.getunleash.io/sdks/php_sdk)
 
 **Official Frontend SDKs:**
@@ -129,7 +128,12 @@ The are numbers of ways you can run Unleash.
 
 ### Run from Docker
 
-1. Create a network by running docker network create unleash
+1. Create a network by running the following command:
+
+```sh
+docker network create unleash
+```
+
 2. Start a postgres database:
 
 ```sh

@@ -88,7 +88,7 @@ class ProjectStore implements IProjectStore {
         const row = await this.db(TABLE)
             .insert(this.fieldToRow(project))
             .returning('*');
-        return this.mapRow(row);
+        return this.mapRow(row[0]);
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types

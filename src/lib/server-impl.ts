@@ -16,6 +16,7 @@ import { IUnleash } from './types/core';
 import { IUnleashConfig, IUnleashOptions, IAuthType } from './types/option';
 import { IUnleashServices } from './types/services';
 import User, { IUser } from './types/user';
+import ApiUser from './types/api-user';
 import { Logger, LogLevel } from './logger';
 import AuthenticationRequired from './types/authentication-required';
 import Controller from './routes/controller';
@@ -56,7 +57,7 @@ async function createApp(
         // eslint-disable-next-line no-param-reassign
         config.server.secret = secret;
     }
-    const app = getApp(config, stores, services, unleashSession);
+    const app = await getApp(config, stores, services, unleashSession);
 
     if (typeof config.eventHook === 'function') {
         addEventHook(config.eventHook, stores.eventStore);
@@ -163,6 +164,7 @@ export {
     Controller,
     AuthenticationRequired,
     User,
+    ApiUser,
     LogLevel,
     RoleName,
     IAuthType,

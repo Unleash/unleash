@@ -7,7 +7,7 @@ import FeatureController from './feature';
 import { createTestConfig } from '../../../test/config/test-config';
 import { secondsToMilliseconds } from 'date-fns';
 
-function getSetup() {
+async function getSetup() {
     const base = `/random${Math.round(Math.random() * 1000)}`;
     const stores = createStores();
     const config = createTestConfig({
@@ -15,7 +15,7 @@ function getSetup() {
     });
     const services = createServices(stores, config);
 
-    const app = getApp(config, stores, services);
+    const app = await getApp(config, stores, services);
 
     return {
         base,
@@ -35,8 +35,8 @@ let request;
 let destroy;
 let featureToggleClientStore;
 
-beforeEach(() => {
-    const setup = getSetup();
+beforeEach(async () => {
+    const setup = await getSetup();
     base = setup.base;
     request = setup.request;
     featureToggleClientStore = setup.featureToggleClientStore;

@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { URL } from 'url';
 import { Logger } from '../logger';
 import UsedTokenError from '../error/used-token-error';
@@ -119,7 +119,7 @@ export default class ResetTokenService {
     }
 
     private generateToken(): Promise<string> {
-        return bcrypt.hash(crypto.randomBytes(32), 10);
+        return bcrypt.hash(crypto.randomBytes(32).toString(), 10);
     }
 }
 

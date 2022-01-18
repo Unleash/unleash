@@ -5,14 +5,14 @@ import getApp from '../../app';
 import { createTestConfig } from '../../../test/config/test-config';
 import { createServices } from '../../services';
 
-function getSetup() {
+async function getSetup() {
     const stores = createStores();
     const perms = permissions();
     const config = createTestConfig({
         preRouterHook: perms.hook,
     });
     const services = createServices(stores, config);
-    const app = getApp(config, stores, services);
+    const app = await getApp(config, stores, services);
 
     return {
         request: supertest(app),
@@ -30,8 +30,8 @@ let stores;
 let request;
 let destroy;
 
-beforeEach(() => {
-    const setup = getSetup();
+beforeEach(async () => {
+    const setup = await getSetup();
     stores = setup.stores;
     request = setup.request;
     destroy = setup.destroy;

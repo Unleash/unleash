@@ -1,5 +1,6 @@
 import EventEmitter from 'events';
 import { LogLevel, LogProvider } from '../logger';
+import { IApiTokenCreate } from './models/api-token';
 
 export type EventHook = (eventName: string, data: object) => void;
 
@@ -53,6 +54,7 @@ export interface IAuthOption {
     type: IAuthType;
     customAuthHandler?: Function;
     createAdminUser: boolean;
+    initApiTokens: IApiTokenCreate[];
 }
 
 export interface IImportOption {
@@ -68,6 +70,7 @@ export interface IServerOption {
     keepAliveTimeout: number;
     headersTimeout: number;
     baseUriPath: string;
+    cdnPrefix?: string;
     unleashUrl: string;
     serverMetrics: boolean;
     enableRequestLogger: boolean;
@@ -98,6 +101,7 @@ export interface IUnleashOptions {
     preRouterHook?: Function;
     eventHook?: EventHook;
     enterpriseVersion?: string;
+    disableLegacyFeaturesApi?: boolean;
 }
 
 export interface IEmailOption {
@@ -153,4 +157,5 @@ export interface IUnleashConfig {
     eventHook?: EventHook;
     enterpriseVersion?: string;
     eventBus: EventEmitter;
+    disableLegacyFeaturesApi?: boolean;
 }

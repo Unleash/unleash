@@ -32,8 +32,6 @@ test('exports strategies and features as json by default', async () => {
 });
 
 test('exports strategies and features as yaml', async () => {
-    expect.assertions(0);
-
     return app.request
         .get('/api/admin/state/export?format=yaml')
         .expect('Content-Type', /yaml/)
@@ -41,8 +39,6 @@ test('exports strategies and features as yaml', async () => {
 });
 
 test('exports only features as yaml', async () => {
-    expect.assertions(0);
-
     return app.request
         .get('/api/admin/state/export?format=yaml&featureToggles=1')
         .expect('Content-Type', /yaml/)
@@ -50,8 +46,6 @@ test('exports only features as yaml', async () => {
 });
 
 test('exports strategies and features as attachment', async () => {
-    expect.assertions(0);
-
     return app.request
         .get('/api/admin/state/export?download=1')
         .expect('Content-Type', /json/)
@@ -60,17 +54,26 @@ test('exports strategies and features as attachment', async () => {
 });
 
 test('imports strategies and features', async () => {
-    expect.assertions(0);
-
     return app.request
         .post('/api/admin/state/import')
         .send(importData)
         .expect(202);
 });
 
-test('does not not accept gibberish', async () => {
-    expect.assertions(0);
+test('imports features with variants', async () => {
+    await app.request
+        .post('/api/admin/state/import')
+        .send(importData)
+        .expect(202);
 
+    const { body } = await app.request.get(
+        '/api/admin/projects/default/features/feature.with.variants',
+    );
+
+    expect(body.variants).toHaveLength(2);
+});
+
+test('does not not accept gibberish', async () => {
     return app.request
         .post('/api/admin/state/import')
         .send({ features: 'nonsense' })
@@ -78,8 +81,6 @@ test('does not not accept gibberish', async () => {
 });
 
 test('imports strategies and features from json file', async () => {
-    expect.assertions(0);
-
     return app.request
         .post('/api/admin/state/import')
         .attach('file', 'src/test/examples/import.json')
@@ -87,8 +88,6 @@ test('imports strategies and features from json file', async () => {
 });
 
 test('imports strategies and features from yaml file', async () => {
-    expect.assertions(0);
-
     return app.request
         .post('/api/admin/state/import')
         .attach('file', 'src/test/examples/import.yml')

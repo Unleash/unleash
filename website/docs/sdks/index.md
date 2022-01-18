@@ -14,21 +14,22 @@ Unleash provides official client SDKs for a number of programming language. Addi
 
 Server-side clients run on your server and communicate directly with your Unleash instance. We provide these official clients:
 
+- [Go SDK](/sdks/go_sdk)
 - [Java SDK](/sdks/java_sdk)
 - [Node.js SDK](/sdks/node_sdk)
-- [Go SDK](/sdks/go_sdk)
-- [Ruby SDK](/sdks/ruby_sdk)
-- [Python SDK](/sdks/python_sdk)
-- [.Net SDK](/sdks/dot_net_sdk)
 - [PHP SDK](/sdks/php_sdk)
+- [Python SDK](/sdks/python_sdk)
+- [Ruby SDK](/sdks/ruby_sdk)
+- [Rust SDK](https://github.com/unleash/unleash-client-rust)
+- [.NET SDK](/sdks/dot_net_sdk)
 
 ### Front-end SDKs
 
 For security and performance reasons, the front-end SDKs do not communicate directly with your Unleash instance. Instead, they go via the [Unleash Proxy](unleash-proxy.md).
 
-- [Javascript SDK](/sdks/proxy-javascript)
 - [Android SDK](/sdks/android_proxy_sdk)
 - [iOS Proxy SDK](/sdks/proxy-ios)
+- [Javascript SDK](/sdks/proxy-javascript)
 - [React Proxy SDK](/sdks/proxy-react)
 
 
@@ -48,13 +49,13 @@ If you see an item marked with a ❌ that you would find useful, feel free to re
 :::
 
 
-| Capability                                                                                        | [Java](/sdks/java_sdk) | [Node.js](/sdks/node_sdk) | [Go](/sdks/go_sdk) | [Python](/sdks/python_sdk) | [Ruby](/sdks/ruby_sdk) | [.Net](/sdks/dot_net_sdk) | [PHP](/sdks/php_sdk) | [Unleash Proxy Server](unleash-proxy.md) |
+| Capability                                                                                        | [Java](/sdks/java_sdk) | [Node.js](/sdks/node_sdk) | [Go](/sdks/go_sdk) | [Python](/sdks/python_sdk) | [Ruby](/sdks/ruby_sdk) | [.NET](/sdks/dot_net_sdk) | [PHP](/sdks/php_sdk) | [Unleash Proxy Server](unleash-proxy.md) |
 |---------------------------------------------------------------------------------------------------|:----------------------:|:-------------------------:|:------------------:|:--------------------------:|:----------------------:|:-------------------------:|:--------------------:|:----------------------------------------:|
 | **Category: Initialization**                                                                      |                        |                           |                    |                            |                        |                           |                      |                                          |
 | Async initialization                                                                              | ✅                     | ✅                        | ✅                 | ✅                         | ✅                     | ✅                        | ✅                   | N/A                                      |
 | Can block until synchronized                                                                      | ✅                     | ✅                        | ⭕                 | ⭕                         | ⭕                     | ✅                        | ⭕                   | N/A                                      |
 | Default refresh interval                                                                          | 10s                    | 15s                       | 15s                | 15s                        | 15s                    | 30s                       | 30s                  | 5s                                       |
-| Default metrics interval                                                                          | 60s                    | 60s                       | 60s                | 60s                        | 30s                    | 60s                       | 30s                  | 30s                                      |
+| Default metrics interval                                                                          | 60s                    | 60s                       | 60s                | 60s                        | 60s                    | 60s                       | 30s                  | 30s                                      |
 | Context provider                                                                                  | ✅                     | N/A                       | N/A                | N/A                        | N/A                    | ✅                        | ✅                   | N/A                                      |
 | Global fallback function                                                                          | ✅                     | ✅                        | ✅                 | ✅                         | ❌                     | ❌                        | ❌                   | N/A                                      |
 | Toggle Query: `namePrefix`                                                                        | ✅                     | ✅                        | ❌                 | ❌                         | ❌                     | ❌                        | ❌                   | ✅                                       |
@@ -69,7 +70,7 @@ If you see an item marked with a ❌ that you would find useful, feel free to re
 | [Gradual rollout: custom stickiness](../user_guide/activation_strategy#customize-stickiness-beta) | ✅                     | ✅                        | ⭕                 | ✅                         | ✅                     | ✅                        | ✅                   | ✅                                       |
 | [UserID](../user_guide/activation_strategy#userids)                                               | ✅                     | ✅                        | ✅                 | ✅                         | ✅                     | ✅                        | ✅                   | ✅                                       |
 | [IP](../user_guide/activation_strategy#ips)                                                       | ✅                     | ✅                        | ✅                 | ✅                         | ✅                     | ✅                        | ✅                   | ✅                                       |
-| [IP](../user_guide/activation_strategy#ips): CIDR syntax                                          | ✅                     | ✅                        | ✅                 | ✅                         | ⭕                     | ⭕                        | ⭕                   | ✅                                       |
+| [IP](../user_guide/activation_strategy#ips): CIDR syntax                                          | ✅                     | ✅                        | ✅                 | ✅                         | ✅                     | ⭕                        | ⭕                   | ✅                                       |
 | [Hostname](../user_guide/activation_strategy#hostnames)                                           | ✅                     | ✅                        | ✅                 | ✅                         | ✅                     | ✅                        | ✅                   | ✅                                       |
 | **Category: [Custom strategies](../advanced/custom_activation_strategy)**                         |                        |                           |                    |                            |                        |                           |                      |                                          |
 | Basic support                                                                                     | ✅                     | ✅                        | ✅                 | ✅                         | ✅                     | ✅                        | ✅                   | ✅                                       |
@@ -87,7 +88,7 @@ If you see an item marked with a ❌ that you would find useful, feel free to re
 | Basic support                                                                                     | ✅                     | ✅                        | ✅                 | ✅                         | ✅                     | ✅                        | ✅                   | ✅                                       |
 | Custom fallback variant                                                                           | ✅                     | ✅                        | ✅                 | ✅                         | ✅                     | ✅                        | ✅                   | ✅                                       |
 | Custom weight                                                                                     | ✅                     | ✅                        | ✅                 | ✅                         | ✅                     | ✅                        | ✅                   | ✅                                       |
-| [Custom stickiness (beta)](../advanced/stickiness#custom-stickiness-beta)                         | ✅                     | ✅                        | ⭕                 | ✅                         | ✅                     | ⭕                        | ✅                   | ✅                                       |
+| [Custom stickiness (beta)](../advanced/stickiness#custom-stickiness-beta)                         | ✅                     | ✅                        | ⭕                 | ✅                         | ✅                     | ✅                        | ✅                   | ✅                                       |
 | **Category: Local backup**                                                                        |                        |                           |                    |                            |                        |                           |                      |                                          |
 | File based backup                                                                                 | ✅                     | ✅                        | ✅                 | ✅                         | ✅                     | ✅                        | ✅                   | ✅                                       |
 | **Category: Usage metrics**                                                                       |                        |                           |                    |                            |                        |                           |                      |                                          |
@@ -98,17 +99,23 @@ If you see an item marked with a ❌ that you would find useful, feel free to re
 | Bootstrap from file                                                                               | ✅                     | ⭕                        | ⭕                 | ⭕                         | ⭕                     | ⭕                        | ⭕                   | ⭕                                       |
 | Custom Bootstrap implementation                                                                   | ✅                     | ⭕                        | ⭕                 | ⭕                         | ⭕                     | ⭕                        | ⭕                   | ⭕                                       |
 
-## Clients written by awesome enthusiasts {#clients-written-by-awesome-enthusiasts}
+## Community SDKs ❤️ {#community-sdks}
 
 Here's some of the fantastic work our community has done to make Unleash work in even more contexts. If you still can't find your favorite language, let us know and we'd love to help you create the client for it!
 
-- [cognitedata/unleash-client-rust](https://github.com/cognitedata/unleash-client-rust) (Rust)
-- [silvercar/unleash-client-kotlin](https://github.com/silvercar/unleash-client-kotlin) (Kotlin)
-- [uekoetter.dev/unleash-client-dart](https://pub.dev/packages/unleash) (Dart)
-- [minds/unleash-client-php](https://gitlab.com/minds/unleash-client-php) (PHP)
-- [Stogon/unleash-bundle](https://git.stogon.io/Stogon/unleash-bundle/) (PHP - Symfony)
 - [afontaine/unleash_ex](https://gitlab.com/afontaine/unleash_ex) (Elixir)
-- [mikefrancis/laravel-unleash](https://github.com/mikefrancis/laravel-unleash) (Laravel - PHP)
 - [AppsFlyer/clojure-unleash](https://github.com/AppsFlyer/unleash-client-clojure) (Clojure)
+- [mikefrancis/laravel-unleash](https://github.com/mikefrancis/laravel-unleash) (Laravel - PHP)
+- [minds/unleash-client-php](https://gitlab.com/minds/unleash-client-php) (PHP)
 - [pmb0/nestjs-unleash](https://github.com/pmb0/nestjs-unleash) (NestJS - Node.js)
+- [silvercar/unleash-client-kotlin](https://github.com/silvercar/unleash-client-kotlin) (Kotlin)
+- [Stogon/unleash-bundle](https://git.stogon.io/Stogon/unleash-bundle/) (PHP - Symfony)
+- [uekoetter.dev/unleash-client-dart](https://pub.dev/packages/unleash) (Dart)
 - _...your implementation for your favorite language._
+
+## Implement your own SDK {#implement-your-own-sdk}
+
+If you can't find an SDK that fits your need, you can also develop your own SDK. To make implementation easier, check out these resources:
+
+- [Unleash Client Specifications](https://github.com/Unleash/client-specification) - Used by all official SDKs to make sure they behave correctly across different language implementations. This lets us verify that a gradual rollout to 10% of the users would affect the same users regardless of which SDK you're using.
+- [Client SDK overview](../client-specification) - A brief, overall guide of the _Unleash Architecture_ and important aspects of the SDK role in it all.

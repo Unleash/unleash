@@ -3,6 +3,7 @@ import User, { IUser } from '../types/user';
 import {
     IAccessStore,
     IRole,
+    IRoleWithPermissions,
     IUserPermission,
     IUserRole,
 } from '../types/stores/access-store';
@@ -10,20 +11,25 @@ import { IUserStore } from '../types/stores/user-store';
 import { Logger } from '../logger';
 import { IUnleashStores } from '../types/stores';
 import {
+    IAvailablePermissions,
+    ICustomRole,
     IPermission,
     IRoleData,
     IUserWithRole,
-    PermissionType,
     RoleName,
     RoleType,
 } from '../types/model';
+import { IRoleStore } from 'lib/types/stores/role-store';
+import NameExistsError from '../error/name-exists-error';
+import { IEnvironmentStore } from 'lib/types/stores/environment-store';
+import RoleInUseError from '../error/role-in-use-error';
+import { roleSchema } from '../schema/role-schema';
+import { CUSTOM_ROLE_TYPE } from '../util/constants';
+import { DEFAULT_PROJECT } from '../types/project';
+import InvalidOperationError from '../error/invalid-operation-error';
 
 export const ALL_PROJECTS = '*';
-
-const PROJECT_DESCRIPTION = {
-    OWNER: 'Users with this role have full control over the project, and can add and manage other users within the project context, manage feature toggles within the project, and control advanced project features like archiving and deleting the project.',
-    MEMBER: 'Users with this role within a project are allowed to view, create and update feature toggles, but have limited permissions in regards to managing the projects user access and can not archive or delete the project.',
-};
+export const ALL_ENVS = '*';
 
 const { ADMIN } = permissions;
 
@@ -35,11 +41,18 @@ const PROJECT_ADMIN = [
     permissions.DELETE_FEATURE,
 ];
 
-const PROJECT_REGULAR = [
-    permissions.CREATE_FEATURE,
-    permissions.UPDATE_FEATURE,
-    permissions.DELETE_FEATURE,
-];
+interface IRoleCreation {
+    name: string;
+    description: string;
+    permissions?: IPermission[];
+}
+
+interface IRoleUpdate {
+    id: number;
+    name: string;
+    description: string;
+    permissions?: IPermission[];
+}
 
 const isProjectPermission = (permission) => PROJECT_ADMIN.includes(permission);
 
@@ -48,26 +61,29 @@ export class AccessService {
 
     private userStore: IUserStore;
 
-    private logger: Logger;
+    private roleStore: IRoleStore;
 
-    private permissions: IPermission[];
+    private environmentStore: IEnvironmentStore;
+
+    private logger: Logger;
 
     constructor(
         {
             accessStore,
             userStore,
-        }: Pick<IUnleashStores, 'accessStore' | 'userStore'>,
+            roleStore,
+            environmentStore,
+        }: Pick<
+            IUnleashStores,
+            'accessStore' | 'userStore' | 'roleStore' | 'environmentStore'
+        >,
         { getLogger }: { getLogger: Function },
     ) {
         this.store = accessStore;
         this.userStore = userStore;
+        this.roleStore = roleStore;
+        this.environmentStore = environmentStore;
         this.logger = getLogger('/services/access-service.ts');
-        this.permissions = Object.values(permissions).map((p) => ({
-            name: p,
-            type: isProjectPermission(p)
-                ? PermissionType.project
-                : PermissionType.root,
-        }));
     }
 
     /**
@@ -81,9 +97,10 @@ export class AccessService {
         user: User,
         permission: string,
         projectId?: string,
+        environment?: string,
     ): Promise<boolean> {
         this.logger.info(
-            `Checking permission=${permission}, userId=${user.id} projectId=${projectId}`,
+            `Checking permission=${permission}, userId=${user.id}, projectId=${projectId}, environment=${environment}`,
         );
 
         try {
@@ -95,6 +112,12 @@ export class AccessService {
                         !p.project ||
                         p.project === projectId ||
                         p.project === ALL_PROJECTS,
+                )
+                .filter(
+                    (p) =>
+                        !p.environment ||
+                        p.environment === environment ||
+                        p.environment === ALL_ENVS,
                 )
                 .some(
                     (p) =>
@@ -118,12 +141,43 @@ export class AccessService {
         return this.store.getPermissionsForUser(user.id);
     }
 
-    getPermissions(): IPermission[] {
-        return this.permissions;
+    async getPermissions(): Promise<IAvailablePermissions> {
+        const bindablePermissions = await this.store.getAvailablePermissions();
+        const environments = await this.environmentStore.getAll();
+
+        const projectPermissions = bindablePermissions.filter((x) => {
+            return x.type === 'project';
+        });
+
+        const environmentPermissions = bindablePermissions.filter((perm) => {
+            return perm.type === 'environment';
+        });
+
+        const allEnvironmentPermissions = environments.map((env) => {
+            return {
+                name: env.name,
+                permissions: environmentPermissions.map((permission) => {
+                    return { environment: env.name, ...permission };
+                }),
+            };
+        });
+
+        return {
+            project: projectPermissions,
+            environments: allEnvironmentPermissions,
+        };
     }
 
-    async addUserToRole(userId: number, roleId: number): Promise<void> {
-        return this.store.addUserToRole(userId, roleId);
+    async addUserToRole(
+        userId: number,
+        roleId: number,
+        projectId: string,
+    ): Promise<void> {
+        return this.store.addUserToRole(userId, roleId, projectId);
+    }
+
+    async getRoleByName(roleName: string): Promise<IRole> {
+        return this.roleStore.getRoleByName(roleName);
     }
 
     async setUserRootRole(
@@ -131,14 +185,18 @@ export class AccessService {
         role: number | RoleName,
     ): Promise<void> {
         const newRootRole = await this.resolveRootRole(role);
-
         if (newRootRole) {
             try {
                 await this.store.removeRolesOfTypeForUser(
                     userId,
                     RoleType.ROOT,
                 );
-                await this.store.addUserToRole(userId, newRootRole.id);
+
+                await this.store.addUserToRole(
+                    userId,
+                    newRootRole.id,
+                    DEFAULT_PROJECT,
+                );
             } catch (error) {
                 throw new Error(
                     `Could not add role=${newRootRole.name} to userId=${userId}`,
@@ -154,29 +212,39 @@ export class AccessService {
         return userRoles.filter((r) => r.type === RoleType.ROOT);
     }
 
-    async removeUserFromRole(userId: number, roleId: number): Promise<void> {
-        return this.store.removeUserFromRole(userId, roleId);
+    async removeUserFromRole(
+        userId: number,
+        roleId: number,
+        projectId: string,
+    ): Promise<void> {
+        return this.store.removeUserFromRole(userId, roleId, projectId);
     }
 
+    //This actually only exists for testing purposes
     async addPermissionToRole(
         roleId: number,
         permission: string,
-        projectId?: string,
+        environment?: string,
     ): Promise<void> {
-        if (isProjectPermission(permission) && !projectId) {
+        if (isProjectPermission(permission) && !environment) {
             throw new Error(
                 `ProjectId cannot be empty for permission=${permission}`,
             );
         }
-        return this.store.addPermissionsToRole(roleId, [permission], projectId);
+        return this.store.addPermissionsToRole(
+            roleId,
+            [permission],
+            environment,
+        );
     }
 
+    //This actually only exists for testing purposes
     async removePermissionFromRole(
         roleId: number,
         permission: string,
-        projectId?: string,
+        environment?: string,
     ): Promise<void> {
-        if (isProjectPermission(permission) && !projectId) {
+        if (isProjectPermission(permission) && !environment) {
             throw new Error(
                 `ProjectId cannot be empty for permission=${permission}`,
             );
@@ -184,15 +252,24 @@ export class AccessService {
         return this.store.removePermissionFromRole(
             roleId,
             permission,
-            projectId,
+            environment,
         );
     }
 
     async getRoles(): Promise<IRole[]> {
-        return this.store.getRoles();
+        return this.roleStore.getRoles();
     }
 
-    async getRole(roleId: number): Promise<IRoleData> {
+    async getRole(id: number): Promise<IRoleWithPermissions> {
+        const role = await this.store.get(id);
+        const rolePermissions = await this.store.getPermissionsForRole(role.id);
+        return {
+            ...role,
+            permissions: rolePermissions,
+        };
+    }
+
+    async getRoleData(roleId: number): Promise<IRoleData> {
         const [role, rolePerms, users] = await Promise.all([
             this.store.get(roleId),
             this.store.getPermissionsForRole(roleId),
@@ -201,12 +278,20 @@ export class AccessService {
         return { role, permissions: rolePerms, users };
     }
 
+    async getProjectRoles(): Promise<IRole[]> {
+        return this.roleStore.getProjectRoles();
+    }
+
     async getRolesForProject(projectId: string): Promise<IRole[]> {
-        return this.store.getRolesForProject(projectId);
+        return this.roleStore.getRolesForProject(projectId);
     }
 
     async getRolesForUser(userId: number): Promise<IRole[]> {
         return this.store.getRolesForUserId(userId);
+    }
+
+    async unlinkUserRoles(userId: number): Promise<void> {
+        return this.store.unlinkUserRoles(userId);
     }
 
     async getUsersForRole(roleId: number): Promise<IUser[]> {
@@ -217,16 +302,33 @@ export class AccessService {
         return [];
     }
 
+    async getProjectUsersForRole(
+        roleId: number,
+        projectId?: string,
+    ): Promise<IUser[]> {
+        const userIdList = await this.store.getProjectUserIdsForRole(
+            roleId,
+            projectId,
+        );
+        if (userIdList.length > 0) {
+            return this.userStore.getAllWithId(userIdList);
+        }
+        return [];
+    }
+
     // Move to project-service?
     async getProjectRoleUsers(
         projectId: string,
     ): Promise<[IRole[], IUserWithRole[]]> {
-        const roles = await this.store.getRolesForProject(projectId);
+        const roles = await this.roleStore.getProjectRoles();
 
         const users = await Promise.all(
             roles.map(async (role) => {
-                const usrs = await this.getUsersForRole(role.id);
-                return usrs.map((u) => ({ ...u, roleId: role.id }));
+                const projectUsers = await this.getProjectUsersForRole(
+                    role.id,
+                    projectId,
+                );
+                return projectUsers.map((u) => ({ ...u, roleId: role.id }));
             }),
         );
         return [roles, users.flat()];
@@ -240,36 +342,15 @@ export class AccessService {
             throw new Error('ProjectId cannot be empty');
         }
 
-        const ownerRole = await this.store.createRole(
-            RoleName.OWNER,
-            RoleType.PROJECT,
-            projectId,
-            PROJECT_DESCRIPTION.OWNER,
-        );
-        await this.store.addPermissionsToRole(
-            ownerRole.id,
-            PROJECT_ADMIN,
-            projectId,
-        );
+        const ownerRole = await this.roleStore.getRoleByName(RoleName.OWNER);
 
         // TODO: remove this when all users is guaranteed to have a unique id.
         if (owner.id) {
             this.logger.info(
                 `Making ${owner.id} admin of ${projectId} via roleId=${ownerRole.id}`,
             );
-            await this.store.addUserToRole(owner.id, ownerRole.id);
+            await this.store.addUserToRole(owner.id, ownerRole.id, projectId);
         }
-        const memberRole = await this.store.createRole(
-            RoleName.MEMBER,
-            RoleType.PROJECT,
-            projectId,
-            PROJECT_DESCRIPTION.MEMBER,
-        );
-        await this.store.addPermissionsToRole(
-            memberRole.id,
-            PROJECT_REGULAR,
-            projectId,
-        );
     }
 
     async removeDefaultProjectRoles(
@@ -277,15 +358,15 @@ export class AccessService {
         projectId: string,
     ): Promise<void> {
         this.logger.info(`Removing project roles for ${projectId}`);
-        return this.store.removeRolesForProject(projectId);
+        return this.roleStore.removeRolesForProject(projectId);
     }
 
     async getRootRoleForAllUsers(): Promise<IUserRole[]> {
-        return this.store.getRootRoleForAllUsers();
+        return this.roleStore.getRootRoleForAllUsers();
     }
 
     async getRootRoles(): Promise<IRole[]> {
-        return this.store.getRootRoles();
+        return this.roleStore.getRootRoles();
     }
 
     public async resolveRootRole(rootRole: number | RoleName): Promise<IRole> {
@@ -300,7 +381,96 @@ export class AccessService {
     }
 
     async getRootRole(roleName: RoleName): Promise<IRole> {
-        const roles = await this.store.getRootRoles();
+        const roles = await this.roleStore.getRootRoles();
         return roles.find((r) => r.name === roleName);
+    }
+
+    async getAllRoles(): Promise<ICustomRole[]> {
+        return this.roleStore.getAll();
+    }
+
+    async createRole(role: IRoleCreation): Promise<ICustomRole> {
+        const baseRole = {
+            ...(await this.validateRole(role)),
+            roleType: CUSTOM_ROLE_TYPE,
+        };
+
+        const rolePermissions = role.permissions;
+        const newRole = await this.roleStore.create(baseRole);
+        if (rolePermissions) {
+            this.store.addEnvironmentPermissionsToRole(
+                newRole.id,
+                rolePermissions,
+            );
+        }
+        return newRole;
+    }
+
+    async updateRole(role: IRoleUpdate): Promise<ICustomRole> {
+        await this.validateRole(role, role.id);
+        const baseRole = {
+            id: role.id,
+            name: role.name,
+            description: role.description,
+            roleType: CUSTOM_ROLE_TYPE,
+        };
+        const rolePermissions = role.permissions;
+        const newRole = await this.roleStore.update(baseRole);
+        if (rolePermissions) {
+            this.store.wipePermissionsFromRole(newRole.id);
+            this.store.addEnvironmentPermissionsToRole(
+                newRole.id,
+                rolePermissions,
+            );
+        }
+        return newRole;
+    }
+
+    async deleteRole(id: number): Promise<void> {
+        await this.validateRoleIsNotBuiltIn(id);
+
+        const roleUsers = await this.getUsersForRole(id);
+
+        if (roleUsers.length > 0) {
+            throw new RoleInUseError(
+                'Role is in use by more than one user. You cannot delete a role that is in use without first removing the role from the users.',
+            );
+        }
+
+        return this.roleStore.delete(id);
+    }
+
+    async validateRoleIsUnique(
+        roleName: string,
+        existingId?: number,
+    ): Promise<void> {
+        const exists = await this.roleStore.nameInUse(roleName, existingId);
+        if (exists) {
+            throw new NameExistsError(
+                `There already exists a role with the name ${roleName}`,
+            );
+        }
+        return Promise.resolve();
+    }
+
+    async validateRoleIsNotBuiltIn(roleId: number): Promise<void> {
+        const role = await this.store.get(roleId);
+        if (role.type !== CUSTOM_ROLE_TYPE) {
+            throw new InvalidOperationError(
+                'You cannot change built in roles.',
+            );
+        }
+    }
+
+    async validateRole(
+        role: IRoleCreation,
+        existingId?: number,
+    ): Promise<IRoleCreation> {
+        const cleanedRole = await roleSchema.validateAsync(role);
+        if (existingId) {
+            await this.validateRoleIsNotBuiltIn(existingId);
+        }
+        await this.validateRoleIsUnique(role.name, existingId);
+        return cleanedRole;
     }
 }

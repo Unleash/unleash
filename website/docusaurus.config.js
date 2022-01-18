@@ -31,7 +31,7 @@ module.exports = {
                     activeBaseRegex: '(user_guide|sdks|addons|advanced)',
                 },
                 { to: 'deploy/getting_started', label: 'Deploy and manage' },
-                { to: 'integrations/integrations', label: 'Integrations' },
+                { to: 'integrations', label: 'Integrations' },
                 { to: '/api', label: 'API' },
                 {
                     href: 'https://www.getunleash.io/plans',
@@ -110,6 +110,9 @@ module.exports = {
                     editUrl:
                         'https://github.com/Unleash/unleash/edit/main/website/',
                     routeBasePath: '/',
+                    remarkPlugins: [
+                        [require('@docusaurus/remark-plugin-npm2yarn'), {sync: true}]
+                    ]
                 },
                 theme: {
                     customCss: require.resolve('./src/css/custom.css'),
@@ -129,6 +132,7 @@ module.exports = {
                             '/user_guide/client-sdk',
                             '/client-sdk',
                             '/user_guide/connect_sdk',
+                            '/sdks/community',
                         ],
                     },
                     {
@@ -142,6 +146,10 @@ module.exports = {
                     {
                         to: '/advanced/toggle_variants',
                         from: '/toggle_variants',
+                    },
+                    {
+                        to: '/integrations',
+                        from: '/integrations/integrations',
                     },
                 ],
                 createRedirects: function(toPath) {

@@ -4,12 +4,21 @@ import { AccessService } from '../../lib/services/access-service';
 import User from '../../lib/types/user';
 import noLoggerProvider from './no-logger';
 import { IRole } from '../../lib/types/stores/access-store';
-import { IPermission, IRoleData, IUserWithRole } from '../../lib/types/model';
+import {
+    IAvailablePermissions,
+    IRoleData,
+    IUserWithRole,
+} from '../../lib/types/model';
 
 class AccessServiceMock extends AccessService {
     constructor() {
         super(
-            { accessStore: undefined, userStore: undefined },
+            {
+                accessStore: undefined,
+                userStore: undefined,
+                roleStore: undefined,
+                environmentStore: undefined,
+            },
             { getLogger: noLoggerProvider },
         );
     }
@@ -22,7 +31,7 @@ class AccessServiceMock extends AccessService {
         throw new Error('Method not implemented.');
     }
 
-    getPermissions(): IPermission[] {
+    getPermissions(): Promise<IAvailablePermissions> {
         throw new Error('Method not implemented.');
     }
 
@@ -32,10 +41,6 @@ class AccessServiceMock extends AccessService {
 
     setUserRootRole(userId: number, roleId: number): Promise<void> {
         return Promise.resolve();
-    }
-
-    removeUserFromRole(userId: number, roleId: number): Promise<void> {
-        throw new Error('Method not implemented.');
     }
 
     addPermissionToRole(
@@ -55,10 +60,6 @@ class AccessServiceMock extends AccessService {
     }
 
     getRoles(): Promise<IRole[]> {
-        throw new Error('Method not implemented.');
-    }
-
-    getRole(roleId: number): Promise<IRoleData> {
         throw new Error('Method not implemented.');
     }
 

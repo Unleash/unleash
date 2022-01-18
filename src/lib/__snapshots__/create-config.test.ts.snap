@@ -6,6 +6,7 @@ Object {
     "createAdminUser": true,
     "customAuthHandler": [Function],
     "enableApiToken": true,
+    "initApiTokens": Array [],
     "type": "open-source",
   },
   "db": Object {
@@ -29,6 +30,7 @@ Object {
     "user": "unleash",
     "version": undefined,
   },
+  "disableLegacyFeaturesApi": false,
   "email": Object {
     "host": undefined,
     "port": 587,
@@ -62,6 +64,7 @@ Object {
   "secureHeaders": false,
   "server": Object {
     "baseUriPath": "",
+    "cdnPrefix": undefined,
     "enableRequestLogger": false,
     "gracefulShutdownEnable": true,
     "gracefulShutdownTimeout": 1000,

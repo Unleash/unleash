@@ -1,6 +1,6 @@
 ---
 id: dot_net_sdk
-title: .net SDK
+title: .NET SDK
 ---
 
 In this guide we explain how to use feature toggles in a .NET application using Unleash-hosted. We will be using the open source Unleash [.net Client SDK](https://github.com/Unleash/unleash-client-dotnet).
@@ -9,7 +9,7 @@ In this guide we explain how to use feature toggles in a .NET application using 
 
 ## Step 1: Install client SDK {#step-1-install-client-sdk}
 
-First we must add Unleash Client SDK as a dependency to your project. Below is an example of how you would add it via the .Net cli. Please see [NuGet](https://www.nuget.org/packages/Unleash.Client/) for other alternatives.
+First we must add Unleash Client SDK as a dependency to your project. Below is an example of how you would add it via the .NET cli. Please see [NuGet](https://www.nuget.org/packages/Unleash.Client/) for other alternatives.
 
 ```sh
 dotnet add package unleash.client

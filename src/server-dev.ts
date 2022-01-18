@@ -1,6 +1,7 @@
 import { start } from './lib/server-impl';
 import { createConfig } from './lib/create-config';
 import { LogLevel } from './lib/logger';
+import { ApiTokenType } from './lib/types/models/api-token';
 
 process.nextTick(async () => {
     try {
@@ -19,9 +20,11 @@ process.nextTick(async () => {
                     baseUriPath: '',
                     // keepAliveTimeout: 1,
                     gracefulShutdownEnable: true,
+                    // cdnPrefix: 'https://cdn.getunleash.io/unleash/v4.4.1',
                 },
                 logLevel: LogLevel.debug,
                 enableOAS: true,
+                // secureHeaders: true,
                 versionCheck: {
                     enable: false,
                 },
@@ -29,6 +32,17 @@ process.nextTick(async () => {
                     metricsV2: {
                         enabled: true,
                     },
+                },
+                authentication: {
+                    initApiTokens: [
+                        {
+                            environment: '*',
+                            project: '*',
+                            secret: '*:*.964a287e1b728cb5f4f3e0120df92cb5',
+                            type: ApiTokenType.ADMIN,
+                            username: 'some-user',
+                        },
+                    ],
                 },
             }),
         );

@@ -40,17 +40,25 @@ class FeatureController extends Controller {
         this.tagService = featureTagService;
         this.service = featureToggleServiceV2;
 
+        if (!config.disableLegacyFeaturesApi) {
+            this.post('/', this.createToggle, CREATE_FEATURE);
+            this.get('/:featureName', this.getToggle);
+            this.put('/:featureName', this.updateToggle, UPDATE_FEATURE);
+            this.delete('/:featureName', this.archiveToggle, DELETE_FEATURE);
+            this.post('/:featureName/toggle', this.toggle, UPDATE_FEATURE);
+            this.post('/:featureName/toggle/on', this.toggleOn, UPDATE_FEATURE);
+            this.post(
+                '/:featureName/toggle/off',
+                this.toggleOff,
+                UPDATE_FEATURE,
+            );
+
+            this.post('/:featureName/stale/on', this.staleOn, UPDATE_FEATURE);
+            this.post('/:featureName/stale/off', this.staleOff, UPDATE_FEATURE);
+        }
+
         this.get('/', this.getAllToggles);
-        this.post('/', this.createToggle, CREATE_FEATURE);
-        this.get('/:featureName', this.getToggle);
-        this.put('/:featureName', this.updateToggle, UPDATE_FEATURE);
-        this.delete('/:featureName', this.archiveToggle, DELETE_FEATURE);
         this.post('/validate', this.validate, NONE);
-        this.post('/:featureName/toggle', this.toggle, UPDATE_FEATURE);
-        this.post('/:featureName/toggle/on', this.toggleOn, UPDATE_FEATURE);
-        this.post('/:featureName/toggle/off', this.toggleOff, UPDATE_FEATURE);
-        this.post('/:featureName/stale/on', this.staleOn, UPDATE_FEATURE);
-        this.post('/:featureName/stale/off', this.staleOff, UPDATE_FEATURE);
         this.get('/:featureName/tags', this.listTags);
         this.post('/:featureName/tags', this.addTag, UPDATE_FEATURE);
         this.delete(
@@ -141,9 +149,9 @@ class FeatureController extends Controller {
         const toggle = req.body;
 
         const validatedToggle = await featureSchema.validateAsync(toggle);
-        const { enabled } = validatedToggle;
+        const { enabled, project, name, variants = [] } = validatedToggle;
         const createdFeature = await this.service.createFeatureToggle(
-            validatedToggle.project,
+            project,
             validatedToggle,
             userName,
             true,
@@ -153,8 +161,8 @@ class FeatureController extends Controller {
                 this.service.createStrategy(
                     s,
                     {
-                        projectId: createdFeature.project,
-                        featureName: createdFeature.name,
+                        projectId: project,
+                        featureName: name,
                         environment: DEFAULT_ENV,
                     },
                     userName,
@@ -162,15 +170,17 @@ class FeatureController extends Controller {
             ),
         );
         await this.service.updateEnabled(
-            createdFeature.project,
-            createdFeature.name,
+            project,
+            name,
             DEFAULT_ENV,
             enabled,
             userName,
         );
+        await this.service.saveVariants(name, project, variants, userName);
 
         res.status(201).json({
             ...createdFeature,
+            variants,
             enabled,
             strategies,
         });
@@ -183,7 +193,7 @@ class FeatureController extends Controller {
 
         updatedFeature.name = featureName;
 
-        const projectId = await this.service.getProjectId(updatedFeature.name);
+        const projectId = await this.service.getProjectId(featureName);
         const value = await featureSchema.validateAsync(updatedFeature);
 
         await this.service.updateFeatureToggle(projectId, value, userName);
@@ -203,9 +213,15 @@ class FeatureController extends Controller {
         }
         await this.service.updateEnabled(
             projectId,
-            updatedFeature.name,
+            featureName,
             DEFAULT_ENV,
             updatedFeature.enabled,
+            userName,
+        );
+        await this.service.saveVariants(
+            featureName,
+            projectId,
+            value.variants || [],
             userName,
         );
 

@@ -73,7 +73,7 @@ docker run -p 4242:4242 \
 1. Create a new folder/directory on your development computer.
 2. From a terminal/bash shell, install the dependencies:
 
-   ```sh
+   ```shell npm2yarn
    npm init
    npm install unleash-server --save
    ```

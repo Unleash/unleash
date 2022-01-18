@@ -30,10 +30,12 @@ class AdminApi extends Controller {
         super(config);
 
         this.app.get('/', this.index);
+
         this.app.use(
             '/features',
             new FeatureController(config, services).router,
         );
+
         this.app.use(
             '/feature-types',
             new FeatureTypeController(config, services).router,

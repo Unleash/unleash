@@ -5,11 +5,11 @@ import getLogger from '../../../test/fixtures/no-logger';
 import getApp from '../../app';
 import { createServices } from '../../services';
 
-function getSetup() {
+async function getSetup() {
     const stores = createStores();
     const config = createTestConfig();
     const services = createServices(stores, config);
-    const app = getApp(config, stores, services);
+    const app = await getApp(config, stores, services);
 
     return {
         request: supertest(app),
@@ -23,8 +23,8 @@ function getSetup() {
 }
 let request;
 let destroy;
-beforeEach(() => {
-    const setup = getSetup();
+beforeEach(async () => {
+    const setup = await getSetup();
     request = setup.request;
     destroy = setup.destroy;
 });

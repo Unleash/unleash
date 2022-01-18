@@ -111,6 +111,7 @@ Here's some of the fantastic work our community has done to make Unleash work in
 - [silvercar/unleash-client-kotlin](https://github.com/silvercar/unleash-client-kotlin) (Kotlin)
 - [Stogon/unleash-bundle](https://git.stogon.io/Stogon/unleash-bundle/) (PHP - Symfony)
 - [uekoetter.dev/unleash-client-dart](https://pub.dev/packages/unleash) (Dart)
+- [ngx-unleash-proxy-client](https://www.npmjs.com/package/@snowfrog/ngx-unleash-proxy-client) (Angular - TypeScript)
 - _...your implementation for your favorite language._
 
 ## Implement your own SDK {#implement-your-own-sdk}

@@ -8,9 +8,7 @@ import {
     TableHead,
     TableRow,
 } from '@material-ui/core';
-import AddUser from '../AddUser/AddUser';
 import ChangePassword from '../change-password-component';
-import UpdateUser from '../update-user-component';
 import DelUser from '../del-user-component';
 import ConditionallyRender from '../../../common/ConditionallyRender/ConditionallyRender';
 import AccessContext from '../../../../contexts/AccessContext';
@@ -27,9 +25,7 @@ import PaginateUI from '../../../common/PaginateUI/PaginateUI';
 function UsersList({ location, closeDialog, showDialog }) {
     const { users, roles, refetch, loading } = useUsers();
     const {
-        addUser,
         removeUser,
-        updateUser,
         changePassword,
         validatePassword,
         userLoading,
@@ -42,7 +38,6 @@ function UsersList({ location, closeDialog, showDialog }) {
     const [emailSent, setEmailSent] = useState(false);
     const [inviteLink, setInviteLink] = useState('');
     const [delUser, setDelUser] = useState();
-    const [updateDialog, setUpdateDialog] = useState({ open: false });
     const ref = useLoading(loading);
     const { page, pages, nextPage, prevPage, setPageIndex, pageIndex } =
         usePagination(users, 50);
@@ -66,42 +61,11 @@ function UsersList({ location, closeDialog, showDialog }) {
         setPwDialog({ open: false });
     };
 
-    const openUpdateDialog = user => e => {
-        e.preventDefault();
-        setUpdateDialog({ open: true, user });
-    };
-
-    const closeUpdateDialog = () => {
-        setUpdateDialog({ open: false });
-    };
-
-    const onAddUser = data => {
-        addUser(data)
-            .then(res => res.json())
-            .then(user => {
-                setEmailSent(user.emailSent);
-                setInviteLink(user.inviteLink);
-                closeDialog();
-                refetch();
-                setShowConfirm(true);
-            })
-            .catch(handleCatch);
-    };
-
     const onDeleteUser = () => {
         removeUser(delUser)
             .then(() => {
                 refetch();
                 closeDelDialog();
-            })
-            .catch(handleCatch);
-    };
-
-    const onUpdateUser = data => {
-        updateUser(data)
-            .then(() => {
-                refetch();
-                closeUpdateDialog();
             })
             .catch(handleCatch);
     };
@@ -126,7 +90,6 @@ function UsersList({ location, closeDialog, showDialog }) {
                 <UserListItem
                     key={user.id}
                     user={user}
-                    openUpdateDialog={openUpdateDialog}
                     openPwDialog={openPwDialog}
                     openDelDialog={openDelDialog}
                     location={location}
@@ -140,7 +103,6 @@ function UsersList({ location, closeDialog, showDialog }) {
                 <UserListItem
                     key={user.id}
                     user={user}
-                    openUpdateDialog={openUpdateDialog}
                     openPwDialog={openPwDialog}
                     openDelDialog={openDelDialog}
                     location={location}
@@ -183,26 +145,6 @@ function UsersList({ location, closeDialog, showDialog }) {
                 closeConfirm={closeConfirm}
                 emailSent={emailSent}
                 inviteLink={inviteLink}
-            />
-
-            <AddUser
-                showDialog={showDialog}
-                closeDialog={closeDialog}
-                addUser={onAddUser}
-                userLoading={userLoading}
-                validatePassword={validatePassword}
-                userApiErrors={userApiErrors}
-                roles={roles}
-            />
-
-            <UpdateUser
-                showDialog={updateDialog.open}
-                closeDialog={closeUpdateDialog}
-                updateUser={onUpdateUser}
-                userLoading={userLoading}
-                userApiErrors={userApiErrors}
-                user={updateDialog.user}
-                roles={roles}
             />
 
             <ChangePassword

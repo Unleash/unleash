@@ -1,193 +1,141 @@
-import React, { useState } from 'react';
-import { FormControl, Button } from '@material-ui/core';
-import HeaderTitle from '../../common/HeaderTitle';
-import PageContent from '../../common/PageContent';
-
-import { useStyles } from './CreateEnvironment.styles';
 import { useHistory } from 'react-router-dom';
-import useEnvironmentApi from '../../../hooks/api/actions/useEnvironmentApi/useEnvironmentApi';
-import ConditionallyRender from '../../common/ConditionallyRender';
-import CreateEnvironmentSuccess from './CreateEnvironmentSuccess/CreateEnvironmentSuccess';
-import useLoading from '../../../hooks/useLoading';
+import useEnvironmentForm from '../hooks/useEnvironmentForm';
+import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from '../../../hooks/useToast';
-import EnvironmentTypeSelector from '../form/EnvironmentTypeSelector/EnvironmentTypeSelector';
-import Input from '../../common/Input/Input';
+import useEnvironmentApi from '../../../hooks/api/actions/useEnvironmentApi/useEnvironmentApi';
+import EnvironmentForm from '../EnvironmentForm/EnvironmentForm';
+import FormTemplate from '../../common/FormTemplate/FormTemplate';
 import useEnvironments from '../../../hooks/api/getters/useEnvironments/useEnvironments';
 import { Alert } from '@material-ui/lab';
+import { Button } from '@material-ui/core';
+import ConditionallyRender from '../../common/ConditionallyRender';
+import PageContent from '../../common/PageContent';
+import HeaderTitle from '../../common/HeaderTitle';
+import PermissionButton from '../../common/PermissionButton/PermissionButton';
+import { ADMIN } from '../../providers/AccessProvider/permissions';
 import useProjectRolePermissions from '../../../hooks/api/getters/useProjectRolePermissions/useProjectRolePermissions';
 
-const NAME_EXISTS_ERROR = 'Error: Environment';
-
 const CreateEnvironment = () => {
-    const [type, setType] = useState('development');
-    const [envName, setEnvName] = useState('');
-    const [nameError, setNameError] = useState('');
-    const [createSuccess, setCreateSucceess] = useState(false);
+    /* @ts-ignore */
+    const { setToastApiError, setToastData } = useToast();
+    const { uiConfig } = useUiConfig();
     const history = useHistory();
-    const styles = useStyles();
-    const { validateEnvName, createEnvironment, loading } = useEnvironmentApi();
     const { environments } = useEnvironments();
-    const ref = useLoading(loading);
-    const { setToastApiError } = useToast();
-    const { refetch } = useProjectRolePermissions();
-
-    const handleTypeChange = (event: React.FormEvent<HTMLInputElement>) => {
-        setType(event.currentTarget.value);
-    };
-
-    const handleEnvNameChange = (e: React.FormEvent<HTMLInputElement>) => {
-        setEnvName(e.currentTarget.value);
-    };
-
-    const goBack = () => history.goBack();
-
     const canCreateMoreEnvs = environments.length < 7;
+    const { createEnvironment, loading } = useEnvironmentApi();
+    const { refetch } = useProjectRolePermissions();
+    const {
+        name,
+        setName,
+        type,
+        setType,
+        getEnvPayload,
+        validateEnvironmentName,
+        clearErrors,
+        errors,
+    } = useEnvironmentForm();
 
-    const validateEnvironmentName = async () => {
-        if (envName.length === 0) {
-            setNameError('Environment Id can not be empty.');
-            return false;
-        }
-
-        try {
-            await validateEnvName(envName);
-        } catch (e) {
-            if (e.toString().includes(NAME_EXISTS_ERROR)) {
-                setNameError('Name already exists');
-            }
-            return false;
-        }
-        return true;
-    };
-
-    const clearNameError = () => setNameError('');
-
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: Event) => {
         e.preventDefault();
+        clearErrors();
         const validName = await validateEnvironmentName();
-
         if (validName) {
-            const environment = {
-                name: envName,
-                type,
-            };
-
+            const payload = getEnvPayload();
             try {
-                await createEnvironment(environment);
+                await createEnvironment(payload);
                 refetch();
-                setCreateSucceess(true);
-            } catch (e) {
+                setToastData({
+                    title: 'Environment created',
+                    type: 'success',
+                    confetti: true,
+                });
+                history.push('/environments');
+            } catch (e: any) {
                 setToastApiError(e.toString());
             }
         }
     };
 
+    const formatApiCode = () => {
+        return `curl --location --request POST '${
+            uiConfig.unleashUrl
+        }/api/admin/environments' \\
+--header 'Authorization: INSERT_API_KEY' \\
+--header 'Content-Type: application/json' \\
+--data-raw '${JSON.stringify(getEnvPayload(), undefined, 2)}'`;
+    };
+
+    const handleCancel = () => {
+        history.goBack();
+    };
+
     return (
-        <PageContent headerContent={<HeaderTitle title="Create environment" />}>
-            <ConditionallyRender
-                condition={createSuccess}
-                show={<CreateEnvironmentSuccess name={envName} type={type} />}
-                elseShow={
-                    <ConditionallyRender
-                        condition={canCreateMoreEnvs}
-                        show={
-                            <div ref={ref}>
-                                <p className={styles.helperText} data-loading>
-                                    Environments allow you to manage your
-                                    product lifecycle from local development
-                                    through production. Your projects and
-                                    feature toggles are accessible in all your
-                                    environments, but they can take different
-                                    configurations per environment. This means
-                                    that you can enable a feature toggle in a
-                                    development or test environment without
-                                    enabling the feature toggle in the
-                                    production environment.
-                                </p>
-
-                                <form onSubmit={handleSubmit}>
-                                    <FormControl component="fieldset">
-                                        <h3
-                                            className={styles.formHeader}
-                                            data-loading
-                                        >
-                                            Environment Id and name
-                                        </h3>
-
-                                        <div
-                                            data-loading
-                                            className={
-                                                styles.environmentDetailsContainer
-                                            }
-                                        >
-                                            <p>
-                                                Unique env name for SDK
-                                                configurations.
-                                            </p>
-                                            <Input
-                                                label="Environment Id"
-                                                onFocus={clearNameError}
-                                                placeholder="A unique name for your environment"
-                                                onBlur={validateEnvironmentName}
-                                                error={Boolean(nameError)}
-                                                errorText={nameError}
-                                                value={envName}
-                                                onChange={handleEnvNameChange}
-                                                className={styles.inputField}
-                                            />
-                                        </div>
-
-                                        <EnvironmentTypeSelector
-                                            onChange={handleTypeChange}
-                                            value={type}
-                                        />
-                                    </FormControl>
-                                    <div className={styles.btnContainer}>
-                                        <Button
-                                            className={styles.submitButton}
-                                            variant="contained"
-                                            color="primary"
-                                            type="submit"
-                                            data-loading
-                                        >
-                                            Submit
-                                        </Button>{' '}
-                                        <Button
-                                            className={styles.submitButton}
-                                            variant="outlined"
-                                            color="secondary"
-                                            onClick={goBack}
-                                            data-loading
-                                        >
-                                            Cancel
-                                        </Button>
-                                    </div>
-                                </form>
-                            </div>
+        <ConditionallyRender
+            condition={canCreateMoreEnvs}
+            show={
+                <FormTemplate
+                    loading={loading}
+                    title="Create Environment"
+                    description="Environments allow you to manage your 
+                            product lifecycle from local development
+                            through production. Your projects and
+                            feature toggles are accessible in all your
+                            environments, but they can take different
+                            configurations per environment. This means
+                            that you can enable a feature toggle in a
+                            development or test environment without
+                            enabling the feature toggle in the
+                            production environment."
+                    documentationLink="https://docs.getunleash.io/user_guide/environments"
+                    formatApiCode={formatApiCode}
+                >
+                    <EnvironmentForm
+                        errors={errors}
+                        handleSubmit={handleSubmit}
+                        handleCancel={handleCancel}
+                        validateEnvironmentName={validateEnvironmentName}
+                        name={name}
+                        type={type}
+                        setName={setName}
+                        setType={setType}
+                        mode="Create"
+                        clearErrors={clearErrors}
+                    >
+                        <PermissionButton
+                            onClick={handleSubmit}
+                            permission={ADMIN}
+                            type="submit"
+                        >
+                            Create environment
+                        </PermissionButton>
+                    </EnvironmentForm>
+                </FormTemplate>
+            }
+            elseShow={
+                <>
+                    <PageContent
+                        headerContent={
+                            <HeaderTitle title="Create environment" />
                         }
-                        elseShow={
-                            <>
-                                <Alert severity="error">
-                                    <p>
-                                        Currently Unleash does not support more
-                                        than 5 environments. If you need more
-                                        please reach out.
-                                    </p>
-                                </Alert>
-                                <br />
-                                <Button
-                                    onClick={goBack}
-                                    variant="contained"
-                                    color="primary"
-                                >
-                                    Go back
-                                </Button>
-                            </>
-                        }
-                    />
-                }
-            />
-        </PageContent>
+                    >
+                        <Alert severity="error">
+                            <p>
+                                Currently Unleash does not support more than 7
+                                environments. If you need more please reach out.
+                            </p>
+                        </Alert>
+                        <br />
+                        <Button
+                            onClick={handleCancel}
+                            variant="contained"
+                            color="primary"
+                        >
+                            Go back
+                        </Button>
+                    </PageContent>
+                </>
+            }
+        />
     );
 };
 

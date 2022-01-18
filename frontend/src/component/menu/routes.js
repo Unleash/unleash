@@ -37,13 +37,17 @@ import Project from '../project/Project/Project';
 import RedirectFeatureViewPage from '../../page/features/redirect';
 import RedirectArchive from '../feature/RedirectArchive/RedirectArchive';
 import EnvironmentList from '../environments/EnvironmentList/EnvironmentList';
-import CreateEnvironment from '../environments/CreateEnvironment/CreateEnvironment';
 import FeatureView2 from '../feature/FeatureView2/FeatureView2';
 import FeatureCreate from '../feature/FeatureCreate/FeatureCreate';
 import ProjectRoles from '../admin/project-roles/ProjectRoles/ProjectRoles';
 import CreateProjectRole from '../admin/project-roles/CreateProjectRole/CreateProjectRole';
 import EditProjectRole from '../admin/project-roles/EditProjectRole/EditProjectRole';
+import CreateUser from '../admin/users/CreateUser/CreateUser';
+import EditUser from '../admin/users/EditUser/EditUser';
 import CreateApiToken from '../admin/api-token/CreateApiToken/CreateApiToken';
+import CreateEnvironment from '../environments/CreateEnvironment/CreateEnvironment';
+import EditEnvironment from '../environments/EditEnvironment/EditEnvironment';
+
 
 export const routes = [
     // Project
@@ -256,6 +260,14 @@ export const routes = [
         menu: {},
     },
     {
+        path: '/environments/:id',
+        title: 'Edit',
+        component: EditEnvironment,
+        type: 'protected',
+        layout: 'main',
+        menu: {},
+    },
+    {
         path: '/environments',
         title: 'Environments',
         component: EnvironmentList,
@@ -407,6 +419,15 @@ export const routes = [
         flag: RE,
     },
     {
+        path: '/admin/users/:id/edit',
+        title: 'Edit',
+        component: EditUser,
+        type: 'protected',
+        layout: 'main',
+        menu: {},
+        hidden: true,
+    },
+    {
         path: '/admin/api',
         parent: '/admin',
         title: 'API access',
@@ -423,6 +444,15 @@ export const routes = [
         type: 'protected',
         layout: 'main',
         menu: { adminSettings: true },
+    },
+    {
+        path: '/admin/create-user',
+        parent: '/admin',
+        title: 'Users',
+        component: CreateUser,
+        type: 'protected',
+        layout: 'main',
+        menu: {},
     },
     {
         path: '/admin/auth',

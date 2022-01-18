@@ -1,12 +1,13 @@
 import { CloudCircle } from '@material-ui/icons';
-import StringTruncator from '../../../../common/StringTruncator/StringTruncator';
-import { ICreateEnvironmentSuccessProps } from '../CreateEnvironmentSuccess';
-import { useStyles } from './CreateEnvironmentSuccessCard.styles';
+import StringTruncator from '../../../common/StringTruncator/StringTruncator';
+import { useStyles } from './EnvironmentCard.styles';
 
-const CreateEnvironmentSuccessCard = ({
-    name,
-    type,
-}: ICreateEnvironmentSuccessProps) => {
+interface IEnvironmentProps {
+    name: string;
+    type: string;
+}
+
+const EnvironmentCard = ({ name, type }: IEnvironmentProps) => {
     const styles = useStyles();
     return (
         <div className={styles.container}>
@@ -30,4 +31,4 @@ const CreateEnvironmentSuccessCard = ({
     );
 };
 
-export default CreateEnvironmentSuccessCard;
+export default EnvironmentCard;

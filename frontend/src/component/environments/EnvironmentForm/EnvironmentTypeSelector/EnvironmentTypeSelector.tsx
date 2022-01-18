@@ -18,10 +18,6 @@ const EnvironmentTypeSelector = ({
     const styles = useStyles();
     return (
         <FormControl component="fieldset">
-            <h3 className={styles.formHeader} data-loading>
-                Environment Type
-            </h3>
-
             <RadioGroup
                 data-loading
                 value={value}

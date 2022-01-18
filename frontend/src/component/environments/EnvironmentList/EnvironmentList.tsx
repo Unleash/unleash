@@ -17,7 +17,6 @@ import useToast from '../../../hooks/useToast';
 import useEnvironmentApi from '../../../hooks/api/actions/useEnvironmentApi/useEnvironmentApi';
 import EnvironmentListItem from './EnvironmentListItem/EnvironmentListItem';
 import { mutate } from 'swr';
-import EditEnvironment from '../EditEnvironment/EditEnvironment';
 import EnvironmentToggleConfirm from './EnvironmentToggleConfirm/EnvironmentToggleConfirm';
 import useProjectRolePermissions from '../../../hooks/api/getters/useProjectRolePermissions/useProjectRolePermissions';
 
@@ -31,7 +30,6 @@ const EnvironmentList = () => {
         protected: false,
     };
     const { environments, refetch } = useEnvironments();
-    const [editEnvironment, setEditEnvironment] = useState(false);
     const { refetch: refetchProjectRolePermissions } =
         useProjectRolePermissions();
 
@@ -151,7 +149,6 @@ const EnvironmentList = () => {
             <EnvironmentListItem
                 key={env.name}
                 env={env}
-                setEditEnvironment={setEditEnvironment}
                 setDeldialogue={setDeldialogue}
                 setSelectedEnv={setSelectedEnv}
                 setToggleDialog={setToggleDialog}
@@ -194,13 +191,6 @@ const EnvironmentList = () => {
                 handleDeleteEnvironment={handleDeleteEnvironment}
                 confirmName={confirmName}
                 setConfirmName={setConfirmName}
-            />
-
-            <EditEnvironment
-                env={selectedEnv}
-                setEditEnvironment={setEditEnvironment}
-                editEnvironment={editEnvironment}
-                setToastData={setToastData}
             />
             <EnvironmentToggleConfirm
                 env={selectedEnv}

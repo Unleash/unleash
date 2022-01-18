@@ -1,108 +1,99 @@
-import { CloudCircle } from '@material-ui/icons';
-import { useEffect, useState } from 'react';
-import EnvironmentTypeSelector from '../form/EnvironmentTypeSelector/EnvironmentTypeSelector';
-import { useStyles } from './EditEnvironment.styles';
-import { IEnvironment } from '../../../interfaces/environments';
+import { useHistory, useParams } from 'react-router-dom';
 import useEnvironmentApi from '../../../hooks/api/actions/useEnvironmentApi/useEnvironmentApi';
-import useLoading from '../../../hooks/useLoading';
-import useEnvironments from '../../../hooks/api/getters/useEnvironments/useEnvironments';
-import Dialogue from '../../common/Dialogue';
+import useEnvironment from '../../../hooks/api/getters/useEnvironment/useEnvironment';
+import useProjectRolePermissions from '../../../hooks/api/getters/useProjectRolePermissions/useProjectRolePermissions';
+import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
+import useToast from '../../../hooks/useToast';
+import FormTemplate from '../../common/FormTemplate/FormTemplate';
+import PermissionButton from '../../common/PermissionButton/PermissionButton';
+import { ADMIN } from '../../providers/AccessProvider/permissions';
+import EnvironmentForm from '../EnvironmentForm/EnvironmentForm';
+import useEnvironmentForm from '../hooks/useEnvironmentForm';
 
-interface IEditEnvironmentProps {
-    env: IEnvironment;
-    setEditEnvironment: React.Dispatch<React.SetStateAction<boolean>>;
-    editEnvironment: boolean;
-    setToastData: React.Dispatch<React.SetStateAction<any>>;
-}
+const EditEnvironment = () => {
+    const { uiConfig } = useUiConfig();
+    const { setToastData, setToastApiError } = useToast();
 
-const EditEnvironment = ({
-    env,
-    setEditEnvironment,
-    editEnvironment,
-    setToastData,
-}: IEditEnvironmentProps) => {
-    const styles = useStyles();
-    const [type, setType] = useState(env.type);
-    const { updateEnvironment, loading } = useEnvironmentApi();
-    const { refetch } = useEnvironments();
-    const ref = useLoading(loading);
+    const { id } = useParams<{ id: string }>();
+    const { environment } = useEnvironment(id);
+    const { updateEnvironment } = useEnvironmentApi();
 
-    useEffect(() => {
-        setType(env.type);
-    }, [env.type]);
+    const history = useHistory();
+    const { name, type, setName, setType, errors, clearErrors } =
+        useEnvironmentForm(environment.name, environment.type);
+    const { refetch } = useProjectRolePermissions();
 
-    const handleTypeChange = (event: React.FormEvent<HTMLInputElement>) => {
-        setType(event.currentTarget.value);
-    };
-
-    const isDisabled = () => {
-        return type === env.type;
-    };
-
-    const handleCancel = () => {
-        setEditEnvironment(false);
-        resetFields();
-    };
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        const updatedEnv = {
-            sortOrder: env.sortOrder,
+    const editPayload = () => {
+        return {
             type,
+            sortOrder: environment.sortOrder,
         };
+    };
 
+    const formatApiCode = () => {
+        return `curl --location --request PUT '${
+            uiConfig.unleashUrl
+        }/api/admin/environments/update/${id}' \\
+--header 'Authorization: INSERT_API_KEY' \\
+--header 'Content-Type: application/json' \\
+--data-raw '${JSON.stringify(editPayload(), undefined, 2)}'`;
+    };
+
+    const handleSubmit = async (e: Event) => {
+        e.preventDefault();
         try {
-            await updateEnvironment(env.name, updatedEnv);
+            await updateEnvironment(id, editPayload());
+            refetch();
+            history.push('/environments');
             setToastData({
                 type: 'success',
-                show: true,
-                text: 'Successfully updated environment.',
+                title: 'Successfully updated environment.',
             });
-            resetFields();
-            refetch();
-        } catch (e) {
-            setToastData({
-                show: true,
-                type: 'error',
-                text: e.toString(),
-            });
-        } finally {
-            setEditEnvironment(false);
+        } catch (e: any) {
+            setToastApiError(e.toString());
         }
     };
 
-    const resetFields = () => {
-        setType(env.type);
+    const handleCancel = () => {
+        history.goBack();
     };
 
-    const formId = 'edit-environment-form';
-
     return (
-        <Dialogue
-            open={editEnvironment}
+        <FormTemplate
             title="Edit environment"
-            onClose={handleCancel}
-            onClick={handleSubmit}
-            primaryButtonText="Save"
-            secondaryButtonText="Cancel"
-            disabledPrimaryButton={isDisabled()}
-            formId={formId}
+            description="Environments allow you to manage your 
+            product lifecycle from local development
+            through production. Your projects and
+            feature toggles are accessible in all your
+            environments, but they can take different
+            configurations per environment. This means
+            that you can enable a feature toggle in a
+            development or test environment without
+            enabling the feature toggle in the
+            production environment."
+            documentationLink="https://docs.getunleash.io/user_guide/environments"
+            formatApiCode={formatApiCode}
         >
-            <div className={styles.body} ref={ref}>
-                <h3 className={styles.formHeader} data-loading>
-                    Environment Id
-                </h3>
-                <h3 className={styles.subheader} data-loading>
-                    <CloudCircle className={styles.icon} /> {env.name}
-                </h3>
-                <form id={formId}>
-                    <EnvironmentTypeSelector
-                        onChange={handleTypeChange}
-                        value={type}
-                    />
-                </form>
-            </div>
-        </Dialogue>
+            <EnvironmentForm
+                handleSubmit={handleSubmit}
+                handleCancel={handleCancel}
+                name={name}
+                type={type}
+                setName={setName}
+                setType={setType}
+                mode="Edit"
+                errors={errors}
+                clearErrors={clearErrors}
+            >
+                <PermissionButton
+                    onClick={handleSubmit}
+                    permission={ADMIN}
+                    type="submit"
+                >
+                    Edit environment
+                </PermissionButton>
+            </EnvironmentForm>
+        </FormTemplate>
     );
 };
 

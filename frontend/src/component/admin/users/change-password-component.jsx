@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import { Typography, Avatar } from '@material-ui/core';
+import { TextField, Typography, Avatar } from '@material-ui/core';
 import { trim } from '../../common/util';
 import { modalStyles } from './util';
 import Dialogue from '../../common/Dialogue/Dialogue';
@@ -10,7 +10,6 @@ import { useCommonStyles } from '../../../common.styles';
 import PasswordMatcher from '../../user/common/ResetPasswordForm/PasswordMatcher/PasswordMatcher';
 import ConditionallyRender from '../../common/ConditionallyRender';
 import { Alert } from '@material-ui/lab';
-import PasswordField from '../../common/PasswordField/PasswordField';
 
 function ChangePassword({
     showDialog,
@@ -110,20 +109,26 @@ function ChangePassword({
                 />
 
                 <p style={{ color: 'red' }}>{error.general}</p>
-                <PasswordField
+                <TextField
                     label="New password"
                     name="password"
+                    type="password"
                     value={data.password}
                     helperText={error.password}
                     onChange={updateField}
+                    variant="outlined"
+                    size="small"
                 />
-                <PasswordField
+                <TextField
                     label="Confirm password"
                     name="confirm"
+                    type="password"
                     value={data.confirm}
                     error={error.confirm !== undefined}
                     helperText={error.confirm}
                     onChange={updateField}
+                    variant="outlined"
+                    size="small"
                 />
                 <PasswordMatcher
                     started={data.password && data.confirm}

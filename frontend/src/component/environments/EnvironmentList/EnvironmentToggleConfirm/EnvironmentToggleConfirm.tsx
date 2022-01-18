@@ -4,7 +4,7 @@ import React from 'react';
 import { IEnvironment } from '../../../../interfaces/environments';
 import ConditionallyRender from '../../../common/ConditionallyRender';
 import Dialogue from '../../../common/Dialogue';
-import CreateEnvironmentSuccessCard from '../../CreateEnvironment/CreateEnvironmentSuccess/CreateEnvironmentSuccessCard/CreateEnvironmentSuccessCard';
+import EnvironmentCard from '../EnvironmentCard/EnvironmentCard';
 
 interface IEnvironmentToggleConfirmProps {
     env: IEnvironment;
@@ -52,10 +52,7 @@ const EnvironmentToggleConfirm = ({
                 }
             />
 
-            <CreateEnvironmentSuccessCard
-                name={env?.name}
-                type={env?.type}
-            />
+            <EnvironmentCard name={env?.name} type={env?.type} />
         </Dialogue>
     );
 };

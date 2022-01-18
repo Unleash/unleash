@@ -8,3 +8,8 @@ export interface ITagType {
     description: string;
     icon: string;
 }
+
+export interface ITagPayload {
+    name: string;
+    description: string;
+}

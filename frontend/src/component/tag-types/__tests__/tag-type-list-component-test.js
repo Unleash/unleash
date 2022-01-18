@@ -14,21 +14,24 @@ import {
     UPDATE_TAG_TYPE,
     DELETE_TAG_TYPE,
 } from '../../providers/AccessProvider/permissions';
+import UIProvider from '../../providers/UIProvider/UIProvider';
 
 test('renders an empty list correctly', () => {
     const tree = renderer.create(
         <MemoryRouter>
             <ThemeProvider theme={theme}>
-                <AccessProvider
-                    store={createFakeStore([{ permission: ADMIN }])}
-                >
-                    <TagTypesList
-                        tagTypes={[]}
-                        fetchTagTypes={jest.fn()}
-                        removeTagType={jest.fn()}
-                        history={{}}
-                    />
-                </AccessProvider>
+                <UIProvider>
+                    <AccessProvider
+                        store={createFakeStore([{ permission: ADMIN }])}
+                    >
+                        <TagTypesList
+                            tagTypes={[]}
+                            fetchTagTypes={jest.fn()}
+                            removeTagType={jest.fn()}
+                            history={{}}
+                        />
+                    </AccessProvider>
+                </UIProvider>
             </ThemeProvider>
         </MemoryRouter>
     );
@@ -39,26 +42,28 @@ test('renders a list with elements correctly', () => {
     const tree = renderer.create(
         <ThemeProvider theme={theme}>
             <MemoryRouter>
-                <AccessProvider
-                    store={createFakeStore([
-                        { permission: CREATE_TAG_TYPE },
-                        { permission: UPDATE_TAG_TYPE },
-                        { permission: DELETE_TAG_TYPE },
-                    ])}
-                >
-                    <TagTypesList
-                        tagTypes={[
-                            {
-                                name: 'simple',
-                                description: 'Some simple description',
-                                icon: '#',
-                            },
-                        ]}
-                        fetchTagTypes={jest.fn()}
-                        removeTagType={jest.fn()}
-                        history={{}}
-                    />
-                </AccessProvider>
+                <UIProvider>
+                    <AccessProvider
+                        store={createFakeStore([
+                            { permission: CREATE_TAG_TYPE },
+                            { permission: UPDATE_TAG_TYPE },
+                            { permission: DELETE_TAG_TYPE },
+                        ])}
+                    >
+                        <TagTypesList
+                            tagTypes={[
+                                {
+                                    name: 'simple',
+                                    description: 'Some simple description',
+                                    icon: '#',
+                                },
+                            ]}
+                            fetchTagTypes={jest.fn()}
+                            removeTagType={jest.fn()}
+                            history={{}}
+                        />
+                    </AccessProvider>
+                </UIProvider>
             </MemoryRouter>
         </ThemeProvider>
     );

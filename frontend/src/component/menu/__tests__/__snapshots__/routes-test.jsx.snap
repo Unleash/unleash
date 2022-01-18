@@ -389,6 +389,15 @@ Array [
     "type": "protected",
   },
   Object {
+    "component": [Function],
+    "layout": "main",
+    "menu": Object {},
+    "parent": "/admin",
+    "path": "/admin/create-user",
+    "title": "Users",
+    "type": "protected",
+  },
+  Object {
     "component": Object {
       "$$typeof": Symbol(react.memo),
       "WrappedComponent": [Function],

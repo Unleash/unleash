@@ -13,6 +13,7 @@ import { formatDateWithLocale } from '../../../../common/util';
 import AccessContext from '../../../../../contexts/AccessContext';
 import { IUser } from '../../../../../interfaces/user';
 import { useStyles } from './UserListItem.styles';
+import { useHistory } from 'react-router-dom';
 
 interface IUserListItemProps {
     user: IUser;
@@ -36,6 +37,7 @@ const UserListItem = ({
     location,
 }: IUserListItemProps) => {
     const { hasAccess } = useContext(AccessContext);
+    const history = useHistory()
     const styles = useStyles();
 
     return (
@@ -78,7 +80,7 @@ const UserListItem = ({
                             data-loading
                             aria-label="Edit"
                             title="Edit"
-                            onClick={openUpdateDialog(user)}
+                            onClick={()=> history.push(`/admin/users/${user.id}/edit`)}
                         >
                             <Edit />
                         </IconButton>

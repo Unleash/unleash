@@ -40,7 +40,9 @@ const UsersAdmin = ({ history }) => {
                                     <Button
                                         variant="contained"
                                         color="primary"
-                                        onClick={openDialog}
+                                        onClick={() =>
+                                            history.push('/admin/create-user')
+                                        }
                                     >
                                         Add new user
                                     </Button>

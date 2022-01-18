@@ -216,6 +216,14 @@ Array [
   },
   Object {
     "component": [Function],
+    "layout": "main",
+    "menu": Object {},
+    "path": "/environments/:id",
+    "title": "Edit",
+    "type": "protected",
+  },
+  Object {
+    "component": [Function],
     "flag": "EEA",
     "layout": "main",
     "menu": Object {

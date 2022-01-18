@@ -37,13 +37,15 @@ import Project from '../project/Project/Project';
 import RedirectFeatureViewPage from '../../page/features/redirect';
 import RedirectArchive from '../feature/RedirectArchive/RedirectArchive';
 import EnvironmentList from '../environments/EnvironmentList/EnvironmentList';
-import CreateEnvironment from '../environments/CreateEnvironment/CreateEnvironment';
 import FeatureView2 from '../feature/FeatureView2/FeatureView2';
 import FeatureCreate from '../feature/FeatureCreate/FeatureCreate';
 import ProjectRoles from '../admin/project-roles/ProjectRoles/ProjectRoles';
 import CreateProjectRole from '../admin/project-roles/CreateProjectRole/CreateProjectRole';
 import EditProjectRole from '../admin/project-roles/EditProjectRole/EditProjectRole';
 import CreateApiToken from '../admin/api-token/CreateApiToken/CreateApiToken';
+import CreateEnvironment from '../environments/CreateEnvironment/CreateEnvironment';
+import EditEnvironment from '../environments/EditEnvironment/EditEnvironment';
+
 
 export const routes = [
     // Project
@@ -251,6 +253,14 @@ export const routes = [
         title: 'Environments',
         component: CreateEnvironment,
         parent: '/environments',
+        type: 'protected',
+        layout: 'main',
+        menu: {},
+    },
+    {
+        path: '/environments/:id',
+        title: 'Edit',
+        component: EditEnvironment,
         type: 'protected',
         layout: 'main',
         menu: {},

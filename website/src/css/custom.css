@@ -20,6 +20,10 @@
     --navbar-link-color: #122d33;
 }
 
+footer {
+    --ifm-footer-link-hover-color: var(--ifm-footer-link-color);
+}
+
 [class^='docTitle'] {
     font-size: 2.5rem !important;
 }

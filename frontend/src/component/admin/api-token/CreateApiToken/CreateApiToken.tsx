@@ -5,6 +5,8 @@ import useApiTokenForm from '../hooks/useApiTokenForm';
 import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from '../../../../hooks/useToast';
 import useApiTokensApi from '../../../../hooks/api/actions/useApiTokensApi/useApiTokensApi';
+import PermissionButton from '../../../common/PermissionButton/PermissionButton';
+import { ADMIN } from '../../../providers/AccessProvider/permissions';
 
 const CreateApiToken = () => {
     /* @ts-ignore */
@@ -80,9 +82,17 @@ const CreateApiToken = () => {
                 errors={errors}
                 handleSubmit={handleSubmit}
                 handleCancel={handleCancel}
-                submitButtonText="Create"
+                mode="Create"
                 clearErrors={clearErrors}
-            />
+            >
+                <PermissionButton
+                    onClick={handleSubmit}
+                    permission={ADMIN}
+                    type="submit"
+                >
+                    Create token
+                </PermissionButton>
+            </ApiTokenForm>
         </FormTemplate>
     );
 };

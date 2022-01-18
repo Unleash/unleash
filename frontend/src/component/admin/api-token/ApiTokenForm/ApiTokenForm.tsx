@@ -5,10 +5,7 @@ import useEnvironments from '../../../../hooks/api/getters/useEnvironments/useEn
 import useProjects from '../../../../hooks/api/getters/useProjects/useProjects';
 import GeneralSelect from '../../../common/GeneralSelect/GeneralSelect';
 import Input from '../../../common/Input/Input';
-import PermissionButton from '../../../common/PermissionButton/PermissionButton';
-import { ADMIN } from '../../../providers/AccessProvider/permissions';
 import { useStyles } from './ApiTokenForm.styles';
-
 interface IApiTokenFormProps {
     username: string;
     type: string;
@@ -21,10 +18,11 @@ interface IApiTokenFormProps {
     handleSubmit: (e: any) => void;
     handleCancel: () => void;
     errors: { [key: string]: string };
-    submitButtonText: string;
+    mode: string;
     clearErrors: () => void;
 }
-const ApiTokenForm = ({
+const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
+    children,
     username,
     type,
     project,
@@ -37,8 +35,8 @@ const ApiTokenForm = ({
     handleCancel,
     errors,
     clearErrors,
-    submitButtonText,
-}: IApiTokenFormProps) => {
+    mode,
+}) => {
     const TYPE_ADMIN = 'ADMIN';
     const styles = useStyles();
     const { environments } = useEnvironments();
@@ -127,13 +125,7 @@ const ApiTokenForm = ({
                 <Button onClick={handleCancel} className={styles.cancelButton}>
                     Cancel
                 </Button>
-                <PermissionButton
-                    onClick={handleSubmit}
-                    permission={ADMIN}
-                    type="submit"
-                >
-                    {submitButtonText} token
-                </PermissionButton>
+                {children}
             </div>
         </form>
     );

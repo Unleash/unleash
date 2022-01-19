@@ -13,7 +13,6 @@ import ApplicationView from '../../page/applications/view';
 import ContextFields from '../../page/context';
 import CreateContextField from '../../page/context/create';
 import EditContextField from '../../page/context/edit';
-import CreateProject from '../../page/project/create';
 import ListTagTypes from '../../page/tag-types';
 import Addons from '../../page/addons';
 import AddonsCreate from '../../page/addons/create';
@@ -46,6 +45,8 @@ import EditEnvironment from '../environments/EditEnvironment/EditEnvironment';
 
 import EditTagType from '../tagTypes/EditTagType/EditTagType';
 import CreateTagType from '../tagTypes/CreateTagType/CreateTagType';
+import EditProject from '../project/Project/EditProject/EditProject';
+import CreateProject from '../project/Project/CreateProject/CreateProject';
 
 export const routes = [
     // Project
@@ -55,6 +56,15 @@ export const routes = [
         parent: '/projects',
         title: 'Create',
         component: CreateProject,
+        type: 'protected',
+        layout: 'main',
+        menu: {},
+    },
+    {
+        path: '/projects/:id/edit',
+        parent: '/projects',
+        title: ':id',
+        component: EditProject,
         type: 'protected',
         layout: 'main',
         menu: {},

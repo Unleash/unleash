@@ -9,6 +9,9 @@ This guide takes you through [how to create](#creating-custom-project-roles "how
 
 ## Creating custom project roles
 
+
+It takes about three steps to create custom project roles. You can either follow the steps in writing below or watch [the accompanying video](#video-create).
+
 To create custom project roles:
 
 1. Navigate to the custom project roles page by using the admin menu (the gear symbol) and navigating to users.
@@ -20,7 +23,17 @@ To create custom project roles:
 4. Give the role a name, an optional description, and the set of permissions you'd like it to have. For a full overview of all the options, consult the [custom project roles reference documentation](../user_guide/rbac.md#custom-project-roles).
     ![The project role creation form filled in with details for a "developer" role. To the left is the equivalent cURL command you could run if you wanted to use the API instead of the form.](/img/create-cpr-step-4.png)
 
+### How to create custom project roles (video) {#video-create}
+
+Here's a video recording with accompanying explanations of how to create custom project roles:
+
+<iframe width="100%" height="auto" style={{  aspectRatio: "16/9"  }} src="https://www.youtube.com/embed/2BlckVMHxgE" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+
+
 ## Assigning custom project roles
+
+Custom project role creation is a pretty straightforward process and requires around three steps, outlined below. There's also a [video how-to guide for assigning custom project roles](#video-assign) available.
 
 To assign a custom project role to a user:
 1. Navigate to the project you want to assign the user a role in.
@@ -32,3 +45,9 @@ To assign a custom project role to a user:
         ![A list of users with access to the current project. To the right of each user is a dropdown input labeled role.](/img/assign-cpr-step-3a.png)
     - If the user _hasn't_ been added to the project, add them via the 'add user' form. Select the role you want to give them from the role field.
         ![Adding a user to a project. The add user form is filled out with data for an "Alexis". The Role input is open and the custom "Developer" role is highlighted.](/img/assign-cpr-step-3b.png)
+
+### How to assign custom project roles (video) {#video-assign}
+
+Here's a video recording with accompanying explanations of how to assign custom project roles:
+
+<iframe width="100%" height="auto" style={{  aspectRatio: "16/9"  }} src="https://www.youtube.com/embed/IqaD8iGxkwk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>

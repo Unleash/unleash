@@ -215,6 +215,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         project: string,
         data: FeatureToggleDTO,
     ): Promise<FeatureToggle> {
+        console.log(data);
         const row = await this.db(TABLE)
             .where({ name: data.name })
             .update(this.dtoToRow(project, data))

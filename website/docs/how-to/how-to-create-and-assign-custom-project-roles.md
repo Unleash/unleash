@@ -33,7 +33,7 @@ Here's a video recording with accompanying explanations of how to create custom 
 
 ## Assigning custom project roles
 
-Custom project role creation is a pretty straightforward process and requires around three steps, outlined below. There's also a [video how-to guide for assigning custom project roles](#video-assign) available.
+Custom project role creation is a pretty straightforward process and requires around three steps, outlined below. There's also a [video version](#video-assign) available.
 
 To assign a custom project role to a user:
 1. Navigate to the project you want to assign the user a role in.

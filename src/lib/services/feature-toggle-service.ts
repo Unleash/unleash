@@ -118,7 +118,7 @@ class FeatureToggleService {
         const id = await this.featureToggleStore.getProjectId(featureName);
         if (id !== projectId) {
             throw new InvalidOperationError(
-                'You can not change the projectId for an activation strategy.',
+                'Project id does not match the project that the feature belongs to',
             );
         }
     }

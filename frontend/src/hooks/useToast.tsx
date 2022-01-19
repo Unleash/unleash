@@ -15,6 +15,8 @@ interface IToastOptions {
     type: string;
     persist?: boolean;
     confetti?: boolean;
+    autoHideDuration?: number;
+    show?: boolean;
 }
 
 const useToast = () => {

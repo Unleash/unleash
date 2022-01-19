@@ -13,12 +13,7 @@ import ApplicationView from '../../page/applications/view';
 import ContextFields from '../../page/context';
 import CreateContextField from '../../page/context/create';
 import EditContextField from '../../page/context/edit';
-import CreateProject from '../../page/project/create';
 import ListTagTypes from '../../page/tag-types';
-import CreateTagType from '../../page/tag-types/create';
-import EditTagType from '../../page/tag-types/edit';
-import ListTags from '../../page/tags';
-import CreateTag from '../../page/tags/create';
 import Addons from '../../page/addons';
 import AddonsCreate from '../../page/addons/create';
 import AddonsEdit from '../../page/addons/edit';
@@ -48,6 +43,10 @@ import CreateApiToken from '../admin/api-token/CreateApiToken/CreateApiToken';
 import CreateEnvironment from '../environments/CreateEnvironment/CreateEnvironment';
 import EditEnvironment from '../environments/EditEnvironment/EditEnvironment';
 
+import EditTagType from '../tagTypes/EditTagType/EditTagType';
+import CreateTagType from '../tagTypes/CreateTagType/CreateTagType';
+import EditProject from '../project/Project/EditProject/EditProject';
+import CreateProject from '../project/Project/CreateProject/CreateProject';
 
 export const routes = [
     // Project
@@ -57,6 +56,15 @@ export const routes = [
         parent: '/projects',
         title: 'Create',
         component: CreateProject,
+        type: 'protected',
+        layout: 'main',
+        menu: {},
+    },
+    {
+        path: '/projects/:id/edit',
+        parent: '/projects',
+        title: ':id',
+        component: EditProject,
         type: 'protected',
         layout: 'main',
         menu: {},
@@ -303,24 +311,6 @@ export const routes = [
         type: 'protected',
         layout: 'main',
         menu: { mobile: true, advanced: true },
-    },
-    {
-        path: '/tags/create',
-        parent: '/tags',
-        title: 'Create',
-        component: CreateTag,
-        type: 'protected',
-        layout: 'main',
-        menu: {},
-    },
-    {
-        path: '/tags',
-        title: 'Tags',
-        component: ListTags,
-        hidden: true,
-        type: 'protected',
-        layout: 'main',
-        menu: {},
     },
 
     // Addons

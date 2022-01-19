@@ -55,7 +55,7 @@ const ProjectInfo = ({
             component={Link}
             className={permissionButtonClass}
             data-loading
-            to={`/projects/${id}/settings`}
+            to={`/projects/${id}/edit`}
         >
             <Edit />
         </PermissionIconButton>

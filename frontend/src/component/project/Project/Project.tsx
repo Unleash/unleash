@@ -13,7 +13,6 @@ import { useEffect } from 'react';
 import useTabs from '../../../hooks/useTabs';
 import TabPanel from '../../common/TabNav/TabPanel';
 import ProjectAccess from '../access-container';
-import EditProject from '../edit-project-container';
 import ProjectEnvironment from '../ProjectEnvironment/ProjectEnvironment';
 import ProjectOverview from './ProjectOverview';
 import ProjectHealth from './ProjectHealth/ProjectHealth';
@@ -58,19 +57,6 @@ const Project = () => {
             path: `${basePath}/environments`,
             name: 'environments',
         },
-        {
-            title: 'Settings',
-            // @ts-ignore (fix later)
-            component: (
-                <EditProject
-                    projectId={id}
-                    history={history}
-                    title="Edit project"
-                />
-            ),
-            path: `${basePath}/settings`,
-            name: 'settings',
-        },
     ];
 
     useEffect(() => {
@@ -100,15 +86,6 @@ const Project = () => {
 
         /* eslint-disable-next-line */
     }, []);
-
-    const goToTabWithName = (name: string) => {
-        const index = tabData.findIndex(t => t.name === name);
-        if (index >= 0) {
-            const tab = tabData[index];
-            history.push(tab.path);
-            setActiveTab(index);
-        }
-    };
 
     const renderTabs = () => {
         return tabData.map((tab, index) => {
@@ -150,9 +127,9 @@ const Project = () => {
                         Project: {project?.name}{' '}
                         <PermissionIconButton
                             permission={UPDATE_PROJECT}
-                            tooltip={'Edit description'}
+                            tooltip="Edit"
                             projectId={project?.id}
-                            onClick={() => goToTabWithName('settings')}
+                            onClick={() => history.push(`/projects/${id}/edit`)}
                             data-loading
                         >
                             <Edit />

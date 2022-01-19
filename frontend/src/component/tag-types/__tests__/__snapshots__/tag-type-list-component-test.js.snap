@@ -38,44 +38,10 @@ exports[`renders a list with elements correctly 1`] = `
       className="MuiList-root MuiList-padding"
     >
       <li
-        className="MuiListItem-root tagListItem MuiListItem-gutters"
+        className="MuiListItem-root MuiListItem-gutters"
         disabled={false}
       >
-        <div
-          className="MuiListItemIcon-root"
-        >
-          <svg
-            aria-hidden={true}
-            className="MuiSvgIcon-root"
-            focusable="false"
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M17.63 5.84C17.27 5.33 16.67 5 16 5L5 5.01C3.9 5.01 3 5.9 3 7v10c0 1.1.9 1.99 2 1.99L16 19c.67 0 1.27-.33 1.63-.84L22 12l-4.37-6.16z"
-            />
-          </svg>
-        </div>
-        <div
-          className="MuiListItemText-root MuiListItemText-multiline"
-        >
-          <span
-            className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
-          >
-            <a
-              href="/tag-types/edit/simple"
-              onClick={[Function]}
-            >
-              <strong>
-                simple
-              </strong>
-            </a>
-          </span>
-          <p
-            className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
-          >
-            Some simple description
-          </p>
-        </div>
+        No entries
       </li>
     </ul>
   </div>

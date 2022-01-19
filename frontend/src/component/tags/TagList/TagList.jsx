@@ -50,6 +50,7 @@ const TagList = ({ tags, fetchTags, removeTag }) => {
                 <Label />
             </ListItemIcon>
             <ListItemText primary={tag.value} secondary={tag.type} />
+
             <ConditionallyRender
                 condition={hasAccess(DELETE_TAG)}
                 show={<DeleteButton tagType={tag.type} tagValue={tag.value} />}
@@ -81,7 +82,7 @@ const TagList = ({ tags, fetchTags, removeTag }) => {
                     show={
                         <IconButton
                             aria-label="add tag"
-                            onClick={() => history.push('/tags/create')}
+                            onClick={() => history.push('/tag-types/create')}
                         >
                             <Add />
                         </IconButton>
@@ -91,7 +92,9 @@ const TagList = ({ tags, fetchTags, removeTag }) => {
                             <Button
                                 color="primary"
                                 startIcon={<Add />}
-                                onClick={() => history.push('/tags/create')}
+                                onClick={() =>
+                                    history.push('/tag-types/create')
+                                }
                                 variant="contained"
                             >
                                 Add new tag

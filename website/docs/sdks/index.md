@@ -107,6 +107,7 @@ Here's some of the fantastic work our community has done to make Unleash work in
 - [AppsFlyer/clojure-unleash](https://github.com/AppsFlyer/unleash-client-clojure) (Clojure)
 - [mikefrancis/laravel-unleash](https://github.com/mikefrancis/laravel-unleash) (Laravel - PHP)
 - [minds/unleash-client-php](https://gitlab.com/minds/unleash-client-php) (PHP)
+- [ngx-unleash-proxy-client](https://github.com/snowfrogdev/snowfrogdev/tree/main/packages/ngx-unleash-proxy-client) (Angular - TypeScript)
 - [pmb0/nestjs-unleash](https://github.com/pmb0/nestjs-unleash) (NestJS - Node.js)
 - [silvercar/unleash-client-kotlin](https://github.com/silvercar/unleash-client-kotlin) (Kotlin)
 - [Stogon/unleash-bundle](https://git.stogon.io/Stogon/unleash-bundle/) (PHP - Symfony)

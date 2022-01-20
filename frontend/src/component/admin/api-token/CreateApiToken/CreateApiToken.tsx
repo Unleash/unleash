@@ -7,12 +7,18 @@ import useToast from '../../../../hooks/useToast';
 import useApiTokensApi from '../../../../hooks/api/actions/useApiTokensApi/useApiTokensApi';
 import PermissionButton from '../../../common/PermissionButton/PermissionButton';
 import { ADMIN } from '../../../providers/AccessProvider/permissions';
+import ConfirmToken from '../ConfirmToken/ConfirmToken';
+import { useState } from 'react';
+import { scrollToTop } from '../../../common/util';
 
 const CreateApiToken = () => {
     /* @ts-ignore */
-    const { setToastData, setToastApiError } = useToast();
+    const { setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
     const history = useHistory();
+    const [showConfirm, setShowConfirm] = useState(false);
+    const [token, setToken] = useState('');
+
     const {
         getApiTokenPayload,
         username,
@@ -36,17 +42,22 @@ const CreateApiToken = () => {
             return;
         }
         try {
-            await createToken(getApiTokenPayload());
-            history.push('/admin/api');
-            setToastData({
-                type: 'success',
-                title: 'Created token',
-                text: 'Successfully created API token',
-                confetti: true,
-            });
+            const payload = getApiTokenPayload();
+            await createToken(payload)
+                .then(res => res.json())
+                .then(api => {
+                    scrollToTop();
+                    setToken(api.secret);
+                    setShowConfirm(true);
+                });
         } catch (e: any) {
             setToastApiError(e.toString());
         }
+    };
+
+    const closeConfirm = () => {
+        setShowConfirm(false);
+        history.push('/admin/api');
     };
 
     const formatApiCode = () => {
@@ -93,6 +104,11 @@ const CreateApiToken = () => {
                     Create token
                 </PermissionButton>
             </ApiTokenForm>
+            <ConfirmToken
+                open={showConfirm}
+                closeConfirm={closeConfirm}
+                token={token}
+            />
         </FormTemplate>
     );
 };

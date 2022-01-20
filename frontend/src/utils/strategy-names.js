@@ -1,7 +1,7 @@
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import PeopleIcon from '@material-ui/icons/People';
 import LanguageIcon from '@material-ui/icons/Language';
-import MapIcon from '@material-ui/icons/Map';
+import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
 import RolloutIcon from '../component/common/RolloutIcon/RolloutIcon';
 
 const nameMapping = {
@@ -67,6 +67,6 @@ export const getFeatureStrategyIcon = strategyName => {
         case 'applicationHostname':
             return LocationOnIcon;
         default:
-            return MapIcon;
+            return PowerSettingsNewIcon;
     }
 };

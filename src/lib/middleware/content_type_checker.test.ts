@@ -38,6 +38,20 @@ test('Content-type middleware should by default only support application/json', 
     expect(fail).toHaveBeenCalledTimes(0);
 });
 
+test('Content-type middleware should by default only support application/json with charset', () => {
+    const middleware = requireContentType();
+    const t = jest.fn();
+    const fail = jest.fn();
+    middleware(
+        mockRequest('application/json; charset=UTF-8'),
+        expectNoCall(fail),
+        t,
+    );
+    middleware(mockRequest('text/plain'), returns415(t), fail);
+    expect(t).toHaveBeenCalledTimes(2);
+    expect(fail).toHaveBeenCalledTimes(0);
+});
+
 test('Content-type middleware should allow adding custom supported types', () => {
     const middleware = requireContentType('application/yaml');
     const t = jest.fn();

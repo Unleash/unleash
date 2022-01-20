@@ -30,6 +30,8 @@ import { IFeatureViewParams } from '../../../interfaces/params';
 import ProjectRoleSelect from './ProjectRoleSelect/ProjectRoleSelect';
 import usePagination from '../../../hooks/usePagination';
 import PaginateUI from '../../common/PaginateUI/PaginateUI';
+import useToast from '../../../hooks/useToast';
+import ConfirmDialogue from '../../common/Dialogue';
 
 const ProjectAccess = () => {
     const { id } = useParams<IFeatureViewParams>();
@@ -37,9 +39,12 @@ const ProjectAccess = () => {
     const [roles, setRoles] = useState([]);
     const [users, setUsers] = useState([]);
     const [error, setError] = useState();
+    const { setToastData, setToastApiError } = useToast();
     const { isOss } = useUiConfig();
     const { page, pages, nextPage, prevPage, setPageIndex, pageIndex } =
         usePagination(users, 10);
+    const [showDelDialogue, setShowDelDialogue] = useState(false);
+    const [user, setUser] = useState({});
 
     useEffect(() => {
         fetchAccess();
@@ -54,7 +59,7 @@ const ProjectAccess = () => {
                 access.users.map(u => ({ ...u, name: u.name || '(No name)' }))
             );
         } catch (e) {
-            console.log(e);
+            setToastApiError(e.toString());
         }
     };
 
@@ -77,7 +82,12 @@ const ProjectAccess = () => {
         const roleId = evt.target.value;
         try {
             await projectApi.removeUserFromRole(id, currRoleId, userId);
-            await projectApi.addUserToRole(id, roleId, userId);
+            await projectApi.addUserToRole(id, roleId, userId).then(() => {
+                setToastData({
+                    type: 'success',
+                    title: 'User role changed successfully',
+                });
+            });
             const newUsers = users.map(u => {
                 if (u.id === userId) {
                     return { ...u, roleId };
@@ -85,27 +95,47 @@ const ProjectAccess = () => {
             });
             setUsers(newUsers);
         } catch (err) {
-            setError(err.message || 'Server problems when adding users.');
+            setToastData({
+                type: 'error',
+                title: err.message || 'Server problems when adding users.',
+            });
         }
     };
 
     const addUser = async (userId, roleId) => {
         try {
             await projectApi.addUserToRole(id, roleId, userId);
-            await fetchAccess();
+            await fetchAccess().then(() => {
+                setToastData({
+                    type: 'success',
+                    title: 'Successfully added user to the project',
+                });
+            });
         } catch (err) {
-            setError(err.message || 'Server problems when adding users.');
+            setToastData({
+                type: 'error',
+                title: err.message || 'Server problems when adding users.',
+            });
         }
     };
 
-    const removeAccess = (userId, roleId) => async () => {
+    const removeAccess = (userId: number, roleId: number) => async () => {
         try {
-            await projectApi.removeUserFromRole(id, roleId, userId);
+            await projectApi.removeUserFromRole(id, roleId, userId).then(() => {
+                setToastData({
+                    type: 'success',
+                    title: 'User have been removed from project',
+                });
+            });
             const newUsers = users.filter(u => u.id !== userId);
             setUsers(newUsers);
         } catch (err) {
-            setError(err.message || 'Server problems when adding users.');
+            setToastData({
+                type: 'error',
+                title: err.message || 'Server problems when adding users.',
+            });
         }
+        setShowDelDialogue(false);
     };
 
     const handleCloseError = () => {
@@ -176,7 +206,10 @@ const ProjectAccess = () => {
                                     edge="end"
                                     aria-label="delete"
                                     title="Remove access"
-                                    onClick={removeAccess(user.id, user.roleId)}
+                                    onClick={() => {
+                                        setUser(user);
+                                        setShowDelDialogue(true);
+                                    }}
                                     disabled={users.length === 1}
                                     tooltip={
                                         users.length === 1
@@ -199,6 +232,15 @@ const ProjectAccess = () => {
                     style={{ bottom: '-21px' }}
                 />
             </List>
+            <ConfirmDialogue
+                open={showDelDialogue}
+                onClick={removeAccess(user.id, user.roleId)}
+                onClose={() => {
+                    setUser({});
+                    setShowDelDialogue(false);
+                }}
+                title="Really remove user from this project"
+            />
         </PageContent>
     );
 };

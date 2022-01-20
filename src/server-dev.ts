@@ -24,6 +24,7 @@ process.nextTick(async () => {
                 },
                 logLevel: LogLevel.debug,
                 enableOAS: true,
+                // secureHeaders: true,
                 versionCheck: {
                     enable: false,
                 },

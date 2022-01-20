@@ -5,7 +5,7 @@ import { IUnleashConfig } from '../../../types/option';
 import { IUnleashServices } from '../../../types';
 import { Request, Response } from 'express';
 import { Operation } from 'fast-json-patch';
-import { UPDATE_FEATURE } from '../../../types/permissions';
+import { UPDATE_FEATURE_VARIANTS } from '../../../types/permissions';
 import { IVariant } from '../../../types/model';
 import { extractUsername } from '../../../util/extract-user';
 import { IAuthRequest } from '../../unleash-types';
@@ -35,8 +35,8 @@ export default class VariantsController extends Controller {
         this.logger = config.getLogger('admin-api/project/variants.ts');
         this.featureService = featureToggleService;
         this.get(PREFIX, this.getVariants);
-        this.patch(PREFIX, this.patchVariants, UPDATE_FEATURE);
-        this.put(PREFIX, this.overwriteVariants, UPDATE_FEATURE);
+        this.patch(PREFIX, this.patchVariants, UPDATE_FEATURE_VARIANTS);
+        this.put(PREFIX, this.overwriteVariants, UPDATE_FEATURE_VARIANTS);
     }
 
     async getVariants(

@@ -5,11 +5,11 @@ title: Role-based Access control
 
 This document forms the specifications for [Role-Based Access Control](https://en.wikipedia.org/wiki/Role-based_access_control) which was introduced as part of the **Unleash v4 release**.
 
-### Core principles {#core-principles}
+## Core principles {#core-principles}
 
 Unleash has two levels in it’s hierarchy of resources:
 
-1. **Root resources** - Everything that lives across the entire Unleash instance. Examples of this includes:
+1. **Global resources** - Everything that lives across the entire Unleash instance. Examples of this includes:
    - activation strategies
    - context field definitions
    - addon configurations
@@ -19,33 +19,84 @@ Unleash has two levels in it’s hierarchy of resources:
 
 ![RBAC overview](/img/rbac.png)
 
-Unleash v4 allows you control access to both "root resources" and individual project resources.
+Unleash v4 allows you control access to both global resources and individual project resources.
 
-### Root Roles {#root-roles}
+## Standard roles
 
-> Available for Unleash Open-Source and Unleash Enterprise.
+Unleash comes with a set of built-in roles that you can use. The _global roles_ are available to all Unleash users, while the _project-based roles_ are only available to Pro and Enterprise users. The below table lists the roles, what they do, and what plans they are available in. Additionally, enterprise users can create their own [custom project roles](#custom-project-roles).
 
-Unleash will come with three "root" role out of the box:
+When you add a new user, you can assign them one of the global roles listed below.
 
-- **Admin** - Used to administer the Unleash instance. Is allowed to add/remove users, add them to roles and update role permissions.
-- **Editor** - Represent users with typical read and write access to Unleash. They will typically be allowed to create new projects (for enterprise), create feature toggles on the "default" project, configure context fields etc. They will not be able to add/remove users or roles.
-- **Viewer** - Users with this role are only allowed to read resources in Unleash. They might be added as collaborators to specific projects.
+| Role       | Scope   | Description                                                                                                                                                                                                                                                         | Availability       |
+|------------|---------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------|
+| **Admin**  | Global  | Users with the global admin role have superuser access to Unleash and can perform any operation within the Unleash platform.                                                                                                                                        | All versions       |
+| **Editor** | Global  | Users with the editor role have access to most features in Unleash but can not manage users and roles in the global scope. Editors will be added as project owners when creating projects and get superuser rights within the context of these projects. Users with the editor role will also get access to most permissions on the default project by default.           | All versions       |
+| **Viewer** | Global  | Users with the viewer role can read global resources in Unleash.                                                                                                                                                                                                    | All versions       |
+| **Owner**  | Project | Users with this the project owner role have full control over the project, and can add and manage other users within the project context; manage feature toggles within the project; and control advanced project features like archiving and deleting the project. | Pro and Enterprise |
+| **Member** | Project | Users with the project member role are allowed to view, create, and update feature toggles within a project, but have limited permissions in regards to managing the project's user access and can not archive or delete the project.                               | Pro and Enterprise |
 
-### Project {#project}
+## Custom Project Roles
 
-> Project roles are part of Unleash Enterprise.
+:::info availability
+Custom project roles were introduced in **Unleash 4.6** and are only available in Unleash Enterprise.
+:::
 
-Per project two roles are now available:
+Custom project roles let you define your own roles with a specific set of project permissions down to the environment level. The roles can then be assigned to users in specific projects. All users have viewer access to all projects and resources, but must be assigned a project role to be allowed to edit a project's resources. For a step-by-step walkthrough of how to create and assign custom project roles, see [_how to create and assign custom project roles_](../how-to/how-to-create-and-assign-custom-project-roles.md).
 
-- **Owner** - Allowed to update the project. This includes adding and removing project members and their role.
-- **Member** - Allowed to create and update feature toggles within the project. They can not update the project itself
+Each custom project role consists of:
+- a **name** (required)
+- a **role description** (optional)
+- a set of **project permissions** (optional)
+- a set of **environment permissions** (optional)
 
-It is important to highlight that we have not introduced a Viewer role on the project level. We believe that all users in Unleash should be able to to View all feature toggles and configuration within an organization. (If we learn this not to be the case we can add a separate role for READ access later).
+### Project permissions
 
-### Custom Roles {#custom-roles}
+You can assign the following project permissions. The permissions will be valid across all of the project's environments.
 
-> Will only be introduced for Unleash Enterprise.
+- **update the project**
 
-In a later iteration we will introduce the concept of "custom roles". This will allow full customization to meet internal needs of larger organisations. We believe these should be able to define access across both “root resources” and specific projects resources. We need further investigation with customers before we land custom roles.
+  Lets the user update project settings, such as enabling/disabling environments, add users, etc.
 
-Please let us know if you have feedback or ideas on how custom roles should work in order to solve your company needs.
+- **delete the project**
+
+  Lets the user delete the project.
+
+- **create feature toggles within the project**
+
+  Lets the user create feature toggles within the project and create variants for said toggle. Note that they **can not assign strategies** to toggles without having the _create activation strategy_ permission for the corresponding environment.
+
+- **update feature toggles within the project**
+
+  Lets the user update feature toggle descriptions; mark toggles as stale / not stale; add, update, and remove toggle tags; and update toggle variants within the project.
+
+- **delete feature toggles within the project**
+
+  Lets the user archive feature toggles within the project.
+
+- **change feature toggle project**
+
+  Lets the user move toggles to other projects they have access to.
+
+- **create/edit variants**
+
+  Lets the user create and edit variants within the project.
+
+### Environment permissions
+
+You can assign the following permissions on a per-environment level within the project:
+
+- **create activation strategies**
+
+  Lets the user assign feature toggle activation strategies within the environment.
+
+- **update activation strategies**
+
+  Lets the user update feature toggle activation strategies within the environment.
+
+- **delete activation strategies**
+
+  Lets the user delete feature toggle activation strategies within the environment.
+
+- **enable/disable toggles**
+
+  Lets the user enable and disable toggles within the environment.

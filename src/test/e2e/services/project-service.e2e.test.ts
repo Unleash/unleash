@@ -3,12 +3,7 @@ import getLogger from '../../fixtures/no-logger';
 import FeatureToggleService from '../../../lib/services/feature-toggle-service';
 import ProjectService from '../../../lib/services/project-service';
 import { AccessService } from '../../../lib/services/access-service';
-import {
-    CREATE_FEATURE,
-    UPDATE_FEATURE,
-    UPDATE_PROJECT,
-} from '../../../lib/types/permissions';
-import NotFoundError from '../../../lib/error/notfound-error';
+import { MOVE_FEATURE_TOGGLE } from '../../../lib/types/permissions';
 import { createTestConfig } from '../../config/test-config';
 import { RoleName } from '../../../lib/types/model';
 
@@ -53,7 +48,12 @@ afterEach(async () => {
         .map(async (env) => {
             await stores.environmentStore.delete(env.name);
         });
+    const users = await stores.userStore.getAll();
+    const wipeUserPermissions = users.map(async (u) => {
+        await stores.accessStore.unlinkUserRoles(u.id);
+    });
     await Promise.allSettled(deleteEnvs);
+    await Promise.allSettled(wipeUserPermissions);
 });
 
 test('should have default project', async () => {
@@ -202,37 +202,6 @@ test('should give error when getting unknown project', async () => {
     }
 });
 
-test('(TODO: v4): should create roles for new project if userId is missing', async () => {
-    const project = {
-        id: 'test-roles-no-id',
-        name: 'New project',
-        description: 'Blah',
-    };
-    await projectService.createProject(project, {
-        username: 'random-user',
-    });
-    const roles = await stores.accessStore.getRolesForProject(project.id);
-
-    expect(roles).toHaveLength(2);
-    expect(
-        await accessService.hasPermission(user, UPDATE_PROJECT, project.id),
-    ).toBe(false);
-});
-
-test('should create roles when project is created', async () => {
-    const project = {
-        id: 'test-roles',
-        name: 'New project',
-        description: 'Blah',
-    };
-    await projectService.createProject(project, user);
-    const roles = await stores.accessStore.getRolesForProject(project.id);
-    expect(roles).toHaveLength(2);
-    expect(
-        await accessService.hasPermission(user, UPDATE_PROJECT, project.id),
-    ).toBe(true);
-});
-
 test('should get list of users with access to project', async () => {
     const project = {
         id: 'test-roles-access',
@@ -240,13 +209,10 @@ test('should get list of users with access to project', async () => {
         description: 'Blah',
     };
     await projectService.createProject(project, user);
-    const { roles, users } = await projectService.getUsersWithAccess(
-        project.id,
-        user,
-    );
+    const { users } = await projectService.getUsersWithAccess(project.id, user);
 
-    const owner = roles.find((role) => role.name === RoleName.OWNER);
-    const member = roles.find((role) => role.name === RoleName.MEMBER);
+    const member = await stores.roleStore.getRoleByName(RoleName.MEMBER);
+    const owner = await stores.roleStore.getRoleByName(RoleName.OWNER);
 
     expect(users).toHaveLength(1);
     expect(users[0].id).toBe(user.id);
@@ -272,8 +238,7 @@ test('should add a member user to the project', async () => {
         email: 'member2@getunleash.io',
     });
 
-    const roles = await stores.accessStore.getRolesForProject(project.id);
-    const memberRole = roles.find((r) => r.name === RoleName.MEMBER);
+    const memberRole = await stores.roleStore.getRoleByName(RoleName.MEMBER);
 
     await projectService.addUser(project.id, memberRole.id, projectMember1.id);
     await projectService.addUser(project.id, memberRole.id, projectMember2.id);
@@ -305,10 +270,7 @@ test('should add admin users to the project', async () => {
         email: 'admin2@getunleash.io',
     });
 
-    const projectRoles = await stores.accessStore.getRolesForProject(
-        project.id,
-    );
-    const ownerRole = projectRoles.find((r) => r.name === RoleName.OWNER);
+    const ownerRole = await stores.roleStore.getRoleByName(RoleName.OWNER);
 
     await projectService.addUser(project.id, ownerRole.id, projectAdmin1.id);
     await projectService.addUser(project.id, ownerRole.id, projectAdmin2.id);
@@ -324,15 +286,6 @@ test('should add admin users to the project', async () => {
     expect(adminUsers[2].name).toBe(projectAdmin2.name);
 });
 
-test('add user only accept to add users to project roles', async () => {
-    const roles = await accessService.getRoles();
-    const memberRole = roles.find((r) => r.name === RoleName.MEMBER);
-
-    await expect(async () => {
-        await projectService.addUser('some-id', memberRole.id, user.id);
-    }).rejects.toThrowError(NotFoundError);
-});
-
 test('add user should fail if user already have access', async () => {
     const project = {
         id: 'add-users-twice',
@@ -346,15 +299,14 @@ test('add user should fail if user already have access', async () => {
         email: 'member42@getunleash.io',
     });
 
-    const roles = await stores.accessStore.getRolesForProject(project.id);
-    const memberRole = roles.find((r) => r.name === RoleName.MEMBER);
+    const memberRole = await stores.roleStore.getRoleByName(RoleName.MEMBER);
 
     await projectService.addUser(project.id, memberRole.id, projectMember1.id);
 
     await expect(async () =>
         projectService.addUser(project.id, memberRole.id, projectMember1.id),
     ).rejects.toThrow(
-        new Error('User already have access to project=add-users-twice'),
+        new Error('User already has access to project=add-users-twice'),
     );
 });
 
@@ -371,8 +323,7 @@ test('should remove user from the project', async () => {
         email: 'member99@getunleash.io',
     });
 
-    const roles = await stores.accessStore.getRolesForProject(project.id);
-    const memberRole = roles.find((r) => r.name === RoleName.MEMBER);
+    const memberRole = await stores.roleStore.getRoleByName(RoleName.MEMBER);
 
     await projectService.addUser(project.id, memberRole.id, projectMember1.id);
     await projectService.removeUser(
@@ -395,7 +346,7 @@ test('should not remove user from the project', async () => {
     };
     await projectService.createProject(project, user);
 
-    const roles = await stores.accessStore.getRolesForProject(project.id);
+    const roles = await stores.roleStore.getRolesForProject(project.id);
     const ownerRole = roles.find((r) => r.name === RoleName.OWNER);
 
     await expect(async () => {
@@ -426,7 +377,7 @@ test('should not change project if feature toggle project does not match current
         );
     } catch (err) {
         expect(err.message).toBe(
-            `You need permission=${UPDATE_FEATURE} to perform this action`,
+            `You need permission=${MOVE_FEATURE_TOGGLE} to perform this action`,
         );
     }
 });
@@ -487,7 +438,7 @@ test('should fail if user is not authorized', async () => {
         );
     } catch (err) {
         expect(err.message).toBe(
-            `You need permission=${CREATE_FEATURE} to perform this action`,
+            `You need permission=${MOVE_FEATURE_TOGGLE} to perform this action`,
         );
     }
 });
@@ -547,4 +498,157 @@ test('A newly created project only gets connected to enabled environments', asyn
     expect(connectedEnvs).toHaveLength(2); // default, connection_test
     expect(connectedEnvs.some((e) => e === enabledEnv)).toBeTruthy();
     expect(connectedEnvs.some((e) => e === disabledEnv)).toBeFalsy();
+});
+
+test('should add a user to the project with a custom role', async () => {
+    const project = {
+        id: 'add-users-custom-role',
+        name: 'New project',
+        description: 'Blah',
+    };
+    await projectService.createProject(project, user);
+
+    const projectMember1 = await stores.userStore.insert({
+        name: 'Custom',
+        email: 'custom@getunleash.io',
+    });
+
+    const customRole = await accessService.createRole({
+        name: 'Service Engineer2',
+        description: '',
+        permissions: [
+            {
+                id: 2,
+                name: 'CREATE_FEATURE',
+                environment: null,
+                displayName: 'Create Feature Toggles',
+                type: 'project',
+            },
+            {
+                id: 8,
+                name: 'DELETE_FEATURE',
+                environment: null,
+                displayName: 'Delete Feature Toggles',
+                type: 'project',
+            },
+        ],
+    });
+
+    await projectService.addUser(project.id, customRole.id, projectMember1.id);
+
+    const { users } = await projectService.getUsersWithAccess(project.id, user);
+
+    const customRoleMember = users.filter((u) => u.roleId === customRole.id);
+
+    expect(customRoleMember).toHaveLength(1);
+    expect(customRoleMember[0].id).toBe(projectMember1.id);
+    expect(customRoleMember[0].name).toBe(projectMember1.name);
+});
+
+test('should delete role entries when deleting project', async () => {
+    const project = {
+        id: 'test-delete-users-1',
+        name: 'New project',
+        description: 'Blah',
+    };
+
+    await projectService.createProject(project, user);
+
+    const user1 = await stores.userStore.insert({
+        name: 'Projectuser1',
+        email: 'project1@getunleash.io',
+    });
+
+    const user2 = await stores.userStore.insert({
+        name: 'Projectuser2',
+        email: 'project2@getunleash.io',
+    });
+
+    const customRole = await accessService.createRole({
+        name: 'Service Engineer',
+        description: '',
+        permissions: [
+            {
+                id: 2,
+                name: 'CREATE_FEATURE',
+                environment: null,
+                displayName: 'Create Feature Toggles',
+                type: 'project',
+            },
+            {
+                id: 8,
+                name: 'DELETE_FEATURE',
+                environment: null,
+                displayName: 'Delete Feature Toggles',
+                type: 'project',
+            },
+        ],
+    });
+
+    await projectService.addUser(project.id, customRole.id, user1.id);
+    await projectService.addUser(project.id, customRole.id, user2.id);
+
+    let usersForRole = await accessService.getUsersForRole(customRole.id);
+    expect(usersForRole.length).toBe(2);
+
+    await projectService.deleteProject(project.id, user);
+    usersForRole = await accessService.getUsersForRole(customRole.id);
+    expect(usersForRole.length).toBe(0);
+});
+
+test('should change a users role in the project', async () => {
+    const project = {
+        id: 'test-change-user-role',
+        name: 'New project',
+        description: 'Blah',
+    };
+
+    await projectService.createProject(project, user);
+
+    const projectUser = await stores.userStore.insert({
+        name: 'Projectuser3',
+        email: 'project3@getunleash.io',
+    });
+
+    const customRole = await accessService.createRole({
+        name: 'Service Engineer3',
+        description: '',
+        permissions: [
+            {
+                id: 2,
+                name: 'CREATE_FEATURE',
+                environment: null,
+                displayName: 'Create Feature Toggles',
+                type: 'project',
+            },
+            {
+                id: 8,
+                name: 'DELETE_FEATURE',
+                environment: null,
+                displayName: 'Delete Feature Toggles',
+                type: 'project',
+            },
+        ],
+    });
+    const member = await stores.roleStore.getRoleByName(RoleName.MEMBER);
+
+    await projectService.addUser(project.id, member.id, projectUser.id);
+    const { users } = await projectService.getUsersWithAccess(project.id, user);
+    let memberUser = users.filter((u) => u.roleId === member.id);
+
+    expect(memberUser).toHaveLength(1);
+    expect(memberUser[0].id).toBe(projectUser.id);
+    expect(memberUser[0].name).toBe(projectUser.name);
+    await projectService.removeUser(project.id, member.id, projectUser.id);
+    await projectService.addUser(project.id, customRole.id, projectUser.id);
+
+    let { users: updatedUsers } = await projectService.getUsersWithAccess(
+        project.id,
+        user,
+    );
+    const customUser = updatedUsers.filter((u) => u.roleId === customRole.id);
+
+    expect(customUser).toHaveLength(1);
+    expect(customUser[0].id).toBe(projectUser.id);
+    expect(customUser[0].name).toBe(projectUser.name);
 });

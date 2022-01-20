@@ -16,8 +16,12 @@
     --ifm-color-primary-lightest: #4a6c76;
     --ifm-code-font-size: 90%;
     --ifm-font-size-base: 15px;
-    --ifm-link-color: #817afe;
+    --ifm-link-color: #635DC5;
     --navbar-link-color: #122d33;
+}
+
+footer {
+    --ifm-footer-link-hover-color: var(--ifm-footer-link-color);
 }
 
 [class^='docTitle'] {

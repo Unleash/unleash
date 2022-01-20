@@ -13,7 +13,7 @@ const secureHeaders: (config: IUnleashConfig) => RequestHandler = (config) => {
             },
             contentSecurityPolicy: {
                 directives: {
-                    defaultSrc: ["'self'", 'cdn.getunleash.io'],
+                    defaultSrc: ["'self'", 'cdn.getunleash.io', 'gravatar.com'],
                     fontSrc: [
                         "'self'",
                         'cdn.getunleash.io',
@@ -37,6 +37,7 @@ const secureHeaders: (config: IUnleashConfig) => RequestHandler = (config) => {
                     ],
                 },
             },
+            crossOriginEmbedderPolicy: false,
         });
     }
     return (req, res, next) => {

@@ -39,6 +39,8 @@ export const PROJECT_CREATED = 'project-created';
 export const PROJECT_UPDATED = 'project-updated';
 export const PROJECT_DELETED = 'project-deleted';
 export const PROJECT_IMPORT = 'project-import';
+export const PROJECT_USER_ADDED = 'project-user-added';
+export const PROJECT_USER_REMOVED = 'project-user-removed';
 export const DROP_PROJECTS = 'drop-projects';
 export const TAG_CREATED = 'tag-created';
 export const TAG_DELETED = 'tag-deleted';
@@ -375,6 +377,38 @@ export class FeatureStrategyRemoveEvent extends BaseEvent {
         this.project = project;
         this.featureName = featureName;
         this.environment = environment;
+        this.preData = preData;
+    }
+}
+
+export class ProjectUserAddedEvent extends BaseEvent {
+    readonly project: string;
+
+    readonly data: any;
+
+    readonly preData: any;
+
+    constructor(p: { project: string; createdBy: string; data: any }) {
+        super(PROJECT_USER_ADDED, p.createdBy);
+        const { project, data } = p;
+        this.project = project;
+        this.data = data;
+        this.preData = null;
+    }
+}
+
+export class ProjectUserRemovedEvent extends BaseEvent {
+    readonly project: string;
+
+    readonly data: any;
+
+    readonly preData: any;
+
+    constructor(p: { project: string; createdBy: string; preData: any }) {
+        super(PROJECT_USER_REMOVED, p.createdBy);
+        const { project, preData } = p;
+        this.project = project;
+        this.data = null;
         this.preData = preData;
     }
 }

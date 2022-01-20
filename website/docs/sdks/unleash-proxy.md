@@ -41,38 +41,65 @@ Regardless of how you choose to run the it, the proxy will need access to these 
 
   When using an environment variable to set the proxy secrets, the value should be a comma-separated list of strings, such as `secret-one,secret-two`.
 
-For more information, check out the [documentation on GitHub](https://github.com/Unleash/unleash-proxy).
+There are many more configuration options available. You'll find all [available options on github](https://github.com/Unleash/unleash-proxy#available-options).
+
 
 ### Running the proxy via Docker
 
 The easiest way to run Unleash is via Docker. We have published a [docker image on docker hub](https://hub.docker.com/r/unleashorg/unleash-proxy).
 
-**Step 1: Pull**
+1. **Pull the Proxy image**
+   ```bash
+   docker pull unleashorg/unleash-proxy
+   ```
 
-```bash
-docker pull unleashorg/unleash-proxy
-```
+2. **Start the proxy**
 
-**Step 2: Start**
+   ```bash
+   docker run \
+      -e UNLEASH_PROXY_SECRETS=some-secret \
+      -e UNLEASH_URL='https://app.unleash-hosted.com/demo/api/' \
+      -e UNLEASH_API_TOKEN=56907a2fa53c1d16101d509a10b78e36190b0f918d9f122d \
+      -p 3000:3000 \
+      unleashorg/unleash-proxy
+   ```
 
-```bash
-docker run \
-   -e UNLEASH_PROXY_SECRETS=some-secret \
-   -e UNLEASH_URL='https://app.unleash-hosted.com/demo/api/' \
-   -e UNLEASH_API_TOKEN=56907a2fa53c1d16101d509a10b78e36190b0f918d9f122d \
-   -p 3000:3000 \
-   unleashorg/unleash-proxy
-```
+    You should see the following output:
 
-You should see the following output:
+   ```bash
+   Unleash-proxy is listening on port 3000!
+   ```
 
-```bash
-Unleash-proxy is listening on port 3000!
-```
+### Running the proxy using Node.js
 
-**Step 3: verify**
+To run the Proxy via Node.js, you'll have to create your own Node.js project and use the Unleash Proxy as a dependency. Assuming you've already set up your project, here's the steps to take to start the proxy as part of your app:
 
-In order to verify the proxy you can use curl and see that you get a few evaluated feature toggles back:
+1. **Install the Unleash Proxy package**
+   ``` shell npm2yarn
+   npm install @unleash/proxy
+   ```
+
+2. **Initialize and start the proxy in your code.** A fully working sample app that uses the proxy:
+   ``` js
+   const port = 3000;
+
+   const { createApp } = require('@unleash/proxy');
+
+   const app = createApp({
+       unleashUrl: 'https://app.unleash-hosted.com/demo/api/',
+       unleashApiToken: '56907a2fa53c1d16101d509a10b78e36190b0f918d9f122d',
+       clientKeys: ['some-secret', 'another-proxy-secret', 's1'],
+       refreshInterval: 1000,
+   });
+
+   app.listen(port, () =>
+       console.log(`Unleash Proxy listening on http://localhost:${port}/proxy`),
+   );
+   ```
+
+### Verify that the proxy is working
+
+In order to verify the proxy you can use curl and see that you get a few evaluated feature toggles back. Assuming that the proxy is running on port 3000 and that your proxy client key is `some-secret`, you could run this command :
 
 ```bash
 curl http://localhost:3000/proxy -H "Authorization: some-secret"
@@ -80,7 +107,7 @@ curl http://localhost:3000/proxy -H "Authorization: some-secret"
 
 The output is of the form described in the [payload section](#payload).
 
-**Health endpoint**
+### Health endpoint
 
 The proxy will try to synchronize with the Unleash API at startup, until it has successfully done that the proxy will return `HTTP 503 - Not Read?` for all request. You can use the health endpoint to validate that the proxy is ready to recieve requests:
 
@@ -100,7 +127,6 @@ Connection: keep-alive
 Keep-Alive: timeout=5
 ```
 
-There are multiple more configuration options available. You find all [available options on github](https://github.com/Unleash/unleash-proxy#available-options).
 
 ## Custom activation strategies
 

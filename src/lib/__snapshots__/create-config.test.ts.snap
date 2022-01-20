@@ -30,6 +30,7 @@ Object {
     "user": "unleash",
     "version": undefined,
   },
+  "disableLegacyFeaturesApi": false,
   "email": Object {
     "host": undefined,
     "port": 587,

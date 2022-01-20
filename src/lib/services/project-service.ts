@@ -6,6 +6,8 @@ import { nameType } from '../routes/util';
 import { projectSchema } from './project-schema';
 import NotFoundError from '../error/notfound-error';
 import {
+    ProjectUserAddedEvent,
+    ProjectUserRemovedEvent,
     PROJECT_CREATED,
     PROJECT_DELETED,
     PROJECT_UPDATED,
@@ -25,20 +27,20 @@ import { IFeatureTypeStore } from '../types/stores/feature-type-store';
 import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
 import { IFeatureEnvironmentStore } from '../types/stores/feature-environment-store';
 import { IProjectQuery, IProjectStore } from '../types/stores/project-store';
-import { IRole } from '../types/stores/access-store';
+import { IRoleDescriptor } from '../types/stores/access-store';
 import { IEventStore } from '../types/stores/event-store';
 import FeatureToggleService from './feature-toggle-service';
-import { CREATE_FEATURE, UPDATE_FEATURE } from '../types/permissions';
+import { MOVE_FEATURE_TOGGLE } from '../types/permissions';
 import NoAccessError from '../error/no-access-error';
 import IncompatibleProjectError from '../error/incompatible-project-error';
+import { DEFAULT_PROJECT } from '../types/project';
+import { IFeatureTagStore } from 'lib/types/stores/feature-tag-store';
 
 const getCreatedBy = (user: User) => user.email || user.username;
 
-const DEFAULT_PROJECT = 'default';
-
 export interface UsersWithRoles {
     users: IUserWithRole[];
-    roles: IRole[];
+    roles: IRoleDescriptor[];
 }
 
 export default class ProjectService {
@@ -60,6 +62,8 @@ export default class ProjectService {
 
     private featureToggleService: FeatureToggleService;
 
+    private tagStore: IFeatureTagStore;
+
     constructor(
         {
             projectStore,
@@ -68,6 +72,7 @@ export default class ProjectService {
             featureTypeStore,
             environmentStore,
             featureEnvironmentStore,
+            featureTagStore,
         }: Pick<
             IUnleashStores,
             | 'projectStore'
@@ -76,6 +81,7 @@ export default class ProjectService {
             | 'featureTypeStore'
             | 'environmentStore'
             | 'featureEnvironmentStore'
+            | 'featureTagStore'
         >,
         config: IUnleashConfig,
         accessService: AccessService,
@@ -89,6 +95,7 @@ export default class ProjectService {
         this.featureToggleStore = featureToggleStore;
         this.featureTypeStore = featureTypeStore;
         this.featureToggleService = featureToggleService;
+        this.tagStore = featureTagStore;
         this.logger = config.getLogger('services/project-service.js');
     }
 
@@ -188,7 +195,7 @@ export default class ProjectService {
         const feature = await this.featureToggleStore.get(featureName);
 
         if (feature.project !== currentProjectId) {
-            throw new NoAccessError(UPDATE_FEATURE);
+            throw new NoAccessError(MOVE_FEATURE_TOGGLE);
         }
         const project = await this.getProject(newProjectId);
 
@@ -198,12 +205,12 @@ export default class ProjectService {
 
         const authorized = await this.accessService.hasPermission(
             user,
-            CREATE_FEATURE,
+            MOVE_FEATURE_TOGGLE,
             newProjectId,
         );
 
         if (!authorized) {
-            throw new NoAccessError(CREATE_FEATURE);
+            throw new NoAccessError(MOVE_FEATURE_TOGGLE);
         }
 
         const isCompatibleWithTargetProject =
@@ -278,11 +285,12 @@ export default class ProjectService {
         };
     }
 
-    // TODO: should be an event too
+    // TODO: Remove the optional nature of createdBy - this in place to make sure enterprise is compatible
     async addUser(
         projectId: string,
         roleId: number,
         userId: number,
+        createdBy?: string,
     ): Promise<void> {
         const [roles, users] = await this.accessService.getProjectRoleUsers(
             projectId,
@@ -297,17 +305,26 @@ export default class ProjectService {
 
         const alreadyHasAccess = users.some((u) => u.id === userId);
         if (alreadyHasAccess) {
-            throw new Error(`User already have access to project=${projectId}`);
+            throw new Error(`User already has access to project=${projectId}`);
         }
 
-        await this.accessService.addUserToRole(userId, role.id);
+        await this.accessService.addUserToRole(userId, role.id, projectId);
+
+        await this.eventStore.store(
+            new ProjectUserAddedEvent({
+                project: projectId,
+                createdBy,
+                data: { roleId, userId, roleName: role.name },
+            }),
+        );
     }
 
-    // TODO: should be an event too
+    // TODO: Remove the optional nature of createdBy - this in place to make sure enterprise is compatible
     async removeUser(
         projectId: string,
         roleId: number,
         userId: number,
+        createdBy?: string,
     ): Promise<void> {
         const roles = await this.accessService.getRolesForProject(projectId);
         const role = roles.find((r) => r.id === roleId);
@@ -318,13 +335,24 @@ export default class ProjectService {
         }
 
         if (role.name === RoleName.OWNER) {
-            const users = await this.accessService.getUsersForRole(role.id);
+            const users = await this.accessService.getProjectUsersForRole(
+                role.id,
+                projectId,
+            );
             if (users.length < 2) {
                 throw new Error('A project must have at least one owner');
             }
         }
 
-        await this.accessService.removeUserFromRole(userId, role.id);
+        await this.accessService.removeUserFromRole(userId, role.id, projectId);
+
+        await this.eventStore.store(
+            new ProjectUserRemovedEvent({
+                project: projectId,
+                createdBy,
+                preData: { roleId, userId, roleName: role.name },
+            }),
+        );
     }
 
     async getMembers(projectId: string): Promise<number> {

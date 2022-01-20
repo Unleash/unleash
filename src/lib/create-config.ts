@@ -287,6 +287,10 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
     const enableOAS =
         options.enableOAS || safeBoolean(process.env.ENABLE_OAS, false);
 
+    const disableLegacyFeaturesApi =
+        options.disableLegacyFeaturesApi ||
+        safeBoolean(process.env.DISABLE_LEGACY_FEATURES_API, false);
+
     return {
         db,
         session,
@@ -301,6 +305,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         email,
         secureHeaders,
         enableOAS,
+        disableLegacyFeaturesApi,
         preHook: options.preHook,
         preRouterHook: options.preRouterHook,
         eventHook: options.eventHook,

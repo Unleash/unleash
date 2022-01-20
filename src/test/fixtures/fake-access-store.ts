@@ -6,17 +6,60 @@ import {
     IUserPermission,
     IUserRole,
 } from '../../lib/types/stores/access-store';
+import { IAvailablePermissions, IPermission } from 'lib/types/model';
 
 class AccessStoreMock implements IAccessStore {
+    removeUserFromRole(
+        userId: number,
+        roleId: number,
+        projectId: string,
+    ): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+
+    wipePermissionsFromRole(role_id: number): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+
+    unlinkUserRoles(userId: number): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+
+    getRoleByName(name: string): Promise<IRole> {
+        throw new Error('Method not implemented.');
+    }
+
+    getProjectUserIdsForRole(
+        roleId: number,
+        projectId?: string,
+    ): Promise<number[]> {
+        throw new Error('Method not implemented.');
+    }
+
+    getProjectRoles(): Promise<IRole[]> {
+        throw new Error('Method not implemented.');
+    }
+
+    addEnvironmentPermissionsToRole(
+        role_id: number,
+        permissions: IPermission[],
+    ): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+
     userPermissions: IUserPermission[] = [];
 
     roles: IRole[] = [];
+
+    getAvailablePermissions(): Promise<IPermission[]> {
+        throw new Error('Method not implemented.');
+    }
 
     getPermissionsForUser(userId: Number): Promise<IUserPermission[]> {
         return Promise.resolve([]);
     }
 
-    getPermissionsForRole(roleId: number): Promise<IUserPermission[]> {
+    getPermissionsForRole(roleId: number): Promise<IPermission[]> {
         throw new Error('Method not implemented.');
     }
 
@@ -40,24 +83,11 @@ class AccessStoreMock implements IAccessStore {
         return Promise.resolve([]);
     }
 
-    getUserIdsForRole(roleId: number): Promise<number[]> {
+    getUserIdsForRole(roleId: number, projectId: string): Promise<number[]> {
         throw new Error('Method not implemented.');
     }
 
     addUserToRole(userId: number, roleId: number): Promise<void> {
-        throw new Error('Method not implemented.');
-    }
-
-    removeUserFromRole(userId: number, roleId: number): Promise<void> {
-        throw new Error('Method not implemented.');
-    }
-
-    createRole(
-        name: string,
-        type: string,
-        project?: string,
-        description?: string,
-    ): Promise<IRole> {
         throw new Error('Method not implemented.');
     }
 

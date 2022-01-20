@@ -28,6 +28,8 @@ import PermissionIconButton from '../../common/PermissionIconButton/PermissionIc
 import { useParams } from 'react-router-dom';
 import { IFeatureViewParams } from '../../../interfaces/params';
 import ProjectRoleSelect from './ProjectRoleSelect/ProjectRoleSelect';
+import usePagination from '../../../hooks/usePagination';
+import PaginateUI from '../../common/PaginateUI/PaginateUI';
 
 const ProjectAccess = () => {
     const { id } = useParams<IFeatureViewParams>();
@@ -36,6 +38,8 @@ const ProjectAccess = () => {
     const [users, setUsers] = useState([]);
     const [error, setError] = useState();
     const { isOss } = useUiConfig();
+    const { page, pages, nextPage, prevPage, setPageIndex, pageIndex } =
+        usePagination(users, 10);
 
     useEffect(() => {
         fetchAccess();
@@ -135,7 +139,7 @@ const ProjectAccess = () => {
             </Dialog>
             <div className={styles.divider}></div>
             <List>
-                {users.map(user => {
+                {page.map(user => {
                     const labelId = `checkbox-list-secondary-label-${user.id}`;
                     return (
                         <ListItem key={user.id} button>
@@ -177,7 +181,7 @@ const ProjectAccess = () => {
                                     tooltip={
                                         users.length === 1
                                             ? 'A project must have at least one owner'
-                                            : 'Remove acccess'
+                                            : 'Remove access'
                                     }
                                 >
                                     <Delete />
@@ -186,6 +190,14 @@ const ProjectAccess = () => {
                         </ListItem>
                     );
                 })}
+                <PaginateUI
+                    pages={pages}
+                    pageIndex={pageIndex}
+                    setPageIndex={setPageIndex}
+                    nextPage={nextPage}
+                    prevPage={prevPage}
+                    style={{ bottom: '-21px' }}
+                />
             </List>
         </PageContent>
     );

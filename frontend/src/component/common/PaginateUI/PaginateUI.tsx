@@ -23,6 +23,7 @@ const PaginateUI = ({
     prevPage,
     setPageIndex,
     nextPage,
+    ...rest
 }: IPaginateUIProps) => {
     const STARTLIMIT = 6;
     const theme = useTheme();
@@ -37,19 +38,18 @@ const PaginateUI = ({
         }
     }, [matches]);
 
-
     useEffect(() => {
-        if(pageIndex === 0 && start !== 0) {
+        if (pageIndex === 0 && start !== 0) {
             setStart(0);
             setLimit(STARTLIMIT);
         }
-    }, [pageIndex, start])
+    }, [pageIndex, start]);
 
     return (
         <ConditionallyRender
             condition={pages.length > 1}
             show={
-                <div className={styles.pagination}>
+                <div className={styles.pagination} {...rest}>
                     <div className={styles.paginationInnerContainer}>
                         <ConditionallyRender
                             condition={pageIndex > 0}

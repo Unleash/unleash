@@ -13,7 +13,6 @@ const DEFAULT_ACCEPTED_CONTENT_TYPE = 'application/json';
 export default function requireContentType(
     ...acceptedContentTypes: string[]
 ): RequestHandler {
-    console.log(acceptedContentTypes);
     if (acceptedContentTypes.length === 0) {
         acceptedContentTypes.push(DEFAULT_ACCEPTED_CONTENT_TYPE);
     }

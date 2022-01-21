@@ -35,7 +35,7 @@ Regardless of how you choose to run the it, the proxy will need access to these 
 
   The API token to connect to your Unleash project. For more information on how these work and how to create them, check out the [API token documentation](../user_guide/token.md).
 
-- **`proxySecrets`** / **`UNLEASH_PROXY_SECRETS`**
+- **`clientKeys`** / **`UNLEASH_PROXY_CLIENT_KEYS`**
 
   A list of client keys that the proxy will accept. For the proxy to accept an incoming request, the client must use one of these keys for authorization. In client SDKs, this is usually known as a `clientKey` or a `clientSecret`. If you query the proxy directly via HTTP, this is the `authorization` header.
 
@@ -57,7 +57,7 @@ The easiest way to run Unleash is via Docker. We have published a [docker image 
 
    ```bash
    docker run \
-      -e UNLEASH_PROXY_SECRETS=some-secret \
+      -e UNLEASH_PROXY_CLIENT_KEYS=some-public-key \
       -e UNLEASH_URL='https://app.unleash-hosted.com/demo/api/' \
       -e UNLEASH_API_TOKEN=56907a2fa53c1d16101d509a10b78e36190b0f918d9f122d \
       -p 3000:3000 \

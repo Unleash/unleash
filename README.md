@@ -53,22 +53,24 @@ In order to connect your application to Unleash you need to use a client SDK for
 
 **Official Server SDKs**:
 
+- [Go SDK](https://docs.getunleash.io/sdks/go_sdk)
 - [Java SDK](https://docs.getunleash.io/sdks/java_sdk)
 - [Node.js SDK](https://docs.getunleash.io/sdks/node_sdk)
-- [Go SDK](https://docs.getunleash.io/sdks/go_sdk)
-- [Ruby SDK](https://docs.getunleash.io/sdks/ruby_sdk)
 - [Python SDK](https://docs.getunleash.io/sdks/python_sdk)
-- [.NET SDK](https://docs.getunleash.io/sdks/dot_net_sdk)
 - [PHP SDK](https://docs.getunleash.io/sdks/php_sdk)
+- [Ruby SDK](https://docs.getunleash.io/sdks/ruby_sdk)
+- [Rust SDK](https://github.com/unleash/unleash-client-rust)
+- [.NET SDK](https://docs.getunleash.io/sdks/dot_net_sdk)
 
 **Official Frontend SDKs:**
 
 The frontend SDKs connects via the [Unleash Proxy](https://docs.getunleash.io/sdks/unleash-proxy) in order to ensure Privacy, scalability and security.
 
-- [Javascript SDK](https://docs.getunleash.io/sdks/proxy-javascript)
-- [React SDK](https://docs.getunleash.io/sdks/proxy-react)
 - [Android SDK](https://docs.getunleash.io/sdks/android_proxy_sdk)
 - [iOS SDK](https://docs.getunleash.io/sdks/proxy-ios)
+- [Javascript SDK](https://docs.getunleash.io/sdks/proxy-javascript)
+- [React SDK](https://docs.getunleash.io/sdks/proxy-react)
+
 
 **Community SDKs**
 

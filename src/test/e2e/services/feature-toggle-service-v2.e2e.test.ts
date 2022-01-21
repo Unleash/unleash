@@ -111,3 +111,41 @@ test('Should be able to get strategy by id', async () => {
     const fetchedConfig = await service.getStrategy(createdConfig.id);
     expect(fetchedConfig).toEqual(createdConfig);
 });
+
+test('should ignore name in the body when updating feature toggle', async () => {
+    const featureName = 'body-name-update';
+    const projectId = 'default';
+
+    const userName = 'strategy';
+    const secondFeatureName = 'body-name-update2';
+
+    await service.createFeatureToggle(
+        projectId,
+        {
+            name: featureName,
+            description: 'First toggle',
+        },
+        userName,
+    );
+
+    await service.createFeatureToggle(
+        projectId,
+        {
+            name: secondFeatureName,
+            description: 'Second toggle',
+        },
+        userName,
+    );
+
+    const update = {
+        name: secondFeatureName,
+        description: "I'm changed",
+    };
+
+    await service.updateFeatureToggle(projectId, update, userName, featureName);
+    const featureOne = await service.getFeature(featureName);
+    const featureTwo = await service.getFeature(secondFeatureName);
+
+    expect(featureOne.description).toBe(`I'm changed`);
+    expect(featureTwo.description).toBe('Second toggle');
+});

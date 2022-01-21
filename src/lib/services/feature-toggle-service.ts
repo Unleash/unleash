@@ -118,7 +118,7 @@ class FeatureToggleService {
         const id = await this.featureToggleStore.getProjectId(featureName);
         if (id !== projectId) {
             throw new InvalidOperationError(
-                'You can not change the projectId for an activation strategy.',
+                'Project id does not match the project that the feature belongs to',
             );
         }
     }
@@ -162,6 +162,7 @@ class FeatureToggleService {
             project,
             newDocument,
             createdBy,
+            featureName,
         );
 
         if (featureToggle.stale !== newDocument.stale) {
@@ -559,8 +560,10 @@ class FeatureToggleService {
         projectId: string,
         updatedFeature: FeatureToggleDTO,
         userName: string,
+        featureName: string,
     ): Promise<FeatureToggle> {
-        const featureName = updatedFeature.name;
+        await this.validateFeatureContext({ featureName, projectId });
+
         this.logger.info(`${userName} updates feature toggle ${featureName}`);
 
         const featureData = await featureMetadataSchema.validateAsync(
@@ -569,10 +572,11 @@ class FeatureToggleService {
 
         const preData = await this.featureToggleStore.get(featureName);
 
-        const featureToggle = await this.featureToggleStore.update(
-            projectId,
-            featureData,
-        );
+        const featureToggle = await this.featureToggleStore.update(projectId, {
+            ...featureData,
+            name: featureName,
+        });
+
         const tags = await this.tagStore.getAllTagsForFeature(featureName);
 
         await this.eventStore.store(

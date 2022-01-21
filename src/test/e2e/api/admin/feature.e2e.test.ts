@@ -732,7 +732,6 @@ test('should hit validate and tags endpoint if legacy api is disabled', async ()
     await appWithDisabledLegacyFeatures.request
         .get(`/api/admin/features/${feature.name}/tags`)
         .expect((res) => {
-            console.log(res.body);
             expect(res.body.tags[0].value).toBe('TeamGreen');
         });
 

@@ -196,7 +196,12 @@ class FeatureController extends Controller {
         const projectId = await this.service.getProjectId(featureName);
         const value = await featureSchema.validateAsync(updatedFeature);
 
-        await this.service.updateFeatureToggle(projectId, value, userName);
+        await this.service.updateFeatureToggle(
+            projectId,
+            value,
+            userName,
+            featureName,
+        );
 
         await this.service.removeAllStrategiesForEnv(featureName);
 

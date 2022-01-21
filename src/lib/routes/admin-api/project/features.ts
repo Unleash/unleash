@@ -178,16 +178,22 @@ export default class ProjectFeaturesController extends Controller {
     }
 
     async updateFeature(
-        req: IAuthRequest<ProjectParam, any, FeatureToggleDTO, any>,
+        req: IAuthRequest<
+            { projectId: string; featureName: string },
+            any,
+            FeatureToggleDTO,
+            any
+        >,
         res: Response,
     ): Promise<void> {
-        const { projectId } = req.params;
+        const { projectId, featureName } = req.params;
         const data = req.body;
         const userName = extractUsername(req);
         const created = await this.featureService.updateFeatureToggle(
             projectId,
             data,
             userName,
+            featureName,
         );
         res.status(200).json(created);
     }

@@ -1914,3 +1914,72 @@ test(`a feature's variants should be sorted by name in increasing order`, async 
             expect(res.body.variants[2].name).toBe('z');
         });
 });
+
+test('should validate context when calling update with PUT', async () => {
+    const name = 'new.toggle.validate.context';
+    await app.request
+        .post('/api/admin/projects/default/features')
+        .send({ name, description: 'some', type: 'release' })
+        .expect(201);
+
+    await app.request
+        .put(`/api/admin/projects/another-project/features/${name}`)
+        .send({ name, description: 'updated', type: 'kill-switch' })
+        .expect((res) => {
+            expect(res.body.name).toBe('InvalidOperationError');
+        })
+        .expect(403);
+});
+
+test('should validate context when calling update with PATCH', async () => {
+    const name = 'new.toggle.validate.context2';
+    await app.request
+        .post('/api/admin/projects/default/features')
+        .send({ name, description: 'some', type: 'release' })
+        .expect(201);
+
+    await app.request
+        .patch(`/api/admin/projects/another-project/features/${name}`)
+        .send([])
+        .expect((res) => {
+            expect(res.body.name).toBe('InvalidOperationError');
+        })
+        .expect(403);
+});
+
+test('should not update project with PUT', async () => {
+    const name = 'new.toggle.validate.update.project.put';
+    await app.request
+        .post('/api/admin/projects/default/features')
+        .send({ name, description: 'some', type: 'release' })
+        .expect(201);
+
+    await app.request
+        .put(`/api/admin/projects/default/features/${name}`)
+        .send({
+            name,
+            description: 'updated',
+            type: 'kill-switch',
+            project: 'new-project',
+        })
+        .expect((res) => {
+            expect(res.body.project).toBe('default');
+        })
+        .expect(200);
+});
+
+test('should not update project with PATCH', async () => {
+    const name = 'new.toggle.validate.update.project.patch';
+    await app.request
+        .post('/api/admin/projects/default/features')
+        .send({ name, description: 'some', type: 'release' })
+        .expect(201);
+
+    await app.request
+        .patch(`/api/admin/projects/default/features/${name}`)
+        .send([{ op: 'replace', path: '/project', value: 'new-project' }])
+        .expect((res) => {
+            expect(res.body.project).toBe('default');
+        })
+        .expect(200);
+});

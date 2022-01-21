@@ -43,10 +43,10 @@ module.exports = {
                         'how-to/how-to-create-and-assign-custom-project-roles',
                     ],
                     SSO: [
-                        'advanced/sso-google',
                         'advanced/sso-open-id-connect',
                         'advanced/sso-saml',
                         'advanced/sso-saml-keycloak',
+                        'advanced/sso-google',
                     ],
                 },
             ],

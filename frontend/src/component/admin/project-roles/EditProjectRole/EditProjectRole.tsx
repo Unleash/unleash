@@ -16,7 +16,7 @@ const EditProjectRole = () => {
     const { uiConfig } = useUiConfig();
     const { setToastData, setToastApiError } = useToast();
 
-    const { id } = useParams();
+    const { id } = useParams<{ id: string }>();
     const { role } = useProjectRole(id);
 
     const history = useHistory();
@@ -68,7 +68,7 @@ const EditProjectRole = () => {
     const { refetch } = useProjectRole(id);
     const { editRole, loading } = useProjectRolesApi();
 
-    const handleSubmit = async e => {
+    const handleSubmit = async (e: Event) => {
         e.preventDefault();
         const payload = getProjectRolePayload();
 
@@ -81,18 +81,19 @@ const EditProjectRole = () => {
                 refetch();
                 history.push('/admin/roles');
                 setToastData({
+                    type: 'success',
                     title: 'Project role updated',
                     text: 'Your role changes will automatically be applied to the users with this role.',
                     confetti: true,
                 });
-            } catch (e) {
+            } catch (e: any) {
                 setToastApiError(e.toString());
             }
         }
     };
 
     const handleCancel = () => {
-        history.push('/admin/roles');
+        history.goBack();
     };
 
     return (
@@ -102,7 +103,7 @@ const EditProjectRole = () => {
             description="A project role can be
 customised to limit access
 to resources within a project"
-            documentationLink="https://docs.getunleash.io/"
+            documentationLink="https://docs.getunleash.io/how-to/how-to-create-and-assign-custom-project-roles"
             formatApiCode={formatApiCode}
         >
             <ProjectRoleForm

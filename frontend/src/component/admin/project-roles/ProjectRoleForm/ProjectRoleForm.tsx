@@ -33,6 +33,7 @@ interface IProjectRoleForm {
     errors: { [key: string]: string };
     submitButtonText: string;
     clearErrors: () => void;
+    validateNameUniqueness?: () => void;
     getRoleKey: (permission: { id: number; environment?: string }) => string;
 }
 

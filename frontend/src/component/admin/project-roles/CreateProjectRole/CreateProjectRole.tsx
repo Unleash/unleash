@@ -48,7 +48,7 @@ const CreateProjectRole = () => {
                     confetti: true,
                     type: 'success',
                 });
-            } catch (e) {
+            } catch (e: any) {
                 setToastApiError(e.toString());
             }
         }
@@ -64,7 +64,7 @@ const CreateProjectRole = () => {
     };
 
     const handleCancel = () => {
-        history.push('/admin/roles');
+        history.goBack();
     };
 
     return (
@@ -72,9 +72,9 @@ const CreateProjectRole = () => {
             loading={loading}
             title="Create project role"
             description="A project role can be
-customised to limit access
-to resources within a project"
-            documentationLink="https://docs.getunleash.io/"
+            customised to limit access
+            to resources within a project"
+            documentationLink="https://docs.getunleash.io/how-to/how-to-create-and-assign-custom-project-roles"
             formatApiCode={formatApiCode}
         >
             <ProjectRoleForm

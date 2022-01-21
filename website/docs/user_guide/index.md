@@ -1,6 +1,6 @@
 ---
 id: index
-title: 📚 About the docs
+title: About the docs
 slug: /
 sidebar_position: 1
 ---
@@ -27,13 +27,27 @@ New to Unleash? Not sure where to get started? The tutorials guide you through t
 
 Our how-to guides show you how to perform a number of common tasks that you'll want to do. Think of them as recipes. They are more advanced than the tutorials and assume you have some working knowledge of Unleash.
 
-### Topic guides
-
-Topic guides discuss high-level concepts related to Unleash and provide extra background information and explanations around these concepts.
+The guides are organized into the following topics:
+- API [/how-to/api]
+- Feature toggles, strategies, context [/how-to/general]
+- Users and permissions [/how-to/permissions]
+- SSO [/how-to/single-sign-on]
 
 ### Reference documentation
 
 The reference docs contain technical reference for Unleash and the API. Go here to find out how Unleash works and what configuration options are available. They're like an Unleash encyclopedia and assume you have a grip on key Unleash concepts.
+
+The reference docs are organized into the following topics:
+- Unleash concepts [/reference/concepts]
+- APIs [/reference/api]
+- Unleash SDKs [/reference/sdk]
+- Deploy and manage unleash [/reference/deployment]
+- Addons [/reference/addons]
+- Integrations [/reference/integrations]
+
+### Topic guides
+
+Topic guides discuss high-level concepts related to Unleash and provide extra background information and explanations around these concepts.
 
 ## Other resources and communities
 

@@ -13,14 +13,14 @@ module.exports = {
     documentation: [
         'user_guide/index',
         {
-            '👶 First steps': [
+            'First steps': [
                 'user_guide/unleash_overview',
                 'user_guide/important-concepts',
                 'user_guide/quickstart',
             ],
         },
         {
-            label: '🛠 How-to guides',
+            label: 'How-to guides',
             type: 'category',
             collapsible: true,
             link: {
@@ -52,7 +52,7 @@ module.exports = {
             ],
         },
         {
-            label: '📖 Reference documentation',
+            label: 'Reference documentation',
             type: 'category',
             collapsible: true,
             items: [
@@ -186,7 +186,7 @@ module.exports = {
             ],
         },
         {
-            '🧠 Topic guides': ['topics/a-b-testing'],
+            'Topic guides': ['topics/a-b-testing'],
         },
     ],
 };

@@ -18,6 +18,11 @@ export interface IVersionHolder {
     instanceId: string;
 }
 
+export interface IVersionResponse {
+    versions: IVersionInfo;
+    latest: boolean;
+}
+
 export default class VersionService {
     private logger: Logger;
 
@@ -91,7 +96,7 @@ export default class VersionService {
                     headers: { 'Content-Type': 'application/json' },
                 });
                 if (res.ok) {
-                    const data = await res.json();
+                    const data = (await res.json()) as IVersionResponse;
                     this.latest = {
                         oss: data.versions.oss,
                         enterprise: data.versions.enterprise,

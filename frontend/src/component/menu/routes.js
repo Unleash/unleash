@@ -11,8 +11,6 @@ import Archive from '../../page/archive';
 import Applications from '../../page/applications';
 import ApplicationView from '../../page/applications/view';
 import ContextFields from '../../page/context';
-import CreateContextField from '../../page/context/create';
-import EditContextField from '../../page/context/edit';
 import ListTagTypes from '../../page/tag-types';
 import Addons from '../../page/addons';
 import AddonsCreate from '../../page/addons/create';
@@ -42,7 +40,8 @@ import EditUser from '../admin/users/EditUser/EditUser';
 import CreateApiToken from '../admin/api-token/CreateApiToken/CreateApiToken';
 import CreateEnvironment from '../environments/CreateEnvironment/CreateEnvironment';
 import EditEnvironment from '../environments/EditEnvironment/EditEnvironment';
-
+import CreateContext from '../context/CreateContext/CreateContext';
+import EditContext from '../context/EditContext/EditContext';
 import EditTagType from '../tagTypes/EditTagType/EditTagType';
 import CreateTagType from '../tagTypes/CreateTagType/CreateTagType';
 import EditProject from '../project/Project/EditProject/EditProject';
@@ -205,7 +204,7 @@ export const routes = [
         path: '/context/create',
         parent: '/context',
         title: 'Create',
-        component: CreateContextField,
+        component: CreateContext,
         type: 'protected',
         layout: 'main',
         flag: C,
@@ -215,7 +214,7 @@ export const routes = [
         path: '/context/edit/:name',
         parent: '/context',
         title: ':name',
-        component: EditContextField,
+        component: EditContext,
         type: 'protected',
         layout: 'main',
         flag: C,

@@ -3,7 +3,11 @@ import Input from '../../../common/Input/Input';
 import { Button } from '@material-ui/core';
 import { useStyles } from './FeatureForm.styles';
 import FeatureTypeSelect from '../../FeatureView2/FeatureSettings/FeatureSettingsMetadata/FeatureTypeSelect/FeatureTypeSelect';
-import { CF_DESC_ID, CF_TYPE_ID } from '../../../../testIds';
+import {
+    CF_DESC_ID,
+    CF_NAME_ID,
+    CF_TYPE_ID,
+} from '../../../../testIds';
 import useFeatureTypes from '../../../../hooks/api/getters/useFeatureTypes/useFeatureTypes';
 import { KeyboardArrowDownOutlined } from '@material-ui/icons';
 import useUser from '../../../../hooks/api/getters/useUser/useUser';
@@ -89,6 +93,9 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                     onFocus={() => clearErrors()}
                     value={name}
                     onChange={e => setName(trim(e.target.value))}
+                    inputProps={{
+                        'data-test': CF_NAME_ID,
+                    }}
                 />
                 <ConditionallyRender
                     condition={editable}

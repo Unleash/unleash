@@ -7,6 +7,7 @@ import useToast from '../../../../hooks/useToast';
 import useFeatureApi from '../../../../hooks/api/actions/useFeatureApi/useFeatureApi';
 import { CREATE_FEATURE } from '../../../providers/AccessProvider/permissions';
 import PermissionButton from '../../../common/PermissionButton/PermissionButton';
+import { CF_CREATE_BTN_ID } from '../../../../testIds';
 
 const CreateFeature = () => {
     /* @ts-ignore */
@@ -92,6 +93,7 @@ const CreateFeature = () => {
                     permission={CREATE_FEATURE}
                     projectId={project}
                     type="submit"
+                    data-test={CF_CREATE_BTN_ID}
                 >
                     Create toggle
                 </PermissionButton>

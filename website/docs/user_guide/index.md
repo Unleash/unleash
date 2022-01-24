@@ -17,37 +17,44 @@ Have questions that you can't find the answer to in these docs? You can always t
 
 ## Documentation structure
 
-Our documentation is split into four parts, using the [Diataxis documentation framework](https://diataxis.fr/): documentation, how-to guides, topic guides, and reference documentation.
+Our documentation is split into four parts, using the [Diataxis documentation framework](https://diataxis.fr/):
+- [tutorials and introductory material](#tutorials)
+- [how-to guides](#how-to-guides)
+- [topic guides](#topic-guides)
+- [reference documentation](#reference-documentation)
 
-### Tutorials
+### Tutorials and introductory material {#tutorials}
 
-New to Unleash? Not sure where to get started? The tutorials guide you through taking your first steps with Unleash.
+New to Unleash? Not sure where to get started? The tutorials guide you through your first steps with Unleash:
+- [Unleash introductory overview](unleash_overview.md)
+- [Important Unleash concepts](important-concepts.md)
+- [Quickstart guides](quickstart.md)
 
 ### How-to guides
 
 Our how-to guides show you how to perform a number of common tasks that you'll want to do. Think of them as recipes. They are more advanced than the tutorials and assume you have some working knowledge of Unleash.
 
-The guides are organized into the following topics:
-- API [/how-to/api]
-- Feature toggles, strategies, context [/how-to/general]
-- Users and permissions [/how-to/permissions]
-- SSO [/how-to/single-sign-on]
+The guides are organized into the following categories:
+- [API how-tos](/how-to/api)
+- [Feature toggles, strategies, context, and general how-tos](/how-to/misc)
+- [Users and permissions how-tos](/how-to/users-and-permissions)
+- [Single Sign-On (SSO) how-tos](/how-to/sso)
 
 ### Reference documentation
 
 The reference docs contain technical reference for Unleash and the API. Go here to find out how Unleash works and what configuration options are available. They're like an Unleash encyclopedia and assume you have a grip on key Unleash concepts.
 
 The reference docs are organized into the following topics:
-- Unleash concepts [/reference/concepts]
-- APIs [/reference/api]
-- Unleash SDKs [/reference/sdk]
-- Deploy and manage unleash [/reference/deployment]
-- Addons [/reference/addons]
-- Integrations [/reference/integrations]
+- [Unleash concepts](/reference/concepts)
+- [API documentation](/api)
+- [Unleash SDKs](/sdks)
+- [Deploy and manage unleash](/deploy)
+- [Addons](/addons)
+- [Integrations](/integrations)
 
 ### Topic guides
 
-Topic guides discuss high-level concepts related to Unleash and provide extra background information and explanations around these concepts.
+[The topic guides](/topics) discuss high-level concepts related to Unleash and provide extra background information and explanations around these concepts.
 
 ## Other resources and communities
 

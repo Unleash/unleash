@@ -30,14 +30,13 @@ footer {
 }
 
 li.theme-doc-sidebar-item-category-level-1 > div::before {
-    width: .8em;
-    height: .8em;
+    width: .3em;
+    height: 100%;
     content: " ";
-    position: absolute;
     background-color: var(--color-unleash-purple);
-    left: -.1em;
-    top: calc(50% - .4em);
     border-radius: 2px;
+    position: absolute;
+    /* left: -.3em; */
 }
 
 .docusaurus-highlight-code-line {

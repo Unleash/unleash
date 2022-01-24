@@ -8,9 +8,7 @@ const useFeatureApi = () => {
         propagateErrors: true,
     });
 
-    const validateFeatureToggleName = async (
-        name: string,
-    ) => {
+    const validateFeatureToggleName = async (name: string) => {
         const path = `api/admin/features/validate`;
         const req = createRequest(path, {
             method: 'POST',
@@ -26,10 +24,9 @@ const useFeatureApi = () => {
         }
     };
 
-
     const createFeatureToggle = async (
         projectId: string,
-        featureToggle: IFeatureToggleDTO,
+        featureToggle: IFeatureToggleDTO
     ) => {
         const path = `api/admin/projects/${projectId}/features`;
         const req = createRequest(path, {
@@ -168,6 +165,7 @@ const useFeatureApi = () => {
         featureId: string,
         patchPayload: any
     ) => {
+        console.log(patchPayload);
         const path = `api/admin/projects/${projectId}/features/${featureId}`;
         const req = createRequest(path, {
             method: 'PATCH',
@@ -183,7 +181,11 @@ const useFeatureApi = () => {
         }
     };
 
-    const patchFeatureVariants = async (projectId: string, featureId: string, patchPayload: Operation[]) => {
+    const patchFeatureVariants = async (
+        projectId: string,
+        featureId: string,
+        patchPayload: Operation[]
+    ) => {
         const path = `api/admin/projects/${projectId}/features/${featureId}/variants`;
         const req = createRequest(path, {
             method: 'PATCH',

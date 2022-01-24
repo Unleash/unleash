@@ -68,7 +68,7 @@ const EditFeature = () => {
         }/api/admin/projects/${projectId}/features/${featureId}' \\
     --header 'Authorization: INSERT_API_KEY' \\
     --header 'Content-Type: application/json' \\
-    --data-raw '${JSON.stringify(getTogglePayload(), undefined, 2)}'`;
+    --data-raw '${JSON.stringify(createPatch(), undefined, 2)}'`;
     };
 
     const handleCancel = () => {

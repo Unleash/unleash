@@ -68,7 +68,7 @@
     "enzyme-to-json": "3.6.2",
     "fast-json-patch": "3.1.0",
     "fetch-mock": "9.11.0",
-    "http-proxy-middleware": "2.0.1",
+    "http-proxy-middleware": "2.0.2",
     "immutable": "4.0.0",
     "lodash.clonedeep": "4.5.0",
     "lodash.flow": "3.5.0",

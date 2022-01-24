@@ -37,7 +37,6 @@ import EditProjectRole from '../admin/project-roles/EditProjectRole/EditProjectR
 import CreateUser from '../admin/users/CreateUser/CreateUser';
 import EditUser from '../admin/users/EditUser/EditUser';
 import CreateApiToken from '../admin/api-token/CreateApiToken/CreateApiToken';
-<<<<<<< HEAD
 import CreateEnvironment from '../environments/CreateEnvironment/CreateEnvironment';
 import EditEnvironment from '../environments/EditEnvironment/EditEnvironment';
 import CreateContext from '../context/CreateContext/CreateContext';
@@ -46,10 +45,8 @@ import EditTagType from '../tagTypes/EditTagType/EditTagType';
 import CreateTagType from '../tagTypes/CreateTagType/CreateTagType';
 import EditProject from '../project/Project/EditProject/EditProject';
 import CreateProject from '../project/Project/CreateProject/CreateProject';
-=======
 import CreateFeature from '../feature/CreateFeature/CreateFeature/CreateFeature';
 import EditFeature from '../feature/CreateFeature/EditFeature/EditFeature';
->>>>>>> 937e090b (feat: create edit and creat feature screen)
 
 export const routes = [
     // Project

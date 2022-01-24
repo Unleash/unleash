@@ -65,7 +65,7 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                 <FeatureTypeSelect
                     value={type}
                     onChange={(e: React.SyntheticEvent) =>
-                        setType(e.target.value)
+                        setType(e.target.currentTarget)
                     }
                     label={'Toggle type'}
                     id="feature-type-select"

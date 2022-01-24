@@ -6,11 +6,9 @@ import FeatureTypeSelect from '../../FeatureView2/FeatureSettings/FeatureSetting
 import { CF_DESC_ID, CF_TYPE_ID } from '../../../../testIds';
 import useFeatureTypes from '../../../../hooks/api/getters/useFeatureTypes/useFeatureTypes';
 import { KeyboardArrowDownOutlined } from '@material-ui/icons';
-import { useContext } from 'react';
 import useUser from '../../../../hooks/api/getters/useUser/useUser';
 import { projectFilterGenerator } from '../../../../utils/project-filter-generator';
 import FeatureProjectSelect from '../../FeatureView2/FeatureSettings/FeatureSettingsProject/FeatureProjectSelect/FeatureProjectSelect';
-import AccessContext from '../../../../contexts/AccessContext';
 import ConditionallyRender from '../../../common/ConditionallyRender';
 import { trim } from '../../../common/util';
 
@@ -47,10 +45,9 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
     clearErrors,
 }) => {
     const styles = useStyles();
-    const { hasAccess } = useContext(AccessContext);
     const { featureTypes } = useFeatureTypes();
     const { permissions } = useUser();
-    const editable = hasAccess(CREATE_FEATURE, project) && mode !== 'Edit';
+    const editable = mode !== 'Edit';
 
     const renderToggleDescription = () => {
         return featureTypes.find(toggle => toggle.id === type)?.description;
@@ -65,7 +62,7 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                 <FeatureTypeSelect
                     value={type}
                     onChange={(e: React.SyntheticEvent) =>
-                        setType(e.target.currentTarget)
+                        setType(e.target.value)
                     }
                     label={'Toggle type'}
                     id="feature-type-select"

@@ -91,7 +91,7 @@ docker run -p 4242:4242 \
          port: 5432,
          database: 'unleash',
          user: 'unleash_user',
-         password: 'passord',
+         password: 'password',
        },
        server: {
          port: 4242,

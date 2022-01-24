@@ -165,7 +165,6 @@ const useFeatureApi = () => {
         featureId: string,
         patchPayload: any
     ) => {
-        console.log(patchPayload);
         const path = `api/admin/projects/${projectId}/features/${featureId}`;
         const req = createRequest(path, {
             method: 'PATCH',

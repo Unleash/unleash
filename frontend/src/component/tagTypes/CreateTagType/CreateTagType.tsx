@@ -77,7 +77,6 @@ const CreateTagType = () => {
                 clearErrors={clearErrors}
             >
                 <PermissionButton
-                    onClick={handleSubmit}
                     permission={UPDATE_TAG_TYPE}
                     type="submit"
                 >

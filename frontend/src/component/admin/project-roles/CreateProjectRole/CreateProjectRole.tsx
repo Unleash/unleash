@@ -5,6 +5,8 @@ import ProjectRoleForm from '../ProjectRoleForm/ProjectRoleForm';
 import useProjectRoleForm from '../hooks/useProjectRoleForm';
 import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from '../../../../hooks/useToast';
+import PermissionButton from '../../../common/PermissionButton/PermissionButton';
+import { ADMIN } from '../../../providers/AccessProvider/permissions';
 
 const CreateProjectRole = () => {
     /* @ts-ignore */
@@ -89,11 +91,15 @@ const CreateProjectRole = () => {
                 handlePermissionChange={handlePermissionChange}
                 checkAllProjectPermissions={checkAllProjectPermissions}
                 checkAllEnvironmentPermissions={checkAllEnvironmentPermissions}
-                submitButtonText="Create"
+                mode="Create"
                 clearErrors={clearErrors}
                 validateNameUniqueness={validateNameUniqueness}
                 getRoleKey={getRoleKey}
-            />
+            >
+                <PermissionButton permission={ADMIN} type="submit">
+                    Create role
+                </PermissionButton>
+            </ProjectRoleForm>
         </FormTemplate>
     );
 };

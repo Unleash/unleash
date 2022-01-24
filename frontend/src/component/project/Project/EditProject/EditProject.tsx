@@ -6,6 +6,8 @@ import useProjectForm from '../hooks/useProjectForm';
 import useProject from '../../../../hooks/api/getters/useProject/useProject';
 import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from '../../../../hooks/useToast';
+import PermissionButton from '../../../common/PermissionButton/PermissionButton';
+import { UPDATE_PROJECT } from '../../../../store/project/actions';
 
 const EditProject = () => {
     const { uiConfig } = useUiConfig();
@@ -24,6 +26,7 @@ const EditProject = () => {
         clearErrors,
         validateIdUniqueness,
         validateName,
+        validateProjectId,
         errors,
     } = useProjectForm(id, project.name, project.description);
 
@@ -44,8 +47,9 @@ const EditProject = () => {
         const payload = getProjectPayload();
 
         const validName = validateName();
+        const validId = validateProjectId();
 
-        if (validName) {
+        if (validName && validId) {
             try {
                 await editProject(id, payload);
                 refetch();
@@ -82,10 +86,17 @@ const EditProject = () => {
                 setProjectName={setProjectName}
                 projectDesc={projectDesc}
                 setProjectDesc={setProjectDesc}
-                submitButtonText="Edit"
+                mode="Edit"
                 clearErrors={clearErrors}
                 validateIdUniqueness={validateIdUniqueness}
-            />
+            >
+                <PermissionButton
+                    permission={UPDATE_PROJECT}
+                    type="submit"
+                >
+                    Edit project
+                </PermissionButton>
+            </ProjectForm>
         </FormTemplate>
     );
 };

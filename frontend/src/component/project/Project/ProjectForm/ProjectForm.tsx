@@ -1,5 +1,3 @@
-import PermissionButton from '../../../common/PermissionButton/PermissionButton';
-import { CREATE_PROJECT } from '../../../providers/AccessProvider/permissions';
 import Input from '../../../common/Input/Input';
 import { TextField, Button } from '@material-ui/core';
 import { useStyles } from './ProjectForm.style';
@@ -16,12 +14,13 @@ interface IProjectForm {
     handleSubmit: (e: any) => void;
     handleCancel: () => void;
     errors: { [key: string]: string };
-    submitButtonText: string;
+    mode: string;
     clearErrors: () => void;
     validateIdUniqueness: () => void;
 }
 
-const ProjectForm = ({
+const ProjectForm: React.FC<IProjectForm> = ({
+    children,
     handleSubmit,
     handleCancel,
     projectId,
@@ -31,10 +30,10 @@ const ProjectForm = ({
     setProjectName,
     setProjectDesc,
     errors,
-    submitButtonText,
+    mode,
     validateIdUniqueness,
     clearErrors,
-}: IProjectForm) => {
+}) => {
     const styles = useStyles();
 
     return (
@@ -54,7 +53,7 @@ const ProjectForm = ({
                     errorText={errors.id}
                     onFocus={() => clearErrors()}
                     onBlur={validateIdUniqueness}
-                    disabled={submitButtonText === 'Edit'}
+                    disabled={mode === 'Edit'}
                 />
 
                 <p className={styles.inputDescription}>
@@ -85,16 +84,10 @@ const ProjectForm = ({
             </div>
 
             <div className={styles.buttonContainer}>
+                {children}
                 <Button onClick={handleCancel} className={styles.cancelButton}>
                     Cancel
                 </Button>
-                <PermissionButton
-                    onClick={handleSubmit}
-                    permission={CREATE_PROJECT}
-                    type="submit"
-                >
-                    {submitButtonText} project
-                </PermissionButton>
             </div>
         </form>
     );

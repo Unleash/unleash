@@ -11,6 +11,8 @@ import useProjectRole from '../../../../hooks/api/getters/useProjectRole/useProj
 import { IPermission } from '../../../../interfaces/project';
 import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from '../../../../hooks/useToast';
+import PermissionButton from '../../../common/PermissionButton/PermissionButton';
+import { ADMIN } from '../../../providers/AccessProvider/permissions';
 
 const EditProjectRole = () => {
     const { uiConfig } = useUiConfig();
@@ -117,11 +119,15 @@ to resources within a project"
                 handlePermissionChange={handlePermissionChange}
                 checkAllProjectPermissions={checkAllProjectPermissions}
                 checkAllEnvironmentPermissions={checkAllEnvironmentPermissions}
-                submitButtonText="Edit"
+                mode="Edit"
                 errors={errors}
                 clearErrors={clearErrors}
                 getRoleKey={getRoleKey}
-            />
+            >
+                <PermissionButton permission={ADMIN} type="submit">
+                    Edit role
+                </PermissionButton>
+            </ProjectRoleForm>
         </FormTemplate>
     );
 };

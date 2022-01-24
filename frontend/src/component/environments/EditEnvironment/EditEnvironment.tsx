@@ -86,7 +86,6 @@ const EditEnvironment = () => {
                 clearErrors={clearErrors}
             >
                 <PermissionButton
-                    onClick={handleSubmit}
                     permission={ADMIN}
                     type="submit"
                 >

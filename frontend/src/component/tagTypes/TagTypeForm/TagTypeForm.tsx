@@ -65,10 +65,10 @@ const TagTypeForm: React.FC<ITagTypeForm> = ({
                 />
             </div>
             <div className={styles.buttonContainer}>
+                {children}
                 <Button onClick={handleCancel} className={styles.cancelButton}>
                     Cancel
                 </Button>
-                {children}
             </div>
         </form>
     );

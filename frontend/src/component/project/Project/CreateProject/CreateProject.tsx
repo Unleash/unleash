@@ -6,6 +6,8 @@ import useProjectForm from '../hooks/useProjectForm';
 import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from '../../../../hooks/useToast';
 import useUser from '../../../../hooks/api/getters/useUser/useUser';
+import PermissionButton from '../../../common/PermissionButton/PermissionButton';
+import { CREATE_PROJECT } from '../../../providers/AccessProvider/permissions';
 
 const CreateProject = () => {
     /* @ts-ignore */
@@ -24,6 +26,7 @@ const CreateProject = () => {
         clearErrors,
         validateIdUniqueness,
         validateName,
+        validateProjectId,
         errors,
     } = useProjectForm();
 
@@ -33,8 +36,10 @@ const CreateProject = () => {
         e.preventDefault();
         clearErrors();
         const validName = validateName();
+        const validProjectId = validateProjectId();
         const validId = await validateIdUniqueness();
-        if (validName && validId) {
+
+        if (validName && validId && validProjectId) {
             const payload = getProjectPayload();
             try {
                 await createProject(payload);
@@ -83,10 +88,17 @@ const CreateProject = () => {
                 setProjectName={setProjectName}
                 projectDesc={projectDesc}
                 setProjectDesc={setProjectDesc}
-                submitButtonText="Create"
+                mode="Create"
                 clearErrors={clearErrors}
                 validateIdUniqueness={validateIdUniqueness}
-            />
+            >
+                <PermissionButton
+                    permission={CREATE_PROJECT}
+                    type="submit"
+                >
+                    Create project
+                </PermissionButton>
+            </ProjectForm>
         </FormTemplate>
     );
 };

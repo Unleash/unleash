@@ -97,7 +97,6 @@ const CreateApiToken = () => {
                 clearErrors={clearErrors}
             >
                 <PermissionButton
-                    onClick={handleSubmit}
                     permission={ADMIN}
                     type="submit"
                 >

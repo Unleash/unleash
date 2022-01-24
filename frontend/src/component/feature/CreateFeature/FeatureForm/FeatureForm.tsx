@@ -1,7 +1,4 @@
-import {
-    CREATE_FEATURE,
-    UPDATE_FEATURE,
-} from '../../../providers/AccessProvider/permissions';
+import { CREATE_FEATURE } from '../../../providers/AccessProvider/permissions';
 import Input from '../../../common/Input/Input';
 import { Button } from '@material-ui/core';
 import { useStyles } from './FeatureForm.styles';
@@ -53,7 +50,7 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
     const { hasAccess } = useContext(AccessContext);
     const { featureTypes } = useFeatureTypes();
     const { permissions } = useUser();
-    const editable = hasAccess(UPDATE_FEATURE, project);
+    const editable = hasAccess(CREATE_FEATURE, project) && mode !== 'Edit';
 
     const renderToggleDescription = () => {
         return featureTypes.find(toggle => toggle.id === type)?.description;

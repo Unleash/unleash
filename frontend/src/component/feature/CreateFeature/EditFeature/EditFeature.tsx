@@ -63,7 +63,7 @@ const EditFeature = () => {
     };
 
     const formatApiCode = () => {
-        return `curl --location --request PUT '${
+        return `curl --location --request PATCH '${
             uiConfig.unleashUrl
         }/api/admin/projects/${projectId}/features/${featureId}' \\
     --header 'Authorization: INSERT_API_KEY' \\

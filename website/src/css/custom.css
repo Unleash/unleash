@@ -36,7 +36,6 @@ li.theme-doc-sidebar-item-category-level-1 > div::before {
     background-color: var(--color-unleash-purple);
     border-radius: 2px;
     position: absolute;
-    /* left: -.3em; */
 }
 
 .docusaurus-highlight-code-line {

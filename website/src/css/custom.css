@@ -7,6 +7,7 @@
 
 /* You can override the default Infima variables here. */
 :root {
+    --color-unleash-purple: #635DC5;
     --ifm-color-primary: #39535b;
     --ifm-color-primary-dark: #334b52;
     --ifm-color-primary-darker: #30474d;
@@ -16,7 +17,7 @@
     --ifm-color-primary-lightest: #4a6c76;
     --ifm-code-font-size: 90%;
     --ifm-font-size-base: 15px;
-    --ifm-link-color: #635DC5;
+    --ifm-link-color: var(--color-unleash-purple);
     --navbar-link-color: #122d33;
 }
 
@@ -26,6 +27,17 @@ footer {
 
 [class^='docTitle'] {
     font-size: 2.5rem !important;
+}
+
+li.theme-doc-sidebar-item-category-level-1 > div::before {
+    width: .8em;
+    height: .8em;
+    content: " ";
+    position: absolute;
+    background-color: var(--color-unleash-purple);
+    left: -.1em;
+    top: calc(50% - .4em);
+    border-radius: 2px;
 }
 
 .docusaurus-highlight-code-line {

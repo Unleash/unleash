@@ -90,7 +90,7 @@
     "sass": "1.49.0",
     "swr": "1.0.1",
     "typescript": "4.5.5",
-    "web-vitals": "2.1.3"
+    "web-vitals": "2.1.4"
   },
   "jest": {
     "moduleNameMapper": {

@@ -29,7 +29,6 @@ const EditFeature = () => {
         setProject,
         description,
         setDescription,
-        getTogglePayload,
         clearErrors,
         errors,
     } = useFeatureForm(

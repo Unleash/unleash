@@ -1,9 +1,14 @@
 ---
 title: How to create and assign custom project roles
 ---
+import VideoThing from './VideoThing.jsx'
+
 :::info availability
 Custom project roles were introduced in **Unleash 4.6** and are only available in Unleash Enterprise.
 :::
+
+<VideoThing videoUrls={["https://www.youtube.com/embed/2BlckVMHxgE" , "https://www.youtube.com/embed/IqaD8iGxkwk"]}>
+</VideoThing>
 
 This guide takes you through [how to create](#creating-custom-project-roles "how to create custom project roles") and [assign](#assigning-custom-project-roles "how to assign custom project roles") [custom project roles](../user_guide/rbac.md#custom-project-roles).
 
@@ -27,7 +32,7 @@ To create custom project roles:
 
 Here's a video recording with accompanying explanations of how to create custom project roles:
 
-<iframe width="100%" height="auto" style={{  aspectRatio: "16/9"  }} src="https://www.youtube.com/embed/2BlckVMHxgE" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<!-- <iframe width="100%" height="auto" style={{  aspectRatio: "16/9"  }} src="https://www.youtube.com/embed/2BlckVMHxgE" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> -->
 
 
 
@@ -50,4 +55,4 @@ To assign a custom project role to a user:
 
 Here's a video recording with accompanying explanations of how to assign custom project roles:
 
-<iframe width="100%" height="auto" style={{  aspectRatio: "16/9"  }} src="https://www.youtube.com/embed/IqaD8iGxkwk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<!-- <iframe width="100%" height="auto" style={{  aspectRatio: "16/9"  }} src="https://www.youtube.com/embed/IqaD8iGxkwk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> -->

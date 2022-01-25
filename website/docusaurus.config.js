@@ -10,6 +10,7 @@ module.exports = {
     organizationName: 'Unleash', // Usually your GitHub org/user name.
     projectName: 'unleash.github.io', // Usually your repo name.
     trailingSlash: false,
+    clientModules: ['./client-modules/container-query-polyfill.js'],
     themeConfig: {
         defaultMode: 'light',
         disableSwitch: true,
@@ -44,7 +45,14 @@ module.exports = {
             ],
         },
         prism: {
-            additionalLanguages: ['java', 'swift', 'ruby', 'csharp', 'kotlin', 'php'],
+            additionalLanguages: [
+                'java',
+                'swift',
+                'ruby',
+                'csharp',
+                'kotlin',
+                'php',
+            ],
         },
         footer: {
             style: 'dark',
@@ -71,13 +79,11 @@ module.exports = {
                     items: [
                         {
                             label: 'Stack Overflow',
-                            href:
-                                'https://stackoverflow.com/questions/tagged/unleash',
+                            href: 'https://stackoverflow.com/questions/tagged/unleash',
                         },
                         {
                             label: 'Slack',
-                            href:
-                                'https://join.slack.com/t/unleash-community/shared_invite/zt-8b6l1uut-LL67kLpIXm9bcN3~6RVaRQ',
+                            href: 'https://join.slack.com/t/unleash-community/shared_invite/zt-8b6l1uut-LL67kLpIXm9bcN3~6RVaRQ',
                         },
                         {
                             label: 'Twitter',
@@ -108,8 +114,11 @@ module.exports = {
                         'https://github.com/Unleash/unleash/edit/main/website/',
                     routeBasePath: '/',
                     remarkPlugins: [
-                        [require('@docusaurus/remark-plugin-npm2yarn'), {sync: true}]
-                    ]
+                        [
+                            require('@docusaurus/remark-plugin-npm2yarn'),
+                            { sync: true },
+                        ],
+                    ],
                 },
                 theme: {
                     customCss: require.resolve('./src/css/custom.css'),
@@ -153,7 +162,7 @@ module.exports = {
                         from: '/user_guide/control_rollout',
                     },
                 ],
-                createRedirects: function(toPath) {
+                createRedirects: function (toPath) {
                     if (
                         toPath.indexOf('/docs/') === -1 &&
                         toPath.indexOf('index.html') === -1

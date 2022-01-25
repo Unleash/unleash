@@ -24,7 +24,9 @@ const BreadcrumbNav = () => {
                 item !== 'strategies' &&
                 item !== 'features' &&
                 item !== 'features2' && 
-                item !== 'create-toggle'
+                item !== 'create-toggle'&& 
+                item !== 'settings'  
+
         );
 
     return (

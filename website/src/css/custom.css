@@ -86,7 +86,8 @@ html[data-theme='dark'] .header-github-link:before {
 
     --gap: .5em;
     --border-radius: var(--ifm-alert-border-radius);
-    gap: var(--gap)
+    gap: var(--gap);
+    margin-bottom: 1em;
 }
 
 .unleash-video-container p {
@@ -95,11 +96,22 @@ html[data-theme='dark'] .header-github-link:before {
     border-radius: var(--border-radius);
 }
 
-.unleash-video-container > .videos {
-    padding: 1em;
-    border-radius: var(--border-radius);
-    background: var(--ifm-color-info-contrast-background);
+.unleash-video-container > .videos  {
     display: flex;
     flex-direction: column;
     gap: var(--gap);
+}
+
+.unleash-video-container  .video-wrapper  {
+    padding: .5rem;
+    border-radius: var(--border-radius);
+    background: var(--ifm-color-info-contrast-background);
+}
+
+.unleash-video-container iframe  {
+    aspect-ratio: 16/9;
+}
+
+.unleash-video-container > .admonition {
+    margin: 0;
 }

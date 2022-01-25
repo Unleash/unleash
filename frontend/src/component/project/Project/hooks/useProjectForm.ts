@@ -39,6 +39,10 @@ const useProjectForm = (
     const NAME_EXISTS_ERROR = 'Error: A project with this id already exists.';
 
     const validateIdUniqueness = async () => {
+        if (projectId.length === 0) {
+            setErrors(prev => ({ ...prev, id: 'Id can not be empty.' }));
+            return false;
+        }
         try {
             await validateId(getProjectPayload());
             return true;
@@ -65,7 +69,7 @@ const useProjectForm = (
             setErrors(prev => ({ ...prev, name: 'Name can not be empty.' }));
             return false;
         }
-        
+
         return true;
     };
 

@@ -75,11 +75,9 @@ const CreateTagType = () => {
                 setTagDesc={setTagDesc}
                 mode="Create"
                 clearErrors={clearErrors}
+                validateNameUniqueness={validateNameUniqueness}
             >
-                <PermissionButton
-                    permission={UPDATE_TAG_TYPE}
-                    type="submit"
-                >
+                <PermissionButton permission={UPDATE_TAG_TYPE} type="submit">
                     Create type
                 </PermissionButton>
             </TagTypeForm>

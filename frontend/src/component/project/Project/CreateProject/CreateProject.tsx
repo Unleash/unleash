@@ -26,7 +26,6 @@ const CreateProject = () => {
         clearErrors,
         validateIdUniqueness,
         validateName,
-        validateProjectId,
         errors,
     } = useProjectForm();
 
@@ -36,10 +35,9 @@ const CreateProject = () => {
         e.preventDefault();
         clearErrors();
         const validName = validateName();
-        const validProjectId = validateProjectId();
         const validId = await validateIdUniqueness();
 
-        if (validName && validId && validProjectId) {
+        if (validName && validId) {
             const payload = getProjectPayload();
             try {
                 await createProject(payload);
@@ -67,7 +65,7 @@ const CreateProject = () => {
     };
 
     const handleCancel = () => {
-        history.push('/projects');
+        history.goBack();
     };
 
     return (
@@ -92,10 +90,7 @@ const CreateProject = () => {
                 clearErrors={clearErrors}
                 validateIdUniqueness={validateIdUniqueness}
             >
-                <PermissionButton
-                    permission={CREATE_PROJECT}
-                    type="submit"
-                >
+                <PermissionButton permission={CREATE_PROJECT} type="submit">
                     Create project
                 </PermissionButton>
             </ProjectForm>

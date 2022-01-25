@@ -49,6 +49,15 @@ Array [
   },
   Object {
     "component": [Function],
+    "layout": "main",
+    "menu": Object {},
+    "parent": "/projects",
+    "path": "/projects/:projectId/features2/:featureId/settings",
+    "title": "Edit Feature",
+    "type": "protected",
+  },
+  Object {
+    "component": [Function],
     "flags": "E",
     "layout": "main",
     "menu": Object {},

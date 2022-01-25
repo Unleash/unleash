@@ -134,6 +134,7 @@ const FeatureOverviewEnvironment = ({
                                                         name
                                                     )}
                                                     arrow
+                                                    key={name}
                                                 >
                                                     <div
                                                         className={

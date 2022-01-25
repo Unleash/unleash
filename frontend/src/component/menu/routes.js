@@ -31,7 +31,6 @@ import RedirectFeatureViewPage from '../../page/features/redirect';
 import RedirectArchive from '../feature/RedirectArchive/RedirectArchive';
 import EnvironmentList from '../environments/EnvironmentList/EnvironmentList';
 import FeatureView2 from '../feature/FeatureView2/FeatureView2';
-import FeatureCreate from '../feature/FeatureCreate/FeatureCreate';
 import ProjectRoles from '../admin/project-roles/ProjectRoles/ProjectRoles';
 import CreateProjectRole from '../admin/project-roles/CreateProjectRole/CreateProjectRole';
 import EditProjectRole from '../admin/project-roles/EditProjectRole/EditProjectRole';
@@ -46,6 +45,8 @@ import EditTagType from '../tagTypes/EditTagType/EditTagType';
 import CreateTagType from '../tagTypes/CreateTagType/CreateTagType';
 import EditProject from '../project/Project/EditProject/EditProject';
 import CreateProject from '../project/Project/CreateProject/CreateProject';
+import CreateFeature from '../feature/CreateFeature/CreateFeature/CreateFeature';
+import EditFeature from '../feature/CreateFeature/EditFeature/EditFeature';
 
 export const routes = [
     // Project
@@ -96,6 +97,15 @@ export const routes = [
         menu: {},
     },
     {
+        path: '/projects/:projectId/features2/:featureId/settings',
+        parent: '/projects',
+        title: 'Edit Feature',
+        component: EditFeature,
+        type: 'protected',
+        layout: 'main',
+        menu: {},
+    },
+    {
         path: '/projects/:projectId/features2/:featureId',
         parent: '/projects',
         title: 'FeatureView2',
@@ -118,7 +128,7 @@ export const routes = [
         path: '/projects/:projectId/create-toggle',
         parent: '/projects/:id/features',
         title: 'Create feature toggle',
-        component: FeatureCreate,
+        component: CreateFeature,
         type: 'protected',
         layout: 'main',
         menu: {},

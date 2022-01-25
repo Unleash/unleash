@@ -16,6 +16,7 @@ interface ITagTypeForm {
     errors: { [key: string]: string };
     mode: string;
     clearErrors: () => void;
+    validateNameUniqueness?: () => void;
 }
 
 const TagTypeForm: React.FC<ITagTypeForm> = ({
@@ -28,6 +29,7 @@ const TagTypeForm: React.FC<ITagTypeForm> = ({
     setTagDesc,
     errors,
     mode,
+    validateNameUniqueness,
     clearErrors,
 }) => {
     const styles = useStyles();
@@ -49,11 +51,10 @@ const TagTypeForm: React.FC<ITagTypeForm> = ({
                     errorText={errors.name}
                     onFocus={() => clearErrors()}
                     disabled={mode === EDIT}
+                    onBlur={validateNameUniqueness}
                 />
 
-                <p className={styles.inputDescription}>
-                    What is this role for?
-                </p>
+                <p className={styles.inputDescription}>What is this tag for?</p>
                 <TextField
                     className={styles.input}
                     label="Tag description"
@@ -65,10 +66,10 @@ const TagTypeForm: React.FC<ITagTypeForm> = ({
                 />
             </div>
             <div className={styles.buttonContainer}>
+                {children}
                 <Button onClick={handleCancel} className={styles.cancelButton}>
                     Cancel
                 </Button>
-                {children}
             </div>
         </form>
     );

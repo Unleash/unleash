@@ -38,7 +38,7 @@ export const useStyles = makeStyles(theme => ({
         justifyContent: 'flex-end',
     },
     cancelButton: {
-        marginRight: '1.5rem',
+        marginLeft: '1.5rem',
     },
     inputDescription: {
         marginBottom: '0.5rem',

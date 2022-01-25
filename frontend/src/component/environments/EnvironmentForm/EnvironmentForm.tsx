@@ -62,10 +62,10 @@ const EnvironmentForm: React.FC<IEnvironmentForm> = ({
                 />
             </div>
             <div className={styles.buttonContainer}>
+                {children}
                 <Button onClick={handleCancel} className={styles.cancelButton}>
                     Cancel
                 </Button>
-                {children}
             </div>
         </form>
     );

@@ -100,7 +100,6 @@ const EditUser = () => {
                 mode={EDIT}
             >
                 <PermissionButton
-                    onClick={handleSubmit}
                     permission={ADMIN}
                     type="submit"
                 >

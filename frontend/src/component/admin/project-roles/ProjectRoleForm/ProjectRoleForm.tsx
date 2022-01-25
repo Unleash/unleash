@@ -1,5 +1,3 @@
-import PermissionButton from '../../../common/PermissionButton/PermissionButton';
-import { ADMIN } from '../../../providers/AccessProvider/permissions';
 import Input from '../../../common/Input/Input';
 import EnvironmentPermissionAccordion from './EnvironmentPermissionAccordion/EnvironmentPermissionAccordion';
 import {
@@ -31,13 +29,14 @@ interface IProjectRoleForm {
     handleSubmit: (e: any) => void;
     handleCancel: () => void;
     errors: { [key: string]: string };
-    submitButtonText: string;
+    mode?: string;
     clearErrors: () => void;
     validateNameUniqueness?: () => void;
     getRoleKey: (permission: { id: number; environment?: string }) => string;
 }
 
-const ProjectRoleForm = ({
+const ProjectRoleForm: React.FC<IProjectRoleForm> = ({
+    children,
     handleSubmit,
     handleCancel,
     roleName,
@@ -49,7 +48,7 @@ const ProjectRoleForm = ({
     checkAllProjectPermissions,
     checkAllEnvironmentPermissions,
     errors,
-    submitButtonText,
+    mode,
     validateNameUniqueness,
     clearErrors,
     getRoleKey,
@@ -173,16 +172,10 @@ const ProjectRoleForm = ({
             <h3 className={styles.header}>Environment permissions</h3>
             <div>{renderEnvironmentPermissions()}</div>
             <div className={styles.buttonContainer}>
+                {children}
                 <Button onClick={handleCancel} className={styles.cancelButton}>
                     Cancel
                 </Button>
-                <PermissionButton
-                    onClick={handleSubmit}
-                    permission={ADMIN}
-                    type="submit"
-                >
-                    {submitButtonText} role
-                </PermissionButton>
             </div>
         </form>
     );

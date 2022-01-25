@@ -79,19 +79,19 @@ html[data-theme='dark'] .header-github-link:before {
 
 .unleash-video-container {
     display: grid;
-    /* when it is wider than 400px */
-    grid-template-columns: 1fr min(250px, 25%);
-
-    /* otherwise no template-columns. Use a single column. */
-
     --gap: .5em;
     --border-radius: var(--ifm-alert-border-radius);
     gap: var(--gap);
     margin-bottom: 1em;
 }
 
-.unleash-video-container p {
+@media screen and (min-width: 450px) {
+    .unleash-video-container {
+        grid-template-columns: 1fr min(250px, 25%);
+    }
+}
 
+.unleash-video-container p {
     background: var(--ifm-color-success-contrast-background);
     border-radius: var(--border-radius);
 }

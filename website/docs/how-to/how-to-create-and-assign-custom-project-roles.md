@@ -1,14 +1,14 @@
 ---
 title: How to create and assign custom project roles
 ---
-import VideoThing from './VideoThing.jsx'
+import VideoContent from '@site/src/components/VideoContent.jsx'
 
 :::info availability
 Custom project roles were introduced in **Unleash 4.6** and are only available in Unleash Enterprise.
 :::
 
-<VideoThing videoUrls={["https://www.youtube.com/embed/2BlckVMHxgE" , "https://www.youtube.com/embed/IqaD8iGxkwk"]}>
-</VideoThing>
+<VideoContent videoUrls={["https://www.youtube.com/embed/2BlckVMHxgE" , "https://www.youtube.com/embed/IqaD8iGxkwk"]}>
+</VideoContent>
 
 This guide takes you through [how to create](#creating-custom-project-roles "how to create custom project roles") and [assign](#assigning-custom-project-roles "how to assign custom project roles") [custom project roles](../user_guide/rbac.md#custom-project-roles).
 

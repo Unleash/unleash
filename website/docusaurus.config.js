@@ -39,7 +39,7 @@ module.exports = {
                     href: 'https://github.com/Unleash/unleash',
                     position: 'right',
                     className: 'header-github-link',
-                    'aria-label': 'GitHub repository',
+                    'aria-label': 'Unleash GitHub repository',
                 },
             ],
         },
@@ -57,7 +57,7 @@ module.exports = {
                             to: '/',
                         },
                         {
-                            label: 'Open-Source',
+                            label: 'Unleash on GitHub',
                             href: 'https://github.com/Unleash/unleash',
                         },
                         {

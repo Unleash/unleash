@@ -136,11 +136,12 @@ export class EmailService {
     async sendGettingStartedMail(
         name: string,
         recipient: string,
-        passwordLink: string,
+        unleashUrl: string,
+        passwordLink?: string,
     ): Promise<IEmailEnvelope> {
         if (this.configured()) {
             const year = new Date().getFullYear();
-            const context = { passwordLink, name, year };
+            const context = { passwordLink, name, year, unleashUrl };
             const bodyHtml = await this.compileTemplate(
                 'getting-started',
                 TemplateFormat.HTML,

@@ -10,6 +10,9 @@ import ResetTokenService from '../../services/reset-token-service';
 import { IUnleashServices } from '../../types/services';
 import SessionService from '../../services/session-service';
 import { IAuthRequest } from '../unleash-types';
+import SettingService from '../../services/setting-service';
+import { SimpleAuthSettings } from '../../server-impl';
+import { simpleAuthKey } from '../../types/settings/simple-auth-settings';
 
 interface ICreateUserBody {
     username: string;
@@ -32,6 +35,10 @@ export default class UserAdminController extends Controller {
 
     private sessionService: SessionService;
 
+    private settingService: SettingService;
+
+    readonly unleashUrl: string;
+
     constructor(
         config: IUnleashConfig,
         {
@@ -40,6 +47,7 @@ export default class UserAdminController extends Controller {
             emailService,
             resetTokenService,
             sessionService,
+            settingService,
         }: Pick<
             IUnleashServices,
             | 'userService'
@@ -47,15 +55,18 @@ export default class UserAdminController extends Controller {
             | 'emailService'
             | 'resetTokenService'
             | 'sessionService'
+            | 'settingService'
         >,
     ) {
         super(config);
         this.userService = userService;
         this.accessService = accessService;
         this.emailService = emailService;
-        this.logger = config.getLogger('routes/user-controller.ts');
         this.resetTokenService = resetTokenService;
         this.sessionService = sessionService;
+        this.settingService = settingService;
+        this.logger = config.getLogger('routes/user-controller.ts');
+        this.unleashUrl = config.server.unleashUrl;
 
         this.get('/', this.getUsers, ADMIN);
         this.get('/search', this.search);
@@ -140,10 +151,20 @@ export default class UserAdminController extends Controller {
                 },
                 user,
             );
-            const inviteLink = await this.resetTokenService.createNewUserUrl(
-                createdUser.id,
-                user.email,
-            );
+
+            const passwordAuthSettings =
+                await this.settingService.get<SimpleAuthSettings>(
+                    simpleAuthKey,
+                );
+
+            let inviteLink: string;
+            if (passwordAuthSettings?.disabled !== false) {
+                const inviteUrl = await this.resetTokenService.createNewUserUrl(
+                    createdUser.id,
+                    user.email,
+                );
+                inviteLink = inviteUrl.toString();
+            }
 
             let emailSent = false;
             const emailConfigured = this.emailService.configured();
@@ -154,7 +175,8 @@ export default class UserAdminController extends Controller {
                     await this.emailService.sendGettingStartedMail(
                         createdUser.name,
                         createdUser.email,
-                        inviteLink.toString(),
+                        this.unleashUrl,
+                        inviteLink,
                     );
                     emailSent = true;
                 } catch (e) {
@@ -227,5 +249,3 @@ export default class UserAdminController extends Controller {
         res.status(200).send();
     }
 }
-
-module.exports = UserAdminController;

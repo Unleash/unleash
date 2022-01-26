@@ -1,10 +1,13 @@
-class BadDataError extends Error {
-    constructor(message: string) {
-        super();
-        Error.captureStackTrace(this, this.constructor);
+class BaseError extends Error {
+    readonly statusCode: number;
 
-        this.name = this.constructor.name;
+    constructor(message: string, statusCode: number, name: string) {
+        super();
+
+        this.name = name;
         this.message = message;
+        this.statusCode = statusCode;
+        Error.captureStackTrace(this, this.constructor);
     }
 
     toJSON(): object {
@@ -20,4 +23,4 @@ class BadDataError extends Error {
     }
 }
 
-export default BadDataError;
+export default BaseError;

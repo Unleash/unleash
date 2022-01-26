@@ -79,4 +79,3 @@ class ResetPasswordController extends Controller {
 }
 
 export default ResetPasswordController;
-module.exports = ResetPasswordController;

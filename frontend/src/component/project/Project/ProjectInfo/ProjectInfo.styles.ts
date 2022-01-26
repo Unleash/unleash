@@ -25,6 +25,7 @@ export const useStyles = makeStyles(theme => ({
     idContainer: {
         display: 'flex',
         width: '100%',
+        textAlign: 'left',
     },
     percentageContainer: {
         display: 'flex',

@@ -67,19 +67,6 @@ html[data-theme='dark'] .header-github-link:before {
         no-repeat;
 }
 
-.unleash-video-wrapper {
-    /* container: inline-size / video-wrapper; */
-
-    /* resize: both; */
-    overflow: hidden;
-}
-
-/* @container video-wrapper size(max-width: 700px) { */
-/*     .unleash-video-container { */
-/*         background: red; */
-/*     } */
-/* } */
-
 .unleash-video-container {
     display: grid;
     --gap: 0.5em;
@@ -99,6 +86,10 @@ html[data-theme='dark'] .header-github-link:before {
     gap: var(--gap);
 }
 
+.video-wrapper {
+    display: flex;
+}
+
 .unleash-video-container > .admonition {
     box-shadow: none;
     background-color: var(--unleash-color-admonition-background);
@@ -116,8 +107,7 @@ html[data-theme='dark'] .header-github-link:before {
         grid-template-columns: 1fr min(250px, 25%);
     }
     .unleash-video-container > .videos {
-        display: flex;
-        flex-direction: column;
+        grid-template-columns: 1fr;
         gap: var(--gap);
     }
 }

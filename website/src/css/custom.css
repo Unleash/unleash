@@ -7,7 +7,7 @@
 
 /* You can override the default Infima variables here. */
 :root {
-    --color-unleash-purple: #635DC5;
+    --color-unleash-purple: #635dc5;
     --ifm-color-primary: #39535b;
     --ifm-color-primary-dark: #334b52;
     --ifm-color-primary-darker: #30474d;
@@ -30,9 +30,9 @@ footer {
 }
 
 li.theme-doc-sidebar-item-category-level-1 > div::before {
-    width: .3em;
+    width: 0.3em;
     height: 100%;
-    content: " ";
+    content: ' ';
     background-color: var(--color-unleash-purple);
     border-radius: 2px;
     position: absolute;

@@ -116,52 +116,45 @@ const FeatureOverviewEnvironment = ({
                             >
                                 Add strategy
                             </PermissionButton>
-                            <span className={styles.separtor}>|</span>
                             <ConditionallyRender
                                 condition={
                                     featureEnvironment?.strategies.length !== 0
                                 }
                                 show={
-                                    <div
-                                        className={
-                                            styles.stratigiesIconsContainer
-                                        }
-                                    >
-                                        {getStrategyIcons()?.map(
-                                            ({ name, Icon }) => (
-                                                <Tooltip
-                                                    title={getHumanReadableStrategyName(
-                                                        name
-                                                    )}
-                                                    arrow
-                                                    key={name}
-                                                >
-                                                    <div
-                                                        className={
-                                                            styles.strategyIconContainer
-                                                        }
+                                    <>
+                                        <span className={styles.separator}>
+                                            |
+                                        </span>
+                                        <div
+                                            className={
+                                                styles.strategiesIconsContainer
+                                            }
+                                        >
+                                            {getStrategyIcons()?.map(
+                                                ({ name, Icon }) => (
+                                                    <Tooltip
+                                                        title={getHumanReadableStrategyName(
+                                                            name
+                                                        )}
+                                                        arrow
+                                                        key={name}
                                                     >
-                                                        <Icon
+                                                        <div
                                                             className={
-                                                                styles.strategyIcon
+                                                                styles.strategyIconContainer
                                                             }
-                                                        />
-                                                    </div>
-                                                </Tooltip>
-                                            )
-                                        )}
-                                    </div>
-                                }
-                                elseShow={
-                                    <div
-                                        className={
-                                            styles.noStratigiesInfoContainer
-                                        }
-                                    >
-                                        <p className={styles.strategiesText}>
-                                            No strategies defined on this toggle
-                                        </p>
-                                    </div>
+                                                        >
+                                                            <Icon
+                                                                className={
+                                                                    styles.strategyIcon
+                                                                }
+                                                            />
+                                                        </div>
+                                                    </Tooltip>
+                                                )
+                                            )}
+                                        </div>{' '}
+                                    </>
                                 }
                             />
                         </div>
@@ -187,9 +180,16 @@ const FeatureOverviewEnvironment = ({
                             featureEnvironment={featureEnvironment}
                             getOverviewText={getOverviewText}
                         />
-                        <FeatureOverviewEnvironmentFooter
-                            env={env}
-                            environmentMetric={environmentMetric}
+                        <ConditionallyRender
+                            condition={
+                                featureEnvironment?.strategies?.length > 0
+                            }
+                            show={
+                                <FeatureOverviewEnvironmentFooter
+                                    env={env}
+                                    environmentMetric={environmentMetric}
+                                />
+                            }
                         />
                     </div>
                 </AccordionDetails>

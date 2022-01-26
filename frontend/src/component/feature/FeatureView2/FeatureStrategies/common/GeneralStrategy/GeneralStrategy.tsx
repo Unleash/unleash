@@ -95,7 +95,8 @@ const GeneralStrategy = ({
                     );
                 } else if (type === 'number') {
                     const regex = new RegExp('^\\d+$');
-                    const error = value.length > 0 ? !regex.test(value) : false;
+                    const error =
+                        value?.length > 0 ? !regex.test(value) : false;
 
                     return (
                         <div key={name} className={styles.generalSection}>

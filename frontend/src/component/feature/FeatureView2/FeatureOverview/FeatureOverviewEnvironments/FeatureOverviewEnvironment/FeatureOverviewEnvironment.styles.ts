@@ -23,7 +23,6 @@ export const useStyles = makeStyles(theme => ({
         display: 'flex',
         justifyContent: 'center',
         flexDirection: 'column',
-
         paddingTop: '1.5rem',
     },
     headerTitle: {
@@ -133,13 +132,19 @@ export const useStyles = makeStyles(theme => ({
         top: '1px',
         position: 'relative',
     },
-    stratigiesIconsContainer: {
+    strategyIconContainer: {
+        minWidth: '50px',
+        marginRight: '5px',
+        display: 'flex',
+        justifyContent: 'center',
+    },
+
+    strategiesIconsContainer: {
+        transform: 'scale(0.8)',
         display: 'flex',
         alignItems: 'center',
-        transform: 'scale(0.8)',
-        top: '3px',
-        left: '-10px',
         position: 'relative',
+        marginLeft: '-0.75rem',
         [theme.breakpoints.down(560)]: {
             marginLeft: '0px',
             top: '5px',
@@ -179,9 +184,7 @@ export const useStyles = makeStyles(theme => ({
             padding: '0.5rem',
         },
     },
-    strategyIconContainer: {
-        marginRight: '5px',
-    },
+
     strategyIcon: {
         fill: theme.palette.grey[600],
     },
@@ -208,11 +211,12 @@ export const useStyles = makeStyles(theme => ({
             fontWeight: 'normal',
         },
         '&:disabled': {
-            margin: '0px 16px',
-            height: '35px'
-         },
+            height: '35px',
+            background: 'transparent',
+            color: theme.palette.grey[600],
+        },
     },
-    separtor: {
+    separator: {
         marginLeft: '-10px',
         marginRight: '9px',
         [theme.breakpoints.down(560)]: {

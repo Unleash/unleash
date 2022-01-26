@@ -12,7 +12,7 @@ import { ADMIN } from '../../../../providers/AccessProvider/permissions';
 import PaginateUI from '../../../../common/PaginateUI/PaginateUI';
 import ProjectRoleListItem from './ProjectRoleListItem/ProjectRoleListItem';
 import useProjectRoles from '../../../../../hooks/api/getters/useProjectRoles/useProjectRoles';
-import { IProjectRole } from '../../../../../interfaces/role';
+import IRole, { IProjectRole } from '../../../../../interfaces/role';
 import useProjectRolesApi from '../../../../../hooks/api/actions/useProjectRolesApi/useProjectRolesApi';
 import useToast from '../../../../../hooks/useToast';
 import ProjectRoleDeleteConfirm from '../ProjectRoleDeleteConfirm/ProjectRoleDeleteConfirm';
@@ -22,8 +22,11 @@ const ROOTROLE = 'root';
 const ProjectRoleList = () => {
     const { hasAccess } = useContext(AccessContext);
     const { roles } = useProjectRoles();
+
+    const paginationFilter = (role: IRole) => role?.type !== ROOTROLE;
+
     const { page, pages, nextPage, prevPage, setPageIndex, pageIndex } =
-        usePagination(roles, 10);
+        usePagination(roles, 10, paginationFilter);
     const { deleteRole } = useProjectRolesApi();
     const { refetch } = useProjectRoles();
     const [currentRole, setCurrentRole] = useState<IProjectRole | null>(null);
@@ -49,21 +52,19 @@ const ProjectRoleList = () => {
     };
 
     const renderRoles = () => {
-        return page
-            .filter(role => role?.type !== ROOTROLE)
-            .map((role: IProjectRole) => {
-                return (
-                    <ProjectRoleListItem
-                        key={role.id}
-                        id={role.id}
-                        name={role.name}
-                        type={role.type}
-                        description={role.description}
-                        setCurrentRole={setCurrentRole}
-                        setDelDialog={setDelDialog}
-                    />
-                );
-            });
+        return page.map((role: IProjectRole) => {
+            return (
+                <ProjectRoleListItem
+                    key={role.id}
+                    id={role.id}
+                    name={role.name}
+                    type={role.type}
+                    description={role.description}
+                    setCurrentRole={setCurrentRole}
+                    setDelDialog={setDelDialog}
+                />
+            );
+        });
     };
 
     if (!roles) return null;

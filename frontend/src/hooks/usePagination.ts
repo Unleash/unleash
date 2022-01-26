@@ -1,13 +1,24 @@
 import { useEffect, useState } from 'react';
 import { paginate } from '../utils/paginate';
 
-const usePagination = (data: any[], limit: number) => {
+const usePagination = (
+    data: any[],
+    limit: number,
+    filterFunc?: (item: any) => boolean
+) => {
     const [paginatedData, setPaginatedData] = useState([[]]);
     const [pageIndex, setPageIndex] = useState(0);
 
     useEffect(() => {
-        const result = paginate(data, limit);
+        let dataToPaginate = data;
+
+        if (filterFunc) {
+            dataToPaginate = data.filter(filterFunc);
+        }
+
+        const result = paginate(dataToPaginate, limit);
         setPaginatedData(result);
+        /* eslint-disable-next-line */
     }, [data, limit]);
 
     const nextPage = () => {

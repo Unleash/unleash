@@ -10,7 +10,6 @@ module.exports = {
     organizationName: 'Unleash', // Usually your GitHub org/user name.
     projectName: 'unleash.github.io', // Usually your repo name.
     trailingSlash: false,
-    clientModules: ['./client-modules/container-query-polyfill.js'],
     themeConfig: {
         defaultMode: 'light',
         disableSwitch: true,

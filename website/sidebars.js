@@ -15,6 +15,7 @@ module.exports = {
         {
             label: 'First steps and tutorials',
             type: 'category',
+            collapsed: false,
             link: {
                 type: 'generated-index',
                 title: 'First steps',
@@ -29,8 +30,8 @@ module.exports = {
         },
         {
             label: 'How-to guides',
+            collapsed: false,
             type: 'category',
-            collapsible: true,
             link: {
                 type: 'generated-index',
                 title: 'How-to guides',
@@ -101,6 +102,7 @@ module.exports = {
         },
         {
             label: 'Reference documentation',
+            collapsed: false,
             type: 'category',
             link: {
                 type: 'generated-index',
@@ -109,35 +111,17 @@ module.exports = {
                     'Technical reference documentation relating to Unleash, including APIs, SDKs, Unleash concepts and deployment.',
                 slug: '/reference',
             },
-            collapsible: true,
             items: [
                 {
                     type: 'category',
-                    link: {
-                        type: 'generated-index',
-                        title: 'Unleash concepts',
-                        description:
-                            'Documents describing the inner parts of Unleash.',
-                        slug: '/reference/concepts',
-                    },
-                    label: 'Unleash concepts',
+                    link: { type: 'doc', id: 'addons/index' },
                     items: [
-                        'user_guide/activation_strategy',
-                        'advanced/archived_toggles',
-                        'advanced/audit_log',
-                        'advanced/custom_activation_strategy',
-                        'user_guide/environments',
-                        'advanced/feature_toggle_types',
-                        'advanced/toggle_variants',
-                        'user_guide/projects',
-                        'user_guide/rbac',
-                        'advanced/enterprise-authentication',
-                        'advanced/stickiness',
-                        'advanced/strategy_constraints',
-                        'advanced/tags',
-                        'user_guide/technical_debt',
-                        'user_guide/unleash_context',
+                        'addons/datadog',
+                        'addons/slack',
+                        'addons/teams',
+                        'addons/webhook',
                     ],
+                    label: 'Addons',
                 },
                 {
                     type: 'category',
@@ -185,10 +169,9 @@ module.exports = {
                 },
                 {
                     type: 'category',
-                    label: 'Unleash SDKs',
+                    label: 'Client SDKs',
                     link: { type: 'doc', id: 'sdks/index' },
                     items: [
-                        'sdks/unleash-proxy',
                         {
                             type: 'category',
                             label: 'Server-side SDKs',
@@ -248,17 +231,6 @@ module.exports = {
                 },
                 {
                     type: 'category',
-                    link: { type: 'doc', id: 'addons/index' },
-                    items: [
-                        'addons/datadog',
-                        'addons/slack',
-                        'addons/teams',
-                        'addons/webhook',
-                    ],
-                    label: 'Addons',
-                },
-                {
-                    type: 'category',
                     label: 'Integrations',
                     link: { type: 'doc', id: 'integrations/integrations' },
                     items: [
@@ -271,10 +243,40 @@ module.exports = {
                         ,
                     ],
                 },
+                {
+                    type: 'category',
+                    link: {
+                        type: 'generated-index',
+                        title: 'Unleash concepts',
+                        description:
+                            'Documents describing the inner parts of Unleash.',
+                        slug: '/reference/concepts',
+                    },
+                    label: 'Unleash concepts',
+                    items: [
+                        'user_guide/activation_strategy',
+                        'advanced/archived_toggles',
+                        'advanced/audit_log',
+                        'advanced/custom_activation_strategy',
+                        'user_guide/environments',
+                        'advanced/feature_toggle_types',
+                        'advanced/toggle_variants',
+                        'user_guide/projects',
+                        'user_guide/rbac',
+                        'advanced/enterprise-authentication',
+                        'advanced/stickiness',
+                        'advanced/strategy_constraints',
+                        'advanced/tags',
+                        'user_guide/technical_debt',
+                        'user_guide/unleash_context',
+                        'sdks/unleash-proxy',
+                    ],
+                },
             ],
         },
         {
             label: 'Topic guides',
+            collapsed: false,
             type: 'category',
             link: {
                 type: 'generated-index',

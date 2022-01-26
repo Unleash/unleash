@@ -45,12 +45,12 @@ The guides are organized into the following categories:
 The reference docs contain technical reference for Unleash and the API. Go here to find out how Unleash works and what configuration options are available. They're like an Unleash encyclopedia and assume you have a grip on key Unleash concepts.
 
 The reference docs are organized into the following topics:
-- [Unleash concepts](/reference/concepts)
-- [API documentation](/api)
-- [Unleash SDKs](/sdks)
-- [Deploy and manage unleash](/deploy)
 - [Addons](/addons)
-- [Integrations](/integrations)
+- [API documentation](/api)
+- [Unleash Client SDKs](/sdks)
+- [Deployment and management of Unleash](/deploy)
+- [Integrations with other systems](/integrations)
+- [Unleash concepts](/reference/concepts)
 
 ### Topic guides
 

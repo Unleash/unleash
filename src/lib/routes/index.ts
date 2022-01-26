@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { BackstageController } from './backstage';
 import ResetPasswordController from './auth/reset-password-controller';
+import SimplePasswordProvider from './auth/simple-password-provider';
 import { IUnleashConfig } from '../types/option';
 import { IUnleashServices } from '../types/services';
 import { api } from './api-def';
@@ -10,7 +11,7 @@ const ClientApi = require('./client-api');
 const Controller = require('./controller');
 const HealthCheckController = require('./health-check');
 const LogoutController = require('./logout');
-const SimplePasswordProvider = require('./auth/simple-password-provider');
+
 
 class IndexRouter extends Controller {
     constructor(config: IUnleashConfig, services: IUnleashServices) {

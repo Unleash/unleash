@@ -8,7 +8,7 @@ import {
     getHumanReadableStrategyName,
 } from '../../../../../../../../utils/strategy-names';
 import PermissionIconButton from '../../../../../../../common/PermissionIconButton/PermissionIconButton';
-import { UPDATE_FEATURE } from '../../../../../../../providers/AccessProvider/permissions';
+import { UPDATE_FEATURE_STRATEGY } from '../../../../../../../providers/AccessProvider/permissions';
 import FeatureStrategyExecution from '../../../../../FeatureStrategies/FeatureStrategyExecution/FeatureStrategyExecution';
 import { useStyles } from './FeatureOverviewEnvironmentStrategy.styles';
 
@@ -36,7 +36,8 @@ const FeatureOverviewEnvironmentStrategy = ({
                 {getHumanReadableStrategyName(strategy.name)}
                 <div className={styles.editStrategy}>
                     <PermissionIconButton
-                        permission={UPDATE_FEATURE}
+                        permission={UPDATE_FEATURE_STRATEGY}
+                        environmentId={environmentName}
                         projectId={projectId}
                         component={Link}
                         to={`/projects/${projectId}/features2/${featureId}/strategies?environment=${environmentName}`}

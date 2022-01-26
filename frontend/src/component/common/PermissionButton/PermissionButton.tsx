@@ -4,7 +4,7 @@ import { useContext } from 'react';
 import AccessContext from '../../../contexts/AccessContext';
 import ConditionallyRender from '../ConditionallyRender';
 
-interface IPermissionIconButtonProps
+export interface IPermissionIconButtonProps
     extends React.HTMLProps<HTMLButtonElement> {
     permission: string | string[];
     tooltip?: string;

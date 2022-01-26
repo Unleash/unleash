@@ -23,6 +23,7 @@ interface IDialogue {
     maxWidth?: 'lg' | 'sm' | 'xs' | 'md' | 'xl';
     disabledPrimaryButton?: boolean;
     formId?: string;
+    permissionButton?: React.ReactNode;
 }
 
 const Dialogue: React.FC<IDialogue> = ({
@@ -37,6 +38,7 @@ const Dialogue: React.FC<IDialogue> = ({
     maxWidth = 'sm',
     fullWidth = false,
     formId,
+    permissionButton,
 }) => {
     const styles = useStyles();
     const handleClick = formId
@@ -66,20 +68,26 @@ const Dialogue: React.FC<IDialogue> = ({
 
             <DialogActions>
                 <ConditionallyRender
-                    condition={Boolean(onClick)}
-                    show={
-                        <Button
-                            form={formId}
-                            color="primary"
-                            variant="contained"
-                            onClick={handleClick}
-                            autoFocus={!formId}
-                            disabled={disabledPrimaryButton}
-                            data-test={DIALOGUE_CONFIRM_ID}
-                            type={formId ? 'submit' : 'button'}
-                        >
-                            {primaryButtonText || "Yes, I'm sure"}
-                        </Button>
+                    condition={Boolean(permissionButton)}
+                    show={permissionButton}
+                    elseShow={
+                        <ConditionallyRender
+                            condition={Boolean(onClick)}
+                            show={
+                                <Button
+                                    form={formId}
+                                    color="primary"
+                                    variant="contained"
+                                    onClick={handleClick}
+                                    autoFocus={!formId}
+                                    disabled={disabledPrimaryButton}
+                                    data-test={DIALOGUE_CONFIRM_ID}
+                                    type={formId ? 'submit' : 'button'}
+                                >
+                                    {primaryButtonText || "Yes, I'm sure"}
+                                </Button>
+                            }
+                        />
                     }
                 />
 

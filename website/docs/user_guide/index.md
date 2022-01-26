@@ -17,7 +17,7 @@ Have questions that you can't find the answer to in these docs? You can always t
 
 ## Documentation structure
 
-Our documentation is split into four parts, using the [Diataxis documentation framework](https://diataxis.fr/):
+Our documentation is split into four parts, using the [Diátaxis documentation framework](https://diataxis.fr/):
 - [tutorials and introductory material](#tutorials)
 - [how-to guides](#how-to-guides)
 - [reference documentation](#reference-documentation)

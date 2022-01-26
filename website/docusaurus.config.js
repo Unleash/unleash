@@ -30,9 +30,6 @@ module.exports = {
                     label: 'Documentation',
                     activeBaseRegex: '(user_guide|sdks|addons|advanced)',
                 },
-                { to: 'deploy/getting_started', label: 'Deploy and manage' },
-                { to: 'integrations', label: 'Integrations' },
-                { to: '/api', label: 'API' },
                 {
                     href: 'https://www.getunleash.io/plans',
                     label: 'Unleash Enterprise',
@@ -42,7 +39,7 @@ module.exports = {
                     href: 'https://github.com/Unleash/unleash',
                     position: 'right',
                     className: 'header-github-link',
-                    'aria-label': 'GitHub repository',
+                    'aria-label': 'Unleash GitHub repository',
                 },
             ],
         },
@@ -60,7 +57,7 @@ module.exports = {
                             to: '/',
                         },
                         {
-                            label: 'Open-Source',
+                            label: 'Unleash on GitHub',
                             href: 'https://github.com/Unleash/unleash',
                         },
                         {
@@ -150,6 +147,10 @@ module.exports = {
                     {
                         to: '/integrations',
                         from: '/integrations/integrations',
+                    },
+                    {
+                        to: '/user_guide/activation_strategy',
+                        from: '/user_guide/control_rollout',
                     },
                 ],
                 createRedirects: function(toPath) {

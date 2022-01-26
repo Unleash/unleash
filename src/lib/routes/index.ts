@@ -12,7 +12,6 @@ const Controller = require('./controller');
 const HealthCheckController = require('./health-check');
 const LogoutController = require('./logout');
 
-
 class IndexRouter extends Controller {
     constructor(config: IUnleashConfig, services: IUnleashServices) {
         super(config);

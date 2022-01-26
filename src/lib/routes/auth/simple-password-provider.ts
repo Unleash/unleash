@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { Logger } from '../../logger';
 import { IUnleashConfig } from '../../server-impl';
 import UserService from '../../services/user-service';
@@ -12,7 +12,10 @@ class PasswordProvider extends Controller {
 
     private logger: Logger;
 
-    constructor(config: IUnleashConfig, { userService }: Pick<IUnleashServices, 'userService'>) {
+    constructor(
+        config: IUnleashConfig,
+        { userService }: Pick<IUnleashServices, 'userService'>,
+    ) {
         super(config);
         this.logger = config.getLogger('/auth/password-provider.js');
         this.userService = userService;

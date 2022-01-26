@@ -91,8 +91,7 @@ export default class UserAdminController extends Controller {
     async getUsers(req: Request, res: Response): Promise<void> {
         const users = await this.userService.getAll();
         const rootRoles = await this.accessService.getRootRoles();
-        const inviteLinks =
-            await this.resetTokenService.getActiveInvitations();
+        const inviteLinks = await this.resetTokenService.getActiveInvitations();
 
         const usersWithInviteLinks = users.map((user) => {
             const inviteLink = inviteLinks[user.id] || '';

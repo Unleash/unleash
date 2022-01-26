@@ -1,9 +1,9 @@
-const request = require('supertest');
-const express = require('express');
-const User = require('../../types/user');
-const PasswordProvider = require('./simple-password-provider');
-
-const getLogger = () => ({ info: () => {}, error: () => {} });
+import request from 'supertest';
+import express from 'express';
+import User from '../../types/user';
+import PasswordProvider from './simple-password-provider';
+import PasswordMismatchError from '../../error/password-mismatch';
+import getLogger from '../../../test/fixtures/no-logger';
 
 test('Should require password', async () => {
     const app = express();
@@ -11,6 +11,7 @@ test('Should require password', async () => {
     const userService = () => {};
     const ctr = new PasswordProvider({ getLogger }, { userService });
 
+    //@ts-ignore
     app.use('/auth/simple', ctr.router);
 
     const res = await request(app)
@@ -28,6 +29,7 @@ test('Should login user', async () => {
     const app = express();
     app.use(express.json());
     app.use((req, res, next) => {
+        //@ts-ignore
         req.session = {};
         next();
     });
@@ -41,6 +43,7 @@ test('Should login user', async () => {
     };
     const ctr = new PasswordProvider({ getLogger }, { userService });
 
+    //@ts-ignore
     app.use('/auth/simple', ctr.router);
 
     const res = await request(app)
@@ -59,6 +62,7 @@ test('Should not login user with wrong password', async () => {
     const app = express();
     app.use(express.json());
     app.use((req, res, next) => {
+        //@ts-ignore
         req.session = {};
         next();
     });
@@ -67,16 +71,17 @@ test('Should not login user with wrong password', async () => {
             if (u === username && p === password) {
                 return user;
             }
-            throw new Error('Wrong password');
+            throw new PasswordMismatchError();
         },
     };
     const ctr = new PasswordProvider({ getLogger }, { userService });
 
+    //@ts-ignore
     app.use('/auth/simple', ctr.router);
 
     const res = await request(app)
         .post('/auth/simple/login')
         .send({ username, password: 'not-correct' });
 
-    expect(401).toBe(res.status);
+    expect(res.status).toBe(401);
 });

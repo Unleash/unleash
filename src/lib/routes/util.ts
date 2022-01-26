@@ -1,6 +1,7 @@
 import joi from 'joi';
 import { Response } from 'express';
 import { Logger } from '../logger';
+import BaseError from '../error/base-error';
 
 export const customJoi = joi.extend((j) => ({
     type: 'isUrlFriendly',
@@ -29,6 +30,11 @@ export const handleErrors: (
     // @ts-ignore
     // eslint-disable-next-line no-param-reassign
     error.isJoi = true;
+
+    if (error instanceof BaseError) {
+        return res.status(error.statusCode).json(error).end();
+    }
+
     switch (error.name) {
         case 'ValidationError':
             return res.status(400).json(error).end();

@@ -24,6 +24,8 @@ import { RoleName } from '../types/model';
 import SettingService from './setting-service';
 import { SimpleAuthSettings } from '../server-impl';
 import { simpleAuthKey } from '../types/settings/simple-auth-settings';
+import DisabledError from '../error/disabled-error';
+import PasswordMismatch from '../error/password-mismatch';
 
 const systemUser = new User({ id: -1, username: 'system' });
 
@@ -273,8 +275,8 @@ class UserService {
             simpleAuthKey,
         );
 
-        if (settings && settings.disabled) {
-            throw new Error(
+        if (settings?.disabled) {
+            throw new DisabledError(
                 'Logging in with username/password has been disabled.',
             );
         }
@@ -290,7 +292,7 @@ class UserService {
             await this.store.successfullyLogin(user);
             return user;
         }
-        throw new Error('Wrong password, try again.');
+        throw new PasswordMismatch();
     }
 
     /**

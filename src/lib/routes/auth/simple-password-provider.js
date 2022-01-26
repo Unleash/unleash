@@ -18,13 +18,9 @@ class PasswordProvider extends Controller {
             });
         }
 
-        try {
-            const user = await this.userService.loginUser(username, password);
-            req.session.user = user;
-            return res.status(200).json(user);
-        } catch (e) {
-            return res.status(401).json({ message: e.message });
-        }
+        const user = await this.userService.loginUser(username, password);
+        req.session.user = user;
+        return res.status(200).json(user);
     }
 }
 

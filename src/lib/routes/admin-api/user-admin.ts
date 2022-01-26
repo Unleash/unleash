@@ -158,7 +158,7 @@ export default class UserAdminController extends Controller {
                 );
 
             let inviteLink: string;
-            if (passwordAuthSettings?.disabled !== false) {
+            if (!passwordAuthSettings?.disabled) {
                 const inviteUrl = await this.resetTokenService.createNewUserUrl(
                     createdUser.id,
                     user.email,
@@ -193,7 +193,7 @@ export default class UserAdminController extends Controller {
 
             res.status(201).send({
                 ...createdUser,
-                inviteLink,
+                inviteLink: inviteLink || this.unleashUrl,
                 emailSent,
                 rootRole,
             });

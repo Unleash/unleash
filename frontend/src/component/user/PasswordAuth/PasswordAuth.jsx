@@ -83,7 +83,7 @@ const PasswordAuth = ({ authDetails, passwordLogin }) => {
 
         return (
             <ConditionallyRender
-                condition={!authDetails.disableDefault}
+                condition={!authDetails.defaultHidden}
                 show={
                     <form onSubmit={handleSubmit} action={authDetails.path}>
                         <ConditionallyRender
@@ -146,7 +146,10 @@ const PasswordAuth = ({ authDetails, passwordLogin }) => {
     const renderWithOptions = options => (
         <>
             <AuthOptions options={options} />
-            <DividerText text="Or signin with username" />
+            <ConditionallyRender
+                condition={!authDetails.defaultHidden}
+                show={<DividerText text="Or sign in with username" />}
+            />
             {renderLoginForm()}
         </>
     );

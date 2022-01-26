@@ -84,7 +84,7 @@ const HostedAuth = ({ authDetails, passwordLogin }) => {
             />
 
             <ConditionallyRender
-                condition={!authDetails.disableDefault}
+                condition={!authDetails.defaultHidden}
                 show={
                     <form onSubmit={handleSubmit} action={authDetails.path}>
                         <Typography

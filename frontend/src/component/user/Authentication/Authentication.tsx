@@ -47,7 +47,7 @@ const Authentication = ({
                     history={history}
                 />
                 <ConditionallyRender
-                    condition={!authDetails.disableDefault}
+                    condition={!authDetails.defaultHidden}
                     show={<SecondaryLoginActions />}
                 />
             </>
@@ -77,7 +77,7 @@ const Authentication = ({
                     history={history}
                 />
                 <ConditionallyRender
-                    condition={!authDetails.disableDefault}
+                    condition={!authDetails.defaultHidden}
                     show={<SecondaryLoginActions />}
                 />
             </>

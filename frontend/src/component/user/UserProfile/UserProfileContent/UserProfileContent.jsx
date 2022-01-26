@@ -16,6 +16,7 @@ import { Alert } from '@material-ui/lab';
 import EditProfile from '../EditProfile/EditProfile';
 import legacyStyles from '../../user.module.scss';
 import { getBasePath } from '../../../../utils/format-path';
+import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
 
 const UserProfileContent = ({
     showProfile,
@@ -27,6 +28,7 @@ const UserProfileContent = ({
     setCurrentLocale,
 }) => {
     const commonStyles = useCommonStyles();
+    const { uiConfig } = useUiConfig();
     const [updatedPassword, setUpdatedPassword] = useState(false);
     const [edititingProfile, setEditingProfile] = useState(false);
     const styles = useStyles();
@@ -81,12 +83,14 @@ const UserProfileContent = ({
                         condition={!edititingProfile}
                         show={
                             <>
-                                <Button
-                                    variant="contained"
-                                    onClick={() => setEditingProfile(true)}
-                                >
-                                    Update password
-                                </Button>
+                                <ConditionallyRender condition={!uiConfig.disablePasswordAuth} show={
+                                    <Button
+                                        variant="contained"
+                                        onClick={() => setEditingProfile(true)}
+                                    >
+                                        Update password
+                                    </Button>
+                                } />
                                 <div className={commonStyles.divider} />
                                 <div className={legacyStyles.showUserSettings}>
                                     <FormControl

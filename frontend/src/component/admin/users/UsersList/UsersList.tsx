@@ -23,9 +23,11 @@ import PaginateUI from '../../../common/PaginateUI/PaginateUI';
 import { useHistory } from 'react-router-dom';
 import { IUser } from '../../../../interfaces/user';
 import IRole from '../../../../interfaces/role';
+import useToast from '../../../../hooks/useToast';
 
 const UsersList = () => {
     const { users, roles, refetch, loading } = useUsers();
+    const { setToastData, setToastApiError } = useToast();
     const {
         removeUser,
         changePassword,
@@ -53,27 +55,34 @@ const UsersList = () => {
         setDelUser(undefined);
     };
 
-    const openDelDialog = (user: IUser) => (e: React.SyntheticEvent<Element, Event>) => {
-        e.preventDefault();
-        setDelDialog(true);
-        setDelUser(user);
-    };
-    const openPwDialog = (user: IUser) => (e: React.SyntheticEvent<Element, Event>) => {
-        e.preventDefault();
-        setPwDialog({ open: true, user });
-    };
+    const openDelDialog =
+        (user: IUser) => (e: React.SyntheticEvent<Element, Event>) => {
+            e.preventDefault();
+            setDelDialog(true);
+            setDelUser(user);
+        };
+    const openPwDialog =
+        (user: IUser) => (e: React.SyntheticEvent<Element, Event>) => {
+            e.preventDefault();
+            setPwDialog({ open: true, user });
+        };
 
     const closePwDialog = () => {
         setPwDialog({ open: false });
     };
 
-    const onDeleteUser = () => {
-        removeUser(delUser)
-            .then(() => {
-                refetch();
-                closeDelDialog();
-            })
-            .catch(handleCatch);
+    const onDeleteUser = async () => {
+        try {
+            await removeUser(delUser);
+            setToastData({
+                title: `${delUser?.name} has been deleted`,
+                type: 'success',
+            });
+            refetch();
+            closeDelDialog();
+        } catch (e: any) {
+            setToastApiError(e.toString());
+        }
     };
 
     const handleCatch = () =>

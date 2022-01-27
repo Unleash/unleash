@@ -3,7 +3,7 @@ id: environments
 title: Environments
 ---
 
-<div class="alert alert--info" role="alert">
+<div class="alert alert--info">
   <em>Environments</em> are available in <i>Unleash v4.3.x</i> and later. They can also be enabled from <i>Unleash v4.2.x</i> with a feature toggle.
 </div>
 <br />

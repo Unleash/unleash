@@ -1,6 +1,5 @@
 /* eslint-disable no-alert */
-import { useContext, useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { useContext, useState } from 'react';
 import {
     Table,
     TableBody,
@@ -21,9 +20,14 @@ import loadingData from './loadingData';
 import useLoading from '../../../../hooks/useLoading';
 import usePagination from '../../../../hooks/usePagination';
 import PaginateUI from '../../../common/PaginateUI/PaginateUI';
+import { useHistory } from 'react-router-dom';
+import { IUser } from '../../../../interfaces/user';
+import IRole from '../../../../interfaces/role';
+import useToast from '../../../../hooks/useToast';
 
-function UsersList({ location, closeDialog, showDialog }) {
+const UsersList = () => {
     const { users, roles, refetch, loading } = useUsers();
+    const { setToastData, setToastApiError } = useToast();
     const {
         removeUser,
         changePassword,
@@ -31,13 +35,17 @@ function UsersList({ location, closeDialog, showDialog }) {
         userLoading,
         userApiErrors,
     } = useAdminUsersApi();
+    const history = useHistory();
+    const { location } = history;
     const { hasAccess } = useContext(AccessContext);
-    const [pwDialog, setPwDialog] = useState({ open: false });
+    const [pwDialog, setPwDialog] = useState<{ open: boolean; user?: IUser }>({
+        open: false,
+    });
     const [delDialog, setDelDialog] = useState(false);
     const [showConfirm, setShowConfirm] = useState(false);
     const [emailSent, setEmailSent] = useState(false);
     const [inviteLink, setInviteLink] = useState('');
-    const [delUser, setDelUser] = useState();
+    const [delUser, setDelUser] = useState<IUser>();
     const ref = useLoading(loading);
     const { page, pages, nextPage, prevPage, setPageIndex, pageIndex } =
         usePagination(users, 50);
@@ -47,31 +55,35 @@ function UsersList({ location, closeDialog, showDialog }) {
         setDelUser(undefined);
     };
 
-    const openDelDialog = user => e => {
-        e.preventDefault();
-        setDelDialog(true);
-        setDelUser(user);
-    };
-    const openPwDialog = user => e => {
-        e.preventDefault();
-        setPwDialog({ open: true, user });
-    };
+    const openDelDialog =
+        (user: IUser) => (e: React.SyntheticEvent<Element, Event>) => {
+            e.preventDefault();
+            setDelDialog(true);
+            setDelUser(user);
+        };
+    const openPwDialog =
+        (user: IUser) => (e: React.SyntheticEvent<Element, Event>) => {
+            e.preventDefault();
+            setPwDialog({ open: true, user });
+        };
 
     const closePwDialog = () => {
         setPwDialog({ open: false });
     };
 
-    const onDeleteUser = () => {
-        removeUser(delUser)
-            .then(() => {
-                refetch();
-                closeDelDialog();
-            })
-            .catch(handleCatch);
+    const onDeleteUser = async () => {
+        try {
+            await removeUser(delUser);
+            setToastData({
+                title: `${delUser?.name} has been deleted`,
+                type: 'success',
+            });
+            refetch();
+            closeDelDialog();
+        } catch (e: any) {
+            setToastApiError(e.toString());
+        }
     };
-
-    const handleCatch = () =>
-        console.log('An exception was thrown and handled.');
 
     const closeConfirm = () => {
         setShowConfirm(false);
@@ -79,8 +91,8 @@ function UsersList({ location, closeDialog, showDialog }) {
         setInviteLink('');
     };
 
-    const renderRole = roleId => {
-        const role = roles.find(r => r.id === roleId);
+    const renderRole = (roleId: number) => {
+        const role = roles.find((r: IRole) => r.id === roleId);
         return role ? role.name : '';
     };
 
@@ -156,7 +168,7 @@ function UsersList({ location, closeDialog, showDialog }) {
             />
 
             <ConditionallyRender
-                condition={delUser}
+                condition={Boolean(delUser)}
                 show={
                     <DelUser
                         showDialog={delDialog}
@@ -170,10 +182,6 @@ function UsersList({ location, closeDialog, showDialog }) {
             />
         </div>
     );
-}
-
-UsersList.propTypes = {
-    location: PropTypes.object.isRequired,
 };
 
 export default UsersList;

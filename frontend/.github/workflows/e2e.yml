@@ -17,7 +17,7 @@ jobs:
       - name: Run Cypress
         uses: cypress-io/github-action@v2
         with: 
-          env: AUTH_TOKEN=${{ secrets.UNLEASH_TOKEN }},DEFAULT_ENV="default"
+          env: AUTH_TOKEN=${{ secrets.UNLEASH_TOKEN }},DEFAULT_ENV="development"
           config: baseUrl=${{ github.event.deployment_status.target_url }}
           record: true
         env:

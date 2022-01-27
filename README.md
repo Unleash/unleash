@@ -71,7 +71,6 @@ The frontend SDKs connects via the [Unleash Proxy](https://docs.getunleash.io/sd
 - [Javascript SDK](https://docs.getunleash.io/sdks/proxy-javascript)
 - [React SDK](https://docs.getunleash.io/sdks/proxy-react)
 
-
 **Community SDKs**
 
 In addition there exists a good list of [community developed SDKs](https://docs.getunleash.io/sdks/community), so there might already exist an implementation for your favorite programming language (e.g. [Rust](https://github.com/cognitedata/unleash-client-rust), [Elixir](https://gitlab.com/afontaine/unleash_ex), [Dart](https://pub.dev/packages/unleash), [Clojure](https://github.com/AppsFlyer/unleash-client-clojure), [NestJS](https://github.com/pmb0/nestjs-unleash), [Kotlin](https://github.com/silvercar/unleash-client-kotlin), [PHP](https://gitlab.com/minds/unleash-client-php) and more.)
@@ -86,7 +85,7 @@ In addition there exists a good list of [community developed SDKs](https://docs.
 
 The main motivation for doing feature toggling is to decouple the process for deploying code to production and releasing new features. This helps reducing risk, and allow us to easily manage which features to enable, and have full control of how we exposed the new feature for.
 
-> Feature toggles decouple **deployment** of code from **release** of new features
+> Feature toggles decouple **deployment** of code from **release** of new features.
 
 This repo contains the unleash-server, which contains the Unleash Admin UI and the Unleash API. To make use of unleash you will also need a client SDK.
 
@@ -183,6 +182,7 @@ We know that learning a new tool can be hard and time-consuming. We have a growi
 - [Follow Unleash on Twitter](https://twitter.com/getunleash) if you want to stay updated on the latest progress of the Unleash project.
 
 # In the media
+
 - [Free Code Camp: Feature toggles - Why and how to add to your software](https://www.youtube.com/watch?v=-yHZ9uLVSp4)
 - [Feature toggling transient errors in load tests](https://nrkbeta.no/2021/08/23/feature-toggling-transient-errors-in-load-tests/) (English)
 - [The Code Kitchen Episode 7: Feature flags with Unleash](https://share.fireside.fm/episode/zD-4e4KI+Pr379KBv) (English)

@@ -104,7 +104,7 @@ const ContextForm: React.FC<IContextForm> = ({
                     label="Context name"
                     value={contextName}
                     disabled={mode === 'Edit'}
-                    onChange={e => setContextName(e.target.value)}
+                    onChange={e => setContextName(trim(e.target.value))}
                     error={Boolean(errors.name)}
                     errorText={errors.name}
                     onFocus={() => clearErrors()}

@@ -78,11 +78,6 @@ html[data-theme='dark'] .header-github-link:before {
     margin-bottom: 1em;
 }
 
-.unleash-video-container p {
-    background: var(--ifm-color-success-contrast-background);
-    border-radius: var(--border-radius);
-}
-
 .unleash-video-container > .videos {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));

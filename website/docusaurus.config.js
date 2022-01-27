@@ -92,9 +92,6 @@ module.exports = {
                 alt: 'Unleash logo',
             },
         },
-        gtag: {
-            trackingID: 'UA-134882379-1',
-        },
         image: 'img/logo.png',
     },
     presets: [
@@ -113,6 +110,9 @@ module.exports = {
                 },
                 theme: {
                     customCss: require.resolve('./src/css/custom.css'),
+                },
+                googleAnalytics: {
+                    trackingID: 'UA-134882379-1',
                 },
             },
         ],

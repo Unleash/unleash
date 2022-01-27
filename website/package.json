@@ -16,7 +16,7 @@
   "dependencies": {
     "@docusaurus/core": "2.0.0-beta.15",
     "@docusaurus/plugin-client-redirects": "2.0.0-beta.15",
-    "@docusaurus/plugin-google-analytics": "^2.0.0-beta.15",
+    "@docusaurus/plugin-google-analytics": "2.0.0-beta.15",
     "@docusaurus/preset-classic": "2.0.0-beta.15",
     "@docusaurus/remark-plugin-npm2yarn": "2.0.0-beta.15",
     "@mdx-js/react": "1.6.22",

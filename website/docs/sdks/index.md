@@ -105,6 +105,7 @@ Here's some of the fantastic work our community has done to make Unleash work in
 
 - [afontaine/unleash_ex](https://gitlab.com/afontaine/unleash_ex) (Elixir)
 - [AppsFlyer/clojure-unleash](https://github.com/AppsFlyer/unleash-client-clojure) (Clojure)
+- [aruizs/unleash-client-cpp](https://github.com/aruizs/unleash-client-cpp) (C++)
 - [mikefrancis/laravel-unleash](https://github.com/mikefrancis/laravel-unleash) (Laravel - PHP)
 - [minds/unleash-client-php](https://gitlab.com/minds/unleash-client-php) (PHP)
 - [ngx-unleash-proxy-client](https://github.com/snowfrogdev/snowfrogdev/tree/main/packages/ngx-unleash-proxy-client) (Angular - TypeScript)

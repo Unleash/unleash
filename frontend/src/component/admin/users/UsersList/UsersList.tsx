@@ -85,9 +85,6 @@ const UsersList = () => {
         }
     };
 
-    const handleCatch = () =>
-        console.log('An exception was thrown and handled.');
-
     const closeConfirm = () => {
         setShowConfirm(false);
         setEmailSent(false);

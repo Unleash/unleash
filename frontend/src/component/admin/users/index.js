@@ -1,6 +1,5 @@
-import { useContext, useState } from 'react';
-import PropTypes from 'prop-types';
-import UsersList from './UsersList';
+import { useContext } from 'react';
+import UsersList from './UsersList/UsersList';
 import AdminMenu from '../admin-menu';
 import PageContent from '../../../component/common/PageContent/PageContent';
 import AccessContext from '../../../contexts/AccessContext';
@@ -10,20 +9,12 @@ import { Alert } from '@material-ui/lab';
 import HeaderTitle from '../../../component/common/HeaderTitle';
 import { Button } from '@material-ui/core';
 import { useStyles } from './index.styles';
+import { useHistory } from 'react-router-dom';
 
-const UsersAdmin = ({ history }) => {
+const UsersAdmin = () => {
     const { hasAccess } = useContext(AccessContext);
-    const [showDialog, setDialog] = useState(false);
+    const history = useHistory();
     const styles = useStyles();
-
-    const openDialog = e => {
-        e.preventDefault();
-        setDialog(true);
-    };
-
-    const closeDialog = () => {
-        setDialog(false);
-    };
 
     return (
         <div>
@@ -59,13 +50,7 @@ const UsersAdmin = ({ history }) => {
             >
                 <ConditionallyRender
                     condition={hasAccess(ADMIN)}
-                    show={
-                        <UsersList
-                            openDialog={openDialog}
-                            closeDialog={closeDialog}
-                            showDialog={showDialog}
-                        />
-                    }
+                    show={<UsersList />}
                     elseShow={
                         <Alert severity="error">
                             You need instance admin to access this section.
@@ -75,11 +60,6 @@ const UsersAdmin = ({ history }) => {
             </PageContent>
         </div>
     );
-};
-
-UsersAdmin.propTypes = {
-    match: PropTypes.object.isRequired,
-    history: PropTypes.object.isRequired,
 };
 
 export default UsersAdmin;

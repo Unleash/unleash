@@ -29,14 +29,6 @@ It takes about three steps to create custom project roles:
 4. Give the role a name, an optional description, and the set of permissions you'd like it to have. For a full overview of all the options, consult the [custom project roles reference documentation](../user_guide/rbac.md#custom-project-roles).
     ![The project role creation form filled in with details for a "developer" role. To the left is the equivalent cURL command you could run if you wanted to use the API instead of the form.](/img/create-cpr-step-4.png)
 
-### How to create custom project roles (video) {#video-create}
-
-Here's a video recording with accompanying explanations of how to create custom project roles:
-
-<!-- <iframe width="100%" height="auto" style={{  aspectRatio: "16/9"  }} src="https://www.youtube.com/embed/2BlckVMHxgE" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> -->
-
-
-
 ## Assigning custom project roles
 
 Custom project role creation is a pretty straightforward process and requires around three steps, outlined below.

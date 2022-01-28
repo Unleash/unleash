@@ -27,8 +27,8 @@ const CreateFeature = () => {
         setProject,
         description,
         setDescription,
+        validateToggleName,
         getTogglePayload,
-        validateName,
         clearErrors,
         errors,
     } = useFeatureForm();
@@ -38,20 +38,23 @@ const CreateFeature = () => {
     const handleSubmit = async (e: Event) => {
         e.preventDefault();
         clearErrors();
-        await validateName(name);
-        const payload = getTogglePayload();
-        try {
-            await createFeatureToggle(project, payload);
-            history.push(`/projects/${project}/features2/${name}`);
-            setToastData({
-                title: 'Toggle created successfully',
-                text: 'Now you can start using your toggle.',
-                confetti: true,
-                type: 'success',
-            });
-            setShowFeedback(true);
-        } catch (e: any) {
-            setToastApiError(e.toString());
+        const validToggleName = await validateToggleName();
+
+        if (validToggleName) {
+            const payload = getTogglePayload();
+            try {
+                await createFeatureToggle(project, payload);
+                history.push(`/projects/${project}/features2/${name}`);
+                setToastData({
+                    title: 'Toggle created successfully',
+                    text: 'Now you can start using your toggle.',
+                    confetti: true,
+                    type: 'success',
+                });
+                setShowFeedback(true);
+            } catch (e: any) {
+                setToastApiError(e.toString());
+            }
         }
     };
 
@@ -86,6 +89,7 @@ const CreateFeature = () => {
                 setName={setName}
                 setProject={setProject}
                 setDescription={setDescription}
+                validateToggleName={validateToggleName}
                 errors={errors}
                 handleSubmit={handleSubmit}
                 handleCancel={handleCancel}

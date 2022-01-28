@@ -47,23 +47,24 @@ const useFeatureForm = (
         };
     };
 
-    const validateName = async (name: string) => {
+    const NAME_EXISTS_ERROR = 'Error: A toggle with that name already exists';
+
+    const validateToggleName = async () => {
         if (name.length === 0) {
             setErrors(prev => ({ ...prev, name: 'Name can not be empty.' }));
             return false;
         }
-        if (name.length > 0) {
-            try {
-                await validateFeatureToggleName(name);
-            } catch (err: any) {
+        try {
+            await validateFeatureToggleName(name);
+            return true;
+        } catch (e: any) {
+            if (e.toString().includes(NAME_EXISTS_ERROR)) {
                 setErrors(prev => ({
                     ...prev,
-                    name:
-                        err && err.message
-                            ? err.message
-                            : 'Could not check name',
+                    name: 'A feature with this name already exists',
                 }));
             }
+            return false;
         }
     };
 
@@ -81,7 +82,7 @@ const useFeatureForm = (
         description,
         setDescription,
         getTogglePayload,
-        validateName,
+        validateToggleName,
         clearErrors,
         errors,
     };

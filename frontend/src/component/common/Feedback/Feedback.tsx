@@ -76,7 +76,7 @@ const Feedback = ({ feedbackId, openUrl }: IFeedbackProps) => {
             setShowFeedback(false);
         }, 100);
     };
-    console.log(feedback);
+
     const pnps = feedback.find(feedback => feedback.feedbackId === feedbackId);
 
     if (pnps?.given || pnps?.neverShow) {

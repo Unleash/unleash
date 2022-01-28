@@ -13,6 +13,7 @@ import React from 'react';
 import useUsers from '../../../../hooks/api/getters/useUsers/useUsers';
 import ConditionallyRender from '../../../common/ConditionallyRender/ConditionallyRender';
 import { EDIT } from '../../../../constants/misc';
+import useUiBootstrap from '../../../../hooks/api/getters/useUiBootstrap/useUiBootstrap';
 
 interface IUserForm {
     email: string;
@@ -48,6 +49,7 @@ const UserForm: React.FC<IUserForm> = ({
 }) => {
     const styles = useStyles();
     const { roles } = useUsers();
+    const { bootstrap } = useUiBootstrap();
 
     const sortRoles = (a, b) => {
         if (b.name[0] < a.name[0]) {
@@ -125,7 +127,7 @@ const UserForm: React.FC<IUserForm> = ({
                     </RadioGroup>
                 </FormControl>
                 <ConditionallyRender
-                    condition={mode !== EDIT}
+                    condition={mode !== EDIT && bootstrap?.email}
                     show={
                         <FormControl>
                             <Typography

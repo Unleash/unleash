@@ -1,35 +1,22 @@
-import { useState } from 'react';
 import { IconButton } from '@material-ui/core';
 import CopyIcon from '@material-ui/icons/FileCopy';
-import { Snackbar } from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
+import useToast from '../../../../../../hooks/useToast';
 
 interface IInviteLinkProps {
     inviteLink: string;
 }
 
-interface ISnackbar {
-    show: boolean;
-    type: 'success' | 'error';
-    text: string;
-}
-
 const UserInviteLink = ({ inviteLink }: IInviteLinkProps) => {
-    const [snackbar, setSnackbar] = useState<ISnackbar>({
-        show: false,
-        type: 'success',
-        text: '',
-    });
+    const { setToastData } = useToast();
 
     const handleCopy = () => {
         try {
             return navigator.clipboard
                 .writeText(inviteLink)
                 .then(() => {
-                    setSnackbar({
-                        show: true,
+                    setToastData({
                         type: 'success',
-                        text: 'Successfully copied invite link.',
+                        title: 'Successfully copied invite link.',
                     });
                 })
                 .catch(() => {
@@ -41,10 +28,9 @@ const UserInviteLink = ({ inviteLink }: IInviteLinkProps) => {
     };
 
     const setError = () =>
-        setSnackbar({
-            show: true,
+        setToastData({
             type: 'error',
-            text: 'Could not copy invite link.',
+            title: 'Could not copy invite link.',
         });
 
     return (
@@ -64,15 +50,6 @@ const UserInviteLink = ({ inviteLink }: IInviteLinkProps) => {
             <IconButton onClick={handleCopy}>
                 <CopyIcon />
             </IconButton>
-            <Snackbar
-                open={snackbar.show}
-                autoHideDuration={6000}
-                onClose={() =>
-                    setSnackbar({ show: false, type: 'success', text: '' })
-                }
-            >
-                <Alert severity={snackbar.type}>{snackbar.text}</Alert>
-            </Snackbar>
         </div>
     );
 };

@@ -29,7 +29,7 @@ exports[`renders correctly with one feature 1`] = `
         }
       >
         <div
-          className="MuiChip-root makeStyles-chip-21 MuiChip-colorPrimary MuiChip-outlined MuiChip-outlinedPrimary"
+          className="MuiChip-root makeStyles-chip-24 MuiChip-colorPrimary MuiChip-outlined MuiChip-outlinedPrimary"
           onKeyDown={[Function]}
           onKeyUp={[Function]}
           title="Feature toggle is active."
@@ -104,10 +104,10 @@ exports[`renders correctly with one feature 1`] = `
             </svg>
             <fieldset
               aria-hidden={true}
-              className="PrivateNotchedOutline-root-22 MuiOutlinedInput-notchedOutline"
+              className="PrivateNotchedOutline-root-25 MuiOutlinedInput-notchedOutline"
             >
               <legend
-                className="PrivateNotchedOutline-legendLabelled-24 PrivateNotchedOutline-legendNotched-25"
+                className="PrivateNotchedOutline-legendLabelled-27 PrivateNotchedOutline-legendNotched-28"
               >
                 <span>
                   Feature type
@@ -163,10 +163,10 @@ exports[`renders correctly with one feature 1`] = `
             </svg>
             <fieldset
               aria-hidden={true}
-              className="PrivateNotchedOutline-root-22 MuiOutlinedInput-notchedOutline"
+              className="PrivateNotchedOutline-root-25 MuiOutlinedInput-notchedOutline"
             >
               <legend
-                className="PrivateNotchedOutline-legendLabelled-24 PrivateNotchedOutline-legendNotched-25"
+                className="PrivateNotchedOutline-legendLabelled-27 PrivateNotchedOutline-legendNotched-28"
               >
                 <span>
                   Project
@@ -198,7 +198,7 @@ exports[`renders correctly with one feature 1`] = `
       >
         <span
           aria-disabled={true}
-          className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-26 MuiSwitch-switchBase MuiSwitch-colorSecondary PrivateSwitchBase-disabled-28 Mui-disabled Mui-disabled Mui-disabled"
+          className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-29 MuiSwitch-switchBase MuiSwitch-colorSecondary PrivateSwitchBase-disabled-31 Mui-disabled Mui-disabled Mui-disabled"
           onBlur={[Function]}
           onDragLeave={[Function]}
           onFocus={[Function]}
@@ -217,7 +217,7 @@ exports[`renders correctly with one feature 1`] = `
           >
             <input
               checked={false}
-              className="PrivateSwitchBase-input-29 MuiSwitch-input"
+              className="PrivateSwitchBase-input-32 MuiSwitch-input"
               disabled={true}
               onChange={[Function]}
               type="checkbox"
@@ -350,7 +350,7 @@ exports[`renders correctly with one feature 1`] = `
   </div>
   <hr />
   <div
-    className="MuiPaper-root makeStyles-tabNav-30 MuiPaper-elevation1 MuiPaper-rounded"
+    className="MuiPaper-root makeStyles-tabNav-33 MuiPaper-elevation1 MuiPaper-rounded"
   >
     <div
       className="MuiTabs-root"
@@ -398,7 +398,7 @@ exports[`renders correctly with one feature 1`] = `
               Activation
             </span>
             <span
-              className="PrivateTabIndicator-root-31 PrivateTabIndicator-colorPrimary-32 MuiTabs-indicator"
+              className="PrivateTabIndicator-root-34 PrivateTabIndicator-colorPrimary-35 MuiTabs-indicator"
               style={Object {}}
             />
           </button>

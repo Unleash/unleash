@@ -74,6 +74,7 @@ export default class FeatureToggleClientStore
                 'features.type as type',
                 'features.project as project',
                 'features.stale as stale',
+                'features.impression_data as impression_data',
                 'features.variants as variants',
                 'features.created_at as created_at',
                 'features.last_seen_at as last_seen_at',
@@ -137,6 +138,7 @@ export default class FeatureToggleClientStore
             if (r.strategy_name) {
                 feature.strategies.push(this.getAdminStrategy(r, isAdmin));
             }
+            feature.impressionData = r.impression_data;
             feature.enabled = !!r.enabled;
             feature.name = r.name;
             feature.description = r.description;

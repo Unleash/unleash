@@ -142,17 +142,6 @@ module.exports = {
                                 'api/admin/state',
                                 'api/admin/strategies',
                                 'api/admin/user-admin',
-                                {
-                                    type: 'category',
-                                    label: 'subcat',
-                                    link: {
-                                        type: 'generated-index',
-                                        title: 'Subcat',
-                                        description: 'Lorem ipsum',
-                                        slug: '/api/subcat',
-                                    },
-                                    items: ['api/admin/user-admin'],
-                                },
                             ],
                             'Client API': [
                                 'api/client/features',

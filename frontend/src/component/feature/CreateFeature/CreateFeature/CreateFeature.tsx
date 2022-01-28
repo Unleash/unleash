@@ -8,10 +8,13 @@ import useFeatureApi from '../../../../hooks/api/actions/useFeatureApi/useFeatur
 import { CREATE_FEATURE } from '../../../providers/AccessProvider/permissions';
 import PermissionButton from '../../../common/PermissionButton/PermissionButton';
 import { CF_CREATE_BTN_ID } from '../../../../testIds';
+import { useContext } from 'react';
+import UIContext from '../../../../contexts/UIContext';
 
 const CreateFeature = () => {
     /* @ts-ignore */
     const { setToastData, setToastApiError } = useToast();
+    const { setShowFeedback } = useContext(UIContext);
     const { uiConfig } = useUiConfig();
     const history = useHistory();
 
@@ -46,6 +49,7 @@ const CreateFeature = () => {
                 confetti: true,
                 type: 'success',
             });
+            setShowFeedback(true);
         } catch (e: any) {
             setToastApiError(e.toString());
         }

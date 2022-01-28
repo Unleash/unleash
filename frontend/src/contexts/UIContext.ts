@@ -9,11 +9,13 @@ export interface IToastData {
     confetti?: boolean;
     type: string;
 }
-interface IFeatureStrategiesUIContext {
+interface IUIContext {
     toastData: IToastData;
     setToast: React.Dispatch<React.SetStateAction<IToastData>>;
+    showFeedback: boolean;
+    setShowFeedback: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const UIContext = React.createContext<IFeatureStrategiesUIContext | null>(null);
+const UIContext = React.createContext<IUIContext | null>(null);
 
 export default UIContext;

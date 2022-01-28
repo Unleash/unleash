@@ -4,7 +4,7 @@ import useUsers from '../../../../hooks/api/getters/useUsers/useUsers';
 const useProjectRoleForm = (
     initialName = '',
     initialEmail = '',
-    initialSendEmail = false,
+    initialSendEmail = true,
     initialRootRole = 1
 ) => {
     const [name, setName] = useState(initialName);

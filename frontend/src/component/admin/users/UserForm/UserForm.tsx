@@ -74,6 +74,7 @@ const UserForm: React.FC<IUserForm> = ({
                     error={Boolean(errors.name)}
                     errorText={errors.name}
                     onFocus={() => clearErrors()}
+                    autoFocus
                 />
                 <Input
                     className={styles.input}

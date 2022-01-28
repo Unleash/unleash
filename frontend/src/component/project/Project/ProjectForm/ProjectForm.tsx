@@ -54,6 +54,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
                     onFocus={() => clearErrors()}
                     onBlur={validateIdUniqueness}
                     disabled={mode === 'Edit'}
+                    autoFocus
                 />
 
                 <p className={styles.inputDescription}>

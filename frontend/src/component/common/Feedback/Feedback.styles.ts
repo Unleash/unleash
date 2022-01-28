@@ -2,7 +2,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 export const useStyles = makeStyles(theme => ({
     feedback: {
-        borderRadius: '3px',
+        borderRadius: '12.5px',
         backgroundColor: '#fff',
         zIndex: '9999',
         boxShadow: '2px 2px 4px 4px rgba(143,143,143, 0.25)',
@@ -12,7 +12,7 @@ export const useStyles = makeStyles(theme => ({
         height: '200px',
     },
     animateContainer: {
-        zIndex: '9999',
+        zIndex: 9999,
     },
     container: {
         display: 'flex',

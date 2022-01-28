@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Button, IconButton } from '@material-ui/core';
 import classnames from 'classnames';
 import CloseIcon from '@material-ui/icons/Close';
@@ -10,6 +10,8 @@ import AnimateOnMount from '../AnimateOnMount/AnimateOnMount';
 import ConditionallyRender from '../ConditionallyRender';
 import { formatApiPath } from '../../../utils/format-path';
 import { Action, Dispatch } from 'redux';
+import UIContext from '../../../contexts/UIContext';
+import useUser from '../../../hooks/api/getters/useUser/useUser';
 
 interface IFeedbackProps {
     show?: boolean;
@@ -19,13 +21,9 @@ interface IFeedbackProps {
     openUrl: string;
 }
 
-const Feedback = ({
-    show,
-    hideFeedback,
-    fetchUser,
-    feedbackId,
-    openUrl,
-}: IFeedbackProps) => {
+const Feedback = ({ feedbackId, openUrl }: IFeedbackProps) => {
+    const { showFeedback, setShowFeedback } = useContext(UIContext);
+    const { refetch, feedback } = useUser();
     const [answeredNotNow, setAnsweredNotNow] = useState(false);
     const styles = useStyles();
     const commonStyles = useCommonStyles();
@@ -42,15 +40,15 @@ const Feedback = ({
                 },
                 body: JSON.stringify({ feedbackId }),
             });
-            await fetchUser();
+            await refetch();
         } catch {
-            hideFeedback();
+            setShowFeedback(false);
         }
 
         // Await api call to register confirmation
         window.open(openUrl, '_blank');
         setTimeout(() => {
-            hideFeedback();
+            setShowFeedback(false);
         }, 200);
     };
 
@@ -69,22 +67,28 @@ const Feedback = ({
                 },
                 body: JSON.stringify({ feedbackId, neverShow: true }),
             });
-            await fetchUser();
+            await refetch();
         } catch {
-            hideFeedback();
+            setShowFeedback(false);
         }
 
         setTimeout(() => {
-            hideFeedback();
+            setShowFeedback(false);
         }, 100);
     };
+    console.log(feedback);
+    const pnps = feedback.find(feedback => feedback.feedbackId === feedbackId);
+
+    if (pnps?.given || pnps?.neverShow) {
+        return null;
+    }
 
     return (
         <AnimateOnMount
-            mounted={show}
-            start={commonStyles.fadeInBottomStart}
-            enter={commonStyles.fadeInBottomEnter}
-            leave={commonStyles.fadeInBottomLeave}
+            mounted={showFeedback}
+            start={commonStyles.fadeInTopStart}
+            enter={commonStyles.fadeInTopEnter}
+            leave={commonStyles.fadeInTopLeave}
             container={styles.animateContainer}
         >
             <div className={styles.feedback}>
@@ -96,7 +100,7 @@ const Feedback = ({
                 >
                     <IconButton
                         className={styles.close}
-                        onClick={() => hideFeedback()}
+                        onClick={() => setShowFeedback(false)}
                     >
                         <CloseIcon />
                     </IconButton>

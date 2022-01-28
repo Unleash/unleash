@@ -11,13 +11,16 @@ const UIProvider: React.FC = ({ children }) => {
         persist: false,
         type: '',
     });
+    const [showFeedback, setShowFeedback] = useState();
 
     const context = React.useMemo(
         () => ({
             setToast,
             toastData,
+            showFeedback,
+            setShowFeedback,
         }),
-        [toastData]
+        [toastData, showFeedback]
     );
 
     return <UIContext.Provider value={context}>{children}</UIContext.Provider>;

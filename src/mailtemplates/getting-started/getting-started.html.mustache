@@ -484,10 +484,18 @@
                                          
 												<p>You have been invited to your organization's Unleash account - the new way of delivering software.</p> 
                                             
+												{{# passwordLink }}
                                                 <p>Below is your magic sign-in link. Just click the button and follow the steps provided to update your password and get started using Unleash.</p>
                                             
 												<br />
                                                 <a class="resetPasswordLink" href="{{{ passwordLink }}}" target="_blank" rel="noopener noreferrer">Setup account<a/>
+												{{/ passwordLink }}
+												{{^ passwordLink }}
+                                                <p>Use the link below to access your Unleash instance.</p>
+                                            
+												<br />
+                                                <a class="resetPasswordLink" href="{{{ unleashUrl }}}" target="_blank" rel="noopener noreferrer">Login<a/>
+												{{/ passwordLink }}
 												<br />
 												<br />
 												<p>By the way - did you know we have built Unleash on best practice when releasing new features. Our solution removes pressure from developers, allowing you to focus on delivering value through experimentation.</p>

@@ -10,6 +10,9 @@ import ResetTokenService from '../../services/reset-token-service';
 import { IUnleashServices } from '../../types/services';
 import SessionService from '../../services/session-service';
 import { IAuthRequest } from '../unleash-types';
+import SettingService from '../../services/setting-service';
+import { SimpleAuthSettings } from '../../server-impl';
+import { simpleAuthKey } from '../../types/settings/simple-auth-settings';
 
 interface ICreateUserBody {
     username: string;
@@ -32,6 +35,10 @@ export default class UserAdminController extends Controller {
 
     private sessionService: SessionService;
 
+    private settingService: SettingService;
+
+    readonly unleashUrl: string;
+
     constructor(
         config: IUnleashConfig,
         {
@@ -40,6 +47,7 @@ export default class UserAdminController extends Controller {
             emailService,
             resetTokenService,
             sessionService,
+            settingService,
         }: Pick<
             IUnleashServices,
             | 'userService'
@@ -47,15 +55,18 @@ export default class UserAdminController extends Controller {
             | 'emailService'
             | 'resetTokenService'
             | 'sessionService'
+            | 'settingService'
         >,
     ) {
         super(config);
         this.userService = userService;
         this.accessService = accessService;
         this.emailService = emailService;
-        this.logger = config.getLogger('routes/user-controller.ts');
         this.resetTokenService = resetTokenService;
         this.sessionService = sessionService;
+        this.settingService = settingService;
+        this.logger = config.getLogger('routes/user-controller.ts');
+        this.unleashUrl = config.server.unleashUrl;
 
         this.get('/', this.getUsers, ADMIN);
         this.get('/search', this.search);
@@ -69,8 +80,7 @@ export default class UserAdminController extends Controller {
         this.get('/active-sessions', this.getActiveSessions, ADMIN);
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    async resetPassword(req, res): Promise<void> {
+    async resetPassword(req: IAuthRequest, res: Response): Promise<void> {
         const { user } = req;
         const receiver = req.body.id;
         const resetPasswordUrl =
@@ -78,24 +88,17 @@ export default class UserAdminController extends Controller {
         res.json({ resetPasswordUrl });
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async getUsers(req: Request, res: Response): Promise<void> {
-        try {
-            const users = await this.userService.getAll();
-            const rootRoles = await this.accessService.getRootRoles();
-            const inviteLinks =
-                await this.resetTokenService.getActiveInvitations();
+        const users = await this.userService.getAll();
+        const rootRoles = await this.accessService.getRootRoles();
+        const inviteLinks = await this.resetTokenService.getActiveInvitations();
 
-            const usersWithInviteLinks = users.map((user) => {
-                const inviteLink = inviteLinks[user.id] || '';
-                return { ...user, inviteLink };
-            });
+        const usersWithInviteLinks = users.map((user) => {
+            const inviteLink = inviteLinks[user.id] || '';
+            return { ...user, inviteLink };
+        });
 
-            res.json({ users: usersWithInviteLinks, rootRoles });
-        } catch (error) {
-            this.logger.error(error);
-            res.status(500).send({ msg: 'server errors' });
-        }
+        res.json({ users: usersWithInviteLinks, rootRoles });
     }
 
     async getActiveSessions(req: Request, res: Response): Promise<void> {
@@ -103,7 +106,6 @@ export default class UserAdminController extends Controller {
         res.json(sessions);
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async search(req: Request, res: Response): Promise<void> {
         const { q } = req.query as any;
         try {
@@ -122,7 +124,6 @@ export default class UserAdminController extends Controller {
         res.json(user);
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async createUser(
         req: IAuthRequest<any, any, ICreateUserBody, any>,
         res: Response,
@@ -140,10 +141,20 @@ export default class UserAdminController extends Controller {
                 },
                 user,
             );
-            const inviteLink = await this.resetTokenService.createNewUserUrl(
-                createdUser.id,
-                user.email,
-            );
+
+            const passwordAuthSettings =
+                await this.settingService.get<SimpleAuthSettings>(
+                    simpleAuthKey,
+                );
+
+            let inviteLink: string;
+            if (!passwordAuthSettings?.disabled) {
+                const inviteUrl = await this.resetTokenService.createNewUserUrl(
+                    createdUser.id,
+                    user.email,
+                );
+                inviteLink = inviteUrl.toString();
+            }
 
             let emailSent = false;
             const emailConfigured = this.emailService.configured();
@@ -154,7 +165,8 @@ export default class UserAdminController extends Controller {
                     await this.emailService.sendGettingStartedMail(
                         createdUser.name,
                         createdUser.email,
-                        inviteLink.toString(),
+                        this.unleashUrl,
+                        inviteLink,
                     );
                     emailSent = true;
                 } catch (e) {
@@ -171,7 +183,7 @@ export default class UserAdminController extends Controller {
 
             res.status(201).send({
                 ...createdUser,
-                inviteLink,
+                inviteLink: inviteLink || this.unleashUrl,
                 emailSent,
                 rootRole,
             });
@@ -227,5 +239,3 @@ export default class UserAdminController extends Controller {
         res.status(200).send();
     }
 }
-
-module.exports = UserAdminController;

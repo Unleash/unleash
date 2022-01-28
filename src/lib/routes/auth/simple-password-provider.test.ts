@@ -9,6 +9,7 @@ test('Should require password', async () => {
     const app = express();
     app.use(express.json());
     const userService = () => {};
+    // @ts-ignore
     const ctr = new PasswordProvider({ getLogger }, { userService });
 
     //@ts-ignore
@@ -41,6 +42,7 @@ test('Should login user', async () => {
             throw new Error('Wrong password');
         },
     };
+    // @ts-ignore
     const ctr = new PasswordProvider({ getLogger }, { userService });
 
     //@ts-ignore
@@ -74,6 +76,7 @@ test('Should not login user with wrong password', async () => {
             throw new PasswordMismatchError();
         },
     };
+    // @ts-ignore
     const ctr = new PasswordProvider({ getLogger }, { userService });
 
     //@ts-ignore

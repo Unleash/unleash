@@ -56,7 +56,12 @@ export const featureMetadataSchema = joi
         archived: joi.boolean().default(false),
         type: joi.string().default('release'),
         description: joi.string().allow('').allow(null).optional(),
-        impressionData: joi.boolean().allow(true).allow(false).optional(),
+        impressionData: joi
+            .boolean()
+            .allow(true)
+            .allow(false)
+            .default(false)
+            .optional(),
         createdAt: joi.date().optional().allow(null),
     })
     .options({ allowUnknown: false, stripUnknown: true, abortEarly: false });
@@ -71,7 +76,12 @@ export const featureSchema = joi
         type: joi.string().default('release'),
         project: joi.string().default('default'),
         description: joi.string().allow('').allow(null).optional(),
-        impressionData: joi.boolean().allow(true).allow(false).optional(),
+        impressionData: joi
+            .boolean()
+            .allow(true)
+            .allow(false)
+            .default(false)
+            .optional(),
         strategies: joi
             .array()
             .min(0)

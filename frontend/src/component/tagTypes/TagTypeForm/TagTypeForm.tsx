@@ -52,6 +52,7 @@ const TagTypeForm: React.FC<ITagTypeForm> = ({
                     onFocus={() => clearErrors()}
                     disabled={mode === EDIT}
                     onBlur={validateNameUniqueness}
+                    autoFocus
                 />
 
                 <p className={styles.inputDescription}>What is this tag for?</p>

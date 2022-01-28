@@ -80,6 +80,7 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
                     error={errors.username !== undefined}
                     errorText={errors.username}
                     onFocus={() => clearErrors()}
+                    autoFocus
                 />
                 <p className={styles.inputDescription}>
                     What is your token type?

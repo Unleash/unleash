@@ -24,8 +24,8 @@ const fromRow = (row: ClientMetricsEnvTable) => ({
     appName: row.app_name,
     environment: row.environment,
     timestamp: row.timestamp,
-    yes: row.yes,
-    no: row.no,
+    yes: Number(row.yes),
+    no: Number(row.no),
 });
 
 const toRow = (metric: IClientMetricsEnv) => ({

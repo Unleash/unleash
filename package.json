@@ -30,7 +30,7 @@
     "prestart:dev": "yarn run clean",
     "start:dev": "NODE_ENV=development tsc-watch --onSuccess \"node dist/server-dev.js\"",
     "copy-templates": "copyfiles -u 1 src/mailtemplates/**/*.mustache dist/",
-    "db-migrate": "db-migrate --migrations-dir ./src/migrations",
+    "db-migrate": "DATABASE_URL=postgres://unleash_user:passord@localhost:5432/unleash db-migrate --migrations-dir ./src/migrations",
     "lint": "eslint ./src",
     "prebuild:watch": "yarn run clean",
     "build:watch": "tsc -w",

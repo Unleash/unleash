@@ -22,12 +22,14 @@ interface IFlexibleStrategyProps {
     parameters: IParameter;
     updateParameter: (field: string, value: any) => void;
     context: any;
+    editable: boolean;
 }
 
 const FlexibleStrategy = ({
     updateParameter,
     parameters,
     context,
+    editable=true
 }: IFlexibleStrategyProps) => {
     const onUpdate =
         (field: string) =>
@@ -66,6 +68,7 @@ const FlexibleStrategy = ({
             <RolloutSlider
                 name="Rollout"
                 value={1 * rollout}
+                disabled={!editable}
                 onChange={updateRollout}
             />
 
@@ -96,6 +99,7 @@ const FlexibleStrategy = ({
                     label="Stickiness"
                     options={stickinessOptions}
                     value={stickiness}
+                    disabled={!editable}
                     data-test={FLEXIBLE_STRATEGY_STICKINESS_ID}
                     onChange={e =>
                         onUpdate('stickiness')(e, e.target.value as number)
@@ -126,6 +130,7 @@ const FlexibleStrategy = ({
                 <Input
                     label="groupId"
                     value={groupId || ''}
+                    disabled={!editable}
                     onChange={e => onUpdate('groupId')(e, e.target.value)}
                     data-test={FLEXIBLE_STRATEGY_GROUP_ID}
                 />

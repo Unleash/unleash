@@ -148,6 +148,17 @@ const FeatureStrategyAccordionBody: React.FC<
     const { parameters } = strategy;
     const ON = uiConfig.flags[C];
 
+    const editable = hasAccess(
+        UPDATE_FEATURE_STRATEGY,
+        projectId,
+        activeEnvironment.name
+    ) ||
+    hasAccess(
+        CREATE_FEATURE_STRATEGY,
+        projectId,
+        activeEnvironment.name
+    );
+
     return (
         <div className={styles.accordionContainer}>
             <ConditionallyRender
@@ -193,28 +204,12 @@ const FeatureStrategyAccordionBody: React.FC<
                 />
             </Dialogue>
 
-            <ConditionallyRender
-                condition={
-                    hasAccess(
-                        UPDATE_FEATURE_STRATEGY,
-                        projectId,
-                        activeEnvironment.name
-                    ) ||
-                    hasAccess(
-                        CREATE_FEATURE_STRATEGY,
-                        projectId,
-                        activeEnvironment.name
-                    )
-                }
-                show={
-                    <Type
-                        parameters={parameters}
-                        updateParameter={updateParameters}
-                        strategyDefinition={definition}
-                        context={context}
-                        editable
-                    />
-                }
+            <Type
+                parameters={parameters}
+                updateParameter={updateParameters}
+                strategyDefinition={definition}
+                context={context}
+                editable={editable}
             />
 
             {children}

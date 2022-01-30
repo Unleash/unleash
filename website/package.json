@@ -20,7 +20,7 @@
     "@docusaurus/preset-classic": "2.0.0-beta.15",
     "@docusaurus/remark-plugin-npm2yarn": "2.0.0-beta.15",
     "@mdx-js/react": "1.6.22",
-    "@svgr/webpack": "6.2.0",
+    "@svgr/webpack": "6.2.1",
     "clsx": "1.1.1",
     "file-loader": "6.2.0",
     "react": "17.0.2",

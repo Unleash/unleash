@@ -7,7 +7,7 @@ import { ApiTokenType } from '../types/models/api-token';
 
 function demoAuthentication(
     app: Application,
-    basePath: string = '',
+    basePath: string = '', // eslint-disable-line
     { userService }: Pick<IUnleashServices, 'userService'>,
     { authentication }: Pick<IUnleashConfig, 'authentication'>,
 ): void {

@@ -2,6 +2,7 @@ import { Application } from 'express';
 import { ADMIN } from '../types/permissions';
 import ApiUser from '../types/api-user';
 
+// eslint-disable-next-line
 function noneAuthentication(basePath = '', app: Application): void {
     app.use(`${basePath}/api/admin/`, (req, res, next) => {
         // @ts-ignore

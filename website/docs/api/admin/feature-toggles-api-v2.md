@@ -666,9 +666,9 @@ This will add a user to a project and give the user a specified role within that
 
 | Parameter   | Type    | Description                                                           | Example value     |
 |-------------|---------|-----------------------------------------------------------------------|-------------------|
-| `userId`    | integer | The ID of the user you want to add to the project.                     | `1`               |
-| `projectId` | string  | The id of the project to add the user to.                              | `"MyCoolProject"` |
-| `roleId`    | integer | The id of the role you want to assign to the new user in the project. | `7`                  |
+| `userId`    | integer | The ID of the user you want to add to the project.                    | `1`               |
+| `projectId` | string  | The id of the project to add the user to.                             | `"MyCoolProject"` |
+| `roleId`    | integer | The id of the role you want to assign to the new user in the project. | `7`               |
 
 
 #### Responses

@@ -490,6 +490,8 @@ export const routes = [
         layout: 'main',
         menu: {},
     },
+    /* If you update this route path, make sure you update the path in SWRProvider.tsx */
+
     {
         path: '/login',
         title: 'Log in',
@@ -499,6 +501,7 @@ export const routes = [
         layout: 'standalone',
         menu: {},
     },
+    /* If you update this route path, make sure you update the path in SWRProvider.tsx */
     {
         path: '/new-user',
         title: 'New user',
@@ -508,6 +511,7 @@ export const routes = [
         layout: 'standalone',
         menu: {},
     },
+    /* If you update this route path, make sure you update the path in SWRProvider.tsx */
     {
         path: '/reset-password',
         title: 'reset-password',

@@ -17,7 +17,7 @@ const useAddons = (options: SWRConfiguration = {}) => {
     const { data, error } = useSWR(KEY, fetcher, options);
     const [loading, setLoading] = useState(!error && !data);
 
-    const refetch = () => {
+    const refetchAddons = () => {
         mutate(KEY);
     };
 
@@ -26,10 +26,11 @@ const useAddons = (options: SWRConfiguration = {}) => {
     }, [data, error]);
 
     return {
-        addons: data || [],
+        addons: data?.addons || [],
+        providers: data?.providers || [],
         error,
         loading,
-        refetch,
+        refetchAddons,
     };
 };
 

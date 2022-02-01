@@ -13,6 +13,8 @@ import { CREATE_ADDON } from '../../../providers/AccessProvider/permissions';
 import PropTypes from 'prop-types';
 
 const AvailableAddons = ({ providers, getIcon, hasAccess, history }) => {
+    
+    console.log('this is ', providers)
     const renderProvider = provider => (
         <ListItem key={provider.name}>
             <ListItemAvatar>{getIcon(provider.name)}</ListItemAvatar>

@@ -17,15 +17,51 @@ import {
 import { Link } from 'react-router-dom';
 import PageContent from '../../../common/PageContent/PageContent';
 import PropTypes from 'prop-types';
+import useAddons from '../../../../hooks/api/getters/useAddons/useAddons';
+import useToast from '../../../../hooks/useToast';
+import useAddonsApi from '../../../../hooks/api/actions/useAddonsApi/useAddonsApi';
 
-const ConfiguredAddons = ({
-    addons,
-    hasAccess,
-    removeAddon,
-    getIcon,
-    toggleAddon,
-}) => {
-    const onRemoveAddon = addon => () => removeAddon(addon);
+const ConfiguredAddons = ({ addons, hasAccess, getIcon }) => {
+    const { refetchAddons } = useAddons();
+    const { updateAddon, removeAddon } = useAddonsApi();
+    const { setToastData } = useToast();
+
+    const toggleAddon = async addon => {
+        try {
+            await updateAddon({ ...addon, enabled: !addon.enabled });
+            refetchAddons();
+            setToastData({
+                type: 'success',
+                title: 'Success',
+                text: 'Addon state switched successfully',
+            });
+        } catch (e) {
+            setToastData({
+                type: 'error',
+                title: 'Error',
+                text: 'Can not change addon state',
+            });
+        }
+    };
+
+    const onRemoveAddon = addon => async () => {
+        try {
+            await removeAddon(addon.id);
+            refetchAddons();
+            setToastData({
+                type: 'success',
+                title: 'Success',
+                text: 'Deleted addon successfully',
+            });
+        } catch (e) {
+            setToastData({
+                type: 'error',
+                title: 'Error',
+                text: 'Can not delete addon',
+            });
+        }
+    };
+
     const renderAddon = addon => (
         <ListItem key={addon.id}>
             <ListItemAvatar>{getIcon(addon.provider)}</ListItemAvatar>
@@ -95,7 +131,6 @@ const ConfiguredAddons = ({
 ConfiguredAddons.propTypes = {
     addons: PropTypes.array.isRequired,
     hasAccess: PropTypes.func.isRequired,
-    removeAddon: PropTypes.func.isRequired,
     toggleAddon: PropTypes.func.isRequired,
     getIcon: PropTypes.func.isRequired,
 };

@@ -1,5 +1,4 @@
-import React, { useContext, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import { useContext, useEffect } from 'react';
 import ConfiguredAddons from './ConfiguredAddons';
 import AvailableAddons from './AvailableAddons';
 import { Avatar } from '@material-ui/core';
@@ -14,6 +13,8 @@ import webhooksIcon from '../../../assets/icons/webhooks.svg';
 import teamsIcon from '../../../assets/icons/teams.svg';
 import dataDogIcon from '../../../assets/icons/datadog.svg';
 import { formatAssetPath } from '../../../utils/format-path';
+import useAddons from '../../../hooks/api/getters/useAddons/useAddons';
+import { useHistory } from 'react-router-dom';
 
 const style = {
     width: '40px',
@@ -73,18 +74,14 @@ const getIcon = name => {
     }
 };
 
-const AddonList = ({
-    addons,
-    providers,
-    fetchAddons,
-    removeAddon,
-    toggleAddon,
-    history,
-}) => {
+const AddonList = () => {
     const { hasAccess } = useContext(AccessContext);
+    const { addons, providers, refetchAddons } = useAddons();
+    const history = useHistory();
+
     useEffect(() => {
         if (addons.length === 0) {
-            fetchAddons();
+            refetchAddons();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [addons.length]);
@@ -96,9 +93,7 @@ const AddonList = ({
                 show={
                     <ConfiguredAddons
                         addons={addons}
-                        toggleAddon={toggleAddon}
                         hasAccess={hasAccess}
-                        removeAddon={removeAddon}
                         getIcon={getIcon}
                     />
                 }
@@ -113,15 +108,6 @@ const AddonList = ({
             />
         </>
     );
-};
-
-AddonList.propTypes = {
-    addons: PropTypes.array.isRequired,
-    providers: PropTypes.array.isRequired,
-    fetchAddons: PropTypes.func.isRequired,
-    removeAddon: PropTypes.func.isRequired,
-    toggleAddon: PropTypes.func.isRequired,
-    history: PropTypes.object.isRequired,
 };
 
 export default AddonList;

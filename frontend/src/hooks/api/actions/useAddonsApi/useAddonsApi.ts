@@ -1,8 +1,7 @@
-import { SWRConfiguration } from 'swr';
 import { IAddons } from '../../../../interfaces/addons';
 import useAPI from '../useApi/useApi';
 
-const useAddonsApi = (options: SWRConfiguration = {}) => {
+const useAddonsApi = () => {
     const { makeRequest, createRequest, errors, loading } = useAPI({
         propagateErrors: true,
     });

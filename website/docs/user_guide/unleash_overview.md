@@ -11,7 +11,7 @@ If you want more details you can read about [our unique architecture](https://ww
 Before you can connect your application to Unleash you need a Unleash server. You have a few options available:
 
 1. **Unleash Open-source**
-   - [Docker](../deploy/getting_started)
+   - [Docker](../deploy/getting_started.md)
    - [Helm Chart](https://github.com/unleash/helm-charts/)
    - [Click-to-deploy on Heroku](https://www.heroku.com/deploy/?template=https://github.com/Unleash/unleash)
 2. **Unleash Enterprise**

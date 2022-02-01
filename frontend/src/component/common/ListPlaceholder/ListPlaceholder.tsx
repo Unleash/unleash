@@ -17,7 +17,7 @@ const ListPlaceholder = ({ text, link, linkText }: IListPlaceholderProps) => {
             {text}
             <ConditionallyRender
                 condition={Boolean(link && linkText)}
-                show={<Link to="/features/create">Add your first toggle</Link>}
+                show={<Link to={link}>Add your first toggle</Link>}
             />
         </ListItem>
     );

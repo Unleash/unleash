@@ -22,16 +22,22 @@ const SWRProvider: React.FC<ISWRProviderProps> = ({
     const handleFetchError = error => {
         setShowLoader(false);
         if (error.status === 401) {
-            cache.clear();
             const path = location.pathname;
             // Only populate user with authDetails if 401 and
             // error is not invalid token
             if (error?.info?.name !== INVALID_TOKEN_ERROR) {
                 mutate(USER_CACHE_KEY, { ...error.info }, false);
             }
-            if (path === '/login') {
+
+            if (
+                path === '/login' ||
+                path === '/new-user' ||
+                path === '/reset-password'
+            ) {
                 return;
             }
+
+            cache.clear();
 
             history.push('/login');
             return;

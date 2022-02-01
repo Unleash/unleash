@@ -2,6 +2,7 @@ import { USER_CACHE_KEY } from '../../../hooks/api/getters/useUser/useUser';
 import { mutate, SWRConfig, useSWRConfig } from 'swr';
 import { useHistory } from 'react-router';
 import useToast from '../../../hooks/useToast';
+import { formatApiPath } from '../../../utils/format-path';
 
 interface ISWRProviderProps {
     setShowLoader: React.Dispatch<React.SetStateAction<boolean>>;
@@ -30,9 +31,9 @@ const SWRProvider: React.FC<ISWRProviderProps> = ({
             }
 
             if (
-                path === '/login' ||
-                path === '/new-user' ||
-                path === '/reset-password'
+                path === formatApiPath('login') ||
+                path === formatApiPath('new-user') ||
+                path === formatApiPath('reset-password')
             ) {
                 return;
             }

@@ -51,9 +51,11 @@ function AddUserComponent({ roles, addUserToRole }) {
         setSelect(false);
     };
 
-    const handleSelectUser = (evt, value) => {
+    const handleSelectUser = (evt, selectedUser) => {
         setOptions([]);
-        setUser(value);
+        if(selectedUser.id) {
+            setUser(selectedUser);
+        }
     };
 
     const handleRoleChange = evt => {
@@ -63,6 +65,7 @@ function AddUserComponent({ roles, addUserToRole }) {
     };
 
     const handleSubmit = async evt => {
+        debugger; 
         evt.preventDefault();
         await addUserToRole(user.id, role.id);
         setUser(undefined);

@@ -10,15 +10,15 @@ import cloneDeep from 'lodash.clonedeep';
 
 import styles from './form-addon-component.module.scss';
 import PageContent from '../common/PageContent/PageContent';
+import useAddonsApi from '../../hooks/api/actions/useAddonsApi/useAddonsApi';
+import useToast from '../../hooks/useToast';
+import { useHistory } from 'react-router-dom';
 
-const AddonFormComponent = ({
-    editMode,
-    provider,
-    addon,
-    fetch,
-    cancel,
-    submit,
-}) => {
+const AddonFormComponent = ({ editMode, provider, addon, fetch }) => {
+    const { createAddon, updateAddon } = useAddonsApi();
+    const { setToastData, setToastApiError } = useToast();
+    const history = useHistory();
+
     const [config, setConfig] = useState(addon);
     const [errors, setErrors] = useState({
         parameters: {},
@@ -73,6 +73,10 @@ const AddonFormComponent = ({
         setErrors({ ...errors, events: undefined });
     };
 
+    const handleCancel = () => {
+        history.goBack();
+    };
+
     const onSubmit = async evt => {
         evt.preventDefault();
         if (!provider) return;
@@ -100,8 +104,25 @@ const AddonFormComponent = ({
         }
 
         try {
-            await submit(config);
+            if (editMode) {
+                await updateAddon(config);
+                history.push('/addons');
+                setToastData({
+                    type: 'success',
+                    title: 'Addon updated successfully',
+                });
+            } else {
+                await createAddon(config);
+                history.push('/addons');
+                setToastData({
+                    type: 'success',
+                    title: 'Addon created successfully',
+                });
+            }
         } catch (e) {
+            setToastApiError({
+                text: e.toString(),
+            });
             setErrors({ parameters: {}, general: e.message });
         }
     };
@@ -175,7 +196,7 @@ const AddonFormComponent = ({
                     />
                 </section>
                 <section className={styles.formSection}>
-                    <FormButtons submitText={submitText} onCancel={cancel} />
+                    <FormButtons submitText={submitText} onCancel={handleCancel} />
                 </section>
             </form>
         </PageContent>

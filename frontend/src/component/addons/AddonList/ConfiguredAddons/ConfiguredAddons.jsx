@@ -24,7 +24,7 @@ import useAddonsApi from '../../../../hooks/api/actions/useAddonsApi/useAddonsAp
 const ConfiguredAddons = ({ addons, hasAccess, getIcon }) => {
     const { refetchAddons } = useAddons();
     const { updateAddon, removeAddon } = useAddonsApi();
-    const { setToastData } = useToast();
+    const { setToastData, setToastApiError } = useToast();
 
     const toggleAddon = async addon => {
         try {
@@ -36,11 +36,7 @@ const ConfiguredAddons = ({ addons, hasAccess, getIcon }) => {
                 text: 'Addon state switched successfully',
             });
         } catch (e) {
-            setToastData({
-                type: 'error',
-                title: 'Error',
-                text: 'Can not change addon state',
-            });
+            setToastApiError(e.toString());
         }
     };
 

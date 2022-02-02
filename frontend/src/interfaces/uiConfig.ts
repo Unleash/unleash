@@ -19,11 +19,11 @@ export interface IFlags {
 export interface IVersionInfo {
     instanceId: string;
     isLatest: boolean;
-    latest: Object;
-    current: ICurrent;
+    latest: Partial<IVersion>;
+    current: IVersion;
 }
 
-export interface ICurrent {
+export interface IVersion {
     oss: string;
     enterprise: string;
 }

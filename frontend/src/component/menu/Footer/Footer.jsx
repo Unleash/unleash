@@ -1,19 +1,19 @@
 /* eslint-disable react/jsx-no-target-blank */
 
 import { List, ListItem, ListItemText, Grid } from '@material-ui/core';
-
-import ShowApiDetailsContainer from '../../api/show-api-details-container';
-
+import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
+import { ApiDetails } from './ApiDetails/ApiDetails';
 import { useStyles } from './Footer.styles';
 
 export const Footer = () => {
     const styles = useStyles();
+    const { uiConfig } = useUiConfig();
 
     return (
         <footer className={styles.footer}>
             <Grid container justifyContent="center" spacing={10} style={{marginBottom: 0}}>
                 <Grid item md={4} xs={12}>
-                    <ShowApiDetailsContainer />
+                    <ApiDetails uiConfig={uiConfig} />
                 </Grid>
                 <Grid item xs={12} md="auto">
                     <Grid container spacing={7} direction="row">

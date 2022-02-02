@@ -19,11 +19,13 @@ exports[`should render DrawerMenu 1`] = `
         title="API details"
       >
         <h4>
-          undefined undefined
+          Unleash 3.x
            
         </h4>
         <br />
-        <small />
+        <small>
+          The enterprise ready feature toggle service.
+        </small>
         <br />
       </section>
     </div>
@@ -445,11 +447,13 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
         title="API details"
       >
         <h4>
-          undefined undefined
+          Unleash 3.x
            
         </h4>
         <br />
-        <small />
+        <small>
+          The enterprise ready feature toggle service.
+        </small>
         <br />
       </section>
     </div>

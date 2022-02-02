@@ -42,6 +42,27 @@ exports[`renders correctly with ui-config 1`] = `
 </section>
 `;
 
+exports[`renders correctly with versionInfo 1`] = `
+<section
+  title="API details"
+>
+  <h4>
+    Unleash 1.2.3
+     
+  </h4>
+  <small>
+    Upgrade available - Latest Enterprise release: 1.2.4
+    <br />
+  </small>
+  <br />
+  <small />
+  <br />
+  <small>
+    1
+  </small>
+</section>
+`;
+
 exports[`renders correctly without uiConfig 1`] = `
 <section
   title="API details"

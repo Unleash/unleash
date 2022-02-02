@@ -4,6 +4,7 @@ test('should require URL firendly name', () => {
     const toggle = {
         name: 'io`dasd',
         enabled: false,
+        impressionData: false,
         strategies: [{ name: 'default' }],
     };
 
@@ -15,6 +16,7 @@ test('should be valid toggle name', () => {
     const toggle = {
         name: 'app.name',
         enabled: false,
+        impressionData: false,
         strategies: [{ name: 'default' }],
     };
 
@@ -28,6 +30,7 @@ test('should strip extra variant fields', () => {
         type: 'release',
         enabled: false,
         stale: false,
+        impressionData: false,
         strategies: [{ name: 'default' }],
         variants: [
             {
@@ -49,6 +52,7 @@ test('should allow weightType=fix', () => {
         type: 'release',
         project: 'default',
         enabled: false,
+        impressionData: false,
         stale: false,
         archived: false,
         strategies: [{ name: 'default' }],
@@ -71,6 +75,7 @@ test('should disallow weightType=unknown', () => {
         name: 'app.name',
         type: 'release',
         enabled: false,
+        impressionData: false,
         stale: false,
         archived: false,
         strategies: [{ name: 'default' }],
@@ -95,6 +100,7 @@ test('should be possible to define variant overrides', () => {
         type: 'release',
         project: 'some',
         enabled: false,
+        impressionData: false,
         stale: false,
         archived: false,
         strategies: [{ name: 'default' }],
@@ -125,6 +131,7 @@ test('variant overrides must have corect shape', async () => {
         name: 'app.name',
         type: 'release',
         enabled: false,
+        impressionData: false,
         stale: false,
         strategies: [{ name: 'default' }],
         variants: [
@@ -154,6 +161,7 @@ test('should keep constraints', () => {
         type: 'release',
         project: 'default',
         enabled: false,
+        impressionData: false,
         stale: false,
         archived: false,
         strategies: [
@@ -180,6 +188,7 @@ test('should not accept empty constraint values', () => {
         name: 'app.constraints.empty.value',
         type: 'release',
         enabled: false,
+        impressionData: false,
         stale: false,
         strategies: [
             {
@@ -206,6 +215,7 @@ test('should not accept empty list of constraint values', () => {
         name: 'app.constraints.empty.value.list',
         type: 'release',
         enabled: false,
+        impressionData: false,
         stale: false,
         strategies: [
             {

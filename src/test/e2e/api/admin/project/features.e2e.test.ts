@@ -2037,3 +2037,32 @@ test('Can update impression data with PUT', async () => {
             expect(res.body.impressionData).toBe(false);
         });
 });
+
+test('Can create toggle with impression data on different project', async () => {
+    db.stores.projectStore.create({
+        id: 'impression-data',
+        name: 'ImpressionData',
+        description: '',
+    });
+
+    const toggle = {
+        name: 'project.impression.data',
+        impressionData: true,
+    };
+
+    await app.request
+        .post('/api/admin/projects/impression-data/features')
+        .send(toggle)
+        .expect(201)
+        .expect((res) => {
+            expect(res.body.impressionData).toBe(true);
+        });
+
+    await app.request
+        .put(`/api/admin/projects/impression-data/features/${toggle.name}`)
+        .send({ ...toggle, impressionData: false })
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.impressionData).toBe(false);
+        });
+});

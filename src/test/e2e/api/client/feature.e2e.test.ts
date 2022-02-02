@@ -274,3 +274,39 @@ test('Can use multiple filters', async () => {
             expect(res.body.features[0].name).toBe('test.feature');
         });
 });
+
+test('returns a feature toggles impression data for a different project', async () => {
+    const project = {
+        id: 'impression-data-client',
+        name: 'ImpressionData',
+        description: '',
+    };
+
+    db.stores.projectStore.create(project);
+
+    const toggle = {
+        name: 'project-client.impression.data',
+        impressionData: true,
+    };
+
+    await app.request
+        .post('/api/admin/projects/impression-data-client/features')
+        .send(toggle)
+        .expect(201)
+        .expect((res) => {
+            expect(res.body.impressionData).toBe(true);
+        });
+
+    return app.request
+        .get('/api/client/features')
+        .expect('Content-Type', /json/)
+        .expect((res) => {
+            const projectToggle = res.body.features.find(
+                (resToggle) => resToggle.project === project.id,
+            );
+
+            expect(projectToggle.name).toBe(toggle.name);
+            expect(projectToggle.project).toBe(project.id);
+            expect(projectToggle.impressionData).toBe(true);
+        });
+});

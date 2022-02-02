@@ -34,8 +34,9 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: Tests on ${{ matrix.node-version }}
-        uses: artiomtr/jest-coverage-report-action@v2.0-rc.1
+        uses: ArtiomTr/jest-coverage-report-action@v2
         with:
+          annotations: none
           package-manager: yarn
           github-token: ${{ secrets.GITHUB_TOKEN }}
           test-script: yarn run test:coverage:jest

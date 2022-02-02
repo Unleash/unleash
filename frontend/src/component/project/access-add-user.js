@@ -65,7 +65,6 @@ function AddUserComponent({ roles, addUserToRole }) {
     };
 
     const handleSubmit = async evt => {
-        debugger; 
         evt.preventDefault();
         await addUserToRole(user.id, role.id);
         setUser(undefined);

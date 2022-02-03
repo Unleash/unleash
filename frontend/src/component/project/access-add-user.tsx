@@ -53,7 +53,7 @@ function AddUserComponent({ roles, addUserToRole }) {
 
     const handleSelectUser = (evt, selectedUser) => {
         setOptions([]);
-        if(selectedUser.id) {
+        if (selectedUser?.id) {
             setUser(selectedUser);
         }
     };

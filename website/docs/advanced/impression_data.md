@@ -7,7 +7,7 @@ Impression data represents that unleash uses locally in order to resolve a featu
 
 Since this data lives in your own application, and you pass this data into the SDK, it can be useful to know what the data looks like when a feature toggle is evaluated. You can then use this data to send to your analytics provider to enrich experiments and track feature usage.
 
-You can turn on impression data for a toggle, which will allow that toggle to emit an impression event in the client SDKs which are located in your application, which you can listen to and act upon in your own code.
+You can turn on impression data for a toggle. This will allow that toggle to emit an impression event in the client SDKs, where you can listen to the events and act upon them in your own code base.
 
 ## Step 1: Create a feature toggle with impression data
 

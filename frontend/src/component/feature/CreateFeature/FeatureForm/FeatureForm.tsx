@@ -81,7 +81,7 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                     onBlur={validateToggleName}
                 />
                 <p className={styles.inputDescription}>
-                    What kind of feature toggle do you want to create?
+                    What kind of feature toggle do you want?
                 </p>
                 <FeatureTypeSelect
                     value={type}

@@ -116,7 +116,7 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@babel/core": "7.16.12",
+    "@babel/core": "7.17.0",
     "@types/bcryptjs": "2.4.2",
     "@types/express": "4.17.13",
     "@types/express-session": "1.17.4",

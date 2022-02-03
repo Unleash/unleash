@@ -123,7 +123,8 @@ Creates a new use with the given root role.
 {
   "email": "some-email@getunleash.io",
   "name": "Some Name",
-  "rootRole": 2
+  "rootRole": 2,
+  "sendEmail": true
 }
 ```
 

@@ -38,6 +38,7 @@ export interface FeatureToggleDTO {
     stale?: boolean;
     archived?: boolean;
     createdAt?: Date;
+    impressionData?: boolean;
 }
 
 export interface FeatureToggle extends FeatureToggleDTO {

@@ -14,6 +14,7 @@ beforeAll(async () => {
         {
             name: 'featureX',
             description: 'the #1 feature',
+            impressionData: true,
         },
         'test',
     );
@@ -132,6 +133,24 @@ test('gets a feature by name', async () => {
         .get('/api/client/features/featureX')
         .expect('Content-Type', /json/)
         .expect(200);
+});
+
+test('returns a feature toggles impression data', async () => {
+    return app.request
+        .get('/api/client/features/featureX')
+        .expect('Content-Type', /json/)
+        .expect((res) => {
+            expect(res.body.impressionData).toBe(true);
+        });
+});
+
+test('returns a false for impression data when not specified', async () => {
+    return app.request
+        .get('/api/client/features/featureZ')
+        .expect('Content-Type', /json/)
+        .expect((res) => {
+            expect(res.body.impressionData).toBe(false);
+        });
 });
 
 test('cant get feature that does not exist', async () => {
@@ -253,5 +272,41 @@ test('Can use multiple filters', async () => {
         .expect((res) => {
             expect(res.body.features).toHaveLength(1);
             expect(res.body.features[0].name).toBe('test.feature');
+        });
+});
+
+test('returns a feature toggles impression data for a different project', async () => {
+    const project = {
+        id: 'impression-data-client',
+        name: 'ImpressionData',
+        description: '',
+    };
+
+    db.stores.projectStore.create(project);
+
+    const toggle = {
+        name: 'project-client.impression.data',
+        impressionData: true,
+    };
+
+    await app.request
+        .post('/api/admin/projects/impression-data-client/features')
+        .send(toggle)
+        .expect(201)
+        .expect((res) => {
+            expect(res.body.impressionData).toBe(true);
+        });
+
+    return app.request
+        .get('/api/client/features')
+        .expect('Content-Type', /json/)
+        .expect((res) => {
+            const projectToggle = res.body.features.find(
+                (resToggle) => resToggle.project === project.id,
+            );
+
+            expect(projectToggle.name).toBe(toggle.name);
+            expect(projectToggle.project).toBe(project.id);
+            expect(projectToggle.impressionData).toBe(true);
         });
 });

@@ -206,6 +206,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 'features.project as project',
                 'features.stale as stale',
                 'features.variants as variants',
+                'features.impression_data as impression_data',
                 'features.created_at as created_at',
                 'features.last_seen_at as last_seen_at',
                 'feature_environments.enabled as enabled',
@@ -249,6 +250,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                     acc.environments = {};
                 }
                 acc.name = r.name;
+                acc.impressionData = r.impression_data;
                 acc.description = r.description;
                 acc.project = r.project;
                 acc.stale = r.stale;

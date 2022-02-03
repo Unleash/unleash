@@ -1,4 +1,4 @@
-import { IFeatureToggleDTO } from '../../../../interfaces/featureToggle';
+import { IFeatureTogglePayload } from '../../../../interfaces/featureToggle';
 import { ITag } from '../../../../interfaces/tags';
 import useAPI from '../useApi/useApi';
 import { Operation } from 'fast-json-patch';
@@ -26,7 +26,7 @@ const useFeatureApi = () => {
 
     const createFeatureToggle = async (
         projectId: string,
-        featureToggle: IFeatureToggleDTO
+        featureToggle: IFeatureTogglePayload
     ) => {
         const path = `api/admin/projects/${projectId}/features`;
         const req = createRequest(path, {

@@ -29,17 +29,20 @@ const EditFeature = () => {
         setProject,
         description,
         setDescription,
+        impressionData,
+        setImpressionData,
         clearErrors,
         errors,
     } = useFeatureForm(
         feature?.name,
         feature?.type,
         feature?.project,
-        feature?.description
+        feature?.description,
+        feature?.impressionData
     );
 
     const createPatch = () => {
-        const comparison = { ...feature, type, description };
+        const comparison = { ...feature, type, description, impressionData };
         const patch = jsonpatch.compare(feature, comparison);
         return patch;
     };
@@ -95,11 +98,12 @@ const EditFeature = () => {
                 errors={errors}
                 handleSubmit={handleSubmit}
                 handleCancel={handleCancel}
+                impressionData={impressionData}
+                setImpressionData={setImpressionData}
                 mode="Edit"
                 clearErrors={clearErrors}
             >
                 <PermissionButton
-                    onClick={handleSubmit}
                     permission={UPDATE_FEATURE}
                     projectId={project}
                     type="submit"

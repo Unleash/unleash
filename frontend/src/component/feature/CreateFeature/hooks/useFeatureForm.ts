@@ -8,7 +8,8 @@ const useFeatureForm = (
     initialName = '',
     initialType = 'release',
     initialProject = 'default',
-    initialDescription = ''
+    initialDescription = '',
+    initialImpressionData = false
 ) => {
     const { projectId } = useParams<IFeatureViewParams>();
     const params = useQueryParams();
@@ -18,6 +19,9 @@ const useFeatureForm = (
     const [name, setName] = useState(toggleQueryName || initialName);
     const [project, setProject] = useState(projectId || initialProject);
     const [description, setDescription] = useState(initialDescription);
+    const [impressionData, setImpressionData] = useState<boolean>(
+        initialImpressionData
+    );
     const [errors, setErrors] = useState({});
 
     useEffect(() => {
@@ -38,12 +42,17 @@ const useFeatureForm = (
         setDescription(initialDescription);
     }, [initialDescription]);
 
+    useEffect(() => {
+        setImpressionData(initialImpressionData);
+    }, [initialImpressionData]);
+
     const getTogglePayload = () => {
         return {
-            type: type,
-            name: name,
+            type,
+            name,
             projectId: project,
             description: description,
+            impressionData
         };
     };
 
@@ -81,6 +90,8 @@ const useFeatureForm = (
         setProject,
         description,
         setDescription,
+        impressionData,
+        setImpressionData,
         getTogglePayload,
         validateToggleName,
         clearErrors,

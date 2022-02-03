@@ -28,6 +28,8 @@ const CreateFeature = () => {
         description,
         setDescription,
         validateToggleName,
+        impressionData,
+        setImpressionData,
         getTogglePayload,
         clearErrors,
         errors,
@@ -90,6 +92,8 @@ const CreateFeature = () => {
                 setProject={setProject}
                 setDescription={setDescription}
                 validateToggleName={validateToggleName}
+                setImpressionData={setImpressionData}
+                impressionData={impressionData}
                 errors={errors}
                 handleSubmit={handleSubmit}
                 handleCancel={handleCancel}

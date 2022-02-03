@@ -17,6 +17,9 @@ export const useStyles = makeStyles(theme => ({
             minWidth: '379px',
         },
     },
+    link: {
+        color: theme.palette.primary.light,
+    },
     label: {
         minWidth: '300px',
         [theme.breakpoints.down(600)]: {
@@ -57,5 +60,13 @@ export const useStyles = makeStyles(theme => ({
         color: theme.palette.error.main,
         position: 'absolute',
         top: '-8px',
+    },
+    roleSubtitle: {
+        margin: '0.5rem 0',
+    },
+    flexRow: {
+        display: 'flex',
+        alignItems: 'center',
+        marginTop: '0.5rem',
     },
 }));

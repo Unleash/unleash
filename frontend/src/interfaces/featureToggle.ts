@@ -21,6 +21,14 @@ export interface IFeatureToggleDTO {
     variants: IFeatureVariant[];
 }
 
+export interface IFeatureTogglePayload {
+    description: string;
+    name: string;
+    projectId: string;
+    type: string;
+    impressionData: boolean;
+}
+
 export interface IFeatureToggle {
     stale: boolean;
     archived: boolean;
@@ -32,6 +40,7 @@ export interface IFeatureToggle {
     project: string;
     type: string;
     variants: IFeatureVariant[];
+    impressionData: boolean;
 }
 
 export interface IFeatureEnvironment {

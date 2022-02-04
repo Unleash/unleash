@@ -33,6 +33,10 @@ footer {
     --ifm-footer-link-hover-color: var(--ifm-footer-link-color);
 }
 
+html[data-theme='dark'] {
+    --ifm-link-color: #aaa5ff;
+}
+
 [class^='docTitle'] {
     font-size: 2.5rem !important;
 }

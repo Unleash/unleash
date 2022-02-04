@@ -38,17 +38,23 @@ html[data-theme='light'] {
 }
 
 html[data-theme='dark'] {
-    --ifm-color-primary: #39535b;
-    --ifm-color-primary-dark: #334b52;
-    --ifm-color-primary-darker: #30474d;
-    --ifm-color-primary-darkest: #283a40;
-    --ifm-color-primary-light: #3f5b64;
-    --ifm-color-primary-lighter: #425f69;
-    --ifm-color-primary-lightest: #4a6c76;
+    --ifm-color-primary-lightest: #ffffff;
+    --ifm-color-primary-lighter: #fcfcfc;
+    --ifm-color-primary-light: #f9f9f9;
+    --ifm-color-primary: #f6f6f6;
+    --ifm-color-primary-dark: #f2f2f2;
+    --ifm-color-primary-darker: #efefef;
+    --ifm-color-primary-darkest: #ececec;
+
+    --unleash-color-gray: #3c3c3c;
+    --ifm-menu-color-background-active: var(--unleash-color-gray);
+    --ifm-menu-color-background-hover: var(--unleash-color-gray);
 
     --ifm-link-color: #aaa5ff;
 
-    --unleash-color-admonition-background: var(--ifm-color-secondary-contrast-background);
+    --unleash-color-admonition-background: var(
+        --ifm-color-secondary-contrast-background
+    );
 }
 
 [class^='docTitle'] {

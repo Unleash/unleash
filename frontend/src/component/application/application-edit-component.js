@@ -19,7 +19,7 @@ import {
     formatDateWithLocale,
 } from '../common/util';
 import { UPDATE_APPLICATION } from '../providers/AccessProvider/permissions';
-import ApplicationView from './application-view';
+import ApplicationView from './ApplicationView';
 import ApplicationUpdate from './application-update';
 import TabNav from '../common/TabNav/TabNav';
 import Dialogue from '../common/Dialogue';

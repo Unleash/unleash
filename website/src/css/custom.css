@@ -38,19 +38,20 @@ html[data-theme='light'] {
 }
 
 html[data-theme='dark'] {
-    --ifm-color-primary-lightest: #ffffff;
-    --ifm-color-primary-lighter: #fcfcfc;
-    --ifm-color-primary-light: #f9f9f9;
-    --ifm-color-primary: #f6f6f6;
-    --ifm-color-primary-dark: #f2f2f2;
-    --ifm-color-primary-darker: #efefef;
-    --ifm-color-primary-darkest: #ececec;
+    --ifm-color-primary-lightest: #d1d1ff;
+    --ifm-color-primary-lighter: #c9c9ff;
+    --ifm-color-primary-light: #c2c0ff;
+    --ifm-color-primary: #bab8ff;
+    --ifm-color-primary-dark: #b2afff;
+    --ifm-color-primary-darker: #aba7ff;
+    --ifm-color-primary-darkest: #a39eff;
 
-    --unleash-color-gray: #3c3c3c;
+    --unleash-color-purple: var(--ifm-color-primary);
+    --unleash-color-gray: #333;
     --ifm-menu-color-background-active: var(--unleash-color-gray);
     --ifm-menu-color-background-hover: var(--unleash-color-gray);
 
-    --ifm-link-color: #aaa5ff;
+    --ifm-link-color: var(--ifm-color-primary);
 
     --unleash-color-admonition-background: var(
         --ifm-color-secondary-contrast-background

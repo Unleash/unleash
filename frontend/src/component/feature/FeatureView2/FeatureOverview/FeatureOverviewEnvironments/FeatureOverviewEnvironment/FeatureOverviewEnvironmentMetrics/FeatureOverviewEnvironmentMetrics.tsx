@@ -13,8 +13,10 @@ const FeatureOverviewEnvironmentMetrics = ({
 }: IFeatureOverviewEnvironmentMetrics) => {
     const styles = useStyles();
 
+    if (!environmentMetric) return null;
+
     const total = environmentMetric.yes + environmentMetric.no;
-    const percentage = calculatePercentage(total, environmentMetric.yes);
+    const percentage = calculatePercentage(total, environmentMetric?.yes);
 
     if (
         !environmentMetric ||

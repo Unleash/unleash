@@ -18,7 +18,7 @@ import {
 } from '../common/util';
 import { UPDATE_APPLICATION } from '../providers/AccessProvider/permissions';
 import ApplicationView from './ApplicationView';
-import ApplicationUpdate from './application-update';
+import ApplicationUpdate from './ApplicationUpdate';
 import TabNav from '../common/TabNav/TabNav';
 import Dialogue from '../common/Dialogue';
 import PageContent from '../common/PageContent';
@@ -67,7 +67,6 @@ const EditApplication = () => {
             title="Are you sure you want to delete this application?"
         />
     );
-
     const tabData = [
         {
             label: 'Application overview',
@@ -75,12 +74,7 @@ const EditApplication = () => {
         },
         {
             label: 'Edit application',
-            component: (
-                <ApplicationUpdate
-                    application={application}
-                    storeApplicationMetaData={storeApplicationMetaData}
-                />
-            ),
+            component: <ApplicationUpdate application={application} />,
         },
     ];
 

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { CircularProgress } from '@material-ui/core';
 import { Warning } from '@material-ui/icons';
@@ -25,49 +25,45 @@ const Empty = () => (
     </React.Fragment>
 );
 
-class ClientStrategies extends Component {
-    static propTypes = {
-        applications: PropTypes.array,
-        fetchAll: PropTypes.func.isRequired,
-        settings: PropTypes.object.isRequired,
-        updateSetting: PropTypes.func.isRequired,
-    };
+const ClientStrategies = ({ fetchAll, applications }) => {
+    const [filter, setFilter] = useState('');
 
-    componentDidMount() {
-        this.props.fetchAll();
+    useEffect(() => {
+        fetchAll();
+    }, [fetchAll]);
+
+    const filteredApplications = useMemo(() => {
+        const regExp = new RegExp(filter, 'i');
+        return filter
+            ? applications?.filter(a => regExp.test(a.appName))
+            : applications;
+    }, [applications, filter]);
+
+    if (!filteredApplications) {
+        return <CircularProgress variant="indeterminate" />;
     }
 
-    render() {
-        const { applications } = this.props;
-
-        if (!applications) {
-            return <CircularProgress variant="indeterminate" />;
-        }
-        return (
-            <>
-                <div className={commonStyles.searchField}>
-                    <SearchField
-                        value={this.props.settings.filter}
-                        updateValue={this.props.updateSetting.bind(
-                            this,
-                            'filter'
-                        )}
-                    />
+    return (
+        <>
+            <div className={commonStyles.searchField}>
+                <SearchField value={filter} updateValue={setFilter} />
+            </div>
+            <PageContent headerContent={<HeaderTitle title="Applications" />}>
+                <div className={commonStyles.fullwidth}>
+                    {filteredApplications.length > 0 ? (
+                        <AppsLinkList apps={filteredApplications} />
+                    ) : (
+                        <Empty />
+                    )}
                 </div>
-                <PageContent
-                    headerContent={<HeaderTitle title="Applications" />}
-                >
-                    <div className={commonStyles.fullwidth}>
-                        {applications.length > 0 ? (
-                            <AppsLinkList apps={applications} />
-                        ) : (
-                            <Empty />
-                        )}
-                    </div>
-                </PageContent>
-            </>
-        );
-    }
-}
+            </PageContent>
+        </>
+    );
+};
+
+ClientStrategies.propTypes = {
+    applications: PropTypes.array,
+    fetchAll: PropTypes.func.isRequired,
+};
 
 export default ClientStrategies;

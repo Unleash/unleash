@@ -6,7 +6,6 @@ import featureTags from './feature-tags';
 import tagTypes from './tag-type';
 import tags from './tag';
 import strategies from './strategy';
-import history from './history'; // eslint-disable-line
 import archive from './archive';
 import error from './error';
 import settings from './settings';
@@ -29,7 +28,6 @@ const unleashStore = combineReducers({
     tagTypes,
     tags,
     featureTags,
-    history,
     archive,
     error,
     settings,

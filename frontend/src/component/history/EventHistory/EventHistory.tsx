@@ -1,22 +1,12 @@
-import { useEffect } from 'react';
-
 import EventLog from '../EventLog';
+import { useEvents } from '../../../hooks/api/getters/useEvents/useEvents';
 
-interface IEventLogProps {
-    fetchHistory: () => void;
-    history: History;
-}
+export const EventHistory = () => {
+    const { events } = useEvents();
 
-const EventHistory = ({ fetchHistory, history }: IEventLogProps) => {
-    useEffect(() => {
-        fetchHistory();
-    }, [fetchHistory]);
-
-    if (history.length < 0) {
+    if (events.length < 0) {
         return null;
     }
 
-    return <EventLog history={history} title="Recent changes" />;
+    return <EventLog history={events} title="Recent changes" />;
 };
-
-export default EventHistory;

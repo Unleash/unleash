@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import HistoryListToggle from '../../component/history/FeatureEventHistory';
+import { FeatureEventHistory } from '../../component/history/FeatureEventHistory/FeatureEventHistory';
 
 const render = ({ match: { params } }) => (
-    <HistoryListToggle toggleName={params.toggleName} />
+    <FeatureEventHistory toggleName={params.toggleName} />
 );
 
 render.propTypes = {

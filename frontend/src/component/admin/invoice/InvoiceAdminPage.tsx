@@ -1,14 +1,12 @@
 import { useContext } from 'react';
-import PropTypes from 'prop-types';
-import InvoiceList from './invoice-container';
+import InvoiceList from './InvoiceList';
 import AccessContext from '../../../contexts/AccessContext';
 import { ADMIN } from '../../providers/AccessProvider/permissions';
 import ConditionallyRender from '../../common/ConditionallyRender';
 import { Alert } from '@material-ui/lab';
 
-const InvoiceAdminPage = ({ history }) => {
+const InvoiceAdminPage = () => {
     const { hasAccess } = useContext(AccessContext);
-
     return (
         <div>
             <ConditionallyRender
@@ -22,11 +20,6 @@ const InvoiceAdminPage = ({ history }) => {
             />
         </div>
     );
-};
-
-InvoiceAdminPage.propTypes = {
-    match: PropTypes.object.isRequired,
-    history: PropTypes.object.isRequired,
 };
 
 export default InvoiceAdminPage;

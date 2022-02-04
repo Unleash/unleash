@@ -3,7 +3,7 @@ import classnames from 'classnames';
 import { useParams } from 'react-router';
 import { IFeatureViewParams } from '../../../interfaces/params';
 import { IConstraint } from '../../../interfaces/strategy';
-import FeatureStrategiesSeparator from '../../feature/FeatureView2/FeatureStrategies/FeatureStrategiesEnvironments/FeatureStrategiesSeparator/FeatureStrategiesSeparator';
+import FeatureStrategiesSeparator from '../../feature/FeatureView/FeatureStrategies/FeatureStrategiesEnvironments/FeatureStrategiesSeparator/FeatureStrategiesSeparator';
 import { UPDATE_FEATURE } from '../../providers/AccessProvider/permissions';
 import ConditionallyRender from '../ConditionallyRender';
 import PermissionIconButton from '../PermissionIconButton/PermissionIconButton';

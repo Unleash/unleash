@@ -7,8 +7,8 @@ import {
     TableHead,
     TableRow,
 } from '@material-ui/core';
-import ChangePassword from '../change-password-component';
-import DelUser from '../del-user-component';
+import ChangePassword from './ChangePassword/ChangePassword';
+import DeleteUser from './DeleteUser/DeleteUser';
 import ConditionallyRender from '../../../common/ConditionallyRender/ConditionallyRender';
 import AccessContext from '../../../../contexts/AccessContext';
 import { ADMIN } from '../../../providers/AccessProvider/permissions';
@@ -170,7 +170,7 @@ const UsersList = () => {
             <ConditionallyRender
                 condition={Boolean(delUser)}
                 show={
-                    <DelUser
+                    <DeleteUser
                         showDialog={delDialog}
                         closeDialog={closeDelDialog}
                         user={delUser}

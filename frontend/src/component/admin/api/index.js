@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import ApiTokenList from '../api-token/ApiTokenList/ApiTokenList';
 
-import AdminMenu from '../admin-menu';
+import AdminMenu from '../menu/AdminMenu';
 import usePermissions from '../../../hooks/usePermissions';
 import ConditionallyRender from '../../common/ConditionallyRender';
 

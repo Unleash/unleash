@@ -7,7 +7,7 @@ import { Checkbox } from '@material-ui/core';
 import CheckIcon from '@material-ui/icons/Check';
 import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined';
 import ConditionallyRender from '../../../common/ConditionallyRender/ConditionallyRender';
-import FeatureStatus from '../../../feature/FeatureView2/FeatureStatus/FeatureStatus';
+import FeatureStatus from '../../../feature/FeatureView/FeatureStatus/FeatureStatus';
 
 import {
     pluralize,

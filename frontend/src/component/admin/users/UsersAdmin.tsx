@@ -1,29 +1,29 @@
-import { Button } from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
 import { useContext } from 'react';
+import UsersList from './UsersList/UsersList';
+import AdminMenu from '../menu/AdminMenu';
+import PageContent from '../../common/PageContent/PageContent';
+import AccessContext from '../../../contexts/AccessContext';
+import ConditionallyRender from '../../common/ConditionallyRender';
+import { ADMIN } from '../../providers/AccessProvider/permissions';
+import { Alert } from '@material-ui/lab';
+import HeaderTitle from '../../common/HeaderTitle';
+import { Button } from '@material-ui/core';
+import { useStyles } from './UserAdmin.styles';
 import { useHistory } from 'react-router-dom';
-import AccessContext from '../../../../contexts/AccessContext';
-import ConditionallyRender from '../../../common/ConditionallyRender';
-import HeaderTitle from '../../../common/HeaderTitle';
-import PageContent from '../../../common/PageContent';
-import { ADMIN } from '../../../providers/AccessProvider/permissions';
-import AdminMenu from '../../menu/AdminMenu';
-import { useStyles } from './ProjectRoles.styles';
-import ProjectRoleList from './ProjectRoleList/ProjectRoleList';
 
-const ProjectRoles = () => {
+const UsersAdmin = () => {
     const { hasAccess } = useContext(AccessContext);
-    const styles = useStyles();
     const history = useHistory();
+    const styles = useStyles();
 
     return (
         <div>
             <AdminMenu history={history} />
             <PageContent
-                bodyClass={styles.rolesListBody}
+                bodyClass={styles.userListBody}
                 headerContent={
                     <HeaderTitle
-                        title="Project Roles"
+                        title="Users"
                         actions={
                             <ConditionallyRender
                                 condition={hasAccess(ADMIN)}
@@ -32,17 +32,15 @@ const ProjectRoles = () => {
                                         variant="contained"
                                         color="primary"
                                         onClick={() =>
-                                            history.push(
-                                                '/admin/create-project-role'
-                                            )
+                                            history.push('/admin/create-user')
                                         }
                                     >
-                                        New Project role
+                                        Add new user
                                     </Button>
                                 }
                                 elseShow={
                                     <small>
-                                        PS! Only admins can add/remove roles.
+                                        PS! Only admins can add/remove users.
                                     </small>
                                 }
                             />
@@ -52,7 +50,7 @@ const ProjectRoles = () => {
             >
                 <ConditionallyRender
                     condition={hasAccess(ADMIN)}
-                    show={<ProjectRoleList />}
+                    show={<UsersList />}
                     elseShow={
                         <Alert severity="error">
                             You need instance admin to access this section.
@@ -64,4 +62,4 @@ const ProjectRoles = () => {
     );
 };
 
-export default ProjectRoles;
+export default UsersAdmin;

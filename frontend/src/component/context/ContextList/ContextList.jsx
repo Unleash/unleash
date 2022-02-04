@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import PageContent from '../../common/PageContent/PageContent';
 import HeaderTitle from '../../common/HeaderTitle';
 import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyRender';
@@ -27,7 +26,7 @@ import useUnleashContext from '../../../hooks/api/getters/useUnleashContext/useU
 import useContextsApi from '../../../hooks/api/actions/useContextsApi/useContextsApi';
 import useToast from '../../../hooks/useToast';
 
-const ContextList = ({ removeContextField }) => {
+const ContextList = () => {
     const { hasAccess } = useContext(AccessContext);
     const [showDelDialogue, setShowDelDialogue] = useState(false);
     const smallScreen = useMediaQuery('(max-width:700px)');
@@ -162,12 +161,6 @@ const ContextList = ({ removeContextField }) => {
             />
         </PageContent>
     );
-};
-
-ContextList.propTypes = {
-    contextFields: PropTypes.array.isRequired,
-    removeContextField: PropTypes.func.isRequired,
-    history: PropTypes.object.isRequired,
 };
 
 export default ContextList;

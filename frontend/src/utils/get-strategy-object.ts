@@ -1,5 +1,5 @@
-import { resolveDefaultParamValue } from '../component/feature/strategy/AddStrategy/utils';
 import { IStrategy, IParameter } from '../interfaces/strategy';
+import { resolveDefaultParamValue } from './resolve-default-param-value';
 
 export const getStrategyObject = (
     selectableStrategies: IStrategy[],

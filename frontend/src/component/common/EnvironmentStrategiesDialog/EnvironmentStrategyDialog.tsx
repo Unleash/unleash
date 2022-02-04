@@ -20,7 +20,7 @@ const EnvironmentStrategyDialog = ({
 }: IEnvironmentStrategyDialogProps) => {
     const styles = useStyles();
     const history = useHistory();
-    const strategiesLink = `/projects/${projectId}/features2/${featureId}/strategies?environment=${environmentName}&addStrategy=true`;
+    const strategiesLink = `/projects/${projectId}/features/${featureId}/strategies?environment=${environmentName}&addStrategy=true`;
 
     return (
         <Dialogue

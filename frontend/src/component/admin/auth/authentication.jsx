@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import AdminMenu from '../admin-menu';
+import AdminMenu from '../menu/AdminMenu';
 import { Alert } from '@material-ui/lab';
 import GoogleAuth from './google-auth-container';
 import SamlAuth from './saml-auth-container';
@@ -22,7 +22,7 @@ function AdminAuthPage({ authenticationType, history }) {
         },
         {
             label: 'Password',
-            component: <PasswordAuthSettings />
+            component: <PasswordAuthSettings />,
         },
         {
             label: 'Google',
@@ -34,34 +34,47 @@ function AdminAuthPage({ authenticationType, history }) {
         <div>
             <AdminMenu history={history} />
             <PageContent headerContent="Single Sign-On">
-                <ConditionallyRender condition={authenticationType === 'enterprise'}
-                    show={
-                        <TabNav tabData={tabs} />
-                    }
+                <ConditionallyRender
+                    condition={authenticationType === 'enterprise'}
+                    show={<TabNav tabData={tabs} />}
                 />
-                <ConditionallyRender condition={authenticationType === 'open-source'}
+                <ConditionallyRender
+                    condition={authenticationType === 'open-source'}
                     show={
                         <Alert severity="warning">
-                            You are running the open-source version of Unleash. You have to use the Enterprise edition 
-                            in order configure Single Sign-on.</Alert>
+                            You are running the open-source version of Unleash.
+                            You have to use the Enterprise edition in order
+                            configure Single Sign-on.
+                        </Alert>
                     }
                 />
-                <ConditionallyRender condition={authenticationType === 'demo'}
+                <ConditionallyRender
+                    condition={authenticationType === 'demo'}
                     show={
                         <Alert severity="warning">
-                            You are running Unleash in demo mode. You have to use the Enterprise edition 
-                            in order configure Single Sign-on.</Alert>
+                            You are running Unleash in demo mode. You have to
+                            use the Enterprise edition in order configure Single
+                            Sign-on.
+                        </Alert>
                     }
                 />
-                <ConditionallyRender condition={authenticationType === 'custom'}
+                <ConditionallyRender
+                    condition={authenticationType === 'custom'}
                     show={
-                        <Alert severity="warning">You have decided to use custom authentication type. You have to use the Enterprise edition 
-                            in order configure Single Sign-on from the user interface.</Alert>
+                        <Alert severity="warning">
+                            You have decided to use custom authentication type.
+                            You have to use the Enterprise edition in order
+                            configure Single Sign-on from the user interface.
+                        </Alert>
                     }
                 />
-                <ConditionallyRender condition={authenticationType === 'hosted'}
+                <ConditionallyRender
+                    condition={authenticationType === 'hosted'}
                     show={
-                        <Alert severity="info">Your Unleash instance is managed by the Unleash team.</Alert>
+                        <Alert severity="info">
+                            Your Unleash instance is managed by the Unleash
+                            team.
+                        </Alert>
                     }
                 />
             </PageContent>

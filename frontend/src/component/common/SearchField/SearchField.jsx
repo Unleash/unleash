@@ -7,7 +7,7 @@ import SearchIcon from '@material-ui/icons/Search';
 
 import { useStyles } from './styles';
 
-function SearchField({ updateValue, className }) {
+function SearchField({ updateValue, className = '' }) {
     const styles = useStyles();
 
     const [localValue, setLocalValue] = useState('');

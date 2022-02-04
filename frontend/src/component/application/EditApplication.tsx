@@ -34,8 +34,7 @@ const EditApplication = () => {
     const { refetchApplication, application } = useApplication(name);
     const { appName, url, description, icon = 'apps', createdAt } = application;
     const { hasAccess } = useContext(AccessContext);
-    const { storeApplicationMetaData, deleteApplication } =
-        useApplicationsApi();
+    const { deleteApplication } = useApplicationsApi();
 
     const [loading, setLoading] = useState(true);
     const [showDialog, setShowDialog] = useState(false);

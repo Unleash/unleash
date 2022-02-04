@@ -8,7 +8,6 @@ import HistoryPage from '../../page/history';
 import HistoryTogglePage from '../../page/history/toggle';
 import ShowArchive from '../../page/archive/show';
 import Archive from '../../page/archive';
-import Applications from '../../page/applications';
 import ContextFields from '../../page/context';
 import ListTagTypes from '../../page/tag-types';
 import Addons from '../../page/addons';
@@ -47,6 +46,7 @@ import CreateProject from '../project/Project/CreateProject/CreateProject';
 import CreateFeature from '../feature/CreateFeature/CreateFeature/CreateFeature';
 import EditFeature from '../feature/CreateFeature/EditFeature/EditFeature';
 import EditApplication from '../application/EditApplication';
+import ApplicationList from '../application/ApplicationList';
 
 export const routes = [
     // Project
@@ -203,7 +203,7 @@ export const routes = [
     {
         path: '/applications',
         title: 'Applications',
-        component: Applications,
+        component: ApplicationList,
         type: 'protected',
         layout: 'main',
         menu: { mobile: true, advanced: true },

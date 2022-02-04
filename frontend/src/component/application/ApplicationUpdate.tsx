@@ -8,8 +8,8 @@ import useApplicationsApi from '../../hooks/api/actions/useApplicationsApi/useAp
 const ApplicationUpdate = ({ application }) => {
     const { storeApplicationMetaData } = useApplicationsApi();
     const { appName, icon, url, description } = application;
-    const [localUrl, setLocalUrl] = useState(url);
-    const [localDescription, setLocalDescription] = useState(description);
+    const [localUrl, setLocalUrl] = useState(url || '');
+    const [localDescription, setLocalDescription] = useState(description || '');
     const commonStyles = useCommonStyles();
 
     return (

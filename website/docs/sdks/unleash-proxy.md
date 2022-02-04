@@ -57,7 +57,7 @@ The easiest way to run Unleash is via Docker. We have published a [docker image 
 
    ```bash
    docker run \
-      -e UNLEASH_PROXY_CLIENT_KEYS=some-public-key \
+      -e UNLEASH_PROXY_CLIENT_KEYS=some-secret \
       -e UNLEASH_URL='https://app.unleash-hosted.com/demo/api/' \
       -e UNLEASH_API_TOKEN=56907a2fa53c1d16101d509a10b78e36190b0f918d9f122d \
       -p 3000:3000 \

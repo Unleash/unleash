@@ -60,7 +60,7 @@ unleash.on("impression", (event) => {
 
 This will allow you to capture an event whenever a call is done to isEnabled or getVariant, capturing the context of the call which you can use to enrich your own data. The impression event will contain the following data, including the entire context of the call (which will expand if you provide more values to the unleash context): 
 
-```
+```js
 // Example isEnabled event
 {
   eventType: 'isEnabled',

@@ -129,7 +129,7 @@ const ApplicationView = () => {
                 </Typography>
                 <hr />
                 <List>
-                    {strategies.map(({ name, description, notFound }, i) => (
+                    {strategies.map(({ name, description, notFound }, i: number) => (
                         <ConditionallyRender
                             key={`strategies_conditional_${name}`}
                             condition={notFound}
@@ -137,13 +137,11 @@ const ApplicationView = () => {
                                 createUrl: '/strategies/create',
                                 name,
                                 permission: CREATE_STRATEGY,
-                                i,
                             })}
                             elseShow={foundListItem({
                                 viewUrl: '/strategies/view',
                                 name,
                                 Icon: Extension,
-                                enabled: undefined,
                                 description,
                                 i,
                             })}
@@ -178,7 +176,11 @@ const ApplicationView = () => {
                                         <ConditionallyRender
                                             key={`${instanceId}_conditional`}
                                             condition={Boolean(sdkVersion)}
-                                            show={<span>{instanceId} {(sdkVersion)}</span>}
+                                            show={
+                                                <span>
+                                                    {instanceId} {sdkVersion}
+                                                </span>
+                                            }
                                             elseShow={<span>{instanceId}</span>}
                                         />
                                     }

@@ -32,7 +32,7 @@ const useApplication = (name: string, options: SWRConfiguration = {}) => {
     return {
         application: data || {
             appName: name,
-            color: null,
+            color: '',
             createdAt: '2022-02-02T21:04:00.268Z',
             descriotion: '',
             instances: [],

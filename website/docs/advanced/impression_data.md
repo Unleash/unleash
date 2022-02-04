@@ -39,7 +39,7 @@ Currently this functionality is only supported in [unleash-proxy-client](/sdks/p
 
 Once you have set up your client application with the SDK you can listen to impression events on the client. Example with unleash-proxy-client:
 
-```
+```js
 const unleash = new UnleashClient({
   url: 'https://eu.unleash-hosted.com/hosted/proxy',
   clientKey: 'your-proxy-key',

@@ -8,15 +8,20 @@ import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import { useStyles } from './UserProfile.styles';
 import { useCommonStyles } from '../../../common.styles';
 import UserProfileContent from './UserProfileContent/UserProfileContent';
+import { IUser } from "../../../interfaces/user";
+
+interface IUserProfileProps {
+    profile: IUser
+    updateSettingLocation: (field: 'locale', value: string) => void
+}
 
 const UserProfile = ({
     profile,
     location,
-    fetchUser,
     updateSettingLocation,
-}) => {
+}: IUserProfileProps) => {
     const [showProfile, setShowProfile] = useState(false);
-    const [currentLocale, setCurrentLocale] = useState([]);
+    const [currentLocale, setCurrentLocale] = useState<string>();
 
     const styles = useStyles();
     const commonStyles = useCommonStyles();
@@ -35,8 +40,7 @@ const UserProfile = ({
     ]);
 
     useEffect(() => {
-        fetchUser();
-        const locale = navigator.language || navigator.userLanguage;
+        const locale = location.locale || navigator.language;
         let found = possibleLocales.find(l =>
             l.toLowerCase().includes(locale.toLowerCase())
         );
@@ -73,7 +77,6 @@ const UserProfile = ({
                     profile={profile}
                     updateSettingLocation={updateSettingLocation}
                     possibleLocales={possibleLocales}
-                    location={location}
                     setCurrentLocale={setCurrentLocale}
                     currentLocale={currentLocale}
                 />
@@ -85,7 +88,6 @@ const UserProfile = ({
 UserProfile.propTypes = {
     profile: PropTypes.object,
     location: PropTypes.object,
-    fetchUser: PropTypes.func.isRequired,
     updateSettingLocation: PropTypes.func.isRequired,
 };
 

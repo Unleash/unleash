@@ -8,6 +8,7 @@ export interface IUiConfig {
     version: string;
     versionInfo: IVersionInfo;
     links: ILinks[];
+    disablePasswordAuth?: boolean;
 }
 
 export interface IFlags {

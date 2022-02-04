@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import ConditionallyRender from '../../../common/ConditionallyRender';
 import {
     Paper,
@@ -17,6 +17,17 @@ import EditProfile from '../EditProfile/EditProfile';
 import legacyStyles from '../../user.module.scss';
 import { getBasePath } from '../../../../utils/format-path';
 import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
+import { IUser } from "../../../../interfaces/user";
+
+interface IUserProfileContentProps {
+    showProfile: boolean
+    profile: IUser
+    possibleLocales: string[]
+    updateSettingLocation: (field: 'locale', value: string) => void
+    imageUrl: string
+    currentLocale?: string
+    setCurrentLocale: (value: string) => void
+}
 
 const UserProfileContent = ({
     showProfile,
@@ -26,27 +37,31 @@ const UserProfileContent = ({
     imageUrl,
     currentLocale,
     setCurrentLocale,
-}) => {
+}: IUserProfileContentProps) => {
     const commonStyles = useCommonStyles();
     const { uiConfig } = useUiConfig();
     const [updatedPassword, setUpdatedPassword] = useState(false);
-    const [edititingProfile, setEditingProfile] = useState(false);
+    const [editingProfile, setEditingProfile] = useState(false);
     const styles = useStyles();
 
-    const setLocale = value => {
+    const setLocale = (value: string) => {
         updateSettingLocation('locale', value);
     };
 
+    // @ts-expect-error
     const profileAvatarClasses = classnames(styles.avatar, {
-        [styles.editingAvatar]: edititingProfile,
+        // @ts-expect-error
+        [styles.editingAvatar]: editingProfile,
     });
 
+    // @ts-expect-error
     const profileEmailClasses = classnames(styles.profileEmail, {
-        [styles.editingEmail]: edititingProfile,
+        // @ts-expect-error
+        [styles.editingEmail]: editingProfile,
     });
 
-    const handleChange = e => {
-        const { value } = e.target;
+    const handleChange = (e: React.ChangeEvent<{ value: unknown }>) => {
+        const value = e.target.value as string;
         setCurrentLocale(value);
         setLocale(value);
     };
@@ -57,6 +72,7 @@ const UserProfileContent = ({
             show={
                 <Paper
                     className={classnames(
+                        // @ts-expect-error
                         styles.profile,
                         commonStyles.flexColumn,
                         commonStyles.itemsCenter,
@@ -80,7 +96,7 @@ const UserProfileContent = ({
                         }
                     />
                     <ConditionallyRender
-                        condition={!edititingProfile}
+                        condition={!editingProfile}
                         show={
                             <>
                                 <ConditionallyRender condition={!uiConfig.disablePasswordAuth} show={
@@ -133,6 +149,7 @@ const UserProfileContent = ({
                                 </div>
                                 <div className={commonStyles.divider} />
                                 <a
+                                    // @ts-expect-error
                                     className={styles.link}
                                     href="https://www.getunleash.io/privacy-policy"
                                     rel="noopener noreferrer"

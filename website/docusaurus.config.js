@@ -26,11 +26,6 @@ module.exports = {
             },
             items: [
                 {
-                    to: '/',
-                    label: 'Documentation',
-                    activeBaseRegex: '(user_guide|sdks|addons|advanced)',
-                },
-                {
                     href: 'https://www.getunleash.io/plans',
                     label: 'Unleash Enterprise',
                     position: 'right',

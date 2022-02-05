@@ -147,7 +147,7 @@
     "faker": "5.5.3",
     "fetch-mock": "9.11.0",
     "husky": "7.0.4",
-    "jest": "27.4.7",
+    "jest": "27.5.0",
     "jest-fetch-mock": "3.0.3",
     "lint-staged": "12.3.3",
     "prettier": "2.5.1",

@@ -16,7 +16,7 @@ Go to the admin UI and navigate to the create feature toggle screen:
 
 In the bottom section you'll see a switch to turn on impression data for this feature toggle. Click the switch to enable the feature. Alternatively, you can send the following payload to the unleash API to create a feature toggle with the impression data enabled:
 
-```
+``` bash
 curl --location --request POST 'http://{YOUR_DOMAIN}/api/admin/projects/{PROJECT_ID}/features' \
     --header 'Authorization: {INSERT_API_KEY}' \
     --header 'Content-Type: application/json' \

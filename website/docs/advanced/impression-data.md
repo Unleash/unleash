@@ -1,5 +1,4 @@
 ---
-id: impression_data
 title: Impression data
 ---
 
@@ -33,7 +32,7 @@ curl --location --request POST 'http://{YOUR_DOMAIN}/api/admin/projects/{PROJECT
 
 This step assumes that you have set up an application connected to an unleash instance using one of our [SDKs](/sdks)
 
-:::caution 
+:::caution
 Currently this functionality is only supported in [unleash-proxy-client](/sdks/proxy-javascript) and [proxy-client-react](/sdks/proxy-react)
 :::
 
@@ -58,17 +57,17 @@ unleash.on("impression", (event) => {
 })
 ```
 
-This will allow you to capture an event whenever a call is done to isEnabled or getVariant, capturing the context of the call which you can use to enrich your own data. The impression event will contain the following data, including the entire context of the call (which will expand if you provide more values to the unleash context): 
+This will allow you to capture an event whenever a call is done to isEnabled or getVariant, capturing the context of the call which you can use to enrich your own data. The impression event will contain the following data, including the entire context of the call (which will expand if you provide more values to the unleash context):
 
 ```js
 // Example isEnabled event
 {
   eventType: 'isEnabled',
   eventId: '84b41a43-5ba0-47d8-b21f-a60a319607b0',
-  context: { 
-    sessionId: 54085233, 
-    appName: 'my-webapp', 
-    environment: 'default' 
+  context: {
+    sessionId: 54085233,
+    appName: 'my-webapp',
+    environment: 'default'
   },
   enabled: true,
   featureName: 'my-feature-toggle',
@@ -79,10 +78,10 @@ This will allow you to capture an event whenever a call is done to isEnabled or 
 {
   eventType: 'getVariant',
   eventId: '84b41a43-5ba0-47d8-b21f-a60a319607b0',
-  context: { 
-    sessionId: 54085233, 
-    appName: 'my-webapp', 
-    environment: 'default' 
+  context: {
+    sessionId: 54085233,
+    appName: 'my-webapp',
+    environment: 'default'
   },
   enabled: true,
   featureName: 'my-feature-toggle',
@@ -91,5 +90,3 @@ This will allow you to capture an event whenever a call is done to isEnabled or 
 ```
 
 Once the event is captured, you can do whatever you'd like with it in the event handler body.
-
-

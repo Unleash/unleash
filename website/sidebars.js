@@ -246,7 +246,7 @@ module.exports = {
                         'user_guide/activation_strategy',
                         'advanced/archived_toggles',
                         'advanced/audit_log',
-                        'advanced/impression_data',
+                        'advanced/impression-data',
                         'advanced/custom_activation_strategy',
                         'user_guide/environments',
                         'advanced/feature_toggle_types',

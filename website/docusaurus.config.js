@@ -160,6 +160,10 @@ module.exports = {
                         to: '/user_guide/activation_strategy',
                         from: '/user_guide/control_rollout',
                     },
+                    {
+                        from: '/advanced/impression_data',
+                        to: '/advanced/impression-data',
+                    }
                 ],
                 createRedirects: function (toPath) {
                     if (

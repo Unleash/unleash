@@ -9,12 +9,12 @@ title: /api/admin/projects/:projectId
 
 In this document we will guide you on how you can work with feature toggles and their configuration. Please remember the following details:
 
-- All feature toggles exists _inside a project_. 
-- A feature toggle exists _across all environments_. 
+- All feature toggles exists _inside a project_.
+- A feature toggle exists _across all environments_.
 - A feature toggle can take different configuration, activation strategies, per environment.
 
 
-> We will in this guide use [HTTPie](https://httpie.io) commands to show examples on how to interact with the API. 
+> We will in this guide use [HTTPie](https://httpie.io) commands to show examples on how to interact with the API.
 
 ### Get Project Overview {#fetching-project}
 
@@ -146,10 +146,23 @@ This endpoint will return all feature toggles and high level environment details
 
 This endpoint will accept HTTP POST request to create a new feature toggle for a given _projectId_
 
+**Toggle options**
+
+This endpoint accepts the following toggle options:
+
+| Property name    | Required | Description                                                                                                  | Example value           |
+|------------------|----------|--------------------------------------------------------------------------------------------------------------|-------------------------|
+| `name`           | Yes      | The name of the feature toggle.                                                                              | `"my-feature-toggle"`   |
+| `description`    | No       | The feature toggle's description. Defaults to an empty string.                                               | `"Turn my feature on!"` |
+| `impressionData` | No       | Whether to enable [impression data](../../advanced/impression-data.md) for this toggle. Defaults to `false.` | `true`                  |
+| `type`           | No       | The [type of toggle](../../advanced/feature-toggle-types.md) you want to create. Defaults to `"release"`     | `"release"`             |
+
+
 **Example Query**
 
-```sh
-echo '{"name": "demo2", "description": "A new feature toggle"}' | http POST http://localhost:4242/api/admin/projects/default/features Authorization:$KEY`
+```bash
+echo '{"name": "demo2", "description": "A new feature toggle"}' | \
+http POST http://localhost:4242/api/admin/projects/default/features Authorization:$KEY`
 ```
 
 
@@ -388,7 +401,7 @@ Transfer-Encoding: chunked
 
 `http://localhost:4242/api/admin/projects/:projectId/features/:featureName/environments/:environment/strategies`
 
-This endpoint will allow you to add a new strategy to a feature toggle in a given environment. 
+This endpoint will allow you to add a new strategy to a feature toggle in a given environment.
 
 **Example Query**
 
@@ -598,4 +611,3 @@ http PATCH http://localhost:4242/api/admin/projects/default/features/demo/varian
   ]
 }
 ```
-

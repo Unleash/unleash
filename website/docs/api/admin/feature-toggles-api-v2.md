@@ -150,12 +150,12 @@ This endpoint will accept HTTP POST request to create a new feature toggle for a
 
 This endpoint accepts the following toggle options:
 
-| Property name    | Required | Description                                                                                               | Example value           |
-|------------------|----------|-----------------------------------------------------------------------------------------------------------|-------------------------|
-| `name`           | Yes      | The name of the feature toggle.                                                                           | `"my-feature-toggle"`   |
-| `description`    | No       | The feature toggle's description. Defaults to an empty string.                                            | `"Turn my feature on!"` |
-| `impressionData` | No       | Whether to enable [impression data](../advanced/impression-data.md) for this toggle. Defaults to `false.` | `true`                  |
-| `type`           | No       | The [type of toggle](../advanced/feature-toggle-types.md) you want to create. Defaults to `"release"`     | `"release"`             |
+| Property name    | Required | Description                                                                                                  | Example value           |
+|------------------|----------|--------------------------------------------------------------------------------------------------------------|-------------------------|
+| `name`           | Yes      | The name of the feature toggle.                                                                              | `"my-feature-toggle"`   |
+| `description`    | No       | The feature toggle's description. Defaults to an empty string.                                               | `"Turn my feature on!"` |
+| `impressionData` | No       | Whether to enable [impression data](../../advanced/impression-data.md) for this toggle. Defaults to `false.` | `true`                  |
+| `type`           | No       | The [type of toggle](../../advanced/feature-toggle-types.md) you want to create. Defaults to `"release"`     | `"release"`             |
 
 
 **Example Query**

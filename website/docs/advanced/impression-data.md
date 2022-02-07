@@ -3,7 +3,7 @@ title: Impression data
 ---
 
 :::info Availability
-The impression data feature was introduced in **Unleash 4.7**. Listening for events requires [an SDK that supports impression data events](../sdks/index.md#server-side-sdk-compatibility-table).
+The impression data feature was introduced in **Unleash 4.7**. Listening for events requires [an SDK that supports impression data events](../sdks/index.md#server-side-sdk-compatibility-table). Currently, it's only supported in the [Unleash Proxy client](../sdks/proxy-javascript.md) and [React Proxy client](../sdks/proxy-react.md).
 :::
 
 Unleash can provide you with **impression data** about the toggles in your application. Impression data contains information about a specific feature toggle activation check: The client SDK will emit an **impression event** whenever it calls `isEnabled` or `getVariant`.
@@ -79,7 +79,7 @@ You can enable impression data via the impression data toggle in the admin UI's 
 ## Example setup
 
 :::caution
-This functionality is currently only supported in the [Unleash Proxy client](../sdks/proxy-javascript.md) and [React Proxy client](../sdks/proxy-react.md)
+This functionality is currently only supported in the [Unleash Proxy client](../sdks/proxy-javascript.md) and [React Proxy client](../sdks/proxy-react.md).
 :::
 
 The exact setup will vary depending on your [client SDK](../sdks/index.md). The below example configures the [Unleash Proxy client](/sdks/proxy-javascript) to listen for impression events and log them to the console. If "my-feature-toggle" is configured to emit impression data, then it will trigger an impression event as soon as Unleash is ready.

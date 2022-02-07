@@ -2,53 +2,87 @@
 title: Impression data
 ---
 
-Impression data represents that unleash uses locally in order to resolve a feature toggle to true or false. This data does not leave your application, and the data is not sent to unleash - but it is used for the purposes of resolving feature toggles.
-
-Since this data lives in your own application, and you pass this data into the SDK, it can be useful to know what the data looks like when a feature toggle is evaluated. You can then use this data to send to your analytics provider to enrich experiments and track feature usage.
-
-You can turn on impression data for a toggle. This will allow that toggle to emit an impression event in the client SDKs, where you can listen to the events and act upon them in your own code base.
-
-## Impression data data
-
-Event types
-
-### `isEnabled`  events
-
-### `getVariant` events
-
-## Impress everyone
-
-## Impress anyone anywhere
-
-## Step 1: Create a feature toggle with impression data
-
-Go to the admin UI and navigate to the create feature toggle screen:
-
-![Impression data switch](/img/create_feat_impression.png)
-
-In the bottom section you'll see a switch to turn on impression data for this feature toggle. Click the switch to enable the feature. Alternatively, you can send the following payload to the unleash API to create a feature toggle with the impression data enabled:
-
-``` bash
-curl --location --request POST 'http://{YOUR_DOMAIN}/api/admin/projects/{PROJECT_ID}/features' \
-    --header 'Authorization: {INSERT_API_KEY}' \
-    --header 'Content-Type: application/json' \
-    --data-raw '{
-  "type": "release",
-  "name": "my-feature-toggle",
-  "description": "",
-  "impressionData": true
-}'
-```
-
-## Step 2: Use the impression event in your client application
-
-This step assumes that you have set up an application connected to an unleash instance using one of our [SDKs](/sdks)
-
-:::caution
-Currently this functionality is only supported in [unleash-proxy-client](/sdks/proxy-javascript) and [proxy-client-react](/sdks/proxy-react)
+:::info Availability
+The impression data feature was introduced in **Unleash 4.7**. Listening for events requires [an SDK that supports impression data events](../sdks/index.md#server-side-sdk-compatibility-table).
 :::
 
-Once you have set up your client application with the SDK you can listen to impression events on the client. Example with unleash-proxy-client:
+Unleash can provide you with **impression data** about the toggles in your application. Impression data contains information about a specific feature toggle activation check: The client SDK will emit an **impression event** whenever it calls `isEnabled` or `getVariant`.
+
+Impression data was designed to make it easier for you to **collect analytics data**, **perform A/B tests**, and **enrich experiments** in your applications. It contains information about the feature toggle and the related [Unleash Context](../user_guide/unleash-context.md).
+
+Impression data is **opt-in on a per-toggle basis**. Unleash will not emit impression events for toggles not marked as such. Once you've turned impression data on for a toggle, you can start listening for impression events in your client SDK.
+
+## Impression event data
+
+There's two types of impression events you can listen for:
+
+- [`isEnabled` events](#example-isenabled)
+- [`getVariant` events](#example-getvariant)
+
+The `getVariant` event contains all the information found in an `isEnabled` event in addition to extra data that's only relevant to `getVariant` calls.
+
+This table describes all the properties on the impression events:
+
+| Property name | Description                                                                                                                                              | Event type               |
+|---------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------|
+| `eventType`   | The type of the event: `isEnabled` or `getVariant`                                                                                                       | All                      |
+| `eventId`     | A globally unique id (GUID) assigned to this event. @Fredrik: does this correlate to anything in the Unleash system or is it for the user's ease of use? | All                      |
+| `context`     | A representation of the current [Unleash Context](../user_guide/unleash-context.md).                                                                     | All                      |
+| `enabled`     | Whether the toggle was enabled or not at when the client made the request.                                                                               | All                      |
+| `featureName` | The name of the feature toggle.                                                                                                                          | All                      |
+| `variant`     | The name of the active variant                                                                                                                           | `getVariant` events only |
+
+### Example `isEnabled`  event {#example-isenabled}
+
+```js
+{
+  eventType: 'isEnabled',
+  eventId: '84b41a43-5ba0-47d8-b21f-a60a319607b0',
+  context: {
+    sessionId: 54085233,
+    appName: 'my-webapp',
+    environment: 'default'
+  },
+  enabled: true,
+  featureName: 'my-feature-toggle',
+}
+```
+
+
+### Example `getVariant` event {#example-getvariant}
+
+
+```js
+{
+  eventType: 'getVariant',
+  eventId: '84b41a43-5ba0-47d8-b21f-a60a319607b0',
+  context: {
+    sessionId: 54085233,
+    appName: 'my-webapp',
+    environment: 'default'
+  },
+  enabled: true,
+  featureName: 'my-feature-toggle',
+  variant: 'variantA'
+}
+```
+
+## Enabling impression data
+
+Impression data is strictly an **opt-in** feature and must be enabled on a **per-toggle basis**.
+You can enable and disable it both when you create a toggle and when you edit a toggle.
+
+You can enable impression data via the impression data toggle in the admin UI's toggle creation form. You can also go via the [the API, using the `impressionData` option](../api/admin/feature-toggles-api-v2.md#create-toggle).
+
+![A feature toggle creation form. At the end of the form is a heading that says "Impression data", a short paragraph that describes the feature, and a toggle to opt in or out of it.](/img/create_feat_impression.png)
+
+## Example setup
+
+:::caution
+This functionality is currently only supported in the [Unleash Proxy client](../sdks/proxy-javascript.md) and [React Proxy client](../sdks/proxy-react.md)
+:::
+
+The exact setup will vary depending on your [client SDK](../sdks/index.md). The below example configures the [Unleash Proxy client](/sdks/proxy-javascript) to listen for impression events and log them to the console. If "my-feature-toggle" is configured to emit impression data, then it will trigger an impression event as soon as Unleash is ready.
 
 ```js
 const unleash = new UnleashClient({
@@ -68,37 +102,3 @@ unleash.on("impression", (event) => {
   console.log(event);
 })
 ```
-
-This will allow you to capture an event whenever a call is done to isEnabled or getVariant, capturing the context of the call which you can use to enrich your own data. The impression event will contain the following data, including the entire context of the call (which will expand if you provide more values to the unleash context):
-
-```js
-// Example isEnabled event
-{
-  eventType: 'isEnabled',
-  eventId: '84b41a43-5ba0-47d8-b21f-a60a319607b0',
-  context: {
-    sessionId: 54085233,
-    appName: 'my-webapp',
-    environment: 'default'
-  },
-  enabled: true,
-  featureName: 'my-feature-toggle',
-}
-
-
-// Example getVariant event
-{
-  eventType: 'getVariant',
-  eventId: '84b41a43-5ba0-47d8-b21f-a60a319607b0',
-  context: {
-    sessionId: 54085233,
-    appName: 'my-webapp',
-    environment: 'default'
-  },
-  enabled: true,
-  featureName: 'my-feature-toggle',
-  variant: 'variantA'
-}
-```
-
-Once the event is captured, you can do whatever you'd like with it in the event handler body.

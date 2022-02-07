@@ -1,51 +1,42 @@
 import useSWR, { mutate, SWRConfiguration } from 'swr';
-import { useState, useEffect } from 'react';
+import { useCallback } from 'react';
 import { IProjectHealthReport } from '../../../../interfaces/project';
-import { fallbackProject } from '../useProject/fallbackProject';
-import useSort from '../../../useSort';
 import { formatApiPath } from '../../../../utils/format-path';
 import handleErrorResponses from '../httpErrorResponseHandler';
 
-const useHealthReport = (id: string, options: SWRConfiguration = {}) => {
-    const KEY = `api/admin/projects/${id}/health-report`;
+interface IUseHealthReportOutput {
+    healthReport: IProjectHealthReport | undefined;
+    refetchHealthReport: () => void;
+    loading: boolean;
+    error?: Error;
+}
 
-    const fetcher = () => {
-        const path = formatApiPath(`api/admin/projects/${id}/health-report`);
-        return fetch(path, {
-            method: 'GET',
-        })
-            .then(handleErrorResponses('Health report'))
-            .then(res => res.json());
-    };
+export const useHealthReport = (
+    projectId: string,
+    options?: SWRConfiguration
+): IUseHealthReportOutput => {
+    const path = formatApiPath(`api/admin/projects/${projectId}/health-report`);
 
-    const [sort] = useSort();
+    const { data, error } = useSWR<IProjectHealthReport>(
+        path,
+        fetchHealthReport,
+        options
+    );
 
-    const { data, error } = useSWR<IProjectHealthReport>(KEY, fetcher, options);
-    const [loading, setLoading] = useState(!error && !data);
-
-    const refetch = () => {
-        mutate(KEY);
-    };
-
-    useEffect(() => {
-        setLoading(!error && !data);
-    }, [data, error]);
-
-    const sortedData = (
-        data: IProjectHealthReport | undefined
-    ): IProjectHealthReport => {
-        if (data) {
-            return { ...data, features: sort(data.features || []) };
-        }
-        return fallbackProject;
-    };
+    const refetchHealthReport = useCallback(() => {
+        mutate(path).catch(console.warn);
+    }, [path]);
 
     return {
-        project: sortedData(data),
+        healthReport: data,
+        refetchHealthReport,
+        loading: !error && !data,
         error,
-        loading,
-        refetch,
     };
 };
 
-export default useHealthReport;
+const fetchHealthReport = (path: string): Promise<IProjectHealthReport> => {
+    return fetch(path)
+        .then(handleErrorResponses('Health report'))
+        .then(res => res.json());
+};

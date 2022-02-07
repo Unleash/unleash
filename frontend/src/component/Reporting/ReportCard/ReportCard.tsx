@@ -1,23 +1,19 @@
 import classnames from 'classnames';
 import { Paper } from '@material-ui/core';
-import PropTypes from 'prop-types';
-
 import CheckIcon from '@material-ui/icons/Check';
 import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined';
 import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyRender';
-
 import styles from './ReportCard.module.scss';
 import ReactTimeAgo from 'react-timeago';
+import { IProjectHealthReport } from "../../../interfaces/project";
 
-const ReportCard = ({
-    health,
-    activeCount,
-    staleCount,
-    potentiallyStaleCount,
-    lastUpdate,
-}) => {
-    const healthLessThan50 = health < 50;
-    const healthLessThan75 = health < 75;
+interface IReportCardProps {
+    healthReport: IProjectHealthReport
+}
+
+export const ReportCard = ({ healthReport }: IReportCardProps) => {
+    const healthLessThan50 = healthReport.health < 50;
+    const healthLessThan75 = healthReport.health < 75;
 
     const healthClasses = classnames(styles.reportCardHealthRating, {
         [styles.healthWarning]: healthLessThan75,
@@ -27,21 +23,21 @@ const ReportCard = ({
     const renderActiveToggles = () => (
         <>
             <CheckIcon className={styles.check} />
-            <span>{activeCount} active toggles</span>
+            <span>{healthReport.activeCount} active toggles</span>
         </>
     );
 
     const renderStaleToggles = () => (
         <>
             <ReportProblemOutlinedIcon className={styles.danger} />
-            <span>{staleCount} stale toggles</span>
+            <span>{healthReport.staleCount} stale toggles</span>
         </>
     );
 
     const renderPotentiallyStaleToggles = () => (
         <>
             <ReportProblemOutlinedIcon className={styles.danger} />
-            <span>{potentiallyStaleCount} potentially stale toggles</span>
+            <span>{healthReport.potentiallyStaleCount} potentially stale toggles</span>
         </>
     );
 
@@ -52,14 +48,14 @@ const ReportCard = ({
                     <h2 className={styles.header}>Health rating</h2>
                     <div className={styles.reportCardHealthInnerContainer}>
                         <ConditionallyRender
-                            condition={health > -1}
+                            condition={healthReport.health > -1}
                             show={
                                 <div>
-                                    <p className={healthClasses}>{health}%</p>
+                                    <p className={healthClasses}>{healthReport.health}%</p>
                                     <p className={styles.lastUpdate}>
                                         Last updated:{' '}
                                         <ReactTimeAgo
-                                            date={lastUpdate}
+                                            date={healthReport.updatedAt}
                                             live={false}
                                         />
                                     </p>
@@ -73,12 +69,12 @@ const ReportCard = ({
                     <ul className={styles.reportCardList}>
                         <li>
                             <ConditionallyRender
-                                condition={activeCount}
+                                condition={Boolean(healthReport.activeCount)}
                                 show={renderActiveToggles}
                             />
                         </li>
                         <ConditionallyRender
-                            condition={activeCount}
+                            condition={Boolean(healthReport.activeCount)}
                             show={
                                 <p className={styles.reportCardActionText}>
                                     Also includes potentially stale toggles.
@@ -88,7 +84,7 @@ const ReportCard = ({
 
                         <li>
                             <ConditionallyRender
-                                condition={staleCount}
+                                condition={Boolean(healthReport.staleCount)}
                                 show={renderStaleToggles}
                             />
                         </li>
@@ -101,13 +97,13 @@ const ReportCard = ({
                         <ul className={styles.reportCardList}>
                             <li>
                                 <ConditionallyRender
-                                    condition={potentiallyStaleCount}
+                                    condition={Boolean(healthReport.potentiallyStaleCount)}
                                     show={renderPotentiallyStaleToggles}
                                 />
                             </li>
                         </ul>
                         <ConditionallyRender
-                            condition={potentiallyStaleCount}
+                            condition={Boolean(healthReport.potentiallyStaleCount)}
                             show={
                                 <p className={styles.reportCardActionText}>
                                     Review your feature toggles and delete
@@ -126,9 +122,3 @@ const ReportCard = ({
         </Paper>
     );
 };
-
-ReportCard.propTypes = {
-    features: PropTypes.array.isRequired,
-};
-
-export default ReportCard;

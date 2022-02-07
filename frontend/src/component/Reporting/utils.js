@@ -177,10 +177,3 @@ export const getDates = dateString => {
 
 export const filterByProject = selectedProject => feature =>
     feature.project === selectedProject;
-
-export const isFeatureExpired = feature => {
-    const [date, now] = getDates(feature.createdAt);
-    const diff = getDiffInDays(date, now);
-
-    return expired(diff, feature.type);
-};

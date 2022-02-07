@@ -39,6 +39,6 @@ Response: **200 OK** - When feature toggle was successfully revived.
 
 ### Delete an archivied feature toggle
 
-`POST http://unleash.host.com/api/admin/archive/revive/:featureName`
+`DELETE http://unleash.host.com/api/admin/archive/:featureName`
 
 Will fully remove the feature toggle and associated configuration. Impossible to restore after this action. 

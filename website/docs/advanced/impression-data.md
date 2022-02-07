@@ -23,14 +23,14 @@ The `getVariant` event contains all the information found in an `isEnabled` even
 
 This table describes all the properties on the impression events:
 
-| Property name | Description                                                                                                                                              | Event type               |
-|---------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------|
-| `eventType`   | The type of the event: `isEnabled` or `getVariant`                                                                                                       | All                      |
-| `eventId`     | A globally unique id (GUID) assigned to this event. @Fredrik: does this correlate to anything in the Unleash system or is it for the user's ease of use? | All                      |
-| `context`     | A representation of the current [Unleash Context](../user_guide/unleash-context.md).                                                                     | All                      |
-| `enabled`     | Whether the toggle was enabled or not at when the client made the request.                                                                               | All                      |
-| `featureName` | The name of the feature toggle.                                                                                                                          | All                      |
-| `variant`     | The name of the active variant                                                                                                                           | `getVariant` events only |
+| Property name | Description                                                                          | Event type               |
+|---------------|--------------------------------------------------------------------------------------|--------------------------|
+| `eventType`   | The type of the event: `isEnabled` or `getVariant`                                   | All                      |
+| `eventId`     | A globally unique id (GUID) assigned to this event.                                  | All                      |
+| `context`     | A representation of the current [Unleash Context](../user_guide/unleash-context.md). | All                      |
+| `enabled`     | Whether the toggle was enabled or not at when the client made the request.           | All                      |
+| `featureName` | The name of the feature toggle.                                                      | All                      |
+| `variant`     | The name of the active variant                                                       | `getVariant` events only |
 
 ### Example `isEnabled`  event {#example-isenabled}
 

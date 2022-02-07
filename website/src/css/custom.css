@@ -65,7 +65,7 @@ img {
     background: var(--unleash-img-background-color);
     display: block;
     margin: auto;
-    border: 1px solid var(--unleash-color-gray);
+    border: var(--ifm-global-border-width) solid var(--unleash-color-gray);
     border-radius: var(--ifm-global-radius);
     box-shadow: var(--ifm-global-shadow-lw);
 }

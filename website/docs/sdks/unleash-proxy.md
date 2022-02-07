@@ -168,7 +168,7 @@ Refer the [custom activation strategy documentation](../advanced/custom-activati
 
 The Unleash Proxy has a very simple API. It takes the [Unleash Context](../user_guide/unleash_context) as input and will return the feature toggles relevant for that specific context.
 
-![The Unleash Proxy](/img/The-Unleash-Proxy-API.png).
+![The Unleash Proxy](/img/The-Unleash-Proxy-API.png)
 
 ### Payload
 

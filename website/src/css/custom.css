@@ -56,6 +56,18 @@ html[data-theme='dark'] {
     --unleash-color-admonition-background: var(
         --ifm-color-secondary-contrast-background
     );
+
+
+    --unleash-img-background-color: #fff;
+}
+
+img {
+    background: var(--unleash-img-background-color);
+    display: block;
+    margin: auto;
+    border: 1px solid var(--unleash-color-gray);
+    border-radius: var(--ifm-global-radius);
+    box-shadow: var(--ifm-global-shadow-lw);
 }
 
 [class^='docTitle'] {

@@ -8,6 +8,18 @@ Since this data lives in your own application, and you pass this data into the S
 
 You can turn on impression data for a toggle. This will allow that toggle to emit an impression event in the client SDKs, where you can listen to the events and act upon them in your own code base.
 
+## Impression data data
+
+Event types
+
+### `isEnabled`  events
+
+### `getVariant` events
+
+## Impress everyone
+
+## Impress anyone anywhere
+
 ## Step 1: Create a feature toggle with impression data
 
 Go to the admin UI and navigate to the create feature toggle screen:

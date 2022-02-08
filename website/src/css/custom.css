@@ -29,13 +29,17 @@
     --navbar-link-color: #122d33;
 }
 
-
 footer {
     --ifm-footer-link-hover-color: var(--ifm-footer-link-color);
 }
 
 [class^='docTitle'] {
     font-size: 2.5rem !important;
+}
+
+.navbar-sidebar__back {
+    /* hide the 'back to main menu' item in the narrow menu. */
+    display: none;
 }
 
 li.theme-doc-sidebar-item-category-level-1 > div::before {

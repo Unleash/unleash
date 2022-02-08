@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import ConditionallyRender from '../../../common/ConditionallyRender';
 import {
-    Paper,
     Avatar,
-    Typography,
     Button,
     FormControl,
-    Select,
     InputLabel,
+    Paper,
+    Select,
+    Typography,
 } from '@material-ui/core';
 import classnames from 'classnames';
 import { useStyles } from './UserProfileContent.styles';
@@ -17,36 +17,35 @@ import EditProfile from '../EditProfile/EditProfile';
 import legacyStyles from '../../user.module.scss';
 import { getBasePath } from '../../../../utils/format-path';
 import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
-import { IUser } from "../../../../interfaces/user";
+import { IUser } from '../../../../interfaces/user';
+import { ILocationSettings } from '../../../../hooks/useLocationSettings';
 
 interface IUserProfileContentProps {
-    showProfile: boolean
-    profile: IUser
-    possibleLocales: string[]
-    updateSettingLocation: (field: 'locale', value: string) => void
-    imageUrl: string
-    currentLocale?: string
-    setCurrentLocale: (value: string) => void
+    showProfile: boolean;
+    profile: IUser;
+    possibleLocales: string[];
+    imageUrl: string;
+    currentLocale?: string;
+    setCurrentLocale: (value: string) => void;
+    setLocationSettings: React.Dispatch<
+        React.SetStateAction<ILocationSettings>
+    >;
 }
 
 const UserProfileContent = ({
     showProfile,
     profile,
     possibleLocales,
-    updateSettingLocation,
     imageUrl,
     currentLocale,
     setCurrentLocale,
+    setLocationSettings,
 }: IUserProfileContentProps) => {
     const commonStyles = useCommonStyles();
     const { uiConfig } = useUiConfig();
     const [updatedPassword, setUpdatedPassword] = useState(false);
     const [editingProfile, setEditingProfile] = useState(false);
     const styles = useStyles();
-
-    const setLocale = (value: string) => {
-        updateSettingLocation('locale', value);
-    };
 
     // @ts-expect-error
     const profileAvatarClasses = classnames(styles.avatar, {
@@ -61,9 +60,9 @@ const UserProfileContent = ({
     });
 
     const handleChange = (e: React.ChangeEvent<{ value: unknown }>) => {
-        const value = e.target.value as string;
-        setCurrentLocale(value);
-        setLocale(value);
+        const locale = e.target.value as string;
+        setCurrentLocale(locale);
+        setLocationSettings({ locale });
     };
 
     return (

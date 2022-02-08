@@ -33,7 +33,7 @@ class ClientApplications extends PureComponent {
         fetchApplication: PropTypes.func.isRequired,
         appName: PropTypes.string,
         application: PropTypes.object,
-        location: PropTypes.object,
+        locationSettings: PropTypes.object.isRequired,
         storeApplicationMetaData: PropTypes.func.isRequired,
         deleteApplication: PropTypes.func.isRequired,
         history: PropTypes.object.isRequired,
@@ -54,8 +54,8 @@ class ClientApplications extends PureComponent {
             .finally(() => this.setState({ loading: false }));
     }
     formatFullDateTime = v =>
-        formatFullDateTimeWithLocale(v, this.props.location.locale);
-    formatDate = v => formatDateWithLocale(v, this.props.location.locale);
+        formatFullDateTimeWithLocale(v, this.props.locationSettings.locale);
+    formatDate = v => formatDateWithLocale(v, this.props.locationSettings.locale);
 
     deleteApplication = async evt => {
         evt.preventDefault();

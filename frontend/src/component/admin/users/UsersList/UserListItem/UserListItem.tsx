@@ -14,6 +14,7 @@ import AccessContext from '../../../../../contexts/AccessContext';
 import { IUser } from '../../../../../interfaces/user';
 import { useStyles } from './UserListItem.styles';
 import { useHistory } from 'react-router-dom';
+import { ILocationSettings } from "../../../../../hooks/useLocationSettings";
 
 interface IUserListItemProps {
     user: IUser;
@@ -21,11 +22,7 @@ interface IUserListItemProps {
     openUpdateDialog: (user: IUser) => (e: SyntheticEvent) => void;
     openPwDialog: (user: IUser) => (e: SyntheticEvent) => void;
     openDelDialog: (user: IUser) => (e: SyntheticEvent) => void;
-    location: ILocation;
-}
-
-interface ILocation {
-    locale: string;
+    locationSettings: ILocationSettings;
 }
 
 const UserListItem = ({
@@ -34,7 +31,7 @@ const UserListItem = ({
     openDelDialog,
     openPwDialog,
     openUpdateDialog,
-    location,
+    locationSettings,
 }: IUserListItemProps) => {
     const { hasAccess } = useContext(AccessContext);
     const history = useHistory()
@@ -54,7 +51,7 @@ const UserListItem = ({
             </TableCell>
             <TableCell>
                 <span data-loading>
-                    {formatDateWithLocale(user.createdAt, location.locale)}
+                    {formatDateWithLocale(user.createdAt, locationSettings.locale)}
                 </span>
             </TableCell>
             <TableCell className={styles.leftTableCell}>

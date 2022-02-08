@@ -15,6 +15,7 @@ export interface IFlags {
     C: boolean;
     P: boolean;
     E: boolean;
+    RE: boolean;
 }
 
 export interface IVersionInfo {

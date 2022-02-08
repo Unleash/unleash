@@ -22,10 +22,6 @@ import PermissionIconButton from '../../../common/PermissionIconButton/Permissio
 
 const FeatureToggleListItem = ({
     feature,
-    toggleFeature,
-    settings,
-    metricsLastHour = { yes: 0, no: 0, isFallback: true },
-    metricsLastMinute = { yes: 0, no: 0, isFallback: true },
     revive,
     hasAccess,
     flags = {},
@@ -164,10 +160,6 @@ const FeatureToggleListItem = ({
 
 FeatureToggleListItem.propTypes = {
     feature: PropTypes.object,
-    toggleFeature: PropTypes.func,
-    settings: PropTypes.object,
-    metricsLastHour: PropTypes.object,
-    metricsLastMinute: PropTypes.object,
     revive: PropTypes.func,
     hasAccess: PropTypes.func.isRequired,
     flags: PropTypes.object,

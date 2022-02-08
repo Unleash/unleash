@@ -5,7 +5,7 @@ import AdminMenu from '../menu/AdminMenu';
 import usePermissions from '../../../hooks/usePermissions';
 import ConditionallyRender from '../../common/ConditionallyRender';
 
-const ApiPage = ({ history, location }) => {
+const ApiPage = ({ history }) => {
     const { isAdmin } = usePermissions();
 
     return (
@@ -14,7 +14,7 @@ const ApiPage = ({ history, location }) => {
                 condition={isAdmin()}
                 show={<AdminMenu history={history} />}
             />
-            <ApiTokenList location={location} />
+            <ApiTokenList />
         </div>
     );
 };
@@ -22,7 +22,6 @@ const ApiPage = ({ history, location }) => {
 ApiPage.propTypes = {
     match: PropTypes.object.isRequired,
     history: PropTypes.object.isRequired,
-    location: PropTypes.object.isRequired,
 };
 
 export default ApiPage;

@@ -25,8 +25,7 @@ test('renders correctly with one feature', () => {
             name: 'Another',
         },
     ];
-    const featureMetrics = { lastHour: {}, lastMinute: {}, seenApps: {} };
-    const settings = { sort: 'name' };
+
     const tree = renderer.create(
         <MemoryRouter>
             <ThemeProvider theme={theme}>
@@ -35,13 +34,12 @@ test('renders correctly with one feature', () => {
                 >
                     <FeatureToggleList
                         updateSetting={jest.fn()}
-                        settings={settings}
-                        history={{}}
-                        featureMetrics={featureMetrics}
+                        filter={{}}
+                        setFilter={jest.fn()}
+                        sort={{}}
+                        setSort={jest.fn()}
                         features={features}
-                        toggleFeature={jest.fn()}
                         fetcher={jest.fn()}
-                        currentProjectId="default"
                         flags={{}}
                     />
                 </AccessProvider>
@@ -58,8 +56,6 @@ test('renders correctly with one feature without permissions', () => {
             name: 'Another',
         },
     ];
-    const featureMetrics = { lastHour: {}, lastMinute: {}, seenApps: {} };
-    const settings = { sort: 'name' };
     const tree = renderer.create(
         <MemoryRouter>
             <ThemeProvider theme={theme}>
@@ -67,14 +63,12 @@ test('renders correctly with one feature without permissions', () => {
                     store={createFakeStore([{ permission: CREATE_FEATURE }])}
                 >
                     <FeatureToggleList
-                        updateSetting={jest.fn()}
-                        settings={settings}
-                        history={{}}
-                        featureMetrics={featureMetrics}
+                        filter={{}}
+                        setFilter={jest.fn()}
+                        sort={{}}
+                        setSort={jest.fn()}
                         features={features}
-                        toggleFeature={jest.fn()}
                         fetcher={jest.fn()}
-                        currentProjectId="default"
                         flags={{}}
                     />
                 </AccessProvider>

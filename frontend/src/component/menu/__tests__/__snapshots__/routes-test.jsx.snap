@@ -398,12 +398,7 @@ Array [
     "type": "protected",
   },
   Object {
-    "component": Object {
-      "$$typeof": Symbol(react.memo),
-      "WrappedComponent": [Function],
-      "compare": null,
-      "type": [Function],
-    },
+    "component": [Function],
     "layout": "main",
     "menu": Object {
       "adminSettings": true,

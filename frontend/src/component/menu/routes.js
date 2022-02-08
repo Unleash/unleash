@@ -1,11 +1,13 @@
 import CopyFeatureToggle from '../../page/features/copy';
-import Features from '../../page/features';
+import { FeatureToggleListContainer } from '../feature/FeatureToggleList/FeatureToggleListContainer';
 import CreateStrategies from '../../page/strategies/create';
 import StrategyView from '../../page/strategies/show';
 import Strategies from '../../page/strategies';
 import HistoryPage from '../../page/history';
 import HistoryTogglePage from '../../page/history/toggle';
-import Archive from '../../page/archive';
+import { ArchiveListContainer } from '../archive/ArchiveListContainer';
+import Applications from '../../page/applications';
+import ApplicationView from '../../page/applications/view';
 import ListTagTypes from '../../page/tag-types';
 import Addons from '../../page/addons';
 import AddonsCreate from '../../page/addons/create';
@@ -14,7 +16,7 @@ import Admin from '../admin';
 import AdminApi from '../admin/api';
 import AdminInvoice from '../admin/invoice/InvoiceAdminPage';
 import AdminUsers from '../admin/users/UsersAdmin';
-import AdminAuth from '../admin/auth';
+import { AuthSettings } from '../admin/auth/AuthSettings';
 import Login from '../user/Login/Login';
 import { P, C, E, EEA, RE } from '../common/flags';
 import NewUser from '../user/NewUser';
@@ -22,7 +24,7 @@ import ResetPassword from '../user/ResetPassword/ResetPassword';
 import ForgottenPassword from '../user/ForgottenPassword/ForgottenPassword';
 import ProjectListNew from '../project/ProjectList/ProjectList';
 import Project from '../project/Project/Project';
-import RedirectArchive from '../feature/RedirectArchive/RedirectArchive';
+import RedirectArchive from '../archive/RedirectArchive';
 import EnvironmentList from '../environments/EnvironmentList/EnvironmentList';
 import FeatureView from '../feature/FeatureView/FeatureView';
 import ProjectRoles from '../admin/project-roles/ProjectRoles/ProjectRoles';
@@ -183,7 +185,7 @@ export const routes = [
     {
         path: '/features',
         title: 'Feature Toggles',
-        component: Features,
+        component: FeatureToggleListContainer,
         type: 'protected',
         layout: 'main',
         menu: { mobile: true },
@@ -373,7 +375,7 @@ export const routes = [
     {
         path: '/archive',
         title: 'Archived Toggles',
-        component: Archive,
+        component: ArchiveListContainer,
         type: 'protected',
         layout: 'main',
         menu: {},
@@ -447,7 +449,7 @@ export const routes = [
         path: '/admin/auth',
         parent: '/admin',
         title: 'Single Sign-On',
-        component: AdminAuth,
+        component: AuthSettings,
         type: 'protected',
         layout: 'main',
         menu: { adminSettings: true },

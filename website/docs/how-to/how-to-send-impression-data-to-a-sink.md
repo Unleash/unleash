@@ -2,7 +2,7 @@
 title: How to send impression data to a sink
 ---
 
-Unleash allows you to gather [**impression data**](../advanced/impression-data.md) from your feature toggles, giving you complete visibility into who checked what toggles and when. What you do with this data is entirely up to you, but a common use case is to send it off to an aggregation and analytics service such as [Google Analytics](analytics.google.com/) or [Posthog](https://posthog.com/).
+Unleash allows you to gather [**impression data**](../advanced/impression-data.md) from your feature toggles, giving you complete visibility into who checked what toggles and when. What you do with this data is entirely up to you, but a common use case is to send it off to an aggregation and analytics service such as [Google Analytics](https://analytics.google.com/) or [Posthog](https://posthog.com/).
 
 This guide will take you through everything you need to do in Unleash to facilitate such a workflow. It will show you how to send data to Google Analytics (and Posthog?) as an example sink, but the exact same principles will apply to any other service of the same kind.
 

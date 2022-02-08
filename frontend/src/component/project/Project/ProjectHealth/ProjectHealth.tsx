@@ -1,40 +1,38 @@
-import useHealthReport from '../../../../hooks/api/getters/useHealthReport/useHealthReport';
+import { useHealthReport } from '../../../../hooks/api/getters/useHealthReport/useHealthReport';
 import ApiError from '../../../common/ApiError/ApiError';
 import ConditionallyRender from '../../../common/ConditionallyRender';
-import ReportCardContainer from '../../../Reporting/ReportCard/ReportCardContainer';
 import ReportToggleList from '../../../Reporting/ReportToggleList/ReportToggleList';
+import { ReportCard } from '../../../Reporting/ReportCard/ReportCard';
 
 interface ProjectHealthProps {
     projectId: string;
 }
 
 const ProjectHealth = ({ projectId }: ProjectHealthProps) => {
-    const { project, error, refetch } = useHealthReport(projectId);
+    const { healthReport, refetchHealthReport, error } =
+        useHealthReport(projectId);
+
+    if (!healthReport) {
+        return null;
+    }
 
     return (
         <div>
             <ConditionallyRender
-                condition={error}
+                condition={Boolean(error)}
                 show={
                     <ApiError
                         data-loading
                         style={{ maxWidth: '500px', marginTop: '1rem' }}
-                        onClick={refetch}
+                        onClick={refetchHealthReport}
                         text={`Could not fetch health rating for ${projectId}`}
                     />
                 }
             />
-            <ReportCardContainer
-                health={project?.health}
-                staleCount={project?.staleCount}
-                activeCount={project?.activeCount}
-                potentiallyStaleCount={project?.potentiallyStaleCount}
-                selectedProject={project.name}
-                lastUpdate={project.updatedAt}
-            />
+            <ReportCard healthReport={healthReport} />
             <ReportToggleList
-                features={project.features}
                 selectedProject={projectId}
+                features={healthReport.features}
             />
         </div>
     );

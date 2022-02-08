@@ -1,4 +1,4 @@
-import { weightTypes } from '../feature/variant/enums';
+import { weightTypes } from '../feature/FeatureView/FeatureVariants/FeatureVariantsList/AddFeatureVariant/enums';
 import differenceInDays from 'date-fns/differenceInDays';
 
 const dateTimeOptions = {
@@ -50,7 +50,7 @@ export const trim = value => {
 };
 
 export function updateWeight(variants, totalWeight) {
-    if (variants.length === 0){
+    if (variants.length === 0) {
         return [];
     }
     const variantMetadata = variants.reduce(

@@ -1,0 +1,176 @@
+import { Button, FormControl, Switch, Typography } from '@material-ui/core';
+import { useStyles } from './FeatureForm.styles';
+import FeatureTypeSelect from '../FeatureView/FeatureSettings/FeatureSettingsMetadata/FeatureTypeSelect/FeatureTypeSelect';
+import { CF_DESC_ID, CF_NAME_ID, CF_TYPE_ID } from '../../../testIds';
+import useFeatureTypes from '../../../hooks/api/getters/useFeatureTypes/useFeatureTypes';
+import { KeyboardArrowDownOutlined } from '@material-ui/icons';
+import useUser from '../../../hooks/api/getters/useUser/useUser';
+import { projectFilterGenerator } from '../../../utils/project-filter-generator';
+import FeatureProjectSelect from '../FeatureView/FeatureSettings/FeatureSettingsProject/FeatureProjectSelect/FeatureProjectSelect';
+import ConditionallyRender from '../../common/ConditionallyRender';
+import { trim } from '../../common/util';
+import Input from '../../common/Input/Input';
+import { CREATE_FEATURE } from '../../providers/AccessProvider/permissions';
+
+interface IFeatureToggleForm {
+    type: string;
+    name: string;
+    description: string;
+    project: string;
+    impressionData: boolean;
+    setType: React.Dispatch<React.SetStateAction<string>>;
+    setName: React.Dispatch<React.SetStateAction<string>>;
+    setDescription: React.Dispatch<React.SetStateAction<string>>;
+    setProject: React.Dispatch<React.SetStateAction<string>>;
+    validateToggleName: () => void;
+    setImpressionData: React.Dispatch<React.SetStateAction<boolean>>;
+    handleSubmit: (e: any) => void;
+    handleCancel: () => void;
+    errors: { [key: string]: string };
+    mode: string;
+    clearErrors: () => void;
+}
+
+const FeatureForm: React.FC<IFeatureToggleForm> = ({
+    children,
+    type,
+    name,
+    description,
+    project,
+    setType,
+    setName,
+    setDescription,
+    setProject,
+    validateToggleName,
+    setImpressionData,
+    impressionData,
+    handleSubmit,
+    handleCancel,
+    errors,
+    mode,
+    clearErrors,
+}) => {
+    const styles = useStyles();
+    const { featureTypes } = useFeatureTypes();
+    const { permissions } = useUser();
+    const editable = mode !== 'Edit';
+
+    const renderToggleDescription = () => {
+        return featureTypes.find(toggle => toggle.id === type)?.description;
+    };
+
+    return (
+        <form onSubmit={handleSubmit} className={styles.form}>
+            <div className={styles.container}>
+                <p className={styles.inputDescription}>
+                    What would you like to call your toggle?
+                </p>
+                <Input
+                    autoFocus
+                    disabled={mode === 'Edit'}
+                    className={styles.input}
+                    label="Name"
+                    error={Boolean(errors.name)}
+                    errorText={errors.name}
+                    onFocus={() => clearErrors()}
+                    value={name}
+                    onChange={e => setName(trim(e.target.value))}
+                    inputProps={{
+                        'data-test': CF_NAME_ID,
+                    }}
+                    onBlur={validateToggleName}
+                />
+                <p className={styles.inputDescription}>
+                    What kind of feature toggle do you want?
+                </p>
+                <FeatureTypeSelect
+                    value={type}
+                    onChange={(e: React.ChangeEvent) => setType(e.target.value)}
+                    label={'Toggle type'}
+                    id="feature-type-select"
+                    editable
+                    inputProps={{
+                        'data-test': CF_TYPE_ID,
+                    }}
+                    IconComponent={KeyboardArrowDownOutlined}
+                    className={styles.selectInput}
+                />
+                <p className={styles.typeDescription}>
+                    {renderToggleDescription()}
+                </p>
+                <ConditionallyRender
+                    condition={editable}
+                    show={
+                        <p className={styles.inputDescription}>
+                            In which project do you want to save the toggle?
+                        </p>
+                    }
+                />
+                <FeatureProjectSelect
+                    value={project}
+                    onChange={e => setProject(e.target.value)}
+                    enabled={editable}
+                    filter={projectFilterGenerator(
+                        { permissions },
+                        CREATE_FEATURE
+                    )}
+                    IconComponent={KeyboardArrowDownOutlined}
+                    className={styles.selectInput}
+                />
+
+                <p className={styles.inputDescription}>
+                    How would you describe your feature toggle?
+                </p>
+                <Input
+                    className={styles.input}
+                    multiline
+                    rows={4}
+                    label="Description"
+                    placeholder="A short description of the feature toggle"
+                    value={description}
+                    data-test={CF_DESC_ID}
+                    onChange={e => setDescription(e.target.value)}
+                />
+                <FormControl>
+                    <Typography
+                        variant="subtitle1"
+                        className={styles.roleSubtitle}
+                        data-loading
+                    >
+                        Impression Data
+                    </Typography>
+                    <p>
+                        When you enable impression data for a feature toggle,
+                        your client SDKs will emit events you can listen for
+                        every time this toggle gets triggered. Learn more in{' '}
+                        <a
+                            className={styles.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            href="https://docs.getunleash.io/advanced/impression_data"
+                        >
+                            the impression data documentation
+                        </a>
+                    </p>
+                    <div className={styles.flexRow}>
+                        <Switch
+                            name="impressionData"
+                            onChange={() => setImpressionData(!impressionData)}
+                            checked={impressionData}
+                        />
+                        <Typography>{impressionData ? 'Yes' : 'No'}</Typography>
+                    </div>
+                </FormControl>
+            </div>
+
+            <div className={styles.buttonContainer}>
+                {children}
+                <Button onClick={handleCancel} className={styles.cancelButton}>
+                    Cancel
+                </Button>
+            </div>
+        </form>
+    );
+};
+
+export default FeatureForm;

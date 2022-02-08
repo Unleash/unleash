@@ -64,7 +64,7 @@ exports[`renders correctly with one feature 1`] = `
   >
     <a
       className="listLink truncate"
-      href="/projects/default/features/Another/strategies"
+      href="/projects/default/features/Another"
       onClick={[Function]}
     >
       <span
@@ -201,7 +201,7 @@ exports[`renders correctly with one feature without permission 1`] = `
   >
     <a
       className="listLink truncate"
-      href="/projects/undefined/features/Another/strategies"
+      href="/projects/undefined/features/Another"
       onClick={[Function]}
     >
       <span

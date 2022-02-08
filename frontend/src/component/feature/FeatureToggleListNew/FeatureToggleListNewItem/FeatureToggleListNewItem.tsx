@@ -9,8 +9,8 @@ import useToast from '../../../../hooks/useToast';
 import { getTogglePath } from '../../../../utils/route-path-helpers';
 import { SyntheticEvent } from 'react-router/node_modules/@types/react';
 import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
-import FeatureStatus from '../../FeatureView2/FeatureStatus/FeatureStatus';
-import FeatureType from '../../FeatureView2/FeatureType/FeatureType';
+import FeatureStatus from '../../FeatureView/FeatureStatus/FeatureStatus';
+import FeatureType from '../../FeatureView/FeatureType/FeatureType';
 import classNames from 'classnames';
 import CreatedAt from './CreatedAt';
 import useProject from '../../../../hooks/api/getters/useProject/useProject';
@@ -57,7 +57,7 @@ const FeatureToggleListNewItem = ({
 
     const onClick = (e: SyntheticEvent) => {
         if (!ref.current?.contains(e.target)) {
-            history.push(getTogglePath(projectId, name, uiConfig.flags.E));
+            history.push(getTogglePath(projectId, name));
         }
     };
 

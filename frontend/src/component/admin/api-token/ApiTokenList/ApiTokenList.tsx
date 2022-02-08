@@ -86,7 +86,7 @@ const ApiTokenList = ({ location }: IApiTokenList) => {
         refetch();
         setToastData({
             type: 'success',
-            show: true,
+            title: 'Deleted successfully',
             text: 'Successfully deleted API token.',
         });
     };

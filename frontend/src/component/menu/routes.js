@@ -1,22 +1,19 @@
 import CopyFeatureToggle from '../../page/features/copy';
-import ViewFeatureToggle from '../../page/features/show';
 import Features from '../../page/features';
 import CreateStrategies from '../../page/strategies/create';
 import StrategyView from '../../page/strategies/show';
 import Strategies from '../../page/strategies';
 import HistoryPage from '../../page/history';
 import HistoryTogglePage from '../../page/history/toggle';
-import ShowArchive from '../../page/archive/show';
 import Archive from '../../page/archive';
-import ContextFields from '../../page/context';
 import ListTagTypes from '../../page/tag-types';
 import Addons from '../../page/addons';
 import AddonsCreate from '../../page/addons/create';
 import AddonsEdit from '../../page/addons/edit';
 import Admin from '../admin';
 import AdminApi from '../admin/api';
-import AdminUsers from '../admin/users';
-import AdminInvoice from '../admin/invoice';
+import AdminInvoice from '../admin/invoice/InvoiceAdminPage';
+import AdminUsers from '../admin/users/UsersAdmin';
 import AdminAuth from '../admin/auth';
 import Login from '../user/Login/Login';
 import { P, C, E, EEA, RE } from '../common/flags';
@@ -25,10 +22,9 @@ import ResetPassword from '../user/ResetPassword/ResetPassword';
 import ForgottenPassword from '../user/ForgottenPassword/ForgottenPassword';
 import ProjectListNew from '../project/ProjectList/ProjectList';
 import Project from '../project/Project/Project';
-import RedirectFeatureViewPage from '../../page/features/redirect';
 import RedirectArchive from '../feature/RedirectArchive/RedirectArchive';
 import EnvironmentList from '../environments/EnvironmentList/EnvironmentList';
-import FeatureView2 from '../feature/FeatureView2/FeatureView2';
+import FeatureView from '../feature/FeatureView/FeatureView';
 import ProjectRoles from '../admin/project-roles/ProjectRoles/ProjectRoles';
 import CreateProjectRole from '../admin/project-roles/CreateProjectRole/CreateProjectRole';
 import EditProjectRole from '../admin/project-roles/EditProjectRole/EditProjectRole';
@@ -47,6 +43,9 @@ import CreateFeature from '../feature/CreateFeature/CreateFeature/CreateFeature'
 import EditFeature from '../feature/CreateFeature/EditFeature/EditFeature';
 import EditApplication from '../application/EditApplication';
 import ApplicationList from '../application/ApplicationList';
+import ContextList from '../context/ContextList/ContextList';
+import RedirectFeatureView from '../feature/RedirectFeatureView/RedirectFeatureView';
+
 
 export const routes = [
     // Project
@@ -88,7 +87,7 @@ export const routes = [
         menu: {},
     },
     {
-        path: '/projects/:id/features2/:name/:activeTab/copy',
+        path: '/projects/:id/features/:name/:activeTab/copy',
         parent: '/projects/:id/features/:name/:activeTab',
         title: 'Copy',
         component: CopyFeatureToggle,
@@ -97,7 +96,7 @@ export const routes = [
         menu: {},
     },
     {
-        path: '/projects/:projectId/features2/:featureId/settings',
+        path: '/projects/:projectId/features/:featureId/settings',
         parent: '/projects',
         title: 'Edit Feature',
         component: EditFeature,
@@ -106,10 +105,10 @@ export const routes = [
         menu: {},
     },
     {
-        path: '/projects/:projectId/features2/:featureId',
+        path: '/projects/:projectId/features/:featureId',
         parent: '/projects',
-        title: 'FeatureView2',
-        component: FeatureView2,
+        title: 'FeatureView',
+        component: FeatureView,
         type: 'protected',
         layout: 'main',
         flags: E,
@@ -119,7 +118,7 @@ export const routes = [
         path: '/projects/:id/features/:name/:activeTab',
         parent: '/projects',
         title: ':name',
-        component: ViewFeatureToggle,
+        component: FeatureView,
         type: 'protected',
         layout: 'main',
         menu: {},
@@ -134,10 +133,10 @@ export const routes = [
         menu: {},
     },
     {
-        path: '/projects/:projectId/features/:name',
+        path: '/projects/:projectId/features2/:name',
         parent: '/features',
         title: ':name',
-        component: RedirectFeatureViewPage,
+        component: RedirectFeatureView,
         type: 'protected',
         layout: 'main',
         menu: {},
@@ -176,7 +175,7 @@ export const routes = [
         path: '/features/:activeTab/:name',
         parent: '/features',
         title: ':name',
-        component: RedirectFeatureViewPage,
+        component: RedirectFeatureView,
         type: 'protected',
         layout: 'main',
         menu: {},
@@ -233,7 +232,7 @@ export const routes = [
     {
         path: '/context',
         title: 'Context Fields',
-        component: ContextFields,
+        component: ContextList,
         type: 'protected',
         flag: C,
         layout: 'main',
@@ -371,15 +370,6 @@ export const routes = [
     },
 
     // Archive
-    {
-        path: '/projects/:id/archived/:name/:activeTab',
-        title: ':name',
-        parent: '/archive',
-        component: ShowArchive,
-        type: 'protected',
-        layout: 'main',
-        menu: {},
-    },
     {
         path: '/archive',
         title: 'Archived Toggles',

@@ -15,8 +15,8 @@ import useToast from '../../../hooks/useToast';
 
 const PasswordAuthSettings = () => {
 
-    const { setToastData } = useToast();
-    const { config } = useAuthSettings('simple');
+    const { setToastData } = useToast();
+    const { config } = useAuthSettings('simple');
     const [disablePasswordAuth, setDisablePasswordAuth] = useState<boolean>(false);
     const { updateSettings, errors, loading } = useAuthSettingsApi<ISimpleAuthSettings>('simple')
     const { hasAccess } = useContext(AccessContext);
@@ -24,7 +24,7 @@ const PasswordAuthSettings = () => {
 
     useEffect(() => {
         setDisablePasswordAuth(!!config.disabled);
-    }, [ config.disabled ]);
+    }, [ config.disabled ]);
 
     if (!hasAccess(ADMIN)) {
         return (
@@ -38,10 +38,10 @@ const PasswordAuthSettings = () => {
         setDisablePasswordAuth(!disablePasswordAuth);
     };
 
-    
+
     const onSubmit = async evt => {
         evt.preventDefault();
-        
+
         try {
             const settings: ISimpleAuthSettings = { disabled: disablePasswordAuth };
             await updateSettings(settings);
@@ -62,7 +62,7 @@ const PasswordAuthSettings = () => {
             });
             setDisablePasswordAuth(config.disabled)
         }
-        
+
     };
     return (
         <PageContent headerContent=''>

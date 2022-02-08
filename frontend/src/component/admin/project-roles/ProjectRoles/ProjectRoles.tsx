@@ -7,7 +7,7 @@ import ConditionallyRender from '../../../common/ConditionallyRender';
 import HeaderTitle from '../../../common/HeaderTitle';
 import PageContent from '../../../common/PageContent';
 import { ADMIN } from '../../../providers/AccessProvider/permissions';
-import AdminMenu from '../../admin-menu';
+import AdminMenu from '../../menu/AdminMenu';
 import { useStyles } from './ProjectRoles.styles';
 import ProjectRoleList from './ProjectRoleList/ProjectRoleList';
 

@@ -57,6 +57,7 @@ module.exports = {
                         'user_guide/create_feature_toggle',
                         'how-to/how-to-define-custom-context-fields',
                         'how-to/how-to-use-custom-strategies',
+                        'how-to/how-to-send-impression-data-to-a-sink'
                     ],
                     type: 'category',
                     link: {

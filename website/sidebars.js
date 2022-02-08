@@ -47,7 +47,7 @@ module.exports = {
                         description: 'Learn how to work with the Unleash API',
                         slug: '/how-to/api',
                     },
-                    label: 'API',
+                    label: 'Using the APIs',
                     items: ['user_guide/api-token', 'advanced/api_access'],
                 },
                 {

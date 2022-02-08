@@ -11,10 +11,9 @@ import {
 } from '@material-ui/core';
 import { Link as LinkIcon } from '@material-ui/icons';
 import ConditionallyRender from '../common/ConditionallyRender/ConditionallyRender';
-// import {
-//     formatFullDateTimeWithLocale,
-//     formatDateWithLocale,
-// } from '../common/util';
+import {
+    formatDateWithLocale,
+} from '../common/util';
 import { UPDATE_APPLICATION } from '../providers/AccessProvider/permissions';
 import ApplicationView from './ApplicationView';
 import ApplicationUpdate from './ApplicationUpdate';
@@ -26,6 +25,7 @@ import AccessContext from '../../contexts/AccessContext';
 import useApplicationsApi from '../../hooks/api/actions/useApplicationsApi/useApplicationsApi';
 import useApplication from '../../hooks/api/getters/useApplication/useApplication';
 import { useHistory, useParams } from 'react-router-dom';
+import { useLocationSettings } from '../../hooks/useLocationSettings';
 
 const EditApplication = () => {
     const history = useHistory();
@@ -34,6 +34,9 @@ const EditApplication = () => {
     const { appName, url, description, icon = 'apps', createdAt } = application;
     const { hasAccess } = useContext(AccessContext);
     const { deleteApplication } = useApplicationsApi();
+    const { locationSettings } = useLocationSettings();
+
+    console.log(locationSettings)
 
     const [loading, setLoading] = useState(true);
     const [showDialog, setShowDialog] = useState(false);
@@ -48,8 +51,8 @@ const EditApplication = () => {
         setShowDialog(!showDialog);
     };
 
-    // missing the settings hook (locale)
-    //const formatDate = v => formatDateWithLocale(v, locale);
+    const formatDate = (v: Date) =>
+        formatDateWithLocale(v, locationSettings.locale);
 
     const onDeleteApplication = async (evt: Event) => {
         evt.preventDefault();
@@ -134,8 +137,7 @@ const EditApplication = () => {
             <div>
                 <Typography variant="body1">{description || ''}</Typography>
                 <Typography variant="body2">
-                    {/* // need to use formatDate once we have the useSettings hook ready */}
-                    Created: <strong>{createdAt}</strong>
+                    Created: <strong>{formatDate(createdAt)}</strong>
                 </Typography>
             </div>
             <ConditionallyRender

@@ -5,7 +5,7 @@ title: /api/admin/projects/:projectId
 
 > In order to access the admin API endpoints you need to identify yourself. You'll need to [create an ADMIN token](/user_guide/api-token) and add an Authorization header using the token.
 
-**Available sense Unleash v4.3**
+**Available since Unleash v4.3**
 
 In this document we will guide you on how you can work with feature toggles and their configuration. Please remember the following details:
 

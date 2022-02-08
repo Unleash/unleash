@@ -4,36 +4,38 @@ import { formatApiPath } from '../../../../utils/format-path';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { IFeatureToggle } from '../../../../interfaces/featureToggle';
 
-const PATH = formatApiPath('api/admin/features');
+const PATH = formatApiPath('api/admin/archive/features');
 
-export interface IUseFeaturesOutput {
-    features: IFeatureToggle[];
-    refetchFeatures: () => void;
+export interface UseFeaturesArchiveOutput {
+    archivedFeatures: IFeatureToggle[];
+    refetchArchived: () => void;
     loading: boolean;
     error?: Error;
 }
 
-export const useFeatures = (options?: SWRConfiguration): IUseFeaturesOutput => {
+export const useFeaturesArchive = (
+    options?: SWRConfiguration
+): UseFeaturesArchiveOutput => {
     const { data, error } = useSWR<{ features: IFeatureToggle[] }>(
         PATH,
-        fetchFeatures,
+        fetchArchivedFeatures,
         options
     );
 
-    const refetchFeatures = useCallback(() => {
+    const refetchArchived = useCallback(() => {
         mutate(PATH).catch(console.warn);
     }, []);
 
     return {
-        features: data?.features || [],
+        archivedFeatures: data?.features || [],
+        refetchArchived,
         loading: !error && !data,
-        refetchFeatures,
         error,
     };
 };
 
-const fetchFeatures = () => {
+const fetchArchivedFeatures = () => {
     return fetch(PATH, { method: 'GET' })
-        .then(handleErrorResponses('Features'))
+        .then(handleErrorResponses('Archive'))
         .then(res => res.json());
 };

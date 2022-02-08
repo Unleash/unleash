@@ -117,7 +117,7 @@ exports[`renders correctly with one feature 1`] = `
                 <span
                   className="MuiButton-label"
                 >
-                  By name
+                  By Name
                   <span
                     className="MuiButton-endIcon MuiButton-iconSizeMedium"
                   >
@@ -185,12 +185,6 @@ exports[`renders correctly with one feature 1`] = `
           }
           flags={Object {}}
           hasAccess={[Function]}
-          settings={
-            Object {
-              "sort": "name",
-            }
-          }
-          toggleFeature={[MockFunction]}
         />
       </ul>
     </div>
@@ -315,7 +309,7 @@ exports[`renders correctly with one feature without permissions 1`] = `
                 <span
                   className="MuiButton-label"
                 >
-                  By name
+                  By Name
                   <span
                     className="MuiButton-endIcon MuiButton-iconSizeMedium"
                   >
@@ -386,12 +380,6 @@ exports[`renders correctly with one feature without permissions 1`] = `
           }
           flags={Object {}}
           hasAccess={[Function]}
-          settings={
-            Object {
-              "sort": "name",
-            }
-          }
-          toggleFeature={[MockFunction]}
         />
       </ul>
     </div>

@@ -1,8 +1,8 @@
-import { useContext, useLayoutEffect, useEffect } from 'react';
+import { useContext } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { Link } from 'react-router-dom';
-import { Button, List, Tooltip, IconButton, ListItem } from '@material-ui/core';
+import { Button, IconButton, List, ListItem, Tooltip } from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { Add } from '@material-ui/icons';
 
@@ -23,43 +23,31 @@ import { useStyles } from './styles';
 import ListPlaceholder from '../../common/ListPlaceholder/ListPlaceholder';
 import { getCreateTogglePath } from '../../../utils/route-path-helpers';
 import { NAVIGATE_TO_CREATE_FEATURE } from '../../../testIds';
+import { resolveFilteredProjectId } from '../../../hooks/useFeaturesFilter';
 
 const FeatureToggleList = ({
-    fetcher,
     features,
-    settings,
     revive,
-    currentProjectId,
-    updateSetting,
-    featureMetrics,
-    toggleFeature,
     archive,
     loading,
     flags,
+    filter,
+    setFilter,
+    sort,
+    setSort,
 }) => {
     const { hasAccess } = useContext(AccessContext);
     const styles = useStyles();
     const smallScreen = useMediaQuery('(max-width:800px)');
     const mobileView = useMediaQuery('(max-width:600px)');
 
-    useLayoutEffect(() => {
-        fetcher();
-    }, [fetcher]);
-
-    useEffect(() => {
-        updateSetting('filter', '');
-        /* eslint-disable-next-line */
-    }, []);
-
-    const toggleMetrics = () => {
-        updateSetting('showLastHour', !settings.showLastHour);
+    const setFilterQuery = v => {
+        const query = v && typeof v === 'string' ? v.trim() : '';
+        setFilter(prev => ({ ...prev, query }));
     };
 
-    const setSort = v => {
-        updateSetting('sort', typeof v === 'string' ? v.trim() : '');
-    };
-
-    const createURL = getCreateTogglePath(currentProjectId, flags.E);
+    const resolvedProjectId = resolveFilteredProjectId(filter);
+    const createURL = getCreateTogglePath(resolvedProjectId, flags.E);
 
     const renderFeatures = () => {
         features.forEach(e => {
@@ -70,11 +58,7 @@ const FeatureToggleList = ({
             return loadingFeatures.map(feature => (
                 <FeatureToggleListItem
                     key={feature.name}
-                    settings={settings}
-                    metricsLastHour={featureMetrics.lastHour[feature.name]}
-                    metricsLastMinute={featureMetrics.lastMinute[feature.name]}
                     feature={feature}
-                    toggleFeature={toggleFeature}
                     revive={revive}
                     hasAccess={hasAccess}
                     className={'skeleton'}
@@ -89,13 +73,7 @@ const FeatureToggleList = ({
                 show={features.map(feature => (
                     <FeatureToggleListItem
                         key={feature.name}
-                        settings={settings}
-                        metricsLastHour={featureMetrics.lastHour[feature.name]}
-                        metricsLastMinute={
-                            featureMetrics.lastMinute[feature.name]
-                        }
                         feature={feature}
-                        toggleFeature={toggleFeature}
                         revive={revive}
                         hasAccess={hasAccess}
                         flags={flags}
@@ -129,7 +107,7 @@ const FeatureToggleList = ({
         <div className={styles.featureContainer}>
             <div className={styles.searchBarContainer}>
                 <SearchField
-                    updateValue={updateSetting.bind(this, 'filter')}
+                    updateValue={setFilterQuery}
                     className={classnames(styles.searchBar, {
                         skeleton: loading,
                     })}
@@ -151,10 +129,10 @@ const FeatureToggleList = ({
                                     condition={!smallScreen}
                                     show={
                                         <FeatureToggleListActions
-                                            settings={settings}
-                                            toggleMetrics={toggleMetrics}
+                                            filter={filter}
+                                            setFilter={setFilter}
+                                            sort={sort}
                                             setSort={setSort}
-                                            updateSetting={updateSetting}
                                             loading={loading}
                                         />
                                     }
@@ -175,7 +153,7 @@ const FeatureToggleList = ({
                                                         disabled={
                                                             !hasAccess(
                                                                 CREATE_FEATURE,
-                                                                currentProjectId
+                                                                resolvedProjectId
                                                             )
                                                         }
                                                     >
@@ -195,7 +173,7 @@ const FeatureToggleList = ({
                                                     disabled={
                                                         !hasAccess(
                                                             CREATE_FEATURE,
-                                                            currentProjectId
+                                                            resolvedProjectId
                                                         )
                                                     }
                                                     className={classnames({
@@ -221,16 +199,14 @@ const FeatureToggleList = ({
 
 FeatureToggleList.propTypes = {
     features: PropTypes.array.isRequired,
-    featureMetrics: PropTypes.object.isRequired,
-    fetcher: PropTypes.func,
     revive: PropTypes.func,
-    updateSetting: PropTypes.func.isRequired,
-    toggleFeature: PropTypes.func,
-    settings: PropTypes.object,
-    history: PropTypes.object.isRequired,
     loading: PropTypes.bool,
-    currentProjectId: PropTypes.string.isRequired,
+    archive: PropTypes.bool,
     flags: PropTypes.object,
+    filter: PropTypes.object.isRequired,
+    setFilter: PropTypes.func.isRequired,
+    sort: PropTypes.object.isRequired,
+    setSort: PropTypes.func.isRequired,
 };
 
 export default FeatureToggleList;

@@ -1,11 +1,11 @@
 import CopyFeatureToggle from '../../page/features/copy';
-import Features from '../../page/features';
+import { FeatureToggleListContainer } from '../feature/FeatureToggleList/FeatureToggleListContainer';
 import CreateStrategies from '../../page/strategies/create';
 import StrategyView from '../../page/strategies/show';
 import Strategies from '../../page/strategies';
 import HistoryPage from '../../page/history';
 import HistoryTogglePage from '../../page/history/toggle';
-import Archive from '../../page/archive';
+import { ArchiveListContainer } from '../archive/ArchiveListContainer';
 import Applications from '../../page/applications';
 import ApplicationView from '../../page/applications/view';
 import ListTagTypes from '../../page/tag-types';
@@ -24,7 +24,7 @@ import ResetPassword from '../user/ResetPassword/ResetPassword';
 import ForgottenPassword from '../user/ForgottenPassword/ForgottenPassword';
 import ProjectListNew from '../project/ProjectList/ProjectList';
 import Project from '../project/Project/Project';
-import RedirectArchive from '../feature/RedirectArchive/RedirectArchive';
+import RedirectArchive from '../archive/RedirectArchive';
 import EnvironmentList from '../environments/EnvironmentList/EnvironmentList';
 import FeatureView from '../feature/FeatureView/FeatureView';
 import ProjectRoles from '../admin/project-roles/ProjectRoles/ProjectRoles';
@@ -182,7 +182,7 @@ export const routes = [
     {
         path: '/features',
         title: 'Feature Toggles',
-        component: Features,
+        component: FeatureToggleListContainer,
         type: 'protected',
         layout: 'main',
         menu: { mobile: true },
@@ -372,7 +372,7 @@ export const routes = [
     {
         path: '/archive',
         title: 'Archived Toggles',
-        component: Archive,
+        component: ArchiveListContainer,
         type: 'protected',
         layout: 'main',
         menu: {},

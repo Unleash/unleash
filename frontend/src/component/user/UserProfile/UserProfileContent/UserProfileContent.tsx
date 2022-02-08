@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import ConditionallyRender from '../../../common/ConditionallyRender';
 import {
-    Paper,
     Avatar,
-    Typography,
     Button,
     FormControl,
-    Select,
     InputLabel,
+    Paper,
+    Select,
+    Typography,
 } from '@material-ui/core';
 import classnames from 'classnames';
 import { useStyles } from './UserProfileContent.styles';
@@ -17,16 +17,16 @@ import EditProfile from '../EditProfile/EditProfile';
 import legacyStyles from '../../user.module.scss';
 import { getBasePath } from '../../../../utils/format-path';
 import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
-import { IUser } from "../../../../interfaces/user";
+import { IUser } from '../../../../interfaces/user';
 
 interface IUserProfileContentProps {
-    showProfile: boolean
-    profile: IUser
-    possibleLocales: string[]
-    updateSettingLocation: (field: 'locale', value: string) => void
-    imageUrl: string
-    currentLocale?: string
-    setCurrentLocale: (value: string) => void
+    showProfile: boolean;
+    profile: IUser;
+    possibleLocales: string[];
+    updateSettingLocation: (field: 'locale', value: string) => void;
+    imageUrl: string;
+    currentLocale?: string;
+    setCurrentLocale: (value: string) => void;
 }
 
 const UserProfileContent = ({
@@ -99,14 +99,19 @@ const UserProfileContent = ({
                         condition={!editingProfile}
                         show={
                             <>
-                                <ConditionallyRender condition={!uiConfig.disablePasswordAuth} show={
-                                    <Button
-                                        variant="contained"
-                                        onClick={() => setEditingProfile(true)}
-                                    >
-                                        Update password
-                                    </Button>
-                                } />
+                                <ConditionallyRender
+                                    condition={!uiConfig.disablePasswordAuth}
+                                    show={
+                                        <Button
+                                            variant="contained"
+                                            onClick={() =>
+                                                setEditingProfile(true)
+                                            }
+                                        >
+                                            Update password
+                                        </Button>
+                                    }
+                                />
                                 <div className={commonStyles.divider} />
                                 <div className={legacyStyles.showUserSettings}>
                                     <FormControl

@@ -6,7 +6,6 @@ import featureTags from './feature-tags';
 import tagTypes from './tag-type';
 import tags from './tag';
 import strategies from './strategy';
-import archive from './archive';
 import error from './error';
 import settings from './settings';
 import user from './user';
@@ -27,7 +26,6 @@ const unleashStore = combineReducers({
     tagTypes,
     tags,
     featureTags,
-    archive,
     error,
     settings,
     user,

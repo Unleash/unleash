@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Redirect, useParams } from 'react-router-dom';
-import useFeatures from '../../../hooks/api/getters/useFeatures/useFeatures';
+import { useFeatures } from '../../../hooks/api/getters/useFeatures/useFeatures';
 import { IFeatureToggle } from '../../../interfaces/featureToggle';
 import { getTogglePath } from '../../../utils/route-path-helpers';
 

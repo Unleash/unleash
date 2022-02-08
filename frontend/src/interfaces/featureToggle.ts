@@ -32,8 +32,9 @@ export interface IFeatureTogglePayload {
 export interface IFeatureToggle {
     stale: boolean;
     archived: boolean;
-    createdAt: Date;
-    lastSeenAt?: Date;
+    enabled?: boolean;
+    createdAt: string;
+    lastSeenAt?: string;
     description: string;
     environments: IFeatureEnvironment[];
     name: string;
@@ -41,6 +42,7 @@ export interface IFeatureToggle {
     type: string;
     variants: IFeatureVariant[];
     impressionData: boolean;
+    strategies?: IFeatureStrategy[];
 }
 
 export interface IFeatureEnvironment {

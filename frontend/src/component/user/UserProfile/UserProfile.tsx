@@ -8,11 +8,11 @@ import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import { useStyles } from './UserProfile.styles';
 import { useCommonStyles } from '../../../common.styles';
 import UserProfileContent from './UserProfileContent/UserProfileContent';
-import { IUser } from "../../../interfaces/user";
+import { IUser } from '../../../interfaces/user';
 
 interface IUserProfileProps {
-    profile: IUser
-    updateSettingLocation: (field: 'locale', value: string) => void
+    profile: IUser;
+    updateSettingLocation: (field: 'locale', value: string) => void;
 }
 
 const UserProfile = ({

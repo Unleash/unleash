@@ -7,7 +7,6 @@ import tagTypes from './tag-type';
 import tags from './tag';
 import strategies from './strategy';
 import error from './error';
-import settings from './settings';
 import user from './user';
 import applications from './application';
 import uiConfig from './ui-config';
@@ -27,7 +26,6 @@ const unleashStore = combineReducers({
     tags,
     featureTags,
     error,
-    settings,
     user,
     applications,
     uiConfig,

@@ -14,15 +14,15 @@ import HeaderTitle from '../../common/HeaderTitle';
 import ConditionallyRender from '../../common/ConditionallyRender';
 import { formatApiPath } from '../../../utils/format-path';
 import useInvoices from '../../../hooks/api/getters/useInvoices/useInvoices';
-import { useLocation } from 'react-router-dom';
 import { IInvoice } from '../../../interfaces/invoice';
+import { useLocationSettings } from '../../../hooks/useLocationSettings';
 
 const PORTAL_URL = formatApiPath('api/admin/invoices/portal');
 
 const InvoiceList = () => {
     const { refetchInvoices, invoices } = useInvoices();
     const [isLoaded, setLoaded] = useState(false);
-    const location = useLocation();
+    const { locationSettings } = useLocationSettings();
 
     useEffect(() => {
         refetchInvoices();
@@ -89,7 +89,7 @@ const InvoiceList = () => {
                                             {item.dueDate &&
                                                 formatDateWithLocale(
                                                     item.dueDate,
-                                                    location.locale
+                                                    locationSettings.locale
                                                 )}
                                         </TableCell>
                                         <TableCell

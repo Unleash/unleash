@@ -31,6 +31,7 @@ import Dialogue from '../../../common/Dialogue';
 import { CREATE_API_TOKEN_BUTTON } from '../../../../testIds';
 import { Alert } from '@material-ui/lab';
 import copy from 'copy-to-clipboard';
+import { useLocationSettings } from "../../../../hooks/useLocationSettings";
 
 interface IApiToken {
     createdAt: Date;
@@ -41,16 +42,13 @@ interface IApiToken {
     environment: string;
 }
 
-interface IApiTokenList {
-    location: any;
-}
-
-const ApiTokenList = ({ location }: IApiTokenList) => {
+const ApiTokenList = () => {
     const styles = useStyles();
     const { hasAccess } = useContext(AccessContext);
     const { uiConfig } = useUiConfig();
     const [showDelete, setShowDelete] = useState(false);
     const [delToken, setDeleteToken] = useState<IApiToken>();
+    const { locationSettings } = useLocationSettings()
     const { setToastData } = useToast();
     const { tokens, loading, refetch, error } = useApiTokens();
     const { deleteToken } = useApiTokensApi();
@@ -150,7 +148,7 @@ const ApiTokenList = ({ location }: IApiTokenList) => {
                                 >
                                     {formatDateWithLocale(
                                         item.createdAt,
-                                        location.locale
+                                        locationSettings.locale
                                     )}
                                 </TableCell>
                                 <TableCell

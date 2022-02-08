@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import classnames from 'classnames';
-import PropTypes from 'prop-types';
 import OutsideClickHandler from 'react-outside-click-handler';
 
 import { Avatar, Button } from '@material-ui/core';
@@ -8,17 +7,19 @@ import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import { useStyles } from './UserProfile.styles';
 import { useCommonStyles } from '../../../common.styles';
 import UserProfileContent from './UserProfileContent/UserProfileContent';
-import { IUser } from '../../../interfaces/user';
+import { IUser } from "../../../interfaces/user";
+import { ILocationSettings } from "../../../hooks/useLocationSettings";
 
 interface IUserProfileProps {
-    profile: IUser;
-    updateSettingLocation: (field: 'locale', value: string) => void;
+    profile: IUser
+    locationSettings: ILocationSettings
+    setLocationSettings: React.Dispatch<React.SetStateAction<ILocationSettings>>
 }
 
 const UserProfile = ({
     profile,
-    location,
-    updateSettingLocation,
+    locationSettings,
+    setLocationSettings,
 }: IUserProfileProps) => {
     const [showProfile, setShowProfile] = useState(false);
     const [currentLocale, setCurrentLocale] = useState<string>();
@@ -40,17 +41,15 @@ const UserProfile = ({
     ]);
 
     useEffect(() => {
-        const locale = location.locale || navigator.language;
         let found = possibleLocales.find(l =>
-            l.toLowerCase().includes(locale.toLowerCase())
+            l.toLowerCase().includes(locationSettings.locale.toLowerCase())
         );
         setCurrentLocale(found);
-
         if (!found) {
-            setPossibleLocales(prev => [...prev, locale]);
+            setPossibleLocales(prev => [...prev, locationSettings.locale]);
         }
         /* eslint-disable-next-line*/
-    }, []);
+    }, [locationSettings]);
 
     const email = profile ? profile.email : '';
     const imageUrl = email ? profile.imageUrl : 'unknown-user.png';
@@ -75,7 +74,7 @@ const UserProfile = ({
                     showProfile={showProfile}
                     imageUrl={imageUrl}
                     profile={profile}
-                    updateSettingLocation={updateSettingLocation}
+                    setLocationSettings={setLocationSettings}
                     possibleLocales={possibleLocales}
                     setCurrentLocale={setCurrentLocale}
                     currentLocale={currentLocale}
@@ -83,12 +82,6 @@ const UserProfile = ({
             </div>
         </OutsideClickHandler>
     );
-};
-
-UserProfile.propTypes = {
-    profile: PropTypes.object,
-    location: PropTypes.object,
-    updateSettingLocation: PropTypes.func.isRequired,
 };
 
 export default UserProfile;

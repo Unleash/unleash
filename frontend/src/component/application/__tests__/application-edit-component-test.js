@@ -19,6 +19,7 @@ test('renders correctly if no application', () => {
                     storeApplicationMetaData={jest.fn()}
                     deleteApplication={jest.fn()}
                     history={{}}
+                    locationSettings={{ locale: 'en-GB' }}
                 />
             </AccessProvider>
         )
@@ -77,7 +78,7 @@ test('renders correctly without permission', () => {
                                 url: 'http://example.org',
                                 description: 'app description',
                             }}
-                            location={{ locale: 'en-GB' }}
+                            locationSettings={{ locale: 'en-GB' }}
                         />
                     </AccessProvider>
                 </ThemeProvider>
@@ -140,7 +141,7 @@ test('renders correctly with permissions', () => {
                                 url: 'http://example.org',
                                 description: 'app description',
                             }}
-                            location={{ locale: 'en-GB' }}
+                            locationSettings={{ locale: 'en-GB' }}
                         />
                     </AccessProvider>
                 </ThemeProvider>

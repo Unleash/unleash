@@ -123,13 +123,16 @@ Creates a new use with the given root role.
 {
   "email": "some-email@getunleash.io",
   "name": "Some Name",
-  "rootRole": 2
+  "rootRole": 2,
+  "sendEmail": true
 }
 ```
 
 **Notes**
 
-- `rootRole` can either be the role id or the unique name of the role (e.g: `Editor`).
+- `email` - Required field. 
+- `rootRole` - can either be the role id or the unique name of the role (e.g: `Editor`).
+- `sendEmail` - set to `true` if you want Unleash to send Welcome email to the new user. Do require the Unleash instance to be configured with email settings.
 
 #### Return values: {#return-values}
 

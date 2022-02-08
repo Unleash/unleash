@@ -10,12 +10,11 @@ import {
     Typography,
 } from '@material-ui/core';
 import { Link as LinkIcon } from '@material-ui/icons';
-
 import ConditionallyRender from '../common/ConditionallyRender/ConditionallyRender';
-import {
-    formatFullDateTimeWithLocale,
-    formatDateWithLocale,
-} from '../common/util';
+// import {
+//     formatFullDateTimeWithLocale,
+//     formatDateWithLocale,
+// } from '../common/util';
 import { UPDATE_APPLICATION } from '../providers/AccessProvider/permissions';
 import ApplicationView from './ApplicationView';
 import ApplicationUpdate from './ApplicationUpdate';

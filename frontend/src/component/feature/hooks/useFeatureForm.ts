@@ -50,9 +50,8 @@ const useFeatureForm = (
         return {
             type,
             name,
-            projectId: project,
-            description: description,
-            impressionData
+            description,
+            impressionData,
         };
     };
 

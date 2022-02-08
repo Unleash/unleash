@@ -11,6 +11,7 @@ import ConditionallyRender from '../../common/ConditionallyRender';
 import { trim } from '../../common/util';
 import Input from '../../common/Input/Input';
 import { CREATE_FEATURE } from '../../providers/AccessProvider/permissions';
+import { useHistory } from 'react-router-dom';
 
 interface IFeatureToggleForm {
     type: string;
@@ -22,8 +23,8 @@ interface IFeatureToggleForm {
     setName: React.Dispatch<React.SetStateAction<string>>;
     setDescription: React.Dispatch<React.SetStateAction<string>>;
     setProject: React.Dispatch<React.SetStateAction<string>>;
-    validateToggleName: () => void;
     setImpressionData: React.Dispatch<React.SetStateAction<boolean>>;
+    validateToggleName?: () => void;
     handleSubmit: (e: any) => void;
     handleCancel: () => void;
     errors: { [key: string]: string };
@@ -52,6 +53,7 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
 }) => {
     const styles = useStyles();
     const { featureTypes } = useFeatureTypes();
+    const history = useHistory();
     const { permissions } = useUser();
     const editable = mode !== 'Edit';
 
@@ -75,9 +77,7 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                     onFocus={() => clearErrors()}
                     value={name}
                     onChange={e => setName(trim(e.target.value))}
-                    inputProps={{
-                        'data-test': CF_NAME_ID,
-                    }}
+                    data-test={CF_NAME_ID}
                     onBlur={validateToggleName}
                 />
                 <p className={styles.inputDescription}>
@@ -89,9 +89,7 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                     label={'Toggle type'}
                     id="feature-type-select"
                     editable
-                    inputProps={{
-                        'data-test': CF_TYPE_ID,
-                    }}
+                    data-test={CF_TYPE_ID}
                     IconComponent={KeyboardArrowDownOutlined}
                     className={styles.selectInput}
                 />
@@ -108,7 +106,12 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                 />
                 <FeatureProjectSelect
                     value={project}
-                    onChange={e => setProject(e.target.value)}
+                    onChange={e => {
+                        setProject(e.target.value);
+                        history.replace(
+                            `/projects/${e.target.value}/create-toggle`
+                        );
+                    }}
                     enabled={editable}
                     filter={projectFilterGenerator(
                         { permissions },

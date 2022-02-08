@@ -27,7 +27,7 @@ import useApplication from '../../hooks/api/getters/useApplication/useApplicatio
 import { useHistory, useParams } from 'react-router-dom';
 import { useLocationSettings } from '../../hooks/useLocationSettings';
 
-const EditApplication = () => {
+const ApplicationEdit = () => {
     const history = useHistory();
     const { name } = useParams<{ name: string }>();
     const { refetchApplication, application } = useApplication(name);
@@ -35,8 +35,6 @@ const EditApplication = () => {
     const { hasAccess } = useContext(AccessContext);
     const { deleteApplication } = useApplicationsApi();
     const { locationSettings } = useLocationSettings();
-
-    console.log(locationSettings)
 
     const [loading, setLoading] = useState(true);
     const [showDialog, setShowDialog] = useState(false);
@@ -153,4 +151,4 @@ const EditApplication = () => {
     );
 };
 
-export default EditApplication;
+export default ApplicationEdit;

@@ -5,7 +5,23 @@ import icons from './icon-names';
 import GeneralSelect from '../common/GeneralSelect/GeneralSelect';
 import useApplicationsApi from '../../hooks/api/actions/useApplicationsApi/useApplicationsApi';
 
-const ApplicationUpdate = ({ application }) => {
+interface IApplication {
+    appName: string;
+    color: string;
+    createdAt: string;
+    description: string;
+    icon: string;
+    instances: [];
+    links: object;
+    seenToggles: [];
+    strategies: [];
+    url: string;
+}
+interface IApplicationUpdateProps {
+    application: IApplication;
+}
+
+const ApplicationUpdate = ({ application }: IApplicationUpdateProps) => {
     const { storeApplicationMetaData } = useApplicationsApi();
     const { appName, icon, url, description } = application;
     const [localUrl, setLocalUrl] = useState(url || '');

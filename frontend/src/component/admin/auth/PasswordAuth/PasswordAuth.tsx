@@ -1,30 +1,28 @@
-import React, { useState, useContext, useEffect } from 'react';
-import {
-    Button,
-    FormControlLabel,
-    Grid,
-    Switch,
-} from '@material-ui/core';
+import React, { useContext, useEffect, useState } from 'react';
+import { Button, FormControlLabel, Grid, Switch } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
-import PageContent from '../../common/PageContent/PageContent';
-import AccessContext from '../../../contexts/AccessContext';
-import { ADMIN } from '../../providers/AccessProvider/permissions';
-import useAuthSettings from '../../../hooks/api/getters/useAuthSettings/useAuthSettings';
-import useAuthSettingsApi, {ISimpleAuthSettings } from '../../../hooks/api/actions/useAuthSettingsApi/useAuthSettingsApi';
-import useToast from '../../../hooks/useToast';
+import PageContent from '../../../common/PageContent/PageContent';
+import AccessContext from '../../../../contexts/AccessContext';
+import { ADMIN } from '../../../providers/AccessProvider/permissions';
+import useAuthSettings from '../../../../hooks/api/getters/useAuthSettings/useAuthSettings';
+import useAuthSettingsApi, {
+    ISimpleAuthSettings,
+} from '../../../../hooks/api/actions/useAuthSettingsApi/useAuthSettingsApi';
+import useToast from '../../../../hooks/useToast';
+import { formatUnknownError } from '../../../../utils/format-unknown-error';
 
-const PasswordAuthSettings = () => {
-
-    const { setToastData } = useToast();
+export const PasswordAuth = () => {
+    const { setToastData, setToastApiError } = useToast();
     const { config } = useAuthSettings('simple');
-    const [disablePasswordAuth, setDisablePasswordAuth] = useState<boolean>(false);
-    const { updateSettings, errors, loading } = useAuthSettingsApi<ISimpleAuthSettings>('simple')
+    const [disablePasswordAuth, setDisablePasswordAuth] =
+        useState<boolean>(false);
+    const { updateSettings, errors, loading } =
+        useAuthSettingsApi<ISimpleAuthSettings>('simple');
     const { hasAccess } = useContext(AccessContext);
-
 
     useEffect(() => {
         setDisablePasswordAuth(!!config.disabled);
-    }, [ config.disabled ]);
+    }, [config.disabled]);
 
     if (!hasAccess(ADMIN)) {
         return (
@@ -38,12 +36,13 @@ const PasswordAuthSettings = () => {
         setDisablePasswordAuth(!disablePasswordAuth);
     };
 
-
-    const onSubmit = async evt => {
-        evt.preventDefault();
+    const onSubmit = async (event: React.SyntheticEvent) => {
+        event.preventDefault();
 
         try {
-            const settings: ISimpleAuthSettings = { disabled: disablePasswordAuth };
+            const settings: ISimpleAuthSettings = {
+                disabled: disablePasswordAuth,
+            };
             await updateSettings(settings);
             setToastData({
                 title: 'Successfully saved',
@@ -52,20 +51,13 @@ const PasswordAuthSettings = () => {
                 type: 'success',
                 show: true,
             });
-        } catch (err: any) {
-            setToastData({
-                title: 'Could not store settings',
-                text: err?.message,
-                autoHideDuration: 4000,
-                type: 'error',
-                show: true,
-            });
-            setDisablePasswordAuth(config.disabled)
+        } catch (err) {
+            setToastApiError(formatUnknownError(err));
+            setDisablePasswordAuth(config.disabled);
         }
-
     };
     return (
-        <PageContent headerContent=''>
+        <PageContent headerContent="">
             <form onSubmit={onSubmit}>
                 <Grid container spacing={3}>
                     <Grid item md={5}>
@@ -82,7 +74,9 @@ const PasswordAuthSettings = () => {
                                     checked={!disablePasswordAuth}
                                 />
                             }
-                            label={!disablePasswordAuth ? 'Enabled' : 'Disabled'}
+                            label={
+                                !disablePasswordAuth ? 'Enabled' : 'Disabled'
+                            }
                         />
                     </Grid>
                 </Grid>
@@ -96,12 +90,14 @@ const PasswordAuthSettings = () => {
                         >
                             Save
                         </Button>{' '}
-                        <p><small style={{ color: 'red' }}>{errors?.message}</small></p>
+                        <p>
+                            <small style={{ color: 'red' }}>
+                                {errors?.message}
+                            </small>
+                        </p>
                     </Grid>
                 </Grid>
             </form>
         </PageContent>
     );
-}
-
-export default PasswordAuthSettings;
+};

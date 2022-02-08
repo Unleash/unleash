@@ -46,7 +46,7 @@ const useAPI = ({
     handleUnauthorized,
     propagateErrors = false,
 }: IUseAPI) => {
-    const [errors, setErrors] = useState({});
+    const [errors, setErrors] = useState<Record<string, string>>({});
     const [loading, setLoading] = useState(false);
 
     const defaultOptions: RequestInit = {

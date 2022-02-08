@@ -16,7 +16,7 @@ import Admin from '../admin';
 import AdminApi from '../admin/api';
 import AdminInvoice from '../admin/invoice/InvoiceAdminPage';
 import AdminUsers from '../admin/users/UsersAdmin';
-import AdminAuth from '../admin/auth';
+import { AuthSettings } from '../admin/auth/AuthSettings';
 import Login from '../user/Login/Login';
 import { P, C, E, EEA, RE } from '../common/flags';
 import NewUser from '../user/NewUser';
@@ -446,7 +446,7 @@ export const routes = [
         path: '/admin/auth',
         parent: '/admin',
         title: 'Single Sign-On',
-        component: AdminAuth,
+        component: AuthSettings,
         type: 'protected',
         layout: 'main',
         menu: { adminSettings: true },

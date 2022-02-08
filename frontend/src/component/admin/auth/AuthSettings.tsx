@@ -1,16 +1,18 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import AdminMenu from '../menu/AdminMenu';
 import { Alert } from '@material-ui/lab';
-import GoogleAuth from './google-auth-container';
-import SamlAuth from './saml-auth-container';
-import OidcAuth from './oidc-auth-container';
-import PasswordAuthSettings from './PasswordAuthSettings';
 import TabNav from '../../common/TabNav/TabNav';
 import PageContent from '../../common/PageContent/PageContent';
 import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyRender';
+import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
+import { OidcAuth } from './OidcAuth/OidcAuth';
+import { SamlAuth } from './SamlAuth/SamlAuth';
+import { PasswordAuth } from './PasswordAuth/PasswordAuth';
+import { GoogleAuth } from './GoogleAuth/GoogleAuth';
 
-function AdminAuthPage({ authenticationType, history }) {
+export const AuthSettings = () => {
+    const { authenticationType } = useUiConfig().uiConfig;
+
     const tabs = [
         {
             label: 'OpenID Connect',
@@ -22,7 +24,7 @@ function AdminAuthPage({ authenticationType, history }) {
         },
         {
             label: 'Password',
-            component: <PasswordAuthSettings />,
+            component: <PasswordAuth />,
         },
         {
             label: 'Google',
@@ -32,7 +34,7 @@ function AdminAuthPage({ authenticationType, history }) {
 
     return (
         <div>
-            <AdminMenu history={history} />
+            <AdminMenu />
             <PageContent headerContent="Single Sign-On">
                 <ConditionallyRender
                     condition={authenticationType === 'enterprise'}
@@ -80,12 +82,4 @@ function AdminAuthPage({ authenticationType, history }) {
             </PageContent>
         </div>
     );
-}
-
-AdminAuthPage.propTypes = {
-    match: PropTypes.object.isRequired,
-    history: PropTypes.object.isRequired,
-    authenticationType: PropTypes.string,
 };
-
-export default AdminAuthPage;

@@ -61,6 +61,7 @@ const TabNav = ({ tabData, className, navClass, startingTab = 0 }) => {
 
 TabNav.propTypes = {
     tabData: PropTypes.array.isRequired,
+    navClass: PropTypes.string,
     className: PropTypes.string,
     startingTab: PropTypes.number,
 };

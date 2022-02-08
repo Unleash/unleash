@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
-import PropTypes from 'prop-types';
+import React, { useContext, useEffect, useState } from 'react';
 import {
     Button,
     FormControlLabel,
@@ -8,32 +7,40 @@ import {
     TextField,
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
-import PageContent from '../../common/PageContent/PageContent';
-import AccessContext from '../../../contexts/AccessContext';
-import { ADMIN } from '../../providers/AccessProvider/permissions';
-import AutoCreateForm from './AutoCreateForm/AutoCreateForm';
+import PageContent from '../../../common/PageContent/PageContent';
+import AccessContext from '../../../../contexts/AccessContext';
+import { ADMIN } from '../../../providers/AccessProvider/permissions';
+import { AutoCreateForm } from '../AutoCreateForm/AutoCreateForm';
+import useToast from '../../../../hooks/useToast';
+import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
+import useAuthSettings from '../../../../hooks/api/getters/useAuthSettings/useAuthSettings';
+import useAuthSettingsApi from '../../../../hooks/api/actions/useAuthSettingsApi/useAuthSettingsApi';
+import { formatUnknownError } from '../../../../utils/format-unknown-error';
+import { removeEmptyStringFields } from '../../../../utils/remove-empty-string-fields';
 
 const initialState = {
     enabled: false,
     autoCreate: false,
     unleashHostname: location.hostname,
+    entityId: '',
+    signOnUrl: '',
+    certificate: '',
+    signOutUrl: '',
+    spCertificate: '',
 };
 
-function SamlAuth({ config, getSamlConfig, updateSamlConfig, unleashUrl }) {
+export const SamlAuth = () => {
+    const { setToastData, setToastApiError } = useToast();
+    const { uiConfig } = useUiConfig();
     const [data, setData] = useState(initialState);
-    const [info, setInfo] = useState();
     const { hasAccess } = useContext(AccessContext);
-
-    useEffect(() => {
-        getSamlConfig();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    const { config } = useAuthSettings('saml');
+    const { updateSettings, errors, loading } = useAuthSettingsApi('saml');
 
     useEffect(() => {
         if (config.entityId) {
             setData(config);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [config]);
 
     if (!hasAccess(ADMIN)) {
@@ -44,34 +51,37 @@ function SamlAuth({ config, getSamlConfig, updateSamlConfig, unleashUrl }) {
         );
     }
 
-    const updateField = e => {
-        setValue(e.target.name, e.target.value);
+    const updateField = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setValue(event.target.name, event.target.value);
     };
 
     const updateEnabled = () => {
         setData({ ...data, enabled: !data.enabled });
     };
 
-    const setValue = (field, value) => {
+    const setValue = (name: string, value: string | boolean) => {
         setData({
             ...data,
-            [field]: value,
+            [name]: value,
         });
     };
 
-    const onSubmit = async e => {
-        e.preventDefault();
-        setInfo('...saving');
+    const onSubmit = async (event: React.SyntheticEvent) => {
+        event.preventDefault();
+
         try {
-            await updateSamlConfig(data);
-            setInfo('Settings stored');
-            setTimeout(() => setInfo(''), 2000);
-        } catch (e) {
-            setInfo(e.message);
+            await updateSettings(removeEmptyStringFields(data));
+            setToastData({
+                title: 'Settings stored',
+                type: 'success',
+            });
+        } catch (err) {
+            setToastApiError(formatUnknownError(err));
         }
     };
+
     return (
-        <PageContent>
+        <PageContent headerContent="">
             <Grid container style={{ marginBottom: '1rem' }}>
                 <Grid item md={12}>
                     <Alert severity="info">
@@ -86,7 +96,7 @@ function SamlAuth({ config, getSamlConfig, updateSamlConfig, unleashUrl }) {
                         to learn how to integrate with specific SAML 2.0
                         providers (Okta, Keycloak, etc). <br />
                         Callback URL:{' '}
-                        <code>{unleashUrl}/auth/saml/callback</code>
+                        <code>{uiConfig.unleashUrl}/auth/saml/callback</code>
                     </Alert>
                 </Grid>
             </Grid>
@@ -120,7 +130,7 @@ function SamlAuth({ config, getSamlConfig, updateSamlConfig, unleashUrl }) {
                             onChange={updateField}
                             label="Entity ID"
                             name="entityId"
-                            value={data.entityId || ''}
+                            value={data.entityId}
                             disabled={!data.enabled}
                             style={{ width: '400px' }}
                             variant="outlined"
@@ -142,7 +152,7 @@ function SamlAuth({ config, getSamlConfig, updateSamlConfig, unleashUrl }) {
                             onChange={updateField}
                             label="Single Sign-On URL"
                             name="signOnUrl"
-                            value={data.signOnUrl || ''}
+                            value={data.signOnUrl}
                             disabled={!data.enabled}
                             style={{ width: '400px' }}
                             variant="outlined"
@@ -164,7 +174,7 @@ function SamlAuth({ config, getSamlConfig, updateSamlConfig, unleashUrl }) {
                             onChange={updateField}
                             label="X.509 Certificate"
                             name="certificate"
-                            value={data.certificate || ''}
+                            value={data.certificate}
                             disabled={!data.enabled}
                             style={{ width: '100%' }}
                             InputProps={{
@@ -196,7 +206,7 @@ function SamlAuth({ config, getSamlConfig, updateSamlConfig, unleashUrl }) {
                             onChange={updateField}
                             label="Single Sign-out URL"
                             name="signOutUrl"
-                            value={data.signOutUrl || ''}
+                            value={data.signOutUrl}
                             disabled={!data.enabled}
                             style={{ width: '400px' }}
                             variant="outlined"
@@ -219,7 +229,7 @@ function SamlAuth({ config, getSamlConfig, updateSamlConfig, unleashUrl }) {
                             onChange={updateField}
                             label="X.509 Certificate"
                             name="spCertificate"
-                            value={data.spCertificate || ''}
+                            value={data.spCertificate}
                             disabled={!data.enabled}
                             style={{ width: '100%' }}
                             InputProps={{
@@ -243,22 +253,18 @@ function SamlAuth({ config, getSamlConfig, updateSamlConfig, unleashUrl }) {
                             variant="contained"
                             color="primary"
                             type="submit"
+                            disabled={loading}
                         >
                             Save
                         </Button>{' '}
-                        <small>{info}</small>
+                        <p>
+                            <small style={{ color: 'red' }}>
+                                {errors?.message}
+                            </small>
+                        </p>
                     </Grid>
                 </Grid>
             </form>
         </PageContent>
     );
-}
-
-SamlAuth.propTypes = {
-    config: PropTypes.object,
-    unleash: PropTypes.string,
-    getSamlConfig: PropTypes.func.isRequired,
-    updateSamlConfig: PropTypes.func.isRequired,
 };
-
-export default SamlAuth;

@@ -28,6 +28,10 @@ export default class EventService {
     async getEventsForProject(project: string): Promise<IEvent[]> {
         return this.eventStore.getEventsFilterByProject(project);
     }
+
+    async getLatestId(): Promise<number> {
+        return this.eventStore.getLatestId();
+    }
 }
 
 module.exports = EventService;

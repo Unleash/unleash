@@ -9,4 +9,5 @@ export interface IEventStore extends Store<IEvent, number>, EventEmitter {
     getEventsFilterByType(name: string): Promise<IEvent[]>;
     getEventsForFeature(featureName: string): Promise<IEvent[]>;
     getEventsFilterByProject(project: string): Promise<IEvent[]>;
+    getLatestId(): Promise<number>;
 }

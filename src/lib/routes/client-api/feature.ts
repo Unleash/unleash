@@ -11,6 +11,7 @@ import NotFoundError from '../../error/notfound-error';
 import { IAuthRequest } from '../unleash-types';
 import ApiUser from '../../types/api-user';
 import { ALL } from '../../types/models/api-token';
+import EventService from '../../services/event-service';
 
 const version = 2;
 
@@ -24,19 +25,25 @@ export default class FeatureController extends Controller {
 
     private featureToggleServiceV2: FeatureToggleService;
 
+    private eventService: EventService;
+
     private readonly cache: boolean;
 
     private cachedFeatures: any;
 
+    private latestEventId: number;
+
     constructor(
         {
             featureToggleServiceV2,
-        }: Pick<IUnleashServices, 'featureToggleServiceV2'>,
+            eventService,
+        }: Pick<IUnleashServices, 'featureToggleServiceV2' | 'eventService'>,
         config: IUnleashConfig,
     ) {
         super(config);
         const { experimental } = config;
         this.featureToggleServiceV2 = featureToggleServiceV2;
+        this.eventService = eventService;
         this.logger = config.getLogger('client-api/feature.js');
         this.get('/', this.getAll);
         this.get('/:featureName', this.getFeatureToggle);
@@ -55,6 +62,20 @@ export default class FeatureController extends Controller {
                     },
                 },
             );
+        }
+        if (this.cache) {
+            process.nextTick(async () => {
+                this.latestEventId = await this.eventService.getLatestId();
+                setInterval(async () => {
+                    const eventId = await this.eventService.getLatestId();
+                    console.log(eventId);
+                    if (this.latestEventId !== eventId) {
+                        console.log('clear cache');
+                        this.latestEventId = eventId;
+                        await this.cachedFeatures.clear();
+                    }
+                }, 500);
+            });
         }
     }
 

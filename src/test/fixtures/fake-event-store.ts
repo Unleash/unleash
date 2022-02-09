@@ -11,6 +11,10 @@ class FakeEventStore extends EventEmitter implements IEventStore {
         this.events = [];
     }
 
+    getLatestId(): Promise<number> {
+        return Promise.resolve(1);
+    }
+
     async getEventsForFeature(featureName: string): Promise<IEvent[]> {
         return this.events.filter((e) => e.featureName === featureName);
     }

@@ -420,6 +420,7 @@ class FeatureToggleService {
     async getClientFeatures(
         query?: IFeatureToggleQuery,
     ): Promise<FeatureConfigurationClient[]> {
+        console.log('fetch!');
         return this.featureToggleClientStore.getClient(query);
     }
 

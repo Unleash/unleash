@@ -164,6 +164,11 @@ class EventStore extends EventEmitter implements IEventStore {
         }
     }
 
+    async getLatestId(): Promise<number> {
+        const item = await this.db(TABLE).max('id').first();
+        return item.max;
+    }
+
     rowToEvent(row: IEventTable): IEvent {
         return {
             id: row.id,

@@ -32,6 +32,10 @@ process.nextTick(async () => {
                     metricsV2: {
                         enabled: true,
                     },
+                    clientFeatureMemoize: {
+                        enabled: true,
+                        maxAge: 120_000,
+                    },
                 },
                 authentication: {
                     initApiTokens: [

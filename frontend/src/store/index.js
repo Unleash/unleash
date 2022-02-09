@@ -5,7 +5,6 @@ import error from './error';
 import user from './user';
 import applications from './application';
 import projects from './project';
-import addons from './addons';
 import apiCalls from './api-calls';
 
 const unleashStore = combineReducers({
@@ -15,7 +14,6 @@ const unleashStore = combineReducers({
     user,
     applications,
     projects,
-    addons,
     apiCalls,
 });
 

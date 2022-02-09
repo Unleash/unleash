@@ -1,23 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { TextField, FormControlLabel, Switch } from '@material-ui/core';
-
-import { FormButtons, styles as commonStyles } from '../common';
-import { trim } from '../common/util';
-import AddonParameters from './form-addon-parameters';
-import AddonEvents from './form-addon-events';
+import { FormButtons, styles as commonStyles } from '../../common';
+import { trim } from '../../common/util';
+import { AddonParameters } from './AddonParameters/AddonParameters';
+import { AddonEvents } from './AddonEvents/AddonEvents';
 import cloneDeep from 'lodash.clonedeep';
-
-import styles from './form-addon-component.module.scss';
-import PageContent from '../common/PageContent/PageContent';
-import useAddonsApi from '../../hooks/api/actions/useAddonsApi/useAddonsApi';
-import useToast from '../../hooks/useToast';
+import PageContent from '../../common/PageContent/PageContent';
 import { useHistory } from 'react-router-dom';
+import useAddonsApi from '../../../hooks/api/actions/useAddonsApi/useAddonsApi';
+import useToast from '../../../hooks/useToast';
+import { makeStyles } from '@material-ui/styles';
 
-const AddonFormComponent = ({ editMode, provider, addon, fetch }) => {
+const useStyles = makeStyles(theme => ({
+    nameInput: {
+        marginRight: '1.5rem',
+    },
+    formSection: { padding: '10px 28px' },
+}));
+
+export const AddonForm = ({ editMode, provider, addon, fetch }) => {
     const { createAddon, updateAddon } = useAddonsApi();
     const { setToastData, setToastApiError } = useToast();
     const history = useHistory();
+    const styles = useStyles();
 
     const [config, setConfig] = useState(addon);
     const [errors, setErrors] = useState({
@@ -116,6 +122,7 @@ const AddonFormComponent = ({ editMode, provider, addon, fetch }) => {
                 history.push('/addons');
                 setToastData({
                     type: 'success',
+                    confetti: true,
                     title: 'Addon created successfully',
                 });
             }
@@ -196,14 +203,17 @@ const AddonFormComponent = ({ editMode, provider, addon, fetch }) => {
                     />
                 </section>
                 <section className={styles.formSection}>
-                    <FormButtons submitText={submitText} onCancel={handleCancel} />
+                    <FormButtons
+                        submitText={submitText}
+                        onCancel={handleCancel}
+                    />
                 </section>
             </form>
         </PageContent>
     );
 };
 
-AddonFormComponent.propTypes = {
+AddonForm.propTypes = {
     provider: PropTypes.object,
     addon: PropTypes.object.isRequired,
     fetch: PropTypes.func.isRequired,
@@ -211,5 +221,3 @@ AddonFormComponent.propTypes = {
     cancel: PropTypes.func.isRequired,
     editMode: PropTypes.bool.isRequired,
 };
-
-export default AddonFormComponent;

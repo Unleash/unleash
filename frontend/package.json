@@ -67,6 +67,7 @@
     "fetch-mock": "9.11.0",
     "http-proxy-middleware": "2.0.2",
     "immutable": "4.0.0",
+    "@types/lodash.clonedeep": "^4.5.6",
     "lodash.clonedeep": "4.5.0",
     "lodash.flow": "3.5.0",
     "node-fetch": "2.6.7",

@@ -1,4 +1,4 @@
-import { IAddons } from '../../../../interfaces/addons';
+import { IAddon } from '../../../../interfaces/addons';
 import useAPI from '../useApi/useApi';
 
 const useAddonsApi = () => {
@@ -8,7 +8,7 @@ const useAddonsApi = () => {
 
     const URI = 'api/admin/addons';
 
-    const createAddon = async (addonConfig: IAddons) => {
+    const createAddon = async (addonConfig: IAddon) => {
         const path = URI;
         const req = createRequest(path, {
             method: 'POST',
@@ -38,7 +38,7 @@ const useAddonsApi = () => {
         }
     };
 
-    const updateAddon = async (addonConfig: IAddons) => {
+    const updateAddon = async (addonConfig: IAddon) => {
         const path = `${URI}/${addonConfig.id}`;
         const req = createRequest(path, {
             method: 'PUT',

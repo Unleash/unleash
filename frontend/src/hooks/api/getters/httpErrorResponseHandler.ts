@@ -5,15 +5,15 @@ const handleErrorResponses = (target: string) => async (res: Response) => {
         );
         // Try to resolve body, but don't rethrow res.json is not a function
         try {
-            // @ts-ignore
+            // @ts-expect-error
             error.info = await res.json();
         } catch (e) {
-            // @ts-ignore
+            // @ts-expect-error
             error.info = {};
         }
-        // @ts-ignore
+        // @ts-expect-error
         error.status = res.status;
-        // @ts-ignore
+        // @ts-expect-error
         error.statusText = res.statusText;
         throw error;
     }

@@ -4,7 +4,7 @@ title: How to send impression data to a sink
 import ApiRequest from '@site/src/components/ApiRequest'
 
 :::info Placeholders
-Placeholders in code samples below will be delimited by angle brackets (i.e. `<placeholder-name>`). You will need to replace them with the values that are correct in _your_ situation.
+Placeholders in code samples below are delimited by angle brackets (i.e. `<placeholder-name>`). You will need to replace them with the values that are correct in _your_ situation for the code samples to run properly.
 :::
 
 Unleash allows you to gather [**impression data**](../advanced/impression-data.md) from your feature toggles, giving you complete visibility into who checked what toggles and when. What you do with this data is entirely up to you, but a common use case is to send it off to an aggregation and analytics service such as [Posthog](https://posthog.com/) or [Google Analytics](https://analytics.google.com/).
@@ -44,6 +44,7 @@ To enable impression data for an existing toggle, use the "edit" button on the t
 ![The create feature toggle form. There's a toggle at the end of the form that enables or disables impression data. It's labeled "impression data".](/img/enable-impression-data-existing-toggle.png)
 
 To enable impression data for an existing toggle, use the [API's toggle patching functionality](../api/admin/feature-toggles-api-v2.md#patch-toggle):
+
 <ApiRequest verb="patch" payload={[{op: "replace", path: "/impressionData", value: true}]} url="api/admin/projects/<project-id>/features/<feature-toggle-name>" title="Enable impression data on an existing toggle."/>
 
 

@@ -14,7 +14,6 @@ import context from './context';
 import projects from './project';
 import addons from './addons';
 import apiCalls from './api-calls';
-import invoiceAdmin from './e-admin-invoice';
 import feedback from './feedback';
 
 const unleashStore = combineReducers({
@@ -33,7 +32,6 @@ const unleashStore = combineReducers({
     projects,
     addons,
     apiCalls,
-    invoiceAdmin,
     feedback,
 });
 

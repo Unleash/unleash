@@ -33,7 +33,7 @@ When you create a new feature toggle via the UI, there's an option at the end of
 
 ![The create feature toggle form. There's a toggle at the end of the form that enables or disables impression data. It's labeled "impression data".](/img/enable-impression-data.png)
 
-To create a feature toggle with impression data enabled, set the `impressionData` option to `true` in the request payload:
+To create a feature toggle with impression data enabled, set the `impressionData` option to `true` in the request payload, as seen below. For more options, check the [reference docs on creating features](../api/admin/feature-toggles-api-v2.md#create-toggle).
 
 <ApiRequest verb="post" payload={{name: "<feature-toggle-name>", impressionData: true}} url="api/admin/projects/<project-id>/features" title="Create a feature toggle with impression data enabled."/>
 
@@ -42,6 +42,9 @@ To create a feature toggle with impression data enabled, set the `impressionData
 To enable impression data for an existing toggle, use the "edit" button on the toggle's page in the admin UI. It will take you to a form that looks like the toggle creation form. Follow the same steps as you would for [enabling impression data for a new feature toggle](#step-1-new-toggles).
 
 ![The create feature toggle form. There's a toggle at the end of the form that enables or disables impression data. It's labeled "impression data".](/img/enable-impression-data-existing-toggle.png)
+
+To enable impression data for an existing toggle, use the [API's toggle patching functionality](../api/admin/feature-toggles-api-v2.md#patch-toggle):
+<ApiRequest verb="patch" payload={[{op: "replace", path: "/impressionData", value: true}]} url="api/admin/projects/<project-id>/features/<feature-toggle-name>" title="Enable impression data on an existing toggle."/>
 
 
 ## Step 2: Capture impression events in your client {#step-2}

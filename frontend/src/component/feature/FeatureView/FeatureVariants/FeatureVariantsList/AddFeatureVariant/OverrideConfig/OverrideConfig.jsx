@@ -1,6 +1,4 @@
-import { connect } from 'react-redux';
 import classnames from 'classnames';
-
 import PropTypes from 'prop-types';
 import { Grid, IconButton, TextField } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
@@ -10,17 +8,19 @@ import GeneralSelect from '../../../../../../common/GeneralSelect/GeneralSelect'
 import { useCommonStyles } from '../../../../../../../common.styles';
 import ConditionallyRender from '../../../../../../common/ConditionallyRender';
 import InputListField from '../../../../../../common/input-list-field.jsx';
+import useUnleashContext from '../../../../../../../hooks/api/getters/useUnleashContext/useUnleashContext';
 
-const OverrideConfig = ({
+export const OverrideConfig = ({
     overrides,
     updateOverrideType,
     updateOverrideValues,
     removeOverride,
-    contextDefinitions,
 }) => {
     const styles = useStyles();
     const commonStyles = useCommonStyles();
-    const contextNames = contextDefinitions.map(c => ({
+
+    const { context } = useUnleashContext();
+    const contextNames = context.map(c => ({
         key: c.name,
         label: c.name,
     }));
@@ -34,9 +34,7 @@ const OverrideConfig = ({
     };
 
     return overrides.map((o, i) => {
-        const definition = contextDefinitions.find(
-            c => c.name === o.contextName
-        );
+        const definition = context.find(c => c.name === o.contextName);
         const legalValues = definition ? definition.legalValues : [];
 
         return (
@@ -115,9 +113,3 @@ OverrideConfig.propTypes = {
     updateOverrideValues: PropTypes.func.isRequired,
     removeOverride: PropTypes.func.isRequired,
 };
-
-const mapStateToProps = state => ({
-    contextDefinitions: state.context.toJS(),
-});
-
-export default connect(mapStateToProps, {})(OverrideConfig);

@@ -13,7 +13,7 @@ import { Info } from '@material-ui/icons';
 
 import { weightTypes } from './enums';
 
-import OverrideConfig from './OverrideConfig/OverrideConfig';
+import { OverrideConfig } from './OverrideConfig/OverrideConfig';
 import ConditionallyRender from '../../../../../common/ConditionallyRender';
 import GeneralSelect from '../../../../../common/GeneralSelect/GeneralSelect';
 import { useCommonStyles } from '../../../../../../common.styles';

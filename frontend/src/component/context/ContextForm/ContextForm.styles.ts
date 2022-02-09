@@ -54,7 +54,6 @@ export const useStyles = makeStyles(theme => ({
         position: 'relative',
     },
     errorMessage: {
-        // @ts-expect-error
         fontSize: theme.fontSizes.smallBody,
         color: theme.palette.error.main,
         position: 'absolute',

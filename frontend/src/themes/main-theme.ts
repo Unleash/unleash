@@ -1,6 +1,16 @@
-import { createTheme } from '@material-ui/core/styles';
+import { createTheme, Theme } from '@material-ui/core/styles';
 
-const theme = createTheme({
+type MainTheme = typeof mainTheme;
+
+declare module '@material-ui/core/styles/createTheme' {
+    interface Theme extends MainTheme {}
+}
+
+declare module '@material-ui/core/styles/makeStyles' {
+    interface Theme extends MainTheme {}
+}
+
+const mainTheme = {
     typography: {
         fontFamily: ['Sen', 'Roboto, sans-serif'],
         fontWeightBold: '700',
@@ -117,6 +127,6 @@ const theme = createTheme({
         semi: '700',
         bold: '700',
     },
-});
+};
 
-export default theme;
+export default createTheme(mainTheme as unknown as Theme);

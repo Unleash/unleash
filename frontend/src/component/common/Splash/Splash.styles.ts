@@ -29,7 +29,7 @@ export const useStyles = makeStyles(theme => ({
             right: '0px',
             bottom: '0px',
             padding: '2rem 0',
-            zIndex: '500',
+            zIndex: 500,
             position: 'fixed',
             width: '100%',
             height: '100%',

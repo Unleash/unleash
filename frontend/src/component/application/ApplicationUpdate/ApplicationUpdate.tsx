@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { TextField, Grid } from '@material-ui/core';
 import { useCommonStyles } from '../../../common.styles';
 import icons from '../icon-names';
 import GeneralSelect from '../../common/GeneralSelect/GeneralSelect';
 import useApplicationsApi from '../../../hooks/api/actions/useApplicationsApi/useApplicationsApi';
+import useToast from '../../../hooks/useToast';
 
 interface IApplication {
     appName: string;
@@ -26,7 +27,23 @@ const ApplicationUpdate = ({ application }: IApplicationUpdateProps) => {
     const { appName, icon, url, description } = application;
     const [localUrl, setLocalUrl] = useState(url || '');
     const [localDescription, setLocalDescription] = useState(description || '');
+    const { setToastApiError } = useToast();
     const commonStyles = useCommonStyles();
+
+    const handleChange = (
+        evt: ChangeEvent<{ name?: string | undefined; value: unknown }>
+    ) => {
+        evt.preventDefault();
+        try {
+            storeApplicationMetaData(
+                appName,
+                'icon',
+                evt.target.value as string
+            );
+        } catch (e: any) {
+            setToastApiError(e.toString());
+        }
+    };
 
     return (
         <Grid container style={{ marginTop: '1rem' }}>
@@ -38,13 +55,7 @@ const ApplicationUpdate = ({ application }: IApplicationUpdateProps) => {
                         label="Icon"
                         options={icons.map(v => ({ key: v, label: v }))}
                         value={icon || 'apps'}
-                        onChange={e =>
-                            storeApplicationMetaData(
-                                appName,
-                                'icon',
-                                e.target.value as string
-                            )
-                        }
+                        onChange={e => handleChange(e)}
                     />
                 </Grid>
                 <Grid item>

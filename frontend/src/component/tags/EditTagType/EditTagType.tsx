@@ -6,7 +6,7 @@ import useToast from '../../../hooks/useToast';
 import FormTemplate from '../../common/FormTemplate/FormTemplate';
 import PermissionButton from '../../common/PermissionButton/PermissionButton';
 import { UPDATE_TAG_TYPE } from '../../providers/AccessProvider/permissions';
-import useTagForm from '../hooks/useTagForm';
+import useTagTypeForm from '../TagTypeForm/useTagTypeForm';
 import TagForm from '../TagTypeForm/TagTypeForm';
 
 const EditTagType = () => {
@@ -23,7 +23,7 @@ const EditTagType = () => {
         getTagPayload,
         errors,
         clearErrors,
-    } = useTagForm(tagType?.name, tagType?.description);
+    } = useTagTypeForm(tagType?.name, tagType?.description);
     const { updateTagType, loading } = useTagTypesApi();
 
     const handleSubmit = async (e: Event) => {

@@ -1,20 +1,18 @@
 import React from 'react';
-
-import TagTypesList from '../TagTypeList';
+import { TagTypeList } from '../TagTypeList';
 import renderer from 'react-test-renderer';
 import { MemoryRouter } from 'react-router-dom';
 import { ThemeProvider } from '@material-ui/styles';
-import theme from '../../../themes/main-theme';
-import { createFakeStore } from '../../../accessStoreFake';
-import AccessProvider from '../../providers/AccessProvider/AccessProvider';
-
+import theme from '../../../../themes/main-theme';
+import { createFakeStore } from '../../../../accessStoreFake';
+import AccessProvider from '../../../providers/AccessProvider/AccessProvider';
 import {
     ADMIN,
     CREATE_TAG_TYPE,
     UPDATE_TAG_TYPE,
     DELETE_TAG_TYPE,
-} from '../../providers/AccessProvider/permissions';
-import UIProvider from '../../providers/UIProvider/UIProvider';
+} from '../../../providers/AccessProvider/permissions';
+import UIProvider from '../../../providers/UIProvider/UIProvider';
 
 test('renders an empty list correctly', () => {
     const tree = renderer.create(
@@ -24,7 +22,7 @@ test('renders an empty list correctly', () => {
                     <AccessProvider
                         store={createFakeStore([{ permission: ADMIN }])}
                     >
-                        <TagTypesList
+                        <TagTypeList
                             tagTypes={[]}
                             fetchTagTypes={jest.fn()}
                             removeTagType={jest.fn()}
@@ -50,7 +48,7 @@ test('renders a list with elements correctly', () => {
                             { permission: DELETE_TAG_TYPE },
                         ])}
                     >
-                        <TagTypesList
+                        <TagTypeList
                             tagTypes={[
                                 {
                                     name: 'simple',

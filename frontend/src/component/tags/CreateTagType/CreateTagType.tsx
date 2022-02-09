@@ -5,7 +5,7 @@ import useToast from '../../../hooks/useToast';
 import FormTemplate from '../../common/FormTemplate/FormTemplate';
 import PermissionButton from '../../common/PermissionButton/PermissionButton';
 import { UPDATE_TAG_TYPE } from '../../providers/AccessProvider/permissions';
-import useTagForm from '../hooks/useTagForm';
+import useTagTypeForm from '../TagTypeForm/useTagTypeForm';
 import TagTypeForm from '../TagTypeForm/TagTypeForm';
 
 const CreateTagType = () => {
@@ -21,7 +21,7 @@ const CreateTagType = () => {
         validateNameUniqueness,
         errors,
         clearErrors,
-    } = useTagForm();
+    } = useTagTypeForm();
     const { createTag, loading } = useTagTypesApi();
 
     const handleSubmit = async (e: Event) => {

@@ -8,7 +8,7 @@ import HistoryTogglePage from '../../page/history/toggle';
 import { ArchiveListContainer } from '../archive/ArchiveListContainer';
 import Applications from '../../page/applications';
 import ApplicationView from '../../page/applications/view';
-import ListTagTypes from '../../page/tag-types';
+import { TagTypeList } from '../tags/TagTypeList/TagTypeList';
 import Addons from '../../page/addons';
 import AddonsCreate from '../../page/addons/create';
 import AddonsEdit from '../../page/addons/edit';
@@ -37,8 +37,8 @@ import CreateEnvironment from '../environments/CreateEnvironment/CreateEnvironme
 import EditEnvironment from '../environments/EditEnvironment/EditEnvironment';
 import CreateContext from '../context/CreateContext/CreateContext';
 import EditContext from '../context/EditContext/EditContext';
-import EditTagType from '../tagTypes/EditTagType/EditTagType';
-import CreateTagType from '../tagTypes/CreateTagType/CreateTagType';
+import EditTagType from '../tags/EditTagType/EditTagType';
+import CreateTagType from '../tags/CreateTagType/CreateTagType';
 import EditProject from '../project/Project/EditProject/EditProject';
 import CreateProject from '../project/Project/CreateProject/CreateProject';
 import CreateFeature from '../feature/CreateFeature/CreateFeature';
@@ -314,7 +314,7 @@ export const routes = [
     {
         path: '/tag-types',
         title: 'Tag types',
-        component: ListTagTypes,
+        component: TagTypeList,
         type: 'protected',
         layout: 'main',
         menu: { mobile: true, advanced: true },

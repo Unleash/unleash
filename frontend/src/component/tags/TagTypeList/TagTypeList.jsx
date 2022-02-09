@@ -2,12 +2,12 @@ import { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link, useHistory } from 'react-router-dom';
 import {
+    Button,
+    IconButton,
     List,
     ListItem,
     ListItemIcon,
     ListItemText,
-    IconButton,
-    Button,
     Tooltip,
 } from '@material-ui/core';
 import { Add, Delete, Edit, Label } from '@material-ui/icons';
@@ -20,14 +20,14 @@ import {
 } from '../../providers/AccessProvider/permissions';
 import Dialogue from '../../common/Dialogue/Dialogue';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import styles from '../TagType.module.scss';
+import styles from './TagTypeList.module.scss';
 import AccessContext from '../../../contexts/AccessContext';
 import useTagTypesApi from '../../../hooks/api/actions/useTagTypesApi/useTagTypesApi';
 import useTagTypes from '../../../hooks/api/getters/useTagTypes/useTagTypes';
 import useToast from '../../../hooks/useToast';
 import PermissionIconButton from '../../common/PermissionIconButton/PermissionIconButton';
 
-const TagTypeList = () => {
+export const TagTypeList = () => {
     const { hasAccess } = useContext(AccessContext);
     const [deletion, setDeletion] = useState({ open: false });
     const history = useHistory();
@@ -160,5 +160,3 @@ TagTypeList.propTypes = {
     fetchTagTypes: PropTypes.func.isRequired,
     removeTagType: PropTypes.func.isRequired,
 };
-
-export default TagTypeList;

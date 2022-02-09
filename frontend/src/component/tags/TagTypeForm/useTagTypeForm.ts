@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import useTagTypesApi from '../../../hooks/api/actions/useTagTypesApi/useTagTypesApi';
 
-const useTagForm = (initialTagName = '', initialTagDesc = '') => {
+const useTagTypeForm = (initialTagName = '', initialTagDesc = '') => {
     const [tagName, setTagName] = useState(initialTagName);
     const [tagDesc, setTagDesc] = useState(initialTagDesc);
     const [errors, setErrors] = useState({});
@@ -66,4 +66,4 @@ const useTagForm = (initialTagName = '', initialTagDesc = '') => {
     };
 };
 
-export default useTagForm;
+export default useTagTypeForm;

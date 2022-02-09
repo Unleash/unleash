@@ -1,6 +1,5 @@
 import { combineReducers } from 'redux';
 import features from './feature-toggle';
-import featureTypes from './feature-type';
 import featureMetrics from './feature-metrics';
 import featureTags from './feature-tags';
 import tagTypes from './tag-type';
@@ -17,7 +16,6 @@ import feedback from './feedback';
 
 const unleashStore = combineReducers({
     features,
-    featureTypes,
     featureMetrics,
     strategies,
     tagTypes,

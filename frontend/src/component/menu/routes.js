@@ -41,8 +41,8 @@ import EditProject from '../project/Project/EditProject/EditProject';
 import CreateProject from '../project/Project/CreateProject/CreateProject';
 import CreateFeature from '../feature/CreateFeature/CreateFeature';
 import EditFeature from '../feature/EditFeature/EditFeature';
-import ApplicationEdit from '../application/ApplicationEdit';
-import ApplicationList from '../application/ApplicationList';
+import ApplicationEdit from '../application/ApplicationEdit/ApplicationEdit';
+import ApplicationList from '../application/ApplicationList/ApplicationList';
 import ContextList from '../context/ContextList/ContextList';
 import RedirectFeatureView from '../feature/RedirectFeatureView/RedirectFeatureView';
 

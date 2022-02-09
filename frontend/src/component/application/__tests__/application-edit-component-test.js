@@ -1,5 +1,5 @@
 import { ThemeProvider } from '@material-ui/core';
-import ApplicationEdit from '../ApplicationEdit';
+import ApplicationEdit from '../ApplicationEdit/ApplicationEdit';
 import renderer from 'react-test-renderer';
 import { MemoryRouter } from 'react-router-dom';
 import { ADMIN } from '../../providers/AccessProvider/permissions';

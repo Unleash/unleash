@@ -1,49 +1,42 @@
 /* eslint react/no-multi-comp:off */
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import {
     Avatar,
     Link,
     Icon,
     IconButton,
-    Button,
     LinearProgress,
     Typography,
 } from '@material-ui/core';
 import { Link as LinkIcon } from '@material-ui/icons';
-import ConditionallyRender from '../common/ConditionallyRender/ConditionallyRender';
-import {
-    formatDateWithLocale,
-} from '../common/util';
-import { UPDATE_APPLICATION } from '../providers/AccessProvider/permissions';
-import ApplicationView from './ApplicationView';
-import ApplicationUpdate from './ApplicationUpdate';
-import TabNav from '../common/TabNav/TabNav';
-import Dialogue from '../common/Dialogue';
-import PageContent from '../common/PageContent';
-import HeaderTitle from '../common/HeaderTitle';
-import AccessContext from '../../contexts/AccessContext';
-import useApplicationsApi from '../../hooks/api/actions/useApplicationsApi/useApplicationsApi';
-import useApplication from '../../hooks/api/getters/useApplication/useApplication';
+import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyRender';
+import { formatDateWithLocale } from '../../common/util';
+import { UPDATE_APPLICATION } from '../../providers/AccessProvider/permissions';
+import ApplicationView from '../ApplicationView/ApplicationView';
+import ApplicationUpdate from '../ApplicationUpdate/ApplicationUpdate';
+import TabNav from '../../common/TabNav/TabNav';
+import Dialogue from '../../common/Dialogue';
+import PageContent from '../../common/PageContent';
+import HeaderTitle from '../../common/HeaderTitle';
+import AccessContext from '../../../contexts/AccessContext';
+import useApplicationsApi from '../../../hooks/api/actions/useApplicationsApi/useApplicationsApi';
+import useApplication from '../../../hooks/api/getters/useApplication/useApplication';
 import { useHistory, useParams } from 'react-router-dom';
-import { useLocationSettings } from '../../hooks/useLocationSettings';
+import { useLocationSettings } from '../../../hooks/useLocationSettings';
+import useToast from '../../../hooks/useToast';
+import PermissionButton from '../../common/PermissionButton/PermissionButton';
 
 const ApplicationEdit = () => {
     const history = useHistory();
     const { name } = useParams<{ name: string }>();
-    const { refetchApplication, application } = useApplication(name);
+    const { application, loading } = useApplication(name);
     const { appName, url, description, icon = 'apps', createdAt } = application;
     const { hasAccess } = useContext(AccessContext);
     const { deleteApplication } = useApplicationsApi();
     const { locationSettings } = useLocationSettings();
+    const { setToastData, setToastApiError } = useToast();
 
-    const [loading, setLoading] = useState(true);
     const [showDialog, setShowDialog] = useState(false);
-
-    useEffect(() => {
-        refetchApplication();
-        setLoading(false);
-        // eslint-disable-next-line
-    }, []);
 
     const toggleModal = () => {
         setShowDialog(!showDialog);
@@ -54,8 +47,17 @@ const ApplicationEdit = () => {
 
     const onDeleteApplication = async (evt: Event) => {
         evt.preventDefault();
-        await deleteApplication(appName);
-        history.push('/applications');
+        try {
+            await deleteApplication(appName);
+            setToastData({
+                title: 'Deleted Successfully',
+                text: 'Application deleted successfully',
+                type: 'success',
+            });
+            history.push('/applications');
+        } catch (e: any) {
+            setToastApiError(e.toString());
+        }
     };
 
     const renderModal = () => (
@@ -115,18 +117,13 @@ const ApplicationEdit = () => {
                                 }
                             />
 
-                            <ConditionallyRender
-                                condition={hasAccess(UPDATE_APPLICATION)}
-                                show={
-                                    <Button
-                                        color="secondary"
-                                        title="Delete application"
-                                        onClick={toggleModal}
-                                    >
-                                        Delete
-                                    </Button>
-                                }
-                            />
+                            <PermissionButton
+                                title="Delete application"
+                                onClick={toggleModal}
+                                permission={UPDATE_APPLICATION}
+                            >
+                                Delete
+                            </PermissionButton>
                         </>
                     }
                 />

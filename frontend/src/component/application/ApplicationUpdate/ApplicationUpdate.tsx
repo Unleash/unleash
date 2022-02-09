@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { TextField, Grid } from '@material-ui/core';
-import { useCommonStyles } from '../../common.styles';
-import icons from './icon-names';
-import GeneralSelect from '../common/GeneralSelect/GeneralSelect';
-import useApplicationsApi from '../../hooks/api/actions/useApplicationsApi/useApplicationsApi';
+import { useCommonStyles } from '../../../common.styles';
+import icons from '../icon-names';
+import GeneralSelect from '../../common/GeneralSelect/GeneralSelect';
+import useApplicationsApi from '../../../hooks/api/actions/useApplicationsApi/useApplicationsApi';
 
 interface IApplication {
     appName: string;

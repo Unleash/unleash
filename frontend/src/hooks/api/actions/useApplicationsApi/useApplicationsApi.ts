@@ -39,20 +39,8 @@ const useApplicationsApi = () => {
         }
     };
 
-    const fetchApplicationsWithStrategyName = async (strategyName: string) => {
-        const path = `${URI}?strategyName=${strategyName}`;
-        const req = createRequest(path, { method: 'GET' });
-        try {
-            const res = await makeRequest(req.caller, req.id);
-            return res;
-        } catch (e) {
-            throw e;
-        }
-    };
-
     return {
         storeApplicationMetaData,
-        fetchApplicationsWithStrategyName,
         deleteApplication,
         errors,
         loading,

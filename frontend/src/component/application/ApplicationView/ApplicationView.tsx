@@ -15,16 +15,16 @@ import {
     FlagRounded,
     SvgIconComponent,
 } from '@material-ui/icons';
-import { shorten } from '../common';
+import { shorten } from '../../common';
 import {
     CREATE_FEATURE,
     CREATE_STRATEGY,
-} from '../providers/AccessProvider/permissions';
-import ConditionallyRender from '../common/ConditionallyRender/ConditionallyRender';
-import { getTogglePath } from '../../utils/route-path-helpers';
-import useApplication from '../../hooks/api/getters/useApplication/useApplication';
-import AccessContext from '../../contexts/AccessContext';
-import { formatFullDateTimeWithLocale } from '../common/util';
+} from '../../providers/AccessProvider/permissions';
+import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyRender';
+import { getTogglePath } from '../../../utils/route-path-helpers';
+import useApplication from '../../../hooks/api/getters/useApplication/useApplication';
+import AccessContext from '../../../contexts/AccessContext';
+import { formatFullDateTimeWithLocale } from '../../common/util';
 const ApplicationView = () => {
     const { hasAccess } = useContext(AccessContext);
     const { name } = useParams<{ name: string }>();

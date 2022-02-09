@@ -1,20 +1,16 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { CircularProgress } from '@material-ui/core';
 import { Warning } from '@material-ui/icons';
 
-import { AppsLinkList, styles as commonStyles } from '../common';
-import SearchField from '../common/SearchField/SearchField';
-import PageContent from '../common/PageContent/PageContent';
-import HeaderTitle from '../common/HeaderTitle';
-import useApplications from '../../hooks/api/getters/useApplications/useApplications';
+import { AppsLinkList, styles as commonStyles } from '../../common';
+import SearchField from '../../common/SearchField/SearchField';
+import PageContent from '../../common/PageContent/PageContent';
+import HeaderTitle from '../../common/HeaderTitle';
+import useApplications from '../../../hooks/api/getters/useApplications/useApplications';
 
 const ApplicationList = () => {
-    const { applications, refetchApplications } = useApplications();
+    const { applications } = useApplications();
     const [filter, setFilter] = useState('');
-    useEffect(() => {
-        refetchApplications();
-        // eslint-disable-next-line
-    }, []);
 
     const filteredApplications = useMemo(() => {
         const regExp = new RegExp(filter, 'i');
@@ -23,8 +19,8 @@ const ApplicationList = () => {
             : applications;
     }, [applications, filter]);
 
-    const Empty = () => (
-        <React.Fragment>
+    const RenderNoApplications = () => (
+        <>
             <section style={{ textAlign: 'center' }}>
                 <Warning /> <br />
                 <br />
@@ -39,7 +35,7 @@ const ApplicationList = () => {
                     documentation.
                 </a>
             </section>
-        </React.Fragment>
+        </>
     );
 
     if (!filteredApplications) {
@@ -56,7 +52,7 @@ const ApplicationList = () => {
                     {filteredApplications.length > 0 ? (
                         <AppsLinkList apps={filteredApplications} />
                     ) : (
-                        <Empty />
+                        <RenderNoApplications />
                     )}
                 </div>
             </PageContent>

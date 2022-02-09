@@ -1,12 +1,9 @@
-import React from 'react';
-
 import { ThemeProvider } from '@material-ui/core';
-import ClientApplications from '../application-edit-component';
+import ApplicationEdit from '../ApplicationEdit';
 import renderer from 'react-test-renderer';
 import { MemoryRouter } from 'react-router-dom';
 import { ADMIN } from '../../providers/AccessProvider/permissions';
 import theme from '../../../themes/main-theme';
-
 import { createFakeStore } from '../../../accessStoreFake';
 import AccessProvider from '../../providers/AccessProvider/AccessProvider';
 
@@ -14,13 +11,17 @@ test('renders correctly if no application', () => {
     const tree = renderer
         .create(
             <AccessProvider store={createFakeStore([{ permission: ADMIN }])}>
-                <ClientApplications
-                    fetchApplication={() => Promise.resolve({})}
-                    storeApplicationMetaData={jest.fn()}
-                    deleteApplication={jest.fn()}
-                    history={{}}
-                    locationSettings={{ locale: 'en-GB' }}
-                />
+                <ThemeProvider theme={theme}>
+                    <MemoryRouter initialEntries={['/test']}>
+                        <ApplicationEdit
+                            fetchApplication={() => Promise.resolve({})}
+                            storeApplicationMetaData={jest.fn()}
+                            deleteApplication={jest.fn()}
+                            history={{}}
+                            locationSettings={{ locale: 'en-GB' }}
+                        />
+                    </MemoryRouter>
+                </ThemeProvider>
             </AccessProvider>
         )
         .toJSON();
@@ -34,7 +35,7 @@ test('renders correctly without permission', () => {
             <MemoryRouter>
                 <ThemeProvider theme={theme}>
                     <AccessProvider store={createFakeStore([])}>
-                        <ClientApplications
+                        <ApplicationEdit
                             fetchApplication={() => Promise.resolve({})}
                             storeApplicationMetaData={jest.fn()}
                             deleteApplication={jest.fn()}
@@ -97,7 +98,7 @@ test('renders correctly with permissions', () => {
                     <AccessProvider
                         store={createFakeStore([{ permission: ADMIN }])}
                     >
-                        <ClientApplications
+                        <ApplicationEdit
                             fetchApplication={() => Promise.resolve({})}
                             storeApplicationMetaData={jest.fn()}
                             history={{}}

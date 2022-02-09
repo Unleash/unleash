@@ -22,112 +22,22 @@ exports[`renders correctly if no application 1`] = `
 `;
 
 exports[`renders correctly with permissions 1`] = `
-<div
-  className="MuiPaper-root MuiPaper-elevation1 MuiPaper-rounded"
-  style={
-    Object {
-      "borderRadius": "10px",
-      "boxShadow": "none",
-    }
-  }
->
+<div>
+  <p>
+    Loading...
+  </p>
   <div
-    className="makeStyles-headerContainer-1"
+    className="MuiLinearProgress-root MuiLinearProgress-colorPrimary MuiLinearProgress-indeterminate"
+    role="progressbar"
   >
     <div
-      className="makeStyles-headerTitleContainer-5"
-    >
-      <div
-        className=""
-        data-loading={true}
-      >
-        <h2
-          className="MuiTypography-root makeStyles-headerTitle-6 MuiTypography-h2"
-        >
-          <span
-            style={
-              Object {
-                "alignItems": "center",
-                "display": "flex",
-              }
-            }
-          >
-            <div
-              className="MuiAvatar-root MuiAvatar-circular MuiAvatar-colorDefault"
-              style={
-                Object {
-                  "marginRight": "8px",
-                }
-              }
-            >
-              <span
-                aria-hidden={true}
-                className="material-icons MuiIcon-root"
-              >
-                apps
-              </span>
-            </div>
-            test-app
-          </span>
-        </h2>
-      </div>
-      <div
-        className="makeStyles-headerActions-7"
-      >
-        <a
-          aria-disabled={false}
-          className="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiButtonBase-root MuiIconButton-root MuiTypography-colorPrimary"
-          href="http://example.org"
-          onBlur={[Function]}
-          onDragLeave={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onKeyUp={[Function]}
-          onMouseDown={[Function]}
-          onMouseLeave={[Function]}
-          onMouseUp={[Function]}
-          onTouchEnd={[Function]}
-          onTouchMove={[Function]}
-          onTouchStart={[Function]}
-          role="button"
-          tabIndex={0}
-        >
-          <span
-            className="MuiIconButton-label"
-          >
-            <svg
-              aria-hidden={true}
-              className="MuiSvgIcon-root"
-              focusable="false"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"
-              />
-            </svg>
-          </span>
-        </a>
-      </div>
-    </div>
-  </div>
-  <div
-    className="makeStyles-bodyContainer-2"
-  >
-    <div>
-      <p
-        className="MuiTypography-root MuiTypography-body1"
-      >
-        app description
-      </p>
-      <p
-        className="MuiTypography-root MuiTypography-body2"
-      >
-        Created: 
-        <strong>
-          Invalid Date
-        </strong>
-      </p>
-    </div>
+      className="MuiLinearProgress-bar MuiLinearProgress-barColorPrimary MuiLinearProgress-bar1Indeterminate"
+      style={Object {}}
+    />
+    <div
+      className="MuiLinearProgress-bar MuiLinearProgress-bar2Indeterminate MuiLinearProgress-barColorPrimary"
+      style={Object {}}
+    />
   </div>
 </div>
 `;
@@ -178,47 +88,12 @@ exports[`renders correctly without permission 1`] = `
                 apps
               </span>
             </div>
-            test-app
           </span>
         </h2>
       </div>
       <div
         className="makeStyles-headerActions-7"
-      >
-        <a
-          aria-disabled={false}
-          className="MuiTypography-root MuiLink-root MuiLink-underlineHover MuiButtonBase-root MuiIconButton-root MuiTypography-colorPrimary"
-          href="http://example.org"
-          onBlur={[Function]}
-          onDragLeave={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onKeyUp={[Function]}
-          onMouseDown={[Function]}
-          onMouseLeave={[Function]}
-          onMouseUp={[Function]}
-          onTouchEnd={[Function]}
-          onTouchMove={[Function]}
-          onTouchStart={[Function]}
-          role="button"
-          tabIndex={0}
-        >
-          <span
-            className="MuiIconButton-label"
-          >
-            <svg
-              aria-hidden={true}
-              className="MuiSvgIcon-root"
-              focusable="false"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"
-              />
-            </svg>
-          </span>
-        </a>
-      </div>
+      />
     </div>
   </div>
   <div
@@ -228,14 +103,14 @@ exports[`renders correctly without permission 1`] = `
       <p
         className="MuiTypography-root MuiTypography-body1"
       >
-        app description
+        
       </p>
       <p
         className="MuiTypography-root MuiTypography-body2"
       >
         Created: 
         <strong>
-          Invalid Date
+          02/02/2022
         </strong>
       </p>
     </div>

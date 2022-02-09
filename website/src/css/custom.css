@@ -10,10 +10,16 @@
     --unleash-color-purple: #635dc5;
     --unleash-color-gray: #ecebeb;
 
-    --unleash-color-admonition-background: var(--unleash-color-gray);
-    --unleash-color-admonition-border: #999;
-    --unleash-color-admonition-text: #2b2b2b;
+    --ifm-code-font-size: 90%;
+    --ifm-font-size-base: 15px;
+    --navbar-link-color: #122d33;
+}
 
+footer {
+    --ifm-footer-link-hover-color: var(--ifm-footer-link-color);
+}
+
+html[data-theme='light'] {
     --ifm-color-primary: #39535b;
     --ifm-color-primary-dark: #334b52;
     --ifm-color-primary-darker: #30474d;
@@ -21,16 +27,47 @@
     --ifm-color-primary-light: #3f5b64;
     --ifm-color-primary-lighter: #425f69;
     --ifm-color-primary-lightest: #4a6c76;
-    --ifm-code-font-size: 90%;
-    --ifm-font-size-base: 15px;
+
     --ifm-link-color: var(--unleash-color-purple);
     --ifm-menu-color-background-active: var(--unleash-color-gray);
     --ifm-menu-color-background-hover: var(--unleash-color-gray);
-    --navbar-link-color: #122d33;
+
+    --unleash-color-admonition-background: var(--unleash-color-gray);
+    --unleash-color-admonition-border: #999;
+    --unleash-color-admonition-text: #2b2b2b;
 }
 
-footer {
-    --ifm-footer-link-hover-color: var(--ifm-footer-link-color);
+html[data-theme='dark'] {
+    --ifm-color-primary-lightest: #d1d1ff;
+    --ifm-color-primary-lighter: #c9c9ff;
+    --ifm-color-primary-light: #c2c0ff;
+    --ifm-color-primary: #bab8ff;
+    --ifm-color-primary-dark: #b2afff;
+    --ifm-color-primary-darker: #aba7ff;
+    --ifm-color-primary-darkest: #a39eff;
+
+    --unleash-color-purple: var(--ifm-color-primary);
+    --unleash-color-gray: #333;
+    --ifm-menu-color-background-active: var(--unleash-color-gray);
+    --ifm-menu-color-background-hover: var(--unleash-color-gray);
+
+    --ifm-link-color: var(--ifm-color-primary);
+
+    --unleash-color-admonition-background: var(
+        --ifm-color-secondary-contrast-background
+    );
+
+
+    --unleash-img-background-color: #fff;
+}
+
+img {
+    background: var(--unleash-img-background-color);
+    display: block;
+    margin: auto;
+    border: var(--ifm-global-border-width) solid var(--unleash-color-gray);
+    border-radius: var(--ifm-global-radius);
+    box-shadow: var(--ifm-global-shadow-lw);
 }
 
 [class^='docTitle'] {

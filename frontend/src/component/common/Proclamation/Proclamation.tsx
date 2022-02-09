@@ -3,16 +3,10 @@ import { Alert } from '@material-ui/lab';
 import ConditionallyRender from '../ConditionallyRender';
 import { Typography } from '@material-ui/core';
 import { useStyles } from './Proclamation.styles';
+import { IProclamationToast } from '../../../interfaces/uiConfig';
 
 interface IProclamationProps {
-    toast?: IToast;
-}
-
-interface IToast {
-    message: string;
-    id: string;
-    severity: 'success' | 'info' | 'warning' | 'error';
-    link: string;
+    toast?: IProclamationToast;
 }
 
 const renderProclamation = (id: string) => {

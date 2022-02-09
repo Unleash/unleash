@@ -1,6 +1,6 @@
 import ConditionallyRender from '../../common/ConditionallyRender';
 import { matchPath } from 'react-router';
-import MainLayout from '../MainLayout';
+import { MainLayout } from '../MainLayout/MainLayout';
 
 const LayoutPicker = ({ children, location }) => {
     const standalonePages = () => {

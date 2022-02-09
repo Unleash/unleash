@@ -8,7 +8,6 @@ import strategies from './strategy';
 import error from './error';
 import user from './user';
 import applications from './application';
-import uiConfig from './ui-config';
 import projects from './project';
 import addons from './addons';
 import apiCalls from './api-calls';
@@ -23,7 +22,6 @@ const unleashStore = combineReducers({
     error,
     user,
     applications,
-    uiConfig,
     projects,
     addons,
     apiCalls,

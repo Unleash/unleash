@@ -9,24 +9,21 @@ import { useStyles } from './Feedback.styles';
 import AnimateOnMount from '../AnimateOnMount/AnimateOnMount';
 import ConditionallyRender from '../ConditionallyRender';
 import { formatApiPath } from '../../../utils/format-path';
-import { Action, Dispatch } from 'redux';
 import UIContext from '../../../contexts/UIContext';
 import useUser from '../../../hooks/api/getters/useUser/useUser';
+import { PNPS_FEEDBACK_ID, showPnpsFeedback } from '../util';
 
 interface IFeedbackProps {
-    show?: boolean;
-    hideFeedback: () => Dispatch<Action>;
-    fetchUser: () => void;
-    feedbackId: string;
     openUrl: string;
 }
 
-const Feedback = ({ feedbackId, openUrl }: IFeedbackProps) => {
+const Feedback = ({ openUrl }: IFeedbackProps) => {
     const { showFeedback, setShowFeedback } = useContext(UIContext);
     const { refetch, feedback } = useUser();
     const [answeredNotNow, setAnsweredNotNow] = useState(false);
     const styles = useStyles();
     const commonStyles = useCommonStyles();
+    const feedbackId = PNPS_FEEDBACK_ID;
 
     const onConfirm = async () => {
         const url = formatApiPath('api/admin/feedback');
@@ -41,7 +38,8 @@ const Feedback = ({ feedbackId, openUrl }: IFeedbackProps) => {
                 body: JSON.stringify({ feedbackId }),
             });
             await refetch();
-        } catch {
+        } catch (err) {
+            console.warn(err);
             setShowFeedback(false);
         }
 
@@ -68,7 +66,8 @@ const Feedback = ({ feedbackId, openUrl }: IFeedbackProps) => {
                 body: JSON.stringify({ feedbackId, neverShow: true }),
             });
             await refetch();
-        } catch {
+        } catch (err) {
+            console.warn(err);
             setShowFeedback(false);
         }
 
@@ -77,9 +76,7 @@ const Feedback = ({ feedbackId, openUrl }: IFeedbackProps) => {
         }, 100);
     };
 
-    const pnps = feedback.find(feedback => feedback.feedbackId === feedbackId);
-
-    if (pnps?.given || pnps?.neverShow) {
+    if (!showPnpsFeedback(feedback)) {
         return null;
     }
 

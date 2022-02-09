@@ -12,7 +12,6 @@ import uiConfig from './ui-config';
 import projects from './project';
 import addons from './addons';
 import apiCalls from './api-calls';
-import feedback from './feedback';
 
 const unleashStore = combineReducers({
     features,
@@ -28,7 +27,6 @@ const unleashStore = combineReducers({
     projects,
     addons,
     apiCalls,
-    feedback,
 });
 
 export default unleashStore;

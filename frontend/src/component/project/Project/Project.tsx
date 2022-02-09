@@ -12,7 +12,7 @@ import useQueryParams from '../../../hooks/useQueryParams';
 import { useEffect } from 'react';
 import useTabs from '../../../hooks/useTabs';
 import TabPanel from '../../common/TabNav/TabPanel';
-import ProjectAccess from '../access-container';
+import { ProjectAccess } from '../ProjectAccess/ProjectAccess';
 import ProjectEnvironment from '../ProjectEnvironment/ProjectEnvironment';
 import ProjectOverview from './ProjectOverview';
 import ProjectHealth from './ProjectHealth/ProjectHealth';

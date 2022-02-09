@@ -1,19 +1,24 @@
 import { FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
 import React from 'react';
-import IRole from '../../../../interfaces/role';
+import { IProjectRole } from '../../../../interfaces/role';
 
 import { useStyles } from '../ProjectAccess.styles';
 
 interface IProjectRoleSelect {
-    roles: IRole[];
+    roles: IProjectRole[];
     labelId: string;
     id: string;
     placeholder?: string;
-    onChange: () => void;
+    onChange: (
+        evt: React.ChangeEvent<{
+            name?: string | undefined;
+            value: unknown;
+        }>
+    ) => void;
     value: any;
 }
 
-const ProjectRoleSelect: React.FC<IProjectRoleSelect> = ({
+export const ProjectRoleSelect: React.FC<IProjectRoleSelect> = ({
     roles,
     onChange,
     labelId,
@@ -39,9 +44,10 @@ const ProjectRoleSelect: React.FC<IProjectRoleSelect> = ({
                 value={value || ''}
                 onChange={onChange}
                 renderValue={roleId => {
-                    return roles?.find(role => {
+                    const role = roles?.find(role => {
                         return role.id === roleId;
-                    }).name;
+                    });
+                    return role?.name || '';
                 }}
             >
                 {children}
@@ -66,5 +72,3 @@ const ProjectRoleSelect: React.FC<IProjectRoleSelect> = ({
         </FormControl>
     );
 };
-
-export default ProjectRoleSelect;

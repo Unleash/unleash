@@ -8,7 +8,7 @@ import ConditionallyRender from '../../ConditionallyRender';
 import Close from '@material-ui/icons/Close';
 
 const Toast = ({ title, text, type, confetti }: IToastData) => {
-    // @ts-ignore
+    // @ts-expect-error
     const { setToast } = useContext(UIContext);
 
     const styles = useStyles();

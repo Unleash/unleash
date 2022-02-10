@@ -20,7 +20,7 @@ interface IToastOptions {
 }
 
 const useToast = () => {
-    // @ts-ignore
+    // @ts-expect-error
     const { setToast } = useContext(UIContext);
 
     const hideToast = () =>

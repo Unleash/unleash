@@ -15,6 +15,7 @@ interface IPaginateUIProps {
     prevPage: () => void;
     setPageIndex: (idx: number) => void;
     nextPage: () => void;
+    style?: React.CSSProperties;
 }
 
 const PaginateUI = ({

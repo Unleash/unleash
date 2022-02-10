@@ -6,10 +6,8 @@ import Strategies from '../../page/strategies';
 import HistoryPage from '../../page/history';
 import HistoryTogglePage from '../../page/history/toggle';
 import { ArchiveListContainer } from '../archive/ArchiveListContainer';
-import ListTagTypes from '../../page/tag-types';
-import Addons from '../../page/addons';
-import AddonsCreate from '../../page/addons/create';
-import AddonsEdit from '../../page/addons/edit';
+import { TagTypeList } from '../tags/TagTypeList/TagTypeList';
+import { AddonList } from '../addons/AddonList/AddonList';
 import Admin from '../admin';
 import AdminApi from '../admin/api';
 import AdminInvoice from '../admin/invoice/InvoiceAdminPage';
@@ -35,8 +33,8 @@ import CreateEnvironment from '../environments/CreateEnvironment/CreateEnvironme
 import EditEnvironment from '../environments/EditEnvironment/EditEnvironment';
 import CreateContext from '../context/CreateContext/CreateContext';
 import EditContext from '../context/EditContext/EditContext';
-import EditTagType from '../tagTypes/EditTagType/EditTagType';
-import CreateTagType from '../tagTypes/CreateTagType/CreateTagType';
+import EditTagType from '../tags/EditTagType/EditTagType';
+import CreateTagType from '../tags/CreateTagType/CreateTagType';
 import EditProject from '../project/Project/EditProject/EditProject';
 import CreateProject from '../project/Project/CreateProject/CreateProject';
 import CreateFeature from '../feature/CreateFeature/CreateFeature';
@@ -45,6 +43,8 @@ import { ApplicationEdit } from '../application/ApplicationEdit/ApplicationEdit'
 import { ApplicationList } from '../application/ApplicationList/ApplicationList';
 import ContextList from '../context/ContextList/ContextList';
 import RedirectFeatureView from '../feature/RedirectFeatureView/RedirectFeatureView';
+import { CreateAddon } from '../addons/CreateAddon/CreateAddon';
+import { EditAddon } from '../addons/EditAddon/EditAddon';
 
 export const routes = [
     // Project
@@ -314,7 +314,7 @@ export const routes = [
     {
         path: '/tag-types',
         title: 'Tag types',
-        component: ListTagTypes,
+        component: TagTypeList,
         type: 'protected',
         layout: 'main',
         menu: { mobile: true, advanced: true },
@@ -322,19 +322,19 @@ export const routes = [
 
     // Addons
     {
-        path: '/addons/create/:provider',
+        path: '/addons/create/:providerId',
         parent: '/addons',
         title: 'Create',
-        component: AddonsCreate,
+        component: CreateAddon,
         type: 'protected',
         layout: 'main',
         menu: {},
     },
     {
-        path: '/addons/edit/:id',
+        path: '/addons/edit/:addonId',
         parent: '/addons',
         title: 'Edit',
-        component: AddonsEdit,
+        component: EditAddon,
         type: 'protected',
         layout: 'main',
         menu: {},
@@ -342,7 +342,7 @@ export const routes = [
     {
         path: '/addons',
         title: 'Addons',
-        component: Addons,
+        component: AddonList,
         hidden: false,
         type: 'protected',
         layout: 'main',

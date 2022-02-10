@@ -23,7 +23,6 @@ import ToastRenderer from './common/ToastRenderer/ToastRenderer';
 interface IAppProps extends RouteComponentProps {
     user: IAuthStatus;
     fetchUiBootstrap: any;
-    feedback: any;
 }
 const App = ({ location, user, fetchUiBootstrap }: IAppProps) => {
     // because we need the userId when the component load.
@@ -135,7 +134,6 @@ const App = ({ location, user, fetchUiBootstrap }: IAppProps) => {
                                         <Redirect to="/404" />
                                     </Switch>
                                     <Feedback
-                                        feedbackId="pnps"
                                         openUrl="http://feedback.unleash.run"
                                     />
                                 </LayoutPicker>
@@ -147,10 +145,10 @@ const App = ({ location, user, fetchUiBootstrap }: IAppProps) => {
         </SWRProvider>
     );
 };
+
 // Set state to any for now, to avoid typing up entire state object while converting to tsx.
 const mapStateToProps = (state: any) => ({
     user: state.user.toJS(),
-    feedback: state.feedback,
 });
 
 export default connect(mapStateToProps)(App);

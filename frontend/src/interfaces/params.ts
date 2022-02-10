@@ -3,3 +3,7 @@ export interface IFeatureViewParams {
     featureId: string;
     activeTab: string;
 }
+
+export interface IProjectViewParams {
+    id: string;
+}

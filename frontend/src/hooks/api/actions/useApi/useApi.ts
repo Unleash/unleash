@@ -163,14 +163,19 @@ const useAPI = ({
 
         if (res.status > 399) {
             const response = await res.json();
-
-            if (response?.details?.length > 0) {
+            if (response?.details?.length > 0 && propagateErrors) {
                 const error = response.details[0];
                 if (propagateErrors) {
-                    throw new Error(error.message);
+                    throw new Error(error.message || error.msg);
                 }
                 return error;
             }
+
+            if (response?.length > 0 && propagateErrors) {
+                const error = response[0];
+                throw new Error(error.message || error.msg);
+            }
+
             if (propagateErrors) {
                 throw new Error('Action could not be performed');
             }

@@ -10,7 +10,6 @@ import PermissionButton from '../../../common/PermissionButton/PermissionButton'
 import { CREATE_PROJECT } from '../../../providers/AccessProvider/permissions';
 
 const CreateProject = () => {
-    /* @ts-ignore */
     const { setToastData, setToastApiError } = useToast();
     const { refetch } = useUser();
     const { uiConfig } = useUiConfig();

@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/styles';
 export const useStyles = makeStyles(theme => ({
     profile: {
         position: 'absolute',
-        zIndex: '5000',
+        zIndex: 5000,
         minWidth: '300px',
         right: 0,
         padding: '1.5rem',

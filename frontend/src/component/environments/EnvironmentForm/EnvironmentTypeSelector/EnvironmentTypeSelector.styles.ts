@@ -6,7 +6,6 @@ export const useStyles = makeStyles(theme => ({
     },
     formHeader: {
         fontWeight: 'bold',
-        //@ts-ignore
         fontSize: theme.fontSizes.bodySize,
         marginTop: '1.5rem',
         marginBottom: '0.5rem',

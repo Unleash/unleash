@@ -7,7 +7,7 @@ import AnimateOnMount from '../AnimateOnMount/AnimateOnMount';
 import Toast from './Toast/Toast';
 
 const ToastRenderer = () => {
-    // @ts-ignore-next-line
+    // @ts-expect-error
     const { toastData, setToast } = useContext(UIContext);
     const commonStyles = useCommonStyles();
     const styles = useStyles();

@@ -75,7 +75,6 @@ const FeatureStatus = ({
         <ConditionallyRender
             condition={!!lastSeenAt}
             show={
-                //@ts-ignore
                 <TimeAgo
                     date={lastSeenAt}
                     title=""

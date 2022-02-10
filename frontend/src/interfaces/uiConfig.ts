@@ -9,6 +9,14 @@ export interface IUiConfig {
     versionInfo: IVersionInfo;
     links: ILinks[];
     disablePasswordAuth?: boolean;
+    toast?: IProclamationToast
+}
+
+export interface IProclamationToast {
+    message: string;
+    id: string;
+    severity: 'success' | 'info' | 'warning' | 'error';
+    link: string;
 }
 
 export interface IFlags {

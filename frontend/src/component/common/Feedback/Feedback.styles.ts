@@ -4,7 +4,7 @@ export const useStyles = makeStyles(theme => ({
     feedback: {
         borderRadius: '12.5px',
         backgroundColor: '#fff',
-        zIndex: '9999',
+        zIndex: 9999,
         boxShadow: '2px 2px 4px 4px rgba(143,143,143, 0.25)',
         padding: '1.5rem',
         maxWidth: '400px',

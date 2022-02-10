@@ -118,12 +118,11 @@ export const modalStyles = {
 export const updateIndexInArray = (array, index, newValue) =>
     array.map((v, i) => (i === index ? newValue : v));
 
-export const showPnpsFeedback = user => {
-    if (!user) return;
-    if (!user.feedback) return;
-    if (user.feedback.length > 0) {
-        const feedback = user.feedback.find(
-            feedback => feedback.feedbackId === 'pnps'
+export const showPnpsFeedback = (feedbackList) => {
+    if (!feedbackList) return;
+    if (feedbackList.length > 0) {
+        const feedback = feedbackList.find(
+            feedback => feedback.feedbackId === PNPS_FEEDBACK_ID
         );
 
         if (!feedback) return false;
@@ -143,3 +142,5 @@ export const showPnpsFeedback = user => {
     }
     return true;
 };
+
+export const PNPS_FEEDBACK_ID = 'pnps'

@@ -107,6 +107,54 @@ const useProjectApi = () => {
         }
     };
 
+    const addUserToRole = async (
+        projectId: string,
+        roleId: number,
+        userId: number
+    ) => {
+        const path = `api/admin/projects/${projectId}/users/${userId}/roles/${roleId}`;
+        const req = createRequest(path, { method: 'POST' });
+
+        try {
+            const res = await makeRequest(req.caller, req.id);
+
+            return res;
+        } catch (e) {
+            throw e;
+        }
+    };
+
+    const removeUserFromRole = async (
+        projectId: string,
+        roleId: number,
+        userId: number
+    ) => {
+        const path = `api/admin/projects/${projectId}/users/${userId}/roles/${roleId}`;
+        const req = createRequest(path, { method: 'DELETE' });
+
+        try {
+            const res = await makeRequest(req.caller, req.id);
+
+            return res;
+        } catch (e) {
+            throw e;
+        }
+    };
+
+    const searchProjectUser = async (query: string): Promise<Response> => {
+        const path = `api/admin/user-admin/search?q=${query}`;
+
+        const req = createRequest(path, { method: 'GET' });
+
+        try {
+            const res = await makeRequest(req.caller, req.id);
+
+            return res;
+        } catch (e) {
+            throw e;
+        }
+    };
+
     return {
         createProject,
         validateId,
@@ -114,8 +162,11 @@ const useProjectApi = () => {
         deleteProject,
         addEnvironmentToProject,
         removeEnvironmentFromProject,
+        addUserToRole,
+        removeUserFromRole,
         errors,
         loading,
+        searchProjectUser,
     };
 };
 

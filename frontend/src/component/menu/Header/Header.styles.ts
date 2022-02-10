@@ -7,7 +7,7 @@ export const useStyles = makeStyles(theme => ({
         padding: '0.5rem',
         boxShadow: 'none',
         position: 'relative',
-        zIndex: '300',
+        zIndex: 300,
     },
     links: {
         display: 'flex',

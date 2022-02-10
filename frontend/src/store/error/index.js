@@ -17,21 +17,10 @@ import {
 } from '../strategy/actions';
 
 import {
-    ERROR_ADD_CONTEXT_FIELD,
-    ERROR_UPDATE_CONTEXT_FIELD,
-} from '../context/actions';
-
-import {
     ERROR_REMOVING_PROJECT,
     ERROR_ADD_PROJECT,
     ERROR_UPDATE_PROJECT,
 } from '../project/actions';
-
-import {
-    ERROR_ADD_ADDON_CONFIG,
-    ERROR_UPDATE_ADDON_CONFIG,
-    ERROR_REMOVING_ADDON_CONFIG,
-} from '../addons/actions';
 
 import { UPDATE_APPLICATION_FIELD } from '../application/actions';
 
@@ -62,13 +51,8 @@ const strategies = (state = getInitState(), action) => {
         case ERROR_UPDATING_STRATEGY:
         case ERROR_CREATING_STRATEGY:
         case ERROR_RECEIVE_STRATEGIES:
-        case ERROR_ADD_CONTEXT_FIELD:
-        case ERROR_UPDATE_CONTEXT_FIELD:
         case ERROR_REMOVING_PROJECT:
         case ERROR_UPDATE_PROJECT:
-        case ERROR_ADD_ADDON_CONFIG:
-        case ERROR_UPDATE_ADDON_CONFIG:
-        case ERROR_REMOVING_ADDON_CONFIG:
         case ERROR_ADD_PROJECT:
             return addErrorIfNotAlreadyInList(state, action.error.message);
         case FORBIDDEN:

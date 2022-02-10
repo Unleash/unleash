@@ -19,7 +19,7 @@ const usePagination = (
         const result = paginate(dataToPaginate, limit);
         setPaginatedData(result);
         /* eslint-disable-next-line */
-    }, [data, limit]);
+    }, [JSON.stringify(data), limit]);
 
     const nextPage = () => {
         if (pageIndex < paginatedData.length - 1) {

@@ -48,6 +48,13 @@ If you're running a basic A/B test where the control group doesn't see any chang
 
 If you want to run a more advanced experiment, then take a look at using [feature toggle variants](../advanced/toggle_variants). If you have a control group, and want to test multiple potential improvements, then simply add your desired variants to the toggle as discussed in the previous paragraph. If you want to launch a new feature (or a headline) in multiple variations right out the gate, consider using a basic on/off toggle with variants and activate it for all your users.
 
+### Impression data
+
+[Impression data](../advanced/impression-data.md) is an Unleash feature that was released in Unleash 4.7.
+It allows you to capture events whenever a feature toggle is checked in your applications.
+The event contains all the information about the toggle and the current context, so you can pass everything onto your third-party analytics provider, such as [Google Analytics](https://analytics.google.com/analytics) or [Posthog](https://posthog.com/).
+This makes Unleash even more useful as an A/B testing tool and makes it much easier to correlate events and variants with feature toggles and Unleash context.
+
 
 ## Summary
 

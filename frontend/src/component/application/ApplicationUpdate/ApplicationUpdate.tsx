@@ -7,7 +7,6 @@ import useApplicationsApi from '../../../hooks/api/actions/useApplicationsApi/us
 import useToast from '../../../hooks/useToast';
 import { IApplication } from '../../../interfaces/application';
 
-
 interface IApplicationUpdateProps {
     application: IApplication;
 }
@@ -17,19 +16,22 @@ export const ApplicationUpdate = ({ application }: IApplicationUpdateProps) => {
     const { appName, icon, url, description } = application;
     const [localUrl, setLocalUrl] = useState(url || '');
     const [localDescription, setLocalDescription] = useState(description || '');
-    const { setToastApiError } = useToast();
+    const { setToastData, setToastApiError } = useToast();
     const commonStyles = useCommonStyles();
 
     const handleChange = (
-        evt: ChangeEvent<{ name?: string | undefined; value: unknown }>
+        evt: ChangeEvent<{ name?: string | undefined; value: unknown }>,
+        field: string,
+        value: string
     ) => {
         evt.preventDefault();
         try {
-            storeApplicationMetaData(
-                appName,
-                'icon',
-                evt.target.value as string
-            );
+            storeApplicationMetaData(appName, field, value);
+            setToastData({
+                type: 'success',
+                title: 'Updated Successfully',
+                text: `${field} successfully updated`,
+            });
         } catch (e: any) {
             setToastApiError(e.toString());
         }
@@ -45,7 +47,9 @@ export const ApplicationUpdate = ({ application }: IApplicationUpdateProps) => {
                         label="Icon"
                         options={icons.map(v => ({ key: v, label: v }))}
                         value={icon || 'apps'}
-                        onChange={e => handleChange(e)}
+                        onChange={e =>
+                            handleChange(e, 'icon', e.target.value as string)
+                        }
                     />
                 </Grid>
                 <Grid item>
@@ -57,9 +61,7 @@ export const ApplicationUpdate = ({ application }: IApplicationUpdateProps) => {
                         type="url"
                         variant="outlined"
                         size="small"
-                        onBlur={() =>
-                            storeApplicationMetaData(appName, 'url', localUrl)
-                        }
+                        onBlur={e => handleChange(e, 'url', localUrl)}
                     />
                 </Grid>
                 <Grid item>
@@ -70,12 +72,8 @@ export const ApplicationUpdate = ({ application }: IApplicationUpdateProps) => {
                         size="small"
                         rows={2}
                         onChange={e => setLocalDescription(e.target.value)}
-                        onBlur={() =>
-                            storeApplicationMetaData(
-                                appName,
-                                'description',
-                                localDescription
-                            )
+                        onBlur={e =>
+                            handleChange(e, 'description', localDescription)
                         }
                     />
                 </Grid>

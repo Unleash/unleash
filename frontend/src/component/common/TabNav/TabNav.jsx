@@ -13,7 +13,12 @@ const a11yProps = index => ({
     'aria-controls': `tabpanel-${index}`,
 });
 
-const TabNav = ({ tabData, className, navClass, startingTab = 0 }) => {
+const TabNav = ({
+    tabData,
+    className = '',
+    navClass = '',
+    startingTab = 0,
+}) => {
     const styles = useStyles();
     const [activeTab, setActiveTab] = useState(startingTab);
     const history = useHistory();

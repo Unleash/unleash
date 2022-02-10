@@ -1,6 +1,5 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import { useContext } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import {
     Grid,
     List,
@@ -9,30 +8,45 @@ import {
     ListItemAvatar,
     Typography,
 } from '@material-ui/core';
-import { Report, Extension, Timeline, FlagRounded } from '@material-ui/icons';
-
-import { shorten } from '../common';
+import {
+    Report,
+    Extension,
+    Timeline,
+    FlagRounded,
+    SvgIconComponent,
+} from '@material-ui/icons';
+import { shorten } from '../../common';
 import {
     CREATE_FEATURE,
     CREATE_STRATEGY,
-} from '../providers/AccessProvider/permissions';
-import ConditionallyRender from '../common/ConditionallyRender/ConditionallyRender';
-import { getTogglePath } from '../../utils/route-path-helpers';
-function ApplicationView({
-    seenToggles,
-    hasAccess,
-    strategies,
-    instances,
-    formatFullDateTime,
-}) {
-    const notFoundListItem = ({ createUrl, name, permission }) => (
+} from '../../providers/AccessProvider/permissions';
+import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyRender';
+import { getTogglePath } from '../../../utils/route-path-helpers';
+import useApplication from '../../../hooks/api/getters/useApplication/useApplication';
+import AccessContext from '../../../contexts/AccessContext';
+import { formatFullDateTimeWithLocale } from '../../common/util';
+
+export const ApplicationView = () => {
+    const { hasAccess } = useContext(AccessContext);
+    const { name } = useParams<{ name: string }>();
+    const { application } = useApplication(name);
+    const { instances, strategies, seenToggles } = application;
+    const notFoundListItem = ({
+        createUrl,
+        name,
+        permission,
+    }: {
+        createUrl: string;
+        name: string;
+        permission: string;
+    }) => (
         <ConditionallyRender
             key={`not_found_conditional_${name}`}
             condition={hasAccess(permission)}
             show={
                 <ListItem key={`not_found_${name}`}>
                     <ListItemAvatar>
-                        <Report style={{color: 'red'}} />
+                        <Report style={{ color: 'red' }} />
                     </ListItemAvatar>
                     <ListItemText
                         primary={<Link to={`${createUrl}`}>{name}</Link>}
@@ -54,13 +68,18 @@ function ApplicationView({
         />
     );
 
-    // eslint-disable-next-line react/prop-types
     const foundListItem = ({
         viewUrl,
         name,
         description,
         Icon,
         i,
+    }: {
+        viewUrl: string;
+        name: string;
+        description: string;
+        Icon: SvgIconComponent;
+        i: number;
     }) => (
         <ListItem key={`found_${name}-${i}`}>
             <ListItemAvatar>
@@ -83,10 +102,7 @@ function ApplicationView({
                 <hr />
                 <List>
                     {seenToggles.map(
-                        (
-                            { name, description, notFound, project },
-                            i
-                        ) => (
+                        ({ name, description, notFound, project }, i) => (
                             <ConditionallyRender
                                 key={`toggle_conditional_${name}`}
                                 condition={notFound}
@@ -97,7 +113,7 @@ function ApplicationView({
                                     i,
                                 })}
                                 elseShow={foundListItem({
-                                    viewUrl: getTogglePath(project, name),
+                                    viewUrl: getTogglePath(project, name, true),
                                     name,
                                     description,
                                     Icon: FlagRounded,
@@ -114,26 +130,26 @@ function ApplicationView({
                 </Typography>
                 <hr />
                 <List>
-                    {strategies.map(({ name, description, notFound }, i) => (
-                        <ConditionallyRender
-                            key={`strategies_conditional_${name}`}
-                            condition={notFound}
-                            show={notFoundListItem({
-                                createUrl: '/strategies/create',
-                                name,
-                                permission: CREATE_STRATEGY,
-                                i,
-                            })}
-                            elseShow={foundListItem({
-                                viewUrl: '/strategies/view',
-                                name,
-                                Icon: Extension,
-                                enabled: undefined,
-                                description,
-                                i,
-                            })}
-                        />
-                    ))}
+                    {strategies.map(
+                        ({ name, description, notFound }, i: number) => (
+                            <ConditionallyRender
+                                key={`strategies_conditional_${name}`}
+                                condition={notFound}
+                                show={notFoundListItem({
+                                    createUrl: '/strategies/create',
+                                    name,
+                                    permission: CREATE_STRATEGY,
+                                })}
+                                elseShow={foundListItem({
+                                    viewUrl: '/strategies/view',
+                                    name,
+                                    Icon: Extension,
+                                    description,
+                                    i,
+                                })}
+                            />
+                        )
+                    )}
                 </List>
             </Grid>
             <Grid item xl={12} md={12}>
@@ -143,7 +159,17 @@ function ApplicationView({
                 <hr />
                 <List>
                     {instances.map(
-                        ({ instanceId, clientIp, lastSeen, sdkVersion }) => (
+                        ({
+                            instanceId,
+                            clientIp,
+                            lastSeen,
+                            sdkVersion,
+                        }: {
+                            instanceId: string;
+                            clientIp: string;
+                            lastSeen: string;
+                            sdkVersion: string;
+                        }) => (
                             <ListItem key={`${instanceId}`}>
                                 <ListItemAvatar>
                                     <Timeline />
@@ -152,16 +178,22 @@ function ApplicationView({
                                     primary={
                                         <ConditionallyRender
                                             key={`${instanceId}_conditional`}
-                                            condition={sdkVersion}
-                                            show={`${instanceId} (${sdkVersion})`}
-                                            elseShow={instanceId}
+                                            condition={Boolean(sdkVersion)}
+                                            show={
+                                                <span>
+                                                    {instanceId} {sdkVersion}
+                                                </span>
+                                            }
+                                            elseShow={<span>{instanceId}</span>}
                                         />
                                     }
                                     secondary={
                                         <span>
                                             {clientIp} last seen at{' '}
                                             <small>
-                                                {formatFullDateTime(lastSeen)}
+                                                {formatFullDateTimeWithLocale(
+                                                    lastSeen
+                                                )}
                                             </small>
                                         </span>
                                     }
@@ -173,17 +205,4 @@ function ApplicationView({
             </Grid>
         </Grid>
     );
-}
-
-ApplicationView.propTypes = {
-    createUrl: PropTypes.string,
-    name: PropTypes.string,
-    permission: PropTypes.string,
-    instances: PropTypes.array.isRequired,
-    seenToggles: PropTypes.array.isRequired,
-    strategies: PropTypes.array.isRequired,
-    hasAccess: PropTypes.func.isRequired,
-    formatFullDateTime: PropTypes.func.isRequired,
 };
-
-export default ApplicationView;

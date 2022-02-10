@@ -6,8 +6,6 @@ import Strategies from '../../page/strategies';
 import HistoryPage from '../../page/history';
 import HistoryTogglePage from '../../page/history/toggle';
 import { ArchiveListContainer } from '../archive/ArchiveListContainer';
-import Applications from '../../page/applications';
-import ApplicationView from '../../page/applications/view';
 import { TagTypeList } from '../tags/TagTypeList/TagTypeList';
 import { AddonList } from '../addons/AddonList/AddonList';
 import Admin from '../admin';
@@ -41,6 +39,8 @@ import EditProject from '../project/Project/EditProject/EditProject';
 import CreateProject from '../project/Project/CreateProject/CreateProject';
 import CreateFeature from '../feature/CreateFeature/CreateFeature';
 import EditFeature from '../feature/EditFeature/EditFeature';
+import { ApplicationEdit } from '../application/ApplicationEdit/ApplicationEdit';
+import { ApplicationList } from '../application/ApplicationList/ApplicationList';
 import ContextList from '../context/ContextList/ContextList';
 import RedirectFeatureView from '../feature/RedirectFeatureView/RedirectFeatureView';
 import { CreateAddon } from '../addons/CreateAddon/CreateAddon';
@@ -193,7 +193,7 @@ export const routes = [
         path: '/applications/:name',
         title: ':name',
         parent: '/applications',
-        component: ApplicationView,
+        component: ApplicationEdit,
         type: 'protected',
         layout: 'main',
         menu: {},
@@ -201,7 +201,7 @@ export const routes = [
     {
         path: '/applications',
         title: 'Applications',
-        component: Applications,
+        component: ApplicationList,
         type: 'protected',
         layout: 'main',
         menu: { mobile: true, advanced: true },

@@ -16,12 +16,6 @@ import {
     UPDATE_STRATEGY_SUCCESS,
 } from '../strategy/actions';
 
-import {
-    ERROR_REMOVING_PROJECT,
-    ERROR_ADD_PROJECT,
-    ERROR_UPDATE_PROJECT,
-} from '../project/actions';
-
 import { UPDATE_APPLICATION_FIELD } from '../application/actions';
 
 import { FORBIDDEN } from '../util';
@@ -51,9 +45,6 @@ const strategies = (state = getInitState(), action) => {
         case ERROR_UPDATING_STRATEGY:
         case ERROR_CREATING_STRATEGY:
         case ERROR_RECEIVE_STRATEGIES:
-        case ERROR_REMOVING_PROJECT:
-        case ERROR_UPDATE_PROJECT:
-        case ERROR_ADD_PROJECT:
             return addErrorIfNotAlreadyInList(state, action.error.message);
         case FORBIDDEN:
             return addErrorIfNotAlreadyInList(

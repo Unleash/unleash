@@ -12,7 +12,7 @@ jest.mock('../FeatureToggleListItem', () => ({
     default: 'ListItem',
 }));
 
-jest.mock('../../../common/ProjectSelect');
+jest.mock('../../../common/ProjectSelect/ProjectSelect');
 
 test('renders correctly with one feature', () => {
     const features = [

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { MenuItem, Typography } from '@material-ui/core';
 import DropdownMenu from '../../../common/DropdownMenu/DropdownMenu';
-import ProjectSelect from '../../../common/ProjectSelect';
+import ProjectSelect from '../../../common/ProjectSelect/ProjectSelect';
 import { useStyles } from './styles';
 import useLoading from '../../../../hooks/useLoading';
 import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
@@ -29,7 +29,8 @@ const FeatureToggleListActions = ({
     };
 
     const isDisabled = s => s === sort.type;
-    const selectedOption = sortOptions.find(o => o.type === sort.type) || sortOptions[0];
+    const selectedOption =
+        sortOptions.find(o => o.type === sort.type) || sortOptions[0];
 
     const renderSortingOptions = () =>
         sortOptions.map(option => (
@@ -63,7 +64,9 @@ const FeatureToggleListActions = ({
                 show={
                     <ProjectSelect
                         currentProjectId={filter.project}
-                        updateCurrentProject={project => setFilter(prev => ({ ...prev, project }))}
+                        updateCurrentProject={project =>
+                            setFilter(prev => ({ ...prev, project }))
+                        }
                         style={{
                             textTransform: 'lowercase',
                             fontWeight: 'normal',

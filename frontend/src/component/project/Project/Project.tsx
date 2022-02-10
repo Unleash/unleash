@@ -16,8 +16,8 @@ import { ProjectAccess } from '../ProjectAccess/ProjectAccess';
 import ProjectEnvironment from '../ProjectEnvironment/ProjectEnvironment';
 import ProjectOverview from './ProjectOverview';
 import ProjectHealth from './ProjectHealth/ProjectHealth';
-import { UPDATE_PROJECT } from '../../../store/project/actions';
 import PermissionIconButton from '../../common/PermissionIconButton/PermissionIconButton';
+import { UPDATE_PROJECT } from '../../providers/AccessProvider/permissions';
 
 const Project = () => {
     const { id, activeTab } = useParams<{ id: string; activeTab: string }>();

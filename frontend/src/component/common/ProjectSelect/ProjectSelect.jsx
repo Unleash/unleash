@@ -54,7 +54,7 @@ const ProjectSelect = ({ currentProjectId, updateCurrentProject, ...rest }) => {
         ];
     };
 
-    const { updateSetting, fetchProjects, ...passDown } = rest;
+    const { updateSetting, ...passDown } = rest;
 
     return (
         <React.Fragment>

@@ -7,7 +7,7 @@ import useProject from '../../../../hooks/api/getters/useProject/useProject';
 import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from '../../../../hooks/useToast';
 import PermissionButton from '../../../common/PermissionButton/PermissionButton';
-import { UPDATE_PROJECT } from '../../../../store/project/actions';
+import { UPDATE_PROJECT } from '../../../providers/AccessProvider/permissions';
 
 const EditProject = () => {
     const { uiConfig } = useUiConfig();
@@ -90,10 +90,7 @@ const EditProject = () => {
                 clearErrors={clearErrors}
                 validateIdUniqueness={validateIdUniqueness}
             >
-                <PermissionButton
-                    permission={UPDATE_PROJECT}
-                    type="submit"
-                >
+                <PermissionButton permission={UPDATE_PROJECT} type="submit">
                     Edit project
                 </PermissionButton>
             </ProjectForm>

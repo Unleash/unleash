@@ -11,8 +11,8 @@ import useProjects from '../../../hooks/api/getters/useProjects/useProjects';
 import { Delete, Edit } from '@material-ui/icons';
 import { getProjectEditPath } from '../../../utils/route-path-helpers';
 import PermissionIconButton from '../../common/PermissionIconButton/PermissionIconButton';
-import { UPDATE_PROJECT } from '../../../store/project/actions';
 import useToast from '../../../hooks/useToast';
+import { UPDATE_PROJECT } from '../../providers/AccessProvider/permissions';
 interface IProjectCardProps {
     name: string;
     featureCount: number;

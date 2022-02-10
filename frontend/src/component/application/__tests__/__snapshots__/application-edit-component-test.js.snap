@@ -43,77 +43,22 @@ exports[`renders correctly with permissions 1`] = `
 `;
 
 exports[`renders correctly without permission 1`] = `
-<div
-  className="MuiPaper-root MuiPaper-elevation1 MuiPaper-rounded"
-  style={
-    Object {
-      "borderRadius": "10px",
-      "boxShadow": "none",
-    }
-  }
->
+<div>
+  <p>
+    Loading...
+  </p>
   <div
-    className="makeStyles-headerContainer-1"
+    className="MuiLinearProgress-root MuiLinearProgress-colorPrimary MuiLinearProgress-indeterminate"
+    role="progressbar"
   >
     <div
-      className="makeStyles-headerTitleContainer-5"
-    >
-      <div
-        className=""
-        data-loading={true}
-      >
-        <h2
-          className="MuiTypography-root makeStyles-headerTitle-6 MuiTypography-h2"
-        >
-          <span
-            style={
-              Object {
-                "alignItems": "center",
-                "display": "flex",
-              }
-            }
-          >
-            <div
-              className="MuiAvatar-root MuiAvatar-circular MuiAvatar-colorDefault"
-              style={
-                Object {
-                  "marginRight": "8px",
-                }
-              }
-            >
-              <span
-                aria-hidden={true}
-                className="material-icons MuiIcon-root"
-              >
-                apps
-              </span>
-            </div>
-          </span>
-        </h2>
-      </div>
-      <div
-        className="makeStyles-headerActions-7"
-      />
-    </div>
-  </div>
-  <div
-    className="makeStyles-bodyContainer-2"
-  >
-    <div>
-      <p
-        className="MuiTypography-root MuiTypography-body1"
-      >
-        
-      </p>
-      <p
-        className="MuiTypography-root MuiTypography-body2"
-      >
-        Created: 
-        <strong>
-          02/02/2022
-        </strong>
-      </p>
-    </div>
+      className="MuiLinearProgress-bar MuiLinearProgress-barColorPrimary MuiLinearProgress-bar1Indeterminate"
+      style={Object {}}
+    />
+    <div
+      className="MuiLinearProgress-bar MuiLinearProgress-bar2Indeterminate MuiLinearProgress-barColorPrimary"
+      style={Object {}}
+    />
   </div>
 </div>
 `;

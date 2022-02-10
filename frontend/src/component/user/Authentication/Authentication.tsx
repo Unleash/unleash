@@ -2,8 +2,7 @@ import SimpleAuth from '../SimpleAuth/SimpleAuth';
 import AuthenticationCustomComponent from '../authentication-custom-component';
 import PasswordAuth from '../PasswordAuth/PasswordAuth';
 import HostedAuth from '../HostedAuth/HostedAuth';
-import DemoAuth from '../DemoAuth';
-
+import DemoAuth from '../DemoAuth/DemoAuth';
 import {
     SIMPLE_TYPE,
     DEMO_TYPE,
@@ -11,27 +10,13 @@ import {
     HOSTED_TYPE,
 } from '../../../constants/authTypes';
 import SecondaryLoginActions from '../common/SecondaryLoginActions/SecondaryLoginActions';
-import useUser from '../../../hooks/api/getters/useUser/useUser';
-import { IUser } from '../../../interfaces/user';
-import { useHistory } from 'react-router';
 import useQueryParams from '../../../hooks/useQueryParams';
 import ConditionallyRender from '../../common/ConditionallyRender';
 import { Alert } from '@material-ui/lab';
+import { useAuthDetails } from '../../../hooks/api/getters/useAuth/useAuthDetails';
 
-interface IAuthenticationProps {
-    insecureLogin: (path: string, user: IUser) => void;
-    passwordLogin: (path: string, user: IUser) => void;
-    demoLogin: (path: string, user: IUser) => void;
-    history: any;
-}
-
-const Authentication = ({
-    insecureLogin,
-    passwordLogin,
-    demoLogin,
-}: IAuthenticationProps) => {
-    const { authDetails } = useUser();
-    const history = useHistory();
+const Authentication = () => {
+    const { authDetails } = useAuthDetails();
     const params = useQueryParams();
 
     const error = params.get('errorMsg');
@@ -41,11 +26,7 @@ const Authentication = ({
     if (authDetails.type === PASSWORD_TYPE) {
         content = (
             <>
-                <PasswordAuth
-                    passwordLogin={passwordLogin}
-                    authDetails={authDetails}
-                    history={history}
-                />
+                <PasswordAuth authDetails={authDetails} />
                 <ConditionallyRender
                     condition={!authDetails.defaultHidden}
                     show={<SecondaryLoginActions />}
@@ -53,29 +34,13 @@ const Authentication = ({
             </>
         );
     } else if (authDetails.type === SIMPLE_TYPE) {
-        content = (
-            <SimpleAuth
-                insecureLogin={insecureLogin}
-                authDetails={authDetails}
-                history={history}
-            />
-        );
+        content = <SimpleAuth authDetails={authDetails} />;
     } else if (authDetails.type === DEMO_TYPE) {
-        content = (
-            <DemoAuth
-                demoLogin={demoLogin}
-                authDetails={authDetails}
-                history={history}
-            />
-        );
+        content = <DemoAuth authDetails={authDetails} />;
     } else if (authDetails.type === HOSTED_TYPE) {
         content = (
             <>
-                <HostedAuth
-                    passwordLogin={passwordLogin}
-                    authDetails={authDetails}
-                    history={history}
-                />
+                <HostedAuth authDetails={authDetails} />
                 <ConditionallyRender
                     condition={!authDetails.defaultHidden}
                     show={<SecondaryLoginActions />}

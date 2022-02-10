@@ -64,7 +64,7 @@ const Splash: React.FC<ISplashProps> = ({
                 );
             }
 
-            return <FiberManualRecordOutlined />;
+            return <FiberManualRecordOutlined key={index} />;
         });
     };
 

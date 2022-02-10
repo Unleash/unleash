@@ -5,6 +5,7 @@ import { SyntheticEvent, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useCommonStyles } from '../../../common.styles';
 import useLoading from '../../../hooks/useLoading';
+import { FORGOTTEN_PASSWORD_FIELD } from '../../../testIds';
 import { formatApiPath } from '../../../utils/format-path';
 import ConditionallyRender from '../../common/ConditionallyRender';
 import DividerText from '../../common/DividerText/DividerText';
@@ -96,6 +97,7 @@ const ForgottenPassword = () => {
                         placeholder="email"
                         type="email"
                         data-loading
+                        data-test={FORGOTTEN_PASSWORD_FIELD}
                         value={email}
                         onChange={e => {
                             setEmail(e.target.value);

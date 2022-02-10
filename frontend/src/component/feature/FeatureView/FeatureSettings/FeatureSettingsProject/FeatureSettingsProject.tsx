@@ -3,7 +3,6 @@ import { useHistory, useParams } from 'react-router';
 import AccessContext from '../../../../../contexts/AccessContext';
 import useFeatureApi from '../../../../../hooks/api/actions/useFeatureApi/useFeatureApi';
 import useFeature from '../../../../../hooks/api/getters/useFeature/useFeature';
-import useUser from '../../../../../hooks/api/getters/useUser/useUser';
 import useToast from '../../../../../hooks/useToast';
 import { IFeatureViewParams } from '../../../../../interfaces/params';
 import { MOVE_FEATURE_TOGGLE } from '../../../../providers/AccessProvider/permissions';
@@ -12,6 +11,7 @@ import PermissionButton from '../../../../common/PermissionButton/PermissionButt
 import FeatureProjectSelect from './FeatureProjectSelect/FeatureProjectSelect';
 import FeatureSettingsProjectConfirm from './FeatureSettingsProjectConfirm/FeatureSettingsProjectConfirm';
 import { IPermission } from '../../../../../interfaces/user';
+import { useAuthPermissions } from '../../../../../hooks/api/getters/useAuth/useAuthPermissions';
 
 const FeatureSettingsProject = () => {
     const { hasAccess } = useContext(AccessContext);
@@ -21,10 +21,11 @@ const FeatureSettingsProject = () => {
     const [dirty, setDirty] = useState(false);
     const [showConfirmDialog, setShowConfirmDialog] = useState(false);
     const editable = hasAccess(MOVE_FEATURE_TOGGLE, projectId);
-    const { permissions } = useUser();
+    const { permissions = [] } = useAuthPermissions()
     const { changeFeatureProject } = useFeatureApi();
     const { setToastData, setToastApiError } = useToast();
     const history = useHistory();
+
 
     useEffect(() => {
         if (project !== feature.project) {
@@ -43,7 +44,7 @@ const FeatureSettingsProject = () => {
             setProject(projectId);
         }
         /* eslint-disable-next-line */
-    }, [permissions?.length]);
+    }, [permissions.length]);
 
     const updateProject = async () => {
         const newProject = project;

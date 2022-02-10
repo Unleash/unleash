@@ -1,17 +1,17 @@
 import PropTypes from 'prop-types';
 import ApiTokenList from '../api-token/ApiTokenList/ApiTokenList';
-
 import AdminMenu from '../menu/AdminMenu';
-import usePermissions from '../../../hooks/usePermissions';
 import ConditionallyRender from '../../common/ConditionallyRender';
+import AccessContext from '../../../contexts/AccessContext';
+import { useContext } from 'react';
 
 const ApiPage = ({ history }) => {
-    const { isAdmin } = usePermissions();
+    const { isAdmin } = useContext(AccessContext);
 
     return (
         <div>
             <ConditionallyRender
-                condition={isAdmin()}
+                condition={isAdmin}
                 show={<AdminMenu history={history} />}
             />
             <ApiTokenList />

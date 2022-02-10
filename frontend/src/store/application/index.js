@@ -1,6 +1,5 @@
 import { fromJS, List, Map } from 'immutable';
 import { RECEIVE_ALL_APPLICATIONS, RECEIVE_APPLICATION, UPDATE_APPLICATION_FIELD, DELETE_APPLICATION } from './actions';
-import { USER_LOGOUT, USER_LOGIN } from '../user/actions';
 
 function getInitState() {
     return fromJS({ list: [], apps: {} });
@@ -19,9 +18,6 @@ const store = (state = getInitState(), action) => {
             const result = state.removeIn(['list', index]);
             return result.removeIn(['apps', action.appName]);
         }
-        case USER_LOGOUT:
-        case USER_LOGIN:
-            return getInitState();
         default:
             return state;
     }

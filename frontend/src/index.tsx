@@ -43,7 +43,7 @@ ReactDOM.render(
     <Provider store={unleashStore}>
         <DndProvider backend={HTML5Backend}>
             <UIProvider>
-                <AccessProvider store={unleashStore}>
+                <AccessProvider>
                     <Router basename={`${getBasePath()}`}>
                         <ThemeProvider theme={mainTheme}>
                             <StylesProvider injectFirst>

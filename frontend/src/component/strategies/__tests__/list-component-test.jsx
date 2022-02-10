@@ -1,13 +1,10 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { ThemeProvider } from '@material-ui/core';
-
 import StrategiesListComponent from '../StrategiesList/StrategiesList';
 import renderer from 'react-test-renderer';
 import theme from '../../../themes/main-theme';
 import AccessProvider from '../../providers/AccessProvider/AccessProvider';
-import { createFakeStore } from '../../../accessStoreFake';
-import { ADMIN } from '../../providers/AccessProvider/permissions';
 
 test('renders correctly with one strategy', () => {
     const strategy = {
@@ -17,7 +14,7 @@ test('renders correctly with one strategy', () => {
     const tree = renderer.create(
         <MemoryRouter>
             <ThemeProvider theme={theme}>
-                <AccessProvider store={createFakeStore()}>
+                <AccessProvider>
                     <StrategiesListComponent
                         strategies={[strategy]}
                         fetchStrategies={jest.fn()}
@@ -42,9 +39,7 @@ test('renders correctly with one strategy without permissions', () => {
     const tree = renderer.create(
         <MemoryRouter>
             <ThemeProvider theme={theme}>
-                <AccessProvider
-                    store={createFakeStore([{ permission: ADMIN }])}
-                >
+                <AccessProvider>
                     <StrategiesListComponent
                         strategies={[strategy]}
                         fetchStrategies={jest.fn()}

@@ -15,7 +15,7 @@ import AdminUsers from '../admin/users/UsersAdmin';
 import { AuthSettings } from '../admin/auth/AuthSettings';
 import Login from '../user/Login/Login';
 import { P, C, E, EEA, RE } from '../common/flags';
-import NewUser from '../user/NewUser';
+import { NewUser } from '../user/NewUser/NewUser';
 import ResetPassword from '../user/ResetPassword/ResetPassword';
 import ForgottenPassword from '../user/ForgottenPassword/ForgottenPassword';
 import ProjectListNew from '../project/ProjectList/ProjectList';

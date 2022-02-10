@@ -9,8 +9,6 @@ import {
     TOGGLE_FEATURE_TOGGLE,
 } from './actions';
 
-import { USER_LOGOUT, USER_LOGIN } from '../user/actions';
-
 const debug = require('debug')('unleash:feature-store');
 
 const features = (state = new List([]), action) => {
@@ -62,10 +60,6 @@ const features = (state = new List([]), action) => {
         case RECEIVE_FEATURE_TOGGLES:
             debug(RECEIVE_FEATURE_TOGGLES, action);
             return new List(action.featureToggles.map($Map));
-        case USER_LOGIN:
-        case USER_LOGOUT:
-            debug(USER_LOGOUT, action);
-            return new List([]);
         default:
             return state;
     }

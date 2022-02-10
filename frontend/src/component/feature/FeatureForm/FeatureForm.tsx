@@ -4,7 +4,6 @@ import FeatureTypeSelect from '../FeatureView/FeatureSettings/FeatureSettingsMet
 import { CF_DESC_ID, CF_NAME_ID, CF_TYPE_ID } from '../../../testIds';
 import useFeatureTypes from '../../../hooks/api/getters/useFeatureTypes/useFeatureTypes';
 import { KeyboardArrowDownOutlined } from '@material-ui/icons';
-import useUser from '../../../hooks/api/getters/useUser/useUser';
 import { projectFilterGenerator } from '../../../utils/project-filter-generator';
 import FeatureProjectSelect from '../FeatureView/FeatureSettings/FeatureSettingsProject/FeatureProjectSelect/FeatureProjectSelect';
 import ConditionallyRender from '../../common/ConditionallyRender';
@@ -12,6 +11,8 @@ import { trim } from '../../common/util';
 import Input from '../../common/Input/Input';
 import { CREATE_FEATURE } from '../../providers/AccessProvider/permissions';
 import { useHistory } from 'react-router-dom';
+import React from 'react';
+import { useAuthPermissions } from '../../../hooks/api/getters/useAuth/useAuthPermissions';
 
 interface IFeatureToggleForm {
     type: string;
@@ -54,7 +55,7 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
     const styles = useStyles();
     const { featureTypes } = useFeatureTypes();
     const history = useHistory();
-    const { permissions } = useUser();
+    const { permissions } = useAuthPermissions()
     const editable = mode !== 'Edit';
 
     const renderToggleDescription = () => {
@@ -114,7 +115,7 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                     }}
                     enabled={editable}
                     filter={projectFilterGenerator(
-                        { permissions },
+                        permissions,
                         CREATE_FEATURE
                     )}
                     IconComponent={KeyboardArrowDownOutlined}

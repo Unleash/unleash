@@ -5,13 +5,13 @@ import ProjectForm from '../ProjectForm/ProjectForm';
 import useProjectForm from '../hooks/useProjectForm';
 import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from '../../../../hooks/useToast';
-import useUser from '../../../../hooks/api/getters/useUser/useUser';
 import PermissionButton from '../../../common/PermissionButton/PermissionButton';
 import { CREATE_PROJECT } from '../../../providers/AccessProvider/permissions';
+import { useAuthUser } from '../../../../hooks/api/getters/useAuth/useAuthUser';
 
 const CreateProject = () => {
     const { setToastData, setToastApiError } = useToast();
-    const { refetch } = useUser();
+    const { refetchUser } = useAuthUser();
     const { uiConfig } = useUiConfig();
     const history = useHistory();
     const {
@@ -40,7 +40,7 @@ const CreateProject = () => {
             const payload = getProjectPayload();
             try {
                 await createProject(payload);
-                refetch();
+                refetchUser();
                 history.push(`/projects/${projectId}`);
                 setToastData({
                     title: 'Project created',

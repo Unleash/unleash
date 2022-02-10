@@ -9,15 +9,17 @@ import useQueryParams from '../../../hooks/useQueryParams';
 import AuthOptions from '../common/AuthOptions/AuthOptions';
 import DividerText from '../../common/DividerText/DividerText';
 import ConditionallyRender from '../../common/ConditionallyRender';
-import useUser from '../../../hooks/api/getters/useUser/useUser';
 import PasswordField from '../../common/PasswordField/PasswordField';
+import { useAuthApi } from "../../../hooks/api/actions/useAuthApi/useAuthApi";
+import { useAuthUser } from '../../../hooks/api/getters/useAuth/useAuthUser';
 
-const HostedAuth = ({ authDetails, passwordLogin }) => {
+const HostedAuth = ({ authDetails }) => {
     const commonStyles = useCommonStyles();
     const styles = useStyles();
-    const { refetch } = useUser();
+    const { refetchUser } = useAuthUser();
     const history = useHistory();
     const params = useQueryParams();
+    const { passwordAuth } = useAuthApi()
     const [username, setUsername] = useState(params.get('email') || '');
     const [password, setPassword] = useState('');
     const [errors, setErrors] = useState({
@@ -45,12 +47,9 @@ const HostedAuth = ({ authDetails, passwordLogin }) => {
             return;
         }
 
-        const user = { username, password };
-        const path = evt.target.action;
-
         try {
-            await passwordLogin(path, user);
-            refetch();
+            await passwordAuth(authDetails.path, username, password);
+            refetchUser();
             history.push(`/`);
         } catch (error) {
             if (error.statusCode === 404 || error.statusCode === 400) {
@@ -86,7 +85,7 @@ const HostedAuth = ({ authDetails, passwordLogin }) => {
             <ConditionallyRender
                 condition={!authDetails.defaultHidden}
                 show={
-                    <form onSubmit={handleSubmit} action={authDetails.path}>
+                    <form onSubmit={handleSubmit}>
                         <Typography
                             variant="subtitle2"
                             className={styles.apiError}
@@ -138,8 +137,6 @@ const HostedAuth = ({ authDetails, passwordLogin }) => {
 
 HostedAuth.propTypes = {
     authDetails: PropTypes.object.isRequired,
-    passwordLogin: PropTypes.func.isRequired,
-    history: PropTypes.object.isRequired,
 };
 
 export default HostedAuth;

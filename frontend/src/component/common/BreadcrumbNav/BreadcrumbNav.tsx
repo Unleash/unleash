@@ -1,11 +1,12 @@
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import { Link, useLocation } from 'react-router-dom';
-import usePermissions from '../../../hooks/usePermissions';
 import ConditionallyRender from '../ConditionallyRender';
 import { useStyles } from './BreadcrumbNav.styles';
+import AccessContext from '../../../contexts/AccessContext';
+import { useContext } from 'react';
 
 const BreadcrumbNav = () => {
-    const { isAdmin } = usePermissions();
+    const { isAdmin } = useContext(AccessContext);
     const styles = useStyles();
     const location = useLocation();
 
@@ -23,16 +24,16 @@ const BreadcrumbNav = () => {
                 item !== 'copy' &&
                 item !== 'strategies' &&
                 item !== 'features' &&
-                item !== 'features2' && 
-                item !== 'create-toggle'&& 
-                item !== 'settings'  
+                item !== 'features2' &&
+                item !== 'create-toggle'&&
+                item !== 'settings'
 
         );
 
     return (
         <ConditionallyRender
             condition={
-                (location.pathname.includes('admin') && isAdmin()) ||
+                (location.pathname.includes('admin') && isAdmin) ||
                 !location.pathname.includes('admin')
             }
             show={

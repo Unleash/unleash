@@ -1,5 +1,3 @@
-import { IUserPayload } from '../../../../interfaces/user';
-
 import useAPI from '../useApi/useApi';
 import {
     handleBadRequest,
@@ -14,6 +12,12 @@ export interface IUserApiErrors {
     updateUser?: string;
     changePassword?: string;
     validatePassword?: string;
+}
+
+interface IUserPayload {
+    name: string;
+    email: string;
+    id?: string;
 }
 
 export const ADD_USER_ERROR = 'addUser';

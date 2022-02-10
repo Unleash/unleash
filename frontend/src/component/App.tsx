@@ -1,57 +1,37 @@
-import { connect } from 'react-redux';
-import { Redirect, Route, Switch } from 'react-router-dom';
-import { RouteComponentProps } from 'react-router';
-
-import ProtectedRoute from './common/ProtectedRoute/ProtectedRoute';
-import LayoutPicker from './layout/LayoutPicker/LayoutPicker';
-
-import { routes } from './menu/routes';
-
-import styles from './styles.module.scss';
-
-import IAuthStatus from '../interfaces/user';
-import { useState, useEffect } from 'react';
-import NotFound from './common/NotFound/NotFound';
-import Feedback from './common/Feedback/Feedback';
-import SWRProvider from './providers/SWRProvider/SWRProvider';
 import ConditionallyRender from './common/ConditionallyRender';
 import EnvironmentSplash from './common/EnvironmentSplash/EnvironmentSplash';
+import Feedback from './common/Feedback/Feedback';
+import LayoutPicker from './layout/LayoutPicker/LayoutPicker';
 import Loader from './common/Loader/Loader';
-import useUser from '../hooks/api/getters/useUser/useUser';
+import NotFound from './common/NotFound/NotFound';
+import ProtectedRoute from './common/ProtectedRoute/ProtectedRoute';
+import SWRProvider from './providers/SWRProvider/SWRProvider';
 import ToastRenderer from './common/ToastRenderer/ToastRenderer';
+import styles from './styles.module.scss';
+import { Redirect, Route, Switch } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router';
+import { routes } from './menu/routes';
+import { useEffect } from 'react';
+import { useAuthDetails } from '../hooks/api/getters/useAuth/useAuthDetails';
+import { useAuthUser } from '../hooks/api/getters/useAuth/useAuthUser';
+import { useAuthSplash } from '../hooks/api/getters/useAuth/useAuthSplash';
 
 interface IAppProps extends RouteComponentProps {
-    user: IAuthStatus;
-    fetchUiBootstrap: any;
+    fetchUiBootstrap: () => void;
 }
-const App = ({ location, user, fetchUiBootstrap }: IAppProps) => {
-    // because we need the userId when the component load.
-    const { splash, user: userFromUseUser, authDetails } = useUser();
 
-    const [showSplash, setShowSplash] = useState(false);
-    const [showLoader, setShowLoader] = useState(false);
+export const App = ({ fetchUiBootstrap }: IAppProps) => {
+    const { splash, refetchSplash } = useAuthSplash();
+    const { authDetails } = useAuthDetails();
+    const { user } = useAuthUser();
+
+    const isLoggedIn = Boolean(user?.id);
+    const hasFetchedAuth = Boolean(authDetails || user);
+    const showEnvSplash = isLoggedIn && splash?.environment === false;
+
     useEffect(() => {
         fetchUiBootstrap();
-        /* eslint-disable-next-line */
-    }, [user.authDetails?.type]);
-
-    useEffect(() => {
-        // Temporary duality until redux store is removed
-        if (!isUnauthorized() && !userFromUseUser?.id && !authDetails) {
-            setShowLoader(true);
-            return;
-        }
-        setShowLoader(false);
-        /* eslint-disable-next-line */
-    }, [user.authDetails, userFromUseUser.id]);
-
-    useEffect(() => {
-        if (splash?.environment === undefined) return;
-        if (!splash?.environment && !isUnauthorized()) {
-            setShowSplash(true);
-        }
-        /* eslint-disable-next-line */
-    }, [splash.environment]);
+    }, [fetchUiBootstrap, authDetails?.type]);
 
     const renderMainLayoutRoutes = () => {
         return routes.filter(route => route.layout === 'main').map(renderRoute);
@@ -63,10 +43,8 @@ const App = ({ location, user, fetchUiBootstrap }: IAppProps) => {
             .map(renderRoute);
     };
 
-    const isUnauthorized = () => {
-        // authDetails only exists if the user is not logged in.
-        //if (user?.permissions.length === 0) return true;
-        return user?.authDetails !== undefined;
+    const isUnauthorized = (): boolean => {
+        return !isLoggedIn;
     };
 
     // Change this to IRoute once snags with HashRouter and TS is worked out
@@ -91,7 +69,7 @@ const App = ({ location, user, fetchUiBootstrap }: IAppProps) => {
                     <route.component
                         {...props}
                         isUnauthorized={isUnauthorized}
-                        authDetails={user.authDetails}
+                        authDetails={authDetails}
                     />
                 )}
             />
@@ -99,21 +77,18 @@ const App = ({ location, user, fetchUiBootstrap }: IAppProps) => {
     };
 
     return (
-        <SWRProvider
-            isUnauthorized={isUnauthorized}
-            setShowLoader={setShowLoader}
-        >
+        <SWRProvider isUnauthorized={isUnauthorized}>
             <ConditionallyRender
-                condition={showLoader}
+                condition={!hasFetchedAuth}
                 show={<Loader />}
                 elseShow={
                     <div className={styles.container}>
                         <ToastRenderer />
 
                         <ConditionallyRender
-                            condition={showSplash}
+                            condition={showEnvSplash}
                             show={
-                                <EnvironmentSplash onFinish={setShowSplash} />
+                                <EnvironmentSplash onFinish={refetchSplash} />
                             }
                             elseShow={
                                 <LayoutPicker location={location}>
@@ -133,9 +108,7 @@ const App = ({ location, user, fetchUiBootstrap }: IAppProps) => {
                                         />
                                         <Redirect to="/404" />
                                     </Switch>
-                                    <Feedback
-                                        openUrl="http://feedback.unleash.run"
-                                    />
+                                    <Feedback openUrl="http://feedback.unleash.run" />
                                 </LayoutPicker>
                             }
                         />
@@ -145,10 +118,3 @@ const App = ({ location, user, fetchUiBootstrap }: IAppProps) => {
         </SWRProvider>
     );
 };
-
-// Set state to any for now, to avoid typing up entire state object while converting to tsx.
-const mapStateToProps = (state: any) => ({
-    user: state.user.toJS(),
-});
-
-export default connect(mapStateToProps)(App);

@@ -1,87 +1,110 @@
-import { FC } from 'react';
-
-import AccessContext from '../../../contexts/AccessContext';
-import useUser from '../../../hooks/api/getters/useUser/useUser';
+import { ReactElement, ReactNode, useCallback, useMemo } from 'react';
+import AccessContext, { IAccessContext } from '../../../contexts/AccessContext';
 import { ADMIN } from './permissions';
+import { IPermission } from '../../../interfaces/user';
+import { useAuthPermissions } from '../../../hooks/api/getters/useAuth/useAuthPermissions';
 
-// TODO: Type up redux store
-interface IAccessProvider {
-    store: any;
+interface IAccessProviderProps {
+    children: ReactNode;
+    permissions: IPermission[];
 }
 
-interface IPermission {
-    permission: string;
-    project?: string | null;
-    environment: string | null;
-}
+// TODO(olav): Mock useAuth instead of using props.permissions in tests.
+const AccessProvider = (props: IAccessProviderProps): ReactElement => {
+    const auth = useAuthPermissions();
+    const permissions = props.permissions ?? auth.permissions;
 
-const AccessProvider: FC<IAccessProvider> = ({ store, children }) => {
-    const { permissions } = useUser();
-    const isAdminHigherOrder = () => {
-        let called = false;
-        let result = false;
+    const isAdmin: boolean = useMemo(() => {
+        return checkAdmin(permissions);
+    }, [permissions]);
 
-        return () => {
-            if (called) return result;
-            const permissions = store.getState().user.get('permissions') || [];
-            result = permissions.some(
-                (p: IPermission) => p.permission === ADMIN
+    const hasAccess = useCallback(
+        (permission: string, project?: string, environment?: string) => {
+            return checkPermissions(
+                permissions,
+                permission,
+                project,
+                environment
             );
+        },
+        [permissions]
+    );
 
-            if (permissions.length > 0) {
-                called = true;
-            }
-        };
-    };
-
-    const isAdmin = isAdminHigherOrder();
-
-    const hasAccess = (
-        permission: string,
-        project: string,
-        environment?: string
-    ) => {
-        const result = permissions.some((p: IPermission) => {
-            if (p.permission === ADMIN) {
-                return true;
-            }
-
-            if (
-                p.permission === permission &&
-                (p.project === project || p.project === '*') &&
-                (p.environment === environment || p.environment === '*')
-            ) {
-                return true;
-            }
-
-            if (
-                p.permission === permission &&
-                (p.project === project || p.project === '*') &&
-                p.environment === null
-            ) {
-                return true;
-            }
-
-            if (
-                p.permission === permission &&
-                p.project === undefined &&
-                p.environment === null
-            ) {
-                return true;
-            }
-
-            return false;
-        });
-
-        return result;
-    };
-
-    const context = { hasAccess, isAdmin };
+    const value: IAccessContext = useMemo(
+        () => ({
+            isAdmin,
+            hasAccess,
+        }),
+        [isAdmin, hasAccess]
+    );
 
     return (
-        <AccessContext.Provider value={context}>
-            {children}
+        <AccessContext.Provider value={value}>
+            {props.children}
         </AccessContext.Provider>
+    );
+};
+
+const checkAdmin = (permissions: IPermission[] | undefined): boolean => {
+    if (!permissions) {
+        return false;
+    }
+
+    return permissions.some(p => {
+        return p.permission === ADMIN;
+    });
+};
+
+const checkPermissions = (
+    permissions: IPermission[] | undefined,
+    permission: string,
+    project?: string,
+    environment?: string
+): boolean => {
+    if (!permissions) {
+        return false;
+    }
+
+    return permissions.some(p => {
+        return checkPermission(p, permission, project, environment);
+    });
+};
+
+const checkPermission = (
+    p: IPermission,
+    permission: string,
+    project?: string,
+    environment?: string
+): boolean => {
+    if (!permission) {
+        console.warn(`Missing permission for AccessProvider: ${permission}`)
+        return false
+    }
+
+    if (p.permission === ADMIN) {
+        return true;
+    }
+
+    if (
+        p.permission === permission &&
+        (p.project === project || p.project === '*') &&
+        (p.environment === environment || p.environment === '*')
+    ) {
+        return true;
+    }
+
+    if (
+        p.permission === permission &&
+        (p.project === project || p.project === '*') &&
+        p.environment === null
+    ) {
+        return true;
+    }
+
+    return (
+        p.permission === permission &&
+        p.project === undefined &&
+        p.environment === null
     );
 };
 

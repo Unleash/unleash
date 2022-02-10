@@ -1,6 +1,5 @@
 import { List } from 'immutable';
 import { RECEIVE_PROJECT, REMOVE_PROJECT, ADD_PROJECT, UPDATE_PROJECT } from './actions';
-import { USER_LOGOUT, USER_LOGIN } from '../user/actions';
 
 const DEFAULT_PROJECTS = [{ id: 'default', name: 'Default', initial: true }];
 
@@ -22,9 +21,6 @@ const strategies = (state = getInitState(), action) => {
             const index = state.findIndex(item => item.id === action.project.id);
             return state.set(index, action.project);
         }
-        case USER_LOGOUT:
-        case USER_LOGIN:
-            return getInitState();
         default:
             return state;
     }

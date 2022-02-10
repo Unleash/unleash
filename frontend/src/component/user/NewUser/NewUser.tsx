@@ -1,23 +1,18 @@
 import useLoading from '../../../hooks/useLoading';
 import { TextField, Typography } from '@material-ui/core';
-
 import StandaloneBanner from '../StandaloneBanner/StandaloneBanner';
 import ResetPasswordDetails from '../common/ResetPasswordDetails/ResetPasswordDetails';
-
 import { useStyles } from './NewUser.styles';
 import useResetPassword from '../../../hooks/api/getters/useResetPassword/useResetPassword';
 import StandaloneLayout from '../common/StandaloneLayout/StandaloneLayout';
 import ConditionallyRender from '../../common/ConditionallyRender';
 import InvalidToken from '../common/InvalidToken/InvalidToken';
-import { IAuthStatus } from '../../../interfaces/user';
 import AuthOptions from '../common/AuthOptions/AuthOptions';
 import DividerText from '../../common/DividerText/DividerText';
+import { useAuthDetails } from '../../../hooks/api/getters/useAuth/useAuthDetails';
 
-interface INewUserProps {
-    user: IAuthStatus;
-}
-
-const NewUser = ({ user }: INewUserProps) => {
+export const NewUser = () => {
+    const { authDetails } = useAuthDetails();
     const { token, data, loading, setLoading, invalidToken } =
         useResetPassword();
     const ref = useLoading(loading);
@@ -75,10 +70,9 @@ const NewUser = ({ user }: INewUserProps) => {
                                 />
                                 <div className={styles.roleContainer}>
                                     <ConditionallyRender
-                                        condition={
-                                            user?.authDetails?.options?.length >
-                                            0
-                                        }
+                                        condition={Boolean(
+                                            authDetails?.options?.length
+                                        )}
                                         show={
                                             <>
                                                 <DividerText
@@ -88,8 +82,7 @@ const NewUser = ({ user }: INewUserProps) => {
 
                                                 <AuthOptions
                                                     options={
-                                                        user?.authDetails
-                                                            ?.options
+                                                        authDetails?.options
                                                     }
                                                 />
                                                 <DividerText
@@ -116,5 +109,3 @@ const NewUser = ({ user }: INewUserProps) => {
         </div>
     );
 };
-
-export default NewUser;

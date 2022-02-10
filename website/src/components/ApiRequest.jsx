@@ -39,7 +39,7 @@ ${prettyPayload}
                     {`
 curl -H "Content-Type: application/json" \\
      -H "Authorization: <API-token>" \\
-     -X ${verbUpper}
+     -X ${verbUpper} \\
      -d '${prettyPayload}' \\
      <unleash-url>/${url}
 `.trim()}

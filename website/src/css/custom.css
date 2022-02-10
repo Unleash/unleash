@@ -61,7 +61,7 @@ html[data-theme='dark'] {
     --unleash-img-background-color: #fff;
 }
 
-img {
+main img {
     background: var(--unleash-img-background-color);
     display: block;
     margin: auto;

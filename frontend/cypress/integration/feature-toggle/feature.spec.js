@@ -94,6 +94,40 @@ describe('feature toggle', () => {
         cy.url().should('include', featureToggleName);
     });
 
+    it('Gives an error if a toggle exists with the same name', () => {
+        cy.get('[data-test=NAVIGATE_TO_CREATE_FEATURE').click();
+
+        cy.intercept('POST', '/api/admin/projects/default/features').as(
+            'createFeature'
+        );
+
+        cy.get("[data-test='CF_NAME_ID'").type(featureToggleName);
+        cy.get("[data-test='CF_DESC_ID'").type('hellowrdada');
+
+        cy.get("[data-test='CF_CREATE_BTN_ID']").click();
+
+        cy.get("[data-test='INPUT_ERROR_TEXT']").contains(
+            'A feature with this name already exists'
+        );
+    });
+
+    it('Gives an error if a toggle name is url unsafe', () => {
+        cy.get('[data-test=NAVIGATE_TO_CREATE_FEATURE').click();
+
+        cy.intercept('POST', '/api/admin/projects/default/features').as(
+            'createFeature'
+        );
+
+        cy.get("[data-test='CF_NAME_ID'").type('featureToggleUnsafe####$#//');
+        cy.get("[data-test='CF_DESC_ID'").type('hellowrdada');
+
+        cy.get("[data-test='CF_CREATE_BTN_ID']").click();
+
+        cy.get("[data-test='INPUT_ERROR_TEXT']").contains(
+            `"name" must be URL friendly`
+        );
+    });
+
     it('Can add a gradual rollout strategy to the development environment', () => {
         cy.wait(500);
         cy.visit(`/projects/default/features/${featureToggleName}/strategies`);

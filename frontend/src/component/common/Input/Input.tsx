@@ -1,4 +1,5 @@
 import { TextField } from '@material-ui/core';
+import { INPUT_ERROR_TEXT } from '../../../testIds';
 import { useStyles } from './Input.styles.ts';
 
 interface IInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -41,6 +42,7 @@ const Input = ({
                 value={value}
                 onChange={onChange}
                 FormHelperTextProps={{
+                    ['data-test']: INPUT_ERROR_TEXT,
                     classes: {
                         root: styles.helperText,
                     },

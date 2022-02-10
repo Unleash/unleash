@@ -71,6 +71,11 @@ const useFeatureForm = (
                     ...prev,
                     name: 'A feature with this name already exists',
                 }));
+            } else {
+                setErrors(prev => ({
+                    ...prev,
+                    name: e.toString(),
+                }));
             }
             return false;
         }

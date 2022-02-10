@@ -9,7 +9,7 @@ import HeaderTitle from '../../common/HeaderTitle';
 import useApplications from '../../../hooks/api/getters/useApplications/useApplications';
 import ConditionallyRender from '../../common/ConditionallyRender';
 
-const ApplicationList = () => {
+export const ApplicationList = () => {
     const { applications, loading } = useApplications();
     const [filter, setFilter] = useState('');
 
@@ -20,7 +20,7 @@ const ApplicationList = () => {
             : applications;
     }, [applications, filter]);
 
-    const RenderNoApplications = () => (
+    const renderNoApplications = () => (
         <>
             <section style={{ textAlign: 'center' }}>
                 <Warning /> <br />
@@ -57,7 +57,7 @@ const ApplicationList = () => {
                             <ConditionallyRender
                                 condition={loading}
                                 show={<div>...loading</div>}
-                                elseShow={<RenderNoApplications />}
+                                elseShow={renderNoApplications()}
                             />
                         }
                     />
@@ -66,5 +66,3 @@ const ApplicationList = () => {
         </>
     );
 };
-
-export default ApplicationList;

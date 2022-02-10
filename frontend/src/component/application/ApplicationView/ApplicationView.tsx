@@ -25,7 +25,8 @@ import { getTogglePath } from '../../../utils/route-path-helpers';
 import useApplication from '../../../hooks/api/getters/useApplication/useApplication';
 import AccessContext from '../../../contexts/AccessContext';
 import { formatFullDateTimeWithLocale } from '../../common/util';
-const ApplicationView = () => {
+
+export const ApplicationView = () => {
     const { hasAccess } = useContext(AccessContext);
     const { name } = useParams<{ name: string }>();
     const { application } = useApplication(name);
@@ -129,24 +130,26 @@ const ApplicationView = () => {
                 </Typography>
                 <hr />
                 <List>
-                    {strategies.map(({ name, description, notFound }, i: number) => (
-                        <ConditionallyRender
-                            key={`strategies_conditional_${name}`}
-                            condition={notFound}
-                            show={notFoundListItem({
-                                createUrl: '/strategies/create',
-                                name,
-                                permission: CREATE_STRATEGY,
-                            })}
-                            elseShow={foundListItem({
-                                viewUrl: '/strategies/view',
-                                name,
-                                Icon: Extension,
-                                description,
-                                i,
-                            })}
-                        />
-                    ))}
+                    {strategies.map(
+                        ({ name, description, notFound }, i: number) => (
+                            <ConditionallyRender
+                                key={`strategies_conditional_${name}`}
+                                condition={notFound}
+                                show={notFoundListItem({
+                                    createUrl: '/strategies/create',
+                                    name,
+                                    permission: CREATE_STRATEGY,
+                                })}
+                                elseShow={foundListItem({
+                                    viewUrl: '/strategies/view',
+                                    name,
+                                    Icon: Extension,
+                                    description,
+                                    i,
+                                })}
+                            />
+                        )
+                    )}
                 </List>
             </Grid>
             <Grid item xl={12} md={12}>
@@ -203,5 +206,3 @@ const ApplicationView = () => {
         </Grid>
     );
 };
-
-export default ApplicationView;

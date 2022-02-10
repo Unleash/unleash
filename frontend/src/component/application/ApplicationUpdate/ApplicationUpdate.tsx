@@ -12,7 +12,7 @@ interface IApplicationUpdateProps {
     application: IApplication;
 }
 
-const ApplicationUpdate = ({ application }: IApplicationUpdateProps) => {
+export const ApplicationUpdate = ({ application }: IApplicationUpdateProps) => {
     const { storeApplicationMetaData } = useApplicationsApi();
     const { appName, icon, url, description } = application;
     const [localUrl, setLocalUrl] = useState(url || '');
@@ -83,5 +83,3 @@ const ApplicationUpdate = ({ application }: IApplicationUpdateProps) => {
         </Grid>
     );
 };
-
-export default ApplicationUpdate;

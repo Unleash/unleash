@@ -12,8 +12,8 @@ import { Link as LinkIcon } from '@material-ui/icons';
 import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyRender';
 import { formatDateWithLocale } from '../../common/util';
 import { UPDATE_APPLICATION } from '../../providers/AccessProvider/permissions';
-import ApplicationView from '../ApplicationView/ApplicationView';
-import ApplicationUpdate from '../ApplicationUpdate/ApplicationUpdate';
+import { ApplicationView } from '../ApplicationView/ApplicationView';
+import { ApplicationUpdate } from '../ApplicationUpdate/ApplicationUpdate';
 import TabNav from '../../common/TabNav/TabNav';
 import Dialogue from '../../common/Dialogue';
 import PageContent from '../../common/PageContent';
@@ -26,7 +26,7 @@ import { useLocationSettings } from '../../../hooks/useLocationSettings';
 import useToast from '../../../hooks/useToast';
 import PermissionButton from '../../common/PermissionButton/PermissionButton';
 
-const ApplicationEdit = () => {
+export const ApplicationEdit = () => {
     const history = useHistory();
     const { name } = useParams<{ name: string }>();
     const { application, loading } = useApplication(name);
@@ -42,7 +42,7 @@ const ApplicationEdit = () => {
         setShowDialog(!showDialog);
     };
 
-    const formatDate = (v: Date) =>
+    const formatDate = (v: string) =>
         formatDateWithLocale(v, locationSettings.locale);
 
     const onDeleteApplication = async (evt: Event) => {
@@ -109,7 +109,7 @@ const ApplicationEdit = () => {
                     actions={
                         <>
                             <ConditionallyRender
-                                condition={url}
+                                condition={Boolean(url)}
                                 show={
                                     <IconButton component={Link} href={url}>
                                         <LinkIcon />
@@ -147,5 +147,3 @@ const ApplicationEdit = () => {
         </PageContent>
     );
 };
-
-export default ApplicationEdit;

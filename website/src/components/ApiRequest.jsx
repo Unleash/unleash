@@ -18,19 +18,31 @@ import CodeBlock from '@theme/CodeBlock';
 const indentation = 2;
 
 const Component = ({ verb, payload, url, title }) => {
-    const verbUpper = verb?.toUpperCase() || ""
-    const prettyPayload = JSON.stringify(payload, null, indentation)
+    const verbUpper = verb?.toUpperCase() || '';
+    const prettyPayload = JSON.stringify(payload, null, indentation);
 
     return (
         <Tabs groupId="api-request">
             <TabItem value="http" label="HTTP">
                 <CodeBlock language="http" title={title}>
-                    {`${verbUpper} <unleash-url>/${url}
+                    {`
+${verbUpper} <unleash-url>/${url}
 Authorization: <API-token>
 content-type: application/json
 
 ${prettyPayload}
-`}
+`.trim()}
+                </CodeBlock>
+            </TabItem>
+            <TabItem value="curl" label="cURL">
+                <CodeBlock language="bash" title={title}>
+                    {`
+curl -H "Content-Type: application/json" \\
+     -H "Authorization: <API-token>" \\
+     -X ${verbUpper}
+     -d '${prettyPayload}' \\
+     <unleash-url>/${url}
+`.trim()}
                 </CodeBlock>
             </TabItem>
             <TabItem value="httpie" label="HTTPie">
@@ -38,7 +50,7 @@ ${prettyPayload}
                     {`echo '${prettyPayload}' \\
 | http ${verbUpper} \\
   <unleash-url>/${url} \\
-  Authorization:<API-token>`}
+  Authorization:<API-token>`.trim()}
                 </CodeBlock>
             </TabItem>
         </Tabs>

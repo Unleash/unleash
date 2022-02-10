@@ -4,8 +4,9 @@ import { formatApiPath } from '../../../../utils/format-path';
 import handleErrorResponses from '../httpErrorResponseHandler';
 
 const useApplication = (name: string, options: SWRConfiguration = {}) => {
+    const path = formatApiPath(`api/admin/metrics/applications/${name}`);
+
     const fetcher = async () => {
-        const path = formatApiPath(`api/admin/metrics/applications/${name}`);
         return fetch(path, {
             method: 'GET',
         })
@@ -13,16 +14,16 @@ const useApplication = (name: string, options: SWRConfiguration = {}) => {
             .then(res => res.json());
     };
 
-    const FEATURE_CACHE_KEY = `api/admin/metrics/applications/${name}`;
+    const APPLICATION_CACHE_KEY = `api/admin/metrics/applications/${name}`;
 
-    const { data, error } = useSWR(FEATURE_CACHE_KEY, fetcher, {
+    const { data, error } = useSWR(APPLICATION_CACHE_KEY, fetcher, {
         ...options,
     });
 
     const [loading, setLoading] = useState(!error && !data);
 
     const refetchApplication = () => {
-        mutate(FEATURE_CACHE_KEY);
+        mutate(APPLICATION_CACHE_KEY);
     };
 
     useEffect(() => {
@@ -43,7 +44,7 @@ const useApplication = (name: string, options: SWRConfiguration = {}) => {
         error,
         loading,
         refetchApplication,
-        FEATURE_CACHE_KEY,
+        APPLICATION_CACHE_KEY,
     };
 };
 

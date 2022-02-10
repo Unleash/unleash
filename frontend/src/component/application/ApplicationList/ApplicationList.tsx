@@ -7,9 +7,10 @@ import SearchField from '../../common/SearchField/SearchField';
 import PageContent from '../../common/PageContent/PageContent';
 import HeaderTitle from '../../common/HeaderTitle';
 import useApplications from '../../../hooks/api/getters/useApplications/useApplications';
+import ConditionallyRender from '../../common/ConditionallyRender';
 
 const ApplicationList = () => {
-    const { applications } = useApplications();
+    const { applications, loading } = useApplications();
     const [filter, setFilter] = useState('');
 
     const filteredApplications = useMemo(() => {
@@ -49,11 +50,17 @@ const ApplicationList = () => {
             </div>
             <PageContent headerContent={<HeaderTitle title="Applications" />}>
                 <div className={commonStyles.fullwidth}>
-                    {filteredApplications.length > 0 ? (
-                        <AppsLinkList apps={filteredApplications} />
-                    ) : (
-                        <RenderNoApplications />
-                    )}
+                    <ConditionallyRender
+                        condition={filteredApplications.length > 0}
+                        show={<AppsLinkList apps={filteredApplications} />}
+                        elseShow={
+                            <ConditionallyRender
+                                condition={loading}
+                                show={<div>...loading</div>}
+                                elseShow={<RenderNoApplications />}
+                            />
+                        }
+                    />
                 </div>
             </PageContent>
         </>

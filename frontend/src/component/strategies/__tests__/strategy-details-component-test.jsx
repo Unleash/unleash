@@ -1,6 +1,6 @@
 import React from 'react';
 import { ThemeProvider } from '@material-ui/core';
-import StrategyDetails from '../strategy-details-component';
+import { StrategyView } from '../StrategyView/StrategyView';
 import renderer from 'react-test-renderer';
 import { MemoryRouter } from 'react-router-dom';
 import theme from '../../../themes/main-theme';
@@ -36,7 +36,7 @@ test('renders correctly with one strategy', () => {
         <MemoryRouter>
             <AccessProvider>
                 <ThemeProvider theme={theme}>
-                    <StrategyDetails
+                    <StrategyView
                         strategyName={'Another'}
                         strategy={strategy}
                         activeTab="view"

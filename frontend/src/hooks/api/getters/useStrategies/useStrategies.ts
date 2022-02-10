@@ -49,7 +49,7 @@ const useStrategies = (options: SWRConfiguration = {}) => {
     );
     const [loading, setLoading] = useState(!error && !data);
 
-    const refetch = () => {
+    const refetchStrategies = () => {
         mutate(STRATEGIES_CACHE_KEY);
     };
 
@@ -61,7 +61,7 @@ const useStrategies = (options: SWRConfiguration = {}) => {
         strategies: data?.strategies || [flexibleRolloutStrategy],
         error,
         loading,
-        refetch,
+        refetchStrategies,
     };
 };
 

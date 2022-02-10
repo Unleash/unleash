@@ -67,18 +67,18 @@ exports[`renders correctly with one strategy 1`] = `
             className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
           >
             <a
-              href="/strategies/view/Another"
+              href="/strategies/view/flexibleRollout"
               onClick={[Function]}
             >
               <strong>
-                Another
+                Gradual rollout
               </strong>
             </a>
           </span>
           <p
             className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
           >
-            another's description
+            Roll out to a percentage of your userbase, and ensure that the experience is the same for the user on each visit.
           </p>
         </div>
         <div>
@@ -201,18 +201,18 @@ exports[`renders correctly with one strategy without permissions 1`] = `
             className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
           >
             <a
-              href="/strategies/view/Another"
+              href="/strategies/view/flexibleRollout"
               onClick={[Function]}
             >
               <strong>
-                Another
+                Gradual rollout
               </strong>
             </a>
           </span>
           <p
             className="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
           >
-            another's description
+            Roll out to a percentage of your userbase, and ensure that the experience is the same for the user on each visit.
           </p>
         </div>
         <div>

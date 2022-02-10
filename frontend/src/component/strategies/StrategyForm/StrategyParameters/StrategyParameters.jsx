@@ -10,7 +10,7 @@ const StrategyParameters = ({ input = [], count = 0, updateParameter }) => (
         {gerArrayWithEntries(count).map((v, i) => (
             <StrategyParameter
                 key={i}
-                set={v => updateParameter(i, v, true)}
+                set={v => updateParameter(i, v)}
                 index={i}
                 input={input[i]}
             />

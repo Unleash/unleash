@@ -1,8 +1,8 @@
 import CopyFeatureToggle from '../../page/features/copy';
 import { FeatureToggleListContainer } from '../feature/FeatureToggleList/FeatureToggleListContainer';
-import CreateStrategies from '../../page/strategies/create';
-import StrategyView from '../../page/strategies/show';
-import Strategies from '../../page/strategies';
+import { StrategyForm } from '../strategies/StrategyForm/StrategyForm';
+import { StrategyView } from '../../component/strategies/StrategyView/StrategyView';
+import { StrategiesList } from '../strategies/StrategiesList/StrategiesList';
 import HistoryPage from '../../page/history';
 import HistoryTogglePage from '../../page/history/toggle';
 import { ArchiveListContainer } from '../archive/ArchiveListContainer';
@@ -243,7 +243,7 @@ export const routes = [
         path: '/strategies/create',
         title: 'Create',
         parent: '/strategies',
-        component: CreateStrategies,
+        component: StrategyForm,
         type: 'protected',
         layout: 'main',
         menu: {},
@@ -260,7 +260,7 @@ export const routes = [
     {
         path: '/strategies',
         title: 'Strategies',
-        component: Strategies,
+        component: StrategiesList,
         type: 'protected',
         layout: 'main',
         menu: { mobile: true, advanced: true },

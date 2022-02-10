@@ -9,15 +9,6 @@ import {
     UPDATE_FEATURE_TOGGLE,
 } from '../feature-toggle/actions';
 
-import {
-    ERROR_UPDATING_STRATEGY,
-    ERROR_CREATING_STRATEGY,
-    ERROR_RECEIVE_STRATEGIES,
-    UPDATE_STRATEGY_SUCCESS,
-} from '../strategy/actions';
-
-import { UPDATE_APPLICATION_FIELD } from '../application/actions';
-
 import { FORBIDDEN } from '../util';
 
 const debug = require('debug')('unleash:error-store');
@@ -42,9 +33,6 @@ const strategies = (state = getInitState(), action) => {
         case ERROR_REMOVE_FEATURE_TOGGLE:
         case ERROR_FETCH_FEATURE_TOGGLES:
         case ERROR_UPDATE_FEATURE_TOGGLE:
-        case ERROR_UPDATING_STRATEGY:
-        case ERROR_CREATING_STRATEGY:
-        case ERROR_RECEIVE_STRATEGIES:
             return addErrorIfNotAlreadyInList(state, action.error.message);
         case FORBIDDEN:
             return addErrorIfNotAlreadyInList(
@@ -60,8 +48,6 @@ const strategies = (state = getInitState(), action) => {
         // revise how this works in a future update.
         case UPDATE_FEATURE_TOGGLE:
         case UPDATE_FEATURE_TOGGLE_STRATEGIES:
-        case UPDATE_APPLICATION_FIELD:
-        case UPDATE_STRATEGY_SUCCESS:
             return addErrorIfNotAlreadyInList(state, action.info);
         default:
             return state;

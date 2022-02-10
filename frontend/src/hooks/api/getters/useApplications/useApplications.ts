@@ -42,7 +42,7 @@ const useApplications = (
     }, [data, error]);
 
     return {
-        applications: data?.applications || {},
+        applications: data?.applications || [],
         error,
         loading,
         refetchApplications,

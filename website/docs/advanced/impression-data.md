@@ -72,7 +72,7 @@ This table describes all the properties on the impression events:
 Impression data is strictly an **opt-in** feature and must be enabled on a **per-toggle basis**.
 You can enable and disable it both when you create a toggle and when you edit a toggle.
 
-You can enable impression data via the impression data toggle in the admin UI's toggle creation form. You can also go via the [the API, using the `impressionData` option](../api/admin/feature-toggles-api-v2.md#create-toggle).
+You can enable impression data via the impression data toggle in the admin UI's toggle creation form. You can also go via the [the API, using the `impressionData` option](../api/admin/feature-toggles-api-v2.md#create-toggle). For more detailed instructions, see [the section on enabling impression data in the how-to guide for capturing impression data](../how-to/how-to-capture-impression-data.mdx#step-1).
 
 ![A feature toggle creation form. At the end of the form is a heading that says "Impression data", a short paragraph that describes the feature, and a toggle to opt in or out of it.](/img/create_feat_impression.png)
 

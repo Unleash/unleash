@@ -2,10 +2,21 @@ import useSWR, { mutate, SWRConfiguration } from 'swr';
 import { useState, useEffect } from 'react';
 import { formatApiPath } from '../../../../utils/format-path';
 import handleErrorResponses from '../httpErrorResponseHandler';
+import { IApplication } from '../../../../interfaces/application';
 
 const path = formatApiPath('api/admin/metrics/applications');
 
-const useApplications = (options: SWRConfiguration = {}) => {
+interface IUseApplicationsOutput {
+    applications: IApplication[];
+    refetchApplications: () => void;
+    loading: boolean;
+    error?: Error;
+    APPLICATIONS_CACHE_KEY: string;
+}
+
+const useApplications = (
+    options: SWRConfiguration = {}
+): IUseApplicationsOutput => {
     const fetcher = async () => {
         return fetch(path, {
             method: 'GET',

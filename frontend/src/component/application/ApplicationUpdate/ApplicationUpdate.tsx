@@ -5,19 +5,9 @@ import icons from '../icon-names';
 import GeneralSelect from '../../common/GeneralSelect/GeneralSelect';
 import useApplicationsApi from '../../../hooks/api/actions/useApplicationsApi/useApplicationsApi';
 import useToast from '../../../hooks/useToast';
+import { IApplication } from '../../../interfaces/application';
 
-interface IApplication {
-    appName: string;
-    color: string;
-    createdAt: string;
-    description: string;
-    icon: string;
-    instances: [];
-    links: object;
-    seenToggles: [];
-    strategies: [];
-    url: string;
-}
+
 interface IApplicationUpdateProps {
     application: IApplication;
 }

@@ -2,8 +2,20 @@ import useSWR, { mutate, SWRConfiguration } from 'swr';
 import { useState, useEffect } from 'react';
 import { formatApiPath } from '../../../../utils/format-path';
 import handleErrorResponses from '../httpErrorResponseHandler';
+import { IApplication } from '../../../../interfaces/application';
 
-const useApplication = (name: string, options: SWRConfiguration = {}) => {
+interface IUseApplicationOutput {
+    application: IApplication;
+    refetchApplication: () => void;
+    loading: boolean;
+    error?: Error;
+    APPLICATION_CACHE_KEY: string;
+}
+
+const useApplication = (
+    name: string,
+    options: SWRConfiguration = {}
+): IUseApplicationOutput => {
     const path = formatApiPath(`api/admin/metrics/applications/${name}`);
 
     const fetcher = async () => {

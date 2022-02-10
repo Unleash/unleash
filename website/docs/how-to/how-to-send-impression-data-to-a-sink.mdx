@@ -39,7 +39,7 @@ To create a feature toggle with impression data enabled, set the `impressionData
 
 ### Enabling impression data for existing feature toggles {#step-1-existing-toggles}
 
-To enable impression data for an existing toggle, use the "edit" button on the toggle's page in the admin UI. It will take you to a form that looks like the toggle creation form. Follow the same steps as you would for [enabling impression data for a new feature toggle](#step-1-new-toggles).
+To enable impression data for an existing toggle, use the "edit" button on the toggle's page in the admin UI. It will take you to a form that looks like the toggle creation form. Use the "impression data" toggle to enable impression data the same way you would when [enabling impression data for a new feature toggle](#step-1-new-toggles).
 
 ![The create feature toggle form. There's a toggle at the end of the form that enables or disables impression data. It's labeled "impression data".](/img/enable-impression-data-existing-toggle.png)
 
@@ -50,16 +50,25 @@ To enable impression data for an existing toggle, use the [API's toggle patching
 
 ## Step 2: Capture impression events in your client {#step-2}
 
-### Initialize your analytics service
+In your client SDK, initialize the library for the third party service you're using.
+For the full details on setting up a Posthog client, see [the official Posthog JavaScript client docs](https://posthog.com/docs/integrate/client/js).
+The steps below will use extracts from said documentation.
 
-``` js
+After initializing the library, you'll probably also want to identify the current user, so that events can be correlated properly:
+
+``` js title="Identify the user."
 posthog.identify(userId);
 ```
 
-### Set up a listener
+### Capture and transform the event
 
-``` js
+Attach an event listener to Unleash that listens for `"impression"` events. Inside the listener, transform the event data to the format you want and send it to your analytics service.
+
+``` js title="Capture, transform, and send impression data."
+// listen for impression events
 unleash.on("impression", (event) => {
+
+    // capture and transform events
     posthog.capture(event.eventType, {
         ...event.context,
         distinct_id: event.context?.userId,
@@ -67,58 +76,10 @@ unleash.on("impression", (event) => {
         enabled: event.enabled,
         variant: event.variant,
     });
+
 });
 ```
 
-option:
-
-
-``` js
-unleash.on("impression", (event) => {
-    posthog.capture(event.eventType, transform(event));
-});
-```
-
-### Transform and record the data {#step-3}
-
-Posthog requires the `distinct_id` property. For the rest, we'll just spread everything into a flat object.
-
-``` js
-const transform = (event) => ({
-    ...event.context,
-    distinct_id: event.context?.userId,
-    featureName: event.featureName,
-    enabled: event.enabled,
-    variant: event.variant,
-})
-```
-
-## Full example
-
-```js
-import posthog from "posthog-js";
-
-const unleash = new UnleashClient({
-  url: 'https://eu.unleash-hosted.com/hosted/proxy',
-  clientKey: 'your-proxy-key',
-  appName: 'my-webapp',
-});
-
-posthog.identify(userId);
-
-unleash.start();
-
-unleash.on("ready", () => {
-  unleash.isEnabled("my-feature-toggle");
-})
-
-unleash.on("impression", (event) => {
-    posthog.capture(event.eventType, {
-        ...event.context,
-        distinct_id: event.context?.userId,
-        featureName: event.featureName,
-        enabled: event.enabled,
-        variant: event.variant,
-    });
-})
-```
+Posthog expects an object with a `distinct_id` property that it uses to correlate data.
+Additionally, you can add whatever properties you want, such as the feature toggle name, its state and/or variant, or the whole Unleash context.
+The `posthog.capture` method sends the event data to your Posthog instance.

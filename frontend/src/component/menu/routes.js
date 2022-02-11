@@ -1,4 +1,3 @@
-import CopyFeatureToggle from '../../page/features/copy';
 import { FeatureToggleListContainer } from '../feature/FeatureToggleList/FeatureToggleListContainer';
 import { StrategyForm } from '../strategies/StrategyForm/StrategyForm';
 import { StrategyView } from '../../component/strategies/StrategyView/StrategyView';
@@ -45,6 +44,7 @@ import ContextList from '../context/ContextList/ContextList';
 import RedirectFeatureView from '../feature/RedirectFeatureView/RedirectFeatureView';
 import { CreateAddon } from '../addons/CreateAddon/CreateAddon';
 import { EditAddon } from '../addons/EditAddon/EditAddon';
+import { CopyFeatureToggle } from '../feature/CopyFeature/CopyFeature';
 
 export const routes = [
     // Project

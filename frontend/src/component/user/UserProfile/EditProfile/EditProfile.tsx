@@ -5,7 +5,6 @@ import { useStyles } from './EditProfile.styles';
 import { useCommonStyles } from '../../../../common.styles';
 import PasswordChecker from '../../common/ResetPasswordForm/PasswordChecker/PasswordChecker';
 import PasswordMatcher from '../../common/ResetPasswordForm/PasswordMatcher/PasswordMatcher';
-import { headers } from '../../../../store/api-helper';
 import { Alert } from '@material-ui/lab';
 import ConditionallyRender from '../../../common/ConditionallyRender';
 import useLoading from '../../../../hooks/useLoading';
@@ -17,6 +16,7 @@ import {
 } from '../../../../constants/statusCodes';
 import { formatApiPath } from '../../../../utils/format-path';
 import PasswordField from '../../../common/PasswordField/PasswordField';
+import { headers } from '../../../../utils/api-utils';
 
 interface IEditProfileProps {
     setEditingProfile: React.Dispatch<React.SetStateAction<boolean>>;

@@ -6,7 +6,7 @@ import { useAuthPermissions } from '../../../hooks/api/getters/useAuth/useAuthPe
 
 interface IAccessProviderProps {
     children: ReactNode;
-    permissions: IPermission[];
+    permissions?: IPermission[];
 }
 
 // TODO(olav): Mock useAuth instead of using props.permissions in tests.
@@ -77,8 +77,8 @@ const checkPermission = (
     environment?: string
 ): boolean => {
     if (!permission) {
-        console.warn(`Missing permission for AccessProvider: ${permission}`)
-        return false
+        console.warn(`Missing permission for AccessProvider: ${permission}`);
+        return false;
     }
 
     if (p.permission === ADMIN) {

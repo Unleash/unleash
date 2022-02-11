@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { formatApiPath } from '../../../../utils/format-path';
 
 const useUiBootstrap = (options: SWRConfiguration = {}) => {
+    // The point of the bootstrap is to get multiple datasets in one call. Therefore,
+    // this needs to be refactored to seed other hooks with the correct data.
     const BOOTSTRAP_CACHE_KEY = `api/admin/ui-bootstrap`;
 
     const fetcher = () => {

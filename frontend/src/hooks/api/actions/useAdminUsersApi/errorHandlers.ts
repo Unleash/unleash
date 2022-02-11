@@ -4,7 +4,7 @@ import {
     AuthenticationError,
     ForbiddenError,
     NotFoundError,
-} from '../../../../store/api-helper';
+} from '../../../../utils/api-utils';
 
 export const handleBadRequest = async (
     setErrors?: Dispatch<SetStateAction<{}>>,

@@ -12,7 +12,7 @@ import {
     ForbiddenError,
     headers,
     NotFoundError,
-} from '../../../../store/api-helper';
+} from '../../../../utils/api-utils';
 import { formatApiPath } from '../../../../utils/format-path';
 
 interface IUseAPI {

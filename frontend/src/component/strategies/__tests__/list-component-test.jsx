@@ -4,7 +4,6 @@ import { StrategiesList } from '../StrategiesList/StrategiesList';
 import renderer from 'react-test-renderer';
 import theme from '../../../themes/main-theme';
 import AccessProvider from '../../providers/AccessProvider/AccessProvider';
-import { createFakeStore } from '../../../accessStoreFake';
 import { ADMIN } from '../../providers/AccessProvider/permissions';
 import UIProvider from '../../providers/UIProvider/UIProvider';
 
@@ -17,7 +16,7 @@ test('renders correctly with one strategy', () => {
         <MemoryRouter>
             <ThemeProvider theme={theme}>
                 <UIProvider>
-                    <AccessProvider store={createFakeStore()}>
+                    <AccessProvider permissions={[{ permission: ADMIN }]}>
                         <StrategiesList
                             strategies={[strategy]}
                             fetchStrategies={jest.fn()}
@@ -44,9 +43,7 @@ test('renders correctly with one strategy without permissions', () => {
         <MemoryRouter>
             <ThemeProvider theme={theme}>
                 <UIProvider>
-                    <AccessProvider
-                        store={createFakeStore([{ permission: ADMIN }])}
-                    >
+                    <AccessProvider permissions={[{ permission: ADMIN }]}>
                         <StrategiesList
                             strategies={[strategy]}
                             fetchStrategies={jest.fn()}

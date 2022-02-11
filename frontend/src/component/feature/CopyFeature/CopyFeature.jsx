@@ -1,7 +1,6 @@
-import React, { useState, useRef, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import { useState, useRef, useEffect } from 'react';
 
-import { Link, useParams } from 'react-router-dom';
+import { Link, useHistory, useParams } from 'react-router-dom';
 
 import {
     Button,
@@ -23,17 +22,18 @@ import useFeatureApi from '../../../hooks/api/actions/useFeatureApi/useFeatureAp
 import useFeature from '../../../hooks/api/getters/useFeature/useFeature';
 import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
 
-const CopyFeature = props => {
+export const CopyFeatureToggle = () => {
     // static displayName = `AddFeatureComponent-${getDisplayName(Component)}`;
     const [replaceGroupId, setReplaceGroupId] = useState(true);
     const [apiError, setApiError] = useState('');
     const [nameError, setNameError] = useState(undefined);
     const [newToggleName, setNewToggleName] = useState();
-    const { cloneFeatureToggle } = useFeatureApi();
+    const { cloneFeatureToggle, validateFeatureToggleName } = useFeatureApi();
     const inputRef = useRef();
     const { name: copyToggleName, id: projectId } = useParams();
     const { feature } = useFeature(projectId, copyToggleName);
     const { uiConfig } = useUiConfig();
+    const history = useHistory();
 
     useEffect(() => {
         inputRef.current?.focus();
@@ -50,7 +50,7 @@ const CopyFeature = props => {
 
     const onValidateName = async () => {
         try {
-            await props.validateName(newToggleName);
+            await validateFeatureToggleName(newToggleName);
 
             setNameError(undefined);
         } catch (err) {
@@ -70,7 +70,7 @@ const CopyFeature = props => {
                 name: newToggleName,
                 replaceGroupId,
             });
-            props.history.push(
+            history.push(
                 getTogglePath(projectId, newToggleName, uiConfig.flags.E)
             );
         } catch (e) {
@@ -137,10 +137,3 @@ const CopyFeature = props => {
         </Paper>
     );
 };
-
-CopyFeature.propTypes = {
-    history: PropTypes.object.isRequired,
-    validateName: PropTypes.func.isRequired,
-};
-
-export default CopyFeature;

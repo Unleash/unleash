@@ -1,3 +1,4 @@
+import { headers } from '../../../../utils/api-utils';
 import useAPI from '../useApi/useApi';
 
 type PasswordLogin = (
@@ -16,24 +17,36 @@ interface IUseAuthApiOutput {
 }
 
 export const useAuthApi = (): IUseAuthApiOutput => {
-    const { makeRequest, createRequest, errors, loading } = useAPI({
+    const { makeRequest, errors, loading } = useAPI({
         propagateErrors: true,
     });
 
     const passwordAuth = (path: string, username: string, password: string) => {
-        const req = createRequest(ensureRelativePath(path), {
-            method: 'POST',
-            body: JSON.stringify({ username, password }),
-        });
+        const req = {
+            caller: () => {
+                return fetch(path, {
+                    headers,
+                    method: 'POST',
+                    body: JSON.stringify({ username, password }),
+                });
+            },
+            id: 'passwordAuth',
+        };
 
         return makeRequest(req.caller, req.id);
     };
 
     const emailAuth = (path: string, email: string) => {
-        const req = createRequest(ensureRelativePath(path), {
-            method: 'POST',
-            body: JSON.stringify({ email }),
-        });
+        const req = {
+            caller: () => {
+                return fetch(path, {
+                    headers,
+                    method: 'POST',
+                    body: JSON.stringify({ email }),
+                });
+            },
+            id: 'emailAuth',
+        };
 
         return makeRequest(req.caller, req.id);
     };

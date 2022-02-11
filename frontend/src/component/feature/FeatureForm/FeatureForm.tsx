@@ -1,4 +1,10 @@
-import { Button, FormControl, Switch, Typography } from '@material-ui/core';
+import {
+    Button,
+    FormControl,
+    FormControlLabel,
+    Switch,
+    Typography,
+} from '@material-ui/core';
 import { useStyles } from './FeatureForm.styles';
 import FeatureTypeSelect from '../FeatureView/FeatureSettings/FeatureSettingsMetadata/FeatureTypeSelect/FeatureTypeSelect';
 import { CF_DESC_ID, CF_NAME_ID, CF_TYPE_ID } from '../../../testIds';
@@ -55,7 +61,7 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
     const styles = useStyles();
     const { featureTypes } = useFeatureTypes();
     const history = useHistory();
-    const { permissions } = useAuthPermissions()
+    const { permissions } = useAuthPermissions();
     const editable = mode !== 'Edit';
 
     const renderToggleDescription = () => {
@@ -114,10 +120,7 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                         );
                     }}
                     enabled={editable}
-                    filter={projectFilterGenerator(
-                        permissions,
-                        CREATE_FEATURE
-                    )}
+                    filter={projectFilterGenerator(permissions, CREATE_FEATURE)}
                     IconComponent={KeyboardArrowDownOutlined}
                     className={styles.selectInput}
                 />
@@ -157,12 +160,20 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                         </a>
                     </p>
                     <div className={styles.flexRow}>
-                        <Switch
-                            name="impressionData"
-                            onChange={() => setImpressionData(!impressionData)}
-                            checked={impressionData}
+                        <FormControlLabel
+                            labelPlacement="start"
+                            style={{ marginLeft: 0 }}
+                            control={
+                                <Switch
+                                    name="impressionData"
+                                    onChange={() =>
+                                        setImpressionData(!impressionData)
+                                    }
+                                    checked={impressionData}
+                                />
+                            }
+                            label="Impression Data"
                         />
-                        <Typography>{impressionData ? 'Yes' : 'No'}</Typography>
                     </div>
                 </FormControl>
             </div>

@@ -172,7 +172,7 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                                     checked={impressionData}
                                 />
                             }
-                            label="Impression Data"
+                            label="Enable impression data"
                         />
                     </div>
                 </FormControl>

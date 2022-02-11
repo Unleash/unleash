@@ -1,38 +1,28 @@
 import { IconButton } from '@material-ui/core';
 import CopyIcon from '@material-ui/icons/FileCopy';
+import copy from 'copy-to-clipboard';
 import useToast from '../../../../../hooks/useToast';
 
 interface IUserTokenProps {
     token: string;
 }
 
-const UserToken = ({ token }: IUserTokenProps) => {
+export const UserToken = ({ token }: IUserTokenProps) => {
     const { setToastData } = useToast();
-    
-    const handleCopy = () => {
-        try {
-            return navigator.clipboard
-                .writeText(token)
-                .then(() => {
-                    setToastData({
-                        type: 'success',
-                        title: 'Token copied',
-                        text: `Token is copied to clipboard`,
-                    });
-                })
-                .catch(() => {
-                    setError();
-                });
-        } catch (e) {
-            setError();
-        }
-    };
 
-    const setError = () =>
-        setToastData({
-            type: 'error',
-            title: 'Could not copy token',
-        });
+    const copyToken = () => {
+        if (copy(token)) {
+            setToastData({
+                type: 'success',
+                title: 'Token copied',
+                text: `Token is copied to clipboard`,
+            });
+        } else
+            setToastData({
+                type: 'error',
+                title: 'Could not copy token',
+            });
+    };
 
     return (
         <div
@@ -48,11 +38,9 @@ const UserToken = ({ token }: IUserTokenProps) => {
             }}
         >
             {token}
-            <IconButton onClick={handleCopy}>
+            <IconButton onClick={copyToken}>
                 <CopyIcon />
             </IconButton>
         </div>
     );
 };
-
-export default UserToken;

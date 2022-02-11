@@ -6,6 +6,7 @@ import GeneralSelect from '../../common/GeneralSelect/GeneralSelect';
 import useApplicationsApi from '../../../hooks/api/actions/useApplicationsApi/useApplicationsApi';
 import useToast from '../../../hooks/useToast';
 import { IApplication } from '../../../interfaces/application';
+import useApplication from '../../../hooks/api/getters/useApplication/useApplication';
 
 interface IApplicationUpdateProps {
     application: IApplication;
@@ -14,19 +15,21 @@ interface IApplicationUpdateProps {
 export const ApplicationUpdate = ({ application }: IApplicationUpdateProps) => {
     const { storeApplicationMetaData } = useApplicationsApi();
     const { appName, icon, url, description } = application;
+    const { refetchApplication } = useApplication(appName);
     const [localUrl, setLocalUrl] = useState(url || '');
     const [localDescription, setLocalDescription] = useState(description || '');
     const { setToastData, setToastApiError } = useToast();
     const commonStyles = useCommonStyles();
 
-    const handleChange = (
+    const handleChange = async (
         evt: ChangeEvent<{ name?: string | undefined; value: unknown }>,
         field: string,
         value: string
     ) => {
         evt.preventDefault();
         try {
-            storeApplicationMetaData(appName, field, value);
+            await storeApplicationMetaData(appName, field, value);
+            refetchApplication();
             setToastData({
                 type: 'success',
                 title: 'Updated Successfully',

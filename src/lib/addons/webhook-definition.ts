@@ -13,6 +13,8 @@ import {
     FEATURE_STRATEGY_REMOVE,
     FEATURE_STRATEGY_UPDATE,
     FEATURE_UPDATED,
+    FEATURE_TAGGED,
+    FEATURE_UNTAGGED,
 } from '../types/events';
 import { IAddonDefinition } from '../types/model';
 
@@ -73,6 +75,8 @@ const webhookDefinition: IAddonDefinition = {
         FEATURE_METADATA_UPDATED,
         FEATURE_VARIANTS_UPDATED,
         FEATURE_PROJECT_CHANGE,
+        FEATURE_TAGGED,
+        FEATURE_UNTAGGED,
     ],
 };
 

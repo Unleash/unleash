@@ -1,9 +1,7 @@
 import { FeatureToggleListContainer } from '../feature/FeatureToggleList/FeatureToggleListContainer';
 import { StrategyForm } from '../strategies/StrategyForm/StrategyForm';
-import { StrategyView } from '../../component/strategies/StrategyView/StrategyView';
+import { StrategyView } from '../strategies/StrategyView/StrategyView';
 import { StrategiesList } from '../strategies/StrategiesList/StrategiesList';
-import HistoryPage from '../../page/history';
-import HistoryTogglePage from '../../page/history/toggle';
 import { ArchiveListContainer } from '../archive/ArchiveListContainer';
 import { TagTypeList } from '../tags/TagTypeList/TagTypeList';
 import { AddonList } from '../addons/AddonList/AddonList';
@@ -45,6 +43,8 @@ import RedirectFeatureView from '../feature/RedirectFeatureView/RedirectFeatureV
 import { CreateAddon } from '../addons/CreateAddon/CreateAddon';
 import { EditAddon } from '../addons/EditAddon/EditAddon';
 import { CopyFeatureToggle } from '../feature/CopyFeature/CopyFeature';
+import { EventHistoryPage } from '../history/EventHistoryPage/EventHistoryPage';
+import { FeatureEventHistoryPage } from '../history/FeatureEventHistoryPage/FeatureEventHistoryPage';
 
 export const routes = [
     // Project
@@ -354,7 +354,7 @@ export const routes = [
         path: '/history/:toggleName',
         title: ':toggleName',
         parent: '/history',
-        component: HistoryTogglePage,
+        component: FeatureEventHistoryPage,
         type: 'protected',
         layout: 'main',
         menu: {},
@@ -362,7 +362,7 @@ export const routes = [
     {
         path: '/history',
         title: 'Event History',
-        component: HistoryPage,
+        component: EventHistoryPage,
         type: 'protected',
         layout: 'main',
         menu: { adminSettings: true },

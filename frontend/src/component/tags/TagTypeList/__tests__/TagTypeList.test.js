@@ -22,7 +22,6 @@ test('renders an empty list correctly', () => {
                             tagTypes={[]}
                             fetchTagTypes={jest.fn()}
                             removeTagType={jest.fn()}
-                            history={{}}
                         />
                     </AccessProvider>
                 </UIProvider>
@@ -53,7 +52,6 @@ test('renders a list with elements correctly', () => {
                             ]}
                             fetchTagTypes={jest.fn()}
                             removeTagType={jest.fn()}
-                            history={{}}
                         />
                     </AccessProvider>
                 </UIProvider>

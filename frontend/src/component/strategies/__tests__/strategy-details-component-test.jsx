@@ -45,7 +45,6 @@ test('renders correctly with one strategy', () => {
                         fetchStrategies={jest.fn()}
                         fetchApplications={jest.fn()}
                         fetchFeatureToggles={jest.fn()}
-                        history={{}}
                     />
                 </ThemeProvider>
             </AccessProvider>

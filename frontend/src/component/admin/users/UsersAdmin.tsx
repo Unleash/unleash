@@ -18,7 +18,7 @@ const UsersAdmin = () => {
 
     return (
         <div>
-            <AdminMenu history={history} />
+            <AdminMenu />
             <PageContent
                 bodyClass={styles.userListBody}
                 headerContent={

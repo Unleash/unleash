@@ -18,7 +18,7 @@ const ProjectRoles = () => {
 
     return (
         <div>
-            <AdminMenu history={history} />
+            <AdminMenu />
             <PageContent
                 bodyClass={styles.rolesListBody}
                 headerContent={

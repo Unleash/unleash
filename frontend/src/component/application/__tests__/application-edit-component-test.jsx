@@ -18,7 +18,6 @@ test('renders correctly if no application', () => {
                                 fetchApplication={() => Promise.resolve({})}
                                 storeApplicationMetaData={jest.fn()}
                                 deleteApplication={jest.fn()}
-                                history={{}}
                                 locationSettings={{ locale: 'en-GB' }}
                             />
                         </MemoryRouter>
@@ -42,7 +41,6 @@ test('renders correctly without permission', () => {
                                 fetchApplication={() => Promise.resolve({})}
                                 storeApplicationMetaData={jest.fn()}
                                 deleteApplication={jest.fn()}
-                                history={{}}
                                 application={{
                                     appName: 'test-app',
                                     instances: [
@@ -104,7 +102,6 @@ test('renders correctly with permissions', () => {
                             <ApplicationEdit
                                 fetchApplication={() => Promise.resolve({})}
                                 storeApplicationMetaData={jest.fn()}
-                                history={{}}
                                 deleteApplication={jest.fn()}
                                 application={{
                                     appName: 'test-app',

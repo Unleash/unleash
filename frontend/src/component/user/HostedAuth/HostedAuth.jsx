@@ -12,7 +12,11 @@ import ConditionallyRender from '../../common/ConditionallyRender';
 import PasswordField from '../../common/PasswordField/PasswordField';
 import { useAuthApi } from '../../../hooks/api/actions/useAuthApi/useAuthApi';
 import { useAuthUser } from '../../../hooks/api/getters/useAuth/useAuthUser';
-import { LOGIN_EMAIL_ID, LOGIN_PASSWORD_ID } from '../../../testIds';
+import {
+    LOGIN_BUTTON,
+    LOGIN_EMAIL_ID,
+    LOGIN_PASSWORD_ID,
+} from '../../../testIds';
 
 const HostedAuth = ({ authDetails }) => {
     const commonStyles = useCommonStyles();
@@ -126,6 +130,7 @@ const HostedAuth = ({ authDetails }) => {
                                     color="primary"
                                     type="submit"
                                     className={styles.button}
+                                    data-test={LOGIN_BUTTON}
                                 >
                                     Sign in
                                 </Button>

@@ -2,7 +2,7 @@ import { Knex } from 'knex';
 import { Logger, LogProvider } from '../logger';
 
 import NotFoundError from '../error/notfound-error';
-import { IProject } from '../types/model';
+import { IProject, IProjectWithCount } from '../types/model';
 import {
     IProjectHealthUpdate,
     IProjectInsert,
@@ -10,6 +10,9 @@ import {
     IProjectStore,
 } from '../types/stores/project-store';
 import { DEFAULT_ENV } from '../util/constants';
+import metricsHelper from '../util/metrics-helper';
+import { DB_TIME } from '../metric-events';
+import EventEmitter from 'events';
 
 const COLUMNS = [
     'id',
@@ -26,9 +29,16 @@ class ProjectStore implements IProjectStore {
 
     private logger: Logger;
 
-    constructor(db: Knex, getLogger: LogProvider) {
+    private timer: Function;
+
+    constructor(db: Knex, eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
         this.logger = getLogger('project-store.ts');
+        this.timer = (action) =>
+            metricsHelper.wrapTimer(eventBus, DB_TIME, {
+                store: 'project',
+                action,
+            });
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -40,15 +50,54 @@ class ProjectStore implements IProjectStore {
         };
     }
 
-    destroy(): void {}
+    destroy(): void {
+    }
 
     async exists(id: string): Promise<boolean> {
         const result = await this.db.raw(
-            `SELECT EXISTS (SELECT 1 FROM ${TABLE} WHERE id = ?) AS present`,
+            `SELECT EXISTS(SELECT 1 FROM ${TABLE} WHERE id = ?) AS present`,
             [id],
         );
         const { present } = result.rows[0];
         return present;
+    }
+
+    async getProjectsWithCounts(query?: IProjectQuery): Promise<IProjectWithCount[]> {
+        const projectTimer = this.timer('getProjectsWithCount');
+        const projectAndFeatureCount = await this.db.raw(
+            `SELECT p.id,
+                    p.name,
+                    p.description,
+                    p.health,
+                    p.updated_at,
+                    count(f.name) as number_of_features
+             FROM projects p
+                      LEFT JOIN features f ON f.project = p.id
+             GROUP BY p.id`);
+        const projectsWithFeatureCount = projectAndFeatureCount.rows.map(this.mapProjectWithCountRow);
+        projectTimer();
+        const memberTimer = this.timer('getMemberCount');
+        const memberCount = await this.db.raw(`SELECT count(role_id) as member_count, project FROM role_user GROUP BY project`)
+        memberTimer();
+        const memberMap = memberCount.rows.reduce((a, r) => {
+            a[r.project] = r.member_count;
+            return a;
+        }, {});
+        return projectsWithFeatureCount.map(r => {
+            return { ...r, memberCount: memberMap[r.id] }
+        });
+    }
+
+    mapProjectWithCountRow(row): IProjectWithCount {
+        return ({
+            name: row.name,
+            id: row.id,
+            description: row.description,
+            health: row.health,
+            featureCount: row.number_of_features,
+            memberCount: row.number_of_users || 0,
+            updatedAt: row.updated_at,
+        });
     }
 
     async getAll(query: IProjectQuery = {}): Promise<IProject[]> {
@@ -71,7 +120,7 @@ class ProjectStore implements IProjectStore {
 
     async hasProject(id: string): Promise<boolean> {
         const result = await this.db.raw(
-            `SELECT EXISTS (SELECT 1 FROM ${TABLE} WHERE id = ?) AS present`,
+            `SELECT EXISTS(SELECT 1 FROM ${TABLE} WHERE id = ?) AS present`,
             [id],
         );
         const { present } = result.rows[0];
@@ -208,5 +257,6 @@ class ProjectStore implements IProjectStore {
         };
     }
 }
+
 export default ProjectStore;
 module.exports = ProjectStore;

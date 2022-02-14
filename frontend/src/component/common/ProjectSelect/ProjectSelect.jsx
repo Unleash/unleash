@@ -72,8 +72,6 @@ const ProjectSelect = ({ currentProjectId, updateCurrentProject, ...rest }) => {
 };
 
 ProjectSelect.propTypes = {
-    projects: PropTypes.array.isRequired,
-    fetchProjects: PropTypes.func.isRequired,
     currentProjectId: PropTypes.string.isRequired,
     updateCurrentProject: PropTypes.func.isRequired,
 };

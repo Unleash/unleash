@@ -159,7 +159,6 @@ const EnvironmentListItem = ({
                     <Tooltip title={`${tooltipText} environment`}>
                         <IconButton
                             aria-label="disable"
-                            disabled={env.protected}
                             onClick={() => {
                                 setSelectedEnv(env);
                                 setToggleDialog(prev => !prev);

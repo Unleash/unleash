@@ -112,7 +112,7 @@
     "serve-favicon": "^2.5.0",
     "stoppable": "^1.1.0",
     "type-is": "^1.6.18",
-    "unleash-frontend": "4.8.0-beta.1",
+    "unleash-frontend": "4.8.0-beta.3",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

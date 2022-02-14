@@ -153,3 +153,22 @@ html[data-theme='dark'] .header-github-link:before {
 }
 
 /* end video content container */
+
+.var-label {
+    display: grid;
+    grid-template-columns: 1fr 1fr 2fr;
+    gap: 1em;
+    align-items: start;
+}
+
+.var-label input {
+    width: 100%;
+}
+
+.var-details {
+    padding: --ifm-pre-padding;
+
+}
+.var-details > *+* {
+    margin-top: 1rem;
+}

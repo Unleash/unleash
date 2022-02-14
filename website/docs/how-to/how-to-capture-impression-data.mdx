@@ -2,10 +2,39 @@
 title: How to capture impression data
 ---
 import ApiRequest from '@site/src/components/ApiRequest'
+import VarHandler from '@site/src/components/VariableHandler'
+
+import { useUserData as vars } from '@site/src/theme/Root';
+
+<code>api/{JSON.stringify(vars().userData)}/thing</code>
 
 :::info Placeholders
 Placeholders in code samples below are delimited by angle brackets (i.e. `<placeholder-name>`). You will need to replace them with the values that are correct in _your_ situation for the code samples to run properly.
 :::
+
+<VarHandler variables={[
+    {
+        name: 'featureToggleName',
+        description: 'The name of the feature toggle to use in requests.',
+        default: '<feature-toggle-name>',
+    },
+    {
+        name: 'projectId',
+        description: 'The ID of the project to act on',
+        default: '<project-id>',
+    },
+    {
+        name: 'apiToken',
+        description: 'The API token to use in requests',
+        default: '<API-token>',
+    },
+    {
+        name: 'unleashUrl',
+        description: 'The URL your unleash instance is hosted on.',
+        default: '<unleash-url>',
+    },
+]}/>
+
 
 Unleash allows you to gather [**impression data**](../advanced/impression-data.md) from your feature toggles, giving you complete visibility into who checked what toggles and when. What you do with this data is entirely up to you, but a common use case is to send it off to an aggregation and analytics service such as [Posthog](https://posthog.com/) or [Google Analytics](https://analytics.google.com/), either just for monitoring purposes or to facilitate [A/B testing](../topics/a-b-testing.md).
 
@@ -35,7 +64,7 @@ When you create a new feature toggle via the UI, there's an option at the end of
 
 To create a feature toggle with impression data enabled, set the `impressionData` option to `true` in the request payload, as seen below. For more options, check the [reference docs on creating features](../api/admin/feature-toggles-api-v2.md#create-toggle).
 
-<ApiRequest verb="post" payload={{name: "<feature-toggle-name>", impressionData: true}} url="api/admin/projects/<project-id>/features" title="Create a feature toggle with impression data enabled."/>
+<ApiRequest verb="post" payload={{name: vars().userData.featureToggleName || '<feature-toggle-name>', impressionData: true}} url={`api/admin/projects/${vars().userData.projectId || '<project-id>'}/features`} title="Create a feature toggle with impression data enabled."/>
 
 ### Enabling impression data for existing feature toggles {#step-1-existing-toggles}
 
@@ -45,8 +74,32 @@ To enable impression data for an existing toggle, use the "edit" button on the t
 
 To enable impression data for an existing toggle, use the [API's toggle patching functionality](../api/admin/feature-toggles-api-v2.md#patch-toggle):
 
-<ApiRequest verb="patch" payload={[{op: "replace", path: "/impressionData", value: true}]} url="api/admin/projects/<project-id>/features/<feature-toggle-name>" title="Enable impression data on an existing toggle."/>
+<ApiRequest verb="patch" payload={[{op: "replace", path: "/impressionData", value: true}]} url={`api/admin/projects/${vars().userData.projectId || '<project-id>'}/features/${vars().userData.featureToggleName || '<feature-toggle-name>'}`} title="Enable impression data on an existing toggle."/>
 
+
+
+<VarHandler variables={[
+    {
+        name: 'featureToggleName',
+        description: 'The name of the feature toggle to use in requests.',
+        default: '<feature-toggle-name>',
+    },
+    {
+        name: 'projectId',
+        description: 'The ID of the project to act on',
+        default: '<project-id>',
+    },
+    {
+        name: 'apiToken',
+        description: 'The API token to use in requests',
+        default: '<API-token>',
+    },
+    {
+        name: 'unleashUrl',
+        description: 'The URL your unleash instance is hosted on.',
+        default: '<unleash-url>',
+    },
+]}/>
 
 ## Step 2: Capture impression events in your client {#step-2}
 

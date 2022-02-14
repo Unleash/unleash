@@ -14,20 +14,26 @@ import React from 'react';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import CodeBlock from '@theme/CodeBlock';
+import { useUserData } from '@site/src/theme/Root';
 
 const indentation = 2;
 
 const Component = ({ verb, payload, url, title }) => {
+    const userData = useUserData().userData;
     const verbUpper = verb?.toUpperCase() || '';
     const prettyPayload = JSON.stringify(payload, null, indentation);
+
+    const fullUrl = `${userData.unleashUrl || '<unleash-url>'}/${url}`;
+
+    const apiToken = userData.apiToken || '<api-token>';
 
     return (
         <Tabs groupId="api-request">
             <TabItem value="http" label="HTTP">
                 <CodeBlock language="http" title={title}>
                     {`
-${verbUpper} <unleash-url>/${url}
-Authorization: <API-token>
+${verbUpper} ${fullUrl}
+Authorization: ${apiToken}
 content-type: application/json
 
 ${prettyPayload}
@@ -38,10 +44,10 @@ ${prettyPayload}
                 <CodeBlock language="bash" title={title}>
                     {`
 curl -H "Content-Type: application/json" \\
-     -H "Authorization: <API-token>" \\
+     -H "Authorization: ${apiToken}" \\
      -X ${verbUpper} \\
      -d '${prettyPayload}' \\
-     <unleash-url>/${url}
+     ${fullUrl}
 `.trim()}
                 </CodeBlock>
             </TabItem>
@@ -49,8 +55,8 @@ curl -H "Content-Type: application/json" \\
                 <CodeBlock language="bash" title={title}>
                     {`echo '${prettyPayload}' \\
 | http ${verbUpper} \\
-  <unleash-url>/${url} \\
-  Authorization:<API-token>`.trim()}
+  ${fullUrl} \\
+  Authorization:${apiToken}`.trim()}
                 </CodeBlock>
             </TabItem>
         </Tabs>

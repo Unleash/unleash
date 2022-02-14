@@ -10,8 +10,9 @@ import AuthOptions from '../common/AuthOptions/AuthOptions';
 import DividerText from '../../common/DividerText/DividerText';
 import ConditionallyRender from '../../common/ConditionallyRender';
 import PasswordField from '../../common/PasswordField/PasswordField';
-import { useAuthApi } from "../../../hooks/api/actions/useAuthApi/useAuthApi";
+import { useAuthApi } from '../../../hooks/api/actions/useAuthApi/useAuthApi';
 import { useAuthUser } from '../../../hooks/api/getters/useAuth/useAuthUser';
+import { LOGIN_EMAIL_ID, LOGIN_PASSWORD_ID } from '../../../testIds';
 
 const HostedAuth = ({ authDetails }) => {
     const commonStyles = useCommonStyles();
@@ -19,7 +20,7 @@ const HostedAuth = ({ authDetails }) => {
     const { refetchUser } = useAuthUser();
     const history = useHistory();
     const params = useQueryParams();
-    const { passwordAuth } = useAuthApi()
+    const { passwordAuth } = useAuthApi();
     const [username, setUsername] = useState(params.get('email') || '');
     const [password, setPassword] = useState('');
     const [errors, setErrors] = useState({
@@ -108,6 +109,7 @@ const HostedAuth = ({ authDetails }) => {
                                 helperText={usernameError}
                                 variant="outlined"
                                 size="small"
+                                data-test={LOGIN_EMAIL_ID}
                             />
                             <PasswordField
                                 label="Password"
@@ -116,6 +118,7 @@ const HostedAuth = ({ authDetails }) => {
                                 value={password}
                                 error={!!passwordError}
                                 helperText={passwordError}
+                                data-test={LOGIN_PASSWORD_ID}
                             />
                             <Grid container>
                                 <Button

@@ -2,14 +2,12 @@
 # yarn lockfile v1
 
 
-"@ampproject/remapping@^2.0.0":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@ampproject/remapping/-/remapping-2.0.1.tgz#9a04a4aba7b8323b65498d9554a1bdd15d960296"
-  integrity sha512-EldHF4Ufj3NL9yCAmYrPzY+3/Yqrzxu24F4Mu4nRjK3w70AKYRmhuLwGZdA9JeoDsbIwkgGkbqUK2INuF582Og==
+"@ampproject/remapping@^2.1.0":
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/@ampproject/remapping/-/remapping-2.1.1.tgz#7922fb0817bf3166d8d9e258c57477e3fd1c3610"
+  integrity sha512-Aolwjd7HSC2PyY0fDj/wA/EimQT4HfEnFYNp5s9CQlrdhyvWTtvZ5YzrUPu6R6/1jKiUlxu8bUhkdSnKHNAHMA==
   dependencies:
-    "@jridgewell/resolve-uri" "^3.0.3"
-    "@jridgewell/trace-mapping" "^0.2.2"
-    sourcemap-codec "1.4.8"
+    "@jridgewell/trace-mapping" "^0.3.0"
 
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.12.13":
   version "7.12.13"
@@ -42,20 +40,20 @@
   resolved "https://registry.npmjs.org/@babel/compat-data/-/compat-data-7.16.4.tgz"
   integrity sha512-1o/jo7D+kC9ZjHX5v+EHrdjl3PhxMrLSOTGsOdHJ+KL8HCaEK6ehrVL2RS6oHDZp+L7xLirLrPmQtEng769J/Q==
 
-"@babel/core@7.17.2":
-  version "7.17.2"
-  resolved "https://registry.yarnpkg.com/@babel/core/-/core-7.17.2.tgz#2c77fc430e95139d816d39b113b31bf40fb22337"
-  integrity sha512-R3VH5G42VSDolRHyUO4V2cfag8WHcZyxdq5Z/m8Xyb92lW/Erm/6kM+XtRFGf3Mulre3mveni2NHfEUws8wSvw==
+"@babel/core@7.17.3":
+  version "7.17.3"
+  resolved "https://registry.yarnpkg.com/@babel/core/-/core-7.17.3.tgz#6a6f7e9b5cc0182aef531b93cb5dde94071dc20d"
+  integrity sha512-TolSoY0D/G6/e5bufjUK7wqQeHdcK4NbdxHg0hrhx/zN6boloG52oNpxbZuil/GqmAIz2qEnJ0s8ay24j2YwVg==
   dependencies:
-    "@ampproject/remapping" "^2.0.0"
+    "@ampproject/remapping" "^2.1.0"
     "@babel/code-frame" "^7.16.7"
-    "@babel/generator" "^7.17.0"
+    "@babel/generator" "^7.17.3"
     "@babel/helper-compilation-targets" "^7.16.7"
     "@babel/helper-module-transforms" "^7.16.7"
     "@babel/helpers" "^7.17.2"
-    "@babel/parser" "^7.17.0"
+    "@babel/parser" "^7.17.3"
     "@babel/template" "^7.16.7"
-    "@babel/traverse" "^7.17.0"
+    "@babel/traverse" "^7.17.3"
     "@babel/types" "^7.17.0"
     convert-source-map "^1.7.0"
     debug "^4.1.0"
@@ -127,6 +125,15 @@
   version "7.17.0"
   resolved "https://registry.yarnpkg.com/@babel/generator/-/generator-7.17.0.tgz#7bd890ba706cd86d3e2f727322346ffdbf98f65e"
   integrity sha512-I3Omiv6FGOC29dtlZhkfXO6pgkmukJSlT26QjVvS1DGZe/NzSVCPG41X0tS21oZkJYlovfj9qDWgKP+Cn4bXxw==
+  dependencies:
+    "@babel/types" "^7.17.0"
+    jsesc "^2.5.1"
+    source-map "^0.5.0"
+
+"@babel/generator@^7.17.3":
+  version "7.17.3"
+  resolved "https://registry.yarnpkg.com/@babel/generator/-/generator-7.17.3.tgz#a2c30b0c4f89858cb87050c3ffdfd36bdf443200"
+  integrity sha512-+R6Dctil/MgUsZsZAkYgK+ADNSZzJRRy0TvY65T71z/CR854xHQ1EweBYXdfT+HNeN7w0cSJJEzgxZMv40pxsg==
   dependencies:
     "@babel/types" "^7.17.0"
     jsesc "^2.5.1"
@@ -389,6 +396,11 @@
   resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.17.0.tgz#f0ac33eddbe214e4105363bb17c3341c5ffcc43c"
   integrity sha512-VKXSCQx5D8S04ej+Dqsr1CzYvvWgf20jIw2D+YhQCrIlr2UZGaDds23Y0xg75/skOxpLCRpUZvk/1EAVkGoDOw==
 
+"@babel/parser@^7.17.3":
+  version "7.17.3"
+  resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.17.3.tgz#b07702b982990bf6fdc1da5049a23fece4c5c3d0"
+  integrity sha512-7yJPvPV+ESz2IUTPbOL+YkIGyCqOyNIzdguKQuJGnH7bg1WTIifuM21YqokFt/THWh1AkCRn9IgoykTRCBVpzA==
+
 "@babel/plugin-syntax-async-generators@^7.8.4":
   version "7.8.4"
   resolved "https://registry.npmjs.org/@babel/plugin-syntax-async-generators/-/plugin-syntax-async-generators-7.8.4.tgz"
@@ -548,6 +560,22 @@
     "@babel/helper-hoist-variables" "^7.16.7"
     "@babel/helper-split-export-declaration" "^7.16.7"
     "@babel/parser" "^7.17.0"
+    "@babel/types" "^7.17.0"
+    debug "^4.1.0"
+    globals "^11.1.0"
+
+"@babel/traverse@^7.17.3":
+  version "7.17.3"
+  resolved "https://registry.yarnpkg.com/@babel/traverse/-/traverse-7.17.3.tgz#0ae0f15b27d9a92ba1f2263358ea7c4e7db47b57"
+  integrity sha512-5irClVky7TxRWIRtxlh2WPUUOLhcPN06AGgaQSB8AEwuyEBgJVuJ5imdHm5zxk8w0QS5T+tDfnDxAlhWjpb7cw==
+  dependencies:
+    "@babel/code-frame" "^7.16.7"
+    "@babel/generator" "^7.17.3"
+    "@babel/helper-environment-visitor" "^7.16.7"
+    "@babel/helper-function-name" "^7.16.7"
+    "@babel/helper-hoist-variables" "^7.16.7"
+    "@babel/helper-split-export-declaration" "^7.16.7"
+    "@babel/parser" "^7.17.3"
     "@babel/types" "^7.17.0"
     debug "^4.1.0"
     globals "^11.1.0"
@@ -835,13 +863,18 @@
   resolved "https://registry.yarnpkg.com/@jridgewell/resolve-uri/-/resolve-uri-3.0.3.tgz#b80093f4edbb5490c49746231513669c8f518acb"
   integrity sha512-fuIOnc81C5iRNevb/XPiM8Khp9bVjreydRQ37rt0C/dY0PAW1DRvEM3WrKX/5rStS5lbgwS0FCgqSndh9tvK5w==
 
-"@jridgewell/trace-mapping@^0.2.2":
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/@jridgewell/trace-mapping/-/trace-mapping-0.2.2.tgz#77510cc2f6f3b92e78c78de216d42de631b1d7fb"
-  integrity sha512-I9AGQzMPEzQNJgib2YSqciYWazGsXSyu1rEEeaPeM1764ZtnfNTxA5bofzG/POMI3QcvpBUxwecOPZM6ZhkEpg==
+"@jridgewell/sourcemap-codec@^1.4.10":
+  version "1.4.11"
+  resolved "https://registry.yarnpkg.com/@jridgewell/sourcemap-codec/-/sourcemap-codec-1.4.11.tgz#771a1d8d744eeb71b6adb35808e1a6c7b9b8c8ec"
+  integrity sha512-Fg32GrJo61m+VqYSdRSjRXMjQ06j8YIYfcTqndLYVAaHmroZHLJZCydsWBOTDqXS2v+mjxohBWEMfg97GXmYQg==
+
+"@jridgewell/trace-mapping@^0.3.0":
+  version "0.3.4"
+  resolved "https://registry.yarnpkg.com/@jridgewell/trace-mapping/-/trace-mapping-0.3.4.tgz#f6a0832dffd5b8a6aaa633b7d9f8e8e94c83a0c3"
+  integrity sha512-vFv9ttIedivx0ux3QSjhgtCVjPZd5l46ZOMDSCwnH1yUO2e964gO8LZGyv2QkqcgR6TnBU1v+1IFqmeoG+0UJQ==
   dependencies:
     "@jridgewell/resolve-uri" "^3.0.3"
-    sourcemap-codec "1.4.8"
+    "@jridgewell/sourcemap-codec" "^1.4.10"
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
@@ -6511,11 +6544,6 @@ source-map@^0.7.3:
   version "0.7.3"
   resolved "https://registry.npmjs.org/source-map/-/source-map-0.7.3.tgz"
   integrity sha512-CkCj6giN3S+n9qrYiBTX5gystlENnRW5jZeNLHpe6aue+SrHcG5VYwujhW9s4dY31mEGsxBDrHR6oI69fTXsaQ==
-
-sourcemap-codec@1.4.8:
-  version "1.4.8"
-  resolved "https://registry.yarnpkg.com/sourcemap-codec/-/sourcemap-codec-1.4.8.tgz#ea804bd94857402e6992d05a38ef1ae35a9ab4c4"
-  integrity sha512-9NykojV5Uih4lgo5So5dtw+f0JgJX30KCNI8gwhz2J9A15wD0Ml6tjHKwf6fTSa6fAdVBdZeNOs9eJ71qCk8vA==
 
 spdx-correct@^3.0.0:
   version "3.1.1"

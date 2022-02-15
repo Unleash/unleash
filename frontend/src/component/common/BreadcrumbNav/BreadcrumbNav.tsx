@@ -4,6 +4,7 @@ import ConditionallyRender from '../ConditionallyRender';
 import { useStyles } from './BreadcrumbNav.styles';
 import AccessContext from '../../../contexts/AccessContext';
 import { useContext } from 'react';
+import StringTruncator from '../StringTruncator/StringTruncator';
 
 const BreadcrumbNav = () => {
     const { isAdmin } = useContext(AccessContext);
@@ -51,7 +52,7 @@ const BreadcrumbNav = () => {
                                                 styles.breadcrumbNavParagraph
                                             }
                                         >
-                                            {path.substring(0, 30)}
+                                            <StringTruncator text={path} maxWidth="200" />
                                         </p>
                                     );
                                 }
@@ -72,7 +73,7 @@ const BreadcrumbNav = () => {
                                         className={styles.breadcrumbLink}
                                         to={link}
                                     >
-                                        {path.substring(0, 30)}
+                                        <StringTruncator text={path} maxWidth="200" />
                                     </Link>
                                 );
                             })}

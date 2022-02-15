@@ -9,7 +9,7 @@ interface IPermissionIconButtonProps
     > {
     permission: string;
     Icon?: React.ElementType;
-    tooltip: string;
+    tooltip?: string;
     onClick?: (e: any) => void;
     projectId?: string;
     environmentId?: string;

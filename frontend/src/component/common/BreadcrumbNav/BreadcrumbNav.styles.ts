@@ -5,8 +5,16 @@ export const useStyles = makeStyles(theme => ({
         position: 'absolute',
         top: '4px',
     },
-    breadcrumbNavParagraph: { color: 'inherit' },
+    breadcrumbNavParagraph: {
+        color: 'inherit',
+        '& > *': {
+            verticalAlign: 'middle',
+        },
+    },
     breadcrumbLink: {
         textDecoration: 'none',
+        '& > *': {
+            verticalAlign: 'middle',
+        },
     },
 }));

@@ -19,8 +19,6 @@ import ConditionallyRender from './ConditionallyRender/ConditionallyRender';
 
 export { styles };
 
-export const shorten = (str, len = 50) =>
-    str && str.length > len ? `${str.substring(0, len)}...` : str;
 export const AppsLinkList = ({ apps }) => (
     <List>
         <ConditionallyRender

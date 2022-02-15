@@ -23,6 +23,11 @@ export const useStyles = makeStyles(theme => ({
     title: {
         fontWeight: 'normal',
         fontSize: '1rem',
+        lineClamp: 2,
+        display: '-webkit-box',
+        boxOrient: 'vertical',
+        textOverflow: 'ellipsis',
+        overflow: 'hidden'
     },
 
     projectIcon: {

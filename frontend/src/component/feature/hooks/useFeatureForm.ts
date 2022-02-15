@@ -29,9 +29,10 @@ const useFeatureForm = (
     }, [initialType]);
 
     useEffect(() => {
-        if (!toggleQueryName) setName(initialName);
-        else setName(toggleQueryName);
-    }, [initialName, toggleQueryName]);
+        if (!name) {
+            setName(toggleQueryName || initialName);
+        }
+    }, [name, initialName, toggleQueryName]);
 
     useEffect(() => {
         if (!projectId) setProject(initialProject);

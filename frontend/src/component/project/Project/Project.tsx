@@ -1,5 +1,4 @@
 import { useHistory, useParams } from 'react-router';
-import { useCommonStyles } from '../../../common.styles';
 import useProject from '../../../hooks/api/getters/useProject/useProject';
 import useLoading from '../../../hooks/useLoading';
 import ApiError from '../../common/ApiError/ApiError';
@@ -25,7 +24,6 @@ const Project = () => {
     const { project, error, loading, refetch } = useProject(id);
     const ref = useLoading(loading);
     const { setToastData } = useToast();
-    const commonStyles = useCommonStyles();
     const styles = useStyles();
     const history = useHistory();
 
@@ -121,10 +119,10 @@ const Project = () => {
                 <div className={styles.innerContainer}>
                     <h2
                         data-loading
-                        className={commonStyles.title}
+                        className={styles.title}
                         style={{ margin: 0 }}
                     >
-                        Project: {project?.name}{' '}
+                        <div className={styles.titleText}>{project?.name}</div>
                         <PermissionIconButton
                             permission={UPDATE_PROJECT}
                             tooltip="Edit"

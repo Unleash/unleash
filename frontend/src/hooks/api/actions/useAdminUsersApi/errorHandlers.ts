@@ -14,10 +14,11 @@ export const handleBadRequest = async (
     if (!setErrors || !requestId) return;
     if (res) {
         const data = await res.json();
+        const message = data.isJoi ? data.details[0].message : data[0].msg;
 
         setErrors(prev => ({
             ...prev,
-            [requestId]: data[0].msg,
+            [requestId]: message,
         }));
     }
 
@@ -47,10 +48,11 @@ export const handleUnauthorized = async (
     if (!setErrors || !requestId) return;
     if (res) {
         const data = await res.json();
+        const message = data.isJoi ? data.details[0].message : data[0].msg;
 
         setErrors(prev => ({
             ...prev,
-            [requestId]: data[0].msg,
+            [requestId]: message,
         }));
     }
 
@@ -65,7 +67,6 @@ export const handleForbidden = async (
     if (!setErrors || !requestId) return;
     if (res) {
         const data = await res.json();
-
         const message = data.isJoi ? data.details[0].message : data[0].msg;
 
         setErrors(prev => ({

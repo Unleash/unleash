@@ -55,7 +55,6 @@ const EditFeature = () => {
             history.push(`/projects/${project}/features/${name}`);
             setToastData({
                 title: 'Toggle updated successfully',
-                text: 'Now you can start using your toggle.',
                 type: 'success',
             });
         } catch (e: any) {

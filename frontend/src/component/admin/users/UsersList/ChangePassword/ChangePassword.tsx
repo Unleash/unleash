@@ -114,8 +114,6 @@ const ChangePassword = ({
                     password={data.password}
                     callback={setValidPassword}
                 />
-
-                <p style={{ color: 'red' }}>{error.general}</p>
                 <TextField
                     label="New password"
                     name="password"

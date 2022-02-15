@@ -5,13 +5,13 @@ import {
     ListItemSecondaryAction,
     ListItemText,
 } from '@material-ui/core';
-import { Visibility, VisibilityOff, Delete } from '@material-ui/icons';
+import { Delete, Edit, Visibility, VisibilityOff } from '@material-ui/icons';
 import ConditionallyRender from '../../../common/ConditionallyRender/ConditionallyRender';
 import {
     DELETE_ADDON,
     UPDATE_ADDON,
 } from '../../../providers/AccessProvider/permissions';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import PageContent from '../../../common/PageContent/PageContent';
 import useAddons from '../../../../hooks/api/getters/useAddons/useAddons';
 import useToast from '../../../../hooks/useToast';
@@ -31,6 +31,7 @@ export const ConfiguredAddons = ({ getAddonIcon }: IConfigureAddonsProps) => {
     const { updateAddon, removeAddon } = useAddonsApi();
     const { setToastData, setToastApiError } = useToast();
     const { hasAccess } = useContext(AccessContext);
+    const history = useHistory();
     const [showDelete, setShowDelete] = useState(false);
     const [deletedAddon, setDeletedAddon] = useState<IAddon>({
         id: 0,
@@ -115,9 +116,18 @@ export const ConfiguredAddons = ({ getAddonIcon }: IConfigureAddonsProps) => {
                 >
                     <ConditionallyRender
                         condition={addon.enabled}
-                        show={<Visibility />}
-                        elseShow={<VisibilityOff />}
+                        show={<Visibility titleAccess="Disable addon" />}
+                        elseShow={<VisibilityOff titleAccess="Enable addon" />}
                     />
+                </PermissionIconButton>
+                <PermissionIconButton
+                    permission={UPDATE_ADDON}
+                    tooltip={'Edit Addon'}
+                    onClick={() => {
+                        history.push(`/addons/edit/${addon.id}`);
+                    }}
+                >
+                    <Edit titleAccess="Edit Addon" />
                 </PermissionIconButton>
                 <PermissionIconButton
                     permission={DELETE_ADDON}
@@ -127,7 +137,7 @@ export const ConfiguredAddons = ({ getAddonIcon }: IConfigureAddonsProps) => {
                         setShowDelete(true);
                     }}
                 >
-                    <Delete />
+                    <Delete titleAccess="Remove Addon" />
                 </PermissionIconButton>
             </ListItemSecondaryAction>
         </ListItem>

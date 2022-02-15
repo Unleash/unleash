@@ -38,7 +38,6 @@ const EditUser = () => {
     } = useAddUserForm(
         user?.name,
         user?.email,
-        user?.sendEmail,
         user?.rootRole
     );
 

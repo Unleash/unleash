@@ -112,11 +112,11 @@ const ContextForm: React.FC<IContextForm> = ({
                     autoFocus
                 />
                 <p className={styles.inputDescription}>
-                    What is this context for?
+                     What is this context for?
                 </p>
                 <TextField
                     className={styles.input}
-                    label="Context description"
+                    label="Context description (optional)"
                     variant="outlined"
                     multiline
                     maxRows={4}
@@ -139,7 +139,7 @@ const ContextForm: React.FC<IContextForm> = ({
                 })}
                 <div className={styles.tagContainer}>
                     <TextField
-                        label="Value"
+                        label="Value (optional)"
                         name="value"
                         className={styles.tagInput}
                         value={value}

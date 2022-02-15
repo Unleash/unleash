@@ -7,7 +7,7 @@ import useToast from '../../hooks/useToast';
 import { useFeaturesSort } from '../../hooks/useFeaturesSort';
 
 export const ArchiveListContainer = () => {
-    const { setToastApiError } = useToast();
+    const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
     const { reviveFeature } = useFeatureArchiveApi();
     const { archivedFeatures, loading, refetchArchived } = useFeaturesArchive();
@@ -17,6 +17,14 @@ export const ArchiveListContainer = () => {
     const revive = (feature: string) => {
         reviveFeature(feature)
             .then(refetchArchived)
+            .then(() =>
+                setToastData({
+                    type: 'success',
+                    title: "And we're back!",
+                    text: 'The feature toggle has been revived.',
+                    confetti: true,
+                })
+            )
             .catch(e => setToastApiError(e.toString()));
     };
 

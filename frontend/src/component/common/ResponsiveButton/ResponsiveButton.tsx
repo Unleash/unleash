@@ -38,6 +38,7 @@ const ResponsiveButton: React.FC<IResponsiveButtonProps> = ({
                     permission={permission}
                     projectId={projectId}
                     environmentId={environmentId}
+                    tooltip={tooltip}
                     data-loading
                     {...rest}
                 >
@@ -53,6 +54,7 @@ const ResponsiveButton: React.FC<IResponsiveButtonProps> = ({
                     variant="contained"
                     disabled={disabled}
                     environmentId={environmentId}
+                    tooltip={tooltip}
                     data-loading
                     {...rest}
                 >

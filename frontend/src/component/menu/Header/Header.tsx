@@ -27,7 +27,7 @@ const Header = () => {
     const [anchorEl, setAnchorEl] = useState();
     const [anchorElAdvanced, setAnchorElAdvanced] = useState();
     const [admin, setAdmin] = useState(false);
-    const { permissions } = useAuthPermissions()
+    const { permissions } = useAuthPermissions();
     const commonStyles = useCommonStyles();
     const { uiConfig } = useUiConfig();
     const smallScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -68,12 +68,19 @@ const Header = () => {
                                 className={styles.drawerButton}
                                 onClick={toggleDrawer}
                             >
-                                <MenuIcon />
+                                <MenuIcon titleAccess="Menu" />
                             </IconButton>
                         }
                         elseShow={
-                            <Link to="/" className={commonStyles.flexRow}>
-                                <UnleashLogo className={styles.logo} />{' '}
+                            <Link
+                                to="/"
+                                className={commonStyles.flexRow}
+                                aria-label="Home"
+                            >
+                                <UnleashLogo
+                                    className={styles.logo}
+                                    aria-label="Unleash logo"
+                                />
                             </Link>
                         }
                     />
@@ -127,6 +134,7 @@ const Header = () => {
                                         >
                                             <MenuBookIcon
                                                 className={styles.docsIcon}
+                                                titleAccess="Documentation"
                                             />
                                         </a>
                                     </Tooltip>
@@ -140,6 +148,7 @@ const Header = () => {
                                             >
                                                 <SettingsIcon
                                                     className={styles.docsIcon}
+                                                    titleAccess="Settings"
                                                 />
                                             </IconButton>
                                         }

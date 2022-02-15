@@ -1,6 +1,6 @@
 import { Tab, Tabs, useMediaQuery } from '@material-ui/core';
 import { useState } from 'react';
-import { WatchLater, Archive, FileCopy, Label } from '@material-ui/icons';
+import { Archive, FileCopy, Label, WatchLater } from '@material-ui/icons';
 import { Link, Route, useHistory, useParams } from 'react-router-dom';
 import useFeatureApi from '../../../hooks/api/actions/useFeatureApi/useFeatureApi';
 import useFeature from '../../../hooks/api/getters/useFeature/useFeature';
@@ -115,7 +115,8 @@ const FeatureView = () => {
         return (
             <div>
                 <p>
-                    The feature <strong>{featureId.substring(0, 30)}</strong>{' '}
+                    The feature{' '}
+                    <strong className={styles.featureId}>{featureId}</strong>{' '}
                     does not exist. Do you want to &nbsp;
                     <Link
                         to={getCreateTogglePath(projectId, uiConfig.flags.E, {

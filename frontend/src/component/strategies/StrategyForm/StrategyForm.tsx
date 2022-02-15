@@ -11,6 +11,7 @@ import useStrategiesApi from '../../../hooks/api/actions/useStrategiesApi/useStr
 import { IStrategy } from '../../../interfaces/strategy';
 import useToast from '../../../hooks/useToast';
 import useStrategies from '../../../hooks/api/getters/useStrategies/useStrategies';
+import { formatUnknownError } from '../../../utils/format-unknown-error';
 
 interface ICustomStrategyParams {
     name?: string;
@@ -78,7 +79,7 @@ export const StrategyForm = ({ editMode, strategy }: IStrategyFormProps) => {
         setParams(prev => [...parameters]);
         if (editMode) {
             try {
-                await updateStrategy({ name, description, parameters: params });
+                await updateStrategy({ name, description, parameters });
                 history.push(`/strategies/view/${name}`);
                 setToastData({
                     type: 'success',
@@ -86,12 +87,12 @@ export const StrategyForm = ({ editMode, strategy }: IStrategyFormProps) => {
                     text: 'Successfully updated strategy',
                 });
                 refetchStrategies();
-            } catch (e: any) {
-                setToastApiError(e.toString());
+            } catch (error: unknown) {
+                setToastApiError(formatUnknownError(error));
             }
         } else {
             try {
-                await createStrategy({ name, description, parameters: params });
+                await createStrategy({ name, description, parameters });
                 history.push(`/strategies`);
                 setToastData({
                     type: 'success',
@@ -99,13 +100,8 @@ export const StrategyForm = ({ editMode, strategy }: IStrategyFormProps) => {
                     text: 'Successfully created new strategy',
                 });
                 refetchStrategies();
-            } catch (e: any) {
-                const STRATEGY_EXIST_ERROR = 'Error: Strategy with name';
-                if (e.toString().includes(STRATEGY_EXIST_ERROR)) {
-                    setErrors({
-                        name: 'A strategy with this name already exists',
-                    });
-                }
+            } catch (error: unknown) {
+                setToastApiError(formatUnknownError(error));
             }
         }
     };

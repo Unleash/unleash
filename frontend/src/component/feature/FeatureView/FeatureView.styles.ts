@@ -44,4 +44,7 @@ export const useStyles = makeStyles(theme => ({
             flexDirection: 'column',
         },
     },
+    featureId: {
+        wordBreak: 'break-all'
+    }
 }));

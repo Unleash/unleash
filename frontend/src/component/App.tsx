@@ -81,7 +81,7 @@ export const App = () => {
                                 <EnvironmentSplash onFinish={refetchSplash} />
                             }
                             elseShow={
-                                <LayoutPicker location={location}>
+                                <LayoutPicker>
                                     <Switch>
                                         <ProtectedRoute
                                             exact

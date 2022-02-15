@@ -58,7 +58,3 @@ export const useAuthApi = (): IUseAuthApiOutput => {
         loading,
     };
 };
-
-const ensureRelativePath = (path: string): string => {
-    return path.replace(/^\//, '');
-};

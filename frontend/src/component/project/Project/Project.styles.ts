@@ -32,4 +32,18 @@ export const useStyles = makeStyles(theme => ({
         width: 'auto',
         fontSize: '1rem',
     },
+    title: {
+        fontSize: theme.fontSizes.mainHeader,
+        fontWeight: 'bold',
+        marginBottom: '0.5rem',
+        display: 'grid',
+        gridTemplateColumns: '1fr auto',
+        alignItems: 'center',
+        gridGap: '1rem',
+    },
+    titleText: {
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+    },
 }));

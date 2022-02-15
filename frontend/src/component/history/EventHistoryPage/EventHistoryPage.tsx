@@ -1,11 +1,11 @@
 import { Alert } from '@material-ui/lab';
 import React, { useContext } from 'react';
-import { ADMIN } from '../../component/providers/AccessProvider/permissions';
-import ConditionallyRender from '../../component/common/ConditionallyRender';
-import { EventHistory } from '../../component/history/EventHistory/EventHistory';
-import AccessContext from '../../contexts/AccessContext';
+import { ADMIN } from '../../providers/AccessProvider/permissions';
+import ConditionallyRender from '../../common/ConditionallyRender';
+import AccessContext from '../../../contexts/AccessContext';
+import { EventHistory } from '../EventHistory/EventHistory';
 
-const HistoryPage = () => {
+export const EventHistoryPage = () => {
     const { hasAccess } = useContext(AccessContext);
 
     return (
@@ -20,5 +20,3 @@ const HistoryPage = () => {
         />
     );
 };
-
-export default HistoryPage;

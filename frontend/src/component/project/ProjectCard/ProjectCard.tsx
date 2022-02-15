@@ -46,7 +46,7 @@ const ProjectCard = ({
     return (
         <Card className={styles.projectCard} onMouseEnter={onHover}>
             <div className={styles.header} data-loading>
-                <h2 className={styles.title}>{name}</h2>
+                <div className={styles.title}>{name}</div>
 
                 <PermissionIconButton
                     permission={UPDATE_PROJECT}

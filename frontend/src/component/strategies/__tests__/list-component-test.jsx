@@ -23,7 +23,6 @@ test('renders correctly with one strategy', () => {
                             removeStrategy={jest.fn()}
                             deprecateStrategy={jest.fn()}
                             reactivateStrategy={jest.fn()}
-                            history={{}}
                         />
                     </AccessProvider>
                 </UIProvider>
@@ -50,7 +49,6 @@ test('renders correctly with one strategy without permissions', () => {
                             removeStrategy={jest.fn()}
                             deprecateStrategy={jest.fn()}
                             reactivateStrategy={jest.fn()}
-                            history={{}}
                         />
                     </AccessProvider>
                 </UIProvider>

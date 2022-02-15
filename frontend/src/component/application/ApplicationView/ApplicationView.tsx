@@ -15,7 +15,6 @@ import {
     FlagRounded,
     SvgIconComponent,
 } from '@material-ui/icons';
-import { shorten } from '../../common';
 import {
     CREATE_FEATURE,
     CREATE_STRATEGY,
@@ -87,9 +86,14 @@ export const ApplicationView = () => {
             </ListItemAvatar>
             <ListItemText
                 primary={
-                    <Link to={`${viewUrl}/${name}`}>{shorten(name, 50)}</Link>
+                    <Link
+                        to={`${viewUrl}/${name}`}
+                        style={{ wordBreak: 'break-all' }}
+                    >
+                        {name}
+                    </Link>
                 }
-                secondary={shorten(description, 60)}
+                secondary={description}
             />
         </ListItem>
     );

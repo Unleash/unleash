@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import useTagTypesApi from '../../../hooks/api/actions/useTagTypesApi/useTagTypesApi';
+import { formatUnknownError } from '../../../utils/format-unknown-error';
 
 const useTagTypeForm = (initialTagName = '', initialTagDesc = '') => {
     const [tagName, setTagName] = useState(initialTagName);
@@ -22,8 +23,6 @@ const useTagTypeForm = (initialTagName = '', initialTagDesc = '') => {
         };
     };
 
-    const NAME_EXISTS_ERROR =
-        'There already exists a tag-type with the name simple';
     const validateNameUniqueness = async () => {
         if (tagName.length === 0) {
             setErrors(prev => ({ ...prev, name: 'Name can not be empty.' }));
@@ -39,14 +38,12 @@ const useTagTypeForm = (initialTagName = '', initialTagDesc = '') => {
         try {
             await validateTagName(tagName);
             return true;
-        } catch (e: any) {
-            if (e.toString().includes(NAME_EXISTS_ERROR)) {
-                setErrors(prev => ({
-                    ...prev,
-                    name: NAME_EXISTS_ERROR,
-                }));
-                return false;
-            }
+        } catch (err: unknown) {
+            setErrors(prev => ({
+                ...prev,
+                name: formatUnknownError(err)
+            }));
+            return false;
         }
     };
 

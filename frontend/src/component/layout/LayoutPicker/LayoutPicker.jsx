@@ -1,8 +1,10 @@
 import ConditionallyRender from '../../common/ConditionallyRender';
 import { matchPath } from 'react-router';
+import { useLocation } from 'react-router-dom';
 import { MainLayout } from '../MainLayout/MainLayout';
 
-const LayoutPicker = ({ children, location }) => {
+const LayoutPicker = ({ children }) => {
+    const location = useLocation();
     const standalonePages = () => {
         const { pathname } = location;
         const isLoginPage = matchPath(pathname, { path: '/login' });

@@ -31,7 +31,7 @@ import Dialogue from '../../../common/Dialogue';
 import { CREATE_API_TOKEN_BUTTON } from '../../../../testIds';
 import { Alert } from '@material-ui/lab';
 import copy from 'copy-to-clipboard';
-import { useLocationSettings } from "../../../../hooks/useLocationSettings";
+import { useLocationSettings } from '../../../../hooks/useLocationSettings';
 
 interface IApiToken {
     createdAt: Date;
@@ -42,13 +42,13 @@ interface IApiToken {
     environment: string;
 }
 
-const ApiTokenList = () => {
+export const ApiTokenList = () => {
     const styles = useStyles();
     const { hasAccess } = useContext(AccessContext);
     const { uiConfig } = useUiConfig();
     const [showDelete, setShowDelete] = useState(false);
     const [delToken, setDeleteToken] = useState<IApiToken>();
-    const { locationSettings } = useLocationSettings()
+    const { locationSettings } = useLocationSettings();
     const { setToastData } = useToast();
     const { tokens, loading, refetch, error } = useApiTokens();
     const { deleteToken } = useApiTokensApi();
@@ -315,5 +315,3 @@ const ApiTokenList = () => {
         </div>
     );
 };
-
-export default ApiTokenList;

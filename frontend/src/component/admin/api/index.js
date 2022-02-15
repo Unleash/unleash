@@ -1,4 +1,4 @@
-import ApiTokenList from '../api-token/ApiTokenList/ApiTokenList';
+import { ApiTokenList } from '../api-token/ApiTokenList/ApiTokenList';
 import AdminMenu from '../menu/AdminMenu';
 import ConditionallyRender from '../../common/ConditionallyRender';
 import AccessContext from '../../../contexts/AccessContext';

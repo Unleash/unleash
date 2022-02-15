@@ -1,7 +1,7 @@
 import { Typography } from '@material-ui/core';
 import { useCommonStyles } from '../../../../common.styles';
 import Dialogue from '../../../common/Dialogue';
-import UserToken from './UserToken/UserToken';
+import { UserToken } from './UserToken/UserToken';
 
 interface IConfirmUserLink {
     open: boolean;
@@ -9,7 +9,7 @@ interface IConfirmUserLink {
     token: string;
 }
 
-const ConfirmToken = ({
+export const ConfirmToken = ({
     open,
     closeConfirm,
     token,
@@ -31,5 +31,3 @@ const ConfirmToken = ({
         </Dialogue>
     );
 };
-
-export default ConfirmToken;

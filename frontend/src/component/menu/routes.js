@@ -25,7 +25,7 @@ import CreateProjectRole from '../admin/project-roles/CreateProjectRole/CreatePr
 import EditProjectRole from '../admin/project-roles/EditProjectRole/EditProjectRole';
 import CreateUser from '../admin/users/CreateUser/CreateUser';
 import EditUser from '../admin/users/EditUser/EditUser';
-import CreateApiToken from '../admin/api-token/CreateApiToken/CreateApiToken';
+import { CreateApiToken } from '../admin/api-token/CreateApiToken/CreateApiToken';
 import CreateEnvironment from '../environments/CreateEnvironment/CreateEnvironment';
 import EditEnvironment from '../environments/EditEnvironment/EditEnvironment';
 import CreateContext from '../context/CreateContext/CreateContext';

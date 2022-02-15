@@ -7,11 +7,11 @@ import useToast from '../../../../hooks/useToast';
 import useApiTokensApi from '../../../../hooks/api/actions/useApiTokensApi/useApiTokensApi';
 import PermissionButton from '../../../common/PermissionButton/PermissionButton';
 import { ADMIN } from '../../../providers/AccessProvider/permissions';
-import ConfirmToken from '../ConfirmToken/ConfirmToken';
+import { ConfirmToken } from '../ConfirmToken/ConfirmToken';
 import { useState } from 'react';
 import { scrollToTop } from '../../../common/util';
 
-const CreateApiToken = () => {
+export const CreateApiToken = () => {
     const { setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
     const history = useHistory();
@@ -95,10 +95,7 @@ const CreateApiToken = () => {
                 mode="Create"
                 clearErrors={clearErrors}
             >
-                <PermissionButton
-                    permission={ADMIN}
-                    type="submit"
-                >
+                <PermissionButton permission={ADMIN} type="submit">
                     Create token
                 </PermissionButton>
             </ApiTokenForm>
@@ -110,5 +107,3 @@ const CreateApiToken = () => {
         </FormTemplate>
     );
 };
-
-export default CreateApiToken;

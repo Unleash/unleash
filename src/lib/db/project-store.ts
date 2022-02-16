@@ -80,7 +80,7 @@ class ProjectStore implements IProjectStore {
         const memberCount = await this.db.raw(`SELECT count(role_id) as member_count, project FROM role_user GROUP BY project`)
         memberTimer();
         const memberMap = memberCount.rows.reduce((a, r) => {
-            a[r.project] = r.member_count;
+            a[r.project] = parseInt(r.member_count, 10);
             return a;
         }, {});
         return projectsWithFeatureCount.map(r => {

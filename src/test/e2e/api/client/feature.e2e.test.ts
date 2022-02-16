@@ -282,7 +282,7 @@ test('returns a feature toggles impression data for a different project', async 
         description: '',
     };
 
-    db.stores.projectStore.create(project);
+    await db.stores.projectStore.create(project);
 
     const toggle = {
         name: 'project-client.impression.data',

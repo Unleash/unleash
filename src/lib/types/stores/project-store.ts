@@ -32,7 +32,7 @@ export interface IProjectStore extends Store<IProject, string> {
     deleteEnvironmentForProject(id: string, environment: string): Promise<void>;
     getEnvironmentsForProject(id: string): Promise<string[]>;
     getMembers(projectId: string): Promise<number>;
-    getProjectsWithCounts(query?: IProjectQuery): Promise<IProjectWithCount[]>
+    getProjectsWithCounts(query?: IProjectQuery): Promise<IProjectWithCount[]>;
     count(): Promise<number>;
     getAll(query?: IProjectQuery): Promise<IProject[]>;
 }

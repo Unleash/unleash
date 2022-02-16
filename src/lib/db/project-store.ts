@@ -50,8 +50,7 @@ class ProjectStore implements IProjectStore {
         };
     }
 
-    destroy(): void {
-    }
+    destroy(): void {}
 
     async exists(id: string): Promise<boolean> {
         const result = await this.db.raw(
@@ -62,7 +61,7 @@ class ProjectStore implements IProjectStore {
         return present;
     }
 
-    async getProjectsWithCounts(query?: IProjectQuery): Promise<IProjectWithCount[]> {
+    async getProjectsWithCounts(): Promise<IProjectWithCount[]> {
         const projectTimer = this.timer('getProjectsWithCount');
         const projectAndFeatureCount = await this.db.raw(
             `SELECT p.id,
@@ -73,23 +72,29 @@ class ProjectStore implements IProjectStore {
                     count(f.name) as number_of_features
              FROM projects p
                       LEFT JOIN features f ON f.project = p.id
-             GROUP BY p.id`);
-        const projectsWithFeatureCount = projectAndFeatureCount.rows.map(this.mapProjectWithCountRow);
+             GROUP BY p.id`,
+        );
+        const projectsWithFeatureCount = projectAndFeatureCount.rows.map(
+            this.mapProjectWithCountRow,
+        );
         projectTimer();
         const memberTimer = this.timer('getMemberCount');
-        const memberCount = await this.db.raw(`SELECT count(role_id) as member_count, project FROM role_user GROUP BY project`)
+        const memberCount = await this.db.raw(
+            `SELECT count(role_id) as member_count, project FROM role_user GROUP BY project`,
+        );
         memberTimer();
         const memberMap = memberCount.rows.reduce((a, r) => {
             a[r.project] = parseInt(r.member_count, 10);
             return a;
         }, {});
-        return projectsWithFeatureCount.map(r => {
-            return { ...r, memberCount: memberMap[r.id] }
+        return projectsWithFeatureCount.map((r) => {
+            return { ...r, memberCount: memberMap[r.id] };
         });
     }
 
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     mapProjectWithCountRow(row): IProjectWithCount {
-        return ({
+        return {
             name: row.name,
             id: row.id,
             description: row.description,
@@ -97,7 +102,7 @@ class ProjectStore implements IProjectStore {
             featureCount: row.number_of_features,
             memberCount: row.number_of_users || 0,
             updatedAt: row.updated_at,
-        });
+        };
     }
 
     async getAll(query: IProjectQuery = {}): Promise<IProject[]> {

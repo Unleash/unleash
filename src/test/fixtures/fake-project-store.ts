@@ -1,6 +1,6 @@
 import {
     IProjectHealthUpdate,
-    IProjectInsert, IProjectQuery,
+    IProjectInsert,
     IProjectStore,
 } from '../../lib/types/stores/project-store';
 import { IProject, IProjectWithCount } from '../../lib/types/model';
@@ -26,12 +26,11 @@ export default class FakeProjectStore implements IProjectStore {
         this.projectEnvironment.set(id, environments);
     }
 
-    async getProjectsWithCounts(query?: IProjectQuery): Promise<IProjectWithCount[]> {
-        return this.projects.map(p => {
+    async getProjectsWithCounts(): Promise<IProjectWithCount[]> {
+        return this.projects.map((p) => {
             return { ...p, memberCount: 0, featureCount: 0 };
         });
     }
-
 
     private createInternal(project: IProjectInsert): IProject {
         const newProj: IProject = {
@@ -69,8 +68,7 @@ export default class FakeProjectStore implements IProjectStore {
         }
     }
 
-    destroy(): void {
-    }
+    destroy(): void {}
 
     async count(): Promise<number> {
         return this.projects.length;

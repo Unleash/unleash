@@ -114,8 +114,12 @@ export default class ClientMetricsServiceV2 {
 
     async getClientMetricsForToggle(
         toggleName: string,
+        hoursBack?: number,
     ): Promise<IClientMetricsEnv[]> {
-        return this.clientMetricsStoreV2.getMetricsForFeatureToggle(toggleName);
+        return this.clientMetricsStoreV2.getMetricsForFeatureToggle(
+            toggleName,
+            hoursBack,
+        );
     }
 
     destroy(): void {

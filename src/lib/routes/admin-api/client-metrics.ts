@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import Controller from '../controller';
 import { IUnleashConfig } from '../../types/option';
-import { IUnleashServices } from '../../types/services';
+import { IUnleashServices } from '../../types';
 import { Logger } from '../../logger';
 import ClientMetricsServiceV2 from '../../services/client-metrics/metrics-service-v2';
 
@@ -9,6 +9,10 @@ class ClientMetricsController extends Controller {
     private logger: Logger;
 
     private metrics: ClientMetricsServiceV2;
+
+    private static HOURS_BACK_MIN = 1;
+
+    private static HOURS_BACK_MAX = 48;
 
     constructor(
         config: IUnleashConfig,
@@ -27,7 +31,11 @@ class ClientMetricsController extends Controller {
 
     async getRawToggleMetrics(req: Request, res: Response): Promise<void> {
         const { name } = req.params;
-        const data = await this.metrics.getClientMetricsForToggle(name);
+        const { hoursBack } = req.query;
+        const data = await this.metrics.getClientMetricsForToggle(
+            name,
+            ClientMetricsController.parseHoursBackQueryParam(hoursBack),
+        );
         res.json({
             version: 1,
             maturity: 'stable',
@@ -44,5 +52,23 @@ class ClientMetricsController extends Controller {
             ...data,
         });
     }
+
+    private static parseHoursBackQueryParam(
+        param: unknown,
+    ): number | undefined {
+        if (typeof param !== 'string') {
+            return;
+        }
+
+        const parsed = Number(param);
+
+        if (
+            parsed >= ClientMetricsController.HOURS_BACK_MIN &&
+            parsed <= ClientMetricsController.HOURS_BACK_MAX
+        ) {
+            return parsed;
+        }
+    }
 }
+
 export default ClientMetricsController;

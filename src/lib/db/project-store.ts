@@ -61,20 +61,25 @@ class ProjectStore implements IProjectStore {
         return present;
     }
 
-    async getProjectsWithCounts(): Promise<IProjectWithCount[]> {
+    async getProjectsWithCounts(
+        query?: IProjectQuery,
+    ): Promise<IProjectWithCount[]> {
         const projectTimer = this.timer('getProjectsWithCount');
-        const projectAndFeatureCount = await this.db.raw(
-            `SELECT p.id,
-                    p.name,
-                    p.description,
-                    p.health,
-                    p.updated_at,
-                    count(f.name) as number_of_features
-             FROM projects p
-                      LEFT JOIN features f ON f.project = p.id
-             GROUP BY p.id`,
-        );
-        const projectsWithFeatureCount = projectAndFeatureCount.rows.map(
+        let projectsQuery = this.db(TABLE)
+            .select(
+                this.db.raw(
+                    'projects.id, projects.name, projects.description, projects.health, projects.updated_at, count(features.name) AS number_of_features',
+                ),
+            )
+            .leftJoin('features', 'features.project', 'projects.id')
+            .groupBy('projects.id');
+        if (query) {
+            projectsQuery = projectsQuery.where(query);
+        }
+        const projectAndFeatureCount = await projectsQuery;
+
+        // @ts-ignore
+        const projectsWithFeatureCount = projectAndFeatureCount.map(
             this.mapProjectWithCountRow,
         );
         projectTimer();

@@ -136,11 +136,13 @@ test('should support the hoursBack query param for raw metrics', async () => {
             .then((res) => res.body);
     };
 
+    const hours1 = await fetchHoursBack(1);
     const hours24 = await fetchHoursBack(24);
     const hours48 = await fetchHoursBack(48);
     const hoursTooFew = await fetchHoursBack(-999);
     const hoursTooMany = await fetchHoursBack(999);
 
+    expect(hours1.data).toHaveLength(1);
     expect(hours24.data).toHaveLength(2);
     expect(hours48.data).toHaveLength(3);
     expect(hoursTooFew.data).toHaveLength(2);

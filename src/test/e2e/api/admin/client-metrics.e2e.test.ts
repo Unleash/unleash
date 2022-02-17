@@ -126,9 +126,11 @@ test('should support the hoursBack query param for raw metrics', async () => {
 
     await db.stores.clientMetricsStoreV2.batchInsertMetrics(metrics);
 
-    const fetchHoursBack = (h: number) => {
+    const fetchHoursBack = (hoursBack: number) => {
         return app.request
-            .get(`/api/admin/client-metrics/features/demo/raw?hoursBack=${h}`)
+            .get(
+                `/api/admin/client-metrics/features/demo/raw?hoursBack=${hoursBack}`,
+            )
             .expect('Content-Type', /json/)
             .expect(200)
             .then((res) => res.body);

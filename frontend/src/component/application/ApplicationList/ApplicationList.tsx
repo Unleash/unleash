@@ -46,7 +46,7 @@ export const ApplicationList = () => {
     return (
         <>
             <div className={commonStyles.searchField}>
-                <SearchField value={filter} updateValue={setFilter} />
+                <SearchField initialValue={filter} updateValue={setFilter} />
             </div>
             <PageContent headerContent={<HeaderTitle title="Applications" />}>
                 <div className={commonStyles.fullwidth}>

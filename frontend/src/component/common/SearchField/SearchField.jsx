@@ -7,10 +7,10 @@ import SearchIcon from '@material-ui/icons/Search';
 
 import { useStyles } from './styles';
 
-function SearchField({ updateValue, className = '' }) {
+function SearchField({ initialValue = '', updateValue, className = '' }) {
     const styles = useStyles();
 
-    const [localValue, setLocalValue] = useState('');
+    const [localValue, setLocalValue] = useState(initialValue);
     const debounceUpdateValue = debounce(updateValue, 500);
 
     const handleChange = e => {

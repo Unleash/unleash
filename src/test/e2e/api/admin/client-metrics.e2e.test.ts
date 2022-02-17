@@ -95,6 +95,56 @@ test('should return raw metrics, aggregated on key', async () => {
     expect(t2.data[0].no).toBe(104);
 });
 
+test('should support the hoursBack query param for raw metrics', async () => {
+    const date = new Date();
+    const metrics: IClientMetricsEnv[] = [
+        {
+            featureName: 'demo',
+            appName: 'web',
+            environment: 'default',
+            timestamp: date,
+            yes: 1,
+            no: 1,
+        },
+        {
+            featureName: 'demo',
+            appName: 'web',
+            environment: 'default',
+            timestamp: subHours(date, 12),
+            yes: 2,
+            no: 2,
+        },
+        {
+            featureName: 'demo',
+            appName: 'web',
+            environment: 'default',
+            timestamp: subHours(date, 32),
+            yes: 3,
+            no: 3,
+        },
+    ];
+
+    await db.stores.clientMetricsStoreV2.batchInsertMetrics(metrics);
+
+    const fetchHoursBack = (h: number) => {
+        return app.request
+            .get(`/api/admin/client-metrics/features/demo/raw?hoursBack=${h}`)
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .then((res) => res.body);
+    };
+
+    const hours24 = await fetchHoursBack(24);
+    const hours48 = await fetchHoursBack(48);
+    const hoursTooFew = await fetchHoursBack(-999);
+    const hoursTooMany = await fetchHoursBack(999);
+
+    expect(hours24.data).toHaveLength(2);
+    expect(hours48.data).toHaveLength(3);
+    expect(hoursTooFew.data).toHaveLength(2);
+    expect(hoursTooMany.data).toHaveLength(2);
+});
+
 test('should return toggle summary', async () => {
     const date = new Date();
     const metrics: IClientMetricsEnv[] = [

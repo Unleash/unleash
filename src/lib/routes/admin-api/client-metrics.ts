@@ -57,7 +57,7 @@ class ClientMetricsController extends Controller {
         param: unknown,
     ): number | undefined {
         if (typeof param !== 'string') {
-            return;
+            return undefined;
         }
 
         const parsed = Number(param);

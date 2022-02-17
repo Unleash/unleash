@@ -107,6 +107,7 @@ const FeatureToggleList = ({
         <div className={styles.featureContainer}>
             <div className={styles.searchBarContainer}>
                 <SearchField
+                    initialValue={filter.query}
                     updateValue={setFilterQuery}
                     className={classnames(styles.searchBar, {
                         skeleton: loading,

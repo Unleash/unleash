@@ -8,7 +8,7 @@ import ConditionallyRender from '../../../../../common/ConditionallyRender';
 
 import FeatureStrategiesSeparator from '../FeatureStrategiesSeparator/FeatureStrategiesSeparator';
 import useFeatureStrategiesEnvironmentList from './useFeatureStrategiesEnvironmentList';
-import useDropboxMarkup from './useDropboxMarkup';
+import { useDropboxMarkup } from './useDropboxMarkup';
 import useDeleteStrategyMarkup from './useDeleteStrategyMarkup';
 import useProductionGuardMarkup from './useProductionGuardMarkup';
 import FeatureStrategyEditable from '../FeatureStrategyEditable/FeatureStrategyEditable';

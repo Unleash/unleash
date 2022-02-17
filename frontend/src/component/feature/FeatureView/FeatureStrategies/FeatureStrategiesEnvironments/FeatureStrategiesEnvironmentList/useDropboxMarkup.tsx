@@ -3,13 +3,16 @@ import ConditionallyRender from '../../../../../common/ConditionallyRender';
 import classnames from 'classnames';
 import { useStyles } from './FeatureStrategiesEnvironmentList.styles';
 import { Button } from '@material-ui/core';
+import React from 'react';
+import { useHistory } from 'react-router-dom';
 
-const useDropboxMarkup = (
+export const useDropboxMarkup = (
     isOver: boolean,
     expandedSidebar: boolean,
-    setExpandedSidbar
+    setExpandedSidbar: React.Dispatch<React.SetStateAction<boolean>>
 ) => {
     const styles = useStyles();
+    const history = useHistory();
 
     const dropboxClasses = classnames(styles.dropbox, {
         [styles.dropboxActive]: isOver,
@@ -33,7 +36,12 @@ const useDropboxMarkup = (
                     </div>
                     <Button
                         style={{ marginTop: '1rem' }}
-                        onClick={() => setExpandedSidbar(false)}
+                        onClick={() => {
+                            setExpandedSidbar(false);
+                            history.replace({
+                                search: '',
+                            });
+                        }}
                     >
                         Cancel
                     </Button>
@@ -42,5 +50,3 @@ const useDropboxMarkup = (
         />
     );
 };
-
-export default useDropboxMarkup;

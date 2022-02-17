@@ -34,7 +34,7 @@ class ClientMetricsController extends Controller {
         const { hoursBack } = req.query;
         const data = await this.metrics.getClientMetricsForToggle(
             name,
-            ClientMetricsController.parseHoursBackQueryParam(hoursBack),
+            this.parseHoursBackQueryParam(hoursBack),
         );
         res.json({
             version: 1,
@@ -53,9 +53,7 @@ class ClientMetricsController extends Controller {
         });
     }
 
-    private static parseHoursBackQueryParam(
-        param: unknown,
-    ): number | undefined {
+    private parseHoursBackQueryParam(param: unknown): number | undefined {
         if (typeof param !== 'string') {
             return undefined;
         }

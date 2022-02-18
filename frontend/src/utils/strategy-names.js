@@ -44,9 +44,6 @@ const nameMapping = {
     },
 };
 
-export const getHumanReadbleStrategy = strategyName =>
-    nameMapping[strategyName];
-
 export const getHumanReadableStrategyName = strategyName => {
     const humanReadableStrategy = nameMapping[strategyName];
 

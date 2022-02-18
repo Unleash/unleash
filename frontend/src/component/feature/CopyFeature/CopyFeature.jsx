@@ -23,7 +23,6 @@ import useFeature from '../../../hooks/api/getters/useFeature/useFeature';
 import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
 
 export const CopyFeatureToggle = () => {
-    // static displayName = `AddFeatureComponent-${getDisplayName(Component)}`;
     const [replaceGroupId, setReplaceGroupId] = useState(true);
     const [apiError, setApiError] = useState('');
     const [nameError, setNameError] = useState(undefined);

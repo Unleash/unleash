@@ -1,10 +1,5 @@
 import { useEffect, useState } from 'react';
 import useProjectApi from '../../../../hooks/api/actions/useProjectApi/useProjectApi';
-import { IPermission } from '../../../../interfaces/project';
-
-export interface ICheckedPermission {
-    [key: string]: IPermission;
-}
 
 const useProjectForm = (
     initialProjectId = '',
@@ -56,7 +51,7 @@ const useProjectForm = (
             return false;
         }
     };
-    
+
     const validateProjectId = () => {
         if (projectId.length === 0) {
             setErrors(prev => ({ ...prev, id: 'id can not be empty.' }));

@@ -174,6 +174,3 @@ export const getDates = dateString => {
 
     return [date, now];
 };
-
-export const filterByProject = selectedProject => feature =>
-    feature.project === selectedProject;

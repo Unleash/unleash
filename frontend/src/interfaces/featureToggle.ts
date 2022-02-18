@@ -11,16 +11,6 @@ export interface IEnvironments {
     enabled: boolean;
 }
 
-export interface IFeatureToggleDTO {
-    stale: boolean;
-    archived: boolean;
-    description: string;
-    name: string;
-    project: string;
-    type: string;
-    variants: IFeatureVariant[];
-}
-
 export interface IFeatureTogglePayload {
     description: string;
     name: string;

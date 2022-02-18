@@ -1,13 +1,5 @@
-import { Dispatch, SetStateAction, useContext } from 'react';
+import { useContext } from 'react';
 import UIContext, { IToastData } from '../contexts/UIContext';
-
-export interface IToast {
-    show: boolean;
-    type: 'success' | 'info' | 'warning' | 'error';
-    text: string;
-}
-
-export type TSetToastData = Dispatch<SetStateAction<IToast>>;
 
 interface IToastOptions {
     title: string;

@@ -99,21 +99,6 @@ FormButtons.propTypes = {
     primaryButtonTestId: PropTypes.string,
 };
 
-export function getIcon(type) {
-    switch (type) {
-        case 'feature-updated':
-            return 'autorenew';
-        case 'feature-created':
-            return 'add';
-        case 'feature-deleted':
-            return 'remove';
-        case 'feature-archived':
-            return 'archived';
-        default:
-            return 'star';
-    }
-}
-
 export const IconLink = ({ url, icon: IconComponent }) => (
     <a
         href={url}
@@ -200,9 +185,6 @@ export function calc(value, total, decimal) {
     });
 
     return ((value / total) * 100).toFixed(decimal);
-}
-export function getDisplayName(WrappedComponent) {
-    return WrappedComponent.displayName || WrappedComponent.name || 'Component';
 }
 
 export const selectStyles = {

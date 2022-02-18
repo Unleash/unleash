@@ -1,27 +1,7 @@
-const defaultErrorMessage = 'Unexpected exception when talking to unleash-api';
-
 export const headers = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
 };
-
-export const extractJoiMsg = (body: any) => {
-    return body.details.length > 0
-        ? body.details[0].message
-        : defaultErrorMessage;
-};
-
-export const extractLegacyMsg = (body: any[]) => {
-    return body && body.length > 0 ? body[0].msg : defaultErrorMessage;
-};
-
-export class ServiceError extends Error {
-    constructor(statusCode = 500) {
-        super(defaultErrorMessage);
-        this.name = 'ServiceError';
-        this.statusCode = statusCode;
-    }
-}
 
 export class AuthenticationError extends Error {
     constructor(statusCode, body) {

@@ -81,7 +81,7 @@
     "react-scripts": "4.0.3",
     "react-test-renderer": "16.14.0",
     "react-timeago": "6.2.1",
-    "sass": "1.49.7",
+    "sass": "1.49.8",
     "swr": "1.2.1",
     "typescript": "4.5.5",
     "web-vitals": "2.1.4"

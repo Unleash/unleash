@@ -10,4 +10,10 @@ module.exports = {
         'storybook-addon-root-attribute/register',
     ],
     framework: '@storybook/react',
+    staticDirs: [
+        {
+            from: '../static',
+            to: '/',
+        },
+    ],
 };

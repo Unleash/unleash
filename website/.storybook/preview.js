@@ -1,4 +1,6 @@
 import '../src/css/custom.css';
+import '../node_modules/infima/dist/css/default/default.css';
+import '../node_modules/@docusaurus/theme-classic/lib/admonitions.css';
 import { withRootAttribute } from 'storybook-addon-root-attribute';
 
 export const parameters = {

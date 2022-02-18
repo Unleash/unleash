@@ -23,7 +23,7 @@ import PaginateUI from '../../../common/PaginateUI/PaginateUI';
 import { IUser } from '../../../../interfaces/user';
 import IRole from '../../../../interfaces/role';
 import useToast from '../../../../hooks/useToast';
-import { useLocationSettings } from "../../../../hooks/useLocationSettings";
+import { useLocationSettings } from '../../../../hooks/useLocationSettings';
 
 const UsersList = () => {
     const { users, roles, refetch, loading } = useUsers();
@@ -36,7 +36,7 @@ const UsersList = () => {
         userApiErrors,
     } = useAdminUsersApi();
     const { hasAccess } = useContext(AccessContext);
-    const { locationSettings } = useLocationSettings()
+    const { locationSettings } = useLocationSettings();
     const [pwDialog, setPwDialog] = useState<{ open: boolean; user?: IUser }>({
         open: false,
     });

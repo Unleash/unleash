@@ -74,7 +74,7 @@ const useContextsApi = () => {
         updateContext,
         removeContext,
         errors,
-        loading
+        loading,
     };
 };
 

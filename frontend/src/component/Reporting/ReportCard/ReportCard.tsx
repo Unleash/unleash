@@ -5,10 +5,10 @@ import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined'
 import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyRender';
 import styles from './ReportCard.module.scss';
 import ReactTimeAgo from 'react-timeago';
-import { IProjectHealthReport } from "../../../interfaces/project";
+import { IProjectHealthReport } from '../../../interfaces/project';
 
 interface IReportCardProps {
-    healthReport: IProjectHealthReport
+    healthReport: IProjectHealthReport;
 }
 
 export const ReportCard = ({ healthReport }: IReportCardProps) => {
@@ -37,7 +37,9 @@ export const ReportCard = ({ healthReport }: IReportCardProps) => {
     const renderPotentiallyStaleToggles = () => (
         <>
             <ReportProblemOutlinedIcon className={styles.danger} />
-            <span>{healthReport.potentiallyStaleCount} potentially stale toggles</span>
+            <span>
+                {healthReport.potentiallyStaleCount} potentially stale toggles
+            </span>
         </>
     );
 
@@ -51,7 +53,9 @@ export const ReportCard = ({ healthReport }: IReportCardProps) => {
                             condition={healthReport.health > -1}
                             show={
                                 <div>
-                                    <p className={healthClasses}>{healthReport.health}%</p>
+                                    <p className={healthClasses}>
+                                        {healthReport.health}%
+                                    </p>
                                     <p className={styles.lastUpdate}>
                                         Last updated:{' '}
                                         <ReactTimeAgo
@@ -97,13 +101,17 @@ export const ReportCard = ({ healthReport }: IReportCardProps) => {
                         <ul className={styles.reportCardList}>
                             <li>
                                 <ConditionallyRender
-                                    condition={Boolean(healthReport.potentiallyStaleCount)}
+                                    condition={Boolean(
+                                        healthReport.potentiallyStaleCount
+                                    )}
                                     show={renderPotentiallyStaleToggles}
                                 />
                             </li>
                         </ul>
                         <ConditionallyRender
-                            condition={Boolean(healthReport.potentiallyStaleCount)}
+                            condition={Boolean(
+                                healthReport.potentiallyStaleCount
+                            )}
                             show={
                                 <p className={styles.reportCardActionText}>
                                     Review your feature toggles and delete

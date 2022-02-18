@@ -21,11 +21,10 @@ const FeatureSettingsProject = () => {
     const [dirty, setDirty] = useState(false);
     const [showConfirmDialog, setShowConfirmDialog] = useState(false);
     const editable = hasAccess(MOVE_FEATURE_TOGGLE, projectId);
-    const { permissions = [] } = useAuthPermissions()
+    const { permissions = [] } = useAuthPermissions();
     const { changeFeatureProject } = useFeatureApi();
     const { setToastData, setToastApiError } = useToast();
     const history = useHistory();
-
 
     useEffect(() => {
         if (project !== feature.project) {

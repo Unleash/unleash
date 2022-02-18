@@ -20,7 +20,7 @@ const useApiToken = (
         setType(initialtype);
         if (type === 'ADMIN') {
             setProject('*');
-            setEnvironment('*')
+            setEnvironment('*');
         }
         //eslint-disable-next-line react-hooks/exhaustive-deps
     }, [initialtype]);
@@ -35,11 +35,11 @@ const useApiToken = (
 
     const setTokenType = (value: string) => {
         if (value === 'ADMIN') {
-            setType(value)
+            setType(value);
             setProject('*');
             setEnvironment('*');
         } else {
-            setType(value)
+            setType(value);
             setEnvironment(initialEnvironment);
         }
     };

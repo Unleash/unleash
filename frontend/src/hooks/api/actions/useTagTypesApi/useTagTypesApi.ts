@@ -68,7 +68,7 @@ const useTagTypesApi = () => {
         updateTagType,
         deleteTagType,
         errors,
-        loading
+        loading,
     };
 };
 

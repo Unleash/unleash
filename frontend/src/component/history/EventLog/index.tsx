@@ -1,6 +1,6 @@
 import EventLog from './EventLog';
-import { useEventSettings } from "../../../hooks/useEventSettings";
-import { useLocationSettings } from "../../../hooks/useLocationSettings";
+import { useEventSettings } from '../../../hooks/useEventSettings';
+import { useLocationSettings } from '../../../hooks/useLocationSettings';
 
 interface IEventLogContainerProps {
     title: string;

@@ -97,10 +97,7 @@ const CreateUser = () => {
                 setRootRole={setRootRole}
                 clearErrors={clearErrors}
             >
-                <PermissionButton
-                    permission={ADMIN}
-                    type="submit"
-                >
+                <PermissionButton permission={ADMIN} type="submit">
                     Create user
                 </PermissionButton>
             </UserForm>

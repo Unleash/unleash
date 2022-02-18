@@ -100,10 +100,7 @@ const CreateEnvironment = () => {
                         mode="Create"
                         clearErrors={clearErrors}
                     >
-                        <PermissionButton
-                            permission={ADMIN}
-                            type="submit"
-                        >
+                        <PermissionButton permission={ADMIN} type="submit">
                             Create environment
                         </PermissionButton>
                     </EnvironmentForm>

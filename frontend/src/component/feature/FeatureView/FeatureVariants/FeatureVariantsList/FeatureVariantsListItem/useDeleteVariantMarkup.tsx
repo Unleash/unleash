@@ -8,10 +8,10 @@ interface IUseDeleteVariantMarkupProps {
 }
 
 const useDeleteVariantMarkup = ({
-                                     show,
-                                     onClick,
-                                     onClose,
-                                 }: IUseDeleteVariantMarkupProps) => {
+    show,
+    onClick,
+    onClose,
+}: IUseDeleteVariantMarkupProps) => {
     return (
         <Dialogue
             title="Are you sure you want to delete this variant?"

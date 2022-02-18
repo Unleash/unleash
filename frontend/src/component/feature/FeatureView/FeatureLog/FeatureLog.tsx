@@ -10,7 +10,7 @@ const FeatureLog = () => {
     const { feature } = useFeature(projectId, featureId);
 
     if (!feature.name) {
-        return null
+        return null;
     }
 
     return (

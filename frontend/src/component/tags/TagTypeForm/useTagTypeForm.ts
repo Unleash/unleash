@@ -41,7 +41,7 @@ const useTagTypeForm = (initialTagName = '', initialTagDesc = '') => {
         } catch (err: unknown) {
             setErrors(prev => ({
                 ...prev,
-                name: formatUnknownError(err)
+                name: formatUnknownError(err),
             }));
             return false;
         }

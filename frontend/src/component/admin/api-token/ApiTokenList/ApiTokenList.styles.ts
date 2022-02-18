@@ -18,35 +18,35 @@ export const useStyles = makeStyles(theme => ({
         marginBottom: '1rem',
     },
     center: {
-        textAlign: 'center'
+        textAlign: 'center',
     },
     actionsContainer: {
         textAlign: 'center',
         display: 'flex-inline',
-        flexWrap: 'nowrap'
+        flexWrap: 'nowrap',
     },
-    infoBoxContainer:{
-        marginBottom:40
+    infoBoxContainer: {
+        marginBottom: 40,
     },
-    hideSM:{
-        [theme.breakpoints.down('sm')]: { 
-            display: 'none'
-    }
+    hideSM: {
+        [theme.breakpoints.down('sm')]: {
+            display: 'none',
+        },
     },
-    hideMD:{
-        [theme.breakpoints.down('md')]: { 
-            display: 'none'
-    }
+    hideMD: {
+        [theme.breakpoints.down('md')]: {
+            display: 'none',
+        },
     },
-    hideXS:{
-        [theme.breakpoints.down('xs')]: { 
-            display: 'none'
-    }
+    hideXS: {
+        [theme.breakpoints.down('xs')]: {
+            display: 'none',
+        },
     },
-    token:{
+    token: {
         textAlign: 'left',
-        [theme.breakpoints.up('sm')]: { 
-            display: 'none'
-    }
-    }
+        [theme.breakpoints.up('sm')]: {
+            display: 'none',
+        },
+    },
 }));

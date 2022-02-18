@@ -1,9 +1,10 @@
 import PropTypes from 'prop-types';
 function Secret({ value }) {
-
     return (
         <div>
-           <span style={{ width: '250px', display: 'inline-block' }}>************************************</span>
+            <span style={{ width: '250px', display: 'inline-block' }}>
+                ************************************
+            </span>
         </div>
     );
 }

@@ -11,6 +11,6 @@ export const useStyles = makeStyles(theme => ({
     envName: {
         position: 'relative',
         top: '6px',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
     },
 }));

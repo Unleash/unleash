@@ -9,7 +9,7 @@ export interface IUiConfig {
     versionInfo: IVersionInfo;
     links: ILinks[];
     disablePasswordAuth?: boolean;
-    toast?: IProclamationToast
+    toast?: IProclamationToast;
 }
 
 export interface IProclamationToast {

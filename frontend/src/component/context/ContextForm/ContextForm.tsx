@@ -112,7 +112,7 @@ const ContextForm: React.FC<IContextForm> = ({
                     autoFocus
                 />
                 <p className={styles.inputDescription}>
-                     What is this context for?
+                    What is this context for?
                 </p>
                 <TextField
                     className={styles.input}

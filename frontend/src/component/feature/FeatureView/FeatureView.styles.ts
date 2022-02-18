@@ -45,6 +45,6 @@ export const useStyles = makeStyles(theme => ({
         },
     },
     featureId: {
-        wordBreak: 'break-all'
-    }
+        wordBreak: 'break-all',
+    },
 }));

@@ -10,8 +10,8 @@ export const useStyles = makeStyles(theme => ({
         height: '100%',
     },
     input: { width: '100%', marginBottom: '1rem' },
-    inputHeader:{
-        marginBottom: '0.3rem'
+    inputHeader: {
+        marginBottom: '0.3rem',
     },
     label: {
         minWidth: '300px',
@@ -22,7 +22,7 @@ export const useStyles = makeStyles(theme => ({
     tagContainer: {
         display: 'flex',
         alignItems: 'flex-start',
-        marginBottom: '1rem'
+        marginBottom: '1rem',
     },
     tagInput: {
         width: '75%',
@@ -30,7 +30,7 @@ export const useStyles = makeStyles(theme => ({
     },
     tagValue: {
         marginRight: '3px',
-        marginBottom: '1rem'
+        marginBottom: '1rem',
     },
     buttonContainer: {
         marginTop: 'auto',
@@ -62,6 +62,6 @@ export const useStyles = makeStyles(theme => ({
     switchContainer: {
         display: 'flex',
         alignItems: 'center',
-        marginLeft: '-9px'
+        marginLeft: '-9px',
     },
 }));

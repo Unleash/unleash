@@ -6,5 +6,5 @@ export const defaultEnvironment: IEnvironment = {
     createdAt: '',
     sortOrder: 0,
     enabled: false,
-    protected: false
+    protected: false,
 };

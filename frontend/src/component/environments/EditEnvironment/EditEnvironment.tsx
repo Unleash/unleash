@@ -85,10 +85,7 @@ const EditEnvironment = () => {
                 errors={errors}
                 clearErrors={clearErrors}
             >
-                <PermissionButton
-                    permission={ADMIN}
-                    type="submit"
-                >
+                <PermissionButton permission={ADMIN} type="submit">
                     Edit environment
                 </PermissionButton>
             </EnvironmentForm>

@@ -30,7 +30,12 @@ const useContext = (name: string, options: SWRConfiguration = {}) => {
     }, [data, error]);
 
     return {
-        context: data || { name: '', description: '', legalValues: [], stickiness: false },
+        context: data || {
+            name: '',
+            description: '',
+            legalValues: [],
+            stickiness: false,
+        },
         error,
         loading,
         refetch,

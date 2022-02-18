@@ -71,9 +71,7 @@ const FormTemplate: React.FC<ICreateProps> = ({
                         <>
                             <h3 className={styles.subtitle}>
                                 API Command{' '}
-                                <IconButton
-                                    onClick={copyCommand}
-                                >
+                                <IconButton onClick={copyCommand}>
                                     <FileCopy className={styles.icon} />
                                 </IconButton>
                             </h3>

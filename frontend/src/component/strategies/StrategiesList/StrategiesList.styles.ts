@@ -9,7 +9,7 @@ export const useStyles = makeStyles(theme => ({
         },
         '&:hover': {
             backgroundColor: theme.palette.grey[200],
-        }
+        },
     },
     deprecated: {
         '& a': {

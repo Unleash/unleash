@@ -26,9 +26,8 @@ const BreadcrumbNav = () => {
                 item !== 'strategies' &&
                 item !== 'features' &&
                 item !== 'features2' &&
-                item !== 'create-toggle'&&
+                item !== 'create-toggle' &&
                 item !== 'settings'
-
         );
 
     return (
@@ -52,7 +51,10 @@ const BreadcrumbNav = () => {
                                                 styles.breadcrumbNavParagraph
                                             }
                                         >
-                                            <StringTruncator text={path} maxWidth="200" />
+                                            <StringTruncator
+                                                text={path}
+                                                maxWidth="200"
+                                            />
                                         </p>
                                     );
                                 }
@@ -73,7 +75,10 @@ const BreadcrumbNav = () => {
                                         className={styles.breadcrumbLink}
                                         to={link}
                                     >
-                                        <StringTruncator text={path} maxWidth="200" />
+                                        <StringTruncator
+                                            text={path}
+                                            maxWidth="200"
+                                        />
                                     </Link>
                                 );
                             })}

@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import PercentageCircle from '../../../../common/PercentageCircle/PercentageCircle';
 import { useStyles } from './FeatureEnvironmentMetrics.styles';
-import {FiberManualRecord} from '@material-ui/icons';
+import { FiberManualRecord } from '@material-ui/icons';
 import { useMediaQuery } from '@material-ui/core';
 import { IFeatureEnvironmentMetrics } from '../../../../../interfaces/featureToggle';
 import { parseISO } from 'date-fns';

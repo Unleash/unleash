@@ -29,7 +29,7 @@ const FlexibleStrategy = ({
     updateParameter,
     parameters,
     context,
-    editable=true
+    editable = true,
 }: IFlexibleStrategyProps) => {
     const onUpdate =
         (field: string) =>

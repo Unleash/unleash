@@ -6,7 +6,7 @@ export const useStyles = makeStyles(theme => ({
             backgroundColor: theme.palette.grey[200],
         },
     },
-    leftTableCell:{
-        textAlign: 'left'
-    }
+    leftTableCell: {
+        textAlign: 'left',
+    },
 }));

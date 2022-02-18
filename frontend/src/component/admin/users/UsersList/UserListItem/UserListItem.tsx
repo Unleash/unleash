@@ -14,7 +14,7 @@ import AccessContext from '../../../../../contexts/AccessContext';
 import { IUser } from '../../../../../interfaces/user';
 import { useStyles } from './UserListItem.styles';
 import { useHistory } from 'react-router-dom';
-import { ILocationSettings } from "../../../../../hooks/useLocationSettings";
+import { ILocationSettings } from '../../../../../hooks/useLocationSettings';
 
 interface IUserListItemProps {
     user: IUser;
@@ -34,7 +34,7 @@ const UserListItem = ({
     locationSettings,
 }: IUserListItemProps) => {
     const { hasAccess } = useContext(AccessContext);
-    const history = useHistory()
+    const history = useHistory();
     const styles = useStyles();
 
     return (
@@ -51,7 +51,10 @@ const UserListItem = ({
             </TableCell>
             <TableCell>
                 <span data-loading>
-                    {formatDateWithLocale(user.createdAt, locationSettings.locale)}
+                    {formatDateWithLocale(
+                        user.createdAt,
+                        locationSettings.locale
+                    )}
                 </span>
             </TableCell>
             <TableCell className={styles.leftTableCell}>
@@ -77,7 +80,9 @@ const UserListItem = ({
                             data-loading
                             aria-label="Edit"
                             title="Edit"
-                            onClick={()=> history.push(`/admin/users/${user.id}/edit`)}
+                            onClick={() =>
+                                history.push(`/admin/users/${user.id}/edit`)
+                            }
                         >
                             <Edit />
                         </IconButton>

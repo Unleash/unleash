@@ -12,24 +12,24 @@ const FeatureSeenApplications: React.FC = () => {
     const styles = useStyles();
     const seenApplications = (seenApps: string[]) => {
         return seenApps.map(appName => {
-            return (<Grid item md={4} xs={6} xl={3}>
-                <Link
-                    to={`/applications/${appName}`}
-                    className={[
-                        styles.listLink,
-                        styles.truncate
-                    ].join(' ')}
-                >
-                    {appName}
-                </Link>
-            </Grid>);
+            return (
+                <Grid item md={4} xs={6} xl={3}>
+                    <Link
+                        to={`/applications/${appName}`}
+                        className={[styles.listLink, styles.truncate].join(' ')}
+                    >
+                        {appName}
+                    </Link>
+                </Grid>
+            );
         });
     };
 
-    const noApplications = (<Grid item xs={12}>
-        <div>{'Not seen in any applications'}</div>
-    </Grid>);
-
+    const noApplications = (
+        <Grid item xs={12}>
+            <div>{'Not seen in any applications'}</div>
+        </Grid>
+    );
 
     return (
         <Grid container spacing={1}>
@@ -37,7 +37,8 @@ const FeatureSeenApplications: React.FC = () => {
             <ConditionallyRender
                 condition={metrics?.seenApplications?.length > 0}
                 show={seenApplications(metrics.seenApplications)}
-                elseShow={noApplications} />
+                elseShow={noApplications}
+            />
         </Grid>
     );
 };

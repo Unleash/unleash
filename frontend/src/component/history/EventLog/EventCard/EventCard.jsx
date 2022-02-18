@@ -17,26 +17,34 @@ const EventCard = ({ entry, timeFormatted }) => {
                 <dd>{entry.type}</dd>
                 <dt className={styles.eventLogHeader}>Changed by: </dt>
                 <dd title={entry.createdBy}>{entry.createdBy}</dd>
-                <ConditionallyRender condition={entry.project} show={
-                    <>
-                        <dt className={styles.eventLogHeader}>Project: </dt>
-                        <dd>{entry.project}</dd>
-                    </>
-                } />
-                <ConditionallyRender condition={entry.featureName} show={
-                    <>
-                        <dt className={styles.eventLogHeader}>Feature: </dt>
-                        <dd>{entry.featureName}</dd>
-                    </>
-                } />
+                <ConditionallyRender
+                    condition={entry.project}
+                    show={
+                        <>
+                            <dt className={styles.eventLogHeader}>Project: </dt>
+                            <dd>{entry.project}</dd>
+                        </>
+                    }
+                />
+                <ConditionallyRender
+                    condition={entry.featureName}
+                    show={
+                        <>
+                            <dt className={styles.eventLogHeader}>Feature: </dt>
+                            <dd>{entry.featureName}</dd>
+                        </>
+                    }
+                />
             </dl>
-            <ConditionallyRender condition={entry.data || entry.preData} show={
+            <ConditionallyRender
+                condition={entry.data || entry.preData}
+                show={
                     <>
                         <strong>Change</strong>
                         <EventDiff entry={entry} />
                     </>
-                } />
-            
+                }
+            />
         </div>
     );
 };

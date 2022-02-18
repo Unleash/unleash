@@ -20,7 +20,10 @@ const EventDiff = ({ entry }) => {
         N: styles.positive, // added
     };
 
-    const diffs = entry.data && entry.preData ? diff(entry.preData, entry.data) : undefined;
+    const diffs =
+        entry.data && entry.preData
+            ? diff(entry.preData, entry.data)
+            : undefined;
 
     const buildItemDiff = (diff, key) => {
         let change;

@@ -35,11 +35,7 @@ const EditUser = () => {
         validateName,
         errors,
         clearErrors,
-    } = useAddUserForm(
-        user?.name,
-        user?.email,
-        user?.rootRole
-    );
+    } = useAddUserForm(user?.name, user?.email, user?.rootRole);
 
     const formatApiCode = () => {
         return `curl --location --request PUT '${
@@ -98,10 +94,7 @@ const EditUser = () => {
                 clearErrors={clearErrors}
                 mode={EDIT}
             >
-                <PermissionButton
-                    permission={ADMIN}
-                    type="submit"
-                >
+                <PermissionButton permission={ADMIN} type="submit">
                     Edit user
                 </PermissionButton>
             </UserForm>

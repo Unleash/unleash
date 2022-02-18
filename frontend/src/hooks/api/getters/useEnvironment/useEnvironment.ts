@@ -6,14 +6,9 @@ import { IEnvironment } from '../../../../interfaces/environments';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { defaultEnvironment } from './defaultEnvironment';
 
-const useEnvironment = (
-    id: string,
-    options: SWRConfiguration = {}
-) => {
+const useEnvironment = (id: string, options: SWRConfiguration = {}) => {
     const fetcher = async () => {
-        const path = formatApiPath(
-            `api/admin/environments/${id}`
-        );
+        const path = formatApiPath(`api/admin/environments/${id}`);
         return fetch(path, {
             method: 'GET',
         })

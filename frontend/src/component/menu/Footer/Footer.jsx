@@ -11,7 +11,12 @@ export const Footer = () => {
 
     return (
         <footer className={styles.footer}>
-            <Grid container justifyContent="center" spacing={10} style={{marginBottom: 0}}>
+            <Grid
+                container
+                justifyContent="center"
+                spacing={10}
+                style={{ marginBottom: 0 }}
+            >
                 <Grid item md={4} xs={12}>
                     <ApiDetails uiConfig={uiConfig} />
                 </Grid>

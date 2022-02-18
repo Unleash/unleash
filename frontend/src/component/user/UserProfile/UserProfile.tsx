@@ -7,13 +7,15 @@ import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import { useStyles } from './UserProfile.styles';
 import { useCommonStyles } from '../../../common.styles';
 import UserProfileContent from './UserProfileContent/UserProfileContent';
-import { IUser } from "../../../interfaces/user";
-import { ILocationSettings } from "../../../hooks/useLocationSettings";
+import { IUser } from '../../../interfaces/user';
+import { ILocationSettings } from '../../../hooks/useLocationSettings';
 
 interface IUserProfileProps {
-    profile: IUser
-    locationSettings: ILocationSettings
-    setLocationSettings: React.Dispatch<React.SetStateAction<ILocationSettings>>
+    profile: IUser;
+    locationSettings: ILocationSettings;
+    setLocationSettings: React.Dispatch<
+        React.SetStateAction<ILocationSettings>
+    >;
 }
 
 const UserProfile = ({

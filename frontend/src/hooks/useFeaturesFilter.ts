@@ -11,7 +11,7 @@ export interface IFeaturesFilter {
 export interface IFeaturesSortOutput {
     filtered: IFeatureToggle[];
     filter: IFeaturesFilter;
-    setFilter: React.Dispatch<React.SetStateAction<IFeaturesFilter>>
+    setFilter: React.Dispatch<React.SetStateAction<IFeaturesFilter>>;
 }
 
 // Store the features filter state globally, and in localStorage.

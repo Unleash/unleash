@@ -9,10 +9,7 @@ const ApiPage = () => {
 
     return (
         <div>
-            <ConditionallyRender
-                condition={isAdmin}
-                show={<AdminMenu />}
-            />
+            <ConditionallyRender condition={isAdmin} show={<AdminMenu />} />
             <ApiTokenList />
         </div>
     );

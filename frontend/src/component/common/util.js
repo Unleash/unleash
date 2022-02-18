@@ -110,7 +110,7 @@ export const modalStyles = {
     },
 };
 
-export const showPnpsFeedback = (feedbackList) => {
+export const showPnpsFeedback = feedbackList => {
     if (!feedbackList) return;
     if (feedbackList.length > 0) {
         const feedback = feedbackList.find(
@@ -135,4 +135,4 @@ export const showPnpsFeedback = (feedbackList) => {
     return true;
 };
 
-export const PNPS_FEEDBACK_ID = 'pnps'
+export const PNPS_FEEDBACK_ID = 'pnps';

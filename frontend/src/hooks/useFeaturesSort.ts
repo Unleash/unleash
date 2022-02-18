@@ -19,7 +19,7 @@ interface IFeaturesSort {
 export interface IFeaturesSortOutput {
     sort: IFeaturesSort;
     sorted: IFeatureToggle[];
-    setSort: React.Dispatch<React.SetStateAction<IFeaturesSort>>
+    setSort: React.Dispatch<React.SetStateAction<IFeaturesSort>>;
 }
 
 export interface IFeaturesFilterSortOption {

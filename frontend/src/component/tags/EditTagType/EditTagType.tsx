@@ -74,10 +74,7 @@ const EditTagType = () => {
                 mode="Edit"
                 clearErrors={clearErrors}
             >
-                <PermissionButton
-                    permission={UPDATE_TAG_TYPE}
-                    type="submit"
-                >
+                <PermissionButton permission={UPDATE_TAG_TYPE} type="submit">
                     Edit type
                 </PermissionButton>
             </TagForm>

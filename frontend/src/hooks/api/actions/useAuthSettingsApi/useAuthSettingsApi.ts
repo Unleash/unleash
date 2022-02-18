@@ -7,12 +7,12 @@ export interface ISimpleAuthSettings {
 
 export const handleBadRequest = async (
     setErrors?: Dispatch<SetStateAction<{}>>,
-    res?: Response,
+    res?: Response
 ) => {
     if (!setErrors) return;
     if (res) {
         const data = await res.json();
-        setErrors({message: data.message});
+        setErrors({ message: data.message });
         throw new Error(data.message);
     }
 

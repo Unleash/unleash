@@ -27,7 +27,10 @@ const useApiTokensApi = () => {
 
     const createToken = async (newToken: IApiTokenCreate) => {
         const path = `api/admin/api-tokens`;
-        const req = createRequest(path, { method: 'POST', body: JSON.stringify(newToken) });
+        const req = createRequest(path, {
+            method: 'POST',
+            body: JSON.stringify(newToken),
+        });
 
         try {
             const res = await makeRequest(req.caller, req.id);

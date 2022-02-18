@@ -1,10 +1,7 @@
 import { useEffect, useState } from 'react';
 import useEnvironmentApi from '../../../hooks/api/actions/useEnvironmentApi/useEnvironmentApi';
 
-const useEnvironmentForm = (
-    initialName = '',
-    initialType = 'development'
-) => {
+const useEnvironmentForm = (initialName = '', initialType = 'development') => {
     const NAME_EXISTS_ERROR = 'Error: Environment';
     const [name, setName] = useState(initialName);
     const [type, setType] = useState(initialType);

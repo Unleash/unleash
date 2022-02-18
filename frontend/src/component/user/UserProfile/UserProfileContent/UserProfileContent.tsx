@@ -98,14 +98,19 @@ const UserProfileContent = ({
                         condition={!editingProfile}
                         show={
                             <>
-                                <ConditionallyRender condition={!uiConfig.disablePasswordAuth} show={
-                                    <Button
-                                        variant="contained"
-                                        onClick={() => setEditingProfile(true)}
-                                    >
-                                        Update password
-                                    </Button>
-                                } />
+                                <ConditionallyRender
+                                    condition={!uiConfig.disablePasswordAuth}
+                                    show={
+                                        <Button
+                                            variant="contained"
+                                            onClick={() =>
+                                                setEditingProfile(true)
+                                            }
+                                        >
+                                            Update password
+                                        </Button>
+                                    }
+                                />
                                 <div className={commonStyles.divider} />
                                 <div className={legacyStyles.showUserSettings}>
                                     <FormControl

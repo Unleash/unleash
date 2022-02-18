@@ -27,7 +27,7 @@ export const useStyles = makeStyles(theme => ({
         display: '-webkit-box',
         boxOrient: 'vertical',
         textOverflow: 'ellipsis',
-        overflow: 'hidden'
+        overflow: 'hidden',
     },
 
     projectIcon: {

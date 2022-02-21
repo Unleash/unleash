@@ -100,24 +100,7 @@ export default class ProjectService {
     }
 
     async getProjects(query?: IProjectQuery): Promise<IProjectWithCount[]> {
-        const projects = await this.store.getAll(query);
-        const projectsWithCount = await Promise.all(
-            projects.map(async (p) => {
-                let featureCount = 0;
-                let memberCount = 0;
-                try {
-                    featureCount =
-                        await this.featureToggleService.getFeatureCountForProject(
-                            p.id,
-                        );
-                    memberCount = await this.getMembers(p.id);
-                } catch (e) {
-                    this.logger.warn('Error fetching project counts', e);
-                }
-                return { ...p, featureCount, memberCount };
-            }),
-        );
-        return projectsWithCount;
+        return this.store.getProjectsWithCounts(query);
     }
 
     async getProject(id: string): Promise<IProject> {

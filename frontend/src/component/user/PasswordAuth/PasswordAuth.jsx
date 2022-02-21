@@ -56,7 +56,6 @@ const PasswordAuth = ({ authDetails, redirect }) => {
         try {
             await passwordAuth(authDetails.path, username, password);
             refetchUser();
-            console.log('hio')
             history.push(redirect);
         } catch (error) {
             if (error.statusCode === 404 || error.statusCode === 400) {

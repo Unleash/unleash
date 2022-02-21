@@ -8,6 +8,7 @@ import NotFoundError from '../error/notfound-error';
 import {
     ProjectUserAddedEvent,
     ProjectUserRemovedEvent,
+    ProjectUserUpdateRoleEvent,
     PROJECT_CREATED,
     PROJECT_DELETED,
     PROJECT_UPDATED,
@@ -326,23 +327,9 @@ export default class ProjectService {
         userId: number,
         createdBy?: string,
     ): Promise<void> {
-        const roles = await this.accessService.getRolesForProject(projectId);
-        const role = roles.find((r) => r.id === roleId);
-        if (!role) {
-            throw new NotFoundError(
-                `Couldn't find roleId=${roleId} on project=${projectId}`,
-            );
-        }
+        const role = await this.findProjectRole(projectId, roleId);
 
-        if (role.name === RoleName.OWNER) {
-            const users = await this.accessService.getProjectUsersForRole(
-                role.id,
-                projectId,
-            );
-            if (users.length < 2) {
-                throw new Error('A project must have at least one owner');
-            }
-        }
+        await this.validateAtLeastOneOwner(projectId, role);
 
         await this.accessService.removeUserFromRole(userId, role.id, projectId);
 
@@ -351,6 +338,76 @@ export default class ProjectService {
                 project: projectId,
                 createdBy,
                 preData: { roleId, userId, roleName: role.name },
+            }),
+        );
+    }
+
+    async findProjectRole(
+        projectId: string,
+        roleId: number,
+    ): Promise<IRoleDescriptor> {
+        const roles = await this.accessService.getRolesForProject(projectId);
+        const role = roles.find((r) => r.id === roleId);
+        if (!role) {
+            throw new NotFoundError(
+                `Couldn't find roleId=${roleId} on project=${projectId}`,
+            );
+        }
+        return role;
+    }
+
+    async validateAtLeastOneOwner(
+        projectId: string,
+        currentRole: IRoleDescriptor,
+    ): Promise<void> {
+        if (currentRole.name === RoleName.OWNER) {
+            const users = await this.accessService.getProjectUsersForRole(
+                currentRole.id,
+                projectId,
+            );
+            if (users.length < 2) {
+                throw new Error('A project must have at least one owner');
+            }
+        }
+    }
+
+    async changeRole(
+        projectId: string,
+        roleId: number,
+        userId: number,
+        createdBy: string,
+    ): Promise<void> {
+        const role = await this.findProjectRole(projectId, roleId);
+
+        const usersWithRoles = await this.getUsersWithAccess(projectId);
+        const user = usersWithRoles.users.find((u) => u.id === userId);
+        const currentRole = usersWithRoles.roles.find(
+            (r) => r.id === user.roleId,
+        );
+
+        if (currentRole.id === roleId) {
+            // Nothing to do....
+            return;
+        }
+
+        await this.validateAtLeastOneOwner(projectId, currentRole);
+
+        await this.accessService.updateUserProjectRole(
+            userId,
+            roleId,
+            projectId,
+        );
+
+        await this.eventStore.store(
+            new ProjectUserUpdateRoleEvent({
+                project: projectId,
+                createdBy,
+                preData: {
+                    userId,
+                    roleId: currentRole.id,
+                    roleName: currentRole.name,
+                },
+                data: { userId, roleId, roleName: role.name },
             }),
         );
     }
@@ -383,5 +440,3 @@ export default class ProjectService {
         };
     }
 }
-
-module.exports = ProjectService;

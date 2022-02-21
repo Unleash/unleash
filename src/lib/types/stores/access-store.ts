@@ -19,6 +19,7 @@ export interface IRoleWithPermissions extends IRole {
 }
 
 export interface IRoleDescriptor {
+    id: number;
     name: string;
     description?: string;
     type: string;
@@ -50,6 +51,11 @@ export interface IAccessStore extends Store<IRole, number> {
         userId: number,
         roleId: number,
         projectId?: string,
+    ): Promise<void>;
+    updateUserProjectRole(
+        userId: number,
+        roleId: number,
+        projectId: string,
     ): Promise<void>;
     removeRolesOfTypeForUser(userId: number, roleType: string): Promise<void>;
     addPermissionsToRole(

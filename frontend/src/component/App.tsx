@@ -41,7 +41,6 @@ export const App = () => {
     const renderRoute = (route: any) => {
         if (route.type === 'protected') {
             const unauthorized = isUnauthorized();
-
             return (
                 <ProtectedRoute
                     key={route.path}
@@ -88,7 +87,6 @@ export const App = () => {
                                             path="/"
                                             unauthorized={isUnauthorized()}
                                             component={Redirect}
-                                            renderProps={{ to: '/features' }}
                                         />
                                         {renderMainLayoutRoutes()}
                                         {renderStandaloneRoutes()}

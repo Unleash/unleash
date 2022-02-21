@@ -84,16 +84,16 @@ class ProjectStore implements IProjectStore {
         );
         projectTimer();
         const memberTimer = this.timer('getMemberCount');
+        this.db.count('role_id');
         const memberCount = await this.db.raw(
             `SELECT count(role_id) as member_count, project FROM role_user GROUP BY project`,
         );
         memberTimer();
-        const memberMap = memberCount.rows.reduce((a, r) => {
-            a[r.project] = parseInt(r.member_count, 10);
-            return a;
-        }, {});
+        const memberMap = new Map<string, number>(
+            memberCount.rows.map((c) => [c.project, Number(c.member_count)]),
+        );
         return projectsWithFeatureCount.map((r) => {
-            return { ...r, memberCount: memberMap[r.id] };
+            return { ...r, memberCount: memberMap.get(r.id) };
         });
     }
 

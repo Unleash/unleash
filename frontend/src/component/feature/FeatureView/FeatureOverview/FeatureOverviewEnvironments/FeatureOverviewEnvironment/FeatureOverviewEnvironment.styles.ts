@@ -68,69 +68,10 @@ export const useStyles = makeStyles(theme => ({
         backgroundColor: theme.palette.grey[300],
         width: '90%',
     },
-    accordionBodyFooter: {
-        position: 'relative',
-        padding: '1rem',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    percentageContainer: {
-        width: '90px',
-        height: '90px',
-        border: `2px solid ${theme.palette.primary.light}`,
-        borderRadius: '50%',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        fontWeight: 'bold',
-        color: theme.palette.primary.light,
-        marginTop: '1rem',
-    },
-    requestContainer: {
-        padding: '2rem',
-        border: `2px solid ${theme.palette.primary.light}`,
-        borderRadius: '5px',
-        display: 'flex',
-        flexDirection: 'column',
-        maxWidth: '300px',
-        justifyContent: 'center',
-        minWidth: '200px',
-        alignItems: 'center',
-    },
-    requestText: {
-        textAlign: 'center',
-        marginTop: '1rem',
-        fontSize: theme.fontSizes.smallBody,
-    },
     linkContainer: {
         display: 'flex',
         justifyContent: 'flex-end',
         marginBottom: '1rem',
-    },
-    disabledInfo: {
-        maxWidth: '300px',
-        marginRight: '1.5rem',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-    },
-    disabledIcon: {
-        height: '50px',
-        width: '50px',
-        fill: theme.palette.grey[400],
-        marginBottom: '1rem',
-    },
-    strategiesText: {
-        fontSize: '14px',
-        color: theme.palette.grey[700],
-    },
-    stratigiesInfoContainer: {
-        display: 'flex',
-    },
-    noStratigiesInfoContainer: {
-        top: '1px',
-        position: 'relative',
     },
     strategyIconContainer: {
         minWidth: '50px',
@@ -138,7 +79,6 @@ export const useStyles = makeStyles(theme => ({
         display: 'flex',
         justifyContent: 'center',
     },
-
     strategiesIconsContainer: {
         transform: 'scale(0.8)',
         display: 'flex',
@@ -148,14 +88,6 @@ export const useStyles = makeStyles(theme => ({
         [theme.breakpoints.down(560)]: {
             marginLeft: '0px',
             top: '5px',
-        },
-    },
-    [theme.breakpoints.down(750)]: {
-        accordionBodyFooter: {
-            flexDirection: 'column',
-        },
-        requestContainer: {
-            marginTop: '1rem',
         },
     },
     [theme.breakpoints.down(560)]: {
@@ -171,15 +103,11 @@ export const useStyles = makeStyles(theme => ({
         truncator: {
             textAlign: 'center',
         },
-        resultContainer: {
-            flexWrap: 'wrap',
-        },
     },
     [theme.breakpoints.down(400)]: {
         accordionHeader: {
             padding: '0.5rem 1rem',
         },
-
         accordionBodyInnerContainer: {
             padding: '0.5rem',
         },
@@ -222,21 +150,5 @@ export const useStyles = makeStyles(theme => ({
         [theme.breakpoints.down(560)]: {
             display: 'none',
         },
-    },
-    resultContainer: {
-        display: 'flex',
-        width: '100%',
-        justifyContent: 'space-around',
-    },
-    dataContainer: {
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignContent: 'center',
-        alignItems: 'center',
-        padding: '0px 15px',
-    },
-    resultTitle: {
-        color: theme.palette.primary.main,
     },
 }));

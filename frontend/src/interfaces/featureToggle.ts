@@ -74,3 +74,19 @@ export interface IFeatureMetrics {
     lastHourUsage: IFeatureEnvironmentMetrics[];
     seenApplications: string[];
 }
+
+export interface IFeatureMetrics {
+    version: number;
+    maturity: string;
+    lastHourUsage: IFeatureEnvironmentMetrics[];
+    seenApplications: string[];
+}
+
+export interface IFeatureMetricsRaw {
+    featureName: string;
+    appName: string;
+    environment: string;
+    timestamp: string;
+    yes: number;
+    no: number;
+}

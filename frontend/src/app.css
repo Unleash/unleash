@@ -133,6 +133,10 @@ p {
     font-size: var(--p-size);
 }
 
+[hidden] {
+    display: none !important;
+}
+
 @media screen and (max-width: 1024px) {
     :root {
         --drawer-padding: 0.75rem 1.25rem;

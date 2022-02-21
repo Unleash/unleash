@@ -7,6 +7,7 @@ export interface ISelectOption {
     title?: string;
     label?: string;
 }
+
 export interface ISelectMenuProps {
     name: string;
     id: string;
@@ -14,15 +15,18 @@ export interface ISelectMenuProps {
     label?: string;
     options: ISelectOption[];
     style?: object;
-    onChange?: (
-        event: React.ChangeEvent<{ name?: string; value: unknown }>,
-        child: React.ReactNode
-    ) => void;
+    onChange?: OnGeneralSelectChange;
     disabled?: boolean;
+    fullWidth?: boolean;
     className?: string;
     classes?: any;
     defaultValue?: string;
 }
+
+export type OnGeneralSelectChange = (
+    event: React.ChangeEvent<{ name?: string; value: unknown }>,
+    child: React.ReactNode
+) => void;
 
 const GeneralSelect: React.FC<ISelectMenuProps> = ({
     name,
@@ -35,6 +39,7 @@ const GeneralSelect: React.FC<ISelectMenuProps> = ({
     disabled = false,
     className,
     classes,
+    fullWidth,
     ...rest
 }) => {
     const renderSelectItems = () =>
@@ -50,10 +55,13 @@ const GeneralSelect: React.FC<ISelectMenuProps> = ({
         ));
 
     return (
-        <FormControl variant="outlined" size="small" classes={classes}>
-            <InputLabel htmlFor={id} id={id}>
-                {label}
-            </InputLabel>
+        <FormControl
+            variant="outlined"
+            size="small"
+            classes={classes}
+            fullWidth={fullWidth}
+        >
+            <InputLabel htmlFor={id}>{label}</InputLabel>
             <Select
                 defaultValue={defaultValue}
                 name={name}

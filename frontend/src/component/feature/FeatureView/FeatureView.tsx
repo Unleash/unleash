@@ -1,5 +1,5 @@
 import { Tab, Tabs, useMediaQuery } from '@material-ui/core';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Archive, FileCopy, Label, WatchLater } from '@material-ui/icons';
 import { Link, Route, useHistory, useParams } from 'react-router-dom';
 import useFeatureApi from '../../../hooks/api/actions/useFeatureApi/useFeatureApi';
@@ -16,10 +16,10 @@ import {
 import Dialogue from '../../common/Dialogue';
 import PermissionIconButton from '../../common/PermissionIconButton/PermissionIconButton';
 import FeatureLog from './FeatureLog/FeatureLog';
-import FeatureMetrics from './FeatureMetrics/FeatureMetrics';
 import FeatureOverview from './FeatureOverview/FeatureOverview';
 import FeatureStrategies from './FeatureStrategies/FeatureStrategies';
 import FeatureVariants from './FeatureVariants/FeatureVariants';
+import { FeatureMetrics } from './FeatureMetrics/FeatureMetrics';
 import { useStyles } from './FeatureView.styles';
 import FeatureSettings from './FeatureSettings/FeatureSettings';
 import useLoading from '../../../hooks/useLoading';
@@ -29,6 +29,7 @@ import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
 import StaleDialog from './FeatureOverview/StaleDialog/StaleDialog';
 import AddTagDialog from './FeatureOverview/AddTagDialog/AddTagDialog';
 import StatusChip from '../../common/StatusChip/StatusChip';
+import { formatUnknownError } from '../../../utils/format-unknown-error';
 
 const FeatureView = () => {
     const { projectId, featureId } = useParams<IFeatureViewParams>();
@@ -60,8 +61,8 @@ const FeatureView = () => {
             setShowDelDialog(false);
             projectRefetch();
             history.push(`/projects/${projectId}`);
-        } catch (e) {
-            setToastApiError(e.toString());
+        } catch (error) {
+            setToastApiError(formatUnknownError(error));
             setShowDelDialog(false);
         }
     };
@@ -160,7 +161,7 @@ const FeatureView = () => {
                                     component={Link}
                                     to={`/projects/${projectId}/features/${featureId}/strategies/copy`}
                                 >
-                                    <FileCopy />
+                                    <FileCopy titleAccess="Copy" />
                                 </PermissionIconButton>
                                 <PermissionIconButton
                                     permission={DELETE_FEATURE}
@@ -169,7 +170,7 @@ const FeatureView = () => {
                                     data-loading
                                     onClick={() => setShowDelDialog(true)}
                                 >
-                                    <Archive />
+                                    <Archive titleAccess="Archive feature toggle" />
                                 </PermissionIconButton>
                                 <PermissionIconButton
                                     onClick={() => setOpenStaleDialog(true)}
@@ -178,7 +179,7 @@ const FeatureView = () => {
                                     tooltip="Toggle stale status"
                                     data-loading
                                 >
-                                    <WatchLater />
+                                    <WatchLater titleAccess="Toggle stale status" />
                                 </PermissionIconButton>
                                 <PermissionIconButton
                                     onClick={() => setOpenTagDialog(true)}
@@ -187,7 +188,7 @@ const FeatureView = () => {
                                     tooltip="Add tag"
                                     data-loading
                                 >
-                                    <Label />
+                                    <Label titleAccess="Add tag" />
                                 </PermissionIconButton>
                             </div>
                         </div>

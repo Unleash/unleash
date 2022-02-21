@@ -1,10 +1,7 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
 import { MemoryRouter } from 'react-router-dom';
-
 import Breadcrumb from '../breadcrumb';
-
-jest.mock('@material-ui/core');
 
 test('breadcrumb for /features', () => {
     const tree = renderer.create(

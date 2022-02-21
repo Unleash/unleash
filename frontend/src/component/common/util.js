@@ -16,6 +16,11 @@ const dateOptions = {
     year: 'numeric',
 };
 
+const timeOptions = {
+    hour: '2-digit',
+    minute: '2-digit',
+};
+
 export const filterByFlags = flags => r => {
     if (r.flag && !flags[r.flag]) {
         return false;
@@ -39,6 +44,13 @@ export const formatDateWithLocale = (v, locale, tz) => {
         dateTimeOptions.timeZone = tz;
     }
     return new Date(v).toLocaleString(locale, dateOptions);
+};
+
+export const formatTimeWithLocale = (v, locale, tz) => {
+    if (tz) {
+        dateTimeOptions.timeZone = tz;
+    }
+    return new Date(v).toLocaleString(locale, timeOptions);
 };
 
 export const trim = value => {

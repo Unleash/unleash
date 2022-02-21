@@ -87,6 +87,7 @@ export const App = () => {
                                             path="/"
                                             unauthorized={isUnauthorized()}
                                             component={Redirect}
+                                            renderProps={{ to: '/features' }}
                                         />
                                         {renderMainLayoutRoutes()}
                                         {renderStandaloneRoutes()}

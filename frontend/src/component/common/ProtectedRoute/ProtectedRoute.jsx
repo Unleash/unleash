@@ -1,4 +1,4 @@
-import { Route, useLocation, useHistory } from 'react-router-dom';
+import { Route, useLocation, Redirect } from 'react-router-dom';
 
 const ProtectedRoute = ({
     component: Component,
@@ -7,7 +7,6 @@ const ProtectedRoute = ({
     ...rest
 }) => {
     const { pathname } = useLocation();
-    const history = useHistory();
     const loginLink =
         pathname.length > 1 ? `/login?redirect=${pathname}` : '/login';
     return (
@@ -15,7 +14,7 @@ const ProtectedRoute = ({
             {...rest}
             render={props => {
                 if (unauthorized) {
-                    history.push(loginLink);
+                    return <Redirect to={loginLink} />;
                 } else {
                     return <Component {...props} {...renderProps} />;
                 }

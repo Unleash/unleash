@@ -90,6 +90,7 @@ const DemoAuth = ({ authDetails, redirect }) => {
 
 DemoAuth.propTypes = {
     authDetails: PropTypes.object.isRequired,
+    redirect: PropTypes.string.isRequired,
 };
 
 export default DemoAuth;

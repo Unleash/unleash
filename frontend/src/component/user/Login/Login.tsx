@@ -7,7 +7,7 @@ import { DEMO_TYPE } from '../../../constants/authTypes';
 import Authentication from '../Authentication/Authentication';
 import { useAuthDetails } from '../../../hooks/api/getters/useAuth/useAuthDetails';
 import { useAuthUser } from '../../../hooks/api/getters/useAuth/useAuthUser';
-import { useHistory } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
 
 const Login = () => {
     const styles = useStyles();
@@ -15,11 +15,10 @@ const Login = () => {
     const { user } = useAuthUser();
     const query = useQueryParams();
     const resetPassword = query.get('reset') === 'true';
-    const redirect = query.get('redirect') || '/features';
-    const history = useHistory();
+    const redirect = query.get('redirect') || '/';
 
     if (user) {
-        history.replace(redirect);
+        return <Redirect to={redirect} />; 
     }
 
     return (

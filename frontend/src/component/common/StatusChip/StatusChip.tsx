@@ -3,7 +3,7 @@ import { useStyles } from './StatusChip.styles';
 
 interface IStatusChip {
     stale: boolean;
-    showActive: true;
+    showActive?: true;
 }
 
 const StatusChip = ({ stale, showActive = true }: IStatusChip) => {

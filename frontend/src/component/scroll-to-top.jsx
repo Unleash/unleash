@@ -8,7 +8,7 @@ class ScrollToTop extends Component {
     };
 
     componentDidUpdate(prevProps) {
-        if (this.props.location !== prevProps.location) {
+        if (this.props.location.pathname !== prevProps.location.pathname) {
             if (
                 this.props.location.pathname.includes('/features/metrics') ||
                 this.props.location.pathname.includes('/features/variants') ||

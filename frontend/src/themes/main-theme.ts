@@ -122,10 +122,10 @@ const mainTheme = {
         },
     },
     fontWeight: {
-        thin: '300',
-        medium: '400',
-        semi: '700',
-        bold: '700',
+        thin: 300,
+        medium: 400,
+        semi: 700,
+        bold: 700,
     },
 };
 

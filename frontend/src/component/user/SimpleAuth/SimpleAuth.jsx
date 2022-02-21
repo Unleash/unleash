@@ -8,7 +8,7 @@ import { useAuthUser } from '../../../hooks/api/getters/useAuth/useAuthUser';
 import { LOGIN_BUTTON, LOGIN_EMAIL_ID } from '../../../testIds';
 import useToast from '../../../hooks/useToast';
 
-const SimpleAuth = ({ authDetails }) => {
+const SimpleAuth = ({ authDetails, redirect }) => {
     const [email, setEmail] = useState('');
     const { refetchUser } = useAuthUser();
     const { emailAuth } = useAuthApi();
@@ -21,7 +21,7 @@ const SimpleAuth = ({ authDetails }) => {
         try {
             await emailAuth(authDetails.path, email);
             refetchUser();
-            history.push(`/`);
+            history.push(redirect);
         } catch (e) {
             setToastApiError(e.toString());
         }

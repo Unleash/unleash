@@ -17,11 +17,9 @@ const Login = () => {
     const resetPassword = query.get('reset') === 'true';
     const redirect = query.get('redirect') || '/features';
     const history = useHistory();
-    console.log(redirect);
 
     if (user) {
-        console.log(redirect);
-        history.push(redirect);
+        history.replace(redirect);
     }
 
     return (
@@ -40,7 +38,7 @@ const Login = () => {
                     condition={resetPassword}
                     show={<ResetPasswordSuccess />}
                 />
-                <Authentication />
+                <Authentication redirect={redirect} />
             </div>
         </StandaloneLayout>
     );

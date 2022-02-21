@@ -19,7 +19,7 @@ import PasswordField from '../../common/PasswordField/PasswordField';
 import { useAuthApi } from '../../../hooks/api/actions/useAuthApi/useAuthApi';
 import { useAuthUser } from '../../../hooks/api/getters/useAuth/useAuthUser';
 
-const PasswordAuth = ({ authDetails }) => {
+const PasswordAuth = ({ authDetails, redirect }) => {
     const commonStyles = useCommonStyles();
     const styles = useStyles();
     const history = useHistory();
@@ -56,7 +56,8 @@ const PasswordAuth = ({ authDetails }) => {
         try {
             await passwordAuth(authDetails.path, username, password);
             refetchUser();
-            history.push(`/`);
+            console.log('hio')
+            history.push(redirect);
         } catch (error) {
             if (error.statusCode === 404 || error.statusCode === 400) {
                 setErrors(prev => ({

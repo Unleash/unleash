@@ -9,7 +9,7 @@ import { useAuthApi } from '../../../hooks/api/actions/useAuthApi/useAuthApi';
 import { useAuthUser } from '../../../hooks/api/getters/useAuth/useAuthUser';
 import useToast from '../../../hooks/useToast';
 
-const DemoAuth = ({ authDetails }) => {
+const DemoAuth = ({ authDetails, redirect }) => {
     const [email, setEmail] = useState('');
     const history = useHistory();
     const { refetchUser } = useAuthUser();
@@ -22,7 +22,7 @@ const DemoAuth = ({ authDetails }) => {
         try {
             await emailAuth(authDetails.path, email);
             refetchUser();
-            history.push(`/`);
+            history.push(redirect);
         } catch (e) {
             setToastApiError(e.toString());
         }

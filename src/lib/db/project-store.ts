@@ -65,7 +65,7 @@ class ProjectStore implements IProjectStore {
         query?: IProjectQuery,
     ): Promise<IProjectWithCount[]> {
         const projectTimer = this.timer('getProjectsWithCount');
-        let projectsQuery = this.db(TABLE)
+        let projects = this.db(TABLE)
             .select(
                 this.db.raw(
                     'projects.id, projects.name, projects.description, projects.health, projects.updated_at, count(features.name) AS number_of_features',
@@ -74,9 +74,9 @@ class ProjectStore implements IProjectStore {
             .leftJoin('features', 'features.project', 'projects.id')
             .groupBy('projects.id');
         if (query) {
-            projectsQuery = projectsQuery.where(query);
+            projects = projects.where(query);
         }
-        const projectAndFeatureCount = await projectsQuery;
+        const projectAndFeatureCount = await projects;
 
         // @ts-ignore
         const projectsWithFeatureCount = projectAndFeatureCount.map(
@@ -84,7 +84,6 @@ class ProjectStore implements IProjectStore {
         );
         projectTimer();
         const memberTimer = this.timer('getMemberCount');
-        this.db.count('role_id');
         const memberCount = await this.db.raw(
             `SELECT count(role_id) as member_count, project FROM role_user GROUP BY project`,
         );
@@ -269,4 +268,3 @@ class ProjectStore implements IProjectStore {
 }
 
 export default ProjectStore;
-module.exports = ProjectStore;

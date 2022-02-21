@@ -652,3 +652,64 @@ test('should change a users role in the project', async () => {
     expect(customUser[0].id).toBe(projectUser.id);
     expect(customUser[0].name).toBe(projectUser.name);
 });
+
+test('should update role for user on project', async () => {
+    const project = {
+        id: 'update-users',
+        name: 'New project',
+        description: 'Blah',
+    };
+    await projectService.createProject(project, user);
+
+    const projectMember1 = await stores.userStore.insert({
+        name: 'Some Member',
+        email: 'update99@getunleash.io',
+    });
+
+    const memberRole = await stores.roleStore.getRoleByName(RoleName.MEMBER);
+    const ownerRole = await stores.roleStore.getRoleByName(RoleName.OWNER);
+
+    await projectService.addUser(project.id, memberRole.id, projectMember1.id);
+    await projectService.changeRole(
+        project.id,
+        ownerRole.id,
+        projectMember1.id,
+        'test',
+    );
+
+    const { users } = await projectService.getUsersWithAccess(project.id, user);
+    const memberUsers = users.filter((u) => u.roleId === memberRole.id);
+    const ownerUsers = users.filter((u) => u.roleId === ownerRole.id);
+
+    expect(memberUsers).toHaveLength(0);
+    expect(ownerUsers).toHaveLength(2);
+});
+
+test('should not update role for user on project when she is the owner', async () => {
+    const project = {
+        id: 'update-users-not-allowed',
+        name: 'New project',
+        description: 'Blah',
+    };
+    await projectService.createProject(project, user);
+
+    const projectMember1 = await stores.userStore.insert({
+        name: 'Some Member',
+        email: 'update991@getunleash.io',
+    });
+
+    const memberRole = await stores.roleStore.getRoleByName(RoleName.MEMBER);
+
+    await projectService.addUser(project.id, memberRole.id, projectMember1.id);
+
+    await expect(async () => {
+        await projectService.changeRole(
+            project.id,
+            memberRole.id,
+            user.id,
+            'test',
+        );
+    }).rejects.toThrowError(
+        new Error('A project must have at least one owner'),
+    );
+});

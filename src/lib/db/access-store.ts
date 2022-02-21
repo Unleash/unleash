@@ -247,6 +247,19 @@ export class AccessStore implements IAccessStore {
             .delete();
     }
 
+    async updateUserProjectRole(
+        userId: number,
+        roleId: number,
+        projectId: string,
+    ): Promise<void> {
+        return this.db(T.ROLE_USER)
+            .where({
+                user_id: userId,
+                project: projectId,
+            })
+            .update('role_id', roleId);
+    }
+
     async removeRolesOfTypeForUser(
         userId: number,
         roleType: string,

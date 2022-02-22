@@ -145,6 +145,7 @@ const HostedAuth = ({ authDetails, redirect }) => {
 
 HostedAuth.propTypes = {
     authDetails: PropTypes.object.isRequired,
+    redirect: PropTypes.string.isRequired,
 };
 
 export default HostedAuth;

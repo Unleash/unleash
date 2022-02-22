@@ -51,12 +51,7 @@ const Authentication = ({ redirect }: IAuthenticationProps) => {
             </>
         );
     } else {
-        content = (
-            <AuthenticationCustomComponent
-                authDetails={authDetails}
-                redirect={redirect}
-            />
-        );
+        content = <AuthenticationCustomComponent authDetails={authDetails} />;
     }
     return (
         <>

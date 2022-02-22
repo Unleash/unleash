@@ -168,6 +168,7 @@ const PasswordAuth = ({ authDetails, redirect }) => {
 
 PasswordAuth.propTypes = {
     authDetails: PropTypes.object.isRequired,
+    redirect: PropTypes.string.isRequired,
 };
 
 export default PasswordAuth;

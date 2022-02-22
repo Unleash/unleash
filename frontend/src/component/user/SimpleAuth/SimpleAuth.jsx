@@ -79,6 +79,7 @@ const SimpleAuth = ({ authDetails, redirect }) => {
 
 SimpleAuth.propTypes = {
     authDetails: PropTypes.object.isRequired,
+    redirect: PropTypes.string.isRequired,
 };
 
 export default SimpleAuth;

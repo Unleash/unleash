@@ -1,13 +1,13 @@
 import { useParams, useHistory, Link } from 'react-router-dom';
-import { IFeatureViewParams } from '../../../../../../../interfaces/params';
-import ConditionallyRender from '../../../../../../common/ConditionallyRender';
-import NoItemsStrategies from '../../../../../../common/NoItems/NoItemsStrategies/NoItemsStrategies';
+import { IFeatureViewParams } from 'interfaces/params';
+import ConditionallyRender from 'component/common/ConditionallyRender';
+import NoItemsStrategies from 'component/common/NoItems/NoItemsStrategies/NoItemsStrategies';
 import FeatureOverviewEnvironmentStrategies from '../FeatureOverviewEnvironmentStrategies/FeatureOverviewEnvironmentStrategies';
 import { useStyles } from '../FeatureOverviewEnvironment.styles';
-import { IFeatureEnvironment } from '../../../../../../../interfaces/featureToggle';
-import { CREATE_FEATURE_STRATEGY } from '../../../../../../providers/AccessProvider/permissions';
+import { IFeatureEnvironment } from 'interfaces/featureToggle';
+import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { useContext } from 'react';
-import AccessContext from '../../../../../../../contexts/AccessContext';
+import AccessContext from 'contexts/AccessContext';
 
 interface IFeatureOverviewEnvironmentBodyProps {
     getOverviewText: () => string;

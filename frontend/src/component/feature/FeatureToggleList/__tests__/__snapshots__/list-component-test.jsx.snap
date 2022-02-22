@@ -163,7 +163,7 @@ exports[`renders correctly with one feature 1`] = `
               <span
                 className="MuiButton-label"
               >
-                Create feature toggle
+                New feature toggle
               </span>
             </a>
           </div>
@@ -358,7 +358,7 @@ exports[`renders correctly with one feature without permissions 1`] = `
               <span
                 className="MuiButton-label"
               >
-                Create feature toggle
+                New feature toggle
               </span>
             </a>
           </div>

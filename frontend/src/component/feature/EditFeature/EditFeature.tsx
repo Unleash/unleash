@@ -106,7 +106,7 @@ const EditFeature = () => {
                     projectId={project}
                     type="submit"
                 >
-                    Edit toggle
+                    Save
                 </PermissionButton>
             </FeatureForm>
         </FormTemplate>

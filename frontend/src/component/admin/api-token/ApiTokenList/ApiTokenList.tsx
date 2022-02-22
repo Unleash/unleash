@@ -249,7 +249,7 @@ export const ApiTokenList = () => {
                                         }
                                         data-test={CREATE_API_TOKEN_BUTTON}
                                     >
-                                        Create API token
+                                        New API token
                                     </Button>
                                 }
                             />

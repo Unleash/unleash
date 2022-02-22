@@ -75,7 +75,7 @@ const EditTagType = () => {
                 clearErrors={clearErrors}
             >
                 <PermissionButton permission={UPDATE_TAG_TYPE} type="submit">
-                    Edit type
+                    Save
                 </PermissionButton>
             </TagForm>
         </FormTemplate>

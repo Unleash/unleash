@@ -293,7 +293,7 @@ const FeatureOverviewVariants = () => {
                     permission={UPDATE_FEATURE_VARIANTS}
                     projectId={projectId}
                 >
-                    Add variant
+                    New variant
                 </PermissionButton>
                 <ConditionallyRender
                     condition={editable}

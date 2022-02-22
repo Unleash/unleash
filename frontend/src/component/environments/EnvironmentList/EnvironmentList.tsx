@@ -172,10 +172,10 @@ const EnvironmentList = () => {
                             <ResponsiveButton
                                 onClick={navigateToCreateEnvironment}
                                 maxWidth="700px"
-                                tooltip="Add environment"
+                                tooltip="Add new environment"
                                 Icon={Add}
                             >
-                                Add Environment
+                                New Environment
                             </ResponsiveButton>
                         </>
                     }

@@ -127,7 +127,7 @@ const ContextList = () => {
                             color="primary"
                             variant="contained"
                         >
-                            Add new context field
+                            New context field
                         </Button>
                     }
                 />

@@ -80,7 +80,7 @@ export const StrategiesList = () => {
                             data-test={ADD_NEW_STRATEGY_ID}
                             tooltip={'Add new strategy'}
                         >
-                            Add new strategy
+                            New strategy
                         </PermissionButton>
                     }
                 />

@@ -82,10 +82,6 @@ const FeatureStrategyEditable = ({
         };
 
         updateStrategy(strategy, cleanup);
-
-        if (activeEnvironment.type !== PRODUCTION) {
-            cleanup();
-        }
     };
 
     useEffect(() => {

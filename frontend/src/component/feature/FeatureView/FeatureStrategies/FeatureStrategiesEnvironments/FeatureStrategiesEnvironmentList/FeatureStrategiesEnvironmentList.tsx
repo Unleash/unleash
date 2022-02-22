@@ -105,6 +105,7 @@ const FeatureStrategiesEnvironmentList = ({
         }
 
         updateStrategy(strategy);
+        callback();
     };
 
     const renderStrategies = () => {

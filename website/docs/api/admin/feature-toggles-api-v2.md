@@ -652,8 +652,6 @@ Authorization:$KEY
 
 You can add and remove users to a project using the `/api/admin/projects/:projectId/users/:userId/roles/:roleId` endpoint. When adding or removing users, you must also provide the ID for the role to give them (when adding) or the ID of the role they currently have (when removing).
 
-There is no way to update a user's role directly at the moment. Instead, if you want to change a user's role, first remove the user from the project and then add them back with the desired role.
-
 ### Add a user to a project
 
 ``` http
@@ -704,6 +702,55 @@ http://localhost:4242/api/admin/projects/MyCoolProject/users/42/roles/13 \
 Authorization:$KEY
 ```
 
+### Change a user's role in a project
+
+``` http
+PUT /api/admin/projects/:projectId/users/:userId/roles/:roleId
+```
+
+This will change the user's project role to the role specified by `:roleId`. If the user has not been added to the project, nothing happens.
+
+#### URL parameters
+
+| Parameter   | Type    | Description                                          | Example value     |
+|-------------|---------|------------------------------------------------------|-------------------|
+| `userId`    | integer | The ID of the user whose role you want to update.    | `1`               |
+| `projectId` | string  | The id of the relevant project.                      | `"MyCoolProject"` |
+| `roleId`    | integer | The role ID of the role you wish to assign the user. | `7`               |
+
+
+#### Responses
+
+<details>
+<summary>Responses data</summary>
+
+##### 200 OK
+
+The user's role has been successfully changed. This response has no body.
+
+##### 400 Bad Request
+
+You tried to change the role of only user with the `owner` role in the project:
+
+``` json
+[
+  {
+    "msg": "A project must have at least one owner."
+  }
+]
+```
+
+</details>
+
+#### Example query
+
+The following query would change the role of the user with ID 42 the role with ID 13 in the _MyCoolProject_ project.
+```bash
+http PUT \
+http://localhost:4242/api/admin/projects/MyCoolProject/users/42/roles/13 \
+Authorization:$KEY
+```
+
 ### Remove a user from a project
 
 ``` http
@@ -719,6 +766,50 @@ This will remove the specified user from the project. The user _must_ have the r
 | `userId`    | integer | The ID of the user you want to remove from the project.               | `1`               |
 | `projectId` | string  | The id of the project to remove the user from.                        | `"MyCoolProject"` |
 | `roleId`    | integer | The current role the of the user you want to remove from the project. | `7`               |
+
+
+#### Responses
+
+<details>
+<summary>Responses data</summary>
+
+##### 200 OK
+
+The user has been removed from the project. This response has no body.
+
+##### 400 Bad Request
+
+No user with the current role exists in the project:
+
+
+``` json
+[
+  {
+    "msg": "Couldn't find roleId=<roleId> on project=<projectId>"
+  }
+]
+```
+
+You tried to remove the only user with the role `owner` in the project:
+
+``` json
+[
+  {
+    "msg": "A project must have at least one owner."
+  }
+]
+```
+
+</details>
+
+#### Example query
+
+The following query would remove the user with ID 42 and role ID 13 from the _MyCoolProject_ project.
+```bash
+http DELETE \
+http://localhost:4242/api/admin/projects/MyCoolProject/users/42/roles/13 \
+Authorization:$KEY
+```
 
 #### Responses
 

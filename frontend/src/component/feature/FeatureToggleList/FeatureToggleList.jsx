@@ -96,11 +96,13 @@ const FeatureToggleList = ({
         );
     };
 
-    const headerTitle = filter.query
-        ? 'Search results'
-        : archive
-        ? 'Archived Features'
-        : 'Features';
+    const searchResultsHeader = filter.query
+        ? `(${features.length} matches)`
+        : '';
+
+    const headerTitle = archive
+        ? `Archived Features ${searchResultsHeader}`
+        : `Features ${searchResultsHeader}`;
 
     return (
         <div className={styles.featureContainer}>

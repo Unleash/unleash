@@ -714,7 +714,7 @@ Authorization:$KEY
 DELETE /api/admin/projects/:projectId/users/:userId/roles/:roleId
 ```
 
-This will remove the specified from user from the project. The user _must_ have the role indicated by the `:roleId` URL parameter for the request to succeed.
+This will remove the specified user from the project. The user _must_ have the role indicated by the `:roleId` URL parameter for the request to succeed.
 
 #### URL parameters
 

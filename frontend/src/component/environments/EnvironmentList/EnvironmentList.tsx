@@ -19,6 +19,8 @@ import EnvironmentListItem from './EnvironmentListItem/EnvironmentListItem';
 import { mutate } from 'swr';
 import EnvironmentToggleConfirm from './EnvironmentToggleConfirm/EnvironmentToggleConfirm';
 import useProjectRolePermissions from '../../../hooks/api/getters/useProjectRolePermissions/useProjectRolePermissions';
+import { ADMIN } from 'component/providers/AccessProvider/permissions';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const EnvironmentList = () => {
     const defaultEnv = {
@@ -30,6 +32,7 @@ const EnvironmentList = () => {
         protected: false,
     };
     const { environments, refetch } = useEnvironments();
+    const { uiConfig } = useUiConfig();
     const { refetch: refetchProjectRolePermissions } =
         useProjectRolePermissions();
 
@@ -161,7 +164,6 @@ const EnvironmentList = () => {
     const navigateToCreateEnvironment = () => {
         history.push('/environments/create');
     };
-
     return (
         <PageContent
             headerContent={
@@ -173,6 +175,8 @@ const EnvironmentList = () => {
                                 onClick={navigateToCreateEnvironment}
                                 maxWidth="700px"
                                 Icon={Add}
+                                permission={ADMIN}
+                                disabled={!Boolean(uiConfig.flags.EEA)}
                             >
                                 New Environment
                             </ResponsiveButton>

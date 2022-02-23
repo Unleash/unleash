@@ -1,0 +1,8 @@
+.user-feedback {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    border: var(--ifm-global-border-width) solid var(--unleash-color-gray);
+    border-radius: var(--ifm-global-radius);
+    box-shadow: var(--ifm-global-shadow-lw);
+}

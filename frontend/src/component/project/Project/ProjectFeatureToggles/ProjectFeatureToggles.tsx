@@ -66,7 +66,6 @@ const ProjectFeatureToggles = ({
                                     )
                                 }
                                 maxWidth="700px"
-                                tooltip="New feature toggle"
                                 Icon={Add}
                                 projectId={id}
                                 permission={CREATE_FEATURE}

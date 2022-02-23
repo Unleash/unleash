@@ -16,7 +16,7 @@ export interface IPermissionIconButtonProps
 
 const PermissionButton: React.FC<IPermissionIconButtonProps> = ({
     permission,
-    tooltip = 'Click to perform action',
+    tooltip,
     onClick,
     children,
     disabled,
@@ -54,9 +54,9 @@ const PermissionButton: React.FC<IPermissionIconButtonProps> = ({
 
     access = handleAccess();
 
-    const tooltipText = access
-        ? tooltip
-        : "You don't have access to perform this operation";
+    const tooltipText = !access
+        ? "You don't have access to perform this operation"
+        : '';
 
     return (
         <Tooltip title={tooltipText} arrow>

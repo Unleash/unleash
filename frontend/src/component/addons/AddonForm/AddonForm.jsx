@@ -79,7 +79,7 @@ export const AddonForm = ({ editMode, provider, addon, fetch }) => {
         setErrors({ ...errors, events: undefined });
     };
 
-    const handleCancel = () => {
+    const onCancel = () => {
         history.goBack();
     };
 
@@ -149,7 +149,7 @@ export const AddonForm = ({ editMode, provider, addon, fetch }) => {
                 </a>
                 <p className={commonStyles.error}>{errors.general}</p>
             </section>
-            <form>
+            <form onSubmit={onSubmit}>
                 <section className={styles.formSection}>
                     <TextField
                         size="small"
@@ -206,7 +206,9 @@ export const AddonForm = ({ editMode, provider, addon, fetch }) => {
                     <Button type="submit" color="primary" variant="contained">
                         {submitText}
                     </Button>
-                    <Button onClick={handleCancel}>Cancel</Button>
+                    <Button type="button" onClick={onCancel}>
+                        Cancel
+                    </Button>
                 </section>
             </form>
         </PageContent>

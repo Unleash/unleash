@@ -1,5 +1,5 @@
 import { getBasePath } from '../utils/format-path';
-import { createPersistentGlobalState } from './usePersistentGlobalState';
+import { createPersistentGlobalStateHook } from './usePersistentGlobalState';
 import React from 'react';
 
 export interface ILocationSettings {
@@ -23,7 +23,7 @@ const createInitialValue = (): ILocationSettings => {
     return { locale: navigator.language };
 };
 
-const useGlobalState = createPersistentGlobalState<ILocationSettings>(
+const useGlobalState = createPersistentGlobalStateHook<ILocationSettings>(
     `${getBasePath()}:useLocationSettings:v1`,
     createInitialValue()
 );

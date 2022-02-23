@@ -678,11 +678,7 @@ This will add a user to a project and give the user a specified role within that
 
 ##### 200 OK
 
-The user was added to the project with the specified role.
-
-``` json
-{ }
-```
+The user was added to the project with the specified role. This response has no body.
 
 ##### 400 Bad Request
 
@@ -735,11 +731,7 @@ If you provide the wrong role id for the user, but there is another user in the 
 
 ##### 200 OK
 
-The user has been removed from the project.
-
-``` json
-{ }
-```
+The user has been removed from the project. This response has no body.
 
 ##### 400 Bad Request
 

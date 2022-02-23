@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { TextField, FormControlLabel, Switch } from '@material-ui/core';
-import { FormButtons, styles as commonStyles } from '../../common';
+import { TextField, FormControlLabel, Switch, Button } from '@material-ui/core';
+import { styles as commonStyles } from '../../common';
 import { trim } from '../../common/util';
 import { AddonParameters } from './AddonParameters/AddonParameters';
 import { AddonEvents } from './AddonEvents/AddonEvents';
@@ -149,7 +149,7 @@ export const AddonForm = ({ editMode, provider, addon, fetch }) => {
                 </a>
                 <p className={commonStyles.error}>{errors.general}</p>
             </section>
-            <form onSubmit={onSubmit}>
+            <form>
                 <section className={styles.formSection}>
                     <TextField
                         size="small"
@@ -203,10 +203,10 @@ export const AddonForm = ({ editMode, provider, addon, fetch }) => {
                     />
                 </section>
                 <section className={styles.formSection}>
-                    <FormButtons
-                        submitText={submitText}
-                        onCancel={handleCancel}
-                    />
+                    <Button type="submit" color="primary" variant="contained">
+                        {submitText}
+                    </Button>
+                    <Button onClick={handleCancel}>Cancel</Button>
                 </section>
             </form>
         </PageContent>

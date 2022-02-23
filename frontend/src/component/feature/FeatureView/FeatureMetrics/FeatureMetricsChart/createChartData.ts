@@ -42,10 +42,8 @@ const createChartPoints = (
     locationSettings: ILocationSettings,
     y: (m: IFeatureMetricsRaw) => number
 ): IPoint[] => {
-    const points = metrics.map(metric => ({
+    return metrics.map(metric => ({
         x: metric.timestamp,
         y: y(metric),
     }));
-
-    return points.filter(point => point.y > 0);
 };

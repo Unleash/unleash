@@ -1,13 +1,13 @@
 import { useHistory } from 'react-router-dom';
-import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
-import useToast from '../../../hooks/useToast';
-import FormTemplate from '../../common/FormTemplate/FormTemplate';
 import useContextForm from '../hooks/useContextForm';
 import ContextForm from '../ContextForm/ContextForm';
-import PermissionButton from '../../common/PermissionButton/PermissionButton';
-import { CREATE_CONTEXT_FIELD } from '../../providers/AccessProvider/permissions';
-import useContextsApi from '../../../hooks/api/actions/useContextsApi/useContextsApi';
-import useUnleashContext from '../../../hooks/api/getters/useUnleashContext/useUnleashContext';
+import { ResourceCreationButton } from 'component/common/ResourceCreationButton/ResourceCreationButton';
+import useToast from 'hooks/useToast';
+import FormTemplate from 'component/common/FormTemplate/FormTemplate';
+import { CREATE_CONTEXT_FIELD } from 'component/providers/AccessProvider/permissions';
+import useContextsApi from 'hooks/api/actions/useContextsApi/useContextsApi';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 
 const CreateContext = () => {
     const { setToastData, setToastApiError } = useToast();
@@ -91,12 +91,10 @@ const CreateContext = () => {
                 setErrors={setErrors}
                 clearErrors={clearErrors}
             >
-                <PermissionButton
+                <ResourceCreationButton
                     permission={CREATE_CONTEXT_FIELD}
-                    type="submit"
-                >
-                    Create context
-                </PermissionButton>
+                    ressourceName={'context'}
+                />
             </ContextForm>
         </FormTemplate>
     );

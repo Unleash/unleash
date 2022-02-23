@@ -1,11 +1,11 @@
+import FormTemplate from 'component/common/FormTemplate/FormTemplate';
+import { SaveChangesButton } from 'component/common/SaveChangesButton/SaveChangesButton';
+import useEnvironmentApi from 'hooks/api/actions/useEnvironmentApi/useEnvironmentApi';
+import useEnvironment from 'hooks/api/getters/useEnvironment/useEnvironment';
+import useProjectRolePermissions from 'hooks/api/getters/useProjectRolePermissions/useProjectRolePermissions';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import useToast from 'hooks/useToast';
 import { useHistory, useParams } from 'react-router-dom';
-import useEnvironmentApi from '../../../hooks/api/actions/useEnvironmentApi/useEnvironmentApi';
-import useEnvironment from '../../../hooks/api/getters/useEnvironment/useEnvironment';
-import useProjectRolePermissions from '../../../hooks/api/getters/useProjectRolePermissions/useProjectRolePermissions';
-import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
-import useToast from '../../../hooks/useToast';
-import FormTemplate from '../../common/FormTemplate/FormTemplate';
-import PermissionButton from '../../common/PermissionButton/PermissionButton';
 import { ADMIN } from '../../providers/AccessProvider/permissions';
 import EnvironmentForm from '../EnvironmentForm/EnvironmentForm';
 import useEnvironmentForm from '../hooks/useEnvironmentForm';
@@ -85,9 +85,7 @@ const EditEnvironment = () => {
                 errors={errors}
                 clearErrors={clearErrors}
             >
-                <PermissionButton permission={ADMIN} type="submit">
-                    Edit environment
-                </PermissionButton>
+                <SaveChangesButton permission={ADMIN} />
             </EnvironmentForm>
         </FormTemplate>
     );

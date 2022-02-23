@@ -1,13 +1,13 @@
-import FormTemplate from '../../../common/FormTemplate/FormTemplate';
-import useProjectApi from '../../../../hooks/api/actions/useProjectApi/useProjectApi';
 import { useHistory } from 'react-router-dom';
 import ProjectForm from '../ProjectForm/ProjectForm';
 import useProjectForm from '../hooks/useProjectForm';
-import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
-import useToast from '../../../../hooks/useToast';
-import PermissionButton from '../../../common/PermissionButton/PermissionButton';
-import { CREATE_PROJECT } from '../../../providers/AccessProvider/permissions';
-import { useAuthUser } from '../../../../hooks/api/getters/useAuth/useAuthUser';
+import { ResourceCreationButton } from 'component/common/ResourceCreationButton/ResourceCreationButton';
+import FormTemplate from 'component/common/FormTemplate/FormTemplate';
+import { CREATE_PROJECT } from 'component/providers/AccessProvider/permissions';
+import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
+import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import useToast from 'hooks/useToast';
 
 const CreateProject = () => {
     const { setToastData, setToastApiError } = useToast();
@@ -89,9 +89,10 @@ const CreateProject = () => {
                 clearErrors={clearErrors}
                 validateIdUniqueness={validateIdUniqueness}
             >
-                <PermissionButton permission={CREATE_PROJECT} type="submit">
-                    Create project
-                </PermissionButton>
+                <ResourceCreationButton
+                    ressourceName="project"
+                    permission={CREATE_PROJECT}
+                />
             </ProjectForm>
         </FormTemplate>
     );

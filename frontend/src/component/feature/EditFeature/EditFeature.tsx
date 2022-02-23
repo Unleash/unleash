@@ -2,14 +2,14 @@ import FormTemplate from '../../common/FormTemplate/FormTemplate';
 import { useHistory, useParams } from 'react-router-dom';
 import FeatureForm from '../FeatureForm/FeatureForm';
 import useFeatureForm from '../hooks/useFeatureForm';
-import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
-import useToast from '../../../hooks/useToast';
-import useFeatureApi from '../../../hooks/api/actions/useFeatureApi/useFeatureApi';
-import useFeature from '../../../hooks/api/getters/useFeature/useFeature';
-import { IFeatureViewParams } from '../../../interfaces/params';
 import * as jsonpatch from 'fast-json-patch';
-import PermissionButton from '../../common/PermissionButton/PermissionButton';
-import { UPDATE_FEATURE } from '../../providers/AccessProvider/permissions';
+import { SaveChangesButton } from 'component/common/SaveChangesButton/SaveChangesButton';
+import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
+import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
+import useFeature from 'hooks/api/getters/useFeature/useFeature';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import useToast from 'hooks/useToast';
+import { IFeatureViewParams } from 'interfaces/params';
 
 const EditFeature = () => {
     const { setToastData, setToastApiError } = useToast();
@@ -101,13 +101,10 @@ const EditFeature = () => {
                 mode="Edit"
                 clearErrors={clearErrors}
             >
-                <PermissionButton
+                <SaveChangesButton
                     permission={UPDATE_FEATURE}
                     projectId={project}
-                    type="submit"
-                >
-                    Edit toggle
-                </PermissionButton>
+                />
             </FeatureForm>
         </FormTemplate>
     );

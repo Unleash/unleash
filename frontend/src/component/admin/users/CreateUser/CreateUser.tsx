@@ -1,15 +1,15 @@
-import FormTemplate from '../../../common/FormTemplate/FormTemplate';
+import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { useHistory } from 'react-router-dom';
 import UserForm from '../UserForm/UserForm';
-import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
-import useToast from '../../../../hooks/useToast';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import useAdminUsersApi from 'hooks/api/actions/useAdminUsersApi/useAdminUsersApi';
+import useToast from 'hooks/useToast';
 import useAddUserForm from '../hooks/useAddUserForm';
-import useAdminUsersApi from '../../../../hooks/api/actions/useAdminUsersApi/useAdminUsersApi';
 import ConfirmUserAdded from '../ConfirmUserAdded/ConfirmUserAdded';
 import { useState } from 'react';
 import { scrollToTop } from '../../../common/util';
-import PermissionButton from '../../../common/PermissionButton/PermissionButton';
-import { ADMIN } from '../../../providers/AccessProvider/permissions';
+import { ResourceCreationButton } from 'component/common/ResourceCreationButton/ResourceCreationButton';
+import { ADMIN } from 'component/providers/AccessProvider/permissions';
 
 const CreateUser = () => {
     const { setToastApiError } = useToast();
@@ -97,9 +97,10 @@ const CreateUser = () => {
                 setRootRole={setRootRole}
                 clearErrors={clearErrors}
             >
-                <PermissionButton permission={ADMIN} type="submit">
-                    Create user
-                </PermissionButton>
+                <ResourceCreationButton
+                    permission={ADMIN}
+                    ressourceName={'user'}
+                />
             </UserForm>
             <ConfirmUserAdded
                 open={showConfirm}

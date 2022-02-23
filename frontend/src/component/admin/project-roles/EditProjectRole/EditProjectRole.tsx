@@ -1,18 +1,15 @@
 import { useEffect } from 'react';
-
-import FormTemplate from '../../../common/FormTemplate/FormTemplate';
-
-import useProjectRolesApi from '../../../../hooks/api/actions/useProjectRolesApi/useProjectRolesApi';
-
-import { useHistory, useParams } from 'react-router-dom';
-import ProjectRoleForm from '../ProjectRoleForm/ProjectRoleForm';
+import FormTemplate from 'component/common/FormTemplate/FormTemplate';
+import { SaveChangesButton } from 'component/common/SaveChangesButton/SaveChangesButton';
+import { ADMIN } from 'component/providers/AccessProvider/permissions';
+import useProjectRolesApi from 'hooks/api/actions/useProjectRolesApi/useProjectRolesApi';
+import useProjectRole from 'hooks/api/getters/useProjectRole/useProjectRole';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import useToast from 'hooks/useToast';
+import { IPermission } from 'interfaces/user';
+import { useParams, useHistory } from 'react-router-dom';
 import useProjectRoleForm from '../hooks/useProjectRoleForm';
-import useProjectRole from '../../../../hooks/api/getters/useProjectRole/useProjectRole';
-import { IPermission } from '../../../../interfaces/project';
-import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
-import useToast from '../../../../hooks/useToast';
-import PermissionButton from '../../../common/PermissionButton/PermissionButton';
-import { ADMIN } from '../../../providers/AccessProvider/permissions';
+import ProjectRoleForm from '../ProjectRoleForm/ProjectRoleForm';
 
 const EditProjectRole = () => {
     const { uiConfig } = useUiConfig();
@@ -124,9 +121,7 @@ to resources within a project"
                 clearErrors={clearErrors}
                 getRoleKey={getRoleKey}
             >
-                <PermissionButton permission={ADMIN} type="submit">
-                    Edit role
-                </PermissionButton>
+                <SaveChangesButton permission={ADMIN} />
             </ProjectRoleForm>
         </FormTemplate>
     );

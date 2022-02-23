@@ -1,12 +1,12 @@
 import { useHistory } from 'react-router-dom';
-import useTagTypesApi from '../../../hooks/api/actions/useTagTypesApi/useTagTypesApi';
-import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
-import useToast from '../../../hooks/useToast';
-import FormTemplate from '../../common/FormTemplate/FormTemplate';
-import PermissionButton from '../../common/PermissionButton/PermissionButton';
-import { UPDATE_TAG_TYPE } from '../../providers/AccessProvider/permissions';
 import useTagTypeForm from '../TagTypeForm/useTagTypeForm';
 import TagTypeForm from '../TagTypeForm/TagTypeForm';
+import { ResourceCreationButton } from 'component/common/ResourceCreationButton/ResourceCreationButton';
+import FormTemplate from 'component/common/FormTemplate/FormTemplate';
+import { UPDATE_TAG_TYPE } from 'component/providers/AccessProvider/permissions';
+import useTagTypesApi from 'hooks/api/actions/useTagTypesApi/useTagTypesApi';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import useToast from 'hooks/useToast';
 
 const CreateTagType = () => {
     const { setToastData, setToastApiError } = useToast();
@@ -77,9 +77,10 @@ const CreateTagType = () => {
                 clearErrors={clearErrors}
                 validateNameUniqueness={validateNameUniqueness}
             >
-                <PermissionButton permission={UPDATE_TAG_TYPE} type="submit">
-                    Create type
-                </PermissionButton>
+                <ResourceCreationButton
+                    ressourceName="type"
+                    permission={UPDATE_TAG_TYPE}
+                />
             </TagTypeForm>
         </FormTemplate>
     );

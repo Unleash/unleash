@@ -1,13 +1,13 @@
 import { useHistory, useParams } from 'react-router-dom';
-import useTagTypesApi from '../../../hooks/api/actions/useTagTypesApi/useTagTypesApi';
-import useTagType from '../../../hooks/api/getters/useTagType/useTagType';
-import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
-import useToast from '../../../hooks/useToast';
-import FormTemplate from '../../common/FormTemplate/FormTemplate';
-import PermissionButton from '../../common/PermissionButton/PermissionButton';
 import { UPDATE_TAG_TYPE } from '../../providers/AccessProvider/permissions';
 import useTagTypeForm from '../TagTypeForm/useTagTypeForm';
 import TagForm from '../TagTypeForm/TagTypeForm';
+import { SaveChangesButton } from 'component/common/SaveChangesButton/SaveChangesButton';
+import useTagTypesApi from 'hooks/api/actions/useTagTypesApi/useTagTypesApi';
+import useTagType from 'hooks/api/getters/useTagType/useTagType';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import useToast from 'hooks/useToast';
+import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 
 const EditTagType = () => {
     const { setToastData, setToastApiError } = useToast();
@@ -74,9 +74,7 @@ const EditTagType = () => {
                 mode="Edit"
                 clearErrors={clearErrors}
             >
-                <PermissionButton permission={UPDATE_TAG_TYPE} type="submit">
-                    Edit type
-                </PermissionButton>
+                <SaveChangesButton permission={UPDATE_TAG_TYPE} />
             </TagForm>
         </FormTemplate>
     );

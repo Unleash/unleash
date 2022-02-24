@@ -3,7 +3,7 @@ import UserForm from '../UserForm/UserForm';
 import useAddUserForm from '../hooks/useAddUserForm';
 import { scrollToTop } from '../../../common/util';
 import { useEffect } from 'react';
-import { SaveChangesButton } from 'component/common/SaveChangesButton/SaveChangesButton';
+import { UpdateButton } from 'component/common/UpdateButton/UpdateButton';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { EDIT } from 'constants/misc';
@@ -94,7 +94,7 @@ const EditUser = () => {
                 clearErrors={clearErrors}
                 mode={EDIT}
             >
-                <SaveChangesButton permission={ADMIN} />
+                <UpdateButton permission={ADMIN} />
             </UserForm>
         </FormTemplate>
     );

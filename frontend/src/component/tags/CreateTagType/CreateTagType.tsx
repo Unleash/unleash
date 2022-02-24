@@ -1,7 +1,7 @@
 import { useHistory } from 'react-router-dom';
 import useTagTypeForm from '../TagTypeForm/useTagTypeForm';
 import TagTypeForm from '../TagTypeForm/TagTypeForm';
-import { ResourceCreationButton } from 'component/common/ResourceCreationButton/ResourceCreationButton';
+import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { UPDATE_TAG_TYPE } from 'component/providers/AccessProvider/permissions';
 import useTagTypesApi from 'hooks/api/actions/useTagTypesApi/useTagTypesApi';
@@ -77,10 +77,7 @@ const CreateTagType = () => {
                 clearErrors={clearErrors}
                 validateNameUniqueness={validateNameUniqueness}
             >
-                <ResourceCreationButton
-                    ressourceName="type"
-                    permission={UPDATE_TAG_TYPE}
-                />
+                <CreateButton name="type" permission={UPDATE_TAG_TYPE} />
             </TagTypeForm>
         </FormTemplate>
     );

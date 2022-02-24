@@ -8,7 +8,7 @@ import useAddUserForm from '../hooks/useAddUserForm';
 import ConfirmUserAdded from '../ConfirmUserAdded/ConfirmUserAdded';
 import { useState } from 'react';
 import { scrollToTop } from '../../../common/util';
-import { ResourceCreationButton } from 'component/common/ResourceCreationButton/ResourceCreationButton';
+import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 
 const CreateUser = () => {
@@ -97,10 +97,7 @@ const CreateUser = () => {
                 setRootRole={setRootRole}
                 clearErrors={clearErrors}
             >
-                <ResourceCreationButton
-                    permission={ADMIN}
-                    ressourceName={'user'}
-                />
+                <CreateButton name="user" permission={ADMIN} />
             </UserForm>
             <ConfirmUserAdded
                 open={showConfirm}

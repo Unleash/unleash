@@ -1,5 +1,5 @@
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
-import { SaveChangesButton } from 'component/common/SaveChangesButton/SaveChangesButton';
+import { UpdateButton } from 'component/common/UpdateButton/UpdateButton';
 import useEnvironmentApi from 'hooks/api/actions/useEnvironmentApi/useEnvironmentApi';
 import useEnvironment from 'hooks/api/getters/useEnvironment/useEnvironment';
 import useProjectRolePermissions from 'hooks/api/getters/useProjectRolePermissions/useProjectRolePermissions';
@@ -85,7 +85,7 @@ const EditEnvironment = () => {
                 errors={errors}
                 clearErrors={clearErrors}
             >
-                <SaveChangesButton permission={ADMIN} />
+                <UpdateButton permission={ADMIN} />
             </EnvironmentForm>
         </FormTemplate>
     );

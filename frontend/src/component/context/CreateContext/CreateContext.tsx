@@ -1,7 +1,7 @@
 import { useHistory } from 'react-router-dom';
 import useContextForm from '../hooks/useContextForm';
 import ContextForm from '../ContextForm/ContextForm';
-import { ResourceCreationButton } from 'component/common/ResourceCreationButton/ResourceCreationButton';
+import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import useToast from 'hooks/useToast';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { CREATE_CONTEXT_FIELD } from 'component/providers/AccessProvider/permissions';
@@ -91,9 +91,9 @@ const CreateContext = () => {
                 setErrors={setErrors}
                 clearErrors={clearErrors}
             >
-                <ResourceCreationButton
+                <CreateButton
+                    name="context"
                     permission={CREATE_CONTEXT_FIELD}
-                    ressourceName={'context'}
                 />
             </ContextForm>
         </FormTemplate>

@@ -2,7 +2,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import { UPDATE_TAG_TYPE } from '../../providers/AccessProvider/permissions';
 import useTagTypeForm from '../TagTypeForm/useTagTypeForm';
 import TagForm from '../TagTypeForm/TagTypeForm';
-import { SaveChangesButton } from 'component/common/SaveChangesButton/SaveChangesButton';
+import { UpdateButton } from 'component/common/UpdateButton/UpdateButton';
 import useTagTypesApi from 'hooks/api/actions/useTagTypesApi/useTagTypesApi';
 import useTagType from 'hooks/api/getters/useTagType/useTagType';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -74,7 +74,7 @@ const EditTagType = () => {
                 mode="Edit"
                 clearErrors={clearErrors}
             >
-                <SaveChangesButton permission={UPDATE_TAG_TYPE} />
+                <UpdateButton permission={UPDATE_TAG_TYPE} />
             </TagForm>
         </FormTemplate>
     );

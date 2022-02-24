@@ -1,7 +1,7 @@
 import { useHistory } from 'react-router-dom';
 import ProjectForm from '../ProjectForm/ProjectForm';
 import useProjectForm from '../hooks/useProjectForm';
-import { ResourceCreationButton } from 'component/common/ResourceCreationButton/ResourceCreationButton';
+import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { CREATE_PROJECT } from 'component/providers/AccessProvider/permissions';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
@@ -89,10 +89,7 @@ const CreateProject = () => {
                 clearErrors={clearErrors}
                 validateIdUniqueness={validateIdUniqueness}
             >
-                <ResourceCreationButton
-                    ressourceName="project"
-                    permission={CREATE_PROJECT}
-                />
+                <CreateButton name="project" permission={CREATE_PROJECT} />
             </ProjectForm>
         </FormTemplate>
     );

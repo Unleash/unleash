@@ -4,7 +4,7 @@ import EnvironmentForm from '../EnvironmentForm/EnvironmentForm';
 import FormTemplate from '../../common/FormTemplate/FormTemplate';
 import { Alert } from '@material-ui/lab';
 import { Button } from '@material-ui/core';
-import { ResourceCreationButton } from 'component/common/ResourceCreationButton/ResourceCreationButton';
+import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import useEnvironmentApi from 'hooks/api/actions/useEnvironmentApi/useEnvironmentApi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
@@ -100,10 +100,7 @@ const CreateEnvironment = () => {
                         mode="Create"
                         clearErrors={clearErrors}
                     >
-                        <ResourceCreationButton
-                            ressourceName="environment"
-                            permission={ADMIN}
-                        />
+                        <CreateButton name="environment" permission={ADMIN} />
                     </EnvironmentForm>
                 </FormTemplate>
             }

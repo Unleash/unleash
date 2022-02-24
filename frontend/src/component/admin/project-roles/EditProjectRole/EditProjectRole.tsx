@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
-import { SaveChangesButton } from 'component/common/SaveChangesButton/SaveChangesButton';
+import { UpdateButton } from 'component/common/UpdateButton/UpdateButton';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import useProjectRolesApi from 'hooks/api/actions/useProjectRolesApi/useProjectRolesApi';
 import useProjectRole from 'hooks/api/getters/useProjectRole/useProjectRole';
@@ -121,7 +121,7 @@ to resources within a project"
                 clearErrors={clearErrors}
                 getRoleKey={getRoleKey}
             >
-                <SaveChangesButton permission={ADMIN} />
+                <UpdateButton permission={ADMIN} />
             </ProjectRoleForm>
         </FormTemplate>
     );

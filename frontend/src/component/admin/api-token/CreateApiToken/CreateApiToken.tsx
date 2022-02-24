@@ -1,7 +1,7 @@
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { useHistory } from 'react-router-dom';
 import ApiTokenForm from '../ApiTokenForm/ApiTokenForm';
-import { ResourceCreationButton } from 'component/common/ResourceCreationButton/ResourceCreationButton';
+import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import useApiTokensApi from 'hooks/api/actions/useApiTokensApi/useApiTokensApi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
@@ -95,10 +95,7 @@ export const CreateApiToken = () => {
                 mode="Create"
                 clearErrors={clearErrors}
             >
-                <ResourceCreationButton
-                    permission={ADMIN}
-                    ressourceName={'token'}
-                />
+                <CreateButton name="token" permission={ADMIN} />
             </ApiTokenForm>
             <ConfirmToken
                 open={showConfirm}

@@ -7,7 +7,7 @@ import useToast from 'hooks/useToast';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { useContext } from 'react';
-import { ResourceCreationButton } from 'component/common/ResourceCreationButton/ResourceCreationButton';
+import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import UIContext from 'contexts/UIContext';
 import { CF_CREATE_BTN_ID } from 'testIds';
 
@@ -99,8 +99,8 @@ const CreateFeature = () => {
                 mode="Create"
                 clearErrors={clearErrors}
             >
-                <ResourceCreationButton
-                    ressourceName={'Feature'}
+                <CreateButton
+                    name="Feature"
                     permission={CREATE_FEATURE}
                     projectId={project}
                     data-test={CF_CREATE_BTN_ID}

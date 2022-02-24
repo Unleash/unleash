@@ -1,5 +1,5 @@
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
-import { SaveChangesButton } from 'component/common/SaveChangesButton/SaveChangesButton';
+import { UpdateButton } from 'component/common/UpdateButton/UpdateButton';
 import { UPDATE_CONTEXT_FIELD } from 'component/providers/AccessProvider/permissions';
 import useContextsApi from 'hooks/api/actions/useContextsApi/useContextsApi';
 import useContext from 'hooks/api/getters/useContext/useContext';
@@ -103,7 +103,7 @@ const EditContext = () => {
                 setErrors={setErrors}
                 clearErrors={clearErrors}
             >
-                <SaveChangesButton permission={UPDATE_CONTEXT_FIELD} />
+                <UpdateButton permission={UPDATE_CONTEXT_FIELD} />
             </ContextForm>
         </FormTemplate>
     );

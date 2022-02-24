@@ -5,7 +5,7 @@ import ProjectRoleForm from '../ProjectRoleForm/ProjectRoleForm';
 import useProjectRoleForm from '../hooks/useProjectRoleForm';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
-import { ResourceCreationButton } from 'component/common/ResourceCreationButton/ResourceCreationButton';
+import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 
 const CreateProjectRole = () => {
@@ -95,10 +95,7 @@ const CreateProjectRole = () => {
                 validateNameUniqueness={validateNameUniqueness}
                 getRoleKey={getRoleKey}
             >
-                <ResourceCreationButton
-                    ressourceName={'role'}
-                    permission={ADMIN}
-                />
+                <CreateButton name="role" permission={ADMIN} />
             </ProjectRoleForm>
         </FormTemplate>
     );

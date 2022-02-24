@@ -3,7 +3,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import FeatureForm from '../FeatureForm/FeatureForm';
 import useFeatureForm from '../hooks/useFeatureForm';
 import * as jsonpatch from 'fast-json-patch';
-import { SaveChangesButton } from 'component/common/SaveChangesButton/SaveChangesButton';
+import { UpdateButton } from 'component/common/UpdateButton/UpdateButton';
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import useFeature from 'hooks/api/getters/useFeature/useFeature';
@@ -101,10 +101,7 @@ const EditFeature = () => {
                 mode="Edit"
                 clearErrors={clearErrors}
             >
-                <SaveChangesButton
-                    permission={UPDATE_FEATURE}
-                    projectId={project}
-                />
+                <UpdateButton permission={UPDATE_FEATURE} projectId={project} />
             </FeatureForm>
         </FormTemplate>
     );

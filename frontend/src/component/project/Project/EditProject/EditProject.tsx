@@ -1,7 +1,7 @@
 import { useHistory, useParams } from 'react-router-dom';
 import ProjectForm from '../ProjectForm/ProjectForm';
 import useProjectForm from '../hooks/useProjectForm';
-import { SaveChangesButton } from 'component/common/SaveChangesButton/SaveChangesButton';
+import { UpdateButton } from 'component/common/UpdateButton/UpdateButton';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
@@ -90,7 +90,7 @@ const EditProject = () => {
                 clearErrors={clearErrors}
                 validateIdUniqueness={validateIdUniqueness}
             >
-                <SaveChangesButton permission={UPDATE_PROJECT} />
+                <UpdateButton permission={UPDATE_PROJECT} />
             </ProjectForm>
         </FormTemplate>
     );

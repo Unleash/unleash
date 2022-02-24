@@ -39,13 +39,17 @@ tags:
 info:
   title: Unleash API
   description: |-
+    
+    > The Open API specifications are currently considered a **"beta feature"** and will not cover the full Unleash Admin API. 
+    > You can follow the progress on making OAS official in [GitHub issue 1391](https://github.com/Unleash/unleash/issues/1391)
+    
     Unleash is an open source feature flag and toggle system for all your applications and services.
 
     # Try it out
 
     ## Try it in your browser
 
-    Once you have [set your Unleash server up](https://unleash.github.io/docs/getting_started), you can test the API from inside your browser. The following assumes the server is running on localhost:4242.
+    Once you have [set your Unleash server up](https://docs.getunleash.io/deploy/getting_started), you can test the API from inside your browser. The following assumes the server is running on localhost:4242.
 
     The following 'endpoints' (such as `GET /admin/metrics/applications`) provide reference documentation for the Unleash REST API. To try out API calls:
     1. Navigate to an endpoint
@@ -63,7 +67,7 @@ info:
   version: 4.0.13
   contact:
     name: The Unleash team
-    url: 'https://unleash.github.io/'
+    url: 'https://docs.getunleash.io'
 externalDocs:
   description: Unleash documentation
   url: 'https://unleash.github.io/docs/getting_started'
@@ -223,7 +227,7 @@ paths:
           source: |
             curl --request POST \
               --url http://localhost:4242/api/admin/features \
-              --data '[{"name":"featureX","description":"Toggles featureX on and off","type":"release","enabled":true,"stale":false,"strategies":[{"name":"default","editable":true,"description":"Default on/off strategy.","parameters":{"parameter":{"name":"groupId","type":"string","description":"Define activation groups to allow you to correlate across feature toggles.","required":false}}}],"variants":[{"name":"yellow","weight":20}],"createdAt":"string"}]'
+              --data '{"name":"featureX","description":"Toggles featureX on and off","type":"release","enabled":true,"stale":false,"strategies":[{"name":"default","editable":true,"description":"Default on/off strategy.","parameters":{"parameter":{"name":"groupId","type":"string","description":"Define activation groups to allow you to correlate across feature toggles.","required":false}}}],"variants":[{"name":"yellow","weight":20}],"createdAt":"string"}'
   '/admin/features/{featureName}':
     get:
       summary: Fetches a specific Feature Toggle from the Unleash server.
@@ -917,7 +921,7 @@ components:
         version:
           $ref: '#/components/schemas/versionSchema'
         features:
-          $ref: '#/components/schemas/featureToggleSchema'
+          $ref: '#/components/schemas/featureToggleListSchema'
       x-tags:
         - Responses
     '401':
@@ -1276,7 +1280,7 @@ components:
               minLength: 1
               example: '2020-11-13T16:56:29.279Z'
         seenToggles:
-          $ref: '#/components/schemas/featureToggleSchema'
+          $ref: '#/components/schemas/featureToggleListSchema'
         links:
           type: object
           properties:
@@ -1312,46 +1316,48 @@ components:
       example: 1
       x-tags:
         - Schemas
-    featureToggleSchema:
+    featureToggleListSchema:
       type: array
       items:
-        type: object
-        required:
-          - name
-          - description
-          - type
-          - enabled
-          - stale
-          - strategies
-        properties:
-          name:
-            description: Feature Toggle name must be unique.
-            type: string
-            minLength: 1
-            example: featureX
-          description:
-            type: string
-            minLength: 1
-            example: Toggles featureX on and off
-          type:
-            $ref: '#/components/schemas/featureToggleTypeSchema'
-          enabled:
-            description: Is the Feature Toggle enabled?
-            type: boolean
-            example: true
-          stale:
-            description: Is the Feature Toggle 'stale' (deprecated)?
-            type: boolean
-            example: false
-          strategies:
-            $ref: '#/components/schemas/strategySchema'
-          variants:
-            $ref: '#/components/schemas/variantsSchema'
-          createdAt:
-            type: string
-            minLength: 1
-      x-tags:
-        - Schemas
+        type: array
+    featureToggleSchema:
+      type: object
+      required:
+        - name
+        - description
+        - type
+        - enabled
+        - stale
+        - strategies
+      properties:
+        name:
+          description: Feature Toggle name must be unique.
+          type: string
+          minLength: 1
+          example: featureX
+        description:
+          type: string
+          minLength: 1
+          example: Toggles featureX on and off
+        type:
+          $ref: '#/components/schemas/featureToggleTypeSchema'
+        enabled:
+          description: Is the Feature Toggle enabled?
+          type: boolean
+          example: true
+        stale:
+          description: Is the Feature Toggle 'stale' (deprecated)?
+          type: boolean
+          example: false
+        strategies:
+          $ref: '#/components/schemas/strategySchema'
+        variants:
+          $ref: '#/components/schemas/variantsSchema'
+        createdAt:
+          type: string
+          minLength: 1
+    x-tags:
+      - Schemas
     strategySchema:
       type: array
       items:
@@ -1607,7 +1613,7 @@ components:
         version:
           $ref: '#/components/schemas/versionSchema'
         features:
-          $ref: '#/components/schemas/featureToggleSchema'
+          $ref: '#/components/schemas/featureToggleListSchema'
         strategies:
           $ref: '#/components/schemas/strategySchema'
       x-tags:

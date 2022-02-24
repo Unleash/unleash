@@ -39,6 +39,7 @@ import {
     FeatureToggleDTO,
     FeatureToggleLegacy,
     FeatureToggleWithEnvironment,
+    IConstraint,
     IEnvironmentDetail,
     IFeatureEnvironmentInfo,
     IFeatureOverview,
@@ -50,7 +51,13 @@ import {
 } from '../types/model';
 import { IFeatureEnvironmentStore } from '../types/stores/feature-environment-store';
 import { IFeatureToggleClientStore } from '../types/stores/feature-toggle-client-store';
-import { DEFAULT_ENV } from '../util/constants';
+import {
+    DATE_OPERATORS,
+    DEFAULT_ENV,
+    NUM_OPERATORS,
+    SEMVER_OPERATORS,
+    STRING_OPERATORS,
+} from '../util/constants';
 import { applyPatch, deepClone, Operation } from 'fast-json-patch';
 import { OperationDeniedError } from '../error/operation-denied-error';
 
@@ -62,6 +69,10 @@ interface IFeatureContext {
 interface IFeatureStrategyContext extends IFeatureContext {
     environment: string;
 }
+
+const oneOf = (values: string[], match: string) => {
+    return values.some((value) => value === match);
+};
 
 class FeatureToggleService {
     private logger: Logger;
@@ -137,6 +148,25 @@ class FeatureToggleService {
             throw new InvalidOperationError(
                 'You can not change the featureName for an activation strategy.',
             );
+        }
+    }
+
+    validateConstraint(constraint: IConstraint): void {
+        const { operator } = constraint;
+        if (oneOf(NUM_OPERATORS, operator)) {
+            // Validate number value
+        }
+
+        if (oneOf(STRING_OPERATORS, operator)) {
+            // validate string values array
+        }
+
+        if (oneOf(SEMVER_OPERATORS, operator)) {
+            // validate semver
+        }
+
+        if (oneOf(DATE_OPERATORS, operator)) {
+            // validate dates
         }
     }
 

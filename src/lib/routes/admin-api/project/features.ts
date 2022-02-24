@@ -337,6 +337,13 @@ export default class ProjectFeaturesController extends Controller {
         res.status(200).json(updatedStrategy);
     }
 
+    async validateConstraint(req: Request, res: Response): Promise<void> {
+        const constraint: IConstraint = { ...req.body };
+
+        await this.featureService.validateConstraint(constraint);
+        res.status(204).send();
+    }
+
     async getStrategy(
         req: IAuthRequest<StrategyIdParams, any, any, any>,
         res: Response,

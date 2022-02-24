@@ -7,6 +7,20 @@
     box-shadow: var(--ifm-global-shadow-lw);
     padding: var(--ifm-spacing-vertical) var(--ifm-spacing-horizontal);
     text-align: center;
+    --outline-style: 2px solid var(--ifm-color-primary);
+}
+
+.user-feedback > form {
+    max-width: 850px;
+    margin: auto;
+}
+
+.user-feedback * {
+        outline-offset: 4px;
+}
+
+.user-feedback *:focus {
+    outline: var(--outline-style);
 }
 
 .satisfaction-input-container {
@@ -24,11 +38,10 @@
     width: 3em;
     border: var(--ifm-global-border-width) solid currentColor;
     border-radius: 50%;
-    outline-offset: 4px;
 }
 
 .user-satisfaction-score-input:focus-visible + .user-satisfaction-score-label {
-    outline: 2px solid var(--ifm-color-primary);
+    outline: var(--outline-style);
 }
 
 .user-satisfaction-score-label:hover {
@@ -46,3 +59,5 @@
     display: flex;
     justify-content: end;
 }
+
+.bah {}

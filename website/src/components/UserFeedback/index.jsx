@@ -1,9 +1,9 @@
 import React from 'react';
-import './styles.css';
+import styles from './styles.module.css';
 
 const Component = ({ text }) => (
     <article className="user-feedback">
-        <form>
+        <form className={styles.bah}>
             <p>
                 <span className="visually-hidden">
                     On a scale from 1 to 5 where 1 is very unsatisfied and 5 is

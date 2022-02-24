@@ -6,6 +6,7 @@ import NameExistsError from '../error/name-exists-error';
 import InvalidOperationError from '../error/invalid-operation-error';
 import { FOREIGN_KEY_VIOLATION } from '../error/db-error';
 import {
+    constraintSchema,
     featureMetadataSchema,
     nameSchema,
     variantsArraySchema,
@@ -60,6 +61,7 @@ import {
 } from '../util/constants';
 import { applyPatch, deepClone, Operation } from 'fast-json-patch';
 import { OperationDeniedError } from '../error/operation-denied-error';
+import { validateNumber } from 'lib/util/validators/constraint-types';
 
 interface IFeatureContext {
     featureName: string;
@@ -151,23 +153,33 @@ class FeatureToggleService {
         }
     }
 
-    validateConstraint(constraint: IConstraint): void {
+    async validateConstraint(constraint: IConstraint): Promise<void> {
         const { operator } = constraint;
+        await constraintSchema.validateAsync(constraint);
+
         if (oneOf(NUM_OPERATORS, operator)) {
             // Validate number value
+            await validateNumber(constraint.value);
+            // 1. Retrieve context defintion based on constraint contextName
+            // 2. Check if value is a valid number / value type
+            // 3. Check the value against predefined legalValues if specified on the
+            // context definition
         }
 
         if (oneOf(STRING_OPERATORS, operator)) {
             // validate string values array
+            await validateString(constraint.values);
         }
 
-        if (oneOf(SEMVER_OPERATORS, operator)) {
-            // validate semver
-        }
+        // if (oneOf(SEMVER_OPERATORS, operator)) {
+        //     // validate semver
+        //     validateSemver(constraint.value)
+        // }
 
-        if (oneOf(DATE_OPERATORS, operator)) {
-            // validate dates
-        }
+        // if (oneOf(DATE_OPERATORS, operator)) {
+        //     // validate dates
+        //     validateDate(constraint.value);
+        // }
     }
 
     async patchFeature(

@@ -1,5 +1,9 @@
-import { constraintNumberTypeSchema } from './constraint-value-types';
+import {
+    constraintNumberTypeSchema,
+    constraintStringTypeSchema,
+} from './constraint-value-types';
 
+/* Number type */
 test('should require number', async () => {
     try {
         await constraintNumberTypeSchema.validateAsync('test');
@@ -22,4 +26,21 @@ test('should allow numbers', async () => {
 
 test('should allow negative numbers', async () => {
     await constraintNumberTypeSchema.validateAsync(-5);
+});
+
+/* String types */
+test('should require a list of strings', async () => {
+    try {
+        await constraintStringTypeSchema.validateAsync(['test', 1]);
+    } catch (error) {
+        expect(error.details[0].message).toEqual('"[1]" must be a string');
+    }
+});
+
+test('should succeed with a list of strings', async () => {
+    await constraintStringTypeSchema.validateAsync([
+        'test',
+        'another-test',
+        'supervalue',
+    ]);
 });

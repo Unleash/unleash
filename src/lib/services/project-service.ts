@@ -365,7 +365,7 @@ export default class ProjectService {
         const usersWithRoles = await this.getUsersWithAccess(projectId);
         const user = usersWithRoles.users.find((user) => user.id === userId);
         const currentRole = usersWithRoles.roles.find(
-            (r) => r.id === user.roleId,
+            (role) => role.id === user.roleId,
         );
 
         if (currentRole.id === roleId) {

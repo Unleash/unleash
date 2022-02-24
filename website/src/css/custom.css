@@ -62,6 +62,18 @@ html[data-theme='dark'] {
     --docsearch-primary-color: var(--ifm-color-primary-darkest);
 }
 
+.visually-hidden {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: auto;
+  margin: 0;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+  white-space: nowrap;
+}
+
 main img {
     background: var(--unleash-img-background-color);
     display: block;

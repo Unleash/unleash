@@ -3,6 +3,46 @@
     position: absolute;
     bottom: 0;
     border: var(--ifm-global-border-width) solid var(--unleash-color-gray);
-    border-radius: var(--ifm-global-radius);
+    border-radius: var(--ifm-global-radius) var(--ifm-global-radius) 0 0;
     box-shadow: var(--ifm-global-shadow-lw);
+    padding: var(--ifm-spacing-vertical) var(--ifm-spacing-horizontal);
+    text-align: center;
+}
+
+.satisfaction-input-container {
+    display: flex;
+    place-content: center;
+    align-items: center;
+    gap: 1em;
+}
+
+
+.user-satisfaction-score-label {
+    display: grid;
+    place-content: center;
+    height: 3em;
+    width: 3em;
+    border: var(--ifm-global-border-width) solid currentColor;
+    border-radius: 50%;
+    outline-offset: 4px;
+}
+
+.user-satisfaction-score-input:focus-visible + .user-satisfaction-score-label {
+    outline: 2px solid var(--ifm-color-primary);
+}
+
+.user-satisfaction-score-label:hover {
+    color: var(--ifm-color-primary)
+}
+
+.user-satisfaction-score-input:checked + label {
+    color: var(--ifm-color-primary);
+    background: var(--ifm-color-primary);
+    color: var(--ifm-color-primary-contrast-background);
+    border-color: var(--ifm-color-primary);
+}
+
+.button-container {
+    display: flex;
+    justify-content: end;
 }

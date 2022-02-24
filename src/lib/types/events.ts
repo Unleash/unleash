@@ -428,7 +428,7 @@ export class ProjectUserUpdateRoleEvent extends BaseEvent {
         preData: any;
     }) {
         super(PROJECT_USER_REMOVED, eventData.createdBy);
-        const { project, data, preData } = p;
+        const { project, data, preData } = eventData;
         this.project = project;
         this.data = data;
         this.preData = preData;

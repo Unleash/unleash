@@ -421,7 +421,7 @@ export class ProjectUserUpdateRoleEvent extends BaseEvent {
 
     readonly preData: any;
 
-    constructor(p: {
+    constructor(eventData: {
         project: string;
         createdBy: string;
         data: any;

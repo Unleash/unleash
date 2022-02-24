@@ -1,5 +1,5 @@
 import React from 'react';
-import Component from './UserFeedback';
+import Component from './index';
 
 export default {
     title: 'User feedback component',

@@ -15,7 +15,7 @@ import { P, C, E, EEA, RE } from '../common/flags';
 import { NewUser } from '../user/NewUser/NewUser';
 import ResetPassword from '../user/ResetPassword/ResetPassword';
 import ForgottenPassword from '../user/ForgottenPassword/ForgottenPassword';
-import ProjectListNew from '../project/ProjectList/ProjectList';
+import { ProjectListNew } from '../project/ProjectList/ProjectList';
 import Project from '../project/Project/Project';
 import RedirectArchive from '../archive/RedirectArchive';
 import EnvironmentList from '../environments/EnvironmentList/EnvironmentList';

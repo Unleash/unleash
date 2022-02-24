@@ -4,7 +4,7 @@ import { mutate } from 'swr';
 import { getProjectFetcher } from '../../../hooks/api/getters/useProject/getProjectFetcher';
 import useProjects from '../../../hooks/api/getters/useProjects/useProjects';
 import ConditionallyRender from '../../common/ConditionallyRender';
-import ProjectCard from '../ProjectCard/ProjectCard';
+import { ProjectCard } from '../ProjectCard/ProjectCard';
 import { useStyles } from './ProjectList.styles';
 import { IProjectCard } from '../../../interfaces/project';
 
@@ -43,7 +43,7 @@ function resolveCreateButtonData(isOss: boolean, hasAccess: boolean) {
     }
 }
 
-const ProjectListNew = () => {
+export const ProjectListNew = () => {
     const { hasAccess } = useContext(AccessContext);
     const history = useHistory();
     const styles = useStyles();
@@ -157,5 +157,3 @@ const ProjectListNew = () => {
         </div>
     );
 };
-
-export default ProjectListNew;

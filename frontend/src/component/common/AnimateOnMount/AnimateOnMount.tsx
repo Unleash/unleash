@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, FC } from 'react';
+import React, { useEffect, useState, useRef, FC } from 'react';
 import ConditionallyRender from '../ConditionallyRender';
 
 interface IAnimateOnMountProps {
@@ -7,7 +7,7 @@ interface IAnimateOnMountProps {
     start: string;
     leave: string;
     container?: string;
-    style?: Object;
+    style?: React.CSSProperties;
 }
 
 const AnimateOnMount: FC<IAnimateOnMountProps> = ({

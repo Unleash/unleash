@@ -1,7 +1,7 @@
 import { IFeatureToggle } from '../interfaces/featureToggle';
 import React, { useMemo } from 'react';
 import { getBasePath } from '../utils/format-path';
-import { createPersistentGlobalState } from './usePersistentGlobalState';
+import { createPersistentGlobalStateHook } from './usePersistentGlobalState';
 
 type FeaturesSortType =
     | 'name'
@@ -29,7 +29,7 @@ export interface IFeaturesFilterSortOption {
 
 // Store the features sort state globally, and in localStorage.
 // When changing the format of IFeaturesSort, change the version as well.
-const useFeaturesSortState = createPersistentGlobalState<IFeaturesSort>(
+const useFeaturesSortState = createPersistentGlobalStateHook<IFeaturesSort>(
     `${getBasePath()}:useFeaturesSort:v1`,
     { type: 'name' }
 );

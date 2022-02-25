@@ -1,5 +1,5 @@
 import { IconButton, Tooltip } from '@material-ui/core';
-import { useContext } from 'react';
+import React, { useContext } from 'react';
 import AccessContext from '../../../contexts/AccessContext';
 
 interface IPermissionIconButtonProps

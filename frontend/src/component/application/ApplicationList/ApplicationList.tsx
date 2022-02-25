@@ -1,9 +1,8 @@
 import { useMemo, useState } from 'react';
 import { CircularProgress } from '@material-ui/core';
 import { Warning } from '@material-ui/icons';
-
 import { AppsLinkList, styles as commonStyles } from '../../common';
-import SearchField from '../../common/SearchField/SearchField';
+import { SearchField } from 'component/common/SearchField/SearchField';
 import PageContent from '../../common/PageContent/PageContent';
 import HeaderTitle from '../../common/HeaderTitle';
 import useApplications from '../../../hooks/api/getters/useApplications/useApplications';

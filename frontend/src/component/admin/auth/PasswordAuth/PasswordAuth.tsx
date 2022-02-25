@@ -51,8 +51,8 @@ export const PasswordAuth = () => {
                 type: 'success',
                 show: true,
             });
-        } catch (err) {
-            setToastApiError(formatUnknownError(err));
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
             setDisablePasswordAuth(config.disabled);
         }
     };

@@ -14,6 +14,7 @@ import HeaderTitle from '../../common/HeaderTitle';
 import PermissionButton from '../../common/PermissionButton/PermissionButton';
 import { ADMIN } from '../../providers/AccessProvider/permissions';
 import useProjectRolePermissions from '../../../hooks/api/getters/useProjectRolePermissions/useProjectRolePermissions';
+import { formatUnknownError } from '../../../utils/format-unknown-error';
 
 const CreateEnvironment = () => {
     const { setToastApiError, setToastData } = useToast();
@@ -49,8 +50,8 @@ const CreateEnvironment = () => {
                     confetti: true,
                 });
                 history.push('/environments');
-            } catch (e: any) {
-                setToastApiError(e.toString());
+            } catch (error: unknown) {
+                setToastApiError(formatUnknownError(error));
             }
         }
     };

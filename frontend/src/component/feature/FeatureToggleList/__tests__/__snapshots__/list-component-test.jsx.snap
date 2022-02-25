@@ -5,13 +5,15 @@ exports[`renders correctly with one feature 1`] = `
   <div
     className="makeStyles-searchBarContainer-3"
   >
-    <div>
+    <div
+      className="makeStyles-container-6"
+    >
       <div
-        className="makeStyles-search-6 makeStyles-searchBar-4"
+        className="makeStyles-search-7 makeStyles-searchBar-4"
       >
         <svg
           aria-hidden={true}
-          className="MuiSvgIcon-root makeStyles-searchIcon-7"
+          className="MuiSvgIcon-root makeStyles-searchIcon-8"
           focusable="false"
           viewBox="0 0 24 24"
         >
@@ -20,7 +22,7 @@ exports[`renders correctly with one feature 1`] = `
           />
         </svg>
         <div
-          className="MuiInputBase-root makeStyles-inputRoot-8"
+          className="MuiInputBase-root makeStyles-inputRoot-9"
           onClick={[Function]}
           onKeyPress={[Function]}
         >
@@ -31,7 +33,7 @@ exports[`renders correctly with one feature 1`] = `
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
-            placeholder="Search…"
+            placeholder="Search..."
             type="text"
             value=""
           />
@@ -55,29 +57,29 @@ exports[`renders correctly with one feature 1`] = `
     }
   >
     <div
-      className="makeStyles-headerContainer-9"
+      className="makeStyles-headerContainer-10"
     >
       <div
-        className="makeStyles-headerTitleContainer-13"
+        className="makeStyles-headerTitleContainer-14"
       >
         <div
           className=""
           data-loading={true}
         >
           <h2
-            className="MuiTypography-root makeStyles-headerTitle-14 MuiTypography-h2"
+            className="MuiTypography-root makeStyles-headerTitle-15 MuiTypography-h2"
           >
-            Features
+            Features 
           </h2>
         </div>
         <div
-          className="makeStyles-headerActions-15"
+          className="makeStyles-headerActions-16"
         >
           <div
             className="makeStyles-actionsContainer-1"
           >
             <div
-              className="makeStyles-actions-16"
+              className="makeStyles-actions-17"
             >
               <p
                 className="MuiTypography-root MuiTypography-body2"
@@ -171,7 +173,7 @@ exports[`renders correctly with one feature 1`] = `
       </div>
     </div>
     <div
-      className="makeStyles-bodyContainer-10"
+      className="makeStyles-bodyContainer-11"
     >
       <ul
         className="MuiList-root MuiList-padding"
@@ -197,13 +199,15 @@ exports[`renders correctly with one feature without permissions 1`] = `
   <div
     className="makeStyles-searchBarContainer-3"
   >
-    <div>
+    <div
+      className="makeStyles-container-6"
+    >
       <div
-        className="makeStyles-search-6 makeStyles-searchBar-4"
+        className="makeStyles-search-7 makeStyles-searchBar-4"
       >
         <svg
           aria-hidden={true}
-          className="MuiSvgIcon-root makeStyles-searchIcon-7"
+          className="MuiSvgIcon-root makeStyles-searchIcon-8"
           focusable="false"
           viewBox="0 0 24 24"
         >
@@ -212,7 +216,7 @@ exports[`renders correctly with one feature without permissions 1`] = `
           />
         </svg>
         <div
-          className="MuiInputBase-root makeStyles-inputRoot-8"
+          className="MuiInputBase-root makeStyles-inputRoot-9"
           onClick={[Function]}
           onKeyPress={[Function]}
         >
@@ -223,7 +227,7 @@ exports[`renders correctly with one feature without permissions 1`] = `
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
-            placeholder="Search…"
+            placeholder="Search..."
             type="text"
             value=""
           />
@@ -247,29 +251,29 @@ exports[`renders correctly with one feature without permissions 1`] = `
     }
   >
     <div
-      className="makeStyles-headerContainer-9"
+      className="makeStyles-headerContainer-10"
     >
       <div
-        className="makeStyles-headerTitleContainer-13"
+        className="makeStyles-headerTitleContainer-14"
       >
         <div
           className=""
           data-loading={true}
         >
           <h2
-            className="MuiTypography-root makeStyles-headerTitle-14 MuiTypography-h2"
+            className="MuiTypography-root makeStyles-headerTitle-15 MuiTypography-h2"
           >
-            Features
+            Features 
           </h2>
         </div>
         <div
-          className="makeStyles-headerActions-15"
+          className="makeStyles-headerActions-16"
         >
           <div
             className="makeStyles-actionsContainer-1"
           >
             <div
-              className="makeStyles-actions-16"
+              className="makeStyles-actions-17"
             >
               <p
                 className="MuiTypography-root MuiTypography-body2"
@@ -366,7 +370,7 @@ exports[`renders correctly with one feature without permissions 1`] = `
       </div>
     </div>
     <div
-      className="makeStyles-bodyContainer-10"
+      className="makeStyles-bodyContainer-11"
     >
       <ul
         className="MuiList-root MuiList-padding"

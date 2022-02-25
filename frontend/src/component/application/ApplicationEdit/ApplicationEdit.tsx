@@ -1,16 +1,15 @@
 /* eslint react/no-multi-comp:off */
-import { useContext, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
     Avatar,
-    Link,
     Icon,
     IconButton,
     LinearProgress,
+    Link,
     Typography,
 } from '@material-ui/core';
 import { Link as LinkIcon } from '@material-ui/icons';
 import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyRender';
-import { formatDateWithLocale } from '../../common/util';
 import { UPDATE_APPLICATION } from '../../providers/AccessProvider/permissions';
 import { ApplicationView } from '../ApplicationView/ApplicationView';
 import { ApplicationUpdate } from '../ApplicationUpdate/ApplicationUpdate';
@@ -25,6 +24,8 @@ import { useHistory, useParams } from 'react-router-dom';
 import { useLocationSettings } from '../../../hooks/useLocationSettings';
 import useToast from '../../../hooks/useToast';
 import PermissionButton from '../../common/PermissionButton/PermissionButton';
+import { formatDateYMD } from '../../../utils/format-date';
+import { formatUnknownError } from '../../../utils/format-unknown-error';
 
 export const ApplicationEdit = () => {
     const history = useHistory();
@@ -42,10 +43,9 @@ export const ApplicationEdit = () => {
         setShowDialog(!showDialog);
     };
 
-    const formatDate = (v: string) =>
-        formatDateWithLocale(v, locationSettings.locale);
+    const formatDate = (v: string) => formatDateYMD(v, locationSettings.locale);
 
-    const onDeleteApplication = async (evt: Event) => {
+    const onDeleteApplication = async (evt: React.SyntheticEvent) => {
         evt.preventDefault();
         try {
             await deleteApplication(appName);
@@ -55,8 +55,8 @@ export const ApplicationEdit = () => {
                 type: 'success',
             });
             history.push('/applications');
-        } catch (e: any) {
-            setToastApiError(e.toString());
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
         }
     };
 

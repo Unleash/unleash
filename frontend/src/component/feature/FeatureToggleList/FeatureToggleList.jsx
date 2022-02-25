@@ -5,20 +5,15 @@ import { Link } from 'react-router-dom';
 import { Button, IconButton, List, ListItem, Tooltip } from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { Add } from '@material-ui/icons';
-
 import FeatureToggleListItem from './FeatureToggleListItem';
-import SearchField from '../../common/SearchField/SearchField';
+import { SearchField } from '../../common/SearchField/SearchField';
 import FeatureToggleListActions from './FeatureToggleListActions';
 import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyRender';
 import PageContent from '../../common/PageContent/PageContent';
 import HeaderTitle from '../../common/HeaderTitle';
-
 import loadingFeatures from './loadingFeatures';
-
 import { CREATE_FEATURE } from '../../providers/AccessProvider/permissions';
-
 import AccessContext from '../../../contexts/AccessContext';
-
 import { useStyles } from './styles';
 import ListPlaceholder from '../../common/ListPlaceholder/ListPlaceholder';
 import { getCreateTogglePath } from '../../../utils/route-path-helpers';
@@ -101,7 +96,13 @@ const FeatureToggleList = ({
         );
     };
 
-    const headerTitle = archive ? 'Archived Features' : 'Features';
+    const searchResultsHeader = filter.query
+        ? `(${features.length} matches)`
+        : '';
+
+    const headerTitle = archive
+        ? `Archived Features ${searchResultsHeader}`
+        : `Features ${searchResultsHeader}`;
 
     return (
         <div className={styles.featureContainer}>
@@ -109,6 +110,7 @@ const FeatureToggleList = ({
                 <SearchField
                     initialValue={filter.query}
                     updateValue={setFilterQuery}
+                    showValueChip={!mobileView}
                     className={classnames(styles.searchBar, {
                         skeleton: loading,
                     })}

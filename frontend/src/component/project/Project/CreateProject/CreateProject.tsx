@@ -8,6 +8,7 @@ import useToast from '../../../../hooks/useToast';
 import PermissionButton from '../../../common/PermissionButton/PermissionButton';
 import { CREATE_PROJECT } from '../../../providers/AccessProvider/permissions';
 import { useAuthUser } from '../../../../hooks/api/getters/useAuth/useAuthUser';
+import { formatUnknownError } from '../../../../utils/format-unknown-error';
 
 const CreateProject = () => {
     const { setToastData, setToastApiError } = useToast();
@@ -48,8 +49,8 @@ const CreateProject = () => {
                     confetti: true,
                     type: 'success',
                 });
-            } catch (e: any) {
-                setToastApiError(e.toString());
+            } catch (error: unknown) {
+                setToastApiError(formatUnknownError(error));
             }
         }
     };

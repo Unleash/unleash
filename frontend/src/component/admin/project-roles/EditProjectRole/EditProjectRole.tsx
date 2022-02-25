@@ -13,6 +13,7 @@ import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from '../../../../hooks/useToast';
 import PermissionButton from '../../../common/PermissionButton/PermissionButton';
 import { ADMIN } from '../../../providers/AccessProvider/permissions';
+import { formatUnknownError } from '../../../../utils/format-unknown-error';
 
 const EditProjectRole = () => {
     const { uiConfig } = useUiConfig();
@@ -88,8 +89,8 @@ const EditProjectRole = () => {
                     text: 'Your role changes will automatically be applied to the users with this role.',
                     confetti: true,
                 });
-            } catch (e: any) {
-                setToastApiError(e.toString());
+            } catch (error: unknown) {
+                setToastApiError(formatUnknownError(error));
             }
         }
     };

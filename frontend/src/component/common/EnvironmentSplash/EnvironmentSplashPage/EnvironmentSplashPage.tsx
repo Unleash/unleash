@@ -1,3 +1,5 @@
+import React from 'react';
+
 interface EnvironmentSplashPageProps {
     title: React.ReactNode;
     topDescription: React.ReactNode;

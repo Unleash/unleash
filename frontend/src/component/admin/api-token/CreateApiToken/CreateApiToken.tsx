@@ -10,6 +10,7 @@ import { ADMIN } from '../../../providers/AccessProvider/permissions';
 import { ConfirmToken } from '../ConfirmToken/ConfirmToken';
 import { useState } from 'react';
 import { scrollToTop } from '../../../common/util';
+import { formatUnknownError } from '../../../../utils/format-unknown-error';
 
 export const CreateApiToken = () => {
     const { setToastApiError } = useToast();
@@ -49,8 +50,8 @@ export const CreateApiToken = () => {
                     setToken(api.secret);
                     setShowConfirm(true);
                 });
-        } catch (e: any) {
-            setToastApiError(e.toString());
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
         }
     };
 

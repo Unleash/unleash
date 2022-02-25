@@ -9,6 +9,7 @@ import PermissionButton from '../../common/PermissionButton/PermissionButton';
 import { ADMIN } from '../../providers/AccessProvider/permissions';
 import EnvironmentForm from '../EnvironmentForm/EnvironmentForm';
 import useEnvironmentForm from '../hooks/useEnvironmentForm';
+import { formatUnknownError } from '../../../utils/format-unknown-error';
 
 const EditEnvironment = () => {
     const { uiConfig } = useUiConfig();
@@ -49,8 +50,8 @@ const EditEnvironment = () => {
                 type: 'success',
                 title: 'Successfully updated environment.',
             });
-        } catch (e: any) {
-            setToastApiError(e.toString());
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
         }
     };
 
@@ -61,7 +62,7 @@ const EditEnvironment = () => {
     return (
         <FormTemplate
             title="Edit environment"
-            description="Environments allow you to manage your 
+            description="Environments allow you to manage your
             product lifecycle from local development
             through production. Your projects and
             feature toggles are accessible in all your

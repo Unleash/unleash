@@ -7,6 +7,7 @@ import ConditionallyRender from '../ConditionallyRender';
 import Loader from '../Loader/Loader';
 import copy from 'copy-to-clipboard';
 import useToast from '../../../hooks/useToast';
+import React from 'react';
 
 interface ICreateProps {
     title: string;

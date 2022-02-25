@@ -1,4 +1,4 @@
-import { useState, Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import {
     BAD_REQUEST,
     FORBIDDEN,
@@ -15,27 +15,17 @@ import {
 } from '../../../../utils/api-utils';
 import { formatApiPath } from '../../../../utils/format-path';
 
+type ApiErrorHandler = (
+    setErrors: Dispatch<SetStateAction<{}>>,
+    res: Response,
+    requestId: string
+) => void;
+
 interface IUseAPI {
-    handleBadRequest?: (
-        setErrors?: Dispatch<SetStateAction<{}>>,
-        res?: Response,
-        requestId?: string
-    ) => void;
-    handleNotFound?: (
-        setErrors?: Dispatch<SetStateAction<{}>>,
-        res?: Response,
-        requestId?: string
-    ) => void;
-    handleUnauthorized?: (
-        setErrors?: Dispatch<SetStateAction<{}>>,
-        res?: Response,
-        requestId?: string
-    ) => void;
-    handleForbidden?: (
-        setErrors?: Dispatch<SetStateAction<{}>>,
-        res?: Response,
-        requestId?: string
-    ) => void;
+    handleBadRequest?: ApiErrorHandler;
+    handleNotFound?: ApiErrorHandler;
+    handleUnauthorized?: ApiErrorHandler;
+    handleForbidden?: ApiErrorHandler;
     propagateErrors?: boolean;
 }
 
@@ -55,8 +45,8 @@ const useAPI = ({
     };
 
     const makeRequest = async (
-        apiCaller: any,
-        requestId?: string,
+        apiCaller: () => Promise<Response>,
+        requestId: string,
         loadingOn: boolean = true
     ): Promise<Response> => {
         if (loadingOn) {
@@ -97,7 +87,7 @@ const useAPI = ({
         };
     };
 
-    const handleResponses = async (res: Response, requestId?: string) => {
+    const handleResponses = async (res: Response, requestId: string) => {
         if (res.status === BAD_REQUEST) {
             if (handleBadRequest) {
                 return handleBadRequest(setErrors, res, requestId);
@@ -147,7 +137,7 @@ const useAPI = ({
 
         if (res.status === FORBIDDEN) {
             if (handleForbidden) {
-                return handleForbidden(setErrors);
+                return handleForbidden(setErrors, res, requestId);
             } else {
                 setErrors(prev => ({
                     ...prev,

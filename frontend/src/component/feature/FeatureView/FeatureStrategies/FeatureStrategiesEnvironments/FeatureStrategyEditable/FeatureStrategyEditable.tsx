@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { mutate } from 'swr';
 import FeatureStrategiesUIContext from '../../../../../../contexts/FeatureStrategiesUIContext';
@@ -6,8 +6,8 @@ import useFeatureStrategy from '../../../../../../hooks/api/getters/useFeatureSt
 import { IFeatureViewParams } from '../../../../../../interfaces/params';
 import {
     IConstraint,
-    IParameter,
     IFeatureStrategy,
+    IParameter,
 } from '../../../../../../interfaces/strategy';
 import FeatureStrategyAccordion from '../../FeatureStrategyAccordion/FeatureStrategyAccordion';
 import cloneDeep from 'lodash.clonedeep';
@@ -15,7 +15,6 @@ import { Tooltip } from '@material-ui/core';
 import ConditionallyRender from '../../../../../common/ConditionallyRender';
 import { useStyles } from './FeatureStrategyEditable.styles';
 import { Delete } from '@material-ui/icons';
-import { PRODUCTION } from '../../../../../../constants/environmentTypes';
 import {
     DELETE_STRATEGY_ID,
     STRATEGY_ACCORDION_ID,

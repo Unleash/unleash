@@ -20,15 +20,14 @@ footer {
 }
 
 html[data-theme='light'] {
+    --ifm-color-primary-lightest: #8783d2;
+    --ifm-color-primary-lighter: #7b76ce;
+    --ifm-color-primary-light: #6f6ac9;
     --ifm-color-primary: var(--unleash-color-purple);
-    --ifm-color-primary-dark: #334b52;
-    --ifm-color-primary-darker: #30474d;
-    --ifm-color-primary-darkest: #283a40;
-    --ifm-color-primary-light: #3f5b64;
-    --ifm-color-primary-lighter: #425f69;
-    --ifm-color-primary-lightest: #4a6c76;
+    --ifm-color-primary-dark: #5953be;
+    --ifm-color-primary-darker: #4f4ab7;
+    --ifm-color-primary-darkest: #4540b0;
 
-    --ifm-link-color: var(--unleash-color-purple);
     --ifm-menu-color-background-active: var(--unleash-color-gray);
     --ifm-menu-color-background-hover: var(--unleash-color-gray);
 
@@ -63,15 +62,15 @@ html[data-theme='dark'] {
 }
 
 .visually-hidden {
-  border: 0;
-  clip: rect(0 0 0 0);
-  height: auto;
-  margin: 0;
-  overflow: hidden;
-  padding: 0;
-  position: absolute;
-  width: 1px;
-  white-space: nowrap;
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: auto;
+    margin: 0;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+    white-space: nowrap;
 }
 
 main img {

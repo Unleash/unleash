@@ -10,6 +10,7 @@ import {
     CREATE_FEATURE_STRATEGY,
     DELETE_FEATURE,
     DELETE_FEATURE_STRATEGY,
+    NONE,
     UPDATE_FEATURE,
     UPDATE_FEATURE_ENVIRONMENT,
     UPDATE_FEATURE_STRATEGY,
@@ -91,6 +92,11 @@ export default class ProjectFeaturesController extends Controller {
             `${PATH_STRATEGIES}`,
             this.addStrategy,
             CREATE_FEATURE_STRATEGY,
+        );
+        this.post(
+            `${PATH_STRATEGIES}/validate-constraint`,
+            this.validateConstraint,
+            NONE,
         );
         this.get(`${PATH_STRATEGY}`, this.getStrategy);
         this.put(

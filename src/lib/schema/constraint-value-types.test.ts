@@ -1,4 +1,5 @@
 import {
+    constraintDateTypeSchema,
     constraintNumberTypeSchema,
     constraintStringTypeSchema,
 } from './constraint-value-types';
@@ -30,6 +31,7 @@ test('should allow negative numbers', async () => {
 
 /* String types */
 test('should require a list of strings', async () => {
+    expect.assertions(1);
     try {
         await constraintStringTypeSchema.validateAsync(['test', 1]);
     } catch (error) {
@@ -38,9 +40,38 @@ test('should require a list of strings', async () => {
 });
 
 test('should succeed with a list of strings', async () => {
+    expect.assertions(0);
     await constraintStringTypeSchema.validateAsync([
         'test',
         'another-test',
         'supervalue',
     ]);
+});
+
+/* Date type */
+
+test('should fail an invalid date', async () => {
+    expect.assertions(1);
+
+    const invalidDate = 'Tuesday the awesome day';
+    try {
+        await constraintDateTypeSchema.validateAsync(invalidDate);
+    } catch (error) {
+        expect(error.details[0].message).toEqual(
+            '"value" must be a valid date',
+        );
+    }
+});
+
+test('Should pass a valid date', async () => {
+    expect.assertions(0);
+
+    const invalidDate = '2022-01-29T13:00:00.000Z';
+    try {
+        await constraintDateTypeSchema.validateAsync(invalidDate);
+    } catch (error) {
+        expect(error.details[0].message).toEqual(
+            '"value" must be a valid date',
+        );
+    }
 });

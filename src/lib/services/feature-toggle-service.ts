@@ -61,7 +61,14 @@ import {
 } from '../util/constants';
 import { applyPatch, deepClone, Operation } from 'fast-json-patch';
 import { OperationDeniedError } from '../error/operation-denied-error';
-import { validateNumber } from 'lib/util/validators/constraint-types';
+import {
+    validateDate,
+    validateLegalValues,
+    validateNumber,
+    validateSemver,
+    validateString,
+} from 'lib/util/validators/constraint-types';
+import { IContextFieldStore } from 'lib/types/stores/context-field-store';
 
 interface IFeatureContext {
     featureName: string;
@@ -93,6 +100,8 @@ class FeatureToggleService {
 
     private eventStore: IEventStore;
 
+    private contextFieldStore: IContextFieldStore;
+
     constructor(
         {
             featureStrategiesStore,
@@ -102,6 +111,7 @@ class FeatureToggleService {
             eventStore,
             featureTagStore,
             featureEnvironmentStore,
+            contextFieldStore,
         }: Pick<
             IUnleashStores,
             | 'featureStrategiesStore'
@@ -111,6 +121,7 @@ class FeatureToggleService {
             | 'eventStore'
             | 'featureTagStore'
             | 'featureEnvironmentStore'
+            | 'contextFieldStore'
         >,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
     ) {
@@ -122,6 +133,7 @@ class FeatureToggleService {
         this.projectStore = projectStore;
         this.eventStore = eventStore;
         this.featureEnvironmentStore = featureEnvironmentStore;
+        this.contextFieldStore = contextFieldStore;
     }
 
     async validateFeatureContext({
@@ -156,30 +168,48 @@ class FeatureToggleService {
     async validateConstraint(constraint: IConstraint): Promise<void> {
         const { operator } = constraint;
         await constraintSchema.validateAsync(constraint);
+        const contextDefinition = await this.contextFieldStore.get(
+            constraint.contextName,
+        );
 
         if (oneOf(NUM_OPERATORS, operator)) {
-            // Validate number value
             await validateNumber(constraint.value);
-            // 1. Retrieve context defintion based on constraint contextName
-            // 2. Check if value is a valid number / value type
-            // 3. Check the value against predefined legalValues if specified on the
-            // context definition
         }
 
         if (oneOf(STRING_OPERATORS, operator)) {
-            // validate string values array
             await validateString(constraint.values);
         }
 
-        // if (oneOf(SEMVER_OPERATORS, operator)) {
-        //     // validate semver
-        //     validateSemver(constraint.value)
-        // }
+        if (oneOf(SEMVER_OPERATORS, operator)) {
+            // Semver library is not asynchronous, so we do not
+            // need to await here.
+            validateSemver(constraint.value);
+        }
 
-        // if (oneOf(DATE_OPERATORS, operator)) {
-        //     // validate dates
-        //     validateDate(constraint.value);
-        // }
+        if (oneOf(DATE_OPERATORS, operator)) {
+            validateDate(constraint.value);
+        }
+
+        if (
+            oneOf(
+                [...DATE_OPERATORS, ...SEMVER_OPERATORS, ...NUM_OPERATORS],
+                operator,
+            )
+        ) {
+            if (contextDefinition?.legalValues?.length > 0) {
+                validateLegalValues(
+                    contextDefinition.legalValues,
+                    constraint.value,
+                );
+            }
+        } else {
+            if (contextDefinition?.legalValues?.length > 0) {
+                validateLegalValues(
+                    contextDefinition.legalValues,
+                    constraint.values,
+                );
+            }
+        }
     }
 
     async patchFeature(

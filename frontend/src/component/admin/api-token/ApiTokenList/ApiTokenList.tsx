@@ -24,7 +24,6 @@ import {
     DELETE_API_TOKEN,
 } from '../../../providers/AccessProvider/permissions';
 import { useStyles } from './ApiTokenList.styles';
-import { formatDateWithLocale } from '../../../common/util';
 import Secret from './secret';
 import { Delete, FileCopy } from '@material-ui/icons';
 import Dialogue from '../../../common/Dialogue';
@@ -32,6 +31,7 @@ import { CREATE_API_TOKEN_BUTTON } from '../../../../testIds';
 import { Alert } from '@material-ui/lab';
 import copy from 'copy-to-clipboard';
 import { useLocationSettings } from '../../../../hooks/useLocationSettings';
+import { formatDateYMD } from '../../../../utils/format-date';
 
 interface IApiToken {
     createdAt: Date;
@@ -146,7 +146,7 @@ export const ApiTokenList = () => {
                                     align="left"
                                     className={styles.hideSM}
                                 >
-                                    {formatDateWithLocale(
+                                    {formatDateYMD(
                                         item.createdAt,
                                         locationSettings.locale
                                     )}

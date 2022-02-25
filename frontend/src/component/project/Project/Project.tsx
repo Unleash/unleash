@@ -125,7 +125,6 @@ const Project = () => {
                         <div className={styles.titleText}>{project?.name}</div>
                         <PermissionIconButton
                             permission={UPDATE_PROJECT}
-                            tooltip="Edit"
                             projectId={project?.id}
                             onClick={() => history.push(`/projects/${id}/edit`)}
                             data-loading

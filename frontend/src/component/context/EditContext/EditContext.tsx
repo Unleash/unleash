@@ -108,7 +108,7 @@ const EditContext = () => {
                     permission={UPDATE_CONTEXT_FIELD}
                     type="submit"
                 >
-                    Edit context
+                    Save
                 </PermissionButton>
             </ContextForm>
         </FormTemplate>

@@ -92,7 +92,7 @@ const EditProject = () => {
                 validateIdUniqueness={validateIdUniqueness}
             >
                 <PermissionButton permission={UPDATE_PROJECT} type="submit">
-                    Edit project
+                    Save
                 </PermissionButton>
             </ProjectForm>
         </FormTemplate>

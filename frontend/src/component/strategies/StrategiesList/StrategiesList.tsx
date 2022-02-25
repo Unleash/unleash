@@ -72,7 +72,6 @@ export const StrategiesList = () => {
                             data-test={ADD_NEW_STRATEGY_ID}
                             onClick={() => history.push('/strategies/create')}
                             permission={CREATE_STRATEGY}
-                            tooltip={'Add new strategy'}
                         >
                             <Add />
                         </PermissionIconButton>
@@ -83,9 +82,8 @@ export const StrategiesList = () => {
                             color="primary"
                             permission={CREATE_STRATEGY}
                             data-test={ADD_NEW_STRATEGY_ID}
-                            tooltip={'Add new strategy'}
                         >
-                            Add new strategy
+                            New strategy
                         </PermissionButton>
                     }
                 />
@@ -168,7 +166,6 @@ export const StrategiesList = () => {
             <PermissionIconButton
                 onClick={() => onReactivateStrategy(strategy)}
                 permission={UPDATE_STRATEGY}
-                tooltip={'Reactivate activation strategy'}
             >
                 <VisibilityOff />
             </PermissionIconButton>
@@ -208,7 +205,6 @@ export const StrategiesList = () => {
                 <PermissionIconButton
                     onClick={() => onDeleteStrategy(strategy)}
                     permission={DELETE_STRATEGY}
-                    tooltip={'Delete strategy'}
                 >
                     <Delete />
                 </PermissionIconButton>

@@ -81,7 +81,7 @@ export const TagTypeList = () => {
                                         history.push('/tag-types/create')
                                     }
                                 >
-                                    Add new tag type
+                                    New tag type
                                 </Button>
                             }
                         />

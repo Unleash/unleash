@@ -19,7 +19,7 @@ const PermissionSwitch = React.forwardRef<
 >((props, ref) => {
     const {
         permission,
-        tooltip = '',
+        tooltip,
         disabled,
         projectId,
         environmentId,
@@ -39,9 +39,9 @@ const PermissionSwitch = React.forwardRef<
         access = hasAccess(permission);
     }
 
-    const tooltipText = access
-        ? tooltip
-        : "You don't have access to perform this operation";
+    const tooltipText = !access
+        ? "You don't have access to perform this operation"
+        : '';
 
     return (
         <Tooltip title={tooltipText} arrow>

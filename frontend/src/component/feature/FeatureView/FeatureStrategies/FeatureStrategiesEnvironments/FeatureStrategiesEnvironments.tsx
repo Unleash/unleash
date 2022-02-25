@@ -282,7 +282,7 @@ const FeatureStrategiesEnvironments = () => {
                                         environmentId={activeEnvironment.name}
                                         permission={CREATE_FEATURE_STRATEGY}
                                     >
-                                        Add new strategy
+                                        New strategy
                                     </ResponsiveButton>
                                 }
                             />

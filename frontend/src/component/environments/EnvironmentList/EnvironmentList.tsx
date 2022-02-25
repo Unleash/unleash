@@ -175,12 +175,11 @@ const EnvironmentList = () => {
                             <ResponsiveButton
                                 onClick={navigateToCreateEnvironment}
                                 maxWidth="700px"
-                                tooltip="Add environment"
                                 Icon={Add}
                                 permission={ADMIN}
                                 disabled={!Boolean(uiConfig.flags.EEA)}
                             >
-                                Add Environment
+                                New Environment
                             </ResponsiveButton>
                         </>
                     }

@@ -96,7 +96,7 @@ const EditUser = () => {
                 mode={EDIT}
             >
                 <PermissionButton permission={ADMIN} type="submit">
-                    Edit user
+                    Save
                 </PermissionButton>
             </UserForm>
         </FormTemplate>

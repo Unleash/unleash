@@ -51,7 +51,6 @@ const RoleListItem = ({
                     <PermissionIconButton
                         data-loading
                         aria-label="Edit"
-                        tooltip="Edit"
                         disabled={type === BUILTIN_ROLE_TYPE}
                         onClick={() => {
                             history.push(`/admin/roles/${id}/edit`);
@@ -63,7 +62,6 @@ const RoleListItem = ({
                     <PermissionIconButton
                         data-loading
                         aria-label="Remove role"
-                        tooltip="Remove role"
                         disabled={type === BUILTIN_ROLE_TYPE}
                         onClick={() => {
                             setCurrentRole({ id, name, description });

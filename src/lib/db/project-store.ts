@@ -72,7 +72,8 @@ class ProjectStore implements IProjectStore {
                 ),
             )
             .leftJoin('features', 'features.project', 'projects.id')
-            .groupBy('projects.id');
+            .groupBy('projects.id')
+            .orderBy('projects.name', 'asc');
         if (query) {
             projects = projects.where(query);
         }

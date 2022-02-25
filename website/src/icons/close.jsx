@@ -1,8 +1,9 @@
-import './styles.css';
+import React from 'react';
+import styles from './styles.module.css';
 
 const svg = () => (
     <svg
-        className="icon"
+        className={styles['icon']}
         viewBox="0 0 12 12"
         xmlns="http://www.w3.org/2000/svg"
     >

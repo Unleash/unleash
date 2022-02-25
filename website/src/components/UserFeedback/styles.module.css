@@ -1,6 +1,7 @@
 .user-feedback {
     width: 100%;
     position: absolute;
+    background: var(--ifm-background-color);
     bottom: 0;
     border: var(--ifm-global-border-width) solid var(--unleash-color-gray);
     border-radius: var(--ifm-global-radius) var(--ifm-global-radius) 0 0;
@@ -99,8 +100,12 @@ button.close-button {
 
 .user-feedback button[type=submit] {
     background-color: var(--ifm-color-primary);
-    color: var(--ifm-color-primary-contrast-background);
+    color: var(--ifm-background-color);
     padding-inline: calc(var(--ifm-spacing-horizontal) * 4);
+}
+
+.user-feedback button[type=submit]:hover {
+    background-color: var(--ifm-color-primary-lighter);
 }
 
 .user-feedback button[type=submit]:active {
@@ -115,4 +120,8 @@ button.close-button {
 
 .button-secondary:active {
     color: var(--ifm-color-primary-darker);
+}
+
+.button-secondary:hover {
+    color: var(--ifm-color-primary-lightest);
 }

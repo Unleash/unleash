@@ -5,7 +5,8 @@ import UF from '@site/src/components/UserFeedback';
 function Root({ children }) {
     return (
         <>
-            {children} <UF />
+            <UF />
+            {children}
         </>
     );
 }

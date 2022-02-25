@@ -10,7 +10,7 @@ import {
 interface IStrategyInputList {
     name: string;
     list: string[];
-    setConfig: () => void;
+    setConfig: (field: string, value: string) => void;
     disabled: boolean;
 }
 

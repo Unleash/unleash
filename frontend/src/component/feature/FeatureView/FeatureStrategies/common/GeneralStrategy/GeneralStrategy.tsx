@@ -1,16 +1,16 @@
 import React from 'react';
 import {
-    Switch,
     FormControlLabel,
-    Tooltip,
+    Switch,
     TextField,
+    Tooltip,
 } from '@material-ui/core';
 
 import StrategyInputList from '../StrategyInputList/StrategyInputList';
 import RolloutSlider from '../RolloutSlider/RolloutSlider';
 import {
-    IParameter,
     IFeatureStrategy,
+    IParameter,
 } from '../../../../../../interfaces/strategy';
 import { useStyles } from './GeneralStrategy.styles';
 
@@ -77,7 +77,7 @@ const GeneralStrategy = ({
                         </div>
                     );
                 } else if (type === 'list') {
-                    let list = [];
+                    let list: string[] = [];
                     if (typeof value === 'string') {
                         list = value.trim().split(',').filter(Boolean);
                     }

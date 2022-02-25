@@ -10,6 +10,7 @@ import { useState } from 'react';
 import { scrollToTop } from '../../../common/util';
 import PermissionButton from '../../../common/PermissionButton/PermissionButton';
 import { ADMIN } from '../../../providers/AccessProvider/permissions';
+import { formatUnknownError } from '../../../../utils/format-unknown-error';
 
 const CreateUser = () => {
     const { setToastApiError } = useToast();
@@ -51,8 +52,8 @@ const CreateUser = () => {
                         setInviteLink(user.inviteLink);
                         setShowConfirm(true);
                     });
-            } catch (e: any) {
-                setToastApiError(e.toString());
+            } catch (error: unknown) {
+                setToastApiError(formatUnknownError(error));
             }
         }
     };

@@ -45,7 +45,7 @@ const Project = () => {
         },
         {
             title: 'Access',
-            component: <ProjectAccess projectId={id} />,
+            component: <ProjectAccess />,
             path: `${basePath}/access`,
             name: 'access',
         },

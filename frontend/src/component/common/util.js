@@ -1,26 +1,6 @@
 import { weightTypes } from '../feature/FeatureView/FeatureVariants/FeatureVariantsList/AddFeatureVariant/enums';
 import differenceInDays from 'date-fns/differenceInDays';
 
-const dateTimeOptions = {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-};
-
-const dateOptions = {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-};
-
-const timeOptions = {
-    hour: '2-digit',
-    minute: '2-digit',
-};
-
 export const filterByFlags = flags => r => {
     if (r.flag && !flags[r.flag]) {
         return false;
@@ -30,27 +10,6 @@ export const filterByFlags = flags => r => {
 
 export const scrollToTop = () => {
     window.scrollTo(0, 0);
-};
-
-export const formatFullDateTimeWithLocale = (v, locale, tz) => {
-    if (tz) {
-        dateTimeOptions.timeZone = tz;
-    }
-    return new Date(v).toLocaleString(locale, dateTimeOptions);
-};
-
-export const formatDateWithLocale = (v, locale, tz) => {
-    if (tz) {
-        dateTimeOptions.timeZone = tz;
-    }
-    return new Date(v).toLocaleString(locale, dateOptions);
-};
-
-export const formatTimeWithLocale = (v, locale, tz) => {
-    if (tz) {
-        dateTimeOptions.timeZone = tz;
-    }
-    return new Date(v).toLocaleString(locale, timeOptions);
 };
 
 export const trim = value => {

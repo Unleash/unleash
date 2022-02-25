@@ -10,6 +10,7 @@ import PermissionButton from '../../common/PermissionButton/PermissionButton';
 import { CF_CREATE_BTN_ID } from '../../../testIds';
 import { useContext } from 'react';
 import UIContext from '../../../contexts/UIContext';
+import { formatUnknownError } from '../../../utils/format-unknown-error';
 
 const CreateFeature = () => {
     const { setToastData, setToastApiError } = useToast();
@@ -53,8 +54,8 @@ const CreateFeature = () => {
                     type: 'success',
                 });
                 setShowFeedback(true);
-            } catch (e: any) {
-                setToastApiError(e.toString());
+            } catch (error: unknown) {
+                setToastApiError(formatUnknownError(error));
             }
         }
     };

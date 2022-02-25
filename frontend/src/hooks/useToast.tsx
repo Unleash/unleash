@@ -1,27 +1,17 @@
 import { useContext } from 'react';
-import UIContext, { IToastData } from '../contexts/UIContext';
-
-interface IToastOptions {
-    title: string;
-    text?: string;
-    type: string;
-    persist?: boolean;
-    confetti?: boolean;
-    autoHideDuration?: number;
-    show?: boolean;
-}
+import UIContext from '../contexts/UIContext';
+import { IToast } from '../interfaces/toast';
 
 const useToast = () => {
-    // @ts-expect-error
     const { setToast } = useContext(UIContext);
 
     const hideToast = () =>
-        setToast((prev: IToastData) => ({
+        setToast((prev: IToast) => ({
             ...prev,
             show: false,
         }));
 
-    const setToastApiError = (errorText: string, overrides?: IToastOptions) => {
+    const setToastApiError = (errorText: string, overrides?: IToast) => {
         setToast({
             title: 'Something went wrong',
             text: `We had trouble talking to our API. Here's why: ${errorText}`,
@@ -32,11 +22,11 @@ const useToast = () => {
         });
     };
 
-    const setToastData = (options: IToastOptions) => {
-        if (options.persist) {
-            setToast({ ...options, show: true });
+    const setToastData = (toast: IToast) => {
+        if (toast.persist) {
+            setToast({ ...toast, show: true });
         } else {
-            setToast({ ...options, show: true, autoHideDuration: 6000 });
+            setToast({ ...toast, show: true, autoHideDuration: 6000 });
         }
     };
 

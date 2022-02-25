@@ -8,6 +8,7 @@ import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from '../../../../hooks/useToast';
 import PermissionButton from '../../../common/PermissionButton/PermissionButton';
 import { UPDATE_PROJECT } from '../../../providers/AccessProvider/permissions';
+import { formatUnknownError } from '../../../../utils/format-unknown-error';
 
 const EditProject = () => {
     const { uiConfig } = useUiConfig();
@@ -58,8 +59,8 @@ const EditProject = () => {
                     title: 'Project information updated',
                     type: 'success',
                 });
-            } catch (e: any) {
-                setToastApiError(e.toString());
+            } catch (error: unknown) {
+                setToastApiError(formatUnknownError(error));
             }
         }
     };

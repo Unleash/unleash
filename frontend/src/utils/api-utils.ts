@@ -1,21 +1,24 @@
-export const headers = {
-    Accept: 'application/json',
-    'Content-Type': 'application/json',
-};
+export interface IErrorBody {
+    details?: { message: string }[];
+}
 
 export class AuthenticationError extends Error {
-    constructor(statusCode, body) {
+    statusCode: number;
+
+    constructor(statusCode: number) {
         super('Authentication required');
         this.name = 'AuthenticationError';
         this.statusCode = statusCode;
-        this.body = body;
     }
 }
 
 export class ForbiddenError extends Error {
-    constructor(statusCode, body = {}) {
+    statusCode: number;
+    body: IErrorBody;
+
+    constructor(statusCode: number, body: IErrorBody = {}) {
         super(
-            body.details?.length > 0
+            body.details?.length
                 ? body.details[0].message
                 : 'You cannot perform this action'
         );
@@ -26,10 +29,11 @@ export class ForbiddenError extends Error {
 }
 
 export class BadRequestError extends Error {
-    constructor(statusCode, body = {}) {
-        super(
-            body.details?.length > 0 ? body.details[0].message : 'Bad request'
-        );
+    statusCode: number;
+    body: IErrorBody;
+
+    constructor(statusCode: number, body: IErrorBody = {}) {
+        super(body.details?.length ? body.details[0].message : 'Bad request');
         this.name = 'BadRequestError';
         this.statusCode = statusCode;
         this.body = body;
@@ -37,7 +41,9 @@ export class BadRequestError extends Error {
 }
 
 export class NotFoundError extends Error {
-    constructor(statusCode) {
+    statusCode: number;
+
+    constructor(statusCode: number) {
         super(
             'The requested resource could not be found but may be available in the future'
         );
@@ -45,3 +51,8 @@ export class NotFoundError extends Error {
         this.statusCode = statusCode;
     }
 }
+
+export const headers = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+};

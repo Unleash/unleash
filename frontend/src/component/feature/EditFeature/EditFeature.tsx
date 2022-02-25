@@ -10,6 +10,7 @@ import { IFeatureViewParams } from '../../../interfaces/params';
 import * as jsonpatch from 'fast-json-patch';
 import PermissionButton from '../../common/PermissionButton/PermissionButton';
 import { UPDATE_FEATURE } from '../../providers/AccessProvider/permissions';
+import { formatUnknownError } from '../../../utils/format-unknown-error';
 
 const EditFeature = () => {
     const { setToastData, setToastApiError } = useToast();
@@ -57,8 +58,8 @@ const EditFeature = () => {
                 title: 'Toggle updated successfully',
                 type: 'success',
             });
-        } catch (e: any) {
-            setToastApiError(e.toString());
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
         }
     };
 

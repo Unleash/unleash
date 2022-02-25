@@ -1,10 +1,12 @@
 import { useRef, useState } from 'react';
 import { TableCell, TableRow } from '@material-ui/core';
 import { useHistory } from 'react-router';
-
 import { useStyles } from '../FeatureToggleListNew.styles';
 import useToggleFeatureByEnv from '../../../../hooks/api/actions/useToggleFeatureByEnv/useToggleFeatureByEnv';
-import { IEnvironments } from '../../../../interfaces/featureToggle';
+import {
+    IEnvironments,
+    IFeatureEnvironment,
+} from '../../../../interfaces/featureToggle';
 import useToast from '../../../../hooks/useToast';
 import { getTogglePath } from '../../../../utils/route-path-helpers';
 import { SyntheticEvent } from 'react-router/node_modules/@types/react';
@@ -25,8 +27,8 @@ interface IFeatureToggleListNewItemProps {
     type: string;
     environments: IFeatureEnvironment[];
     projectId: string;
-    lastSeenAt?: Date;
-    createdAt: Date;
+    lastSeenAt?: string;
+    createdAt: string;
 }
 
 const FeatureToggleListNewItem = ({

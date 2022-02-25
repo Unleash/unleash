@@ -1,17 +1,10 @@
 import React, { useState } from 'react';
-
-import UIContext, { IToastData } from '../../../contexts/UIContext';
+import UIContext, { createEmptyToast } from '../../../contexts/UIContext';
+import { IToast } from '../../../interfaces/toast';
 
 const UIProvider: React.FC = ({ children }) => {
-    const [toastData, setToast] = useState<IToastData>({
-        title: '',
-        text: '',
-        components: [],
-        show: false,
-        persist: false,
-        type: '',
-    });
-    const [showFeedback, setShowFeedback] = useState();
+    const [toastData, setToast] = useState<IToast>(createEmptyToast());
+    const [showFeedback, setShowFeedback] = useState(false);
 
     const context = React.useMemo(
         () => ({

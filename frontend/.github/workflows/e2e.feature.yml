@@ -16,10 +16,10 @@ jobs:
         uses: actions/checkout@v2
       - name: Run Cypress
         uses: cypress-io/github-action@v2
-        with: 
-          env: AUTH_TOKEN=${{ secrets.UNLEASH_TOKEN }},DEFAULT_ENV="development"
+        with:
+          env: AUTH_TOKEN=${{ secrets.UNLEASH_TOKEN }}
           config: baseUrl=${{ github.event.deployment_status.target_url }}
           record: true
-          spec: cypress/integration/feature-toggle/feature.spec.js
+          spec: cypress/integration/feature/feature.spec.ts
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}

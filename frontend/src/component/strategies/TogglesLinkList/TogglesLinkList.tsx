@@ -5,13 +5,14 @@ import {
     ListItemText,
     Tooltip,
 } from '@material-ui/core';
-import { PlayArrow, Pause } from '@material-ui/icons';
+import { Pause, PlayArrow } from '@material-ui/icons';
 import styles from '../../common/common.module.scss';
 import { Link } from 'react-router-dom';
 import ConditionallyRender from '../../common/ConditionallyRender';
+import { IFeatureToggle } from '../../../interfaces/featureToggle';
 
 interface ITogglesLinkListProps {
-    toggles: [];
+    toggles: IFeatureToggle[];
 }
 
 export const TogglesLinkList = ({ toggles }: ITogglesLinkListProps) => (

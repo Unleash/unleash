@@ -20,7 +20,7 @@ export const StrategyView = () => {
     const { applications } = useApplications();
 
     const toggles = features.filter(toggle => {
-        return toggle?.strategies.findIndex(s => s.name === strategyName) > -1;
+        return toggle?.strategies?.find(s => s.name === strategyName);
     });
 
     const strategy = strategies.find(n => n.name === strategyName);

@@ -55,7 +55,7 @@ export const EditContext = () => {
     const handleSubmit = async (e: Event) => {
         e.preventDefault();
         const payload = getContextPayload();
-
+      
         try {
             await updateContext(payload);
             refetch();

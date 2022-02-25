@@ -24,33 +24,36 @@ module.exports = {
             '@site': path.resolve(__dirname, '../'),
         };
 
+        let cssRules = [];
         const rules = config.module.rules.map((rule) => {
-            if (rule.test.toString() !== '/\\.css$/') {
-                return rule;
-            }
-
-            const use = rule.use.map((u) => {
-                const { loader } = u;
-
-                if (!loader || !loader.includes('/css-loader/')) {
-                    return u;
-                }
-
-                const options = {
-                    ...u.options,
-                    modules: true,
-                };
+            if (rule.test.toString() === '/\\.css$/') {
+                cssRules.push(JSON.parse(JSON.stringify(rule)));
 
                 return {
-                    ...u,
-                    options,
+                    ...rule,
+                    exclude: /\.module\.css$/,
                 };
-            });
+            } else return rule;
+        });
 
-            return {
-                ...rule,
-                use,
+        cssRules.forEach((r) => {
+            const moduleRule = {
+                ...r,
+                test: /\.module\.css$/,
+                use: r.use.map((use) => {
+                    if (
+                        typeof use === 'object' &&
+                        use.loader.includes('/css-loader/')
+                    ) {
+                        use.options = {
+                            ...use.options,
+                            modules: true,
+                        };
+                    }
+                    return use;
+                }),
             };
+            rules.push(moduleRule);
         });
 
         return {

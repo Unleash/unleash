@@ -61,4 +61,11 @@ const FeatureStrategiesProductionGuard = ({
     );
 };
 
+export const disableFeatureStrategiesProductionGuard = () => {
+    localStorage.setItem(
+        FEATURE_STRATEGY_PRODUCTION_GUARD_SETTING,
+        String(true)
+    );
+};
+
 export default FeatureStrategiesProductionGuard;

@@ -85,7 +85,6 @@ export default class ProjectFeaturesController extends Controller {
             this.toggleEnvironmentOff,
             UPDATE_FEATURE_ENVIRONMENT,
         );
-
         // activation strategies
         this.get(`${PATH_STRATEGIES}`, this.getStrategies);
         this.post(
@@ -93,11 +92,7 @@ export default class ProjectFeaturesController extends Controller {
             this.addStrategy,
             CREATE_FEATURE_STRATEGY,
         );
-        this.post(
-            `${PATH_STRATEGIES}/validate-constraint`,
-            this.validateConstraint,
-            NONE,
-        );
+
         this.get(`${PATH_STRATEGY}`, this.getStrategy);
         this.put(
             `${PATH_STRATEGY}`,
@@ -113,6 +108,11 @@ export default class ProjectFeaturesController extends Controller {
             `${PATH_STRATEGY}`,
             this.deleteStrategy,
             DELETE_FEATURE_STRATEGY,
+        );
+        this.post(
+            `${PATH_FEATURE}/validate-constraint`,
+            this.validateConstraint,
+            NONE,
         );
 
         // feature toggles

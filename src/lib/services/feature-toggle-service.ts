@@ -67,7 +67,7 @@ import {
     validateNumber,
     validateSemver,
     validateString,
-} from 'lib/util/validators/constraint-types';
+} from '../util/validators/constraint-types';
 import { IContextFieldStore } from 'lib/types/stores/context-field-store';
 
 interface IFeatureContext {

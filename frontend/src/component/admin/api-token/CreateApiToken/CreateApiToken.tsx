@@ -1,12 +1,12 @@
-import FormTemplate from '../../../common/FormTemplate/FormTemplate';
+import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { useHistory } from 'react-router-dom';
 import ApiTokenForm from '../ApiTokenForm/ApiTokenForm';
+import { CreateButton } from 'component/common/CreateButton/CreateButton';
+import useApiTokensApi from 'hooks/api/actions/useApiTokensApi/useApiTokensApi';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import useToast from 'hooks/useToast';
 import useApiTokenForm from '../hooks/useApiTokenForm';
-import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
-import useToast from '../../../../hooks/useToast';
-import useApiTokensApi from '../../../../hooks/api/actions/useApiTokensApi/useApiTokensApi';
-import PermissionButton from '../../../common/PermissionButton/PermissionButton';
-import { ADMIN } from '../../../providers/AccessProvider/permissions';
+import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { ConfirmToken } from '../ConfirmToken/ConfirmToken';
 import { useState } from 'react';
 import { scrollToTop } from '../../../common/util';
@@ -96,9 +96,7 @@ export const CreateApiToken = () => {
                 mode="Create"
                 clearErrors={clearErrors}
             >
-                <PermissionButton permission={ADMIN} type="submit">
-                    Create token
-                </PermissionButton>
+                <CreateButton name="token" permission={ADMIN} />
             </ApiTokenForm>
             <ConfirmToken
                 open={showConfirm}

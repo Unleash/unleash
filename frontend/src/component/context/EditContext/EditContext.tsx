@@ -1,14 +1,14 @@
+import FormTemplate from 'component/common/FormTemplate/FormTemplate';
+import { UpdateButton } from 'component/common/UpdateButton/UpdateButton';
+import { UPDATE_CONTEXT_FIELD } from 'component/providers/AccessProvider/permissions';
+import useContextsApi from 'hooks/api/actions/useContextsApi/useContextsApi';
+import useContext from 'hooks/api/getters/useContext/useContext';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import useToast from 'hooks/useToast';
 import { useEffect } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import { formatUnknownError } from 'utils/format-unknown-error';
-import useContextsApi from '../../../hooks/api/actions/useContextsApi/useContextsApi';
-import useContext from '../../../hooks/api/getters/useContext/useContext';
-import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
-import useToast from '../../../hooks/useToast';
-import FormTemplate from '../../common/FormTemplate/FormTemplate';
-import PermissionButton from '../../common/PermissionButton/PermissionButton';
 import { scrollToTop } from '../../common/util';
-import { UPDATE_CONTEXT_FIELD } from '../../providers/AccessProvider/permissions';
+import { formatUnknownError } from 'utils/format-unknown-error';
 import { ContextForm } from '../ContextForm/ContextForm';
 import { useContextForm } from '../hooks/useContextForm';
 
@@ -98,12 +98,7 @@ export const EditContext = () => {
                 setErrors={setErrors}
                 clearErrors={clearErrors}
             >
-                <PermissionButton
-                    permission={UPDATE_CONTEXT_FIELD}
-                    type="submit"
-                >
-                    Save
-                </PermissionButton>
+                <UpdateButton permission={UPDATE_CONTEXT_FIELD} />
             </ContextForm>
         </FormTemplate>
     );

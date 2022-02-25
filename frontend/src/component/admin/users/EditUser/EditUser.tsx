@@ -1,17 +1,17 @@
-import FormTemplate from '../../../common/FormTemplate/FormTemplate';
 import { useHistory, useParams } from 'react-router-dom';
 import UserForm from '../UserForm/UserForm';
 import useAddUserForm from '../hooks/useAddUserForm';
-import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
-import useToast from '../../../../hooks/useToast';
-import useAdminUsersApi from '../../../../hooks/api/actions/useAdminUsersApi/useAdminUsersApi';
-import useUserInfo from '../../../../hooks/api/getters/useUserInfo/useUserInfo';
 import { scrollToTop } from '../../../common/util';
 import { useEffect } from 'react';
-import PermissionButton from '../../../common/PermissionButton/PermissionButton';
-import { ADMIN } from '../../../providers/AccessProvider/permissions';
-import { EDIT } from '../../../../constants/misc';
-import { formatUnknownError } from '../../../../utils/format-unknown-error';
+import { UpdateButton } from 'component/common/UpdateButton/UpdateButton';
+import FormTemplate from 'component/common/FormTemplate/FormTemplate';
+import { ADMIN } from 'component/providers/AccessProvider/permissions';
+import { EDIT } from 'constants/misc';
+import useAdminUsersApi from 'hooks/api/actions/useAdminUsersApi/useAdminUsersApi';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import useUserInfo from 'hooks/api/getters/useUserInfo/useUserInfo';
+import useToast from 'hooks/useToast';
+import { formatUnknownError } from 'utils/format-unknown-error';
 
 const EditUser = () => {
     useEffect(() => {
@@ -95,9 +95,7 @@ const EditUser = () => {
                 clearErrors={clearErrors}
                 mode={EDIT}
             >
-                <PermissionButton permission={ADMIN} type="submit">
-                    Save
-                </PermissionButton>
+                <UpdateButton permission={ADMIN} />
             </UserForm>
         </FormTemplate>
     );

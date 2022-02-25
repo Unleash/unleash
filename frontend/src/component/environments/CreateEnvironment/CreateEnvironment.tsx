@@ -1,20 +1,20 @@
 import { useHistory } from 'react-router-dom';
 import useEnvironmentForm from '../hooks/useEnvironmentForm';
-import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
-import useToast from '../../../hooks/useToast';
-import useEnvironmentApi from '../../../hooks/api/actions/useEnvironmentApi/useEnvironmentApi';
 import EnvironmentForm from '../EnvironmentForm/EnvironmentForm';
 import FormTemplate from '../../common/FormTemplate/FormTemplate';
-import useEnvironments from '../../../hooks/api/getters/useEnvironments/useEnvironments';
 import { Alert } from '@material-ui/lab';
 import { Button } from '@material-ui/core';
-import ConditionallyRender from '../../common/ConditionallyRender';
-import PageContent from '../../common/PageContent';
-import HeaderTitle from '../../common/HeaderTitle';
-import PermissionButton from '../../common/PermissionButton/PermissionButton';
-import { ADMIN } from '../../providers/AccessProvider/permissions';
-import useProjectRolePermissions from '../../../hooks/api/getters/useProjectRolePermissions/useProjectRolePermissions';
-import { formatUnknownError } from '../../../utils/format-unknown-error';
+import { CreateButton } from 'component/common/CreateButton/CreateButton';
+import useEnvironmentApi from 'hooks/api/actions/useEnvironmentApi/useEnvironmentApi';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import useToast from 'hooks/useToast';
+import useEnvironments from 'hooks/api/getters/useEnvironments/useEnvironments';
+import useProjectRolePermissions from 'hooks/api/getters/useProjectRolePermissions/useProjectRolePermissions';
+import ConditionallyRender from 'component/common/ConditionallyRender';
+import PageContent from 'component/common/PageContent/PageContent';
+import { ADMIN } from 'component/providers/AccessProvider/permissions';
+import HeaderTitle from 'component/common/HeaderTitle/HeaderTitle';
+import { formatUnknownError } from 'utils/format-unknown-error';
 
 const CreateEnvironment = () => {
     const { setToastApiError, setToastData } = useToast();
@@ -101,9 +101,7 @@ const CreateEnvironment = () => {
                         mode="Create"
                         clearErrors={clearErrors}
                     >
-                        <PermissionButton permission={ADMIN} type="submit">
-                            Create environment
-                        </PermissionButton>
+                        <CreateButton name="environment" permission={ADMIN} />
                     </EnvironmentForm>
                 </FormTemplate>
             }

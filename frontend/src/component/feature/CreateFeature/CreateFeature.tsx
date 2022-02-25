@@ -1,15 +1,15 @@
-import FormTemplate from '../../common/FormTemplate/FormTemplate';
+import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { useHistory } from 'react-router-dom';
 import FeatureForm from '../FeatureForm/FeatureForm';
 import useFeatureForm from '../hooks/useFeatureForm';
-import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
-import useToast from '../../../hooks/useToast';
-import useFeatureApi from '../../../hooks/api/actions/useFeatureApi/useFeatureApi';
-import { CREATE_FEATURE } from '../../providers/AccessProvider/permissions';
-import PermissionButton from '../../common/PermissionButton/PermissionButton';
-import { CF_CREATE_BTN_ID } from '../../../testIds';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import useToast from 'hooks/useToast';
+import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
+import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { useContext } from 'react';
-import UIContext from '../../../contexts/UIContext';
+import { CreateButton } from 'component/common/CreateButton/CreateButton';
+import UIContext from 'contexts/UIContext';
+import { CF_CREATE_BTN_ID } from 'testIds';
 import { formatUnknownError } from '../../../utils/format-unknown-error';
 
 const CreateFeature = () => {
@@ -100,15 +100,12 @@ const CreateFeature = () => {
                 mode="Create"
                 clearErrors={clearErrors}
             >
-                <PermissionButton
-                    onClick={handleSubmit}
+                <CreateButton
+                    name="Feature"
                     permission={CREATE_FEATURE}
                     projectId={project}
-                    type="submit"
                     data-test={CF_CREATE_BTN_ID}
-                >
-                    Create toggle
-                </PermissionButton>
+                />
             </FeatureForm>
         </FormTemplate>
     );

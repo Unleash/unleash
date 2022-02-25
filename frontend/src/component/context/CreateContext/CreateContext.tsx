@@ -1,9 +1,9 @@
 import { useHistory } from 'react-router-dom';
+import { CreateButton } from 'component/common/CreateButton/CreateButton';
+import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { useContextForm } from '../hooks/useContextForm';
 import { ContextForm } from '../ContextForm/ContextForm';
 import { CREATE_CONTEXT_FIELD } from 'component/providers/AccessProvider/permissions';
-import FormTemplate from 'component/common/FormTemplate/FormTemplate';
-import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import useContextsApi from 'hooks/api/actions/useContextsApi/useContextsApi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
@@ -92,12 +92,10 @@ export const CreateContext = () => {
                 setErrors={setErrors}
                 clearErrors={clearErrors}
             >
-                <PermissionButton
+                <CreateButton
+                    name="context"
                     permission={CREATE_CONTEXT_FIELD}
-                    type="submit"
-                >
-                    Create context
-                </PermissionButton>
+                />
             </ContextForm>
         </FormTemplate>
     );

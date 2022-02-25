@@ -1,14 +1,14 @@
-import FormTemplate from '../../../common/FormTemplate/FormTemplate';
-import useProjectApi from '../../../../hooks/api/actions/useProjectApi/useProjectApi';
 import { useHistory, useParams } from 'react-router-dom';
 import ProjectForm from '../ProjectForm/ProjectForm';
 import useProjectForm from '../hooks/useProjectForm';
-import useProject from '../../../../hooks/api/getters/useProject/useProject';
-import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
-import useToast from '../../../../hooks/useToast';
-import PermissionButton from '../../../common/PermissionButton/PermissionButton';
-import { UPDATE_PROJECT } from '../../../providers/AccessProvider/permissions';
-import { formatUnknownError } from '../../../../utils/format-unknown-error';
+import { UpdateButton } from 'component/common/UpdateButton/UpdateButton';
+import FormTemplate from 'component/common/FormTemplate/FormTemplate';
+import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
+import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
+import useProject from 'hooks/api/getters/useProject/useProject';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import useToast from 'hooks/useToast';
+import { formatUnknownError } from 'utils/format-unknown-error';
 
 const EditProject = () => {
     const { uiConfig } = useUiConfig();
@@ -91,9 +91,7 @@ const EditProject = () => {
                 clearErrors={clearErrors}
                 validateIdUniqueness={validateIdUniqueness}
             >
-                <PermissionButton permission={UPDATE_PROJECT} type="submit">
-                    Save
-                </PermissionButton>
+                <UpdateButton permission={UPDATE_PROJECT} />
             </ProjectForm>
         </FormTemplate>
     );

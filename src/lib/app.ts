@@ -22,6 +22,7 @@ import noAuthentication from './middleware/no-authentication';
 import secureHeaders from './middleware/secure-headers';
 
 import { loadIndexHTML } from './util/load-index-html';
+import { clientEvents } from './types/events';
 
 export default async function getApp(
     config: IUnleashConfig,
@@ -136,6 +137,22 @@ export default async function getApp(
         res.send(indexHTML);
     });
 
+    if (config.enableEventStream) {
+        console.log('Enabled, configuring events');
+        app.get(`${baseUriPath}/api/client/events`, (req, res) => {
+            res.set({
+                'Content-Type': 'text/event-stream',
+                'Cache-Control': 'no-cache',
+                Connection: 'keep-alive',
+            });
+            clientEvents.forEach((e) => {
+                stores.eventStore.on(e, (data) => {
+                    res.write(`event: message\n`);
+                    res.write(`data: ${JSON.stringify(data)}\n\n`);
+                });
+            });
+        });
+    }
     app.get(`${baseUriPath}/*`, (req, res) => {
         if (req.path.startsWith(`${baseUriPath}/api`)) {
             res.status(404).send({ message: '404 - Not found' });
@@ -144,5 +161,6 @@ export default async function getApp(
 
         res.send(indexHTML);
     });
+
     return app;
 }

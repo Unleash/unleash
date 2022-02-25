@@ -158,4 +158,5 @@ export interface IUnleashConfig {
     enterpriseVersion?: string;
     eventBus: EventEmitter;
     disableLegacyFeaturesApi?: boolean;
+    enableEventStream?: boolean;
 }

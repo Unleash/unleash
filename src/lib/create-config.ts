@@ -311,6 +311,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         eventHook: options.eventHook,
         enterpriseVersion: options.enterpriseVersion,
         eventBus: new EventEmitter(),
+        enableEventStream: safeBoolean(process.env.ENABLE_EVENT_STREAM, false),
     };
 }
 

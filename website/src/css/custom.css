@@ -20,7 +20,7 @@ footer {
 }
 
 html[data-theme='light'] {
-    --ifm-color-primary: #39535b;
+    --ifm-color-primary: var(--unleash-color-purple);
     --ifm-color-primary-dark: #334b52;
     --ifm-color-primary-darker: #30474d;
     --ifm-color-primary-darkest: #283a40;

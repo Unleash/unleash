@@ -1,8 +1,15 @@
 import React from 'react';
 import styles from './styles.module.css';
+import CloseIcon from '@site/src/icons/close'
 
 const Component = ({ text }) => (
     <article className="user-feedback">
+        <div className="close-button-row">
+            <button className="close-button" onClick={() => console.log("add some close button action")}>
+            <span className="visually-hidden">close feedback popup</span>
+            <CloseIcon/>
+        </button>
+        </div>
         <form className={styles.bah}>
             <p>
                 <span className="visually-hidden">
@@ -36,6 +43,7 @@ const Component = ({ text }) => (
                 <span aria-hidden="true">Very satisfied</span>
             </div>
             <div className="button-container">
+                <button className="button-secondary">Skip</button>
                 <button type="submit">Next</button>
             </div>
         </form>

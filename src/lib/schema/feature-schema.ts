@@ -1,4 +1,5 @@
 import joi from 'joi';
+import { ALL_OPERATORS } from '../util/constants';
 import { nameType } from '../routes/util';
 
 export const nameSchema = joi
@@ -8,7 +9,7 @@ export const nameSchema = joi
 
 export const constraintSchema = joi.object().keys({
     contextName: joi.string(),
-    operator: joi.string(),
+    operator: joi.string().valid(...ALL_OPERATORS),
     values: joi.array().items(joi.string().min(1).max(100)).min(1).optional(),
     value: joi.optional(),
     caseInsensitive: joi.boolean().optional(),

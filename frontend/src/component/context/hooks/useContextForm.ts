@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import useContextsApi from '../../../hooks/api/actions/useContextsApi/useContextsApi';
 
-const useContextForm = (
+export const useContextForm = (
     initialcontextName = '',
     initialcontextDesc = '',
     initialLegalValues = [] as string[],
@@ -42,25 +42,28 @@ const useContextForm = (
 
     const NAME_EXISTS_ERROR = 'A context field with that name already exist';
 
-    const validateNameUniqueness = async () => {
+    const validateContext = async () => {
+        if (contextName.length === 0) {
+            setErrors(prev => ({ ...prev, name: 'Name can not be empty.' }));
+            return false;
+        }
         try {
             await validateContextName(contextName);
+            return true;
         } catch (e: any) {
             if (e.toString().includes(NAME_EXISTS_ERROR)) {
                 setErrors(prev => ({
                     ...prev,
                     name: 'A context field with that name already exist',
                 }));
+            } else {
+                setErrors(prev => ({
+                    ...prev,
+                    name: e.toString(),
+                }));
             }
-        }
-    };
-
-    const validateName = () => {
-        if (contextName.length === 0) {
-            setErrors(prev => ({ ...prev, name: 'Name can not be empty.' }));
             return false;
         }
-        return true;
     };
 
     const clearErrors = () => {
@@ -77,12 +80,9 @@ const useContextForm = (
         setLegalValues,
         setStickiness,
         getContextPayload,
-        validateNameUniqueness,
-        validateName,
+        validateContext,
         setErrors,
         clearErrors,
         errors,
     };
 };
-
-export default useContextForm;

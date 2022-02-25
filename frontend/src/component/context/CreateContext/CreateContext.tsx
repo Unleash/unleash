@@ -1,16 +1,16 @@
 import { useHistory } from 'react-router-dom';
-import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
-import useToast from '../../../hooks/useToast';
-import FormTemplate from '../../common/FormTemplate/FormTemplate';
-import useContextForm from '../hooks/useContextForm';
-import ContextForm from '../ContextForm/ContextForm';
-import PermissionButton from '../../common/PermissionButton/PermissionButton';
-import { CREATE_CONTEXT_FIELD } from '../../providers/AccessProvider/permissions';
-import useContextsApi from '../../../hooks/api/actions/useContextsApi/useContextsApi';
-import useUnleashContext from '../../../hooks/api/getters/useUnleashContext/useUnleashContext';
-import { formatUnknownError } from '../../../utils/format-unknown-error';
+import { useContextForm } from '../hooks/useContextForm';
+import { ContextForm } from '../ContextForm/ContextForm';
+import { CREATE_CONTEXT_FIELD } from 'component/providers/AccessProvider/permissions';
+import FormTemplate from 'component/common/FormTemplate/FormTemplate';
+import PermissionButton from 'component/common/PermissionButton/PermissionButton';
+import useContextsApi from 'hooks/api/actions/useContextsApi/useContextsApi';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
+import useToast from 'hooks/useToast';
+import { formatUnknownError } from 'utils/format-unknown-error';
 
-const CreateContext = () => {
+export const CreateContext = () => {
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
     const history = useHistory();
@@ -24,8 +24,7 @@ const CreateContext = () => {
         setLegalValues,
         setStickiness,
         getContextPayload,
-        validateNameUniqueness,
-        validateName,
+        validateContext,
         clearErrors,
         setErrors,
         errors,
@@ -35,7 +34,8 @@ const CreateContext = () => {
 
     const handleSubmit = async (e: Event) => {
         e.preventDefault();
-        const validName = validateName();
+        const validName = await validateContext();
+
         if (validName) {
             const payload = getContextPayload();
             try {
@@ -62,7 +62,7 @@ const CreateContext = () => {
 --data-raw '${JSON.stringify(getContextPayload(), undefined, 2)}'`;
     };
 
-    const handleCancel = () => {
+    const onCancel = () => {
         history.goBack();
     };
 
@@ -78,7 +78,7 @@ const CreateContext = () => {
             <ContextForm
                 errors={errors}
                 handleSubmit={handleSubmit}
-                handleCancel={handleCancel}
+                onCancel={onCancel}
                 contextName={contextName}
                 setContextName={setContextName}
                 contextDesc={contextDesc}
@@ -88,7 +88,7 @@ const CreateContext = () => {
                 stickiness={stickiness}
                 setStickiness={setStickiness}
                 mode="Create"
-                validateNameUniqueness={validateNameUniqueness}
+                validateContext={validateContext}
                 setErrors={setErrors}
                 clearErrors={clearErrors}
             >
@@ -102,5 +102,3 @@ const CreateContext = () => {
         </FormTemplate>
     );
 };
-
-export default CreateContext;

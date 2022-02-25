@@ -1,12 +1,11 @@
-import { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { useEffect, useState } from 'react';
 import {
+    Button,
     FormControl,
     FormControlLabel,
     Grid,
-    TextField,
     InputAdornment,
-    Button,
+    TextField,
     Tooltip,
 } from '@material-ui/core';
 import { Info } from '@material-ui/icons';
@@ -18,13 +17,16 @@ import ConditionallyRender from '../../../../../common/ConditionallyRender';
 import GeneralSelect from '../../../../../common/GeneralSelect/GeneralSelect';
 import { useCommonStyles } from '../../../../../../common.styles';
 import Dialogue from '../../../../../common/Dialogue';
-import { trim, modalStyles } from '../../../../../common/util';
+import { modalStyles, trim } from '../../../../../common/util';
 import PermissionSwitch from '../../../../../common/PermissionSwitch/PermissionSwitch';
 import { UPDATE_FEATURE_VARIANTS } from '../../../../../providers/AccessProvider/permissions';
 import useFeature from '../../../../../../hooks/api/getters/useFeature/useFeature';
 import { useParams } from 'react-router-dom';
 import { IFeatureViewParams } from '../../../../../../interfaces/params';
-import { IFeatureVariant } from '../../../../../../interfaces/featureToggle';
+import {
+    IFeatureVariant,
+    IOverride,
+} from '../../../../../../interfaces/featureToggle';
 import cloneDeep from 'lodash.clonedeep';
 
 const payloadOptions = [
@@ -35,6 +37,17 @@ const payloadOptions = [
 
 const EMPTY_PAYLOAD = { type: 'string', value: '' };
 
+interface IAddVariantProps {
+    showDialog: boolean;
+    closeDialog: () => void;
+    save: (variantToSave: IFeatureVariant) => Promise<void>;
+    editVariant: IFeatureVariant;
+    validateName: (value: string) => Record<string, string> | undefined;
+    validateWeight: (value: string) => Record<string, string> | undefined;
+    title: string;
+    editing: boolean;
+}
+
 const AddVariant = ({
     showDialog,
     closeDialog,
@@ -44,11 +57,11 @@ const AddVariant = ({
     validateWeight,
     title,
     editing,
-}) => {
+}: IAddVariantProps) => {
     const [data, setData] = useState({});
     const [payload, setPayload] = useState(EMPTY_PAYLOAD);
-    const [overrides, setOverrides] = useState([]);
-    const [error, setError] = useState({});
+    const [overrides, setOverrides] = useState<IOverride[]>([]);
+    const [error, setError] = useState<Record<string, string>>({});
     const commonStyles = useCommonStyles();
     const { projectId, featureId } = useParams<IFeatureViewParams>();
     const { feature } = useFeature(projectId, featureId);
@@ -80,7 +93,7 @@ const AddVariant = ({
         setError({});
     };
 
-    const setClonedVariants = clonedVariants =>
+    const setClonedVariants = (clonedVariants: IFeatureVariant[]) =>
         setVariants(cloneDeep(clonedVariants));
 
     useEffect(() => {
@@ -159,7 +172,7 @@ const AddVariant = ({
         }
     };
 
-    const onPayload = e => {
+    const onPayload = (e: React.SyntheticEvent) => {
         e.preventDefault();
         setPayload({
             ...payload,
@@ -167,13 +180,13 @@ const AddVariant = ({
         });
     };
 
-    const onCancel = e => {
+    const onCancel = (e: React.SyntheticEvent) => {
         e.preventDefault();
         clear();
         closeDialog();
     };
 
-    const updateOverrideType = index => e => {
+    const updateOverrideType = (index: number) => (e: React.SyntheticEvent) => {
         e.preventDefault();
         setOverrides(
             overrides.map((o, i) => {
@@ -186,7 +199,7 @@ const AddVariant = ({
         );
     };
 
-    const updateOverrideValues = (index, values) => {
+    const updateOverrideValues = (index: number, values: string[]) => {
         setOverrides(
             overrides.map((o, i) => {
                 if (i === index) {
@@ -197,12 +210,12 @@ const AddVariant = ({
         );
     };
 
-    const removeOverride = index => e => {
+    const removeOverride = (index: number) => (e: React.SyntheticEvent) => {
         e.preventDefault();
         setOverrides(overrides.filter((o, i) => i !== index));
     };
 
-    const onAddOverride = e => {
+    const onAddOverride = (e: React.SyntheticEvent) => {
         e.preventDefault();
         setOverrides([
             ...overrides,
@@ -388,7 +401,6 @@ const AddVariant = ({
                     removeOverride={removeOverride}
                     updateOverrideType={updateOverrideType}
                     updateOverrideValues={updateOverrideValues}
-                    updateValues={updateOverrideValues}
                 />
                 <Button
                     onClick={onAddOverride}
@@ -400,17 +412,6 @@ const AddVariant = ({
             </form>
         </Dialogue>
     );
-};
-
-AddVariant.propTypes = {
-    showDialog: PropTypes.bool.isRequired,
-    closeDialog: PropTypes.func.isRequired,
-    save: PropTypes.func.isRequired,
-    validateName: PropTypes.func.isRequired,
-    validateWeight: PropTypes.func.isRequired,
-    editVariant: PropTypes.object,
-    title: PropTypes.string,
-    uiConfig: PropTypes.object,
 };
 
 export default AddVariant;

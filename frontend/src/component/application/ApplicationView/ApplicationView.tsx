@@ -4,16 +4,16 @@ import {
     Grid,
     List,
     ListItem,
-    ListItemText,
     ListItemAvatar,
+    ListItemText,
     Typography,
 } from '@material-ui/core';
 import {
-    Report,
     Extension,
-    Timeline,
     FlagRounded,
+    Report,
     SvgIconComponent,
+    Timeline,
 } from '@material-ui/icons';
 import {
     CREATE_FEATURE,
@@ -117,10 +117,9 @@ export const ApplicationView = () => {
                                     createUrl: `/projects/default/create-toggle?name=${name}`,
                                     name,
                                     permission: CREATE_FEATURE,
-                                    i,
                                 })}
                                 elseShow={foundListItem({
-                                    viewUrl: getTogglePath(project, name, true),
+                                    viewUrl: getTogglePath(project, name),
                                     name,
                                     description,
                                     Icon: FlagRounded,

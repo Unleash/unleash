@@ -19,7 +19,6 @@ import { formatDateYMD } from '../../../../../utils/format-date';
 interface IUserListItemProps {
     user: IUser;
     renderRole: (roleId: number) => string;
-    openUpdateDialog: (user: IUser) => (e: SyntheticEvent) => void;
     openPwDialog: (user: IUser) => (e: SyntheticEvent) => void;
     openDelDialog: (user: IUser) => (e: SyntheticEvent) => void;
     locationSettings: ILocationSettings;
@@ -30,7 +29,6 @@ const UserListItem = ({
     renderRole,
     openDelDialog,
     openPwDialog,
-    openUpdateDialog,
     locationSettings,
 }: IUserListItemProps) => {
     const { hasAccess } = useContext(AccessContext);

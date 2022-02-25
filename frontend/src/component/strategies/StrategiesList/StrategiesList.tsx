@@ -36,6 +36,7 @@ import useStrategies from '../../../hooks/api/getters/useStrategies/useStrategie
 import useStrategiesApi from '../../../hooks/api/actions/useStrategiesApi/useStrategiesApi';
 import useToast from '../../../hooks/useToast';
 import { IStrategy } from '../../../interfaces/strategy';
+import { formatUnknownError } from '../../../utils/format-unknown-error';
 
 interface IDialogueMetaData {
     show: boolean;
@@ -49,7 +50,11 @@ export const StrategiesList = () => {
     const smallScreen = useMediaQuery('(max-width:700px)');
     const { hasAccess } = useContext(AccessContext);
     const [dialogueMetaData, setDialogueMetaData] = useState<IDialogueMetaData>(
-        { show: false, title: '', onConfirm: () => {} }
+        {
+            show: false,
+            title: '',
+            onConfirm: () => {},
+        }
     );
     const { strategies, refetchStrategies } = useStrategies();
     const { removeStrategy, deprecateStrategy, reactivateStrategy } =
@@ -88,7 +93,7 @@ export const StrategiesList = () => {
         />
     );
 
-    const strategyLink = ({ name, deprecated }) => (
+    const strategyLink = ({ name, deprecated }: IStrategy) => (
         <Link to={`/strategies/view/${name}`}>
             <strong>{getHumanReadableStrategyName(name)}</strong>
             <ConditionallyRender
@@ -111,8 +116,8 @@ export const StrategiesList = () => {
                         title: 'Success',
                         text: 'Strategy reactivated successfully',
                     });
-                } catch (e: any) {
-                    setToastApiError(e.toString());
+                } catch (error: unknown) {
+                    setToastApiError(formatUnknownError(error));
                 }
             },
         });
@@ -131,8 +136,8 @@ export const StrategiesList = () => {
                         title: 'Success',
                         text: 'Strategy deprecated successfully',
                     });
-                } catch (e: any) {
-                    setToastApiError(e.toString());
+                } catch (error: unknown) {
+                    setToastApiError(formatUnknownError(error));
                 }
             },
         });
@@ -151,8 +156,8 @@ export const StrategiesList = () => {
                         title: 'Success',
                         text: 'Strategy deleted successfully',
                     });
-                } catch (e: any) {
-                    setToastApiError(e.toString());
+                } catch (error: unknown) {
+                    setToastApiError(formatUnknownError(error));
                 }
             },
         });

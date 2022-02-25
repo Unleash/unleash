@@ -47,15 +47,11 @@ const UserProfileContent = ({
     const [editingProfile, setEditingProfile] = useState(false);
     const styles = useStyles();
 
-    // @ts-expect-error
     const profileAvatarClasses = classnames(styles.avatar, {
-        // @ts-expect-error
         [styles.editingAvatar]: editingProfile,
     });
 
-    // @ts-expect-error
     const profileEmailClasses = classnames(styles.profileEmail, {
-        // @ts-expect-error
         [styles.editingEmail]: editingProfile,
     });
 
@@ -71,7 +67,6 @@ const UserProfileContent = ({
             show={
                 <Paper
                     className={classnames(
-                        // @ts-expect-error
                         styles.profile,
                         commonStyles.flexColumn,
                         commonStyles.itemsCenter,
@@ -153,7 +148,6 @@ const UserProfileContent = ({
                                 </div>
                                 <div className={commonStyles.divider} />
                                 <a
-                                    // @ts-expect-error
                                     className={styles.link}
                                     href="https://www.getunleash.io/privacy-policy"
                                     rel="noopener noreferrer"

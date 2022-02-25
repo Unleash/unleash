@@ -4,6 +4,7 @@ import {
     IProjectAccessUser,
 } from '../../../../hooks/api/getters/useProjectAccess/useProjectAccess';
 import { ProjectAccessListItem } from './ProjectAccessListItem/ProjectAccessListItem';
+import React from 'react';
 
 interface IProjectAccesListProps {
     page: IProjectAccessUser[];
@@ -28,8 +29,8 @@ export const ProjectAccessList: React.FC<IProjectAccesListProps> = ({
     children,
 }) => {
     const sortUsers = (users: IProjectAccessUser[]): IProjectAccessUser[] => {
-        /* This should be done on the API side in the future, 
-                we should expect the list of users to come in the 
+        /* This should be done on the API side in the future,
+                we should expect the list of users to come in the
                 same order each time and not jump around on the screen*/
 
         return users.sort(

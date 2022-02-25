@@ -1,3 +1,5 @@
+import React from 'react';
+
 interface IGradientProps {
     from: string;
     to: string;

@@ -1,11 +1,12 @@
 import { Button } from '@material-ui/core';
 import classnames from 'classnames';
-import {
-    SyntheticEvent,
-    useEffect,
-    useState,
+import React, {
     Dispatch,
     SetStateAction,
+    SyntheticEvent,
+    useCallback,
+    useEffect,
+    useState,
 } from 'react';
 import { useHistory } from 'react-router';
 import { useCommonStyles } from '../../../../common.styles';
@@ -15,7 +16,6 @@ import ResetPasswordError from '../ResetPasswordError/ResetPasswordError';
 import PasswordChecker from './PasswordChecker/PasswordChecker';
 import PasswordMatcher from './PasswordMatcher/PasswordMatcher';
 import { useStyles } from './ResetPasswordForm.styles';
-import { useCallback } from 'react';
 import { formatApiPath } from '../../../../utils/format-path';
 import PasswordField from '../../../common/PasswordField/PasswordField';
 

@@ -11,7 +11,7 @@ interface IFeatureStrategiesProductionGuard {
     onClick: () => void;
     onClose: () => void;
     primaryButtonText: string;
-    loading: boolean;
+    loading?: boolean;
 }
 
 const FeatureStrategiesProductionGuard = ({

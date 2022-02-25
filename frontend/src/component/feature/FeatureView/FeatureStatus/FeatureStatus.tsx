@@ -1,7 +1,8 @@
 import { useStyles } from './FeatureStatus.styles';
 import TimeAgo from 'react-timeago';
 import ConditionallyRender from '../../../common/ConditionallyRender';
-import { Tooltip } from '@material-ui/core';
+import { Tooltip, TooltipProps } from '@material-ui/core';
+import React from 'react';
 
 function generateUnit(unit?: string): string {
     switch (unit) {
@@ -46,8 +47,8 @@ function getColor(unit?: string): string {
 }
 
 interface FeatureStatusProps {
-    lastSeenAt?: Date;
-    tooltipPlacement?: string;
+    lastSeenAt?: string;
+    tooltipPlacement?: TooltipProps['placement'];
 }
 
 const FeatureStatus = ({
@@ -76,7 +77,7 @@ const FeatureStatus = ({
             condition={!!lastSeenAt}
             show={
                 <TimeAgo
-                    date={lastSeenAt}
+                    date={lastSeenAt!}
                     title=""
                     live={false}
                     formatter={(

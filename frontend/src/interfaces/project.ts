@@ -11,6 +11,7 @@ export interface IProjectCard {
 }
 
 export interface IProject {
+    id?: string;
     members: number;
     version: string;
     name: string;

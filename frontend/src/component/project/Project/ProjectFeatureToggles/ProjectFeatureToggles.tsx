@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { IconButton } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
 import FilterListIcon from '@material-ui/icons/FilterList';
@@ -31,7 +31,19 @@ const ProjectFeatureToggles = ({
     const history = useHistory();
     const { hasAccess } = useContext(AccessContext);
     const { uiConfig } = useUiConfig();
+    const [filteredFeatures, setFilteredFeatures] =
+        useState<IFeatureToggleListItem[]>(features);
 
+    const searchFeatures = () => {
+        const filteredData = features.filter(feature => {
+            return Object.values(feature)
+                .join('')
+                .toLowerCase()
+                .includes('ENV'.toLowerCase());
+        });
+        setFilteredFeatures(filteredData);
+    };
+    
     return (
         <PageContent
             className={styles.container}
@@ -39,7 +51,7 @@ const ProjectFeatureToggles = ({
             headerContent={
                 <HeaderTitle
                     className={styles.title}
-                    title={`Feature toggles (${features.length})`}
+                    title={`Feature toggles (${filteredFeatures.length})`}
                     actions={
                         <>
                             <ConditionallyRender
@@ -79,10 +91,10 @@ const ProjectFeatureToggles = ({
             }
         >
             <ConditionallyRender
-                condition={features?.length > 0}
+                condition={filteredFeatures?.length > 0}
                 show={
                     <FeatureToggleListNew
-                        features={features}
+                        features={filteredFeatures}
                         loading={loading}
                         projectId={id}
                     />

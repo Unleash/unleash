@@ -11,7 +11,7 @@ interface IFeatureStrategiesProductionGuard {
     onClick: () => void;
     onClose: () => void;
     primaryButtonText: string;
-    loading: boolean;
+    loading?: boolean;
 }
 
 const FeatureStrategiesProductionGuard = ({
@@ -58,6 +58,13 @@ const FeatureStrategiesProductionGuard = ({
                 }
             />
         </Dialogue>
+    );
+};
+
+export const disableFeatureStrategiesProductionGuard = () => {
+    localStorage.setItem(
+        FEATURE_STRATEGY_PRODUCTION_GUARD_SETTING,
+        String(true)
     );
 };
 

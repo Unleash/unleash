@@ -11,4 +11,5 @@ export const defaultFeature: IFeatureToggle = {
     project: '',
     variants: [],
     description: '',
+    impressionData: false,
 };

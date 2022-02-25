@@ -21,6 +21,7 @@ import EnvironmentToggleConfirm from './EnvironmentToggleConfirm/EnvironmentTogg
 import useProjectRolePermissions from '../../../hooks/api/getters/useProjectRolePermissions/useProjectRolePermissions';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { formatUnknownError } from '../../../utils/format-unknown-error';
 
 const EnvironmentList = () => {
     const defaultEnv = {
@@ -75,16 +76,16 @@ const EnvironmentList = () => {
         try {
             await sortOrderAPICall(sortOrder);
             refetch();
-        } catch (e) {
-            setToastApiError(e.toString());
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
         }
     };
 
     const sortOrderAPICall = async (sortOrder: ISortOrderPayload) => {
         try {
             await changeSortOrder(sortOrder);
-        } catch (e) {
-            setToastApiError(e.toString());
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
         }
     };
 
@@ -97,8 +98,8 @@ const EnvironmentList = () => {
                 title: 'Project environment deleted',
                 text: 'You have successfully deleted the project environment.',
             });
-        } catch (e) {
-            setToastApiError(e.toString());
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
         } finally {
             setDeldialogue(false);
             setSelectedEnv(defaultEnv);
@@ -124,8 +125,8 @@ const EnvironmentList = () => {
                 title: 'Project environment enabled',
                 text: 'Your environment is enabled',
             });
-        } catch (e) {
-            setToastApiError(e.toString());
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
         } finally {
             refetch();
         }
@@ -140,8 +141,8 @@ const EnvironmentList = () => {
                 title: 'Project environment disabled',
                 text: 'Your environment is disabled.',
             });
-        } catch (e) {
-            setToastApiError(e.toString());
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
         } finally {
             refetch();
         }

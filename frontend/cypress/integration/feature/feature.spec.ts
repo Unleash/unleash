@@ -1,82 +1,48 @@
-/* eslint-disable jest/no-conditional-expect */
 /// <reference types="cypress" />
-// Welcome to Cypress!
-//
-// This spec file contains a variety of sample tests
-// for a todo list app that are designed to demonstrate
-// the power of writing tests in Cypress.
-//
-// To learn more about how Cypress works and
-// what makes it such an awesome testing tool,
-// please read our getting started guide:
-// https://on.cypress.io/introduction-to-cypress
 
-let featureToggleName = '';
-let enterprise = false;
+import { disableFeatureStrategiesProductionGuard } from '../../../src/component/feature/FeatureView/FeatureStrategies/FeatureStrategiesEnvironments/FeatureStrategiesProductionGuard/FeatureStrategiesProductionGuard';
+
+const randomId = String(Math.random()).split('.')[1];
+const featureToggleName = `unleash-e2e-${randomId}`;
+const enterprise = Boolean(Cypress.env('ENTERPRISE'));
+const passwordAuth = Cypress.env('PASSWORD_AUTH');
+const authToken = Cypress.env('AUTH_TOKEN');
+const baseUrl = Cypress.config().baseUrl;
 let strategyId = '';
-let defaultEnv = 'development';
 
-describe('feature toggle', () => {
-    before(() => {
-        featureToggleName = `unleash-e2e-${Math.floor(Math.random() * 100)}`;
-        enterprise = Boolean(Cypress.env('ENTERPRISE'));
-
-        const env = Cypress.env('DEFAULT_ENV');
-        if (env) {
-            defaultEnv = env;
-        }
-    });
-
+describe('feature', () => {
     after(() => {
-        const authToken = Cypress.env('AUTH_TOKEN');
-
         cy.request({
             method: 'DELETE',
-            url: `${
-                Cypress.config().baseUrl
-            }/api/admin/features/${featureToggleName}`,
-            headers: {
-                Authorization: authToken,
-            },
+            url: `${baseUrl}/api/admin/features/${featureToggleName}`,
+            headers: { Authorization: authToken },
         });
-
         cy.request({
             method: 'DELETE',
-            url: `${
-                Cypress.config().baseUrl
-            }/api/admin/archive/${featureToggleName}`,
-            headers: {
-                Authorization: authToken,
-            },
+            url: `${baseUrl}/api/admin/archive/${featureToggleName}`,
+            headers: { Authorization: authToken },
         });
     });
 
     beforeEach(() => {
-        // Cypress starts out with a blank slate for each test
-        // so we must tell it to visit our website with the `cy.visit()` command.
-        // Since we want to visit the same URL at the start of all our tests,
-        // we include it in our beforeEach function so that it runs before each test
-        const passwordAuth = Cypress.env('PASSWORD_AUTH');
-        enterprise = Boolean(Cypress.env('ENTERPRISE'));
-
+        disableFeatureStrategiesProductionGuard();
         cy.visit('/');
 
         if (passwordAuth) {
             cy.get('[data-test="LOGIN_EMAIL_ID"]').type('test@test.com');
-
             cy.get('[data-test="LOGIN_PASSWORD_ID"]').type('qY70$NDcJNXA');
-
             cy.get("[data-test='LOGIN_BUTTON']").click();
         } else {
             cy.get('[data-test=LOGIN_EMAIL_ID]').type('test@unleash-e2e.com');
             cy.get('[data-test=LOGIN_BUTTON]').click();
         }
+
+        // Wait for the login redirects to complete.
+        cy.get('[data-test=HEADER_USER_AVATAR');
     });
 
-    it('Creates a feature toggle', () => {
-        if (
-            document.querySelectorAll("[data-test='CLOSE_SPLASH']").length > 0
-        ) {
+    it('can create a feature toggle', () => {
+        if (document.querySelector("[data-test='CLOSE_SPLASH']")) {
             cy.get("[data-test='CLOSE_SPLASH']").click();
         }
 
@@ -87,14 +53,13 @@ describe('feature toggle', () => {
         );
 
         cy.get("[data-test='CF_NAME_ID'").type(featureToggleName);
-        cy.get("[data-test='CF_DESC_ID'").type('hellowrdada');
-
+        cy.get("[data-test='CF_DESC_ID'").type('hello-world');
         cy.get("[data-test='CF_CREATE_BTN_ID']").click();
         cy.wait('@createFeature');
         cy.url().should('include', featureToggleName);
     });
 
-    it('Gives an error if a toggle exists with the same name', () => {
+    it('gives an error if a toggle exists with the same name', () => {
         cy.get('[data-test=NAVIGATE_TO_CREATE_FEATURE').click();
 
         cy.intercept('POST', '/api/admin/projects/default/features').as(
@@ -102,16 +67,14 @@ describe('feature toggle', () => {
         );
 
         cy.get("[data-test='CF_NAME_ID'").type(featureToggleName);
-        cy.get("[data-test='CF_DESC_ID'").type('hellowrdada');
-
+        cy.get("[data-test='CF_DESC_ID'").type('hello-world');
         cy.get("[data-test='CF_CREATE_BTN_ID']").click();
-
         cy.get("[data-test='INPUT_ERROR_TEXT']").contains(
             'A feature with this name already exists'
         );
     });
 
-    it('Gives an error if a toggle name is url unsafe', () => {
+    it('gives an error if a toggle name is url unsafe', () => {
         cy.get('[data-test=NAVIGATE_TO_CREATE_FEATURE').click();
 
         cy.intercept('POST', '/api/admin/projects/default/features').as(
@@ -119,17 +82,14 @@ describe('feature toggle', () => {
         );
 
         cy.get("[data-test='CF_NAME_ID'").type('featureToggleUnsafe####$#//');
-        cy.get("[data-test='CF_DESC_ID'").type('hellowrdada');
-
+        cy.get("[data-test='CF_DESC_ID'").type('hello-world');
         cy.get("[data-test='CF_CREATE_BTN_ID']").click();
-
         cy.get("[data-test='INPUT_ERROR_TEXT']").contains(
             `"name" must be URL friendly`
         );
     });
 
-    it('Can add a gradual rollout strategy to the development environment', () => {
-        cy.wait(1000);
+    it('can add a gradual rollout strategy to the development environment', () => {
         cy.visit(`/projects/default/features/${featureToggleName}/strategies`);
         cy.get('[data-test=ADD_NEW_STRATEGY_ID]').click();
         cy.get('[data-test=ADD_NEW_STRATEGY_CARD_BUTTON_ID-2').click();
@@ -147,10 +107,9 @@ describe('feature toggle', () => {
 
         cy.intercept(
             'POST',
-            `/api/admin/projects/default/features/${featureToggleName}/environments/${defaultEnv}/strategies`,
+            `/api/admin/projects/default/features/${featureToggleName}/environments/*/strategies`,
             req => {
                 expect(req.body.name).to.equal('flexibleRollout');
-
                 expect(req.body.parameters.groupId).to.equal(featureToggleName);
                 expect(req.body.parameters.stickiness).to.equal('default');
                 expect(req.body.parameters.rollout).to.equal(30);
@@ -172,7 +131,6 @@ describe('feature toggle', () => {
     });
 
     it('can update a strategy in the development environment', () => {
-        cy.wait(1000);
         cy.visit(`/projects/default/features/${featureToggleName}/strategies`);
         cy.get('[data-test=STRATEGY_ACCORDION_ID-flexibleRollout').click();
 
@@ -188,7 +146,6 @@ describe('feature toggle', () => {
             .first()
             .click();
 
-        let newGroupId = 'new-group-id';
         cy.get('[data-test=FLEXIBLE_STRATEGY_GROUP_ID]')
             .first()
             .clear()
@@ -196,9 +153,9 @@ describe('feature toggle', () => {
 
         cy.intercept(
             'PUT',
-            `/api/admin/projects/default/features/${featureToggleName}/environments/${defaultEnv}/strategies/${strategyId}`,
+            `/api/admin/projects/default/features/${featureToggleName}/environments/*/strategies/${strategyId}`,
             req => {
-                expect(req.body.parameters.groupId).to.equal(newGroupId);
+                expect(req.body.parameters.groupId).to.equal('new-group-id');
                 expect(req.body.parameters.stickiness).to.equal('sessionId');
                 expect(req.body.parameters.rollout).to.equal(60);
 
@@ -219,12 +176,11 @@ describe('feature toggle', () => {
     });
 
     it('can delete a strategy in the development environment', () => {
-        cy.wait(1000);
         cy.visit(`/projects/default/features/${featureToggleName}/strategies`);
 
         cy.intercept(
             'DELETE',
-            `/api/admin/projects/default/features/${featureToggleName}/environments/${defaultEnv}/strategies/${strategyId}`,
+            `/api/admin/projects/default/features/${featureToggleName}/environments/*/strategies/${strategyId}`,
             req => {
                 req.continue(res => {
                     expect(res.statusCode).to.equal(200);
@@ -237,8 +193,7 @@ describe('feature toggle', () => {
         cy.wait('@deleteStrategy');
     });
 
-    it('Can add a userid  strategy to the development environment', () => {
-        cy.wait(1000);
+    it('can add a userid strategy to the development environment', () => {
         cy.visit(`/projects/default/features/${featureToggleName}/strategies`);
         cy.get('[data-test=ADD_NEW_STRATEGY_ID]').click();
         cy.get('[data-test=ADD_NEW_STRATEGY_CARD_BUTTON_ID-3').click();
@@ -260,7 +215,7 @@ describe('feature toggle', () => {
 
         cy.intercept(
             'POST',
-            `/api/admin/projects/default/features/${featureToggleName}/environments/${defaultEnv}/strategies`,
+            `/api/admin/projects/default/features/${featureToggleName}/environments/*/strategies`,
             req => {
                 expect(req.body.name).to.equal('userWithId');
 
@@ -282,11 +237,12 @@ describe('feature toggle', () => {
         cy.wait('@addStrategyToFeature');
     });
 
-    it('Can add two variant to the feature', () => {
+    it('can add two variant to the feature', () => {
         const variantName = 'my-new-variant';
         const secondVariantName = 'my-second-variant';
-        cy.wait(1000);
+
         cy.visit(`/projects/default/features/${featureToggleName}/variants`);
+
         cy.intercept(
             'PATCH',
             `/api/admin/projects/default/features/${featureToggleName}/variants`,
@@ -304,20 +260,23 @@ describe('feature toggle', () => {
                     expect(req.body[1].value.name).to.equal(secondVariantName);
                 }
             }
-        ).as('variantcreation');
-        cy.get('[data-test=ADD_VARIANT_BUTTON]').click();
-        cy.get('[data-test=VARIANT_NAME_INPUT]').type(variantName);
-        cy.get('[data-test=DIALOGUE_CONFIRM_ID]').click();
-        cy.wait('@variantcreation');
-        cy.get('[data-test=ADD_VARIANT_BUTTON]').click();
-        cy.get('[data-test=VARIANT_NAME_INPUT]').type(secondVariantName);
-        cy.get('[data-test=DIALOGUE_CONFIRM_ID]').click();
-        cy.wait('@variantcreation');
-    });
-    it('Can set weight to fixed value for one of the variants', () => {
-        cy.wait(1000);
+        ).as('variantCreation');
 
+        cy.get('[data-test=ADD_VARIANT_BUTTON]').click();
+        cy.get('[data-test=VARIANT_NAME_INPUT]').click().type(variantName);
+        cy.get('[data-test=DIALOGUE_CONFIRM_ID]').click();
+        cy.wait('@variantCreation');
+        cy.get('[data-test=ADD_VARIANT_BUTTON]').click();
+        cy.get('[data-test=VARIANT_NAME_INPUT]')
+            .click()
+            .type(secondVariantName);
+        cy.get('[data-test=DIALOGUE_CONFIRM_ID]').click();
+        cy.wait('@variantCreation');
+    });
+
+    it('can set weight to fixed value for one of the variants', () => {
         cy.visit(`/projects/default/features/${featureToggleName}/variants`);
+
         cy.get('[data-test=VARIANT_EDIT_BUTTON]').first().click();
         cy.get('[data-test=VARIANT_NAME_INPUT]')
             .children()
@@ -328,6 +287,7 @@ describe('feature toggle', () => {
             .find('input')
             .check();
         cy.get('[data-test=VARIANT_WEIGHT_INPUT]').clear().type('15');
+
         cy.intercept(
             'PATCH',
             `/api/admin/projects/default/features/${featureToggleName}/variants`,
@@ -342,21 +302,23 @@ describe('feature toggle', () => {
                 expect(req.body[2].path).to.match(/weight/);
                 expect(req.body[2].value).to.equal(150);
             }
-        ).as('variantupdate');
+        ).as('variantUpdate');
+
         cy.get('[data-test=DIALOGUE_CONFIRM_ID]').click();
-        cy.wait('@variantupdate');
+        cy.wait('@variantUpdate');
         cy.get('[data-test=VARIANT_WEIGHT]')
             .first()
             .should('have.text', '15 %');
     });
 
-    it(`can delete variant`, () => {
+    it('can delete variant', () => {
         const variantName = 'to-be-deleted';
-        cy.wait(1000);
+
         cy.visit(`/projects/default/features/${featureToggleName}/variants`);
         cy.get('[data-test=ADD_VARIANT_BUTTON]').click();
-        cy.get('[data-test=VARIANT_NAME_INPUT]').type(variantName);
+        cy.get('[data-test=VARIANT_NAME_INPUT]').click().type(variantName);
         cy.get('[data-test=DIALOGUE_CONFIRM_ID]').click();
+
         cy.intercept(
             'PATCH',
             `/api/admin/projects/default/features/${featureToggleName}/variants`,
@@ -365,6 +327,7 @@ describe('feature toggle', () => {
                 expect(e.path).to.match(/\//);
             }
         ).as('delete');
+
         cy.get(`[data-test=VARIANT_DELETE_BUTTON_${variantName}]`).click();
         cy.get('[data-test=DIALOGUE_CONFIRM_ID]').click();
         cy.wait('@delete');

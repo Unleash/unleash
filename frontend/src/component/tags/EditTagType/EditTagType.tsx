@@ -8,6 +8,7 @@ import PermissionButton from '../../common/PermissionButton/PermissionButton';
 import { UPDATE_TAG_TYPE } from '../../providers/AccessProvider/permissions';
 import useTagTypeForm from '../TagTypeForm/useTagTypeForm';
 import TagForm from '../TagTypeForm/TagTypeForm';
+import { formatUnknownError } from '../../../utils/format-unknown-error';
 
 const EditTagType = () => {
     const { setToastData, setToastApiError } = useToast();
@@ -37,8 +38,8 @@ const EditTagType = () => {
                 title: 'Tag type updated',
                 type: 'success',
             });
-        } catch (e: any) {
-            setToastApiError(e.toString());
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
         }
     };
 

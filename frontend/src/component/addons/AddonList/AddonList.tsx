@@ -1,4 +1,4 @@
-import { ReactElement } from 'react';
+import React, { ReactElement } from 'react';
 import { ConfiguredAddons } from './ConfiguredAddons/ConfiguredAddons';
 import { AvailableAddons } from './AvailableAddons/AvailableAddons';
 import { Avatar } from '@material-ui/core';
@@ -12,7 +12,7 @@ import dataDogIcon from '../../../assets/icons/datadog.svg';
 import { formatAssetPath } from '../../../utils/format-path';
 import useAddons from '../../../hooks/api/getters/useAddons/useAddons';
 
-const style = {
+const style: React.CSSProperties = {
     width: '40px',
     height: '40px',
     marginRight: '16px',

@@ -11,6 +11,7 @@ import { useEffect } from 'react';
 import PermissionButton from '../../../common/PermissionButton/PermissionButton';
 import { ADMIN } from '../../../providers/AccessProvider/permissions';
 import { EDIT } from '../../../../constants/misc';
+import { formatUnknownError } from '../../../../utils/format-unknown-error';
 
 const EditUser = () => {
     useEffect(() => {
@@ -60,8 +61,8 @@ const EditUser = () => {
                     title: 'User information updated',
                     type: 'success',
                 });
-            } catch (e: any) {
-                setToastApiError(e.toString());
+            } catch (error: unknown) {
+                setToastApiError(formatUnknownError(error));
             }
         }
     };

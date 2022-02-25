@@ -2,11 +2,11 @@ import { Alert } from '@material-ui/lab';
 import React from 'react';
 import Dialogue from '../../../common/Dialogue';
 import Input from '../../../common/Input/Input';
-import { ProjectEnvironment } from '../ProjectEnvironment';
 import { useStyles } from './EnvironmentDisableConfirm.styles';
+import { IProjectEnvironment } from '../../../../interfaces/environments';
 
 interface IEnvironmentDisableConfirmProps {
-    env?: ProjectEnvironment;
+    env?: IProjectEnvironment;
     open: boolean;
     handleDisableEnvironment: () => Promise<void>;
     handleCancelDisableEnvironment: () => void;

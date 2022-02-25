@@ -7,6 +7,7 @@ import PermissionButton from '../../common/PermissionButton/PermissionButton';
 import { UPDATE_TAG_TYPE } from '../../providers/AccessProvider/permissions';
 import useTagTypeForm from '../TagTypeForm/useTagTypeForm';
 import TagTypeForm from '../TagTypeForm/TagTypeForm';
+import { formatUnknownError } from '../../../utils/format-unknown-error';
 
 const CreateTagType = () => {
     const { setToastData, setToastApiError } = useToast();
@@ -38,8 +39,8 @@ const CreateTagType = () => {
                     confetti: true,
                     type: 'success',
                 });
-            } catch (e: any) {
-                setToastApiError(e.toString());
+            } catch (error: unknown) {
+                setToastApiError(formatUnknownError(error));
             }
         }
     };

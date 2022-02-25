@@ -8,6 +8,7 @@ import PermissionButton from '../../common/PermissionButton/PermissionButton';
 import { CREATE_CONTEXT_FIELD } from '../../providers/AccessProvider/permissions';
 import useContextsApi from '../../../hooks/api/actions/useContextsApi/useContextsApi';
 import useUnleashContext from '../../../hooks/api/getters/useUnleashContext/useUnleashContext';
+import { formatUnknownError } from '../../../utils/format-unknown-error';
 
 const CreateContext = () => {
     const { setToastData, setToastApiError } = useToast();
@@ -46,8 +47,8 @@ const CreateContext = () => {
                     confetti: true,
                     type: 'success',
                 });
-            } catch (e: any) {
-                setToastApiError(e.toString());
+            } catch (error: unknown) {
+                setToastApiError(formatUnknownError(error));
             }
         }
     };
@@ -69,7 +70,7 @@ const CreateContext = () => {
         <FormTemplate
             loading={loading}
             title="Create context"
-            description="Context fields are a basic building block used in Unleash to control roll-out. 
+            description="Context fields are a basic building block used in Unleash to control roll-out.
             They can be used together with strategy constraints as part of the activation strategy evaluation."
             documentationLink="https://docs.getunleash.io/how-to/how-to-define-custom-context-fields"
             formatApiCode={formatApiCode}

@@ -8,6 +8,8 @@ import { IFeatureViewParams } from '../../../../../../interfaces/params';
 import PermissionSwitch from '../../../../../common/PermissionSwitch/PermissionSwitch';
 import StringTruncator from '../../../../../common/StringTruncator/StringTruncator';
 import { UPDATE_FEATURE_ENVIRONMENT } from '../../../../../providers/AccessProvider/permissions';
+import React from 'react';
+import { formatUnknownError } from '../../../../../../utils/format-unknown-error';
 
 interface IFeatureOverviewEnvSwitchProps {
     env: IFeatureEnvironment;
@@ -40,7 +42,7 @@ const FeatureOverviewEnvSwitch = ({
             if (callback) {
                 callback();
             }
-        } catch (e: any) {
+        } catch (e) {
             if (e.message === ENVIRONMENT_STRATEGY_ERROR) {
                 showInfoBox(true);
             } else {
@@ -61,8 +63,8 @@ const FeatureOverviewEnvSwitch = ({
             if (callback) {
                 callback();
             }
-        } catch (e: any) {
-            setToastApiError(e.message);
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
         }
     };
 

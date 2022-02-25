@@ -1,10 +1,11 @@
 import {
     FormControl,
     FormControlLabel,
-    RadioGroup,
     Radio,
+    RadioGroup,
 } from '@material-ui/core';
 import { useStyles } from './EnvironmentTypeSelector.styles';
+import React from 'react';
 
 interface IEnvironmentTypeSelectorProps {
     onChange: (event: React.FormEvent<HTMLInputElement>) => void;

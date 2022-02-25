@@ -10,6 +10,7 @@ import { scrollToTop } from '../../common/util';
 import { UPDATE_CONTEXT_FIELD } from '../../providers/AccessProvider/permissions';
 import ContextForm from '../ContextForm/ContextForm';
 import useContextForm from '../hooks/useContextForm';
+import { formatUnknownError } from '../../../utils/format-unknown-error';
 
 const EditContext = () => {
     useEffect(() => {
@@ -67,8 +68,8 @@ const EditContext = () => {
                     title: 'Context information updated',
                     type: 'success',
                 });
-            } catch (e: any) {
-                setToastApiError(e.toString());
+            } catch (error: unknown) {
+                setToastApiError(formatUnknownError(error));
             }
         }
     };
@@ -81,7 +82,7 @@ const EditContext = () => {
         <FormTemplate
             loading={loading}
             title="Edit context"
-            description="Context fields are a basic building block used in Unleash to control roll-out. 
+            description="Context fields are a basic building block used in Unleash to control roll-out.
             They can be used together with strategy constraints as part of the activation strategy evaluation."
             documentationLink="https://docs.getunleash.io/how-to/how-to-define-custom-context-fields"
             formatApiCode={formatApiCode}

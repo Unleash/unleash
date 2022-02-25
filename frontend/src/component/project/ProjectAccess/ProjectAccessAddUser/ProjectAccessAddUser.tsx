@@ -147,7 +147,6 @@ export const ProjectAccessAddUser = ({ roles }: IProjectAccessAddUserProps) => {
     };
 
     const getOptionLabel = (option: IProjectAccessUser) => {
-        console.log(option);
         if (option) {
             return `${option.name || option.username || '(Empty name)'} <${
                 option.email || option.username

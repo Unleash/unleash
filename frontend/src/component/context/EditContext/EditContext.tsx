@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
+import { formatUnknownError } from 'utils/format-unknown-error';
 import useContextsApi from '../../../hooks/api/actions/useContextsApi/useContextsApi';
 import useContext from '../../../hooks/api/getters/useContext/useContext';
 import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
@@ -63,8 +64,8 @@ export const EditContext = () => {
                 title: 'Context information updated',
                 type: 'success',
             });
-        } catch (e: any) {
-            setToastApiError(e.toString());
+        } catch (e: unknown) {
+            setToastApiError(formatUnknownError(e));
         }
     };
 

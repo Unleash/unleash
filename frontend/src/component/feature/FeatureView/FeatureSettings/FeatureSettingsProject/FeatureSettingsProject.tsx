@@ -102,7 +102,6 @@ const FeatureSettingsProject = () => {
                 show={
                     <PermissionButton
                         permission={MOVE_FEATURE_TOGGLE}
-                        tooltip="Update feature"
                         onClick={() => setShowConfirmDialog(true)}
                         projectId={projectId}
                     >

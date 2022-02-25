@@ -95,7 +95,6 @@ const FeatureOverviewEnvSwitch = ({
                 checked={env.enabled}
                 onChange={toggleEnvironment}
                 environmentId={env.name}
-                tooltip={''}
             />
             {content}
         </div>

@@ -123,7 +123,6 @@ export const ConfiguredAddons = ({ getAddonIcon }: IConfigureAddonsProps) => {
                 </PermissionIconButton>
                 <PermissionIconButton
                     permission={UPDATE_ADDON}
-                    tooltip={'Edit Addon'}
                     onClick={() => {
                         history.push(`/addons/edit/${addon.id}`);
                     }}
@@ -132,7 +131,6 @@ export const ConfiguredAddons = ({ getAddonIcon }: IConfigureAddonsProps) => {
                 </PermissionIconButton>
                 <PermissionIconButton
                     permission={DELETE_ADDON}
-                    tooltip={'Remove Addon'}
                     onClick={() => {
                         setDeletedAddon(addon);
                         setShowDelete(true);

@@ -126,7 +126,7 @@ to resources within a project"
                 getRoleKey={getRoleKey}
             >
                 <PermissionButton permission={ADMIN} type="submit">
-                    Edit role
+                    Save
                 </PermissionButton>
             </ProjectRoleForm>
         </FormTemplate>

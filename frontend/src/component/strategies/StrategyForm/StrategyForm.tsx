@@ -178,7 +178,7 @@ export const StrategyForm = ({ editMode, strategy }: IStrategyFormProps) => {
                             color="primary"
                             style={{ display: 'block' }}
                         >
-                            Update
+                            Save
                         </Button>
                     }
                     elseShow={

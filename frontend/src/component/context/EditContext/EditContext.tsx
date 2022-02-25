@@ -77,7 +77,7 @@ export const EditContext = () => {
         <FormTemplate
             loading={loading}
             title="Edit context"
-            description="Context fields are a basic building block used in Unleash to control roll-out. 
+            description="Context fields are a basic building block used in Unleash to control roll-out.
             They can be used together with strategy constraints as part of the activation strategy evaluation."
             documentationLink="https://docs.getunleash.io/how-to/how-to-define-custom-context-fields"
             formatApiCode={formatApiCode}

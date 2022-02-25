@@ -1,4 +1,4 @@
-import { featureSchema, querySchema } from './feature-schema';
+import { constraintSchema, featureSchema, querySchema } from './feature-schema';
 
 test('should require URL firendly name', () => {
     const toggle = {
@@ -271,4 +271,21 @@ test('Filter queries should reject project names that are not alphanum', () => {
     expect(error.details[0].message).toEqual(
         '"project[0]" must be URL friendly',
     );
+});
+
+test('constraint schema should only allow specified operators', async () => {
+    const invalidConstraint = {
+        contextName: 'semver',
+        operator: 'INVALID_OPERATOR',
+        value: 123123213123,
+    };
+    expect.assertions(1);
+
+    try {
+        await constraintSchema.validateAsync(invalidConstraint);
+    } catch (error) {
+        expect(error.message).toBe(
+            '"operator" must be one of [NOT_IN, IN, STR_ENDS_WITH, STR_STARTS_WITH, STR_CONTAINS, NUM_EQ, NUM_GT, NUM_GTE, NUM_LT, NUM_LTE, DATE_AFTER, DATE_BEFORE, SEMVER_EQ, SEMVER_GT, SEMVER_LT]',
+        );
+    }
 });

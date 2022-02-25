@@ -14,6 +14,7 @@ import ConditionallyRender from 'component/common/ConditionallyRender';
 import PageContent from 'component/common/PageContent/PageContent';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import HeaderTitle from 'component/common/HeaderTitle/HeaderTitle';
+import { formatUnknownError } from 'utils/format-unknown-error';
 
 const CreateEnvironment = () => {
     const { setToastApiError, setToastData } = useToast();
@@ -49,8 +50,8 @@ const CreateEnvironment = () => {
                     confetti: true,
                 });
                 history.push('/environments');
-            } catch (e: any) {
-                setToastApiError(e.toString());
+            } catch (error: unknown) {
+                setToastApiError(formatUnknownError(error));
             }
         }
     };

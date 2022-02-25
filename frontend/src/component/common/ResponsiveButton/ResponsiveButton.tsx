@@ -2,6 +2,7 @@ import { useMediaQuery } from '@material-ui/core';
 import ConditionallyRender from '../ConditionallyRender';
 import PermissionButton from '../PermissionButton/PermissionButton';
 import PermissionIconButton from '../PermissionIconButton/PermissionIconButton';
+import React from 'react';
 
 interface IResponsiveButtonProps {
     Icon: React.ElementType;

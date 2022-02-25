@@ -44,7 +44,6 @@ export const AvailableAddons = ({
                     onClick={() =>
                         history.push(`/addons/create/${provider.name}`)
                     }
-                    tooltip={`Configure ${provider.name} Addon`}
                 >
                     Configure
                 </PermissionButton>

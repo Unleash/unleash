@@ -8,6 +8,7 @@ import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
+import { formatUnknownError } from 'utils/format-unknown-error';
 
 const CreateProject = () => {
     const { setToastData, setToastApiError } = useToast();
@@ -48,8 +49,8 @@ const CreateProject = () => {
                     confetti: true,
                     type: 'success',
                 });
-            } catch (e: any) {
-                setToastApiError(e.toString());
+            } catch (error: unknown) {
+                setToastApiError(formatUnknownError(error));
             }
         }
     };

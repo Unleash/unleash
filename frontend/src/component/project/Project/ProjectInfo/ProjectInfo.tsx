@@ -50,7 +50,6 @@ const ProjectInfo = ({
     const permissionButton = (
         <PermissionIconButton
             permission={UPDATE_PROJECT}
-            tooltip={'Edit description'}
             projectId={id}
             component={Link}
             className={permissionButtonClass}

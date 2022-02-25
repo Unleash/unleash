@@ -10,6 +10,7 @@ import { IPermission } from 'interfaces/user';
 import { useParams, useHistory } from 'react-router-dom';
 import useProjectRoleForm from '../hooks/useProjectRoleForm';
 import ProjectRoleForm from '../ProjectRoleForm/ProjectRoleForm';
+import { formatUnknownError } from 'utils/format-unknown-error';
 
 const EditProjectRole = () => {
     const { uiConfig } = useUiConfig();
@@ -85,8 +86,8 @@ const EditProjectRole = () => {
                     text: 'Your role changes will automatically be applied to the users with this role.',
                     confetti: true,
                 });
-            } catch (e: any) {
-                setToastApiError(e.toString());
+            } catch (error: unknown) {
+                setToastApiError(formatUnknownError(error));
             }
         }
     };

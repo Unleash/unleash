@@ -8,7 +8,7 @@ import useTagType from 'hooks/api/getters/useTagType/useTagType';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
-
+import { formatUnknownError } from 'utils/format-unknown-error';
 const EditTagType = () => {
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
@@ -37,8 +37,8 @@ const EditTagType = () => {
                 title: 'Tag type updated',
                 type: 'success',
             });
-        } catch (e: any) {
-            setToastApiError(e.toString());
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
         }
     };
 

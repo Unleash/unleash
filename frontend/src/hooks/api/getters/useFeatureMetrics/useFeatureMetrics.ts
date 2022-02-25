@@ -4,7 +4,10 @@ import useSWR, { mutate, SWRConfiguration } from 'swr';
 import { IFeatureMetrics } from '../../../../interfaces/featureToggle';
 import handleErrorResponses from '../httpErrorResponseHandler';
 
-const emptyMetrics = { lastHourUsage: [], seenApplications: [] };
+const emptyMetrics: IFeatureMetrics = {
+    lastHourUsage: [],
+    seenApplications: [],
+};
 
 const useFeatureMetrics = (
     projectId: string,

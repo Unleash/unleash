@@ -1,7 +1,7 @@
 import { Button, Tooltip } from '@material-ui/core';
 import { Lock } from '@material-ui/icons';
 import AccessContext from 'contexts/AccessContext';
-import { useContext } from 'react';
+import React, { useContext } from 'react';
 import ConditionallyRender from '../ConditionallyRender';
 
 export interface IPermissionButtonProps
@@ -16,7 +16,7 @@ export interface IPermissionButtonProps
 
 const PermissionButton: React.FC<IPermissionButtonProps> = ({
     permission,
-    tooltip = 'Click to perform action',
+    tooltip,
     onClick,
     children,
     disabled,
@@ -54,9 +54,9 @@ const PermissionButton: React.FC<IPermissionButtonProps> = ({
 
     access = handleAccess();
 
-    const tooltipText = access
-        ? tooltip
-        : "You don't have access to perform this operation";
+    const tooltipText = !access
+        ? "You don't have access to perform this operation"
+        : '';
 
     return (
         <Tooltip title={tooltipText} arrow>

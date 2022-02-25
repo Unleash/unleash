@@ -1,14 +1,11 @@
 import { List, Switch, FormControlLabel } from '@material-ui/core';
 import PropTypes from 'prop-types';
-
-import { formatFullDateTimeWithLocale } from '../../common/util';
-
 import EventJson from './EventJson/EventJson';
 import PageContent from '../../common/PageContent/PageContent';
 import HeaderTitle from '../../common/HeaderTitle';
 import EventCard from './EventCard/EventCard';
-
 import { useStyles } from './EventLog.styles.js';
+import { formatDateYMDHMS } from '../../../utils/format-date';
 
 const EventLog = ({
     title,
@@ -23,7 +20,7 @@ const EventLog = ({
         setEventSettings({ showData: !eventSettings.showData });
     };
     const formatFulldateTime = v => {
-        return formatFullDateTimeWithLocale(v, locationSettings.locale);
+        return formatDateYMDHMS(v, locationSettings.locale);
     };
 
     if (!history || history.length < 0) {

@@ -7,6 +7,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
+import { formatUnknownError } from 'utils/format-unknown-error';
 
 const CreateProjectRole = () => {
     const { setToastData, setToastApiError } = useToast();
@@ -49,8 +50,8 @@ const CreateProjectRole = () => {
                     confetti: true,
                     type: 'success',
                 });
-            } catch (e: any) {
-                setToastApiError(e.toString());
+            } catch (error: unknown) {
+                setToastApiError(formatUnknownError(error));
             }
         }
     };

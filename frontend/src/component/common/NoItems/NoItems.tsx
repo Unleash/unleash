@@ -1,5 +1,6 @@
 import { ReactComponent as NoItemsIcon } from '../../../assets/icons/addfiles.svg';
 import { useStyles } from './NoItems.styles';
+import React from 'react';
 
 const NoItems: React.FC = ({ children }) => {
     const styles = useStyles();

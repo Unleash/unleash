@@ -11,9 +11,7 @@ interface IRedirectParams {
 const RedirectFeatureView = () => {
     const { name } = useParams<IRedirectParams>();
     const { features } = useFeatures();
-    const [featureToggle, setFeatureToggle] = useState<IFeatureToggle | null>(
-        null
-    );
+    const [featureToggle, setFeatureToggle] = useState<IFeatureToggle>();
 
     useEffect(() => {
         const toggle = features.find(
@@ -23,7 +21,9 @@ const RedirectFeatureView = () => {
         setFeatureToggle(toggle);
     }, [features, name]);
 
-    if (!featureToggle) return null;
+    if (!featureToggle) {
+        return null;
+    }
 
     return (
         <Redirect

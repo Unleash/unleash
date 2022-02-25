@@ -79,8 +79,8 @@ export const OidcAuth = () => {
                 title: 'Settings stored',
                 type: 'success',
             });
-        } catch (err) {
-            setToastApiError(formatUnknownError(err));
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
         }
     };
 

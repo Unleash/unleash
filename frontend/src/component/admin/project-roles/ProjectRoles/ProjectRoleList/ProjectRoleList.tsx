@@ -16,6 +16,7 @@ import IRole, { IProjectRole } from '../../../../../interfaces/role';
 import useProjectRolesApi from '../../../../../hooks/api/actions/useProjectRolesApi/useProjectRolesApi';
 import useToast from '../../../../../hooks/useToast';
 import ProjectRoleDeleteConfirm from '../ProjectRoleDeleteConfirm/ProjectRoleDeleteConfirm';
+import { formatUnknownError } from '../../../../../utils/format-unknown-error';
 
 const ROOTROLE = 'root';
 
@@ -44,8 +45,8 @@ const ProjectRoleList = () => {
                 title: 'Successfully deleted role',
                 text: 'Your role is now deleted',
             });
-        } catch (e) {
-            setToastApiError(e.toString());
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
         }
         setDelDialog(false);
         setConfirmName('');

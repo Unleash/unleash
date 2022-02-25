@@ -11,6 +11,7 @@ import useAdminUsersApi from 'hooks/api/actions/useAdminUsersApi/useAdminUsersAp
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useUserInfo from 'hooks/api/getters/useUserInfo/useUserInfo';
 import useToast from 'hooks/useToast';
+import { formatUnknownError } from 'utils/format-unknown-error';
 
 const EditUser = () => {
     useEffect(() => {
@@ -60,8 +61,8 @@ const EditUser = () => {
                     title: 'User information updated',
                     type: 'success',
                 });
-            } catch (e: any) {
-                setToastApiError(e.toString());
+            } catch (error: unknown) {
+                setToastApiError(formatUnknownError(error));
             }
         }
     };

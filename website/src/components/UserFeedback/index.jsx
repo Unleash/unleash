@@ -211,17 +211,15 @@ export const FeedbackWrapper = ({ seedData }) => {
                     Finally, would you mind telling us a little about yourself?
                     What kind of customer are you?
                 </span>
-                <div>
+                <div className={styles['customer-type-inputs']}>
                     {[
-                        ['an', 'open source', 'opensource'],
                         ['a', 'paying', 'paying'],
+                        ['an', 'open source', 'opensource'],
                     ].map(([article, customerType, key]) => (
                         <span key={`input-group-${key}`}>
                             <input
-                                className={join(
-                                    styles['user-satisfaction-score-input'],
-                                )}
                                 id={`customer-type-${key}`}
+                                className={styles['customer-type-input']}
                                 name="customer-type"
                                 type="radio"
                                 value={key}
@@ -233,9 +231,7 @@ export const FeedbackWrapper = ({ seedData }) => {
                                 }}
                             />
                             <label
-                                className={
-                                    styles['user-satisfaction-score-label']
-                                }
+                                className={styles['customer-type-label']}
                                 htmlFor={`customer-type-${key}`}
                             >
                                 I'm {article} {customerType} customer

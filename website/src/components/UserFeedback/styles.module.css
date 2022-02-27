@@ -133,3 +133,11 @@ button.close-button {
     display: block;
     width: 100%;
 }
+
+.customer-type-inputs {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: var(--ifm-spacing-horizontal);
+    accent-color: var(--ifm-color-primary);
+}

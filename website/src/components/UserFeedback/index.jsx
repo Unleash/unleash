@@ -17,6 +17,9 @@ const fetchData = (initialData) => {
     const localstorageKey = 'user-feedback';
 
     return {
+        data: {
+            score: undefined,
+        },
         ...initialData,
         initialized: Date.now(),
         closedOrCompleted: false,
@@ -25,44 +28,45 @@ const fetchData = (initialData) => {
     // populate if there is
 };
 
-export const FeedbackWrapper = ({ initialData }) => {
+const stateReducer = (state, message) => {
+    switch (message.kind) {
+        case 'clear':
+            return fetchData(seedData);
+        case 'set score':
+            return {
+                ...state,
+                // data: { ...state.data, score: message.data },
+            };
+        case 'set comment':
+            return {
+                ...state,
+                data: { ...state.data, comment: message.data },
+            };
+        case 'set customer type':
+            return {
+                ...state,
+                data: { ...state.data, customerType: message.data },
+            };
+        case 'step forward':
+            return {
+                ...state,
+                currentStep: min(state.currentStep + 1, 3),
+            };
+        case 'step back':
+            return {
+                ...state,
+                currentStep: max(state.currentStep - 1, 1),
+            };
+    }
+    return state;
+};
+
+export const FeedbackWrapper = ({ seedData }) => {
     const [feedbackIsOpen, setFeedbackIsOpen] = React.useState(false);
-    const stateReducer = (state, message) => {
-        switch (message.kind) {
-            case 'clear':
-                return initialData();
-            case 'set score':
-                return {
-                    ...state,
-                    data: { ...state.data, score: message.data },
-                };
-            case 'set comment':
-                return {
-                    ...state,
-                    data: { ...state.data, comment: message.data },
-                };
-            case 'set customer type':
-                return {
-                    ...state,
-                    data: { ...state.data, customerType: message.data },
-                };
-            case 'step forward':
-                return {
-                    ...state,
-                    currentStep: min(state.currentStep + 1, 3),
-                };
-            case 'step back':
-                return {
-                    ...state,
-                    currentStep: max(state.currentStep - 1, 1),
-                };
-        }
-        return state;
-    };
 
     const [state, dispatch] = React.useReducer(
         stateReducer,
-        initialData,
+        seedData,
         fetchData,
     );
 
@@ -109,7 +113,7 @@ export const FeedbackWrapper = ({ initialData }) => {
                                 onChange={(e) => {
                                     const value = parseInt(e.target.value);
                                     console.log('the value is', value);
-                                    setScore(value);
+                                    /* setScore(value); */
                                 }}
                             />
                             <label
@@ -134,94 +138,23 @@ export const FeedbackWrapper = ({ initialData }) => {
         );
     };
 
-    return (
-        <Component
-            CurrentStep={
-                <Step1
-                    score={state.data.score}
-                    setScore={setScore}
-                    stepForward={stepForward}
-                />
-            }
-        />
-    );
-};
+    console.log('bluh');
 
-const OpenFeedbackButton = ({ openFeedback }) => {
-    return <button onClick={openFeedback}>Feedback</button>;
-};
-
-export const Step1 = ({ score, stepForward, setScore }) => {
-    return (
-        <form>
-            <p>
-                <span className="visually-hidden">
-                    On a scale from 1 to 5 where 1 is very unsatisfied and 5 is
-                    very satisfied,
-                </span>{' '}
-                How would you rate your overall satisfaction with the Unleash
-                documentation?
-            </p>
-
-            <div className={styles['satisfaction-input-container']}>
-                <span aria-hidden="true">Very unsatisfied</span>
-                {[1, 2, 3, 4, 5].map((n) => (
-                    <span key={`input-group-${n}`}>
-                        <input
-                            className={join(
-                                'visually-hidden',
-                                styles['user-satisfaction-score-input'],
-                            )}
-                            required
-                            id={`user-satisfaction-score-${n}`}
-                            name="satisfaction-level"
-                            type="radio"
-                            value={n}
-                            defaultChecked={n === score}
-                            onChange={(e) => {
-                                const value = parseInt(e.target.value);
-                                console.log('the value is', value);
-                                setScore(value);
-                            }}
-                        />
-                        <label
-                            className={styles['user-satisfaction-score-label']}
-                            htmlFor={`user-satisfaction-score-${n}`}
-                        >
-                            {n}
-                        </label>
-                    </span>
-                ))}
-                <span aria-hidden="true">Very satisfied</span>
-            </div>
-            <div className={styles['button-container']}>
-                <button className={styles['button-secondary']}>Skip</button>
-                <button type="submit" onClick={stepForward}>
-                    Next
-                </button>
-            </div>
-        </form>
-    );
-};
-
-const Component = ({ closeFeedback = () => undefined, CurrentStep }) => {
     return (
         <article className={styles['user-feedback']}>
             <div className={styles['close-button-row']}>
-                <button
-                    className={styles['close-button']}
-                    onClick={closeFeedback}
-                >
+                <button className={styles['close-button']}>
                     <span className="visually-hidden">
                         close feedback popup
                     </span>
                     <CloseIcon />
                 </button>
             </div>
-
-            {CurrentStep}
+            <Step1 />
         </article>
     );
 };
 
-export default Component;
+const OpenFeedbackButton = ({ openFeedback }) => {
+    return <button onClick={openFeedback}>Feedback</button>;
+};

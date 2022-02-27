@@ -106,37 +106,49 @@ export const FeedbackWrapper = ({ seedData }) => {
                 </p>
 
                 <div className={styles['satisfaction-input-container']}>
-                    <span aria-hidden="true">Very unsatisfied</span>
-                    {[1, 2, 3, 4, 5].map((n) => (
-                        <span key={`input-group-${n}`}>
-                            <input
-                                className={join(
-                                    'visually-hidden',
-                                    styles['user-satisfaction-score-input'],
-                                )}
-                                required
-                                id={`user-satisfaction-score-${n}`}
-                                name="satisfaction-level"
-                                type="radio"
-                                value={n}
-                                defaultChecked={n === state.data.score}
-                                onChange={(e) => {
-                                    const value = parseInt(e.target.value);
-                                    console.log('the value is', value);
-                                    setNewValue(value);
-                                }}
-                            />
-                            <label
-                                className={
-                                    styles['user-satisfaction-score-label']
-                                }
-                                htmlFor={`user-satisfaction-score-${n}`}
-                            >
-                                {n}
-                            </label>
-                        </span>
-                    ))}
-                    <span aria-hidden="true">Very satisfied</span>
+                    <span
+                        aria-hidden="true"
+                        className={styles['satisfaction-input-visual-label']}
+                    >
+                        Very unsatisfied
+                    </span>
+                    <span className={styles['satisfaction-input-inputs']}>
+                        {[1, 2, 3, 4, 5].map((n) => (
+                            <span key={`input-group-${n}`}>
+                                <input
+                                    className={join(
+                                        'visually-hidden',
+                                        styles['user-satisfaction-score-input'],
+                                    )}
+                                    required
+                                    id={`user-satisfaction-score-${n}`}
+                                    name="satisfaction-level"
+                                    type="radio"
+                                    value={n}
+                                    defaultChecked={n === state.data.score}
+                                    onChange={(e) => {
+                                        const value = parseInt(e.target.value);
+                                        console.log('the value is', value);
+                                        setNewValue(value);
+                                    }}
+                                />
+                                <label
+                                    className={
+                                        styles['user-satisfaction-score-label']
+                                    }
+                                    htmlFor={`user-satisfaction-score-${n}`}
+                                >
+                                    {n}
+                                </label>
+                            </span>
+                        ))}
+                    </span>
+                    <span
+                        aria-hidden="true"
+                        className={styles['satisfaction-input-visual-label']}
+                    >
+                        Very satisfied
+                    </span>
                 </div>
                 <div className={styles['button-container']}>
                     <button

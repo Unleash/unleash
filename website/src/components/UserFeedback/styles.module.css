@@ -43,9 +43,34 @@
 
 .satisfaction-input-container {
     display: flex;
+    flex-flow: wrap;
     place-content: center;
     align-items: center;
     gap: var(--element-horizontal-gap);
+}
+
+.satisfaction-input-inputs {
+    display: flex;
+    flex-flow: wrap;
+    place-content: center;
+    align-items: center;
+    gap: var(--element-horizontal-gap);
+}
+
+.satisfaction-input-visual-label {
+    display: none;
+}
+
+@media screen and (min-width: 800px) {
+    .satisfaction-input-visual-label {
+        display: inline;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .satisfaction-input-inputs {
+        gap: calc(var(--element-horizontal-gap) / 2);
+    }
 }
 
 .user-satisfaction-score-label {

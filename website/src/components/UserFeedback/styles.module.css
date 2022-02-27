@@ -75,6 +75,7 @@
 .button-container {
     margin-top: var(--row-gap);
     display: flex;
+    flex-direction: row-reverse;
     justify-content: end;
     gap: var(--element-horizontal-gap);
 }

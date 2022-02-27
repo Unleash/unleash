@@ -172,20 +172,6 @@ export const FeedbackWrapper = ({ seedData }) => {
 
                 <div className={styles['button-container']}>
                     <button
-                        className={styles['button-secondary']}
-                        type="button"
-                        onClick={stepForward}
-                    >
-                        Skip
-                    </button>
-                    <button
-                        className={styles['button-secondary']}
-                        type="button"
-                        onClick={stepBack}
-                    >
-                        Back
-                    </button>
-                    <button
                         type="submit"
                         onSubmit={(e) => {
                             e.preventDefault();
@@ -196,6 +182,20 @@ export const FeedbackWrapper = ({ seedData }) => {
                         }}
                     >
                         Next
+                    </button>
+                    <button
+                        className={styles['button-secondary']}
+                        type="button"
+                        onClick={stepBack}
+                    >
+                        Back
+                    </button>
+                    <button
+                        className={styles['button-secondary']}
+                        type="button"
+                        onClick={stepForward}
+                    >
+                        Skip
                     </button>
                 </div>
             </form>
@@ -246,13 +246,6 @@ export const FeedbackWrapper = ({ seedData }) => {
 
                 <div className={styles['button-container']}>
                     <button
-                        className={styles['button-secondary']}
-                        type="button"
-                        onClick={stepBack}
-                    >
-                        Back
-                    </button>
-                    <button
                         type="submit"
                         onSubmit={(e) => {
                             e.preventDefault();
@@ -261,6 +254,13 @@ export const FeedbackWrapper = ({ seedData }) => {
                         }}
                     >
                         Submit feedback
+                    </button>
+                    <button
+                        className={styles['button-secondary']}
+                        type="button"
+                        onClick={stepBack}
+                    >
+                        Back
                     </button>
                 </div>
             </form>

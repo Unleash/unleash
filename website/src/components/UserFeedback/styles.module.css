@@ -29,8 +29,12 @@
     margin-right: auto;
 }
 
+.user-feedback > form > * + * {
+    margin-top: var(--row-gap);
+}
+
 .user-feedback * {
-        outline-offset: 4px;
+    outline-offset: 4px;
 }
 
 .user-feedback *:focus-visible {
@@ -43,7 +47,6 @@
     align-items: center;
     gap: var(--element-horizontal-gap);
 }
-
 
 .user-satisfaction-score-label {
     display: grid;
@@ -59,7 +62,7 @@
 }
 
 .user-satisfaction-score-label:hover {
-    color: var(--ifm-color-primary)
+    color: var(--ifm-color-primary);
 }
 
 .user-satisfaction-score-input:checked + label {
@@ -85,11 +88,11 @@ button.close-button {
     height: 1em;
 }
 
-.close-button:hover{
+.close-button:hover {
     color: var(--ifm-color-primary);
 }
 
-.close-button:active{
+.close-button:active {
     color: var(--ifm-color-primary-darker);
 }
 
@@ -98,17 +101,17 @@ button.close-button {
     justify-content: end;
 }
 
-.user-feedback button[type=submit] {
+.user-feedback button[type='submit'] {
     background-color: var(--ifm-color-primary);
     color: var(--ifm-background-color);
     padding-inline: calc(var(--ifm-spacing-horizontal) * 4);
 }
 
-.user-feedback button[type=submit]:hover {
+.user-feedback button[type='submit']:hover {
     background-color: var(--ifm-color-primary-lighter);
 }
 
-.user-feedback button[type=submit]:active {
+.user-feedback button[type='submit']:active {
     background-color: var(--ifm-color-primary-dark);
 }
 
@@ -117,11 +120,15 @@ button.close-button {
     background: none;
 }
 
-
 .button-secondary:active {
     color: var(--ifm-color-primary-darker);
 }
 
 .button-secondary:hover {
     color: var(--ifm-color-primary-lightest);
+}
+
+.user-feedback textarea {
+    display: block;
+    width: 100%;
 }

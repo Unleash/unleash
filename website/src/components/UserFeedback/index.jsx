@@ -88,10 +88,14 @@ export const FeedbackWrapper = ({ seedData }) => {
     const setCustomerType = (customerType) =>
         dispatch({ kind: 'set customer type', data: customerType });
 
+    const submitFeedback = () => {
+        console.log('send feedback here ');
+    };
+
     const Step1 = () => {
         const [newValue, setNewValue] = React.useState(undefined);
         return (
-            <form>
+            <form className="step-1">
                 <p>
                     <span className="visually-hidden">
                         On a scale from 1 to 5 where 1 is very unsatisfied and 5
@@ -136,15 +140,9 @@ export const FeedbackWrapper = ({ seedData }) => {
                 </div>
                 <div className={styles['button-container']}>
                     <button
-                        className={styles['button-secondary']}
-                        type="button"
-                    >
-                        Skip
-                    </button>
-                    <button
                         type="submit"
-                        onClick={(e) => {
-                            console.log(e);
+                        onSubmit={(e) => {
+                            console.log(e, 'cancelable:', e.cancelable);
                             e.preventDefault();
                             setScore(newValue);
                             stepForward();
@@ -157,6 +155,117 @@ export const FeedbackWrapper = ({ seedData }) => {
         );
     };
 
+    const Step2 = () => {
+        const textareaId = 'feedback-comment-input';
+        return (
+            <form className="step-2">
+                <label htmlFor={textareaId}>
+                    What would you like to see improved in the Unleash
+                    documentation?
+                </label>
+                <textarea
+                    id={textareaId}
+                    /* cols="30" */
+                    name=""
+                    rows="5"
+                ></textarea>
+
+                <div className={styles['button-container']}>
+                    <button
+                        className={styles['button-secondary']}
+                        type="button"
+                        onClick={stepForward}
+                    >
+                        Skip
+                    </button>
+                    <button
+                        className={styles['button-secondary']}
+                        type="button"
+                        onClick={stepBack}
+                    >
+                        Back
+                    </button>
+                    <button
+                        type="submit"
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                            setComment(
+                                document.getElementById(textareaId).value,
+                            );
+                            stepForward();
+                        }}
+                    >
+                        Next
+                    </button>
+                </div>
+            </form>
+        );
+    };
+
+    const Step3 = () => {
+        const [customerType, setCustomerType] = React.useState();
+
+        return (
+            <form className="step-3">
+                <span>
+                    Finally, would you mind telling us a little about yourself?
+                    What kind of customer are you?
+                </span>
+                <div>
+                    {[
+                        ['an', 'open source', 'opensource'],
+                        ['a', 'paying', 'paying'],
+                    ].map(([article, customerType, key]) => (
+                        <span key={`input-group-${key}`}>
+                            <input
+                                className={join(
+                                    styles['user-satisfaction-score-input'],
+                                )}
+                                id={`customer-type-${key}`}
+                                name="customer-type"
+                                type="radio"
+                                value={key}
+                                defaultChecked={key === state.data.customerType}
+                                onChange={(e) => {
+                                    const value = e.target.value;
+                                    console.log('the value is', value);
+                                    setCustomerType(value);
+                                }}
+                            />
+                            <label
+                                className={
+                                    styles['user-satisfaction-score-label']
+                                }
+                                htmlFor={`customer-type-${key}`}
+                            >
+                                I'm {article} {customerType} customer
+                            </label>
+                        </span>
+                    ))}
+                </div>
+
+                <div className={styles['button-container']}>
+                    <button
+                        className={styles['button-secondary']}
+                        type="button"
+                        onClick={stepBack}
+                    >
+                        Back
+                    </button>
+                    <button
+                        type="submit"
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                            setCustomerType(customerType);
+                            submitFeedback();
+                        }}
+                    >
+                        Submit feedback
+                    </button>
+                </div>
+            </form>
+        );
+    };
     return (
         <article className={styles['user-feedback']}>
             <div className={styles['close-button-row']}>

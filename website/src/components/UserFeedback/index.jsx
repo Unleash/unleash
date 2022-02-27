@@ -17,10 +17,14 @@ const fetchData = (initialData) => {
     const localstorageKey = 'user-feedback';
 
     return {
+        currentStep: 1,
+        ...initialData,
         data: {
             score: undefined,
+            comment: undefined,
+            customerType: undefined,
+            ...initialData?.data,
         },
-        ...initialData,
         initialized: Date.now(),
         closedOrCompleted: false,
     };
@@ -35,7 +39,7 @@ const stateReducer = (state, message) => {
         case 'set score':
             return {
                 ...state,
-                // data: { ...state.data, score: message.data },
+                data: { ...state.data, score: message.data },
             };
         case 'set comment':
             return {
@@ -50,19 +54,19 @@ const stateReducer = (state, message) => {
         case 'step forward':
             return {
                 ...state,
-                currentStep: min(state.currentStep + 1, 3),
+                currentStep: Math.min(state.currentStep + 1, 3),
             };
         case 'step back':
             return {
                 ...state,
-                currentStep: max(state.currentStep - 1, 1),
+                currentStep: Math.max(state.currentStep - 1, 1),
             };
     }
     return state;
 };
 
 export const FeedbackWrapper = ({ seedData }) => {
-    const [feedbackIsOpen, setFeedbackIsOpen] = React.useState(false);
+    // const [feedbackIsOpen, setFeedbackIsOpen] = React.useState(false);
 
     const [state, dispatch] = React.useReducer(
         stateReducer,
@@ -70,9 +74,10 @@ export const FeedbackWrapper = ({ seedData }) => {
         fetchData,
     );
 
+    console.log(state, state.data);
+
     const clear = () => dispatch({ kind: 'clear' });
-    const stepForward = (e) => {
-        e.preventDefault();
+    const stepForward = () => {
         console.log('stepping forward!');
         dispatch({ kind: 'step forward' });
     };
@@ -84,6 +89,7 @@ export const FeedbackWrapper = ({ seedData }) => {
         dispatch({ kind: 'set customer type', data: customerType });
 
     const Step1 = () => {
+        const [newValue, setNewValue] = React.useState(undefined);
         return (
             <form>
                 <p>
@@ -113,7 +119,7 @@ export const FeedbackWrapper = ({ seedData }) => {
                                 onChange={(e) => {
                                     const value = parseInt(e.target.value);
                                     console.log('the value is', value);
-                                    /* setScore(value); */
+                                    setNewValue(value);
                                 }}
                             />
                             <label
@@ -129,16 +135,27 @@ export const FeedbackWrapper = ({ seedData }) => {
                     <span aria-hidden="true">Very satisfied</span>
                 </div>
                 <div className={styles['button-container']}>
-                    <button className={styles['button-secondary']}>Skip</button>
-                    <button type="submit" onClick={stepForward}>
+                    <button
+                        className={styles['button-secondary']}
+                        type="button"
+                    >
+                        Skip
+                    </button>
+                    <button
+                        type="submit"
+                        onClick={(e) => {
+                            console.log(e);
+                            e.preventDefault();
+                            setScore(newValue);
+                            stepForward();
+                        }}
+                    >
                         Next
                     </button>
                 </div>
             </form>
         );
     };
-
-    console.log('bluh');
 
     return (
         <article className={styles['user-feedback']}>
@@ -150,7 +167,13 @@ export const FeedbackWrapper = ({ seedData }) => {
                     <CloseIcon />
                 </button>
             </div>
-            <Step1 />
+            {state.currentStep === 1 ? (
+                <Step1 />
+            ) : state.currentStep === 2 ? (
+                <Step2 />
+            ) : (
+                <Step3 />
+            )}
         </article>
     );
 };

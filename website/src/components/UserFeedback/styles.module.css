@@ -87,6 +87,7 @@ button.close-button {
     padding: 0;
     aspect-ratio: 1;
     height: 1em;
+    color: var(--ifm-font-color-base);
 }
 
 .close-button:hover {
@@ -100,6 +101,10 @@ button.close-button {
 .close-button-row {
     display: flex;
     justify-content: end;
+}
+
+.close-button svg {
+    fill: currentColor;
 }
 
 .user-feedback button[type='submit'] {
@@ -132,6 +137,11 @@ button.close-button {
 .user-feedback textarea {
     display: block;
     width: 100%;
+    background-color: var(--ifm-background-color);
+    color: currentColor;
+    border-radius: var(--ifm-global-radius);
+    border: max(var(--ifm-global-border-width), 2px) solid
+        var(--unleash-color-gray);
 }
 
 .customer-type-inputs {

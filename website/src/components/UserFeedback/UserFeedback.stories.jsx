@@ -10,7 +10,7 @@ const Template = (args) => <FeedbackWrapper {...args} />;
 
 export const FullComponent = Template.bind({});
 FullComponent.args = {
-    // initialData,
+    open: true,
 };
 
 export const Step2 = Template.bind({});
@@ -18,6 +18,7 @@ Step2.args = {
     seedData: {
         currentStep: 2,
     },
+    open: true,
 };
 
 export const Step3 = Template.bind({});
@@ -25,5 +26,7 @@ Step3.args = {
     seedData: {
         currentStep: 3,
     },
+    open: true,
 };
+
 export const Closed = Template.bind({});

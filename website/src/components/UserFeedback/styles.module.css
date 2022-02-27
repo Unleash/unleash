@@ -132,6 +132,7 @@ button.close-button {
     fill: currentColor;
 }
 
+.primary-button,
 .user-feedback button[type='submit'] {
     background-color: var(--ifm-color-primary);
     color: var(--ifm-background-color);
@@ -175,4 +176,16 @@ button.close-button {
     flex-wrap: wrap;
     gap: var(--ifm-spacing-horizontal);
     accent-color: var(--ifm-color-primary);
+}
+
+.open-feedback-button {
+    opacity: 0.55;
+    padding-top: var(--ifm-spacing-vertical);
+    padding-bottom: calc(var(--ifm-spacing-vertical) * 2);
+    border-radius: var(--ifm-global-radius) var(--ifm-global-radius) 0 0;
+    border: none;
+    position: absolute;
+    right: calc(var(--ifm-spacing-vertical) * -1);
+    bottom: 25vh;
+    transform: rotate(270deg);
 }

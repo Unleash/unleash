@@ -65,8 +65,8 @@ const stateReducer = (state, message) => {
     return state;
 };
 
-export const FeedbackWrapper = ({ seedData }) => {
-    // const [feedbackIsOpen, setFeedbackIsOpen] = React.useState(false);
+export const FeedbackWrapper = ({ seedData, open }) => {
+    const [feedbackIsOpen, setFeedbackIsOpen] = React.useState(open);
 
     const [state, dispatch] = React.useReducer(
         stateReducer,
@@ -274,10 +274,13 @@ export const FeedbackWrapper = ({ seedData }) => {
             </form>
         );
     };
-    return (
+    return feedbackIsOpen ? (
         <article className={styles['user-feedback']}>
             <div className={styles['close-button-row']}>
-                <button className={styles['close-button']}>
+                <button
+                    onClick={() => setFeedbackIsOpen(false)}
+                    className={styles['close-button']}
+                >
                     <span className="visually-hidden">
                         close feedback popup
                     </span>
@@ -292,9 +295,21 @@ export const FeedbackWrapper = ({ seedData }) => {
                 <Step3 />
             )}
         </article>
+    ) : (
+        <OpenFeedbackButton openFeedback={() => setFeedbackIsOpen(true)} />
     );
 };
 
 const OpenFeedbackButton = ({ openFeedback }) => {
-    return <button onClick={openFeedback}>Feedback</button>;
+    return (
+        <button
+            className={join(
+                styles['open-feedback-button'],
+                styles['primary-button'],
+            )}
+            onClick={openFeedback}
+        >
+            Feedback
+        </button>
+    );
 };

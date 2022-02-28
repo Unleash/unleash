@@ -11,7 +11,7 @@ const clearedData = {
         comment: undefined,
         customerType: undefined,
     },
-    userClosed: false,
+    closedOrCompleted: false,
 };
 
 const localstorageKey = 'user-feedback-v1';
@@ -27,9 +27,12 @@ const populateData = (initialData) => {
         const userFeedbackLog = getUserDataRecord();
 
         if (userFeedbackLog) {
-            const mostRecent = Math.max(...Object.keys(userFeedbackLog));
+            const mostRecentTimestamp = Math.max(
+                ...Object.keys(userFeedbackLog),
+            );
+            const mostRecent = userFeedbackLog[mostRecentTimestamp];
             if (!mostRecent.closedOrCompleted) {
-                return userFeedbackLog[mostRecent];
+                return mostRecent;
             }
         }
 
@@ -69,9 +72,11 @@ const storeData = (data) => {
 const stateReducer = (state, message) => {
     switch (message.kind) {
         case 'close':
-            return { ...state, userClosed: true };
+            return { ...state, closedOrCompleted: true };
+        case 'completed':
+            return { ...state, closedOrCompleted: true };
         case 'reset':
-            return { ...populateData(clearedData), userClosed: false };
+            return { ...populateData(clearedData), closedOrCompleted: false };
         case 'set score':
             return {
                 ...state,
@@ -143,6 +148,7 @@ export const FeedbackWrapper = ({ seedData, open }) => {
             .catch((e) =>
                 console.error('Oh, no! The feedback registration failed:', e),
             );
+        dispatch({ kind: 'completed' });
         stepForward();
     };
 
@@ -405,7 +411,7 @@ export const FeedbackWrapper = ({ seedData, open }) => {
                 onClick={() => {
                     setFeedbackIsOpen(true);
                     setManuallyOpened(true);
-                    if (state.userClosed) {
+                    if (state.closedOrCompleted) {
                         dispatch({ kind: 'reset' });
                     }
                 }}

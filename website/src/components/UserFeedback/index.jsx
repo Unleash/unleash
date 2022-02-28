@@ -95,7 +95,14 @@ export const FeedbackWrapper = ({ seedData, open }) => {
     const Step1 = () => {
         const [newValue, setNewValue] = React.useState(undefined);
         return (
-            <form className="step-1">
+            <form
+                className="step-1"
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    setScore(newValue);
+                    stepForward();
+                }}
+            >
                 <p>
                     <span className="visually-hidden">
                         On a scale from 1 to 5 where 1 is very unsatisfied and 5
@@ -151,17 +158,7 @@ export const FeedbackWrapper = ({ seedData, open }) => {
                     </span>
                 </div>
                 <div className={styles['button-container']}>
-                    <button
-                        type="submit"
-                        onSubmit={(e) => {
-                            console.log(e, 'cancelable:', e.cancelable);
-                            e.preventDefault();
-                            setScore(newValue);
-                            stepForward();
-                        }}
-                    >
-                        Next
-                    </button>
+                    <button type="submit">Next</button>
                 </div>
             </form>
         );
@@ -169,8 +166,18 @@ export const FeedbackWrapper = ({ seedData, open }) => {
 
     const Step2 = () => {
         const textareaId = 'feedback-comment-input';
+        const saveComment = () =>
+            setComment(document.getElementById(textareaId).value);
+
         return (
-            <form className="step-2">
+            <form
+                className="step-2"
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    saveComment();
+                    stepForward();
+                }}
+            >
                 <label htmlFor={textareaId}>
                     What would you like to see improved in the Unleash
                     documentation?
@@ -180,34 +187,31 @@ export const FeedbackWrapper = ({ seedData, open }) => {
                     /* cols="30" */
                     name=""
                     rows="5"
-                ></textarea>
+                >
+                    {state.data.comment}
+                </textarea>
 
                 <div className={styles['button-container']}>
+                    <button type="submit">Next</button>
                     <button
-                        type="submit"
-                        onSubmit={(e) => {
-                            e.preventDefault();
-                            setComment(
-                                document.getElementById(textareaId).value,
-                            );
+                        className={styles['button-secondary']}
+                        type="button"
+                        onClick={() => {
+                            saveComment();
                             stepForward();
                         }}
                     >
-                        Next
+                        Skip
                     </button>
                     <button
                         className={styles['button-secondary']}
                         type="button"
-                        onClick={stepBack}
+                        onClick={() => {
+                            saveComment();
+                            stepBack();
+                        }}
                     >
                         Back
-                    </button>
-                    <button
-                        className={styles['button-secondary']}
-                        type="button"
-                        onClick={stepForward}
-                    >
-                        Skip
                     </button>
                 </div>
             </form>
@@ -215,10 +219,17 @@ export const FeedbackWrapper = ({ seedData, open }) => {
     };
 
     const Step3 = () => {
-        const [customerType, setCustomerType] = React.useState();
+        const [value, setValue] = React.useState();
 
         return (
-            <form className="step-3">
+            <form
+                className="step-3"
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    setCustomerType(value);
+                    submitFeedback();
+                }}
+            >
                 <span>
                     Finally, would you mind telling us a little about yourself?
                     What kind of customer are you?
@@ -238,8 +249,7 @@ export const FeedbackWrapper = ({ seedData, open }) => {
                                 defaultChecked={key === state.data.customerType}
                                 onChange={(e) => {
                                     const value = e.target.value;
-                                    console.log('the value is', value);
-                                    setCustomerType(value);
+                                    setValue(value);
                                 }}
                             />
                             <label
@@ -253,20 +263,14 @@ export const FeedbackWrapper = ({ seedData, open }) => {
                 </div>
 
                 <div className={styles['button-container']}>
-                    <button
-                        type="submit"
-                        onSubmit={(e) => {
-                            e.preventDefault();
-                            setCustomerType(customerType);
-                            submitFeedback();
-                        }}
-                    >
-                        Submit feedback
-                    </button>
+                    <button type="submit">Submit feedback</button>
                     <button
                         className={styles['button-secondary']}
                         type="button"
-                        onClick={stepBack}
+                        onClick={() => {
+                            setCustomerType(value);
+                            stepBack();
+                        }}
                     >
                         Back
                     </button>

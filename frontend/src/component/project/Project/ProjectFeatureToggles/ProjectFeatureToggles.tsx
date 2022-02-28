@@ -1,21 +1,22 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useMemo, useState } from 'react';
 import { IconButton } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import { useParams } from 'react-router';
 import { Link, useHistory } from 'react-router-dom';
-import AccessContext from '../../../../contexts/AccessContext';
-import { IFeatureToggleListItem } from '../../../../interfaces/featureToggle';
-import { getCreateTogglePath } from '../../../../utils/route-path-helpers';
-import ConditionallyRender from '../../../common/ConditionallyRender';
-import { PROJECTFILTERING } from '../../../common/flags';
-import HeaderTitle from '../../../common/HeaderTitle';
-import PageContent from '../../../common/PageContent';
-import ResponsiveButton from '../../../common/ResponsiveButton/ResponsiveButton';
-import FeatureToggleListNew from '../../../feature/FeatureToggleListNew/FeatureToggleListNew';
+import AccessContext from 'contexts/AccessContext';
+import { SearchField } from 'component/common/SearchField/SearchField';
+import ConditionallyRender from 'component/common/ConditionallyRender';
+import { PROJECTFILTERING } from 'component/common/flags';
+import HeaderTitle from 'component/common/HeaderTitle';
+import PageContent from 'component/common/PageContent';
+import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
+import FeatureToggleListNew from 'component/feature/FeatureToggleListNew/FeatureToggleListNew';
+import { IFeatureToggleListItem } from 'interfaces/featureToggle';
+import { getCreateTogglePath } from 'utils/route-path-helpers';
 import { useStyles } from './ProjectFeatureToggles.styles';
-import { CREATE_FEATURE } from '../../../providers/AccessProvider/permissions';
-import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
+import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IProjectFeatureToggles {
     features: IFeatureToggleListItem[];
@@ -27,23 +28,20 @@ const ProjectFeatureToggles = ({
     loading,
 }: IProjectFeatureToggles) => {
     const styles = useStyles();
-    const { id } = useParams();
+    const { id } = useParams<{ id: string }>();
     const history = useHistory();
     const { hasAccess } = useContext(AccessContext);
     const { uiConfig } = useUiConfig();
-    const [filteredFeatures, setFilteredFeatures] =
-        useState<IFeatureToggleListItem[]>(features);
+    const [filter, setFilter] = useState('');
+    useState<IFeatureToggleListItem[]>(features);
 
-    const searchFeatures = () => {
-        const filteredData = features.filter(feature => {
-            return Object.values(feature)
-                .join('')
-                .toLowerCase()
-                .includes('ENV'.toLowerCase());
-        });
-        setFilteredFeatures(filteredData);
-    };
-    
+    const filteredFeatures = useMemo(() => {
+        const regExp = new RegExp(filter, 'i');
+        return filter
+            ? features?.filter(feature => regExp.test(feature?.name))
+            : features;
+    }, [features, filter]);
+
     return (
         <PageContent
             className={styles.container}
@@ -53,7 +51,12 @@ const ProjectFeatureToggles = ({
                     className={styles.title}
                     title={`Feature toggles (${filteredFeatures.length})`}
                     actions={
-                        <>
+                        <div className={styles.actionsContainer}>
+                            <SearchField
+                                initialValue={filter}
+                                updateValue={setFilter}
+                                className={styles.search}
+                            />
                             <ConditionallyRender
                                 condition={PROJECTFILTERING}
                                 show={
@@ -82,10 +85,11 @@ const ProjectFeatureToggles = ({
                                 Icon={Add}
                                 projectId={id}
                                 permission={CREATE_FEATURE}
+                                className={styles.button}
                             >
                                 New feature toggle
                             </ResponsiveButton>
-                        </>
+                        </div>
                     }
                 />
             }

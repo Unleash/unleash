@@ -37,4 +37,17 @@ export const useStyles = makeStyles(theme => ({
     link: {
         textDecoration: 'none',
     },
+    actionsContainer: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    search: {
+        border: `1px solid ${theme.palette.grey[300]}`,
+        height: '35px',
+        marginRight: '2rem',
+    },
+    button: {
+        whiteSpace: 'nowrap',
+    },
 }));

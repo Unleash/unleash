@@ -17,13 +17,14 @@ import { getCreateTogglePath } from 'utils/route-path-helpers';
 import { useStyles } from './ProjectFeatureToggles.styles';
 import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import classnames from 'classnames';
 
 interface IProjectFeatureToggles {
     features: IFeatureToggleListItem[];
     loading: boolean;
 }
 
-const ProjectFeatureToggles = ({
+export const ProjectFeatureToggles = ({
     features,
     loading,
 }: IProjectFeatureToggles) => {
@@ -55,7 +56,9 @@ const ProjectFeatureToggles = ({
                             <SearchField
                                 initialValue={filter}
                                 updateValue={setFilter}
-                                className={styles.search}
+                                className={classnames(styles.search, {
+                                    skeleton: loading,
+                                })}
                             />
                             <ConditionallyRender
                                 condition={PROJECTFILTERING}
@@ -129,5 +132,3 @@ const ProjectFeatureToggles = ({
         </PageContent>
     );
 };
-
-export default ProjectFeatureToggles;

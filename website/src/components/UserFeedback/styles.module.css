@@ -191,12 +191,19 @@ button.close-button {
 }
 
 .open-feedback-button {
-    padding-top: var(--ifm-spacing-vertical);
-    padding-bottom: calc(var(--ifm-spacing-vertical) * 2);
-    border-radius: var(--ifm-global-radius) var(--ifm-global-radius) 0 0;
+    padding-block: var(--ifm-spacing-vertical);
+    border-radius: 0 var(--ifm-global-radius) var(--ifm-global-radius) 0;
     border: none;
     position: absolute;
-    right: calc(var(--ifm-spacing-vertical) * -1);
     bottom: 25vh;
-    transform: rotate(270deg);
+    right: 0;
+    writing-mode: vertical-lr;
+    transform: rotate(180deg);
+    transition: var(--fade-in-transition);
+}
+
+.invisible,
+.open-feedback-button[disabled] {
+    opacity: 0;
+    transition: var(--fade-out-transition);
 }

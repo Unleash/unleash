@@ -8,8 +8,8 @@ export default {
 
 const Template = (args) => <FeedbackWrapper {...args} />;
 
-export const FullComponent = Template.bind({});
-FullComponent.args = {
+export const Step1 = Template.bind({});
+Step1.args = {
     open: true,
 };
 

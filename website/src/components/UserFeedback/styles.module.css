@@ -1,3 +1,9 @@
+.user-feedback-container {
+    --outline-style: 2px solid var(--ifm-color-primary);
+    --row-gap: 1rem;
+    --element-horizontal-gap: 1rem;
+}
+
 .user-feedback {
     width: 100%;
     position: absolute;
@@ -8,9 +14,6 @@
     box-shadow: var(--ifm-global-shadow-lw);
     padding: var(--ifm-spacing-vertical) var(--ifm-spacing-horizontal);
     text-align: center;
-    --outline-style: 2px solid var(--ifm-color-primary);
-    --row-gap: 1rem;
-    --element-horizontal-gap: 1rem;
 }
 
 .user-feedback > * + * {
@@ -33,11 +36,16 @@
     margin-top: var(--row-gap);
 }
 
-.user-feedback * {
+
+.hidden {
+    display: none;
+}
+
+.user-feedback-container * {
     outline-offset: 4px;
 }
 
-.user-feedback *:focus-visible {
+.user-feedback-container *:focus-visible {
     outline: var(--outline-style);
 }
 
@@ -139,11 +147,11 @@ button.close-button {
     padding-inline: calc(var(--ifm-spacing-horizontal) * 4);
 }
 
-.user-feedback button[type='submit']:hover {
+.primary-button:hover, .user-feedback button[type='submit']:hover {
     background-color: var(--ifm-color-primary-lighter);
 }
 
-.user-feedback button[type='submit']:active {
+.primary-button:hover, .user-feedback button[type='submit']:active {
     background-color: var(--ifm-color-primary-dark);
 }
 
@@ -183,7 +191,6 @@ button.close-button {
 }
 
 .open-feedback-button {
-    opacity: 0.55;
     padding-top: var(--ifm-spacing-vertical);
     padding-bottom: calc(var(--ifm-spacing-vertical) * 2);
     border-radius: var(--ifm-global-radius) var(--ifm-global-radius) 0 0;

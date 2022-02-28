@@ -278,42 +278,46 @@ export const FeedbackWrapper = ({ seedData, open }) => {
             </form>
         );
     };
-    return feedbackIsOpen ? (
-        <article className={styles['user-feedback']}>
-            <div className={styles['close-button-row']}>
-                <button
-                    onClick={() => setFeedbackIsOpen(false)}
-                    className={styles['close-button']}
-                >
-                    <span className="visually-hidden">
-                        close feedback popup
-                    </span>
-                    <CloseIcon />
-                </button>
-            </div>
-            {state.currentStep === 1 ? (
-                <Step1 />
-            ) : state.currentStep === 2 ? (
-                <Step2 />
-            ) : (
-                <Step3 />
-            )}
-        </article>
-    ) : (
-        <OpenFeedbackButton openFeedback={() => setFeedbackIsOpen(true)} />
-    );
-};
-
-const OpenFeedbackButton = ({ openFeedback }) => {
     return (
-        <button
-            className={join(
-                styles['open-feedback-button'],
-                styles['primary-button'],
-            )}
-            onClick={openFeedback}
-        >
-            Feedback
-        </button>
+        <div className={styles['user-feedback-container']}>
+            <p>feedback is {feedbackIsOpen ? 'open' : 'closed'}</p>
+            <button
+                className={join(
+                    feedbackIsOpen ? styles['hidden'] : undefined,
+                    styles['open-feedback-button'],
+                    styles['primary-button'],
+                )}
+                disabled={feedbackIsOpen}
+                onClick={() => setFeedbackIsOpen(true)}
+            >
+                Feedback
+            </button>
+
+            <article
+                className={join(
+                    styles['user-feedback'],
+                    feedbackIsOpen ? '' : styles['hidden'],
+                )}
+            >
+                <div className={styles['close-button-row']}>
+                    <button
+                        onClick={() => setFeedbackIsOpen(false)}
+                        className={styles['close-button']}
+                    >
+                        <span className="visually-hidden">
+                            close feedback popup
+                        </span>
+                        <CloseIcon />
+                    </button>
+                </div>
+                {state.currentStep === 1 ? (
+                    <Step1 />
+                ) : state.currentStep === 2 ? (
+                    <Step2 />
+                ) : (
+                    <Step3 />
+                )}
+            </article>
+        </div>
     );
 };

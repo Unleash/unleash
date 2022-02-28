@@ -417,7 +417,10 @@ export const FeedbackWrapper = ({ seedData, open }) => {
             >
                 <div className={styles['close-button-row']}>
                     <button
-                        onClick={() => setFeedbackIsOpen(false)}
+                        onClick={() => {
+                            setFeedbackIsOpen(false);
+                            close();
+                        }}
                         className={styles['close-button']}
                         disabled={!feedbackIsOpen}
                     >

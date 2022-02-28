@@ -67,7 +67,7 @@ const stateReducer = (state, message) => {
 
 export const FeedbackWrapper = ({ seedData, open }) => {
     const [feedbackIsOpen, setFeedbackIsOpen] = React.useState(open);
-    const [manuallyOpened, setManuallyOpened] = React.useState(false);
+    const [manuallyOpened, setManuallyOpened] = React.useState(open);
 
     const [state, dispatch] = React.useReducer(
         stateReducer,
@@ -331,11 +331,6 @@ export const FeedbackWrapper = ({ seedData, open }) => {
 
     return (
         <div className={styles['user-feedback-container']}>
-            <p>
-                feedback is {feedbackIsOpen ? 'open' : 'closed'}, manually?{' '}
-                {manuallyOpened}
-            </p>
-
             <button
                 aria-hidden={feedbackIsOpen}
                 className={join(
@@ -353,7 +348,6 @@ export const FeedbackWrapper = ({ seedData, open }) => {
 
             <article
                 aria-hidden={!feedbackIsOpen}
-                /* hidden={!feedbackIsOpen} */
                 className={join(
                     styles['user-feedback'],
                     feedbackIsOpen ? '' : styles['invisible'],

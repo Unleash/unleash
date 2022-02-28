@@ -225,6 +225,7 @@ button.close-button {
 .open-feedback-button[disabled] {
     opacity: 0;
     transition: var(--fade-out-transition);
+    pointer-events: none;
 }
 
 .form-section-container {

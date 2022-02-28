@@ -166,9 +166,13 @@ button.close-button {
     background-color: var(--ifm-background-color);
     color: currentColor;
     border-radius: var(--ifm-global-radius);
-    border: max(var(--ifm-global-border-width), 2px) solid
-        var(--unleash-color-gray);
+    border: var(--ifm-global-border-width) solid
+        var(--ifm-color-emphasis-400);
+    font-style: normal;
+    font-family: inherit;
+    padding: var(--ifm-spacing-vertical) var(--ifm-spacing-horizontal);
 }
+
 
 .customer-type-inputs {
     display: flex;

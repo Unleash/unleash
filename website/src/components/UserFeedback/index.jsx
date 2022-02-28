@@ -24,14 +24,12 @@ const populateData = (initialData) => {
             return initialData;
         }
 
-        const userFeedbackLog = localStorage.getItem(localstorageKey);
+        const userFeedbackLog = getUserDataRecord();
 
         if (userFeedbackLog) {
-            const mostRecent = Math.max(
-                Object.keys(userFeedbackLog).map(parseInt),
-            );
+            const mostRecent = Math.max(...Object.keys(userFeedbackLog));
             if (!mostRecent.closedOrCompleted) {
-                return mostRecent;
+                return userFeedbackLog[mostRecent];
             }
         }
 
@@ -50,16 +48,23 @@ const populateData = (initialData) => {
             ...seedData?.data,
         },
         initialized: Date.now(),
-        closedOrCompleted: false,
+        userClosed: false,
     };
 };
 
+const getUserDataRecord = () =>
+    JSON.parse(localStorage.getItem(localstorageKey));
+
 const storeData = (data) => {
-    const existingData = localStorage.getItem(localstorageKey);
-    localStorage.setItem(localstorageKey, {
-        ...existingData,
-        [data.initialized]: data,
-    });
+    const existingData = getUserDataRecord();
+    console.log('this is the existing data:', existingData);
+    localStorage.setItem(
+        localstorageKey,
+        JSON.stringify({
+            ...existingData,
+            [data.initialized]: data,
+        }),
+    );
 };
 
 const stateReducer = (state, message) => {
@@ -110,12 +115,17 @@ export const FeedbackWrapper = ({ seedData, open }) => {
     console.log(state, state.data);
 
     const close = () => dispatch({ kind: 'close' });
+    if (feedbackIsOpen) {
+        storeData(state);
+    }
 
     const stepForward = () => {
-        console.log('stepping forward!');
         dispatch({ kind: 'step forward' });
+        console.log(state);
     };
-    const stepBack = () => dispatch({ kind: 'step back' });
+    const stepBack = () => {
+        dispatch({ kind: 'step back' });
+    };
     const setScore = (score) => dispatch({ kind: 'set score', data: score });
     const setComment = (comment) =>
         dispatch({ kind: 'set comment', data: comment });

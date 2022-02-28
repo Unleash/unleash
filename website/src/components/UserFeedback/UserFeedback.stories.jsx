@@ -37,4 +37,9 @@ Step4.args = {
     open: true,
 };
 
+export const WithLocalStorage = Template.bind({});
+WithLocalStorage.args = {
+    open: true,
+};
+
 export const Closed = Template.bind({});

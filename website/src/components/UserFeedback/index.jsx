@@ -90,7 +90,20 @@ export const FeedbackWrapper = ({ seedData, open }) => {
         dispatch({ kind: 'set customer type', data: customerType });
 
     const submitFeedback = () => {
-        console.log('send feedback here ');
+        fetch(process.env.UNLEASH_FEEDBACK_TARGET_URL, {
+            method: 'post',
+            body: JSON.stringify({ data: state.data }),
+        })
+            .then(async (res) =>
+                res.ok
+                    ? console.log('Success! Feedback was registered.')
+                    : console.warn(
+                          `Oh, no! The feedback registration failed: ${await res.text()}`,
+                      ),
+            )
+            .catch((e) =>
+                console.error('Oh, no! The feedback registration failed:', e),
+            );
         stepForward();
     };
 

@@ -99,7 +99,7 @@ export const FeedbackWrapper = ({ seedData, open }) => {
 
     const Step1 = () => {
         const hidden = isHidden(1);
-        const [newValue, setNewValue] = React.useState(undefined);
+        const [newValue, setNewValue] = React.useState(state.data.score);
         return (
             <form
                 className={visuallyHidden(1) ? styles['invisible'] : ''}
@@ -211,9 +211,13 @@ export const FeedbackWrapper = ({ seedData, open }) => {
                         What would you like to see improved in the Unleash
                         documentation?
                     </label>
-                    <textarea id={textareaId} name="" rows="3" autoFocus>
-                        {state.data.comment}
-                    </textarea>
+                    <textarea
+                        id={textareaId}
+                        name=""
+                        rows="3"
+                        autoFocus
+                        defaultValue={state.data.comment}
+                    ></textarea>
 
                     <div className={styles['button-container']}>
                         <button type="submit">Next</button>
@@ -245,7 +249,7 @@ export const FeedbackWrapper = ({ seedData, open }) => {
 
     const Step3 = () => {
         const hidden = isHidden(3);
-        const [value, setValue] = React.useState();
+        const [value, setValue] = React.useState(state.data.customerType);
 
         return (
             <form

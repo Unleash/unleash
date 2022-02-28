@@ -4,38 +4,70 @@ import CloseIcon from '@site/src/icons/close';
 
 const join = (...cs) => cs.join(' ');
 
-export const initialData = {
+const clearedData = {
     currentStep: 1,
     data: {
         score: undefined,
         comment: undefined,
         customerType: undefined,
     },
+    userClosed: false,
 };
 
-const fetchData = (initialData) => {
-    const localstorageKey = 'user-feedback-v1';
+const localstorageKey = 'user-feedback-v1';
+const populateData = (initialData) => {
+    // if we get seed data, use that. Otherwise, check if the last entry in
+    // localstorage was completed. If not, use that as base.
+
+    const getSeedData = () => {
+        if (initialData) {
+            return initialData;
+        }
+
+        const userFeedbackLog = localStorage.getItem(localstorageKey);
+
+        if (userFeedbackLog) {
+            const mostRecent = Math.max(
+                Object.keys(userFeedbackLog).map(parseInt),
+            );
+            if (!mostRecent.closedOrCompleted) {
+                return mostRecent;
+            }
+        }
+
+        return {};
+    };
+
+    const seedData = getSeedData();
 
     return {
         currentStep: 1,
-        ...initialData,
+        ...seedData,
         data: {
             score: undefined,
             comment: undefined,
             customerType: undefined,
-            ...initialData?.data,
+            ...seedData?.data,
         },
         initialized: Date.now(),
         closedOrCompleted: false,
     };
-    // check localstorage
-    // populate if there is
+};
+
+const storeData = (data) => {
+    const existingData = localStorage.getItem(localstorageKey);
+    localStorage.setItem(localstorageKey, {
+        ...existingData,
+        [data.initialized]: data,
+    });
 };
 
 const stateReducer = (state, message) => {
     switch (message.kind) {
-        case 'clear':
-            return fetchData(seedData);
+        case 'close':
+            return { ...state, userClosed: true };
+        case 'reset':
+            return { ...populateData(clearedData), userClosed: false };
         case 'set score':
             return {
                 ...state,
@@ -72,12 +104,13 @@ export const FeedbackWrapper = ({ seedData, open }) => {
     const [state, dispatch] = React.useReducer(
         stateReducer,
         seedData,
-        fetchData,
+        populateData,
     );
 
     console.log(state, state.data);
 
-    const clear = () => dispatch({ kind: 'clear' });
+    const close = () => dispatch({ kind: 'close' });
+
     const stepForward = () => {
         console.log('stepping forward!');
         dispatch({ kind: 'step forward' });
@@ -298,11 +331,11 @@ export const FeedbackWrapper = ({ seedData, open }) => {
                                     type="radio"
                                     value={key}
                                     defaultChecked={
-                                        key === state.data.customerType
+                                        customerType === state.data.customerType
                                     }
                                     onChange={(e) => {
                                         const value = e.target.value;
-                                        setValue(value);
+                                        setValue(customerType);
                                     }}
                                 />
                                 <label
@@ -341,7 +374,10 @@ export const FeedbackWrapper = ({ seedData, open }) => {
                 <button
                     className={styles['button-secondary']}
                     disabled={hidden}
-                    onClick={() => setFeedbackIsOpen(false)}
+                    onClick={() => {
+                        setFeedbackIsOpen(false);
+                        close();
+                    }}
                     autoFocus
                 >
                     close
@@ -352,6 +388,8 @@ export const FeedbackWrapper = ({ seedData, open }) => {
 
     return (
         <div className={styles['user-feedback-container']}>
+            <p>State.data is {JSON.stringify(state.data)}</p>
+
             <button
                 aria-hidden={feedbackIsOpen}
                 className={join(
@@ -362,6 +400,9 @@ export const FeedbackWrapper = ({ seedData, open }) => {
                 onClick={() => {
                     setFeedbackIsOpen(true);
                     setManuallyOpened(true);
+                    if (state.userClosed) {
+                        dispatch({ kind: 'reset' });
+                    }
                 }}
             >
                 <span>Feedback</span>

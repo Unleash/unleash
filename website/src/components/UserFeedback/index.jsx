@@ -210,7 +210,7 @@ export const FeedbackWrapper = ({ seedData, open }) => {
                         id={textareaId}
                         /* cols="30" */
                         name=""
-                        rows="5"
+                        rows="3"
                     >
                         {state.data.comment}
                     </textarea>
@@ -311,7 +311,17 @@ export const FeedbackWrapper = ({ seedData, open }) => {
     };
 
     const Step4 = () => {
-        return <p className={styles['thank-you']}>Thank you! 🙌</p>;
+        return (
+            <div>
+                <p className={styles['thank-you']}>Thank you! 🙌</p>
+                <button
+                    className={styles['button-secondary']}
+                    onClick={() => setFeedbackIsOpen(false)}
+                >
+                    close
+                </button>
+            </div>
+        );
     };
 
     return (
@@ -353,10 +363,12 @@ export const FeedbackWrapper = ({ seedData, open }) => {
                         <CloseIcon />
                     </button>
                 </div>
-                <Step1 />
-                <Step2 />
-                <Step3 />
-                <Step4 />
+                <div className={styles['form-section-container']}>
+                    <Step1 />
+                    <Step2 />
+                    <Step3 />
+                    {/* <Step4 /> */}
+                </div>
             </article>
         </div>
     );

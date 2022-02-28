@@ -43,15 +43,15 @@
     padding: var(--ifm-spacing-vertical) var(--ifm-spacing-horizontal);
 }
 
-.user-feedback > form {
+.user-feedback form {
     max-width: 850px;
     margin-left: auto;
     margin-right: auto;
     transition: var(--fade-in-transition);
-    opacity: 1;
+    /* opacity: 1; */
 }
 
-.user-feedback > form > * + * {
+.user-feedback form > * + * {
     margin-top: var(--row-gap);
 }
 
@@ -224,4 +224,14 @@ button.close-button {
 .open-feedback-button[disabled] {
     opacity: 0;
     transition: var(--fade-out-transition);
+}
+
+.form-section-container {
+    display: grid;
+    align-items: center;
+}
+
+.form-section-container > * {
+    grid-column: 1;
+    grid-row: 1;
 }

@@ -57,7 +57,6 @@ const getUserDataRecord = () =>
 
 const storeData = (data) => {
     const existingData = getUserDataRecord();
-    console.log('this is the existing data:', existingData);
     localStorage.setItem(
         localstorageKey,
         JSON.stringify({
@@ -112,8 +111,6 @@ export const FeedbackWrapper = ({ seedData, open }) => {
         populateData,
     );
 
-    console.log(state, state.data);
-
     const close = () => dispatch({ kind: 'close' });
     if (feedbackIsOpen) {
         storeData(state);
@@ -121,7 +118,6 @@ export const FeedbackWrapper = ({ seedData, open }) => {
 
     const stepForward = () => {
         dispatch({ kind: 'step forward' });
-        console.log(state);
     };
     const stepBack = () => {
         dispatch({ kind: 'step back' });
@@ -206,7 +202,6 @@ export const FeedbackWrapper = ({ seedData, open }) => {
                                             const value = parseInt(
                                                 e.target.value,
                                             );
-                                            console.log('the value is', value);
                                             setNewValue(value);
                                         }}
                                         autoFocus={

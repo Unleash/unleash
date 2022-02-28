@@ -67,6 +67,7 @@ const stateReducer = (state, message) => {
 
 export const FeedbackWrapper = ({ seedData, open }) => {
     const [feedbackIsOpen, setFeedbackIsOpen] = React.useState(open);
+    const [manuallyOpened, setManuallyOpened] = React.useState(false);
 
     const [state, dispatch] = React.useReducer(
         stateReducer,
@@ -91,8 +92,6 @@ export const FeedbackWrapper = ({ seedData, open }) => {
     const submitFeedback = () => {
         console.log('send feedback here ');
     };
-
-    const step1ref = React.useRef(null);
 
     const visuallyHidden = (stepNumber) => state.currentStep !== stepNumber;
     const isHidden = (stepNumber) =>
@@ -131,10 +130,9 @@ export const FeedbackWrapper = ({ seedData, open }) => {
                             Very unsatisfied
                         </span>
                         <span className={styles['satisfaction-input-inputs']}>
-                            {[1, 2, 3, 4, 5].map((n) => (
+                            {[1, 2, 3, 4, 5].map((n, i) => (
                                 <span key={`input-group-${n}`}>
                                     <input
-                                        ref={n === 1 ? step1ref : undefined}
                                         className={join(
                                             'visually-hidden',
                                             styles[
@@ -154,6 +152,13 @@ export const FeedbackWrapper = ({ seedData, open }) => {
                                             console.log('the value is', value);
                                             setNewValue(value);
                                         }}
+                                        autoFocus={
+                                            manuallyOpened
+                                                ? state.data.score
+                                                    ? state.data.score === n
+                                                    : i === 0
+                                                : false
+                                        }
                                     />
                                     <label
                                         className={
@@ -206,12 +211,7 @@ export const FeedbackWrapper = ({ seedData, open }) => {
                         What would you like to see improved in the Unleash
                         documentation?
                     </label>
-                    <textarea
-                        id={textareaId}
-                        /* cols="30" */
-                        name=""
-                        rows="3"
-                    >
+                    <textarea id={textareaId} name="" rows="3" autoFocus>
                         {state.data.comment}
                     </textarea>
 
@@ -259,16 +259,21 @@ export const FeedbackWrapper = ({ seedData, open }) => {
             >
                 <fieldset disabled={hidden}>
                     <span>
-                        Finally, would you mind telling us a little about
-                        yourself? What kind of customer are you?
+                        Finally, are you a paying customer or an open source
+                        customer of Unleash?
                     </span>
                     <div className={styles['customer-type-inputs']}>
                         {[
                             ['a', 'paying', 'paying'],
                             ['an', 'open source', 'opensource'],
-                        ].map(([article, customerType, key]) => (
+                        ].map(([article, customerType, key], i) => (
                             <span key={`input-group-${key}`}>
                                 <input
+                                    autoFocus={
+                                        state.data.customerType
+                                            ? state.data.customerType === key
+                                            : i === 0
+                                    }
                                     id={`customer-type-${key}`}
                                     className={styles['customer-type-input']}
                                     name="customer-type"
@@ -326,7 +331,10 @@ export const FeedbackWrapper = ({ seedData, open }) => {
 
     return (
         <div className={styles['user-feedback-container']}>
-            <p>feedback is {feedbackIsOpen ? 'open' : 'closed'}</p>
+            <p>
+                feedback is {feedbackIsOpen ? 'open' : 'closed'}, manually?{' '}
+                {manuallyOpened}
+            </p>
 
             <button
                 aria-hidden={feedbackIsOpen}
@@ -337,7 +345,7 @@ export const FeedbackWrapper = ({ seedData, open }) => {
                 disabled={feedbackIsOpen}
                 onClick={() => {
                     setFeedbackIsOpen(true);
-                    step1ref.current.focus();
+                    setManuallyOpened(true);
                 }}
             >
                 <span>Feedback</span>

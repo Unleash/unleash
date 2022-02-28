@@ -31,9 +31,10 @@
 .user-feedback fieldset {
     border: none;
     padding: 0;
+    width: 100%;
 }
 
-.user-feedback > * + * {
+:is(.user-feedback, .user-feedback fieldset) > * + * {
     margin-top: var(--row-gap);
 }
 
@@ -44,11 +45,11 @@
 }
 
 .user-feedback form {
-    max-width: 850px;
+    /* max-width: 850px; */
+    width: 100%;
     margin-left: auto;
     margin-right: auto;
     transition: var(--fade-in-transition);
-    /* opacity: 1; */
 }
 
 .user-feedback form > * + * {
@@ -229,6 +230,8 @@ button.close-button {
 .form-section-container {
     display: grid;
     align-items: center;
+    max-width: 850px;
+    margin: auto;
 }
 
 .form-section-container > * {

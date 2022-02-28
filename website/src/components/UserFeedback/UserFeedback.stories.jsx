@@ -29,4 +29,12 @@ Step3.args = {
     open: true,
 };
 
+export const Step4 = Template.bind({});
+Step4.args = {
+    seedData: {
+        currentStep: 4,
+    },
+    open: true,
+};
+
 export const Closed = Template.bind({});

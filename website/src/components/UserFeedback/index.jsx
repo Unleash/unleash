@@ -14,7 +14,7 @@ export const initialData = {
 };
 
 const fetchData = (initialData) => {
-    const localstorageKey = 'user-feedback';
+    const localstorageKey = 'user-feedback-v1';
 
     return {
         currentStep: 1,
@@ -54,7 +54,7 @@ const stateReducer = (state, message) => {
         case 'step forward':
             return {
                 ...state,
-                currentStep: Math.min(state.currentStep + 1, 3),
+                currentStep: Math.min(state.currentStep + 1, 4),
             };
         case 'step back':
             return {
@@ -91,6 +91,7 @@ export const FeedbackWrapper = ({ seedData, open }) => {
 
     const submitFeedback = () => {
         console.log('send feedback here ');
+        stepForward();
     };
 
     const visuallyHidden = (stepNumber) => state.currentStep !== stepNumber;
@@ -320,12 +321,15 @@ export const FeedbackWrapper = ({ seedData, open }) => {
     };
 
     const Step4 = () => {
+        const hidden = isHidden(4);
         return (
-            <div>
+            <div className={visuallyHidden(4) ? styles['invisible'] : ''}>
                 <p className={styles['thank-you']}>Thank you! 🙌</p>
                 <button
                     className={styles['button-secondary']}
+                    disabled={hidden}
                     onClick={() => setFeedbackIsOpen(false)}
+                    autoFocus
                 >
                     close
                 </button>
@@ -373,7 +377,7 @@ export const FeedbackWrapper = ({ seedData, open }) => {
                     <Step1 />
                     <Step2 />
                     <Step3 />
-                    {/* <Step4 /> */}
+                    <Step4 />
                 </div>
             </article>
         </div>

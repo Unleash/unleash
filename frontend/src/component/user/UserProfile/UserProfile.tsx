@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import classnames from 'classnames';
-import OutsideClickHandler from 'react-outside-click-handler';
-import { Avatar, Button } from '@material-ui/core';
+import { Avatar, Button, ClickAwayListener } from '@material-ui/core';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import { useStyles } from './UserProfile.styles';
 import { useCommonStyles } from '../../../common.styles';
@@ -57,7 +56,7 @@ const UserProfile = ({
     const imageUrl = email ? profile.imageUrl : 'unknown-user.png';
 
     return (
-        <OutsideClickHandler onOutsideClick={() => setShowProfile(false)}>
+        <ClickAwayListener onClickAway={() => setShowProfile(false)}>
             <div className={styles.profileContainer}>
                 <Button
                     className={classnames(
@@ -86,7 +85,7 @@ const UserProfile = ({
                     currentLocale={currentLocale}
                 />
             </div>
-        </OutsideClickHandler>
+        </ClickAwayListener>
     );
 };
 

@@ -135,7 +135,7 @@ const FeatureToggleListNew = ({
                         type={feature.type}
                         environments={feature.environments}
                         projectId={projectId}
-                        createdAt={new Date()}
+                        createdAt={new Date().toISOString()}
                     />
                 );
             });

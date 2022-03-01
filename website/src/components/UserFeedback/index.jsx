@@ -360,7 +360,7 @@ export const FeedbackWrapper = ({ seedData, open }) => {
                     </div>
 
                     <div className={styles['button-container']}>
-                        <button type="submit">Submit feedback</button>
+                        <button type="submit">Submit</button>
                         <button
                             className={styles['button-secondary']}
                             type="button"

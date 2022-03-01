@@ -30,6 +30,7 @@
 
 .user-feedback fieldset {
     border: none;
+    margin: 0;
     padding: 0;
     width: 100%;
 }
@@ -41,15 +42,12 @@
 .user-feedback button {
     border: none;
     border-radius: var(--ifm-global-radius);
-    padding: var(--ifm-spacing-vertical) var(--ifm-spacing-horizontal);
+    padding: var(--ifm-spacing-vertical) calc(var(--ifm-spacing-horizontal) / 2);
 }
 
 .user-feedback form {
     /* max-width: 850px; */
-    width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-    transition: var(--fade-in-transition);
+    /* width: 100%; */
 }
 
 .user-feedback form > * + * {
@@ -238,4 +236,5 @@ button.close-button {
 .form-section-container > * {
     grid-column: 1;
     grid-row: 1;
+    transition: var(--fade-in-transition);
 }

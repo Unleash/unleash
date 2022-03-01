@@ -11,6 +11,9 @@ const Template = (args) => <FeedbackWrapper {...args} />;
 export const Step1 = Template.bind({});
 Step1.args = {
     open: true,
+    seedData: {
+        currentStep: 1,
+    },
 };
 
 export const Step2 = Template.bind({});

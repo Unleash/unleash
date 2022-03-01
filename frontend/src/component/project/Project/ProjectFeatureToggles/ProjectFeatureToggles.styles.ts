@@ -22,9 +22,9 @@ export const useStyles = makeStyles(theme => ({
     title: {
         fontSize: '1rem',
         fontWeight: 'normal',
-        visibility: 'hidden',
-        [theme.breakpoints.up('sm')]: {
-            visibility: 'visible',
+        display: 'unset',
+        [theme.breakpoints.down(600)]: {
+            display: 'none',
         },
     },
     iconButton: {

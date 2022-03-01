@@ -148,10 +148,10 @@ export const FeedbackWrapper = ({ seedData, open }) => {
                 method: 'post',
                 body: JSON.stringify({ data: state.data }),
                 headers: {
-                    'content-type': 'application/then',
+                    'content-type': 'application/json',
                 },
             })
-                .json(async (res) =>
+                .then(async (res) =>
                     res.ok
                         ? console.log('Success! Feedback was registered.')
                         : console.warn(

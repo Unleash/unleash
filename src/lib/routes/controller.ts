@@ -1,4 +1,4 @@
-import { IRouter, Router, Request, Response } from 'express';
+import { IRouter, Router, Request, Response, RequestHandler } from 'express';
 import { Logger } from 'lib/logger';
 import { IUnleashConfig } from '../types/option';
 import { NONE } from '../types/permissions';
@@ -104,16 +104,16 @@ export default class Controller {
         );
     }
 
-    fileupload(
+    fileUpload(
         path: string,
-        filehandler: IRequestHandler,
+        fileHandler: RequestHandler,
         handler: Function,
         permission: string,
     ): void {
         this.app.post(
             path,
             checkPermission(permission),
-            filehandler.bind(this),
+            fileHandler.bind(this),
             this.wrap(handler.bind(this)),
         );
     }

@@ -1,31 +1,28 @@
-import { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { useEffect, useState, ChangeEvent } from 'react';
 import {
+    Button,
     FormControl,
     FormControlLabel,
     Grid,
-    TextField,
     InputAdornment,
-    Button,
+    TextField,
     Tooltip,
 } from '@material-ui/core';
 import { Info } from '@material-ui/icons';
-
 import { weightTypes } from './enums';
-
 import { OverrideConfig } from './OverrideConfig/OverrideConfig';
 import ConditionallyRender from '../../../../../common/ConditionallyRender';
-import GeneralSelect from '../../../../../common/GeneralSelect/GeneralSelect';
-import { useCommonStyles } from '../../../../../../common.styles';
+import { useCommonStyles } from 'common.styles';
 import Dialogue from '../../../../../common/Dialogue';
-import { trim, modalStyles } from '../../../../../common/util';
+import { modalStyles, trim } from 'component/common/util';
 import PermissionSwitch from '../../../../../common/PermissionSwitch/PermissionSwitch';
-import { UPDATE_FEATURE_VARIANTS } from '../../../../../providers/AccessProvider/permissions';
+import { UPDATE_FEATURE_VARIANTS } from 'component/providers/AccessProvider/permissions';
 import useFeature from '../../../../../../hooks/api/getters/useFeature/useFeature';
 import { useParams } from 'react-router-dom';
-import { IFeatureViewParams } from '../../../../../../interfaces/params';
-import { IFeatureVariant } from '../../../../../../interfaces/featureToggle';
+import { IFeatureViewParams } from 'interfaces/params';
+import { IFeatureVariant, IOverride } from 'interfaces/featureToggle';
 import cloneDeep from 'lodash.clonedeep';
+import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 
 const payloadOptions = [
     { key: 'string', label: 'string' },
@@ -34,6 +31,17 @@ const payloadOptions = [
 ];
 
 const EMPTY_PAYLOAD = { type: 'string', value: '' };
+
+interface IAddVariantProps {
+    showDialog: boolean;
+    closeDialog: () => void;
+    save: (variantToSave: IFeatureVariant) => Promise<void>;
+    editVariant: IFeatureVariant;
+    validateName: (value: string) => Record<string, string> | undefined;
+    validateWeight: (value: string) => Record<string, string> | undefined;
+    title: string;
+    editing: boolean;
+}
 
 const AddVariant = ({
     showDialog,
@@ -44,11 +52,11 @@ const AddVariant = ({
     validateWeight,
     title,
     editing,
-}) => {
-    const [data, setData] = useState({});
+}: IAddVariantProps) => {
+    const [data, setData] = useState<Record<string, string>>({});
     const [payload, setPayload] = useState(EMPTY_PAYLOAD);
-    const [overrides, setOverrides] = useState([]);
-    const [error, setError] = useState({});
+    const [overrides, setOverrides] = useState<IOverride[]>([]);
+    const [error, setError] = useState<Record<string, string>>({});
     const commonStyles = useCommonStyles();
     const { projectId, featureId } = useParams<IFeatureViewParams>();
     const { feature } = useFeature(projectId, featureId);
@@ -58,7 +66,7 @@ const AddVariant = ({
         if (editVariant) {
             setData({
                 name: editVariant.name,
-                weight: editVariant.weight / 10,
+                weight: String(editVariant.weight / 10),
                 weightType: editVariant.weightType || weightTypes.VARIABLE,
                 stickiness: editVariant.stickiness,
             });
@@ -80,7 +88,7 @@ const AddVariant = ({
         setError({});
     };
 
-    const setClonedVariants = clonedVariants =>
+    const setClonedVariants = (clonedVariants: IFeatureVariant[]) =>
         setVariants(cloneDeep(clonedVariants));
 
     useEffect(() => {
@@ -95,7 +103,9 @@ const AddVariant = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [editVariant]);
 
-    const setVariantValue = e => {
+    const setVariantValue = (
+        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    ) => {
         const { name, value } = e.target;
         setData({
             ...data,
@@ -103,7 +113,7 @@ const AddVariant = ({
         });
     };
 
-    const setVariantWeightType = e => {
+    const setVariantWeightType = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { checked, name } = e.target;
         const weightType = checked ? weightTypes.FIX : weightTypes.VARIABLE;
         setData({
@@ -112,7 +122,7 @@ const AddVariant = ({
         });
     };
 
-    const submit = async e => {
+    const submit = async (e: React.FormEvent) => {
         setError({});
         e.preventDefault();
 
@@ -128,9 +138,9 @@ const AddVariant = ({
         }
 
         try {
-            const variant = {
+            const variant: IFeatureVariant = {
                 name: data.name,
-                weight: data.weight * 10,
+                weight: Number(data.weight) * 10,
                 weightType: data.weightType,
                 stickiness: data.stickiness,
                 payload: payload.value ? payload : undefined,
@@ -159,7 +169,7 @@ const AddVariant = ({
         }
     };
 
-    const onPayload = e => {
+    const onPayload = (e: ChangeEvent<{ name?: string; value: unknown }>) => {
         e.preventDefault();
         setPayload({
             ...payload,
@@ -167,26 +177,27 @@ const AddVariant = ({
         });
     };
 
-    const onCancel = e => {
+    const onCancel = (e: React.SyntheticEvent) => {
         e.preventDefault();
         clear();
         closeDialog();
     };
 
-    const updateOverrideType = index => e => {
-        e.preventDefault();
-        setOverrides(
-            overrides.map((o, i) => {
-                if (i === index) {
-                    o[e.target.name] = e.target.value;
-                }
+    const updateOverrideType =
+        (index: number) => (e: ChangeEvent<HTMLInputElement>) => {
+            e.preventDefault();
+            setOverrides(
+                overrides.map((o, i) => {
+                    if (i === index) {
+                        o[e.target.name] = e.target.value;
+                    }
 
-                return o;
-            })
-        );
-    };
+                    return o;
+                })
+            );
+        };
 
-    const updateOverrideValues = (index, values) => {
+    const updateOverrideValues = (index: number, values: string[]) => {
         setOverrides(
             overrides.map((o, i) => {
                 if (i === index) {
@@ -197,12 +208,12 @@ const AddVariant = ({
         );
     };
 
-    const removeOverride = index => e => {
+    const removeOverride = (index: number) => (e: React.SyntheticEvent) => {
         e.preventDefault();
         setOverrides(overrides.filter((o, i) => i !== index));
     };
 
-    const onAddOverride = e => {
+    const onAddOverride = (e: React.SyntheticEvent) => {
         e.preventDefault();
         setOverrides([
             ...overrides,
@@ -217,7 +228,6 @@ const AddVariant = ({
     return (
         <Dialogue
             open={showDialog}
-            contentLabel="Add variant modal"
             style={modalStyles}
             onClose={onCancel}
             onClick={submit}
@@ -342,6 +352,7 @@ const AddVariant = ({
                 <Grid container>
                     <Grid item md={2} sm={2} xs={4}>
                         <GeneralSelect
+                            id="variant-payload-type"
                             name="type"
                             label="Type"
                             className={commonStyles.fullWidth}
@@ -349,7 +360,6 @@ const AddVariant = ({
                             options={payloadOptions}
                             onChange={onPayload}
                             style={{ minWidth: '100px', width: '100%' }}
-                            data-test={'VARIANT_PAYLOAD_TYPE'}
                         />
                     </Grid>
                     <Grid item md={8} sm={8} xs={6}>
@@ -388,7 +398,6 @@ const AddVariant = ({
                     removeOverride={removeOverride}
                     updateOverrideType={updateOverrideType}
                     updateOverrideValues={updateOverrideValues}
-                    updateValues={updateOverrideValues}
                 />
                 <Button
                     onClick={onAddOverride}
@@ -400,17 +409,6 @@ const AddVariant = ({
             </form>
         </Dialogue>
     );
-};
-
-AddVariant.propTypes = {
-    showDialog: PropTypes.bool.isRequired,
-    closeDialog: PropTypes.func.isRequired,
-    save: PropTypes.func.isRequired,
-    validateName: PropTypes.func.isRequired,
-    validateWeight: PropTypes.func.isRequired,
-    editVariant: PropTypes.object,
-    title: PropTypes.string,
-    uiConfig: PropTypes.object,
 };
 
 export default AddVariant;

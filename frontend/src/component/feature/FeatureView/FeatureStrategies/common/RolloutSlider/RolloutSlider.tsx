@@ -1,6 +1,7 @@
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { Slider, Typography } from '@material-ui/core';
 import { ROLLOUT_SLIDER_ID } from '../../../../../../testIds';
+import React from 'react';
 
 const StyledSlider = withStyles({
     root: {

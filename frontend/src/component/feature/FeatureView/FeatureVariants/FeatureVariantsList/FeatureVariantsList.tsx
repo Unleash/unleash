@@ -30,6 +30,7 @@ import cloneDeep from 'lodash.clonedeep';
 import useDeleteVariantMarkup from './FeatureVariantsListItem/useDeleteVariantMarkup';
 import PermissionButton from '../../../../common/PermissionButton/PermissionButton';
 import { mutate } from 'swr';
+import { formatUnknownError } from '../../../../../utils/format-unknown-error';
 
 const FeatureOverviewVariants = () => {
     const { hasAccess } = useContext(AccessContext);
@@ -155,8 +156,8 @@ const FeatureOverviewVariants = () => {
                 type: 'success',
                 text: 'Successfully updated variant stickiness',
             });
-        } catch (e) {
-            setToastApiError(e.message);
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
         }
     };
 
@@ -167,8 +168,8 @@ const FeatureOverviewVariants = () => {
                 updatedVariants,
                 'Successfully removed variant'
             );
-        } catch (e) {
-            setToastApiError(e.message);
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
         }
     };
     const updateVariant = async (variant: IFeatureVariant) => {
@@ -210,8 +211,8 @@ const FeatureOverviewVariants = () => {
                 type: 'success',
                 text: successText,
             });
-        } catch (e) {
-            setToastApiError(e.message);
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
         }
     };
 
@@ -221,7 +222,7 @@ const FeatureOverviewVariants = () => {
         }
     };
 
-    const validateWeight = (weight: number) => {
+    const validateWeight = (weight: string) => {
         const weightValue = parseInt(weight);
         if (weightValue > 100 || weightValue < 0) {
             return { weight: 'weight must be between 0 and 100' };
@@ -230,7 +231,7 @@ const FeatureOverviewVariants = () => {
 
     const delDialogueMarkup = useDeleteVariantMarkup({
         show: delDialog.show,
-        onClick: e => {
+        onClick: () => {
             removeVariant(delDialog.name);
             setDelDialog({ name: '', show: false });
             setToastData({
@@ -293,7 +294,7 @@ const FeatureOverviewVariants = () => {
                     permission={UPDATE_FEATURE_VARIANTS}
                     projectId={projectId}
                 >
-                    Add variant
+                    New variant
                 </PermissionButton>
                 <ConditionallyRender
                     condition={editable}

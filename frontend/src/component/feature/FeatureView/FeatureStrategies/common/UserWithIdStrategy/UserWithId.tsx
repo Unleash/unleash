@@ -3,7 +3,7 @@ import StrategyInputList from '../StrategyInputList/StrategyInputList';
 
 interface IUserWithIdStrategyProps {
     parameters: IParameter;
-    updateParameter: (field: string, value: any) => void;
+    updateParameter: (field: string, value: string) => void;
     editable: boolean;
 }
 

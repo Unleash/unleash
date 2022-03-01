@@ -23,7 +23,7 @@ interface IFeatureStrategyCardProps {
     name: string;
     description: string;
     configureNewStrategy: boolean;
-    index?: number;
+    index: number;
 }
 
 export const FEATURE_STRATEGIES_DRAG_TYPE = 'FEATURE_STRATEGIES_DRAG_TYPE';

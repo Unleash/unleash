@@ -183,7 +183,7 @@ const FeatureToggleList = ({
                                                         skeleton: loading,
                                                     })}
                                                 >
-                                                    Create feature toggle
+                                                    New feature toggle
                                                 </Button>
                                             }
                                         />

@@ -1,21 +1,4 @@
-# Developing
-
-## Why did you render
-
-This application is set up with [WDYR](https://github.com/welldone-software/why-did-you-render) and [craco](https://github.com/gsoft-inc/craco) in order to find, debug and remove uneccesary re-renders. This configuration can be found in /src/wdyr.ts.
-
-In order to turn it on, change the configuration accordingly:
-
-```
-if (process.env.NODE_ENV === 'development') {
-    const whyDidYouRender = require('@welldone-software/why-did-you-render');
-    whyDidYouRender(React, {
-        trackAllPureComponents: true,
-    });
-}
-```
-
-Now you should be able to review rendering information in the console. If you do utilise this functionality, please remember to set the configuration back to spare other developers the noise in the console.
+# unleash-frontend
 
 ## Run with a local instance of the unleash-api:
 

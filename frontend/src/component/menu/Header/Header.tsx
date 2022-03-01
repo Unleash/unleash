@@ -24,8 +24,10 @@ import { useAuthPermissions } from '../../../hooks/api/getters/useAuth/useAuthPe
 
 const Header = () => {
     const theme = useTheme();
-    const [anchorEl, setAnchorEl] = useState();
-    const [anchorElAdvanced, setAnchorElAdvanced] = useState();
+    const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+    const [anchorElAdvanced, setAnchorElAdvanced] =
+        useState<HTMLButtonElement | null>(null);
+
     const [admin, setAdmin] = useState(false);
     const { permissions } = useAuthPermissions();
     const commonStyles = useCommonStyles();

@@ -35,7 +35,7 @@ const UsersAdmin = () => {
                                             history.push('/admin/create-user')
                                         }
                                     >
-                                        Add new user
+                                        New user
                                     </Button>
                                 }
                                 elseShow={

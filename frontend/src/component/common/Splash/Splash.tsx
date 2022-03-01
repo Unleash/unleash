@@ -1,12 +1,11 @@
-import { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import { Button, IconButton } from '@material-ui/core';
 import { useStyles } from './Splash.styles';
 import {
+    CloseOutlined,
     FiberManualRecord,
     FiberManualRecordOutlined,
-    CloseOutlined,
 } from '@material-ui/icons';
-import { useState } from 'react';
 import ConditionallyRender from '../ConditionallyRender';
 import { CLOSE_SPLASH } from '../../../testIds';
 

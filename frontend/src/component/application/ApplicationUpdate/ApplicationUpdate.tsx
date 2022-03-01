@@ -1,5 +1,5 @@
 import { ChangeEvent, useState } from 'react';
-import { TextField, Grid } from '@material-ui/core';
+import { Grid, TextField } from '@material-ui/core';
 import { useCommonStyles } from '../../../common.styles';
 import icons from '../icon-names';
 import GeneralSelect from '../../common/GeneralSelect/GeneralSelect';
@@ -7,6 +7,7 @@ import useApplicationsApi from '../../../hooks/api/actions/useApplicationsApi/us
 import useToast from '../../../hooks/useToast';
 import { IApplication } from '../../../interfaces/application';
 import useApplication from '../../../hooks/api/getters/useApplication/useApplication';
+import { formatUnknownError } from '../../../utils/format-unknown-error';
 
 interface IApplicationUpdateProps {
     application: IApplication;
@@ -35,8 +36,8 @@ export const ApplicationUpdate = ({ application }: IApplicationUpdateProps) => {
                 title: 'Updated Successfully',
                 text: `${field} successfully updated`,
             });
-        } catch (e: any) {
-            setToastApiError(e.toString());
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
         }
     };
 

@@ -36,6 +36,7 @@ import useStrategies from '../../../hooks/api/getters/useStrategies/useStrategie
 import useStrategiesApi from '../../../hooks/api/actions/useStrategiesApi/useStrategiesApi';
 import useToast from '../../../hooks/useToast';
 import { IStrategy } from '../../../interfaces/strategy';
+import { formatUnknownError } from '../../../utils/format-unknown-error';
 
 interface IDialogueMetaData {
     show: boolean;
@@ -49,7 +50,11 @@ export const StrategiesList = () => {
     const smallScreen = useMediaQuery('(max-width:700px)');
     const { hasAccess } = useContext(AccessContext);
     const [dialogueMetaData, setDialogueMetaData] = useState<IDialogueMetaData>(
-        { show: false, title: '', onConfirm: () => {} }
+        {
+            show: false,
+            title: '',
+            onConfirm: () => {},
+        }
     );
     const { strategies, refetchStrategies } = useStrategies();
     const { removeStrategy, deprecateStrategy, reactivateStrategy } =
@@ -67,7 +72,6 @@ export const StrategiesList = () => {
                             data-test={ADD_NEW_STRATEGY_ID}
                             onClick={() => history.push('/strategies/create')}
                             permission={CREATE_STRATEGY}
-                            tooltip={'Add new strategy'}
                         >
                             <Add />
                         </PermissionIconButton>
@@ -78,9 +82,8 @@ export const StrategiesList = () => {
                             color="primary"
                             permission={CREATE_STRATEGY}
                             data-test={ADD_NEW_STRATEGY_ID}
-                            tooltip={'Add new strategy'}
                         >
-                            Add new strategy
+                            New strategy
                         </PermissionButton>
                     }
                 />
@@ -88,7 +91,7 @@ export const StrategiesList = () => {
         />
     );
 
-    const strategyLink = ({ name, deprecated }) => (
+    const strategyLink = ({ name, deprecated }: IStrategy) => (
         <Link to={`/strategies/view/${name}`}>
             <strong>{getHumanReadableStrategyName(name)}</strong>
             <ConditionallyRender
@@ -111,8 +114,8 @@ export const StrategiesList = () => {
                         title: 'Success',
                         text: 'Strategy reactivated successfully',
                     });
-                } catch (e: any) {
-                    setToastApiError(e.toString());
+                } catch (error: unknown) {
+                    setToastApiError(formatUnknownError(error));
                 }
             },
         });
@@ -131,8 +134,8 @@ export const StrategiesList = () => {
                         title: 'Success',
                         text: 'Strategy deprecated successfully',
                     });
-                } catch (e: any) {
-                    setToastApiError(e.toString());
+                } catch (error: unknown) {
+                    setToastApiError(formatUnknownError(error));
                 }
             },
         });
@@ -151,8 +154,8 @@ export const StrategiesList = () => {
                         title: 'Success',
                         text: 'Strategy deleted successfully',
                     });
-                } catch (e: any) {
-                    setToastApiError(e.toString());
+                } catch (error: unknown) {
+                    setToastApiError(formatUnknownError(error));
                 }
             },
         });
@@ -163,7 +166,6 @@ export const StrategiesList = () => {
             <PermissionIconButton
                 onClick={() => onReactivateStrategy(strategy)}
                 permission={UPDATE_STRATEGY}
-                tooltip={'Reactivate activation strategy'}
             >
                 <VisibilityOff />
             </PermissionIconButton>
@@ -203,7 +205,6 @@ export const StrategiesList = () => {
                 <PermissionIconButton
                     onClick={() => onDeleteStrategy(strategy)}
                     permission={DELETE_STRATEGY}
-                    tooltip={'Delete strategy'}
                 >
                     <Delete />
                 </PermissionIconButton>

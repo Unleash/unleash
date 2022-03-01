@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { mutate } from 'swr';
 import FeatureStrategiesUIContext from '../../../../../../contexts/FeatureStrategiesUIContext';
@@ -6,8 +6,8 @@ import useFeatureStrategy from '../../../../../../hooks/api/getters/useFeatureSt
 import { IFeatureViewParams } from '../../../../../../interfaces/params';
 import {
     IConstraint,
-    IParameter,
     IFeatureStrategy,
+    IParameter,
 } from '../../../../../../interfaces/strategy';
 import FeatureStrategyAccordion from '../../FeatureStrategyAccordion/FeatureStrategyAccordion';
 import cloneDeep from 'lodash.clonedeep';

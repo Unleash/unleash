@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import ConditionallyRender from '../ConditionallyRender';
 import classnames from 'classnames';
 import { useStyles } from './PaginationUI.styles';

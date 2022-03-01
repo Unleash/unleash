@@ -8,7 +8,6 @@ import {
     Button,
 } from '@material-ui/core';
 import OpenInNew from '@material-ui/icons/OpenInNew';
-import { formatDateWithLocale } from '../../common/util';
 import PageContent from '../../common/PageContent';
 import HeaderTitle from '../../common/HeaderTitle';
 import ConditionallyRender from '../../common/ConditionallyRender';
@@ -16,6 +15,7 @@ import { formatApiPath } from '../../../utils/format-path';
 import useInvoices from '../../../hooks/api/getters/useInvoices/useInvoices';
 import { IInvoice } from '../../../interfaces/invoice';
 import { useLocationSettings } from '../../../hooks/useLocationSettings';
+import { formatDateYMD } from '../../../utils/format-date';
 
 const PORTAL_URL = formatApiPath('api/admin/invoices/portal');
 
@@ -87,7 +87,7 @@ const InvoiceList = () => {
                                             style={{ textAlign: 'left' }}
                                         >
                                             {item.dueDate &&
-                                                formatDateWithLocale(
+                                                formatDateYMD(
                                                     item.dueDate,
                                                     locationSettings.locale
                                                 )}

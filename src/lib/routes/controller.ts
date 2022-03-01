@@ -69,44 +69,29 @@ export default class Controller {
         );
     }
 
-    post(
-        path: string,
-        handler: IRequestHandler,
-        permission: string,
-        ...acceptedContentTypes: string[]
-    ): void {
+    post(path: string, handler: IRequestHandler, permission: string): void {
         this.app.post(
             path,
             checkPermission(permission),
-            requireContentType(...acceptedContentTypes),
+            requireContentType(),
             this.wrap(handler.bind(this)),
         );
     }
 
-    put(
-        path: string,
-        handler: IRequestHandler,
-        permission: string,
-        ...acceptedContentTypes: string[]
-    ): void {
+    put(path: string, handler: IRequestHandler, permission: string): void {
         this.app.put(
             path,
             checkPermission(permission),
-            requireContentType(...acceptedContentTypes),
+            requireContentType(),
             this.wrap(handler.bind(this)),
         );
     }
 
-    patch(
-        path: string,
-        handler: IRequestHandler,
-        permission: string,
-        ...acceptedContentTypes: string[]
-    ): void {
+    patch(path: string, handler: IRequestHandler, permission: string): void {
         this.app.patch(
             path,
             checkPermission(permission),
-            requireContentType(...acceptedContentTypes),
+            requireContentType(),
             this.wrap(handler.bind(this)),
         );
     }

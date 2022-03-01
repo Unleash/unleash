@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { IUnleashServices } from '../../types/services';
-import { IUnleashConfig } from '../../types/option';
+import { IAuthType, IUnleashConfig } from '../../types/option';
 import version from '../../util/version';
 
 import Controller from '../controller';
@@ -46,7 +46,9 @@ class ConfigController extends Controller {
             await this.settingService.get<SimpleAuthSettings>(simpleAuthKey);
 
         const versionInfo = this.versionService.getVersionInfo();
-        const disablePasswordAuth = simpleAuthSettings?.disabled;
+        const disablePasswordAuth =
+            simpleAuthSettings?.disabled ||
+            this.config.authentication.type == IAuthType.NONE;
         res.json({ ...config, versionInfo, disablePasswordAuth });
     }
 }

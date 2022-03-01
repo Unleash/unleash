@@ -2,13 +2,13 @@ import { Response } from 'express';
 import { IAuthRequest } from '../unleash-types';
 import Controller from '../controller';
 import { AccessService } from '../../services/access-service';
-import { IUnleashConfig } from '../../types/option';
+import { IAuthType, IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
 import UserService from '../../services/user-service';
 import SessionService from '../../services/session-service';
 import UserFeedbackService from '../../services/user-feedback-service';
 import UserSplashService from '../../services/user-splash-service';
-import { NONE } from '../../types/permissions';
+import { ADMIN, NONE } from '../../types/permissions';
 
 interface IChangeUserRequest {
     password: string;
@@ -58,9 +58,12 @@ class UserController extends Controller {
     async getUser(req: IAuthRequest, res: Response): Promise<void> {
         res.setHeader('cache-control', 'no-store');
         const { user } = req;
-        const permissions = await this.accessService.getPermissionsForUser(
-            user,
-        );
+        let permissions;
+        if (this.config.authentication.type === IAuthType.NONE) {
+            permissions = [{ permission: ADMIN }];
+        } else {
+            permissions = await this.accessService.getPermissionsForUser(user);
+        }
         const feedback = await this.userFeedbackService.getAllUserFeedback(
             user,
         );

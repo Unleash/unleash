@@ -22,6 +22,10 @@ export const useStyles = makeStyles(theme => ({
     title: {
         fontSize: '1rem',
         fontWeight: 'normal',
+        display: 'unset',
+        [theme.breakpoints.down(600)]: {
+            display: 'none',
+        },
     },
     iconButton: {
         marginRight: '1rem',
@@ -36,5 +40,18 @@ export const useStyles = makeStyles(theme => ({
     },
     link: {
         textDecoration: 'none',
+    },
+    actionsContainer: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    search: {
+        border: `1px solid ${theme.palette.grey[300]}`,
+        height: 35,
+        marginRight: '2rem',
+    },
+    button: {
+        whiteSpace: 'nowrap',
     },
 }));

@@ -1,36 +1,46 @@
-import { useContext } from 'react';
+import { useContext, useMemo, useState } from 'react';
 import { IconButton } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import { useParams } from 'react-router';
 import { Link, useHistory } from 'react-router-dom';
-import AccessContext from '../../../../contexts/AccessContext';
-import { IFeatureToggleListItem } from '../../../../interfaces/featureToggle';
-import { getCreateTogglePath } from '../../../../utils/route-path-helpers';
-import ConditionallyRender from '../../../common/ConditionallyRender';
-import { PROJECTFILTERING } from '../../../common/flags';
-import HeaderTitle from '../../../common/HeaderTitle';
-import PageContent from '../../../common/PageContent';
-import ResponsiveButton from '../../../common/ResponsiveButton/ResponsiveButton';
-import FeatureToggleListNew from '../../../feature/FeatureToggleListNew/FeatureToggleListNew';
+import AccessContext from 'contexts/AccessContext';
+import { SearchField } from 'component/common/SearchField/SearchField';
+import ConditionallyRender from 'component/common/ConditionallyRender';
+import { PROJECTFILTERING } from 'component/common/flags';
+import HeaderTitle from 'component/common/HeaderTitle';
+import PageContent from 'component/common/PageContent';
+import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
+import FeatureToggleListNew from 'component/feature/FeatureToggleListNew/FeatureToggleListNew';
+import { IFeatureToggleListItem } from 'interfaces/featureToggle';
+import { getCreateTogglePath } from 'utils/route-path-helpers';
 import { useStyles } from './ProjectFeatureToggles.styles';
-import { CREATE_FEATURE } from '../../../providers/AccessProvider/permissions';
-import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
+import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import classnames from 'classnames';
 
-interface IProjectFeatureToggles {
+interface IProjectFeatureTogglesProps {
     features: IFeatureToggleListItem[];
     loading: boolean;
 }
 
-const ProjectFeatureToggles = ({
+export const ProjectFeatureToggles = ({
     features,
     loading,
-}: IProjectFeatureToggles) => {
+}: IProjectFeatureTogglesProps) => {
     const styles = useStyles();
     const { id } = useParams<{ id: string }>();
     const history = useHistory();
     const { hasAccess } = useContext(AccessContext);
     const { uiConfig } = useUiConfig();
+    const [filter, setFilter] = useState('');
+
+    const filteredFeatures = useMemo(() => {
+        const regExp = new RegExp(filter, 'i');
+        return filter
+            ? features.filter(feature => regExp.test(feature.name))
+            : features;
+    }, [features, filter]);
 
     return (
         <PageContent
@@ -39,9 +49,16 @@ const ProjectFeatureToggles = ({
             headerContent={
                 <HeaderTitle
                     className={styles.title}
-                    title={`Feature toggles (${features.length})`}
+                    title={`Feature toggles (${filteredFeatures.length})`}
                     actions={
-                        <>
+                        <div className={styles.actionsContainer}>
+                            <SearchField
+                                initialValue={filter}
+                                updateValue={setFilter}
+                                className={classnames(styles.search, {
+                                    skeleton: loading,
+                                })}
+                            />
                             <ConditionallyRender
                                 condition={PROJECTFILTERING}
                                 show={
@@ -69,19 +86,20 @@ const ProjectFeatureToggles = ({
                                 Icon={Add}
                                 projectId={id}
                                 permission={CREATE_FEATURE}
+                                className={styles.button}
                             >
                                 New feature toggle
                             </ResponsiveButton>
-                        </>
+                        </div>
                     }
                 />
             }
         >
             <ConditionallyRender
-                condition={features?.length > 0}
+                condition={filteredFeatures.length > 0}
                 show={
                     <FeatureToggleListNew
-                        features={features}
+                        features={filteredFeatures}
                         loading={loading}
                         projectId={id}
                     />
@@ -112,5 +130,3 @@ const ProjectFeatureToggles = ({
         </PageContent>
     );
 };
-
-export default ProjectFeatureToggles;

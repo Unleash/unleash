@@ -19,7 +19,8 @@ export const useStyles = makeStyles(theme => ({
         },
     },
     searchIcon: {
-        marginRight: '8px',
+        marginRight: 8,
+        color: theme.palette.grey[600],
     },
     inputRoot: {
         width: '100%',

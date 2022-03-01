@@ -17,7 +17,7 @@
 
 .user-feedback {
     width: 100%;
-    position: absolute;
+    position: fixed;
     background: var(--ifm-background-color);
     bottom: 0;
     border: var(--ifm-global-border-width) solid var(--unleash-color-gray);
@@ -211,7 +211,7 @@ button.close-button {
     padding-block: var(--ifm-spacing-vertical);
     border-radius: 0 var(--ifm-global-radius) var(--ifm-global-radius) 0;
     border: none;
-    position: absolute;
+    position: fixed;
     bottom: 25vh;
     right: 0;
     writing-mode: vertical-lr;

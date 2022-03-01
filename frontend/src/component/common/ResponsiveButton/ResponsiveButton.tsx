@@ -9,7 +9,7 @@ interface IResponsiveButtonProps {
     onClick: () => void;
     tooltip?: string;
     disabled?: boolean;
-    permission?: string;
+    permission: string;
     projectId?: string;
     environmentId?: string;
     maxWidth: string;

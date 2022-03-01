@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, ChangeEvent } from 'react';
 import {
     Button,
     FormControl,
@@ -9,25 +9,20 @@ import {
     Tooltip,
 } from '@material-ui/core';
 import { Info } from '@material-ui/icons';
-
 import { weightTypes } from './enums';
-
 import { OverrideConfig } from './OverrideConfig/OverrideConfig';
 import ConditionallyRender from '../../../../../common/ConditionallyRender';
-import GeneralSelect from '../../../../../common/GeneralSelect/GeneralSelect';
-import { useCommonStyles } from '../../../../../../common.styles';
+import { useCommonStyles } from 'common.styles';
 import Dialogue from '../../../../../common/Dialogue';
-import { modalStyles, trim } from '../../../../../common/util';
+import { modalStyles, trim } from 'component/common/util';
 import PermissionSwitch from '../../../../../common/PermissionSwitch/PermissionSwitch';
-import { UPDATE_FEATURE_VARIANTS } from '../../../../../providers/AccessProvider/permissions';
+import { UPDATE_FEATURE_VARIANTS } from 'component/providers/AccessProvider/permissions';
 import useFeature from '../../../../../../hooks/api/getters/useFeature/useFeature';
 import { useParams } from 'react-router-dom';
-import { IFeatureViewParams } from '../../../../../../interfaces/params';
-import {
-    IFeatureVariant,
-    IOverride,
-} from '../../../../../../interfaces/featureToggle';
+import { IFeatureViewParams } from 'interfaces/params';
+import { IFeatureVariant, IOverride } from 'interfaces/featureToggle';
 import cloneDeep from 'lodash.clonedeep';
+import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 
 const payloadOptions = [
     { key: 'string', label: 'string' },
@@ -58,7 +53,7 @@ const AddVariant = ({
     title,
     editing,
 }: IAddVariantProps) => {
-    const [data, setData] = useState({});
+    const [data, setData] = useState<Record<string, string>>({});
     const [payload, setPayload] = useState(EMPTY_PAYLOAD);
     const [overrides, setOverrides] = useState<IOverride[]>([]);
     const [error, setError] = useState<Record<string, string>>({});
@@ -71,7 +66,7 @@ const AddVariant = ({
         if (editVariant) {
             setData({
                 name: editVariant.name,
-                weight: editVariant.weight / 10,
+                weight: String(editVariant.weight / 10),
                 weightType: editVariant.weightType || weightTypes.VARIABLE,
                 stickiness: editVariant.stickiness,
             });
@@ -108,7 +103,9 @@ const AddVariant = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [editVariant]);
 
-    const setVariantValue = e => {
+    const setVariantValue = (
+        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    ) => {
         const { name, value } = e.target;
         setData({
             ...data,
@@ -116,7 +113,7 @@ const AddVariant = ({
         });
     };
 
-    const setVariantWeightType = e => {
+    const setVariantWeightType = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { checked, name } = e.target;
         const weightType = checked ? weightTypes.FIX : weightTypes.VARIABLE;
         setData({
@@ -125,7 +122,7 @@ const AddVariant = ({
         });
     };
 
-    const submit = async e => {
+    const submit = async (e: React.FormEvent) => {
         setError({});
         e.preventDefault();
 
@@ -141,9 +138,9 @@ const AddVariant = ({
         }
 
         try {
-            const variant = {
+            const variant: IFeatureVariant = {
                 name: data.name,
-                weight: data.weight * 10,
+                weight: Number(data.weight) * 10,
                 weightType: data.weightType,
                 stickiness: data.stickiness,
                 payload: payload.value ? payload : undefined,
@@ -172,7 +169,7 @@ const AddVariant = ({
         }
     };
 
-    const onPayload = (e: React.SyntheticEvent) => {
+    const onPayload = (e: ChangeEvent<{ name?: string; value: unknown }>) => {
         e.preventDefault();
         setPayload({
             ...payload,
@@ -186,18 +183,19 @@ const AddVariant = ({
         closeDialog();
     };
 
-    const updateOverrideType = (index: number) => (e: React.SyntheticEvent) => {
-        e.preventDefault();
-        setOverrides(
-            overrides.map((o, i) => {
-                if (i === index) {
-                    o[e.target.name] = e.target.value;
-                }
+    const updateOverrideType =
+        (index: number) => (e: ChangeEvent<HTMLInputElement>) => {
+            e.preventDefault();
+            setOverrides(
+                overrides.map((o, i) => {
+                    if (i === index) {
+                        o[e.target.name] = e.target.value;
+                    }
 
-                return o;
-            })
-        );
-    };
+                    return o;
+                })
+            );
+        };
 
     const updateOverrideValues = (index: number, values: string[]) => {
         setOverrides(
@@ -230,7 +228,6 @@ const AddVariant = ({
     return (
         <Dialogue
             open={showDialog}
-            contentLabel="Add variant modal"
             style={modalStyles}
             onClose={onCancel}
             onClick={submit}
@@ -355,6 +352,7 @@ const AddVariant = ({
                 <Grid container>
                     <Grid item md={2} sm={2} xs={4}>
                         <GeneralSelect
+                            id="variant-payload-type"
                             name="type"
                             label="Type"
                             className={commonStyles.fullWidth}
@@ -362,7 +360,6 @@ const AddVariant = ({
                             options={payloadOptions}
                             onChange={onPayload}
                             style={{ minWidth: '100px', width: '100%' }}
-                            data-test={'VARIANT_PAYLOAD_TYPE'}
                         />
                     </Grid>
                     <Grid item md={8} sm={8} xs={6}>

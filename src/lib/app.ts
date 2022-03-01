@@ -12,6 +12,7 @@ import apiTokenMiddleware from './middleware/api-token-middleware';
 import { IUnleashServices } from './types/services';
 import { IAuthType, IUnleashConfig } from './types/option';
 import { IUnleashStores } from './types/stores';
+import { OPEN_API_DOCS } from './middleware/openapi-middleware';
 
 import IndexRouter from './routes';
 
@@ -68,7 +69,9 @@ export default async function getApp(
 
     if (config.enableOAS) {
         app.use(`${baseUriPath}/oas`, express.static('docs/api/oas'));
+        app.use(`${baseUriPath}/docs/openapi`, express.static(OPEN_API_DOCS));
     }
+
     switch (config.authentication.type) {
         case IAuthType.OPEN_SOURCE: {
             app.use(baseUriPath, apiTokenMiddleware(config, services));

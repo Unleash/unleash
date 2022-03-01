@@ -21,6 +21,7 @@ import {
 } from '../../../types/model';
 import { extractUsername } from '../../../util/extract-user';
 import { IAuthRequest } from '../../unleash-types';
+import { createOpenApiAdminValidation } from '../../../middleware/openapi-middleware';
 
 interface FeatureStrategyParams {
     projectId: string;
@@ -112,10 +113,15 @@ export default class ProjectFeaturesController extends Controller {
         // feature toggles
         this.get(PATH, this.getFeatures);
         this.post(PATH, this.createFeature, CREATE_FEATURE);
-
         this.post(PATH_FEATURE_CLONE, this.cloneFeature, CREATE_FEATURE);
 
-        this.get(PATH_FEATURE, this.getFeature);
+        this.get(
+            PATH_FEATURE,
+            this.getFeature,
+            undefined,
+            createOpenApiAdminValidation(),
+        );
+
         this.put(PATH_FEATURE, this.updateFeature, UPDATE_FEATURE);
         this.patch(PATH_FEATURE, this.patchFeature, UPDATE_FEATURE);
         this.delete(PATH_FEATURE, this.archiveFeature, DELETE_FEATURE);

@@ -18,6 +18,7 @@ import { IFeatureToggleQuery } from '../../types/model';
 import FeatureTagService from '../../services/feature-tag-service';
 import { IAuthRequest } from '../unleash-types';
 import { DEFAULT_ENV } from '../../util/constants';
+import { createOpenApiAdminValidation } from '../../middleware/openapi-middleware';
 
 const version = 1;
 
@@ -57,7 +58,13 @@ class FeatureController extends Controller {
             this.post('/:featureName/stale/off', this.staleOff, UPDATE_FEATURE);
         }
 
-        this.get('/', this.getAllToggles);
+        this.get(
+            '/',
+            this.getAllToggles,
+            undefined,
+            createOpenApiAdminValidation(),
+        );
+
         this.post('/validate', this.validate, NONE);
         this.get('/:featureName/tags', this.listTags);
         this.post('/:featureName/tags', this.addTag, UPDATE_FEATURE);

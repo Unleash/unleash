@@ -1,0 +1,167 @@
+openapi: 3.0.3
+servers:
+  - url: 'http://localhost:4242/api/admin'
+
+info:
+  version: 5.0.0-alpha1
+  title: Unleash Admin API
+  description: |
+    Unleash is an open source feature toggle system for all your applications and services.
+
+    This specification documents the **Admin API**, used to manage feature toggles, projects, users, roles, etc.
+
+    To use feature toggles in your **applications**, please check out one of our [Client SDKs](https://docs.getunleash.io/sdks).
+
+    For more information on how to get started, check out [docs.getunleash.io](https://docs.getunleash.io).
+
+paths:
+  /features:
+    get:
+      responses:
+        200:
+          $ref: '#/components/responses/featuresResponse'
+  /projects/{projectName}/features/{featureName}:
+    get:
+      parameters:
+        - $ref: '#/components/parameters/projectNameParameter'
+        - $ref: '#/components/parameters/featureNameParameter'
+      responses:
+        200:
+          $ref: '#/components/responses/featureResponse'
+
+components:
+  parameters:
+    projectNameParameter:
+      name: projectName
+      in: path
+      required: true
+      schema:
+        type: string
+    featureNameParameter:
+      name: featureName
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    featuresResponse:
+      description: "featuresResponse"
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/featuresSchema'
+    featureResponse:
+      description: "featureResponse"
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/featureSchema'
+  schemas:
+    featuresSchema:
+      type: object
+      required:
+        - version
+        - features
+      properties:
+        version:
+          type: integer
+        features:
+          type: array
+          items:
+            $ref: '#/components/schemas/featureSchema'
+    featureSchema:
+      type: object
+      required:
+          - name
+          - type
+          - description
+          - project
+          - stale
+          - impressionData
+          - createdAt
+          - lastSeenAt
+          - variants
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        description:
+          type: string
+        project:
+          type: string
+        enabled:
+          type: boolean
+        stale:
+          type: boolean
+        impressionData:
+          type: boolean
+        createdAt:
+          type: string
+          format: date
+          nullable: true
+        lastSeenAt:
+          type: string
+          format: date
+          nullable: true
+        strategies:
+          type: array
+          items:
+            $ref: '#/components/schemas/strategySchema'
+        variants:
+          items:
+            $ref: '#/components/schemas/variantSchema'
+          type: array
+    strategySchema:
+      type: object
+      required:
+        - id
+        - name
+        - constraints
+        - parameters
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        constraints:
+          type: array
+          items:
+            type: object
+        parameters:
+          type: object
+    variantSchema:
+      type: object
+      required:
+        - name
+        - weight
+        - weightType
+        - stickiness
+        - overrides
+      properties:
+        name:
+          type: string
+        weight:
+          type: number
+        weightType:
+          type: string
+        stickiness:
+          type: string
+        payload:
+          type: object
+        overrides:
+          type: array
+          items:
+            $ref: '#/components/schemas/overrideSchema'
+    overrideSchema:
+      type: object
+      required:
+        - contextName
+        - values
+      properties:
+        contextName:
+          type: string
+        values:
+          type: array
+          items:
+            type: string

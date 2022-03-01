@@ -32,7 +32,7 @@ export const useStyles = makeStyles(theme => ({
         },
     },
     searchBar: {
-        minWidth: '450px',
+        minWidth: 450,
         [theme.breakpoints.down('xs')]: {
             minWidth: '100%',
         },

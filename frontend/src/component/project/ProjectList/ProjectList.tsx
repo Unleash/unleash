@@ -56,7 +56,7 @@ export const ProjectListNew = () => {
     const filteredProjects = useMemo(() => {
         const regExp = new RegExp(filter, 'i');
         return filter
-            ? projects?.filter(project => regExp.test(project?.name))
+            ? projects.filter(project => regExp.test(project.name))
             : projects;
     }, [projects, filter]);
 
@@ -90,7 +90,7 @@ export const ProjectListNew = () => {
             return renderLoading();
         }
 
-        return filteredProjects?.map((project: IProjectCard) => {
+        return filteredProjects.map((project: IProjectCard) => {
             return (
                 <Link
                     key={project.id}
@@ -166,7 +166,7 @@ export const ProjectListNew = () => {
                 <ConditionallyRender condition={error} show={renderError()} />
                 <div className={styles.container}>
                     <ConditionallyRender
-                        condition={filteredProjects?.length < 1 && !loading}
+                        condition={filteredProjects.length < 1 && !loading}
                         show={<div>No projects available.</div>}
                         elseShow={renderProjects()}
                     />

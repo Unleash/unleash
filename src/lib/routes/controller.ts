@@ -61,45 +61,75 @@ export default class Controller {
         };
     }
 
-    get(path: string, handler: IRequestHandler, permission?: string): void {
+    get(
+        path: string,
+        handler: IRequestHandler,
+        permission?: string,
+        middleware: RequestHandler[] = [],
+    ): void {
         this.app.get(
             path,
             checkPermission(permission),
+            ...middleware,
             this.wrap(handler.bind(this)),
         );
     }
 
-    post(path: string, handler: IRequestHandler, permission: string): void {
+    post(
+        path: string,
+        handler: IRequestHandler,
+        permission: string,
+        middleware: RequestHandler[] = [],
+    ): void {
         this.app.post(
             path,
             checkPermission(permission),
             requireContentType(),
+            ...middleware,
             this.wrap(handler.bind(this)),
         );
     }
 
-    put(path: string, handler: IRequestHandler, permission: string): void {
+    put(
+        path: string,
+        handler: IRequestHandler,
+        permission: string,
+        middleware: RequestHandler[] = [],
+    ): void {
         this.app.put(
             path,
             checkPermission(permission),
             requireContentType(),
+            ...middleware,
             this.wrap(handler.bind(this)),
         );
     }
 
-    patch(path: string, handler: IRequestHandler, permission: string): void {
+    patch(
+        path: string,
+        handler: IRequestHandler,
+        permission: string,
+        middleware: RequestHandler[] = [],
+    ): void {
         this.app.patch(
             path,
             checkPermission(permission),
             requireContentType(),
+            ...middleware,
             this.wrap(handler.bind(this)),
         );
     }
 
-    delete(path: string, handler: IRequestHandler, permission: string): void {
+    delete(
+        path: string,
+        handler: IRequestHandler,
+        permission: string,
+        middleware: RequestHandler[] = [],
+    ): void {
         this.app.delete(
             path,
             checkPermission(permission),
+            ...middleware,
             this.wrap(handler.bind(this)),
         );
     }

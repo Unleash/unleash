@@ -1,12 +1,37 @@
 import React from 'react';
-import UF from '@site/src/components/UserFeedback';
+import UserFeedback from '@site/src/components/UserFeedback';
+import { UnleashClient } from 'unleash-proxy-client';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 
 // Default implementation, that you can customize
 function Root({ children }) {
+    const {
+        siteConfig: { customFields },
+    } = useDocusaurusContext();
+
+    const unleashConfig = {
+        clientKey: customFields.unleashProxyClientKey,
+        url: customFields.unleashProxyUrl,
+        refreshInterval: 1,
+        appName: `docs.getunleash.io-${customFields.environment}`,
+    };
+
+    const [showFeedback, setShowFeedback] = React.useState(false);
+
+    try {
+        const unleash = new UnleashClient(unleashConfig);
+        unleash.on('ready', () => {
+            setShowFeedback(unleash.isEnabled('docs-feedback-survey-v1'));
+        });
+        unleash.start();
+    } catch (e) {
+        console.warn('Unable to initialize the Unleash client:', e.message);
+    }
+
     return (
         <>
-            <UF />
             {children}
+            {showFeedback && <UserFeedback />}
         </>
     );
 }

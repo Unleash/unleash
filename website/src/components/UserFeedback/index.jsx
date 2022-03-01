@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './styles.module.css';
 import CloseIcon from '@site/src/icons/close';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 
 const join = (...cs) => cs.join(' ');
 
@@ -107,6 +108,14 @@ const stateReducer = (state, message) => {
 };
 
 export const FeedbackWrapper = ({ seedData, open }) => {
+    const {
+        siteConfig: { customFields },
+    } = useDocusaurusContext();
+    const feedbackTargetUrl =
+        customFields?.unleashFeedbackTargetUrl ??
+        (typeof process !== 'undefined' &&
+            process?.env?.UNLEASH_FEEDBACK_TARGET_URL);
+
     const [feedbackIsOpen, setFeedbackIsOpen] = React.useState(open);
     const [manuallyOpened, setManuallyOpened] = React.useState(open);
 
@@ -134,20 +143,32 @@ export const FeedbackWrapper = ({ seedData, open }) => {
         dispatch({ kind: 'set customer type', data: customerType });
 
     const submitFeedback = () => {
-        fetch(process.env.UNLEASH_FEEDBACK_TARGET_URL, {
-            method: 'post',
-            body: JSON.stringify({ data: state.data }),
-        })
-            .then(async (res) =>
-                res.ok
-                    ? console.log('Success! Feedback was registered.')
-                    : console.warn(
-                          `Oh, no! The feedback registration failed: ${await res.text()}`,
-                      ),
-            )
-            .catch((e) =>
-                console.error('Oh, no! The feedback registration failed:', e),
+        if (feedbackTargetUrl) {
+            fetch(feedbackTargetUrl, {
+                method: 'post',
+                body: JSON.stringify({ data: state.data }),
+                headers: {
+                    'content-type': 'application/then',
+                },
+            })
+                .json(async (res) =>
+                    res.ok
+                        ? console.log('Success! Feedback was registered.')
+                        : console.warn(
+                              `Oh, no! The feedback registration failed: ${await res.text()}`,
+                          ),
+                )
+                .catch((e) =>
+                    console.error(
+                        'Oh, no! The feedback registration failed:',
+                        e,
+                    ),
+                );
+        } else {
+            console.warn(
+                'No target url specified for feedback. Not doing anything.',
             );
+        }
         dispatch({ kind: 'completed' });
         stepForward();
     };
@@ -399,8 +420,6 @@ export const FeedbackWrapper = ({ seedData, open }) => {
 
     return (
         <div className={styles['user-feedback-container']}>
-            <p>State.data is {JSON.stringify(state.data)}</p>
-
             <button
                 aria-hidden={feedbackIsOpen}
                 className={join(
@@ -451,3 +470,5 @@ export const FeedbackWrapper = ({ seedData, open }) => {
         </div>
     );
 };
+
+export default FeedbackWrapper;

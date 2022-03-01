@@ -10,6 +10,13 @@ module.exports = {
     organizationName: 'Unleash', // Usually your GitHub org/user name.
     projectName: 'unleash.github.io', // Usually your repo name.
     trailingSlash: false,
+    customFields: {
+        // expose env vars etc here
+        unleashProxyUrl: process.env.UNLEASH_PROXY_URL,
+        unleashProxyClientKey: process.env.UNLEASH_PROXY_CLIENT_KEY,
+        unleashFeedbackTargetUrl: process.env.UNLEASH_FEEDBACK_TARGET_URL,
+        environment: process.env.NODE_ENV,
+    },
     themeConfig: {
         defaultMode: 'light',
         disableSwitch: true,
@@ -159,7 +166,7 @@ module.exports = {
                     {
                         from: '/advanced/impression_data',
                         to: '/advanced/impression-data',
-                    }
+                    },
                 ],
                 createRedirects: function (toPath) {
                     if (

@@ -28,7 +28,7 @@
   "scripts": {
     "start": "node ./dist/server.js",
     "prestart:dev": "yarn run clean",
-    "start:dev": "NODE_ENV=development tsc-watch --onSuccess \"node dist/server-dev.js\"",
+    "start:dev": "NODE_ENV=development ts-node-dev --watch 'docs/**' src/server-dev.ts",
     "copy-templates": "copyfiles -u 1 src/mailtemplates/**/*.mustache dist/",
     "db-migrate": "db-migrate --migrations-dir ./src/migrations",
     "lint": "eslint ./src",
@@ -156,8 +156,7 @@
     "superagent": "7.1.1",
     "supertest": "6.2.2",
     "ts-jest": "27.1.3",
-    "ts-node": "10.6.0",
-    "tsc-watch": "4.6.0",
+    "ts-node-dev": "^1.1.8",
     "typescript": "4.6.2"
   },
   "resolutions": {

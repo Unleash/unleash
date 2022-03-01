@@ -44,7 +44,7 @@ export const useStyles = makeStyles(theme => ({
     },
     search: {
         border: `1px solid ${theme.palette.grey[300]}`,
-        height: '35px',
+        height: 35,
         marginRight: '2rem',
     },
     button: {

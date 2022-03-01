@@ -19,7 +19,7 @@ import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import classnames from 'classnames';
 
-interface IProjectFeatureToggles {
+interface IProjectFeatureTogglesProps {
     features: IFeatureToggleListItem[];
     loading: boolean;
 }
@@ -27,19 +27,18 @@ interface IProjectFeatureToggles {
 export const ProjectFeatureToggles = ({
     features,
     loading,
-}: IProjectFeatureToggles) => {
+}: IProjectFeatureTogglesProps) => {
     const styles = useStyles();
     const { id } = useParams<{ id: string }>();
     const history = useHistory();
     const { hasAccess } = useContext(AccessContext);
     const { uiConfig } = useUiConfig();
     const [filter, setFilter] = useState('');
-    useState<IFeatureToggleListItem[]>(features);
 
     const filteredFeatures = useMemo(() => {
         const regExp = new RegExp(filter, 'i');
         return filter
-            ? features?.filter(feature => regExp.test(feature?.name))
+            ? features.filter(feature => regExp.test(feature.name))
             : features;
     }, [features, filter]);
 
@@ -98,7 +97,7 @@ export const ProjectFeatureToggles = ({
             }
         >
             <ConditionallyRender
-                condition={filteredFeatures?.length > 0}
+                condition={filteredFeatures.length > 0}
                 show={
                     <FeatureToggleListNew
                         features={filteredFeatures}

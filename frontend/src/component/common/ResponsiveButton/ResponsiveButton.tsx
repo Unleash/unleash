@@ -25,7 +25,6 @@ const ResponsiveButton: React.FC<IResponsiveButtonProps> = ({
     permission,
     environmentId,
     projectId,
-    className,
     ...rest
 }) => {
     const smallScreen = useMediaQuery(`(max-width:${maxWidth})`);

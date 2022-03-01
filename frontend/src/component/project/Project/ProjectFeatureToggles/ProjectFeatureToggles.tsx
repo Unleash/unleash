@@ -27,7 +27,7 @@ const ProjectFeatureToggles = ({
     loading,
 }: IProjectFeatureToggles) => {
     const styles = useStyles();
-    const { id } = useParams();
+    const { id } = useParams<{ id: string }>();
     const history = useHistory();
     const { hasAccess } = useContext(AccessContext);
     const { uiConfig } = useUiConfig();
@@ -66,7 +66,6 @@ const ProjectFeatureToggles = ({
                                     )
                                 }
                                 maxWidth="700px"
-                                tooltip="New feature toggle"
                                 Icon={Add}
                                 projectId={id}
                                 permission={CREATE_FEATURE}

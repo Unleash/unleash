@@ -9,12 +9,12 @@ import { useCommonStyles } from '../../../../../common.styles';
 import { IUser } from '../../../../../interfaces/user';
 
 interface IDeleteUserProps {
-    showDialog: () => void;
+    showDialog: boolean;
     closeDialog: () => void;
     user: IUser;
     userLoading: boolean;
     removeUser: () => void;
-    userApiErrors: Object;
+    userApiErrors: Record<string, string>;
 }
 
 const DeleteUser = ({
@@ -33,13 +33,13 @@ const DeleteUser = ({
             open={showDialog}
             title="Really delete user?"
             onClose={closeDialog}
-            onClick={() => removeUser(user)}
+            onClick={removeUser}
             primaryButtonText="Delete user"
             secondaryButtonText="Cancel"
         >
             <div ref={ref}>
                 <ConditionallyRender
-                    condition={userApiErrors[REMOVE_USER_ERROR]}
+                    condition={Boolean(userApiErrors[REMOVE_USER_ERROR])}
                     show={
                         <Alert
                             data-loading

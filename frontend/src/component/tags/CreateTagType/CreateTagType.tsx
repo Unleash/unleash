@@ -1,12 +1,13 @@
 import { useHistory } from 'react-router-dom';
-import useTagTypesApi from '../../../hooks/api/actions/useTagTypesApi/useTagTypesApi';
-import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
-import useToast from '../../../hooks/useToast';
-import FormTemplate from '../../common/FormTemplate/FormTemplate';
-import PermissionButton from '../../common/PermissionButton/PermissionButton';
-import { UPDATE_TAG_TYPE } from '../../providers/AccessProvider/permissions';
 import useTagTypeForm from '../TagTypeForm/useTagTypeForm';
 import TagTypeForm from '../TagTypeForm/TagTypeForm';
+import { CreateButton } from 'component/common/CreateButton/CreateButton';
+import FormTemplate from 'component/common/FormTemplate/FormTemplate';
+import { UPDATE_TAG_TYPE } from 'component/providers/AccessProvider/permissions';
+import useTagTypesApi from 'hooks/api/actions/useTagTypesApi/useTagTypesApi';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import useToast from 'hooks/useToast';
+import { formatUnknownError } from 'utils/format-unknown-error';
 
 const CreateTagType = () => {
     const { setToastData, setToastApiError } = useToast();
@@ -38,8 +39,8 @@ const CreateTagType = () => {
                     confetti: true,
                     type: 'success',
                 });
-            } catch (e: any) {
-                setToastApiError(e.toString());
+            } catch (error: unknown) {
+                setToastApiError(formatUnknownError(error));
             }
         }
     };
@@ -77,9 +78,7 @@ const CreateTagType = () => {
                 clearErrors={clearErrors}
                 validateNameUniqueness={validateNameUniqueness}
             >
-                <PermissionButton permission={UPDATE_TAG_TYPE} type="submit">
-                    Create type
-                </PermissionButton>
+                <CreateButton name="type" permission={UPDATE_TAG_TYPE} />
             </TagTypeForm>
         </FormTemplate>
     );

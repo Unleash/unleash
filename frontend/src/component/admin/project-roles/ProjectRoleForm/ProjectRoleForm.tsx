@@ -1,16 +1,16 @@
 import Input from '../../../common/Input/Input';
 import EnvironmentPermissionAccordion from './EnvironmentPermissionAccordion/EnvironmentPermissionAccordion';
 import {
+    Button,
     Checkbox,
     FormControlLabel,
     TextField,
-    Button,
 } from '@material-ui/core';
 import useProjectRolePermissions from '../../../../hooks/api/getters/useProjectRolePermissions/useProjectRolePermissions';
 
 import { useStyles } from './ProjectRoleForm.styles';
 import ConditionallyRender from '../../../common/ConditionallyRender';
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { IPermission } from '../../../../interfaces/project';
 import {
     ICheckedPermission,
@@ -33,6 +33,7 @@ interface IProjectRoleForm {
     clearErrors: () => void;
     validateNameUniqueness?: () => void;
     getRoleKey: (permission: { id: number; environment?: string }) => string;
+    children: ReactNode;
 }
 
 const ProjectRoleForm: React.FC<IProjectRoleForm> = ({

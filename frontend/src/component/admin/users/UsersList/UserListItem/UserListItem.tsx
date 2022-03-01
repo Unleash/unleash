@@ -1,25 +1,24 @@
 import {
-    TableRow,
-    TableCell,
     Avatar,
     IconButton,
+    TableCell,
+    TableRow,
     Typography,
 } from '@material-ui/core';
-import { Edit, Lock, Delete } from '@material-ui/icons';
+import { Delete, Edit, Lock } from '@material-ui/icons';
 import { SyntheticEvent, useContext } from 'react';
 import { ADMIN } from '../../../../providers/AccessProvider/permissions';
 import ConditionallyRender from '../../../../common/ConditionallyRender';
-import { formatDateWithLocale } from '../../../../common/util';
 import AccessContext from '../../../../../contexts/AccessContext';
 import { IUser } from '../../../../../interfaces/user';
 import { useStyles } from './UserListItem.styles';
 import { useHistory } from 'react-router-dom';
 import { ILocationSettings } from '../../../../../hooks/useLocationSettings';
+import { formatDateYMD } from '../../../../../utils/format-date';
 
 interface IUserListItemProps {
     user: IUser;
     renderRole: (roleId: number) => string;
-    openUpdateDialog: (user: IUser) => (e: SyntheticEvent) => void;
     openPwDialog: (user: IUser) => (e: SyntheticEvent) => void;
     openDelDialog: (user: IUser) => (e: SyntheticEvent) => void;
     locationSettings: ILocationSettings;
@@ -30,7 +29,6 @@ const UserListItem = ({
     renderRole,
     openDelDialog,
     openPwDialog,
-    openUpdateDialog,
     locationSettings,
 }: IUserListItemProps) => {
     const { hasAccess } = useContext(AccessContext);
@@ -51,10 +49,7 @@ const UserListItem = ({
             </TableCell>
             <TableCell>
                 <span data-loading>
-                    {formatDateWithLocale(
-                        user.createdAt,
-                        locationSettings.locale
-                    )}
+                    {formatDateYMD(user.createdAt, locationSettings.locale)}
                 </span>
             </TableCell>
             <TableCell className={styles.leftTableCell}>

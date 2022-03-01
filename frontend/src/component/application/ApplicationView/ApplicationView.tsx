@@ -4,16 +4,16 @@ import {
     Grid,
     List,
     ListItem,
-    ListItemText,
     ListItemAvatar,
+    ListItemText,
     Typography,
 } from '@material-ui/core';
 import {
-    Report,
     Extension,
-    Timeline,
     FlagRounded,
+    Report,
     SvgIconComponent,
+    Timeline,
 } from '@material-ui/icons';
 import {
     CREATE_FEATURE,
@@ -23,13 +23,16 @@ import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyR
 import { getTogglePath } from '../../../utils/route-path-helpers';
 import useApplication from '../../../hooks/api/getters/useApplication/useApplication';
 import AccessContext from '../../../contexts/AccessContext';
-import { formatFullDateTimeWithLocale } from '../../common/util';
+import { formatDateYMDHMS } from '../../../utils/format-date';
+import { useLocationSettings } from '../../../hooks/useLocationSettings';
 
 export const ApplicationView = () => {
     const { hasAccess } = useContext(AccessContext);
     const { name } = useParams<{ name: string }>();
     const { application } = useApplication(name);
+    const { locationSettings } = useLocationSettings();
     const { instances, strategies, seenToggles } = application;
+
     const notFoundListItem = ({
         createUrl,
         name,
@@ -114,10 +117,9 @@ export const ApplicationView = () => {
                                     createUrl: `/projects/default/create-toggle?name=${name}`,
                                     name,
                                     permission: CREATE_FEATURE,
-                                    i,
                                 })}
                                 elseShow={foundListItem({
-                                    viewUrl: getTogglePath(project, name, true),
+                                    viewUrl: getTogglePath(project, name),
                                     name,
                                     description,
                                     Icon: FlagRounded,
@@ -195,8 +197,9 @@ export const ApplicationView = () => {
                                         <span>
                                             {clientIp} last seen at{' '}
                                             <small>
-                                                {formatFullDateTimeWithLocale(
-                                                    lastSeen
+                                                {formatDateYMDHMS(
+                                                    lastSeen,
+                                                    locationSettings.locale
                                                 )}
                                             </small>
                                         </span>

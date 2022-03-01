@@ -38,7 +38,7 @@ exports[`renders correctly with one strategy 1`] = `
           onMouseOver={[Function]}
           onTouchEnd={[Function]}
           onTouchStart={[Function]}
-          title="Add new strategy"
+          title=""
         >
           <button
             className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -62,7 +62,7 @@ exports[`renders correctly with one strategy 1`] = `
             <span
               className="MuiButton-label"
             >
-              Add new strategy
+              New strategy
               <span
                 className="MuiButton-endIcon MuiButton-iconSizeMedium"
               />
@@ -135,7 +135,7 @@ exports[`renders correctly with one strategy 1`] = `
             onMouseOver={[Function]}
             onTouchEnd={[Function]}
             onTouchStart={[Function]}
-            title="Deprecate activation strategy"
+            title=""
           >
             <button
               className="MuiButtonBase-root MuiIconButton-root"
@@ -263,7 +263,7 @@ exports[`renders correctly with one strategy without permissions 1`] = `
           onMouseOver={[Function]}
           onTouchEnd={[Function]}
           onTouchStart={[Function]}
-          title="Add new strategy"
+          title=""
         >
           <button
             className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -287,7 +287,7 @@ exports[`renders correctly with one strategy without permissions 1`] = `
             <span
               className="MuiButton-label"
             >
-              Add new strategy
+              New strategy
               <span
                 className="MuiButton-endIcon MuiButton-iconSizeMedium"
               />
@@ -360,7 +360,7 @@ exports[`renders correctly with one strategy without permissions 1`] = `
             onMouseOver={[Function]}
             onTouchEnd={[Function]}
             onTouchStart={[Function]}
-            title="Deprecate activation strategy"
+            title=""
           >
             <button
               className="MuiButtonBase-root MuiIconButton-root"

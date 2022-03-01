@@ -1,22 +1,23 @@
 import {
+    Avatar,
     ListItem,
     ListItemAvatar,
-    Avatar,
-    ListItemText,
     ListItemSecondaryAction,
+    ListItemText,
     MenuItem,
 } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
 import { useParams } from 'react-router-dom';
 import {
-    IProjectAccessUser,
     IProjectAccessOutput,
+    IProjectAccessUser,
 } from '../../../../../hooks/api/getters/useProjectAccess/useProjectAccess';
 import { IProjectViewParams } from '../../../../../interfaces/params';
 import PermissionIconButton from '../../../../common/PermissionIconButton/PermissionIconButton';
 import { UPDATE_PROJECT } from '../../../../providers/AccessProvider/permissions';
 import { ProjectRoleSelect } from '../../ProjectRoleSelect/ProjectRoleSelect';
 import { useStyles } from '../ProjectAccessListItem/ProjectAccessListItem.styles';
+import React from 'react';
 
 interface IProjectAccessListItemProps {
     user: IProjectAccessUser;

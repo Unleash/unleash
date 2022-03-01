@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import classnames from 'classnames';
-import OutsideClickHandler from 'react-outside-click-handler';
-
-import { Avatar, Button } from '@material-ui/core';
+import { Avatar, Button, ClickAwayListener } from '@material-ui/core';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import { useStyles } from './UserProfile.styles';
 import { useCommonStyles } from '../../../common.styles';
 import UserProfileContent from './UserProfileContent/UserProfileContent';
 import { IUser } from '../../../interfaces/user';
 import { ILocationSettings } from '../../../hooks/useLocationSettings';
+import { HEADER_USER_AVATAR } from 'testIds';
 
 interface IUserProfileProps {
     profile: IUser;
@@ -57,7 +56,7 @@ const UserProfile = ({
     const imageUrl = email ? profile.imageUrl : 'unknown-user.png';
 
     return (
-        <OutsideClickHandler onOutsideClick={() => setShowProfile(false)}>
+        <ClickAwayListener onClickAway={() => setShowProfile(false)}>
             <div className={styles.profileContainer}>
                 <Button
                     className={classnames(
@@ -69,7 +68,11 @@ const UserProfile = ({
                     role="button"
                     disableRipple
                 >
-                    <Avatar alt="user image" src={imageUrl} />
+                    <Avatar
+                        alt="user image"
+                        src={imageUrl}
+                        data-test={HEADER_USER_AVATAR}
+                    />
                     <KeyboardArrowDownIcon />
                 </Button>
                 <UserProfileContent
@@ -82,7 +85,7 @@ const UserProfile = ({
                     currentLocale={currentLocale}
                 />
             </div>
-        </OutsideClickHandler>
+        </ClickAwayListener>
     );
 };
 

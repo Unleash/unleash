@@ -9,8 +9,8 @@ import {
     useTheme,
 } from '@material-ui/core';
 import { useLocationSettings } from '../../../../../hooks/useLocationSettings';
-import { formatFullDateTimeWithLocale } from '../../../../common/util';
 import { useMemo } from 'react';
+import { formatDateYMDHMS } from 'utils/format-date';
 
 export const FEATURE_METRICS_TABLE_ID = 'feature-metrics-table-id';
 
@@ -48,7 +48,7 @@ export const FeatureMetricsTable = ({ metrics }: IFeatureMetricsTableProps) => {
                 {sortedMetrics.map(metric => (
                     <TableRow key={metric.timestamp}>
                         <TableCell>
-                            {formatFullDateTimeWithLocale(
+                            {formatDateYMDHMS(
                                 metric.timestamp,
                                 locationSettings.locale
                             )}

@@ -139,7 +139,7 @@ const ProjectListNew = () => {
                                 tooltip={createButtonData.title}
                                 disabled={createButtonData.disabled}
                             >
-                                Add new project
+                                New project
                             </ResponsiveButton>
                         }
                     />

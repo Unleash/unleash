@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router';
 import AccessContext from '../../../../../contexts/AccessContext';
 import useFeatureApi from '../../../../../hooks/api/actions/useFeatureApi/useFeatureApi';
@@ -12,6 +12,7 @@ import FeatureProjectSelect from './FeatureProjectSelect/FeatureProjectSelect';
 import FeatureSettingsProjectConfirm from './FeatureSettingsProjectConfirm/FeatureSettingsProjectConfirm';
 import { IPermission } from '../../../../../interfaces/user';
 import { useAuthPermissions } from '../../../../../hooks/api/getters/useAuth/useAuthPermissions';
+import { formatUnknownError } from '../../../../../utils/format-unknown-error';
 
 const FeatureSettingsProject = () => {
     const { hasAccess } = useContext(AccessContext);
@@ -61,16 +62,16 @@ const FeatureSettingsProject = () => {
             history.replace(
                 `/projects/${newProject}/features/${featureId}/settings`
             );
-        } catch (e) {
-            setToastApiError(e.message);
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
         }
     };
 
     const createMoveTargets = () => {
         return permissions.reduce(
-            (acc: { [key: string]: boolean }, permission: IPermission) => {
-                if (permission.permission === MOVE_FEATURE_TOGGLE) {
-                    acc[permission.project] = true;
+            (acc: { [key: string]: boolean }, p: IPermission) => {
+                if (p.project && p.permission === MOVE_FEATURE_TOGGLE) {
+                    acc[p.project] = true;
                 }
                 return acc;
             },
@@ -101,7 +102,6 @@ const FeatureSettingsProject = () => {
                 show={
                     <PermissionButton
                         permission={MOVE_FEATURE_TOGGLE}
-                        tooltip="Update feature"
                         onClick={() => setShowConfirmDialog(true)}
                         projectId={projectId}
                     >

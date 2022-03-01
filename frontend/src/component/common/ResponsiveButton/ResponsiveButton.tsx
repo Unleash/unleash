@@ -2,16 +2,18 @@ import { useMediaQuery } from '@material-ui/core';
 import ConditionallyRender from '../ConditionallyRender';
 import PermissionButton from '../PermissionButton/PermissionButton';
 import PermissionIconButton from '../PermissionIconButton/PermissionIconButton';
+import React from 'react';
 
 interface IResponsiveButtonProps {
     Icon: React.ElementType;
     onClick: () => void;
     tooltip?: string;
     disabled?: boolean;
-    permission?: string;
+    permission: string;
     projectId?: string;
     environmentId?: string;
     maxWidth: string;
+    className?: string;
 }
 
 const ResponsiveButton: React.FC<IResponsiveButtonProps> = ({

@@ -1,5 +1,7 @@
 import useFeatureTypes from '../../../../../../hooks/api/getters/useFeatureTypes/useFeatureTypes';
-import GeneralSelect from '../../../../../common/GeneralSelect/GeneralSelect';
+import GeneralSelect, {
+    ISelectOption,
+} from '../../../../../common/GeneralSelect/GeneralSelect';
 
 const FeatureTypeSelect = ({
     editable,
@@ -11,7 +13,7 @@ const FeatureTypeSelect = ({
 }) => {
     const { featureTypes } = useFeatureTypes();
 
-    const options = featureTypes.map(t => ({
+    const options: ISelectOption[] = featureTypes.map(t => ({
         key: t.id,
         label: t.name,
         title: t.description,

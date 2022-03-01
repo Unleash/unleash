@@ -8,7 +8,7 @@ import useStrategies from '../../../../../../hooks/api/getters/useStrategies/use
 import GeneralStrategy from '../../common/GeneralStrategy/GeneralStrategy';
 import UserWithIdStrategy from '../../common/UserWithIdStrategy/UserWithId';
 import StrategyConstraints from '../../common/StrategyConstraints/StrategyConstraints';
-import { useContext, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import ConditionallyRender from '../../../../../common/ConditionallyRender';
 import useUiConfig from '../../../../../../hooks/api/getters/useUiConfig/useUiConfig';
 import { C } from '../../../../../common/flags';

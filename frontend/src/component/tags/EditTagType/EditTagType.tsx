@@ -1,14 +1,14 @@
 import { useHistory, useParams } from 'react-router-dom';
-import useTagTypesApi from '../../../hooks/api/actions/useTagTypesApi/useTagTypesApi';
-import useTagType from '../../../hooks/api/getters/useTagType/useTagType';
-import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
-import useToast from '../../../hooks/useToast';
-import FormTemplate from '../../common/FormTemplate/FormTemplate';
-import PermissionButton from '../../common/PermissionButton/PermissionButton';
 import { UPDATE_TAG_TYPE } from '../../providers/AccessProvider/permissions';
 import useTagTypeForm from '../TagTypeForm/useTagTypeForm';
 import TagForm from '../TagTypeForm/TagTypeForm';
-
+import { UpdateButton } from 'component/common/UpdateButton/UpdateButton';
+import useTagTypesApi from 'hooks/api/actions/useTagTypesApi/useTagTypesApi';
+import useTagType from 'hooks/api/getters/useTagType/useTagType';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import useToast from 'hooks/useToast';
+import FormTemplate from 'component/common/FormTemplate/FormTemplate';
+import { formatUnknownError } from 'utils/format-unknown-error';
 const EditTagType = () => {
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
@@ -37,8 +37,8 @@ const EditTagType = () => {
                 title: 'Tag type updated',
                 type: 'success',
             });
-        } catch (e: any) {
-            setToastApiError(e.toString());
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
         }
     };
 
@@ -74,9 +74,7 @@ const EditTagType = () => {
                 mode="Edit"
                 clearErrors={clearErrors}
             >
-                <PermissionButton permission={UPDATE_TAG_TYPE} type="submit">
-                    Edit type
-                </PermissionButton>
+                <UpdateButton permission={UPDATE_TAG_TYPE} />
             </TagForm>
         </FormTemplate>
     );

@@ -19,6 +19,7 @@ import { ADD_NEW_STRATEGY_SAVE_ID } from '../../../../../../testIds';
 import useFeature from '../../../../../../hooks/api/getters/useFeature/useFeature';
 import { scrollToTop } from '../../../../../common/util';
 import useToast from '../../../../../../hooks/useToast';
+import { formatUnknownError } from '../../../../../../utils/format-unknown-error';
 
 const FeatureStrategiesConfigure = () => {
     const history = useHistory();
@@ -99,8 +100,8 @@ const FeatureStrategiesConfigure = () => {
             history.replace(history.location.pathname);
             refetch();
             scrollToTop();
-        } catch (e) {
-            setToastApiError(e.message);
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
         }
     };
 

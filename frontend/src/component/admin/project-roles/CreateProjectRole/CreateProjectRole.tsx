@@ -1,12 +1,13 @@
-import FormTemplate from '../../../common/FormTemplate/FormTemplate';
-import useProjectRolesApi from '../../../../hooks/api/actions/useProjectRolesApi/useProjectRolesApi';
+import FormTemplate from 'component/common/FormTemplate/FormTemplate';
+import useProjectRolesApi from 'hooks/api/actions/useProjectRolesApi/useProjectRolesApi';
 import { useHistory } from 'react-router-dom';
 import ProjectRoleForm from '../ProjectRoleForm/ProjectRoleForm';
 import useProjectRoleForm from '../hooks/useProjectRoleForm';
-import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
-import useToast from '../../../../hooks/useToast';
-import PermissionButton from '../../../common/PermissionButton/PermissionButton';
-import { ADMIN } from '../../../providers/AccessProvider/permissions';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import useToast from 'hooks/useToast';
+import { CreateButton } from 'component/common/CreateButton/CreateButton';
+import { ADMIN } from 'component/providers/AccessProvider/permissions';
+import { formatUnknownError } from 'utils/format-unknown-error';
 
 const CreateProjectRole = () => {
     const { setToastData, setToastApiError } = useToast();
@@ -49,8 +50,8 @@ const CreateProjectRole = () => {
                     confetti: true,
                     type: 'success',
                 });
-            } catch (e: any) {
-                setToastApiError(e.toString());
+            } catch (error: unknown) {
+                setToastApiError(formatUnknownError(error));
             }
         }
     };
@@ -95,9 +96,7 @@ const CreateProjectRole = () => {
                 validateNameUniqueness={validateNameUniqueness}
                 getRoleKey={getRoleKey}
             >
-                <PermissionButton permission={ADMIN} type="submit">
-                    Create role
-                </PermissionButton>
+                <CreateButton name="role" permission={ADMIN} />
             </ProjectRoleForm>
         </FormTemplate>
     );

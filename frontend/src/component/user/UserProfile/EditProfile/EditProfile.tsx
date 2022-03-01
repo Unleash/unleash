@@ -1,4 +1,4 @@
-import { SyntheticEvent, useState } from 'react';
+import React, { SyntheticEvent, useState } from 'react';
 import { Button, Typography } from '@material-ui/core';
 import classnames from 'classnames';
 import { useStyles } from './EditProfile.styles';

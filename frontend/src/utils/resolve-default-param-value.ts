@@ -1,4 +1,7 @@
-export const resolveDefaultParamValue = (name, featureToggleName) => {
+export const resolveDefaultParamValue = (
+    name: string,
+    featureToggleName: string
+): string | number => {
     switch (name) {
         case 'percentage':
         case 'rollout':

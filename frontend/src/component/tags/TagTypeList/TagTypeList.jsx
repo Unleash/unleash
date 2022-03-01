@@ -26,6 +26,7 @@ import useTagTypesApi from '../../../hooks/api/actions/useTagTypesApi/useTagType
 import useTagTypes from '../../../hooks/api/getters/useTagTypes/useTagTypes';
 import useToast from '../../../hooks/useToast';
 import PermissionIconButton from '../../common/PermissionIconButton/PermissionIconButton';
+import { formatUnknownError } from '../../../utils/format-unknown-error';
 
 export const TagTypeList = () => {
     const { hasAccess } = useContext(AccessContext);
@@ -46,8 +47,8 @@ export const TagTypeList = () => {
                 show: true,
                 text: 'Successfully deleted tag type.',
             });
-        } catch (e) {
-            setToastApiError(e.toString());
+        } catch (error) {
+            setToastApiError(formatUnknownError(error));
         }
     };
 
@@ -80,7 +81,7 @@ export const TagTypeList = () => {
                                         history.push('/tag-types/create')
                                     }
                                 >
-                                    Add new tag type
+                                    New tag type
                                 </Button>
                             }
                         />

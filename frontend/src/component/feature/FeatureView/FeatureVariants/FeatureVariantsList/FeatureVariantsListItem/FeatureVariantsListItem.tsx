@@ -1,5 +1,5 @@
-import { IconButton, Chip, TableCell, TableRow } from '@material-ui/core';
-import { Edit, Delete } from '@material-ui/icons';
+import { Chip, IconButton, TableCell, TableRow } from '@material-ui/core';
+import { Delete, Edit } from '@material-ui/icons';
 
 import styles from '../variants.module.scss';
 import { IFeatureVariant } from '../../../../../../interfaces/featureToggle';
@@ -26,7 +26,7 @@ const FeatureVariantListItem = ({
             <TableCell data-test={'VARIANT_NAME'}>{variant.name}</TableCell>
             <TableCell className={styles.chipContainer}>
                 <ConditionallyRender
-                    condition={variant.payload}
+                    condition={Boolean(variant.payload)}
                     show={<Chip label="Payload" />}
                 />
                 <ConditionallyRender

@@ -11,7 +11,7 @@ export interface IStrategy {
     editable: boolean;
     deprecated: boolean;
     description: string;
-    parameters: IParameter;
+    parameters: IParameter[];
 }
 
 export interface IConstraint {
@@ -24,6 +24,7 @@ export interface IParameter {
     groupId?: string;
     rollout?: number;
     stickiness?: string;
+
     [index: string]: any;
 }
 

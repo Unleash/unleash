@@ -1,9 +1,10 @@
 interface IConditionallyRenderProps {
     condition: boolean;
-    show: JSX.Element | RenderFunc;
-    elseShow?: JSX.Element | RenderFunc;
+    show: TargetElement;
+    elseShow?: TargetElement;
 }
 
+type TargetElement = JSX.Element | JSX.Element[] | RenderFunc | null;
 type RenderFunc = () => JSX.Element;
 
 const ConditionallyRender = ({
@@ -23,8 +24,9 @@ const ConditionallyRender = ({
         return result;
     };
 
-    const isFunc = (param: JSX.Element | RenderFunc) =>
-        typeof param === 'function';
+    const isFunc = (param: TargetElement): boolean => {
+        return typeof param === 'function';
+    };
 
     if (condition) {
         if (isFunc(show)) {

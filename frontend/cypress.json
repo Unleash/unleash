@@ -1,4 +1,6 @@
 {
   "projectId": "tc2qff",
-  "defaultCommandTimeout": 12000
+  "defaultCommandTimeout": 12000,
+  "screenshotOnRunFailure": false,
+  "video": false
 }

@@ -3,7 +3,7 @@ import { useLocationSettings } from '../../../../hooks/useLocationSettings';
 import { formatDateYMD, formatDateYMDHMS } from '../../../../utils/format-date';
 
 interface CreatedAtProps {
-    time: Date;
+    time: string;
 }
 
 const CreatedAt = ({ time }: CreatedAtProps) => {

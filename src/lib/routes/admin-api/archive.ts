@@ -1,4 +1,4 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
 import { Logger } from '../../logger';
@@ -9,6 +9,8 @@ import { extractUsername } from '../../util/extract-user';
 import { DELETE_FEATURE, UPDATE_FEATURE } from '../../types/permissions';
 import FeatureToggleService from '../../services/feature-toggle-service';
 import { IAuthRequest } from '../unleash-types';
+import { featuresResponse } from '../../openapi/spec/features-response';
+import { FeaturesSchema } from '../../openapi/spec/features-schema';
 
 export default class ArchiveController extends Controller {
     private readonly logger: Logger;
@@ -19,13 +21,26 @@ export default class ArchiveController extends Controller {
         config: IUnleashConfig,
         {
             featureToggleServiceV2,
-        }: Pick<IUnleashServices, 'featureToggleServiceV2'>,
+            openApiService,
+        }: Pick<IUnleashServices, 'featureToggleServiceV2' | 'openApiService'>,
     ) {
         super(config);
         this.logger = config.getLogger('/admin-api/archive.js');
         this.featureService = featureToggleServiceV2;
 
-        this.get('/features', this.getArchivedFeatures);
+        this.route({
+            method: 'get',
+            path: '/features',
+            handler: this.getArchivedFeatures,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    responses: { 200: featuresResponse },
+                    deprecated: true,
+                }),
+            ],
+        });
+
         this.delete('/:featureName', this.deleteFeature, DELETE_FEATURE);
         this.post(
             '/revive/:featureName',
@@ -35,7 +50,10 @@ export default class ArchiveController extends Controller {
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    async getArchivedFeatures(req, res): Promise<void> {
+    async getArchivedFeatures(
+        req: Request,
+        res: Response<FeaturesSchema>,
+    ): Promise<void> {
         const features = await this.featureService.getMetadataForAllFeatures(
             true,
         );

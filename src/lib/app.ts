@@ -66,9 +66,10 @@ export default async function getApp(
     app.use(baseUriPath, favicon(path.join(publicFolder, 'favicon.ico')));
     app.use(baseUriPath, express.static(publicFolder, { index: false }));
 
-    if (config.enableOAS) {
-        app.use(`${baseUriPath}/oas`, express.static('docs/api/oas'));
+    if (config.enableOAS && services.openApiService) {
+        services.openApiService.useDocs(app);
     }
+
     switch (config.authentication.type) {
         case IAuthType.OPEN_SOURCE: {
             app.use(baseUriPath, apiTokenMiddleware(config, services));
@@ -128,6 +129,10 @@ export default async function getApp(
     // Setup API routes
     app.use(`${baseUriPath}/`, new IndexRouter(config, services).router);
 
+    if (services.openApiService) {
+        services.openApiService.useErrorHandler(app);
+    }
+
     if (process.env.NODE_ENV !== 'production') {
         app.use(errorHandler());
     }
@@ -144,5 +149,6 @@ export default async function getApp(
 
         res.send(indexHTML);
     });
+
     return app;
 }

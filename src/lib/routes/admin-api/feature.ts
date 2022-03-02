@@ -18,6 +18,8 @@ import { IFeatureToggleQuery } from '../../types/model';
 import FeatureTagService from '../../services/feature-tag-service';
 import { IAuthRequest } from '../unleash-types';
 import { DEFAULT_ENV } from '../../util/constants';
+import { featuresResponse } from '../../openapi/spec/features-response';
+import { FeaturesSchema } from '../../openapi/spec/features-schema';
 
 const version = 1;
 
@@ -31,9 +33,10 @@ class FeatureController extends Controller {
         {
             featureTagService,
             featureToggleServiceV2,
+            openApiService,
         }: Pick<
             IUnleashServices,
-            'featureTagService' | 'featureToggleServiceV2'
+            'featureTagService' | 'featureToggleServiceV2' | 'openApiService'
         >,
     ) {
         super(config);
@@ -57,7 +60,19 @@ class FeatureController extends Controller {
             this.post('/:featureName/stale/off', this.staleOff, UPDATE_FEATURE);
         }
 
-        this.get('/', this.getAllToggles);
+        this.route({
+            method: 'get',
+            path: '/',
+            handler: this.getAllToggles,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    responses: { 200: featuresResponse },
+                    deprecated: true,
+                }),
+            ],
+        });
+
         this.post('/validate', this.validate, NONE);
         this.get('/:featureName/tags', this.listTags);
         this.post('/:featureName/tags', this.addTag, UPDATE_FEATURE);
@@ -97,7 +112,10 @@ class FeatureController extends Controller {
         return query;
     }
 
-    async getAllToggles(req: Request, res: Response): Promise<void> {
+    async getAllToggles(
+        req: Request,
+        res: Response<FeaturesSchema>,
+    ): Promise<void> {
         const query = await this.prepQuery(req.query);
         const features = await this.service.getFeatureToggles(query);
 

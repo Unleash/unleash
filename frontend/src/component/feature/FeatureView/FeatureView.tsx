@@ -21,7 +21,7 @@ import FeatureStrategies from './FeatureStrategies/FeatureStrategies';
 import FeatureVariants from './FeatureVariants/FeatureVariants';
 import { FeatureMetrics } from './FeatureMetrics/FeatureMetrics';
 import { useStyles } from './FeatureView.styles';
-import FeatureSettings from './FeatureSettings/FeatureSettings';
+import { FeatureSettings } from './FeatureSettings/FeatureSettings';
 import useLoading from '../../../hooks/useLoading';
 import ConditionallyRender from '../../common/ConditionallyRender';
 import { getCreateTogglePath } from '../../../utils/route-path-helpers';
@@ -31,7 +31,7 @@ import AddTagDialog from './FeatureOverview/AddTagDialog/AddTagDialog';
 import StatusChip from '../../common/StatusChip/StatusChip';
 import { formatUnknownError } from '../../../utils/format-unknown-error';
 
-const FeatureView = () => {
+export const FeatureView = () => {
     const { projectId, featureId } = useParams<IFeatureViewParams>();
     const { feature, loading, error } = useFeature(projectId, featureId);
     const { refetch: projectRefetch } = useProject(projectId);
@@ -254,5 +254,3 @@ const FeatureView = () => {
         />
     );
 };
-
-export default FeatureView;

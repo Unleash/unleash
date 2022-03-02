@@ -4,7 +4,7 @@ import { mutate } from 'swr';
 import { getProjectFetcher } from 'hooks/api/getters/useProject/getProjectFetcher';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import ConditionallyRender from 'component/common/ConditionallyRender/ConditionallyRender';
-import ProjectCard from '../ProjectCard/ProjectCard';
+import { ProjectCard } from '../ProjectCard/ProjectCard';
 import { useStyles } from './ProjectList.styles';
 import { IProjectCard } from 'interfaces/project';
 import loadingData from './loadingData';

@@ -22,6 +22,17 @@ module.exports = {
         config.resolve.alias = {
             ...config.resolve.alias,
             '@site': path.resolve(__dirname, '../'),
+            '@docusaurus': path.resolve(
+                __dirname,
+                '../',
+                'node_modules',
+                '@docusaurus',
+                'core',
+                'lib',
+                'client',
+                'exports',
+            ),
+            '@generated': path.resolve(__dirname, '../', '.docusaurus'),
         };
 
         let cssRules = [];

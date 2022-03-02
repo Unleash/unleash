@@ -131,10 +131,16 @@ const stateReducer = (state: CompleteData, message: Message) => {
     }
 };
 
-export const FeedbackWrapper = ({ seedData, open }) => {
+type Props = {
+    seedData?: InitialData;
+    open?: boolean;
+};
+
+export const FeedbackWrapper: React.FC<Props> = ({ seedData, open }) => {
     const {
         siteConfig: { customFields },
     } = useDocusaurusContext();
+
     const feedbackTargetUrl: string | undefined =
         (customFields?.unleashFeedbackTargetUrl as string | undefined) ??
         (typeof process !== 'undefined' &&

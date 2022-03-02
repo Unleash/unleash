@@ -21,7 +21,7 @@ function Root({ children }) {
         url: customFields.unleashProxyUrl as string,
         disableRefresh: true,
         appName: `docs.getunleash.io-${customFields.environment}`,
-        ...(typeof fetch !=="undefined" ? unleashSsrOptions : {})
+        ...(typeof fetch === "undefined" ? unleashSsrOptions : {})
     };
 
     const [showFeedback, setShowFeedback] = React.useState(false);

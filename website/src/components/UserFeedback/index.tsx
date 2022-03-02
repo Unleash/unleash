@@ -3,9 +3,25 @@ import styles from './styles.module.css';
 import CloseIcon from '@site/src/icons/close';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 
-const join = (...cs) => cs.join(' ');
+const join = (...cs: string[]) => cs.join(' ');
 
-const clearedData = {
+type CustomerType = 'open source' | 'paying';
+
+type InitialData = {
+    currentStep: number;
+    data: {
+        score: undefined | number;
+        comment: undefined | string;
+        customerType: undefined | CustomerType;
+    };
+    closedOrCompleted: boolean;
+};
+
+type CompleteData = InitialData & {
+    initialized: number;
+};
+
+const clearedData: InitialData = {
     currentStep: 1,
     data: {
         score: undefined,
@@ -16,7 +32,7 @@ const clearedData = {
 };
 
 const localstorageKey = 'user-feedback-v1';
-const populateData = (initialData) => {
+const populateData = (initialData: InitialData): CompleteData => {
     // if we get seed data, use that. Otherwise, check if the last entry in
     // localstorage was completed. If not, use that as base.
 
@@ -29,10 +45,10 @@ const populateData = (initialData) => {
 
         if (userFeedbackLog) {
             const mostRecentTimestamp = Math.max(
-                ...Object.keys(userFeedbackLog),
+                ...Object.keys(userFeedbackLog).map(parseInt),
             );
             const mostRecent = userFeedbackLog[mostRecentTimestamp];
-            if (!mostRecent.closedOrCompleted) {
+            if (mostRecent && !mostRecent.closedOrCompleted) {
                 return mostRecent;
             }
         }
@@ -52,14 +68,13 @@ const populateData = (initialData) => {
             ...seedData?.data,
         },
         initialized: Date.now(),
-        userClosed: false,
     };
 };
 
 const getUserDataRecord = () =>
     JSON.parse(localStorage.getItem(localstorageKey));
 
-const storeData = (data) => {
+const storeData = (data: CompleteData) => {
     const existingData = getUserDataRecord();
     localStorage.setItem(
         localstorageKey,
@@ -70,7 +85,17 @@ const storeData = (data) => {
     );
 };
 
-const stateReducer = (state, message) => {
+type Message =
+    | { kind: 'close' }
+    | { kind: 'completed' }
+    | { kind: 'reset' }
+    | { kind: 'set score'; data: number }
+    | { kind: 'set comment'; data: string }
+    | { kind: 'set customer type'; data: CustomerType }
+    | { kind: 'step forward' }
+    | { kind: 'step back' };
+
+const stateReducer = (state: CompleteData, message: Message) => {
     switch (message.kind) {
         case 'close':
             return { ...state, closedOrCompleted: true };
@@ -104,15 +129,14 @@ const stateReducer = (state, message) => {
                 currentStep: Math.max(state.currentStep - 1, 1),
             };
     }
-    return state;
 };
 
 export const FeedbackWrapper = ({ seedData, open }) => {
     const {
         siteConfig: { customFields },
     } = useDocusaurusContext();
-    const feedbackTargetUrl =
-        customFields?.unleashFeedbackTargetUrl ??
+    const feedbackTargetUrl: string | undefined =
+        (customFields?.unleashFeedbackTargetUrl as string | undefined) ??
         (typeof process !== 'undefined' &&
             process?.env?.UNLEASH_FEEDBACK_TARGET_URL);
 
@@ -136,10 +160,11 @@ export const FeedbackWrapper = ({ seedData, open }) => {
     const stepBack = () => {
         dispatch({ kind: 'step back' });
     };
-    const setScore = (score) => dispatch({ kind: 'set score', data: score });
-    const setComment = (comment) =>
+    const setScore = (score: number) =>
+        dispatch({ kind: 'set score', data: score });
+    const setComment = (comment: string) =>
         dispatch({ kind: 'set comment', data: comment });
-    const setCustomerType = (customerType) =>
+    const setCustomerType = (customerType: CustomerType) =>
         dispatch({ kind: 'set customer type', data: customerType });
 
     const submitFeedback = () => {
@@ -173,8 +198,9 @@ export const FeedbackWrapper = ({ seedData, open }) => {
         stepForward();
     };
 
-    const visuallyHidden = (stepNumber) => state.currentStep !== stepNumber;
-    const isHidden = (stepNumber) =>
+    const visuallyHidden = (stepNumber: number) =>
+        state.currentStep !== stepNumber;
+    const isHidden = (stepNumber: number) =>
         !feedbackIsOpen || visuallyHidden(stepNumber);
 
     const Step1 = () => {
@@ -273,7 +299,10 @@ export const FeedbackWrapper = ({ seedData, open }) => {
         const hidden = isHidden(2);
         const textareaId = 'feedback-comment-input';
         const saveComment = () =>
-            setComment(document.getElementById(textareaId).value);
+            setComment(
+                (document.getElementById(textareaId) as HTMLTextAreaElement)
+                    .value,
+            );
 
         return (
             <form
@@ -293,7 +322,7 @@ export const FeedbackWrapper = ({ seedData, open }) => {
                     <textarea
                         id={textareaId}
                         name=""
-                        rows="3"
+                        rows={3}
                         autoFocus
                         defaultValue={state.data.comment}
                     ></textarea>
@@ -328,7 +357,9 @@ export const FeedbackWrapper = ({ seedData, open }) => {
 
     const Step3 = () => {
         const hidden = isHidden(3);
-        const [value, setValue] = React.useState(state.data.customerType);
+        const [value, setValue] = React.useState<CustomerType | undefined>(
+            state.data.customerType,
+        );
 
         return (
             <form
@@ -365,16 +396,15 @@ export const FeedbackWrapper = ({ seedData, open }) => {
                                     defaultChecked={
                                         customerType === state.data.customerType
                                     }
-                                    onChange={(e) => {
-                                        const value = e.target.value;
-                                        setValue(customerType);
+                                    onChange={() => {
+                                        setValue(customerType as CustomerType);
                                     }}
                                 />
                                 <label
                                     className={styles['customer-type-label']}
                                     htmlFor={`customer-type-${key}`}
                                 >
-                                    I'm {article} {customerType} customer
+                                    {`I'm ${article} ${customerType} customer`}
                                 </label>
                             </span>
                         ))}

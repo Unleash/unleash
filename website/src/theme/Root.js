@@ -12,7 +12,7 @@ function Root({ children }) {
     const unleashConfig = {
         clientKey: customFields.unleashProxyClientKey,
         url: customFields.unleashProxyUrl,
-        refreshInterval: 1,
+        refreshInterval: 0,
         appName: `docs.getunleash.io-${customFields.environment}`,
     };
 

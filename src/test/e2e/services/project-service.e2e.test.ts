@@ -678,8 +678,8 @@ test('should update role for user on project', async () => {
     );
 
     const { users } = await projectService.getUsersWithAccess(project.id, user);
-    const memberUsers = users.filter((user) => user.roleId === memberRole.id);
-    const ownerUsers = users.filter((user) => user.roleId === ownerRole.id);
+    const memberUsers = users.filter((u) => u.roleId === memberRole.id);
+    const ownerUsers = users.filter((u) => u.roleId === ownerRole.id);
 
     expect(memberUsers).toHaveLength(0);
     expect(ownerUsers).toHaveLength(2);

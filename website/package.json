@@ -25,7 +25,6 @@
     "@svgr/webpack": "6.2.1",
     "clsx": "1.1.1",
     "file-loader": "6.2.0",
-    "node-fetch": "^2.6.7",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "unleash-proxy-client": "^1.11.0",

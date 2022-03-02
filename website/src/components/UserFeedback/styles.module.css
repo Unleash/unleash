@@ -209,14 +209,23 @@ button.close-button {
 
 .open-feedback-button {
     padding-block: var(--ifm-spacing-vertical);
+    padding-inline: var(--ifm-spacing-horizontal);
     border-radius: 0 var(--ifm-global-radius) var(--ifm-global-radius) 0;
     border: none;
     position: fixed;
     bottom: 25vh;
     right: 0;
-    writing-mode: vertical-lr;
-    transform: rotate(180deg);
     transition: var(--fade-in-transition);
+    transform: rotate(180deg);
+    writing-mode: vertical-lr;
+}
+
+/* note: Chrome doesn't support writing-mode on buttons, so we need to add a
+   span for the text and change the writing-mode there. Simultaneously, Firefox
+   does some weird stuff with the padding of the text if writing-mode isn't
+   specified on the button itself, so we need to set that too. */
+.open-feedback-button > span {
+    writing-mode: vertical-lr;
 }
 
 .invisible,

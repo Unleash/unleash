@@ -715,8 +715,8 @@ test('should able to assign role without existing members', async () => {
     );
 
     const { users } = await projectService.getUsersWithAccess(project.id, user);
-    const memberUsers = users.filter((user) => user.roleId === memberRole.id);
-    const testUsers = users.filter((user) => user.roleId === testRole.id);
+    const memberUsers = users.filter((u) => u.roleId === memberRole.id);
+    const testUsers = users.filter((u) => u.roleId === testRole.id);
 
     expect(memberUsers).toHaveLength(0);
     expect(testUsers).toHaveLength(1);

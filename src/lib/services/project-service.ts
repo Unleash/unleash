@@ -36,6 +36,7 @@ import NoAccessError from '../error/no-access-error';
 import IncompatibleProjectError from '../error/incompatible-project-error';
 import { DEFAULT_PROJECT } from '../types/project';
 import { IFeatureTagStore } from 'lib/types/stores/feature-tag-store';
+import ProjectWithoutOwnerError from '../error/project-without-owner-error';
 
 const getCreatedBy = (user: User) => user.email || user.username;
 
@@ -349,7 +350,7 @@ export default class ProjectService {
                 projectId,
             );
             if (users.length < 2) {
-                throw new Error('A project must have at least one owner');
+                throw new ProjectWithoutOwnerError();
             }
         }
     }
@@ -360,8 +361,6 @@ export default class ProjectService {
         userId: number,
         createdBy: string,
     ): Promise<void> {
-        const role = await this.findProjectRole(projectId, roleId);
-
         const usersWithRoles = await this.getUsersWithAccess(projectId);
         const user = usersWithRoles.users.find((u) => u.id === userId);
         const currentRole = usersWithRoles.roles.find(
@@ -380,6 +379,7 @@ export default class ProjectService {
             roleId,
             projectId,
         );
+        const role = await this.findProjectRole(projectId, roleId);
 
         await this.eventStore.store(
             new ProjectUserUpdateRoleEvent({

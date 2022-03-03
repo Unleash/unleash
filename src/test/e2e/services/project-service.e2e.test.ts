@@ -685,6 +685,43 @@ test('should update role for user on project', async () => {
     expect(ownerUsers).toHaveLength(2);
 });
 
+test('should able to assign role without existing members', async () => {
+    const project = {
+        id: 'update-users-test',
+        name: 'New project',
+        description: 'Blah',
+    };
+    await projectService.createProject(project, user);
+
+    const projectMember1 = await stores.userStore.insert({
+        name: 'Some Member',
+        email: 'update1999@getunleash.io',
+    });
+
+    const testRole = await stores.roleStore.create({
+        name: 'Power user',
+        roleType: 'custom',
+        description: 'Grants access to modify all environments',
+    });
+
+    const memberRole = await stores.roleStore.getRoleByName(RoleName.MEMBER);
+
+    await projectService.addUser(project.id, memberRole.id, projectMember1.id);
+    await projectService.changeRole(
+        project.id,
+        testRole.id,
+        projectMember1.id,
+        'test',
+    );
+
+    const { users } = await projectService.getUsersWithAccess(project.id, user);
+    const memberUsers = users.filter((user) => user.roleId === memberRole.id);
+    const testUsers = users.filter((user) => user.roleId === testRole.id);
+
+    expect(memberUsers).toHaveLength(0);
+    expect(testUsers).toHaveLength(1);
+});
+
 test('should not update role for user on project when she is the owner', async () => {
     const project = {
         id: 'update-users-not-allowed',

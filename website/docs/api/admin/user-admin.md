@@ -119,12 +119,12 @@ Creates a new user with the given root role.
 
 **Payload properties**
 
-| Property name | Required | Description                                                                     | Example value(s)       |
-|---------------|----------|---------------------------------------------------------------------------------|------------------------|
-| `email`       | Yes      | The user's email address.                                                       | `"user@getunleash.io"` |
-| `name`        | Yes      | The user's name                                                                 | `"Some Name"`          |
-| `rootRole`    | Yes      | The role to assign to the user. Can be either the role's ID or its unique name. | `2`, `"Editor"`        |
-| `sendEmail`   | No       | Whether to send a registration email to the user or not. Defaults to `true`.    | `false`                |
+| Property name | Required | Description                                                                               | Example value(s)       |
+|---------------|----------|-------------------------------------------------------------------------------------------|------------------------|
+| `email`       | Yes      | The user's email address.                                                                 | `"user@getunleash.io"` |
+| `name`        | Yes      | The user's name                                                                           | `"Some Name"`          |
+| `rootRole`    | Yes      | The role to assign to the user. Can be either the role's ID or its unique name.           | `2`, `"Editor"`        |
+| `sendEmail`   | No       | Whether to send a welcome email with a login link to the user or not. Defaults to `true`. | `false`                |
 
 
 **Body**

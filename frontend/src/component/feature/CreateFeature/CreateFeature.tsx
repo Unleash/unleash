@@ -45,6 +45,7 @@ const CreateFeature = () => {
         if (validToggleName) {
             const payload = getTogglePayload();
             try {
+                // @ts-expect-error
                 await createFeatureToggle(project, payload);
                 history.push(`/projects/${project}/features/${name}`);
                 setToastData({

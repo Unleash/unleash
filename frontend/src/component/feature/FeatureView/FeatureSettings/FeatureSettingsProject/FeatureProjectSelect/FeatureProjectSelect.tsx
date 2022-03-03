@@ -36,18 +36,22 @@ const FeatureProjectSelect = ({
             .filter(project => {
                 return filter(project.id);
             })
+            // @ts-expect-error
             .map(formatOption);
     } else {
+        // @ts-expect-error
         options = projects.map(formatOption);
     }
 
     if (value && !options.find(o => o.key === value)) {
+        // @ts-expect-error
         options.push({ key: value, label: value });
     }
 
     return (
         <GeneralSelect
             label="Project"
+            // @ts-expect-error
             options={options}
             value={value}
             onChange={onChange}

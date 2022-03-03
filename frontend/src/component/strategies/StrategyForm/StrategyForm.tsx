@@ -33,6 +33,7 @@ export const StrategyForm = ({ editMode, strategy }: IStrategyFormProps) => {
     const [name, setName] = useState(strategy?.name || '');
     const [description, setDescription] = useState(strategy?.description || '');
     const [params, setParams] = useState<ICustomStrategyParams[]>(
+        // @ts-expect-error
         strategy?.parameters || []
     );
     const [errors, setErrors] = useState<ICustomStrategyErrors>({});

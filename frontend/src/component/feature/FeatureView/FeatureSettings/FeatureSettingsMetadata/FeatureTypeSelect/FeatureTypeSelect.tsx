@@ -4,10 +4,15 @@ import GeneralSelect, {
 } from '../../../../../common/GeneralSelect/GeneralSelect';
 
 const FeatureTypeSelect = ({
+    // @ts-expect-error
     editable,
+    // @ts-expect-error
     value,
+    // @ts-expect-error
     id,
+    // @ts-expect-error
     label,
+    // @ts-expect-error
     onChange,
     ...rest
 }) => {
@@ -24,15 +29,18 @@ const FeatureTypeSelect = ({
     }
 
     return (
-        <GeneralSelect
-            disabled={!editable}
-            options={options}
-            value={value}
-            onChange={onChange}
-            label={label}
-            id={id}
-            {...rest}
-        />
+        <>
+            {/* @ts-expect-error */}
+            <GeneralSelect
+                disabled={!editable}
+                options={options}
+                value={value}
+                onChange={onChange}
+                label={label}
+                id={id}
+                {...rest}
+            />
+        </>
     );
 };
 

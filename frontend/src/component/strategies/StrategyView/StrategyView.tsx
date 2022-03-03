@@ -30,6 +30,7 @@ export const StrategyView = () => {
             label: 'Details',
             component: (
                 <StrategyDetails
+                    // @ts-expect-error
                     strategy={strategy}
                     toggles={toggles}
                     applications={applications}
@@ -38,6 +39,7 @@ export const StrategyView = () => {
         },
         {
             label: 'Edit',
+            // @ts-expect-error
             component: <StrategyForm strategy={strategy} editMode />,
         },
     ];

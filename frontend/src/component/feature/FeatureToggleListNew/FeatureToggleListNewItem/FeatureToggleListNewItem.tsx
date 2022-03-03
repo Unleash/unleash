@@ -113,6 +113,7 @@ const FeatureToggleListNewItem = ({
                     onClick={onClick}
                 >
                     <Link
+                        // @ts-expect-error
                         to={getTogglePath(projectId, name, uiConfig.flags.E)}
                         className={styles.link}
                     >

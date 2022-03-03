@@ -46,6 +46,7 @@ const PermissionIconButton: React.FC<IPermissionIconButtonProps> = ({
     return (
         <Tooltip title={tooltipText} arrow>
             <span>
+                {/* @ts-expect-error */}
                 <IconButton onClick={onClick} disabled={!access} {...rest}>
                     {children}
                 </IconButton>

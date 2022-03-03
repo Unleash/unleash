@@ -56,14 +56,17 @@ const FeatureOverviewVariants = () => {
     useEffect(() => {
         const options = [
             'default',
+            // @ts-expect-error
             ...context.filter(c => c.stickiness).map(c => c.name),
         ];
 
+        // @ts-expect-error
         setStickinessOptions(options);
     }, [context]);
 
     const editable = hasAccess(UPDATE_FEATURE_VARIANTS, projectId);
 
+    // @ts-expect-error
     const setClonedVariants = clonedVariants =>
         setVariants(cloneDeep(clonedVariants));
 
@@ -101,16 +104,20 @@ const FeatureOverviewVariants = () => {
         const options = stickinessOptions.map(c => ({ key: c, label: c }));
 
         // guard on stickiness being disabled for context field.
+        // @ts-expect-error
         if (!stickinessOptions.includes(value)) {
+            // @ts-expect-error
             options.push({ key: value, label: value });
         }
 
+        // @ts-expect-error
         const onChange = event => {
             updateStickiness(event.target.value);
         };
 
         return (
             <section style={{ paddingTop: '16px' }}>
+                {/* @ts-expect-error */}
                 <GeneralSelect
                     label="Stickiness"
                     options={options}
@@ -315,6 +322,7 @@ const FeatureOverviewVariants = () => {
                 editing={editing}
                 validateName={validateName}
                 validateWeight={validateWeight}
+                // @ts-expect-error
                 editVariant={editVariant}
                 title={editing ? 'Edit variant' : 'Add variant'}
             />

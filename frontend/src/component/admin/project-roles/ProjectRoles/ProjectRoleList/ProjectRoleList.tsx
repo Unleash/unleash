@@ -61,6 +61,7 @@ const ProjectRoleList = () => {
                     name={role.name}
                     type={role.type}
                     description={role.description}
+                    // @ts-expect-error
                     setCurrentRole={setCurrentRole}
                     setDelDialog={setDelDialog}
                 />
@@ -94,6 +95,7 @@ const ProjectRoleList = () => {
             </Table>
             <br />
             <ProjectRoleDeleteConfirm
+                // @ts-expect-error
                 role={currentRole}
                 open={delDialog}
                 setDeldialogue={setDelDialog}

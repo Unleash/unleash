@@ -17,15 +17,18 @@ const TagSelect = ({ value, onChange, ...rest }: ITagSelect) => {
     }));
 
     return (
-        <GeneralSelect
-            label="Tag type"
-            name="tag-select"
-            id="tag-select"
-            options={options}
-            value={value}
-            onChange={onChange}
-            {...rest}
-        />
+        <>
+            {/* @ts-expect-error */}
+            <GeneralSelect
+                label="Tag type"
+                name="tag-select"
+                id="tag-select"
+                options={options}
+                value={value}
+                onChange={onChange}
+                {...rest}
+            />
+        </>
     );
 };
 

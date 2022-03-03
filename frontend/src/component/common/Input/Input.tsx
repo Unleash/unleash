@@ -32,6 +32,7 @@ const Input = ({
     return (
         <div className={styles.inputContainer} data-loading>
             <TextField
+                // @ts-expect-error
                 size="small"
                 variant="outlined"
                 label={label}
@@ -43,6 +44,7 @@ const Input = ({
                 value={value}
                 onChange={onChange}
                 FormHelperTextProps={{
+                    // @ts-expect-error
                     ['data-test']: INPUT_ERROR_TEXT,
                     classes: {
                         root: styles.helperText,

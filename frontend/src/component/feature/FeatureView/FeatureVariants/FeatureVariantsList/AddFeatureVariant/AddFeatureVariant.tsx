@@ -155,14 +155,17 @@ const AddVariant = ({
             clear();
             closeDialog();
         } catch (error) {
+            // @ts-expect-error
             if (error?.body?.details[0]?.message?.includes('duplicate value')) {
                 setError({ name: 'A variant with that name already exists.' });
             } else if (
+                // @ts-expect-error
                 error?.body?.details[0]?.message?.includes('must be a number')
             ) {
                 setError({ weight: 'Weight must be a number' });
             } else {
                 const msg =
+                    // @ts-expect-error
                     error?.body?.details[0]?.message || 'Could not add variant';
                 setError({ general: msg });
             }
@@ -173,6 +176,7 @@ const AddVariant = ({
         e.preventDefault();
         setPayload({
             ...payload,
+            // @ts-expect-error
             [e.target.name]: e.target.value,
         });
     };
@@ -189,6 +193,7 @@ const AddVariant = ({
             setOverrides(
                 overrides.map((o, i) => {
                     if (i === index) {
+                        // @ts-expect-error
                         o[e.target.name] = e.target.value;
                     }
 

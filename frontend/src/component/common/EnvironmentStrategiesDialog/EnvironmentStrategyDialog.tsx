@@ -23,6 +23,7 @@ const EnvironmentStrategyDialog = ({
     const strategiesLink = `/projects/${projectId}/features/${featureId}/strategies?environment=${environmentName}&addStrategy=true`;
 
     return (
+        // @ts-expect-error
         <Dialogue
             open={open}
             maxWidth="sm"

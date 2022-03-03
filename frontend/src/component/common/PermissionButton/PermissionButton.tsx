@@ -65,6 +65,7 @@ const PermissionButton: React.FC<IPermissionButtonProps> = ({
                     onClick={onClick}
                     disabled={disabled || !access}
                     variant="contained"
+                    // @ts-expect-error
                     color="primary"
                     {...rest}
                     endIcon={

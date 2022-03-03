@@ -92,6 +92,7 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                 </p>
                 <FeatureTypeSelect
                     value={type}
+                    // @ts-expect-error
                     onChange={(e: React.ChangeEvent) => setType(e.target.value)}
                     label={'Toggle type'}
                     id="feature-type-select"
@@ -121,6 +122,7 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                     }}
                     enabled={editable}
                     filter={projectFilterGenerator(permissions, CREATE_FEATURE)}
+                    // @ts-expect-error
                     IconComponent={KeyboardArrowDownOutlined}
                     className={styles.selectInput}
                 />

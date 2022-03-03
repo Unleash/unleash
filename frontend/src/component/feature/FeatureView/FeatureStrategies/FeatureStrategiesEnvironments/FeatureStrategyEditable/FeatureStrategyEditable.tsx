@@ -44,6 +44,7 @@ const FeatureStrategyEditable = ({
     const { loading } = useFeatureApi();
 
     const { projectId, featureId } = useParams<IFeatureViewParams>();
+    // @ts-expect-error
     const { activeEnvironment, featureCache, dirty, setDirty } = useContext(
         FeatureStrategiesUIContext
     );
@@ -71,15 +72,18 @@ const FeatureStrategyEditable = ({
         mutate(FEATURE_STRATEGY_CACHE_KEY, { ...updatedStrategy }, false);
 
         const dirtyParams = isDirtyParams(parameters);
+        // @ts-expect-error
         setDirty(prev => ({ ...prev, [strategy.id]: dirtyParams }));
     };
 
     const updateFeatureStrategy = () => {
         const cleanup = () => {
             setStrategyCache(cloneDeep(strategy));
+            // @ts-expect-error
             setDirty(prev => ({ ...prev, [strategy.id]: false }));
         };
 
+        // @ts-expect-error
         updateStrategy(strategy, cleanup);
     };
 
@@ -109,6 +113,7 @@ const FeatureStrategyEditable = ({
     };
 
     const discardChanges = () => {
+        // @ts-expect-error
         setDirty(prev => ({ ...prev, [strategy.id]: false }));
         mutate(FEATURE_STRATEGY_CACHE_KEY, { ...strategyCache }, false);
     };
@@ -117,6 +122,7 @@ const FeatureStrategyEditable = ({
         const updatedStrategy = cloneDeep(strategy);
 
         updatedStrategy.constraints = [...cloneDeep(constraints)];
+        // @ts-expect-error
         setDirty(prev => ({ ...prev, [strategy.id]: true }));
         mutate(FEATURE_STRATEGY_CACHE_KEY, { ...updatedStrategy }, false);
     };
@@ -136,6 +142,7 @@ const FeatureStrategyEditable = ({
                 data-test={`${STRATEGY_ACCORDION_ID}-${strategy.name}`}
                 strategy={strategy}
                 setStrategyParams={setStrategyParams}
+                // @ts-expect-error
                 setStrategyConstraints={setStrategyConstraints}
                 dirty={dirty[strategy.id]}
                 actions={
@@ -147,6 +154,7 @@ const FeatureStrategyEditable = ({
                             data-test={`${DELETE_STRATEGY_ID}-${strategy.name}`}
                             onClick={e => {
                                 e.stopPropagation();
+                                // @ts-expect-error
                                 setDelDialog({
                                     strategyId: strategy.id,
                                     show: true,
@@ -167,6 +175,7 @@ const FeatureStrategyEditable = ({
                                     permission={UPDATE_FEATURE_STRATEGY}
                                     projectId={projectId}
                                     environmentId={activeEnvironment?.name}
+                                    // @ts-expect-error
                                     variant="contained"
                                     color="primary"
                                     className={styles.editButton}
@@ -181,6 +190,7 @@ const FeatureStrategyEditable = ({
                                     className={styles.editButton}
                                     disabled={loading}
                                     color="tertiary"
+                                    // @ts-expect-error
                                     variant="text"
                                     permission={UPDATE_FEATURE_STRATEGY}
                                     projectId={projectId}

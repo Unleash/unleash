@@ -39,6 +39,7 @@ export const ProjectCard = ({
     const history = useHistory();
     const { setToastData, setToastApiError } = useToast();
 
+    // @ts-expect-error
     const handleClick = e => {
         e.preventDefault();
         setAnchorEl(e.currentTarget);
@@ -82,6 +83,7 @@ export const ProjectCard = ({
                     anchorEl={anchorEl}
                     style={{ top: '40px', left: '-60px' }}
                     onClose={e => {
+                        // @ts-expect-error
                         e.preventDefault();
                         setAnchorEl(null);
                     }}
@@ -132,6 +134,7 @@ export const ProjectCard = ({
             </div>
             <Dialogue
                 open={showDelDialog}
+                // @ts-expect-error
                 onClick={onRemoveProject}
                 onClose={() => {
                     setAnchorEl(null);

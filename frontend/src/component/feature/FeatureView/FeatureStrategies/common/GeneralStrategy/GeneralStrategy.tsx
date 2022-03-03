@@ -28,20 +28,26 @@ const GeneralStrategy = ({
     editable,
 }: IGeneralStrategyProps) => {
     const styles = useStyles();
+    // @ts-expect-error
     const onChangeTextField = (field, evt) => {
         const { value } = evt.currentTarget;
 
         evt.preventDefault();
+        // @ts-expect-error
         updateParameter(field, value);
     };
 
+    // @ts-expect-error
     const onChangePercentage = (field, evt, newValue) => {
         evt.preventDefault();
+        // @ts-expect-error
         updateParameter(field, newValue);
     };
 
+    // @ts-expect-error
     const handleSwitchChange = (key, currentValue) => {
         const value = currentValue === 'true' ? 'false' : 'true';
+        // @ts-expect-error
         updateParameter(key, value);
     };
 
@@ -50,6 +56,7 @@ const GeneralStrategy = ({
         strategyDefinition?.parameters.length > 0
     ) {
         return strategyDefinition.parameters.map(
+            // @ts-expect-error
             ({ name, type, description, required }) => {
                 let value = parameters[name];
 

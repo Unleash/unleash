@@ -13,6 +13,7 @@ export const useStyles = makeStyles(theme => ({
     },
     deprecated: {
         '& a': {
+            // @ts-expect-error
             color: theme.palette.links.deprecated,
         },
     },

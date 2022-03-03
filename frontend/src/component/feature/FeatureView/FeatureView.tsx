@@ -158,6 +158,7 @@ export const FeatureView = () => {
                                     projectId={projectId}
                                     tooltip="Copy"
                                     data-loading
+                                    // @ts-expect-error
                                     component={Link}
                                     to={`/projects/${projectId}/features/${featureId}/strategies/copy`}
                                 >

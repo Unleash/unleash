@@ -17,6 +17,7 @@ const ListPlaceholder = ({ text, link, linkText }: IListPlaceholderProps) => {
             {text}
             <ConditionallyRender
                 condition={Boolean(link && linkText)}
+                // @ts-expect-error
                 show={<Link to={link}>Add your first toggle</Link>}
             />
         </ListItem>

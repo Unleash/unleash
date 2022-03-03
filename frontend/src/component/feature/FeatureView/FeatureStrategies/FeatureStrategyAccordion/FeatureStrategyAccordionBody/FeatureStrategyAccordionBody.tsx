@@ -53,6 +53,7 @@ const FeatureStrategyAccordionBody: React.FC<
     const { uiConfig } = useUiConfig();
     const [showConstraints, setShowConstraints] = useState(false);
     const { hasAccess } = useContext(AccessContext);
+    // @ts-expect-error
     const { activeEnvironment } = useContext(FeatureStrategiesUIContext);
 
     const { context } = useUnleashContext();
@@ -164,6 +165,7 @@ const FeatureStrategyAccordionBody: React.FC<
                         <PermissionButton
                             className={styles.addConstraintBtn}
                             onClick={toggleConstraints}
+                            // @ts-expect-error
                             variant={'text'}
                             data-test={ADD_CONSTRAINT_ID}
                             permission={[
@@ -192,14 +194,18 @@ const FeatureStrategyAccordionBody: React.FC<
                 <StrategyConstraints
                     updateConstraints={updateConstraints}
                     constraints={constraints || []}
+                    // @ts-expect-error
                     constraintError={constraintError}
+                    // @ts-expect-error
                     setConstraintError={setConstraintError}
                 />
             </Dialogue>
 
             <Type
                 parameters={parameters}
+                // @ts-expect-error
                 updateParameter={updateParameters}
+                // @ts-expect-error
                 strategyDefinition={definition}
                 context={context}
                 editable={editable}

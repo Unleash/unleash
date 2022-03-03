@@ -42,6 +42,7 @@ const EditProjectRole = () => {
     useEffect(() => {
         const initialCheckedPermissions = role?.permissions?.reduce(
             (acc: { [key: string]: IPermission }, curr: IPermission) => {
+                // @ts-expect-error
                 acc[getRoleKey(curr)] = curr;
                 return acc;
             },

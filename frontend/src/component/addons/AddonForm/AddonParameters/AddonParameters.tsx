@@ -30,6 +30,7 @@ export const AddonParameters = ({
                 </p>
             ) : null}
             {provider.parameters.map(parameter => (
+                // @ts-expect-error
                 <AddonParameter
                     key={parameter.name}
                     definition={parameter}

@@ -42,12 +42,19 @@ const FeatureStrategiesEnvironments = () => {
 
     const { a11yProps, activeTabIdx, setActiveTab } = useTabs(startingTabId);
     const {
+        // @ts-expect-error
         setActiveEnvironment,
+        // @ts-expect-error
         activeEnvironment,
+        // @ts-expect-error
         configureNewStrategy,
+        // @ts-expect-error
         expandedSidebar,
+        // @ts-expect-error
         setExpandedSidebar,
+        // @ts-expect-error
         featureCache,
+        // @ts-expect-error
         setFeatureCache,
     } = useContext(FeatureStrategiesUIContext);
 
@@ -105,6 +112,7 @@ const FeatureStrategiesEnvironments = () => {
     if (!feature) return null;
 
     const renderTabs = () => {
+        // @ts-expect-error
         return featureCache?.environments?.map((env, index) => {
             return (
                 <Tab
@@ -132,6 +140,7 @@ const FeatureStrategiesEnvironments = () => {
 
         feature?.environments?.forEach(env => {
             const cachedEnv = featureCache?.environments?.find(
+                // @ts-expect-error
                 cacheEnv => cacheEnv.name === env.name
             );
 
@@ -140,6 +149,7 @@ const FeatureStrategiesEnvironments = () => {
                 return;
             }
             // If displayName is different
+            // @ts-expect-error
             if (env?.displayName !== cachedEnv?.displayName) {
                 equal = false;
                 return;
@@ -155,6 +165,7 @@ const FeatureStrategiesEnvironments = () => {
 
         feature?.environments?.forEach(env => {
             const cachedEnv = featureCache?.environments?.find(
+                // @ts-expect-error
                 cachedEnv => cachedEnv.name === env.name
             );
 
@@ -167,14 +178,17 @@ const FeatureStrategiesEnvironments = () => {
 
             env?.strategies?.forEach(strategy => {
                 const cachedStrategy = cachedEnv?.strategies?.find(
+                    // @ts-expect-error
                     cachedStrategy => cachedStrategy.id === strategy.id
                 );
                 // Check stickiness
+                // @ts-expect-error
                 if (cachedStrategy?.stickiness !== strategy?.stickiness) {
                     equal = false;
                     return;
                 }
 
+                // @ts-expect-error
                 if (cachedStrategy?.groupId !== strategy?.groupId) {
                     equal = false;
                     return;
@@ -256,6 +270,7 @@ const FeatureStrategiesEnvironments = () => {
             ),
         });
 
+        // @ts-expect-error
         return featureCache?.environments?.map((env, index) => {
             return (
                 <TabPanel
@@ -274,6 +289,7 @@ const FeatureStrategiesEnvironments = () => {
                                         className={styles.addStrategyButton}
                                         data-test={ADD_NEW_STRATEGY_ID}
                                         onClick={() =>
+                                            // @ts-expect-error
                                             setExpandedSidebar(prev => !prev)
                                         }
                                         Icon={Add}
@@ -307,6 +323,7 @@ const FeatureStrategiesEnvironments = () => {
                                                 envName={env.name}
                                                 onClick={() =>
                                                     setExpandedSidebar(
+                                                        // @ts-expect-error
                                                         prev => !prev
                                                     )
                                                 }

@@ -48,6 +48,7 @@ const NoItemsStrategies = ({
                 condition={Boolean(onClick)}
                 show={
                     <PermissionButton
+                        // @ts-expect-error
                         variant="contained"
                         permission={CREATE_FEATURE_STRATEGY}
                         projectId={projectId}

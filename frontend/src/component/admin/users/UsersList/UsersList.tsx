@@ -73,6 +73,7 @@ const UsersList = () => {
 
     const onDeleteUser = async () => {
         try {
+            // @ts-expect-error
             await removeUser(delUser);
             setToastData({
                 title: `${delUser?.name} has been deleted`,
@@ -113,6 +114,7 @@ const UsersList = () => {
         return page.map(user => {
             return (
                 <UserListItem
+                    // @ts-expect-error
                     key={user.id}
                     user={user}
                     openPwDialog={openPwDialog}
@@ -162,8 +164,10 @@ const UsersList = () => {
             <ChangePassword
                 showDialog={pwDialog.open}
                 closeDialog={closePwDialog}
+                // @ts-expect-error
                 changePassword={changePassword}
                 validatePassword={validatePassword}
+                // @ts-expect-error
                 user={pwDialog.user}
             />
 

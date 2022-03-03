@@ -39,6 +39,7 @@ const FeatureOverviewEnvironmentStrategy = ({
                         permission={UPDATE_FEATURE_STRATEGY}
                         environmentId={environmentName}
                         projectId={projectId}
+                        // @ts-expect-error
                         component={Link}
                         to={`/projects/${projectId}/features/${featureId}/strategies?environment=${environmentName}`}
                     >

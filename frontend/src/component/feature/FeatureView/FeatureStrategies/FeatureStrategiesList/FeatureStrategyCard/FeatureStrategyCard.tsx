@@ -37,6 +37,7 @@ const FeatureStrategyCard = ({
     const { featureId, projectId } = useParams<IFeatureViewParams>();
     const { strategies } = useStrategies();
 
+    // @ts-expect-error
     const { setConfigureNewStrategy, setExpandedSidebar, activeEnvironment } =
         useContext(FeatureStrategiesUIContext);
     const { hasAccess } = useContext(AccessContext);
@@ -81,7 +82,7 @@ const FeatureStrategyCard = ({
                                 {<Icon className={styles.icon} />}
                             </div>
                         </div>
-                        <div className={styles.rightSection}>
+                        <div>
                             <PermissionIconButton
                                 className={styles.addButton}
                                 onClick={handleClick}

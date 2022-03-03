@@ -35,11 +35,17 @@ const FeatureStrategiesConfigure = () => {
     );
     const styles = useStyles();
     const {
+        // @ts-expect-error
         activeEnvironment,
+        // @ts-expect-error
         setConfigureNewStrategy,
+        // @ts-expect-error
         configureNewStrategy,
+        // @ts-expect-error
         setExpandedSidebar,
+        // @ts-expect-error
         featureCache,
+        // @ts-expect-error
         setFeatureCache,
     } = useContext(FeatureStrategiesUIContext);
 
@@ -83,6 +89,7 @@ const FeatureStrategiesConfigure = () => {
 
             const feature = cloneDeep(featureCache);
             const environment = feature.environments.find(
+                // @ts-expect-error
                 env => env.name === activeEnvironment.name
             );
 
@@ -123,6 +130,7 @@ const FeatureStrategiesConfigure = () => {
                     <FeatureStrategyAccordion
                         strategy={configureNewStrategy}
                         expanded
+                        // @ts-expect-error
                         hideActions
                         parameters={strategyParams}
                         constraints={strategyConstraints}

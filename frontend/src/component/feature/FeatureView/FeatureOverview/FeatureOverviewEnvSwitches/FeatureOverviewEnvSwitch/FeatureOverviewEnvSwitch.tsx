@@ -43,9 +43,12 @@ const FeatureOverviewEnvSwitch = ({
                 callback();
             }
         } catch (e) {
+            // @ts-expect-error
             if (e.message === ENVIRONMENT_STRATEGY_ERROR) {
+                // @ts-expect-error
                 showInfoBox(true);
             } else {
+                // @ts-expect-error
                 setToastApiError(e.message);
             }
         }

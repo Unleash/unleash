@@ -98,6 +98,7 @@ const FeatureOverviewTags: React.FC<IFeatureOverviewTagsProps> = ({
         }
     };
 
+    // @ts-expect-error
     const renderTag = t => (
         <Chip
             icon={tagIcon(t.type)}
@@ -118,29 +119,32 @@ const FeatureOverviewTags: React.FC<IFeatureOverviewTagsProps> = ({
     );
 
     return (
-        <div className={styles.container} {...rest}>
-            <Dialogue
-                open={showDelDialog}
-                onClose={() => {
-                    setShowDelDialog(false);
-                    setSelectedTag({ type: '', value: '' });
-                }}
-                onClick={() => {
-                    setShowDelDialog(false);
-                    handleDelete();
-                    setSelectedTag({ type: '', value: '' });
-                }}
-                title="Are you sure you want to delete this tag?"
-            />
-
-            <div className={styles.tagContent}>
-                <ConditionallyRender
-                    condition={tags.length > 0}
-                    show={tags.map(renderTag)}
-                    elseShow={<p data-loading>No tags to display</p>}
+        <>
+            {/* @ts-expect-error */}
+            <div className={styles.container} {...rest}>
+                <Dialogue
+                    open={showDelDialog}
+                    onClose={() => {
+                        setShowDelDialog(false);
+                        setSelectedTag({ type: '', value: '' });
+                    }}
+                    onClick={() => {
+                        setShowDelDialog(false);
+                        handleDelete();
+                        setSelectedTag({ type: '', value: '' });
+                    }}
+                    title="Are you sure you want to delete this tag?"
                 />
+
+                <div className={styles.tagContent}>
+                    <ConditionallyRender
+                        condition={tags.length > 0}
+                        show={tags.map(renderTag)}
+                        elseShow={<p data-loading>No tags to display</p>}
+                    />
+                </div>
             </div>
-        </div>
+        </>
     );
 };
 

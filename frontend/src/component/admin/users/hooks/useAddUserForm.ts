@@ -54,6 +54,7 @@ const useCreateUserForm = (
     };
 
     const validateEmail = () => {
+        // @ts-expect-error
         if (users.some(user => user['email'] === email)) {
             setErrors(prev => ({ ...prev, email: 'Email already exists' }));
             return false;

@@ -6,6 +6,7 @@ import { useStyles } from './FeatureStrategiesCreateHeader.styles';
 
 const FeatureStrategiesCreateHeader = () => {
     const styles = useStyles();
+    // @ts-expect-error
     const { expandedSidebar, configureNewStrategy, activeEnvironment } =
         useContext(FeatureStrategiesUIContext);
 

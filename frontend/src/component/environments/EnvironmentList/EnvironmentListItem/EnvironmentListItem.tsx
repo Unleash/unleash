@@ -122,6 +122,7 @@ const EnvironmentListItem = ({
     }
 
     return (
+        // @ts-expect-error
         <ListItem
             style={{ position: 'relative', opacity }}
             ref={ref}

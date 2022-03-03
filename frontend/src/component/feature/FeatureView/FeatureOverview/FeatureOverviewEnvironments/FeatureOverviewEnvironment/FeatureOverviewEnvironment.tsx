@@ -73,6 +73,7 @@ const FeatureOverviewEnvironment = ({
                 } else {
                     acc[current.name] = {
                         count: 1,
+                        // @ts-expect-error
                         Icon: getFeatureStrategyIcon(current.name),
                     };
                 }
@@ -146,6 +147,7 @@ const FeatureOverviewEnvironment = ({
                                                                 styles.strategyIconContainer
                                                             }
                                                         >
+                                                            {/* @ts-expect-error */}
                                                             <Icon
                                                                 className={
                                                                     styles.strategyIcon
@@ -184,10 +186,12 @@ const FeatureOverviewEnvironment = ({
                         />
                         <ConditionallyRender
                             condition={
+                                // @ts-expect-error
                                 featureEnvironment?.strategies?.length > 0
                             }
                             show={
                                 <FeatureOverviewEnvironmentFooter
+                                    // @ts-expect-error
                                     env={env}
                                     environmentMetric={environmentMetric}
                                 />

@@ -1,4 +1,3 @@
-import { IContext } from '../../../../interfaces/context';
 import useAPI from '../useApi/useApi';
 
 const useContextsApi = () => {
@@ -23,6 +22,7 @@ const useContextsApi = () => {
         }
     };
 
+    // @ts-expect-error
     const createContext = async (payload: IContext) => {
         const path = URI;
         const req = createRequest(path, {
@@ -39,6 +39,7 @@ const useContextsApi = () => {
         }
     };
 
+    // @ts-expect-error
     const updateContext = async (context: IContext) => {
         const path = `${URI}/${context.name}`;
         const req = createRequest(path, {

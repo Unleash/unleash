@@ -50,10 +50,13 @@ const FlexibleStrategy = ({
     const resolveStickiness = () =>
         builtInStickinessOptions.concat(
             context
+                // @ts-expect-error
                 .filter(c => c.stickiness)
                 .filter(
+                    // @ts-expect-error
                     c => !builtInStickinessOptions.find(s => s.key === c.name)
                 )
+                // @ts-expect-error
                 .map(c => ({ key: c.name, label: c.name }))
         );
 

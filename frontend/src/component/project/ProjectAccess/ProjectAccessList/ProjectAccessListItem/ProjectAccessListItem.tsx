@@ -79,6 +79,7 @@ export const ProjectAccessListItem = ({
                     onClick={() => {
                         handleRemoveAccess(user);
                     }}
+                    // @ts-expect-error
                     disabled={access.users.length === 1}
                     tooltip={
                         access.users.length === 1

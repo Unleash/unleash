@@ -83,6 +83,7 @@ const FeatureStrategyAccordion: React.FC<IFeatureStrategyAccordionProps> = ({
                     </div>
                 </AccordionSummary>
                 <AccordionDetails className={styles.accordionDetails}>
+                    {/* @ts-expect-error */}
                     <FeatureStrategyAccordionBody
                         strategy={{ ...strategy, parameters }}
                         updateParameters={updateParameters}

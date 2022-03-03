@@ -33,6 +33,7 @@ export const AddonParameter = ({
 }: IAddonParameterProps) => {
     const value = config.parameters[definition.name] || '';
     const type = resolveType(definition, value);
+    // @ts-expect-error
     const error = errors.parameters[definition.name];
 
     return (
@@ -51,6 +52,7 @@ export const AddonParameter = ({
                 }}
                 value={value}
                 error={error}
+                // @ts-expect-error
                 onChange={setParameterValue(definition.name)}
                 variant="outlined"
                 helperText={definition.description}

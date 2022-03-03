@@ -20,7 +20,7 @@ export const createPersistentGlobalStateHook = <T extends object>(
 
     const setGlobalState = (value: React.SetStateAction<T>) => {
         const prev = container.getGlobalState(key);
-        const next = typeof value === 'function' ? value(prev) : value;
+        const next = value instanceof Function ? value(prev) : value;
         container.setGlobalState(key, next);
         setLocalStorageItem(key, next);
     };

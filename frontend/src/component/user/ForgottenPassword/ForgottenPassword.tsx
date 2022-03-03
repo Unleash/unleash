@@ -79,8 +79,7 @@ const ForgottenPassword = () => {
                     onSubmit={onClick}
                     className={classnames(
                         commonStyles.contentSpacingY,
-                        commonStyles.flexColumn,
-                        styles.container
+                        commonStyles.flexColumn
                     )}
                 >
                     <Typography

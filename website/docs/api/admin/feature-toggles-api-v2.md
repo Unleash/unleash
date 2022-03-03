@@ -757,7 +757,7 @@ Authorization:$KEY
 DELETE /api/admin/projects/:projectId/users/:userId/roles/:roleId
 ```
 
-This will remove the specified user from the project. The user _must_ have the role indicated by the `:roleId` URL parameter for the request to succeed.
+This removes the specified role from the user in the project. Because users can only have one role in a project, this effectively removes the user from the project. The user _must_ have the role indicated by the `:roleId` URL parameter for the request to succeed.
 
 #### URL parameters
 
@@ -775,54 +775,7 @@ This will remove the specified user from the project. The user _must_ have the r
 
 ##### 200 OK
 
-The user has been removed from the project. This response has no body.
-
-##### 400 Bad Request
-
-No user with the current role exists in the project:
-
-
-``` json
-[
-  {
-    "msg": "Couldn't find roleId=<roleId> on project=<projectId>"
-  }
-]
-```
-
-You tried to remove the only user with the role `owner` in the project:
-
-``` json
-[
-  {
-    "msg": "A project must have at least one owner."
-  }
-]
-```
-
-</details>
-
-#### Example query
-
-The following query would remove the user with ID 42 and role ID 13 from the _MyCoolProject_ project.
-```bash
-http DELETE \
-http://localhost:4242/api/admin/projects/MyCoolProject/users/42/roles/13 \
-Authorization:$KEY
-```
-
-#### Responses
-
-<details>
-<summary>Responses data</summary>
-
-:::caution
-If you provide the wrong role id for the user, but there is another user in the same project with the role you provided, you'll get a 200 OK response indicating success, but the user will not be removed.
-:::
-
-##### 200 OK
-
-The user has been removed from the project. This response has no body.
+The no longer has the specified role in the project. If the user had this role prior to this API request, they will have been removed from the project. This response has no body.
 
 ##### 400 Bad Request
 

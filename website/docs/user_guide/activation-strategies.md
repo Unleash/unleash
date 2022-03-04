@@ -5,7 +5,7 @@ title: Activation Strategies
 
 It is powerful to be able to turn a feature on and off instantaneously, without redeploying the application. The next level of control comes when you are able to enable a feature for specific users or enable it for a small subset of users. We achieve this level of control with the help of activation strategies. The most straightforward strategy is the standard strategy, which basically means that the feature should be enabled to everyone.
 
-Unleash comes with a number of built-in strategies (described below) and also lets you add your own [custom activation strategies](../custom-activation-strategy.md) if you need more control.
+Unleash comes with a number of built-in strategies (described below) and also lets you add your own [custom activation strategies](../advanced/custom-activation-strategy.md) if you need more control.
 However, while activation strategies are *defined* on the server, the server does not *implement* the strategies. Instead, activation strategy *implementation* (and thus feature toggle *evaluation*) is done client-side.
 Thus, all [server-side client SDKs](../sdks/index.md#server-side-sdks) and the [Unleash Proxy](../sdks/unleash-proxy.md) implement the default strategies
 (and allow you to add your own custom strategy implementations).

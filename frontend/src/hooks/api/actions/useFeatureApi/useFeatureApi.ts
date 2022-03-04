@@ -2,6 +2,7 @@ import { IFeatureTogglePayload } from '../../../../interfaces/featureToggle';
 import { ITag } from '../../../../interfaces/tags';
 import useAPI from '../useApi/useApi';
 import { Operation } from 'fast-json-patch';
+import { IConstraint } from 'interfaces/strategy';
 
 const useFeatureApi = () => {
     const { makeRequest, createRequest, errors, loading } = useAPI({
@@ -13,6 +14,26 @@ const useFeatureApi = () => {
         const req = createRequest(path, {
             method: 'POST',
             body: JSON.stringify({ name }),
+        });
+
+        try {
+            const res = await makeRequest(req.caller, req.id);
+
+            return res;
+        } catch (e) {
+            throw e;
+        }
+    };
+
+    const validateConstraint = async (
+        projectId: string,
+        featureName: string,
+        constraint: IConstraint
+    ) => {
+        const path = `api/admin/projects/${projectId}/features/${featureName}/constraint/validate`;
+        const req = createRequest(path, {
+            method: 'POST',
+            body: JSON.stringify(constraint),
         });
 
         try {
@@ -221,6 +242,7 @@ const useFeatureApi = () => {
 
     return {
         validateFeatureToggleName,
+        validateConstraint,
         createFeatureToggle,
         changeFeatureProject,
         errors,

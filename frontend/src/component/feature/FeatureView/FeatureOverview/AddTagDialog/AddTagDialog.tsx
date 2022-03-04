@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import { IFeatureViewParams } from '../../../../../interfaces/params';
 import Dialogue from '../../../../common/Dialogue';
 import Input from '../../../../common/Input/Input';
-import { SyntheticEvent } from 'react-router/node_modules/@types/react';
 import { useStyles } from './AddTagDialog.styles';
 import { trim } from '../../../../common/util';
 import TagSelect from '../../../../common/TagSelect/TagSelect';
@@ -47,7 +46,7 @@ const AddTagDialog = ({ open, setOpen }: IAddTagDialogProps) => {
         setTag(newTag);
     };
 
-    const onSubmit = async (evt: SyntheticEvent) => {
+    const onSubmit = async (evt: React.SyntheticEvent) => {
         evt.preventDefault();
         if (!tag.type) {
             tag.type = 'simple';

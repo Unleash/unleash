@@ -30,7 +30,7 @@ export const CreateContext = () => {
         errors,
     } = useContextForm();
     const { createContext, loading } = useContextsApi();
-    const { refetch } = useUnleashContext();
+    const { refetchUnleashContext } = useUnleashContext();
 
     const handleSubmit = async (e: Event) => {
         e.preventDefault();
@@ -40,7 +40,7 @@ export const CreateContext = () => {
             const payload = getContextPayload();
             try {
                 await createContext(payload);
-                refetch();
+                refetchUnleashContext();
                 history.push('/context');
                 setToastData({
                     title: 'Context created',

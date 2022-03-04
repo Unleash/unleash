@@ -3,10 +3,7 @@ import React, { useContext } from 'react';
 import AccessContext from '../../../contexts/AccessContext';
 
 interface IPermissionIconButtonProps
-    extends React.DetailedHTMLProps<
-        React.HTMLAttributes<HTMLButtonElement>,
-        HTMLButtonElement
-    > {
+    extends React.HTMLProps<HTMLButtonElement> {
     permission: string;
     Icon?: React.ElementType;
     tooltip?: string;

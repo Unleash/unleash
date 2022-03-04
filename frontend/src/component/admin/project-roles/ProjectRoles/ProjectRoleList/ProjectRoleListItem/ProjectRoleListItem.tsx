@@ -51,7 +51,6 @@ const RoleListItem = ({
                     <PermissionIconButton
                         data-loading
                         aria-label="Edit"
-                        // @ts-expect-error
                         disabled={type === BUILTIN_ROLE_TYPE}
                         onClick={() => {
                             history.push(`/admin/roles/${id}/edit`);
@@ -63,7 +62,6 @@ const RoleListItem = ({
                     <PermissionIconButton
                         data-loading
                         aria-label="Remove role"
-                        // @ts-expect-error
                         disabled={type === BUILTIN_ROLE_TYPE}
                         onClick={() => {
                             // @ts-expect-error

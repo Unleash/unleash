@@ -55,6 +55,7 @@
     "@types/react-router-dom": "5.3.3",
     "@types/react-test-renderer": "17.0.1",
     "@types/react-timeago": "4.1.3",
+    "@types/semver": "^7.3.9",
     "chart.js": "3.7.1",
     "chartjs-adapter-date-fns": "2.0.0",
     "classnames": "2.3.1",
@@ -78,6 +79,7 @@
     "react-scripts": "4.0.3",
     "react-test-renderer": "17.0.2",
     "react-timeago": "6.2.1",
+    "semver": "^7.3.5",
     "sass": "1.49.9",
     "swr": "1.2.2",
     "typescript": "4.6.2"

@@ -17,7 +17,7 @@ const useToast = () => {
             text: `We had trouble talking to our API. Here's why: ${errorText}`,
             type: 'error',
             show: true,
-            autoHideDuration: 6000,
+            autoHideDuration: 12000,
             ...overrides,
         });
     };

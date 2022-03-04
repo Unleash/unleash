@@ -56,7 +56,6 @@ const FeatureOverviewVariants = () => {
     useEffect(() => {
         const options = [
             'default',
-            // @ts-expect-error
             ...context.filter(c => c.stickiness).map(c => c.name),
         ];
 

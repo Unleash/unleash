@@ -120,4 +120,8 @@ export const useCommonStyles = makeStyles(theme => ({
         opacity: '0',
         transition: 'transform 1.25s ease, opacity 1s ease',
     },
+    error: {
+        fontSize: theme.fontSizes.smallBody,
+        color: theme.palette.error.main,
+    },
 }));

@@ -76,8 +76,7 @@ const useFeatureStrategiesEnvironmentList = () => {
             );
 
             setToastData({
-                title: 'Updates strategy',
-                confetti: true,
+                title: 'Updated strategy',
                 type: 'success',
                 text: `Successfully updated strategy`,
             });

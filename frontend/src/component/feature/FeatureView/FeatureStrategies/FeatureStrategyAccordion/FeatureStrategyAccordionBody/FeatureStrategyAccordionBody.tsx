@@ -85,7 +85,7 @@ const FeatureStrategyAccordionBody: React.FC<
         let valid = true;
 
         constraints.forEach((constraint, index) => {
-            const { values } = constraint;
+            const { values = [] } = constraint;
 
             if (values.length === 0) {
                 setConstraintError(prev => ({
@@ -138,7 +138,7 @@ const FeatureStrategyAccordionBody: React.FC<
     const closeConstraintDialog = () => {
         setShowConstraints(false);
         const filteredConstraints = constraints.filter(constraint => {
-            return constraint.values.length > 0;
+            return constraint.values && constraint.values.length > 0;
         });
         updateConstraints(filteredConstraints);
     };

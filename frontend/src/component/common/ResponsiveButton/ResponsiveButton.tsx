@@ -35,7 +35,6 @@ const ResponsiveButton: React.FC<IResponsiveButtonProps> = ({
             condition={smallScreen}
             show={
                 <PermissionIconButton
-                    // @ts-expect-error
                     disabled={disabled}
                     onClick={onClick}
                     permission={permission}

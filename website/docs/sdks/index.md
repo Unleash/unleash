@@ -139,4 +139,4 @@ By default, all SDKs reach out to the Unleash Server at startup to fetch their t
 Bootstrapping is also supported by the following front-end client SDKs:
 - [the JavaScript proxy client](/sdks/proxy-javascript)
 - [the React Proxy client](/sdks/proxy-react)
-- [the Android proxy client](/sdks/proxy-react)
+- [the Android proxy client](/sdks/android_proxy_sdk)

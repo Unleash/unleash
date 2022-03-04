@@ -10,7 +10,9 @@ However, while activation strategies are *defined* on the server, the server doe
 Thus, all [server-side client SDKs](../sdks/index.md#server-side-sdks) and the [Unleash Proxy](../sdks/unleash-proxy.md) implement the default strategies (and allow you to add your own custom strategy implementations).
 The [front-end client SDKs](../sdks/index.md#front-end-sdks) do not do the evaluation themselves: instead relying on the [Unleash Proxy](../sdks/unleash-proxy.md) to take care of the implementation and evaluation.
 
-Unleash comes with a few common activation strategies. Some of them require the client to provide the [unleash-context](unleash-context.md), which gives the necessary context for Unleash. The built-in activation strategies are:
+Some activation strategies require the client to provide the current [Unleash context](unleash-context.md) to the toggle evaluation function for the evaluation to be done correctly.
+
+The following activation strategies are bundled with Unleash and always available:
 
 - [Standard](#standard)
 - [UserIDs](#userids)

@@ -8,7 +8,7 @@ It is powerful to be able to turn a feature on and off instantaneously, without 
 Unleash comes with a number of built-in strategies (described below) and also lets you add your own [custom activation strategies](../advanced/custom-activation-strategy.md) if you need more control.
 However, while activation strategies are *defined* on the server, the server does not *implement* the strategies. Instead, activation strategy *implementation* (and thus feature toggle *evaluation*) is done client-side.
 Thus, all [server-side client SDKs](../sdks/index.md#server-side-sdks) and the [Unleash Proxy](../sdks/unleash-proxy.md) implement the default strategies (and allow you to add your own custom strategy implementations).
-The [front-end client SDKs](../sdks/index.md#front-end-sdks) do not do the evaluation themselves: instead relying on the [Unleash Proxy](../sdks/unleash-proxy.md) to take care of the implementation and evaluation.
+The [front-end client SDKs](../sdks/index.md#front-end-sdks) do not do the evaluation themselves, instead relying on the [Unleash Proxy](../sdks/unleash-proxy.md) to take care of the implementation and evaluation.
 
 Some activation strategies require the client to provide the current [Unleash context](unleash-context.md) to the toggle evaluation function for the evaluation to be done correctly.
 

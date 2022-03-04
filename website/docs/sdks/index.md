@@ -124,6 +124,17 @@ If you can't find an SDK that fits your need, you can also develop your own SDK.
 - [Unleash Client Specifications](https://github.com/Unleash/client-specification) - Used by all official SDKs to make sure they behave correctly across different language implementations. This lets us verify that a gradual rollout to 10% of the users would affect the same users regardless of which SDK you're using.
 - [Client SDK overview](../client-specification) - A brief, overall guide of the _Unleash Architecture_ and important aspects of the SDK role in it all.
 
-## How the SDKs work
+## Working offline
 
-### Working offline
+Once they have been initialised, all Unleash clients will continue to work perfectly well without an internet connection or in the event that the Unleash Server has an outage.
+
+Because the SDKs and the Unleash Proxy cache their feature toggle states locally and only communicate with the Unleash server (in the case of the server-side SDKs and the Proxy) or the Proxy (in the case of front-end SDKs) at predetermined intervals, a broken connection only means that they won't get any new updates.
+
+### Bootstrapping
+
+By default, all SDKs reach out to the Unleash Server at startup to fetch their toggle configuration. Additionally some of the server-side SDKs and the Proxy (see the above [compatibility table](#server-side-sdk-compatibility-table)) also support *bootstrapping*, which allows them to get their toggle configuration from a file, the environment, or other local resources. These SDKs can work without any network connection whatsoever.
+
+Bootstrapping is also supported by the following front-end client SDKs:
+- [the JavaScript proxy client](/sdks/proxy-javascript)
+- [the React Proxy client](/sdks/proxy-react)
+- [the Android proxy client](/sdks/proxy-react)

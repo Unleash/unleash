@@ -117,9 +117,13 @@ Here's some of the fantastic work our community has done to make Unleash work in
 - [uekoetter.dev/unleash-client-dart](https://pub.dev/packages/unleash) (Dart)
 - _...your implementation for your favorite language._
 
-## Implement your own SDK {#implement-your-own-sdk}
+### Implement your own SDK {#implement-your-own-sdk}
 
 If you can't find an SDK that fits your need, you can also develop your own SDK. To make implementation easier, check out these resources:
 
 - [Unleash Client Specifications](https://github.com/Unleash/client-specification) - Used by all official SDKs to make sure they behave correctly across different language implementations. This lets us verify that a gradual rollout to 10% of the users would affect the same users regardless of which SDK you're using.
 - [Client SDK overview](../client-specification) - A brief, overall guide of the _Unleash Architecture_ and important aspects of the SDK role in it all.
+
+## How the SDKs work
+
+### Working offline

@@ -1,6 +1,7 @@
 import React from 'react';
 import { FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
 import { SELECT_ITEM_ID } from '../../../testIds';
+import { KeyboardArrowDownOutlined } from '@material-ui/icons';
 
 export interface ISelectOption {
     key: string;
@@ -71,6 +72,7 @@ const GeneralSelect: React.FC<ISelectMenuProps> = ({
                 label={label}
                 id={id}
                 value={value}
+                IconComponent={KeyboardArrowDownOutlined}
                 {...rest}
             >
                 {renderSelectItems()}

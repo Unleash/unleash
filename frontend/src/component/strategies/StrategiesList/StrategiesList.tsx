@@ -1,5 +1,4 @@
 import { useContext, useState } from 'react';
-import classnames from 'classnames';
 import { Link, useHistory } from 'react-router-dom';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import {
@@ -13,6 +12,7 @@ import {
 import {
     Add,
     Delete,
+    Edit,
     Extension,
     Visibility,
     VisibilityOff,
@@ -22,21 +22,21 @@ import {
     DELETE_STRATEGY,
     UPDATE_STRATEGY,
 } from '../../providers/AccessProvider/permissions';
-import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyRender';
-import PageContent from '../../common/PageContent/PageContent';
-import HeaderTitle from '../../common/HeaderTitle';
+import ConditionallyRender from 'component/common/ConditionallyRender/ConditionallyRender';
+import PageContent from 'component/common/PageContent/PageContent';
+import HeaderTitle from 'component/common/HeaderTitle';
 import { useStyles } from './StrategiesList.styles';
-import AccessContext from '../../../contexts/AccessContext';
-import Dialogue from '../../common/Dialogue';
-import { ADD_NEW_STRATEGY_ID } from '../../../testIds';
-import PermissionIconButton from '../../common/PermissionIconButton/PermissionIconButton';
-import PermissionButton from '../../common/PermissionButton/PermissionButton';
-import { getHumanReadableStrategyName } from '../../../utils/strategy-names';
-import useStrategies from '../../../hooks/api/getters/useStrategies/useStrategies';
-import useStrategiesApi from '../../../hooks/api/actions/useStrategiesApi/useStrategiesApi';
-import useToast from '../../../hooks/useToast';
-import { IStrategy } from '../../../interfaces/strategy';
-import { formatUnknownError } from '../../../utils/format-unknown-error';
+import AccessContext from 'contexts/AccessContext';
+import Dialogue from 'component/common/Dialogue';
+import { ADD_NEW_STRATEGY_ID } from 'testIds';
+import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
+import PermissionButton from 'component/common/PermissionButton/PermissionButton';
+import { getHumanReadableStrategyName } from 'utils/strategy-names';
+import useStrategies from 'hooks/api/getters/useStrategies/useStrategies';
+import useStrategiesApi from 'hooks/api/actions/useStrategiesApi/useStrategiesApi';
+import useToast from 'hooks/useToast';
+import { formatUnknownError } from 'utils/format-unknown-error';
+import { ICustomStrategy } from 'interfaces/strategy';
 
 interface IDialogueMetaData {
     show: boolean;
@@ -91,8 +91,8 @@ export const StrategiesList = () => {
         />
     );
 
-    const strategyLink = ({ name, deprecated }: IStrategy) => (
-        <Link to={`/strategies/view/${name}`}>
+    const strategyLink = (name: string, deprecated: boolean) => (
+        <Link to={`/strategies/${name}`}>
             <strong>{getHumanReadableStrategyName(name)}</strong>
             <ConditionallyRender
                 condition={deprecated}
@@ -101,7 +101,7 @@ export const StrategiesList = () => {
         </Link>
     );
 
-    const onReactivateStrategy = (strategy: IStrategy) => {
+    const onReactivateStrategy = (strategy: ICustomStrategy) => {
         setDialogueMetaData({
             show: true,
             title: 'Really reactivate strategy?',
@@ -121,7 +121,7 @@ export const StrategiesList = () => {
         });
     };
 
-    const onDeprecateStrategy = (strategy: IStrategy) => {
+    const onDeprecateStrategy = (strategy: ICustomStrategy) => {
         setDialogueMetaData({
             show: true,
             title: 'Really deprecate strategy?',
@@ -141,7 +141,7 @@ export const StrategiesList = () => {
         });
     };
 
-    const onDeleteStrategy = (strategy: IStrategy) => {
+    const onDeleteStrategy = (strategy: ICustomStrategy) => {
         setDialogueMetaData({
             show: true,
             title: 'Really delete strategy?',
@@ -161,7 +161,7 @@ export const StrategiesList = () => {
         });
     };
 
-    const reactivateButton = (strategy: IStrategy) => (
+    const reactivateButton = (strategy: ICustomStrategy) => (
         <Tooltip title="Reactivate activation strategy">
             <PermissionIconButton
                 onClick={() => onReactivateStrategy(strategy)}
@@ -172,7 +172,7 @@ export const StrategiesList = () => {
         </Tooltip>
     );
 
-    const deprecateButton = (strategy: IStrategy) => (
+    const deprecateButton = (strategy: ICustomStrategy) => (
         <ConditionallyRender
             condition={strategy.name === 'default'}
             show={
@@ -198,9 +198,35 @@ export const StrategiesList = () => {
         />
     );
 
-    const deleteButton = (strategy: IStrategy) => (
+    const editButton = (strategy: ICustomStrategy) => (
         <ConditionallyRender
-            condition={strategy.editable}
+            condition={strategy?.editable}
+            show={
+                <PermissionIconButton
+                    onClick={() =>
+                        history.push(`/strategies/${strategy?.name}/edit`)
+                    }
+                    permission={UPDATE_STRATEGY}
+                    tooltip={'Edit strategy'}
+                >
+                    <Edit titleAccess="Edit strategy" />
+                </PermissionIconButton>
+            }
+            elseShow={
+                <Tooltip title="You cannot delete a built-in strategy">
+                    <div>
+                        <IconButton disabled>
+                            <Edit titleAccess="Edit strategy" />
+                        </IconButton>
+                    </div>
+                </Tooltip>
+            }
+        />
+    );
+
+    const deleteButton = (strategy: ICustomStrategy) => (
+        <ConditionallyRender
+            condition={strategy?.editable}
             show={
                 <PermissionIconButton
                     onClick={() => onDeleteStrategy(strategy)}
@@ -223,25 +249,22 @@ export const StrategiesList = () => {
 
     const strategyList = () =>
         strategies.map(strategy => (
-            <ListItem
-                key={strategy.name}
-                classes={{
-                    root: classnames(styles.listItem, {
-                        [styles.deprecated]: strategy.deprecated,
-                    }),
-                }}
-            >
+            <ListItem key={strategy.name} className={styles.listItem}>
                 <ListItemAvatar>
                     <Extension style={{ color: '#0000008a' }} />
                 </ListItemAvatar>
                 <ListItemText
-                    primary={strategyLink(strategy)}
+                    primary={strategyLink(strategy?.name, strategy?.deprecated)}
                     secondary={strategy.description}
                 />
                 <ConditionallyRender
                     condition={strategy.deprecated}
                     show={reactivateButton(strategy)}
                     elseShow={deprecateButton(strategy)}
+                />
+                <ConditionallyRender
+                    condition={hasAccess(UPDATE_STRATEGY)}
+                    show={editButton(strategy)}
                 />
                 <ConditionallyRender
                     condition={hasAccess(DELETE_STRATEGY)}

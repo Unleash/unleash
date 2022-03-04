@@ -5,16 +5,10 @@ export const useStyles = makeStyles(theme => ({
         padding: '0',
         ['& a']: {
             textDecoration: 'none',
-            color: 'inherit',
+            color: theme.palette.primary.light,
         },
         '&:hover': {
             backgroundColor: theme.palette.grey[200],
-        },
-    },
-    deprecated: {
-        '& a': {
-            // @ts-expect-error
-            color: theme.palette.links.deprecated,
         },
     },
 }));

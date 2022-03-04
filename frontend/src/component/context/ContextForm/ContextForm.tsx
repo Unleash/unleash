@@ -17,7 +17,7 @@ interface IContextForm {
     handleSubmit: (e: any) => void;
     onCancel: () => void;
     errors: { [key: string]: string };
-    mode: string;
+    mode: 'Create' | 'Edit';
     clearErrors: () => void;
     validateContext?: () => void;
     setErrors: React.Dispatch<React.SetStateAction<Object>>;

@@ -1,5 +1,4 @@
 import { FeatureToggleListContainer } from '../feature/FeatureToggleList/FeatureToggleListContainer';
-import { StrategyForm } from '../strategies/StrategyForm/StrategyForm';
 import { StrategyView } from '../strategies/StrategyView/StrategyView';
 import { StrategiesList } from '../strategies/StrategiesList/StrategiesList';
 import { ArchiveListContainer } from '../archive/ArchiveListContainer';
@@ -45,6 +44,8 @@ import { EditAddon } from '../addons/EditAddon/EditAddon';
 import { CopyFeatureToggle } from '../feature/CopyFeature/CopyFeature';
 import { EventHistoryPage } from '../history/EventHistoryPage/EventHistoryPage';
 import { FeatureEventHistoryPage } from '../history/FeatureEventHistoryPage/FeatureEventHistoryPage';
+import { CreateStrategy } from '../strategies/CreateStrategy/CreateStrategy';
+import { EditStrategy } from '../strategies/EditStrategy/EditStrategy';
 
 export const routes = [
     // Project
@@ -243,14 +244,23 @@ export const routes = [
         path: '/strategies/create',
         title: 'Create',
         parent: '/strategies',
-        component: StrategyForm,
+        component: CreateStrategy,
         type: 'protected',
         layout: 'main',
         menu: {},
     },
     {
-        path: '/strategies/:activeTab/:strategyName',
-        title: ':strategyName',
+        path: '/strategies/:name/edit',
+        title: ':name',
+        parent: '/strategies',
+        component: EditStrategy,
+        type: 'protected',
+        layout: 'main',
+        menu: {},
+    },
+    {
+        path: '/strategies/:name',
+        title: ':name',
         parent: '/strategies',
         component: StrategyView,
         type: 'protected',

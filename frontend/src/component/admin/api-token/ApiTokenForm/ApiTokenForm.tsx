@@ -18,7 +18,7 @@ interface IApiTokenFormProps {
     handleSubmit: (e: any) => void;
     handleCancel: () => void;
     errors: { [key: string]: string };
-    mode: string;
+    mode: 'Create' | 'Edit';
     clearErrors: () => void;
 }
 const ApiTokenForm: React.FC<IApiTokenFormProps> = ({

@@ -14,7 +14,7 @@ interface ITagTypeForm {
     handleSubmit: (e: any) => void;
     handleCancel: () => void;
     errors: { [key: string]: string };
-    mode: string;
+    mode: 'Create' | 'Edit';
     clearErrors: () => void;
     validateNameUniqueness?: () => void;
 }

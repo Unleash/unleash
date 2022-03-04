@@ -24,7 +24,10 @@ This endpoint will give you an general overview of a project. It will return ess
 
 **Example Query**
 
-`http GET http://localhost:4242/api/admin/projects/default Authorization:$KEY`
+```bash
+http GET http://localhost:4242/api/admin/projects/default Authorization:$KEY
+```
+
 
 
 **Example response:**
@@ -90,7 +93,11 @@ This endpoint will return all feature toggles and high level environment details
 
 **Example Query**
 
-`http GET http://localhost:4242/api/admin/projects/default/features Authorization:$KEY`
+``` bash
+http GET http://localhost:4242/api/admin/projects/default/features \
+Authorization:$KEY
+```
+
 
 
 **Example response:**
@@ -162,7 +169,8 @@ This endpoint accepts the following toggle options:
 
 ```bash
 echo '{"name": "demo2", "description": "A new feature toggle"}' | \
-http POST http://localhost:4242/api/admin/projects/default/features Authorization:$KEY`
+http POST http://localhost:4242/api/admin/projects/default/features \
+Authorization:$KEY`
 ```
 
 
@@ -205,8 +213,9 @@ This endpoint will return the feature toggles with the defined name and _project
 
 **Example Query**
 
-```sh
-http GET http://localhost:4242/api/admin/projects/default/features/demo Authorization:$KEY`
+```bash
+http GET http://localhost:4242/api/admin/projects/default/features/demo \
+Authorization:$KEY`
 ```
 
 **Example response:**
@@ -256,8 +265,10 @@ This endpoint will accept HTTP PUT request to update the feature toggle metadata
 
 **Example Query**
 
-```sh
-echo '{"name": "demo", "description": "An update feature toggle", "type": "kill-switch"}' | http PUT http://localhost:4242/api/admin/projects/default/features/demo Authorization:$KEY`
+```bash
+echo '{"name": "demo", "description": "An update feature toggle", "type": "kill-switch"}' | \
+http PUT http://localhost:4242/api/admin/projects/default/features/demo \
+Authorization:$KEY`
 ```
 
 
@@ -291,8 +302,10 @@ This endpoint will accept HTTP PATCH request to update the feature toggle metada
 
 **Example Query**
 
-```sh
-echo '[{"op": "replace", "path": "/description", "value": "patched desc"}]' | http PATCH http://localhost:4242/api/admin/projects/default/features/demo Authorization:$KEY`
+```bash
+echo '[{"op": "replace", "path": "/description", "value": "patched desc"}]' | \
+http PATCH http://localhost:4242/api/admin/projects/default/features/demo \
+Authorization:$KEY`
 ```
 
 
@@ -327,8 +340,10 @@ This endpoint will accept HTTP POST request to clone an existing feature toggle 
 
 **Example Query**
 
-```sh
-echo '{ "name": "newName" }' | http POST http://localhost:4242/api/admin/projects/default/features/Demo/clone Authorization:$KEY`
+```bash
+echo '{ "name": "newName" }' | \
+http POST http://localhost:4242/api/admin/projects/default/features/Demo/clone \
+Authorization:$KEY`
 ```
 
 
@@ -379,21 +394,21 @@ This endpoint will accept HTTP PUT request to update the feature toggle metadata
 
 **Example Query**
 
-```sh
-http DELETE http://localhost:4242/api/admin/projects/default/features/demo Authorization:$KEY`
+```bash
+http DELETE http://localhost:4242/api/admin/projects/default/features/demo \
+Authorization:$KEY`
 ```
 
 
 **Example response:**
 
-```sh
+```
 HTTP/1.1 202 Accepted
 Access-Control-Allow-Origin: *
 Connection: keep-alive
 Date: Wed, 08 Sep 2021 20:09:21 GMT
 Keep-Alive: timeout=60
 Transfer-Encoding: chunked
-
 ```
 
 
@@ -405,9 +420,17 @@ This endpoint will allow you to add a new strategy to a feature toggle in a give
 
 **Example Query**
 
-```sh
- echo '{"name": "flexibleRollout", "parameters": { "rollout": 20, "groupId": "demo", "stickiness": "default" }}' | \
- http POST http://localhost:4242/api/admin/projects/default/features/demo/environments/production/strategies Authorization:$KEY
+```bash
+echo '{"name": "flexibleRollout",
+        "parameters": {
+            "rollout": 20,
+            "groupId": "demo",
+            "stickiness": "default"
+          }
+      }' | \
+http POST \
+http://localhost:4242/api/admin/projects/default/features/demo/environments/production/strategies \
+Authorization:$KEY
 ```
 
 **Example response:**
@@ -429,9 +452,17 @@ This endpoint will allow you to add a new strategy to a feature toggle in a give
 
 **Example Query**
 
-```sh
-echo '{"name": "flexibleRollout", "parameters": { "rollout": 25, "groupId": "demo","stickiness": "default" }}' | \
-http PUT http://localhost:4242/api/admin/projects/default/features/demo/environments/production/strategies/77bbe972-ffce-49b2-94d9-326593e2228e Authorization:$KEY
+```bash
+echo '{"name": "flexibleRollout",
+        "parameters": {
+          "rollout": 25,
+          "groupId": "demo",
+          "stickiness": "default"
+        }
+      }' | \
+http PUT \
+http://localhost:4242/api/admin/projects/default/features/demo/environments/production/strategies/77bbe972-ffce-49b2-94d9-326593e2228e \
+Authorization:$KEY
 ```
 
 **Example response:**
@@ -453,9 +484,11 @@ http PUT http://localhost:4242/api/admin/projects/default/features/demo/environm
 
 **Example Query**
 
-```sh
+```bash
 echo '[{"op": "replace", "path": "/parameters/rollout", "value": 50}]' | \
-http PATCH http://localhost:4242/api/admin/projects/default/features/demo/environments/production/strategies/ea5404e5-0c0d-488c-93b2-0a2200534827 Authorization:$KEY
+http PATCH \
+http://localhost:4242/api/admin/projects/default/features/demo/environments/production/strategies/ea5404e5-0c0d-488c-93b2-0a2200534827 \
+Authorization:$KEY
 ```
 
 **Example response:**
@@ -478,13 +511,13 @@ http PATCH http://localhost:4242/api/admin/projects/default/features/demo/enviro
 
 **Example Query**
 
-```sh
+```bash
 http DELETE http://localhost:4242/api/admin/projects/default/features/demo/environments/production/strategies/77bbe972-ffce-49b2-94d9-326593e2228e Authorization:$KEY
 ```
 
 **Example response:**
 
-```sh
+```
 HTTP/1.1 200 OK
 Access-Control-Allow-Origin: *
 Connection: keep-alive
@@ -499,13 +532,13 @@ Vary: Accept-Encoding
 
 **Example Query**
 
-```sh
+```bash
 http POST http://localhost:4242/api/admin/projects/default/features/demo/environments/development/on Authorization:$KEY --json
 ```
 
 **Example response:**
 
-```sh
+```
 HTTP/1.1 200 OK
 Access-Control-Allow-Origin: *
 Connection: keep-alive
@@ -549,7 +582,7 @@ http PUT http://localhost:4242/api/admin/projects/default/features/demo/variants
 
 **Example response:**
 
-```sh
+```bash
 HTTP/1.1 200 OK
 Access-Control-Allow-Origin: *
 Connection: keep-alive
@@ -579,13 +612,15 @@ Content-Type: application/json; charset=utf-8
 
 **Example Query**
 
-```sh
+```bash
 echo '[{"op": "add", "path": "/1", "value": {
   "name": "new-variant",
   "weightType": "fix",
   "weight": 200
 }}]' | \
-http PATCH http://localhost:4242/api/admin/projects/default/features/demo/variants Authorization:$KEY
+http PATCH \
+http://localhost:4242/api/admin/projects/default/features/demo/variants \
+Authorization:$KEY
 ```
 
 ** Example Response **
@@ -610,4 +645,157 @@ http PATCH http://localhost:4242/api/admin/projects/default/features/demo/varian
     }
   ]
 }
+```
+
+
+## Manage project users and roles
+
+You can add and remove users to a project using the `/api/admin/projects/:projectId/users/:userId/roles/:roleId` endpoint. When adding or removing users, you must also provide the ID for the role to give them (when adding) or the ID of the role they currently have (when removing).
+
+### Add a user to a project
+
+``` http
+POST /api/admin/projects/:projectId/users/:userId/roles/:roleId
+```
+
+This will add a user to a project and give the user a specified role within that project.
+
+#### URL parameters
+
+| Parameter   | Type    | Description                                                           | Example value     |
+|-------------|---------|-----------------------------------------------------------------------|-------------------|
+| `userId`    | integer | The ID of the user you want to add to the project.                    | `1`               |
+| `projectId` | string  | The id of the project to add the user to.                             | `"MyCoolProject"` |
+| `roleId`    | integer | The id of the role you want to assign to the new user in the project. | `7`               |
+
+
+#### Responses
+
+<details>
+<summary>Responses data</summary>
+
+##### 200 OK
+
+The user was added to the project with the specified role. This response has no body.
+
+##### 400 Bad Request
+
+The user already exists in the project and cannot be added again:
+
+``` json
+[
+  {
+    "msg": "User already has access to project=<projectId>"
+  }
+]
+```
+
+</details>
+
+#### Example query
+
+The following query would add the user with ID 42 to the _MyCoolProject_ project and give them the role with ID 13.
+
+```bash
+http POST \
+http://localhost:4242/api/admin/projects/MyCoolProject/users/42/roles/13 \
+Authorization:$KEY
+```
+
+### Change a user's role in a project
+
+``` http
+PUT /api/admin/projects/:projectId/users/:userId/roles/:roleId
+```
+
+This will change the user's project role to the role specified by `:roleId`. If the user has not been added to the project, nothing happens.
+
+#### URL parameters
+
+| Parameter   | Type    | Description                                          | Example value     |
+|-------------|---------|------------------------------------------------------|-------------------|
+| `userId`    | integer | The ID of the user whose role you want to update.    | `1`               |
+| `projectId` | string  | The id of the relevant project.                      | `"MyCoolProject"` |
+| `roleId`    | integer | The role ID of the role you wish to assign the user. | `7`               |
+
+
+#### Responses
+
+<details>
+<summary>Responses data</summary>
+
+##### 200 OK
+
+The user's role has been successfully changed. This response has no body.
+
+##### 400 Bad Request
+
+You tried to change the role of the only user with the `owner` role in the project:
+
+``` json
+[
+  {
+    "msg": "A project must have at least one owner."
+  }
+]
+```
+
+</details>
+
+#### Example query
+
+The following query would change the role of the user with ID 42 the role with ID 13 in the _MyCoolProject_ project.
+```bash
+http PUT \
+http://localhost:4242/api/admin/projects/MyCoolProject/users/42/roles/13 \
+Authorization:$KEY
+```
+
+### Remove a user from a project
+
+``` http
+DELETE /api/admin/projects/:projectId/users/:userId/roles/:roleId
+```
+
+This removes the specified role from the user in the project. Because users can only have one role in a project, this effectively removes the user from the project. The user _must_ have the role indicated by the `:roleId` URL parameter for the request to succeed.
+
+#### URL parameters
+
+| Parameter   | Type    | Description                                                           | Example value     |
+|-------------|---------|-----------------------------------------------------------------------|-------------------|
+| `userId`    | integer | The ID of the user you want to remove from the project.               | `1`               |
+| `projectId` | string  | The id of the project to remove the user from.                        | `"MyCoolProject"` |
+| `roleId`    | integer | The current role the of the user you want to remove from the project. | `7`               |
+
+
+#### Responses
+
+<details>
+<summary>Responses data</summary>
+
+##### 200 OK
+
+The user no longer has the specified role in the project. If the user had this role prior to this API request, they will have been removed from the project. This response has no body.
+
+##### 400 Bad Request
+
+You tried to remove the only user with the role `owner` in the project:
+
+``` json
+[
+  {
+    "msg": "A project must have at least one owner."
+  }
+]
+```
+
+</details>
+
+#### Example query
+
+The following query would remove the user with ID 42 and role ID 13 from the _MyCoolProject_ project.
+```bash
+http DELETE \
+http://localhost:4242/api/admin/projects/MyCoolProject/users/42/roles/13 \
+Authorization:$KEY
 ```

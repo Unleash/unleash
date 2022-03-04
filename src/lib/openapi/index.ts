@@ -16,7 +16,7 @@ export const createOpenApiSchema = (
         servers: serverUrl ? [{ url: serverUrl }] : [],
         info: {
             title: 'Unleash API',
-            version: '1.0.0-wip',
+            version: process.env.npm_package_version,
         },
         security: [
             {

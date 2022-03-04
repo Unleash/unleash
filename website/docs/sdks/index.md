@@ -130,6 +130,8 @@ Once they have been initialised, all Unleash clients will continue to work perfe
 
 Because the SDKs and the Unleash Proxy cache their feature toggle states locally and only communicate with the Unleash server (in the case of the server-side SDKs and the Proxy) or the Proxy (in the case of front-end SDKs) at predetermined intervals, a broken connection only means that they won't get any new updates.
 
+Unless the SDK supports [bootstrapping](#bootstrapping) it *will* need to connect to Unleash at startup to get its initial feature toggle data set. If the SDK doesn't have a feature toggle data set available, all toggles will fall back to evaluating as disabled or as the specified default value (in SDKs that support that).
+
 ### Bootstrapping
 
 By default, all SDKs reach out to the Unleash Server at startup to fetch their toggle configuration. Additionally some of the server-side SDKs and the Proxy (see the above [compatibility table](#server-side-sdk-compatibility-table)) also support *bootstrapping*, which allows them to get their toggle configuration from a file, the environment, or other local resources. These SDKs can work without any network connection whatsoever.

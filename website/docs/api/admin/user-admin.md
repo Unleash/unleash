@@ -115,7 +115,21 @@ You can also search for users via the search API. It will preform a simple searc
 
 `POST https://unleash.host.com/api/admin/user-admin`
 
-Creates a new use with the given root role.
+Creates a new user with the given root role.
+
+**Payload properties**
+
+:::info Requirements
+The payload **must** contain **at least one of** the `name` and `email` properties, though which one is up to you. For the user to be able to log in to the system, the user **must** have an email.
+:::
+
+| Property name | Required | Description                                                                               | Example value(s)       |
+|---------------|----------|-------------------------------------------------------------------------------------------|------------------------|
+| `email`       | No       | The user's email address. Must be provided if `name` is not provided.                     | `"user@getunleash.io"` |
+| `name`        | No       | The user's name. Must be provided if `email` is not provided.                             | `"Some Name"`          |
+| `rootRole`    | Yes      | The role to assign to the user. Can be either the role's ID or its unique name.           | `2`, `"Editor"`        |
+| `sendEmail`   | No       | Whether to send a welcome email with a login link to the user or not. Defaults to `true`. | `false`                |
+
 
 **Body**
 
@@ -127,12 +141,6 @@ Creates a new use with the given root role.
   "sendEmail": true
 }
 ```
-
-**Notes**
-
-- `email` - Required field. 
-- `rootRole` - can either be the role id or the unique name of the role (e.g: `Editor`).
-- `sendEmail` - set to `true` if you want Unleash to send Welcome email to the new user. Do require the Unleash instance to be configured with email settings.
 
 #### Return values: {#return-values}
 

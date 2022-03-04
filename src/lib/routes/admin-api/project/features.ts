@@ -110,7 +110,7 @@ export default class ProjectFeaturesController extends Controller {
             DELETE_FEATURE_STRATEGY,
         );
         this.post(
-            `${PATH_FEATURE}/validate-constraint`,
+            `${PATH_FEATURE}/constraint/validate`,
             this.validateConstraint,
             NONE,
         );

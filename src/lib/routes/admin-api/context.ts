@@ -14,7 +14,6 @@ import { IUnleashServices } from '../../types/services';
 import ContextService from '../../services/context-service';
 import { Logger } from '../../logger';
 import { IAuthRequest } from '../unleash-types';
-import { IConstraint } from 'lib/types/model';
 
 class ContextController extends Controller {
     private logger: Logger;

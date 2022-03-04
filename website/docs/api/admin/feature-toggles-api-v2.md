@@ -779,17 +779,6 @@ The user no longer has the specified role in the project. If the user had this r
 
 ##### 400 Bad Request
 
-No user with the current role exists in the project:
-
-
-``` json
-[
-  {
-    "msg": "Couldn't find roleId=<roleId> on project=<projectId>"
-  }
-]
-```
-
 You tried to remove the only user with the role `owner` in the project:
 
 ``` json

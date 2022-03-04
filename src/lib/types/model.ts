@@ -6,7 +6,10 @@ import { IUser } from './user';
 export interface IConstraint {
     contextName: string;
     operator: string;
-    values: string[];
+    values?: string[];
+    value?: string;
+    inverted?: boolean;
+    caseInsensitive?: boolean;
 }
 export enum WeightType {
     VARIABLE = 'variable',

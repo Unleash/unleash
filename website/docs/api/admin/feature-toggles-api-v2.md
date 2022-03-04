@@ -730,7 +730,7 @@ The user's role has been successfully changed. This response has no body.
 
 ##### 400 Bad Request
 
-You tried to change the role of only user with the `owner` role in the project:
+You tried to change the role of the only user with the `owner` role in the project:
 
 ``` json
 [
@@ -775,7 +775,7 @@ This removes the specified role from the user in the project. Because users can 
 
 ##### 200 OK
 
-The no longer has the specified role in the project. If the user had this role prior to this API request, they will have been removed from the project. This response has no body.
+The user no longer has the specified role in the project. If the user had this role prior to this API request, they will have been removed from the project. This response has no body.
 
 ##### 400 Bad Request
 

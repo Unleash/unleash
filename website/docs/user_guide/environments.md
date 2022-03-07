@@ -146,13 +146,3 @@ In order to support configuration per environment we had to rebuild our feature 
 
 * **Unleash v4.2** will provide _early access_ to environment support. This means that it can be enabled per customer via a feature flag.
 * **Unleash v4.3** plans to provide general access to the environment support for all users of Unleash (Open-Source, Pro, Enterprise).
-
-
-### Future enhancements
-
-With improved environment capabilities we have also done the groundwork to be able to also improve other related aspects inside Unleash:
-
-
-
-* Improve **Usage Metrics** to be able to show usage and evaluation results per hour for multiple days with dimensions such as environment, application and time (per hour).
-* Improve **RBAC** with the ability to limit who can change configuration for a specific environment (planned as an enterprise feature).

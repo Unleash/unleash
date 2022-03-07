@@ -51,7 +51,7 @@ export const createStores = (
         contextFieldStore: new ContextFieldStore(db, getLogger),
         settingStore: new SettingStore(db, getLogger),
         userStore: new UserStore(db, getLogger),
-        projectStore: new ProjectStore(db, getLogger),
+        projectStore: new ProjectStore(db, eventBus, getLogger),
         tagStore: new TagStore(db, eventBus, getLogger),
         tagTypeStore: new TagTypeStore(db, eventBus, getLogger),
         addonStore: new AddonStore(db, eventBus, getLogger),

@@ -53,7 +53,7 @@ If you see an item marked with a ❌ that you would find useful, feel free to re
 |---------------------------------------------------------------------------------------------------|:----------------------:|:-------------------------:|:------------------:|:--------------------------:|:----------------------:|:-------------------------:|:--------------------:|:------------------------------------------------------:|:----------------------------------------:|
 | **Category: Initialization**                                                                      |                        |                           |                    |                            |                        |                           |                      |                                                        |                                          |
 | Async initialization                                                                              | ✅                     | ✅                        | ✅                 | ✅                         | ✅                     | ✅                        | ❌                   | ✅                                                     | N/A                                      |
-| Can block until synchronized                                                                      | ✅                     | ✅                        | ⭕                 | ⭕                         | ⭕                     | ✅                        | ✅                   | ⭕                                                     | N/A                                      |
+| Can block until synchronized                                                                      | ✅                     | ✅                        | ✅                 | ⭕                         | ⭕                     | ✅                        | ✅                   | ⭕                                                     | N/A                                      |
 | Default refresh interval                                                                          | 10s                    | 15s                       | 15s                | 15s                        | 15s                    | 30s                       | 30s                  | 15s                                                    | 5s                                       |
 | Default metrics interval                                                                          | 60s                    | 60s                       | 60s                | 60s                        | 60s                    | 60s                       | 30s                  | 15s                                                    | 30s                                      |
 | Context provider                                                                                  | ✅                     | N/A                       | N/A                | N/A                        | N/A                    | ✅                        | ✅                   | N/A                                                    | N/A                                      |
@@ -76,6 +76,7 @@ If you see an item marked with a ❌ that you would find useful, feel free to re
 | Basic support                                                                                     | ✅                     | ✅                        | ✅                 | ✅                         | ✅                     | ✅                        | ✅                   | ✅                                                     |                                          |
 | **Category: [Strategy constraints](../advanced/strategy_constraints)**                            |                        |                           |                    |                            |                        |                           |                      |                                                        |                                          |
 | Basic support (`IN`, `NOT_IN` operators)                                                          | ✅                     | ✅                        | ✅                 | ✅                         | ✅                     | ✅                        | ✅                   | ✅                                                     |                                          |
+| Advanced support (Semver, date, numeric and extended string operators)                            | ✅                     | ✅                        | ⭕                 | ⭕                         | ⭕                     | ⭕                        | ✅                   | ⭕                                                     |                                          |
 | **Category: [Unleash Context](../user_guide/unleash_context)**                                    |                        |                           |                    |                            |                        |                           |                      |                                                        |                                          |
 | Static fields (`environment`, `appName`)                                                          | ✅                     | ✅                        | ✅                 | ✅                         | ✅                     | ✅                        | ✅                   | ✅                                                     |                                          |
 | Defined fields                                                                                    | ✅                     | ✅                        | ✅                 | ✅                         | ✅                     | ✅                        | ✅                   | ✅                                                     |                                          |
@@ -116,9 +117,26 @@ Here's some of the fantastic work our community has done to make Unleash work in
 - [uekoetter.dev/unleash-client-dart](https://pub.dev/packages/unleash) (Dart)
 - _...your implementation for your favorite language._
 
-## Implement your own SDK {#implement-your-own-sdk}
+### Implement your own SDK {#implement-your-own-sdk}
 
 If you can't find an SDK that fits your need, you can also develop your own SDK. To make implementation easier, check out these resources:
 
 - [Unleash Client Specifications](https://github.com/Unleash/client-specification) - Used by all official SDKs to make sure they behave correctly across different language implementations. This lets us verify that a gradual rollout to 10% of the users would affect the same users regardless of which SDK you're using.
 - [Client SDK overview](../client-specification) - A brief, overall guide of the _Unleash Architecture_ and important aspects of the SDK role in it all.
+
+## Working offline
+
+Once they have been initialised, all Unleash clients will continue to work perfectly well without an internet connection or in the event that the Unleash Server has an outage.
+
+Because the SDKs and the Unleash Proxy cache their feature toggle states locally and only communicate with the Unleash server (in the case of the server-side SDKs and the Proxy) or the Proxy (in the case of front-end SDKs) at predetermined intervals, a broken connection only means that they won't get any new updates.
+
+Unless the SDK supports [bootstrapping](#bootstrapping) it *will* need to connect to Unleash at startup to get its initial feature toggle data set. If the SDK doesn't have a feature toggle data set available, all toggles will fall back to evaluating as disabled or as the specified default value (in SDKs that support that).
+
+### Bootstrapping
+
+By default, all SDKs reach out to the Unleash Server at startup to fetch their toggle configuration. Additionally some of the server-side SDKs and the Proxy (see the above [compatibility table](#server-side-sdk-compatibility-table)) also support *bootstrapping*, which allows them to get their toggle configuration from a file, the environment, or other local resources. These SDKs can work without any network connection whatsoever.
+
+Bootstrapping is also supported by the following front-end client SDKs:
+- [the JavaScript proxy client](/sdks/proxy-javascript)
+- [the React Proxy client](/sdks/proxy-react)
+- [the Android proxy client](/sdks/android_proxy_sdk)

@@ -2039,7 +2039,7 @@ test('Can update impression data with PUT', async () => {
 });
 
 test('Can create toggle with impression data on different project', async () => {
-    db.stores.projectStore.create({
+    await db.stores.projectStore.create({
         id: 'impression-data',
         name: 'ImpressionData',
         description: '',

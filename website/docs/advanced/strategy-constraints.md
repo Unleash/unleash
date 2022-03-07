@@ -20,6 +20,24 @@ Combining strategy constraints with the [gradual rollout strategy](../user_guide
 
 ![A toggle with the gradual rollout strategy. The toggle is constrained on the custom content field "region" and set to only activate if the region is Africa or Europe.](/img/custom-constraints.png)
 
+## Constraint structure
+
+Each strategy constraint has three parts:
+
+- a **context field**: The context field to use for evaluation.
+- an **operator**: One of the [operators listed below](#strategy-constraint-operators).
+- a **value**/**list of values**: A value or list of values to use in the evaluation of the constraint.
+
+These parts turn the strategy constraint into an expression that evaluates to either `true` or `false`.
+
+To clarify, here's a few example strategy constraints and what they do:
+
+| Context field   | Operator        | Value(s)                       | Description                                                                                                                                         |
+|-----------------|-----------------|--------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
+| `userId`        | `STR_ENDS_WITH` | `@example.com, @mycompany.com` | Evaluates to `true` for users whose user IDs end with `@example.com` or `@mycompany.com`.                                                           |
+| `currentTime`   | `DATE_AFTER`    | `2022-06-05 21:43:22Z`         | Evaluates to `true` if the current time is after `2022-06-05 21:43:22Z`.                                                                            |
+| `userScore`[^1] | `NUM_GTE`       | `1000`                         | Evaluates to `true` if the [custom context field](../user_guide/unleash_context#custom-context-fields) `userScore` has a value of `1000` or higher. |
+
 ## Strategy constraint operators
 
 Unleash currently supports 15 different constraint operators.
@@ -101,19 +119,6 @@ Versions with pre-release indicators (e.g. `4.8.0-rc.2`) are considered less tha
 | `SEMVER_GT` | **strictly greater than** the provided value |
 | `SEMVER_LT` | **strictly less than** the provided value    |
 
-## Constraint structure
-
-Each strategy constraint has three parts:
-
-- **Context field**: The context field to evaluate.
-- **Operator**: Either `IN` or `NOT_IN`.
-- **Values**: The list of values that trigger this constraint.
-
-The **context field** is the field that you want to use for constraining this strategy. The **values** field is a list of values that the constraint should either allow or deny. The **operator** determines whether the values are allowed or denied.
-
-For instance, to constrain the strategy to only users with IDs `id-123` and `id-456`: select `userId` as the context field, use the `IN` operator, and set values to `id-123, id-456`. The strategy will then be evaluated only for these two users.
-
-If, on the other hand, you would like to ensure the strategy is never evaluated for the same users, you would use the same configuration as above, but set the operator to `NOT_IN`. This would mean that the strategy is evaluated for all users _not_ listed in the values.
 
 ## Interacting with strategy constraints in the client SDKs {#sdks}
 
@@ -135,3 +140,5 @@ To be able to constrain on a field, it must be listed under the Context Field me
 ## [Deprecated]: Constrain on a specific environment {#constrain-on-a-specific-environment}
 
 Before Unleash 4.3, using strategy constraints was the recommended way to have different toggle configurations per environment. Now that Unleash has environment support built in, we no longer recommend you use strategy constraints for this. Instead, see the [environments documentation](../user_guide/environments).
+
+[^1]: `userScore` is not a default Unleash field, but can be added as a [custom context field](../user_guide/unleash_context#custom-context-fields).

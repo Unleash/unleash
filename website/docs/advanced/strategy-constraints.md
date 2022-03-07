@@ -20,6 +20,71 @@ Combining strategy constraints with the [gradual rollout strategy](../user_guide
 
 ![A toggle with the gradual rollout strategy. The toggle is constrained on the custom content field "region" and set to only activate if the region is Africa or Europe.](/img/custom-constraints.png)
 
+## Strategy constraint operators
+
+Unleash currently supports 15 different constraint operators.
+The operators can be grouped into four different categories based on their method of comparison.
+
+All operators can be **negated**, meaning that they get their opposite value
+
+Each operator is evaluated such that `<your context field> <operator> <value>`
+
+### Numeric operators
+
+| Name      | Description                                              |
+|-----------|----------------------------------------------------------|
+| `NUM_EQ`  | Numerical equivalence; the mathematical `=` operator.    |
+| `NUM_GT`  | Strictly greater than; the mathematical `>` operator.    |
+| `NUM_GTE` | Greater than or equal to; the mathematical `⩾` operator. |
+| `NUM_LT`  | Strictly less than; the mathematical `<` operator.       |
+| `NUM_LTE` | Less than or equal to; the mathematical `⩽` operator.    |
+
+You can read more about [numeric equality](https://en.wikipedia.org/wiki/Equality_(mathematics) "Mathematical equality at Wikipedia") or [numeric inequality operators at Wikipedia](https://en.wikipedia.org/wiki/Inequality_(mathematics)).
+
+### Date and time operators
+
+:::info Context field availability
+The date and time operators are **only available on the `currentTime`** context field.
+:::
+
+With the date and time operators, you can enable a feature before and/or after a specified time.
+They compare the [Unleash context's](../user_guide/unleash_context) `currentTime` property.
+
+You can combine the two constraint operators by setting two separate constraints on a single strategy to create a time span.
+In that case the strategy will be evaluated from `DATE_AFTER` and until `DATE_BEFORE`.
+
+| Name          | Description                                                         |
+|---------------|---------------------------------------------------------------------|
+| `DATE_AFTER`  | Will evaluate to true if `currentTime` is after the provided date.  |
+| `DATE_BEFORE` | Will evaluate to true if `currentTime` is before the provided date. |
+
+### String operators
+
+String operators are all multi-value and most can be either case sensitive or insensitive
+
+:::note
+For legacy reasons / backwards compatibility, `IN` and `NOT_IN` are always case sensitive.
+:::
+
+| Name              | Available since | Description |
+|-------------------|-----------------|-------------|
+| `IN`              | 3.3             |             |
+| `NOT_IN`          | 3.3             |             |
+| `STR_CONTAINS`    | 4.9             | Does the string contain any of the provided strings?             |
+| `STR_ENDS_WITH`   | 4.9             | Does the string end with              |
+| `STR_STARTS_WITH` | 4.9             |             |
+
+
+### Versioning (semver) operators
+
+Versions with pre-release indicators (e.g. `4.8.0-rc.2`) are considered less than versions without (e.g. `4.8.0`) in accordance with [the SemVer specification](https://semver.org/#spec-item-11).
+
+| Name        | Description                                             |
+|-------------|---------------------------------------------------------|
+| `SEMVER_EQ` | Are the two versions identical?                         |
+| `SEMVER_GT` | Is <version> strictly greater than the provided version |
+| `SEMVER_LT` | Is <version> strictly less than the provided version    |
+
 ## Constraint structure
 
 Each strategy constraint has three parts:

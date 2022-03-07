@@ -5,6 +5,8 @@ title: Strategy Constraints
 
 :::info Availability
 Strategy constraints are available to Unleash Pro and Enterprise users.
+
+Unleash 4.9 introduced a more comprehensive set of constraint operators. These require that both Unleash *and* your client SDK of choice support them. See the [SDK compatibility table](../sdks/index.md#server-side-compatibility-table) for more information.
 :::
 
 :::tip
@@ -40,16 +42,16 @@ To clarify, here's a few example strategy constraints and what they do:
 
 ## Strategy constraint operators
 
+:::note Placeholder context field
+In this section, `<context-field>` is used as a placeholder for an arbitrary context field. With the exception of the `currentTime` field, you can use any context field in its place.
+:::
+
 Unleash currently supports 15 different constraint operators.
 The operators can be grouped into four different categories based on their method of comparison.
 
-Each operator forms a predicate together with the provided context field.
+### Constraint negation / inversion
 
-Each operator forms an expression of the form `<your context field> <operator> <value>`
-
-### Negation / inverse values
-
-All operators can be **negated**, meaning that they get their opposite value. Constraints are evaluated to either `true` or `false`. Negating an operator would turn a `true` into a `false` and a `false` value into a `true` value.
+All operators can be **negated**, meaning that they get their opposite value. Constraints are evaluated to either `true` or `false`. Negating an operator would turn a `true` value into a `false` and a `false` value into a `true` value.
 
 For instance, using the numeric equivalence operator `NUM_EQ`, the following truth table shows the how value negation affects the result:
 
@@ -61,8 +63,12 @@ For instance, using the numeric equivalence operator `NUM_EQ`, the following tru
 
 ### Numeric operators
 
-| Name      | `true` if `<contextField>` is ...                                            |
-|-----------|-----------------------------------------------------------------------------|
+Numeric operators compare the numeric values of context fields with your provided value.
+
+Numeric operators only accept single values.
+
+| Name      | `true` if `<context-field>` is ...                                              |
+|-----------|--------------------------------------------------------------------------------|
 | `NUM_EQ`  | **equal** to the provided value; the mathematical `=` operator                 |
 | `NUM_GT`  | **strictly greater than** the provided value; the mathematical `>` operator    |
 | `NUM_GTE` | **greater than or equal to** the provided value; the mathematical `⩾` operator |
@@ -73,15 +79,17 @@ You can read more about [numeric equality](https://en.wikipedia.org/wiki/Equalit
 
 ### Date and time operators
 
-:::info Context field availability
-The date and time operators are **only available on the `currentTime`** context field.
+:::info `currentTime` and date and time operators
+The date and time operators are **only available on the `currentTime`** context field. Furthermore, the `currentTime` context field **can not be used** with any of the other operators.
 :::
 
 With the date and time operators, you can enable a feature before and/or after a specified time.
-They compare the [Unleash context's](../user_guide/unleash_context) `currentTime` property.
+The operators compare the [Unleash context's](../user_guide/unleash_context) `currentTime` property against the provided value.
 
-You can combine the two constraint operators by setting two separate constraints on a single strategy to create a time span.
+You can create a **time span** by combining the two constraint operators using two different constraints on the same strategy.
 In that case the strategy will be evaluated from `DATE_AFTER` and until `DATE_BEFORE`.
+
+Date and time operators only support single values.
 
 | Name          | `true` if `currentTime` is ... |
 |---------------|--------------------------------|
@@ -90,30 +98,35 @@ In that case the strategy will be evaluated from `DATE_AFTER` and until `DATE_BE
 
 ### String operators
 
-String operators are all multi-value and most can be either case sensitive or insensitive
-
 :::note Legacy note
-For legacy reasons / backwards compatibility, `IN` and `NOT_IN` are always case sensitive.
-
-`IN` and `NOT_IN` are also each other's inverses.
+For backwards compatibility reasons, `IN` and `NOT_IN` are always case-sensitive.
 :::
 
-In the below table, `<contextField>` is used to indicate that the value of ...
+String operators differ from the other categories in two different ways:
+- all operators accept multiple values
+- most operators also consider [letter case](https://en.wikipedia.org/wiki/Letter_case "letter case on Wikipedia") and can be set to be case-sensitive or case-insensitive
 
-| Name              | Available since | `true` if `<contextField>` ...                 |
-|-------------------|-----------------|------------------------------------------------|
-| `IN`              | 3.3             | is **equal** to any of the provided values     |
-| `NOT_IN`          | 3.3             | is **not equal** to any of the provided values |
-| `STR_CONTAINS`    | 4.9             | **contains** any of the provided strings       |
-| `STR_ENDS_WITH`   | 4.9             | **ends** with any of the provided strings      |
-| `STR_STARTS_WITH` | 4.9             | **starts** with any of the provided strings    |
+| Name              | `true` if `<context-field>` ...                | Available since |
+|-------------------|------------------------------------------------|-----------------|
+| `IN`              | is **equal** to any of the provided values     | v3.3            |
+| `NOT_IN`          | is **not equal** to any of the provided values | v3.3            |
+| `STR_CONTAINS`    | **contains** any of the provided strings       | v4.9            |
+| `STR_ENDS_WITH`   | **ends** with any of the provided strings      | v4.9            |
+| `STR_STARTS_WITH` | **starts** with any of the provided strings    | v4.9            |
 
 
-### Versioning (semver) operators
+### Versioning (SemVer) operators
+
+The SemVer operators are used to compare version numbers such as application versions, dependency versions, etc.
+
+You can enter SemVer values with or without a leading "v": `v1.2.3` and `1.2.3` are both valid.
+Importantly, they are also considered equal.
 
 Versions with pre-release indicators (e.g. `4.8.0-rc.2`) are considered less than versions without (e.g. `4.8.0`) in accordance with [the SemVer specification](https://semver.org/#spec-item-11).
 
-| Name        | `true` if `<contextField>` is ...            |
+SemVer operators only support single values.
+
+| Name        | `true` if `<context-field>` is ...            |
 |-------------|----------------------------------------------|
 | `SEMVER_EQ` | **equal** to the provided value              |
 | `SEMVER_GT` | **strictly greater than** the provided value |

@@ -1,23 +1,21 @@
 /* eslint-disable react/jsx-no-target-blank */
 import React, { useState } from 'react';
 import { Alert } from '@material-ui/lab';
-
 import { ProjectAccessAddUser } from './ProjectAccessAddUser/ProjectAccessAddUser';
-
 import PageContent from '../../common/PageContent';
-import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useStyles } from './ProjectAccess.styles';
 import { useParams } from 'react-router-dom';
-import { IProjectViewParams } from '../../../interfaces/params';
-import usePagination from '../../../hooks/usePagination';
-import PaginateUI from '../../common/PaginateUI/PaginateUI';
-import useToast from '../../../hooks/useToast';
-import ConfirmDialogue from '../../common/Dialogue';
+import { IProjectViewParams } from 'interfaces/params';
+import usePagination from 'hooks/usePagination';
+import PaginateUI from 'component/common/PaginateUI/PaginateUI';
+import useToast from 'hooks/useToast';
+import ConfirmDialogue from 'component/common/Dialogue';
 import useProjectAccess, {
     IProjectAccessUser,
-} from '../../../hooks/api/getters/useProjectAccess/useProjectAccess';
-import useProjectApi from '../../../hooks/api/actions/useProjectApi/useProjectApi';
-import HeaderTitle from '../../common/HeaderTitle';
+} from 'hooks/api/getters/useProjectAccess/useProjectAccess';
+import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
+import HeaderTitle from 'component/common/HeaderTitle';
 import { ProjectAccessList } from './ProjectAccessList/ProjectAccessList';
 
 export const ProjectAccess = () => {
@@ -28,7 +26,7 @@ export const ProjectAccess = () => {
     const { isOss } = useUiConfig();
     const { page, pages, nextPage, prevPage, setPageIndex, pageIndex } =
         usePagination(access.users, 10);
-    const { removeUserFromRole, addUserToRole } = useProjectApi();
+    const { removeUserFromRole, changeUserRole } = useProjectApi();
     const [showDelDialogue, setShowDelDialogue] = useState(false);
     const [user, setUser] = useState<IProjectAccessUser | undefined>();
 
@@ -48,7 +46,7 @@ export const ProjectAccess = () => {
     }
 
     const handleRoleChange =
-        (userId: number, currRoleId: number) =>
+        (userId: number) =>
         async (
             evt: React.ChangeEvent<{
                 name?: string;
@@ -57,13 +55,12 @@ export const ProjectAccess = () => {
         ) => {
             const roleId = Number(evt.target.value);
             try {
-                await removeUserFromRole(projectId, currRoleId, userId);
-                await addUserToRole(projectId, roleId, userId);
+                await changeUserRole(projectId, roleId, userId);
                 refetchProjectAccess();
-
                 setToastData({
                     type: 'success',
-                    title: 'User role changed successfully',
+                    title: 'Success',
+                    text: 'User role changed successfully',
                 });
             } catch (err: any) {
                 setToastData({

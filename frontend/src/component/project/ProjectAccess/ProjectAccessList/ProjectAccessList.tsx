@@ -2,16 +2,13 @@ import { List } from '@material-ui/core';
 import {
     IProjectAccessOutput,
     IProjectAccessUser,
-} from '../../../../hooks/api/getters/useProjectAccess/useProjectAccess';
+} from 'hooks/api/getters/useProjectAccess/useProjectAccess';
 import { ProjectAccessListItem } from './ProjectAccessListItem/ProjectAccessListItem';
 import React from 'react';
 
 interface IProjectAccesListProps {
     page: IProjectAccessUser[];
-    handleRoleChange: (
-        userId: number,
-        currRoleId: number
-    ) => (
+    handleRoleChange: (userId: number) => (
         evt: React.ChangeEvent<{
             name?: string;
             value: unknown;

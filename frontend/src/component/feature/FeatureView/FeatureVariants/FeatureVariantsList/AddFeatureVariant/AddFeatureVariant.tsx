@@ -5,24 +5,26 @@ import {
     FormControlLabel,
     Grid,
     InputAdornment,
-    TextField,
     Tooltip,
 } from '@material-ui/core';
 import { Info } from '@material-ui/icons';
 import { weightTypes } from './enums';
 import { OverrideConfig } from './OverrideConfig/OverrideConfig';
-import ConditionallyRender from '../../../../../common/ConditionallyRender';
+import ConditionallyRender from 'component/common/ConditionallyRender';
 import { useCommonStyles } from 'common.styles';
-import Dialogue from '../../../../../common/Dialogue';
+import Dialogue from 'component/common/Dialogue';
 import { modalStyles, trim } from 'component/common/util';
-import PermissionSwitch from '../../../../../common/PermissionSwitch/PermissionSwitch';
+import PermissionSwitch from 'component/common/PermissionSwitch/PermissionSwitch';
 import { UPDATE_FEATURE_VARIANTS } from 'component/providers/AccessProvider/permissions';
-import useFeature from '../../../../../../hooks/api/getters/useFeature/useFeature';
+import useFeature from 'hooks/api/getters/useFeature/useFeature';
 import { useParams } from 'react-router-dom';
 import { IFeatureViewParams } from 'interfaces/params';
 import { IFeatureVariant, IOverride } from 'interfaces/featureToggle';
 import cloneDeep from 'lodash.clonedeep';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
+import { useStyles } from './AddFeatureVariant.styles';
+import Input from 'component/common/Input/Input';
+import { formatUnknownError } from 'utils/format-unknown-error';
 
 const payloadOptions = [
     { key: 'string', label: 'string' },
@@ -43,7 +45,7 @@ interface IAddVariantProps {
     editing: boolean;
 }
 
-const AddVariant = ({
+export const AddVariant = ({
     showDialog,
     closeDialog,
     save,
@@ -53,6 +55,7 @@ const AddVariant = ({
     title,
     editing,
 }: IAddVariantProps) => {
+    const styles = useStyles();
     const [data, setData] = useState<Record<string, string>>({});
     const [payload, setPayload] = useState(EMPTY_PAYLOAD);
     const [overrides, setOverrides] = useState<IOverride[]>([]);
@@ -61,6 +64,18 @@ const AddVariant = ({
     const { projectId, featureId } = useParams<IFeatureViewParams>();
     const { feature } = useFeature(projectId, featureId);
     const [variants, setVariants] = useState<IFeatureVariant[]>([]);
+
+    const isValidJSON = (input: string): boolean => {
+        try {
+            JSON.parse(input);
+            return true;
+        } catch (e: unknown) {
+            setError({
+                payload: 'Invalid JSON',
+            });
+            return false;
+        }
+    };
 
     const clear = () => {
         if (editVariant) {
@@ -136,6 +151,11 @@ const AddVariant = ({
             setError(weightValidation);
             return;
         }
+        const validJSON =
+            payload.type === 'json' && !isValidJSON(payload.value);
+        if (validJSON) {
+            return;
+        }
 
         try {
             const variant: IFeatureVariant = {
@@ -154,19 +174,14 @@ const AddVariant = ({
             await save(variant);
             clear();
             closeDialog();
-        } catch (error) {
-            // @ts-expect-error
-            if (error?.body?.details[0]?.message?.includes('duplicate value')) {
+        } catch (e: unknown) {
+            const error = formatUnknownError(e);
+            if (error.includes('duplicate value')) {
                 setError({ name: 'A variant with that name already exists.' });
-            } else if (
-                // @ts-expect-error
-                error?.body?.details[0]?.message?.includes('must be a number')
-            ) {
+            } else if (error.includes('must be a number')) {
                 setError({ weight: 'Weight must be a number' });
             } else {
-                const msg =
-                    // @ts-expect-error
-                    error?.body?.details[0]?.message || 'Could not add variant';
+                const msg = error || 'Could not add variant';
                 setError({ general: msg });
             }
         }
@@ -174,6 +189,7 @@ const AddVariant = ({
 
     const onPayload = (e: ChangeEvent<{ name?: string; value: unknown }>) => {
         e.preventDefault();
+        setError({ payload: '' });
         setPayload({
             ...payload,
             // @ts-expect-error
@@ -248,20 +264,16 @@ const AddVariant = ({
                 onSubmit={submit}
                 className={commonStyles.contentSpacingY}
             >
-                <p style={{ color: 'red' }}>{error.general}</p>
-                <TextField
+                <p className={styles.error}>{error.general}</p>
+                <Input
                     label="Variant name"
                     autoFocus
                     name="name"
-                    placeholder=""
-                    className={commonStyles.fullWidth}
-                    style={{ maxWidth: '350px' }}
-                    helperText={error.name}
+                    className={styles.input}
+                    errorText={error.name}
                     value={data.name || ''}
                     error={Boolean(error.name)}
-                    variant="outlined"
                     required
-                    size="small"
                     type="name"
                     disabled={editing}
                     onChange={setVariantValue}
@@ -276,11 +288,7 @@ const AddVariant = ({
                             (!editing && variants.length > 0)
                         }
                         show={
-                            <Grid
-                                item
-                                md={12}
-                                style={{ marginBottom: '0.5rem' }}
-                            >
+                            <Grid item md={12} className={styles.grid}>
                                 <FormControl>
                                     <FormControlLabel
                                         control={
@@ -308,13 +316,10 @@ const AddVariant = ({
                         condition={data.weightType === weightTypes.FIX}
                         show={
                             <Grid item md={4}>
-                                <TextField
+                                <Input
                                     id="weight"
                                     label="Weight"
                                     name="weight"
-                                    variant="outlined"
-                                    size="small"
-                                    placeholder=""
                                     data-test={'VARIANT_WEIGHT_INPUT'}
                                     InputProps={{
                                         endAdornment: (
@@ -323,10 +328,10 @@ const AddVariant = ({
                                             </InputAdornment>
                                         ),
                                     }}
-                                    style={{ marginRight: '0.8rem' }}
+                                    className={styles.weightInput}
                                     value={data.weight}
                                     error={Boolean(error.weight)}
-                                    helperText={error.weight}
+                                    errorText={error.weight}
                                     type="number"
                                     disabled={!isFixWeight}
                                     onChange={e => {
@@ -339,19 +344,13 @@ const AddVariant = ({
                         }
                     />
                 </Grid>
-                <p style={{ marginBottom: '1rem' }}>
+                <p className={styles.label}>
                     <strong>Payload </strong>
                     <Tooltip
                         title="Passed to the variant object. Can be anything
                         (json, value, csv)"
                     >
-                        <Info
-                            style={{
-                                width: '18.5px',
-                                height: '18.5px',
-                                color: 'grey',
-                            }}
-                        />
+                        <Info className={styles.info} />
                     </Tooltip>
                 </p>
                 <Grid container>
@@ -360,40 +359,37 @@ const AddVariant = ({
                             id="variant-payload-type"
                             name="type"
                             label="Type"
-                            className={commonStyles.fullWidth}
+                            className={styles.select}
                             value={payload.type}
                             options={payloadOptions}
                             onChange={onPayload}
-                            style={{ minWidth: '100px', width: '100%' }}
                         />
                     </Grid>
                     <Grid item md={8} sm={8} xs={6}>
-                        <TextField
-                            rows={1}
-                            label="Value"
+                        <Input
+                            error={Boolean(error.payload)}
+                            errorText={error.payload}
                             name="value"
                             className={commonStyles.fullWidth}
                             value={payload.value}
                             onChange={onPayload}
-                            variant="outlined"
-                            size="small"
                             data-test={'VARIANT_PAYLOAD_VALUE'}
+                            placeholder={
+                                payload.type === 'json'
+                                    ? '{ "hello": "world" }'
+                                    : 'value'
+                            }
+                            label="value"
                         />
                     </Grid>
                 </Grid>
                 <ConditionallyRender
                     condition={overrides.length > 0}
                     show={
-                        <p style={{ marginBottom: '1rem' }}>
+                        <p className={styles.label}>
                             <strong>Overrides </strong>
                             <Tooltip title="Here you can specify which users should get this variant.">
-                                <Info
-                                    style={{
-                                        width: '18.5px',
-                                        height: '18.5px',
-                                        color: 'grey',
-                                    }}
-                                />
+                                <Info className={styles.info} />
                             </Tooltip>
                         </p>
                     }
@@ -410,10 +406,8 @@ const AddVariant = ({
                     color="primary"
                 >
                     Add override
-                </Button>{' '}
+                </Button>
             </form>
         </Dialogue>
     );
 };
-
-export default AddVariant;

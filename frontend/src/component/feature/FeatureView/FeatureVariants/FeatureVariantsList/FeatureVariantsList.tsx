@@ -10,7 +10,7 @@ import {
     TableRow,
     Typography,
 } from '@material-ui/core';
-import AddVariant from './AddFeatureVariant/AddFeatureVariant';
+import { AddVariant } from './AddFeatureVariant/AddFeatureVariant';
 
 import { useContext, useEffect, useState } from 'react';
 import useFeature from '../../../../../hooks/api/getters/useFeature/useFeature';

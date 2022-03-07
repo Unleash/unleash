@@ -25,19 +25,31 @@ Combining strategy constraints with the [gradual rollout strategy](../user_guide
 Unleash currently supports 15 different constraint operators.
 The operators can be grouped into four different categories based on their method of comparison.
 
-All operators can be **negated**, meaning that they get their opposite value
+Each operator forms a predicate together with the provided context field.
 
-Each operator is evaluated such that `<your context field> <operator> <value>`
+Each operator forms an expression of the form `<your context field> <operator> <value>`
+
+### Negation / inverse values
+
+All operators can be **negated**, meaning that they get their opposite value. Constraints are evaluated to either `true` or `false`. Negating an operator would turn a `true` into a `false` and a `false` value into a `true` value.
+
+For instance, using the numeric equivalence operator `NUM_EQ`, the following truth table shows the how value negation affects the result:
+
+| Expression   | Value   | Negated |
+|--------------|---------|---------|
+| 4 `NUM_EQ` 4 | `true`  | `false` |
+| 4 `NUM_EQ` 5 | `false` | `true`  |
+
 
 ### Numeric operators
 
-| Name      | Description                                              |
-|-----------|----------------------------------------------------------|
-| `NUM_EQ`  | Numerical equivalence; the mathematical `=` operator.    |
-| `NUM_GT`  | Strictly greater than; the mathematical `>` operator.    |
-| `NUM_GTE` | Greater than or equal to; the mathematical `⩾` operator. |
-| `NUM_LT`  | Strictly less than; the mathematical `<` operator.       |
-| `NUM_LTE` | Less than or equal to; the mathematical `⩽` operator.    |
+| Name      | `true` if `<contextField>` is ...                                            |
+|-----------|-----------------------------------------------------------------------------|
+| `NUM_EQ`  | **equal** to the provided value; the mathematical `=` operator                 |
+| `NUM_GT`  | **strictly greater than** the provided value; the mathematical `>` operator    |
+| `NUM_GTE` | **greater than or equal to** the provided value; the mathematical `⩾` operator |
+| `NUM_LT`  | **strictly less than** the provided value; the mathematical `<` operator       |
+| `NUM_LTE` | **less than or equal to** the provided value; the mathematical `⩽` operator    |
 
 You can read more about [numeric equality](https://en.wikipedia.org/wiki/Equality_(mathematics) "Mathematical equality at Wikipedia") or [numeric inequality operators at Wikipedia](https://en.wikipedia.org/wiki/Inequality_(mathematics)).
 
@@ -53,37 +65,41 @@ They compare the [Unleash context's](../user_guide/unleash_context) `currentTime
 You can combine the two constraint operators by setting two separate constraints on a single strategy to create a time span.
 In that case the strategy will be evaluated from `DATE_AFTER` and until `DATE_BEFORE`.
 
-| Name          | Description                                                         |
-|---------------|---------------------------------------------------------------------|
-| `DATE_AFTER`  | Will evaluate to true if `currentTime` is after the provided date.  |
-| `DATE_BEFORE` | Will evaluate to true if `currentTime` is before the provided date. |
+| Name          | `true` if `currentTime` is ... |
+|---------------|--------------------------------|
+| `DATE_AFTER`  | **after** the provided date       |
+| `DATE_BEFORE` | **before** the provided date      |
 
 ### String operators
 
 String operators are all multi-value and most can be either case sensitive or insensitive
 
-:::note
+:::note Legacy note
 For legacy reasons / backwards compatibility, `IN` and `NOT_IN` are always case sensitive.
+
+`IN` and `NOT_IN` are also each other's inverses.
 :::
 
-| Name              | Available since | Description |
-|-------------------|-----------------|-------------|
-| `IN`              | 3.3             |             |
-| `NOT_IN`          | 3.3             |             |
-| `STR_CONTAINS`    | 4.9             | Does the string contain any of the provided strings?             |
-| `STR_ENDS_WITH`   | 4.9             | Does the string end with              |
-| `STR_STARTS_WITH` | 4.9             |             |
+In the below table, `<contextField>` is used to indicate that the value of ...
+
+| Name              | Available since | `true` if `<contextField>` ...                 |
+|-------------------|-----------------|------------------------------------------------|
+| `IN`              | 3.3             | is **equal** to any of the provided values     |
+| `NOT_IN`          | 3.3             | is **not equal** to any of the provided values |
+| `STR_CONTAINS`    | 4.9             | **contains** any of the provided strings       |
+| `STR_ENDS_WITH`   | 4.9             | **ends** with any of the provided strings      |
+| `STR_STARTS_WITH` | 4.9             | **starts** with any of the provided strings    |
 
 
 ### Versioning (semver) operators
 
 Versions with pre-release indicators (e.g. `4.8.0-rc.2`) are considered less than versions without (e.g. `4.8.0`) in accordance with [the SemVer specification](https://semver.org/#spec-item-11).
 
-| Name        | Description                                             |
-|-------------|---------------------------------------------------------|
-| `SEMVER_EQ` | Are the two versions identical?                         |
-| `SEMVER_GT` | Is <version> strictly greater than the provided version |
-| `SEMVER_LT` | Is <version> strictly less than the provided version    |
+| Name        | `true` if `<contextField>` is ...            |
+|-------------|----------------------------------------------|
+| `SEMVER_EQ` | **equal** to the provided value              |
+| `SEMVER_GT` | **strictly greater than** the provided value |
+| `SEMVER_LT` | **strictly less than** the provided value    |
 
 ## Constraint structure
 

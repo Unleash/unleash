@@ -37,8 +37,6 @@ By using [custom context fields](../user_guide/unleash_context#custom-context-fi
 - release a feature to users in a specific region
 - release a feature only to beta testers
 
-<!-- Are there any new built-in context fields? -->
-
 You can also combine strategy constraints with the [gradual rollout strategy](../user_guide/activation_strategy#gradual-rollout) to do a gradual rollout to a **specific segment** of your user base.
 
 ![A toggle with the gradual rollout strategy. The toggle is constrained on the custom content field "region" and set to only activate if the region is Africa or Europe.](/img/custom-constraints.png)

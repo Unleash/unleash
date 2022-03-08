@@ -117,21 +117,17 @@ Date and time operators only support single values.
 
 ### String operators
 
-:::note Legacy note
-For backwards compatibility reasons, `IN` and `NOT_IN` are always case-sensitive.
-:::
-
 String operators differ from the other categories in two different ways:
 - all operators accept multiple values
 - most operators also consider [letter case](https://en.wikipedia.org/wiki/Letter_case "letter case on Wikipedia") and can be set to be case-sensitive or case-insensitive
 
-| Name              | `true` if `<context-field>` ...                | Available since |
-|-------------------|------------------------------------------------|-----------------|
-| `IN`              | is **equal** to any of the provided values     | v3.3            |
-| `NOT_IN`          | is **not equal** to any of the provided values | v3.3            |
-| `STR_CONTAINS`    | **contains** any of the provided strings       | v4.9            |
-| `STR_ENDS_WITH`   | **ends** with any of the provided strings      | v4.9            |
-| `STR_STARTS_WITH` | **starts** with any of the provided strings    | v4.9            |
+| Name              | `true` if `<context-field>` ...                | Supports case-insensitivity | Available since |
+|-------------------|------------------------------------------------|-----------------------------|-----------------|
+| `IN`              | is **equal** to any of the provided values     | No                          | v3.3            |
+| `NOT_IN`          | is **not equal** to any of the provided values | No                          | v3.3            |
+| `STR_CONTAINS`    | **contains** any of the provided strings       | Yes                         | v4.9            |
+| `STR_ENDS_WITH`   | **ends** with any of the provided strings      | Yes                         | v4.9            |
+| `STR_STARTS_WITH` | **starts** with any of the provided strings    | Yes                         | v4.9            |
 
 
 ### Versioning (SemVer) operators

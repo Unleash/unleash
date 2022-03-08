@@ -68,9 +68,9 @@ In this section, `<context-field>` is used as a placeholder for an arbitrary con
 Unleash currently supports 15 different constraint operators.
 The operators can be grouped into four different categories based on their method of comparison.
 
-### Constraint negation / inversion
+### Constraint negation / inversion {#constraint-negation}
 
-All operators can be **negated**, meaning that they get their opposite value. Constraints are evaluated to either `true` or `false`. Negating an operator would turn a `true` value into a `false` and a `false` value into a `true` value.
+All constraint expressions can be **negated**, meaning that they get their opposite value. Constraints are evaluated to either `true` or `false`. Negating a constraint would turn a `true` value into a `false` and a `false` value into a `true` value.
 
 For instance, using the numeric equivalence operator `NUM_EQ`, the following truth table shows the how value negation affects the result:
 
@@ -164,6 +164,12 @@ Strategy constraints require [the Unleash Context](../user_guide/unleash_context
 If the strategy constraint uses a [**standard Unleash Context field**](../user_guide/unleash_context#structure), set the context field to the value you wish to give it.
 
 If the strategy constraint uses a [**custom context field**](../user_guide/unleash_context#custom-context-fields), use the Unleash Context's `properties` field. Use the name of the custom context field as a key and set the value to your desired string.
+
+If you set a context field to a value that the SDKs cannot parse correctly for a chosen constraint operator, the strategy constraint will evaluate to false.
+In other words: if you have a strategy constraint operator that expects a number, such as `NUM_GT`, but you set the corresponding context field to a string value, then the expression will be false: `"some string"` is **not** greater than `5`.
+This value can still be negated as explained in [the section on negating values](#constraint-negation).
+
+
 
 ## [Deprecated]: Constrain on a specific environment {#constrain-on-a-specific-environment}
 

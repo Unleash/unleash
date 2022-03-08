@@ -17,15 +17,15 @@ _All fields are optional_, but some strategies depend on certain fields being pr
 
 The below table gives a brief overview over what the fields' intended usage is, their lifetime, and their type. Note that the exact type can vary between programming languages and implementations. Be sure to consult your specific client SDK for more information on its implementation of the Unleash Context.
 
-| field name        | type                  | lifetime | description                                                                                | introduced in |
-|-------------------|-----------------------|----------|--------------------------------------------------------------------------------------------|---------------|
-| `appName`         | `string`              | static   | the name of the application                                                                |               |
-| `environment`[^1] | `string`              | static   | the environment the app is running in                                                      |               |
-| `userId`          | `string`              | dynamic  | an identifier for the current user                                                         |               |
-| `sessionId`       | `string`              | dynamic  | an identifier for the current session                                                      |               |
-| `remoteAddress`   | `string`              | dynamic  | an identifier for the current session                                                      |               |
-| `properties`      | `Map<string, string>` | dynamic  | a key-value store of any data you want                                                     |               |
-| `currentTime`[^2]     | `DateTime`/`string`   | special / read-only  | A `DateTime` (or similar) data class instance or a string in an RFC3339-compatible format. |    v4.9                                  |
+| field name        | type                  | lifetime            | description                                                                                |
+|-------------------|-----------------------|---------------------|--------------------------------------------------------------------------------------------|
+| `appName`         | `string`              | static              | the name of the application                                                                |
+| `environment`[^1] | `string`              | static              | the environment the app is running in                                                      |
+| `userId`          | `string`              | dynamic             | an identifier for the current user                                                         |
+| `sessionId`       | `string`              | dynamic             | an identifier for the current session                                                      |
+| `remoteAddress`   | `string`              | dynamic             | an identifier for the current session                                                      |
+| `properties`      | `Map<string, string>` | dynamic             | a key-value store of any data you want                                                     |
+| `currentTime`[^2] | `DateTime`/`string`   | special / read-only | A `DateTime` (or similar) data class instance or a string in an RFC3339-compatible format. |
 
 
 ### The `properties` field

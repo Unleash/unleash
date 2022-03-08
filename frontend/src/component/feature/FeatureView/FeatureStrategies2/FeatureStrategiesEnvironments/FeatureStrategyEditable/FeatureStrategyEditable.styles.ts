@@ -13,7 +13,7 @@ export const useStyles = makeStyles(theme => ({
         padding: '0.15rem 0.2rem',
         borderRadius: '3px',
         fontSize: theme.fontSizes.smallerBody,
-        zIndex: 400,
+        zIndex: 300,
         [theme.breakpoints.down(500)]: {
             right: 100,
         },

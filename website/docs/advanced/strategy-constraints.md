@@ -13,12 +13,33 @@ Unleash 4.9 introduced a more comprehensive set of constraint operators. These r
 This page explains what strategy constraints are in Unleash and how they work. If you want to know *how you add* strategy constraints to an activation strategy, see [the corresponding how-to guide](../how-to/how-to-add-strategy-constraints.md "how to add strategy constraints").
 :::
 
-**Strategy constraints** allow you to set preconditions on activation strategies that must be satisfied for the activation strategy to take effect. For example, you might want a strategy to only trigger if a user belongs to a specific group or is in a specific country.
+**Strategy constraints** are conditions that must be satisifed for an [activation strategy](../user_guide/activation_strategy) to be evaluated for a feature toggle.
+With strategy constraints, you can:
+- roll out a feature **only to users in a specific region**
+- schedule a feature to be **released at a specific time**
+- make a feature available for **a limited time only**
+- release a feature to users with one of a set of **email addresses**
+- ... and much more!
 
-Constraints use fields from the [Unleash Context](../user_guide/unleash_context) to determine whether a strategy should apply or not. You can constrain on both [standard context fields](../user_guide/unleash_context#structure) and on [custom context fields](../user_guide/unleash_context#custom-context-fields). A common use for using custom context fields is a multi-tenant service where you want to use a tenant identifier to control the feature rollout. This would allow you to decide which users should get access to your new feature based on the tenant. Other commonly seen custom context fields include fields for region, country, and customer type.
 
+Strategy constraints use fields from the [Unleash Context](../user_guide/unleash_context) to determine whether a strategy should apply or not.
+You can constrain both on [standard context fields](../user_guide/unleash_context#structure) and on [custom context fields](../user_guide/unleash_context#custom-context-fields).
 
-Combining strategy constraints with the [gradual rollout strategy](../user_guide/activation_strategy#gradual-rollout) allows you to do a gradual rollout to a specific segment of your user base.
+## Constraining on custom context fields
+
+:::info Making custom context fields available
+To be able to constrain on a field, it must be listed under the Context Field menu. If a field isn't listed, you can add it yourself. See [the how-to guide for creating your own custom fields](../how-to/how-to-define-custom-context-fields.md) for more info.
+:::
+
+Unleash only provides a limited set of context fields by default, and they may not fulfill all your needs.
+By using [custom context fields](../user_guide/unleash_context#custom-context-fields), you can tailor strategy constraints to your specific use case, such as:
+- based on tenant IDs,release a feature to only specific tenants in a multi-tenant setup
+- release a feature to users in a specific region
+- release a feature only to beta testers
+
+<!-- Are there any new built-in context fields? -->
+
+You can also combine strategy constraints with the [gradual rollout strategy](../user_guide/activation_strategy#gradual-rollout) to do a gradual rollout to a **specific segment** of your user base.
 
 ![A toggle with the gradual rollout strategy. The toggle is constrained on the custom content field "region" and set to only activate if the region is Africa or Europe.](/img/custom-constraints.png)
 
@@ -139,16 +160,11 @@ SemVer operators only support single values.
 This section gives a brief overview over to use the client SDKs to interact with strategy constraints. The exact steps will vary depending on which client you are using, so make sure to consult the documentation for your specific client SDK.
 :::
 
-Strategy constraints require [the Unleash Context](../user_guide/unleash_context) to work. All official [Unleash client SDKs](../sdks/index.md) support the option to pass [dynamic context values](../user_guide/unleash_context#structure "Unleash Context, section: structure") to the `isEnabled` function (or the SDKs equivalent).
+Strategy constraints require [the Unleash Context](../user_guide/unleash_context) to work. All official [Unleash client SDKs](../sdks/index.md) support the option to pass [dynamic context values](../user_guide/unleash_context#structure "Unleash Context, section: structure") to the `isEnabled` function (or the SDK's equivalent).
 
 If the strategy constraint uses a [**standard Unleash Context field**](../user_guide/unleash_context#structure), set the context field to the value you wish to give it.
 
 If the strategy constraint uses a [**custom context field**](../user_guide/unleash_context#custom-context-fields), use the Unleash Context's `properties` field. Use the name of the custom context field as a key and set the value to your desired string.
-
-## Prerequisites
-
-To be able to constrain on a field, it must be listed under the Context Field menu. If a field isn't listed, you can add it yourself. See [the how-to guide for creating your own custom fields](../how-to/how-to-define-custom-context-fields.md) for more info.
-
 
 ## [Deprecated]: Constrain on a specific environment {#constrain-on-a-specific-environment}
 

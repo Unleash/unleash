@@ -26,7 +26,6 @@ The below table gives a brief overview over what the fields' intended usage is, 
 | `remoteAddress`   | `string`              | dynamic  | an identifier for the current session                                                                                                               |
 | `properties`      | `Map<string, string>` | dynamic  | a key-value store of any data you want                                                                                                              |
 | `currentTime`[^2] | `DateTime`/`string`   | dynamic  | A `DateTime` (or similar) data class instance or a string in an RFC3339-compatible format. **Defaults to the current time** if not set by the user. |
-|                   |                       |          |                                                                                                                                                     |
 
 
 ### The `properties` field

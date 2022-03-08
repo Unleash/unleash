@@ -52,6 +52,7 @@ export default class User implements IUser {
         name,
         email,
         username,
+        permissions,
         imageUrl,
         seenAt,
         loginAttempts,
@@ -68,6 +69,7 @@ export default class User implements IUser {
         this.name = name;
         this.username = username;
         this.email = email;
+        this.permissions = permissions;
         this.imageUrl = imageUrl || this.generateImageUrl();
         this.seenAt = seenAt;
         this.loginAttempts = loginAttempts;

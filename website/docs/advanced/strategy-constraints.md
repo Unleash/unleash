@@ -134,19 +134,24 @@ String operators differ from the other categories in two different ways:
 
 The SemVer operators are used to compare version numbers such as application versions, dependency versions, etc.
 
+The SemVer input must follow a few rules:
+- The value you enter must at least consist of three version numbers separated by full stops. Example: `1.2.3`
+- Optionally, you can also add pre-release version information by adding a hyphen and series of dot separated identifiers after the patch version. Example: `1.2.3-rc.2`
+
 You can enter SemVer values with or without a leading "v": `v1.2.3` and `1.2.3` are both valid.
 Importantly, they are also considered equal.
 
-Versions with pre-release indicators (e.g. `4.8.0-rc.2`) are considered less than versions without (e.g. `4.8.0`) in accordance with [the SemVer specification](https://semver.org/#spec-item-11).
+Versions with pre-release indicators (e.g. `4.8.0-rc.2`) are considered *less than* versions without (e.g. `4.8.0`) in accordance with [the SemVer specification, item 11](https://semver.org/#spec-item-11).
+
+You can read more about SemVer in [the full SemVer specification](https://semver.org/).
 
 SemVer operators only support single values.
 
-| Name        | `true` if `<context-field>` is ...            |
+| Name        | `true` if `<context-field>` is ...           |
 |-------------|----------------------------------------------|
 | `SEMVER_EQ` | **equal** to the provided value              |
 | `SEMVER_GT` | **strictly greater than** the provided value |
 | `SEMVER_LT` | **strictly less than** the provided value    |
-
 
 ## Interacting with strategy constraints in the client SDKs {#sdks}
 

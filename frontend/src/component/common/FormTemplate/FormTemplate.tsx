@@ -8,12 +8,14 @@ import Loader from '../Loader/Loader';
 import copy from 'copy-to-clipboard';
 import useToast from '../../../hooks/useToast';
 import React from 'react';
+import classNames from 'classnames';
 
 interface ICreateProps {
     title: string;
     description: string;
     documentationLink: string;
     loading?: boolean;
+    modal?: boolean;
     formatApiCode: () => string;
 }
 
@@ -23,6 +25,7 @@ const FormTemplate: React.FC<ICreateProps> = ({
     children,
     documentationLink,
     loading,
+    modal,
     formatApiCode,
 }) => {
     const { setToastData } = useToast();
@@ -50,7 +53,9 @@ const FormTemplate: React.FC<ICreateProps> = ({
     };
 
     return (
-        <section className={styles.container}>
+        <section
+            className={classNames(styles.container, modal && styles.modal)}
+        >
             <aside className={styles.sidebar}>
                 <h2 className={styles.title}>{title}</h2>
                 <p className={styles.description}>{description}</p>

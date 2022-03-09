@@ -19,7 +19,7 @@ import ConditionallyRender from '../../common/ConditionallyRender';
 import { Alert } from '@material-ui/lab';
 import { getTogglePath } from '../../../utils/route-path-helpers';
 import useFeatureApi from '../../../hooks/api/actions/useFeatureApi/useFeatureApi';
-import useFeature from '../../../hooks/api/getters/useFeature/useFeature';
+import { useFeature } from '../../../hooks/api/getters/useFeature/useFeature';
 import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
 
 export const CopyFeatureToggle = () => {

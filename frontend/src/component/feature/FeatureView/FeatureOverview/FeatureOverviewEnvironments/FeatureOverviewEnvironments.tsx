@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import useFeature from '../../../../../hooks/api/getters/useFeature/useFeature';
+import { useFeature } from '../../../../../hooks/api/getters/useFeature/useFeature';
 import { IFeatureViewParams } from '../../../../../interfaces/params';
 
 import FeatureOverviewEnvironment from './FeatureOverviewEnvironment/FeatureOverviewEnvironment';

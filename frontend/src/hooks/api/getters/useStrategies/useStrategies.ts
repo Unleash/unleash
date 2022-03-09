@@ -1,12 +1,38 @@
-import useSWR, { mutate, SWRConfiguration } from 'swr';
-import { useEffect, useState } from 'react';
+import useSWR, { mutate } from 'swr';
+import { useCallback } from 'react';
 import { formatApiPath } from '../../../../utils/format-path';
 import { IStrategy } from '../../../../interfaces/strategy';
 import handleErrorResponses from '../httpErrorResponseHandler';
 
-export const STRATEGIES_CACHE_KEY = 'api/admin/strategies';
+interface IUseStrategiesOutput {
+    strategies: IStrategy[];
+    refetchStrategies: () => void;
+    loading: boolean;
+    error?: Error;
+}
 
-const flexibleRolloutStrategy: IStrategy = {
+export const useStrategies = (): IUseStrategiesOutput => {
+    const { data, error } = useSWR(STRATEGIES_PATH, fetcher);
+
+    const refetchStrategies = useCallback(() => {
+        mutate(STRATEGIES_PATH).catch(console.warn);
+    }, []);
+
+    return {
+        strategies: data?.strategies || defaultStrategies,
+        refetchStrategies,
+        loading: !error && !data,
+        error,
+    };
+};
+
+const fetcher = (): Promise<{ strategies: IStrategy[] }> => {
+    return fetch(STRATEGIES_PATH)
+        .then(handleErrorResponses('Strategies'))
+        .then(res => res.json());
+};
+
+const flexibleRollout: IStrategy = {
     deprecated: false,
     name: 'flexibleRollout',
     displayName: 'Gradual rollout',
@@ -26,43 +52,15 @@ const flexibleRolloutStrategy: IStrategy = {
             description: 'Used to defined stickiness',
             required: true,
         },
-        { name: 'groupId', type: 'string', description: '', required: true },
+        {
+            name: 'groupId',
+            type: 'string',
+            description: '',
+            required: true,
+        },
     ],
 };
 
-const useStrategies = (options: SWRConfiguration = {}) => {
-    const fetcher = () => {
-        const path = formatApiPath(`api/admin/strategies`);
+const defaultStrategies: IStrategy[] = [flexibleRollout];
 
-        return fetch(path, {
-            method: 'GET',
-            credentials: 'include',
-        })
-            .then(handleErrorResponses('Strategies'))
-            .then(res => res.json());
-    };
-
-    const { data, error } = useSWR<{ strategies: IStrategy[] }>(
-        STRATEGIES_CACHE_KEY,
-        fetcher,
-        options
-    );
-    const [loading, setLoading] = useState(!error && !data);
-
-    const refetchStrategies = () => {
-        mutate(STRATEGIES_CACHE_KEY);
-    };
-
-    useEffect(() => {
-        setLoading(!error && !data);
-    }, [data, error]);
-
-    return {
-        strategies: data?.strategies || [flexibleRolloutStrategy],
-        error,
-        loading,
-        refetchStrategies,
-    };
-};
-
-export default useStrategies;
+const STRATEGIES_PATH = formatApiPath(`api/admin/strategies`);

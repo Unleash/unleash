@@ -2,7 +2,7 @@ import { Tooltip } from '@material-ui/core';
 import { useState } from 'react';
 import { useParams } from 'react-router';
 import useFeatureApi from '../../../../../hooks/api/actions/useFeatureApi/useFeatureApi';
-import useFeature from '../../../../../hooks/api/getters/useFeature/useFeature';
+import { useFeature } from '../../../../../hooks/api/getters/useFeature/useFeature';
 import { IFeatureViewParams } from '../../../../../interfaces/params';
 import EnvironmentStrategyDialog from '../../../../common/EnvironmentStrategiesDialog/EnvironmentStrategyDialog';
 import FeatureOverviewEnvSwitch from './FeatureOverviewEnvSwitch/FeatureOverviewEnvSwitch';

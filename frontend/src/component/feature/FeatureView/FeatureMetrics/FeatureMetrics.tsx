@@ -13,7 +13,7 @@ import { FeatureMetricsContent } from './FeatureMetricsContent/FeatureMetricsCon
 import { useQueryStringNumberState } from '../../../../hooks/useQueryStringNumberState';
 import { useQueryStringState } from '../../../../hooks/useQueryStringState';
 import { FeatureMetricsChips } from './FeatureMetricsChips/FeatureMetricsChips';
-import useFeature from '../../../../hooks/api/getters/useFeature/useFeature';
+import { useFeature } from '../../../../hooks/api/getters/useFeature/useFeature';
 import ConditionallyRender from '../../../common/ConditionallyRender';
 import { useStyles } from './FeatureMetrics.styles';
 

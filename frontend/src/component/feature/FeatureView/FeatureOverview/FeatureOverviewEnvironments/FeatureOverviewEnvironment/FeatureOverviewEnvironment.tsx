@@ -7,33 +7,31 @@ import {
 import { ExpandMore } from '@material-ui/icons';
 import React from 'react';
 import { useParams } from 'react-router';
-import { useHistory } from 'react-router-dom';
-import useFeature from '../../../../../../hooks/api/getters/useFeature/useFeature';
+import { useFeature } from '../../../../../../hooks/api/getters/useFeature/useFeature';
 import useFeatureMetrics from '../../../../../../hooks/api/getters/useFeatureMetrics/useFeatureMetrics';
 import { IFeatureEnvironment } from '../../../../../../interfaces/featureToggle';
 import { IFeatureViewParams } from '../../../../../../interfaces/params';
 import { getFeatureMetrics } from '../../../../../../utils/get-feature-metrics';
 import {
     getFeatureStrategyIcon,
-    getHumanReadableStrategyName,
+    formatStrategyName,
 } from '../../../../../../utils/strategy-names';
 import ConditionallyRender from '../../../../../common/ConditionallyRender';
 import DisabledIndicator from '../../../../../common/DisabledIndicator/DisabledIndicator';
 import EnvironmentIcon from '../../../../../common/EnvironmentIcon/EnvironmentIcon';
-import PermissionButton from '../../../../../common/PermissionButton/PermissionButton';
 import StringTruncator from '../../../../../common/StringTruncator/StringTruncator';
-import { CREATE_FEATURE_STRATEGY } from '../../../../../providers/AccessProvider/permissions';
-
 import { useStyles } from './FeatureOverviewEnvironment.styles';
 import FeatureOverviewEnvironmentBody from './FeatureOverviewEnvironmentBody/FeatureOverviewEnvironmentBody';
 import FeatureOverviewEnvironmentFooter from './FeatureOverviewEnvironmentFooter/FeatureOverviewEnvironmentFooter';
 import FeatureOverviewEnvironmentMetrics from './FeatureOverviewEnvironmentMetrics/FeatureOverviewEnvironmentMetrics';
+import { FeatureStrategyMenu } from 'component/feature/FeatureStrategy/FeatureStrategyMenu/FeatureStrategyMenu';
 
 interface IStrategyIconObject {
     count: number;
     Icon: React.ReactElement;
     name: string;
 }
+
 interface IFeatureOverviewEnvironmentProps {
     env: IFeatureEnvironment;
 }
@@ -45,7 +43,6 @@ const FeatureOverviewEnvironment = ({
     const { projectId, featureId } = useParams<IFeatureViewParams>();
     const { metrics } = useFeatureMetrics(projectId, featureId);
     const { feature } = useFeature(projectId, featureId);
-    const history = useHistory();
 
     const featureMetrics = getFeatureMetrics(feature?.environments, metrics);
     const environmentMetric = featureMetrics.find(
@@ -62,8 +59,6 @@ const FeatureOverviewEnvironment = ({
         }
         return `This environment is disabled, which means that none of your strategies are executing`;
     };
-
-    const strategiesLink = `/projects/${projectId}/features/${featureId}/strategies?environment=${featureEnvironment?.name}&addStrategy=true`;
 
     const getStrategyIcons = () => {
         const strategyObjects = featureEnvironment?.strategies.reduce(
@@ -110,24 +105,21 @@ const FeatureOverviewEnvironment = ({
                             />
                         </div>
                         <div className={styles.container}>
-                            <PermissionButton
-                                permission={CREATE_FEATURE_STRATEGY}
-                                projectId={projectId}
-                                environmentId={env.name}
-                                onClick={() => history.push(strategiesLink)}
-                                className={styles.addStrategyButton}
-                            >
-                                Add strategy
-                            </PermissionButton>
+                            <div className={styles.strategyMenu}>
+                                <FeatureStrategyMenu
+                                    label="Add strategy"
+                                    projectId={projectId}
+                                    featureId={featureId}
+                                    environmentId={env.name}
+                                    variant="text"
+                                />
+                            </div>
                             <ConditionallyRender
                                 condition={
                                     featureEnvironment?.strategies.length !== 0
                                 }
                                 show={
                                     <>
-                                        <span className={styles.separator}>
-                                            |
-                                        </span>
                                         <div
                                             className={
                                                 styles.strategiesIconsContainer
@@ -136,7 +128,7 @@ const FeatureOverviewEnvironment = ({
                                             {getStrategyIcons()?.map(
                                                 ({ name, Icon }) => (
                                                     <Tooltip
-                                                        title={getHumanReadableStrategyName(
+                                                        title={formatStrategyName(
                                                             name
                                                         )}
                                                         arrow
@@ -162,7 +154,6 @@ const FeatureOverviewEnvironment = ({
                                 }
                             />
                         </div>
-
                         <ConditionallyRender
                             condition={!env.enabled}
                             show={

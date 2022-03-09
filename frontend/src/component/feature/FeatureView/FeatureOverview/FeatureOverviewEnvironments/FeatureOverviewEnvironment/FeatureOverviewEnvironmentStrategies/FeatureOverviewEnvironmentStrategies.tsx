@@ -16,7 +16,7 @@ const FeatureOverviewEnvironmentStrategies = ({
                 <FeatureOverviewEnvironmentStrategy
                     key={strategy.id}
                     strategy={strategy}
-                    environmentName={environmentName}
+                    environmentId={environmentName}
                 />
             );
         });

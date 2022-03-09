@@ -148,8 +148,7 @@ export const ConstraintAccordionEdit = ({
         return false;
     };
 
-    const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
+    const onSubmit = async () => {
         const hasValues = validateConstraintValues();
         if (!hasValues) return;
         const [typeValidatorResult, err] = validator();
@@ -183,7 +182,7 @@ export const ConstraintAccordionEdit = ({
     }, [localConstraint.operator, localConstraint.contextName, setError]);
 
     return (
-        <form onSubmit={onSubmit} className={styles.form}>
+        <div className={styles.form}>
             <Accordion
                 style={{ boxShadow: 'none' }}
                 className={styles.accordion}
@@ -191,8 +190,10 @@ export const ConstraintAccordionEdit = ({
                 TransitionProps={{
                     onExited: () => {
                         if (action === CANCEL) {
+                            setAction('');
                             onCancel();
                         } else if (action === SAVE) {
+                            setAction('');
                             onSave(localConstraint);
                         }
                     },
@@ -221,6 +222,7 @@ export const ConstraintAccordionEdit = ({
                         triggerTransition={triggerTransition}
                         setAction={setAction}
                         setInvertedOperator={setInvertedOperator}
+                        onSubmit={onSubmit}
                     >
                         <ResolveInput
                             setValues={setValues}
@@ -236,6 +238,6 @@ export const ConstraintAccordionEdit = ({
                     </ConstraintAccordionEditBody>
                 </AccordionDetails>
             </Accordion>
-        </form>
+        </div>
     );
 };

@@ -6,7 +6,7 @@ import FeatureTypeSelect from './FeatureTypeSelect/FeatureTypeSelect';
 import { useParams } from 'react-router';
 import AccessContext from '../../../../../contexts/AccessContext';
 import { UPDATE_FEATURE } from '../../../../providers/AccessProvider/permissions';
-import useFeature from '../../../../../hooks/api/getters/useFeature/useFeature';
+import { useFeature } from '../../../../../hooks/api/getters/useFeature/useFeature';
 import { IFeatureViewParams } from '../../../../../interfaces/params';
 import useToast from '../../../../../hooks/useToast';
 import useFeatureApi from '../../../../../hooks/api/actions/useFeatureApi/useFeatureApi';
@@ -16,7 +16,7 @@ import { formatUnknownError } from '../../../../../utils/format-unknown-error';
 const FeatureSettingsMetadata = () => {
     const { hasAccess } = useContext(AccessContext);
     const { projectId, featureId } = useParams<IFeatureViewParams>();
-    const { refetch, feature } = useFeature(projectId, featureId);
+    const { feature, refetchFeature } = useFeature(projectId, featureId);
     const [description, setDescription] = useState(feature.description);
     const [type, setType] = useState(feature.type);
     const editable = hasAccess(UPDATE_FEATURE, projectId);
@@ -54,7 +54,7 @@ const FeatureSettingsMetadata = () => {
                 text: 'Successfully updated feature toggle metadata',
             });
             setDirty(false);
-            refetch();
+            refetchFeature();
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }

@@ -6,20 +6,22 @@ export const useStyles = makeStyles(theme => ({
         width: '100%',
         display: 'flex',
         margin: '0 auto',
+        borderRadius: '1rem',
+        overflow: 'hidden',
         [theme.breakpoints.down(900)]: {
             flexDirection: 'column',
         },
+    },
+    modal: {
+        minHeight: '100vh',
+        borderRadius: 0,
     },
     sidebar: {
         backgroundColor: theme.palette.primary.light,
         padding: '2rem',
         width: '35%',
-        borderTopLeftRadius: '12.5px',
-        borderBottomLeftRadius: '12.5px',
         [theme.breakpoints.down(900)]: {
             width: '100%',
-            borderBottomLeftRadius: '0',
-            borderTopRightRadius: '12.5px',
         },
         [theme.breakpoints.down(500)]: {
             padding: '2rem 1rem',
@@ -60,12 +62,8 @@ export const useStyles = makeStyles(theme => ({
         flexDirection: 'column',
         padding: '2rem',
         width: '65%',
-        borderTopRightRadius: '12.5px',
-        borderBottomRightRadius: '12.5px',
         [theme.breakpoints.down(900)]: {
             width: '100%',
-            borderBottomLeftRadius: '12.5px',
-            borderTopRightRadius: '0',
         },
         [theme.breakpoints.down(500)]: {
             padding: '2rem 1rem',

@@ -31,8 +31,8 @@ import Dialogue from 'component/common/Dialogue';
 import { ADD_NEW_STRATEGY_ID } from 'testIds';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
-import { getHumanReadableStrategyName } from 'utils/strategy-names';
-import useStrategies from 'hooks/api/getters/useStrategies/useStrategies';
+import { formatStrategyName } from 'utils/strategy-names';
+import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import useStrategiesApi from 'hooks/api/actions/useStrategiesApi/useStrategiesApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/format-unknown-error';
@@ -93,7 +93,7 @@ export const StrategiesList = () => {
 
     const strategyLink = (name: string, deprecated: boolean) => (
         <Link to={`/strategies/${name}`}>
-            <strong>{getHumanReadableStrategyName(name)}</strong>
+            <strong>{formatStrategyName(name)}</strong>
             <ConditionallyRender
                 condition={deprecated}
                 show={<small> (Deprecated)</small>}

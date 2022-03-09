@@ -10,7 +10,7 @@ import AdminInvoice from '../admin/invoice/InvoiceAdminPage';
 import AdminUsers from '../admin/users/UsersAdmin';
 import { AuthSettings } from '../admin/auth/AuthSettings';
 import Login from '../user/Login/Login';
-import { P, C, E, EEA, RE } from '../common/flags';
+import { C, E, EEA, P, RE } from '../common/flags';
 import { NewUser } from '../user/NewUser/NewUser';
 import ResetPassword from '../user/ResetPassword/ResetPassword';
 import ForgottenPassword from '../user/ForgottenPassword/ForgottenPassword';
@@ -73,15 +73,6 @@ export const routes = [
         title: ':name',
         parent: '/archive',
         component: RedirectArchive,
-        type: 'protected',
-        layout: 'main',
-        menu: {},
-    },
-    {
-        path: '/projects/:id/features/:name/:activeTab/copy',
-        parent: '/projects/:id/features/:name/:activeTab',
-        title: 'Copy',
-        component: CopyFeatureToggle,
         type: 'protected',
         layout: 'main',
         menu: {},

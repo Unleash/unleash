@@ -7,7 +7,13 @@ export const useStyles = makeStyles(theme => ({
         borderRadius: '3px',
         position: 'relative',
     },
-    code: { wordBreak: 'break-all', color: '#fff', whiteSpace: 'pre-wrap' },
+    code: {
+        margin: 0,
+        wordBreak: 'break-all',
+        color: '#fff',
+        whiteSpace: 'pre-wrap',
+        fontSize: theme.fontSizes.smallBody,
+    },
     icon: {
         fill: '#fff',
     },

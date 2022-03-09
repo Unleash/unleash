@@ -4,6 +4,7 @@ import { CANCEL } from '../ConstraintAccordionEdit';
 
 import { ConstraintFormHeader } from './ConstraintFormHeader/ConstraintFormHeader';
 import { useStyles } from './ConstraintAccordionEditBody.styles';
+import React from 'react';
 
 interface IConstraintAccordionBody {
     localConstraint: IConstraint;
@@ -13,6 +14,7 @@ interface IConstraintAccordionBody {
     setAction: React.Dispatch<React.SetStateAction<string>>;
     setCaseInsensitive: () => void;
     setInvertedOperator: () => void;
+    onSubmit: () => void;
 }
 
 export const ConstraintAccordionEditBody: React.FC<
@@ -23,6 +25,7 @@ export const ConstraintAccordionEditBody: React.FC<
     triggerTransition,
     setInvertedOperator,
     setAction,
+    onSubmit,
 }) => {
     const styles = useStyles();
 
@@ -38,7 +41,8 @@ export const ConstraintAccordionEditBody: React.FC<
             <div className={styles.buttonContainer}>
                 <div className={styles.innerButtonContainer}>
                     <Button
-                        type="submit"
+                        type="button"
+                        onClick={onSubmit}
                         variant="contained"
                         color="primary"
                         className={styles.leftButton}

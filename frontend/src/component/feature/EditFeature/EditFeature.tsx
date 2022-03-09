@@ -6,7 +6,7 @@ import * as jsonpatch from 'fast-json-patch';
 import { UpdateButton } from 'component/common/UpdateButton/UpdateButton';
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
-import useFeature from 'hooks/api/getters/useFeature/useFeature';
+import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
 import { IFeatureViewParams } from 'interfaces/params';

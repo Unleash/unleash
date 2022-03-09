@@ -10,6 +10,7 @@ import PermissionIconButton from 'component/common/PermissionIconButton/Permissi
 import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { useParams } from 'react-router-dom';
 import { IFeatureViewParams } from 'interfaces/params';
+import React from 'react';
 
 interface IConstraintAccordionViewHeaderProps {
     compact: boolean;
@@ -33,6 +34,16 @@ export const ConstraintAccordionViewHeader = ({
     const smallScreen = useMediaQuery(`(max-width:${790}px)`);
 
     const minWidthHeader = compact || smallScreen ? '100px' : '175px';
+
+    const onEditClick = (event: React.SyntheticEvent) => {
+        event.stopPropagation();
+        onEdit();
+    };
+
+    const onDeleteClick = (event: React.SyntheticEvent) => {
+        event.stopPropagation();
+        onDelete();
+    };
 
     return (
         <div className={styles.headerContainer}>
@@ -63,7 +74,7 @@ export const ConstraintAccordionViewHeader = ({
             </div>
             <div className={styles.headerActions}>
                 <PermissionIconButton
-                    onClick={() => onEdit()}
+                    onClick={onEditClick}
                     permission={UPDATE_FEATURE_STRATEGY}
                     projectId={projectId}
                     environmentId={environmentId}
@@ -71,7 +82,7 @@ export const ConstraintAccordionViewHeader = ({
                     <Edit titleAccess="edit constraint" />
                 </PermissionIconButton>
                 <PermissionIconButton
-                    onClick={() => onDelete()}
+                    onClick={onDeleteClick}
                     permission={UPDATE_FEATURE_STRATEGY}
                     projectId={projectId}
                     environmentId={environmentId}

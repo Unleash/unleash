@@ -5,7 +5,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useParams } from 'react-router';
 import { IFeatureViewParams } from '../../../interfaces/params';
 import { IConstraint } from '../../../interfaces/strategy';
-import FeatureStrategiesSeparator from '../../feature/FeatureView/FeatureStrategies2/FeatureStrategiesEnvironments/FeatureStrategiesSeparator/FeatureStrategiesSeparator';
+import { StrategySeparator } from '../StrategySeparator/StrategySeparator';
 import { UPDATE_FEATURE } from '../../providers/AccessProvider/permissions';
 import ConditionallyRender from '../ConditionallyRender';
 import PermissionIconButton from '../PermissionIconButton/PermissionIconButton';
@@ -48,12 +48,9 @@ const Constraint = ({
         <div className={classes + ' ' + className} {...rest}>
             <div className={classes + ' ' + className} {...rest}>
                 <StringTruncator text={constraint.contextName} maxWidth="125" />
-                <FeatureStrategiesSeparator
-                    text={constraint.operator}
-                    maxWidth="none"
-                />
+                <StrategySeparator text={constraint.operator} maxWidth="none" />
                 <span className={styles.values}>
-                    {constraint.values?.join(', ')}
+                    {constraint.values?.join(', ') ?? constraint.value}
                 </span>
             </div>
 

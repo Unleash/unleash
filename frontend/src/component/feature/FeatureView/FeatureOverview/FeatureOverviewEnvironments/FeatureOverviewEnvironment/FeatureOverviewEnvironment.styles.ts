@@ -74,7 +74,7 @@ export const useStyles = makeStyles(theme => ({
         marginBottom: '1rem',
     },
     strategyIconContainer: {
-        minWidth: '50px',
+        minWidth: '40px',
         marginRight: '5px',
         display: 'flex',
         justifyContent: 'center',
@@ -84,7 +84,6 @@ export const useStyles = makeStyles(theme => ({
         display: 'flex',
         alignItems: 'center',
         position: 'relative',
-        marginLeft: '-0.75rem',
         [theme.breakpoints.down(560)]: {
             marginLeft: '0px',
             top: '5px',
@@ -112,43 +111,19 @@ export const useStyles = makeStyles(theme => ({
             padding: '0.5rem',
         },
     },
-
     strategyIcon: {
         fill: theme.palette.grey[600],
     },
     container: {
         display: 'flex',
         alignItems: 'center',
-        marginLeft: '1.3rem',
+        marginLeft: '1.8rem',
         [theme.breakpoints.down(560)]: {
             flexDirection: 'column',
             marginLeft: '0',
         },
     },
-    addStrategyButton: {
-        background: 'none',
-        textDecoration: 'none',
-        boxShadow: 'none',
-        color: theme.palette.primary.main,
-        fontWeight: 'normal',
-        '&:hover': {
-            background: 'none',
-            textDecoration: 'none',
-            boxShadow: 'none',
-            color: theme.palette.primary.main,
-            fontWeight: 'normal',
-        },
-        '&:disabled': {
-            height: '35px',
-            background: 'transparent',
-            color: theme.palette.grey[600],
-        },
-    },
-    separator: {
-        marginLeft: '-10px',
-        marginRight: '9px',
-        [theme.breakpoints.down(560)]: {
-            display: 'none',
-        },
+    strategyMenu: {
+        marginRight: '-.5rem',
     },
 }));

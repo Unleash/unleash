@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import { disableFeatureStrategiesProductionGuard } from '../../../src/component/feature/FeatureView/FeatureStrategies/FeatureStrategiesEnvironments/FeatureStrategiesProductionGuard/FeatureStrategiesProductionGuard';
+import { disableFeatureStrategiesProductionGuard } from '../../../src/component/feature/FeatureStrategy/FeatureStrategyProdGuard/FeatureStrategyProdGuard';
 
 const randomId = String(Math.random()).split('.')[1];
 const featureToggleName = `unleash-e2e-${randomId}`;
@@ -90,9 +90,11 @@ describe('feature', () => {
     });
 
     it('can add a gradual rollout strategy to the development environment', () => {
-        cy.visit(`/projects/default/features/${featureToggleName}/strategies`);
-        cy.get('[data-test=ADD_NEW_STRATEGY_ID]').click();
-        cy.get('[data-test=ADD_NEW_STRATEGY_CARD_BUTTON_ID-2').click();
+        cy.visit(
+            `/projects/default/features/${featureToggleName}/strategies/create?environmentId=development&strategyName=flexibleRollout`
+        );
+
+        cy.wait(1000);
         cy.get('[data-test=ROLLOUT_SLIDER_ID')
             .click()
             .type('{leftarrow}'.repeat(20));
@@ -126,16 +128,17 @@ describe('feature', () => {
             }
         ).as('addStrategyToFeature');
 
-        cy.get('[data-test=ADD_NEW_STRATEGY_SAVE_ID]').first().click();
+        cy.get(`[data-test=STRATEGY_FORM_SUBMIT_ID]`).first().click();
         cy.wait('@addStrategyToFeature');
     });
 
     it('can update a strategy in the development environment', () => {
-        cy.visit(`/projects/default/features/${featureToggleName}/strategies`);
-        cy.get('[data-test=STRATEGY_ACCORDION_ID-flexibleRollout').click();
+        cy.visit(
+            `/projects/default/features/${featureToggleName}/strategies/edit?environmentId=development&strategyId=${strategyId}`
+        );
 
+        cy.wait(1000);
         cy.get('[data-test=ROLLOUT_SLIDER_ID')
-            .first()
             .click()
             .type('{rightArrow}'.repeat(10));
 
@@ -171,12 +174,14 @@ describe('feature', () => {
             }
         ).as('updateStrategy');
 
-        cy.get('[data-test=UPDATE_STRATEGY_BUTTON_ID]').first().click();
+        cy.get(`[data-test=STRATEGY_FORM_SUBMIT_ID]`).first().click();
         cy.wait('@updateStrategy');
     });
 
     it('can delete a strategy in the development environment', () => {
-        cy.visit(`/projects/default/features/${featureToggleName}/strategies`);
+        cy.visit(
+            `/projects/default/features/${featureToggleName}/strategies/edit?environmentId=development&strategyId=${strategyId}`
+        );
 
         cy.intercept(
             'DELETE',
@@ -188,15 +193,17 @@ describe('feature', () => {
             }
         ).as('deleteStrategy');
 
-        cy.get('[data-test=DELETE_STRATEGY_ID-flexibleRollout]').click();
+        cy.get(
+            '[data-test=SIDEBAR_MODAL_ID] [data-test=STRATEGY_FORM_REMOVE_ID]'
+        ).click();
         cy.get('[data-test=DIALOGUE_CONFIRM_ID]').click();
         cy.wait('@deleteStrategy');
     });
 
-    it('can add a userid strategy to the development environment', () => {
-        cy.visit(`/projects/default/features/${featureToggleName}/strategies`);
-        cy.get('[data-test=ADD_NEW_STRATEGY_ID]').click();
-        cy.get('[data-test=ADD_NEW_STRATEGY_CARD_BUTTON_ID-3').click();
+    it('can add a userId strategy to the development environment', () => {
+        cy.visit(
+            `/projects/default/features/${featureToggleName}/strategies/create?environmentId=development&strategyName=userWithId`
+        );
 
         if (enterprise) {
             cy.get('[data-test=ADD_CONSTRAINT_ID]').click();
@@ -233,7 +240,7 @@ describe('feature', () => {
             }
         ).as('addStrategyToFeature');
 
-        cy.get('[data-test=ADD_NEW_STRATEGY_SAVE_ID]').first().click();
+        cy.get(`[data-test=STRATEGY_FORM_SUBMIT_ID]`).first().click();
         cy.wait('@addStrategyToFeature');
     });
 
@@ -263,13 +270,13 @@ describe('feature', () => {
         ).as('variantCreation');
 
         cy.get('[data-test=ADD_VARIANT_BUTTON]').click();
-        cy.get('[data-test=VARIANT_NAME_INPUT]').click().type(variantName);
+        cy.wait(1000);
+        cy.get('[data-test=VARIANT_NAME_INPUT]').type(variantName);
         cy.get('[data-test=DIALOGUE_CONFIRM_ID]').click();
         cy.wait('@variantCreation');
         cy.get('[data-test=ADD_VARIANT_BUTTON]').click();
-        cy.get('[data-test=VARIANT_NAME_INPUT]')
-            .click()
-            .type(secondVariantName);
+        cy.wait(1000);
+        cy.get('[data-test=VARIANT_NAME_INPUT]').type(secondVariantName);
         cy.get('[data-test=DIALOGUE_CONFIRM_ID]').click();
         cy.wait('@variantCreation');
     });
@@ -278,6 +285,7 @@ describe('feature', () => {
         cy.visit(`/projects/default/features/${featureToggleName}/variants`);
 
         cy.get('[data-test=VARIANT_EDIT_BUTTON]').first().click();
+        cy.wait(1000);
         cy.get('[data-test=VARIANT_NAME_INPUT]')
             .children()
             .find('input')
@@ -316,15 +324,18 @@ describe('feature', () => {
 
         cy.visit(`/projects/default/features/${featureToggleName}/variants`);
         cy.get('[data-test=ADD_VARIANT_BUTTON]').click();
-        cy.get('[data-test=VARIANT_NAME_INPUT]').click().type(variantName);
+        cy.wait(1000);
+        cy.get('[data-test=VARIANT_NAME_INPUT]').type(variantName);
         cy.get('[data-test=DIALOGUE_CONFIRM_ID]').click();
 
         cy.intercept(
             'PATCH',
             `/api/admin/projects/default/features/${featureToggleName}/variants`,
             req => {
-                const e = req.body.find(e => e.op === 'remove');
-                expect(e.path).to.match(/\//);
+                const patch = req.body.find(
+                    (patch: Record<string, string>) => patch.op === 'remove'
+                );
+                expect(patch.path).to.match(/\//);
             }
         ).as('delete');
 

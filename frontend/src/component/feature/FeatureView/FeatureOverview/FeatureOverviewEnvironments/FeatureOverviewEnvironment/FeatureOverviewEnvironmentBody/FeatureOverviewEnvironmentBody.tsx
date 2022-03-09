@@ -1,13 +1,11 @@
-import { useParams, useHistory, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { IFeatureViewParams } from 'interfaces/params';
 import ConditionallyRender from 'component/common/ConditionallyRender';
-import NoItemsStrategies from 'component/common/NoItems/NoItemsStrategies/NoItemsStrategies';
 import FeatureOverviewEnvironmentStrategies from '../FeatureOverviewEnvironmentStrategies/FeatureOverviewEnvironmentStrategies';
 import { useStyles } from '../FeatureOverviewEnvironment.styles';
 import { IFeatureEnvironment } from 'interfaces/featureToggle';
-import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
-import { useContext } from 'react';
-import AccessContext from 'contexts/AccessContext';
+import { FeatureStrategyMenu } from '../../../../../FeatureStrategy/FeatureStrategyMenu/FeatureStrategyMenu';
+import { FeatureStrategyEmpty } from '../../../../../FeatureStrategy/FeatureStrategyEmpty/FeatureStrategyEmpty';
 
 interface IFeatureOverviewEnvironmentBodyProps {
     getOverviewText: () => string;
@@ -20,11 +18,10 @@ const FeatureOverviewEnvironmentBody = ({
 }: IFeatureOverviewEnvironmentBodyProps) => {
     const { projectId, featureId } = useParams<IFeatureViewParams>();
     const styles = useStyles();
-    const history = useHistory();
-    const { hasAccess } = useContext(AccessContext);
-    const strategiesLink = `/projects/${projectId}/features/${featureId}/strategies?environment=${featureEnvironment?.name}`;
 
-    if (!featureEnvironment) return null;
+    if (!featureEnvironment) {
+        return null;
+    }
 
     return (
         <div className={styles.accordionBody}>
@@ -36,25 +33,18 @@ const FeatureOverviewEnvironmentBody = ({
                     </div>
                     <div className={styles.rightWing} />
                 </div>
-
                 <ConditionallyRender
                     condition={featureEnvironment?.strategies.length > 0}
                     show={
                         <>
-                            <ConditionallyRender
-                                condition={hasAccess(
-                                    CREATE_FEATURE_STRATEGY,
-                                    projectId,
-                                    featureEnvironment.name
-                                )}
-                                show={
-                                    <div className={styles.linkContainer}>
-                                        <Link to={strategiesLink}>
-                                            Edit strategies
-                                        </Link>
-                                    </div>
-                                }
-                            />
+                            <div className={styles.linkContainer}>
+                                <FeatureStrategyMenu
+                                    label="Add strategy"
+                                    projectId={projectId}
+                                    featureId={featureId}
+                                    environmentId={featureEnvironment.name}
+                                />
+                            </div>
                             <FeatureOverviewEnvironmentStrategies
                                 strategies={featureEnvironment?.strategies}
                                 environmentName={featureEnvironment.name}
@@ -62,10 +52,10 @@ const FeatureOverviewEnvironmentBody = ({
                         </>
                     }
                     elseShow={
-                        <NoItemsStrategies
-                            envName={featureEnvironment.name}
-                            onClick={() => history.push(strategiesLink)}
+                        <FeatureStrategyEmpty
                             projectId={projectId}
+                            featureId={featureId}
+                            environmentId={featureEnvironment.name}
                         />
                     }
                 />
@@ -73,5 +63,4 @@ const FeatureOverviewEnvironmentBody = ({
         </div>
     );
 };
-
 export default FeatureOverviewEnvironmentBody;

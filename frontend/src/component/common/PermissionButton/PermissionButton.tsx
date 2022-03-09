@@ -1,4 +1,4 @@
-import { Button, Tooltip, ButtonProps } from '@material-ui/core';
+import { Button, ButtonProps, Tooltip } from '@material-ui/core';
 import { Lock } from '@material-ui/icons';
 import AccessContext from 'contexts/AccessContext';
 import React, { useContext } from 'react';
@@ -14,6 +14,8 @@ export interface IPermissionButtonProps extends ButtonProps {
 
 const PermissionButton: React.FC<IPermissionButtonProps> = ({
     permission,
+    variant = 'contained',
+    color = 'primary',
     onClick,
     children,
     disabled,
@@ -61,8 +63,8 @@ const PermissionButton: React.FC<IPermissionButtonProps> = ({
                 <Button
                     onClick={onClick}
                     disabled={disabled || !access}
-                    variant="contained"
-                    color="primary"
+                    variant={variant}
+                    color={color}
                     {...rest}
                     endIcon={
                         <ConditionallyRender

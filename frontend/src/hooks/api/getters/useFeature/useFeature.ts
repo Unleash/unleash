@@ -1,50 +1,48 @@
 import useSWR, { mutate, SWRConfiguration } from 'swr';
-import { useState, useEffect } from 'react';
-
-import { formatApiPath } from '../../../../utils/format-path';
+import { useCallback } from 'react';
 import { IFeatureToggle } from '../../../../interfaces/featureToggle';
-import { defaultFeature } from './defaultFeature';
+import { emptyFeature } from './emptyFeature';
 import handleErrorResponses from '../httpErrorResponseHandler';
+import { formatApiPath } from '../../../../utils/format-path';
 
-const useFeature = (
+interface IUseFeatureOutput {
+    feature: IFeatureToggle;
+    featureCacheKey: string;
+    refetchFeature: () => void;
+    loading: boolean;
+    error?: Error;
+}
+
+export const useFeature = (
     projectId: string,
-    id: string,
-    options: SWRConfiguration = {}
-) => {
-    const fetcher = async () => {
-        const path = formatApiPath(
-            `api/admin/projects/${projectId}/features/${id}`
-        );
-        return fetch(path, {
-            method: 'GET',
-        })
-            .then(handleErrorResponses('Feature toggle data'))
-            .then(res => res.json());
-    };
+    featureId: string,
+    options?: SWRConfiguration
+): IUseFeatureOutput => {
+    const path = formatApiPath(
+        `api/admin/projects/${projectId}/features/${featureId}`
+    );
 
-    const FEATURE_CACHE_KEY = `api/admin/projects/${projectId}/features/${id}`;
+    const { data, error } = useSWR<IFeatureToggle>(
+        path,
+        () => fetcher(path),
+        options
+    );
 
-    const { data, error } = useSWR<IFeatureToggle>(FEATURE_CACHE_KEY, fetcher, {
-        ...options,
-    });
-
-    const [loading, setLoading] = useState(!error && !data);
-
-    const refetch = () => {
-        mutate(FEATURE_CACHE_KEY);
-    };
-
-    useEffect(() => {
-        setLoading(!error && !data);
-    }, [data, error]);
+    const refetchFeature = useCallback(() => {
+        mutate(path).catch(console.warn);
+    }, [path]);
 
     return {
-        feature: data || defaultFeature,
+        feature: data || emptyFeature,
+        featureCacheKey: path,
+        refetchFeature,
+        loading: !error && !data,
         error,
-        loading,
-        refetch,
-        FEATURE_CACHE_KEY,
     };
 };
 
-export default useFeature;
+const fetcher = async (path: string) => {
+    return fetch(path)
+        .then(handleErrorResponses('Feature toggle data'))
+        .then(res => res.json());
+};

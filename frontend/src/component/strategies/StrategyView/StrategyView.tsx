@@ -1,8 +1,8 @@
 import { Grid } from '@material-ui/core';
+import { useParams, useHistory } from 'react-router-dom';
 import { UPDATE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import PageContent from 'component/common/PageContent/PageContent';
-import useStrategies from 'component/../hooks/api/getters/useStrategies/useStrategies';
-import { useHistory, useParams } from 'react-router-dom';
+import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import { useFeatures } from 'hooks/api/getters/useFeatures/useFeatures';
 import useApplications from 'hooks/api/getters/useApplications/useApplications';
 import { StrategyDetails } from './StrategyDetails/StrategyDetails';

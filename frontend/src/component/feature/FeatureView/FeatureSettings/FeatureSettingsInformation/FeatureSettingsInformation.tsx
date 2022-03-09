@@ -1,7 +1,7 @@
 import { Typography } from '@material-ui/core';
 import { Edit } from '@material-ui/icons';
 import { useHistory } from 'react-router-dom';
-import useFeature from '../../../../../hooks/api/getters/useFeature/useFeature';
+import { useFeature } from '../../../../../hooks/api/getters/useFeature/useFeature';
 import PermissionIconButton from '../../../../common/PermissionIconButton/PermissionIconButton';
 import { UPDATE_FEATURE } from '../../../../providers/AccessProvider/permissions';
 import { useStyles } from './FeatureSettingsInformation.style';

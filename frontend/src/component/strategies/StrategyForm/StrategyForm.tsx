@@ -5,6 +5,7 @@ import { Add } from '@material-ui/icons';
 import { trim } from '../../common/util';
 import { StrategyParameters } from './StrategyParameters/StrategyParameters';
 import { ICustomStrategyParameter } from 'interfaces/strategy';
+import React from 'react';
 
 interface IStrategyFormProps {
     strategyName: string;

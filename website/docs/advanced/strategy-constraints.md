@@ -6,7 +6,7 @@ title: Strategy Constraints
 :::info Availability
 Strategy constraints are available to Unleash Pro and Enterprise users.
 
-Unleash 4.9 introduced a more comprehensive set of constraint operators. These require that both Unleash *and* your client SDK of choice support them. See the [SDK compatibility table](../sdks/index.md#server-side-compatibility-table) for more information.
+Unleash 4.9 introduced a more comprehensive set of constraint operators. These require that both Unleash *and* your client SDK of choice support them. See the [SDK compatibility table](../sdks/index.md#server-side-compatibility-table) for more information. Prior to Unleash 4.9, the only available operators were `IN` and `NOT_IN`.
 :::
 
 :::tip

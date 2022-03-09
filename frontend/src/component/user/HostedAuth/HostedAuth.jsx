@@ -18,7 +18,7 @@ import {
     LOGIN_PASSWORD_ID,
 } from '../../../testIds';
 
-const HostedAuth = ({ authDetails }) => {
+const HostedAuth = ({ authDetails, redirect }) => {
     const commonStyles = useCommonStyles();
     const styles = useStyles();
     const { refetchUser } = useAuthUser();
@@ -55,7 +55,7 @@ const HostedAuth = ({ authDetails }) => {
         try {
             await passwordAuth(authDetails.path, username, password);
             refetchUser();
-            history.push(`/`);
+            history.push(redirect);
         } catch (error) {
             if (error.statusCode === 404 || error.statusCode === 400) {
                 setErrors(prev => ({
@@ -145,6 +145,7 @@ const HostedAuth = ({ authDetails }) => {
 
 HostedAuth.propTypes = {
     authDetails: PropTypes.object.isRequired,
+    redirect: PropTypes.string.isRequired,
 };
 
 export default HostedAuth;

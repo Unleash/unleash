@@ -15,7 +15,10 @@ import ConditionallyRender from '../../common/ConditionallyRender';
 import { Alert } from '@material-ui/lab';
 import { useAuthDetails } from '../../../hooks/api/getters/useAuth/useAuthDetails';
 
-const Authentication = () => {
+interface IAuthenticationProps {
+    redirect: string;
+}
+const Authentication = ({ redirect }: IAuthenticationProps) => {
     const { authDetails } = useAuthDetails();
     const params = useQueryParams();
 
@@ -26,7 +29,7 @@ const Authentication = () => {
     if (authDetails.type === PASSWORD_TYPE) {
         content = (
             <>
-                <PasswordAuth authDetails={authDetails} />
+                <PasswordAuth authDetails={authDetails} redirect={redirect} />
                 <ConditionallyRender
                     condition={!authDetails.defaultHidden}
                     show={<SecondaryLoginActions />}
@@ -34,13 +37,13 @@ const Authentication = () => {
             </>
         );
     } else if (authDetails.type === SIMPLE_TYPE) {
-        content = <SimpleAuth authDetails={authDetails} />;
+        content = <SimpleAuth authDetails={authDetails} redirect={redirect} />;
     } else if (authDetails.type === DEMO_TYPE) {
-        content = <DemoAuth authDetails={authDetails} />;
+        content = <DemoAuth authDetails={authDetails} redirect={redirect} />;
     } else if (authDetails.type === HOSTED_TYPE) {
         content = (
             <>
-                <HostedAuth authDetails={authDetails} />
+                <HostedAuth authDetails={authDetails} redirect={redirect} />
                 <ConditionallyRender
                     condition={!authDetails.defaultHidden}
                     show={<SecondaryLoginActions />}

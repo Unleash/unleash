@@ -9,7 +9,7 @@ import { LOGIN_BUTTON, LOGIN_EMAIL_ID } from '../../../testIds';
 import useToast from '../../../hooks/useToast';
 import { formatUnknownError } from '../../../utils/format-unknown-error';
 
-const SimpleAuth = ({ authDetails }) => {
+const SimpleAuth = ({ authDetails, redirect }) => {
     const [email, setEmail] = useState('');
     const { refetchUser } = useAuthUser();
     const { emailAuth } = useAuthApi();
@@ -22,7 +22,7 @@ const SimpleAuth = ({ authDetails }) => {
         try {
             await emailAuth(authDetails.path, email);
             refetchUser();
-            history.push(`/`);
+            history.push(redirect);
         } catch (error) {
             setToastApiError(formatUnknownError(error));
         }
@@ -80,6 +80,7 @@ const SimpleAuth = ({ authDetails }) => {
 
 SimpleAuth.propTypes = {
     authDetails: PropTypes.object.isRequired,
+    redirect: PropTypes.string.isRequired,
 };
 
 export default SimpleAuth;

@@ -15,9 +15,10 @@ const Login = () => {
     const { user } = useAuthUser();
     const query = useQueryParams();
     const resetPassword = query.get('reset') === 'true';
+    const redirect = query.get('redirect') || '/';
 
     if (user) {
-        return <Redirect to="/features" />;
+        return <Redirect to={redirect} />;
     }
 
     return (
@@ -36,7 +37,7 @@ const Login = () => {
                     condition={resetPassword}
                     show={<ResetPasswordSuccess />}
                 />
-                <Authentication />
+                <Authentication redirect={redirect} />
             </div>
         </StandaloneLayout>
     );

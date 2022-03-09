@@ -10,7 +10,7 @@ import { useAuthUser } from '../../../hooks/api/getters/useAuth/useAuthUser';
 import useToast from '../../../hooks/useToast';
 import { formatUnknownError } from '../../../utils/format-unknown-error';
 
-const DemoAuth = ({ authDetails }) => {
+const DemoAuth = ({ authDetails, redirect }) => {
     const [email, setEmail] = useState('');
     const history = useHistory();
     const { refetchUser } = useAuthUser();
@@ -23,7 +23,7 @@ const DemoAuth = ({ authDetails }) => {
         try {
             await emailAuth(authDetails.path, email);
             refetchUser();
-            history.push(`/`);
+            history.push(redirect);
         } catch (error) {
             setToastApiError(formatUnknownError(error));
         }
@@ -91,6 +91,7 @@ const DemoAuth = ({ authDetails }) => {
 
 DemoAuth.propTypes = {
     authDetails: PropTypes.object.isRequired,
+    redirect: PropTypes.string.isRequired,
 };
 
 export default DemoAuth;

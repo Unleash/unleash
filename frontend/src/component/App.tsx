@@ -41,7 +41,6 @@ export const App = () => {
     const renderRoute = (route: any) => {
         if (route.type === 'protected') {
             const unauthorized = isUnauthorized();
-
             return (
                 <ProtectedRoute
                     key={route.path}

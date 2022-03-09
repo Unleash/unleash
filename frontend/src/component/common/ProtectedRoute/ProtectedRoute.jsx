@@ -1,4 +1,4 @@
-import { Route, Redirect } from 'react-router-dom';
+import { Route, useLocation, Redirect } from 'react-router-dom';
 
 const ProtectedRoute = ({
     component: Component,
@@ -6,12 +6,15 @@ const ProtectedRoute = ({
     renderProps = {},
     ...rest
 }) => {
+    const { pathname } = useLocation();
+    const loginLink =
+        pathname.length > 1 ? `/login?redirect=${pathname}` : '/login';
     return (
         <Route
             {...rest}
             render={props => {
                 if (unauthorized) {
-                    return <Redirect to={'/login'} />;
+                    return <Redirect to={loginLink} />;
                 } else {
                     return <Component {...props} {...renderProps} />;
                 }

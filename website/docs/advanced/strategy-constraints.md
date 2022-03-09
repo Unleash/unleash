@@ -33,7 +33,7 @@ To be able to constrain on a field, it must be listed under the Context Field me
 
 Unleash only provides a limited set of context fields by default, and they may not fulfill all your needs.
 By using [custom context fields](../user_guide/unleash_context#custom-context-fields), you can tailor strategy constraints to your specific use case, such as:
-- based on tenant IDs,release a feature to only specific tenants in a multi-tenant setup
+- based on tenant IDs, release a feature to only specific tenants in a multi-tenant setup
 - release a feature to users in a specific region
 - release a feature only to beta testers
 

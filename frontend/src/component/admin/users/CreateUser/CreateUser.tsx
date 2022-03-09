@@ -1,15 +1,16 @@
-import FormTemplate from '../../../common/FormTemplate/FormTemplate';
+import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { useHistory } from 'react-router-dom';
 import UserForm from '../UserForm/UserForm';
-import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
-import useToast from '../../../../hooks/useToast';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import useAdminUsersApi from 'hooks/api/actions/useAdminUsersApi/useAdminUsersApi';
+import useToast from 'hooks/useToast';
 import useAddUserForm from '../hooks/useAddUserForm';
-import useAdminUsersApi from '../../../../hooks/api/actions/useAdminUsersApi/useAdminUsersApi';
 import ConfirmUserAdded from '../ConfirmUserAdded/ConfirmUserAdded';
 import { useState } from 'react';
 import { scrollToTop } from '../../../common/util';
-import PermissionButton from '../../../common/PermissionButton/PermissionButton';
-import { ADMIN } from '../../../providers/AccessProvider/permissions';
+import { CreateButton } from 'component/common/CreateButton/CreateButton';
+import { ADMIN } from 'component/providers/AccessProvider/permissions';
+import { formatUnknownError } from '../../../../utils/format-unknown-error';
 
 const CreateUser = () => {
     const { setToastApiError } = useToast();
@@ -51,8 +52,8 @@ const CreateUser = () => {
                         setInviteLink(user.inviteLink);
                         setShowConfirm(true);
                     });
-            } catch (e: any) {
-                setToastApiError(e.toString());
+            } catch (error: unknown) {
+                setToastApiError(formatUnknownError(error));
             }
         }
     };
@@ -97,9 +98,7 @@ const CreateUser = () => {
                 setRootRole={setRootRole}
                 clearErrors={clearErrors}
             >
-                <PermissionButton permission={ADMIN} type="submit">
-                    Create user
-                </PermissionButton>
+                <CreateButton name="user" permission={ADMIN} />
             </UserForm>
             <ConfirmUserAdded
                 open={showConfirm}

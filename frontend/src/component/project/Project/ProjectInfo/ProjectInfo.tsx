@@ -50,8 +50,8 @@ const ProjectInfo = ({
     const permissionButton = (
         <PermissionIconButton
             permission={UPDATE_PROJECT}
-            tooltip={'Edit description'}
             projectId={id}
+            // @ts-expect-error
             component={Link}
             className={permissionButtonClass}
             data-loading

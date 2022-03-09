@@ -7,7 +7,7 @@ import useUiConfig from '../../../../../../hooks/api/getters/useUiConfig/useUiCo
 import { C } from '../../../../../common/flags';
 import useUnleashContext from '../../../../../../hooks/api/getters/useUnleashContext/useUnleashContext';
 import StrategyConstraintInputField from './StrategyConstraintInputField';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 
 interface IStrategyConstraintProps {
     constraints: IConstraint[];
@@ -38,7 +38,7 @@ const StrategyConstraints: React.FC<IStrategyConstraintProps> = ({
     const enabled = uiConfig.flags[C];
     const contextNames = contextFields.map(context => context.name);
 
-    const onClick = evt => {
+    const onClick = (evt: React.SyntheticEvent) => {
         evt.preventDefault();
         addConstraint();
     };
@@ -49,7 +49,7 @@ const StrategyConstraints: React.FC<IStrategyConstraintProps> = ({
         updateConstraints(updatedConstraints);
     };
 
-    const createConstraint = () => {
+    const createConstraint = (): IConstraint => {
         return {
             contextName: contextNames[0],
             operator: 'IN',
@@ -57,15 +57,16 @@ const StrategyConstraints: React.FC<IStrategyConstraintProps> = ({
         };
     };
 
-    const removeConstraint = index => evt => {
-        evt.preventDefault();
+    const removeConstraint = (index: number) => (event: Event) => {
+        event.preventDefault();
         const updatedConstraints = [...constraints];
         updatedConstraints.splice(index, 1);
 
         updateConstraints(updatedConstraints);
     };
 
-    const updateConstraint = index => (value, field) => {
+    // @ts-expect-error
+    const updateConstraint = (index: number) => (value, field) => {
         const updatedConstraints = [...constraints];
         const constraint = updatedConstraints[index];
         constraint[field] = value;

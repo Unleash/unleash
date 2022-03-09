@@ -11,7 +11,7 @@ interface IEnviromentDeleteConfirmProps {
     open: boolean;
     setSelectedEnv: React.Dispatch<React.SetStateAction<IEnvironment>>;
     setDeldialogue: React.Dispatch<React.SetStateAction<boolean>>;
-    handleDeleteEnvironment: (name: string) => Promise<void>;
+    handleDeleteEnvironment: () => Promise<void>;
     confirmName: string;
     setConfirmName: React.Dispatch<React.SetStateAction<string>>;
 }

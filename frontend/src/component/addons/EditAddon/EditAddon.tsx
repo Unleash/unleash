@@ -26,7 +26,8 @@ export const EditAddon = () => {
         (addon: IAddon) => addon.id === Number(addonId)
     ) || { ...cloneDeep(DEFAULT_DATA) };
     const provider = addon
-        ? providers.find(provider => provider.name === addon.provider)
+        ? // @ts-expect-error
+          providers.find(provider => provider.name === addon.provider)
         : undefined;
 
     return (

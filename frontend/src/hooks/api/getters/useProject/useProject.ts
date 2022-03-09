@@ -22,6 +22,7 @@ const useProject = (id: string, options: SWRConfiguration = {}) => {
 
     const sortedData = (data: IProject | undefined): IProject => {
         if (data) {
+            // @ts-expect-error
             return { ...data, features: sort(data.features || []) };
         }
         return fallbackProject;

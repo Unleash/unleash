@@ -1,9 +1,9 @@
 import { ILocationSettings } from '../../../../../hooks/useLocationSettings';
 import 'chartjs-adapter-date-fns';
 import { ChartOptions, defaults } from 'chart.js';
-import { formatTimeWithLocale } from '../../../../common/util';
 import { IFeatureMetricsRaw } from '../../../../../interfaces/featureToggle';
 import theme from '../../../../../themes/main-theme';
+import { formatDateHM } from '../../../../../utils/format-date';
 
 export const createChartOptions = (
     metrics: IFeatureMetricsRaw[],
@@ -30,7 +30,7 @@ export const createChartOptions = (
                 usePointStyle: true,
                 callbacks: {
                     title: items =>
-                        formatTimeWithLocale(
+                        formatDateHM(
                             items[0].parsed.x,
                             locationSettings.locale
                         ),
@@ -73,10 +73,7 @@ export const createChartOptions = (
                 grid: { display: false },
                 ticks: {
                     callback: (_, i, data) =>
-                        formatTimeWithLocale(
-                            data[i].value,
-                            locationSettings.locale
-                        ),
+                        formatDateHM(data[i].value, locationSettings.locale),
                 },
             },
         },

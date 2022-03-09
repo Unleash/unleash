@@ -50,7 +50,7 @@ exports[`renders a list with elements correctly 1`] = `
           <span
             className="MuiButton-label"
           >
-            Add new tag type
+            New tag type
           </span>
           <span
             className="MuiTouchRipple-root"
@@ -126,7 +126,7 @@ exports[`renders an empty list correctly 1`] = `
           <span
             className="MuiButton-label"
           >
-            Add new tag type
+            New tag type
           </span>
         </button>
       </div>

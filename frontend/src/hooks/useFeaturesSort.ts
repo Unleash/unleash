@@ -1,7 +1,7 @@
 import { IFeatureToggle } from '../interfaces/featureToggle';
 import React, { useMemo } from 'react';
 import { getBasePath } from '../utils/format-path';
-import { createPersistentGlobalState } from './usePersistentGlobalState';
+import { createPersistentGlobalStateHook } from './usePersistentGlobalState';
 
 type FeaturesSortType =
     | 'name'
@@ -29,7 +29,7 @@ export interface IFeaturesFilterSortOption {
 
 // Store the features sort state globally, and in localStorage.
 // When changing the format of IFeaturesSort, change the version as well.
-const useFeaturesSortState = createPersistentGlobalState<IFeaturesSort>(
+const useFeaturesSortState = createPersistentGlobalStateHook<IFeaturesSort>(
     `${getBasePath()}:useFeaturesSort:v1`,
     { type: 'name' }
 );
@@ -109,17 +109,19 @@ const sortByLastSeen = (
 ): IFeatureToggle[] => {
     return [...features].sort((a, b) =>
         a.lastSeenAt && b.lastSeenAt
-            ? a.lastSeenAt.localeCompare(b.lastSeenAt)
-            : 0
+            ? b.lastSeenAt.localeCompare(a.lastSeenAt)
+            : a.lastSeenAt
+            ? -1
+            : b.lastSeenAt
+            ? 1
+            : b.createdAt.localeCompare(a.createdAt)
     );
 };
 
 const sortByCreated = (
     features: Readonly<IFeatureToggle[]>
 ): IFeatureToggle[] => {
-    return [...features].sort((a, b) =>
-        new Date(a.createdAt) > new Date(b.createdAt) ? -1 : 1
-    );
+    return [...features].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 };
 
 const sortByName = (features: Readonly<IFeatureToggle[]>): IFeatureToggle[] => {

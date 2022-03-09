@@ -7,7 +7,7 @@ interface ITagSelect extends React.SelectHTMLAttributes<HTMLSelectElement> {
     onChange: (val: any) => void;
 }
 
-const TagSelect = ({ value, types, onChange, ...rest }: ITagSelect) => {
+const TagSelect = ({ value, onChange, ...rest }: ITagSelect) => {
     const { tagTypes } = useTagTypes();
 
     const options = tagTypes.map(tagType => ({
@@ -17,15 +17,18 @@ const TagSelect = ({ value, types, onChange, ...rest }: ITagSelect) => {
     }));
 
     return (
-        <GeneralSelect
-            label="Tag type"
-            name="tag-select"
-            id="tag-select"
-            options={options}
-            value={value}
-            onChange={onChange}
-            {...rest}
-        />
+        <>
+            {/* @ts-expect-error */}
+            <GeneralSelect
+                label="Tag type"
+                name="tag-select"
+                id="tag-select"
+                options={options}
+                value={value}
+                onChange={onChange}
+                {...rest}
+            />
+        </>
     );
 };
 

@@ -3,12 +3,12 @@ import classnames from 'classnames';
 import { useContext } from 'react';
 import { IconButton } from '@material-ui/core';
 import CheckMarkBadge from '../../CheckmarkBadge/CheckMarkBadge';
-import UIContext, { IToastData } from '../../../../contexts/UIContext';
+import UIContext from '../../../../contexts/UIContext';
 import ConditionallyRender from '../../ConditionallyRender';
 import Close from '@material-ui/icons/Close';
+import { IToast } from '../../../../interfaces/toast';
 
-const Toast = ({ title, text, type, confetti }: IToastData) => {
-    // @ts-expect-error
+const Toast = ({ title, text, type, confetti }: IToast) => {
     const { setToast } = useContext(UIContext);
 
     const styles = useStyles();
@@ -51,7 +51,7 @@ const Toast = ({ title, text, type, confetti }: IToastData) => {
     };
 
     const hide = () => {
-        setToast((prev: IToastData) => ({ ...prev, show: false }));
+        setToast((prev: IToast) => ({ ...prev, show: false }));
     };
 
     return (

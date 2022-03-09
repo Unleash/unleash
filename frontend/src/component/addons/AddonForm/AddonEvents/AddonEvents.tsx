@@ -7,7 +7,9 @@ import { IAddonProvider } from '../../../../interfaces/addons';
 interface IAddonProps {
     provider: IAddonProvider;
     checkedEvents: string[];
-    setEventValue: (name: string) => void;
+    setEventValue: (
+        name: string
+    ) => (event: React.ChangeEvent<HTMLInputElement>) => void;
     error: Record<string, string>;
 }
 

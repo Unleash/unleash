@@ -1,19 +1,13 @@
-import { IconButton, Tooltip } from '@material-ui/core';
-import { useContext } from 'react';
+import { IconButton, Tooltip, IconButtonProps } from '@material-ui/core';
+import React, { useContext } from 'react';
 import AccessContext from '../../../contexts/AccessContext';
 
-interface IPermissionIconButtonProps
-    extends React.DetailedHTMLProps<
-        React.HTMLAttributes<HTMLButtonElement>,
-        HTMLButtonElement
-    > {
+interface IPermissionIconButtonProps extends IconButtonProps {
     permission: string;
     Icon?: React.ElementType;
-    tooltip?: string;
     onClick?: (e: any) => void;
     projectId?: string;
     environmentId?: string;
-    edge?: string;
     className?: string;
     title?: string;
 }
@@ -21,7 +15,6 @@ interface IPermissionIconButtonProps
 const PermissionIconButton: React.FC<IPermissionIconButtonProps> = ({
     permission,
     Icon,
-    tooltip,
     onClick,
     projectId,
     children,
@@ -39,9 +32,9 @@ const PermissionIconButton: React.FC<IPermissionIconButtonProps> = ({
         access = hasAccess(permission);
     }
 
-    const tooltipText = access
-        ? tooltip || ''
-        : "You don't have access to perform this operation";
+    const tooltipText = !access
+        ? "You don't have access to perform this operation"
+        : '';
 
     return (
         <Tooltip title={tooltipText} arrow>

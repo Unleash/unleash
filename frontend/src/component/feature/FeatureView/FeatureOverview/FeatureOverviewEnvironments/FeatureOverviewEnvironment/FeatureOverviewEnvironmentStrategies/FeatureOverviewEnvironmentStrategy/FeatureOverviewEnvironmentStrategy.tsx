@@ -1,5 +1,5 @@
 import { Settings } from '@material-ui/icons';
-import { useTheme } from '@material-ui/styles';
+import { useTheme } from '@material-ui/core/styles';
 import { Link, useParams } from 'react-router-dom';
 import { IFeatureViewParams } from '../../../../../../../../interfaces/params';
 import { IFeatureStrategy } from '../../../../../../../../interfaces/strategy';
@@ -39,6 +39,7 @@ const FeatureOverviewEnvironmentStrategy = ({
                         permission={UPDATE_FEATURE_STRATEGY}
                         environmentId={environmentName}
                         projectId={projectId}
+                        // @ts-expect-error
                         component={Link}
                         to={`/projects/${projectId}/features/${featureId}/strategies?environment=${environmentName}`}
                     >

@@ -51,6 +51,7 @@ const UserForm: React.FC<IUserForm> = ({
     const { roles } = useUsers();
     const { bootstrap } = useUiBootstrap();
 
+    // @ts-expect-error
     const sortRoles = (a, b) => {
         if (b.name[0] < a.name[0]) {
             return 1;
@@ -102,6 +103,7 @@ const UserForm: React.FC<IUserForm> = ({
                         onChange={e => setRootRole(+e.target.value)}
                         data-loading
                     >
+                        {/* @ts-expect-error */}
                         {roles.sort(sortRoles).map(role => (
                             <FormControlLabel
                                 key={`role-${role.id}`}

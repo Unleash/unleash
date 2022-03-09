@@ -1,6 +1,6 @@
-import { useState, useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { Chip } from '@material-ui/core';
-import { Label, Close } from '@material-ui/icons';
+import { Close, Label } from '@material-ui/icons';
 import { useParams } from 'react-router-dom';
 import useTags from '../../../../../../hooks/api/getters/useTags/useTags';
 import { IFeatureViewParams } from '../../../../../../interfaces/params';
@@ -17,6 +17,7 @@ import useToast from '../../../../../../hooks/useToast';
 import { UPDATE_FEATURE } from '../../../../../providers/AccessProvider/permissions';
 import ConditionallyRender from '../../../../../common/ConditionallyRender';
 import AccessContext from '../../../../../../contexts/AccessContext';
+import { formatUnknownError } from '../../../../../../utils/format-unknown-error';
 
 interface IFeatureOverviewTagsProps extends React.HTMLProps<HTMLButtonElement> {
     projectId: string;
@@ -53,8 +54,8 @@ const FeatureOverviewTags: React.FC<IFeatureOverviewTagsProps> = ({
                 title: 'Tag deleted',
                 text: 'Successfully deleted tag',
             });
-        } catch (e) {
-            setToastApiError(e.message);
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
         }
     };
 
@@ -97,6 +98,7 @@ const FeatureOverviewTags: React.FC<IFeatureOverviewTagsProps> = ({
         }
     };
 
+    // @ts-expect-error
     const renderTag = t => (
         <Chip
             icon={tagIcon(t.type)}
@@ -117,29 +119,32 @@ const FeatureOverviewTags: React.FC<IFeatureOverviewTagsProps> = ({
     );
 
     return (
-        <div className={styles.container} {...rest}>
-            <Dialogue
-                open={showDelDialog}
-                onClose={() => {
-                    setShowDelDialog(false);
-                    setSelectedTag({ type: '', value: '' });
-                }}
-                onClick={() => {
-                    setShowDelDialog(false);
-                    handleDelete();
-                    setSelectedTag({ type: '', value: '' });
-                }}
-                title="Are you sure you want to delete this tag?"
-            />
-
-            <div className={styles.tagContent}>
-                <ConditionallyRender
-                    condition={tags.length > 0}
-                    show={tags.map(renderTag)}
-                    elseShow={<p data-loading>No tags to display</p>}
+        <>
+            {/* @ts-expect-error */}
+            <div className={styles.container} {...rest}>
+                <Dialogue
+                    open={showDelDialog}
+                    onClose={() => {
+                        setShowDelDialog(false);
+                        setSelectedTag({ type: '', value: '' });
+                    }}
+                    onClick={() => {
+                        setShowDelDialog(false);
+                        handleDelete();
+                        setSelectedTag({ type: '', value: '' });
+                    }}
+                    title="Are you sure you want to delete this tag?"
                 />
+
+                <div className={styles.tagContent}>
+                    <ConditionallyRender
+                        condition={tags.length > 0}
+                        show={tags.map(renderTag)}
+                        elseShow={<p data-loading>No tags to display</p>}
+                    />
+                </div>
             </div>
-        </div>
+        </>
     );
 };
 

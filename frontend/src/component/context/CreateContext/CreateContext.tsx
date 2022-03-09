@@ -1,15 +1,16 @@
 import { useHistory } from 'react-router-dom';
-import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
-import useToast from '../../../hooks/useToast';
-import FormTemplate from '../../common/FormTemplate/FormTemplate';
-import useContextForm from '../hooks/useContextForm';
-import ContextForm from '../ContextForm/ContextForm';
-import PermissionButton from '../../common/PermissionButton/PermissionButton';
-import { CREATE_CONTEXT_FIELD } from '../../providers/AccessProvider/permissions';
-import useContextsApi from '../../../hooks/api/actions/useContextsApi/useContextsApi';
-import useUnleashContext from '../../../hooks/api/getters/useUnleashContext/useUnleashContext';
+import { CreateButton } from 'component/common/CreateButton/CreateButton';
+import FormTemplate from 'component/common/FormTemplate/FormTemplate';
+import { useContextForm } from '../hooks/useContextForm';
+import { ContextForm } from '../ContextForm/ContextForm';
+import { CREATE_CONTEXT_FIELD } from 'component/providers/AccessProvider/permissions';
+import useContextsApi from 'hooks/api/actions/useContextsApi/useContextsApi';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
+import useToast from 'hooks/useToast';
+import { formatUnknownError } from 'utils/format-unknown-error';
 
-const CreateContext = () => {
+export const CreateContext = () => {
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
     const history = useHistory();
@@ -23,31 +24,31 @@ const CreateContext = () => {
         setLegalValues,
         setStickiness,
         getContextPayload,
-        validateNameUniqueness,
-        validateName,
+        validateContext,
         clearErrors,
         setErrors,
         errors,
     } = useContextForm();
     const { createContext, loading } = useContextsApi();
-    const { refetch } = useUnleashContext();
+    const { refetchUnleashContext } = useUnleashContext();
 
     const handleSubmit = async (e: Event) => {
         e.preventDefault();
-        const validName = validateName();
+        const validName = await validateContext();
+
         if (validName) {
             const payload = getContextPayload();
             try {
                 await createContext(payload);
-                refetch();
+                refetchUnleashContext();
                 history.push('/context');
                 setToastData({
                     title: 'Context created',
                     confetti: true,
                     type: 'success',
                 });
-            } catch (e: any) {
-                setToastApiError(e.toString());
+            } catch (error: unknown) {
+                setToastApiError(formatUnknownError(error));
             }
         }
     };
@@ -61,7 +62,7 @@ const CreateContext = () => {
 --data-raw '${JSON.stringify(getContextPayload(), undefined, 2)}'`;
     };
 
-    const handleCancel = () => {
+    const onCancel = () => {
         history.goBack();
     };
 
@@ -69,7 +70,7 @@ const CreateContext = () => {
         <FormTemplate
             loading={loading}
             title="Create context"
-            description="Context fields are a basic building block used in Unleash to control roll-out. 
+            description="Context fields are a basic building block used in Unleash to control roll-out.
             They can be used together with strategy constraints as part of the activation strategy evaluation."
             documentationLink="https://docs.getunleash.io/how-to/how-to-define-custom-context-fields"
             formatApiCode={formatApiCode}
@@ -77,7 +78,7 @@ const CreateContext = () => {
             <ContextForm
                 errors={errors}
                 handleSubmit={handleSubmit}
-                handleCancel={handleCancel}
+                onCancel={onCancel}
                 contextName={contextName}
                 setContextName={setContextName}
                 contextDesc={contextDesc}
@@ -87,19 +88,15 @@ const CreateContext = () => {
                 stickiness={stickiness}
                 setStickiness={setStickiness}
                 mode="Create"
-                validateNameUniqueness={validateNameUniqueness}
+                validateContext={validateContext}
                 setErrors={setErrors}
                 clearErrors={clearErrors}
             >
-                <PermissionButton
+                <CreateButton
+                    name="context"
                     permission={CREATE_CONTEXT_FIELD}
-                    type="submit"
-                >
-                    Create context
-                </PermissionButton>
+                />
             </ContextForm>
         </FormTemplate>
     );
 };
-
-export default CreateContext;

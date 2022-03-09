@@ -45,7 +45,7 @@ const Project = () => {
         },
         {
             title: 'Access',
-            component: <ProjectAccess projectId={id} />,
+            component: <ProjectAccess />,
             path: `${basePath}/access`,
             name: 'access',
         },
@@ -69,6 +69,7 @@ const Project = () => {
             });
         }
 
+        // @ts-expect-error
         tabData.filter(tab => !tab.disabled);
 
         /* eslint-disable-next-line */
@@ -125,7 +126,6 @@ const Project = () => {
                         <div className={styles.titleText}>{project?.name}</div>
                         <PermissionIconButton
                             permission={UPDATE_PROJECT}
-                            tooltip="Edit"
                             projectId={project?.id}
                             onClick={() => history.push(`/projects/${id}/edit`)}
                             data-loading

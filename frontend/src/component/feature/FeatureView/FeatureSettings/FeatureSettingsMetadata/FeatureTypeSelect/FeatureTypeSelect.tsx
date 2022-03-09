@@ -1,17 +1,24 @@
 import useFeatureTypes from '../../../../../../hooks/api/getters/useFeatureTypes/useFeatureTypes';
-import GeneralSelect from '../../../../../common/GeneralSelect/GeneralSelect';
+import GeneralSelect, {
+    ISelectOption,
+} from '../../../../../common/GeneralSelect/GeneralSelect';
 
 const FeatureTypeSelect = ({
+    // @ts-expect-error
     editable,
+    // @ts-expect-error
     value,
+    // @ts-expect-error
     id,
+    // @ts-expect-error
     label,
+    // @ts-expect-error
     onChange,
     ...rest
 }) => {
     const { featureTypes } = useFeatureTypes();
 
-    const options = featureTypes.map(t => ({
+    const options: ISelectOption[] = featureTypes.map(t => ({
         key: t.id,
         label: t.name,
         title: t.description,
@@ -22,15 +29,18 @@ const FeatureTypeSelect = ({
     }
 
     return (
-        <GeneralSelect
-            disabled={!editable}
-            options={options}
-            value={value}
-            onChange={onChange}
-            label={label}
-            id={id}
-            {...rest}
-        />
+        <>
+            {/* @ts-expect-error */}
+            <GeneralSelect
+                disabled={!editable}
+                options={options}
+                value={value}
+                onChange={onChange}
+                label={label}
+                id={id}
+                {...rest}
+            />
+        </>
     );
 };
 

@@ -19,6 +19,7 @@ const SWRProvider: React.FC<ISWRProviderProps> = ({
     const history = useHistory();
     const { setToastApiError } = useToast();
 
+    // @ts-expect-error
     const handleFetchError = error => {
         if (error.status === 401) {
             const path = location.pathname;
@@ -36,6 +37,7 @@ const SWRProvider: React.FC<ISWRProviderProps> = ({
                 return;
             }
 
+            // @ts-expect-error
             cache.clear();
 
             history.push('/login');

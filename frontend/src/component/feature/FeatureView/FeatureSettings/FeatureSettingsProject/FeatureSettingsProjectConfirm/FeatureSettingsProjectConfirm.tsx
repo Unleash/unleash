@@ -50,6 +50,7 @@ const FeatureSettingsProjectConfirm = ({
                 incompatible = [...incompatible, env];
             }
         });
+        // @ts-expect-error
         setIncompatibleEnvs(incompatible);
     };
 
@@ -77,6 +78,7 @@ const FeatureSettingsProjectConfirm = ({
                 </Dialogue>
             }
             elseShow={
+                // @ts-expect-error
                 <Dialogue
                     open={open}
                     onClose={onClose}

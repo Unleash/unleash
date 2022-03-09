@@ -8,7 +8,7 @@ import useStrategies from '../../../../../../hooks/api/getters/useStrategies/use
 import GeneralStrategy from '../../common/GeneralStrategy/GeneralStrategy';
 import UserWithIdStrategy from '../../common/UserWithIdStrategy/UserWithId';
 import StrategyConstraints from '../../common/StrategyConstraints/StrategyConstraints';
-import { useContext, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import ConditionallyRender from '../../../../../common/ConditionallyRender';
 import useUiConfig from '../../../../../../hooks/api/getters/useUiConfig/useUiConfig';
 import { C } from '../../../../../common/flags';
@@ -53,6 +53,7 @@ const FeatureStrategyAccordionBody: React.FC<
     const { uiConfig } = useUiConfig();
     const [showConstraints, setShowConstraints] = useState(false);
     const { hasAccess } = useContext(AccessContext);
+    // @ts-expect-error
     const { activeEnvironment } = useContext(FeatureStrategiesUIContext);
 
     const { context } = useUnleashContext();
@@ -84,7 +85,7 @@ const FeatureStrategyAccordionBody: React.FC<
         let valid = true;
 
         constraints.forEach((constraint, index) => {
-            const { values } = constraint;
+            const { values = [] } = constraint;
 
             if (values.length === 0) {
                 setConstraintError(prev => ({
@@ -137,7 +138,7 @@ const FeatureStrategyAccordionBody: React.FC<
     const closeConstraintDialog = () => {
         setShowConstraints(false);
         const filteredConstraints = constraints.filter(constraint => {
-            return constraint.values.length > 0;
+            return constraint.values && constraint.values.length > 0;
         });
         updateConstraints(filteredConstraints);
     };
@@ -164,7 +165,7 @@ const FeatureStrategyAccordionBody: React.FC<
                         <PermissionButton
                             className={styles.addConstraintBtn}
                             onClick={toggleConstraints}
-                            variant={'text'}
+                            variant="text"
                             data-test={ADD_CONSTRAINT_ID}
                             permission={[
                                 UPDATE_FEATURE_STRATEGY,
@@ -192,14 +193,18 @@ const FeatureStrategyAccordionBody: React.FC<
                 <StrategyConstraints
                     updateConstraints={updateConstraints}
                     constraints={constraints || []}
+                    // @ts-expect-error
                     constraintError={constraintError}
+                    // @ts-expect-error
                     setConstraintError={setConstraintError}
                 />
             </Dialogue>
 
             <Type
                 parameters={parameters}
+                // @ts-expect-error
                 updateParameter={updateParameters}
+                // @ts-expect-error
                 strategyDefinition={definition}
                 context={context}
                 editable={editable}

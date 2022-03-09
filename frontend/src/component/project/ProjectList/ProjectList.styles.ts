@@ -21,4 +21,20 @@ export const useStyles = makeStyles(theme => ({
         fontFamily: theme.typography.fontFamily,
         pointer: 'cursor',
     },
+    searchBarContainer: {
+        marginBottom: '2rem',
+        display: 'flex',
+        gap: '1rem',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        [theme.breakpoints.down('xs')]: {
+            display: 'block',
+        },
+    },
+    searchBar: {
+        minWidth: 450,
+        [theme.breakpoints.down('xs')]: {
+            minWidth: '100%',
+        },
+    },
 }));

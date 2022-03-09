@@ -39,7 +39,6 @@ const FeatureStrategiesEnvironmentList = ({
 
     const {
         activeEnvironmentsRef,
-        setToastData,
         deleteStrategy,
         updateStrategy,
         delDialog,
@@ -53,6 +52,7 @@ const FeatureStrategiesEnvironmentList = ({
         featureId,
         activeEnvironment,
         updateFeatureEnvironmentCache,
+        // @ts-expect-error
     } = useFeatureStrategiesEnvironmentList(strategies);
 
     const [{ isOver }, drop] = useDrop({
@@ -87,24 +87,32 @@ const FeatureStrategiesEnvironmentList = ({
     const productionGuardMarkup = useProductionGuardMarkup({
         show: productionGuard.show,
         onClick: () => {
+            // @ts-expect-error
             updateStrategy(productionGuard.strategy);
+            // @ts-expect-error
             productionGuard.callback();
             setProductionGuard({
                 show: false,
+                // @ts-expect-error
                 strategy: null,
             });
         },
         onClose: () =>
+            // @ts-expect-error
             setProductionGuard({ show: false, strategy: null, callback: null }),
     });
 
+    // @ts-expect-error
     const resolveUpdateStrategy = (strategy: IFeatureStrategy, callback) => {
+        // @ts-expect-error
         if (activeEnvironmentsRef?.current?.type === PRODUCTION && !dontShow) {
+            // @ts-expect-error
             setProductionGuard({ show: true, strategy, callback });
             return;
         }
 
         updateStrategy(strategy);
+        callback();
     };
 
     const renderStrategies = () => {
@@ -115,6 +123,7 @@ const FeatureStrategiesEnvironmentList = ({
                         <FeatureStrategyEditable
                             currentStrategy={strategy}
                             setDelDialog={setDelDialog}
+                            // @ts-expect-error
                             updateStrategy={resolveUpdateStrategy}
                             index={index}
                         />
@@ -128,6 +137,7 @@ const FeatureStrategiesEnvironmentList = ({
                         key={strategy.id}
                         setDelDialog={setDelDialog}
                         currentStrategy={strategy}
+                        // @ts-expect-error
                         updateStrategy={resolveUpdateStrategy}
                         index={index}
                     />
@@ -141,6 +151,7 @@ const FeatureStrategiesEnvironmentList = ({
     });
 
     const strategiesContainerClasses = classnames({
+        // @ts-expect-error
         [styles.strategiesContainer]: !expandedSidebar,
     });
 
@@ -153,7 +164,7 @@ const FeatureStrategiesEnvironmentList = ({
                         condition={!expandedSidebar}
                         show={
                             <div className={styles.headerContainer}>
-                                <div className={styles.headerInnerContainer}>
+                                <div>
                                     <FeatureOverviewEnvSwitch
                                         text={
                                             activeEnvironment.enabled
@@ -161,7 +172,6 @@ const FeatureStrategiesEnvironmentList = ({
                                                 : 'Toggle is disabled and no strategies are executing'
                                         }
                                         env={activeEnvironment}
-                                        setToastData={setToastData}
                                         callback={updateFeatureEnvironmentCache}
                                     />
                                 </div>

@@ -8,6 +8,7 @@ import { useHistory } from 'react-router-dom';
 import { useAuthApi } from '../../../hooks/api/actions/useAuthApi/useAuthApi';
 import { useAuthUser } from '../../../hooks/api/getters/useAuth/useAuthUser';
 import useToast from '../../../hooks/useToast';
+import { formatUnknownError } from '../../../utils/format-unknown-error';
 
 const DemoAuth = ({ authDetails, redirect }) => {
     const [email, setEmail] = useState('');
@@ -23,8 +24,8 @@ const DemoAuth = ({ authDetails, redirect }) => {
             await emailAuth(authDetails.path, email);
             refetchUser();
             history.push(redirect);
-        } catch (e) {
-            setToastApiError(e.toString());
+        } catch (error) {
+            setToastApiError(formatUnknownError(error));
         }
     };
 

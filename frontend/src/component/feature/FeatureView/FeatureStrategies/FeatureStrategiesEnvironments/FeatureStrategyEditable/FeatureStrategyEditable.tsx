@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { mutate } from 'swr';
 import FeatureStrategiesUIContext from '../../../../../../contexts/FeatureStrategiesUIContext';
@@ -6,8 +6,8 @@ import useFeatureStrategy from '../../../../../../hooks/api/getters/useFeatureSt
 import { IFeatureViewParams } from '../../../../../../interfaces/params';
 import {
     IConstraint,
-    IParameter,
     IFeatureStrategy,
+    IParameter,
 } from '../../../../../../interfaces/strategy';
 import FeatureStrategyAccordion from '../../FeatureStrategyAccordion/FeatureStrategyAccordion';
 import cloneDeep from 'lodash.clonedeep';
@@ -15,7 +15,6 @@ import { Tooltip } from '@material-ui/core';
 import ConditionallyRender from '../../../../../common/ConditionallyRender';
 import { useStyles } from './FeatureStrategyEditable.styles';
 import { Delete } from '@material-ui/icons';
-import { PRODUCTION } from '../../../../../../constants/environmentTypes';
 import {
     DELETE_STRATEGY_ID,
     STRATEGY_ACCORDION_ID,
@@ -45,6 +44,7 @@ const FeatureStrategyEditable = ({
     const { loading } = useFeatureApi();
 
     const { projectId, featureId } = useParams<IFeatureViewParams>();
+    // @ts-expect-error
     const { activeEnvironment, featureCache, dirty, setDirty } = useContext(
         FeatureStrategiesUIContext
     );
@@ -72,20 +72,19 @@ const FeatureStrategyEditable = ({
         mutate(FEATURE_STRATEGY_CACHE_KEY, { ...updatedStrategy }, false);
 
         const dirtyParams = isDirtyParams(parameters);
+        // @ts-expect-error
         setDirty(prev => ({ ...prev, [strategy.id]: dirtyParams }));
     };
 
     const updateFeatureStrategy = () => {
         const cleanup = () => {
             setStrategyCache(cloneDeep(strategy));
+            // @ts-expect-error
             setDirty(prev => ({ ...prev, [strategy.id]: false }));
         };
 
+        // @ts-expect-error
         updateStrategy(strategy, cleanup);
-
-        if (activeEnvironment.type !== PRODUCTION) {
-            cleanup();
-        }
     };
 
     useEffect(() => {
@@ -114,6 +113,7 @@ const FeatureStrategyEditable = ({
     };
 
     const discardChanges = () => {
+        // @ts-expect-error
         setDirty(prev => ({ ...prev, [strategy.id]: false }));
         mutate(FEATURE_STRATEGY_CACHE_KEY, { ...strategyCache }, false);
     };
@@ -122,6 +122,7 @@ const FeatureStrategyEditable = ({
         const updatedStrategy = cloneDeep(strategy);
 
         updatedStrategy.constraints = [...cloneDeep(constraints)];
+        // @ts-expect-error
         setDirty(prev => ({ ...prev, [strategy.id]: true }));
         mutate(FEATURE_STRATEGY_CACHE_KEY, { ...updatedStrategy }, false);
     };
@@ -141,6 +142,7 @@ const FeatureStrategyEditable = ({
                 data-test={`${STRATEGY_ACCORDION_ID}-${strategy.name}`}
                 strategy={strategy}
                 setStrategyParams={setStrategyParams}
+                // @ts-expect-error
                 setStrategyConstraints={setStrategyConstraints}
                 dirty={dirty[strategy.id]}
                 actions={
@@ -152,6 +154,7 @@ const FeatureStrategyEditable = ({
                             data-test={`${DELETE_STRATEGY_ID}-${strategy.name}`}
                             onClick={e => {
                                 e.stopPropagation();
+                                // @ts-expect-error
                                 setDelDialog({
                                     strategyId: strategy.id,
                                     show: true,
@@ -185,6 +188,7 @@ const FeatureStrategyEditable = ({
                                     onClick={discardChanges}
                                     className={styles.editButton}
                                     disabled={loading}
+                                    // @ts-expect-error
                                     color="tertiary"
                                     variant="text"
                                     permission={UPDATE_FEATURE_STRATEGY}

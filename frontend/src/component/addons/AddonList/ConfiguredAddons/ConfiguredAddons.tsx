@@ -21,6 +21,7 @@ import AccessContext from '../../../../contexts/AccessContext';
 import { IAddon } from '../../../../interfaces/addons';
 import PermissionIconButton from '../../../common/PermissionIconButton/PermissionIconButton';
 import Dialogue from '../../../common/Dialogue';
+import { formatUnknownError } from '../../../../utils/format-unknown-error';
 
 interface IConfigureAddonsProps {
     getAddonIcon: (name: string) => ReactElement;
@@ -59,8 +60,8 @@ export const ConfiguredAddons = ({ getAddonIcon }: IConfigureAddonsProps) => {
                 title: 'Success',
                 text: 'Addon state switched successfully',
             });
-        } catch (e: any) {
-            setToastApiError(e.toString());
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
         }
     };
 
@@ -111,7 +112,6 @@ export const ConfiguredAddons = ({ getAddonIcon }: IConfigureAddonsProps) => {
             <ListItemSecondaryAction>
                 <PermissionIconButton
                     permission={UPDATE_ADDON}
-                    tooltip={addon.enabled ? 'Disable addon' : 'Enable addon'}
                     onClick={() => toggleAddon(addon)}
                 >
                     <ConditionallyRender
@@ -122,7 +122,6 @@ export const ConfiguredAddons = ({ getAddonIcon }: IConfigureAddonsProps) => {
                 </PermissionIconButton>
                 <PermissionIconButton
                     permission={UPDATE_ADDON}
-                    tooltip={'Edit Addon'}
                     onClick={() => {
                         history.push(`/addons/edit/${addon.id}`);
                     }}
@@ -131,7 +130,6 @@ export const ConfiguredAddons = ({ getAddonIcon }: IConfigureAddonsProps) => {
                 </PermissionIconButton>
                 <PermissionIconButton
                     permission={DELETE_ADDON}
-                    tooltip={'Remove Addon'}
                     onClick={() => {
                         setDeletedAddon(addon);
                         setShowDelete(true);

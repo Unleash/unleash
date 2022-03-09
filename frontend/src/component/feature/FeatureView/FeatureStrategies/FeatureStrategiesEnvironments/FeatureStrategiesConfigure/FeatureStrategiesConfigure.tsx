@@ -19,6 +19,7 @@ import { ADD_NEW_STRATEGY_SAVE_ID } from '../../../../../../testIds';
 import useFeature from '../../../../../../hooks/api/getters/useFeature/useFeature';
 import { scrollToTop } from '../../../../../common/util';
 import useToast from '../../../../../../hooks/useToast';
+import { formatUnknownError } from '../../../../../../utils/format-unknown-error';
 
 const FeatureStrategiesConfigure = () => {
     const history = useHistory();
@@ -34,11 +35,17 @@ const FeatureStrategiesConfigure = () => {
     );
     const styles = useStyles();
     const {
+        // @ts-expect-error
         activeEnvironment,
+        // @ts-expect-error
         setConfigureNewStrategy,
+        // @ts-expect-error
         configureNewStrategy,
+        // @ts-expect-error
         setExpandedSidebar,
+        // @ts-expect-error
         featureCache,
+        // @ts-expect-error
         setFeatureCache,
     } = useContext(FeatureStrategiesUIContext);
 
@@ -82,6 +89,7 @@ const FeatureStrategiesConfigure = () => {
 
             const feature = cloneDeep(featureCache);
             const environment = feature.environments.find(
+                // @ts-expect-error
                 env => env.name === activeEnvironment.name
             );
 
@@ -99,8 +107,8 @@ const FeatureStrategiesConfigure = () => {
             history.replace(history.location.pathname);
             refetch();
             scrollToTop();
-        } catch (e) {
-            setToastApiError(e.message);
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
         }
     };
 
@@ -122,6 +130,7 @@ const FeatureStrategiesConfigure = () => {
                     <FeatureStrategyAccordion
                         strategy={configureNewStrategy}
                         expanded
+                        // @ts-expect-error
                         hideActions
                         parameters={strategyParams}
                         constraints={strategyConstraints}

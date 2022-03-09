@@ -7,6 +7,7 @@ import {
     UPDATE_CONTEXT_FIELD,
 } from '../../providers/AccessProvider/permissions';
 import {
+    Button,
     IconButton,
     List,
     ListItem,
@@ -14,7 +15,6 @@ import {
     ListItemText,
     Tooltip,
     useMediaQuery,
-    Button,
 } from '@material-ui/core';
 import { Add, Album, Delete, Edit } from '@material-ui/icons';
 import { useContext, useState } from 'react';
@@ -25,13 +25,14 @@ import AccessContext from '../../../contexts/AccessContext';
 import useUnleashContext from '../../../hooks/api/getters/useUnleashContext/useUnleashContext';
 import useContextsApi from '../../../hooks/api/actions/useContextsApi/useContextsApi';
 import useToast from '../../../hooks/useToast';
+import { formatUnknownError } from '../../../utils/format-unknown-error';
 
 const ContextList = () => {
     const { hasAccess } = useContext(AccessContext);
     const [showDelDialogue, setShowDelDialogue] = useState(false);
     const smallScreen = useMediaQuery('(max-width:700px)');
     const [name, setName] = useState();
-    const { context, refetch } = useUnleashContext();
+    const { context, refetchUnleashContext } = useUnleashContext();
     const { removeContext } = useContextsApi();
     const { setToastData, setToastApiError } = useToast();
     const history = useHistory();
@@ -40,14 +41,14 @@ const ContextList = () => {
     const onDeleteContext = async name => {
         try {
             await removeContext(name);
-            refetch();
+            refetchUnleashContext();
             setToastData({
                 type: 'success',
                 title: 'Successfully deleted context',
                 text: 'Your context is now deleted',
             });
-        } catch (e) {
-            setToastApiError(e.toString());
+        } catch (error) {
+            setToastApiError(formatUnknownError(error));
         }
         setName(undefined);
         setShowDelDialogue(false);
@@ -127,7 +128,7 @@ const ContextList = () => {
                             color="primary"
                             variant="contained"
                         >
-                            Add new context field
+                            New context field
                         </Button>
                     }
                 />

@@ -18,7 +18,7 @@ interface IApiTokenFormProps {
     handleSubmit: (e: any) => void;
     handleCancel: () => void;
     errors: { [key: string]: string };
-    mode: string;
+    mode: 'Create' | 'Edit';
     clearErrors: () => void;
 }
 const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
@@ -92,6 +92,7 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
                     label="Token Type"
                     id="api_key_type"
                     name="type"
+                    // @ts-expect-error
                     IconComponent={KeyboardArrowDownOutlined}
                     className={styles.selectInput}
                 />
@@ -104,6 +105,7 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
                     options={selectableProjects}
                     onChange={e => setProject(e.target.value as string)}
                     label="Project"
+                    // @ts-expect-error
                     IconComponent={KeyboardArrowDownOutlined}
                     className={styles.selectInput}
                 />
@@ -118,6 +120,7 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
                     label="Environment"
                     id="api_key_environment"
                     name="environment"
+                    // @ts-expect-error
                     IconComponent={KeyboardArrowDownOutlined}
                     className={styles.selectInput}
                 />

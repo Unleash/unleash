@@ -1,9 +1,9 @@
-import Input from '../../common/Input/Input';
+import Input from 'component/common/Input/Input';
 import { TextField, Button, Switch, Chip, Typography } from '@material-ui/core';
 import { useStyles } from './ContextForm.styles';
 import React, { useState } from 'react';
 import { Add } from '@material-ui/icons';
-import { trim } from '../../common/util';
+import { trim } from 'component/common/util';
 
 interface IContextForm {
     contextName: string;
@@ -15,20 +15,20 @@ interface IContextForm {
     setStickiness: React.Dispatch<React.SetStateAction<boolean>>;
     setLegalValues: React.Dispatch<React.SetStateAction<string[]>>;
     handleSubmit: (e: any) => void;
-    handleCancel: () => void;
+    onCancel: () => void;
     errors: { [key: string]: string };
-    mode: string;
+    mode: 'Create' | 'Edit';
     clearErrors: () => void;
-    validateNameUniqueness: () => void;
+    validateContext?: () => void;
     setErrors: React.Dispatch<React.SetStateAction<Object>>;
 }
 
 const ENTER = 'Enter';
 
-const ContextForm: React.FC<IContextForm> = ({
+export const ContextForm: React.FC<IContextForm> = ({
     children,
     handleSubmit,
-    handleCancel,
+    onCancel,
     contextName,
     contextDesc,
     legalValues,
@@ -39,7 +39,7 @@ const ContextForm: React.FC<IContextForm> = ({
     setStickiness,
     errors,
     mode,
-    validateNameUniqueness,
+    validateContext,
     setErrors,
     clearErrors,
 }) => {
@@ -108,7 +108,7 @@ const ContextForm: React.FC<IContextForm> = ({
                     error={Boolean(errors.name)}
                     errorText={errors.name}
                     onFocus={() => clearErrors()}
-                    onBlur={validateNameUniqueness}
+                    onBlur={validateContext}
                     autoFocus
                 />
                 <p className={styles.inputDescription}>
@@ -187,12 +187,10 @@ const ContextForm: React.FC<IContextForm> = ({
             </div>
             <div className={styles.buttonContainer}>
                 {children}
-                <Button onClick={handleCancel} className={styles.cancelButton}>
+                <Button onClick={onCancel} className={styles.cancelButton}>
                     Cancel
                 </Button>
             </div>
         </form>
     );
 };
-
-export default ContextForm;

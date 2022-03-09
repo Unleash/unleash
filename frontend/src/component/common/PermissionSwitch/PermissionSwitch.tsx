@@ -1,12 +1,11 @@
-import { Switch, Tooltip } from '@material-ui/core';
-import { OverridableComponent } from '@material-ui/core/OverridableComponent';
+import { Switch, Tooltip, SwitchProps } from '@material-ui/core';
 import AccessContext from '../../../contexts/AccessContext';
 import React, { useContext } from 'react';
 
-interface IPermissionSwitchProps extends OverridableComponent<any> {
+interface IPermissionSwitchProps extends SwitchProps {
     permission: string;
-    tooltip: string;
-    onChange?: (e: any) => void;
+    tooltip?: string;
+    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
     disabled?: boolean;
     projectId?: string;
     environmentId?: string;
@@ -19,7 +18,7 @@ const PermissionSwitch = React.forwardRef<
 >((props, ref) => {
     const {
         permission,
-        tooltip = '',
+        tooltip,
         disabled,
         projectId,
         environmentId,
@@ -39,9 +38,9 @@ const PermissionSwitch = React.forwardRef<
         access = hasAccess(permission);
     }
 
-    const tooltipText = access
-        ? tooltip
-        : "You don't have access to perform this operation";
+    const tooltipText = !access
+        ? "You don't have access to perform this operation"
+        : '';
 
     return (
         <Tooltip title={tooltipText} arrow>

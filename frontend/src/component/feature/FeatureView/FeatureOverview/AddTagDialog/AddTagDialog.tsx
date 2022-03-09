@@ -1,16 +1,16 @@
 import { DialogContentText } from '@material-ui/core';
 import { useParams } from 'react-router';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { IFeatureViewParams } from '../../../../../interfaces/params';
 import Dialogue from '../../../../common/Dialogue';
 import Input from '../../../../common/Input/Input';
-import { SyntheticEvent } from 'react-router/node_modules/@types/react';
 import { useStyles } from './AddTagDialog.styles';
 import { trim } from '../../../../common/util';
 import TagSelect from '../../../../common/TagSelect/TagSelect';
 import useFeatureApi from '../../../../../hooks/api/actions/useFeatureApi/useFeatureApi';
 import useTags from '../../../../../hooks/api/getters/useTags/useTags';
 import useToast from '../../../../../hooks/useToast';
+import { formatUnknownError } from '../../../../../utils/format-unknown-error';
 
 interface IAddTagDialogProps {
     open: boolean;
@@ -20,6 +20,7 @@ interface IAddTagDialogProps {
 interface IDefaultTag {
     type: string;
     value: string;
+
     [index: string]: string;
 }
 
@@ -45,7 +46,7 @@ const AddTagDialog = ({ open, setOpen }: IAddTagDialogProps) => {
         setTag(newTag);
     };
 
-    const onSubmit = async (evt: SyntheticEvent) => {
+    const onSubmit = async (evt: React.SyntheticEvent) => {
         evt.preventDefault();
         if (!tag.type) {
             tag.type = 'simple';
@@ -62,9 +63,10 @@ const AddTagDialog = ({ open, setOpen }: IAddTagDialogProps) => {
                 text: 'We successfully added a tag to your toggle',
                 confetti: true,
             });
-        } catch (e) {
-            setToastApiError(e.message);
-            setErrors({ tagError: e.message });
+        } catch (error: unknown) {
+            const message = formatUnknownError(error);
+            setToastApiError(message);
+            setErrors({ tagError: message });
         }
     };
 

@@ -24,6 +24,7 @@ import { IUser } from '../../../../interfaces/user';
 import IRole from '../../../../interfaces/role';
 import useToast from '../../../../hooks/useToast';
 import { useLocationSettings } from '../../../../hooks/useLocationSettings';
+import { formatUnknownError } from '../../../../utils/format-unknown-error';
 
 const UsersList = () => {
     const { users, roles, refetch, loading } = useUsers();
@@ -72,6 +73,7 @@ const UsersList = () => {
 
     const onDeleteUser = async () => {
         try {
+            // @ts-expect-error
             await removeUser(delUser);
             setToastData({
                 title: `${delUser?.name} has been deleted`,
@@ -79,8 +81,8 @@ const UsersList = () => {
             });
             refetch();
             closeDelDialog();
-        } catch (e: any) {
-            setToastApiError(e.toString());
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
         }
     };
 
@@ -112,6 +114,7 @@ const UsersList = () => {
         return page.map(user => {
             return (
                 <UserListItem
+                    // @ts-expect-error
                     key={user.id}
                     user={user}
                     openPwDialog={openPwDialog}
@@ -161,8 +164,10 @@ const UsersList = () => {
             <ChangePassword
                 showDialog={pwDialog.open}
                 closeDialog={closePwDialog}
+                // @ts-expect-error
                 changePassword={changePassword}
                 validatePassword={validatePassword}
+                // @ts-expect-error
                 user={pwDialog.user}
             />
 
@@ -172,7 +177,7 @@ const UsersList = () => {
                     <DeleteUser
                         showDialog={delDialog}
                         closeDialog={closeDelDialog}
-                        user={delUser}
+                        user={delUser!}
                         removeUser={onDeleteUser}
                         userLoading={userLoading}
                         userApiErrors={userApiErrors}

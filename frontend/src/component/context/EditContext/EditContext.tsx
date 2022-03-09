@@ -1,17 +1,18 @@
+import FormTemplate from 'component/common/FormTemplate/FormTemplate';
+import { UpdateButton } from 'component/common/UpdateButton/UpdateButton';
+import { UPDATE_CONTEXT_FIELD } from 'component/providers/AccessProvider/permissions';
+import useContextsApi from 'hooks/api/actions/useContextsApi/useContextsApi';
+import useContext from 'hooks/api/getters/useContext/useContext';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import useToast from 'hooks/useToast';
 import { useEffect } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import useContextsApi from '../../../hooks/api/actions/useContextsApi/useContextsApi';
-import useContext from '../../../hooks/api/getters/useContext/useContext';
-import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
-import useToast from '../../../hooks/useToast';
-import FormTemplate from '../../common/FormTemplate/FormTemplate';
-import PermissionButton from '../../common/PermissionButton/PermissionButton';
 import { scrollToTop } from '../../common/util';
-import { UPDATE_CONTEXT_FIELD } from '../../providers/AccessProvider/permissions';
-import ContextForm from '../ContextForm/ContextForm';
-import useContextForm from '../hooks/useContextForm';
+import { formatUnknownError } from 'utils/format-unknown-error';
+import { ContextForm } from '../ContextForm/ContextForm';
+import { useContextForm } from '../hooks/useContextForm';
 
-const EditContext = () => {
+export const EditContext = () => {
     useEffect(() => {
         scrollToTop();
     }, []);
@@ -32,8 +33,6 @@ const EditContext = () => {
         setLegalValues,
         setStickiness,
         getContextPayload,
-        validateNameUniqueness,
-        validateName,
         clearErrors,
         setErrors,
         errors,
@@ -56,24 +55,21 @@ const EditContext = () => {
     const handleSubmit = async (e: Event) => {
         e.preventDefault();
         const payload = getContextPayload();
-        const validName = validateName();
 
-        if (validName) {
-            try {
-                await updateContext(payload);
-                refetch();
-                history.push('/context');
-                setToastData({
-                    title: 'Context information updated',
-                    type: 'success',
-                });
-            } catch (e: any) {
-                setToastApiError(e.toString());
-            }
+        try {
+            await updateContext(payload);
+            refetch();
+            history.push('/context');
+            setToastData({
+                title: 'Context information updated',
+                type: 'success',
+            });
+        } catch (e: unknown) {
+            setToastApiError(formatUnknownError(e));
         }
     };
 
-    const handleCancel = () => {
+    const onCancel = () => {
         history.goBack();
     };
 
@@ -81,7 +77,7 @@ const EditContext = () => {
         <FormTemplate
             loading={loading}
             title="Edit context"
-            description="Context fields are a basic building block used in Unleash to control roll-out. 
+            description="Context fields are a basic building block used in Unleash to control roll-out.
             They can be used together with strategy constraints as part of the activation strategy evaluation."
             documentationLink="https://docs.getunleash.io/how-to/how-to-define-custom-context-fields"
             formatApiCode={formatApiCode}
@@ -89,7 +85,7 @@ const EditContext = () => {
             <ContextForm
                 errors={errors}
                 handleSubmit={handleSubmit}
-                handleCancel={handleCancel}
+                onCancel={onCancel}
                 contextName={contextName}
                 setContextName={setContextName}
                 contextDesc={contextDesc}
@@ -99,19 +95,11 @@ const EditContext = () => {
                 stickiness={stickiness}
                 setStickiness={setStickiness}
                 mode="Edit"
-                validateNameUniqueness={validateNameUniqueness}
                 setErrors={setErrors}
                 clearErrors={clearErrors}
             >
-                <PermissionButton
-                    permission={UPDATE_CONTEXT_FIELD}
-                    type="submit"
-                >
-                    Edit context
-                </PermissionButton>
+                <UpdateButton permission={UPDATE_CONTEXT_FIELD} />
             </ContextForm>
         </FormTemplate>
     );
 };
-
-export default EditContext;

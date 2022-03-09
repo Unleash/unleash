@@ -43,6 +43,7 @@ const useProjectRoleForm = (
     ) => {
         const formattedInitialCheckedPermissions =
             isAllEnvironmentPermissionsChecked(
+                // @ts-expect-error
                 isAllProjectPermissionsChecked(initialCheckedPermissions)
             );
 
@@ -59,6 +60,7 @@ const useProjectRoleForm = (
         });
 
         if (isAllChecked) {
+            // @ts-expect-error
             initialCheckedPermissions[PROJECT_CHECK_ALL_KEY] = true;
         } else {
             delete initialCheckedPermissions[PROJECT_CHECK_ALL_KEY];
@@ -82,6 +84,7 @@ const useProjectRoleForm = (
             const key = `${ENVIRONMENT_CHECK_ALL_KEY}-${env.name}`;
 
             if (isAllChecked) {
+                // @ts-expect-error
                 initialCheckedPermissions[key] = true;
             } else {
                 delete initialCheckedPermissions[key];
@@ -109,10 +112,12 @@ const useProjectRoleForm = (
         }
 
         if (type === 'project') {
+            // @ts-expect-error
             checkedPermissionsCopy = isAllProjectPermissionsChecked(
                 checkedPermissionsCopy
             );
         } else {
+            // @ts-expect-error
             checkedPermissionsCopy = isAllEnvironmentPermissionsChecked(
                 checkedPermissionsCopy
             );
@@ -141,6 +146,7 @@ const useProjectRoleForm = (
                 };
 
                 if (lastItem) {
+                    // @ts-expect-error
                     checkedPermissionsCopy[PROJECT_CHECK_ALL_KEY] = true;
                 }
             }
@@ -173,6 +179,7 @@ const useProjectRoleForm = (
                 };
 
                 if (lastItem) {
+                    // @ts-expect-error
                     checkedPermissionsCopy[environmentCheckAllKey] = true;
                 }
             }
@@ -204,6 +211,7 @@ const useProjectRoleForm = (
         try {
             await validateRole(payload);
         } catch (e) {
+            // @ts-expect-error
             if (e.toString().includes(NAME_EXISTS_ERROR)) {
                 setErrors(prev => ({
                     ...prev,

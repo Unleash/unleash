@@ -10,7 +10,7 @@ type UsePersistentGlobalState<T> = () => [
 // Create a hook that stores global state (shared across all hook instances).
 // The state is also persisted to localStorage and restored on page load.
 // The localStorage state is not synced between tabs.
-export const createPersistentGlobalState = <T extends object>(
+export const createPersistentGlobalStateHook = <T extends object>(
     key: string,
     initialValue: T
 ): UsePersistentGlobalState<T> => {
@@ -20,7 +20,7 @@ export const createPersistentGlobalState = <T extends object>(
 
     const setGlobalState = (value: React.SetStateAction<T>) => {
         const prev = container.getGlobalState(key);
-        const next = typeof value === 'function' ? value(prev) : value;
+        const next = value instanceof Function ? value(prev) : value;
         container.setGlobalState(key, next);
         setLocalStorageItem(key, next);
     };

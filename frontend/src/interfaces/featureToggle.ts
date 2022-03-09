@@ -57,7 +57,7 @@ export interface IOverride {
 }
 
 export interface IPayload {
-    name: string;
+    type: string;
     value: string;
 }
 
@@ -69,15 +69,8 @@ export interface IFeatureEnvironmentMetrics {
 }
 
 export interface IFeatureMetrics {
-    version: number;
-    maturity: string;
-    lastHourUsage: IFeatureEnvironmentMetrics[];
-    seenApplications: string[];
-}
-
-export interface IFeatureMetrics {
-    version: number;
-    maturity: string;
+    version?: number;
+    maturity?: string;
     lastHourUsage: IFeatureEnvironmentMetrics[];
     seenApplications: string[];
 }

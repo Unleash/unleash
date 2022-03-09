@@ -19,7 +19,7 @@ export const useStyles = makeStyles(theme => ({
         padding: '2rem',
         display: 'flex',
         flexDirection: 'column',
-        width: '350px',
+        width: 400,
         ['& > *']: {
             margin: '0.5rem 0',
         },

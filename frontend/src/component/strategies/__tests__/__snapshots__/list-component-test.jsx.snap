@@ -11,23 +11,23 @@ exports[`renders correctly with one strategy 1`] = `
   }
 >
   <div
-    className="makeStyles-headerContainer-3"
+    className="makeStyles-headerContainer-2"
   >
     <div
-      className="makeStyles-headerTitleContainer-7"
+      className="makeStyles-headerTitleContainer-6"
     >
       <div
         className=""
         data-loading={true}
       >
         <h2
-          className="MuiTypography-root makeStyles-headerTitle-8 MuiTypography-h2"
+          className="MuiTypography-root makeStyles-headerTitle-7 MuiTypography-h2"
         >
           Strategies
         </h2>
       </div>
       <div
-        className="makeStyles-headerActions-9"
+        className="makeStyles-headerActions-8"
       >
         <span
           aria-describedby={null}
@@ -38,7 +38,7 @@ exports[`renders correctly with one strategy 1`] = `
           onMouseOver={[Function]}
           onTouchEnd={[Function]}
           onTouchStart={[Function]}
-          title="Add new strategy"
+          title=""
         >
           <button
             className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -62,7 +62,7 @@ exports[`renders correctly with one strategy 1`] = `
             <span
               className="MuiButton-label"
             >
-              Add new strategy
+              New strategy
               <span
                 className="MuiButton-endIcon MuiButton-iconSizeMedium"
               />
@@ -76,7 +76,7 @@ exports[`renders correctly with one strategy 1`] = `
     </div>
   </div>
   <div
-    className="makeStyles-bodyContainer-4"
+    className="makeStyles-bodyContainer-3"
   >
     <ul
       className="MuiList-root MuiList-padding"
@@ -111,7 +111,7 @@ exports[`renders correctly with one strategy 1`] = `
             className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
           >
             <a
-              href="/strategies/view/flexibleRollout"
+              href="/strategies/flexibleRollout"
               onClick={[Function]}
             >
               <strong>
@@ -135,7 +135,7 @@ exports[`renders correctly with one strategy 1`] = `
             onMouseOver={[Function]}
             onTouchEnd={[Function]}
             onTouchStart={[Function]}
-            title="Deprecate activation strategy"
+            title=""
           >
             <button
               className="MuiButtonBase-root MuiIconButton-root"
@@ -207,6 +207,53 @@ exports[`renders correctly with one strategy 1`] = `
               className="MuiIconButton-label"
             >
               <svg
+                className="MuiSvgIcon-root"
+                focusable="false"
+                role="img"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+                />
+                <title>
+                  Edit strategy
+                </title>
+              </svg>
+            </span>
+          </button>
+        </div>
+        <div
+          aria-describedby={null}
+          className=""
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onMouseLeave={[Function]}
+          onMouseOver={[Function]}
+          onTouchEnd={[Function]}
+          onTouchStart={[Function]}
+          title="You cannot delete a built-in strategy"
+        >
+          <button
+            className="MuiButtonBase-root MuiIconButton-root Mui-disabled Mui-disabled"
+            disabled={true}
+            onBlur={[Function]}
+            onDragLeave={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            tabIndex={-1}
+            type="button"
+          >
+            <span
+              className="MuiIconButton-label"
+            >
+              <svg
                 aria-hidden={true}
                 className="MuiSvgIcon-root"
                 focusable="false"
@@ -236,23 +283,23 @@ exports[`renders correctly with one strategy without permissions 1`] = `
   }
 >
   <div
-    className="makeStyles-headerContainer-3"
+    className="makeStyles-headerContainer-2"
   >
     <div
-      className="makeStyles-headerTitleContainer-7"
+      className="makeStyles-headerTitleContainer-6"
     >
       <div
         className=""
         data-loading={true}
       >
         <h2
-          className="MuiTypography-root makeStyles-headerTitle-8 MuiTypography-h2"
+          className="MuiTypography-root makeStyles-headerTitle-7 MuiTypography-h2"
         >
           Strategies
         </h2>
       </div>
       <div
-        className="makeStyles-headerActions-9"
+        className="makeStyles-headerActions-8"
       >
         <span
           aria-describedby={null}
@@ -263,7 +310,7 @@ exports[`renders correctly with one strategy without permissions 1`] = `
           onMouseOver={[Function]}
           onTouchEnd={[Function]}
           onTouchStart={[Function]}
-          title="Add new strategy"
+          title=""
         >
           <button
             className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -287,7 +334,7 @@ exports[`renders correctly with one strategy without permissions 1`] = `
             <span
               className="MuiButton-label"
             >
-              Add new strategy
+              New strategy
               <span
                 className="MuiButton-endIcon MuiButton-iconSizeMedium"
               />
@@ -301,7 +348,7 @@ exports[`renders correctly with one strategy without permissions 1`] = `
     </div>
   </div>
   <div
-    className="makeStyles-bodyContainer-4"
+    className="makeStyles-bodyContainer-3"
   >
     <ul
       className="MuiList-root MuiList-padding"
@@ -336,7 +383,7 @@ exports[`renders correctly with one strategy without permissions 1`] = `
             className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
           >
             <a
-              href="/strategies/view/flexibleRollout"
+              href="/strategies/flexibleRollout"
               onClick={[Function]}
             >
               <strong>
@@ -360,7 +407,7 @@ exports[`renders correctly with one strategy without permissions 1`] = `
             onMouseOver={[Function]}
             onTouchEnd={[Function]}
             onTouchStart={[Function]}
-            title="Deprecate activation strategy"
+            title=""
           >
             <button
               className="MuiButtonBase-root MuiIconButton-root"
@@ -399,6 +446,53 @@ exports[`renders correctly with one strategy without permissions 1`] = `
               />
             </button>
           </span>
+        </div>
+        <div
+          aria-describedby={null}
+          className=""
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onMouseLeave={[Function]}
+          onMouseOver={[Function]}
+          onTouchEnd={[Function]}
+          onTouchStart={[Function]}
+          title="You cannot delete a built-in strategy"
+        >
+          <button
+            className="MuiButtonBase-root MuiIconButton-root Mui-disabled Mui-disabled"
+            disabled={true}
+            onBlur={[Function]}
+            onDragLeave={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            tabIndex={-1}
+            type="button"
+          >
+            <span
+              className="MuiIconButton-label"
+            >
+              <svg
+                className="MuiSvgIcon-root"
+                focusable="false"
+                role="img"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+                />
+                <title>
+                  Edit strategy
+                </title>
+              </svg>
+            </span>
+          </button>
         </div>
         <div
           aria-describedby={null}

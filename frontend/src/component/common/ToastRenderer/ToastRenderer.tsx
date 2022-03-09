@@ -1,19 +1,19 @@
 import { Portal } from '@material-ui/core';
 import { useContext, useEffect } from 'react';
 import { useCommonStyles } from '../../../common.styles';
-import UIContext, { IToastData } from '../../../contexts/UIContext';
+import UIContext from '../../../contexts/UIContext';
 import { useStyles } from './ToastRenderer.styles';
 import AnimateOnMount from '../AnimateOnMount/AnimateOnMount';
 import Toast from './Toast/Toast';
+import { IToast } from '../../../interfaces/toast';
 
 const ToastRenderer = () => {
-    // @ts-expect-error
     const { toastData, setToast } = useContext(UIContext);
     const commonStyles = useCommonStyles();
     const styles = useStyles();
 
     const hide = () => {
-        setToast((prev: IToastData) => ({ ...prev, show: false }));
+        setToast((prev: IToast) => ({ ...prev, show: false }));
     };
 
     useEffect(() => {
@@ -31,7 +31,7 @@ const ToastRenderer = () => {
     return (
         <Portal>
             <AnimateOnMount
-                mounted={toastData?.show}
+                mounted={Boolean(toastData?.show)}
                 start={commonStyles.fadeInBottomStartWithoutFixed}
                 enter={commonStyles.fadeInBottomEnter}
                 leave={commonStyles.fadeInBottomLeave}

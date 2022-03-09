@@ -1,5 +1,4 @@
 import { FeatureToggleListContainer } from '../feature/FeatureToggleList/FeatureToggleListContainer';
-import { StrategyForm } from '../strategies/StrategyForm/StrategyForm';
 import { StrategyView } from '../strategies/StrategyView/StrategyView';
 import { StrategiesList } from '../strategies/StrategiesList/StrategiesList';
 import { ArchiveListContainer } from '../archive/ArchiveListContainer';
@@ -15,11 +14,11 @@ import { P, C, E, EEA, RE } from '../common/flags';
 import { NewUser } from '../user/NewUser/NewUser';
 import ResetPassword from '../user/ResetPassword/ResetPassword';
 import ForgottenPassword from '../user/ForgottenPassword/ForgottenPassword';
-import ProjectListNew from '../project/ProjectList/ProjectList';
+import { ProjectListNew } from '../project/ProjectList/ProjectList';
 import Project from '../project/Project/Project';
 import RedirectArchive from '../archive/RedirectArchive';
 import EnvironmentList from '../environments/EnvironmentList/EnvironmentList';
-import FeatureView from '../feature/FeatureView/FeatureView';
+import { FeatureView } from '../feature/FeatureView/FeatureView';
 import ProjectRoles from '../admin/project-roles/ProjectRoles/ProjectRoles';
 import CreateProjectRole from '../admin/project-roles/CreateProjectRole/CreateProjectRole';
 import EditProjectRole from '../admin/project-roles/EditProjectRole/EditProjectRole';
@@ -28,8 +27,8 @@ import EditUser from '../admin/users/EditUser/EditUser';
 import { CreateApiToken } from '../admin/api-token/CreateApiToken/CreateApiToken';
 import CreateEnvironment from '../environments/CreateEnvironment/CreateEnvironment';
 import EditEnvironment from '../environments/EditEnvironment/EditEnvironment';
-import CreateContext from '../context/CreateContext/CreateContext';
-import EditContext from '../context/EditContext/EditContext';
+import { CreateContext } from '../context/CreateContext/CreateContext';
+import { EditContext } from '../context/EditContext/EditContext';
 import EditTagType from '../tags/EditTagType/EditTagType';
 import CreateTagType from '../tags/CreateTagType/CreateTagType';
 import EditProject from '../project/Project/EditProject/EditProject';
@@ -45,6 +44,8 @@ import { EditAddon } from '../addons/EditAddon/EditAddon';
 import { CopyFeatureToggle } from '../feature/CopyFeature/CopyFeature';
 import { EventHistoryPage } from '../history/EventHistoryPage/EventHistoryPage';
 import { FeatureEventHistoryPage } from '../history/FeatureEventHistoryPage/FeatureEventHistoryPage';
+import { CreateStrategy } from '../strategies/CreateStrategy/CreateStrategy';
+import { EditStrategy } from '../strategies/EditStrategy/EditStrategy';
 
 export const routes = [
     // Project
@@ -95,7 +96,7 @@ export const routes = [
         menu: {},
     },
     {
-        path: '/projects/:projectId/features/:featureId/settings',
+        path: '/projects/:projectId/features/:featureId/edit',
         parent: '/projects',
         title: 'Edit Feature',
         component: EditFeature,
@@ -243,14 +244,23 @@ export const routes = [
         path: '/strategies/create',
         title: 'Create',
         parent: '/strategies',
-        component: StrategyForm,
+        component: CreateStrategy,
         type: 'protected',
         layout: 'main',
         menu: {},
     },
     {
-        path: '/strategies/:activeTab/:strategyName',
-        title: ':strategyName',
+        path: '/strategies/:name/edit',
+        title: ':name',
+        parent: '/strategies',
+        component: EditStrategy,
+        type: 'protected',
+        layout: 'main',
+        menu: {},
+    },
+    {
+        path: '/strategies/:name',
+        title: ':name',
         parent: '/strategies',
         component: StrategyView,
         type: 'protected',

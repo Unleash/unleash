@@ -1,18 +1,16 @@
 import { useEffect } from 'react';
-
-import FormTemplate from '../../../common/FormTemplate/FormTemplate';
-
-import useProjectRolesApi from '../../../../hooks/api/actions/useProjectRolesApi/useProjectRolesApi';
-
-import { useHistory, useParams } from 'react-router-dom';
-import ProjectRoleForm from '../ProjectRoleForm/ProjectRoleForm';
+import FormTemplate from 'component/common/FormTemplate/FormTemplate';
+import { UpdateButton } from 'component/common/UpdateButton/UpdateButton';
+import { ADMIN } from 'component/providers/AccessProvider/permissions';
+import useProjectRolesApi from 'hooks/api/actions/useProjectRolesApi/useProjectRolesApi';
+import useProjectRole from 'hooks/api/getters/useProjectRole/useProjectRole';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import useToast from 'hooks/useToast';
+import { IPermission } from 'interfaces/user';
+import { useParams, useHistory } from 'react-router-dom';
 import useProjectRoleForm from '../hooks/useProjectRoleForm';
-import useProjectRole from '../../../../hooks/api/getters/useProjectRole/useProjectRole';
-import { IPermission } from '../../../../interfaces/project';
-import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
-import useToast from '../../../../hooks/useToast';
-import PermissionButton from '../../../common/PermissionButton/PermissionButton';
-import { ADMIN } from '../../../providers/AccessProvider/permissions';
+import ProjectRoleForm from '../ProjectRoleForm/ProjectRoleForm';
+import { formatUnknownError } from 'utils/format-unknown-error';
 
 const EditProjectRole = () => {
     const { uiConfig } = useUiConfig();
@@ -44,6 +42,7 @@ const EditProjectRole = () => {
     useEffect(() => {
         const initialCheckedPermissions = role?.permissions?.reduce(
             (acc: { [key: string]: IPermission }, curr: IPermission) => {
+                // @ts-expect-error
                 acc[getRoleKey(curr)] = curr;
                 return acc;
             },
@@ -88,8 +87,8 @@ const EditProjectRole = () => {
                     text: 'Your role changes will automatically be applied to the users with this role.',
                     confetti: true,
                 });
-            } catch (e: any) {
-                setToastApiError(e.toString());
+            } catch (error: unknown) {
+                setToastApiError(formatUnknownError(error));
             }
         }
     };
@@ -124,9 +123,7 @@ to resources within a project"
                 clearErrors={clearErrors}
                 getRoleKey={getRoleKey}
             >
-                <PermissionButton permission={ADMIN} type="submit">
-                    Edit role
-                </PermissionButton>
+                <UpdateButton permission={ADMIN} />
             </ProjectRoleForm>
         </FormTemplate>
     );

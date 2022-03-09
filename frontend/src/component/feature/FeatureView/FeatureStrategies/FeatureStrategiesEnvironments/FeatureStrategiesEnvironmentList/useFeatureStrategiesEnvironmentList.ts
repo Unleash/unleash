@@ -4,9 +4,13 @@ import FeatureStrategiesUIContext from '../../../../../../contexts/FeatureStrate
 import useFeatureStrategyApi from '../../../../../../hooks/api/actions/useFeatureStrategyApi/useFeatureStrategyApi';
 import useToast from '../../../../../../hooks/useToast';
 import { IFeatureViewParams } from '../../../../../../interfaces/params';
-import { IFeatureStrategy } from '../../../../../../interfaces/strategy';
+import {
+    IFeatureStrategy,
+    IStrategyPayload,
+} from '../../../../../../interfaces/strategy';
 import cloneDeep from 'lodash.clonedeep';
 import { IFeatureEnvironment } from '../../../../../../interfaces/featureToggle';
+import { formatUnknownError } from '../../../../../../utils/format-unknown-error';
 
 const useFeatureStrategiesEnvironmentList = () => {
     const { projectId, featureId } = useParams<IFeatureViewParams>();
@@ -15,12 +19,19 @@ const useFeatureStrategiesEnvironmentList = () => {
         useFeatureStrategyApi();
 
     const {
+        // @ts-expect-error
         setConfigureNewStrategy,
+        // @ts-expect-error
         configureNewStrategy,
+        // @ts-expect-error
         activeEnvironment,
+        // @ts-expect-error
         setExpandedSidebar,
+        // @ts-expect-error
         expandedSidebar,
+        // @ts-expect-error
         setFeatureCache,
+        // @ts-expect-error
         featureCache,
     } = useContext(FeatureStrategiesUIContext);
 
@@ -65,8 +76,7 @@ const useFeatureStrategiesEnvironmentList = () => {
             );
 
             setToastData({
-                title: 'Updates strategy',
-                confetti: true,
+                title: 'Updated strategy',
                 type: 'success',
                 text: `Successfully updated strategy`,
             });
@@ -74,10 +84,12 @@ const useFeatureStrategiesEnvironmentList = () => {
             const feature = cloneDeep(featureCache);
 
             const environment = feature.environments.find(
+                // @ts-expect-error
                 env => env.name === activeEnvironment.name
             );
 
             const strategy = environment.strategies.find(
+                // @ts-expect-error
                 strategy => strategy.id === updatedStrategy.id
             );
 
@@ -85,8 +97,8 @@ const useFeatureStrategiesEnvironmentList = () => {
             strategy.constraints = updateStrategyPayload.constraints;
             history.replace(history.location.pathname);
             setFeatureCache(feature);
-        } catch (e) {
-            setToastApiError(e.message);
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
         }
     };
 
@@ -102,9 +114,11 @@ const useFeatureStrategiesEnvironmentList = () => {
 
             const feature = cloneDeep(featureCache);
             const environment = feature.environments.find(
+                // @ts-expect-error
                 env => env.name === environmentId
             );
             const strategyIdx = environment.strategies.findIndex(
+                // @ts-expect-error
                 strategy => strategy.id === strategyId
             );
 
@@ -118,14 +132,13 @@ const useFeatureStrategiesEnvironmentList = () => {
                 text: `Successfully deleted strategy from ${featureId}`,
             });
             history.replace(history.location.pathname);
-        } catch (e) {
-            setToastApiError(e.message);
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
         }
     };
 
     return {
         activeEnvironmentsRef,
-        setToastData,
         deleteStrategy,
         updateStrategy,
         delDialog,

@@ -9,6 +9,7 @@ import ConditionallyRender from '../../../../common/ConditionallyRender';
 
 const FeatureStrategiesList = () => {
     const smallScreen = useMediaQuery('(max-width:700px)');
+    // @ts-expect-error
     const { expandedSidebar, setExpandedSidebar } = useContext(
         FeatureStrategiesUIContext
     );
@@ -32,6 +33,7 @@ const FeatureStrategiesList = () => {
     };
 
     const toggleSidebar = () => {
+        // @ts-expect-error
         setExpandedSidebar(prev => !prev);
     };
 

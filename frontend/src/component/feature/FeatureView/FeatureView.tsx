@@ -1,5 +1,5 @@
 import { Tab, Tabs, useMediaQuery } from '@material-ui/core';
-import React, { Suspense, useState } from 'react';
+import React, { useState } from 'react';
 import { Archive, FileCopy, Label, WatchLater } from '@material-ui/icons';
 import { Link, Route, useHistory, useParams } from 'react-router-dom';
 import useFeatureApi from '../../../hooks/api/actions/useFeatureApi/useFeatureApi';
@@ -18,9 +18,11 @@ import PermissionIconButton from '../../common/PermissionIconButton/PermissionIc
 import FeatureLog from './FeatureLog/FeatureLog';
 import FeatureOverview from './FeatureOverview/FeatureOverview';
 import FeatureStrategies from './FeatureStrategies/FeatureStrategies';
+import FeatureStrategies2 from './FeatureStrategies2/FeatureStrategies2';
 import FeatureVariants from './FeatureVariants/FeatureVariants';
+import { FeatureMetrics } from './FeatureMetrics/FeatureMetrics';
 import { useStyles } from './FeatureView.styles';
-import FeatureSettings from './FeatureSettings/FeatureSettings';
+import { FeatureSettings } from './FeatureSettings/FeatureSettings';
 import useLoading from '../../../hooks/useLoading';
 import ConditionallyRender from '../../common/ConditionallyRender';
 import { getCreateTogglePath } from '../../../utils/route-path-helpers';
@@ -30,7 +32,7 @@ import AddTagDialog from './FeatureOverview/AddTagDialog/AddTagDialog';
 import StatusChip from '../../common/StatusChip/StatusChip';
 import { formatUnknownError } from '../../../utils/format-unknown-error';
 
-const FeatureView = () => {
+export const FeatureView = () => {
     const { projectId, featureId } = useParams<IFeatureViewParams>();
     const { feature, loading, error } = useFeature(projectId, featureId);
     const { refetch: projectRefetch } = useProject(projectId);
@@ -60,7 +62,7 @@ const FeatureView = () => {
             setShowDelDialog(false);
             projectRefetch();
             history.push(`/projects/${projectId}`);
-        } catch (error) {
+        } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
             setShowDelDialog(false);
         }
@@ -131,6 +133,15 @@ const FeatureView = () => {
         );
     };
 
+    // CHANGEME - Feat: Constraint Operators
+    // TEMPORARY UNTIL WE ROLLED OUT FULLY
+    const resolveFeatureStrategies = () => {
+        if (uiConfig.flags.CO) {
+            return FeatureStrategies2;
+        }
+        return FeatureStrategies;
+    };
+
     return (
         <ConditionallyRender
             condition={error === undefined}
@@ -155,8 +166,8 @@ const FeatureView = () => {
                                 <PermissionIconButton
                                     permission={CREATE_FEATURE}
                                     projectId={projectId}
-                                    tooltip="Copy"
                                     data-loading
+                                    // @ts-expect-error
                                     component={Link}
                                     to={`/projects/${projectId}/features/${featureId}/strategies/copy`}
                                 >
@@ -165,7 +176,6 @@ const FeatureView = () => {
                                 <PermissionIconButton
                                     permission={DELETE_FEATURE}
                                     projectId={projectId}
-                                    tooltip="Archive feature toggle"
                                     data-loading
                                     onClick={() => setShowDelDialog(true)}
                                 >
@@ -175,7 +185,6 @@ const FeatureView = () => {
                                     onClick={() => setOpenStaleDialog(true)}
                                     permission={UPDATE_FEATURE}
                                     projectId={projectId}
-                                    tooltip="Toggle stale status"
                                     data-loading
                                 >
                                     <WatchLater titleAccess="Toggle stale status" />
@@ -184,7 +193,6 @@ const FeatureView = () => {
                                     onClick={() => setOpenTagDialog(true)}
                                     permission={UPDATE_FEATURE}
                                     projectId={projectId}
-                                    tooltip="Add tag"
                                     data-loading
                                 >
                                     <Label titleAccess="Add tag" />
@@ -203,33 +211,31 @@ const FeatureView = () => {
                             </Tabs>
                         </div>
                     </div>
-                    <Suspense fallback={null}>
-                        <Route
-                            exact
-                            path={`/projects/:projectId/features/:featureId`}
-                            component={FeatureOverview}
-                        />
-                        <Route
-                            path={`/projects/:projectId/features/:featureId/strategies`}
-                            component={FeatureStrategies}
-                        />
-                        <Route
-                            path={`/projects/:projectId/features/:featureId/metrics`}
-                            component={FeatureMetricsLazy}
-                        />
-                        <Route
-                            path={`/projects/:projectId/features/:featureId/logs`}
-                            component={FeatureLog}
-                        />
-                        <Route
-                            path={`/projects/:projectId/features/:featureId/variants`}
-                            component={FeatureVariants}
-                        />
-                        <Route
-                            path={`/projects/:projectId/features/:featureId/settings`}
-                            component={FeatureSettings}
-                        />
-                    </Suspense>
+                    <Route
+                        exact
+                        path={`/projects/:projectId/features/:featureId`}
+                        component={FeatureOverview}
+                    />
+                    <Route
+                        path={`/projects/:projectId/features/:featureId/strategies`}
+                        component={resolveFeatureStrategies()}
+                    />
+                    <Route
+                        path={`/projects/:projectId/features/:featureId/metrics`}
+                        component={FeatureMetrics}
+                    />
+                    <Route
+                        path={`/projects/:projectId/features/:featureId/logs`}
+                        component={FeatureLog}
+                    />
+                    <Route
+                        path={`/projects/:projectId/features/:featureId/variants`}
+                        component={FeatureVariants}
+                    />
+                    <Route
+                        path={`/projects/:projectId/features/:featureId/settings`}
+                        component={FeatureSettings}
+                    />
                     <Dialogue
                         onClick={() => archiveToggle()}
                         open={showDelDialog}
@@ -255,9 +261,3 @@ const FeatureView = () => {
         />
     );
 };
-
-const FeatureMetricsLazy = React.lazy(
-    () => import('./FeatureMetrics/FeatureMetrics')
-);
-
-export default FeatureView;

@@ -10,6 +10,10 @@ declare module '@material-ui/core/styles/makeStyles' {
     interface Theme extends MainTheme {}
 }
 
+declare module '@material-ui/core/styles/useTheme' {
+    interface Theme extends MainTheme {}
+}
+
 const mainTheme = {
     typography: {
         fontFamily: ['Sen', 'Roboto, sans-serif'],

@@ -7,13 +7,13 @@ import {
     Tooltip,
 } from '@material-ui/core';
 import { Add, RadioButtonChecked } from '@material-ui/icons';
-import { AppsLinkList } from '../../../common';
-import ConditionallyRender from '../../../common/ConditionallyRender';
+import { AppsLinkList } from 'component/common';
+import ConditionallyRender from 'component/common/ConditionallyRender';
 import styles from '../../strategies.module.scss';
 import { TogglesLinkList } from '../../TogglesLinkList/TogglesLinkList';
-import { IParameter, IStrategy } from '../../../../interfaces/strategy';
-import { IApplication } from '../../../../interfaces/application';
-import { IFeatureToggle } from '../../../../interfaces/featureToggle';
+import { IParameter, IStrategy } from 'interfaces/strategy';
+import { IApplication } from 'interfaces/application';
+import { IFeatureToggle } from 'interfaces/featureToggle';
 
 interface IStrategyDetailsProps {
     strategy: IStrategy;
@@ -28,7 +28,7 @@ export const StrategyDetails = ({
 }: IStrategyDetailsProps) => {
     const { parameters = [] } = strategy;
     const renderParameters = (params: IParameter[]) => {
-        if (params) {
+        if (params.length > 0) {
             return params.map(({ name, type, description, required }, i) => (
                 <ListItem key={`${name}-${i}`}>
                     <ConditionallyRender
@@ -59,7 +59,7 @@ export const StrategyDetails = ({
                 </ListItem>
             ));
         } else {
-            return <ListItem>(no params)</ListItem>;
+            return <ListItem>No params</ListItem>;
         }
     };
 

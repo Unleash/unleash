@@ -23,7 +23,7 @@ interface IFeatureStrategyCardProps {
     name: string;
     description: string;
     configureNewStrategy: boolean;
-    index?: number;
+    index: number;
 }
 
 export const FEATURE_STRATEGIES_DRAG_TYPE = 'FEATURE_STRATEGIES_DRAG_TYPE';
@@ -37,6 +37,7 @@ const FeatureStrategyCard = ({
     const { featureId, projectId } = useParams<IFeatureViewParams>();
     const { strategies } = useStrategies();
 
+    // @ts-expect-error
     const { setConfigureNewStrategy, setExpandedSidebar, activeEnvironment } =
         useContext(FeatureStrategiesUIContext);
     const { hasAccess } = useContext(AccessContext);
@@ -81,7 +82,7 @@ const FeatureStrategyCard = ({
                                 {<Icon className={styles.icon} />}
                             </div>
                         </div>
-                        <div className={styles.rightSection}>
+                        <div>
                             <PermissionIconButton
                                 className={styles.addButton}
                                 onClick={handleClick}

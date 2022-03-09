@@ -10,7 +10,7 @@ import {
 interface IStrategyInputList {
     name: string;
     list: string[];
-    setConfig: () => void;
+    setConfig: (field: string, value: string) => void;
     disabled: boolean;
 }
 
@@ -28,6 +28,7 @@ const StrategyInputList = ({
     };
 
     const onKeyDown = (e: ChangeEvent) => {
+        // @ts-expect-error
         if (e?.key === ENTERKEY) {
             setValue(e);
             e.preventDefault();
@@ -37,11 +38,13 @@ const StrategyInputList = ({
 
     const setValue = (evt: ChangeEvent) => {
         evt.preventDefault();
+        // @ts-expect-error
         const value = evt.target.value;
 
         if (value) {
             const newValues = value
                 .split(/,\s*/)
+                // @ts-expect-error
                 .filter(a => !list.includes(a));
             if (newValues.length > 0) {
                 const newList = list.concat(newValues).filter(a => a);
@@ -52,6 +55,7 @@ const StrategyInputList = ({
     };
 
     const onClose = (index: number) => {
+        // @ts-expect-error
         list[index] = null;
         setConfig(
             name,
@@ -59,6 +63,7 @@ const StrategyInputList = ({
         );
     };
 
+    // @ts-expect-error
     const onChange = e => {
         setInput(e.currentTarget.value);
     };
@@ -96,9 +101,11 @@ const StrategyInputList = ({
                             placeholder=""
                             onBlur={onBlur}
                             onChange={onChange}
+                            // @ts-expect-error
                             onKeyDown={onKeyDown}
                             data-test={STRATEGY_INPUT_LIST}
                         />
+                        {/* @ts-expect-error */}
                         <Button
                             onClick={setValue}
                             data-test={ADD_TO_STRATEGY_INPUT_LIST}

@@ -1,10 +1,10 @@
 import React from 'react';
 import {
+    Button,
     Dialog,
-    DialogTitle,
     DialogActions,
     DialogContent,
-    Button,
+    DialogTitle,
 } from '@material-ui/core';
 
 import ConditionallyRender from '../ConditionallyRender/ConditionallyRender';
@@ -15,15 +15,15 @@ interface IDialogue {
     primaryButtonText?: string;
     secondaryButtonText?: string;
     open: boolean;
-    onClick: (e: any) => void;
-    onClose: () => void;
+    onClick: (e: React.SyntheticEvent) => void;
+    onClose?: (e: React.SyntheticEvent) => void;
     style?: object;
     title: string;
     fullWidth?: boolean;
     maxWidth?: 'lg' | 'sm' | 'xs' | 'md' | 'xl';
     disabledPrimaryButton?: boolean;
     formId?: string;
-    permissionButton?: React.ReactNode;
+    permissionButton?: JSX.Element;
 }
 
 const Dialogue: React.FC<IDialogue> = ({
@@ -69,7 +69,7 @@ const Dialogue: React.FC<IDialogue> = ({
             <DialogActions>
                 <ConditionallyRender
                     condition={Boolean(permissionButton)}
-                    show={permissionButton}
+                    show={permissionButton!}
                     elseShow={
                         <ConditionallyRender
                             condition={Boolean(onClick)}

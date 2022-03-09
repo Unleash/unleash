@@ -10,7 +10,7 @@ import {
     TableRow,
     Typography,
 } from '@material-ui/core';
-import AddVariant from './AddFeatureVariant/AddFeatureVariant';
+import { AddVariant } from './AddFeatureVariant/AddFeatureVariant';
 
 import { useContext, useEffect, useState } from 'react';
 import useFeature from '../../../../../hooks/api/getters/useFeature/useFeature';
@@ -30,6 +30,7 @@ import cloneDeep from 'lodash.clonedeep';
 import useDeleteVariantMarkup from './FeatureVariantsListItem/useDeleteVariantMarkup';
 import PermissionButton from '../../../../common/PermissionButton/PermissionButton';
 import { mutate } from 'swr';
+import { formatUnknownError } from '../../../../../utils/format-unknown-error';
 
 const FeatureOverviewVariants = () => {
     const { hasAccess } = useContext(AccessContext);
@@ -58,11 +59,13 @@ const FeatureOverviewVariants = () => {
             ...context.filter(c => c.stickiness).map(c => c.name),
         ];
 
+        // @ts-expect-error
         setStickinessOptions(options);
     }, [context]);
 
     const editable = hasAccess(UPDATE_FEATURE_VARIANTS, projectId);
 
+    // @ts-expect-error
     const setClonedVariants = clonedVariants =>
         setVariants(cloneDeep(clonedVariants));
 
@@ -100,16 +103,20 @@ const FeatureOverviewVariants = () => {
         const options = stickinessOptions.map(c => ({ key: c, label: c }));
 
         // guard on stickiness being disabled for context field.
+        // @ts-expect-error
         if (!stickinessOptions.includes(value)) {
+            // @ts-expect-error
             options.push({ key: value, label: value });
         }
 
+        // @ts-expect-error
         const onChange = event => {
             updateStickiness(event.target.value);
         };
 
         return (
             <section style={{ paddingTop: '16px' }}>
+                {/* @ts-expect-error */}
                 <GeneralSelect
                     label="Stickiness"
                     options={options}
@@ -155,8 +162,8 @@ const FeatureOverviewVariants = () => {
                 type: 'success',
                 text: 'Successfully updated variant stickiness',
             });
-        } catch (e) {
-            setToastApiError(e.message);
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
         }
     };
 
@@ -167,8 +174,8 @@ const FeatureOverviewVariants = () => {
                 updatedVariants,
                 'Successfully removed variant'
             );
-        } catch (e) {
-            setToastApiError(e.message);
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
         }
     };
     const updateVariant = async (variant: IFeatureVariant) => {
@@ -210,8 +217,8 @@ const FeatureOverviewVariants = () => {
                 type: 'success',
                 text: successText,
             });
-        } catch (e) {
-            setToastApiError(e.message);
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
         }
     };
 
@@ -221,7 +228,7 @@ const FeatureOverviewVariants = () => {
         }
     };
 
-    const validateWeight = (weight: number) => {
+    const validateWeight = (weight: string) => {
         const weightValue = parseInt(weight);
         if (weightValue > 100 || weightValue < 0) {
             return { weight: 'weight must be between 0 and 100' };
@@ -230,7 +237,7 @@ const FeatureOverviewVariants = () => {
 
     const delDialogueMarkup = useDeleteVariantMarkup({
         show: delDialog.show,
-        onClick: e => {
+        onClick: () => {
             removeVariant(delDialog.name);
             setDelDialog({ name: '', show: false });
             setToastData({
@@ -293,7 +300,7 @@ const FeatureOverviewVariants = () => {
                     permission={UPDATE_FEATURE_VARIANTS}
                     projectId={projectId}
                 >
-                    Add variant
+                    New variant
                 </PermissionButton>
                 <ConditionallyRender
                     condition={editable}
@@ -314,6 +321,7 @@ const FeatureOverviewVariants = () => {
                 editing={editing}
                 validateName={validateName}
                 validateWeight={validateWeight}
+                // @ts-expect-error
                 editVariant={editVariant}
                 title={editing ? 'Edit variant' : 'Add variant'}
             />

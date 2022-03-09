@@ -16,6 +16,7 @@ import IRole, { IProjectRole } from '../../../../../interfaces/role';
 import useProjectRolesApi from '../../../../../hooks/api/actions/useProjectRolesApi/useProjectRolesApi';
 import useToast from '../../../../../hooks/useToast';
 import ProjectRoleDeleteConfirm from '../ProjectRoleDeleteConfirm/ProjectRoleDeleteConfirm';
+import { formatUnknownError } from '../../../../../utils/format-unknown-error';
 
 const ROOTROLE = 'root';
 
@@ -44,8 +45,8 @@ const ProjectRoleList = () => {
                 title: 'Successfully deleted role',
                 text: 'Your role is now deleted',
             });
-        } catch (e) {
-            setToastApiError(e.toString());
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
         }
         setDelDialog(false);
         setConfirmName('');
@@ -60,6 +61,7 @@ const ProjectRoleList = () => {
                     name={role.name}
                     type={role.type}
                     description={role.description}
+                    // @ts-expect-error
                     setCurrentRole={setCurrentRole}
                     setDelDialog={setDelDialog}
                 />
@@ -93,6 +95,7 @@ const ProjectRoleList = () => {
             </Table>
             <br />
             <ProjectRoleDeleteConfirm
+                // @ts-expect-error
                 role={currentRole}
                 open={delDialog}
                 setDeldialogue={setDelDialog}

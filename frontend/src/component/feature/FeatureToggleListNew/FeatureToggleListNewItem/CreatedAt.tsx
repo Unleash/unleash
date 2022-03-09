@@ -1,12 +1,9 @@
 import { Tooltip } from '@material-ui/core';
-import {
-    formatDateWithLocale,
-    formatFullDateTimeWithLocale,
-} from '../../../common/util';
 import { useLocationSettings } from '../../../../hooks/useLocationSettings';
+import { formatDateYMD, formatDateYMDHMS } from '../../../../utils/format-date';
 
 interface CreatedAtProps {
-    time: Date;
+    time: string;
 }
 
 const CreatedAt = ({ time }: CreatedAtProps) => {
@@ -14,12 +11,12 @@ const CreatedAt = ({ time }: CreatedAtProps) => {
 
     return (
         <Tooltip
-            title={`Created at ${formatFullDateTimeWithLocale(
+            title={`Created at ${formatDateYMDHMS(
                 time,
                 locationSettings.locale
             )}`}
         >
-            <span>{formatDateWithLocale(time, locationSettings.locale)}</span>
+            <span>{formatDateYMD(time, locationSettings.locale)}</span>
         </Tooltip>
     );
 };

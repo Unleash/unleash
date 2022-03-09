@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import * as jsonpatch from 'fast-json-patch';
 import { TextField } from '@material-ui/core';
 import PermissionButton from '../../../../common/PermissionButton/PermissionButton';
@@ -11,6 +11,7 @@ import { IFeatureViewParams } from '../../../../../interfaces/params';
 import useToast from '../../../../../hooks/useToast';
 import useFeatureApi from '../../../../../hooks/api/actions/useFeatureApi/useFeatureApi';
 import ConditionallyRender from '../../../../common/ConditionallyRender';
+import { formatUnknownError } from '../../../../../utils/format-unknown-error';
 
 const FeatureSettingsMetadata = () => {
     const { hasAccess } = useContext(AccessContext);
@@ -54,8 +55,8 @@ const FeatureSettingsMetadata = () => {
             });
             setDirty(false);
             refetch();
-        } catch (e) {
-            setToastApiError(e.toString());
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
         }
     };
 
@@ -64,6 +65,7 @@ const FeatureSettingsMetadata = () => {
             <FeatureTypeSelect
                 value={type}
                 id="feature-type-select"
+                // @ts-expect-error
                 onChange={e => setType(e.target.value)}
                 label="Feature type"
                 editable={editable}
@@ -82,7 +84,6 @@ const FeatureSettingsMetadata = () => {
                 condition={dirty}
                 show={
                     <PermissionButton
-                        tooltip="Save changes"
                         permission={UPDATE_FEATURE}
                         onClick={handleSubmit}
                         projectId={projectId}

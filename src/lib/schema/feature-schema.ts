@@ -8,8 +8,11 @@ export const nameSchema = joi
     .options({ stripUnknown: true, allowUnknown: false, abortEarly: false });
 
 export const constraintSchema = joi.object().keys({
-    contextName: joi.string(),
-    operator: joi.string().valid(...ALL_OPERATORS),
+    contextName: joi.string().required(),
+    operator: joi
+        .string()
+        .valid(...ALL_OPERATORS)
+        .required(),
     // Constraints must have a values array to support legacy SDKs.
     values: joi.array().items(joi.string().min(1).max(100)).default([]),
     value: joi.optional(),

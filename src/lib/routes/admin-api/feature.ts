@@ -157,7 +157,7 @@ class FeatureController extends Controller {
             true,
         );
         const strategies = await Promise.all(
-            toggle.strategies.map(async (s) =>
+            (toggle.strategies ?? []).map(async (s) =>
                 this.service.createStrategy(
                     s,
                     {

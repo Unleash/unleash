@@ -5,7 +5,7 @@ export const useStyles = makeStyles(theme => ({
         padding: '0',
         ['& a']: {
             textDecoration: 'none',
-            color: theme.palette.primary.light,
+            color: 'inherit',
         },
         '&:hover': {
             backgroundColor: theme.palette.grey[200],

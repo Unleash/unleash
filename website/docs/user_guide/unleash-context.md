@@ -78,4 +78,4 @@ Any context field _can_ be used to [calculate custom stickiness](../advanced/sti
 
 [^1]: If you're on Unleash 4.3 or higher, you'll probably want to use [the environments feature](../user_guide/environments.md) instead of relying on the `environment` context field when working with environments.
 
-[^2]: Check the [compatibility table](../sdks/index.md#current-time-server) for an overview of which SDKs provide the `currentTime` property.
+[^2]: Check the [*strategy constraints: advanced support* row of the compatibility table](../sdks/index.md#strategy-constraints-advanced-support) for an overview of which SDKs provide the `currentTime` property.

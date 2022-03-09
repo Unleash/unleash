@@ -341,3 +341,12 @@ export interface IProjectWithCount extends IProject {
     featureCount: number;
     memberCount: number;
 }
+
+export interface ISegment {
+    id: number;
+    name: string;
+    description?: string;
+    constraints: IConstraint[];
+    createdBy?: string;
+    createdAt: Date;
+}

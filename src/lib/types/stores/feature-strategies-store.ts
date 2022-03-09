@@ -46,9 +46,9 @@ export interface IFeatureStrategiesStore
         projectId: String,
         environment: String,
     ): Promise<void>;
-
     setProjectForStrategiesBelongingToFeature(
         featureName: string,
         newProjectId: string,
     ): Promise<void>;
+    getStrategiesBySegment(segmentId: number): Promise<IFeatureStrategy[]>;
 }

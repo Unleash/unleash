@@ -36,6 +36,7 @@ const mapperToColumnNames = {
 const T = {
     features: 'features',
     featureStrategies: 'feature_strategies',
+    featureStrategySegment: 'feature_strategy_segment',
     featureEnvs: 'feature_environments',
 };
 
@@ -128,7 +129,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
 
     async exists(key: string): Promise<boolean> {
         const result = await this.db.raw(
-            `SELECT EXISTS (SELECT 1 FROM ${T.featureStrategies} WHERE id = ?) AS present`,
+            `SELECT EXISTS(SELECT 1 FROM ${T.featureStrategies} WHERE id = ?) AS present`,
             [key],
         );
         const { present } = result.rows[0];
@@ -421,6 +422,27 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         await this.db(T.featureStrategies)
             .where({ feature_name: featureName })
             .update({ project_name: newProjectId });
+    }
+
+    async getStrategiesBySegment(
+        segmentId: number,
+    ): Promise<IFeatureStrategy[]> {
+        const stopTimer = this.timer('getStrategiesBySegment');
+        const rows = await this.db
+            .select(this.prefixColumns())
+            .from<IFeatureStrategiesTable>(T.featureStrategies)
+            .join(
+                T.featureStrategySegment,
+                `${T.featureStrategySegment}.feature_strategy_id`,
+                `${T.featureStrategies}.id`,
+            )
+            .where(`${T.featureStrategySegment}.segment_id`, '=', segmentId);
+        stopTimer();
+        return rows.map(mapRow);
+    }
+
+    prefixColumns(): string[] {
+        return COLUMNS.map((c) => `${T.featureStrategies}.${c}`);
     }
 }
 

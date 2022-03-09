@@ -1,13 +1,11 @@
-import { Button, Tooltip } from '@material-ui/core';
+import { Button, Tooltip, ButtonProps } from '@material-ui/core';
 import { Lock } from '@material-ui/icons';
 import AccessContext from 'contexts/AccessContext';
 import React, { useContext } from 'react';
 import ConditionallyRender from '../ConditionallyRender';
 
-export interface IPermissionButtonProps
-    extends React.HTMLProps<HTMLButtonElement> {
+export interface IPermissionButtonProps extends ButtonProps {
     permission: string | string[];
-    tooltip?: string;
     onClick?: (e: any) => void;
     disabled?: boolean;
     projectId?: string;
@@ -16,7 +14,6 @@ export interface IPermissionButtonProps
 
 const PermissionButton: React.FC<IPermissionButtonProps> = ({
     permission,
-    tooltip,
     onClick,
     children,
     disabled,
@@ -65,7 +62,6 @@ const PermissionButton: React.FC<IPermissionButtonProps> = ({
                     onClick={onClick}
                     disabled={disabled || !access}
                     variant="contained"
-                    // @ts-expect-error
                     color="primary"
                     {...rest}
                     endIcon={

@@ -230,7 +230,6 @@ const FeatureStrategyAccordionBody: React.FC<
                         <PermissionButton
                             className={styles.addConstraintBtn}
                             onClick={addConstraint}
-                            // @ts-expect-error
                             variant={'text'}
                             data-test={ADD_CONSTRAINT_ID}
                             permission={[

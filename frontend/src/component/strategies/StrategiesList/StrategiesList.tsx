@@ -189,7 +189,6 @@ export const StrategiesList = () => {
                     <PermissionIconButton
                         onClick={() => onDeprecateStrategy(strategy)}
                         permission={UPDATE_STRATEGY}
-                        tooltip={'Deprecate activation strategy'}
                     >
                         <Visibility />
                     </PermissionIconButton>
@@ -207,7 +206,6 @@ export const StrategiesList = () => {
                         history.push(`/strategies/${strategy?.name}/edit`)
                     }
                     permission={UPDATE_STRATEGY}
-                    tooltip={'Edit strategy'}
                 >
                     <Edit titleAccess="Edit strategy" />
                 </PermissionIconButton>

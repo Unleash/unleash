@@ -166,7 +166,6 @@ export const FeatureView = () => {
                                 <PermissionIconButton
                                     permission={CREATE_FEATURE}
                                     projectId={projectId}
-                                    tooltip="Copy"
                                     data-loading
                                     // @ts-expect-error
                                     component={Link}
@@ -177,7 +176,6 @@ export const FeatureView = () => {
                                 <PermissionIconButton
                                     permission={DELETE_FEATURE}
                                     projectId={projectId}
-                                    tooltip="Archive feature toggle"
                                     data-loading
                                     onClick={() => setShowDelDialog(true)}
                                 >
@@ -187,7 +185,6 @@ export const FeatureView = () => {
                                     onClick={() => setOpenStaleDialog(true)}
                                     permission={UPDATE_FEATURE}
                                     projectId={projectId}
-                                    tooltip="Toggle stale status"
                                     data-loading
                                 >
                                     <WatchLater titleAccess="Toggle stale status" />
@@ -196,7 +193,6 @@ export const FeatureView = () => {
                                     onClick={() => setOpenTagDialog(true)}
                                     permission={UPDATE_FEATURE}
                                     projectId={projectId}
-                                    tooltip="Add tag"
                                     data-loading
                                 >
                                     <Label titleAccess="Add tag" />

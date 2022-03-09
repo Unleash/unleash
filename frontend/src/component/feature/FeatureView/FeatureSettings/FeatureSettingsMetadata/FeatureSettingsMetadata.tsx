@@ -84,7 +84,6 @@ const FeatureSettingsMetadata = () => {
                 condition={dirty}
                 show={
                     <PermissionButton
-                        tooltip="Save changes"
                         permission={UPDATE_FEATURE}
                         onClick={handleSubmit}
                         projectId={projectId}

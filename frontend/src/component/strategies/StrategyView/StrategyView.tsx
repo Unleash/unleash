@@ -41,7 +41,6 @@ export const StrategyView = () => {
                             show={
                                 <PermissionIconButton
                                     permission={UPDATE_STRATEGY}
-                                    tooltip={'Edit strategy'}
                                     data-loading
                                     onClick={handleEdit}
                                 >

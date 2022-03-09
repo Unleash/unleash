@@ -31,7 +31,6 @@ export const FeatureSettingsInformation = ({
                 </Typography>
                 <PermissionIconButton
                     permission={UPDATE_FEATURE}
-                    tooltip={'Edit feature'}
                     projectId={projectId}
                     data-loading
                     onClick={onEdit}

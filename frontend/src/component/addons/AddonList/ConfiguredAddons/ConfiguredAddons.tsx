@@ -112,7 +112,6 @@ export const ConfiguredAddons = ({ getAddonIcon }: IConfigureAddonsProps) => {
             <ListItemSecondaryAction>
                 <PermissionIconButton
                     permission={UPDATE_ADDON}
-                    tooltip={addon.enabled ? 'Disable addon' : 'Enable addon'}
                     onClick={() => toggleAddon(addon)}
                 >
                     <ConditionallyRender

@@ -154,7 +154,6 @@ export const ProjectListNew = () => {
                                 onClick={() => history.push('/projects/create')}
                                 maxWidth="700px"
                                 permission={CREATE_PROJECT}
-                                tooltip={createButtonData.title}
                                 disabled={createButtonData.disabled}
                             >
                                 New project

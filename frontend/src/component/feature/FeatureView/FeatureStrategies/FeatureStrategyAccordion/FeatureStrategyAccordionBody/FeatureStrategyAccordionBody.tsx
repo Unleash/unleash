@@ -165,8 +165,7 @@ const FeatureStrategyAccordionBody: React.FC<
                         <PermissionButton
                             className={styles.addConstraintBtn}
                             onClick={toggleConstraints}
-                            // @ts-expect-error
-                            variant={'text'}
+                            variant="text"
                             data-test={ADD_CONSTRAINT_ID}
                             permission={[
                                 UPDATE_FEATURE_STRATEGY,

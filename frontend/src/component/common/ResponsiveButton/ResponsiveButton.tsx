@@ -7,7 +7,6 @@ import React from 'react';
 interface IResponsiveButtonProps {
     Icon: React.ElementType;
     onClick: () => void;
-    tooltip?: string;
     disabled?: boolean;
     permission: string;
     projectId?: string;
@@ -20,7 +19,6 @@ const ResponsiveButton: React.FC<IResponsiveButtonProps> = ({
     Icon,
     onClick,
     maxWidth,
-    tooltip,
     disabled = false,
     children,
     permission,
@@ -40,7 +38,6 @@ const ResponsiveButton: React.FC<IResponsiveButtonProps> = ({
                     permission={permission}
                     projectId={projectId}
                     environmentId={environmentId}
-                    tooltip={tooltip}
                     data-loading
                     {...rest}
                 >
@@ -53,11 +50,9 @@ const ResponsiveButton: React.FC<IResponsiveButtonProps> = ({
                     permission={permission}
                     projectId={projectId}
                     color="primary"
-                    // @ts-expect-error
                     variant="contained"
                     disabled={disabled}
                     environmentId={environmentId}
-                    tooltip={tooltip}
                     data-loading
                     {...rest}
                 >

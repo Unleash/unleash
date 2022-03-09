@@ -175,7 +175,6 @@ const FeatureStrategyEditable = ({
                                     permission={UPDATE_FEATURE_STRATEGY}
                                     projectId={projectId}
                                     environmentId={activeEnvironment?.name}
-                                    // @ts-expect-error
                                     variant="contained"
                                     color="primary"
                                     className={styles.editButton}
@@ -189,8 +188,8 @@ const FeatureStrategyEditable = ({
                                     onClick={discardChanges}
                                     className={styles.editButton}
                                     disabled={loading}
-                                    color="tertiary"
                                     // @ts-expect-error
+                                    color="tertiary"
                                     variant="text"
                                     permission={UPDATE_FEATURE_STRATEGY}
                                     projectId={projectId}

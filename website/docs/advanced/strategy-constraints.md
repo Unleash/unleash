@@ -150,6 +150,15 @@ SemVer operators only support single values.
 | `SEMVER_GT` | **strictly greater than** the provided value |
 | `SEMVER_LT` | **strictly less than** the provided value    |
 
+Additionally, you can use negation to get _less than or equal to_ and _greater than or equal to_ functionality:
+
+| Effect                   | How                | `true` if `<context-field>` is ...              |
+|--------------------------|--------------------|-------------------------------------------------|
+| Greater than or equal to | Negate `SEMVER_LT` | **greater than or equal to** the provided value |
+| Less than or equal to    | Negate `SEMVER_GT` | **less than or equal to** the provided value    |
+
+"Not less than 2.0.0" _is the same as_ "greater than or equal to 2.0.0". The same applies for _less than or equal_: "Not greater than 1.9.5." _is the same as_ "less than or equal to 1.9.5".
+
 ## Interacting with strategy constraints in the client SDKs {#sdks}
 
 :::note

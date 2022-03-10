@@ -12,6 +12,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build docs
+        env:
+          UNLEASH_FEEDBACK_TARGET_URL: ${{ secrets.DOCS_FEEDBACK_TARGET_URL }}
+          UNLEASH_PROXY_CLIENT_KEY: ${{ secrets.UNLEASH_PROXY_CLIENT_KEY_DEVELOPMENT }}
+          UNLEASH_PROXY_URL: ${{ secrets.UNLEASH_PROXY_URL_DEVELOPMENT }}
         run: |
           # Build the site
           cd website && yarn && yarn build

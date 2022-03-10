@@ -1,0 +1,244 @@
+.user-feedback-container {
+    --outline-style: 2px solid var(--ifm-color-primary);
+    --row-gap: 1rem;
+    --element-horizontal-gap: 1rem;
+
+    --animation-duration: 0.25s;
+    --fade-out-transition: opacity var(--animation-duration);
+    --fade-in-transition: opacity var(--animation-duration)
+        calc(var(--animation-duration) / 2);
+}
+
+@media screen and (prefers-reduced-motion: reduced) {
+    .user-feedback-container {
+        --animation-duration: 0;
+    }
+}
+
+.user-feedback {
+    width: 100%;
+    position: fixed;
+    background: var(--ifm-background-color);
+    bottom: 0;
+    border: var(--ifm-global-border-width) solid var(--unleash-color-gray);
+    border-radius: var(--ifm-global-radius) var(--ifm-global-radius) 0 0;
+    box-shadow: var(--ifm-global-shadow-lw);
+    padding: var(--ifm-spacing-vertical) var(--ifm-spacing-horizontal);
+    text-align: center;
+    transition: var(--fade-in-transition);
+}
+
+.user-feedback fieldset {
+    border: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+:is(.user-feedback, .user-feedback fieldset) > * + * {
+    margin-top: var(--row-gap);
+}
+
+.user-feedback button {
+    border: none;
+    border-radius: var(--ifm-global-radius);
+    padding: var(--ifm-spacing-vertical) calc(var(--ifm-spacing-horizontal) / 2);
+}
+
+.user-feedback form > * + * {
+    margin-top: var(--row-gap);
+}
+
+.hidden {
+    display: none;
+}
+
+.user-feedback-container * {
+    outline-offset: 4px;
+}
+
+.user-feedback-container *:focus-visible {
+    outline: var(--outline-style);
+}
+
+.satisfaction-input-container {
+    display: flex;
+    flex-flow: wrap;
+    place-content: center;
+    align-items: center;
+    gap: var(--element-horizontal-gap);
+}
+
+.satisfaction-input-inputs {
+    display: flex;
+    flex-flow: wrap;
+    place-content: center;
+    align-items: center;
+    gap: var(--element-horizontal-gap);
+}
+
+.satisfaction-input-visual-label {
+    display: none;
+}
+
+@media screen and (min-width: 800px) {
+    .satisfaction-input-visual-label {
+        display: inline;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .satisfaction-input-inputs {
+        gap: calc(var(--element-horizontal-gap) / 2);
+    }
+}
+
+.user-satisfaction-score-label {
+    display: grid;
+    place-content: center;
+    height: 3em;
+    width: 3em;
+    border: var(--ifm-global-border-width) solid currentColor;
+    border-radius: 50%;
+}
+
+.user-satisfaction-score-input:focus-visible + .user-satisfaction-score-label {
+    outline: var(--outline-style);
+}
+
+.user-satisfaction-score-label:hover {
+    color: var(--ifm-color-primary);
+}
+
+.user-satisfaction-score-input:checked + label {
+    color: var(--ifm-color-primary);
+    background: var(--ifm-color-primary);
+    color: var(--ifm-color-primary-contrast-background);
+    border-color: var(--ifm-color-primary);
+}
+
+.button-container {
+    margin-top: var(--row-gap);
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: end;
+    gap: var(--element-horizontal-gap);
+}
+
+button.close-button {
+    background: none;
+    border: none;
+    border-radius: 50%;
+    padding: 0;
+    aspect-ratio: 1;
+    height: 1em;
+    color: var(--ifm-font-color-base);
+}
+
+.close-button:hover {
+    color: var(--ifm-color-primary);
+}
+
+.close-button:active {
+    color: var(--ifm-color-primary-darker);
+}
+
+.close-button-row {
+    display: flex;
+    justify-content: end;
+}
+
+.close-button svg {
+    fill: currentColor;
+}
+
+.primary-button,
+.user-feedback button[type='submit'] {
+    background-color: var(--ifm-color-primary);
+    color: var(--ifm-background-color);
+    padding-inline: calc(var(--ifm-spacing-horizontal) * 4);
+}
+
+.primary-button:hover,
+.user-feedback button[type='submit']:hover {
+    background-color: var(--ifm-color-primary-lighter);
+}
+
+.primary-button:hover,
+.user-feedback button[type='submit']:active {
+    background-color: var(--ifm-color-primary-dark);
+}
+
+.button-secondary {
+    color: var(--ifm-color-primary);
+    background: none;
+}
+
+.button-secondary:active {
+    color: var(--ifm-color-primary-darker);
+}
+
+.button-secondary:hover {
+    color: var(--ifm-color-primary-lightest);
+}
+
+.user-feedback textarea {
+    display: block;
+    width: 100%;
+    background-color: var(--ifm-background-color);
+    color: currentColor;
+    border-radius: var(--ifm-global-radius);
+    border: var(--ifm-global-border-width) solid var(--ifm-color-emphasis-400);
+    font-style: normal;
+    font-family: inherit;
+    padding: var(--ifm-spacing-vertical) var(--ifm-spacing-horizontal);
+}
+
+.customer-type-inputs {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: var(--ifm-spacing-horizontal);
+    accent-color: var(--ifm-color-primary);
+}
+
+.open-feedback-button {
+    padding-block: var(--ifm-spacing-vertical);
+    padding-inline: var(--ifm-spacing-horizontal);
+    border-radius: 0 var(--ifm-global-radius) var(--ifm-global-radius) 0;
+    border: none;
+    position: fixed;
+    bottom: 25vh;
+    right: 0;
+    transition: var(--fade-in-transition);
+    transform: rotate(180deg);
+    writing-mode: vertical-lr;
+}
+
+/* note: Chrome doesn't support writing-mode on buttons, so we need to add a
+   span for the text and change the writing-mode there. Simultaneously, Firefox
+   does some weird stuff with the padding of the text if writing-mode isn't
+   specified on the button itself, so we need to set that too. */
+.open-feedback-button > span {
+    writing-mode: vertical-lr;
+}
+
+.invisible,
+.open-feedback-button[disabled] {
+    opacity: 0;
+    transition: var(--fade-out-transition);
+    pointer-events: none;
+}
+
+.form-section-container {
+    display: grid;
+    align-items: center;
+    max-width: 850px;
+    margin: auto;
+}
+
+.form-section-container > * {
+    grid-column: 1;
+    grid-row: 1;
+    transition: var(--fade-in-transition);
+}

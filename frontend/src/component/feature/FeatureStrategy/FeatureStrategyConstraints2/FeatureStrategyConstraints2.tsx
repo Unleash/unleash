@@ -10,6 +10,8 @@ import {
 } from 'component/providers/AccessProvider/permissions';
 import { createEmptyConstraint } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints2/createEmptyConstraint';
 import { useWeakMap } from 'hooks/useWeakMap';
+import { objectId } from 'utils/object-id';
+import { useStyles } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints2/FeatureStrategyConstraints2.styles';
 
 interface IFeatureStrategyConstraints2Props {
     projectId: string;
@@ -37,6 +39,7 @@ export const FeatureStrategyConstraints2 = ({
     const state = useWeakMap<IConstraint, IConstraintFormState>();
     const { context } = useUnleashContext();
     const { constraints = [] } = strategy;
+    const styles = useStyles();
 
     const onEdit = (constraint: IConstraint) => {
         state.set(constraint, { editing: true });
@@ -79,21 +82,12 @@ export const FeatureStrategyConstraints2 = ({
         );
     };
 
+    if (context.length === 0) {
+        return null;
+    }
+
     return (
-        <>
-            {strategy.constraints?.map((constraint, index) => (
-                <ConstraintAccordion
-                    key={index}
-                    environmentId={environmentId}
-                    constraint={constraint}
-                    onEdit={onEdit.bind(null, constraint)}
-                    onCancel={onCancel.bind(null, index, constraint)}
-                    onDelete={onRemove.bind(null, index, constraint)}
-                    onSave={onSave.bind(null, index)}
-                    editing={Boolean(state.get(constraint)?.editing)}
-                    compact
-                />
-            ))}
+        <div className={styles.container}>
             <PermissionButton
                 type="button"
                 onClick={onAdd}
@@ -104,6 +98,19 @@ export const FeatureStrategyConstraints2 = ({
             >
                 Add constraints
             </PermissionButton>
-        </>
+            {strategy.constraints?.map((constraint, index) => (
+                <ConstraintAccordion
+                    key={objectId(constraint)}
+                    environmentId={environmentId}
+                    constraint={constraint}
+                    onEdit={onEdit.bind(null, constraint)}
+                    onCancel={onCancel.bind(null, index, constraint)}
+                    onDelete={onRemove.bind(null, index, constraint)}
+                    onSave={onSave.bind(null, index)}
+                    editing={Boolean(state.get(constraint)?.editing)}
+                    compact
+                />
+            ))}
+        </div>
     );
 };

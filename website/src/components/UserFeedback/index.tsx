@@ -7,6 +7,12 @@ const join = (...cs: string[]) => cs.join(' ');
 
 type CustomerType = 'open source' | 'paying';
 
+type FormData = {
+    score: number;
+    comment: undefined | string;
+    customerType: undefined | CustomerType;
+};
+
 type InitialData = {
     currentStep: number;
     data: {
@@ -173,13 +179,13 @@ export const FeedbackWrapper: React.FC<Props> = ({ seedData, open }) => {
     const setCustomerType = (customerType: CustomerType) =>
         dispatch({ kind: 'set customer type', data: customerType });
 
-    const submitFeedback = () => {
+    const submitFeedback = (data: FormData) => {
         if (feedbackTargetUrl) {
             fetch(feedbackTargetUrl, {
                 method: 'post',
                 body: JSON.stringify({
                     data: {
-                        ...state.data,
+                        ...data,
                         openedManually: manuallyOpened,
                         currentPage: location.pathname,
                     },
@@ -380,7 +386,16 @@ export const FeedbackWrapper: React.FC<Props> = ({ seedData, open }) => {
                 onSubmit={(e) => {
                     e.preventDefault();
                     setCustomerType(value);
-                    submitFeedback();
+
+                    // To ensure that we get the correct customer type included.
+                    // We can't rely on the reducer to set it because it won't
+                    // happen until the component re-renders, causing customer
+                    // type to have an old or empty value.
+                    const finalState = stateReducer(state, {
+                        kind: 'set customer type',
+                        data: value,
+                    });
+                    submitFeedback(finalState.data);
                 }}
             >
                 <fieldset disabled={hidden}>

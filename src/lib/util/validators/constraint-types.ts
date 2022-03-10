@@ -16,9 +16,11 @@ export const validateString = async (value: unknown): Promise<void> => {
 };
 
 export const validateSemver = (value: unknown): void => {
+    const cleanValue = semver.clean(value) === value;
+
     const result = semver.valid(value);
 
-    if (result) return;
+    if (result && cleanValue) return;
     throw new BadDataError(
         `the provided value is not a valid semver format. The value provided was: ${value}`,
     );

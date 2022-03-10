@@ -165,6 +165,14 @@ class FeatureToggleService {
         }
     }
 
+    async validateConstraints(constraints: IConstraint[]): Promise<void> {
+        const validations = constraints.map((constraint) => {
+            return this.validateConstraint(constraint);
+        });
+
+        await Promise.all(validations);
+    }
+
     async validateConstraint(constraint: IConstraint): Promise<void> {
         const { operator } = constraint;
         await constraintSchema.validateAsync(constraint);
@@ -272,6 +280,11 @@ class FeatureToggleService {
     ): Promise<IStrategyConfig> {
         const { featureName, projectId, environment } = context;
         await this.validateFeatureContext(context);
+
+        if (strategyConfig.constraints?.length > 0) {
+            await this.validateConstraints(strategyConfig.constraints);
+        }
+
         try {
             const newFeatureStrategy =
                 await this.featureStrategiesStore.createStrategyFeatureEnv({
@@ -333,6 +346,10 @@ class FeatureToggleService {
                 id,
                 updates,
             );
+
+            if (updates.constraints?.length > 0) {
+                await this.validateConstraints(updates.constraints);
+            }
 
             // Store event!
             const tags = await this.tagStore.getAllTagsForFeature(featureName);

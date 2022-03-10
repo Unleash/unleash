@@ -281,7 +281,7 @@ class FeatureToggleService {
         const { featureName, projectId, environment } = context;
         await this.validateFeatureContext(context);
 
-        if (strategyConfig.constraints.length > 0) {
+        if (strategyConfig.constraints?.length > 0) {
             await this.validateConstraints(strategyConfig.constraints);
         }
 

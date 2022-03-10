@@ -177,7 +177,13 @@ export const FeedbackWrapper: React.FC<Props> = ({ seedData, open }) => {
         if (feedbackTargetUrl) {
             fetch(feedbackTargetUrl, {
                 method: 'post',
-                body: JSON.stringify({ data: state.data }),
+                body: JSON.stringify({
+                    data: {
+                        ...state.data,
+                        openedManually: manuallyOpened,
+                        currentPage: location.pathname,
+                    },
+                }),
                 headers: {
                     'content-type': 'application/json',
                 },

@@ -39,6 +39,19 @@ test('semver validation should fail partial semver', () => {
     }
 });
 
+test('semver validation should fail with leading v', () => {
+    const leadingV = 'v1.2.0';
+    expect.assertions(1);
+
+    try {
+        validateSemver(leadingV);
+    } catch (e) {
+        expect(e.message).toBe(
+            `the provided value is not a valid semver format. The value provided was: ${leadingV}`,
+        );
+    }
+});
+
 /* Legal values tests */
 test('should fail validation if value does not exist in single legal value', () => {
     const legalValues = ['100', '200', '300'];

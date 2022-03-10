@@ -45,11 +45,6 @@
     padding: var(--ifm-spacing-vertical) calc(var(--ifm-spacing-horizontal) / 2);
 }
 
-.user-feedback form {
-    /* max-width: 850px; */
-    /* width: 100%; */
-}
-
 .user-feedback form > * + * {
     margin-top: var(--row-gap);
 }

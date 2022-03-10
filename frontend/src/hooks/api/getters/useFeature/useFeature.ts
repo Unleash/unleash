@@ -1,16 +1,21 @@
 import useSWR, { mutate, SWRConfiguration } from 'swr';
 import { useCallback } from 'react';
-import { IFeatureToggle } from '../../../../interfaces/featureToggle';
 import { emptyFeature } from './emptyFeature';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import { formatApiPath } from '../../../../utils/format-path';
+import { formatApiPath } from 'utils/format-path';
+import { IFeatureToggle } from 'interfaces/featureToggle';
 
 interface IUseFeatureOutput {
     feature: IFeatureToggle;
-    featureCacheKey: string;
     refetchFeature: () => void;
     loading: boolean;
+    status?: number;
     error?: Error;
+}
+
+interface IFeatureResponse {
+    status: number;
+    body?: IFeatureToggle;
 }
 
 export const useFeature = (
@@ -22,7 +27,7 @@ export const useFeature = (
         `api/admin/projects/${projectId}/features/${featureId}`
     );
 
-    const { data, error } = useSWR<IFeatureToggle>(
+    const { data, error } = useSWR<IFeatureResponse>(
         path,
         () => fetcher(path),
         options
@@ -33,16 +38,27 @@ export const useFeature = (
     }, [path]);
 
     return {
-        feature: data || emptyFeature,
-        featureCacheKey: path,
+        feature: data?.body || emptyFeature,
         refetchFeature,
         loading: !error && !data,
+        status: data?.status,
         error,
     };
 };
 
-const fetcher = async (path: string) => {
-    return fetch(path)
-        .then(handleErrorResponses('Feature toggle data'))
-        .then(res => res.json());
+const fetcher = async (path: string): Promise<IFeatureResponse> => {
+    const res = await fetch(path);
+
+    if (res.status === 404) {
+        return { status: 404 };
+    }
+
+    if (!res.ok) {
+        await handleErrorResponses('Feature toggle data')(res);
+    }
+
+    return {
+        status: res.status,
+        body: await res.json(),
+    };
 };

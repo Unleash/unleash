@@ -3,11 +3,11 @@ import React, { useState } from 'react';
 import { Archive, FileCopy, Label, WatchLater } from '@material-ui/icons';
 import { Link, Route, useHistory, useParams, Switch } from 'react-router-dom';
 import useFeatureApi from '../../../hooks/api/actions/useFeatureApi/useFeatureApi';
-import { useFeature } from '../../../hooks/api/getters/useFeature/useFeature';
+import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import useProject from '../../../hooks/api/getters/useProject/useProject';
 import useTabs from '../../../hooks/useTabs';
 import useToast from '../../../hooks/useToast';
-import { IFeatureViewParams } from '../../../interfaces/params';
+import { IFeatureViewParams } from 'interfaces/params';
 import {
     CREATE_FEATURE,
     DELETE_FEATURE,
@@ -23,16 +23,14 @@ import { useStyles } from './FeatureView.styles';
 import { FeatureSettings } from './FeatureSettings/FeatureSettings';
 import useLoading from '../../../hooks/useLoading';
 import ConditionallyRender from '../../common/ConditionallyRender';
-import { getCreateTogglePath } from '../../../utils/route-path-helpers';
-import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
 import StaleDialog from './FeatureOverview/StaleDialog/StaleDialog';
 import AddTagDialog from './FeatureOverview/AddTagDialog/AddTagDialog';
 import StatusChip from '../../common/StatusChip/StatusChip';
-import { formatUnknownError } from '../../../utils/format-unknown-error';
+import { formatUnknownError } from 'utils/format-unknown-error';
+import { FeatureNotFound } from 'component/feature/FeatureView/FeatureNotFound/FeatureNotFound';
 
 export const FeatureView = () => {
     const { projectId, featureId } = useParams<IFeatureViewParams>();
-    const { feature, loading, error } = useFeature(projectId, featureId);
     const { refetch: projectRefetch } = useProject(projectId);
     const [openTagDialog, setOpenTagDialog] = useState(false);
     const { a11yProps } = useTabs(0);
@@ -42,10 +40,14 @@ export const FeatureView = () => {
     const [openStaleDialog, setOpenStaleDialog] = useState(false);
     const smallScreen = useMediaQuery(`(max-width:${500}px)`);
 
+    const { feature, loading, error, status } = useFeature(
+        projectId,
+        featureId
+    );
+
     const styles = useStyles();
     const history = useHistory();
     const ref = useLoading(loading);
-    const { uiConfig } = useUiConfig();
 
     const basePath = `/projects/${projectId}/features/${featureId}`;
 
@@ -110,25 +112,9 @@ export const FeatureView = () => {
         });
     };
 
-    const renderFeatureNotExist = () => {
-        return (
-            <div>
-                <p>
-                    The feature{' '}
-                    <strong className={styles.featureId}>{featureId}</strong>{' '}
-                    does not exist. Do you want to &nbsp;
-                    <Link
-                        to={getCreateTogglePath(projectId, uiConfig.flags.E, {
-                            name: featureId,
-                        })}
-                    >
-                        create it
-                    </Link>
-                    &nbsp;?
-                </p>
-            </div>
-        );
-    };
+    if (status === 404) {
+        return <FeatureNotFound />;
+    }
 
     return (
         <ConditionallyRender
@@ -242,7 +228,6 @@ export const FeatureView = () => {
                     />
                 </div>
             }
-            elseShow={renderFeatureNotExist()}
         />
     );
 };

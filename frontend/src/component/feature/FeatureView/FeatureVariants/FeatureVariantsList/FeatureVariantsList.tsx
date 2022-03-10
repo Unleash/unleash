@@ -29,13 +29,12 @@ import { updateWeight } from '../../../../common/util';
 import cloneDeep from 'lodash.clonedeep';
 import useDeleteVariantMarkup from './FeatureVariantsListItem/useDeleteVariantMarkup';
 import PermissionButton from '../../../../common/PermissionButton/PermissionButton';
-import { mutate } from 'swr';
 import { formatUnknownError } from '../../../../../utils/format-unknown-error';
 
 const FeatureOverviewVariants = () => {
     const { hasAccess } = useContext(AccessContext);
     const { projectId, featureId } = useParams<IFeatureViewParams>();
-    const { feature, featureCacheKey } = useFeature(projectId, featureId);
+    const { feature, refetchFeature } = useFeature(projectId, featureId);
     const [variants, setVariants] = useState<IFeatureVariant[]>([]);
     const [editing, setEditing] = useState(false);
     const { context } = useUnleashContext();
@@ -153,9 +152,8 @@ const FeatureOverviewVariants = () => {
         if (patch.length === 0) return;
 
         try {
-            const res = await patchFeatureVariants(projectId, featureId, patch);
-            const { variants } = await res.json();
-            mutate(featureCacheKey, { ...feature, variants }, false);
+            await patchFeatureVariants(projectId, featureId, patch);
+            refetchFeature();
             setToastData({
                 title: 'Updated variant',
                 confetti: true,
@@ -209,9 +207,8 @@ const FeatureOverviewVariants = () => {
 
         if (patch.length === 0) return;
         try {
-            const res = await patchFeatureVariants(projectId, featureId, patch);
-            const { variants } = await res.json();
-            mutate(featureCacheKey, { ...feature, variants }, false);
+            await patchFeatureVariants(projectId, featureId, patch);
+            refetchFeature();
             setToastData({
                 title: 'Updated variant',
                 type: 'success',

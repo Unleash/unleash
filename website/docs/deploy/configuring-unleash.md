@@ -15,7 +15,7 @@ In order for Unleash server to work, you must setup database connection details.
   - `DATABASE_HOST` - the database hostname - defaults to `localhost`
   - `DATABASE_PORT` - the port the database is listening on - defaults to `5432`
   - `DATABASE_USERNAME` - the user configured for access - defaults to `unleash_user`
-  - `DATABASE_PASSWORD` - the password for the user - defaults to `passord`
+  - `DATABASE_PASSWORD` - the password for the user - defaults to `passord` (the Norwegian word for _password_)
   - `DATABASE_NAME` - the name of the database - defaults to `unleash`
   - `DATABASE_SSL` - a json object representing SSL configuration or `false` for not using SSL
   - `DATABASE_SCHEMA` - Which schema to use - defaults to `public`

@@ -26,6 +26,10 @@ export default class FakeSegmentStore implements ISegmentStore {
         throw new Error('Method not implemented.');
     }
 
+    getActive(): Promise<ISegment[]> {
+        throw new Error('Method not implemented.');
+    }
+
     getByStrategy(): Promise<ISegment[]> {
         throw new Error('Method not implemented.');
     }

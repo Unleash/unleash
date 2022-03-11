@@ -5,6 +5,8 @@ import User from '../user';
 export interface ISegmentStore extends Store<ISegment, number> {
     getAll(): Promise<ISegment[]>;
 
+    getActive(): Promise<ISegment[]>;
+
     getByStrategy(strategyId: string): Promise<ISegment[]>;
 
     create(segment: Omit<ISegment, 'id'>, user: User): Promise<ISegment>;

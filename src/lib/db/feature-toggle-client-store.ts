@@ -1,5 +1,4 @@
 import { Knex } from 'knex';
-import EventEmitter from 'events';
 import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
 import { Logger, LogProvider } from '../logger';
@@ -10,6 +9,9 @@ import {
 } from '../types/model';
 import { IFeatureToggleClientStore } from '../types/stores/feature-toggle-client-store';
 import { DEFAULT_ENV } from '../util/constants';
+import { PartialDeep } from '../types/partial';
+import { EventEmitter } from 'stream';
+import { IExperimentalOptions } from '../experimental';
 
 export interface FeaturesTable {
     name: string;
@@ -29,35 +31,24 @@ export default class FeatureToggleClientStore
 
     private logger: Logger;
 
+    private experimental: IExperimentalOptions;
+
     private timer: Function;
 
-    constructor(db: Knex, eventBus: EventEmitter, getLogger: LogProvider) {
+    constructor(
+        db: Knex,
+        eventBus: EventEmitter,
+        getLogger: LogProvider,
+        experimental: IExperimentalOptions,
+    ) {
         this.db = db;
         this.logger = getLogger('feature-toggle-client-store.ts');
+        this.experimental = experimental;
         this.timer = (action) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
                 store: 'feature-toggle',
                 action,
             });
-    }
-
-    private getAdminStrategy(
-        r: any,
-        includeId: boolean = true,
-    ): IStrategyConfig {
-        if (includeId) {
-            return {
-                name: r.strategy_name,
-                constraints: r.constraints || [],
-                parameters: r.parameters,
-                id: r.strategy_id,
-            };
-        }
-        return {
-            name: r.strategy_name,
-            constraints: r.constraints || [],
-            parameters: r.parameters,
-        };
     }
 
     private async getAll(
@@ -67,24 +58,38 @@ export default class FeatureToggleClientStore
     ): Promise<IFeatureToggleClient[]> {
         const environment = featureQuery?.environment || DEFAULT_ENV;
         const stopTimer = this.timer('getFeatureAdmin');
+
+        const { inlineSegmentConstraints = false } =
+            this.experimental?.segments ?? {};
+
+        let selectColumns = [
+            'features.name as name',
+            'features.description as description',
+            'features.type as type',
+            'features.project as project',
+            'features.stale as stale',
+            'features.impression_data as impression_data',
+            'features.variants as variants',
+            'features.created_at as created_at',
+            'features.last_seen_at as last_seen_at',
+            'fe.enabled as enabled',
+            'fe.environment as environment',
+            'fs.id as strategy_id',
+            'fs.strategy_name as strategy_name',
+            'fs.parameters as parameters',
+            'fs.constraints as constraints',
+        ];
+
+        if (inlineSegmentConstraints) {
+            selectColumns = [
+                ...selectColumns,
+                'segments.id as segment_id',
+                'segments.constraints as segment_constraints',
+            ];
+        }
+
         let query = this.db('features')
-            .select(
-                'features.name as name',
-                'features.description as description',
-                'features.type as type',
-                'features.project as project',
-                'features.stale as stale',
-                'features.impression_data as impression_data',
-                'features.variants as variants',
-                'features.created_at as created_at',
-                'features.last_seen_at as last_seen_at',
-                'fe.enabled as enabled',
-                'fe.environment as environment',
-                'fs.id as strategy_id',
-                'fs.strategy_name as strategy_name',
-                'fs.parameters as parameters',
-                'fs.constraints as constraints',
-            )
+            .select(selectColumns)
             .fullOuterJoin(
                 this.db('feature_strategies')
                     .select('*')
@@ -100,8 +105,21 @@ export default class FeatureToggleClientStore
                     .as('fe'),
                 'fe.feature_name',
                 'features.name',
-            )
-            .where({ archived });
+            );
+
+        if (inlineSegmentConstraints) {
+            query = query
+                .fullOuterJoin(
+                    'feature_strategy_segment as fss',
+                    `fss.feature_strategy_id`,
+                    `fs.id`,
+                )
+                .fullOuterJoin('segments', `segments.id`, `fss.segment_id`);
+        }
+
+        query = query.where({
+            archived,
+        });
 
         if (featureQuery) {
             if (featureQuery.tag) {
@@ -109,34 +127,33 @@ export default class FeatureToggleClientStore
                     .from('feature_tag')
                     .select('feature_name')
                     .whereIn(['tag_type', 'tag_value'], featureQuery.tag);
-                query = query.whereIn('name', tagQuery);
+                query = query.whereIn('features.name', tagQuery);
             }
             if (featureQuery.project) {
                 query = query.whereIn('project', featureQuery.project);
             }
             if (featureQuery.namePrefix) {
                 query = query.where(
-                    'name',
+                    'features.name',
                     'like',
                     `${featureQuery.namePrefix}%`,
                 );
             }
         }
 
+        const sendStrategyIds = isAdmin || inlineSegmentConstraints;
         const rows = await query;
         stopTimer();
+
         const featureToggles = rows.reduce((acc, r) => {
-            let feature;
-            if (acc[r.name]) {
-                feature = acc[r.name];
-            } else {
-                feature = {};
+            let feature: PartialDeep<IFeatureToggleClient> = acc[r.name] ?? {
+                strategies: [],
+            };
+            if (this.isUnseenStrategyRow(feature, r)) {
+                feature.strategies.push(this.strategyRow(r, sendStrategyIds));
             }
-            if (!feature.strategies) {
-                feature.strategies = [];
-            }
-            if (r.strategy_name) {
-                feature.strategies.push(this.getAdminStrategy(r, isAdmin));
+            if (inlineSegmentConstraints && r.segment_id) {
+                this.addSegmentToStrategy(feature, r);
             }
             feature.impressionData = r.impression_data;
             feature.enabled = !!r.enabled;
@@ -155,6 +172,43 @@ export default class FeatureToggleClientStore
             return acc;
         }, {});
         return Object.values(featureToggles);
+    }
+
+    private strategyRow(
+        row: Record<string, any>,
+        sendStrategyIds: boolean,
+    ): IStrategyConfig {
+        const strategy: IStrategyConfig = {
+            id: row.strategy_id,
+            name: row.strategy_name,
+            constraints: row.constraints || [],
+            parameters: row.parameters,
+        };
+
+        if (sendStrategyIds) {
+            strategy.id = row.strategy_id;
+        }
+
+        return strategy;
+    }
+
+    private isUnseenStrategyRow(
+        feature: PartialDeep<IFeatureToggleClient>,
+        row: Record<string, any>,
+    ): boolean {
+        return (
+            row.strategy_id &&
+            !feature.strategies.find((s) => s.id === row.strategy_id)
+        );
+    }
+
+    private addSegmentToStrategy(
+        feature: PartialDeep<IFeatureToggleClient>,
+        row: Record<string, any>,
+    ) {
+        feature.strategies
+            .find((s) => s.id === row.strategy_id)
+            ?.constraints.push(...row.segment_constraints);
     }
 
     async getClient(

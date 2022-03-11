@@ -47,6 +47,10 @@ export class SegmentService {
         return this.segmentStore.getByStrategy(strategyId);
     }
 
+    async getActive(): Promise<ISegment[]> {
+        return this.segmentStore.getActive();
+    }
+
     async create(data: unknown, user: User): Promise<void> {
         const input = await unsavedSegmentSchema.validateAsync(data);
         const segment = await this.segmentStore.create(input, user);

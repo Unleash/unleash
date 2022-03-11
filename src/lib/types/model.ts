@@ -60,6 +60,9 @@ export interface IFeatureToggleClient {
     variants: IVariant[];
     enabled: boolean;
     strategies: IStrategyConfig[];
+    impressionData?: boolean;
+    lastSeenAt?: Date;
+    createdAt?: Date;
 }
 
 export interface IFeatureEnvironmentInfo {

@@ -75,17 +75,30 @@ export default class SegmentStore implements ISegmentStore {
 
     async getAll(): Promise<ISegment[]> {
         const rows: ISegmentRow[] = await this.db
-            .select(COLUMNS)
+            .select(this.prefixColumns())
             .from(T.segments)
             .orderBy('name', 'asc');
 
         return rows.map(this.mapRow);
     }
 
+    async getActive(): Promise<ISegment[]> {
+        const rows: ISegmentRow[] = await this.db
+            .distinct(this.prefixColumns())
+            .from(T.segments)
+            .orderBy('name', 'asc')
+            .join(
+                T.featureStrategySegment,
+                `${T.featureStrategySegment}.segment_id`,
+                `${T.segments}.id`,
+            );
+
+        return rows.map(this.mapRow);
+    }
+
     async getByStrategy(strategyId: string): Promise<ISegment[]> {
-        const prefixedCols = COLUMNS.map((c) => `${T.segments}.${c}`);
         const rows = await this.db
-            .select(prefixedCols)
+            .select(this.prefixColumns())
             .from<ISegmentRow>(T.segments)
             .join(
                 T.featureStrategySegment,
@@ -115,7 +128,7 @@ export default class SegmentStore implements ISegmentStore {
 
     async get(id: number): Promise<ISegment> {
         const rows: ISegmentRow[] = await this.db
-            .select(COLUMNS)
+            .select(this.prefixColumns())
             .from(T.segments)
             .where({ id });
 
@@ -133,6 +146,10 @@ export default class SegmentStore implements ISegmentStore {
         await this.db(T.featureStrategySegment)
             .where({ segment_id: id, feature_strategy_id: strategyId })
             .del();
+    }
+
+    prefixColumns(): string[] {
+        return COLUMNS.map((c) => `${T.segments}.${c}`);
     }
 
     mapRow(row?: ISegmentRow): ISegment {

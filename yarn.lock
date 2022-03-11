@@ -7059,10 +7059,10 @@ ts-node@10.7.0:
     v8-compile-cache-lib "^3.0.0"
     yn "3.1.1"
 
-tsc-watch@4.6.0:
-  version "4.6.0"
-  resolved "https://registry.npmjs.org/tsc-watch/-/tsc-watch-4.6.0.tgz"
-  integrity sha512-DRMADjFe44EDWb+YMIOj4b83UrU6le27L3/o0/9FlmA01ikFd5Dl9RD5h1hpeh0mQdIqXvwfHZszCcjhH3bAmQ==
+tsc-watch@4.6.2:
+  version "4.6.2"
+  resolved "https://registry.yarnpkg.com/tsc-watch/-/tsc-watch-4.6.2.tgz#4267ee6acddb608356573ba96024fa250eb22cac"
+  integrity sha512-eHWzZGkPmzXVGQKbqQgf3BFpGiZZw1jQ29ZOJeaSe8JfyUvphbd221NfXmmsJUGGPGA/nnaSS01tXipUcyxAxg==
   dependencies:
     cross-spawn "^7.0.3"
     node-cleanup "^2.1.2"

@@ -10,16 +10,18 @@ export default class FakeEnvironmentStore implements IEnvironmentStore {
 
     environments: IEnvironment[] = [];
 
-    disableAllExcept(environments: string[]): Promise<void> {
+    disable(environments: IEnvironment[]): Promise<void> {
         for (let env of this.environments) {
-            if (!environments.includes(env.name)) env.enabled = false;
+            if (environments.map((e) => e.name).includes(env.name))
+                env.enabled = false;
         }
         return Promise.resolve();
     }
 
-    enable(environments: string[]): Promise<void> {
+    enable(environments: IEnvironment[]): Promise<void> {
         for (let env of this.environments) {
-            if (environments.includes(env.name)) env.enabled = true;
+            if (environments.map((e) => e.name).includes(env.name))
+                env.enabled = true;
         }
         return Promise.resolve();
     }

@@ -24,6 +24,11 @@ const COLUMNS = [
 ];
 const TABLE = 'projects';
 
+export interface IEnvironmentProjectLink {
+    environmentName: string;
+    projectId: string;
+}
+
 class ProjectStore implements IProjectStore {
     private db: Knex;
 
@@ -197,6 +202,15 @@ class ProjectStore implements IProjectStore {
         }
     }
 
+    async getProjectLinksForEnvironments(
+        environments: string[],
+    ): Promise<IEnvironmentProjectLink[]> {
+        let rows = await this.db('project_environments')
+            .select(['project_id', 'environment_name'])
+            .whereIn('environment_name', environments);
+        return rows.map(this.mapLinkRow);
+    }
+
     async deleteEnvironmentForProject(
         id: string,
         environment: string,
@@ -249,6 +263,14 @@ class ProjectStore implements IProjectStore {
             .count('*')
             .from(TABLE)
             .then((res) => Number(res[0].count));
+    }
+
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    mapLinkRow(row): IEnvironmentProjectLink {
+        return {
+            environmentName: row.environment_name,
+            projectId: row.project_id,
+        };
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types

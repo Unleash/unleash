@@ -95,25 +95,87 @@ export default class EnvironmentService {
     }
 
     async overrideEnabledProjects(
-        environmentsToEnable: string[],
+        environmentNamesToEnable: string[],
     ): Promise<void> {
-        if (environmentsToEnable.length === 0) {
+        if (environmentNamesToEnable.length === 0) {
             return Promise.resolve();
         }
 
-        const environmentsExist = await Promise.all(
-            environmentsToEnable.map((env) =>
-                this.environmentStore.exists(env),
-            ),
+        const allEnvironments = await this.environmentStore.getAll();
+        const existingEnvironmentsToEnable = allEnvironments.filter((env) =>
+            environmentNamesToEnable.includes(env.name),
         );
-        if (!environmentsExist.every((exists) => exists)) {
-            this.logger.error(
+
+        if (
+            existingEnvironmentsToEnable.length !==
+            environmentNamesToEnable.length
+        ) {
+            this.logger.warn(
                 "Found environment enabled overrides but some of the specified environments don't exist, no overrides will be executed",
             );
-            return;
+            return Promise.resolve();
         }
-        await this.environmentStore.disableAllExcept(environmentsToEnable);
-        await this.environmentStore.enable(environmentsToEnable);
+
+        const environmentsNotAlreadyEnabled =
+            existingEnvironmentsToEnable.filter((env) => env.enabled == false);
+        const environmentsToDisable = allEnvironments.filter((env) => {
+            return (
+                !environmentNamesToEnable.includes(env.name) &&
+                env.enabled == true
+            );
+        });
+
+        await this.environmentStore.disable(environmentsToDisable);
+        await this.environmentStore.enable(environmentsNotAlreadyEnabled);
+
+        await this.remapProjectsLinks(
+            environmentsToDisable,
+            environmentsNotAlreadyEnabled,
+        );
+    }
+
+    private async remapProjectsLinks(
+        toDisable: IEnvironment[],
+        toEnable: IEnvironment[],
+    ) {
+        const projectLinks =
+            await this.projectStore.getProjectLinksForEnvironments(
+                toDisable.map((env) => env.name),
+            );
+
+        const unlinkTasks = projectLinks.map((link) => {
+            return this.forceRemoveEnvironmentFromProject(
+                link.environmentName,
+                link.projectId,
+            );
+        });
+        await Promise.all(unlinkTasks.flat());
+
+        const uniqueProjects = [
+            ...new Set(projectLinks.map((link) => link.projectId)),
+        ];
+
+        let linkTasks = uniqueProjects.map((project) => {
+            return toEnable.map((enabledEnv) => {
+                return this.addEnvironmentToProject(enabledEnv.name, project);
+            });
+        });
+
+        await Promise.all(linkTasks.flat());
+    }
+
+    async forceRemoveEnvironmentFromProject(
+        environment: string,
+        projectId: string,
+    ): Promise<void> {
+        await this.featureEnvironmentStore.disconnectFeatures(
+            environment,
+            projectId,
+        );
+        await this.featureEnvironmentStore.disconnectProject(
+            environment,
+            projectId,
+        );
     }
 
     async removeEnvironmentFromProject(
@@ -125,11 +187,7 @@ export default class EnvironmentService {
         );
 
         if (projectEnvs.length > 1) {
-            await this.featureEnvironmentStore.disconnectFeatures(
-                environment,
-                projectId,
-            );
-            await this.featureEnvironmentStore.disconnectProject(
+            await this.forceRemoveEnvironmentFromProject(
                 environment,
                 projectId,
             );

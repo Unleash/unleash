@@ -1,3 +1,4 @@
+import { IEnvironmentProjectLink } from 'lib/db/project-store';
 import { IProject, IProjectWithCount } from '../model';
 import { Store } from './store';
 
@@ -35,4 +36,7 @@ export interface IProjectStore extends Store<IProject, string> {
     getProjectsWithCounts(query?: IProjectQuery): Promise<IProjectWithCount[]>;
     count(): Promise<number>;
     getAll(query?: IProjectQuery): Promise<IProject[]>;
+    getProjectLinksForEnvironments(
+        environments: string[],
+    ): Promise<IEnvironmentProjectLink[]>;
 }

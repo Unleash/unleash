@@ -150,7 +150,7 @@ test('Setting an override disables all other envs', async () => {
         type: 'production',
     });
 
-    //Set these to the wrong state so we can assert that overriding them flips
+    //Set these to the wrong state so we can assert that overriding them flips their state
     await service.toggleEnvironment(disabledEnvName, true);
     await service.toggleEnvironment(enabledEnvName, false);
 
@@ -165,7 +165,6 @@ test('Setting an override disables all other envs', async () => {
         .filter((x) => x.name != enabledEnvName)
         .map((env) => env.enabled);
 
-    console.log(allOtherEnvironments);
     expect(targetedEnvironment.enabled).toBe(true);
     expect(allOtherEnvironments.every((x) => x === false)).toBe(true);
 });
@@ -188,4 +187,48 @@ test('Passing an empty override does nothing', async () => {
     );
 
     expect(targetedEnvironment.enabled).toBe(true);
+});
+
+test('When given overrides should remap projects to override environments', async () => {
+    const enabledEnvName = 'enabled';
+    const ignoredEnvName = 'ignored';
+    const disabledEnvName = 'disabled';
+    const toggleName = 'test-toggle';
+
+    await db.stores.environmentStore.create({
+        name: enabledEnvName,
+        type: 'production',
+    });
+
+    await db.stores.environmentStore.create({
+        name: ignoredEnvName,
+        type: 'production',
+    });
+
+    await db.stores.environmentStore.create({
+        name: disabledEnvName,
+        type: 'production',
+    });
+
+    await service.toggleEnvironment(disabledEnvName, true);
+    await service.toggleEnvironment(ignoredEnvName, true);
+    await service.toggleEnvironment(enabledEnvName, false);
+
+    await stores.featureToggleStore.create('default', {
+        name: toggleName,
+        type: 'release',
+        description: '',
+        stale: false,
+    });
+
+    await service.addEnvironmentToProject(disabledEnvName, 'default');
+
+    await service.overrideEnabledProjects([enabledEnvName]);
+
+    const projects = await stores.projectStore.getEnvironmentsForProject(
+        'default',
+    );
+
+    expect(projects).toContain('enabled');
+    expect(projects).not.toContain('default');
 });

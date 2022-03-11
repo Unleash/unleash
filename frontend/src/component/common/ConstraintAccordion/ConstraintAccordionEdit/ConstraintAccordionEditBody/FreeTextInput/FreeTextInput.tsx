@@ -86,7 +86,7 @@ export const FreeTextInput = ({
     return (
         <div>
             <ConstraintFormHeader style={{ marginBottom: 0 }}>
-                Set values (maximum 100)
+                Set values (maximum 100 char length per value)
             </ConstraintFormHeader>
             <div className={styles.inputContainer}>
                 <div className={styles.inputInnerContainer}>

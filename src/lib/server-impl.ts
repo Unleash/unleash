@@ -87,6 +87,12 @@ async function createApp(
         });
     }
 
+    if (config.environmentEnableOverrides?.length > 0) {
+        await services.environmentService.overrideEnabledProjects(
+            config.environmentEnableOverrides,
+        );
+    }
+
     return new Promise((resolve, reject) => {
         if (startApp) {
             const server = stoppable(

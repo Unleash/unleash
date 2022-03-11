@@ -217,6 +217,14 @@ const loadInitApiTokens = () => {
     ];
 };
 
+const loadEnvironmentEnableOverrides = () => {
+    const environmentsString = process.env.ENABLED_ENVIRONMENTS;
+    if (environmentsString) {
+        return environmentsString.split(',');
+    }
+    return [];
+};
+
 export function createConfig(options: IUnleashOptions): IUnleashConfig {
     let extraDbOptions = {};
 
@@ -275,6 +283,8 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         { initApiTokens: initApiTokens },
     ]);
 
+    const environmentEnableOverrides = loadEnvironmentEnableOverrides();
+
     const importSetting: IImportOption = mergeAll([
         defaultImport,
         options.import,
@@ -323,6 +333,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         eventHook: options.eventHook,
         enterpriseVersion: options.enterpriseVersion,
         eventBus: new EventEmitter(),
+        environmentEnableOverrides,
     };
 }
 

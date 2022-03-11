@@ -94,6 +94,28 @@ export default class EnvironmentService {
         }
     }
 
+    async overrideEnabledProjects(
+        environmentsToEnable: string[],
+    ): Promise<void> {
+        if (environmentsToEnable.length === 0) {
+            return Promise.resolve();
+        }
+
+        const environmentsExist = await Promise.all(
+            environmentsToEnable.map((env) =>
+                this.environmentStore.exists(env),
+            ),
+        );
+        if (!environmentsExist.every((exists) => exists)) {
+            this.logger.error(
+                "Found environment enabled overrides but some of the specified environments don't exist, no overrides will be executed",
+            );
+            return;
+        }
+        await this.environmentStore.disableAllExcept(environmentsToEnable);
+        await this.environmentStore.enable(environmentsToEnable);
+    }
+
     async removeEnvironmentFromProject(
         environment: string,
         projectId: string,

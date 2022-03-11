@@ -136,3 +136,56 @@ test('Trying to get an environment that does not exist throws NotFoundError', as
         new NotFoundError(`Could not find environment with name: ${envName}`),
     );
 });
+
+test('Setting an override disables all other envs', async () => {
+    const enabledEnvName = 'should-get-enabled';
+    const disabledEnvName = 'should-get-disabled';
+    await db.stores.environmentStore.create({
+        name: disabledEnvName,
+        type: 'production',
+    });
+
+    await db.stores.environmentStore.create({
+        name: enabledEnvName,
+        type: 'production',
+    });
+
+    //Set these to the wrong state so we can assert that overriding them flips
+    await service.toggleEnvironment(disabledEnvName, true);
+    await service.toggleEnvironment(enabledEnvName, false);
+
+    await service.overrideEnabledProjects([enabledEnvName]);
+
+    const environments = await service.getAll();
+    const targetedEnvironment = environments.find(
+        (env) => env.name == enabledEnvName,
+    );
+
+    const allOtherEnvironments = environments
+        .filter((x) => x.name != enabledEnvName)
+        .map((env) => env.enabled);
+
+    console.log(allOtherEnvironments);
+    expect(targetedEnvironment.enabled).toBe(true);
+    expect(allOtherEnvironments.every((x) => x === false)).toBe(true);
+});
+
+test('Passing an empty override does nothing', async () => {
+    const enabledEnvName = 'should-be-enabled';
+
+    await db.stores.environmentStore.create({
+        name: enabledEnvName,
+        type: 'production',
+    });
+
+    await service.toggleEnvironment(enabledEnvName, true);
+
+    await service.overrideEnabledProjects([]);
+
+    const environments = await service.getAll();
+    const targetedEnvironment = environments.find(
+        (env) => env.name == enabledEnvName,
+    );
+
+    expect(targetedEnvironment.enabled).toBe(true);
+});

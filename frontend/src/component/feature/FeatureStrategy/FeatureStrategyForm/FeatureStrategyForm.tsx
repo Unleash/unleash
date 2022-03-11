@@ -52,8 +52,13 @@ export const FeatureStrategyForm = ({
     const StrategyIcon = getFeatureStrategyIcon(strategy.name ?? '');
     const strategyName = formatStrategyName(strategy.name ?? '');
     const { hasAccess } = useContext(AccessContext);
-    const { uiConfig } = useUiConfig();
     const { push } = useHistory();
+
+    const {
+        uiConfig,
+        error: uiConfigError,
+        loading: uiConfigLoading,
+    } = useUiConfig();
 
     const onCancel = () => {
         push(formatFeaturePath(feature.project, feature.name));
@@ -73,6 +78,15 @@ export const FeatureStrategyForm = ({
         feature.name,
         strategy.constraints
     );
+
+    if (uiConfigError) {
+        throw uiConfigError;
+    }
+
+    // Wait for uiConfig to load for the correct uiConfig.flags.CO value.
+    if (uiConfigLoading) {
+        return null;
+    }
 
     // TODO(olav): Remove uiConfig.flags.CO when new constraints are released.
     const FeatureStrategyConstraintsImplementation = uiConfig.flags.CO

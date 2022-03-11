@@ -1,5 +1,4 @@
 import useSWR, { mutate, SWRConfiguration } from 'swr';
-import { useState, useEffect } from 'react';
 import { formatApiPath } from '../../../../utils/format-path';
 import { defaultValue } from './defaultValue';
 import { IUiConfig } from '../../../../interfaces/uiConfig';
@@ -20,7 +19,6 @@ const useUiConfig = (options: SWRConfiguration = {}) => {
     };
 
     const { data, error } = useSWR<IUiConfig>(REQUEST_KEY, fetcher, options);
-    const [loading, setLoading] = useState(!error && !data);
 
     const refetch = () => {
         mutate(REQUEST_KEY);
@@ -35,14 +33,10 @@ const useUiConfig = (options: SWRConfiguration = {}) => {
         return true;
     };
 
-    useEffect(() => {
-        setLoading(!error && !data);
-    }, [data, error]);
-
     return {
         uiConfig: { ...defaultValue, ...data },
+        loading: !error && !data,
         error,
-        loading,
         refetch,
         isOss,
     };

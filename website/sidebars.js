@@ -54,10 +54,11 @@ module.exports = {
                     label: 'Feature toggles, strategies, context',
                     items: [
                         'how-to/how-to-add-strategy-constraints',
+                        'how-to/how-to-capture-impression-data',
                         'user_guide/create_feature_toggle',
                         'how-to/how-to-define-custom-context-fields',
                         'how-to/how-to-use-custom-strategies',
-                        'how-to/how-to-capture-impression-data'
+                        'how-to/how-to-schedule-feature-releases',
                     ],
                     type: 'category',
                     link: {

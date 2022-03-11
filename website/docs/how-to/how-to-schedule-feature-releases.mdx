@@ -1,0 +1,67 @@
+---
+title: How to schedule feature releases
+---
+import ApiRequest from '@site/src/components/ApiRequest'
+
+:::info Placeholders
+Placeholders in the code samples below are delimited by angle brackets (i.e. `<placeholder-name>`). You will need to replace them with the values that are correct in _your_ situation for the code samples to run properly.
+:::
+
+Scheduling feature releases is good. You may want to:
+- release a feature at a specific date and time (product launch)
+- only have a feature available up until a specific moment (such as a contest cutoff etc)
+- make a feature available during a specific period (24 flash sale, Black Friday, etc)
+
+Obviously Unleash can help you with this.
+
+There's two distinct ways to do this with Unleash:
+- [Using strategy constraints](#strategy-constraints)
+- [Using custom activation strategies](#custom-activation-strategies)
+
+This guide will show you how to schedule a release in the future, but the exact same logic applies if you want to make a feature available until some point in the future. Finally, if you want to only make a feature available during a limited time period, combine the two options.
+
+## Prerequisites
+
+This guide assumes that you've got some experience with Unleash, that you've got an instance up and running, and that you've got a feature toggle with a strategy that you want to schedule the release for. Additionally, each of the two ways of doing this have slightly different prerequisites themselves.
+
+## Schedule feature releases with strategy constraints {#strategy-constraints}
+
+
+### Prerequirements
+- Unleash Enterprise 4.9 or later
+- SDKs that support advanced strategy constraints
+
+### Step 1: Add a date-based strategy constraint
+
+#### Via the UI
+
+On the strategy that you want to schedule, use the "new constraint" button to add a new constraint.
+
+Select the `currentTime` context field from the dropdown and choose the one of the date-based operators.
+
+Finally, select when the feature should be released.
+
+#### Via the API
+
+<ApiRequest verb="patch" payload={[{"op": "replace", "path": "/constraints", "value": [{
+          "value": "2022-01-01T00:00:00.000Z",
+          "inverted": false,
+          "operator": "DATE_AFTER",
+          "contextName": "currentTime",
+          "caseInsensitive": false
+        }
+    ]}]} url="api/admin/projects/<project-id>/features/environments/<environment>/strategies/<strategy-id>" title="Set a time-based constraint on a strategy"/>
+
+
+## Schedule feature releases with custom activation strategies {#custom-activation-strategies}
+
+### Requirements
+- Unleash v3.3 or later
+
+### Step 1: Define a custom activation strategy
+See the how-to guide for more granular instructions, but you'd define a custom strategy with an `enableAfter` parameter in the form of a time format you can parse.
+
+### Step 2: Implement the custom activation strategy in your clients
+Again, following the steps in the guide, you'd implement this strategy in each of your clients.
+
+### See the how-to guide for custom activation strategies

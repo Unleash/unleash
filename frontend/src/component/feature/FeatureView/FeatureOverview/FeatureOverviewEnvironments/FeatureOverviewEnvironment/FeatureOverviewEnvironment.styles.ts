@@ -95,6 +95,7 @@ export const useStyles = makeStyles(theme => ({
         },
         headerTitle: {
             flexDirection: 'column',
+            textAlign: 'center',
         },
         headerIcon: {
             marginBottom: '0.5rem',

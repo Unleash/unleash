@@ -20,6 +20,8 @@ import { Alert } from '@material-ui/lab';
 import PermissionSwitch from '../../common/PermissionSwitch/PermissionSwitch';
 import { IProjectEnvironment } from '../../../interfaces/environments';
 import { getEnabledEnvs } from './helpers';
+import StringTruncator from 'component/common/StringTruncator/StringTruncator';
+import { useCommonStyles } from 'common.styles';
 
 interface ProjectEnvironmentListProps {
     projectId: string;
@@ -39,6 +41,7 @@ const ProjectEnvironmentList = ({ projectId }: ProjectEnvironmentListProps) => {
     const { project, refetch: refetchProject } = useProject(projectId);
     const { removeEnvironmentFromProject, addEnvironmentToProject } =
         useProjectApi();
+    const commonStyles = useCommonStyles();
 
     // local state
     const [selectedEnv, setSelectedEnv] = useState<IProjectEnvironment>();
@@ -129,10 +132,20 @@ const ProjectEnvironmentList = ({ projectId }: ProjectEnvironmentListProps) => {
     };
 
     const genLabel = (env: IProjectEnvironment) => (
-        <>
-            <code>{env.name}</code> environment is{' '}
-            <strong>{env.enabled ? 'enabled' : 'disabled'}</strong>
-        </>
+        <div className={commonStyles.flexRow}>
+            <code>
+                <StringTruncator
+                    text={env.name}
+                    maxLength={50}
+                    maxWidth="150"
+                />
+            </code>
+            {/* This is ugly - but regular {" "} doesn't work here*/}
+            <p>
+                &nbsp; environment is{' '}
+                <strong>{env.enabled ? 'enabled' : 'disabled'}</strong>
+            </p>
+        </div>
     );
 
     const renderEnvironments = () => {

@@ -23,6 +23,7 @@ export const FeatureStrategyEmpty = ({
                 <StringTruncator
                     text={environmentId}
                     maxWidth={'130'}
+                    maxLength={15}
                     className={styles.envName}
                 />{' '}
                 environment

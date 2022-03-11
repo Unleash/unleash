@@ -128,6 +128,7 @@ const EnvironmentPermissionAccordion = ({
                             text={environment.name}
                             className={styles.header}
                             maxWidth="120"
+                            maxLength={25}
                         />
                         &nbsp;
                         <p className={styles.header}>

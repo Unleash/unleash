@@ -54,6 +54,7 @@ const BreadcrumbNav = () => {
                                             <StringTruncator
                                                 text={path}
                                                 maxWidth="200"
+                                                maxLength={25}
                                             />
                                         </p>
                                     );
@@ -76,6 +77,7 @@ const BreadcrumbNav = () => {
                                         to={link}
                                     >
                                         <StringTruncator
+                                            maxLength={25}
                                             text={path}
                                             maxWidth="200"
                                         />

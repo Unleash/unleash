@@ -19,7 +19,11 @@ const EnvironmentCard = ({ name, type }: IEnvironmentProps) => {
                 <div className={styles.infoInnerContainer}>
                     <div className={styles.infoTitle}>Id</div>
                     <div>
-                        <StringTruncator text={name} maxWidth={'250'} />
+                        <StringTruncator
+                            text={name}
+                            maxWidth={'250'}
+                            maxLength={30}
+                        />
                     </div>
                 </div>
                 <div className={styles.infoInnerContainer}>

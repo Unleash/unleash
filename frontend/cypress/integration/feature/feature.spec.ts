@@ -179,9 +179,7 @@ describe('feature', () => {
     });
 
     it('can delete a strategy in the development environment', () => {
-        cy.visit(
-            `/projects/default/features/${featureToggleName}/strategies/edit?environmentId=development&strategyId=${strategyId}`
-        );
+        cy.visit(`/projects/default/features/${featureToggleName}`);
 
         cy.intercept(
             'DELETE',
@@ -193,9 +191,8 @@ describe('feature', () => {
             }
         ).as('deleteStrategy');
 
-        cy.get(
-            '[data-test=SIDEBAR_MODAL_ID] [data-test=STRATEGY_FORM_REMOVE_ID]'
-        ).click();
+        cy.get('[data-test=FEATURE_ENVIRONMENT_ACCORDION_development]').click();
+        cy.get('[data-test=STRATEGY_FORM_REMOVE_ID]').click();
         cy.get('[data-test=DIALOGUE_CONFIRM_ID]').click();
         cy.wait('@deleteStrategy');
     });

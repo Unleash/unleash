@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import classnames from 'classnames';
 import { IConstraint } from '../../../../interfaces/strategy';
 import { useStyles } from '../ConstraintAccordion.styles';
 import { ConstraintAccordionEditBody } from './ConstraintAccordionEditBody/ConstraintAccordionEditBody';
@@ -184,8 +185,11 @@ export const ConstraintAccordionEdit = ({
     return (
         <div className={styles.form}>
             <Accordion
+                className={classnames(styles.accordion, styles.accordionEdit)}
+                classes={{
+                    expanded: styles.accordionRoot,
+                }}
                 style={{ boxShadow: 'none' }}
-                className={styles.accordion}
                 expanded={expanded}
                 TransitionProps={{
                     onExited: () => {

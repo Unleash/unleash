@@ -1,5 +1,6 @@
 import { Button, Chip, makeStyles } from '@material-ui/core';
 import Input from 'component/common/Input/Input';
+import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import React, { useState } from 'react';
 import { ConstraintFormHeader } from '../ConstraintFormHeader/ConstraintFormHeader';
 
@@ -42,6 +43,8 @@ const useStyles = makeStyles(theme => ({
     valuesContainer: { marginTop: '1rem' },
 }));
 
+const ENTER = 'Enter';
+
 export const FreeTextInput = ({
     values,
     removeValue,
@@ -51,6 +54,14 @@ export const FreeTextInput = ({
 }: IFreeTextInputProps) => {
     const [inputValues, setInputValues] = useState('');
     const styles = useStyles();
+
+    const onKeyDown = (event: React.KeyboardEvent) => {
+        event.stopPropagation();
+
+        if (event.key === ENTER) {
+            addValues();
+        }
+    };
 
     const addValues = () => {
         if (inputValues.length === 0) {
@@ -80,6 +91,7 @@ export const FreeTextInput = ({
             <div className={styles.inputContainer}>
                 <div className={styles.inputInnerContainer}>
                     <Input
+                        onKeyDown={onKeyDown}
                         label="Values"
                         name="values"
                         value={inputValues}
@@ -129,7 +141,13 @@ const ConstraintValueChips = ({
                 // be unique here.
                 return (
                     <Chip
-                        label={value}
+                        label={
+                            <StringTruncator
+                                text={value}
+                                maxLength={35}
+                                maxWidth="100"
+                            />
+                        }
                         key={`${value}-${index}`}
                         onDelete={() => removeValue(index)}
                         className={styles.valueChip}

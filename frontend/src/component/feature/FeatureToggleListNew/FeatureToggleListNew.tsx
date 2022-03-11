@@ -239,6 +239,7 @@ const FeatureToggleListNew = ({
                                 >
                                     <StringTruncator
                                         text={env.name}
+                                        maxLength={15}
                                         maxWidth="90"
                                         data-loading
                                     />

@@ -33,7 +33,7 @@ const mainTheme = {
         },
         grey: {
             main: '#6C6C6C',
-            light: '#7e7e7e',
+            light: '#F6F6FA',
         },
         neutral: {
             main: '#18243e',

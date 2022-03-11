@@ -1,5 +1,6 @@
 import { Chip } from '@material-ui/core';
 import { ImportExportOutlined, TextFormatOutlined } from '@material-ui/icons';
+import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { useState } from 'react';
 import { stringOperators } from '../../../../../constants/operators';
 import { IConstraint } from '../../../../../interfaces/strategy';
@@ -37,7 +38,7 @@ export const ConstraintAccordionViewBody = ({
                 show={
                     <p className={styles.settingsParagraph}>
                         <ImportExportOutlined className={styles.settingsIcon} />{' '}
-                        Operator is inverted
+                        Operator is negated
                     </p>
                 }
             />
@@ -65,7 +66,16 @@ const SingleValue = ({ value, operator }: ISingleValueProps) => {
     return (
         <div className={styles.singleValueView}>
             <p className={styles.singleValueText}>Value must {operator}</p>{' '}
-            <Chip label={value} className={styles.chip} />
+            <Chip
+                label={
+                    <StringTruncator
+                        maxWidth="200"
+                        text={value}
+                        maxLength={25}
+                    />
+                }
+                className={styles.chip}
+            />
         </div>
     );
 };
@@ -88,7 +98,13 @@ const MultipleValues = ({ values }: IMultipleValuesProps) => {
                 .map((value, index) => (
                     <Chip
                         key={`${value}-${index}`}
-                        label={value}
+                        label={
+                            <StringTruncator
+                                maxWidth="200"
+                                text={value}
+                                maxLength={25}
+                            />
+                        }
                         className={styles.chip}
                     />
                 ))}

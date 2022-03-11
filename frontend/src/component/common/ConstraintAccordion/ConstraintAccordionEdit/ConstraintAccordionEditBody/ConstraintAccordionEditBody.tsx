@@ -80,7 +80,7 @@ const InvertedOperator = ({
                 the opposite)
             </ConstraintFormHeader>
             <FormControlLabel
-                style={{ display: 'block' }}
+                style={{ display: 'inline-block' }}
                 control={
                     <Switch
                         checked={inverted}
@@ -88,7 +88,7 @@ const InvertedOperator = ({
                         color="primary"
                     />
                 }
-                label={'inverted'}
+                label={'negated'}
             />
         </>
     );

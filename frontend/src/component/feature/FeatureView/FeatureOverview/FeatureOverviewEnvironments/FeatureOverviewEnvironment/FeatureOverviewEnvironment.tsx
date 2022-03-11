@@ -25,6 +25,7 @@ import FeatureOverviewEnvironmentBody from './FeatureOverviewEnvironmentBody/Fea
 import FeatureOverviewEnvironmentFooter from './FeatureOverviewEnvironmentFooter/FeatureOverviewEnvironmentFooter';
 import FeatureOverviewEnvironmentMetrics from './FeatureOverviewEnvironmentMetrics/FeatureOverviewEnvironmentMetrics';
 import { FeatureStrategyMenu } from 'component/feature/FeatureStrategy/FeatureStrategyMenu/FeatureStrategyMenu';
+import { FEATURE_ENVIRONMENT_ACCORDION } from 'testIds';
 
 interface IStrategyIconObject {
     count: number;
@@ -86,7 +87,10 @@ const FeatureOverviewEnvironment = ({
 
     return (
         <div className={styles.featureOverviewEnvironment}>
-            <Accordion style={{ boxShadow: 'none' }}>
+            <Accordion
+                style={{ boxShadow: 'none' }}
+                data-test={`${FEATURE_ENVIRONMENT_ACCORDION}_${env.name}`}
+            >
                 <AccordionSummary
                     className={styles.accordionHeader}
                     expandIcon={<ExpandMore />}
@@ -97,12 +101,15 @@ const FeatureOverviewEnvironment = ({
                                 enabled={env.enabled}
                                 className={styles.headerIcon}
                             />
-                            Feature toggle execution for&nbsp;
-                            <StringTruncator
-                                text={env.name}
-                                className={styles.truncator}
-                                maxWidth="100"
-                            />
+                            <p>
+                                Feature toggle execution for&nbsp;
+                                <StringTruncator
+                                    text={env.name}
+                                    className={styles.truncator}
+                                    maxWidth="100"
+                                    maxLength={15}
+                                />
+                            </p>
                         </div>
                         <div className={styles.container}>
                             <div className={styles.strategyMenu}>

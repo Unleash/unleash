@@ -4,7 +4,6 @@ import ConditionallyRender from 'component/common/ConditionallyRender';
 import FeatureOverviewEnvironmentStrategies from '../FeatureOverviewEnvironmentStrategies/FeatureOverviewEnvironmentStrategies';
 import { useStyles } from '../FeatureOverviewEnvironment.styles';
 import { IFeatureEnvironment } from 'interfaces/featureToggle';
-import { FeatureStrategyMenu } from '../../../../../FeatureStrategy/FeatureStrategyMenu/FeatureStrategyMenu';
 import { FeatureStrategyEmpty } from '../../../../../FeatureStrategy/FeatureStrategyEmpty/FeatureStrategyEmpty';
 
 interface IFeatureOverviewEnvironmentBodyProps {
@@ -37,14 +36,6 @@ const FeatureOverviewEnvironmentBody = ({
                     condition={featureEnvironment?.strategies.length > 0}
                     show={
                         <>
-                            <div className={styles.linkContainer}>
-                                <FeatureStrategyMenu
-                                    label="Add strategy"
-                                    projectId={projectId}
-                                    featureId={featureId}
-                                    environmentId={featureEnvironment.name}
-                                />
-                            </div>
                             <FeatureOverviewEnvironmentStrategies
                                 strategies={featureEnvironment?.strategies}
                                 environmentName={featureEnvironment.name}

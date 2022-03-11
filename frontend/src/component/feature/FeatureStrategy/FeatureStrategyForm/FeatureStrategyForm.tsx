@@ -5,7 +5,6 @@ import {
     formatStrategyName,
 } from 'utils/strategy-names';
 import { FeatureStrategyType } from '../FeatureStrategyType/FeatureStrategyType';
-import { FeatureStrategyRemove } from '../FeatureStrategyRemove/FeatureStrategyRemove';
 import { FeatureStrategyEnabled } from '../FeatureStrategyEnabled/FeatureStrategyEnabled';
 import { FeatureStrategyConstraints } from '../FeatureStrategyConstraints/FeatureStrategyConstraints';
 import { Button } from '@material-ui/core';
@@ -118,33 +117,6 @@ export const FeatureStrategyForm = ({
                 )}
             />
             <div className={styles.buttons}>
-                <Button
-                    type="button"
-                    color="secondary"
-                    onClick={onCancel}
-                    disabled={loading}
-                >
-                    Cancel
-                </Button>
-                <ConditionallyRender
-                    condition={Boolean(strategy.id)}
-                    show={
-                        <FeatureStrategyRemove
-                            projectId={feature.project}
-                            featureId={feature.name}
-                            environmentId={environmentId}
-                            strategyId={strategy.id!}
-                            disabled={loading}
-                        />
-                    }
-                />
-                <FeatureStrategyProdGuard
-                    open={showProdGuard}
-                    onClose={() => setShowProdGuard(false)}
-                    onClick={onSubmit}
-                    loading={loading}
-                    label="Save strategy"
-                />
                 <PermissionButton
                     permission={permission}
                     projectId={feature.project}
@@ -157,6 +129,22 @@ export const FeatureStrategyForm = ({
                 >
                     Save strategy
                 </PermissionButton>
+                <Button
+                    type="button"
+                    color="secondary"
+                    onClick={onCancel}
+                    disabled={loading}
+                >
+                    Cancel
+                </Button>
+
+                <FeatureStrategyProdGuard
+                    open={showProdGuard}
+                    onClose={() => setShowProdGuard(false)}
+                    onClick={onSubmit}
+                    loading={loading}
+                    label="Save strategy"
+                />
             </div>
         </form>
     );

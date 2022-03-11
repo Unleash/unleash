@@ -13,6 +13,7 @@ import FeatureOverviewExecution from '../../../../FeatureOverviewExecution/Featu
 import { useStyles } from './FeatureOverviewEnvironmentStrategy.styles';
 import { formatEditStrategyPath } from '../../../../../../FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
 import { FeatureStrategyRemove } from 'component/feature/FeatureStrategy/FeatureStrategyRemove/FeatureStrategyRemove';
+import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 
 interface IFeatureOverviewEnvironmentStrategyProps {
     environmentId: string;
@@ -40,15 +41,12 @@ const FeatureOverviewEnvironmentStrategy = ({
         <div className={styles.container}>
             <div className={styles.header}>
                 <Icon className={styles.icon} />
-                {formatStrategyName(strategy.name)}
+                <StringTruncator
+                    maxWidth="150"
+                    maxLength={15}
+                    text={formatStrategyName(strategy.name)}
+                />
                 <div className={styles.actions}>
-                    <FeatureStrategyRemove
-                        projectId={projectId}
-                        featureId={featureId}
-                        environmentId={environmentId}
-                        strategyId={strategy.id}
-                        icon
-                    />
                     <PermissionIconButton
                         permission={UPDATE_FEATURE_STRATEGY}
                         environmentId={environmentId}
@@ -59,6 +57,13 @@ const FeatureOverviewEnvironmentStrategy = ({
                     >
                         <Edit titleAccess="Edit" />
                     </PermissionIconButton>
+                    <FeatureStrategyRemove
+                        projectId={projectId}
+                        featureId={featureId}
+                        environmentId={environmentId}
+                        strategyId={strategy.id}
+                        icon
+                    />
                 </div>
             </div>
 

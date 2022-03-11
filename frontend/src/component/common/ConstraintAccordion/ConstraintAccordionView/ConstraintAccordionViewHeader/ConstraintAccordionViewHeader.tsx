@@ -53,10 +53,15 @@ export const ConstraintAccordionViewHeader = ({
                     <StringTruncator
                         text={constraint.contextName}
                         maxWidth="175px"
+                        maxLength={25}
                     />
                 </div>
 
-                <div style={{ minWidth: '220px' }}>
+                <div style={{ minWidth: '220px', position: 'relative' }}>
+                    <ConditionallyRender
+                        condition={Boolean(constraint.inverted)}
+                        show={<div className={styles.negated}>NOT</div>}
+                    />
                     <p className={styles.operator}>{constraint.operator}</p>
                 </div>
                 <div className={styles.headerViewValuesContainer}>
@@ -64,10 +69,14 @@ export const ConstraintAccordionViewHeader = ({
                         condition={singleValue}
                         show={<Chip label={constraint.value} />}
                         elseShow={
-                            <p>
-                                {constraint?.values?.length} values. Expand to
-                                view
-                            </p>
+                            <div className={styles.headerValuesContainer}>
+                                <p className={styles.headerValues}>
+                                    {constraint?.values?.length} values
+                                </p>
+                                <p className={styles.headerValuesExpand}>
+                                    Expand to view
+                                </p>
+                            </div>
                         }
                     />
                 </div>

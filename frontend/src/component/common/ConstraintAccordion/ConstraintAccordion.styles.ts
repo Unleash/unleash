@@ -20,14 +20,30 @@ export const useStyles = makeStyles(theme => ({
         width: '26px',
         height: '26px',
     },
+    accordionRoot: { margin: 0, boxShadow: 'none' },
+    negated: {
+        position: 'absolute',
+        color: '#fff',
+        backgroundColor: theme.palette.primary.light,
+        padding: '0.1rem 0.2rem',
+        fontSize: '0.7rem',
+        fontWeight: 'bold',
+        top: '-15px',
+        left: '42px',
+        borderRadius: '3px',
+    },
     accordion: {
         border: `1px solid ${theme.palette.grey[300]}`,
         borderRadius: '5px',
-        margin: '1rem 0',
         backgroundColor: '#fff',
+        margin: 0,
+
         ['&:before']: {
             height: 0,
         },
+    },
+    accordionEdit: {
+        backgroundColor: '#F6F6FA',
     },
     operator: {
         border: `1px solid ${theme.palette.secondary.main}`,
@@ -52,6 +68,17 @@ export const useStyles = makeStyles(theme => ({
             alignItems: 'center',
             position: 'relative',
         },
+    },
+    headerValuesContainer: {
+        display: 'flex',
+        flexDirection: 'column',
+    },
+    headerValues: {
+        fontSize: theme.fontSizes.smallBody,
+        color: theme.palette.primary.light,
+    },
+    headerValuesExpand: {
+        fontSize: theme.fontSizes.smallBody,
     },
     headerViewValuesContainer: {
         [theme.breakpoints.down(990)]: {
@@ -117,7 +144,14 @@ export const useStyles = makeStyles(theme => ({
         maxHeight: '400px',
         overflowY: 'auto',
     },
-    summary: { border: 'none', padding: '0.25rem 1rem' },
+    summary: {
+        border: 'none',
+        padding: '0.25rem 1rem',
+        height: '85px',
+        [theme.breakpoints.down(770)]: {
+            height: '175px',
+        },
+    },
     settingsParagraph: {
         display: 'flex',
         alignItems: 'center',

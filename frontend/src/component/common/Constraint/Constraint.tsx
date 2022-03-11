@@ -47,7 +47,11 @@ const Constraint = ({
     return (
         <div className={classes + ' ' + className} {...rest}>
             <div className={classes + ' ' + className} {...rest}>
-                <StringTruncator text={constraint.contextName} maxWidth="125" />
+                <StringTruncator
+                    text={constraint.contextName}
+                    maxWidth="125"
+                    maxLength={25}
+                />
                 <StrategySeparator text={constraint.operator} maxWidth="none" />
                 <span className={styles.values}>
                     {constraint.values?.join(', ') ?? constraint.value}

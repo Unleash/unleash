@@ -42,6 +42,7 @@ export const FeatureStrategyMenuCard = ({
                     text={strategy.displayName || strategyName}
                     className={styles.name}
                     maxWidth="200"
+                    maxLength={25}
                 />
                 <div className={styles.description}>{strategy.description}</div>
             </div>

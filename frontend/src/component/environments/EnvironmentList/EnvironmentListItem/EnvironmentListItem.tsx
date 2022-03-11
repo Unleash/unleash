@@ -135,7 +135,11 @@ const EnvironmentListItem = ({
                 primary={
                     <>
                         <strong>
-                            <StringTruncator text={env.name} maxWidth={'125'} />
+                            <StringTruncator
+                                text={env.name}
+                                maxWidth={'125'}
+                                maxLength={25}
+                            />
                         </strong>
                         <ConditionallyRender
                             condition={!env.enabled}

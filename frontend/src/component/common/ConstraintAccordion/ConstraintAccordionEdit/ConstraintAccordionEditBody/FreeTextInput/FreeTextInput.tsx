@@ -55,10 +55,9 @@ export const FreeTextInput = ({
     const [inputValues, setInputValues] = useState('');
     const styles = useStyles();
 
-    const onKeyDown = (event: React.KeyboardEvent) => {
-        event.stopPropagation();
-
+    const onKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === ENTER) {
+            event.preventDefault();
             addValues();
         }
     };
@@ -91,7 +90,7 @@ export const FreeTextInput = ({
             <div className={styles.inputContainer}>
                 <div className={styles.inputInnerContainer}>
                     <Input
-                        onKeyDown={onKeyDown}
+                        onKeyPress={onKeyPress}
                         label="Values"
                         name="values"
                         value={inputValues}

@@ -33,7 +33,7 @@ This guide assumes that you've got some experience with Unleash, that you've got
 
 ### Step 1: Add a date-based strategy constraint
 
-#### Via the UI
+To schedule feature release via the UI
 
 On the strategy that you want to schedule, use the "new constraint" button to add a new constraint.
 
@@ -42,6 +42,8 @@ Select the `currentTime` context field from the dropdown and choose the one of t
 Finally, select when the feature should be released.
 
 #### Via the API
+
+To use the API to add a constraint, you should use the `DATE_AFTER` `operator`, the `currentTime` `contextName` and the date as the `value`.
 
 <ApiRequest verb="patch" payload={[{"op": "replace", "path": "/constraints", "value": [{
           "value": "2022-01-01T00:00:00.000Z",
@@ -52,13 +54,13 @@ Finally, select when the feature should be released.
         }
     ]}]} url="api/admin/projects/<project-id>/features/environments/<environment>/strategies/<strategy-id>" title="Set a time-based constraint on a strategy"/>
 
-
 ## Schedule feature releases with custom activation strategies {#custom-activation-strategies}
 
 ### Requirements
 - Unleash v3.3 or later
 
 ### Step 1: Define a custom activation strategy
+
 See the how-to guide for more granular instructions, but you'd define a custom strategy with an `enableAfter` parameter in the form of a time format you can parse.
 
 ### Step 2: Implement the custom activation strategy in your clients

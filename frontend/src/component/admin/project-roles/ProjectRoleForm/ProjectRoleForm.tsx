@@ -128,8 +128,6 @@ const ProjectRoleForm: React.FC<IProjectRoleForm> = ({
 
     return (
         <form onSubmit={handleSubmit}>
-            <h3 className={styles.formHeader}>Role information</h3>
-
             <div className={styles.container}>
                 <p className={styles.inputDescription}>
                     What is your role name?

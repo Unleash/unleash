@@ -1,6 +1,6 @@
 import Input from '../../../common/Input/Input';
 import { TextField, Button } from '@material-ui/core';
-import { useStyles } from './ProjectForm.style';
+import { useStyles } from './ProjectForm.styles';
 import React from 'react';
 import { trim } from '../../../common/util';
 
@@ -38,8 +38,6 @@ const ProjectForm: React.FC<IProjectForm> = ({
 
     return (
         <form onSubmit={handleSubmit} className={styles.form}>
-            <h3 className={styles.formHeader}>Project Information</h3>
-
             <div className={styles.container}>
                 <p className={styles.inputDescription}>
                     What is your project Id?

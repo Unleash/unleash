@@ -52,8 +52,6 @@ export const StrategyForm: React.FC<IStrategyFormProps> = ({
 
     return (
         <form onSubmit={handleSubmit} className={styles.form}>
-            <h3 className={styles.formHeader}>Strategy type information</h3>
-
             <div className={styles.container}>
                 <p className={styles.inputDescription}>
                     What would you like to call your strategy?

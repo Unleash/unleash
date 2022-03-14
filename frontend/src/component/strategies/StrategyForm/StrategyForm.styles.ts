@@ -9,6 +9,7 @@ export const useStyles = makeStyles(theme => ({
         flexDirection: 'column',
         height: '100%',
     },
+
     input: { width: '100%', marginBottom: '1rem' },
     selectInput: {
         marginBottom: '1rem',
@@ -42,13 +43,6 @@ export const useStyles = makeStyles(theme => ({
         color: theme.palette.grey[600],
         top: '-13px',
         position: 'relative',
-    },
-    formHeader: {
-        fontWeight: 'normal',
-        marginTop: '0',
-    },
-    header: {
-        fontWeight: 'normal',
     },
     errorMessage: {
         fontSize: theme.fontSizes.smallBody,

@@ -63,8 +63,6 @@ const UserForm: React.FC<IUserForm> = ({
 
     return (
         <form onSubmit={handleSubmit} className={styles.form}>
-            <h3 className={styles.formHeader}>User information</h3>
-
             <div className={styles.container}>
                 <p className={styles.inputDescription}>
                     Who is the new Unleash user?

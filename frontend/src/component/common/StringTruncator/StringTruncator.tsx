@@ -37,7 +37,7 @@ const StringTruncator = ({
                     </span>
                 </Tooltip>
             }
-            elseShow={<>{text}</>}
+            elseShow={<span className={className}>{text}</span>}
         />
     );
 };

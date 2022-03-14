@@ -65,8 +65,6 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
 
     return (
         <form onSubmit={handleSubmit} className={styles.form}>
-            <h3 className={styles.formHeader}>Token information</h3>
-
             <div className={styles.container}>
                 <p className={styles.inputDescription}>
                     Who are you generating the token for?

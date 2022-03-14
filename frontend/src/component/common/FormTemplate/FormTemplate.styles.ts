@@ -28,8 +28,7 @@ export const useStyles = makeStyles(theme => ({
         },
     },
     title: {
-        color: '#fff',
-        marginBottom: '1rem',
+        marginBottom: '1.5rem',
         fontWeight: 'normal',
     },
     subtitle: {
@@ -70,4 +69,25 @@ export const useStyles = makeStyles(theme => ({
         },
     },
     icon: { fill: '#fff' },
+    mobileGuidanceBgContainer: {
+        position: 'absolute',
+        right: '-3px',
+        top: '-3px',
+        backgroundColor: theme.palette.primary.light,
+    },
+    mobileGuidanceBackground: {
+        position: 'absolute',
+        right: '-3px',
+        top: '-3px',
+        width: '75px',
+        height: '75px',
+    },
+    mobileGuidanceButton: {
+        position: 'absolute',
+        zIndex: 400,
+        right: 0,
+    },
+    infoIcon: {
+        fill: '#fff',
+    },
 }));

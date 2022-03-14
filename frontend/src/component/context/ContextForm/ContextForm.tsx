@@ -93,8 +93,6 @@ export const ContextForm: React.FC<IContextForm> = ({
 
     return (
         <form onSubmit={submit} className={styles.form}>
-            <h3 className={styles.formHeader}>Context information</h3>
-
             <div className={styles.container}>
                 <p className={styles.inputDescription}>
                     What is your context name?

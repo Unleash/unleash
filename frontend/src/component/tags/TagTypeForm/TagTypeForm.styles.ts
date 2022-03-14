@@ -27,13 +27,6 @@ export const useStyles = makeStyles(theme => ({
     inputDescription: {
         marginBottom: '0.5rem',
     },
-    formHeader: {
-        fontWeight: 'normal',
-        marginTop: '0',
-    },
-    header: {
-        fontWeight: 'normal',
-    },
     permissionErrorContainer: {
         position: 'relative',
     },

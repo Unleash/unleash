@@ -15,7 +15,7 @@ export const StrategyParameters = ({
     setParams,
     errors,
 }: IStrategyParametersProps) => (
-    <div>
+    <div style={{ marginTop: '0.5rem' }}>
         {input.map((item, index) => (
             <StrategyParameter
                 params={input}

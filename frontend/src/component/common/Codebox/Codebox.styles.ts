@@ -6,6 +6,8 @@ export const useStyles = makeStyles(theme => ({
         padding: '1rem',
         borderRadius: '3px',
         position: 'relative',
+        maxHeight: '500px',
+        overflow: 'auto',
     },
     code: {
         margin: 0,

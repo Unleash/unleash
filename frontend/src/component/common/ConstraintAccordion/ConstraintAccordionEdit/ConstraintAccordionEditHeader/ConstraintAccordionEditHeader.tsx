@@ -122,6 +122,7 @@ export const ConstraintAccordionEditHeader = ({
                         id="context-field-select"
                         name="contextName"
                         label="Context Field"
+                        autoFocus
                         options={constraintNameOptions}
                         value={localConstraint.contextName || ''}
                         onChange={(

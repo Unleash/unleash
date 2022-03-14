@@ -19,6 +19,9 @@ export const useCommonStyles = makeStyles(theme => ({
             marginLeft: '0.8rem !important',
         },
     },
+    relative: {
+        position: 'relative',
+    },
     divider: {
         margin: '1rem 0',
         backgroundColor: theme.palette.division.main,

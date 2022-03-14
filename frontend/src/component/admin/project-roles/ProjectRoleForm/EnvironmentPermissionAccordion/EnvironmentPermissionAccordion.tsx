@@ -84,7 +84,7 @@ const EnvironmentPermissionAccordion = ({
                                 color="primary"
                             />
                         }
-                        label={permission.displayName || 'Dummy permission'}
+                        label={permission.displayName}
                     />
                 );
             }

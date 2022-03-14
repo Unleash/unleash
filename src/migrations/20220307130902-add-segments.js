@@ -3,7 +3,7 @@
 exports.up = function (db, cb) {
     db.runSql(
         `
-        create table if not exists segments
+        create table segments
             (
                 id serial primary key,
                 name text not null,
@@ -13,7 +13,7 @@ exports.up = function (db, cb) {
                 constraints jsonb not null default '[]'::jsonb
             );
 
-        create table if not exists feature_strategy_segment
+        create table feature_strategy_segment
             (
                 feature_strategy_id text not null references feature_strategies (id) on update cascade on delete cascade not null,
                 segment_id integer not null references segments (id) on update cascade on delete cascade not null,
@@ -21,7 +21,7 @@ exports.up = function (db, cb) {
                 primary key (feature_strategy_id, segment_id)
             );
 
-        create index if not exists feature_strategy_segment_segment_id_index
+        create index feature_strategy_segment_segment_id_index
             on feature_strategy_segment (segment_id);
 
         insert into permissions (permission, display_name, type) values
@@ -40,9 +40,9 @@ exports.up = function (db, cb) {
                 'Editor'
             )
             and p.permission in  (
-                'DELETE_SEGMENT',
+                'CREATE_SEGMENT',
                 'UPDATE_SEGMENT',
-                'CREATE_SEGMENT'
+                'DELETE_SEGMENT'
             );
         `,
         cb,
@@ -64,9 +64,9 @@ exports.down = function (db, cb) {
         delete from permissions where permission = 'UPDATE_SEGMENT';
         delete from permissions where permission = 'CREATE_SEGMENT';
 
-        drop index if exists feature_strategy_segment_segment_id_index;
-        drop table if exists feature_strategy_segment;
-        drop table if exists segments;
+        drop index feature_strategy_segment_segment_id_index;
+        drop table feature_strategy_segment;
+        drop table segments;
         `,
         cb,
     );

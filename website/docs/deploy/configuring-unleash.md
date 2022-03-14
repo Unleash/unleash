@@ -131,6 +131,10 @@ unleash.start(unleashOptions);
 - **versionCheck** - the object deciding where to check for latest version
   - `url` - The url to check version (Defaults to `https://version.unleash.run`) - Overridable with (`UNLEASH_VERSION_URL`)
   - `enable` - Whether version checking is enabled (defaults to true) - Overridable with (`CHECK_VERSION`) (if anything other than `true`, does not check)
+- **environmentEnableOverrides** - A list of environment names to force enable at startup. This is feature should be
+  used with caution. When passed a list, this will enable each environment in that list and disable all other environments. You can't use this to disable all environments, passing an empty list will do nothing. If one of the given environments is not already enabled on startup then it will also enable projects and toggles for that environment. Note that if one of the passed environments doesn't already exist this will do nothing aside from log a warning.
+
+  You can also set the environment variable `ENABLED_ENVIRONMENTS` to a comma delimited string of environment names to override environments.
 
 ### Disabling Auto-Start {#disabling-auto-start}
 

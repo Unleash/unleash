@@ -23,6 +23,27 @@ exports.up = function (db, cb) {
 
         create index if not exists feature_strategy_segment_segment_id_index
             on feature_strategy_segment (segment_id);
+
+        insert into permissions (permission, display_name, type) values
+            ('CREATE_SEGMENT', 'Create segments', 'root'),
+            ('UPDATE_SEGMENT', 'Edit segments', 'root'),
+            ('DELETE_SEGMENT', 'Delete segments', 'root');
+
+        insert into role_permission (role_id, permission_id)
+            select
+                r.id as role_id,
+                p.id as permission_id
+            from roles r
+            cross join permissions p
+            where r.name in (
+                'Admin',
+                'Editor'
+            )
+            and p.permission in  (
+                'DELETE_SEGMENT',
+                'UPDATE_SEGMENT',
+                'CREATE_SEGMENT'
+            );
         `,
         cb,
     );
@@ -31,6 +52,18 @@ exports.up = function (db, cb) {
 exports.down = function (db, cb) {
     db.runSql(
         `
+        delete from role_permission where permission_id in (
+            select id from permissions where permission in (
+                'DELETE_SEGMENT',
+                'UPDATE_SEGMENT',
+                'CREATE_SEGMENT'
+            )
+        );
+
+        delete from permissions where permission = 'DELETE_SEGMENT';
+        delete from permissions where permission = 'UPDATE_SEGMENT';
+        delete from permissions where permission = 'CREATE_SEGMENT';
+
         drop index if exists feature_strategy_segment_segment_id_index;
         drop table if exists feature_strategy_segment;
         drop table if exists segments;

@@ -41,6 +41,7 @@ Object {
   },
   "enableOAS": false,
   "enterpriseVersion": undefined,
+  "environmentEnableOverrides": Array [],
   "eventBus": EventEmitter {
     "_events": Object {},
     "_eventsCount": 0,

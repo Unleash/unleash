@@ -8,9 +8,9 @@ interface IDateSingleValueProps {
     setError: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const parseValue = (value: string) => {
+export const parseDateValue = (value: string) => {
     const date = new Date(value);
-    return format(date, 'yyyy-MM-dd') + 'T' + format(date, 'kk:mm');
+    return format(date, 'yyyy-MM-dd') + 'T' + format(date, 'HH:mm');
 };
 
 export const DateSingleValue = ({
@@ -28,7 +28,7 @@ export const DateSingleValue = ({
                 id="date"
                 label="Date"
                 type="datetime-local"
-                value={parseValue(value)}
+                value={parseDateValue(value)}
                 onChange={e => {
                     setError('');
                     setValue(new Date(e.target.value).toISOString());

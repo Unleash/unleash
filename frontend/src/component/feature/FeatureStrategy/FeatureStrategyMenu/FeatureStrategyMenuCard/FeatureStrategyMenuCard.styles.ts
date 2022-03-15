@@ -12,7 +12,7 @@ export const useStyles = makeStyles(theme => ({
         borderStyle: 'solid',
         borderColor: theme.palette.grey[400],
         borderRadius: theme.spacing(1),
-        '&:hover': {
+        '&:hover, &:focus': {
             borderColor: theme.palette.primary.main,
         },
     },

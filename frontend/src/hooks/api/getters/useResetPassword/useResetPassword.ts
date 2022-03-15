@@ -2,15 +2,13 @@ import useSWR, { SWRConfiguration } from 'swr';
 import useQueryParams from '../../../useQueryParams';
 import { useState, useEffect } from 'react';
 import { formatApiPath } from '../../../../utils/format-path';
-import handleErrorResponses from '../httpErrorResponseHandler';
 
 const getFetcher = (token: string) => () => {
     const path = formatApiPath(`auth/reset/validate?token=${token}`);
+    // Don't use handleErrorResponses here, because we need to read the error.
     return fetch(path, {
         method: 'GET',
-    })
-        .then(handleErrorResponses('Password reset'))
-        .then(res => res.json());
+    }).then(res => res.json());
 };
 
 const INVALID_TOKEN_ERROR = 'InvalidTokenError';

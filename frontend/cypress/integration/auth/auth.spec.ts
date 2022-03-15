@@ -190,4 +190,9 @@ describe('auth', () => {
         cy.get('[data-test="LOGIN_EMAIL_ID"]').type(email);
         cy.get("[data-test='LOGIN_BUTTON']").click();
     });
+
+    it('renders invalid token page when token is invalid', () => {
+        cy.visit('/new-user?token=hellotokenworld');
+        cy.get('[data-test="INVALID_TOKEN_BUTTON"]').should('be.visible');
+    });
 });

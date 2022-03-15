@@ -1,11 +1,19 @@
 import { Button, Typography } from '@material-ui/core';
 import { Link } from 'react-router-dom';
+import { INVALID_TOKEN_BUTTON } from 'testIds';
 import { useCommonStyles } from '../../../../common.styles';
+import classnames from 'classnames';
 
 const InvalidToken = () => {
     const commonStyles = useCommonStyles();
     return (
-        <div className={commonStyles.contentSpacingY}>
+        <div
+            className={classnames(
+                commonStyles.contentSpacingY,
+                commonStyles.flexColumn,
+                commonStyles.itemsCenter
+            )}
+        >
             <Typography variant="h2" className={commonStyles.title}>
                 Invalid token
             </Typography>
@@ -19,6 +27,7 @@ const InvalidToken = () => {
                 color="primary"
                 component={Link}
                 to="forgotten-password"
+                data-test={INVALID_TOKEN_BUTTON}
             >
                 Reset password
             </Button>

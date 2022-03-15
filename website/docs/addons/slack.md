@@ -38,7 +38,7 @@ Unleash Slack addon takes the following parameters.
 - **Slack Webhook URL** - This is the only required property. If you are using a Slack Application you must also make sure your application is allowed to post to the channel you want to post to.
 - **Username** - Used to override the username used to post the update to a Slack channel.
 - **Emoji Icon** - Used to override the emoji icon used to post the update to a Slack channel.
-- Default channel - Where to post the message if the feature toggles has not overridden the channel via the slack tags.
+- **Default channel** - Where to post the message if the feature toggles has not overridden the channel via the slack tags.
 
 #### Global configuration
 

@@ -1,0 +1,411 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should serve the OpenAPI UI 1`] = `
+"<!DOCTYPE html>
+<html>
+  <head>
+    <title>Swagger UI</title>
+    <meta charset=\\"utf-8\\"/>
+    <meta name=\\"viewport\\" content=\\"width=device-width, initial-scale=1\\">
+    <style>
+      html {
+          box-sizing: border-box;
+          overflow: -moz-scrollbars-vertical;
+          overflow-y: scroll;
+      }
+      *,
+      *:before,
+      *:after {
+          box-sizing: inherit;
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        background: #fafafa;
+      }
+    </style>
+    
+      <link rel=\\"stylesheet\\" type=\\"text/css\\" href=\\"./swagger-ui.css\\" >
+    
+  </head>
+  <body>
+    
+      <div id=\\"swagger-ui\\"></div>
+      <script src=\\"./swagger-ui-bundle.js\\"></script>
+      <script src=\\"./swagger-ui-standalone-preset.js\\"></script>
+      <script>
+        window.onload = function () {
+          window.ui = SwaggerUIBundle({
+            url: \\"/docs/openapi.json\\",
+            dom_id: '#swagger-ui'
+          })
+        }
+      </script>
+    
+  </body>
+</html>
+  "
+`;
+
+exports[`should serve the OpenAPI spec 1`] = `
+Object {
+  "components": Object {
+    "schemas": Object {
+      "constraintSchema": Object {
+        "properties": Object {
+          "contextName": Object {
+            "type": "string",
+          },
+          "operator": Object {
+            "type": "string",
+          },
+          "values": Object {
+            "items": Object {
+              "type": "string",
+            },
+            "type": "array",
+          },
+        },
+        "required": Array [
+          "contextName",
+          "operator",
+        ],
+        "type": "object",
+      },
+      "createFeatureSchema": Object {
+        "properties": Object {
+          "description": Object {
+            "type": "string",
+          },
+          "impressionData": Object {
+            "type": "boolean",
+          },
+          "name": Object {
+            "type": "string",
+          },
+          "type": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "name",
+        ],
+        "type": "object",
+      },
+      "featureSchema": Object {
+        "properties": Object {
+          "createdAt": Object {
+            "format": "date",
+            "nullable": true,
+            "type": "string",
+          },
+          "description": Object {
+            "type": "string",
+          },
+          "enabled": Object {
+            "type": "boolean",
+          },
+          "impressionData": Object {
+            "type": "boolean",
+          },
+          "lastSeenAt": Object {
+            "format": "date",
+            "nullable": true,
+            "type": "string",
+          },
+          "name": Object {
+            "type": "string",
+          },
+          "project": Object {
+            "type": "string",
+          },
+          "stale": Object {
+            "type": "boolean",
+          },
+          "strategies": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/strategySchema",
+            },
+            "type": "array",
+          },
+          "type": Object {
+            "type": "string",
+          },
+          "variants": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/variantSchema",
+            },
+            "type": "array",
+          },
+        },
+        "required": Array [
+          "name",
+          "project",
+        ],
+        "type": "object",
+      },
+      "featuresSchema": Object {
+        "properties": Object {
+          "features": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/featureSchema",
+            },
+            "type": "array",
+          },
+          "version": Object {
+            "type": "integer",
+          },
+        },
+        "required": Array [
+          "version",
+          "features",
+        ],
+        "type": "object",
+      },
+      "overrideSchema": Object {
+        "properties": Object {
+          "contextName": Object {
+            "type": "string",
+          },
+          "values": Object {
+            "items": Object {
+              "type": "string",
+            },
+            "type": "array",
+          },
+        },
+        "required": Array [
+          "contextName",
+          "values",
+        ],
+        "type": "object",
+      },
+      "strategySchema": Object {
+        "properties": Object {
+          "constraints": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/constraintSchema",
+            },
+            "type": "array",
+          },
+          "id": Object {
+            "type": "string",
+          },
+          "name": Object {
+            "type": "string",
+          },
+          "parameters": Object {
+            "type": "object",
+          },
+        },
+        "required": Array [
+          "id",
+          "name",
+          "constraints",
+          "parameters",
+        ],
+        "type": "object",
+      },
+      "variantSchema": Object {
+        "properties": Object {
+          "name": Object {
+            "type": "string",
+          },
+          "overrides": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/overrideSchema",
+            },
+            "type": "array",
+          },
+          "payload": Object {
+            "type": "object",
+          },
+          "stickiness": Object {
+            "type": "string",
+          },
+          "weight": Object {
+            "type": "number",
+          },
+          "weightType": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "name",
+          "weight",
+          "weightType",
+          "stickiness",
+          "overrides",
+        ],
+        "type": "object",
+      },
+    },
+    "securitySchemes": Object {
+      "apiKey": Object {
+        "in": "header",
+        "name": "Authorization",
+        "type": "apiKey",
+      },
+    },
+  },
+  "info": Object {
+    "title": "Unleash API",
+  },
+  "openapi": "3.0.3",
+  "paths": Object {
+    "/api/admin/archive/features": Object {
+      "get": Object {
+        "deprecated": true,
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/featuresSchema",
+                },
+              },
+            },
+            "description": "featuresResponse",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/features/": Object {
+      "get": Object {
+        "deprecated": true,
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/featuresSchema",
+                },
+              },
+            },
+            "description": "featuresResponse",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/projects/{projectId}/features": Object {
+      "get": Object {
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/featuresSchema",
+                },
+              },
+            },
+            "description": "featuresResponse",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+      "post": Object {
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/createFeatureSchema",
+              },
+            },
+          },
+          "required": true,
+        },
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/featureSchema",
+                },
+              },
+            },
+            "description": "featureResponse",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/projects/{projectId}/features/{featureName}": Object {
+      "get": Object {
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+          Object {
+            "in": "path",
+            "name": "featureName",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/featureSchema",
+                },
+              },
+            },
+            "description": "featureResponse",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+  },
+  "security": Array [
+    Object {
+      "apiKey": Array [],
+    },
+  ],
+  "servers": Array [
+    Object {
+      "url": "http://localhost:4242",
+    },
+  ],
+}
+`;

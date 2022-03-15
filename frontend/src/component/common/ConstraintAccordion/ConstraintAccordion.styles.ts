@@ -127,6 +127,9 @@ export const useStyles = makeStyles(theme => ({
     chip: {
         margin: '0 0.5rem 0.5rem 0',
     },
+    chipValue: {
+        whiteSpace: 'pre',
+    },
     headerActions: {
         marginLeft: 'auto',
         [theme.breakpoints.down(660)]: {

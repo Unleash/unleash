@@ -30,5 +30,8 @@ export const useStyles = makeStyles(theme => ({
     column: {
         flexDirection: 'column',
     },
-    values: { marginLeft: '1.5rem' },
+    values: {
+        marginLeft: '1.5rem',
+        whiteSpace: 'pre-wrap',
+    },
 }));

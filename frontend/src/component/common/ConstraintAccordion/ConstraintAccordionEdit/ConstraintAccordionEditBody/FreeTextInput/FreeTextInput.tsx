@@ -14,7 +14,12 @@ interface IFreeTextInputProps {
 }
 
 const useStyles = makeStyles(theme => ({
-    valueChip: { margin: '0 0.5rem 0.5rem 0' },
+    valueChip: {
+        margin: '0 0.5rem 0.5rem 0',
+    },
+    chipValue: {
+        whiteSpace: 'pre',
+    },
     inputContainer: {
         display: 'flex',
         alignItems: 'center',
@@ -74,9 +79,9 @@ export const FreeTextInput = ({
                 .split(',')
                 .filter(values => values)
                 .map(value => value.trim());
-            setValues([...values, ...newValues]);
+            setValues(uniqueValues([...values, ...newValues]));
         } else {
-            setValues([...values, inputValues.trim()]);
+            setValues(uniqueValues([...values, inputValues.trim()]));
         }
 
         setInputValues('');
@@ -145,6 +150,7 @@ const ConstraintValueChips = ({
                                 text={value}
                                 maxLength={35}
                                 maxWidth="100"
+                                className={styles.chipValue}
                             />
                         }
                         key={`${value}-${index}`}
@@ -155,4 +161,8 @@ const ConstraintValueChips = ({
             })}
         </>
     );
+};
+
+const uniqueValues = <T,>(values: T[]): T[] => {
+    return Array.from(new Set(values));
 };

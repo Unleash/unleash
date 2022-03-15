@@ -106,6 +106,7 @@ const MultipleValues = ({ values }: IMultipleValuesProps) => {
                                 maxWidth="200"
                                 text={value}
                                 maxLength={25}
+                                className={styles.chipValue}
                             />
                         }
                         className={styles.chip}

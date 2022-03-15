@@ -96,7 +96,7 @@ export const FeatureStrategyConstraints2 = ({
                 environmentId={environmentId}
                 projectId={projectId}
             >
-                Add constraints
+                Add constraint
             </PermissionButton>
             {strategy.constraints?.map((constraint, index) => (
                 <ConstraintAccordion

@@ -11,6 +11,8 @@ import ConditionallyRender from '../ConditionallyRender';
 import PermissionIconButton from '../PermissionIconButton/PermissionIconButton';
 import StringTruncator from '../StringTruncator/StringTruncator';
 import { useStyles } from './Constraint.styles';
+import { useLocationSettings } from 'hooks/useLocationSettings';
+import { formatConstraintValuesOrValue } from 'component/common/Constraint/formatConstraintValue';
 
 interface IConstraintProps {
     constraint: IConstraint;
@@ -29,6 +31,7 @@ const Constraint = ({
     // CHANGEME - Feat: Constraint Operators
     const { uiConfig } = useUiConfig();
     const styles = useStyles();
+    const { locationSettings } = useLocationSettings();
     const { projectId } = useParams<IFeatureViewParams>();
 
     const classes = classnames(styles.constraint, {
@@ -54,7 +57,10 @@ const Constraint = ({
                 />
                 <StrategySeparator text={constraint.operator} maxWidth="none" />
                 <span className={styles.values}>
-                    {constraint.values?.join(', ') ?? constraint.value}
+                    {formatConstraintValuesOrValue(
+                        constraint,
+                        locationSettings
+                    )}
                 </span>
             </div>
 

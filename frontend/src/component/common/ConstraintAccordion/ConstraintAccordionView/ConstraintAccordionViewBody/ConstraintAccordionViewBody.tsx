@@ -8,6 +8,8 @@ import { oneOf } from '../../../../../utils/one-of';
 import ConditionallyRender from '../../../ConditionallyRender';
 import { useStyles } from '../../ConstraintAccordion.styles';
 import { ConstraintValueSearch } from '../../ConstraintValueSearch/ConstraintValueSearch';
+import { formatConstraintValue } from 'component/common/Constraint/formatConstraintValue';
+import { useLocationSettings } from 'hooks/useLocationSettings';
 
 interface IConstraintAccordionViewBodyProps {
     constraint: IConstraint;
@@ -17,6 +19,7 @@ export const ConstraintAccordionViewBody = ({
     constraint,
 }: IConstraintAccordionViewBodyProps) => {
     const styles = useStyles();
+    const { locationSettings } = useLocationSettings();
 
     return (
         <div>
@@ -46,7 +49,7 @@ export const ConstraintAccordionViewBody = ({
             <div className={styles.valuesContainer}>
                 <MultipleValues values={constraint.values} />
                 <SingleValue
-                    value={constraint.value}
+                    value={formatConstraintValue(constraint, locationSettings)}
                     operator={constraint.operator}
                 />
             </div>
@@ -65,7 +68,7 @@ const SingleValue = ({ value, operator }: ISingleValueProps) => {
 
     return (
         <div className={styles.singleValueView}>
-            <p className={styles.singleValueText}>Value must {operator}</p>{' '}
+            <p className={styles.singleValueText}>Value must be {operator}</p>{' '}
             <Chip
                 label={
                     <StringTruncator

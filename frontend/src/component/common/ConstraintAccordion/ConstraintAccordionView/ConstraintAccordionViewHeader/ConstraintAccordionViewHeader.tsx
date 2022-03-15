@@ -11,6 +11,8 @@ import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/perm
 import { useParams } from 'react-router-dom';
 import { IFeatureViewParams } from 'interfaces/params';
 import React from 'react';
+import { formatConstraintValue } from 'component/common/Constraint/formatConstraintValue';
+import { useLocationSettings } from 'hooks/useLocationSettings';
 
 interface IConstraintAccordionViewHeaderProps {
     compact: boolean;
@@ -30,6 +32,7 @@ export const ConstraintAccordionViewHeader = ({
     environmentId,
 }: IConstraintAccordionViewHeaderProps) => {
     const styles = useStyles();
+    const { locationSettings } = useLocationSettings();
     const { projectId } = useParams<IFeatureViewParams>();
     const smallScreen = useMediaQuery(`(max-width:${790}px)`);
 
@@ -67,7 +70,14 @@ export const ConstraintAccordionViewHeader = ({
                 <div className={styles.headerViewValuesContainer}>
                     <ConditionallyRender
                         condition={singleValue}
-                        show={<Chip label={constraint.value} />}
+                        show={
+                            <Chip
+                                label={formatConstraintValue(
+                                    constraint,
+                                    locationSettings
+                                )}
+                            />
+                        }
                         elseShow={
                             <div className={styles.headerValuesContainer}>
                                 <p className={styles.headerValues}>

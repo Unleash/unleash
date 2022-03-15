@@ -31,7 +31,7 @@ const constraintOperators = allOperators.map(operator => {
     return { key: operator, label: operator };
 });
 
-const CURRENT_TIME_CONTEXT_FIELD = 'currentTime';
+export const CURRENT_TIME_CONTEXT_FIELD = 'currentTime';
 
 export const ConstraintAccordionEditHeader = ({
     compact,

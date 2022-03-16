@@ -141,7 +141,6 @@ export default class FeatureToggleClientStore
             }
         }
 
-        const sendStrategyIds = isAdmin || inlineSegmentConstraints;
         const rows = await query;
         stopTimer();
 
@@ -150,7 +149,7 @@ export default class FeatureToggleClientStore
                 strategies: [],
             };
             if (this.isUnseenStrategyRow(feature, r)) {
-                feature.strategies.push(this.strategyRow(r, sendStrategyIds));
+                feature.strategies.push(this.rowToStrategy(r));
             }
             if (inlineSegmentConstraints && r.segment_id) {
                 this.addSegmentToStrategy(feature, r);
@@ -171,25 +170,33 @@ export default class FeatureToggleClientStore
             acc[r.name] = feature;
             return acc;
         }, {});
-        return Object.values(featureToggles);
+
+        const features: IFeatureToggleClient[] = Object.values(featureToggles);
+
+        if (!isAdmin) {
+            // We should not send strategy IDs from the client API,
+            // as this breaks old versions of the Go SDK (at least).
+            this.removeIdsFromStrategies(features);
+        }
+
+        return features;
     }
 
-    private strategyRow(
-        row: Record<string, any>,
-        sendStrategyIds: boolean,
-    ): IStrategyConfig {
-        const strategy: IStrategyConfig = {
+    private rowToStrategy(row: Record<string, any>): IStrategyConfig {
+        return {
             id: row.strategy_id,
             name: row.strategy_name,
             constraints: row.constraints || [],
             parameters: row.parameters,
         };
+    }
 
-        if (sendStrategyIds) {
-            strategy.id = row.strategy_id;
-        }
-
-        return strategy;
+    private removeIdsFromStrategies(features: IFeatureToggleClient[]) {
+        features.forEach((feature) => {
+            feature.strategies.forEach((strategy) => {
+                delete strategy.id;
+            });
+        });
     }
 
     private isUnseenStrategyRow(

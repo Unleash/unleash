@@ -232,3 +232,38 @@ test('When given overrides should remap projects to override environments', asyn
     expect(projects).toContain('enabled');
     expect(projects).not.toContain('default');
 });
+
+test('Override works correctly when enabling default and disabling prod and dev', async () => {
+    const defaultEnvironment = 'default';
+    const prodEnvironment = 'production';
+    const devEnvironment = 'development';
+
+    await db.stores.environmentStore.create({
+        name: prodEnvironment,
+        type: 'production',
+    });
+
+    await db.stores.environmentStore.create({
+        name: devEnvironment,
+        type: 'development',
+    });
+    await service.toggleEnvironment(prodEnvironment, true);
+    await service.toggleEnvironment(devEnvironment, true);
+
+    await service.overrideEnabledProjects([defaultEnvironment]);
+
+    const environments = await service.getAll();
+    const targetedEnvironment = environments.find(
+        (env) => env.name == defaultEnvironment,
+    );
+
+    const allOtherEnvironments = environments
+        .filter((x) => x.name != defaultEnvironment)
+        .map((env) => env.enabled);
+    const envNames = environments.map((x) => x.name);
+
+    expect(envNames).toContain('production');
+    expect(envNames).toContain('development');
+    expect(targetedEnvironment.enabled).toBe(true);
+    expect(allOtherEnvironments.every((x) => x === false)).toBe(true);
+});

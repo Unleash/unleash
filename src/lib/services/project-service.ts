@@ -37,6 +37,7 @@ import IncompatibleProjectError from '../error/incompatible-project-error';
 import { DEFAULT_PROJECT } from '../types/project';
 import { IFeatureTagStore } from 'lib/types/stores/feature-tag-store';
 import ProjectWithoutOwnerError from '../error/project-without-owner-error';
+import { IUserStore } from 'lib/types/stores/user-store';
 
 const getCreatedBy = (user: User) => user.email || user.username;
 
@@ -66,6 +67,8 @@ export default class ProjectService {
 
     private tagStore: IFeatureTagStore;
 
+    private userStore: IUserStore;
+
     constructor(
         {
             projectStore,
@@ -75,6 +78,7 @@ export default class ProjectService {
             environmentStore,
             featureEnvironmentStore,
             featureTagStore,
+            userStore,
         }: Pick<
             IUnleashStores,
             | 'projectStore'
@@ -84,6 +88,7 @@ export default class ProjectService {
             | 'environmentStore'
             | 'featureEnvironmentStore'
             | 'featureTagStore'
+            | 'userStore'
         >,
         config: IUnleashConfig,
         accessService: AccessService,
@@ -98,6 +103,7 @@ export default class ProjectService {
         this.featureTypeStore = featureTypeStore;
         this.featureToggleService = featureToggleService;
         this.tagStore = featureTagStore;
+        this.userStore = userStore;
         this.logger = config.getLogger('services/project-service.js');
     }
 
@@ -280,6 +286,7 @@ export default class ProjectService {
         const [roles, users] = await this.accessService.getProjectRoleUsers(
             projectId,
         );
+        const user = await this.userStore.get(userId);
 
         const role = roles.find((r) => r.id === roleId);
         if (!role) {
@@ -299,7 +306,12 @@ export default class ProjectService {
             new ProjectUserAddedEvent({
                 project: projectId,
                 createdBy,
-                data: { roleId, userId, roleName: role.name },
+                data: {
+                    roleId,
+                    userId,
+                    roleName: role.name,
+                    email: user.email,
+                },
             }),
         );
     }
@@ -317,11 +329,18 @@ export default class ProjectService {
 
         await this.accessService.removeUserFromRole(userId, role.id, projectId);
 
+        const user = await this.userStore.get(userId);
+
         await this.eventStore.store(
             new ProjectUserRemovedEvent({
                 project: projectId,
                 createdBy,
-                preData: { roleId, userId, roleName: role.name },
+                preData: {
+                    roleId,
+                    userId,
+                    roleName: role.name,
+                    email: user.email,
+                },
             }),
         );
     }
@@ -389,8 +408,14 @@ export default class ProjectService {
                     userId,
                     roleId: currentRole.id,
                     roleName: currentRole.name,
+                    email: user.email,
                 },
-                data: { userId, roleId, roleName: role.name },
+                data: {
+                    userId,
+                    roleId,
+                    roleName: role.name,
+                    email: user.email,
+                },
             }),
         );
     }

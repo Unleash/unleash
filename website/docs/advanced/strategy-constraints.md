@@ -9,8 +9,8 @@ Strategy constraints are available to Unleash Pro and Enterprise users.
 Unleash 4.9 introduced a more comprehensive set of constraint operators. These require that both Unleash *and* your client SDK of choice support them. See the [SDK compatibility table](../sdks/index.md#server-side-compatibility-table) for more information. Prior to Unleash 4.9, the only available operators were `IN` and `NOT_IN`.
 :::
 
-:::tip
-This page explains what strategy constraints are in Unleash and how they work. If you want to know *how you add* strategy constraints to an activation strategy, see [the corresponding how-to guide](../how-to/how-to-add-strategy-constraints.md "how to add strategy constraints").
+:::caution undefined behavior
+When using _advanced strategy constraints_ (any operator that isn't `IN` or `NOT_IN`), *make sure your client SDK is up to date* and supports this feature. For older versions of the client SDKs we **cannot guarantee** any specific behavior: the constraints may evaluate to `false` or they may evaluate to `true`.
 :::
 
 **Strategy constraints** are conditions that must be satisifed for an [activation strategy](../user_guide/activation_strategy) to be evaluated for a feature toggle.
@@ -21,9 +21,10 @@ With strategy constraints, you can:
 - release a feature to users with one of a set of **email addresses**
 - ... and much more!
 
-
 Strategy constraints use fields from the [Unleash Context](../user_guide/unleash_context) to determine whether a strategy should apply or not.
 You can constrain both on [standard context fields](../user_guide/unleash_context#structure) and on [custom context fields](../user_guide/unleash_context#custom-context-fields).
+
+This page explains what strategy constraints are in Unleash and how they work. If you want to know *how you add* strategy constraints to an activation strategy, see [the corresponding how-to guide](../how-to/how-to-add-strategy-constraints.md "how to add strategy constraints").
 
 ## Constraining on custom context fields
 

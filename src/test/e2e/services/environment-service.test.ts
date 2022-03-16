@@ -136,3 +136,134 @@ test('Trying to get an environment that does not exist throws NotFoundError', as
         new NotFoundError(`Could not find environment with name: ${envName}`),
     );
 });
+
+test('Setting an override disables all other envs', async () => {
+    const enabledEnvName = 'should-get-enabled';
+    const disabledEnvName = 'should-get-disabled';
+    await db.stores.environmentStore.create({
+        name: disabledEnvName,
+        type: 'production',
+    });
+
+    await db.stores.environmentStore.create({
+        name: enabledEnvName,
+        type: 'production',
+    });
+
+    //Set these to the wrong state so we can assert that overriding them flips their state
+    await service.toggleEnvironment(disabledEnvName, true);
+    await service.toggleEnvironment(enabledEnvName, false);
+
+    await service.overrideEnabledProjects([enabledEnvName]);
+
+    const environments = await service.getAll();
+    const targetedEnvironment = environments.find(
+        (env) => env.name == enabledEnvName,
+    );
+
+    const allOtherEnvironments = environments
+        .filter((x) => x.name != enabledEnvName)
+        .map((env) => env.enabled);
+
+    expect(targetedEnvironment.enabled).toBe(true);
+    expect(allOtherEnvironments.every((x) => x === false)).toBe(true);
+});
+
+test('Passing an empty override does nothing', async () => {
+    const enabledEnvName = 'should-be-enabled';
+
+    await db.stores.environmentStore.create({
+        name: enabledEnvName,
+        type: 'production',
+    });
+
+    await service.toggleEnvironment(enabledEnvName, true);
+
+    await service.overrideEnabledProjects([]);
+
+    const environments = await service.getAll();
+    const targetedEnvironment = environments.find(
+        (env) => env.name == enabledEnvName,
+    );
+
+    expect(targetedEnvironment.enabled).toBe(true);
+});
+
+test('When given overrides should remap projects to override environments', async () => {
+    const enabledEnvName = 'enabled';
+    const ignoredEnvName = 'ignored';
+    const disabledEnvName = 'disabled';
+    const toggleName = 'test-toggle';
+
+    await db.stores.environmentStore.create({
+        name: enabledEnvName,
+        type: 'production',
+    });
+
+    await db.stores.environmentStore.create({
+        name: ignoredEnvName,
+        type: 'production',
+    });
+
+    await db.stores.environmentStore.create({
+        name: disabledEnvName,
+        type: 'production',
+    });
+
+    await service.toggleEnvironment(disabledEnvName, true);
+    await service.toggleEnvironment(ignoredEnvName, true);
+    await service.toggleEnvironment(enabledEnvName, false);
+
+    await stores.featureToggleStore.create('default', {
+        name: toggleName,
+        type: 'release',
+        description: '',
+        stale: false,
+    });
+
+    await service.addEnvironmentToProject(disabledEnvName, 'default');
+
+    await service.overrideEnabledProjects([enabledEnvName]);
+
+    const projects = await stores.projectStore.getEnvironmentsForProject(
+        'default',
+    );
+
+    expect(projects).toContain('enabled');
+    expect(projects).not.toContain('default');
+});
+
+test('Override works correctly when enabling default and disabling prod and dev', async () => {
+    const defaultEnvironment = 'default';
+    const prodEnvironment = 'production';
+    const devEnvironment = 'development';
+
+    await db.stores.environmentStore.create({
+        name: prodEnvironment,
+        type: 'production',
+    });
+
+    await db.stores.environmentStore.create({
+        name: devEnvironment,
+        type: 'development',
+    });
+    await service.toggleEnvironment(prodEnvironment, true);
+    await service.toggleEnvironment(devEnvironment, true);
+
+    await service.overrideEnabledProjects([defaultEnvironment]);
+
+    const environments = await service.getAll();
+    const targetedEnvironment = environments.find(
+        (env) => env.name == defaultEnvironment,
+    );
+
+    const allOtherEnvironments = environments
+        .filter((x) => x.name != defaultEnvironment)
+        .map((env) => env.enabled);
+    const envNames = environments.map((x) => x.name);
+
+    expect(envNames).toContain('production');
+    expect(envNames).toContain('development');
+    expect(targetedEnvironment.enabled).toBe(true);
+    expect(allOtherEnvironments.every((x) => x === false)).toBe(true);
+});

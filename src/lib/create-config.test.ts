@@ -224,3 +224,47 @@ test('should handle cases where no env var specified for tokens', async () => {
 
     expect(config.authentication.initApiTokens).toHaveLength(1);
 });
+
+test('should load environment overrides from env var', async () => {
+    process.env.ENABLED_ENVIRONMENTS = 'default,production';
+
+    const config = createConfig({
+        db: {
+            host: 'localhost',
+            port: 4242,
+            user: 'unleash',
+            password: 'password',
+            database: 'unleash_db',
+        },
+        server: {
+            port: 4242,
+        },
+        authentication: {
+            initApiTokens: [],
+        },
+    });
+
+    expect(config.environmentEnableOverrides).toHaveLength(2);
+    expect(config.environmentEnableOverrides).toContain('production');
+    delete process.env.ENABLED_ENVIRONMENTS;
+});
+
+test('should yield an empty list when no environment overrides are specified', async () => {
+    const config = createConfig({
+        db: {
+            host: 'localhost',
+            port: 4242,
+            user: 'unleash',
+            password: 'password',
+            database: 'unleash_db',
+        },
+        server: {
+            port: 4242,
+        },
+        authentication: {
+            initApiTokens: [],
+        },
+    });
+
+    expect(config.environmentEnableOverrides).toStrictEqual([]);
+});

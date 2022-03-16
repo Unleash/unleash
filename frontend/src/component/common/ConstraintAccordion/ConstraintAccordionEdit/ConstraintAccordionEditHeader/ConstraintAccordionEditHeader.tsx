@@ -9,7 +9,7 @@ import ConditionallyRender from '../../../ConditionallyRender';
 import {
     allOperators,
     dateOperators,
-    DATE_BEFORE,
+    DATE_AFTER,
     IN,
 } from '../../../../../constants/operators';
 import { SAVE } from '../ConstraintAccordionEdit';
@@ -56,7 +56,7 @@ export const ConstraintAccordionEditHeader = ({
         ) {
             setLocalConstraint(prev => ({
                 ...prev,
-                operator: DATE_BEFORE,
+                operator: DATE_AFTER,
                 value: new Date().toISOString(),
             }));
         } else if (

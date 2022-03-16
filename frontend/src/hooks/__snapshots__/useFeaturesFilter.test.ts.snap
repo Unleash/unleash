@@ -1,0 +1,213 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`useFeaturesFilter constraints 1`] = `
+Object {
+  "filter": Object {
+    "project": "*",
+    "query": "xyz",
+  },
+  "filtered": Array [
+    Object {
+      "archived": false,
+      "createdAt": "22006-01-02T15:04:05Z",
+      "description": "1",
+      "enabled": false,
+      "environments": Array [],
+      "impressionData": false,
+      "lastSeenAt": "2006-01-02T15:04:05Z",
+      "name": "1",
+      "project": "a",
+      "stale": false,
+      "strategies": Array [
+        Object {
+          "constraints": Array [],
+          "id": "1",
+          "name": "1",
+          "parameters": Object {},
+        },
+        Object {
+          "constraints": Array [],
+          "id": "1",
+          "name": "1",
+          "parameters": Object {},
+        },
+        Object {
+          "constraints": Array [
+            Object {
+              "contextName": "",
+              "operator": "IN",
+            },
+            Object {
+              "contextName": "",
+              "operator": "IN",
+              "value": "xyz",
+            },
+            Object {
+              "contextName": "",
+              "operator": "IN",
+              "values": Array [
+                "xyz",
+              ],
+            },
+          ],
+          "id": "1",
+          "name": "1",
+          "parameters": Object {},
+        },
+      ],
+      "type": "1",
+      "variants": Array [],
+    },
+  ],
+  "setFilter": [Function],
+}
+`;
+
+exports[`useFeaturesFilter empty 1`] = `
+Object {
+  "filter": Object {
+    "project": "*",
+  },
+  "filtered": Array [],
+  "setFilter": [Function],
+}
+`;
+
+exports[`useFeaturesFilter equal 1`] = `
+Object {
+  "filter": Object {
+    "project": "*",
+  },
+  "filtered": Array [
+    Object {
+      "archived": false,
+      "createdAt": "22006-01-02T15:04:05Z",
+      "description": "1",
+      "enabled": false,
+      "environments": Array [],
+      "impressionData": false,
+      "lastSeenAt": "2006-01-02T15:04:05Z",
+      "name": "1",
+      "project": "1",
+      "stale": false,
+      "strategies": Array [],
+      "type": "1",
+      "variants": Array [],
+    },
+    Object {
+      "archived": false,
+      "createdAt": "22006-01-02T15:04:05Z",
+      "description": "1",
+      "enabled": false,
+      "environments": Array [],
+      "impressionData": false,
+      "lastSeenAt": "2006-01-02T15:04:05Z",
+      "name": "1",
+      "project": "1",
+      "stale": false,
+      "strategies": Array [],
+      "type": "1",
+      "variants": Array [],
+    },
+    Object {
+      "archived": false,
+      "createdAt": "22006-01-02T15:04:05Z",
+      "description": "1",
+      "enabled": false,
+      "environments": Array [],
+      "impressionData": false,
+      "lastSeenAt": "2006-01-02T15:04:05Z",
+      "name": "1",
+      "project": "1",
+      "stale": false,
+      "strategies": Array [],
+      "type": "1",
+      "variants": Array [],
+    },
+  ],
+  "setFilter": [Function],
+}
+`;
+
+exports[`useFeaturesFilter project 1`] = `
+Object {
+  "filter": Object {
+    "project": "2",
+  },
+  "filtered": Array [
+    Object {
+      "archived": false,
+      "createdAt": "22006-01-02T15:04:05Z",
+      "description": "1",
+      "enabled": false,
+      "environments": Array [],
+      "impressionData": false,
+      "lastSeenAt": "2006-01-02T15:04:05Z",
+      "name": "1",
+      "project": "2",
+      "stale": false,
+      "strategies": Array [],
+      "type": "1",
+      "variants": Array [],
+    },
+    Object {
+      "archived": false,
+      "createdAt": "22006-01-02T15:04:05Z",
+      "description": "1",
+      "enabled": false,
+      "environments": Array [],
+      "impressionData": false,
+      "lastSeenAt": "2006-01-02T15:04:05Z",
+      "name": "1",
+      "project": "2",
+      "stale": false,
+      "strategies": Array [],
+      "type": "1",
+      "variants": Array [],
+    },
+  ],
+  "setFilter": [Function],
+}
+`;
+
+exports[`useFeaturesFilter query 1`] = `
+Object {
+  "filter": Object {
+    "project": "*",
+    "query": "bc",
+  },
+  "filtered": Array [
+    Object {
+      "archived": false,
+      "createdAt": "22006-01-02T15:04:05Z",
+      "description": "1",
+      "enabled": false,
+      "environments": Array [],
+      "impressionData": false,
+      "lastSeenAt": "2006-01-02T15:04:05Z",
+      "name": "1",
+      "project": "abc",
+      "stale": false,
+      "strategies": Array [],
+      "type": "1",
+      "variants": Array [],
+    },
+    Object {
+      "archived": false,
+      "createdAt": "22006-01-02T15:04:05Z",
+      "description": "1",
+      "enabled": false,
+      "environments": Array [],
+      "impressionData": false,
+      "lastSeenAt": "2006-01-02T15:04:05Z",
+      "name": "1",
+      "project": "abcd",
+      "stale": false,
+      "strategies": Array [],
+      "type": "1",
+      "variants": Array [],
+    },
+  ],
+  "setFilter": [Function],
+}
+`;

@@ -1,0 +1,61 @@
+import React from 'react';
+import Dialogue from 'component/common/Dialogue';
+import Input from 'component/common/Input/Input';
+import { useStyles } from './SegmentDeleteConfirm.styles';
+import { ISegment } from 'interfaces/segment';
+
+interface ISegmentDeleteConfirmProps {
+    segment: ISegment;
+    open: boolean;
+    setDeldialogue: React.Dispatch<React.SetStateAction<boolean>>;
+    handleDeleteSegment: (id: number) => Promise<void>;
+    confirmName: string;
+    setConfirmName: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export const SegmentDeleteConfirm = ({
+    segment,
+    open,
+    setDeldialogue,
+    handleDeleteSegment,
+    confirmName,
+    setConfirmName,
+}: ISegmentDeleteConfirmProps) => {
+    const styles = useStyles();
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+        setConfirmName(e.currentTarget.value);
+
+    const handleCancel = () => {
+        setDeldialogue(false);
+        setConfirmName('');
+    };
+    const formId = 'delete-segment-confirmation-form';
+    return (
+        <Dialogue
+            title="Are you sure you want to delete this segment?"
+            open={open}
+            primaryButtonText="Delete segment"
+            secondaryButtonText="Cancel"
+            onClick={() => handleDeleteSegment(segment.id)}
+            disabledPrimaryButton={segment?.name !== confirmName}
+            onClose={handleCancel}
+            formId={formId}
+        >
+            <p className={styles.deleteParagraph}>
+                In order to delete this segment, please enter the name of the
+                segment in the textfield below: <strong>{segment?.name}</strong>
+            </p>
+
+            <form id={formId}>
+                <Input
+                    autoFocus
+                    onChange={handleChange}
+                    value={confirmName}
+                    label="Segment name"
+                    className={styles.deleteInput}
+                />
+            </form>
+        </Dialogue>
+    );
+};

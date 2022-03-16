@@ -10,7 +10,7 @@ import AdminInvoice from '../admin/invoice/InvoiceAdminPage';
 import AdminUsers from '../admin/users/UsersAdmin';
 import { AuthSettings } from '../admin/auth/AuthSettings';
 import Login from '../user/Login/Login';
-import { C, E, EEA, P, RE } from '../common/flags';
+import { C, E, EEA, P, RE, SE } from '../common/flags';
 import { NewUser } from '../user/NewUser/NewUser';
 import ResetPassword from '../user/ResetPassword/ResetPassword';
 import ForgottenPassword from '../user/ForgottenPassword/ForgottenPassword';
@@ -46,6 +46,7 @@ import { EventHistoryPage } from '../history/EventHistoryPage/EventHistoryPage';
 import { FeatureEventHistoryPage } from '../history/FeatureEventHistoryPage/FeatureEventHistoryPage';
 import { CreateStrategy } from '../strategies/CreateStrategy/CreateStrategy';
 import { EditStrategy } from '../strategies/EditStrategy/EditStrategy';
+import { SegmentsList } from 'component/segments/SegmentList/SegmentList';
 
 export const routes = [
     // Project
@@ -348,6 +349,19 @@ export const routes = [
         type: 'protected',
         layout: 'main',
         menu: { mobile: true, advanced: true },
+    },
+
+    // Segments
+
+    {
+        path: '/segments',
+        title: 'Segments',
+        component: SegmentsList,
+        hidden: false,
+        type: 'protected',
+        layout: 'main',
+        menu: { mobile: true, advanced: true },
+        flag: SE,
     },
 
     // History

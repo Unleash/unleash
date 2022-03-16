@@ -27,6 +27,7 @@ export interface IFlags {
     EEA?: boolean;
     OIDC?: boolean;
     CO?: boolean;
+    SE?: boolean;
 }
 
 export interface IVersionInfo {

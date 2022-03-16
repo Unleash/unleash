@@ -5,6 +5,10 @@ import { CANCEL } from '../ConstraintAccordionEdit';
 import { ConstraintFormHeader } from './ConstraintFormHeader/ConstraintFormHeader';
 import { useStyles } from './ConstraintAccordionEditBody.styles';
 import React from 'react';
+import { Alert } from '@material-ui/lab';
+import { newOperators } from 'constants/operators';
+import ConditionallyRender from 'component/common/ConditionallyRender/ConditionallyRender';
+import { oneOf } from 'utils/one-of';
 
 interface IConstraintAccordionBody {
     localConstraint: IConstraint;
@@ -31,6 +35,16 @@ export const ConstraintAccordionEditBody: React.FC<
 
     return (
         <>
+            <ConditionallyRender
+                condition={oneOf(newOperators, localConstraint.operator)}
+                show={
+                    <Alert severity="warning">
+                        In order to use this constraint operator, you need to
+                        update your SDK to the latest version.
+                    </Alert>
+                }
+            />
+
             <div className={styles.inputContainer}>
                 <InvertedOperator
                     inverted={Boolean(localConstraint.inverted)}

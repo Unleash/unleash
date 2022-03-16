@@ -75,3 +75,9 @@ export const multipleValueOperators: Operator[] = [
     ...stringOperators,
     ...inOperators,
 ];
+
+export const newOperators: Operator[] = [
+    ...stringOperators,
+    ...dateOperators,
+    ...singleValueOperators,
+];

@@ -109,9 +109,10 @@ const filterFeatureByRegExp = (
     }
 
     return feature.strategies.some(
-        s =>
-            regExp.test(s.name) ||
-            // @ts-expect-error
-            s.constraints.some(c => c.values.some(v => regExp.test(v)))
+        strategy =>
+            regExp.test(strategy.name) ||
+            strategy.constraints.some(constraint =>
+                constraint.values?.some(value => regExp.test(value))
+            )
     );
 };

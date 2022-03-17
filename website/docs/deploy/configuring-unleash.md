@@ -203,7 +203,82 @@ function getLogger(name) {
 
 The logger interface with its `debug`, `info`, `warn` and `error` methods expects format string support as seen in `debug` or the JavaScript `console` object. Many commonly used logging implementations cover this API, e.g., bunyan, pino or winston.
 
-## Database pooling connection timeouts {#database-pooling-connection-timeouts}
+## Database configuration
 
-- Please be aware of the default values of connection pool about idle session handling.
-- If you have a network component which closes idle sessions on tcp layer, please ensure, that the connection pool idleTimeoutMillis setting is lower than the timespan as the network component will close the idle connection.
+You cannot run the Unleash server without a database. You must provide Unleash with database connection details for it to start correctly.
+
+The available options are listed in the table below. Options can be specified either via JavaScript (only when starting Unleash via code) or via environment variables. The "property name" column below gives the name of the property on the Unleash options' `db` object:
+
+| Property name            | Environment variable            | Default value  | Description                                                                                                                                                                              |
+|--------------------------|---------------------------------|----------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `user`                   | `DATABASE_USERNAME`             | `unleash_user` | The database username.                                                                                                                                                                   |
+| `password`               | `DATABASE_PASSWORD`             | `passord`      | The database password.                                                                                                                                                                   |
+| `host`                   | `DATABASE_HOST`                 | `localhost`    | The database hostname.                                                                                                                                                                   |
+| `port`                   | `DATABASE_PORT`                 | `5432`         | The database port.                                                                                                                                                                       |
+| `database`               | `DATABASE_NAME`                 | `unleash`      | The name of the database.                                                                                                                                                                |
+| `ssl`                    | `DATABASE_SSL`                  | N/A            | An object describing SSL options. In code, provide a regular JavaScript object. When using the environment variable, provide a **stringified JSON object**.                              |
+| `pool`                   | N/A (use the below variables)  |                | An object describing database pool options. With environment variables, use the options below directly.                                                                                  |
+| `pool.min`               | `DATABASE_POOL_MIN`             | 0              | The minimum number of connections in the connection pool.                                                                                                                                |
+| `pool.max`               | `DATABASE_POOL_MAX`             | 4              | The maximum number of connections in the connection pool.                                                                                                                                |
+| `pool.idleTimeoutMillis` | `DATABASE_POOL_IDLE_TIMEOUT_MS` | 30000          | The amount of time (in milliseconds) that a connection must be idle for before it is marked as a candidate for eviction.                                                                 |
+|                          | `DATABASE_URL`                  | N/A            | A string that matches the [libpq connection string](https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING), such as `postgres://USER:PASSWORD@HOST:PORT/DATABASE`. |
+|                          | `DATABASE_URL_FILE`             | N/A            | The path to a file that contains a [libpq connection string](https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING).                                               |
+
+
+Below is an example configuration in JavaScript showing the default options:
+
+
+``` js
+const unleashOptions = {
+  db: {
+    user: 'unleash_user',
+    password: 'passord',
+    host: 'localhost',
+    port: 5432,
+    database: 'unleash',
+    ssl: false,
+    pool: {
+      min: 0,
+      max: 4,
+      idleTimeoutMillis: 30000,
+    },
+  },
+};
+```
+
+### `db.ssl` vs `DATABASE_SSL` options
+
+When initializing Unleash from code, you'll provide the `db.ssl` option as a JavaScript object. As such, any functions will get evaluated before the object is used for configuration. When using the `DATABASE_SSL` environment variable, you must provide the value as a stringified JSON object. The object will get parsed before being used for configuration, but no further evaluation will take place.
+
+If you want to read content from a file, you should either initialize Unleash via JavaScript or manually interpolate the required values into the environment variable:
+
+<>
+
+``` js title="Reading from the file system in JavaScript"
+// assuming this is part of the `db` config property
+{
+    ssl: {
+        key: fs.readFileSync('/path/to/client-key/postgresql.key').toString(),
+        // other properties omitted for brevity
+    }
+}
+```
+
+``` bash title="Reading from the file system with bash"
+DATABASE_SSL="{ \"key\": \"$(cat /path/to/client-key/postgresql.key)\" }"
+```
+
+### Enabling self-signed certificates
+
+To use self-signed certificates, you should set the SSL property `rejectUnauthorized` to `false` and set the `ca` property to the value of the certificate:
+
+
+### Supported Postgres SSL modes
+
+Unleash builds directly on the [node-postgres library](https://node-postgres.com/features/ssl), so we support all the same SSL modes that they support. As of version 8 (released on February 25th 2020), [node-postgres no longer supports all sslmodes](https://node-postgres.com/announcements#2020-02-25). For this reason, Unleash cannot support all of Postgres' SSL modes. Specifically, Unleash **does not support** `sslmode=prefer`. Instead you must know whether you require an SSL connection ahead of time.
+
+### Troubleshooting: database pooling connection timeouts {#database-pooling-connection-timeouts}
+
+- Check the default values of connection pool about idle session handling.
+
+- If you have a network component which closes idle sessions on the TCP layer, make sure that the connection pool's `idleTimeoutMillis` setting is lower than the `timespan` setting. If it isn't, then the network component will close the connection.

@@ -27,19 +27,17 @@ This guide assumes that you've got the following:
 
 ## Schedule feature releases with strategy constraints {#strategy-constraints}
 
-We'll use the standard strategy to release the feature to all users at the same time, but you can just as easily use any other strategy to limit the rollout in whatever way you want.
+You can use this approach with _any_ strategy you want. The strategies will work just as they normally do, they just won't become active until the specified time. For example: with the standard strategy, the feature would become available to all your users at the specified time; with a gradual rollout, the rollout would start at the specified time.
 
 ### Step 1: Add an activation strategy with a date-based constraint
 
 #### Scheduling a release via the UI
 
-To schedule feature release via the UI:
-1. Add the standard strategy to the feature
-  [image here]
+To schedule a feature release via the UI:
+1. Add the desired activation strategy to the feature
 2. Open the constraint creator by using the "add constraint" button
-  [image here]
-3. Add a date-based constraint by selecting the `currentTime` context field, choosing the `DATE_AFTER` operator, and setting the point in time where you want the feature to be available from
-  [image here, steps 1, 2, and 3]
+3. Add a date-based constraint by selecting the `currentTime` context field (step 1 in the below image), choosing the `DATE_AFTER` operator (step 2), and setting the point in time where you want the feature to be available from (step 3)
+  ![A strategy constraint specifying that the activation strategy should be enabled at 12:00 AM, November 25th 2022. There are visual call-outs pointing to the relevant settings mentioned above.](/img/strategy-constraint-date-after.png)
 
 #### Scheduling a release via the API
 
@@ -72,11 +70,14 @@ To schedule feature releases without using strategy constraints, you can use cus
 
 **Define a strategy** that takes a parameter that tells it when to activate (visit [the custom activation strategy reference documentation](../advanced/custom-activation-strategy.md#definition) for full details on definitions):
 
-1. Give the strategy a name. We'll use `enable-after`.
+1. Give the strategy a name. We'll use `enableAfter`.
 2. Give the strategy a required string parameter where the user can enter the time at which the feature should activate. Be sure to describe the format that the user must adhere to.
 3. Save the strategy
 
 [**Apply the strategy** to the feature toggle](../how-to/how-to-use-custom-strategies.md#step-2) you want to schedule.
+
+
+![A custom activation strategy definition for a strategy called `enableAfter`. It takes a required parameter called `start time`: a string in a date format.](/img/custom-strategy-enable-after.png)
 
 ### Step 2: Implement the custom activation strategy in your clients
 

@@ -83,19 +83,7 @@ unleash.start(unleashOptions);
 
       You can also use the environment variables `INIT_ADMIN_API_TOKENS` or `INIT_CLIENT_API_TOKENS` to create API admin or client tokens on startup. Both variables require a comma-separated list of API tokens to initialize (for instance `*:*.some-random-string, *:*.some-other-token`). The tokens found in `INIT_ADMIN_API_TOKENS` and `INIT_CLIENT_API_TOKENS` will be created as admin and client tokens respectively and Unleash will assign a username automatically.
 - **databaseUrl** - (_deprecated_) the postgres database url to connect to. Only used if _db_ object is not specified, and overrides the _db_ object and any environment variables that change parts of it (like `DATABASE_SSL`). Should include username/password. This value may also be set via the `DATABASE_URL` environment variable. Alternatively, if you would like to read the database url from a file, you may set the `DATABASE_URL_FILE` environment variable with the full file path. The contents of the file must be the database url exactly.
-- **db** - The database configuration object taking the following properties:
-  - _user_ - the database username (`DATABASE_USERNAME`)
-  - _password_ - the database password (`DATABASE_PASSWORD`)
-  - _host_ - the database hostname (`DATABASE_HOST`)
-  - _port_ - the database port defaults to 5432 (`DATABASE_PORT`)
-  - _database_ - the database name to be used (`DATABASE_NAME`)
-  - _ssl_ - an object describing ssl options, see https://node-postgres.com/features/ssl (`DATABASE_SSL`, as a stringified json object)
-  - _schema_ - the postgres database schema to use. Defaults to 'public'. (`DATABASE_SCHEMA`)
-  - _version_ - the postgres database version. Used to connect a non-standard database. Defaults to `undefined`, which let the underlying adapter to detect the version automatically. (`DATABASE_VERSION`)
-  - _pool_ - an object describing pool options, see https://knexjs.org/#Installation-pooling. We support the following three fields:
-    - _min_ - minimum connections in connections pool (defaults to 0) (`DATABASE_POOL_MIN`)
-    - _max_ - maximum connections in connections pool (defaults to 4) (`DATABASE_POOL_MAX`)
-    - _idleTimeoutMillis_ - time in milliseconds a connection must be idle before being marked as a candidate for eviction (defaults to 30000) (`DATABASE_POOL_IDLE_TIMEOUT_MS`)
+- **db** - The database configuration object. See [the database configuration section](#database-configuration) for a full overview of the available properties.
 - **disableLegacyFeaturesApi** (boolean) - whether to disable the [legacy features API](../api/admin/feature-toggles-api.md). Defaults to `false` (`DISABLE_LEGACY_FEATURES_API`). Introduced in Unleash 4.6.
 - **email** - the email object configuring an SMTP server for sending welcome mails and password reset mails
   - `host` - The server URL to your SMTP server

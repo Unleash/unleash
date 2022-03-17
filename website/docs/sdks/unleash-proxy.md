@@ -18,95 +18,6 @@ The proxy solves three important aspects:
 ![The Unleash Proxy](/img/The-unleash-proxy.png)
 
 _The Unleash Proxy uses the Unleash SDK and exposes a simple API_. The Proxy will synchronize with the Unleash API in the background and provide a simple HTTP API for clients.
-
-## How to Run the Unleash Proxy
-
-The Unleash Proxy is Open Source and [available on github](https://github.com/Unleash/unleash-proxy). You can either run it as a docker image or as part of a [node.js express application](https://github.com/Unleash/unleash-proxy#run-with-nodejs).
-
-### Configuration variables
-
-Regardless of how you choose to run the it, the proxy will need access to these three variables:
-
-- **`unleashUrl`** / **`UNLEASH_URL`**
-
-  The URL of your Unleash instance's API. For instance, to connect to the [Unleash demo app](https://app.unleash-hosted.com/demo/), you would use `https://app.unleash-hosted.com/demo/api/`
-
-- **`unleashApiToken`** / **`UNLEASH_API_TOKEN`**
-
-  The API token to connect to your Unleash project. For more information on how these work and how to create them, check out the [API token documentation](../user_guide/token.md).
-
-- **`clientKeys`** / **`UNLEASH_PROXY_CLIENT_KEYS`**
-
-  A list of client keys that the proxy will accept. For the proxy to accept an incoming request, the client must use one of these keys for authorization. In client SDKs, this is usually known as a `clientKey` or a `clientSecret`. If you query the proxy directly via HTTP, this is the `authorization` header.
-
-  When using an environment variable to set the proxy secrets, the value should be a comma-separated list of strings, such as `secret-one,secret-two`.
-
-There are many more configuration options available. You'll find all [available options on github](https://github.com/Unleash/unleash-proxy#available-options).
-
-
-### Running the proxy via Docker
-
-The easiest way to run Unleash is via Docker. We have published a [docker image on docker hub](https://hub.docker.com/r/unleashorg/unleash-proxy).
-
-1. **Pull the Proxy image**
-   ```bash
-   docker pull unleashorg/unleash-proxy
-   ```
-
-2. **Start the proxy**
-
-   ```bash
-   docker run \
-      -e UNLEASH_PROXY_CLIENT_KEYS=some-secret \
-      -e UNLEASH_URL='https://app.unleash-hosted.com/demo/api/' \
-      -e UNLEASH_API_TOKEN=56907a2fa53c1d16101d509a10b78e36190b0f918d9f122d \
-      -p 3000:3000 \
-      unleashorg/unleash-proxy
-   ```
-
-    You should see the following output:
-
-   ```bash
-   Unleash-proxy is listening on port 3000!
-   ```
-
-### Running the proxy using Node.js
-
-To run the Proxy via Node.js, you'll have to create your own Node.js project and use the Unleash Proxy as a dependency. Assuming you've already set up your project, here's the steps to take to start the proxy as part of your app:
-
-1. **Install the Unleash Proxy package**
-   ``` shell npm2yarn
-   npm install @unleash/proxy
-   ```
-
-2. **Initialize and start the proxy in your code.** A fully working sample app that uses the proxy:
-   ``` js
-   const port = 3000;
-
-   const { createApp } = require('@unleash/proxy');
-
-   const app = createApp({
-       unleashUrl: 'https://app.unleash-hosted.com/demo/api/',
-       unleashApiToken: '56907a2fa53c1d16101d509a10b78e36190b0f918d9f122d',
-       clientKeys: ['some-secret', 'another-proxy-secret', 's1'],
-       refreshInterval: 1000,
-   });
-
-   app.listen(port, () =>
-       console.log(`Unleash Proxy listening on http://localhost:${port}/proxy`),
-   );
-   ```
-
-### Verify that the proxy is working
-
-In order to verify the proxy you can use curl and see that you get a few evaluated feature toggles back. Assuming that the proxy is running on port 3000 and that your proxy client key is `some-secret`, you could run this command :
-
-```bash
-curl http://localhost:3000/proxy -H "Authorization: some-secret"
-```
-
-The output is of the form described in the [payload section](#payload).
-
 ### Health endpoint
 
 The proxy will try to synchronize with the Unleash API at startup, until it has successfully done that the proxy will return `HTTP 503 - Not Read?` for all request. You can use the health endpoint to validate that the proxy is ready to recieve requests:
@@ -301,3 +212,23 @@ However in some settings you would like a bit more logic around it to make it as
 - [iOS Proxy SDK](/sdks/proxy-ios)
 
 The proxy is also ideal fit for serverless functions such as AWS Lambda. In that scenario the proxy can run on a small container near the serverless function, preferably in the same VPC, giving the lambda extremely fast access to feature flags, at a predictable cost.
+
+## Configuration options
+
+Regardless of how you choose to run the it, the proxy will need access to these three variables:
+
+- **`unleashUrl`** / **`UNLEASH_URL`**
+
+  The URL of your Unleash instance's API. For instance, to connect to the [Unleash demo app](https://app.unleash-hosted.com/demo/), you would use `https://app.unleash-hosted.com/demo/api/`
+
+- **`unleashApiToken`** / **`UNLEASH_API_TOKEN`**
+
+  The API token to connect to your Unleash project. For more information on how these work and how to create them, check out the [API token documentation](../user_guide/token.md).
+
+- **`clientKeys`** / **`UNLEASH_PROXY_CLIENT_KEYS`**
+
+  A list of client keys that the proxy will accept. For the proxy to accept an incoming request, the client must use one of these keys for authorization. In client SDKs, this is usually known as a `clientKey` or a `clientSecret`. If you query the proxy directly via HTTP, this is the `authorization` header.
+
+  When using an environment variable to set the proxy secrets, the value should be a comma-separated list of strings, such as `secret-one,secret-two`.
+
+There are many more configuration options available. You'll find all [available options on github](https://github.com/Unleash/unleash-proxy#available-options).

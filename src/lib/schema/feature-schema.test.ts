@@ -210,7 +210,7 @@ test('should not accept empty constraint values', () => {
     );
 });
 
-test('should not accept empty list of constraint values', () => {
+test('should accept empty list of constraint values', async () => {
     const toggle = {
         name: 'app.constraints.empty.value.list',
         type: 'release',
@@ -231,10 +231,10 @@ test('should not accept empty list of constraint values', () => {
         ],
     };
 
-    const { error } = featureSchema.validate(toggle);
-    expect(error.details[0].message).toEqual(
-        '"strategies[0].constraints[0].values" must contain at least 1 items',
-    );
+    const validated = await featureSchema.validateAsync(toggle);
+    expect(validated.strategies.length).toEqual(1);
+    expect(validated.strategies[0].constraints.length).toEqual(1);
+    expect(validated.strategies[0].constraints[0].values).toEqual([]);
 });
 
 test('Filter queries should accept a list of tag values', () => {
@@ -288,4 +288,19 @@ test('constraint schema should only allow specified operators', async () => {
             '"operator" must be one of [NOT_IN, IN, STR_ENDS_WITH, STR_STARTS_WITH, STR_CONTAINS, NUM_EQ, NUM_GT, NUM_GTE, NUM_LT, NUM_LTE, DATE_AFTER, DATE_BEFORE, SEMVER_EQ, SEMVER_GT, SEMVER_LT]',
         );
     }
+});
+
+test('constraint schema should add a values array by default', async () => {
+    const validated = await constraintSchema.validateAsync({
+        contextName: 'x',
+        operator: 'NUM_EQ',
+        value: 1,
+    });
+
+    expect(validated).toEqual({
+        contextName: 'x',
+        operator: 'NUM_EQ',
+        value: 1,
+        values: [],
+    });
 });

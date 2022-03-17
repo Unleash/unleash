@@ -165,17 +165,19 @@ class FeatureToggleService {
         }
     }
 
-    async validateConstraints(constraints: IConstraint[]): Promise<void> {
+    async validateConstraints(
+        constraints: IConstraint[],
+    ): Promise<IConstraint[]> {
         const validations = constraints.map((constraint) => {
             return this.validateConstraint(constraint);
         });
 
-        await Promise.all(validations);
+        return Promise.all(validations);
     }
 
-    async validateConstraint(constraint: IConstraint): Promise<void> {
+    async validateConstraint(input: IConstraint): Promise<IConstraint> {
+        const constraint = await constraintSchema.validateAsync(input);
         const { operator } = constraint;
-        await constraintSchema.validateAsync(constraint);
         const contextDefinition = await this.contextFieldStore.get(
             constraint.contextName,
         );
@@ -218,6 +220,8 @@ class FeatureToggleService {
                 );
             }
         }
+
+        return constraint;
     }
 
     async patchFeature(
@@ -282,7 +286,9 @@ class FeatureToggleService {
         await this.validateFeatureContext(context);
 
         if (strategyConfig.constraints?.length > 0) {
-            await this.validateConstraints(strategyConfig.constraints);
+            strategyConfig.constraints = await this.validateConstraints(
+                strategyConfig.constraints,
+            );
         }
 
         try {
@@ -342,14 +348,16 @@ class FeatureToggleService {
         this.validateFeatureStrategyContext(existingStrategy, context);
 
         if (existingStrategy.id === id) {
+            if (updates.constraints?.length > 0) {
+                updates.constraints = await this.validateConstraints(
+                    updates.constraints,
+                );
+            }
+
             const strategy = await this.featureStrategiesStore.updateStrategy(
                 id,
                 updates,
             );
-
-            if (updates.constraints?.length > 0) {
-                await this.validateConstraints(updates.constraints);
-            }
 
             // Store event!
             const tags = await this.tagStore.getAllTagsForFeature(featureName);

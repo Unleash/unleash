@@ -10,7 +10,8 @@ export const nameSchema = joi
 export const constraintSchema = joi.object().keys({
     contextName: joi.string(),
     operator: joi.string().valid(...ALL_OPERATORS),
-    values: joi.array().items(joi.string().min(1).max(100)).min(1).optional(),
+    // Constraints must have a values array to support legacy SDKs.
+    values: joi.array().items(joi.string().min(1).max(100)).default([]),
     value: joi.optional(),
     caseInsensitive: joi.boolean().optional(),
     inverted: joi.boolean().optional(),

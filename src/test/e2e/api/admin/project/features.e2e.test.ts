@@ -14,6 +14,8 @@ import ApiUser from '../../../../../lib/types/api-user';
 import { ApiTokenType } from '../../../../../lib/types/models/api-token';
 import IncompatibleProjectError from '../../../../../lib/error/incompatible-project-error';
 import { IVariant, WeightType } from '../../../../../lib/types/model';
+import { v4 as uuidv4 } from 'uuid';
+import supertest from 'supertest';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -2065,4 +2067,109 @@ test('Can create toggle with impression data on different project', async () => 
         .expect((res) => {
             expect(res.body.impressionData).toBe(false);
         });
+});
+
+test('should reject invalid constraint values for multi-valued constraints', async () => {
+    const project = await db.stores.projectStore.create({
+        id: uuidv4(),
+        name: uuidv4(),
+        description: '',
+    });
+
+    const toggle = await db.stores.featureToggleStore.create(project.id, {
+        name: uuidv4(),
+        impressionData: true,
+    });
+
+    const mockStrategy = (values: string[]) => ({
+        name: uuidv4(),
+        constraints: [{ contextName: 'userId', operator: 'IN', values }],
+    });
+
+    const featureStrategiesPath = `/api/admin/projects/${project.id}/features/${toggle.name}/environments/default/strategies`;
+
+    await app.request
+        .post(featureStrategiesPath)
+        .send(mockStrategy([]))
+        .expect(400);
+    await app.request
+        .post(featureStrategiesPath)
+        .send(mockStrategy(['']))
+        .expect(400);
+    const { body: strategy } = await app.request
+        .post(featureStrategiesPath)
+        .send(mockStrategy(['a']))
+        .expect(200);
+
+    await app.request
+        .put(`${featureStrategiesPath}/${strategy.id}`)
+        .send(mockStrategy([]))
+        .expect(400);
+    await app.request
+        .put(`${featureStrategiesPath}/${strategy.id}`)
+        .send(mockStrategy(['']))
+        .expect(400);
+    await app.request
+        .put(`${featureStrategiesPath}/${strategy.id}`)
+        .send(mockStrategy(['a']))
+        .expect(200);
+});
+
+test('should add default constraint values for single-valued constraints', async () => {
+    const project = await db.stores.projectStore.create({
+        id: uuidv4(),
+        name: uuidv4(),
+        description: '',
+    });
+
+    const toggle = await db.stores.featureToggleStore.create(project.id, {
+        name: uuidv4(),
+        impressionData: true,
+    });
+
+    const constraintValue = {
+        contextName: 'userId',
+        operator: 'NUM_EQ',
+        value: '1',
+    };
+
+    const constraintValues = {
+        contextName: 'userId',
+        operator: 'IN',
+        values: ['a', 'b', 'c'],
+    };
+
+    const mockStrategy = (constraint: unknown) => ({
+        name: uuidv4(),
+        constraints: [constraint],
+    });
+
+    const expectValues = (res: supertest.Response, values: unknown[]) => {
+        expect(res.body.constraints.length).toEqual(1);
+        expect(res.body.constraints[0].values).toEqual(values);
+    };
+
+    const featureStrategiesPath = `/api/admin/projects/${project.id}/features/${toggle.name}/environments/default/strategies`;
+
+    await app.request
+        .post(featureStrategiesPath)
+        .send(mockStrategy(constraintValue))
+        .expect(200)
+        .expect((res) => expectValues(res, []));
+    const { body: strategy } = await app.request
+        .post(featureStrategiesPath)
+        .send(mockStrategy(constraintValues))
+        .expect(200)
+        .expect((res) => expectValues(res, constraintValues.values));
+
+    await app.request
+        .put(`${featureStrategiesPath}/${strategy.id}`)
+        .send(mockStrategy(constraintValue))
+        .expect(200)
+        .expect((res) => expectValues(res, []));
+    await app.request
+        .put(`${featureStrategiesPath}/${strategy.id}`)
+        .send(mockStrategy(constraintValues))
+        .expect(200)
+        .expect((res) => expectValues(res, constraintValues.values));
 });

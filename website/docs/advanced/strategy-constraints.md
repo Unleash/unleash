@@ -10,7 +10,7 @@ Unleash 4.9 introduced a more comprehensive set of constraint operators. These r
 :::
 
 :::caution undefined behavior
-When using _advanced strategy constraints_ (any operator that isn't `IN` or `NOT_IN`), *make sure your client SDK is up to date* and supports this feature. For older versions of the client SDKs we **cannot guarantee** any specific behavior: the constraints may evaluate to `false` or they may evaluate to `true`.
+When using _advanced strategy constraints_ (any operator that isn't `IN` or `NOT_IN`), *make sure your client SDK is up to date* and supports this feature. For older versions of the client SDKs we **cannot guarantee** any specific behavior: the constraints may evaluate to `false`, they may evaluate to `true`, or the client may raise an exception (as in the case of the **Ruby SDK** prior to **version 4.1.0**).
 :::
 
 **Strategy constraints** are conditions that must be satisifed for an [activation strategy](../user_guide/activation_strategy) to be evaluated for a feature toggle.

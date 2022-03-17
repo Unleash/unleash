@@ -2,25 +2,17 @@
 id: configuring_unleash
 title: Configuring Unleash
 ---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 
 > This is the guide on how to configure **Unleash v4 self-hosted**. If you are still using Unleash v3 you should checkout [configuring Unleash v3](./configuring_unleash_v3)
 
 ## Must configure
 
-### Database details {#database-details}
+### Database
 
-In order for Unleash server to work, you must setup database connection details.
-
-- If using docker, use environment variables
-  - `DATABASE_HOST` - the database hostname - defaults to `localhost`
-  - `DATABASE_PORT` - the port the database is listening on - defaults to `5432`
-  - `DATABASE_USERNAME` - the user configured for access - defaults to `unleash_user`
-  - `DATABASE_PASSWORD` - the password for the user - defaults to `passord` (the Norwegian word for _password_)
-  - `DATABASE_NAME` - the name of the database - defaults to `unleash`
-  - `DATABASE_SSL` - a json object representing SSL configuration or `false` for not using SSL
-  - `DATABASE_SCHEMA` - Which schema to use - defaults to `public`
-- We also support `DATABASE_URL` see [libpq's doc](https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING) for full format explanation. In short: `postgres://USER:PASSWORD@HOST:PORT/DATABASE`
-- If you're using secret files from kubernetes and would like to load a `DATABASE_URL` format from a file, use `DATABASE_URL_FILE` and point it to a path containing a connection URL.
+In order for Unleash server to work, you need a running database and its connection details. See the [database configuration section](#database-configuration) for the available options and configuration details.
 
 ## Nice to configure
 
@@ -252,26 +244,68 @@ When initializing Unleash from code, you'll provide the `db.ssl` option as a Jav
 
 If you want to read content from a file, you should either initialize Unleash via JavaScript or manually interpolate the required values into the environment variable:
 
-<>
+<Tabs groupId="db-configuration-options">
+
+<TabItem value="js" label="JavaScript" default>
 
 ``` js title="Reading from the file system in JavaScript"
-// assuming this is part of the `db` config property
-{
-    ssl: {
-        key: fs.readFileSync('/path/to/client-key/postgresql.key').toString(),
-        // other properties omitted for brevity
-    }
-}
+const unleashOptions = {
+    db: {
+        // other options omitted for brevity
+        ssl: {
+            ca: fs.readFileSync('/path/to/server-certificates/root.crt').toString(),
+        }
+    }}
 ```
 
+</TabItem>
+
+<TabItem value="env" label="Environment variables (bash)">
+
 ``` bash title="Reading from the file system with bash"
-DATABASE_SSL="{ \"key\": \"$(cat /path/to/client-key/postgresql.key)\" }"
+DATABASE_SSL="{ \"key\": \"$(cat /path/to/server-certificates/root.crt)\" }"
 ```
+
+</TabItem>
+
+</Tabs>
+
+
 
 ### Enabling self-signed certificates
 
+
 To use self-signed certificates, you should set the SSL property `rejectUnauthorized` to `false` and set the `ca` property to the value of the certificate:
 
+<Tabs groupId="db-configuration-options">
+
+<TabItem value="js" label="JavaScript" default>
+
+``` js title="Enable self-signed certificates"
+const unleashOptions = {
+    db: {
+        // other options omitted for brevity
+        ssl: {
+            rejectUnauthorized: false,
+            ca: fs.readFileSync('/path/to/server-certificates/root.crt').toString(),
+        }
+    }}
+
+```
+
+</TabItem>
+
+<TabItem value="env" label="Environment variables (bash)">
+
+``` bash title="Enable self-signed certificates"
+DATABASE_SSL="{ \"rejectUnauthorized\": false, \"key\": \"$(cat /path/to/server-certificates/root.crt)\" }"
+```
+
+</TabItem>
+
+</Tabs>
+
+Visit [the node-postgres library's SSL section](https://node-postgres.com/features/ssl) for more information.
 
 ### Supported Postgres SSL modes
 

@@ -13,7 +13,8 @@ process.nextTick(async () => {
                     password: 'passord',
                     host: 'localhost',
                     port: 5432,
-                    database: 'unleash',
+                    database: process.env.UNLEASH_DATABASE_NAME || 'unleash',
+                    schema: process.env.UNLEASH_DATABASE_SCHEMA,
                     ssl: false,
                 },
                 server: {

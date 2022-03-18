@@ -1,0 +1,12 @@
+config:
+  target: "http://localhost:4242"
+  defaults:
+    headers:
+      authorization: "{{ $processEnvironment.AUTH_KEY }}"
+  phases:
+    - duration: 60
+      arrivalRate: 10
+scenarios:
+  - flow:
+      - get:
+          url: "/api/client/features"

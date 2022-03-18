@@ -232,3 +232,14 @@ Regardless of how you choose to run the it, the proxy will need access to these 
   When using an environment variable to set the proxy secrets, the value should be a comma-separated list of strings, such as `secret-one,secret-two`.
 
 There are many more configuration options available. You'll find all [available options on github](https://github.com/Unleash/unleash-proxy#available-options).
+
+## Bootstrapping the Unleash Proxy {#bootstrap}
+
+## Scaling the Unleash Proxy
+
+## Hosting the Unleash Proxy
+
+## Proxy connection
+
+{ how to connect the proxy, what setups are possible etc. }
+See #bootstrap

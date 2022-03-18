@@ -187,7 +187,7 @@ If you use the new constraints with old SDKs, here's how it'll affect _some_ of 
 
 Please inspect the [SDK compatibility table to see which version of your preferred SDK introduced support for this feature](../sdks/index.md#strategy-constraints).
 
-After Unleash 4.9, we updated the client spec. Going forward, any constraint that a client does not recognize, **must be evaluated as `false`**
+After Unleash 4.9, we updated the [Unleash client specification](https://github.com/Unleash/client-specification). Going forward, any constraint that a client does not recognize, **must be evaluated as `false`**
 
 ## [Deprecated]: Constrain on a specific environment {#constrain-on-a-specific-environment}
 

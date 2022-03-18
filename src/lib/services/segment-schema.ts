@@ -13,3 +13,11 @@ export const unsavedSegmentSchema = joi
 export const savedSegmentSchema = unsavedSegmentSchema.keys({
     id: joi.number().required(),
 });
+
+export const featureStrategySegmentSchema = joi
+    .object()
+    .keys({
+        segmentId: joi.number().required(),
+        featureStrategyId: joi.string().required(),
+    })
+    .options({ allowUnknown: true });

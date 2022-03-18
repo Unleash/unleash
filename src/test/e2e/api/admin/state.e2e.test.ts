@@ -2,6 +2,7 @@ import dbInit, { ITestDb } from '../../helpers/database-init';
 import { IUnleashTest, setupApp } from '../../helpers/test-helper';
 import getLogger from '../../../fixtures/no-logger';
 import { DEFAULT_ENV } from '../../../../lib/util/constants';
+import { collectIds } from '../../../../lib/util/collect-ids';
 
 const importData = require('../../../examples/import.json');
 
@@ -320,4 +321,19 @@ test(`Importing version 2 replaces :global: environment with 'default'`, async (
     );
     expect(feature.environments).toHaveLength(1);
     expect(feature.environments[0].name).toBe(DEFAULT_ENV);
+});
+
+test(`should import segments and connect them to feature strategies`, async () => {
+    await app.request
+        .post('/api/admin/state/import')
+        .attach('file', 'src/test/examples/exported-segments.json')
+        .expect(202);
+
+    const allSegments = await app.services.segmentService.getAll();
+    const activeSegments = await app.services.segmentService.getActive();
+
+    expect(allSegments.length).toEqual(2);
+    expect(collectIds(allSegments)).toEqual([1, 2]);
+    expect(activeSegments.length).toEqual(1);
+    expect(collectIds(activeSegments)).toEqual([1]);
 });

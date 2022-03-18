@@ -1,10 +1,11 @@
 import { ISegmentStore } from '../types/stores/segment-store';
-import { IConstraint, ISegment } from '../types/model';
+import { IConstraint, IFeatureStrategySegment, ISegment } from '../types/model';
 import { Logger, LogProvider } from '../logger';
 import { Knex } from 'knex';
 import EventEmitter from 'events';
 import NotFoundError from '../error/notfound-error';
 import User from '../types/user';
+import { PartialSome } from '../types/partial';
 
 const T = {
     segments: 'segments',
@@ -30,6 +31,12 @@ interface ISegmentRow {
     constraints: IConstraint[];
 }
 
+interface IFeatureStrategySegmentRow {
+    feature_strategy_id: string;
+    segment_id: number;
+    created_at?: Date;
+}
+
 export default class SegmentStore implements ISegmentStore {
     private logger: Logger;
 
@@ -43,9 +50,13 @@ export default class SegmentStore implements ISegmentStore {
         this.logger = getLogger('lib/db/segment-store.ts');
     }
 
-    async create(segment: Omit<ISegment, 'id'>, user: User): Promise<ISegment> {
+    async create(
+        segment: PartialSome<ISegment, 'id'>,
+        user: Partial<Pick<User, 'username' | 'email'>>,
+    ): Promise<ISegment> {
         const rows = await this.db(T.segments)
             .insert({
+                id: segment.id,
                 name: segment.name,
                 description: segment.description,
                 constraints: JSON.stringify(segment.constraints),
@@ -136,16 +147,27 @@ export default class SegmentStore implements ISegmentStore {
     }
 
     async addToStrategy(id: number, strategyId: string): Promise<void> {
-        await this.db(T.featureStrategySegment)
-            .insert({ segment_id: id, feature_strategy_id: strategyId })
-            .onConflict(['segment_id', 'feature_strategy_id'])
-            .ignore();
+        await this.db(T.featureStrategySegment).insert({
+            segment_id: id,
+            feature_strategy_id: strategyId,
+        });
     }
 
     async removeFromStrategy(id: number, strategyId: string): Promise<void> {
         await this.db(T.featureStrategySegment)
             .where({ segment_id: id, feature_strategy_id: strategyId })
             .del();
+    }
+
+    async getAllFeatureStrategySegments(): Promise<IFeatureStrategySegment[]> {
+        const rows: IFeatureStrategySegmentRow[] = await this.db
+            .select(['segment_id', 'feature_strategy_id'])
+            .from(T.featureStrategySegment);
+
+        return rows.map((row) => ({
+            featureStrategyId: row.feature_strategy_id,
+            segmentId: row.segment_id,
+        }));
     }
 
     prefixColumns(): string[] {

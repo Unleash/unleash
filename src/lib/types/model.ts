@@ -353,3 +353,8 @@ export interface ISegment {
     createdBy?: string;
     createdAt: Date;
 }
+
+export interface IFeatureStrategySegment {
+    featureStrategyId: string;
+    segmentId: number;
+}

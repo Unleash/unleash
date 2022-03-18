@@ -14,6 +14,7 @@ import {
     IStrategyConfig,
 } from '../types/model';
 import { IFeatureStrategiesStore } from '../types/stores/feature-strategies-store';
+import { PartialSome } from '../types/partial';
 
 const COLUMNS = [
     'id',
@@ -149,9 +150,9 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
     }
 
     async createStrategyFeatureEnv(
-        strategyConfig: Omit<IFeatureStrategy, 'id' | 'createdAt'>,
+        strategyConfig: PartialSome<IFeatureStrategy, 'id' | 'createdAt'>,
     ): Promise<IFeatureStrategy> {
-        const strategyRow = mapInput({ ...strategyConfig, id: uuidv4() });
+        const strategyRow = mapInput({ id: uuidv4(), ...strategyConfig });
         const rows = await this.db<IFeatureStrategiesTable>(T.featureStrategies)
             .insert(strategyRow)
             .returning('*');

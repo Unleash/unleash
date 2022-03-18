@@ -1,37 +1,37 @@
 import { ISegmentStore } from '../../lib/types/stores/segment-store';
-import { ISegment } from '../../lib/types/model';
+import { IFeatureStrategySegment, ISegment } from '../../lib/types/model';
 
 export default class FakeSegmentStore implements ISegmentStore {
     create(): Promise<ISegment> {
         throw new Error('Method not implemented.');
     }
 
-    delete(): Promise<void> {
-        throw new Error('Method not implemented.');
+    async delete(): Promise<void> {
+        return;
     }
 
-    deleteAll(): Promise<void> {
-        throw new Error('Method not implemented.');
+    async deleteAll(): Promise<void> {
+        return;
     }
 
-    exists(): Promise<boolean> {
-        throw new Error('Method not implemented.');
+    async exists(): Promise<boolean> {
+        return false;
     }
 
     get(): Promise<ISegment> {
         throw new Error('Method not implemented.');
     }
 
-    getAll(): Promise<ISegment[]> {
-        throw new Error('Method not implemented.');
+    async getAll(): Promise<ISegment[]> {
+        return [];
     }
 
-    getActive(): Promise<ISegment[]> {
-        throw new Error('Method not implemented.');
+    async getActive(): Promise<ISegment[]> {
+        return [];
     }
 
-    getByStrategy(): Promise<ISegment[]> {
-        throw new Error('Method not implemented.');
+    async getByStrategy(): Promise<ISegment[]> {
+        return [];
     }
 
     update(): Promise<ISegment> {
@@ -44,6 +44,10 @@ export default class FakeSegmentStore implements ISegmentStore {
 
     removeFromStrategy(): Promise<void> {
         throw new Error('Method not implemented.');
+    }
+
+    async getAllFeatureStrategySegments(): Promise<IFeatureStrategySegment[]> {
+        return [];
     }
 
     destroy(): void {}

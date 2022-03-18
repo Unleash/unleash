@@ -6,11 +6,11 @@ title: Strategy Constraints
 :::info Availability
 Strategy constraints are available to Unleash Pro and Enterprise users.
 
-Unleash 4.9 introduced a more comprehensive set of constraint operators. These require that both Unleash *and* your client SDK of choice support them. See the [SDK compatibility table](../sdks/index.md#server-side-compatibility-table) for more information. Prior to Unleash 4.9, the only available operators were `IN` and `NOT_IN`.
+Unleash 4.9 introduced a more comprehensive set of constraint operators. These require that both Unleash *and* your client SDK of choice support them. See the [SDK compatibility table](../sdks/index.md#strategy-constraints) for more information. Prior to Unleash 4.9, the only available operators were `IN` and `NOT_IN`.
 :::
 
 :::caution undefined behavior
-When using _advanced strategy constraints_ (any operator that isn't `IN` or `NOT_IN`), *make sure your client SDK is up to date* and supports this feature. For older versions of the client SDKs we **cannot guarantee** any specific behavior: the constraints may evaluate to `false`, they may evaluate to `true`, or the client may raise an exception (as in the case of the **Ruby SDK** prior to **version 4.1.0**).
+When using _advanced strategy constraints_ (any operator that isn't `IN` or `NOT_IN`), *make sure your client SDK is up to date* and supports this feature. For older versions of the client SDKs we **cannot guarantee** any specific behavior. Please see the [incompatibilities section](#incompatibilities) for more information.
 :::
 
 **Strategy constraints** are conditions that must be satisifed for an [activation strategy](../user_guide/activation_strategy) to be evaluated for a feature toggle.
@@ -176,7 +176,18 @@ If you set a context field to a value that the SDKs cannot parse correctly for a
 In other words: if you have a strategy constraint operator that expects a number, such as `NUM_GT`, but you set the corresponding context field to a string value, then the expression will be false: `"some string"` is **not** greater than `5`.
 This value can still be negated as explained in [the section on negating values](#constraint-negation).
 
+## Incompatibilities and undefined behavior {#incompatibilities}
 
+It's important that you use an up-to-date client SDK if you're using the advanced constraint operators introduced in Unleash 4.9. If your client SDK does not support the new operators, we cannot guarantee how it'll react. As a result, you may see different behavior across applications.
+
+If you use the new constraints with old SDKs, here's how it'll affect _some_ of the SDKs (the list is not exhaustive):
+- The Node.js and Go client SDKs will ignore the new constraints completely: the constraints will not affect the toggle's status.
+- The Python client SDK will evaluate the toggle to false, as it cannot evaluate the constraint successfully.
+- The Ruby SDK raises an exception if the operator is not `IN` or `NOT_IN`.
+
+Please inspect the [SDK compatibility table to see which version of your preferred SDK introduced support for this feature](../sdks/index.md#strategy-constraints).
+
+After Unleash 4.9, we updated the [Unleash client specification](https://github.com/Unleash/client-specification). Going forward, any constraint that a client does not recognize, **must be evaluated as `false`**
 
 ## [Deprecated]: Constrain on a specific environment {#constrain-on-a-specific-environment}
 

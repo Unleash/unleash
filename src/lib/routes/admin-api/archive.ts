@@ -31,6 +31,7 @@ export default class ArchiveController extends Controller {
         this.route({
             method: 'get',
             path: '/features',
+            acceptAnyContentType: true,
             handler: this.getArchivedFeatures,
             middleware: [
                 openApiService.validPath({

@@ -63,6 +63,7 @@ class FeatureController extends Controller {
         this.route({
             method: 'get',
             path: '/',
+            acceptAnyContentType: true,
             handler: this.getAllToggles,
             middleware: [
                 openApiService.validPath({

@@ -116,6 +116,7 @@ export default class ProjectFeaturesController extends Controller {
         this.route({
             method: 'get',
             path: PATH,
+            acceptAnyContentType: true,
             handler: this.getFeatures,
             middleware: [
                 openApiService.validPath({
@@ -144,6 +145,7 @@ export default class ProjectFeaturesController extends Controller {
         this.route({
             method: 'get',
             path: PATH_FEATURE,
+            acceptAnyContentType: true,
             handler: this.getFeature,
             middleware: [
                 openApiService.validPath({

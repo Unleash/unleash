@@ -24,6 +24,8 @@ interface IRouteOptions {
     permission?: string;
     middleware?: RequestHandler[];
     handler: IRequestHandler;
+    acceptAnyContentType?: boolean;
+    acceptedContentTypes?: string[];
 }
 
 const checkPermission = (permission) => async (req, res, next) => {
@@ -59,7 +61,7 @@ export default class Controller {
         this.config = config;
     }
 
-    private wrap(handler: IRequestHandler): IRequestHandler {
+    private useRouteErrorHandler(handler: IRequestHandler): IRequestHandler {
         return async (req: Request, res: Response) => {
             try {
                 await handler(req, res);
@@ -69,12 +71,20 @@ export default class Controller {
         };
     }
 
+    private useContentTypeMiddleware(options: IRouteOptions): RequestHandler[] {
+        const { middleware = [], acceptedContentTypes = [] } = options;
+
+        return options.acceptAnyContentType
+            ? middleware
+            : [requireContentType(...acceptedContentTypes), ...middleware];
+    }
+
     route(options: IRouteOptions): void {
         this.app[options.method](
             options.path,
             checkPermission(options.permission),
-            ...(options.middleware ?? []),
-            this.wrap(options.handler.bind(this)),
+            this.useContentTypeMiddleware(options),
+            this.useRouteErrorHandler(options.handler.bind(this)),
         );
     }
 
@@ -84,6 +94,7 @@ export default class Controller {
             path,
             handler,
             permission,
+            acceptAnyContentType: true,
         });
     }
 
@@ -98,7 +109,7 @@ export default class Controller {
             path,
             handler,
             permission,
-            middleware: [requireContentType(...acceptedContentTypes)],
+            acceptedContentTypes,
         });
     }
 
@@ -113,7 +124,7 @@ export default class Controller {
             path,
             handler,
             permission,
-            middleware: [requireContentType(...acceptedContentTypes)],
+            acceptedContentTypes,
         });
     }
 
@@ -128,7 +139,7 @@ export default class Controller {
             path,
             handler,
             permission,
-            middleware: [requireContentType(...acceptedContentTypes)],
+            acceptedContentTypes,
         });
     }
 
@@ -138,6 +149,7 @@ export default class Controller {
             path,
             handler,
             permission,
+            acceptAnyContentType: true,
         });
     }
 
@@ -151,7 +163,7 @@ export default class Controller {
             path,
             checkPermission(permission),
             filehandler.bind(this),
-            this.wrap(handler.bind(this)),
+            this.useRouteErrorHandler(handler.bind(this)),
         );
     }
 

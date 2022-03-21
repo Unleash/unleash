@@ -39,6 +39,10 @@ export class SegmentService {
         this.logger = getLogger('services/segment-service.ts');
     }
 
+    async get(id: number): Promise<ISegment> {
+        return this.segmentStore.get(id);
+    }
+
     async getAll(): Promise<ISegment[]> {
         return this.segmentStore.getAll();
     }

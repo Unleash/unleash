@@ -185,9 +185,13 @@ The logger interface with its `debug`, `info`, `warn` and `error` methods expect
 
 ## Database configuration
 
+:::info
+In-code configuration values take precedence over environment values: If you provide a database username both via environment variables and in code with the Unleash options object, Unleash will use the in-code username.
+:::
+
 You cannot run the Unleash server without a database. You must provide Unleash with database connection details for it to start correctly.
 
-The available options are listed in the table below. Options can be specified either via JavaScript (only when starting Unleash via code) or via environment variables. The "property name" column below gives the name of the property on the Unleash options' `db` object:
+The available options are listed in the table below. Options can be specified either via JavaScript (only when starting Unleash via code) or via environment variables. The "property name" column below gives the name of the property on the Unleash options' `db` object.
 
 | Property name            | Environment variable            | Default value  | Description                                                                                                                                                                              |
 |--------------------------|---------------------------------|----------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -201,12 +205,16 @@ The available options are listed in the table below. Options can be specified ei
 | `pool.min`               | `DATABASE_POOL_MIN`             | 0              | The minimum number of connections in the connection pool.                                                                                                                                |
 | `pool.max`               | `DATABASE_POOL_MAX`             | 4              | The maximum number of connections in the connection pool.                                                                                                                                |
 | `pool.idleTimeoutMillis` | `DATABASE_POOL_IDLE_TIMEOUT_MS` | 30000          | The amount of time (in milliseconds) that a connection must be idle for before it is marked as a candidate for eviction.                                                                 |
-|                          | `DATABASE_URL`                  | N/A            | A string that matches the [libpq connection string](https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING), such as `postgres://USER:PASSWORD@HOST:PORT/DATABASE`. |
-|                          | `DATABASE_URL_FILE`             | N/A            | The path to a file that contains a [libpq connection string](https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING).                                               |
+
+Alternatively, you can use a [libpq connection string](https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING) to connect to the database. You can provide it directly or from a file by using one of the below options. In JavaScript, these are top-level properties of the root configuration object, *not* the `db` object.
+
+| Property name     | Environment variable | Default value | Description                                                                                                                                                                              |
+|-------------------|----------------------|---------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `databaseUrl`     | `DATABASE_URL`       | N/A           | A string that matches the [libpq connection string](https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING), such as `postgres://USER:PASSWORD@HOST:PORT/DATABASE`. |
+| `databaseUrlFile` | `DATABASE_URL_FILE`  | N/A           | The path to a file that contains a [libpq connection string](https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING).                                               |
 
 
-Below is an example configuration in JavaScript showing the default options:
-
+Below is an example JavaScript configuration object.
 
 ``` js
 const unleashOptions = {
@@ -223,6 +231,8 @@ const unleashOptions = {
       idleTimeoutMillis: 30000,
     },
   },
+  databaseUrl: "postgres:/USER:PASSWORD@HOST:PORT/DATABASE",
+  databaseUrlFile: "/path/to/file",
 };
 ```
 

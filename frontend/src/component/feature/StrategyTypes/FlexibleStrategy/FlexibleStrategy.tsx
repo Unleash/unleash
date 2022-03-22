@@ -62,7 +62,8 @@ const FlexibleStrategy = ({
 
     const stickinessOptions = resolveStickiness();
 
-    const rollout = parameters.rollout !== undefined ? parameters.rollout : '100';
+    const rollout =
+        parameters.rollout !== undefined ? parameters.rollout : '100';
     const stickiness = parameters.stickiness;
     const groupId = parameters.groupId;
 

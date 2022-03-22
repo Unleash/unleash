@@ -218,6 +218,8 @@ Below is an example JavaScript configuration object.
 
 ``` js
 const unleashOptions = {
+  databaseUrl: "postgres:/USER:PASSWORD@HOST:PORT/DATABASE",
+  databaseUrlFile: "/path/to/file",
   db: {
     user: 'unleash_user',
     password: 'passord',
@@ -231,8 +233,6 @@ const unleashOptions = {
       idleTimeoutMillis: 30000,
     },
   },
-  databaseUrl: "postgres:/USER:PASSWORD@HOST:PORT/DATABASE",
-  databaseUrlFile: "/path/to/file",
 };
 ```
 

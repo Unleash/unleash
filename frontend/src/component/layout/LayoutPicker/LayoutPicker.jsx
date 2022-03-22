@@ -17,9 +17,11 @@ const LayoutPicker = ({ children }) => {
         const isResetPasswordSuccessPage = matchPath(pathname, {
             path: '/reset-password-success',
         });
-
         const isForgottenPasswordPage = matchPath(pathname, {
             path: '/forgotten-password',
+        });
+        const isSplashPage = matchPath(pathname, {
+            path: '/splash/:id',
         });
 
         const is404 = matchPath(pathname, { path: '/404' });
@@ -30,6 +32,7 @@ const LayoutPicker = ({ children }) => {
             isChangePasswordPage ||
             isResetPasswordSuccessPage ||
             isForgottenPasswordPage ||
+            isSplashPage ||
             is404
         );
     };

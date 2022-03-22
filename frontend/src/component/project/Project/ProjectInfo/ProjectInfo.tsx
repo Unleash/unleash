@@ -22,7 +22,7 @@ interface IProjectInfoProps {
     memberCount: number;
     featureCount: number;
     health: number;
-    description: string;
+    description?: string;
 }
 
 const ProjectInfo = ({
@@ -42,10 +42,11 @@ const ProjectInfo = ({
     }
 
     const LONG_DESCRIPTION = 100;
+    const isShortDescription =
+        !description || description.length < LONG_DESCRIPTION;
 
     const permissionButtonClass = classnames({
-        [styles.permissionButtonShortDesc]:
-            description.length < LONG_DESCRIPTION,
+        [styles.permissionButtonShortDesc]: isShortDescription,
     });
     const permissionButton = (
         <PermissionIconButton
@@ -70,9 +71,7 @@ const ProjectInfo = ({
                             condition={Boolean(description)}
                             show={
                                 <ConditionallyRender
-                                    condition={
-                                        description.length < LONG_DESCRIPTION
-                                    }
+                                    condition={isShortDescription}
                                     show={
                                         <p
                                             data-loading
@@ -113,7 +112,7 @@ const ProjectInfo = ({
                             }
                         />
                         <ConditionallyRender
-                            condition={description.length < LONG_DESCRIPTION}
+                            condition={isShortDescription}
                             show={permissionButton}
                         />
                     </div>

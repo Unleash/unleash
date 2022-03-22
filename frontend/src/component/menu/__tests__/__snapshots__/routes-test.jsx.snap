@@ -4,7 +4,13 @@ exports[`returns all baseRoutes 1`] = `
 Array [
   Object {
     "component": [Function],
-    "layout": "main",
+    "menu": Object {},
+    "path": "/splash/:splashId",
+    "title": "Unleash",
+    "type": "protected",
+  },
+  Object {
+    "component": [Function],
     "menu": Object {},
     "parent": "/projects",
     "path": "/projects/create",
@@ -13,7 +19,6 @@ Array [
   },
   Object {
     "component": [Function],
-    "layout": "main",
     "menu": Object {},
     "parent": "/projects",
     "path": "/projects/:id/edit",
@@ -22,7 +27,6 @@ Array [
   },
   Object {
     "component": [Function],
-    "layout": "main",
     "menu": Object {},
     "parent": "/archive",
     "path": "/projects/:id/archived",
@@ -31,7 +35,6 @@ Array [
   },
   Object {
     "component": [Function],
-    "layout": "main",
     "menu": Object {},
     "parent": "/projects/:id/features/:name/:activeTab",
     "path": "/projects/:id/features/:name/:activeTab/copy",
@@ -40,7 +43,6 @@ Array [
   },
   Object {
     "component": [Function],
-    "layout": "main",
     "menu": Object {},
     "parent": "/projects",
     "path": "/projects/:projectId/features/:featureId/edit",
@@ -50,7 +52,6 @@ Array [
   Object {
     "component": [Function],
     "flags": "E",
-    "layout": "main",
     "menu": Object {},
     "parent": "/projects",
     "path": "/projects/:projectId/features/:featureId",
@@ -59,7 +60,6 @@ Array [
   },
   Object {
     "component": [Function],
-    "layout": "main",
     "menu": Object {},
     "parent": "/projects",
     "path": "/projects/:id/features/:name/:activeTab",
@@ -68,7 +68,6 @@ Array [
   },
   Object {
     "component": [Function],
-    "layout": "main",
     "menu": Object {},
     "parent": "/projects/:id/features",
     "path": "/projects/:projectId/create-toggle",
@@ -77,7 +76,6 @@ Array [
   },
   Object {
     "component": [Function],
-    "layout": "main",
     "menu": Object {},
     "parent": "/features",
     "path": "/projects/:projectId/features2/:name",
@@ -87,7 +85,6 @@ Array [
   Object {
     "component": [Function],
     "flag": "P",
-    "layout": "main",
     "menu": Object {},
     "parent": "/projects",
     "path": "/projects/:id/:activeTab",
@@ -97,7 +94,6 @@ Array [
   Object {
     "component": [Function],
     "flag": "P",
-    "layout": "main",
     "menu": Object {},
     "parent": "/projects",
     "path": "/projects/:id",
@@ -106,7 +102,6 @@ Array [
   },
   Object {
     "component": [Function],
-    "layout": "main",
     "menu": Object {
       "mobile": true,
     },
@@ -116,7 +111,6 @@ Array [
   },
   Object {
     "component": [Function],
-    "layout": "main",
     "menu": Object {},
     "parent": "/features",
     "path": "/features/:activeTab/:name",
@@ -125,7 +119,6 @@ Array [
   },
   Object {
     "component": [Function],
-    "layout": "main",
     "menu": Object {
       "mobile": true,
     },
@@ -135,7 +128,6 @@ Array [
   },
   Object {
     "component": [Function],
-    "layout": "main",
     "menu": Object {},
     "parent": "/applications",
     "path": "/applications/:name",
@@ -144,7 +136,6 @@ Array [
   },
   Object {
     "component": [Function],
-    "layout": "main",
     "menu": Object {
       "advanced": true,
       "mobile": true,
@@ -156,7 +147,6 @@ Array [
   Object {
     "component": [Function],
     "flag": "C",
-    "layout": "main",
     "menu": Object {},
     "parent": "/context",
     "path": "/context/create",
@@ -166,7 +156,6 @@ Array [
   Object {
     "component": [Function],
     "flag": "C",
-    "layout": "main",
     "menu": Object {},
     "parent": "/context",
     "path": "/context/edit/:name",
@@ -176,7 +165,6 @@ Array [
   Object {
     "component": [Function],
     "flag": "C",
-    "layout": "main",
     "menu": Object {
       "advanced": true,
       "mobile": true,
@@ -187,7 +175,6 @@ Array [
   },
   Object {
     "component": [Function],
-    "layout": "main",
     "menu": Object {},
     "parent": "/strategies",
     "path": "/strategies/create",
@@ -196,7 +183,6 @@ Array [
   },
   Object {
     "component": [Function],
-    "layout": "main",
     "menu": Object {},
     "parent": "/strategies",
     "path": "/strategies/:name/edit",
@@ -205,7 +191,6 @@ Array [
   },
   Object {
     "component": [Function],
-    "layout": "main",
     "menu": Object {},
     "parent": "/strategies",
     "path": "/strategies/:name",
@@ -214,7 +199,6 @@ Array [
   },
   Object {
     "component": [Function],
-    "layout": "main",
     "menu": Object {
       "advanced": true,
       "mobile": true,
@@ -225,7 +209,6 @@ Array [
   },
   Object {
     "component": [Function],
-    "layout": "main",
     "menu": Object {},
     "parent": "/environments",
     "path": "/environments/create",
@@ -234,7 +217,6 @@ Array [
   },
   Object {
     "component": [Function],
-    "layout": "main",
     "menu": Object {},
     "path": "/environments/:id",
     "title": "Edit",
@@ -243,7 +225,6 @@ Array [
   Object {
     "component": [Function],
     "flag": "EEA",
-    "layout": "main",
     "menu": Object {
       "advanced": true,
       "mobile": true,
@@ -254,7 +235,6 @@ Array [
   },
   Object {
     "component": [Function],
-    "layout": "main",
     "menu": Object {},
     "parent": "/tag-types",
     "path": "/tag-types/create",
@@ -263,7 +243,6 @@ Array [
   },
   Object {
     "component": [Function],
-    "layout": "main",
     "menu": Object {},
     "parent": "/tag-types",
     "path": "/tag-types/edit/:name",
@@ -272,7 +251,6 @@ Array [
   },
   Object {
     "component": [Function],
-    "layout": "main",
     "menu": Object {
       "advanced": true,
       "mobile": true,
@@ -283,7 +261,6 @@ Array [
   },
   Object {
     "component": [Function],
-    "layout": "main",
     "menu": Object {},
     "parent": "/addons",
     "path": "/addons/create/:providerId",
@@ -292,7 +269,6 @@ Array [
   },
   Object {
     "component": [Function],
-    "layout": "main",
     "menu": Object {},
     "parent": "/addons",
     "path": "/addons/edit/:addonId",
@@ -302,7 +278,6 @@ Array [
   Object {
     "component": [Function],
     "hidden": false,
-    "layout": "main",
     "menu": Object {
       "advanced": true,
       "mobile": true,
@@ -315,7 +290,6 @@ Array [
     "component": [Function],
     "flag": "SE",
     "hidden": false,
-    "layout": "main",
     "menu": Object {
       "advanced": true,
       "mobile": true,
@@ -326,7 +300,6 @@ Array [
   },
   Object {
     "component": [Function],
-    "layout": "main",
     "menu": Object {},
     "parent": "/history",
     "path": "/history/:toggleName",
@@ -335,7 +308,6 @@ Array [
   },
   Object {
     "component": [Function],
-    "layout": "main",
     "menu": Object {
       "adminSettings": true,
     },
@@ -345,7 +317,6 @@ Array [
   },
   Object {
     "component": [Function],
-    "layout": "main",
     "menu": Object {},
     "path": "/archive",
     "title": "Archived Toggles",
@@ -353,7 +324,6 @@ Array [
   },
   Object {
     "component": [Function],
-    "layout": "main",
     "menu": Object {},
     "parent": "/admin",
     "path": "/admin/api/create-token",
@@ -363,7 +333,6 @@ Array [
   Object {
     "component": [Function],
     "flag": "RE",
-    "layout": "main",
     "menu": Object {},
     "path": "/admin/create-project-role",
     "title": "Create",
@@ -372,7 +341,6 @@ Array [
   Object {
     "component": [Function],
     "flag": "RE",
-    "layout": "main",
     "menu": Object {},
     "path": "/admin/roles/:id/edit",
     "title": "Edit",
@@ -380,7 +348,6 @@ Array [
   },
   Object {
     "component": [Function],
-    "layout": "main",
     "menu": Object {
       "advanced": true,
       "mobile": true,
@@ -392,7 +359,6 @@ Array [
   },
   Object {
     "component": [Function],
-    "layout": "main",
     "menu": Object {
       "adminSettings": true,
     },
@@ -403,7 +369,6 @@ Array [
   },
   Object {
     "component": [Function],
-    "layout": "main",
     "menu": Object {},
     "parent": "/admin",
     "path": "/admin/create-user",
@@ -412,7 +377,6 @@ Array [
   },
   Object {
     "component": [Function],
-    "layout": "main",
     "menu": Object {
       "adminSettings": true,
     },
@@ -424,7 +388,6 @@ Array [
   Object {
     "component": [Function],
     "flag": "RE",
-    "layout": "main",
     "menu": Object {
       "adminSettings": true,
     },
@@ -436,7 +399,6 @@ Array [
   Object {
     "component": [Function],
     "hidden": false,
-    "layout": "main",
     "menu": Object {},
     "path": "/admin",
     "title": "Admin",

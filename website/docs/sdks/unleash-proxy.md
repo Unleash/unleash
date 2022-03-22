@@ -243,3 +243,5 @@ There are many more configuration options available. You'll find all [available 
 
 { how to connect the proxy, what setups are possible etc. }
 See #bootstrap
+
+## Configuration options

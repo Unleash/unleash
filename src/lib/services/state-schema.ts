@@ -5,10 +5,7 @@ import { tagSchema } from './tag-schema';
 import { tagTypeSchema } from './tag-type-schema';
 import { projectSchema } from './project-schema';
 import { nameType } from '../routes/util';
-import {
-    featureStrategySegmentSchema,
-    unsavedSegmentSchema,
-} from './segment-schema';
+import { featureStrategySegmentSchema, segmentSchema } from './segment-schema';
 
 export const featureStrategySchema = joi
     .object()
@@ -60,7 +57,7 @@ export const stateSchema = joi.object().keys({
         .optional()
         .items(featureEnvironmentsSchema),
     environments: joi.array().optional().items(environmentSchema),
-    segments: joi.array().optional().items(unsavedSegmentSchema),
+    segments: joi.array().optional().items(segmentSchema),
     featureStrategySegments: joi
         .array()
         .optional()

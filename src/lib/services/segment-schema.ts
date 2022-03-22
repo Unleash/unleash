@@ -1,7 +1,7 @@
 import joi from 'joi';
 import { constraintSchema } from '../schema/feature-schema';
 
-export const unsavedSegmentSchema = joi
+export const segmentSchema = joi
     .object()
     .keys({
         name: joi.string().required(),
@@ -9,10 +9,6 @@ export const unsavedSegmentSchema = joi
         constraints: joi.array().items(constraintSchema).required(),
     })
     .options({ allowUnknown: true });
-
-export const savedSegmentSchema = unsavedSegmentSchema.keys({
-    id: joi.number().required(),
-});
 
 export const featureStrategySegmentSchema = joi
     .object()

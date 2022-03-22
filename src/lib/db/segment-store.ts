@@ -67,9 +67,9 @@ export default class SegmentStore implements ISegmentStore {
         return this.mapRow(rows[0]);
     }
 
-    async update(segment: ISegment): Promise<ISegment> {
+    async update(id: number, segment: Omit<ISegment, 'id'>): Promise<ISegment> {
         const rows = await this.db(T.segments)
-            .where({ id: segment.id })
+            .where({ id })
             .update({
                 name: segment.name,
                 description: segment.description,

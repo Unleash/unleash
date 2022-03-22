@@ -114,7 +114,7 @@ describe('feature', () => {
                 expect(req.body.name).to.equal('flexibleRollout');
                 expect(req.body.parameters.groupId).to.equal(featureToggleName);
                 expect(req.body.parameters.stickiness).to.equal('default');
-                expect(req.body.parameters.rollout).to.equal(30);
+                expect(req.body.parameters.rollout).to.equal('30');
 
                 if (enterprise) {
                     expect(req.body.constraints.length).to.equal(1);
@@ -160,7 +160,7 @@ describe('feature', () => {
             req => {
                 expect(req.body.parameters.groupId).to.equal('new-group-id');
                 expect(req.body.parameters.stickiness).to.equal('sessionId');
-                expect(req.body.parameters.rollout).to.equal(60);
+                expect(req.body.parameters.rollout).to.equal('60');
 
                 if (enterprise) {
                     expect(req.body.constraints.length).to.equal(1);

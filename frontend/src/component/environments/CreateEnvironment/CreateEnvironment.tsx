@@ -8,7 +8,7 @@ import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import useEnvironmentApi from 'hooks/api/actions/useEnvironmentApi/useEnvironmentApi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
-import useEnvironments from 'hooks/api/getters/useEnvironments/useEnvironments';
+import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import useProjectRolePermissions from 'hooks/api/getters/useProjectRolePermissions/useProjectRolePermissions';
 import ConditionallyRender from 'component/common/ConditionallyRender';
 import PageContent from 'component/common/PageContent/PageContent';

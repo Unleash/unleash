@@ -1,7 +1,7 @@
 import { Button } from '@material-ui/core';
 import { KeyboardArrowDownOutlined } from '@material-ui/icons';
 import React from 'react';
-import useEnvironments from '../../../../hooks/api/getters/useEnvironments/useEnvironments';
+import { useEnvironments } from '../../../../hooks/api/getters/useEnvironments/useEnvironments';
 import useProjects from '../../../../hooks/api/getters/useProjects/useProjects';
 import GeneralSelect from '../../../common/GeneralSelect/GeneralSelect';
 import Input from '../../../common/Input/Input';
@@ -10,11 +10,11 @@ interface IApiTokenFormProps {
     username: string;
     type: string;
     project: string;
-    environment: string;
+    environment?: string;
     setTokenType: (value: string) => void;
     setUsername: React.Dispatch<React.SetStateAction<string>>;
     setProject: React.Dispatch<React.SetStateAction<string>>;
-    setEnvironment: React.Dispatch<React.SetStateAction<string>>;
+    setEnvironment: React.Dispatch<React.SetStateAction<string | undefined>>;
     handleSubmit: (e: any) => void;
     handleCancel: () => void;
     errors: { [key: string]: string };
@@ -54,13 +54,15 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
             title: i.name,
         })
     );
+
     const selectableEnvs =
         type === TYPE_ADMIN
             ? [{ key: '*', label: 'ALL' }]
-            : environments.map(i => ({
-                  key: i.name,
-                  label: i.name,
-                  title: i.name,
+            : environments.map(environment => ({
+                  key: environment.name,
+                  label: environment.name,
+                  title: environment.name,
+                  disabled: !environment.enabled,
               }));
 
     return (

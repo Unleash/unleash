@@ -3,9 +3,7 @@ import ResponsiveButton from '../../common/ResponsiveButton/ResponsiveButton';
 import { Add } from '@material-ui/icons';
 import PageContent from '../../common/PageContent';
 import { List } from '@material-ui/core';
-import useEnvironments, {
-    ENVIRONMENT_CACHE_KEY,
-} from '../../../hooks/api/getters/useEnvironments/useEnvironments';
+import { useEnvironments } from '../../../hooks/api/getters/useEnvironments/useEnvironments';
 import {
     IEnvironment,
     ISortOrderPayload,
@@ -16,7 +14,6 @@ import EnvironmentDeleteConfirm from './EnvironmentDeleteConfirm/EnvironmentDele
 import useToast from '../../../hooks/useToast';
 import useEnvironmentApi from '../../../hooks/api/actions/useEnvironmentApi/useEnvironmentApi';
 import EnvironmentListItem from './EnvironmentListItem/EnvironmentListItem';
-import { mutate } from 'swr';
 import EnvironmentToggleConfirm from './EnvironmentToggleConfirm/EnvironmentToggleConfirm';
 import useProjectRolePermissions from '../../../hooks/api/getters/useProjectRolePermissions/useProjectRolePermissions';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
@@ -32,7 +29,7 @@ const EnvironmentList = () => {
         enabled: true,
         protected: false,
     };
-    const { environments, refetch } = useEnvironments();
+    const { environments, refetchEnvironments } = useEnvironments();
     const { uiConfig } = useUiConfig();
     const { refetch: refetchProjectRolePermissions } =
         useProjectRolePermissions();
@@ -58,8 +55,7 @@ const EnvironmentList = () => {
         const item = newEnvList.splice(dragIndex, 1)[0];
 
         newEnvList.splice(hoverIndex, 0, item);
-
-        mutate(ENVIRONMENT_CACHE_KEY, { environments: newEnvList }, false);
+        refetchEnvironments({ environments: newEnvList }, false);
         return newEnvList;
     };
 
@@ -75,7 +71,6 @@ const EnvironmentList = () => {
 
         try {
             await sortOrderAPICall(sortOrder);
-            refetch();
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }
@@ -104,7 +99,7 @@ const EnvironmentList = () => {
             setDeldialogue(false);
             setSelectedEnv(defaultEnv);
             setConfirmName('');
-            refetch();
+            refetchEnvironments();
         }
     };
 
@@ -128,7 +123,7 @@ const EnvironmentList = () => {
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         } finally {
-            refetch();
+            refetchEnvironments();
         }
     };
 
@@ -144,7 +139,7 @@ const EnvironmentList = () => {
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         } finally {
-            refetch();
+            refetchEnvironments();
         }
     };
 

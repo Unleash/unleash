@@ -10,7 +10,7 @@ import { UPDATE_PROJECT } from '../../providers/AccessProvider/permissions';
 import ApiError from '../../common/ApiError/ApiError';
 import useToast from '../../../hooks/useToast';
 import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
-import useEnvironments from '../../../hooks/api/getters/useEnvironments/useEnvironments';
+import { useEnvironments } from '../../../hooks/api/getters/useEnvironments/useEnvironments';
 import useProject from '../../../hooks/api/getters/useProject/useProject';
 import { FormControlLabel, FormGroup } from '@material-ui/core';
 import useProjectApi from '../../../hooks/api/actions/useProjectApi/useProjectApi';
@@ -32,12 +32,8 @@ const ProjectEnvironmentList = ({ projectId }: ProjectEnvironmentListProps) => {
     const [envs, setEnvs] = useState<IProjectEnvironment[]>([]);
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
-    const {
-        environments,
-        loading,
-        error,
-        refetch: refetchEnvs,
-    } = useEnvironments();
+    const { environments, loading, error, refetchEnvironments } =
+        useEnvironments();
     const { project, refetch: refetchProject } = useProject(projectId);
     const { removeEnvironmentFromProject, addEnvironmentToProject } =
         useProjectApi();
@@ -59,7 +55,7 @@ const ProjectEnvironmentList = ({ projectId }: ProjectEnvironmentListProps) => {
     }, [environments, project?.environments]);
 
     const refetch = () => {
-        refetchEnvs();
+        refetchEnvironments();
         refetchProject();
     };
 

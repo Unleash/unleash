@@ -1,42 +1,35 @@
-import useSWR, { mutate, SWRConfiguration } from 'swr';
-import { useState, useEffect } from 'react';
-import { IEnvironmentResponse } from '../../../../interfaces/environments';
-import { formatApiPath } from '../../../../utils/format-path';
+import useSWR, { mutate } from 'swr';
+import { useCallback, useMemo } from 'react';
+import { IEnvironmentResponse } from 'interfaces/environments';
+import { formatApiPath } from 'utils/format-path';
 import handleErrorResponses from '../httpErrorResponseHandler';
 
-export const ENVIRONMENT_CACHE_KEY = `api/admin/environments`;
+const PATH = formatApiPath(`api/admin/environments`);
 
-const useEnvironments = (options: SWRConfiguration = {}) => {
-    const fetcher = () => {
-        const path = formatApiPath(`api/admin/environments`);
-        return fetch(path, {
-            method: 'GET',
-        })
-            .then(handleErrorResponses('Environments'))
-            .then(res => res.json());
-    };
+export const useEnvironments = () => {
+    const { data, error } = useSWR<IEnvironmentResponse>(PATH, fetcher);
 
-    const { data, error } = useSWR<IEnvironmentResponse>(
-        ENVIRONMENT_CACHE_KEY,
-        fetcher,
-        options
+    const refetchEnvironments = useCallback(
+        (data?: IEnvironmentResponse, revalidate?: boolean) => {
+            mutate(PATH, data, revalidate).catch(console.warn);
+        },
+        []
     );
-    const [loading, setLoading] = useState(!error && !data);
 
-    const refetch = () => {
-        mutate(ENVIRONMENT_CACHE_KEY);
-    };
-
-    useEffect(() => {
-        setLoading(!error && !data);
-    }, [data, error]);
+    const environments = useMemo(() => {
+        return data?.environments || [];
+    }, [data]);
 
     return {
-        environments: data?.environments || [],
+        environments,
+        refetchEnvironments,
+        loading: !error && !data,
         error,
-        loading,
-        refetch,
     };
 };
 
-export default useEnvironments;
+const fetcher = (): Promise<IEnvironmentResponse> => {
+    return fetch(PATH)
+        .then(handleErrorResponses('Environments'))
+        .then(res => res.json());
+};

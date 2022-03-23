@@ -1,37 +1,19 @@
 import { useEffect, useState } from 'react';
+import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 
-const useApiToken = (
-    initialUserName = '',
-    initialtype = 'CLIENT',
-    initialProject = '*',
-    initialEnvironment = 'default'
-) => {
-    const [username, setUsername] = useState(initialUserName);
-    const [type, setType] = useState(initialtype);
-    const [project, setProject] = useState(initialtype);
-    const [environment, setEnvironment] = useState(initialEnvironment);
+export const useApiTokenForm = () => {
+    const { environments } = useEnvironments();
+    const initialEnvironment = environments?.find(e => e.enabled)?.name;
+
+    const [username, setUsername] = useState('');
+    const [type, setType] = useState('CLIENT');
+    const [project, setProject] = useState('*');
+    const [environment, setEnvironment] = useState<string>();
     const [errors, setErrors] = useState({});
 
     useEffect(() => {
-        setUsername(initialUserName);
-    }, [initialUserName]);
-
-    useEffect(() => {
-        setType(initialtype);
-        if (type === 'ADMIN') {
-            setProject('*');
-            setEnvironment('*');
-        }
-        //eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [initialtype]);
-
-    useEffect(() => {
-        setProject(initialProject);
-    }, [initialProject]);
-
-    useEffect(() => {
-        setEnvironment(initialEnvironment);
-    }, [initialEnvironment]);
+        setEnvironment(type === 'ADMIN' ? '*' : initialEnvironment);
+    }, [type, initialEnvironment]);
 
     const setTokenType = (value: string) => {
         if (value === 'ADMIN') {
@@ -82,5 +64,3 @@ const useApiToken = (
         errors,
     };
 };
-
-export default useApiToken;

@@ -7,6 +7,7 @@ export interface ISelectOption {
     key: string;
     title?: string;
     label?: string;
+    disabled?: boolean;
 }
 
 export interface ISelectMenuProps {
@@ -52,6 +53,7 @@ const GeneralSelect: React.FC<ISelectMenuProps> = ({
                 value={option.key}
                 title={option.title || ''}
                 data-test={`${SELECT_ITEM_ID}-${option.label}`}
+                disabled={option.disabled}
             >
                 {option.label}
             </MenuItem>

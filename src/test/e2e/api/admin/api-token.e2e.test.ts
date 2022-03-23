@@ -331,3 +331,21 @@ test('client tokens cannot span all environments', async () => {
         .set('Content-Type', 'application/json')
         .expect(400);
 });
+
+test('should not create token for disabled environment', async () => {
+    await db.stores.environmentStore.create({
+        name: 'disabledEnvironment',
+        type: 'production',
+        enabled: false,
+    });
+    return app.request
+        .post('/api/admin/api-tokens')
+        .send({
+            username: 'default',
+            type: 'client',
+            project: 'default',
+            environment: 'disabledEnvironment',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(400);
+});

@@ -1,33 +1,25 @@
-import Splash from '../Splash/Splash';
-import EnvironmentSplashPage from './EnvironmentSplashPage/EnvironmentSplashPage';
+import { SplashPageEnvironmentsContent } from 'component/splash/SplashPageEnvironments/SplashPageEnvironmentsContent/SplashPageEnvironmentsContent';
+import { SplashPageEnvironmentsContainer } from 'component/splash/SplashPageEnvironments/SplashPageEnvironmentsContainer/SplashPageEnvironmentsContainer';
 import { VpnKey, CloudCircle } from '@material-ui/icons';
-import { useStyles } from './EnvironmentSplash.styles';
-import { ReactComponent as Logo1 } from '../../../assets/img/splash_env1.svg';
-import { ReactComponent as Logo2 } from '../../../assets/img/splash_env2.svg';
-import { useEffect } from 'react';
-import useSplashApi from '../../../hooks/api/actions/useSplashApi/useSplashApi';
+import { useStyles } from 'component/splash/SplashPageEnvironments/SplashPageEnvironments.styles';
+import { ReactComponent as Logo1 } from 'assets/img/splash_env1.svg';
+import { ReactComponent as Logo2 } from 'assets/img/splash_env2.svg';
+import { useHistory } from 'react-router-dom';
 
-interface IEnvironmentSplashProps {
-    onFinish: (status: boolean) => void;
-}
-
-const ENVIRONMENT_SPLASH_ID = 'environment';
-
-const EnvironmentSplash = ({ onFinish }: IEnvironmentSplashProps) => {
+export const SplashPageEnvironments = () => {
     const styles = useStyles();
-    const { setSplashSeen } = useSplashApi();
+    const { push } = useHistory();
 
-    useEffect(() => {
-        setSplashSeen(ENVIRONMENT_SPLASH_ID);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    const onFinish = () => {
+        push('/');
+    };
 
     return (
         <>
-            <Splash
+            <SplashPageEnvironmentsContent
                 onFinish={onFinish}
                 components={[
-                    <EnvironmentSplashPage
+                    <SplashPageEnvironmentsContainer
                         key={1}
                         title={
                             <h2 className={styles.title}>
@@ -61,7 +53,7 @@ const EnvironmentSplash = ({ onFinish }: IEnvironmentSplashProps) => {
                         }
                         image={<CloudCircle className={styles.icon} />}
                     />,
-                    <EnvironmentSplashPage
+                    <SplashPageEnvironmentsContainer
                         key={2}
                         title={
                             <h2 className={styles.title}>
@@ -79,7 +71,7 @@ const EnvironmentSplash = ({ onFinish }: IEnvironmentSplashProps) => {
                         }
                         image={<Logo1 className={styles.logo} />}
                     />,
-                    <EnvironmentSplashPage
+                    <SplashPageEnvironmentsContainer
                         key={3}
                         title={
                             <h2 className={styles.title}>
@@ -99,7 +91,7 @@ const EnvironmentSplash = ({ onFinish }: IEnvironmentSplashProps) => {
                         }
                         image={<Logo2 className={styles.logo} />}
                     />,
-                    <EnvironmentSplashPage
+                    <SplashPageEnvironmentsContainer
                         key={4}
                         title={
                             <h2 className={styles.title}>
@@ -125,7 +117,7 @@ const EnvironmentSplash = ({ onFinish }: IEnvironmentSplashProps) => {
                         }
                         image={<VpnKey className={styles.icon} />}
                     />,
-                    <EnvironmentSplashPage
+                    <SplashPageEnvironmentsContainer
                         key={5}
                         title={
                             <h2 className={styles.title}>Want to know more?</h2>
@@ -202,5 +194,3 @@ const EnvironmentSplash = ({ onFinish }: IEnvironmentSplashProps) => {
         </>
     );
 };
-
-export default EnvironmentSplash;

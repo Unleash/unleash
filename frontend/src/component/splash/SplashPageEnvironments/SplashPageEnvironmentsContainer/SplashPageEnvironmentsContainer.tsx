@@ -1,18 +1,18 @@
 import React from 'react';
 
-interface EnvironmentSplashPageProps {
+interface ISplashPageEnvironmentsContainerProps {
     title: React.ReactNode;
     topDescription: React.ReactNode;
     image?: React.ReactNode;
     bottomDescription?: React.ReactNode;
 }
 
-const EnvironmentSplashPage = ({
+export const SplashPageEnvironmentsContainer = ({
     title,
     topDescription,
     image,
     bottomDescription,
-}: EnvironmentSplashPageProps) => {
+}: ISplashPageEnvironmentsContainerProps) => {
     return (
         <div>
             {title}
@@ -22,5 +22,3 @@ const EnvironmentSplashPage = ({
         </div>
     );
 };
-
-export default EnvironmentSplashPage;

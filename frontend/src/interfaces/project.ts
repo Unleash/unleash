@@ -15,7 +15,7 @@ export interface IProject {
     members: number;
     version: string;
     name: string;
-    description: string;
+    description?: string;
     environments: string[];
     health: number;
     features: IFeatureToggleListItem[];

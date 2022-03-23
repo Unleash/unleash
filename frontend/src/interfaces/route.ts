@@ -6,7 +6,6 @@ interface IRoute {
     title?: string;
     component: React.ComponentType;
     type: string;
-    layout: string;
     hidden?: boolean;
     flag?: string;
     parent?: string;

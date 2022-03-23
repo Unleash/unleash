@@ -1,5 +1,3 @@
-import { Store } from 'express-session';
-import EnvironmentService from 'lib/services/environment-service';
 import BadDataError from '../../error/bad-data-error';
 import { IEnvironment } from '../model';
 

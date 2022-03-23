@@ -28,7 +28,7 @@ export interface IConstraint {
 
 export interface IParameter {
     groupId?: string;
-    rollout?: number;
+    rollout?: string;
     stickiness?: string;
 
     [index: string]: any;

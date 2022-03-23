@@ -4,10 +4,7 @@ import { matchPath } from 'react-router';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { IFlags } from 'interfaces/uiConfig';
 import { IAuthSplash } from 'hooks/api/getters/useAuth/useAuthEndpoint';
-import {
-    activeSplashIds,
-    SplashId,
-} from 'component/splash/SplashPage/SplashPage';
+import { activeSplashIds, SplashId } from 'component/splash/splash';
 
 export const SplashPageRedirect = () => {
     const { pathname } = useLocation();

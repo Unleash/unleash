@@ -1,6 +1,7 @@
 /// <reference types="cypress" />
 
 import { disableFeatureStrategiesProductionGuard } from '../../../src/component/feature/FeatureStrategy/FeatureStrategyProdGuard/FeatureStrategyProdGuard';
+import { activeSplashIds } from '../../../src/component/splash/splash';
 
 const randomId = String(Math.random()).split('.')[1];
 const featureToggleName = `unleash-e2e-${randomId}`;
@@ -11,6 +12,13 @@ const baseUrl = Cypress.config().baseUrl;
 let strategyId = '';
 
 describe('feature', () => {
+    before(() => {
+        // Visit all splash pages to mark them as seen.
+        activeSplashIds.forEach(splashId => {
+            cy.visit(`/splash/${splashId}`);
+        });
+    });
+
     after(() => {
         cy.request({
             method: 'DELETE',

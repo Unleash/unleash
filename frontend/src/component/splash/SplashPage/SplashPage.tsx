@@ -5,14 +5,7 @@ import useSplashApi from 'hooks/api/actions/useSplashApi/useSplashApi';
 import { SplashPageOperators } from 'component/splash/SplashPageOperators/SplashPageOperators';
 import { useEffect } from 'react';
 import { useAuthSplash } from 'hooks/api/getters/useAuth/useAuthSplash';
-
-// All known splash IDs.
-export const splashIds = ['environments', 'operators'] as const;
-
-// Active splash IDs that may be shown to the user.
-export const activeSplashIds: SplashId[] = ['operators'];
-
-export type SplashId = typeof splashIds[number];
+import { splashIds, SplashId } from 'component/splash/splash';
 
 export const SplashPage = () => {
     const splashId = useRequiredPathParam('splashId');

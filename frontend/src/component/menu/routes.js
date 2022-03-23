@@ -456,8 +456,8 @@ export const routes = [
         type: 'protected',
         menu: {},
     },
-    /* If you update this route path, make sure you update the path in SWRProvider.tsx */
 
+    /* If you update this route path, make sure you update the path in SWRProvider.tsx */
     {
         path: '/login',
         title: 'Log in',
@@ -478,15 +478,16 @@ export const routes = [
     /* If you update this route path, make sure you update the path in SWRProvider.tsx */
     {
         path: '/reset-password',
-        title: 'reset-password',
+        title: 'Reset password',
         hidden: true,
         component: ResetPassword,
         type: 'unprotected',
         menu: {},
     },
+    /* If you update this route path, make sure you update the path in SWRProvider.tsx */
     {
         path: '/forgotten-password',
-        title: 'reset-password',
+        title: 'Forgotten password',
         hidden: true,
         component: ForgottenPassword,
         type: 'unprotected',

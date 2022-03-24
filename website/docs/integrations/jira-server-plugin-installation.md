@@ -10,6 +10,19 @@ existing toggles to Jira issues.
 
 The plugin also shows you current status of connected toggles.
 
+## Prerequisites
+
+### Jira
+
+- [Jira **data center**](https://www.atlassian.com/enterprise/data-center/jira), v8.0 or higher
+
+We do not support Jira Cloud at the moment.
+
+### Unleash
+
+- Unleash v4 or higher
+- Unleash Pro or Unleash Enterprise license
+
 ## Required access levels
 
 ### Unleash
@@ -22,37 +35,10 @@ You will need a Jira admin user.
 
 ## Installation
 
-The Jira server plugin is currently not listed on the Atlassian marketplace.
+The [Jira server plugin is available in the Atlassian marketplace](https://marketplace.atlassian.com/apps/1227377/unleash-for-jira?tab=overview&hosting=datacenter).
 
-To get access to the Jira plugin, please reach out to sales@getunleash.io.
 
-You will receive a dedicated link that will allow you to download the Unleash Jira server plugin.
-
-Once you've downloaded the plugin artifact, you'll need to click the Manage Apps link in Jira's administration menu
-
-![Jira Manage Apps](/img/jira_server_manage_apps.png)
-
-This will take you to Atlassian's marketplace for Jira apps.
-
-From here, click the "Manage apps" link in the left-hand menu
-
-![Jira Marketplace - Manage apps](/img/jira_marketplace_manage_apps.png)
-
-Now, click "Upload app"
-
-![Jira Manage Apps - Upload App](/img/jira_upload_app.png)
-
-This will prompt you to select the plugin artifact for upload.
-
-![Jira Manage Apps - Browse](/img/jira_upload_app_dialog.png)
-
-Once you've selected your file and clicked "Upload". Jira will install the plugin, and you should get a nice status screen saying that it successfully installed.
-
-![Jira Manage Apps - Successful install](/img/jira_server_installed_ready_to_go.png)
-
-You can now move on to [Configuring the plugin](#configure-plugin)
-
-## Configuring plugin {#configure-plugin}
+## Configuring the plugin {#configure-plugin}
 
 After the plugin is installed. Jira's Manage Apps page will have a new menu section called "Unleash Admin" with a single
 link - "Configure servers".

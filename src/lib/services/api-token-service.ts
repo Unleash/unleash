@@ -9,14 +9,18 @@ import {
     IApiToken,
     IApiTokenCreate,
     validateApiToken,
+    validateApiTokenEnvironment,
 } from '../types/models/api-token';
 import { IApiTokenStore } from '../types/stores/api-token-store';
 import { FOREIGN_KEY_VIOLATION } from '../error/db-error';
 import BadDataError from '../error/bad-data-error';
 import { minutesToMilliseconds } from 'date-fns';
+import { IEnvironmentStore } from 'lib/types/stores/environment-store';
 
 export class ApiTokenService {
     private store: IApiTokenStore;
+
+    private environmentStore: IEnvironmentStore;
 
     private logger: Logger;
 
@@ -25,10 +29,14 @@ export class ApiTokenService {
     private activeTokens: IApiToken[] = [];
 
     constructor(
-        { apiTokenStore }: Pick<IUnleashStores, 'apiTokenStore'>,
+        {
+            apiTokenStore,
+            environmentStore,
+        }: Pick<IUnleashStores, 'apiTokenStore' | 'environmentStore'>,
         config: Pick<IUnleashConfig, 'getLogger' | 'authentication'>,
     ) {
         this.store = apiTokenStore;
+        this.environmentStore = environmentStore;
         this.logger = config.getLogger('/services/api-token-service.ts');
         this.fetchActiveTokens();
         this.timer = setInterval(
@@ -104,6 +112,9 @@ export class ApiTokenService {
         newToken: Omit<IApiTokenCreate, 'secret'>,
     ): Promise<IApiToken> {
         validateApiToken(newToken);
+
+        const environments = await this.environmentStore.getAll();
+        validateApiTokenEnvironment(newToken, environments);
 
         const secret = this.generateSecretKey(newToken);
         const createNewToken = { ...newToken, secret };

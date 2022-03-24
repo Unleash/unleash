@@ -4,12 +4,12 @@ import useToast from 'hooks/useToast';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { useStrategyForm } from '../hooks/useStrategyForm';
 import { StrategyForm } from '../StrategyForm/StrategyForm';
-import PermissionButton from 'component/common/PermissionButton/PermissionButton';
-import { CREATE_STRATEGY } from 'component/providers/AccessProvider/permissions';
+import { UPDATE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import useStrategiesApi from 'hooks/api/actions/useStrategiesApi/useStrategiesApi';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import { formatUnknownError } from 'utils/format-unknown-error';
 import useStrategy from 'hooks/api/getters/useStrategy/useStrategy';
+import { UpdateButton } from 'component/common/UpdateButton/UpdateButton';
 
 export const EditStrategy = () => {
     const { setToastData, setToastApiError } = useToast();
@@ -93,9 +93,7 @@ export const EditStrategy = () => {
                 setErrors={setErrors}
                 clearErrors={clearErrors}
             >
-                <PermissionButton permission={CREATE_STRATEGY} type="submit">
-                    Save
-                </PermissionButton>
+                <UpdateButton permission={UPDATE_STRATEGY} />
             </StrategyForm>
         </FormTemplate>
     );

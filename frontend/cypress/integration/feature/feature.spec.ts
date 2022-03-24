@@ -5,11 +5,12 @@ import { activeSplashIds } from '../../../src/component/splash/splash';
 
 const randomId = String(Math.random()).split('.')[1];
 const featureToggleName = `unleash-e2e-${randomId}`;
-const enterprise = Boolean(Cypress.env('ENTERPRISE'));
-const passwordAuth = Cypress.env('PASSWORD_AUTH');
-const authToken = Cypress.env('AUTH_TOKEN');
 const baseUrl = Cypress.config().baseUrl;
 let strategyId = '';
+
+const AUTH_USER = Cypress.env('AUTH_USER');
+const AUTH_PASSWORD = Cypress.env('AUTH_PASSWORD');
+const ENTERPRISE = Boolean(Cypress.env('ENTERPRISE'));
 
 describe('feature', () => {
     before(() => {
@@ -23,29 +24,24 @@ describe('feature', () => {
         cy.request({
             method: 'DELETE',
             url: `${baseUrl}/api/admin/features/${featureToggleName}`,
-            headers: { Authorization: authToken },
         });
         cy.request({
             method: 'DELETE',
             url: `${baseUrl}/api/admin/archive/${featureToggleName}`,
-            headers: { Authorization: authToken },
         });
     });
 
     beforeEach(() => {
         disableFeatureStrategiesProductionGuard();
         cy.visit('/');
+        cy.get('[data-test="LOGIN_EMAIL_ID"]').type(AUTH_USER);
 
-        if (passwordAuth) {
-            cy.get('[data-test="LOGIN_EMAIL_ID"]').type('test@test.com');
-            cy.get('[data-test="LOGIN_PASSWORD_ID"]').type('qY70$NDcJNXA');
-            cy.get("[data-test='LOGIN_BUTTON']").click();
-        } else {
-            cy.get('[data-test=LOGIN_EMAIL_ID]').type('test@unleash-e2e.com');
-            cy.get('[data-test=LOGIN_BUTTON]').click();
+        if (AUTH_PASSWORD) {
+            cy.get('[data-test="LOGIN_PASSWORD_ID"]').type(AUTH_PASSWORD);
         }
 
-        // Wait for the login redirects to complete.
+        cy.get("[data-test='LOGIN_BUTTON']").click();
+        // Wait for the login redirect to complete.
         cy.get('[data-test=HEADER_USER_AVATAR');
     });
 
@@ -107,7 +103,7 @@ describe('feature', () => {
             .click()
             .type('{leftarrow}'.repeat(20));
 
-        if (enterprise) {
+        if (ENTERPRISE) {
             cy.get('[data-test=ADD_CONSTRAINT_ID]').click();
             cy.get('[data-test=CONSTRAINT_AUTOCOMPLETE_ID]')
                 .type('{downArrow}'.repeat(1))
@@ -124,7 +120,7 @@ describe('feature', () => {
                 expect(req.body.parameters.stickiness).to.equal('default');
                 expect(req.body.parameters.rollout).to.equal('30');
 
-                if (enterprise) {
+                if (ENTERPRISE) {
                     expect(req.body.constraints.length).to.equal(1);
                 } else {
                     expect(req.body.constraints.length).to.equal(0);
@@ -170,7 +166,7 @@ describe('feature', () => {
                 expect(req.body.parameters.stickiness).to.equal('sessionId');
                 expect(req.body.parameters.rollout).to.equal('60');
 
-                if (enterprise) {
+                if (ENTERPRISE) {
                     expect(req.body.constraints.length).to.equal(1);
                 } else {
                     expect(req.body.constraints.length).to.equal(0);
@@ -210,7 +206,7 @@ describe('feature', () => {
             `/projects/default/features/${featureToggleName}/strategies/create?environmentId=development&strategyName=userWithId`
         );
 
-        if (enterprise) {
+        if (ENTERPRISE) {
             cy.get('[data-test=ADD_CONSTRAINT_ID]').click();
             cy.get('[data-test=CONSTRAINT_AUTOCOMPLETE_ID]')
                 .type('{downArrow}'.repeat(1))
@@ -233,7 +229,7 @@ describe('feature', () => {
 
                 expect(req.body.parameters.userIds.length).to.equal(11);
 
-                if (enterprise) {
+                if (ENTERPRISE) {
                     expect(req.body.constraints.length).to.equal(1);
                 } else {
                     expect(req.body.constraints.length).to.equal(0);

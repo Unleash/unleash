@@ -1,7 +1,6 @@
 /// <reference types="cypress" />
 
-const username = 'test@test.com';
-const password = 'qY70$NDcJNXA';
+export {};
 
 describe('auth', () => {
     it('renders the password login', () => {
@@ -15,17 +14,16 @@ describe('auth', () => {
                 type: 'password',
             },
         });
+
         cy.visit('/');
 
         cy.intercept('POST', '/auth/simple/login', req => {
-            expect(req.body.username).to.equal(username);
-            expect(req.body.password).to.equal(password);
+            expect(req.body.username).to.equal('admin');
+            expect(req.body.password).to.equal('unleash4all');
         }).as('passwordLogin');
 
-        cy.get('[data-test="LOGIN_EMAIL_ID"]').type(username);
-
-        cy.get('[data-test="LOGIN_PASSWORD_ID"]').type(password);
-
+        cy.get('[data-test="LOGIN_EMAIL_ID"]').type('admin');
+        cy.get('[data-test="LOGIN_PASSWORD_ID"]').type('unleash4all');
         cy.get("[data-test='LOGIN_BUTTON']").click();
     });
 
@@ -40,15 +38,15 @@ describe('auth', () => {
                 type: 'password',
             },
         });
+
         cy.visit('/');
-
         cy.get('[data-test="LOGIN_EMAIL_ID"]').should('not.exist');
-
         cy.get('[data-test="LOGIN_PASSWORD_ID"]').should('not.exist');
     });
 
     it('renders google auth when options are specified', () => {
         const ssoPath = '/auth/google/login';
+
         cy.intercept('GET', '/api/admin/user', {
             statusCode: 401,
             body: {
@@ -77,6 +75,7 @@ describe('auth', () => {
 
     it('renders oidc auth when options are specified', () => {
         const ssoPath = '/auth/oidc/login';
+
         cy.intercept('GET', '/api/admin/user', {
             statusCode: 401,
             body: {
@@ -105,6 +104,7 @@ describe('auth', () => {
 
     it('renders saml auth when options are specified', () => {
         const ssoPath = '/auth/saml/login';
+
         cy.intercept('GET', '/api/admin/user', {
             statusCode: 401,
             body: {
@@ -149,6 +149,7 @@ describe('auth', () => {
 
     it('renders demo auth correctly', () => {
         const email = 'hello@hello.com';
+
         cy.intercept('GET', '/api/admin/user', {
             statusCode: 401,
             body: {
@@ -171,6 +172,7 @@ describe('auth', () => {
 
     it('renders email auth correctly', () => {
         const email = 'hello@hello.com';
+
         cy.intercept('GET', '/api/admin/user', {
             statusCode: 401,
             body: {

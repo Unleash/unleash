@@ -17,7 +17,7 @@ jobs:
       - name: Run Cypress
         uses: cypress-io/github-action@v2
         with:
-          env: AUTH_TOKEN=${{ secrets.UNLEASH_TOKEN }}
+          env: AUTH_USER=test@unleash-e2e.com
           config: baseUrl=${{ github.event.deployment_status.target_url }}
           record: true
           spec: cypress/integration/feature/feature.spec.ts

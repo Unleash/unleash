@@ -25,8 +25,10 @@ import IRole from '../../../../interfaces/role';
 import useToast from '../../../../hooks/useToast';
 import { useLocationSettings } from '../../../../hooks/useLocationSettings';
 import { formatUnknownError } from '../../../../utils/format-unknown-error';
+import { useStyles } from './UserListItem/UserListItem.styles';
 
 const UsersList = () => {
+    const styles = useStyles();
     const { users, roles, refetch, loading } = useUsers();
     const { setToastData, setToastApiError } = useToast();
     const {
@@ -133,13 +135,17 @@ const UsersList = () => {
             <Table>
                 <TableHead>
                     <TableRow>
-                        <TableCell></TableCell>
-                        <TableCell>Created</TableCell>
+                        <TableCell className={styles.hideXS}></TableCell>
+                        <TableCell className={styles.hideSM}>Created</TableCell>
                         <TableCell>Name</TableCell>
-                        <TableCell>Username</TableCell>
-                        <TableCell align="center">Role</TableCell>
+                        <TableCell className={styles.hideSM}>
+                            Username
+                        </TableCell>
+                        <TableCell align="center" className={styles.hideXS}>
+                            Role
+                        </TableCell>
                         <TableCell align="right">
-                            {hasAccess(ADMIN) ? 'Action' : ''}
+                            {hasAccess(ADMIN) ? 'Actions' : ''}
                         </TableCell>
                     </TableRow>
                 </TableHead>

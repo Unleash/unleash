@@ -37,7 +37,7 @@ const UserListItem = ({
 
     return (
         <TableRow key={user.id} className={styles.tableRow}>
-            <TableCell>
+            <TableCell className={styles.hideXS}>
                 <Avatar
                     data-loading
                     alt={user.name}
@@ -47,7 +47,7 @@ const UserListItem = ({
                     })`}
                 />
             </TableCell>
-            <TableCell>
+            <TableCell className={styles.hideSM}>
                 <span data-loading>
                     {formatDateYMD(user.createdAt, locationSettings.locale)}
                 </span>
@@ -57,12 +57,12 @@ const UserListItem = ({
                     {user.name}
                 </Typography>
             </TableCell>
-            <TableCell className={styles.leftTableCell}>
+            <TableCell className={`${styles.leftTableCell} ${styles.hideSM}`}>
                 <Typography variant="body2" data-loading>
                     {user.username || user.email}
                 </Typography>
             </TableCell>
-            <TableCell align="center">
+            <TableCell align="center" className={styles.hideXS}>
                 <Typography variant="body2" data-loading>
                     {renderRole(user.rootRole)}
                 </Typography>

@@ -33,7 +33,7 @@ const RoleListItem = ({
     return (
         <>
             <TableRow className={styles.tableRow}>
-                <TableCell>
+                <TableCell className={styles.hideXS}>
                     <SupervisedUserCircleIcon className={styles.icon} />
                 </TableCell>
                 <TableCell className={styles.leftTableCell}>
@@ -41,7 +41,7 @@ const RoleListItem = ({
                         {name}
                     </Typography>
                 </TableCell>
-                <TableCell className={styles.leftTableCell}>
+                <TableCell className={styles.description}>
                     <Typography variant="body2" data-loading>
                         {description}
                     </Typography>

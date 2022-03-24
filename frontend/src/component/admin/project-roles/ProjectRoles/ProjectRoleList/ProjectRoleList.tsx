@@ -17,12 +17,14 @@ import useProjectRolesApi from '../../../../../hooks/api/actions/useProjectRoles
 import useToast from '../../../../../hooks/useToast';
 import ProjectRoleDeleteConfirm from '../ProjectRoleDeleteConfirm/ProjectRoleDeleteConfirm';
 import { formatUnknownError } from '../../../../../utils/format-unknown-error';
+import { useStyles } from './ProjectRoleListItem/ProjectRoleListItem.styles';
 
 const ROOTROLE = 'root';
 
 const ProjectRoleList = () => {
     const { hasAccess } = useContext(AccessContext);
     const { roles } = useProjectRoles();
+    const styles = useStyles();
 
     const paginationFilter = (role: IRole) => role?.type !== ROOTROLE;
 
@@ -76,9 +78,11 @@ const ProjectRoleList = () => {
             <Table>
                 <TableHead>
                     <TableRow>
-                        <TableCell></TableCell>
+                        <TableCell className={styles.hideXS}></TableCell>
                         <TableCell>Project Role</TableCell>
-                        <TableCell>Description</TableCell>
+                        <TableCell className={styles.hideSM}>
+                            Description
+                        </TableCell>
                         <TableCell align="right">
                             {hasAccess(ADMIN) ? 'Action' : ''}
                         </TableCell>

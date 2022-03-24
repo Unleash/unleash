@@ -13,4 +13,21 @@ export const useStyles = makeStyles(theme => ({
     icon: {
         color: theme.palette.grey[600],
     },
+    description: {
+        textAlign: 'left',
+        maxWidth: '300px',
+        [theme.breakpoints.down('sm')]: {
+            display: 'none',
+        },
+    },
+    hideSM: {
+        [theme.breakpoints.down('sm')]: {
+            display: 'none',
+        },
+    },
+    hideXS: {
+        [theme.breakpoints.down('xs')]: {
+            display: 'none',
+        },
+    },
 }));

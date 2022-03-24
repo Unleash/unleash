@@ -9,4 +9,14 @@ export const useStyles = makeStyles(theme => ({
     leftTableCell: {
         textAlign: 'left',
     },
+    hideSM: {
+        [theme.breakpoints.down('sm')]: {
+            display: 'none',
+        },
+    },
+    hideXS: {
+        [theme.breakpoints.down('xs')]: {
+            display: 'none',
+        },
+    },
 }));

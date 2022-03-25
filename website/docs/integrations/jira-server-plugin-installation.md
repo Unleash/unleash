@@ -48,7 +48,7 @@ On the Manage apps page, use the "upload app" button.
 
 This will prompt you to select the plugin file you downloaded in the previous steps for upload.
 
-Once you've selected your file and clicked "Upload". Jira will install the plugin, and you should get a nice status screen saying that it successfully installed.
+Once you've selected your file and started the upload, Jira will install the plugin. If the installation is successful, you'll get a status screen saying that it successfully installed.
 
 ![Jira Manage Apps - Successful install](/img/jira_server_installed_ready_to_go.png)
 

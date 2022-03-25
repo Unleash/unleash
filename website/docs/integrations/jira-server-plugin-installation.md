@@ -10,6 +10,18 @@ existing toggles to Jira issues.
 
 The plugin also shows you current status of connected toggles.
 
+## Prerequisites
+
+### Jira
+
+- [Jira **data center**](https://www.atlassian.com/enterprise/data-center/jira), v8.0 or higher
+
+We do not support Jira Cloud at the moment.
+
+### Unleash
+
+- Unleash v4 or higher
+
 ## Required access levels
 
 ### Unleash
@@ -22,48 +34,36 @@ You will need a Jira admin user.
 
 ## Installation
 
-The Jira server plugin is currently not listed on the Atlassian marketplace.
+The [Jira server plugin is available in the Atlassian marketplace](https://marketplace.atlassian.com/apps/1227377/unleash-for-jira?tab=overview&hosting=datacenter).
 
-To get access to the Jira plugin, please reach out to sales@getunleash.io.
+You'll need to download the plugin and create a license key.
 
-You will receive a dedicated link that will allow you to download the Unleash Jira server plugin.
+If you have an Unleash enterprise license you're welcome to reach out to us at sales@getunleash.io for a free plugin license, otherwise you'll need to try the plugin for 30 days free or purchase a license through the marketplace.
 
-Once you've downloaded the plugin artifact, you'll need to click the Manage Apps link in Jira's administration menu
+Once you've downloaded the plugin artifact, you'll need to follow the Manage apps link in Jira's administration menu.
 
-![Jira Manage Apps](/img/jira_server_manage_apps.png)
+On the Manage apps page, use the "upload app" button.
 
-This will take you to Atlassian's marketplace for Jira apps.
+![The Jira "manage apps" page. The "upload app" button is visually highlighted.](/img/jira_upload_app.png)
 
-From here, click the "Manage apps" link in the left-hand menu
+This will prompt you to select the plugin file you downloaded in the previous steps for upload.
 
-![Jira Marketplace - Manage apps](/img/jira_marketplace_manage_apps.png)
+Once you've selected your file and started the upload, Jira will install the plugin. If the installation is successful, you'll get a status screen saying that it successfully installed.
 
-Now, click "Upload app"
+![The successful install screen mentioned in the preceding paragraph.](/img/jira_server_installed_ready_to_go.png)
 
-![Jira Manage Apps - Upload App](/img/jira_upload_app.png)
-
-This will prompt you to select the plugin artifact for upload.
-
-![Jira Manage Apps - Browse](/img/jira_upload_app_dialog.png)
-
-Once you've selected your file and clicked "Upload". Jira will install the plugin, and you should get a nice status screen saying that it successfully installed.
-
-![Jira Manage Apps - Successful install](/img/jira_server_installed_ready_to_go.png)
-
-You can now move on to [Configuring the plugin](#configure-plugin)
-
-## Configuring plugin {#configure-plugin}
+## Configuring the plugin {#configure-plugin}
 
 After the plugin is installed. Jira's Manage Apps page will have a new menu section called "Unleash Admin" with a single
 link - "Configure servers".
 
-![Jira Manage Apps - Unleash Admin](/img/jira_server_manage_unleash_admin.png)
+![The "configure servers" link highlighted in the Manage Apps menu.](/img/jira_server_manage_unleash_admin.png)
 
 Following the "Configure servers" link will take you to a config page where you can setup your connection(s) to Unleash
 servers. The Unleash Jira server plugin supports having a global server configured for all Jira projects, or a specific
 server configured for a specific Jira project.
 
-![Jira Manage Apps - Unleash Server Admin](/img/jira_server_manage_servers.png)
+![A table marked Unleash Server Configuration, listing Unleash server instances.](/img/jira_server_manage_servers.png)
 
 Once you have configured at least one Unleash server, your users should be ready to [use the Jira Server plugin](/integrations/jira_server_plugin_usage)
 
@@ -72,7 +72,7 @@ Once you have configured at least one Unleash server, your users should be ready
 In the list of known servers, each server has a connected edit button. Clicking the edit button brings up the edit
 dialog for the server, allowing you to change the details for the selected server
 
-![Jira Manage Apps - Edit server](/img/jira_server_edit_server.png)
+![An "editing server" form. The fields are "JIRA project", "Name", "Api URL", "Api Key"](/img/jira_server_edit_server.png)
 
 
 ### Delete (disconnect) existing servers
@@ -81,9 +81,9 @@ Deleting a server from the admin interface does not actually delete the server, 
 server.
 Since this is a destructive operation, our plugin will ask for confirmation that you're sure you want to do this.
 
-![Jira Manage apps - Delete server confirmation](/img/jira_server_delete_server_confirmation.png)
+![A plugin deletion confirmation dialog. It gives you two options: "Delete connection", and "Cancel".](/img/jira_server_delete_server_confirmation.png)
 
-You will not be allowed to delete a server that has toggles connected to issues, instead you'll receive a
+You cannot delete a server that has toggles connected to issues. Instead, you'll get a
 warning dialog telling you that you'll need to disconnect the toggles from their issues first.
 
-![Jira Manage apps - Delete server connected toggles](/img/jira_server_delete_connected_toggles.png)
+![A warning dialog telling you that you can't delete a server.](/img/jira_server_delete_connected_toggles.png)

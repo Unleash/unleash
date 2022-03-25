@@ -2,7 +2,7 @@ config:
   target: "http://localhost:4242"
   defaults:
     headers:
-      authorization: "{{ $processEnvironment.AUTH_KEY }}"
+      authorization: "{{ $processEnvironment.PERF_AUTH_KEY }}"
   phases:
     - duration: 60
       arrivalRate: 10

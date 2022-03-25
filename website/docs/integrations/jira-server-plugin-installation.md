@@ -44,7 +44,7 @@ Once you've downloaded the plugin artifact, you'll need to follow the Manage app
 
 On the Manage apps page, use the "upload app" button.
 
-![Jira Manage Apps - Upload App](/img/jira_upload_app.png)
+![The Jira "manage apps" page. The "upload app" button is visually highlighted.](/img/jira_upload_app.png)
 
 This will prompt you to select the plugin file you downloaded in the previous steps for upload.
 

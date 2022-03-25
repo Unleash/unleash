@@ -21,7 +21,6 @@ We do not support Jira Cloud at the moment.
 ### Unleash
 
 - Unleash v4 or higher
-- Unleash Pro or Unleash Enterprise license
 
 ## Required access levels
 
@@ -37,6 +36,19 @@ You will need a Jira admin user.
 
 The [Jira server plugin is available in the Atlassian marketplace](https://marketplace.atlassian.com/apps/1227377/unleash-for-jira?tab=overview&hosting=datacenter).
 
+You'll need to download the plugin and create a license key.
+
+If you have an Unleash enterprise license you're welcome to reach out to us at sales@getunleash.io for a free plugin license, otherwise you'll need to try the plugin for 30 days free or purchase a license through the marketplace.
+
+Once you've downloaded the plugin artifact, you'll need to click the Manage Apps link in Jira's administration menu.
+
+![Jira Manage Apps - Upload App](/img/jira_upload_app.png)
+
+This will prompt you to select the plugin file you downloaded in the previous steps for upload.
+
+Once you've selected your file and clicked "Upload". Jira will install the plugin, and you should get a nice status screen saying that it successfully installed.
+
+![Jira Manage Apps - Successful install](/img/jira_server_installed_ready_to_go.png)
 
 ## Configuring the plugin {#configure-plugin}
 

@@ -4,7 +4,7 @@ import { useStyles } from './FeatureStrategyMenuCard.styles';
 import {
     getFeatureStrategyIcon,
     formatStrategyName,
-} from 'utils/strategy-names';
+} from 'utils/strategyNames';
 import { formatCreateStrategyPath } from '../../FeatureStrategyCreate/FeatureStrategyCreate';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 

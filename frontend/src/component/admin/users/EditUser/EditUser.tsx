@@ -11,7 +11,7 @@ import useAdminUsersApi from 'hooks/api/actions/useAdminUsersApi/useAdminUsersAp
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useUserInfo from 'hooks/api/getters/useUserInfo/useUserInfo';
 import useToast from 'hooks/useToast';
-import { formatUnknownError } from 'utils/format-unknown-error';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 const EditUser = () => {
     useEffect(() => {

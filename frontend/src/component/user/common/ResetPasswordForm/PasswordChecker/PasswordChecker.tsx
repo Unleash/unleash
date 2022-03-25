@@ -5,7 +5,7 @@ import { BAD_REQUEST, OK } from '../../../../../constants/statusCodes';
 import { useStyles } from './PasswordChecker.styles';
 import HelpIcon from '@material-ui/icons/Help';
 import { useCallback } from 'react';
-import { formatApiPath } from '../../../../../utils/format-path';
+import { formatApiPath } from 'utils/formatPath';
 import { Alert } from '@material-ui/lab';
 import ConditionallyRender from '../../../../common/ConditionallyRender';
 

@@ -8,7 +8,7 @@ import useContextsApi from 'hooks/api/actions/useContextsApi/useContextsApi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import useToast from 'hooks/useToast';
-import { formatUnknownError } from 'utils/format-unknown-error';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 export const CreateContext = () => {
     const { setToastData, setToastApiError } = useToast();

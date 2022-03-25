@@ -24,8 +24,8 @@ import { useHistory, useParams } from 'react-router-dom';
 import { useLocationSettings } from '../../../hooks/useLocationSettings';
 import useToast from '../../../hooks/useToast';
 import PermissionButton from '../../common/PermissionButton/PermissionButton';
-import { formatDateYMD } from '../../../utils/format-date';
-import { formatUnknownError } from '../../../utils/format-unknown-error';
+import { formatDateYMD } from 'utils/formatDate';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 export const ApplicationEdit = () => {
     const history = useHistory();

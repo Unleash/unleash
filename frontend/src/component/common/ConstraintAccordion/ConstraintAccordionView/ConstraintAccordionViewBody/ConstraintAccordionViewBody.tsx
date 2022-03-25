@@ -4,7 +4,7 @@ import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { useState } from 'react';
 import { stringOperators } from '../../../../../constants/operators';
 import { IConstraint } from '../../../../../interfaces/strategy';
-import { oneOf } from '../../../../../utils/one-of';
+import { oneOf } from 'utils/oneOf';
 import ConditionallyRender from '../../../ConditionallyRender';
 import { useStyles } from '../../ConstraintAccordion.styles';
 import { ConstraintValueSearch } from '../../ConstraintValueSearch/ConstraintValueSearch';

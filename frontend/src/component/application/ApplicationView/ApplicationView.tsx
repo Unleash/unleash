@@ -20,10 +20,10 @@ import {
     CREATE_STRATEGY,
 } from '../../providers/AccessProvider/permissions';
 import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyRender';
-import { getTogglePath } from '../../../utils/route-path-helpers';
+import { getTogglePath } from 'utils/routePathHelpers';
 import useApplication from '../../../hooks/api/getters/useApplication/useApplication';
 import AccessContext from '../../../contexts/AccessContext';
-import { formatDateYMDHMS } from '../../../utils/format-date';
+import { formatDateYMDHMS } from 'utils/formatDate';
 import { useLocationSettings } from '../../../hooks/useLocationSettings';
 
 export const ApplicationView = () => {

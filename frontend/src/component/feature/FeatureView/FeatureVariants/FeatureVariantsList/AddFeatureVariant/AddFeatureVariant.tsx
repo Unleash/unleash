@@ -24,7 +24,7 @@ import cloneDeep from 'lodash.clonedeep';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { useStyles } from './AddFeatureVariant.styles';
 import Input from 'component/common/Input/Input';
-import { formatUnknownError } from 'utils/format-unknown-error';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 const payloadOptions = [
     { key: 'string', label: 'string' },

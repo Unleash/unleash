@@ -7,7 +7,7 @@ import { StrategyForm } from '../StrategyForm/StrategyForm';
 import { CREATE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import useStrategiesApi from 'hooks/api/actions/useStrategiesApi/useStrategiesApi';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
-import { formatUnknownError } from 'utils/format-unknown-error';
+import { formatUnknownError } from 'utils/formatUnknownError';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 
 export const CreateStrategy = () => {

@@ -1,4 +1,4 @@
-import { getBasePath } from '../utils/format-path';
+import { getBasePath } from 'utils/formatPath';
 import { createPersistentGlobalStateHook } from './usePersistentGlobalState';
 import React from 'react';
 

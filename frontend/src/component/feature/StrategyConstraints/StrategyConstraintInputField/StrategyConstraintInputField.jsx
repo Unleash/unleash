@@ -4,7 +4,7 @@ import { IconButton, TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import { Delete } from '@material-ui/icons';
 
-import InputListField from '../../../common/input-list-field';
+import InputListField from '../../../common/InputListField';
 import ConditionallyRender from '../../../common/ConditionallyRender/ConditionallyRender';
 import { useCommonStyles } from '../../../../common.styles';
 import { useStyles } from './StrategyConstraintInputField.styles';

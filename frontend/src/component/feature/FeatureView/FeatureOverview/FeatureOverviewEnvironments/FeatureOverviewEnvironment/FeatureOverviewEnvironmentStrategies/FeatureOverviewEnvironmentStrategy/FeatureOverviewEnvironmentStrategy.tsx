@@ -6,7 +6,7 @@ import { IFeatureStrategy } from '../../../../../../../../interfaces/strategy';
 import {
     getFeatureStrategyIcon,
     formatStrategyName,
-} from '../../../../../../../../utils/strategy-names';
+} from 'utils/strategyNames';
 import PermissionIconButton from '../../../../../../../common/PermissionIconButton/PermissionIconButton';
 import { UPDATE_FEATURE_STRATEGY } from '../../../../../../../providers/AccessProvider/permissions';
 import FeatureOverviewExecution from '../../../../FeatureOverviewExecution/FeatureOverviewExecution';

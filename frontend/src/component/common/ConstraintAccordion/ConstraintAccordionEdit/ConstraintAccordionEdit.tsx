@@ -12,7 +12,7 @@ import {
 import { cleanConstraint } from 'utils/cleanConstraint';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
-import { formatUnknownError } from 'utils/format-unknown-error';
+import { formatUnknownError } from 'utils/formatUnknownError';
 import { useParams } from 'react-router-dom';
 import { IFeatureViewParams } from 'interfaces/params';
 import { IUnleashContextDefinition } from 'interfaces/context';

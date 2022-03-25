@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFeatureStrategyApi';
-import { formatUnknownError } from 'utils/format-unknown-error';
+import { formatUnknownError } from 'utils/formatUnknownError';
 import { useHistory } from 'react-router-dom';
 import useToast from 'hooks/useToast';
 import { formatFeaturePath } from '../FeatureStrategyEdit/FeatureStrategyEdit';

@@ -5,7 +5,7 @@ import PageContent from '../../common/PageContent/PageContent';
 import HeaderTitle from '../../common/HeaderTitle';
 import EventCard from './EventCard/EventCard';
 import { useStyles } from './EventLog.styles.js';
-import { formatDateYMDHMS } from '../../../utils/format-date';
+import { formatDateYMDHMS } from '../../../utils/formatDate';
 
 const EventLog = ({
     title,

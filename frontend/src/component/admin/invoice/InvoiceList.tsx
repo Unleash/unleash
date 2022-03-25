@@ -11,11 +11,11 @@ import OpenInNew from '@material-ui/icons/OpenInNew';
 import PageContent from '../../common/PageContent';
 import HeaderTitle from '../../common/HeaderTitle';
 import ConditionallyRender from '../../common/ConditionallyRender';
-import { formatApiPath } from '../../../utils/format-path';
+import { formatApiPath } from 'utils/formatPath';
 import useInvoices from '../../../hooks/api/getters/useInvoices/useInvoices';
 import { IInvoice } from '../../../interfaces/invoice';
 import { useLocationSettings } from '../../../hooks/useLocationSettings';
-import { formatDateYMD } from '../../../utils/format-date';
+import { formatDateYMD } from 'utils/formatDate';
 
 const PORTAL_URL = formatApiPath('api/admin/invoices/portal');
 

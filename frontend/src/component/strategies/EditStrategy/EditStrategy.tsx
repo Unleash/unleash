@@ -7,7 +7,7 @@ import { StrategyForm } from '../StrategyForm/StrategyForm';
 import { UPDATE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import useStrategiesApi from 'hooks/api/actions/useStrategiesApi/useStrategiesApi';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
-import { formatUnknownError } from 'utils/format-unknown-error';
+import { formatUnknownError } from 'utils/formatUnknownError';
 import useStrategy from 'hooks/api/getters/useStrategy/useStrategy';
 import { UpdateButton } from 'component/common/UpdateButton/UpdateButton';
 

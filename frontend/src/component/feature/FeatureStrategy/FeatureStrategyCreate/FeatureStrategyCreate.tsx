@@ -6,7 +6,7 @@ import { FeatureStrategyForm } from 'component/feature/FeatureStrategy/FeatureSt
 import FormTemplate from '../../../common/FormTemplate/FormTemplate';
 import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
 import useFeatureStrategyApi from '../../../../hooks/api/actions/useFeatureStrategyApi/useFeatureStrategyApi';
-import { formatUnknownError } from 'utils/format-unknown-error';
+import { formatUnknownError } from 'utils/formatUnknownError';
 import { useHistory } from 'react-router-dom';
 import useToast from '../../../../hooks/useToast';
 import { IFeatureStrategy } from 'interfaces/strategy';
@@ -16,7 +16,7 @@ import {
     formatFeaturePath,
     createStrategyPayload,
 } from '../FeatureStrategyEdit/FeatureStrategyEdit';
-import { getStrategyObject } from 'utils/get-strategy-object';
+import { getStrategyObject } from 'utils/getStrategyObject';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 

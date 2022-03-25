@@ -10,7 +10,7 @@ import { useState } from 'react';
 import { scrollToTop } from '../../../common/util';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
-import { formatUnknownError } from '../../../../utils/format-unknown-error';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 const CreateUser = () => {
     const { setToastApiError } = useToast();

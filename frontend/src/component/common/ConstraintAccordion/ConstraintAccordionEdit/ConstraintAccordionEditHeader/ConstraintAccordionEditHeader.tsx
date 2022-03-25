@@ -14,7 +14,7 @@ import {
 } from '../../../../../constants/operators';
 import { SAVE } from '../ConstraintAccordionEdit';
 import { resolveText } from './helpers';
-import { oneOf } from 'utils/one-of';
+import { oneOf } from 'utils/oneOf';
 import { useEffect } from 'react';
 import { Operator } from 'constants/operators';
 

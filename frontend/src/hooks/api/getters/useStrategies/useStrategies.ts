@@ -1,6 +1,6 @@
 import useSWR, { mutate } from 'swr';
 import { useCallback } from 'react';
-import { formatApiPath } from '../../../../utils/format-path';
+import { formatApiPath } from 'utils/formatPath';
 import { IStrategy } from '../../../../interfaces/strategy';
 import handleErrorResponses from '../httpErrorResponseHandler';
 

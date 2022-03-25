@@ -10,7 +10,7 @@ import {
 } from 'component/providers/AccessProvider/permissions';
 import { createEmptyConstraint } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints2/createEmptyConstraint';
 import { useWeakMap } from 'hooks/useWeakMap';
-import { objectId } from 'utils/object-id';
+import { objectId } from 'utils/objectId';
 import { useStyles } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints2/FeatureStrategyConstraints2.styles';
 
 interface IFeatureStrategyConstraints2Props {

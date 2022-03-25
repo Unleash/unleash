@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { getCreateTogglePath } from 'utils/route-path-helpers';
+import { getCreateTogglePath } from 'utils/routePathHelpers';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useStyles } from 'component/feature/FeatureView/FeatureNotFound/FeatureNotFound.styles';
 import { IFeatureViewParams } from 'interfaces/params';

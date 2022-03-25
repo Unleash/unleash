@@ -1,4 +1,4 @@
-import { formatApiPath } from '../../../../utils/format-path';
+import { formatApiPath } from 'utils/formatPath';
 import { useEffect, useState } from 'react';
 import useSWR, { mutate, SWRConfiguration } from 'swr';
 import { IFeatureMetrics } from '../../../../interfaces/featureToggle';

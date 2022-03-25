@@ -11,11 +11,11 @@ import { useFeature } from '../../../../../../hooks/api/getters/useFeature/useFe
 import useFeatureMetrics from '../../../../../../hooks/api/getters/useFeatureMetrics/useFeatureMetrics';
 import { IFeatureEnvironment } from '../../../../../../interfaces/featureToggle';
 import { IFeatureViewParams } from '../../../../../../interfaces/params';
-import { getFeatureMetrics } from '../../../../../../utils/get-feature-metrics';
+import { getFeatureMetrics } from 'utils/getFeatureMetrics';
 import {
     getFeatureStrategyIcon,
     formatStrategyName,
-} from '../../../../../../utils/strategy-names';
+} from 'utils/strategyNames';
 import ConditionallyRender from '../../../../../common/ConditionallyRender';
 import DisabledIndicator from '../../../../../common/DisabledIndicator/DisabledIndicator';
 import EnvironmentIcon from '../../../../../common/EnvironmentIcon/EnvironmentIcon';

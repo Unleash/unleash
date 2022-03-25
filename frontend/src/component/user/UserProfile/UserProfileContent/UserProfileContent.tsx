@@ -15,7 +15,7 @@ import { useCommonStyles } from '../../../../common.styles';
 import { Alert } from '@material-ui/lab';
 import EditProfile from '../EditProfile/EditProfile';
 import legacyStyles from '../../user.module.scss';
-import { getBasePath } from '../../../../utils/format-path';
+import { getBasePath } from 'utils/formatPath';
 import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
 import { IUser } from '../../../../interfaces/user';
 import { ILocationSettings } from '../../../../hooks/useLocationSettings';

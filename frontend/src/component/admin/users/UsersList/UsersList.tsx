@@ -24,7 +24,7 @@ import { IUser } from '../../../../interfaces/user';
 import IRole from '../../../../interfaces/role';
 import useToast from '../../../../hooks/useToast';
 import { useLocationSettings } from '../../../../hooks/useLocationSettings';
-import { formatUnknownError } from '../../../../utils/format-unknown-error';
+import { formatUnknownError } from 'utils/formatUnknownError';
 import { useStyles } from './UserListItem/UserListItem.styles';
 
 const UsersList = () => {

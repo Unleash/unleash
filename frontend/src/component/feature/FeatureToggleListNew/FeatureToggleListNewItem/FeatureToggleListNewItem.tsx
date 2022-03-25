@@ -5,7 +5,7 @@ import { useStyles } from '../FeatureToggleListNew.styles';
 import useToggleFeatureByEnv from '../../../../hooks/api/actions/useToggleFeatureByEnv/useToggleFeatureByEnv';
 import { IEnvironments } from '../../../../interfaces/featureToggle';
 import useToast from '../../../../hooks/useToast';
-import { getTogglePath } from '../../../../utils/route-path-helpers';
+import { getTogglePath } from 'utils/routePathHelpers';
 import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
 import FeatureStatus from '../../FeatureView/FeatureStatus/FeatureStatus';
 import FeatureType from '../../FeatureView/FeatureType/FeatureType';

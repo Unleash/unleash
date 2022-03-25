@@ -16,7 +16,7 @@ import { CREATE_FEATURE } from '../../providers/AccessProvider/permissions';
 import AccessContext from '../../../contexts/AccessContext';
 import { useStyles } from './styles';
 import ListPlaceholder from '../../common/ListPlaceholder/ListPlaceholder';
-import { getCreateTogglePath } from '../../../utils/route-path-helpers';
+import { getCreateTogglePath } from '../../../utils/routePathHelpers';
 import { NAVIGATE_TO_CREATE_FEATURE } from '../../../testIds';
 import { resolveFilteredProjectId } from '../../../hooks/useFeaturesFilter';
 

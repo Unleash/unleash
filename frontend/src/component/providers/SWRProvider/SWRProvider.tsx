@@ -1,7 +1,7 @@
 import { mutate, SWRConfig, useSWRConfig } from 'swr';
 import { useHistory } from 'react-router';
 import useToast from '../../../hooks/useToast';
-import { formatApiPath } from '../../../utils/format-path';
+import { formatApiPath } from 'utils/formatPath';
 import React from 'react';
 import { USER_ENDPOINT_PATH } from '../../../hooks/api/getters/useAuth/useAuthEndpoint';
 

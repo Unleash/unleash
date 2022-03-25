@@ -15,8 +15,8 @@ import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
 import useAuthSettingsApi from '../../../../hooks/api/actions/useAuthSettingsApi/useAuthSettingsApi';
 import useAuthSettings from '../../../../hooks/api/getters/useAuthSettings/useAuthSettings';
 import useToast from '../../../../hooks/useToast';
-import { formatUnknownError } from '../../../../utils/format-unknown-error';
-import { removeEmptyStringFields } from '../../../../utils/remove-empty-string-fields';
+import { formatUnknownError } from 'utils/formatUnknownError';
+import { removeEmptyStringFields } from 'utils/removeEmptyStringFields';
 
 const initialState = {
     enabled: false,

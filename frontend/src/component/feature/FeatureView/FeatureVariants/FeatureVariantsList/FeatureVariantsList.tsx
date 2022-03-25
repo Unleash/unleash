@@ -29,7 +29,7 @@ import { updateWeight } from '../../../../common/util';
 import cloneDeep from 'lodash.clonedeep';
 import useDeleteVariantMarkup from './FeatureVariantsListItem/useDeleteVariantMarkup';
 import PermissionButton from '../../../../common/PermissionButton/PermissionButton';
-import { formatUnknownError } from '../../../../../utils/format-unknown-error';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 const FeatureOverviewVariants = () => {
     const { hasAccess } = useContext(AccessContext);

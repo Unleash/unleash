@@ -21,7 +21,7 @@ import AccessContext from '../../../../contexts/AccessContext';
 import { IAddon } from '../../../../interfaces/addons';
 import PermissionIconButton from '../../../common/PermissionIconButton/PermissionIconButton';
 import Dialogue from '../../../common/Dialogue';
-import { formatUnknownError } from '../../../../utils/format-unknown-error';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 interface IConfigureAddonsProps {
     getAddonIcon: (name: string) => ReactElement;

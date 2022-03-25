@@ -1,7 +1,7 @@
 import { IFeatureMetricsRaw } from '../../../../../interfaces/featureToggle';
 import { ChartData } from 'chart.js';
 import { ILocationSettings } from '../../../../../hooks/useLocationSettings';
-import theme from '../../../../../themes/main-theme';
+import theme from 'themes/mainTheme';
 import 'chartjs-adapter-date-fns';
 
 interface IPoint {

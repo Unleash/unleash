@@ -2,8 +2,8 @@ import { ILocationSettings } from '../../../../../hooks/useLocationSettings';
 import 'chartjs-adapter-date-fns';
 import { ChartOptions, defaults } from 'chart.js';
 import { IFeatureMetricsRaw } from '../../../../../interfaces/featureToggle';
-import theme from '../../../../../themes/main-theme';
-import { formatDateHM } from '../../../../../utils/format-date';
+import theme from 'themes/mainTheme';
+import { formatDateHM } from 'utils/formatDate';
 
 export const createChartOptions = (
     metrics: IFeatureMetricsRaw[],

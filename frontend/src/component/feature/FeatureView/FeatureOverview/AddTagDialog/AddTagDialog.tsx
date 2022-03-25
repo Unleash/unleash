@@ -10,7 +10,7 @@ import TagSelect from '../../../../common/TagSelect/TagSelect';
 import useFeatureApi from '../../../../../hooks/api/actions/useFeatureApi/useFeatureApi';
 import useTags from '../../../../../hooks/api/getters/useTags/useTags';
 import useToast from '../../../../../hooks/useToast';
-import { formatUnknownError } from '../../../../../utils/format-unknown-error';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 interface IAddTagDialogProps {
     open: boolean;

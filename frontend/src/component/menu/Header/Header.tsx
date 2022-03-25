@@ -9,7 +9,7 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import UserProfile from '../../user/UserProfile';
 import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyRender';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
-import { ReactComponent as UnleashLogo } from '../../../assets/img/logo-dark-with-text.svg';
+import { ReactComponent as UnleashLogo } from 'assets/img/logoDarkWithText.svg';
 
 import { useStyles } from './Header.styles';
 import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';

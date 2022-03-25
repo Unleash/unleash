@@ -31,11 +31,11 @@ import Dialogue from 'component/common/Dialogue';
 import { ADD_NEW_STRATEGY_ID } from 'testIds';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
-import { formatStrategyName } from 'utils/strategy-names';
+import { formatStrategyName } from 'utils/strategyNames';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import useStrategiesApi from 'hooks/api/actions/useStrategiesApi/useStrategiesApi';
 import useToast from 'hooks/useToast';
-import { formatUnknownError } from 'utils/format-unknown-error';
+import { formatUnknownError } from 'utils/formatUnknownError';
 import { ICustomStrategy } from 'interfaces/strategy';
 
 interface IDialogueMetaData {

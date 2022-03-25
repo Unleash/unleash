@@ -1,5 +1,5 @@
 import SimpleAuth from '../SimpleAuth/SimpleAuth';
-import AuthenticationCustomComponent from '../authentication-custom-component';
+import AuthenticationCustomComponent from 'component/user/AuthenticationCustomComponent';
 import PasswordAuth from '../PasswordAuth/PasswordAuth';
 import HostedAuth from '../HostedAuth/HostedAuth';
 import DemoAuth from '../DemoAuth/DemoAuth';

@@ -13,7 +13,7 @@ import PageContent from 'component/common/PageContent';
 import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
 import FeatureToggleListNew from 'component/feature/FeatureToggleListNew/FeatureToggleListNew';
 import { IFeatureToggleListItem } from 'interfaces/featureToggle';
-import { getCreateTogglePath } from 'utils/route-path-helpers';
+import { getCreateTogglePath } from 'utils/routePathHelpers';
 import { useStyles } from './ProjectFeatureToggles.styles';
 import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';

@@ -10,7 +10,7 @@ import { useContext } from 'react';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import UIContext from 'contexts/UIContext';
 import { CF_CREATE_BTN_ID } from 'testIds';
-import { formatUnknownError } from '../../../utils/format-unknown-error';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 const CreateFeature = () => {
     const { setToastData, setToastApiError } = useToast();

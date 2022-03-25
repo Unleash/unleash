@@ -7,7 +7,7 @@ import { useAuthApi } from '../../../hooks/api/actions/useAuthApi/useAuthApi';
 import { useAuthUser } from '../../../hooks/api/getters/useAuth/useAuthUser';
 import { LOGIN_BUTTON, LOGIN_EMAIL_ID } from '../../../testIds';
 import useToast from '../../../hooks/useToast';
-import { formatUnknownError } from '../../../utils/format-unknown-error';
+import { formatUnknownError } from '../../../utils/formatUnknownError';
 
 const SimpleAuth = ({ authDetails, redirect }) => {
     const [email, setEmail] = useState('');

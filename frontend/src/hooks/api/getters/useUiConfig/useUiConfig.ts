@@ -1,5 +1,5 @@
 import useSWR, { mutate, SWRConfiguration } from 'swr';
-import { formatApiPath } from '../../../../utils/format-path';
+import { formatApiPath } from 'utils/formatPath';
 import { defaultValue } from './defaultValue';
 import { IUiConfig } from '../../../../interfaces/uiConfig';
 import handleErrorResponses from '../httpErrorResponseHandler';

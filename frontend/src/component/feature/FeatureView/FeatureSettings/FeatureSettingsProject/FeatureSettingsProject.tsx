@@ -12,7 +12,7 @@ import FeatureProjectSelect from './FeatureProjectSelect/FeatureProjectSelect';
 import FeatureSettingsProjectConfirm from './FeatureSettingsProjectConfirm/FeatureSettingsProjectConfirm';
 import { IPermission } from '../../../../../interfaces/user';
 import { useAuthPermissions } from '../../../../../hooks/api/getters/useAuth/useAuthPermissions';
-import { formatUnknownError } from '../../../../../utils/format-unknown-error';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 const FeatureSettingsProject = () => {
     const { hasAccess } = useContext(AccessContext);

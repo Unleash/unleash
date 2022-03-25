@@ -3,7 +3,7 @@ import { IFeatureStrategy } from 'interfaces/strategy';
 import {
     getFeatureStrategyIcon,
     formatStrategyName,
-} from 'utils/strategy-names';
+} from 'utils/strategyNames';
 import { FeatureStrategyType } from '../FeatureStrategyType/FeatureStrategyType';
 import { FeatureStrategyEnabled } from '../FeatureStrategyEnabled/FeatureStrategyEnabled';
 import { FeatureStrategyConstraints } from '../FeatureStrategyConstraints/FeatureStrategyConstraints';

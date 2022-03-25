@@ -14,7 +14,7 @@ import { IUser } from '../../../../../interfaces/user';
 import { useStyles } from './UserListItem.styles';
 import { useHistory } from 'react-router-dom';
 import { ILocationSettings } from '../../../../../hooks/useLocationSettings';
-import { formatDateYMD } from '../../../../../utils/format-date';
+import { formatDateYMD } from 'utils/formatDate';
 
 interface IUserListItemProps {
     user: IUser;

@@ -9,7 +9,7 @@ import { IUnleashContextDefinition } from 'interfaces/context';
 import { IConstraint } from 'interfaces/strategy';
 import React, { useCallback, useEffect, useState } from 'react';
 import { exists } from 'utils/exists';
-import { oneOf } from 'utils/one-of';
+import { oneOf } from 'utils/oneOf';
 
 import {
     numberValidatorGenerator,

@@ -1,5 +1,5 @@
-import logo from '../../../assets/img/unleash_logo_icon_dark _ alpha.gif';
-import { formatAssetPath } from '../../../utils/format-path';
+import logo from 'assets/img/unleashLogoIconDarkAlpha.gif';
+import { formatAssetPath } from 'utils/formatPath';
 import { useStyles } from './Loader.styles';
 
 const Loader = () => {

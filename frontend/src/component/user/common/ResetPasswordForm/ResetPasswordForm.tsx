@@ -16,7 +16,7 @@ import ResetPasswordError from '../ResetPasswordError/ResetPasswordError';
 import PasswordChecker from './PasswordChecker/PasswordChecker';
 import PasswordMatcher from './PasswordMatcher/PasswordMatcher';
 import { useStyles } from './ResetPasswordForm.styles';
-import { formatApiPath } from '../../../../utils/format-path';
+import { formatApiPath } from 'utils/formatPath';
 import PasswordField from '../../../common/PasswordField/PasswordField';
 
 interface IResetPasswordProps {

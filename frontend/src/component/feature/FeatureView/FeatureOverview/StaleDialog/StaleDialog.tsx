@@ -7,7 +7,7 @@ import Dialogue from '../../../../common/Dialogue';
 import { useFeature } from '../../../../../hooks/api/getters/useFeature/useFeature';
 import React from 'react';
 import useToast from '../../../../../hooks/useToast';
-import { formatUnknownError } from '../../../../../utils/format-unknown-error';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 interface IStaleDialogProps {
     open: boolean;

@@ -1,6 +1,6 @@
 import { IFeatureToggle } from '../interfaces/featureToggle';
 import React, { useMemo } from 'react';
-import { getBasePath } from '../utils/format-path';
+import { getBasePath } from 'utils/formatPath';
 import { createPersistentGlobalStateHook } from './usePersistentGlobalState';
 
 type FeaturesSortType =

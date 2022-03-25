@@ -1,7 +1,7 @@
 import handleErrorResponses from '../httpErrorResponseHandler';
 import useSWR, { mutate, SWRConfiguration } from 'swr';
 import { useState, useEffect } from 'react';
-import { formatApiPath } from '../../../../utils/format-path';
+import { formatApiPath } from 'utils/formatPath';
 
 const useUiBootstrap = (options: SWRConfiguration = {}) => {
     // The point of the bootstrap is to get multiple datasets in one call. Therefore,

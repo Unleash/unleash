@@ -7,7 +7,7 @@ import { UPDATE_TAG_TYPE } from 'component/providers/AccessProvider/permissions'
 import useTagTypesApi from 'hooks/api/actions/useTagTypesApi/useTagTypesApi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
-import { formatUnknownError } from 'utils/format-unknown-error';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 const CreateTagType = () => {
     const { setToastData, setToastApiError } = useToast();

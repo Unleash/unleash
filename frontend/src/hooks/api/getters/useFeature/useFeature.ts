@@ -2,7 +2,7 @@ import useSWR, { mutate, SWRConfiguration } from 'swr';
 import { useCallback } from 'react';
 import { emptyFeature } from './emptyFeature';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import { formatApiPath } from 'utils/format-path';
+import { formatApiPath } from 'utils/formatPath';
 import { IFeatureToggle } from 'interfaces/featureToggle';
 
 interface IUseFeatureOutput {

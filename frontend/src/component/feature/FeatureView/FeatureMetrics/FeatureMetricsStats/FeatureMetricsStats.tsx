@@ -1,4 +1,4 @@
-import { calculatePercentage } from '../../../../../utils/calculate-percentage';
+import { calculatePercentage } from 'utils/calculatePercentage';
 import { useStyles } from './FeatureMetricsStats.styles';
 import { Grid } from '@material-ui/core';
 

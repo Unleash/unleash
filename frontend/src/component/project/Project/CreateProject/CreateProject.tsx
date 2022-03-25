@@ -8,7 +8,7 @@ import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
-import { formatUnknownError } from 'utils/format-unknown-error';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 const CreateProject = () => {
     const { setToastData, setToastApiError } = useToast();

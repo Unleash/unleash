@@ -7,7 +7,7 @@ import { Autocomplete } from '@material-ui/lab';
 import GeneralSelect from '../../../../../../common/GeneralSelect/GeneralSelect';
 import { useCommonStyles } from '../../../../../../../common.styles';
 import ConditionallyRender from '../../../../../../common/ConditionallyRender';
-import InputListField from '../../../../../../common/input-list-field.jsx';
+import InputListField from '../../../../../../common/InputListField.jsx';
 import useUnleashContext from '../../../../../../../hooks/api/getters/useUnleashContext/useUnleashContext';
 
 export const OverrideConfig = ({

@@ -26,7 +26,7 @@ import useTagTypesApi from '../../../hooks/api/actions/useTagTypesApi/useTagType
 import useTagTypes from '../../../hooks/api/getters/useTagTypes/useTagTypes';
 import useToast from '../../../hooks/useToast';
 import PermissionIconButton from '../../common/PermissionIconButton/PermissionIconButton';
-import { formatUnknownError } from '../../../utils/format-unknown-error';
+import { formatUnknownError } from '../../../utils/formatUnknownError';
 
 export const TagTypeList = () => {
     const { hasAccess } = useContext(AccessContext);

@@ -10,7 +10,7 @@ import {
 } from '@material-ui/core';
 import { useLocationSettings } from '../../../../../hooks/useLocationSettings';
 import { useMemo } from 'react';
-import { formatDateYMDHMS } from 'utils/format-date';
+import { formatDateYMDHMS } from 'utils/formatDate';
 
 export const FEATURE_METRICS_TABLE_ID = 'feature-metrics-table-id';
 

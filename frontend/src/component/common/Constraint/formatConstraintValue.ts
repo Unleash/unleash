@@ -1,6 +1,6 @@
 import { IConstraint } from 'interfaces/strategy';
 import { CURRENT_TIME_CONTEXT_FIELD } from 'component/common/ConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditHeader/ConstraintAccordionEditHeader';
-import { formatDateYMDHMS } from 'utils/format-date';
+import { formatDateYMDHMS } from 'utils/formatDate';
 import { ILocationSettings } from 'hooks/useLocationSettings';
 
 export const formatConstraintValuesOrValue = (

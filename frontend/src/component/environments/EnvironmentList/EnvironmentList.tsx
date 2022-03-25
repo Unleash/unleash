@@ -18,7 +18,7 @@ import EnvironmentToggleConfirm from './EnvironmentToggleConfirm/EnvironmentTogg
 import useProjectRolePermissions from '../../../hooks/api/getters/useProjectRolePermissions/useProjectRolePermissions';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { formatUnknownError } from '../../../utils/format-unknown-error';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 const EnvironmentList = () => {
     const defaultEnv = {

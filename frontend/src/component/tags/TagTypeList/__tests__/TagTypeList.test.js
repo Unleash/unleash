@@ -3,7 +3,7 @@ import { TagTypeList } from '../TagTypeList';
 import renderer from 'react-test-renderer';
 import { MemoryRouter } from 'react-router-dom';
 import { ThemeProvider } from '@material-ui/styles';
-import theme from '../../../../themes/main-theme';
+import theme from '../../../../themes/mainTheme';
 import AccessProvider from '../../../providers/AccessProvider/AccessProvider';
 import {
     ADMIN,

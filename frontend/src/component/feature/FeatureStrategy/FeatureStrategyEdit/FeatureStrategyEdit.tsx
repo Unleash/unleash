@@ -6,7 +6,7 @@ import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
 import { useRequiredQueryParam } from 'hooks/useRequiredQueryParam';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useFeatureStrategyApi from '../../../../hooks/api/actions/useFeatureStrategyApi/useFeatureStrategyApi';
-import { formatUnknownError } from 'utils/format-unknown-error';
+import { formatUnknownError } from 'utils/formatUnknownError';
 import { useHistory } from 'react-router-dom';
 import useToast from '../../../../hooks/useToast';
 import { IFeatureStrategy, IStrategyPayload } from 'interfaces/strategy';

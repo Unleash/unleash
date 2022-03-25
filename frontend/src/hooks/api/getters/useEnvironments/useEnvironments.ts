@@ -1,7 +1,7 @@
 import useSWR, { mutate } from 'swr';
 import { useCallback, useMemo } from 'react';
 import { IEnvironmentResponse } from 'interfaces/environments';
-import { formatApiPath } from 'utils/format-path';
+import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 
 const PATH = formatApiPath(`api/admin/environments`);

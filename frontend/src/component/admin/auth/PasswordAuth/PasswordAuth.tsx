@@ -9,7 +9,7 @@ import useAuthSettingsApi, {
     ISimpleAuthSettings,
 } from '../../../../hooks/api/actions/useAuthSettingsApi/useAuthSettingsApi';
 import useToast from '../../../../hooks/useToast';
-import { formatUnknownError } from '../../../../utils/format-unknown-error';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 export const PasswordAuth = () => {
     const { setToastData, setToastApiError } = useToast();

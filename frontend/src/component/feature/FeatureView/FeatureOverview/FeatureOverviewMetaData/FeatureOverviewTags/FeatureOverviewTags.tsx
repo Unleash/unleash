@@ -8,7 +8,7 @@ import { useStyles } from './FeatureOverviewTags.styles';
 import slackIcon from '../../../../../../assets/icons/slack.svg';
 import jiraIcon from '../../../../../../assets/icons/jira.svg';
 import webhookIcon from '../../../../../../assets/icons/webhooks.svg';
-import { formatAssetPath } from '../../../../../../utils/format-path';
+import { formatAssetPath } from 'utils/formatPath';
 import useTagTypes from '../../../../../../hooks/api/getters/useTagTypes/useTagTypes';
 import useFeatureApi from '../../../../../../hooks/api/actions/useFeatureApi/useFeatureApi';
 import Dialogue from '../../../../../common/Dialogue';
@@ -17,7 +17,7 @@ import useToast from '../../../../../../hooks/useToast';
 import { UPDATE_FEATURE } from '../../../../../providers/AccessProvider/permissions';
 import ConditionallyRender from '../../../../../common/ConditionallyRender';
 import AccessContext from '../../../../../../contexts/AccessContext';
-import { formatUnknownError } from '../../../../../../utils/format-unknown-error';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 interface IFeatureOverviewTagsProps extends React.HTMLProps<HTMLButtonElement> {
     projectId: string;

@@ -9,7 +9,7 @@ import jiraIcon from '../../../assets/icons/jira.svg';
 import webhooksIcon from '../../../assets/icons/webhooks.svg';
 import teamsIcon from '../../../assets/icons/teams.svg';
 import dataDogIcon from '../../../assets/icons/datadog.svg';
-import { formatAssetPath } from '../../../utils/format-path';
+import { formatAssetPath } from 'utils/formatPath';
 import useAddons from '../../../hooks/api/getters/useAddons/useAddons';
 
 const style: React.CSSProperties = {

@@ -10,7 +10,7 @@ import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
 import { IFeatureViewParams } from 'interfaces/params';
-import { formatUnknownError } from 'utils/format-unknown-error';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 const EditFeature = () => {
     const { setToastData, setToastApiError } = useToast();

@@ -1,4 +1,4 @@
-import { headers } from '../../../../utils/api-utils';
+import { headers } from 'utils/apiUtils';
 import useAPI from '../useApi/useApi';
 
 type PasswordLogin = (

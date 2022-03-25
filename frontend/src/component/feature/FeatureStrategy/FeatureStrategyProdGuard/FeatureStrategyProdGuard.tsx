@@ -1,4 +1,4 @@
-import { getBasePath } from 'utils/format-path';
+import { getBasePath } from 'utils/formatPath';
 import Dialogue from '../../../common/Dialogue';
 import { Alert } from '@material-ui/lab';
 import { Checkbox, FormControlLabel } from '@material-ui/core';

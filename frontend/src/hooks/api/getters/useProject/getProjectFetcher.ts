@@ -1,4 +1,4 @@
-import { formatApiPath } from '../../../../utils/format-path';
+import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 
 export const getProjectFetcher = (id: string) => {

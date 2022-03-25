@@ -14,9 +14,9 @@ import {
     OK,
     UNAUTHORIZED,
 } from '../../../../constants/statusCodes';
-import { formatApiPath } from '../../../../utils/format-path';
+import { formatApiPath } from 'utils/formatPath';
 import PasswordField from '../../../common/PasswordField/PasswordField';
-import { headers } from '../../../../utils/api-utils';
+import { headers } from 'utils/apiUtils';
 
 interface IEditProfileProps {
     setEditingProfile: React.Dispatch<React.SetStateAction<boolean>>;

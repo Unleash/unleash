@@ -1,6 +1,6 @@
 import { singleValueOperators } from 'constants/operators';
 import { IConstraint } from 'interfaces/strategy';
-import { oneOf } from './one-of';
+import { oneOf } from 'utils/oneOf';
 
 const VALUES = 'values';
 const VALUE = 'value';

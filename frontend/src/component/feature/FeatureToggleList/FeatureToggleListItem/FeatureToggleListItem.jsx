@@ -14,7 +14,7 @@ import { UPDATE_FEATURE } from '../../../providers/AccessProvider/permissions';
 import { styles as commonStyles } from '../../../common';
 
 import { useStyles } from './styles';
-import { getTogglePath } from '../../../../utils/route-path-helpers';
+import { getTogglePath } from '../../../../utils/routePathHelpers';
 import FeatureStatus from '../../FeatureView/FeatureStatus/FeatureStatus';
 import FeatureType from '../../FeatureView/FeatureType/FeatureType';
 import useProjects from '../../../../hooks/api/getters/useProjects/useProjects';

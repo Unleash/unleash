@@ -9,7 +9,7 @@ import PermissionSwitch from '../../../../../common/PermissionSwitch/PermissionS
 import StringTruncator from '../../../../../common/StringTruncator/StringTruncator';
 import { UPDATE_FEATURE_ENVIRONMENT } from '../../../../../providers/AccessProvider/permissions';
 import React from 'react';
-import { formatUnknownError } from '../../../../../../utils/format-unknown-error';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 interface IFeatureOverviewEnvSwitchProps {
     env: IFeatureEnvironment;

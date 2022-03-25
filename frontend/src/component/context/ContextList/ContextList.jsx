@@ -25,7 +25,7 @@ import AccessContext from '../../../contexts/AccessContext';
 import useUnleashContext from '../../../hooks/api/getters/useUnleashContext/useUnleashContext';
 import useContextsApi from '../../../hooks/api/actions/useContextsApi/useContextsApi';
 import useToast from '../../../hooks/useToast';
-import { formatUnknownError } from '../../../utils/format-unknown-error';
+import { formatUnknownError } from '../../../utils/formatUnknownError';
 
 const ContextList = () => {
     const { hasAccess } = useContext(AccessContext);

@@ -10,7 +10,7 @@ import FeatureTypeSelect from '../FeatureView/FeatureSettings/FeatureSettingsMet
 import { CF_DESC_ID, CF_NAME_ID, CF_TYPE_ID } from '../../../testIds';
 import useFeatureTypes from '../../../hooks/api/getters/useFeatureTypes/useFeatureTypes';
 import { KeyboardArrowDownOutlined } from '@material-ui/icons';
-import { projectFilterGenerator } from '../../../utils/project-filter-generator';
+import { projectFilterGenerator } from 'utils/projectFilterGenerator';
 import FeatureProjectSelect from '../FeatureView/FeatureSettings/FeatureSettingsProject/FeatureProjectSelect/FeatureProjectSelect';
 import ConditionallyRender from '../../common/ConditionallyRender';
 import { trim } from '../../common/util';

@@ -1,6 +1,6 @@
 import useSWR, { mutate } from 'swr';
 import { useCallback } from 'react';
-import { formatApiPath } from '../../../../utils/format-path';
+import { formatApiPath } from 'utils/formatPath';
 import { IPermission, IUser } from '../../../../interfaces/user';
 
 // The auth endpoint returns different things depending on the auth status.

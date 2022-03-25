@@ -1,7 +1,7 @@
 import { Button, Typography } from '@material-ui/core';
 import { useHistory } from 'react-router';
 
-import { ReactComponent as LogoIcon } from '../../../assets/icons/logo_wbg.svg';
+import { ReactComponent as LogoIcon } from 'assets/icons/logoBg.svg';
 
 import { useStyles } from './NotFound.styles';
 

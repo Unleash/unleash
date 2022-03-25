@@ -3,7 +3,7 @@ import classnames from 'classnames';
 import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { useFeature } from '../../../../../hooks/api/getters/useFeature/useFeature';
-import { getFeatureTypeIcons } from '../../../../../utils/get-feature-type-icons';
+import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
 import ConditionallyRender from '../../../../common/ConditionallyRender';
 import { useStyles } from './FeatureOverviewMetadata.styles';
 

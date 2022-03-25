@@ -11,7 +11,7 @@ import { IFeatureViewParams } from '../../../../../interfaces/params';
 import useToast from '../../../../../hooks/useToast';
 import useFeatureApi from '../../../../../hooks/api/actions/useFeatureApi/useFeatureApi';
 import ConditionallyRender from '../../../../common/ConditionallyRender';
-import { formatUnknownError } from '../../../../../utils/format-unknown-error';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 const FeatureSettingsMetadata = () => {
     const { hasAccess } = useContext(AccessContext);

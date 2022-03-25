@@ -26,7 +26,7 @@ import ConditionallyRender from '../../common/ConditionallyRender';
 import StaleDialog from './FeatureOverview/StaleDialog/StaleDialog';
 import AddTagDialog from './FeatureOverview/AddTagDialog/AddTagDialog';
 import StatusChip from '../../common/StatusChip/StatusChip';
-import { formatUnknownError } from 'utils/format-unknown-error';
+import { formatUnknownError } from 'utils/formatUnknownError';
 import { FeatureNotFound } from 'component/feature/FeatureView/FeatureNotFound/FeatureNotFound';
 
 export const FeatureView = () => {

@@ -17,11 +17,16 @@ interface ISeedSegmentSpec {
     valuesPerConstraint: number;
 }
 
-// The database schema to populate.
-const SEED_SCHEMA = 'seed';
+// The number of items to insert.
+const seedSegmentSpec: ISeedSegmentSpec = {
+    featuresCount: 100,
+    segmentsPerFeature: 5,
+    constraintsPerSegment: 1,
+    valuesPerConstraint: 100,
+};
 
-// A multiplier for the number of rows to insert.
-const SEED_SIZE = 10;
+// The database schema to populate.
+const seedSchema = 'seed';
 
 const fetchSegments = (app: IUnleashTest): Promise<ISegment[]> => {
     return app.services.segmentService.getAll();
@@ -84,7 +89,7 @@ const seedConstraints = (spec: ISeedSegmentSpec): IConstraint[] => {
 const seedSegments = (spec: ISeedSegmentSpec): Partial<ISegment>[] => {
     return Array.from({ length: spec.segmentsPerFeature }).map((v, i) => {
         return {
-            name: `${SEED_SCHEMA}_segment_${i}`,
+            name: `${seedSchema}_segment_${i}`,
             constraints: seedConstraints(spec),
         };
     });
@@ -95,7 +100,7 @@ const seedFeatures = (
 ): Partial<IFeatureToggleClient>[] => {
     return Array.from({ length: spec.featuresCount }).map((v, i) => {
         return mockFeatureToggle({
-            name: `${SEED_SCHEMA}_feature_${i}`,
+            name: `${seedSchema}_feature_${i}`,
         });
     });
 };
@@ -133,17 +138,10 @@ const seedSegmentsDatabase = async (
 };
 
 const main = async (): Promise<void> => {
-    const spec: ISeedSegmentSpec = {
-        featuresCount: SEED_SIZE,
-        segmentsPerFeature: SEED_SIZE,
-        constraintsPerSegment: SEED_SIZE,
-        valuesPerConstraint: SEED_SIZE * 10,
-    };
-
-    const db = await dbInit(SEED_SCHEMA, getLogger);
+    const db = await dbInit(seedSchema, getLogger);
     const app = await setupApp(db.stores);
 
-    await seedSegmentsDatabase(app, spec);
+    await seedSegmentsDatabase(app, seedSegmentSpec);
     await app.destroy();
     await db.destroy();
 };

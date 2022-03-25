@@ -1,7 +1,7 @@
 import React from 'react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
-import { useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { Checkbox } from '@material-ui/core';
 import CheckIcon from '@material-ui/icons/Check';
@@ -21,7 +21,7 @@ import {
     PERMISSION,
 } from '../../../../constants/featureToggleTypes';
 
-import styles from '../ReportToggleList.module.scss';
+import { useStyles } from '../ReportToggleList.styles';
 import { getTogglePath } from '../../../../utils/routePathHelpers';
 
 const ReportToggleListItem = ({
@@ -35,8 +35,8 @@ const ReportToggleListItem = ({
     bulkActionsOn,
     setFeatures,
 }) => {
+    const styles = useStyles();
     const nameMatches = feature => feature.name === name;
-    const history = useHistory();
 
     const handleChange = () => {
         setFeatures(prevState => {
@@ -116,21 +116,12 @@ const ReportToggleListItem = ({
         );
     };
 
-    const navigateToFeature = () => {
-        history.push(getTogglePath(project, name));
-    };
-
     const statusClasses = classnames(styles.active, styles.hideColumnStatus, {
         [styles.stale]: stale,
     });
 
     return (
-        <tr
-            role="button"
-            tabIndex={0}
-            onClick={navigateToFeature}
-            className={styles.tableRow}
-        >
+        <tr className={styles.tableRow}>
             <ConditionallyRender
                 condition={bulkActionsOn}
                 show={
@@ -144,7 +135,11 @@ const ReportToggleListItem = ({
                     </td>
                 }
             />
-            <td>{name}</td>
+            <td>
+                <Link to={getTogglePath(project, name)} className={styles.link}>
+                    {name}
+                </Link>
+            </td>
             <td className={styles.hideColumnLastSeen}>{formatLastSeenAt()}</td>
             <td className={styles.hideColumn}>{formatCreatedAt()}</td>
             <td className={`${styles.expired} ${styles.hideColumn}`}>

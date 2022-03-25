@@ -1,12 +1,10 @@
 import React, { useRef, useState } from 'react';
 import { TableCell, TableRow } from '@material-ui/core';
-import { useHistory } from 'react-router';
 import { useStyles } from '../FeatureToggleListNew.styles';
 import useToggleFeatureByEnv from '../../../../hooks/api/actions/useToggleFeatureByEnv/useToggleFeatureByEnv';
 import { IEnvironments } from '../../../../interfaces/featureToggle';
 import useToast from '../../../../hooks/useToast';
 import { getTogglePath } from 'utils/routePathHelpers';
-import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
 import FeatureStatus from '../../FeatureView/FeatureStatus/FeatureStatus';
 import FeatureType from '../../FeatureView/FeatureType/FeatureType';
 import classNames from 'classnames';
@@ -41,22 +39,14 @@ const FeatureToggleListNewItem = ({
         name
     );
 
-    const { uiConfig } = useUiConfig();
     const { refetch } = useProject(projectId);
     const styles = useStyles();
-    const history = useHistory();
     const ref = useRef<HTMLButtonElement>(null);
     const [showInfoBox, setShowInfoBox] = useState(false);
     const [environmentName, setEnvironmentName] = useState('');
 
     const closeInfoBox = () => {
         setShowInfoBox(false);
-    };
-
-    const onClick = (e: React.MouseEvent) => {
-        if (!ref.current?.contains(e.target as Node)) {
-            history.push(getTogglePath(projectId, name));
-        }
     };
 
     const handleToggle = (env: IEnvironments) => {
@@ -87,7 +77,6 @@ const FeatureToggleListNewItem = ({
                         styles.tableCellStatus
                     )}
                     align="left"
-                    onClick={onClick}
                 >
                     <FeatureStatus
                         lastSeenAt={lastSeenAt}
@@ -100,7 +89,6 @@ const FeatureToggleListNewItem = ({
                         styles.tableCellType
                     )}
                     align="center"
-                    onClick={onClick}
                 >
                     <FeatureType type={type} />
                 </TableCell>
@@ -110,11 +98,9 @@ const FeatureToggleListNewItem = ({
                         styles.tableCellName
                     )}
                     align="left"
-                    onClick={onClick}
                 >
                     <Link
-                        // @ts-expect-error
-                        to={getTogglePath(projectId, name, uiConfig.flags.E)}
+                        to={getTogglePath(projectId, name)}
                         className={styles.link}
                     >
                         <span data-loading>{name}</span>
@@ -126,7 +112,6 @@ const FeatureToggleListNewItem = ({
                         styles.tableCellCreated
                     )}
                     align="left"
-                    onClick={onClick}
                 >
                     <CreatedAt time={createdAt} />
                 </TableCell>

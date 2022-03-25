@@ -1,29 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Paper, MenuItem } from '@material-ui/core';
 import PropTypes from 'prop-types';
-
 import ReportToggleListItem from './ReportToggleListItem/ReportToggleListItem';
 import ReportToggleListHeader from './ReportToggleListHeader/ReportToggleListHeader';
 import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyRender';
 import DropdownMenu from '../../common/DropdownMenu/DropdownMenu';
-
 import {
     getObjectProperties,
     getCheckedState,
     applyCheckedToFeatures,
 } from '../utils';
-
-import useSort from '../../../hooks/useSort';
-
-import styles from './ReportToggleList.module.scss';
+import { useStyles } from './ReportToggleList.styles';
+import { useFeaturesSort } from 'hooks/useFeaturesSort';
 
 /* FLAG TO TOGGLE UNFINISHED BULK ACTIONS FEATURE */
 const BULK_ACTIONS_ON = false;
 
 const ReportToggleList = ({ features, selectedProject }) => {
+    const styles = useStyles();
     const [checkAll, setCheckAll] = useState(false);
     const [localFeatures, setFeatures] = useState([]);
-    const [sort, setSortData] = useSort();
+    const { setSort, sorted } = useFeaturesSort(localFeatures);
 
     useEffect(() => {
         const formattedFeatures = features.map(feature => ({
@@ -52,7 +49,7 @@ const ReportToggleList = ({ features, selectedProject }) => {
     };
 
     const renderListRows = () =>
-        sort(localFeatures).map(feature => (
+        sorted.map(feature => (
             <ReportToggleListItem
                 key={feature.name}
                 {...feature}
@@ -88,7 +85,7 @@ const ReportToggleList = ({ features, selectedProject }) => {
                     <ReportToggleListHeader
                         handleCheckAll={handleCheckAll}
                         checkAll={checkAll}
-                        setSortData={setSortData}
+                        setSort={setSort}
                         bulkActionsOn={BULK_ACTIONS_ON}
                     />
 

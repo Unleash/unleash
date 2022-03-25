@@ -2,7 +2,6 @@ import { makeStyles } from '@material-ui/core/styles';
 
 export const useStyles = makeStyles(theme => ({
     tableRow: {
-        cursor: 'pointer',
         '&:hover': {
             backgroundColor: theme.palette.grey[200],
         },
@@ -46,6 +45,7 @@ export const useStyles = makeStyles(theme => ({
     },
     link: {
         textDecoration: 'none',
-        color: 'inherit',
+        color: theme.palette.primary.main,
+        fontWeight: theme.fontWeight.bold,
     },
 }));

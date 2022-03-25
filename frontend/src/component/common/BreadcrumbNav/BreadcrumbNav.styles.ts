@@ -16,5 +16,6 @@ export const useStyles = makeStyles(theme => ({
         '& > *': {
             verticalAlign: 'middle',
         },
+        color: theme.palette.primary.main,
     },
 }));

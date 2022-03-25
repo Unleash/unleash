@@ -40,6 +40,7 @@ export const useStyles = makeStyles(theme => ({
     },
     link: {
         textDecoration: 'none',
+        color: theme.palette.primary.main,
     },
     actionsContainer: {
         display: 'flex',

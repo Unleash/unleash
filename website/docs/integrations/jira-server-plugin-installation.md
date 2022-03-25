@@ -50,7 +50,7 @@ This will prompt you to select the plugin file you downloaded in the previous st
 
 Once you've selected your file and started the upload, Jira will install the plugin. If the installation is successful, you'll get a status screen saying that it successfully installed.
 
-![Jira Manage Apps - Successful install](/img/jira_server_installed_ready_to_go.png)
+![The successful install screen mentioned in the preceding paragraph.](/img/jira_server_installed_ready_to_go.png)
 
 ## Configuring the plugin {#configure-plugin}
 

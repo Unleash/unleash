@@ -28,12 +28,13 @@
     "lint": "eslint src",
     "start": "react-scripts start",
     "start:heroku": "UNLEASH_API=https://unleash.herokuapp.com yarn run start",
-    "start:ea": "UNLEASH_API=https://unleash4.herokuapp.com yarn run start",
+    "start:enterprise": "UNLEASH_API=https://unleash4.herokuapp.com yarn run start",
     "test": "react-scripts test",
     "prepare": "yarn run build",
     "fmt": "prettier src --write --loglevel warn",
     "fmt:check": "prettier src --check",
-    "e2e": "yarn run cypress open --config baseUrl='http://localhost:3000' --env AUTH_USER=admin,AUTH_PASSWORD=unleash4all"
+    "e2e": "yarn run cypress open --config baseUrl='http://localhost:3000' --env AUTH_USER=admin,AUTH_PASSWORD=unleash4all",
+    "e2e:heroku": "yarn run cypress open --config baseUrl='http://localhost:3000' --env AUTH_USER=example@example.com"
   },
   "devDependencies": {
     "@material-ui/core": "4.12.3",

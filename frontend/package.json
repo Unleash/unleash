@@ -67,7 +67,7 @@
     "http-proxy-middleware": "2.0.4",
     "immer": "^9.0.12",
     "lodash.clonedeep": "4.5.0",
-    "prettier": "2.6.0",
+    "prettier": "2.6.1",
     "prop-types": "15.8.1",
     "react": "17.0.2",
     "react-chartjs-2": "4.0.1",

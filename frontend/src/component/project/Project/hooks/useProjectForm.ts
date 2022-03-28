@@ -33,7 +33,7 @@ const useProjectForm = (
     };
     const NAME_EXISTS_ERROR = 'Error: A project with this id already exists.';
 
-    const validateIdUniqueness = async () => {
+    const validateProjectId = async () => {
         if (projectId.length === 0) {
             setErrors(prev => ({ ...prev, id: 'Id can not be empty.' }));
             return false;
@@ -47,17 +47,14 @@ const useProjectForm = (
                     ...prev,
                     id: 'A project with this id already exists',
                 }));
+            } else {
+                setErrors(prev => ({
+                    ...prev,
+                    id: e.toString(),
+                }));
             }
             return false;
         }
-    };
-
-    const validateProjectId = () => {
-        if (projectId.length === 0) {
-            setErrors(prev => ({ ...prev, id: 'id can not be empty.' }));
-            return false;
-        }
-        return true;
     };
 
     const validateName = () => {
@@ -83,7 +80,6 @@ const useProjectForm = (
         getProjectPayload,
         validateName,
         validateProjectId,
-        validateIdUniqueness,
         clearErrors,
         errors,
     };

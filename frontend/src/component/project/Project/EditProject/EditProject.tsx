@@ -25,9 +25,8 @@ const EditProject = () => {
         setProjectDesc,
         getProjectPayload,
         clearErrors,
-        validateIdUniqueness,
-        validateName,
         validateProjectId,
+        validateName,
         errors,
     } = useProjectForm(id, project.name, project.description);
 
@@ -48,9 +47,8 @@ const EditProject = () => {
         const payload = getProjectPayload();
 
         const validName = validateName();
-        const validId = validateProjectId();
 
-        if (validName && validId) {
+        if (validName) {
             try {
                 await editProject(id, payload);
                 refetch();
@@ -89,7 +87,7 @@ const EditProject = () => {
                 setProjectDesc={setProjectDesc}
                 mode="Edit"
                 clearErrors={clearErrors}
-                validateIdUniqueness={validateIdUniqueness}
+                validateProjectId={validateProjectId}
             >
                 <UpdateButton permission={UPDATE_PROJECT} />
             </ProjectForm>

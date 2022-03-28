@@ -24,7 +24,7 @@ const CreateProject = () => {
         setProjectDesc,
         getProjectPayload,
         clearErrors,
-        validateIdUniqueness,
+        validateProjectId,
         validateName,
         errors,
     } = useProjectForm();
@@ -35,7 +35,7 @@ const CreateProject = () => {
         e.preventDefault();
         clearErrors();
         const validName = validateName();
-        const validId = await validateIdUniqueness();
+        const validId = await validateProjectId();
 
         if (validName && validId) {
             const payload = getProjectPayload();
@@ -88,7 +88,7 @@ const CreateProject = () => {
                 setProjectDesc={setProjectDesc}
                 mode="Create"
                 clearErrors={clearErrors}
-                validateIdUniqueness={validateIdUniqueness}
+                validateProjectId={validateProjectId}
             >
                 <CreateButton name="project" permission={CREATE_PROJECT} />
             </ProjectForm>

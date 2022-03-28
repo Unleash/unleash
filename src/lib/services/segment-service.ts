@@ -47,12 +47,18 @@ export class SegmentService {
         return this.segmentStore.getAll();
     }
 
+    async getActive(): Promise<ISegment[]> {
+        return this.segmentStore.getActive();
+    }
+
+    // Used by unleash-enterprise.
     async getByStrategy(strategyId: string): Promise<ISegment[]> {
         return this.segmentStore.getByStrategy(strategyId);
     }
 
-    async getActive(): Promise<ISegment[]> {
-        return this.segmentStore.getActive();
+    // Used by unleash-enterprise.
+    async getStrategies(id: number): Promise<IFeatureStrategy[]> {
+        return this.featureStrategiesStore.getStrategiesBySegment(id);
     }
 
     async create(data: unknown, user: User): Promise<void> {
@@ -89,14 +95,12 @@ export class SegmentService {
         });
     }
 
-    async getStrategies(id: number): Promise<IFeatureStrategy[]> {
-        return this.featureStrategiesStore.getStrategiesBySegment(id);
-    }
-
+    // Used by unleash-enterprise.
     async addToStrategy(id: number, strategyId: string): Promise<void> {
         await this.segmentStore.addToStrategy(id, strategyId);
     }
 
+    // Used by unleash-enterprise.
     async removeFromStrategy(id: number, strategyId: string): Promise<void> {
         await this.segmentStore.removeFromStrategy(id, strategyId);
     }

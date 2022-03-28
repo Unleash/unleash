@@ -1,7 +1,7 @@
-import useFeatureTypes from '../../../../../../hooks/api/getters/useFeatureTypes/useFeatureTypes';
+import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
 import GeneralSelect, {
     ISelectOption,
-} from '../../../../../common/GeneralSelect/GeneralSelect';
+} from 'component/common/GeneralSelect/GeneralSelect';
 
 const FeatureTypeSelect = ({
     // @ts-expect-error

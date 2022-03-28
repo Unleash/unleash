@@ -2,13 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { MenuItem, Typography } from '@material-ui/core';
-import DropdownMenu from '../../../common/DropdownMenu/DropdownMenu';
-import ProjectSelect from '../../../common/ProjectSelect/ProjectSelect';
+import DropdownMenu from 'component/common/DropdownMenu/DropdownMenu';
+import ProjectSelect from 'component/common/ProjectSelect/ProjectSelect';
 import { useStyles } from './styles';
-import useLoading from '../../../../hooks/useLoading';
-import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
-import ConditionallyRender from '../../../common/ConditionallyRender';
-import { createFeaturesFilterSortOptions } from '../../../../hooks/useFeaturesSort';
+import useLoading from 'hooks/useLoading';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import ConditionallyRender from 'component/common/ConditionallyRender';
+import { createFeaturesFilterSortOptions } from 'hooks/useFeaturesSort';
 
 const sortOptions = createFeaturesFilterSortOptions();
 

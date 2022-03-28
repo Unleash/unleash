@@ -1,10 +1,10 @@
 import { useStyles } from './ProjectRoleListItem.styles';
 import { TableCell, TableRow, Typography } from '@material-ui/core';
 import { Delete, Edit } from '@material-ui/icons';
-import { ADMIN } from '../../../../../providers/AccessProvider/permissions';
+import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import SupervisedUserCircleIcon from '@material-ui/icons/SupervisedUserCircle';
-import PermissionIconButton from '../../../../../common/PermissionIconButton/PermissionIconButton';
-import { IProjectRole } from '../../../../../../interfaces/role';
+import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
+import { IProjectRole } from 'interfaces/role';
 import { useHistory } from 'react-router-dom';
 import React from 'react';
 

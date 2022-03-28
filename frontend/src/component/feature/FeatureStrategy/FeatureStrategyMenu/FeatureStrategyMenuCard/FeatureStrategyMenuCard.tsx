@@ -5,7 +5,7 @@ import {
     getFeatureStrategyIcon,
     formatStrategyName,
 } from 'utils/strategyNames';
-import { formatCreateStrategyPath } from '../../FeatureStrategyCreate/FeatureStrategyCreate';
+import { formatCreateStrategyPath } from 'component/feature/FeatureStrategy/FeatureStrategyCreate/FeatureStrategyCreate';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 
 interface IFeatureStrategyMenuCardProps {

@@ -1,17 +1,17 @@
 import { Edit } from '@material-ui/icons';
 import { useTheme } from '@material-ui/core/styles';
 import { Link, useParams } from 'react-router-dom';
-import { IFeatureViewParams } from '../../../../../../../../interfaces/params';
-import { IFeatureStrategy } from '../../../../../../../../interfaces/strategy';
+import { IFeatureViewParams } from 'interfaces/params';
+import { IFeatureStrategy } from 'interfaces/strategy';
 import {
     getFeatureStrategyIcon,
     formatStrategyName,
 } from 'utils/strategyNames';
-import PermissionIconButton from '../../../../../../../common/PermissionIconButton/PermissionIconButton';
-import { UPDATE_FEATURE_STRATEGY } from '../../../../../../../providers/AccessProvider/permissions';
-import FeatureOverviewExecution from '../../../../FeatureOverviewExecution/FeatureOverviewExecution';
+import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
+import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
+import FeatureOverviewExecution from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewExecution/FeatureOverviewExecution';
 import { useStyles } from './FeatureOverviewEnvironmentStrategy.styles';
-import { formatEditStrategyPath } from '../../../../../../FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
+import { formatEditStrategyPath } from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
 import { FeatureStrategyRemove } from 'component/feature/FeatureStrategy/FeatureStrategyRemove/FeatureStrategyRemove';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 

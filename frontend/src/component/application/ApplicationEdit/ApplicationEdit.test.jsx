@@ -2,10 +2,10 @@ import { ThemeProvider } from '@material-ui/core';
 import { ApplicationEdit } from './ApplicationEdit';
 import renderer from 'react-test-renderer';
 import { MemoryRouter } from 'react-router-dom';
-import { ADMIN } from '../../providers/AccessProvider/permissions';
-import theme from '../../../themes/mainTheme';
-import AccessProvider from '../../providers/AccessProvider/AccessProvider';
-import UIProvider from '../../providers/UIProvider/UIProvider';
+import { ADMIN } from 'component/providers/AccessProvider/permissions';
+import theme from 'themes/mainTheme';
+import AccessProvider from 'component/providers/AccessProvider/AccessProvider';
+import UIProvider from 'component/providers/UIProvider/UIProvider';
 
 test('renders correctly if no application', () => {
     const tree = renderer

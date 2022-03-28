@@ -1,8 +1,8 @@
-import { useHealthReport } from '../../../../hooks/api/getters/useHealthReport/useHealthReport';
-import ApiError from '../../../common/ApiError/ApiError';
-import ConditionallyRender from '../../../common/ConditionallyRender';
-import ReportToggleList from '../../../Reporting/ReportToggleList/ReportToggleList';
-import { ReportCard } from '../../../Reporting/ReportCard/ReportCard';
+import { useHealthReport } from 'hooks/api/getters/useHealthReport/useHealthReport';
+import ApiError from 'component/common/ApiError/ApiError';
+import ConditionallyRender from 'component/common/ConditionallyRender';
+import ReportToggleList from 'component/Reporting/ReportToggleList/ReportToggleList';
+import { ReportCard } from 'component/Reporting/ReportCard/ReportCard';
 
 interface ProjectHealthProps {
     projectId: string;

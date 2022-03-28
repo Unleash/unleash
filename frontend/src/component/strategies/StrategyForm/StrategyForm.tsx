@@ -1,8 +1,8 @@
-import Input from '../../common/Input/Input';
+import Input from 'component/common/Input/Input';
 import { Button } from '@material-ui/core';
 import { useStyles } from './StrategyForm.styles';
 import { Add } from '@material-ui/icons';
-import { trim } from '../../common/util';
+import { trim } from 'component/common/util';
 import { StrategyParameters } from './StrategyParameters/StrategyParameters';
 import { ICustomStrategyParameter } from 'interfaces/strategy';
 import React from 'react';

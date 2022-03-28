@@ -1,5 +1,5 @@
 import { Button, FormControlLabel, Switch } from '@material-ui/core';
-import { IConstraint } from '../../../../../interfaces/strategy';
+import { IConstraint } from 'interfaces/strategy';
 import { CANCEL } from '../ConstraintAccordionEdit';
 
 import { ConstraintFormHeader } from './ConstraintFormHeader/ConstraintFormHeader';

@@ -1,15 +1,15 @@
 import { Tooltip, Typography } from '@material-ui/core';
 import { Info } from '@material-ui/icons';
 
-import { IParameter } from '../../../../interfaces/strategy';
+import { IParameter } from 'interfaces/strategy';
 import RolloutSlider from '../RolloutSlider/RolloutSlider';
-import Select from '../../../common/select';
+import Select from 'component/common/select';
 import React from 'react';
-import Input from '../../../common/Input/Input';
+import Input from 'component/common/Input/Input';
 import {
     FLEXIBLE_STRATEGY_GROUP_ID,
     FLEXIBLE_STRATEGY_STICKINESS_ID,
-} from '../../../../testIds';
+} from 'testIds';
 
 const builtInStickinessOptions = [
     { key: 'default', label: 'default' },

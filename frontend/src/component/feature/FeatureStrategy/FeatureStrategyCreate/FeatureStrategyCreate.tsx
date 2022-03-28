@@ -3,12 +3,12 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useRequiredQueryParam } from 'hooks/useRequiredQueryParam';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { FeatureStrategyForm } from 'component/feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyForm';
-import FormTemplate from '../../../common/FormTemplate/FormTemplate';
-import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
-import useFeatureStrategyApi from '../../../../hooks/api/actions/useFeatureStrategyApi/useFeatureStrategyApi';
+import FormTemplate from 'component/common/FormTemplate/FormTemplate';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFeatureStrategyApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useHistory } from 'react-router-dom';
-import useToast from '../../../../hooks/useToast';
+import useToast from 'hooks/useToast';
 import { IFeatureStrategy } from 'interfaces/strategy';
 import {
     featureStrategyDocsLink,

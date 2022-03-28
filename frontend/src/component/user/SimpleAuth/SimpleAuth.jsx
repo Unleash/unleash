@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import { Button, TextField } from '@material-ui/core';
 import styles from './SimpleAuth.module.scss';
 import { useHistory } from 'react-router-dom';
-import { useAuthApi } from '../../../hooks/api/actions/useAuthApi/useAuthApi';
-import { useAuthUser } from '../../../hooks/api/getters/useAuth/useAuthUser';
-import { LOGIN_BUTTON, LOGIN_EMAIL_ID } from '../../../testIds';
-import useToast from '../../../hooks/useToast';
-import { formatUnknownError } from '../../../utils/formatUnknownError';
+import { useAuthApi } from 'hooks/api/actions/useAuthApi/useAuthApi';
+import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
+import { LOGIN_BUTTON, LOGIN_EMAIL_ID } from 'testIds';
+import useToast from 'hooks/useToast';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 const SimpleAuth = ({ authDetails, redirect }) => {
     const [email, setEmail] = useState('');

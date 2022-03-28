@@ -1,21 +1,18 @@
-import HeaderTitle from '../../common/HeaderTitle';
-import ResponsiveButton from '../../common/ResponsiveButton/ResponsiveButton';
+import HeaderTitle from 'component/common/HeaderTitle';
+import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
 import { Add } from '@material-ui/icons';
-import PageContent from '../../common/PageContent';
+import PageContent from 'component/common/PageContent';
 import { List } from '@material-ui/core';
-import { useEnvironments } from '../../../hooks/api/getters/useEnvironments/useEnvironments';
-import {
-    IEnvironment,
-    ISortOrderPayload,
-} from '../../../interfaces/environments';
+import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
+import { IEnvironment, ISortOrderPayload } from 'interfaces/environments';
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import EnvironmentDeleteConfirm from './EnvironmentDeleteConfirm/EnvironmentDeleteConfirm';
-import useToast from '../../../hooks/useToast';
-import useEnvironmentApi from '../../../hooks/api/actions/useEnvironmentApi/useEnvironmentApi';
+import useToast from 'hooks/useToast';
+import useEnvironmentApi from 'hooks/api/actions/useEnvironmentApi/useEnvironmentApi';
 import EnvironmentListItem from './EnvironmentListItem/EnvironmentListItem';
 import EnvironmentToggleConfirm from './EnvironmentToggleConfirm/EnvironmentToggleConfirm';
-import useProjectRolePermissions from '../../../hooks/api/getters/useProjectRolePermissions/useProjectRolePermissions';
+import useProjectRolePermissions from 'hooks/api/getters/useProjectRolePermissions/useProjectRolePermissions';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { formatUnknownError } from 'utils/formatUnknownError';

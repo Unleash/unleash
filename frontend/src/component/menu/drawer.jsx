@@ -7,10 +7,10 @@ import ExitToApp from '@material-ui/icons/ExitToApp';
 
 import styles from './drawer.module.scss';
 
-import { ReactComponent as LogoIcon } from '../../assets/icons/logoBg.svg';
+import { ReactComponent as LogoIcon } from 'assets/icons/logoBg.svg';
 import NavigationLink from './Header/NavigationLink/NavigationLink';
-import ConditionallyRender from '../common/ConditionallyRender';
-import { getBasePath } from '../../utils/formatPath';
+import ConditionallyRender from 'component/common/ConditionallyRender';
+import { getBasePath } from 'utils/formatPath';
 
 export const DrawerMenu = ({
     links = [],

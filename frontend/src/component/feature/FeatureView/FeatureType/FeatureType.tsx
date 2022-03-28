@@ -1,7 +1,7 @@
 import { useStyles } from './FeatureType.styles';
 import { Tooltip } from '@material-ui/core';
 import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
-import useFeatureTypes from '../../../../hooks/api/getters/useFeatureTypes/useFeatureTypes';
+import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
 
 interface FeatureTypeProps {
     type: string;

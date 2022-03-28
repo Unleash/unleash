@@ -1,9 +1,9 @@
 import useSWR, { mutate, SWRConfiguration } from 'swr';
 import { useState, useEffect } from 'react';
 import { getProjectFetcher } from './getProjectFetcher';
-import { IProject } from '../../../../interfaces/project';
+import { IProject } from 'interfaces/project';
 import { fallbackProject } from './fallbackProject';
-import useSort from '../../../useSort';
+import useSort from 'hooks/useSort';
 
 const useProject = (id: string, options: SWRConfiguration = {}) => {
     const { KEY, fetcher } = getProjectFetcher(id);

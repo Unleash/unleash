@@ -1,5 +1,5 @@
 import { CloudCircle } from '@material-ui/icons';
-import StringTruncator from '../../../common/StringTruncator/StringTruncator';
+import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { useStyles } from './EnvironmentCard.styles';
 
 interface IEnvironmentProps {

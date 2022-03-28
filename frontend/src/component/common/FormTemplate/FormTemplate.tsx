@@ -6,7 +6,7 @@ import { FileCopy, Info } from '@material-ui/icons';
 import ConditionallyRender from '../ConditionallyRender';
 import Loader from '../Loader/Loader';
 import copy from 'copy-to-clipboard';
-import useToast from '../../../hooks/useToast';
+import useToast from 'hooks/useToast';
 import React, { useState } from 'react';
 import classNames from 'classnames';
 import { ReactComponent as MobileGuidanceBG } from 'assets/img/mobileGuidanceBg.svg';

@@ -1,4 +1,4 @@
-import Input from '../../../common/Input/Input';
+import Input from 'component/common/Input/Input';
 import {
     FormControlLabel,
     Button,
@@ -10,10 +10,10 @@ import {
 } from '@material-ui/core';
 import { useStyles } from './UserForm.styles';
 import React from 'react';
-import useUsers from '../../../../hooks/api/getters/useUsers/useUsers';
-import ConditionallyRender from '../../../common/ConditionallyRender/ConditionallyRender';
-import { EDIT } from '../../../../constants/misc';
-import useUiBootstrap from '../../../../hooks/api/getters/useUiBootstrap/useUiBootstrap';
+import useUsers from 'hooks/api/getters/useUsers/useUsers';
+import ConditionallyRender from 'component/common/ConditionallyRender/ConditionallyRender';
+import { EDIT } from 'constants/misc';
+import useUiBootstrap from 'hooks/api/getters/useUiBootstrap/useUiBootstrap';
 
 interface IUserForm {
     email: string;

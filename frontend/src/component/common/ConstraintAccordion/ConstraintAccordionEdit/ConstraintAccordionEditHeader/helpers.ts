@@ -15,7 +15,7 @@ import {
     SEMVER_GT,
     SEMVER_LT,
     Operator,
-} from '../../../../../constants/operators';
+} from 'constants/operators';
 
 export const resolveText = (operator: Operator, contextName: string) => {
     const base = `To satisfy this constraint, values passed into the SDK as ${contextName} must`;

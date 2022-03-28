@@ -1,7 +1,7 @@
 import { useHistory } from 'react-router-dom';
 import useEnvironmentForm from '../hooks/useEnvironmentForm';
 import EnvironmentForm from '../EnvironmentForm/EnvironmentForm';
-import FormTemplate from '../../common/FormTemplate/FormTemplate';
+import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { Alert } from '@material-ui/lab';
 import { Button } from '@material-ui/core';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';

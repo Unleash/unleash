@@ -7,7 +7,7 @@ import useToast from 'hooks/useToast';
 import useAddUserForm from '../hooks/useAddUserForm';
 import ConfirmUserAdded from '../ConfirmUserAdded/ConfirmUserAdded';
 import { useState } from 'react';
-import { scrollToTop } from '../../../common/util';
+import { scrollToTop } from 'component/common/util';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { formatUnknownError } from 'utils/formatUnknownError';

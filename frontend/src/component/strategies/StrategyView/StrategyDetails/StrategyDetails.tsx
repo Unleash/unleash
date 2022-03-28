@@ -10,7 +10,7 @@ import { Add, RadioButtonChecked } from '@material-ui/icons';
 import { AppsLinkList } from 'component/common';
 import ConditionallyRender from 'component/common/ConditionallyRender';
 import styles from '../../strategies.module.scss';
-import { TogglesLinkList } from '../../TogglesLinkList/TogglesLinkList';
+import { TogglesLinkList } from 'component/strategies/TogglesLinkList/TogglesLinkList';
 import { IParameter, IStrategy } from 'interfaces/strategy';
 import { IApplication } from 'interfaces/application';
 import { IFeatureToggle } from 'interfaces/featureToggle';

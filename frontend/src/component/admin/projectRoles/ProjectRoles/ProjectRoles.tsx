@@ -2,12 +2,12 @@ import { Button } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import { useContext } from 'react';
 import { useHistory } from 'react-router-dom';
-import AccessContext from '../../../../contexts/AccessContext';
-import ConditionallyRender from '../../../common/ConditionallyRender';
-import HeaderTitle from '../../../common/HeaderTitle';
-import PageContent from '../../../common/PageContent';
-import { ADMIN } from '../../../providers/AccessProvider/permissions';
-import AdminMenu from '../../menu/AdminMenu';
+import AccessContext from 'contexts/AccessContext';
+import ConditionallyRender from 'component/common/ConditionallyRender';
+import HeaderTitle from 'component/common/HeaderTitle';
+import PageContent from 'component/common/PageContent';
+import { ADMIN } from 'component/providers/AccessProvider/permissions';
+import AdminMenu from 'component/admin/menu/AdminMenu';
 import { useStyles } from './ProjectRoles.styles';
 import ProjectRoleList from './ProjectRoleList/ProjectRoleList';
 

@@ -1,11 +1,7 @@
 import parseISO from 'date-fns/parseISO';
 import differenceInDays from 'date-fns/differenceInDays';
 
-import {
-    EXPERIMENT,
-    OPERATIONAL,
-    RELEASE,
-} from '../../constants/featureToggleTypes';
+import { EXPERIMENT, OPERATIONAL, RELEASE } from 'constants/featureToggleTypes';
 
 import { FOURTYDAYS, SEVENDAYS } from './constants';
 

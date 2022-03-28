@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import ConditionallyRender from '../../../common/ConditionallyRender';
+import ConditionallyRender from 'component/common/ConditionallyRender';
 import {
     Avatar,
     Button,
@@ -11,14 +11,14 @@ import {
 } from '@material-ui/core';
 import classnames from 'classnames';
 import { useStyles } from './UserProfileContent.styles';
-import { useCommonStyles } from '../../../../common.styles';
+import { useCommonStyles } from 'common.styles';
 import { Alert } from '@material-ui/lab';
 import EditProfile from '../EditProfile/EditProfile';
 import legacyStyles from '../../user.module.scss';
 import { getBasePath } from 'utils/formatPath';
-import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
-import { IUser } from '../../../../interfaces/user';
-import { ILocationSettings } from '../../../../hooks/useLocationSettings';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { IUser } from 'interfaces/user';
+import { ILocationSettings } from 'hooks/useLocationSettings';
 
 interface IUserProfileContentProps {
     showProfile: boolean;

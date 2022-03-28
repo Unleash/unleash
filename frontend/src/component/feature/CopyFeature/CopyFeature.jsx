@@ -1,7 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-
 import { Link, useHistory, useParams } from 'react-router-dom';
-
 import {
     Button,
     TextField,
@@ -10,17 +8,15 @@ import {
     FormControlLabel,
 } from '@material-ui/core';
 import { FileCopy } from '@material-ui/icons';
-
-import { styles as commonStyles } from '../../common';
+import { styles as commonStyles } from 'component/common';
 import styles from './CopyFeature.module.scss';
-
-import { trim } from '../../common/util';
-import ConditionallyRender from '../../common/ConditionallyRender';
+import { trim } from 'component/common/util';
+import ConditionallyRender from 'component/common/ConditionallyRender';
 import { Alert } from '@material-ui/lab';
-import { getTogglePath } from '../../../utils/routePathHelpers';
-import useFeatureApi from '../../../hooks/api/actions/useFeatureApi/useFeatureApi';
-import { useFeature } from '../../../hooks/api/getters/useFeature/useFeature';
-import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
+import { getTogglePath } from 'utils/routePathHelpers';
+import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
+import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 export const CopyFeatureToggle = () => {
     const [replaceGroupId, setReplaceGroupId] = useState(true);

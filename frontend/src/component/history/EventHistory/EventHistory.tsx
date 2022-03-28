@@ -1,5 +1,5 @@
 import EventLog from '../EventLog';
-import { useEvents } from '../../../hooks/api/getters/useEvents/useEvents';
+import { useEvents } from 'hooks/api/getters/useEvents/useEvents';
 
 export const EventHistory = () => {
     const { events } = useEvents();

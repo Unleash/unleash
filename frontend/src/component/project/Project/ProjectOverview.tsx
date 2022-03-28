@@ -1,4 +1,4 @@
-import useProject from '../../../hooks/api/getters/useProject/useProject';
+import useProject from 'hooks/api/getters/useProject/useProject';
 import { ProjectFeatureToggles } from './ProjectFeatureToggles/ProjectFeatureToggles';
 import ProjectInfo from './ProjectInfo/ProjectInfo';
 import { useStyles } from './Project.styles';

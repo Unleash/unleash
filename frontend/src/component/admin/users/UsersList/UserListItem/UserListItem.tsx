@@ -7,13 +7,13 @@ import {
 } from '@material-ui/core';
 import { Delete, Edit, Lock } from '@material-ui/icons';
 import { SyntheticEvent, useContext } from 'react';
-import { ADMIN } from '../../../../providers/AccessProvider/permissions';
-import ConditionallyRender from '../../../../common/ConditionallyRender';
-import AccessContext from '../../../../../contexts/AccessContext';
-import { IUser } from '../../../../../interfaces/user';
+import { ADMIN } from 'component/providers/AccessProvider/permissions';
+import ConditionallyRender from 'component/common/ConditionallyRender';
+import AccessContext from 'contexts/AccessContext';
+import { IUser } from 'interfaces/user';
 import { useStyles } from './UserListItem.styles';
 import { useHistory } from 'react-router-dom';
-import { ILocationSettings } from '../../../../../hooks/useLocationSettings';
+import { ILocationSettings } from 'hooks/useLocationSettings';
 import { formatDateYMD } from 'utils/formatDate';
 
 interface IUserListItemProps {

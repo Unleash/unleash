@@ -1,9 +1,9 @@
 import { Button } from '@material-ui/core';
 import { useStyles } from './EnvironmentForm.styles';
 import React from 'react';
-import Input from '../../common/Input/Input';
+import Input from 'component/common/Input/Input';
 import EnvironmentTypeSelector from './EnvironmentTypeSelector/EnvironmentTypeSelector';
-import { trim } from '../../common/util';
+import { trim } from 'component/common/util';
 
 interface IEnvironmentForm {
     name: string;

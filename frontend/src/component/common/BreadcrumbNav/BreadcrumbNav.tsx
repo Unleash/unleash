@@ -2,7 +2,7 @@ import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import { Link, useLocation } from 'react-router-dom';
 import ConditionallyRender from '../ConditionallyRender';
 import { useStyles } from './BreadcrumbNav.styles';
-import AccessContext from '../../../contexts/AccessContext';
+import AccessContext from 'contexts/AccessContext';
 import { useContext } from 'react';
 import StringTruncator from '../StringTruncator/StringTruncator';
 

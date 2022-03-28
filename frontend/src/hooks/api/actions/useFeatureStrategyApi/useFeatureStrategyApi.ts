@@ -1,4 +1,4 @@
-import { IStrategyPayload } from '../../../../interfaces/strategy';
+import { IStrategyPayload } from 'interfaces/strategy';
 import useAPI from '../useApi/useApi';
 
 const useFeatureStrategyApi = () => {

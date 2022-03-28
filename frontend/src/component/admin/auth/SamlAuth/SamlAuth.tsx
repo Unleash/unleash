@@ -7,14 +7,14 @@ import {
     TextField,
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
-import PageContent from '../../../common/PageContent/PageContent';
-import AccessContext from '../../../../contexts/AccessContext';
-import { ADMIN } from '../../../providers/AccessProvider/permissions';
+import PageContent from 'component/common/PageContent/PageContent';
+import AccessContext from 'contexts/AccessContext';
+import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { AutoCreateForm } from '../AutoCreateForm/AutoCreateForm';
-import useToast from '../../../../hooks/useToast';
-import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
-import useAuthSettings from '../../../../hooks/api/getters/useAuthSettings/useAuthSettings';
-import useAuthSettingsApi from '../../../../hooks/api/actions/useAuthSettingsApi/useAuthSettingsApi';
+import useToast from 'hooks/useToast';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import useAuthSettings from 'hooks/api/getters/useAuthSettings/useAuthSettings';
+import useAuthSettingsApi from 'hooks/api/actions/useAuthSettingsApi/useAuthSettingsApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { removeEmptyStringFields } from 'utils/removeEmptyStringFields';
 

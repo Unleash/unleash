@@ -11,22 +11,22 @@ import {
     Tooltip,
 } from '@material-ui/core';
 import { Add, Delete, Edit, Label } from '@material-ui/icons';
-import HeaderTitle from '../../common/HeaderTitle';
-import PageContent from '../../common/PageContent/PageContent';
-import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyRender';
+import HeaderTitle from 'component/common/HeaderTitle';
+import PageContent from 'component/common/PageContent/PageContent';
+import ConditionallyRender from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
     DELETE_TAG_TYPE,
     UPDATE_TAG_TYPE,
-} from '../../providers/AccessProvider/permissions';
-import Dialogue from '../../common/Dialogue/Dialogue';
+} from 'component/providers/AccessProvider/permissions';
+import Dialogue from 'component/common/Dialogue/Dialogue';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import styles from './TagTypeList.module.scss';
-import AccessContext from '../../../contexts/AccessContext';
-import useTagTypesApi from '../../../hooks/api/actions/useTagTypesApi/useTagTypesApi';
-import useTagTypes from '../../../hooks/api/getters/useTagTypes/useTagTypes';
-import useToast from '../../../hooks/useToast';
-import PermissionIconButton from '../../common/PermissionIconButton/PermissionIconButton';
-import { formatUnknownError } from '../../../utils/formatUnknownError';
+import AccessContext from 'contexts/AccessContext';
+import useTagTypesApi from 'hooks/api/actions/useTagTypesApi/useTagTypesApi';
+import useTagTypes from 'hooks/api/getters/useTagTypes/useTagTypes';
+import useToast from 'hooks/useToast';
+import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 export const TagTypeList = () => {
     const { hasAccess } = useContext(AccessContext);

@@ -1,12 +1,12 @@
 import React from 'react';
-import Dialogue from '../../../../common/Dialogue/Dialogue';
-import ConditionallyRender from '../../../../common/ConditionallyRender/ConditionallyRender';
-import { REMOVE_USER_ERROR } from '../../../../../hooks/api/actions/useAdminUsersApi/useAdminUsersApi';
+import Dialogue from 'component/common/Dialogue/Dialogue';
+import ConditionallyRender from 'component/common/ConditionallyRender/ConditionallyRender';
+import { REMOVE_USER_ERROR } from 'hooks/api/actions/useAdminUsersApi/useAdminUsersApi';
 import { Alert } from '@material-ui/lab';
-import useLoading from '../../../../../hooks/useLoading';
+import useLoading from 'hooks/useLoading';
 import { Avatar, Typography } from '@material-ui/core';
-import { useCommonStyles } from '../../../../../common.styles';
-import { IUser } from '../../../../../interfaces/user';
+import { useCommonStyles } from 'common.styles';
+import { IUser } from 'interfaces/user';
 
 interface IDeleteUserProps {
     showDialog: boolean;

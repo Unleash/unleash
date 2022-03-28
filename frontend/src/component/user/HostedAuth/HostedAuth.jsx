@@ -3,20 +3,16 @@ import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import { Button, Grid, TextField, Typography } from '@material-ui/core';
 import { useHistory } from 'react-router';
-import { useCommonStyles } from '../../../common.styles';
+import { useCommonStyles } from 'common.styles';
 import { useStyles } from './HostedAuth.styles';
-import useQueryParams from '../../../hooks/useQueryParams';
+import useQueryParams from 'hooks/useQueryParams';
 import AuthOptions from '../common/AuthOptions/AuthOptions';
-import DividerText from '../../common/DividerText/DividerText';
-import ConditionallyRender from '../../common/ConditionallyRender';
-import PasswordField from '../../common/PasswordField/PasswordField';
-import { useAuthApi } from '../../../hooks/api/actions/useAuthApi/useAuthApi';
-import { useAuthUser } from '../../../hooks/api/getters/useAuth/useAuthUser';
-import {
-    LOGIN_BUTTON,
-    LOGIN_EMAIL_ID,
-    LOGIN_PASSWORD_ID,
-} from '../../../testIds';
+import DividerText from 'component/common/DividerText/DividerText';
+import ConditionallyRender from 'component/common/ConditionallyRender';
+import PasswordField from 'component/common/PasswordField/PasswordField';
+import { useAuthApi } from 'hooks/api/actions/useAuthApi/useAuthApi';
+import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
+import { LOGIN_BUTTON, LOGIN_EMAIL_ID, LOGIN_PASSWORD_ID } from 'testIds';
 
 const HostedAuth = ({ authDetails, redirect }) => {
     const commonStyles = useCommonStyles();

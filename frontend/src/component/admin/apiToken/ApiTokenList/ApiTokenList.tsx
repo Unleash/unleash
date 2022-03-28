@@ -9,28 +9,28 @@ import {
     TableHead,
     TableRow,
 } from '@material-ui/core';
-import AccessContext from '../../../../contexts/AccessContext';
-import useToast from '../../../../hooks/useToast';
-import useLoading from '../../../../hooks/useLoading';
-import useApiTokens from '../../../../hooks/api/getters/useApiTokens/useApiTokens';
-import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
-import useApiTokensApi from '../../../../hooks/api/actions/useApiTokensApi/useApiTokensApi';
-import ApiError from '../../../common/ApiError/ApiError';
-import PageContent from '../../../common/PageContent';
-import HeaderTitle from '../../../common/HeaderTitle';
-import ConditionallyRender from '../../../common/ConditionallyRender';
+import AccessContext from 'contexts/AccessContext';
+import useToast from 'hooks/useToast';
+import useLoading from 'hooks/useLoading';
+import useApiTokens from 'hooks/api/getters/useApiTokens/useApiTokens';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import useApiTokensApi from 'hooks/api/actions/useApiTokensApi/useApiTokensApi';
+import ApiError from 'component/common/ApiError/ApiError';
+import PageContent from 'component/common/PageContent';
+import HeaderTitle from 'component/common/HeaderTitle';
+import ConditionallyRender from 'component/common/ConditionallyRender';
 import {
     CREATE_API_TOKEN,
     DELETE_API_TOKEN,
-} from '../../../providers/AccessProvider/permissions';
+} from 'component/providers/AccessProvider/permissions';
 import { useStyles } from './ApiTokenList.styles';
 import Secret from './secret';
 import { Delete, FileCopy } from '@material-ui/icons';
-import Dialogue from '../../../common/Dialogue';
-import { CREATE_API_TOKEN_BUTTON } from '../../../../testIds';
+import Dialogue from 'component/common/Dialogue';
+import { CREATE_API_TOKEN_BUTTON } from 'testIds';
 import { Alert } from '@material-ui/lab';
 import copy from 'copy-to-clipboard';
-import { useLocationSettings } from '../../../../hooks/useLocationSettings';
+import { useLocationSettings } from 'hooks/useLocationSettings';
 import { formatDateYMD } from 'utils/formatDate';
 
 interface IApiToken {

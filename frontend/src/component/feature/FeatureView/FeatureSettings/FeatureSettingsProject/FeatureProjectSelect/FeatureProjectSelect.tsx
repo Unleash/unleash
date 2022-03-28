@@ -1,6 +1,6 @@
-import useProjects from '../../../../../../hooks/api/getters/useProjects/useProjects';
-import { IProject } from '../../../../../../interfaces/project';
-import GeneralSelect from '../../../../../common/GeneralSelect/GeneralSelect';
+import useProjects from 'hooks/api/getters/useProjects/useProjects';
+import { IProject } from 'interfaces/project';
+import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 
 interface IFeatureProjectSelect {
     enabled: boolean;

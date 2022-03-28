@@ -1,5 +1,5 @@
 import { FeatureMetricsTable } from '../FeatureMetricsTable/FeatureMetricsTable';
-import { IFeatureMetricsRaw } from '../../../../../interfaces/featureToggle';
+import { IFeatureMetricsRaw } from 'interfaces/featureToggle';
 import { FeatureMetricsStatsRaw } from '../FeatureMetricsStats/FeatureMetricsStatsRaw';
 import { FeatureMetricsChart } from '../FeatureMetricsChart/FeatureMetricsChart';
 import { FeatureMetricsEmpty } from '../FeatureMetricsEmpty/FeatureMetricsEmpty';

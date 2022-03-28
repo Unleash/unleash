@@ -7,8 +7,8 @@ import {
     RadioGroup,
     Radio,
 } from '@material-ui/core';
-import { ConstraintValueSearch } from '../../../ConstraintValueSearch/ConstraintValueSearch';
-import ConditionallyRender from '../../../../ConditionallyRender';
+import { ConstraintValueSearch } from 'component/common/ConstraintAccordion/ConstraintValueSearch/ConstraintValueSearch';
+import ConditionallyRender from 'component/common/ConditionallyRender';
 import { useCommonStyles } from 'common.styles';
 
 // Parent component

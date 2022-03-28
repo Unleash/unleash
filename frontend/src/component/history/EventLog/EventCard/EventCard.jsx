@@ -1,7 +1,7 @@
 import EventDiff from './EventDiff/EventDiff';
 
 import { useStyles } from './EventCard.styles';
-import ConditionallyRender from '../../../common/ConditionallyRender';
+import ConditionallyRender from 'component/common/ConditionallyRender';
 
 const EventCard = ({ entry, timeFormatted }) => {
     const styles = useStyles();

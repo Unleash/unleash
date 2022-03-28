@@ -2,7 +2,7 @@ import useSWR, { mutate, SWRConfiguration } from 'swr';
 import { useCallback } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import { IEvent } from '../../../../interfaces/event';
+import { IEvent } from 'interfaces/event';
 
 const PATH = formatApiPath('api/admin/events');
 

@@ -1,7 +1,7 @@
 import { FiberManualRecord } from '@material-ui/icons';
-import { IFeatureEnvironmentMetrics } from '../../../../../../../interfaces/featureToggle';
+import { IFeatureEnvironmentMetrics } from 'interfaces/featureToggle';
 import { calculatePercentage } from 'utils/calculatePercentage';
-import PercentageCircle from '../../../../../../common/PercentageCircle/PercentageCircle';
+import PercentageCircle from 'component/common/PercentageCircle/PercentageCircle';
 import { useStyles } from './FeatureOverviewEnvironmentMetrics.styles';
 
 interface IFeatureOverviewEnvironmentMetrics {

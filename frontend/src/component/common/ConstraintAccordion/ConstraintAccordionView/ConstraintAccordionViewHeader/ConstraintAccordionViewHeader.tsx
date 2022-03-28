@@ -1,11 +1,11 @@
-import StringTruncator from '../../../StringTruncator/StringTruncator';
+import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { Chip, useMediaQuery } from '@material-ui/core';
-import { ConstraintIcon } from '../../ConstraintIcon';
+import { ConstraintIcon } from 'component/common/ConstraintAccordion/ConstraintIcon';
 import { Delete, Edit } from '@material-ui/icons';
-import { IConstraint } from '../../../../../interfaces/strategy';
+import { IConstraint } from 'interfaces/strategy';
 
-import { useStyles } from '../../ConstraintAccordion.styles';
-import ConditionallyRender from '../../../ConditionallyRender';
+import { useStyles } from 'component/common/ConstraintAccordion/ConstraintAccordion.styles';
+import ConditionallyRender from 'component/common/ConditionallyRender';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { useParams } from 'react-router-dom';

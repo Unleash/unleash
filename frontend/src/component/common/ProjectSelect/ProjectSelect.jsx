@@ -2,7 +2,7 @@ import React from 'react';
 import { MenuItem } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import DropdownMenu from '../DropdownMenu/DropdownMenu';
-import useProjects from '../../../hooks/api/getters/useProjects/useProjects';
+import useProjects from 'hooks/api/getters/useProjects/useProjects';
 
 const ALL_PROJECTS = { id: '*', name: '> All projects' };
 

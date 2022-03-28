@@ -6,21 +6,21 @@ import {
     ListItemText,
 } from '@material-ui/core';
 import { Delete, Edit, Visibility, VisibilityOff } from '@material-ui/icons';
-import ConditionallyRender from '../../../common/ConditionallyRender/ConditionallyRender';
+import ConditionallyRender from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
     DELETE_ADDON,
     UPDATE_ADDON,
-} from '../../../providers/AccessProvider/permissions';
+} from 'component/providers/AccessProvider/permissions';
 import { Link, useHistory } from 'react-router-dom';
-import PageContent from '../../../common/PageContent/PageContent';
-import useAddons from '../../../../hooks/api/getters/useAddons/useAddons';
-import useToast from '../../../../hooks/useToast';
-import useAddonsApi from '../../../../hooks/api/actions/useAddonsApi/useAddonsApi';
+import PageContent from 'component/common/PageContent/PageContent';
+import useAddons from 'hooks/api/getters/useAddons/useAddons';
+import useToast from 'hooks/useToast';
+import useAddonsApi from 'hooks/api/actions/useAddonsApi/useAddonsApi';
 import { ReactElement, useContext, useState } from 'react';
-import AccessContext from '../../../../contexts/AccessContext';
-import { IAddon } from '../../../../interfaces/addons';
-import PermissionIconButton from '../../../common/PermissionIconButton/PermissionIconButton';
-import Dialogue from '../../../common/Dialogue';
+import AccessContext from 'contexts/AccessContext';
+import { IAddon } from 'interfaces/addons';
+import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
+import Dialogue from 'component/common/Dialogue';
 import { formatUnknownError } from 'utils/formatUnknownError';
 
 interface IConfigureAddonsProps {

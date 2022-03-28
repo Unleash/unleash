@@ -1,5 +1,5 @@
 import { Switch, Tooltip, SwitchProps } from '@material-ui/core';
-import AccessContext from '../../../contexts/AccessContext';
+import AccessContext from 'contexts/AccessContext';
 import React, { useContext } from 'react';
 
 interface IPermissionSwitchProps extends SwitchProps {

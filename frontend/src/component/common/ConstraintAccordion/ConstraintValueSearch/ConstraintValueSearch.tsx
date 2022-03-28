@@ -1,6 +1,6 @@
 import { TextField, InputAdornment, Chip } from '@material-ui/core';
 import { Search } from '@material-ui/icons';
-import ConditionallyRender from '../../ConditionallyRender';
+import ConditionallyRender from 'component/common/ConditionallyRender';
 
 interface IConstraintValueSearchProps {
     filter: string;

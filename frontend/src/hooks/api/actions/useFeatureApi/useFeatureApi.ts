@@ -1,5 +1,5 @@
-import { IFeatureTogglePayload } from '../../../../interfaces/featureToggle';
-import { ITag } from '../../../../interfaces/tags';
+import { IFeatureTogglePayload } from 'interfaces/featureToggle';
+import { ITag } from 'interfaces/tags';
 import useAPI from '../useApi/useApi';
 import { Operation } from 'fast-json-patch';
 import { IConstraint } from 'interfaces/strategy';

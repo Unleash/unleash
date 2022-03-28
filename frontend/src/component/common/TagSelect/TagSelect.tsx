@@ -1,6 +1,6 @@
 import React from 'react';
 import GeneralSelect from '../GeneralSelect/GeneralSelect';
-import useTagTypes from '../../../hooks/api/getters/useTagTypes/useTagTypes';
+import useTagTypes from 'hooks/api/getters/useTagTypes/useTagTypes';
 
 interface ITagSelect extends React.SelectHTMLAttributes<HTMLSelectElement> {
     value: string;

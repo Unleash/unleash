@@ -1,5 +1,5 @@
-import NoItems from '../../../common/NoItems/NoItems';
-import StringTruncator from '../../../common/StringTruncator/StringTruncator';
+import NoItems from 'component/common/NoItems/NoItems';
+import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { useStyles } from './FeatureStrategyEmpty.styles';
 import { FeatureStrategyMenu } from '../FeatureStrategyMenu/FeatureStrategyMenu';
 

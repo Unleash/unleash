@@ -1,11 +1,9 @@
-import { getBasePath } from 'utils/formatPath';
-import Dialogue from '../../../common/Dialogue';
+import Dialogue from 'component/common/Dialogue';
 import { Alert } from '@material-ui/lab';
 import { Checkbox, FormControlLabel } from '@material-ui/core';
 import { PRODUCTION } from 'constants/environmentTypes';
 import { IFeatureToggle } from 'interfaces/featureToggle';
 import { createPersistentGlobalStateHook } from 'hooks/usePersistentGlobalState';
-import { setLocalStorageItem } from 'utils/storage';
 
 interface IFeatureStrategyProdGuardProps {
     open: boolean;
@@ -80,13 +78,8 @@ export const useFeatureStrategyProdGuard = (
     return environment?.type === PRODUCTION;
 };
 
-export const disableFeatureStrategiesProductionGuard = () => {
-    const settings: IFeatureStrategyProdGuardSettings = { hide: true };
-    setLocalStorageItem(localStorageKey, settings);
-};
-
 // Store the "always hide" prod guard dialog setting in localStorage.
-const localStorageKey = `${getBasePath()}:useFeatureStrategyProdGuardSettings:v1`;
+const localStorageKey = 'useFeatureStrategyProdGuardSettings:v2';
 
 const useFeatureStrategyProdGuardSettings =
     createPersistentGlobalStateHook<IFeatureStrategyProdGuardSettings>(

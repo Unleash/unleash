@@ -1,4 +1,4 @@
-import { IPermission } from '../../../../interfaces/project';
+import { IPermission } from 'interfaces/project';
 import useAPI from '../useApi/useApi';
 
 interface ICreateRolePayload {

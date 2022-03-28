@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import PageContent from '../../../common/PageContent';
+import PageContent from 'component/common/PageContent';
 import { useStyles } from './FeatureSettings.styles';
 import { List, ListItem } from '@material-ui/core';
-import ConditionallyRender from '../../../common/ConditionallyRender';
+import ConditionallyRender from 'component/common/ConditionallyRender';
 import FeatureSettingsProject from './FeatureSettingsProject/FeatureSettingsProject';
 import { useParams } from 'react-router-dom';
-import { IFeatureViewParams } from '../../../../interfaces/params';
+import { IFeatureViewParams } from 'interfaces/params';
 import { FeatureSettingsInformation } from './FeatureSettingsInformation/FeatureSettingsInformation';
 
 const METADATA = 'metadata';

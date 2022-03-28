@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { Paper, Tab, Tabs } from '@material-ui/core';
-import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const navLinkStyle = {
     display: 'flex',

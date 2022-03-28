@@ -4,7 +4,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { ThemeProvider } from '@material-ui/core';
 
 import Footer from '../Footer/Footer';
-import theme from '../../../themes/mainTheme';
+import theme from 'themes/mainTheme';
 
 test('should render DrawerMenu', () => {
     const tree = renderer.create(

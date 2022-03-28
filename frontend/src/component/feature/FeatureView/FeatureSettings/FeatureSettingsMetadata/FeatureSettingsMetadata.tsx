@@ -1,16 +1,16 @@
 import { useContext, useEffect, useState } from 'react';
 import * as jsonpatch from 'fast-json-patch';
 import { TextField } from '@material-ui/core';
-import PermissionButton from '../../../../common/PermissionButton/PermissionButton';
+import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import FeatureTypeSelect from './FeatureTypeSelect/FeatureTypeSelect';
 import { useParams } from 'react-router';
-import AccessContext from '../../../../../contexts/AccessContext';
-import { UPDATE_FEATURE } from '../../../../providers/AccessProvider/permissions';
-import { useFeature } from '../../../../../hooks/api/getters/useFeature/useFeature';
-import { IFeatureViewParams } from '../../../../../interfaces/params';
-import useToast from '../../../../../hooks/useToast';
-import useFeatureApi from '../../../../../hooks/api/actions/useFeatureApi/useFeatureApi';
-import ConditionallyRender from '../../../../common/ConditionallyRender';
+import AccessContext from 'contexts/AccessContext';
+import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
+import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
+import { IFeatureViewParams } from 'interfaces/params';
+import useToast from 'hooks/useToast';
+import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
+import ConditionallyRender from 'component/common/ConditionallyRender';
 import { formatUnknownError } from 'utils/formatUnknownError';
 
 const FeatureSettingsMetadata = () => {

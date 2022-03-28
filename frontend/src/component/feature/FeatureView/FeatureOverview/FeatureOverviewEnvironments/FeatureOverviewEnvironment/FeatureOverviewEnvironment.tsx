@@ -7,19 +7,19 @@ import {
 import { ExpandMore } from '@material-ui/icons';
 import React from 'react';
 import { useParams } from 'react-router';
-import { useFeature } from '../../../../../../hooks/api/getters/useFeature/useFeature';
-import useFeatureMetrics from '../../../../../../hooks/api/getters/useFeatureMetrics/useFeatureMetrics';
-import { IFeatureEnvironment } from '../../../../../../interfaces/featureToggle';
-import { IFeatureViewParams } from '../../../../../../interfaces/params';
+import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
+import useFeatureMetrics from 'hooks/api/getters/useFeatureMetrics/useFeatureMetrics';
+import { IFeatureEnvironment } from 'interfaces/featureToggle';
+import { IFeatureViewParams } from 'interfaces/params';
 import { getFeatureMetrics } from 'utils/getFeatureMetrics';
 import {
     getFeatureStrategyIcon,
     formatStrategyName,
 } from 'utils/strategyNames';
-import ConditionallyRender from '../../../../../common/ConditionallyRender';
-import DisabledIndicator from '../../../../../common/DisabledIndicator/DisabledIndicator';
-import EnvironmentIcon from '../../../../../common/EnvironmentIcon/EnvironmentIcon';
-import StringTruncator from '../../../../../common/StringTruncator/StringTruncator';
+import ConditionallyRender from 'component/common/ConditionallyRender';
+import DisabledIndicator from 'component/common/DisabledIndicator/DisabledIndicator';
+import EnvironmentIcon from 'component/common/EnvironmentIcon/EnvironmentIcon';
+import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { useStyles } from './FeatureOverviewEnvironment.styles';
 import FeatureOverviewEnvironmentBody from './FeatureOverviewEnvironmentBody/FeatureOverviewEnvironmentBody';
 import FeatureOverviewEnvironmentFooter from './FeatureOverviewEnvironmentFooter/FeatureOverviewEnvironmentFooter';

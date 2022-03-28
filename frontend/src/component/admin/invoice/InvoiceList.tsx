@@ -8,13 +8,13 @@ import {
     Button,
 } from '@material-ui/core';
 import OpenInNew from '@material-ui/icons/OpenInNew';
-import PageContent from '../../common/PageContent';
-import HeaderTitle from '../../common/HeaderTitle';
-import ConditionallyRender from '../../common/ConditionallyRender';
+import PageContent from 'component/common/PageContent';
+import HeaderTitle from 'component/common/HeaderTitle';
+import ConditionallyRender from 'component/common/ConditionallyRender';
 import { formatApiPath } from 'utils/formatPath';
-import useInvoices from '../../../hooks/api/getters/useInvoices/useInvoices';
-import { IInvoice } from '../../../interfaces/invoice';
-import { useLocationSettings } from '../../../hooks/useLocationSettings';
+import useInvoices from 'hooks/api/getters/useInvoices/useInvoices';
+import { IInvoice } from 'interfaces/invoice';
+import { useLocationSettings } from 'hooks/useLocationSettings';
 import { formatDateYMD } from 'utils/formatDate';
 
 const PORTAL_URL = formatApiPath('api/admin/invoices/portal');

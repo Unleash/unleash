@@ -1,5 +1,5 @@
 import { ReactElement } from 'react';
-import ConditionallyRender from '../../../common/ConditionallyRender';
+import ConditionallyRender from 'component/common/ConditionallyRender';
 import {
     formatCurrentVersion,
     formatUpdateNotification,

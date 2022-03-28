@@ -6,21 +6,21 @@ import { AppBar, Container, IconButton, Tooltip } from '@material-ui/core';
 import { DrawerMenu } from '../drawer';
 import MenuIcon from '@material-ui/icons/Menu';
 import SettingsIcon from '@material-ui/icons/Settings';
-import UserProfile from '../../user/UserProfile';
-import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyRender';
+import UserProfile from 'component/user/UserProfile';
+import ConditionallyRender from 'component/common/ConditionallyRender/ConditionallyRender';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import { ReactComponent as UnleashLogo } from 'assets/img/logoDarkWithText.svg';
 
 import { useStyles } from './Header.styles';
-import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
-import { useCommonStyles } from '../../../common.styles';
-import { ADMIN } from '../../providers/AccessProvider/permissions';
-import { IPermission } from '../../../interfaces/user';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { useCommonStyles } from 'common.styles';
+import { ADMIN } from 'component/providers/AccessProvider/permissions';
+import { IPermission } from 'interfaces/user';
 import NavigationMenu from './NavigationMenu/NavigationMenu';
 import { getRoutes } from '../routes';
 import { KeyboardArrowDown } from '@material-ui/icons';
-import { filterByFlags } from '../../common/util';
-import { useAuthPermissions } from '../../../hooks/api/getters/useAuth/useAuthPermissions';
+import { filterByFlags } from 'component/common/util';
+import { useAuthPermissions } from 'hooks/api/getters/useAuth/useAuthPermissions';
 
 const Header = () => {
     const theme = useTheme();

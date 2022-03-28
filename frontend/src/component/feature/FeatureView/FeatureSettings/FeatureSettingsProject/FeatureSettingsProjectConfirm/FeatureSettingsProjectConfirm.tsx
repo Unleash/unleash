@@ -1,13 +1,10 @@
 import { List, ListItem } from '@material-ui/core';
 import { Check, Error, Cloud } from '@material-ui/icons';
 import { useState, useEffect } from 'react';
-import useProject from '../../../../../../hooks/api/getters/useProject/useProject';
-import {
-    IFeatureEnvironment,
-    IFeatureToggle,
-} from '../../../../../../interfaces/featureToggle';
-import ConditionallyRender from '../../../../../common/ConditionallyRender';
-import Dialogue from '../../../../../common/Dialogue';
+import useProject from 'hooks/api/getters/useProject/useProject';
+import { IFeatureEnvironment, IFeatureToggle } from 'interfaces/featureToggle';
+import ConditionallyRender from 'component/common/ConditionallyRender';
+import Dialogue from 'component/common/Dialogue';
 import { useStyles } from './FeatureSettingsProjectConfirm.styles';
 
 interface IFeatureSettingsProjectConfirm {

@@ -9,15 +9,15 @@ import React, {
     useState,
 } from 'react';
 import { useHistory } from 'react-router';
-import { useCommonStyles } from '../../../../common.styles';
-import { OK } from '../../../../constants/statusCodes';
-import ConditionallyRender from '../../../common/ConditionallyRender';
+import { useCommonStyles } from 'common.styles';
+import { OK } from 'constants/statusCodes';
+import ConditionallyRender from 'component/common/ConditionallyRender';
 import ResetPasswordError from '../ResetPasswordError/ResetPasswordError';
 import PasswordChecker from './PasswordChecker/PasswordChecker';
 import PasswordMatcher from './PasswordMatcher/PasswordMatcher';
 import { useStyles } from './ResetPasswordForm.styles';
 import { formatApiPath } from 'utils/formatPath';
-import PasswordField from '../../../common/PasswordField/PasswordField';
+import PasswordField from 'component/common/PasswordField/PasswordField';
 
 interface IResetPasswordProps {
     token: string;

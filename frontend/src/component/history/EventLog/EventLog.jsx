@@ -1,11 +1,11 @@
 import { List, Switch, FormControlLabel } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import EventJson from './EventJson/EventJson';
-import PageContent from '../../common/PageContent/PageContent';
-import HeaderTitle from '../../common/HeaderTitle';
+import PageContent from 'component/common/PageContent/PageContent';
+import HeaderTitle from 'component/common/HeaderTitle';
 import EventCard from './EventCard/EventCard';
 import { useStyles } from './EventLog.styles.js';
-import { formatDateYMDHMS } from '../../../utils/formatDate';
+import { formatDateYMDHMS } from 'utils/formatDate';
 
 const EventLog = ({
     title,

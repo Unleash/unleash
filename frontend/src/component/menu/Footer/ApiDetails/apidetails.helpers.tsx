@@ -1,4 +1,4 @@
-import { IVersionInfo } from '../../../../interfaces/uiConfig';
+import { IVersionInfo } from 'interfaces/uiConfig';
 
 export interface IPartialUiConfig {
     name: string;

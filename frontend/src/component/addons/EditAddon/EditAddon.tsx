@@ -1,8 +1,8 @@
 import { useParams } from 'react-router-dom';
-import useAddons from '../../../hooks/api/getters/useAddons/useAddons';
+import useAddons from 'hooks/api/getters/useAddons/useAddons';
 import { AddonForm } from '../AddonForm/AddonForm';
 import cloneDeep from 'lodash.clonedeep';
-import { IAddon } from '../../../interfaces/addons';
+import { IAddon } from 'interfaces/addons';
 
 interface IAddonEditParams {
     addonId: string;

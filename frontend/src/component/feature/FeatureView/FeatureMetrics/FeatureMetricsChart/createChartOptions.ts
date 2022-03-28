@@ -1,7 +1,7 @@
-import { ILocationSettings } from '../../../../../hooks/useLocationSettings';
+import { ILocationSettings } from 'hooks/useLocationSettings';
 import 'chartjs-adapter-date-fns';
 import { ChartOptions, defaults } from 'chart.js';
-import { IFeatureMetricsRaw } from '../../../../../interfaces/featureToggle';
+import { IFeatureMetricsRaw } from 'interfaces/featureToggle';
 import theme from 'themes/mainTheme';
 import { formatDateHM } from 'utils/formatDate';
 

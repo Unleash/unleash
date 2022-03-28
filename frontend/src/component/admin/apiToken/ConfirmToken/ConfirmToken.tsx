@@ -1,6 +1,6 @@
 import { Typography } from '@material-ui/core';
-import { useCommonStyles } from '../../../../common.styles';
-import Dialogue from '../../../common/Dialogue';
+import { useCommonStyles } from 'common.styles';
+import Dialogue from 'component/common/Dialogue';
 import { UserToken } from './UserToken/UserToken';
 
 interface IConfirmUserLink {

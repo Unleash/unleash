@@ -1,10 +1,10 @@
 import React from 'react';
 import AdminMenu from '../menu/AdminMenu';
 import { Alert } from '@material-ui/lab';
-import TabNav from '../../common/TabNav/TabNav';
-import PageContent from '../../common/PageContent/PageContent';
-import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyRender';
-import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
+import TabNav from 'component/common/TabNav/TabNav';
+import PageContent from 'component/common/PageContent/PageContent';
+import ConditionallyRender from 'component/common/ConditionallyRender/ConditionallyRender';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { OidcAuth } from './OidcAuth/OidcAuth';
 import { SamlAuth } from './SamlAuth/SamlAuth';
 import { PasswordAuth } from './PasswordAuth/PasswordAuth';

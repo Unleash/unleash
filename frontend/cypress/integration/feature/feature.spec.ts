@@ -1,23 +1,32 @@
 /// <reference types="cypress" />
 
-import { disableFeatureStrategiesProductionGuard } from '../../../src/component/feature/FeatureStrategy/FeatureStrategyProdGuard/FeatureStrategyProdGuard';
-import { activeSplashIds } from '../../../src/component/splash/splash';
+export {};
 
+const AUTH_USER = Cypress.env('AUTH_USER');
+const AUTH_PASSWORD = Cypress.env('AUTH_PASSWORD');
+const ENTERPRISE = Boolean(Cypress.env('ENTERPRISE'));
 const randomId = String(Math.random()).split('.')[1];
 const featureToggleName = `unleash-e2e-${randomId}`;
 const baseUrl = Cypress.config().baseUrl;
 let strategyId = '';
 
-const AUTH_USER = Cypress.env('AUTH_USER');
-const AUTH_PASSWORD = Cypress.env('AUTH_PASSWORD');
-const ENTERPRISE = Boolean(Cypress.env('ENTERPRISE'));
+// Disable the prod guard modal by marking it as seen.
+const disableFeatureStrategiesProdGuard = () => {
+    localStorage.setItem(
+        'useFeatureStrategyProdGuardSettings:v2',
+        JSON.stringify({ hide: true })
+    );
+};
+
+// Disable all active splash pages by visiting them.
+const disableActiveSplashScreens = () => {
+    cy.visit(`/splash/operators`);
+};
 
 describe('feature', () => {
     before(() => {
-        // Visit all splash pages to mark them as seen.
-        activeSplashIds.forEach(splashId => {
-            cy.visit(`/splash/${splashId}`);
-        });
+        disableFeatureStrategiesProdGuard();
+        disableActiveSplashScreens();
     });
 
     after(() => {
@@ -32,7 +41,6 @@ describe('feature', () => {
     });
 
     beforeEach(() => {
-        disableFeatureStrategiesProductionGuard();
         cy.visit('/');
         cy.get('[data-test="LOGIN_EMAIL_ID"]').type(AUTH_USER);
 

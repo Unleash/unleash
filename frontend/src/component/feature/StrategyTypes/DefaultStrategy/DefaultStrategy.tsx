@@ -1,5 +1,5 @@
 import React from 'react';
-import { IStrategy } from '../../../../interfaces/strategy';
+import { IStrategy } from 'interfaces/strategy';
 
 interface IDefaultStrategyProps {
     strategyDefinition: IStrategy;

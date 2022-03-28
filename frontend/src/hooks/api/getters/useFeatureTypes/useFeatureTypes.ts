@@ -1,7 +1,7 @@
 import useSWR, { mutate, SWRConfiguration } from 'swr';
 import { useState, useEffect } from 'react';
 import { formatApiPath } from 'utils/formatPath';
-import { IFeatureType } from '../../../../interfaces/featureTypes';
+import { IFeatureType } from 'interfaces/featureTypes';
 import handleErrorResponses from '../httpErrorResponseHandler';
 
 const useFeatureTypes = (options: SWRConfiguration = {}) => {

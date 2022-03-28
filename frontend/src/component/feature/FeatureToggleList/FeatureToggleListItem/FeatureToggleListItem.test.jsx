@@ -5,7 +5,7 @@ import { ThemeProvider } from '@material-ui/core';
 import FeatureToggleListItem from './index';
 import renderer from 'react-test-renderer';
 
-import theme from '../../../../themes/mainTheme';
+import theme from 'themes/mainTheme';
 
 test('renders correctly with one feature', () => {
     const feature = {

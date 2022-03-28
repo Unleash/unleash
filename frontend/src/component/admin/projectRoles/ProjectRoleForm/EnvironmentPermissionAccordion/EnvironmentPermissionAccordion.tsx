@@ -10,9 +10,9 @@ import { useEffect, useState } from 'react';
 import {
     IPermission,
     IProjectEnvironmentPermissions,
-} from '../../../../../interfaces/project';
-import StringTruncator from '../../../../common/StringTruncator/StringTruncator';
-import { ICheckedPermission } from '../../hooks/useProjectRoleForm';
+} from 'interfaces/project';
+import StringTruncator from 'component/common/StringTruncator/StringTruncator';
+import { ICheckedPermission } from 'component/admin/projectRoles/hooks/useProjectRoleForm';
 import { useStyles } from './EnvironmentPermissionAccordion.styles';
 
 type PermissionMap = { [key: string]: boolean };

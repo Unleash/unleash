@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import useContextsApi from '../../../hooks/api/actions/useContextsApi/useContextsApi';
+import useContextsApi from 'hooks/api/actions/useContextsApi/useContextsApi';
 
 export const useContextForm = (
     initialcontextName = '',

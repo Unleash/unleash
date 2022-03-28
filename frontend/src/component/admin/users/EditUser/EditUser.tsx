@@ -1,7 +1,7 @@
 import { useHistory, useParams } from 'react-router-dom';
 import UserForm from '../UserForm/UserForm';
 import useAddUserForm from '../hooks/useAddUserForm';
-import { scrollToTop } from '../../../common/util';
+import { scrollToTop } from 'component/common/util';
 import { useEffect } from 'react';
 import { UpdateButton } from 'component/common/UpdateButton/UpdateButton';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';

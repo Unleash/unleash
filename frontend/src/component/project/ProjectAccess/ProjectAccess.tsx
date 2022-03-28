@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Alert } from '@material-ui/lab';
 import { ProjectAccessAddUser } from './ProjectAccessAddUser/ProjectAccessAddUser';
-import PageContent from '../../common/PageContent';
+import PageContent from 'component/common/PageContent';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useStyles } from './ProjectAccess.styles';
 import { useParams } from 'react-router-dom';

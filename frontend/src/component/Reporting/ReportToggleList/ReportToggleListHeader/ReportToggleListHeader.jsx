@@ -2,11 +2,14 @@ import React from 'react';
 import { Checkbox } from '@material-ui/core';
 import UnfoldMoreOutlinedIcon from '@material-ui/icons/UnfoldMoreOutlined';
 import PropTypes from 'prop-types';
-
-import ConditionallyRender from '../../../common/ConditionallyRender/ConditionallyRender';
-
-import { NAME, LAST_SEEN, CREATED, EXPIRED, STATUS } from '../../constants';
-
+import ConditionallyRender from 'component/common/ConditionallyRender/ConditionallyRender';
+import {
+    NAME,
+    LAST_SEEN,
+    CREATED,
+    EXPIRED,
+    STATUS,
+} from 'component/Reporting/constants';
 import { useStyles } from '../ReportToggleList.styles';
 
 const ReportToggleListHeader = ({

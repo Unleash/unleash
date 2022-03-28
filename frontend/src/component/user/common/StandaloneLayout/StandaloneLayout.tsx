@@ -1,6 +1,5 @@
 import { FC } from 'react';
-import StandaloneBanner from '../../StandaloneBanner/StandaloneBanner';
-
+import StandaloneBanner from 'component/user/StandaloneBanner/StandaloneBanner';
 import { useStyles } from './StandaloneLayout.styles';
 
 interface IStandaloneLayout {

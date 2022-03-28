@@ -2,30 +2,30 @@ import { Tab, Tabs, useMediaQuery } from '@material-ui/core';
 import React, { useState } from 'react';
 import { Archive, FileCopy, Label, WatchLater } from '@material-ui/icons';
 import { Link, Route, useHistory, useParams, Switch } from 'react-router-dom';
-import useFeatureApi from '../../../hooks/api/actions/useFeatureApi/useFeatureApi';
+import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
-import useProject from '../../../hooks/api/getters/useProject/useProject';
-import useTabs from '../../../hooks/useTabs';
-import useToast from '../../../hooks/useToast';
+import useProject from 'hooks/api/getters/useProject/useProject';
+import useTabs from 'hooks/useTabs';
+import useToast from 'hooks/useToast';
 import { IFeatureViewParams } from 'interfaces/params';
 import {
     CREATE_FEATURE,
     DELETE_FEATURE,
     UPDATE_FEATURE,
-} from '../../providers/AccessProvider/permissions';
-import Dialogue from '../../common/Dialogue';
-import PermissionIconButton from '../../common/PermissionIconButton/PermissionIconButton';
+} from 'component/providers/AccessProvider/permissions';
+import Dialogue from 'component/common/Dialogue';
+import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import FeatureLog from './FeatureLog/FeatureLog';
 import FeatureOverview from './FeatureOverview/FeatureOverview';
 import FeatureVariants from './FeatureVariants/FeatureVariants';
 import { FeatureMetrics } from './FeatureMetrics/FeatureMetrics';
 import { useStyles } from './FeatureView.styles';
 import { FeatureSettings } from './FeatureSettings/FeatureSettings';
-import useLoading from '../../../hooks/useLoading';
-import ConditionallyRender from '../../common/ConditionallyRender';
+import useLoading from 'hooks/useLoading';
+import ConditionallyRender from 'component/common/ConditionallyRender';
 import StaleDialog from './FeatureOverview/StaleDialog/StaleDialog';
 import AddTagDialog from './FeatureOverview/AddTagDialog/AddTagDialog';
-import StatusChip from '../../common/StatusChip/StatusChip';
+import StatusChip from 'component/common/StatusChip/StatusChip';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { FeatureNotFound } from 'component/feature/FeatureView/FeatureNotFound/FeatureNotFound';
 

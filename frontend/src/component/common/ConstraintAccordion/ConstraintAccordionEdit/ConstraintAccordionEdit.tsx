@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import classnames from 'classnames';
-import { IConstraint } from '../../../../interfaces/strategy';
+import { IConstraint } from 'interfaces/strategy';
 import { useStyles } from '../ConstraintAccordion.styles';
 import { ConstraintAccordionEditBody } from './ConstraintAccordionEditBody/ConstraintAccordionEditBody';
 import { ConstraintAccordionEditHeader } from './ConstraintAccordionEditHeader/ConstraintAccordionEditHeader';

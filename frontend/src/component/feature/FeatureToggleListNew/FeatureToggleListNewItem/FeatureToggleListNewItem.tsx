@@ -1,20 +1,20 @@
 import React, { useRef, useState } from 'react';
 import { TableCell, TableRow } from '@material-ui/core';
 import { useStyles } from '../FeatureToggleListNew.styles';
-import useToggleFeatureByEnv from '../../../../hooks/api/actions/useToggleFeatureByEnv/useToggleFeatureByEnv';
-import { IEnvironments } from '../../../../interfaces/featureToggle';
-import useToast from '../../../../hooks/useToast';
+import useToggleFeatureByEnv from 'hooks/api/actions/useToggleFeatureByEnv/useToggleFeatureByEnv';
+import { IEnvironments } from 'interfaces/featureToggle';
+import useToast from 'hooks/useToast';
 import { getTogglePath } from 'utils/routePathHelpers';
-import FeatureStatus from '../../FeatureView/FeatureStatus/FeatureStatus';
-import FeatureType from '../../FeatureView/FeatureType/FeatureType';
+import FeatureStatus from 'component/feature/FeatureView/FeatureStatus/FeatureStatus';
+import FeatureType from 'component/feature/FeatureView/FeatureType/FeatureType';
 import classNames from 'classnames';
 import CreatedAt from './CreatedAt';
-import useProject from '../../../../hooks/api/getters/useProject/useProject';
-import { UPDATE_FEATURE_ENVIRONMENT } from '../../../providers/AccessProvider/permissions';
-import PermissionSwitch from '../../../common/PermissionSwitch/PermissionSwitch';
+import useProject from 'hooks/api/getters/useProject/useProject';
+import { UPDATE_FEATURE_ENVIRONMENT } from 'component/providers/AccessProvider/permissions';
+import PermissionSwitch from 'component/common/PermissionSwitch/PermissionSwitch';
 import { Link } from 'react-router-dom';
-import { ENVIRONMENT_STRATEGY_ERROR } from '../../../../constants/apiErrors';
-import EnvironmentStrategyDialog from '../../../common/EnvironmentStrategiesDialog/EnvironmentStrategyDialog';
+import { ENVIRONMENT_STRATEGY_ERROR } from 'constants/apiErrors';
+import EnvironmentStrategyDialog from 'component/common/EnvironmentStrategiesDialog/EnvironmentStrategyDialog';
 
 interface IFeatureToggleListNewItemProps {
     name: string;

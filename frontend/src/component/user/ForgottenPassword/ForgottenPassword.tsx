@@ -3,12 +3,12 @@ import { AlertTitle, Alert } from '@material-ui/lab';
 import classnames from 'classnames';
 import { SyntheticEvent, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useCommonStyles } from '../../../common.styles';
-import useLoading from '../../../hooks/useLoading';
-import { FORGOTTEN_PASSWORD_FIELD } from '../../../testIds';
+import { useCommonStyles } from 'common.styles';
+import useLoading from 'hooks/useLoading';
+import { FORGOTTEN_PASSWORD_FIELD } from 'testIds';
 import { formatApiPath } from 'utils/formatPath';
-import ConditionallyRender from '../../common/ConditionallyRender';
-import DividerText from '../../common/DividerText/DividerText';
+import ConditionallyRender from 'component/common/ConditionallyRender';
+import DividerText from 'component/common/DividerText/DividerText';
 import StandaloneLayout from '../common/StandaloneLayout/StandaloneLayout';
 import { useStyles } from './ForgottenPassword.styles';
 

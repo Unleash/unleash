@@ -1,24 +1,24 @@
 import { useEffect, useState } from 'react';
-import ConditionallyRender from '../../common/ConditionallyRender';
+import ConditionallyRender from 'component/common/ConditionallyRender';
 import { useStyles } from './ProjectEnvironment.styles';
 
-import useLoading from '../../../hooks/useLoading';
-import PageContent from '../../common/PageContent';
-import HeaderTitle from '../../common/HeaderTitle';
-import { UPDATE_PROJECT } from '../../providers/AccessProvider/permissions';
+import useLoading from 'hooks/useLoading';
+import PageContent from 'component/common/PageContent';
+import HeaderTitle from 'component/common/HeaderTitle';
+import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
 
-import ApiError from '../../common/ApiError/ApiError';
-import useToast from '../../../hooks/useToast';
-import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
-import { useEnvironments } from '../../../hooks/api/getters/useEnvironments/useEnvironments';
-import useProject from '../../../hooks/api/getters/useProject/useProject';
+import ApiError from 'component/common/ApiError/ApiError';
+import useToast from 'hooks/useToast';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
+import useProject from 'hooks/api/getters/useProject/useProject';
 import { FormControlLabel, FormGroup } from '@material-ui/core';
-import useProjectApi from '../../../hooks/api/actions/useProjectApi/useProjectApi';
+import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import EnvironmentDisableConfirm from './EnvironmentDisableConfirm/EnvironmentDisableConfirm';
 import { Link } from 'react-router-dom';
 import { Alert } from '@material-ui/lab';
-import PermissionSwitch from '../../common/PermissionSwitch/PermissionSwitch';
-import { IProjectEnvironment } from '../../../interfaces/environments';
+import PermissionSwitch from 'component/common/PermissionSwitch/PermissionSwitch';
+import { IProjectEnvironment } from 'interfaces/environments';
 import { getEnabledEnvs } from './helpers';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { useCommonStyles } from 'common.styles';

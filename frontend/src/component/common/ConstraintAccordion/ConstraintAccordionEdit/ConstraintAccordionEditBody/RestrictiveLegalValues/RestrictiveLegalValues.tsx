@@ -2,7 +2,7 @@ import { Checkbox, FormControlLabel } from '@material-ui/core';
 import { useCommonStyles } from 'common.styles';
 import ConditionallyRender from 'component/common/ConditionallyRender';
 import { useEffect, useState } from 'react';
-import { ConstraintValueSearch } from '../../../ConstraintValueSearch/ConstraintValueSearch';
+import { ConstraintValueSearch } from 'component/common/ConstraintAccordion/ConstraintValueSearch/ConstraintValueSearch';
 import { ConstraintFormHeader } from '../ConstraintFormHeader/ConstraintFormHeader';
 
 // Parent component

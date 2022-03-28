@@ -1,8 +1,8 @@
 import PermissionButton, {
     IPermissionButtonProps,
-} from '../../../common/PermissionButton/PermissionButton';
+} from 'component/common/PermissionButton/PermissionButton';
 import React, { useState } from 'react';
-import { CREATE_FEATURE_STRATEGY } from '../../../providers/AccessProvider/permissions';
+import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { Popover } from '@material-ui/core';
 import { FeatureStrategyMenuCards } from './FeatureStrategyMenuCards/FeatureStrategyMenuCards';
 

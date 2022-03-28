@@ -1,4 +1,4 @@
-import { IFeatureMetricsRaw } from '../../../../../interfaces/featureToggle';
+import { IFeatureMetricsRaw } from 'interfaces/featureToggle';
 import {
     Table,
     TableBody,
@@ -8,7 +8,7 @@ import {
     useMediaQuery,
     useTheme,
 } from '@material-ui/core';
-import { useLocationSettings } from '../../../../../hooks/useLocationSettings';
+import { useLocationSettings } from 'hooks/useLocationSettings';
 import { useMemo } from 'react';
 import { formatDateYMDHMS } from 'utils/formatDate';
 

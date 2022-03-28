@@ -1,4 +1,4 @@
-import { IAddon } from '../../../../interfaces/addons';
+import { IAddon } from 'interfaces/addons';
 import useAPI from '../useApi/useApi';
 
 const useAddonsApi = () => {

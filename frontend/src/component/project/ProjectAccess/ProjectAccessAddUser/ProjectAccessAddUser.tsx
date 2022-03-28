@@ -10,14 +10,14 @@ import { Search } from '@material-ui/icons';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { Alert } from '@material-ui/lab';
 import { ProjectRoleSelect } from '../ProjectRoleSelect/ProjectRoleSelect';
-import useProjectApi from '../../../../hooks/api/actions/useProjectApi/useProjectApi';
+import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import { useParams } from 'react-router-dom';
-import useToast from '../../../../hooks/useToast';
+import useToast from 'hooks/useToast';
 import useProjectAccess, {
     IProjectAccessUser,
-} from '../../../../hooks/api/getters/useProjectAccess/useProjectAccess';
-import { IProjectRole } from '../../../../interfaces/role';
-import ConditionallyRender from '../../../common/ConditionallyRender';
+} from 'hooks/api/getters/useProjectAccess/useProjectAccess';
+import { IProjectRole } from 'interfaces/role';
+import ConditionallyRender from 'component/common/ConditionallyRender';
 
 interface IProjectAccessAddUserProps {
     roles: IProjectRole[];

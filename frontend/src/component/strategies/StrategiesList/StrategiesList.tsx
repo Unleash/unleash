@@ -21,7 +21,7 @@ import {
     CREATE_STRATEGY,
     DELETE_STRATEGY,
     UPDATE_STRATEGY,
-} from '../../providers/AccessProvider/permissions';
+} from 'component/providers/AccessProvider/permissions';
 import ConditionallyRender from 'component/common/ConditionallyRender/ConditionallyRender';
 import PageContent from 'component/common/PageContent/PageContent';
 import HeaderTitle from 'component/common/HeaderTitle';

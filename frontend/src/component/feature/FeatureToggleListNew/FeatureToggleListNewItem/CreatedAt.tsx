@@ -1,5 +1,5 @@
 import { Tooltip } from '@material-ui/core';
-import { useLocationSettings } from '../../../../hooks/useLocationSettings';
+import { useLocationSettings } from 'hooks/useLocationSettings';
 import { formatDateYMD, formatDateYMDHMS } from 'utils/formatDate';
 
 interface CreatedAtProps {

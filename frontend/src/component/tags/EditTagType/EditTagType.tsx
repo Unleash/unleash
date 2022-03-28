@@ -1,5 +1,5 @@
 import { useHistory, useParams } from 'react-router-dom';
-import { UPDATE_TAG_TYPE } from '../../providers/AccessProvider/permissions';
+import { UPDATE_TAG_TYPE } from 'component/providers/AccessProvider/permissions';
 import useTagTypeForm from '../TagTypeForm/useTagTypeForm';
 import TagForm from '../TagTypeForm/TagTypeForm';
 import { UpdateButton } from 'component/common/UpdateButton/UpdateButton';

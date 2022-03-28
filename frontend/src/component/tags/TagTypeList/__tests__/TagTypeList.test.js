@@ -3,14 +3,14 @@ import { TagTypeList } from '../TagTypeList';
 import renderer from 'react-test-renderer';
 import { MemoryRouter } from 'react-router-dom';
 import { ThemeProvider } from '@material-ui/styles';
-import theme from '../../../../themes/mainTheme';
-import AccessProvider from '../../../providers/AccessProvider/AccessProvider';
+import theme from 'themes/mainTheme';
+import AccessProvider from 'component/providers/AccessProvider/AccessProvider';
 import {
     ADMIN,
     DELETE_TAG_TYPE,
     UPDATE_TAG_TYPE,
-} from '../../../providers/AccessProvider/permissions';
-import UIProvider from '../../../providers/UIProvider/UIProvider';
+} from 'component/providers/AccessProvider/permissions';
+import UIProvider from 'component/providers/UIProvider/UIProvider';
 
 test('renders an empty list correctly', () => {
     const tree = renderer.create(

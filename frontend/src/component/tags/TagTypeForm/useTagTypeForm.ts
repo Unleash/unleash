@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import useTagTypesApi from '../../../hooks/api/actions/useTagTypesApi/useTagTypesApi';
+import useTagTypesApi from 'hooks/api/actions/useTagTypesApi/useTagTypesApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
 
 const useTagTypeForm = (initialTagName = '', initialTagDesc = '') => {

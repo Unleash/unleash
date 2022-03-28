@@ -1,4 +1,4 @@
-import { IPermission } from '../../../../interfaces/user';
+import { IPermission } from 'interfaces/user';
 import { useAuthEndpoint } from './useAuthEndpoint';
 
 interface IUseAuthPermissionsOutput {

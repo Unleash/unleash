@@ -1,20 +1,20 @@
 import { useParams } from 'react-router';
-import { IFeatureViewParams } from '../../../../interfaces/params';
-import { useFeatureMetricsRaw } from '../../../../hooks/api/getters/useFeatureMetricsRaw/useFeatureMetricsRaw';
-import PageContent from '../../../common/PageContent';
+import { IFeatureViewParams } from 'interfaces/params';
+import { useFeatureMetricsRaw } from 'hooks/api/getters/useFeatureMetricsRaw/useFeatureMetricsRaw';
+import PageContent from 'component/common/PageContent';
 import { useEffect, useMemo, useState } from 'react';
 import {
     FEATURE_METRIC_HOURS_BACK_MAX,
     FeatureMetricsHours,
 } from './FeatureMetricsHours/FeatureMetricsHours';
-import { IFeatureMetricsRaw } from '../../../../interfaces/featureToggle';
+import { IFeatureMetricsRaw } from 'interfaces/featureToggle';
 import { Grid } from '@material-ui/core';
 import { FeatureMetricsContent } from './FeatureMetricsContent/FeatureMetricsContent';
-import { useQueryStringNumberState } from '../../../../hooks/useQueryStringNumberState';
-import { useQueryStringState } from '../../../../hooks/useQueryStringState';
+import { useQueryStringNumberState } from 'hooks/useQueryStringNumberState';
+import { useQueryStringState } from 'hooks/useQueryStringState';
 import { FeatureMetricsChips } from './FeatureMetricsChips/FeatureMetricsChips';
-import { useFeature } from '../../../../hooks/api/getters/useFeature/useFeature';
-import ConditionallyRender from '../../../common/ConditionallyRender';
+import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
+import ConditionallyRender from 'component/common/ConditionallyRender';
 import { useStyles } from './FeatureMetrics.styles';
 
 export const FeatureMetrics = () => {

@@ -4,18 +4,18 @@ import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import classnames from 'classnames';
 import { Edit, ExpandMore } from '@material-ui/icons';
 
-import { useCommonStyles } from '../../../../common.styles';
-import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
-import PercentageCircle from '../../../common/PercentageCircle/PercentageCircle';
-import PermissionIconButton from '../../../common/PermissionIconButton/PermissionIconButton';
-import ConditionallyRender from '../../../common/ConditionallyRender';
+import { useCommonStyles } from 'common.styles';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import PercentageCircle from 'component/common/PercentageCircle/PercentageCircle';
+import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
+import ConditionallyRender from 'component/common/ConditionallyRender';
 import {
     Accordion,
     AccordionActions,
     AccordionDetails,
     AccordionSummary,
 } from '@material-ui/core';
-import { UPDATE_PROJECT } from '../../../providers/AccessProvider/permissions';
+import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
 
 interface IProjectInfoProps {
     id: string;

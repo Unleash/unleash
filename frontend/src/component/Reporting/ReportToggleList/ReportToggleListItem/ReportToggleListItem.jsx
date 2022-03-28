@@ -2,27 +2,21 @@ import React from 'react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-
 import { Checkbox } from '@material-ui/core';
 import CheckIcon from '@material-ui/icons/Check';
 import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined';
-import ConditionallyRender from '../../../common/ConditionallyRender/ConditionallyRender';
-import FeatureStatus from '../../../feature/FeatureView/FeatureStatus/FeatureStatus';
-
+import ConditionallyRender from 'component/common/ConditionallyRender/ConditionallyRender';
+import FeatureStatus from 'component/feature/FeatureView/FeatureStatus/FeatureStatus';
 import {
     pluralize,
     getDates,
     expired,
     toggleExpiryByTypeMap,
     getDiffInDays,
-} from '../../utils';
-import {
-    KILLSWITCH,
-    PERMISSION,
-} from '../../../../constants/featureToggleTypes';
-
+} from 'component/Reporting/utils';
+import { KILLSWITCH, PERMISSION } from 'constants/featureToggleTypes';
 import { useStyles } from '../ReportToggleList.styles';
-import { getTogglePath } from '../../../../utils/routePathHelpers';
+import { getTogglePath } from 'utils/routePathHelpers';
 
 const ReportToggleListItem = ({
     name,

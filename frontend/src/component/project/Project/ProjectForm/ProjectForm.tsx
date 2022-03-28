@@ -1,8 +1,8 @@
-import Input from '../../../common/Input/Input';
+import Input from 'component/common/Input/Input';
 import { TextField, Button } from '@material-ui/core';
 import { useStyles } from './ProjectForm.styles';
 import React from 'react';
-import { trim } from '../../../common/util';
+import { trim } from 'component/common/util';
 
 interface IProjectForm {
     projectId: string;

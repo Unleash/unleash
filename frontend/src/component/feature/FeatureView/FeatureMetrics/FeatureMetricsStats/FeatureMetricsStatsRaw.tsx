@@ -1,4 +1,4 @@
-import { IFeatureMetricsRaw } from '../../../../../interfaces/featureToggle';
+import { IFeatureMetricsRaw } from 'interfaces/featureToggle';
 import { useMemo } from 'react';
 import { FeatureMetricsStats } from './FeatureMetricsStats';
 

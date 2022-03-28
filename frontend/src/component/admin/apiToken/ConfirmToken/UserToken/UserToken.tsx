@@ -1,7 +1,7 @@
 import { IconButton } from '@material-ui/core';
 import CopyIcon from '@material-ui/icons/FileCopy';
 import copy from 'copy-to-clipboard';
-import useToast from '../../../../../hooks/useToast';
+import useToast from 'hooks/useToast';
 
 interface IUserTokenProps {
     token: string;

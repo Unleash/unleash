@@ -1,12 +1,12 @@
-import ConditionallyRender from '../../common/ConditionallyRender';
+import ConditionallyRender from 'component/common/ConditionallyRender';
 import { useStyles } from './Login.styles';
-import useQueryParams from '../../../hooks/useQueryParams';
+import useQueryParams from 'hooks/useQueryParams';
 import ResetPasswordSuccess from '../common/ResetPasswordSuccess/ResetPasswordSuccess';
 import StandaloneLayout from '../common/StandaloneLayout/StandaloneLayout';
-import { DEMO_TYPE } from '../../../constants/authTypes';
+import { DEMO_TYPE } from 'constants/authTypes';
 import Authentication from '../Authentication/Authentication';
-import { useAuthDetails } from '../../../hooks/api/getters/useAuth/useAuthDetails';
-import { useAuthUser } from '../../../hooks/api/getters/useAuth/useAuthUser';
+import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
+import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import { Redirect } from 'react-router-dom';
 
 const Login = () => {

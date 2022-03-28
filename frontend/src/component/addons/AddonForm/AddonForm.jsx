@@ -1,15 +1,15 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { TextField, FormControlLabel, Switch, Button } from '@material-ui/core';
-import { styles as commonStyles } from '../../common';
-import { trim } from '../../common/util';
+import { styles as commonStyles } from 'component/common';
+import { trim } from 'component/common/util';
 import { AddonParameters } from './AddonParameters/AddonParameters';
 import { AddonEvents } from './AddonEvents/AddonEvents';
 import cloneDeep from 'lodash.clonedeep';
-import PageContent from '../../common/PageContent/PageContent';
+import PageContent from 'component/common/PageContent/PageContent';
 import { useHistory } from 'react-router-dom';
-import useAddonsApi from '../../../hooks/api/actions/useAddonsApi/useAddonsApi';
-import useToast from '../../../hooks/useToast';
+import useAddonsApi from 'hooks/api/actions/useAddonsApi/useAddonsApi';
+import useToast from 'hooks/useToast';
 import { makeStyles } from '@material-ui/styles';
 
 const useStyles = makeStyles(theme => ({

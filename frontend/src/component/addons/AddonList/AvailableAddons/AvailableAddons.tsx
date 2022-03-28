@@ -1,5 +1,5 @@
 import { ReactElement } from 'react';
-import PageContent from '../../../common/PageContent/PageContent';
+import PageContent from 'component/common/PageContent/PageContent';
 import {
     List,
     ListItem,
@@ -7,9 +7,9 @@ import {
     ListItemSecondaryAction,
     ListItemText,
 } from '@material-ui/core';
-import { CREATE_ADDON } from '../../../providers/AccessProvider/permissions';
+import { CREATE_ADDON } from 'component/providers/AccessProvider/permissions';
 import { useHistory } from 'react-router-dom';
-import PermissionButton from '../../../common/PermissionButton/PermissionButton';
+import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 
 interface IProvider {
     name: string;

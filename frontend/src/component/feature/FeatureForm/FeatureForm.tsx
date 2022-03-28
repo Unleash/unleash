@@ -7,18 +7,18 @@ import {
 } from '@material-ui/core';
 import { useStyles } from './FeatureForm.styles';
 import FeatureTypeSelect from '../FeatureView/FeatureSettings/FeatureSettingsMetadata/FeatureTypeSelect/FeatureTypeSelect';
-import { CF_DESC_ID, CF_NAME_ID, CF_TYPE_ID } from '../../../testIds';
-import useFeatureTypes from '../../../hooks/api/getters/useFeatureTypes/useFeatureTypes';
+import { CF_DESC_ID, CF_NAME_ID, CF_TYPE_ID } from 'testIds';
+import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
 import { KeyboardArrowDownOutlined } from '@material-ui/icons';
 import { projectFilterGenerator } from 'utils/projectFilterGenerator';
 import FeatureProjectSelect from '../FeatureView/FeatureSettings/FeatureSettingsProject/FeatureProjectSelect/FeatureProjectSelect';
-import ConditionallyRender from '../../common/ConditionallyRender';
-import { trim } from '../../common/util';
-import Input from '../../common/Input/Input';
-import { CREATE_FEATURE } from '../../providers/AccessProvider/permissions';
+import ConditionallyRender from 'component/common/ConditionallyRender';
+import { trim } from 'component/common/util';
+import Input from 'component/common/Input/Input';
+import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { useHistory } from 'react-router-dom';
 import React from 'react';
-import { useAuthPermissions } from '../../../hooks/api/getters/useAuth/useAuthPermissions';
+import { useAuthPermissions } from 'hooks/api/getters/useAuth/useAuthPermissions';
 
 interface IFeatureToggleForm {
     type: string;

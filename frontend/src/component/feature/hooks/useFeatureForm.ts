@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import useFeatureApi from '../../../hooks/api/actions/useFeatureApi/useFeatureApi';
-import useQueryParams from '../../../hooks/useQueryParams';
-import { IFeatureViewParams } from '../../../interfaces/params';
+import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
+import useQueryParams from 'hooks/useQueryParams';
+import { IFeatureViewParams } from 'interfaces/params';
 
 const useFeatureForm = (
     initialName = '',

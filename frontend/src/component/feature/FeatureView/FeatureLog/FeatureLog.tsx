@@ -1,8 +1,8 @@
 import { useParams } from 'react-router';
-import { useFeature } from '../../../../hooks/api/getters/useFeature/useFeature';
+import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { useStyles } from './FeatureLog.styles';
-import { IFeatureViewParams } from '../../../../interfaces/params';
-import { FeatureEventHistory } from '../../../history/FeatureEventHistory/FeatureEventHistory';
+import { IFeatureViewParams } from 'interfaces/params';
+import { FeatureEventHistory } from 'component/history/FeatureEventHistory/FeatureEventHistory';
 
 const FeatureLog = () => {
     const styles = useStyles();

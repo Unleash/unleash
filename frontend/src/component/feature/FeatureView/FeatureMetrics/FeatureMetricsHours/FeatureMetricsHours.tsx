@@ -1,6 +1,6 @@
 import GeneralSelect, {
     OnGeneralSelectChange,
-} from '../../../../common/GeneralSelect/GeneralSelect';
+} from 'component/common/GeneralSelect/GeneralSelect';
 
 interface IFeatureMetricsHoursProps {
     hoursBack: number;

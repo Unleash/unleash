@@ -1,7 +1,7 @@
 import { Card, Menu, MenuItem } from '@material-ui/core';
 import { useStyles } from './ProjectCard.styles';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import { ReactComponent as ProjectIcon } from '../../../assets/icons/projectIcon.svg';
+import { ReactComponent as ProjectIcon } from 'assets/icons/projectIcon.svg';
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import Dialogue from 'component/common/Dialogue';

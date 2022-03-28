@@ -1,12 +1,12 @@
 import { ChangeEvent, useState } from 'react';
 import { Grid, TextField } from '@material-ui/core';
-import { useCommonStyles } from '../../../common.styles';
+import { useCommonStyles } from 'common.styles';
 import icons from 'component/application/iconNames';
-import GeneralSelect from '../../common/GeneralSelect/GeneralSelect';
-import useApplicationsApi from '../../../hooks/api/actions/useApplicationsApi/useApplicationsApi';
-import useToast from '../../../hooks/useToast';
-import { IApplication } from '../../../interfaces/application';
-import useApplication from '../../../hooks/api/getters/useApplication/useApplication';
+import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
+import useApplicationsApi from 'hooks/api/actions/useApplicationsApi/useApplicationsApi';
+import useToast from 'hooks/useToast';
+import { IApplication } from 'interfaces/application';
+import useApplication from 'hooks/api/getters/useApplication/useApplication';
 import { formatUnknownError } from 'utils/formatUnknownError';
 
 interface IApplicationUpdateProps {

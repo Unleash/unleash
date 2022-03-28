@@ -8,12 +8,12 @@ import {
     DEMO_TYPE,
     PASSWORD_TYPE,
     HOSTED_TYPE,
-} from '../../../constants/authTypes';
+} from 'constants/authTypes';
 import SecondaryLoginActions from '../common/SecondaryLoginActions/SecondaryLoginActions';
-import useQueryParams from '../../../hooks/useQueryParams';
-import ConditionallyRender from '../../common/ConditionallyRender';
+import useQueryParams from 'hooks/useQueryParams';
+import ConditionallyRender from 'component/common/ConditionallyRender';
 import { Alert } from '@material-ui/lab';
-import { useAuthDetails } from '../../../hooks/api/getters/useAuth/useAuthDetails';
+import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
 
 interface IAuthenticationProps {
     redirect: string;

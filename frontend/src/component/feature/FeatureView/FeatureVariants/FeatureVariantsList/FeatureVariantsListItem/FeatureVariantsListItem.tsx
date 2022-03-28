@@ -2,8 +2,8 @@ import { Chip, IconButton, TableCell, TableRow } from '@material-ui/core';
 import { Delete, Edit } from '@material-ui/icons';
 
 import styles from '../variants.module.scss';
-import { IFeatureVariant } from '../../../../../../interfaces/featureToggle';
-import ConditionallyRender from '../../../../../common/ConditionallyRender';
+import { IFeatureVariant } from 'interfaces/featureToggle';
+import ConditionallyRender from 'component/common/ConditionallyRender';
 import { weightTypes } from '../AddFeatureVariant/enums';
 
 interface IFeatureVariantListItem {

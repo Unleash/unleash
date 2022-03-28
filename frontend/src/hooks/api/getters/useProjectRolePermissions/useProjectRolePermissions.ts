@@ -6,7 +6,7 @@ import {
     IProjectEnvironmentPermissions,
     IProjectRolePermissions,
     IPermission,
-} from '../../../../interfaces/project';
+} from 'interfaces/project';
 import handleErrorResponses from '../httpErrorResponseHandler';
 
 interface IUseProjectRolePermissions {

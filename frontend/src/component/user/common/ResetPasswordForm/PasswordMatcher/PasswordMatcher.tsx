@@ -1,5 +1,5 @@
 import { Typography } from '@material-ui/core';
-import ConditionallyRender from '../../../../common/ConditionallyRender';
+import ConditionallyRender from 'component/common/ConditionallyRender';
 import classnames from 'classnames';
 import CheckIcon from '@material-ui/icons/Check';
 

@@ -1,4 +1,4 @@
-import Input from '../../../common/Input/Input';
+import Input from 'component/common/Input/Input';
 import EnvironmentPermissionAccordion from './EnvironmentPermissionAccordion/EnvironmentPermissionAccordion';
 import {
     Button,
@@ -6,12 +6,12 @@ import {
     FormControlLabel,
     TextField,
 } from '@material-ui/core';
-import useProjectRolePermissions from '../../../../hooks/api/getters/useProjectRolePermissions/useProjectRolePermissions';
+import useProjectRolePermissions from 'hooks/api/getters/useProjectRolePermissions/useProjectRolePermissions';
 
 import { useStyles } from './ProjectRoleForm.styles';
-import ConditionallyRender from '../../../common/ConditionallyRender';
+import ConditionallyRender from 'component/common/ConditionallyRender';
 import React, { ReactNode } from 'react';
-import { IPermission } from '../../../../interfaces/project';
+import { IPermission } from 'interfaces/project';
 import {
     ICheckedPermission,
     PROJECT_CHECK_ALL_KEY,

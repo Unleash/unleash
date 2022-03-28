@@ -1,13 +1,13 @@
 import { useParams } from 'react-router';
-import { ENVIRONMENT_STRATEGY_ERROR } from '../../../../../../constants/apiErrors';
-import useFeatureApi from '../../../../../../hooks/api/actions/useFeatureApi/useFeatureApi';
-import { useFeature } from '../../../../../../hooks/api/getters/useFeature/useFeature';
-import useToast from '../../../../../../hooks/useToast';
-import { IFeatureEnvironment } from '../../../../../../interfaces/featureToggle';
-import { IFeatureViewParams } from '../../../../../../interfaces/params';
-import PermissionSwitch from '../../../../../common/PermissionSwitch/PermissionSwitch';
-import StringTruncator from '../../../../../common/StringTruncator/StringTruncator';
-import { UPDATE_FEATURE_ENVIRONMENT } from '../../../../../providers/AccessProvider/permissions';
+import { ENVIRONMENT_STRATEGY_ERROR } from 'constants/apiErrors';
+import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
+import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
+import useToast from 'hooks/useToast';
+import { IFeatureEnvironment } from 'interfaces/featureToggle';
+import { IFeatureViewParams } from 'interfaces/params';
+import PermissionSwitch from 'component/common/PermissionSwitch/PermissionSwitch';
+import StringTruncator from 'component/common/StringTruncator/StringTruncator';
+import { UPDATE_FEATURE_ENVIRONMENT } from 'component/providers/AccessProvider/permissions';
 import React from 'react';
 import { formatUnknownError } from 'utils/formatUnknownError';
 

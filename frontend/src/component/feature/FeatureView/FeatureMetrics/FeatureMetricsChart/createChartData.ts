@@ -1,6 +1,6 @@
-import { IFeatureMetricsRaw } from '../../../../../interfaces/featureToggle';
+import { IFeatureMetricsRaw } from 'interfaces/featureToggle';
 import { ChartData } from 'chart.js';
-import { ILocationSettings } from '../../../../../hooks/useLocationSettings';
+import { ILocationSettings } from 'hooks/useLocationSettings';
 import theme from 'themes/mainTheme';
 import 'chartjs-adapter-date-fns';
 

@@ -3,16 +3,16 @@ import { MemoryRouter } from 'react-router-dom';
 import { ThemeProvider } from '@material-ui/core';
 import FeatureToggleList from './FeatureToggleList';
 import renderer from 'react-test-renderer';
-import theme from '../../../themes/mainTheme';
-import { CREATE_FEATURE } from '../../providers/AccessProvider/permissions';
-import AccessProvider from '../../providers/AccessProvider/AccessProvider';
+import theme from 'themes/mainTheme';
+import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
+import AccessProvider from 'component/providers/AccessProvider/AccessProvider';
 
 jest.mock('./FeatureToggleListItem/FeatureToggleListItem', () => ({
     __esModule: true,
     default: 'ListItem',
 }));
 
-jest.mock('../../common/ProjectSelect/ProjectSelect');
+jest.mock('component/common/ProjectSelect/ProjectSelect');
 
 test('renders correctly with one feature', () => {
     const features = [

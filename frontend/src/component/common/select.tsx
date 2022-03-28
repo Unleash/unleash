@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
-import { SELECT_ITEM_ID } from '../../testIds';
+import { SELECT_ITEM_ID } from 'testIds';
 
 export interface ISelectOption {
     key: string;

@@ -1,8 +1,8 @@
 import React from 'react';
 import { Grid, FormControlLabel, Checkbox } from '@material-ui/core';
 
-import { styles as commonStyles } from '../../../common';
-import { IAddonProvider } from '../../../../interfaces/addons';
+import { styles as commonStyles } from 'component/common';
+import { IAddonProvider } from 'interfaces/addons';
 
 interface IAddonProps {
     provider: IAddonProvider;

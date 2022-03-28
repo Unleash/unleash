@@ -3,7 +3,7 @@ import {
     IAddonConfig,
     IAddonProvider,
     IAddonProviderParams,
-} from '../../../../../interfaces/addons';
+} from 'interfaces/addons';
 
 const resolveType = ({ type = 'text', sensitive = false }, value: string) => {
     if (sensitive && value === MASKED_VALUE) {

@@ -2,10 +2,10 @@ import { MemoryRouter } from 'react-router-dom';
 import { ThemeProvider } from '@material-ui/core';
 import { StrategiesList } from './StrategiesList';
 import renderer from 'react-test-renderer';
-import theme from '../../../themes/mainTheme';
-import AccessProvider from '../../providers/AccessProvider/AccessProvider';
-import { ADMIN } from '../../providers/AccessProvider/permissions';
-import UIProvider from '../../providers/UIProvider/UIProvider';
+import theme from 'themes/mainTheme';
+import AccessProvider from 'component/providers/AccessProvider/AccessProvider';
+import { ADMIN } from 'component/providers/AccessProvider/permissions';
+import UIProvider from 'component/providers/UIProvider/UIProvider';
 
 test('renders correctly with one strategy', () => {
     const strategy = {

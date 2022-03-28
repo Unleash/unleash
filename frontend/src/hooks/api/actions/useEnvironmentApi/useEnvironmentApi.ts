@@ -2,7 +2,7 @@ import {
     IEnvironmentPayload,
     ISortOrderPayload,
     IEnvironmentEditPayload,
-} from '../../../../interfaces/environments';
+} from 'interfaces/environments';
 import useAPI from '../useApi/useApi';
 
 const useEnvironmentApi = () => {

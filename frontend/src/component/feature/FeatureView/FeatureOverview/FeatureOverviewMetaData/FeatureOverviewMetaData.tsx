@@ -2,16 +2,16 @@ import { capitalize } from '@material-ui/core';
 import classnames from 'classnames';
 import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import { useFeature } from '../../../../../hooks/api/getters/useFeature/useFeature';
+import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
-import ConditionallyRender from '../../../../common/ConditionallyRender';
+import ConditionallyRender from 'component/common/ConditionallyRender';
 import { useStyles } from './FeatureOverviewMetadata.styles';
 
 import { Edit } from '@material-ui/icons';
-import { IFeatureViewParams } from '../../../../../interfaces/params';
-import PermissionIconButton from '../../../../common/PermissionIconButton/PermissionIconButton';
-import { UPDATE_FEATURE } from '../../../../providers/AccessProvider/permissions';
-import useTags from '../../../../../hooks/api/getters/useTags/useTags';
+import { IFeatureViewParams } from 'interfaces/params';
+import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
+import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
+import useTags from 'hooks/api/getters/useTags/useTags';
 import FeatureOverviewTags from './FeatureOverviewTags/FeatureOverviewTags';
 
 const FeatureOverviewMetaData = () => {

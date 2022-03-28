@@ -1,4 +1,4 @@
-import FormTemplate from '../../common/FormTemplate/FormTemplate';
+import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { useHistory, useParams } from 'react-router-dom';
 import FeatureForm from '../FeatureForm/FeatureForm';
 import useFeatureForm from '../hooks/useFeatureForm';

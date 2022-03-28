@@ -1,15 +1,15 @@
-import useLoading from '../../../hooks/useLoading';
+import useLoading from 'hooks/useLoading';
 import { TextField, Typography } from '@material-ui/core';
 import StandaloneBanner from '../StandaloneBanner/StandaloneBanner';
 import ResetPasswordDetails from '../common/ResetPasswordDetails/ResetPasswordDetails';
 import { useStyles } from './NewUser.styles';
-import useResetPassword from '../../../hooks/api/getters/useResetPassword/useResetPassword';
+import useResetPassword from 'hooks/api/getters/useResetPassword/useResetPassword';
 import StandaloneLayout from '../common/StandaloneLayout/StandaloneLayout';
-import ConditionallyRender from '../../common/ConditionallyRender';
+import ConditionallyRender from 'component/common/ConditionallyRender';
 import InvalidToken from '../common/InvalidToken/InvalidToken';
 import AuthOptions from '../common/AuthOptions/AuthOptions';
-import DividerText from '../../common/DividerText/DividerText';
-import { useAuthDetails } from '../../../hooks/api/getters/useAuth/useAuthDetails';
+import DividerText from 'component/common/DividerText/DividerText';
+import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
 
 export const NewUser = () => {
     const { authDetails } = useAuthDetails();

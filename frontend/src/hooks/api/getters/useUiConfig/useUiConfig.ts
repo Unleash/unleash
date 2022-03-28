@@ -1,7 +1,7 @@
 import useSWR, { mutate, SWRConfiguration } from 'swr';
 import { formatApiPath } from 'utils/formatPath';
 import { defaultValue } from './defaultValue';
-import { IUiConfig } from '../../../../interfaces/uiConfig';
+import { IUiConfig } from 'interfaces/uiConfig';
 import handleErrorResponses from '../httpErrorResponseHandler';
 
 const REQUEST_KEY = 'api/admin/ui-config';

@@ -1,4 +1,4 @@
-import { IFeatureMetricsRaw } from '../../../../../interfaces/featureToggle';
+import { IFeatureMetricsRaw } from 'interfaces/featureToggle';
 import React, { useMemo } from 'react';
 import { Line } from 'react-chartjs-2';
 import {
@@ -12,7 +12,7 @@ import {
     Title,
     Tooltip,
 } from 'chart.js';
-import { useLocationSettings } from '../../../../../hooks/useLocationSettings';
+import { useLocationSettings } from 'hooks/useLocationSettings';
 import { FEATURE_METRICS_TABLE_ID } from '../FeatureMetricsTable/FeatureMetricsTable';
 import 'chartjs-adapter-date-fns';
 import { createChartData } from './createChartData';

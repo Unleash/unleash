@@ -7,7 +7,7 @@ import {
 } from '@material-ui/core';
 import StrategyInputList from '../StrategyInputList/StrategyInputList';
 import RolloutSlider from '../RolloutSlider/RolloutSlider';
-import { IParameter, IStrategy } from '../../../../interfaces/strategy';
+import { IParameter, IStrategy } from 'interfaces/strategy';
 import { useStyles } from './GeneralStrategy.styles';
 
 interface IGeneralStrategyProps {

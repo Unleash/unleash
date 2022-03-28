@@ -1,6 +1,6 @@
 import { IconButton, Tooltip, IconButtonProps } from '@material-ui/core';
 import React, { useContext } from 'react';
-import AccessContext from '../../../contexts/AccessContext';
+import AccessContext from 'contexts/AccessContext';
 
 interface IPermissionIconButtonProps extends IconButtonProps {
     permission: string;

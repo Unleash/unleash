@@ -1,10 +1,10 @@
 import { IFeatureStrategy } from 'interfaces/strategy';
-import DefaultStrategy from '../../StrategyTypes/DefaultStrategy/DefaultStrategy';
-import FlexibleStrategy from '../../StrategyTypes/FlexibleStrategy/FlexibleStrategy';
-import UserWithIdStrategy from '../../StrategyTypes/UserWithIdStrategy/UserWithId';
-import GeneralStrategy from '../../StrategyTypes/GeneralStrategy/GeneralStrategy';
+import DefaultStrategy from 'component/feature/StrategyTypes/DefaultStrategy/DefaultStrategy';
+import FlexibleStrategy from 'component/feature/StrategyTypes/FlexibleStrategy/FlexibleStrategy';
+import UserWithIdStrategy from 'component/feature/StrategyTypes/UserWithIdStrategy/UserWithId';
+import GeneralStrategy from 'component/feature/StrategyTypes/GeneralStrategy/GeneralStrategy';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
-import useUnleashContext from '../../../../hooks/api/getters/useUnleashContext/useUnleashContext';
+import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import produce from 'immer';
 import React from 'react';
 

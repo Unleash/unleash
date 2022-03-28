@@ -1,4 +1,4 @@
-import { IParameter } from '../../../../interfaces/strategy';
+import { IParameter } from 'interfaces/strategy';
 import StrategyInputList from '../StrategyInputList/StrategyInputList';
 
 interface IUserWithIdStrategyProps {

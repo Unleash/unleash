@@ -6,10 +6,10 @@ import {
     Tooltip,
 } from '@material-ui/core';
 import { Pause, PlayArrow } from '@material-ui/icons';
-import styles from '../../common/common.module.scss';
+import styles from 'component/common/common.module.scss';
 import { Link } from 'react-router-dom';
-import ConditionallyRender from '../../common/ConditionallyRender';
-import { IFeatureToggle } from '../../../interfaces/featureToggle';
+import ConditionallyRender from 'component/common/ConditionallyRender';
+import { IFeatureToggle } from 'interfaces/featureToggle';
 
 interface ITogglesLinkListProps {
     toggles: IFeatureToggle[];

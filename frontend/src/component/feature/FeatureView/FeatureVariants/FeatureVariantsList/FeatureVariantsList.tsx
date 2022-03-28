@@ -13,22 +13,22 @@ import {
 import { AddVariant } from './AddFeatureVariant/AddFeatureVariant';
 
 import { useContext, useEffect, useState } from 'react';
-import { useFeature } from '../../../../../hooks/api/getters/useFeature/useFeature';
+import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { useParams } from 'react-router';
-import { IFeatureViewParams } from '../../../../../interfaces/params';
-import AccessContext from '../../../../../contexts/AccessContext';
+import { IFeatureViewParams } from 'interfaces/params';
+import AccessContext from 'contexts/AccessContext';
 import FeatureVariantListItem from './FeatureVariantsListItem/FeatureVariantsListItem';
-import { UPDATE_FEATURE_VARIANTS } from '../../../../providers/AccessProvider/permissions';
-import ConditionallyRender from '../../../../common/ConditionallyRender';
-import useUnleashContext from '../../../../../hooks/api/getters/useUnleashContext/useUnleashContext';
-import GeneralSelect from '../../../../common/GeneralSelect/GeneralSelect';
-import { IFeatureVariant } from '../../../../../interfaces/featureToggle';
-import useFeatureApi from '../../../../../hooks/api/actions/useFeatureApi/useFeatureApi';
-import useToast from '../../../../../hooks/useToast';
-import { updateWeight } from '../../../../common/util';
+import { UPDATE_FEATURE_VARIANTS } from 'component/providers/AccessProvider/permissions';
+import ConditionallyRender from 'component/common/ConditionallyRender';
+import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
+import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
+import { IFeatureVariant } from 'interfaces/featureToggle';
+import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
+import useToast from 'hooks/useToast';
+import { updateWeight } from 'component/common/util';
 import cloneDeep from 'lodash.clonedeep';
 import useDeleteVariantMarkup from './FeatureVariantsListItem/useDeleteVariantMarkup';
-import PermissionButton from '../../../../common/PermissionButton/PermissionButton';
+import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { formatUnknownError } from 'utils/formatUnknownError';
 
 const FeatureOverviewVariants = () => {

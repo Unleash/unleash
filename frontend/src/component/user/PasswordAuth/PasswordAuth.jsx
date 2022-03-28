@@ -2,22 +2,18 @@ import { useState } from 'react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import { Button, TextField } from '@material-ui/core';
-import ConditionallyRender from '../../common/ConditionallyRender';
+import ConditionallyRender from 'component/common/ConditionallyRender';
 import { useHistory } from 'react-router';
-import { useCommonStyles } from '../../../common.styles';
+import { useCommonStyles } from 'common.styles';
 import { useStyles } from './PasswordAuth.styles';
-import useQueryParams from '../../../hooks/useQueryParams';
+import useQueryParams from 'hooks/useQueryParams';
 import AuthOptions from '../common/AuthOptions/AuthOptions';
-import DividerText from '../../common/DividerText/DividerText';
+import DividerText from 'component/common/DividerText/DividerText';
 import { Alert } from '@material-ui/lab';
-import {
-    LOGIN_BUTTON,
-    LOGIN_EMAIL_ID,
-    LOGIN_PASSWORD_ID,
-} from '../../../testIds';
-import PasswordField from '../../common/PasswordField/PasswordField';
-import { useAuthApi } from '../../../hooks/api/actions/useAuthApi/useAuthApi';
-import { useAuthUser } from '../../../hooks/api/getters/useAuth/useAuthUser';
+import { LOGIN_BUTTON, LOGIN_EMAIL_ID, LOGIN_PASSWORD_ID } from 'testIds';
+import PasswordField from 'component/common/PasswordField/PasswordField';
+import { useAuthApi } from 'hooks/api/actions/useAuthApi/useAuthApi';
+import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 
 const PasswordAuth = ({ authDetails, redirect }) => {
     const commonStyles = useCommonStyles();

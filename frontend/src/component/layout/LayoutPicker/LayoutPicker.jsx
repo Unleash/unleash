@@ -1,4 +1,4 @@
-import ConditionallyRender from '../../common/ConditionallyRender';
+import ConditionallyRender from 'component/common/ConditionallyRender';
 import { matchPath } from 'react-router';
 import { useLocation } from 'react-router-dom';
 import { MainLayout } from '../MainLayout/MainLayout';

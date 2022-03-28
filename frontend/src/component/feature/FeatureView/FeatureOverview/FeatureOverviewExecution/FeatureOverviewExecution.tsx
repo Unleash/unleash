@@ -1,16 +1,12 @@
 import { Fragment } from 'react';
-import {
-    IConstraint,
-    IFeatureStrategy,
-    IParameter,
-} from '../../../../../interfaces/strategy';
-import ConditionallyRender from '../../../../common/ConditionallyRender';
-import PercentageCircle from '../../../../common/PercentageCircle/PercentageCircle';
-import { StrategySeparator } from '../../../../common/StrategySeparator/StrategySeparator';
+import { IConstraint, IFeatureStrategy, IParameter } from 'interfaces/strategy';
+import ConditionallyRender from 'component/common/ConditionallyRender';
+import PercentageCircle from 'component/common/PercentageCircle/PercentageCircle';
+import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 import { useStyles } from './FeatureOverviewExecution.styles';
 import FeatureOverviewExecutionChips from './FeatureOverviewExecutionChips/FeatureOverviewExecutionChips';
-import { useStrategies } from '../../../../../hooks/api/getters/useStrategies/useStrategies';
-import Constraint from '../../../../common/Constraint/Constraint';
+import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
+import Constraint from 'component/common/Constraint/Constraint';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 
 interface IFeatureOverviewExecutionProps {

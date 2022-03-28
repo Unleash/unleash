@@ -1,4 +1,4 @@
-import { IFeatureStrategy } from '../../../../../../../interfaces/strategy';
+import { IFeatureStrategy } from 'interfaces/strategy';
 import FeatureOverviewEnvironmentStrategy from './FeatureOverviewEnvironmentStrategy/FeatureOverviewEnvironmentStrategy';
 
 interface FeatureOverviewEnvironmentStrategiesProps {

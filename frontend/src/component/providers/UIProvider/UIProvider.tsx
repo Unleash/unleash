@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import UIContext, { createEmptyToast } from '../../../contexts/UIContext';
-import { IToast } from '../../../interfaces/toast';
+import UIContext, { createEmptyToast } from 'contexts/UIContext';
+import { IToast } from 'interfaces/toast';
 
 const UIProvider: React.FC = ({ children }) => {
     const [toastData, setToast] = useState<IToast>(createEmptyToast());

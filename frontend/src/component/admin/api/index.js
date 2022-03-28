@@ -1,7 +1,7 @@
 import { ApiTokenList } from '../apiToken/ApiTokenList/ApiTokenList';
 import AdminMenu from '../menu/AdminMenu';
-import ConditionallyRender from '../../common/ConditionallyRender';
-import AccessContext from '../../../contexts/AccessContext';
+import ConditionallyRender from 'component/common/ConditionallyRender';
+import AccessContext from 'contexts/AccessContext';
 import { useContext } from 'react';
 
 const ApiPage = () => {

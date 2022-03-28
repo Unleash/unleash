@@ -2,7 +2,7 @@ import useSWR, { mutate, SWRConfiguration } from 'swr';
 import { useCallback } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import { IFeatureToggle } from '../../../../interfaces/featureToggle';
+import { IFeatureToggle } from 'interfaces/featureToggle';
 
 const PATH = formatApiPath('api/admin/features');
 

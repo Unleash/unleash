@@ -2,12 +2,12 @@ import { Chip } from '@material-ui/core';
 import { ImportExportOutlined, TextFormatOutlined } from '@material-ui/icons';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { useState } from 'react';
-import { stringOperators } from '../../../../../constants/operators';
-import { IConstraint } from '../../../../../interfaces/strategy';
+import { stringOperators } from 'constants/operators';
+import { IConstraint } from 'interfaces/strategy';
 import { oneOf } from 'utils/oneOf';
-import ConditionallyRender from '../../../ConditionallyRender';
-import { useStyles } from '../../ConstraintAccordion.styles';
-import { ConstraintValueSearch } from '../../ConstraintValueSearch/ConstraintValueSearch';
+import ConditionallyRender from 'component/common/ConditionallyRender';
+import { useStyles } from 'component/common/ConstraintAccordion/ConstraintAccordion.styles';
+import { ConstraintValueSearch } from 'component/common/ConstraintAccordion/ConstraintValueSearch/ConstraintValueSearch';
 import { formatConstraintValue } from 'component/common/Constraint/formatConstraintValue';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 

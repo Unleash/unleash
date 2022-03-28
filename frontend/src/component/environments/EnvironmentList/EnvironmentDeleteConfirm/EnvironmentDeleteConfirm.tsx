@@ -1,8 +1,8 @@
 import { Alert } from '@material-ui/lab';
 import React from 'react';
-import { IEnvironment } from '../../../../interfaces/environments';
-import Dialogue from '../../../common/Dialogue';
-import Input from '../../../common/Input/Input';
+import { IEnvironment } from 'interfaces/environments';
+import Dialogue from 'component/common/Dialogue';
+import Input from 'component/common/Input/Input';
 import EnvironmentCard from '../EnvironmentCard/EnvironmentCard';
 import { useStyles } from './EnvironmentDeleteConfirm.styles';
 

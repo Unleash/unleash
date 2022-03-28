@@ -1,11 +1,11 @@
 import { Portal } from '@material-ui/core';
 import { useContext, useEffect } from 'react';
-import { useCommonStyles } from '../../../common.styles';
-import UIContext from '../../../contexts/UIContext';
+import { useCommonStyles } from 'common.styles';
+import UIContext from 'contexts/UIContext';
 import { useStyles } from './ToastRenderer.styles';
 import AnimateOnMount from '../AnimateOnMount/AnimateOnMount';
 import Toast from './Toast/Toast';
-import { IToast } from '../../../interfaces/toast';
+import { IToast } from 'interfaces/toast';
 
 const ToastRenderer = () => {
     const { toastData, setToast } = useContext(UIContext);

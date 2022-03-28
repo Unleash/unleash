@@ -5,7 +5,7 @@ import {
     NOT_FOUND,
     OK,
     UNAUTHORIZED,
-} from '../../../../constants/statusCodes';
+} from 'constants/statusCodes';
 import {
     AuthenticationError,
     BadRequestError,

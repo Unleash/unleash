@@ -1,7 +1,7 @@
 import useSWR, { mutate, SWRConfiguration } from 'swr';
 import { useState, useEffect } from 'react';
 import { formatApiPath } from 'utils/formatPath';
-import { ITagType } from '../../../../interfaces/tags';
+import { ITagType } from 'interfaces/tags';
 import handleErrorResponses from '../httpErrorResponseHandler';
 
 const useTagTypes = (options: SWRConfiguration = {}) => {

@@ -1,24 +1,20 @@
 import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-
 import { Link } from 'react-router-dom';
 import { Chip, ListItem, Tooltip } from '@material-ui/core';
 import { Undo } from '@material-ui/icons';
-
 import TimeAgo from 'react-timeago';
-import StatusChip from '../../../common/StatusChip/StatusChip';
-import ConditionallyRender from '../../../common/ConditionallyRender/ConditionallyRender';
-
-import { UPDATE_FEATURE } from '../../../providers/AccessProvider/permissions';
-import { styles as commonStyles } from '../../../common';
-
+import StatusChip from 'component/common/StatusChip/StatusChip';
+import ConditionallyRender from 'component/common/ConditionallyRender/ConditionallyRender';
+import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
+import { styles as commonStyles } from 'component/common';
 import { useStyles } from './styles';
-import { getTogglePath } from '../../../../utils/routePathHelpers';
-import FeatureStatus from '../../FeatureView/FeatureStatus/FeatureStatus';
-import FeatureType from '../../FeatureView/FeatureType/FeatureType';
-import useProjects from '../../../../hooks/api/getters/useProjects/useProjects';
-import PermissionIconButton from '../../../common/PermissionIconButton/PermissionIconButton';
+import { getTogglePath } from 'utils/routePathHelpers';
+import FeatureStatus from 'component/feature/FeatureView/FeatureStatus/FeatureStatus';
+import FeatureType from 'component/feature/FeatureView/FeatureType/FeatureType';
+import useProjects from 'hooks/api/getters/useProjects/useProjects';
+import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 
 const FeatureToggleListItem = ({
     feature,

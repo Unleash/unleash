@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import useProjectApi from '../../../../hooks/api/actions/useProjectApi/useProjectApi';
+import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 
 const useProjectForm = (
     initialProjectId = '',

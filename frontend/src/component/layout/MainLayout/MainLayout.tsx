@@ -2,13 +2,13 @@ import React, { ReactNode } from 'react';
 import classnames from 'classnames';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid } from '@material-ui/core';
-import styles from '../../styles.module.scss';
-import Header from '../../menu/Header/Header';
-import Footer from '../../menu/Footer/Footer';
-import Proclamation from '../../common/Proclamation/Proclamation';
-import BreadcrumbNav from '../../common/BreadcrumbNav/BreadcrumbNav';
-import { ReactComponent as Texture } from '../../../assets/img/texture.svg';
-import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
+import styles from 'component/styles.module.scss';
+import Header from 'component/menu/Header/Header';
+import Footer from 'component/menu/Footer/Footer';
+import Proclamation from 'component/common/Proclamation/Proclamation';
+import BreadcrumbNav from 'component/common/BreadcrumbNav/BreadcrumbNav';
+import { ReactComponent as Texture } from 'assets/img/texture.svg';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const useStyles = makeStyles(theme => ({
     container: {

@@ -1,4 +1,4 @@
-import useProject from '../../getters/useProject/useProject';
+import useProject from 'hooks/api/getters/useProject/useProject';
 import useAPI from '../useApi/useApi';
 
 const useToggleFeatureByEnv = (projectId: string, name: string) => {

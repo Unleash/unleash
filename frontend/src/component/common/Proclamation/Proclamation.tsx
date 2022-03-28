@@ -3,7 +3,7 @@ import { Alert } from '@material-ui/lab';
 import ConditionallyRender from '../ConditionallyRender';
 import { Typography } from '@material-ui/core';
 import { useStyles } from './Proclamation.styles';
-import { IProclamationToast } from '../../../interfaces/uiConfig';
+import { IProclamationToast } from 'interfaces/uiConfig';
 
 interface IProclamationProps {
     toast?: IProclamationToast;

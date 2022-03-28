@@ -2,10 +2,10 @@ import classnames from 'classnames';
 import { Paper } from '@material-ui/core';
 import CheckIcon from '@material-ui/icons/Check';
 import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined';
-import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyRender';
+import ConditionallyRender from 'component/common/ConditionallyRender/ConditionallyRender';
 import styles from './ReportCard.module.scss';
 import ReactTimeAgo from 'react-timeago';
-import { IProjectHealthReport } from '../../../interfaces/project';
+import { IProjectHealthReport } from 'interfaces/project';
 
 interface IReportCardProps {
     healthReport: IProjectHealthReport;

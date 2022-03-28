@@ -1,5 +1,5 @@
 import { useHistory } from 'react-router-dom';
-import { CREATE_FEATURE_STRATEGY } from '../../providers/AccessProvider/permissions';
+import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import Dialogue from '../Dialogue';
 import PermissionButton from '../PermissionButton/PermissionButton';
 import { useStyles } from './EnvironmentStrategyDialog.styles';

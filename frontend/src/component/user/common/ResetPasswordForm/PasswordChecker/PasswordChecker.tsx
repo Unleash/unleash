@@ -1,13 +1,13 @@
 import { Tooltip, Typography } from '@material-ui/core';
 import classnames from 'classnames';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { BAD_REQUEST, OK } from '../../../../../constants/statusCodes';
+import { BAD_REQUEST, OK } from 'constants/statusCodes';
 import { useStyles } from './PasswordChecker.styles';
 import HelpIcon from '@material-ui/icons/Help';
 import { useCallback } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import { Alert } from '@material-ui/lab';
-import ConditionallyRender from '../../../../common/ConditionallyRender';
+import ConditionallyRender from 'component/common/ConditionallyRender';
 
 interface IPasswordCheckerProps {
     password: string;

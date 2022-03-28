@@ -1,11 +1,11 @@
-import PageContent from '../../common/PageContent/PageContent';
-import HeaderTitle from '../../common/HeaderTitle';
-import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyRender';
+import PageContent from 'component/common/PageContent/PageContent';
+import HeaderTitle from 'component/common/HeaderTitle';
+import ConditionallyRender from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
     CREATE_CONTEXT_FIELD,
     DELETE_CONTEXT_FIELD,
     UPDATE_CONTEXT_FIELD,
-} from '../../providers/AccessProvider/permissions';
+} from 'component/providers/AccessProvider/permissions';
 import {
     Button,
     IconButton,
@@ -20,12 +20,12 @@ import { Add, Album, Delete, Edit } from '@material-ui/icons';
 import { useContext, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useStyles } from './styles';
-import ConfirmDialogue from '../../common/Dialogue';
-import AccessContext from '../../../contexts/AccessContext';
-import useUnleashContext from '../../../hooks/api/getters/useUnleashContext/useUnleashContext';
-import useContextsApi from '../../../hooks/api/actions/useContextsApi/useContextsApi';
-import useToast from '../../../hooks/useToast';
-import { formatUnknownError } from '../../../utils/formatUnknownError';
+import ConfirmDialogue from 'component/common/Dialogue';
+import AccessContext from 'contexts/AccessContext';
+import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
+import useContextsApi from 'hooks/api/actions/useContextsApi/useContextsApi';
+import useToast from 'hooks/useToast';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 const ContextList = () => {
     const { hasAccess } = useContext(AccessContext);

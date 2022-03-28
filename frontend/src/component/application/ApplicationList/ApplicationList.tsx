@@ -1,12 +1,12 @@
 import { useMemo, useState } from 'react';
 import { CircularProgress } from '@material-ui/core';
 import { Warning } from '@material-ui/icons';
-import { AppsLinkList, styles as commonStyles } from '../../common';
+import { AppsLinkList, styles as commonStyles } from 'component/common';
 import { SearchField } from 'component/common/SearchField/SearchField';
-import PageContent from '../../common/PageContent/PageContent';
-import HeaderTitle from '../../common/HeaderTitle';
-import useApplications from '../../../hooks/api/getters/useApplications/useApplications';
-import ConditionallyRender from '../../common/ConditionallyRender';
+import PageContent from 'component/common/PageContent/PageContent';
+import HeaderTitle from 'component/common/HeaderTitle';
+import useApplications from 'hooks/api/getters/useApplications/useApplications';
+import ConditionallyRender from 'component/common/ConditionallyRender';
 
 export const ApplicationList = () => {
     const { applications, loading } = useApplications();

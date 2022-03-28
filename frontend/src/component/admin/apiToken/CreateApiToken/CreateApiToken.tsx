@@ -9,7 +9,7 @@ import { useApiTokenForm } from '../hooks/useApiTokenForm';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { ConfirmToken } from '../ConfirmToken/ConfirmToken';
 import { useState } from 'react';
-import { scrollToTop } from '../../../common/util';
+import { scrollToTop } from 'component/common/util';
 import { formatUnknownError } from 'utils/formatUnknownError';
 
 export const CreateApiToken = () => {

@@ -2,11 +2,11 @@ import { useStyles } from './Toast.styles';
 import classnames from 'classnames';
 import { useContext } from 'react';
 import { IconButton } from '@material-ui/core';
-import CheckMarkBadge from '../../CheckmarkBadge/CheckMarkBadge';
-import UIContext from '../../../../contexts/UIContext';
-import ConditionallyRender from '../../ConditionallyRender';
+import CheckMarkBadge from 'component/common/CheckmarkBadge/CheckMarkBadge';
+import UIContext from 'contexts/UIContext';
+import ConditionallyRender from 'component/common/ConditionallyRender';
 import Close from '@material-ui/icons/Close';
-import { IToast } from '../../../../interfaces/toast';
+import { IToast } from 'interfaces/toast';
 
 const Toast = ({ title, text, type, confetti }: IToast) => {
     const { setToast } = useContext(UIContext);

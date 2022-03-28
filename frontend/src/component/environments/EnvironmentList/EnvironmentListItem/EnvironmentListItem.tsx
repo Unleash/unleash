@@ -12,19 +12,19 @@ import {
     Edit,
     OfflineBolt,
 } from '@material-ui/icons';
-import ConditionallyRender from '../../../common/ConditionallyRender';
+import ConditionallyRender from 'component/common/ConditionallyRender';
 
-import { IEnvironment } from '../../../../interfaces/environments';
+import { IEnvironment } from 'interfaces/environments';
 import React, { useContext, useRef } from 'react';
-import AccessContext from '../../../../contexts/AccessContext';
+import AccessContext from 'contexts/AccessContext';
 import {
     DELETE_ENVIRONMENT,
     UPDATE_ENVIRONMENT,
-} from '../../../providers/AccessProvider/permissions';
+} from 'component/providers/AccessProvider/permissions';
 import { useDrag, useDrop, DropTargetMonitor } from 'react-dnd';
 import { XYCoord } from 'dnd-core';
-import DisabledIndicator from '../../../common/DisabledIndicator/DisabledIndicator';
-import StringTruncator from '../../../common/StringTruncator/StringTruncator';
+import DisabledIndicator from 'component/common/DisabledIndicator/DisabledIndicator';
+import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { useHistory } from 'react-router-dom';
 
 interface IEnvironmentListItemProps {

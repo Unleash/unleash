@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import useUiBootstrap from '../../../../hooks/api/getters/useUiBootstrap/useUiBootstrap';
-import useUsers from '../../../../hooks/api/getters/useUsers/useUsers';
+import useUiBootstrap from 'hooks/api/getters/useUiBootstrap/useUiBootstrap';
+import useUsers from 'hooks/api/getters/useUsers/useUsers';
 
 const useCreateUserForm = (
     initialName = '',

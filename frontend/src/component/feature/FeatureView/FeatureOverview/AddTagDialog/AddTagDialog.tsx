@@ -1,15 +1,15 @@
 import { DialogContentText } from '@material-ui/core';
 import { useParams } from 'react-router';
 import React, { useState } from 'react';
-import { IFeatureViewParams } from '../../../../../interfaces/params';
-import Dialogue from '../../../../common/Dialogue';
-import Input from '../../../../common/Input/Input';
+import { IFeatureViewParams } from 'interfaces/params';
+import Dialogue from 'component/common/Dialogue';
+import Input from 'component/common/Input/Input';
 import { useStyles } from './AddTagDialog.styles';
-import { trim } from '../../../../common/util';
-import TagSelect from '../../../../common/TagSelect/TagSelect';
-import useFeatureApi from '../../../../../hooks/api/actions/useFeatureApi/useFeatureApi';
-import useTags from '../../../../../hooks/api/getters/useTags/useTags';
-import useToast from '../../../../../hooks/useToast';
+import { trim } from 'component/common/util';
+import TagSelect from 'component/common/TagSelect/TagSelect';
+import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
+import useTags from 'hooks/api/getters/useTags/useTags';
+import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 
 interface IAddTagDialogProps {

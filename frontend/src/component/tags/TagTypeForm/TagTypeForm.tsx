@@ -1,10 +1,10 @@
-import Input from '../../common/Input/Input';
+import Input from 'component/common/Input/Input';
 import { TextField, Button } from '@material-ui/core';
 
 import { useStyles } from './TagTypeForm.styles';
 import React from 'react';
-import { trim } from '../../common/util';
-import { EDIT } from '../../../constants/misc';
+import { trim } from 'component/common/util';
+import { EDIT } from 'constants/misc';
 
 interface ITagTypeForm {
     tagName: string;

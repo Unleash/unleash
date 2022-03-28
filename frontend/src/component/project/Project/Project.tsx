@@ -1,22 +1,22 @@
 import { useHistory, useParams } from 'react-router';
-import useProject from '../../../hooks/api/getters/useProject/useProject';
-import useLoading from '../../../hooks/useLoading';
-import ApiError from '../../common/ApiError/ApiError';
-import ConditionallyRender from '../../common/ConditionallyRender';
+import useProject from 'hooks/api/getters/useProject/useProject';
+import useLoading from 'hooks/useLoading';
+import ApiError from 'component/common/ApiError/ApiError';
+import ConditionallyRender from 'component/common/ConditionallyRender';
 import { useStyles } from './Project.styles';
 import { Tab, Tabs } from '@material-ui/core';
 import { Edit } from '@material-ui/icons';
-import useToast from '../../../hooks/useToast';
-import useQueryParams from '../../../hooks/useQueryParams';
+import useToast from 'hooks/useToast';
+import useQueryParams from 'hooks/useQueryParams';
 import { useEffect } from 'react';
-import useTabs from '../../../hooks/useTabs';
-import TabPanel from '../../common/TabNav/TabPanel';
+import useTabs from 'hooks/useTabs';
+import TabPanel from 'component/common/TabNav/TabPanel';
 import { ProjectAccess } from '../ProjectAccess/ProjectAccess';
 import ProjectEnvironment from '../ProjectEnvironment/ProjectEnvironment';
 import ProjectOverview from './ProjectOverview';
 import ProjectHealth from './ProjectHealth/ProjectHealth';
-import PermissionIconButton from '../../common/PermissionIconButton/PermissionIconButton';
-import { UPDATE_PROJECT } from '../../providers/AccessProvider/permissions';
+import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
+import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
 
 const Project = () => {
     const { id, activeTab } = useParams<{ id: string; activeTab: string }>();

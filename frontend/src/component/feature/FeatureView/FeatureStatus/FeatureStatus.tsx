@@ -1,6 +1,6 @@
 import { useStyles } from './FeatureStatus.styles';
 import TimeAgo from 'react-timeago';
-import ConditionallyRender from '../../../common/ConditionallyRender';
+import ConditionallyRender from 'component/common/ConditionallyRender';
 import { Tooltip, TooltipProps } from '@material-ui/core';
 import React from 'react';
 

@@ -4,7 +4,7 @@ import ConditionallyRender from 'component/common/ConditionallyRender';
 import FeatureOverviewEnvironmentStrategies from '../FeatureOverviewEnvironmentStrategies/FeatureOverviewEnvironmentStrategies';
 import { useStyles } from '../FeatureOverviewEnvironment.styles';
 import { IFeatureEnvironment } from 'interfaces/featureToggle';
-import { FeatureStrategyEmpty } from '../../../../../FeatureStrategy/FeatureStrategyEmpty/FeatureStrategyEmpty';
+import { FeatureStrategyEmpty } from 'component/feature/FeatureStrategy/FeatureStrategyEmpty/FeatureStrategyEmpty';
 
 interface IFeatureOverviewEnvironmentBodyProps {
     getOverviewText: () => string;

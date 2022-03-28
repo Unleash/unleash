@@ -1,6 +1,6 @@
 import { IconButton } from '@material-ui/core';
 import CopyIcon from '@material-ui/icons/FileCopy';
-import useToast from '../../../../../../hooks/useToast';
+import useToast from 'hooks/useToast';
 
 interface IInviteLinkProps {
     inviteLink: string;

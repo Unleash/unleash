@@ -2,20 +2,20 @@ import React, { SyntheticEvent, useState } from 'react';
 import { Button, Typography } from '@material-ui/core';
 import classnames from 'classnames';
 import { useStyles } from './EditProfile.styles';
-import { useCommonStyles } from '../../../../common.styles';
-import PasswordChecker from '../../common/ResetPasswordForm/PasswordChecker/PasswordChecker';
-import PasswordMatcher from '../../common/ResetPasswordForm/PasswordMatcher/PasswordMatcher';
+import { useCommonStyles } from 'common.styles';
+import PasswordChecker from 'component/user/common/ResetPasswordForm/PasswordChecker/PasswordChecker';
+import PasswordMatcher from 'component/user/common/ResetPasswordForm/PasswordMatcher/PasswordMatcher';
 import { Alert } from '@material-ui/lab';
-import ConditionallyRender from '../../../common/ConditionallyRender';
-import useLoading from '../../../../hooks/useLoading';
+import ConditionallyRender from 'component/common/ConditionallyRender';
+import useLoading from 'hooks/useLoading';
 import {
     BAD_REQUEST,
     NOT_FOUND,
     OK,
     UNAUTHORIZED,
-} from '../../../../constants/statusCodes';
+} from 'constants/statusCodes';
 import { formatApiPath } from 'utils/formatPath';
-import PasswordField from '../../../common/PasswordField/PasswordField';
+import PasswordField from 'component/common/PasswordField/PasswordField';
 import { headers } from 'utils/apiUtils';
 
 interface IEditProfileProps {

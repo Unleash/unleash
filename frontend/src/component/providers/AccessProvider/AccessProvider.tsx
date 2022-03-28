@@ -1,8 +1,8 @@
 import { ReactElement, ReactNode, useCallback, useMemo } from 'react';
-import AccessContext, { IAccessContext } from '../../../contexts/AccessContext';
+import AccessContext, { IAccessContext } from 'contexts/AccessContext';
 import { ADMIN } from './permissions';
-import { IPermission } from '../../../interfaces/user';
-import { useAuthPermissions } from '../../../hooks/api/getters/useAuth/useAuthPermissions';
+import { IPermission } from 'interfaces/user';
+import { useAuthPermissions } from 'hooks/api/getters/useAuth/useAuthPermissions';
 
 interface IAccessProviderProps {
     children: ReactNode;

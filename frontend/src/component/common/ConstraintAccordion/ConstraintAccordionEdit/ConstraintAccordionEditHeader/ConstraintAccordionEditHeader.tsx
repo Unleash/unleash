@@ -1,17 +1,17 @@
-import { IConstraint } from '../../../../../interfaces/strategy';
+import { IConstraint } from 'interfaces/strategy';
 
-import { useStyles } from '../../ConstraintAccordion.styles';
-import useUnleashContext from '../../../../../hooks/api/getters/useUnleashContext/useUnleashContext';
-import GeneralSelect from '../../../GeneralSelect/GeneralSelect';
-import { ConstraintIcon } from '../../ConstraintIcon';
+import { useStyles } from 'component/common/ConstraintAccordion/ConstraintAccordion.styles';
+import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
+import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
+import { ConstraintIcon } from 'component/common/ConstraintAccordion/ConstraintIcon';
 import { Help } from '@material-ui/icons';
-import ConditionallyRender from '../../../ConditionallyRender';
+import ConditionallyRender from 'component/common/ConditionallyRender';
 import {
     allOperators,
     dateOperators,
     DATE_AFTER,
     IN,
-} from '../../../../../constants/operators';
+} from 'constants/operators';
 import { SAVE } from '../ConstraintAccordionEdit';
 import { resolveText } from './helpers';
 import { oneOf } from 'utils/oneOf';

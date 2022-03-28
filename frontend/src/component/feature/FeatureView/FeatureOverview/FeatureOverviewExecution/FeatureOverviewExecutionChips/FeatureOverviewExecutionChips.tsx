@@ -1,5 +1,5 @@
 import { Chip } from '@material-ui/core';
-import ConditionallyRender from '../../../../../common/ConditionallyRender';
+import ConditionallyRender from 'component/common/ConditionallyRender';
 import { useStyles } from './FeatureOverviewExecutionChips.styles';
 
 interface IFeatureOverviewExecutionChipsProps {

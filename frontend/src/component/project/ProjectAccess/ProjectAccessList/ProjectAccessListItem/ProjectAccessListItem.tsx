@@ -15,7 +15,7 @@ import {
 import { IProjectViewParams } from 'interfaces/params';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
-import { ProjectRoleSelect } from '../../ProjectRoleSelect/ProjectRoleSelect';
+import { ProjectRoleSelect } from 'component/project/ProjectAccess/ProjectRoleSelect/ProjectRoleSelect';
 import { useStyles } from '../ProjectAccessListItem/ProjectAccessListItem.styles';
 import React from 'react';
 

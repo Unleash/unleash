@@ -1,6 +1,6 @@
 import UserProfile from './UserProfile';
-import { useLocationSettings } from '../../../hooks/useLocationSettings';
-import { useAuthUser } from '../../../hooks/api/getters/useAuth/useAuthUser';
+import { useLocationSettings } from 'hooks/useLocationSettings';
+import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 
 const UserProfileContainer = () => {
     const { locationSettings, setLocationSettings } = useLocationSettings();

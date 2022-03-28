@@ -9,21 +9,21 @@ import {
     Typography,
 } from '@material-ui/core';
 import { Link as LinkIcon } from '@material-ui/icons';
-import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyRender';
-import { UPDATE_APPLICATION } from '../../providers/AccessProvider/permissions';
+import ConditionallyRender from 'component/common/ConditionallyRender/ConditionallyRender';
+import { UPDATE_APPLICATION } from 'component/providers/AccessProvider/permissions';
 import { ApplicationView } from '../ApplicationView/ApplicationView';
 import { ApplicationUpdate } from '../ApplicationUpdate/ApplicationUpdate';
-import TabNav from '../../common/TabNav/TabNav';
-import Dialogue from '../../common/Dialogue';
-import PageContent from '../../common/PageContent';
-import HeaderTitle from '../../common/HeaderTitle';
-import AccessContext from '../../../contexts/AccessContext';
-import useApplicationsApi from '../../../hooks/api/actions/useApplicationsApi/useApplicationsApi';
-import useApplication from '../../../hooks/api/getters/useApplication/useApplication';
+import TabNav from 'component/common/TabNav/TabNav';
+import Dialogue from 'component/common/Dialogue';
+import PageContent from 'component/common/PageContent';
+import HeaderTitle from 'component/common/HeaderTitle';
+import AccessContext from 'contexts/AccessContext';
+import useApplicationsApi from 'hooks/api/actions/useApplicationsApi/useApplicationsApi';
+import useApplication from 'hooks/api/getters/useApplication/useApplication';
 import { useHistory, useParams } from 'react-router-dom';
-import { useLocationSettings } from '../../../hooks/useLocationSettings';
-import useToast from '../../../hooks/useToast';
-import PermissionButton from '../../common/PermissionButton/PermissionButton';
+import { useLocationSettings } from 'hooks/useLocationSettings';
+import useToast from 'hooks/useToast';
+import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { formatDateYMD } from 'utils/formatDate';
 import { formatUnknownError } from 'utils/formatUnknownError';
 

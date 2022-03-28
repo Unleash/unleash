@@ -1,6 +1,6 @@
 import { FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
 import React from 'react';
-import { IProjectRole } from '../../../../interfaces/role';
+import { IProjectRole } from 'interfaces/role';
 
 import { useStyles } from '../ProjectAccess.styles';
 

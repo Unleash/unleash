@@ -3,14 +3,14 @@ import { ConfiguredAddons } from './ConfiguredAddons/ConfiguredAddons';
 import { AvailableAddons } from './AvailableAddons/AvailableAddons';
 import { Avatar } from '@material-ui/core';
 import { DeviceHub } from '@material-ui/icons';
-import ConditionallyRender from '../../common/ConditionallyRender/ConditionallyRender';
-import slackIcon from '../../../assets/icons/slack.svg';
-import jiraIcon from '../../../assets/icons/jira.svg';
-import webhooksIcon from '../../../assets/icons/webhooks.svg';
-import teamsIcon from '../../../assets/icons/teams.svg';
-import dataDogIcon from '../../../assets/icons/datadog.svg';
+import ConditionallyRender from 'component/common/ConditionallyRender/ConditionallyRender';
+import slackIcon from 'assets/icons/slack.svg';
+import jiraIcon from 'assets/icons/jira.svg';
+import webhooksIcon from 'assets/icons/webhooks.svg';
+import teamsIcon from 'assets/icons/teams.svg';
+import dataDogIcon from 'assets/icons/datadog.svg';
 import { formatAssetPath } from 'utils/formatPath';
-import useAddons from '../../../hooks/api/getters/useAddons/useAddons';
+import useAddons from 'hooks/api/getters/useAddons/useAddons';
 
 const style: React.CSSProperties = {
     width: '40px',

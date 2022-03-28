@@ -68,7 +68,7 @@ export class SegmentService {
 
     async update(id: number, data: unknown, user: User): Promise<void> {
         const input = await segmentSchema.validateAsync(data);
-        const preData = this.segmentStore.get(id);
+        const preData = await this.segmentStore.get(id);
         const segment = await this.segmentStore.update(id, input);
 
         await this.eventStore.store({

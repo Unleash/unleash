@@ -60,7 +60,7 @@
     "chartjs-adapter-date-fns": "2.0.0",
     "classnames": "2.3.1",
     "copy-to-clipboard": "3.3.1",
-    "cypress": "9.5.2",
+    "cypress": "9.5.3",
     "date-fns": "2.28.0",
     "debounce": "1.2.1",
     "deep-diff": "1.0.2",

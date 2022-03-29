@@ -7,12 +7,12 @@ import { ConstraintAccordionView } from './ConstraintAccordionView/ConstraintAcc
 interface IConstraintAccordionProps {
     compact: boolean;
     editing: boolean;
-    environmentId: string;
+    environmentId?: string;
     constraint: IConstraint;
-    onEdit: () => void;
     onCancel: () => void;
-    onDelete: () => void;
-    onSave: (constraint: IConstraint) => void;
+    onEdit?: () => void;
+    onDelete?: () => void;
+    onSave?: (constraint: IConstraint) => void;
 }
 
 export const ConstraintAccordion = ({
@@ -29,12 +29,12 @@ export const ConstraintAccordion = ({
 
     return (
         <ConditionallyRender
-            condition={editing}
+            condition={Boolean(editing && onSave)}
             show={
                 <ConstraintAccordionEdit
                     constraint={constraint}
                     onCancel={onCancel}
-                    onSave={onSave}
+                    onSave={onSave!}
                     compact={compact}
                 />
             }

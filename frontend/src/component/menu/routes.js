@@ -27,7 +27,6 @@ import EditUser from 'component/admin/users/EditUser/EditUser';
 import { CreateApiToken } from 'component/admin/apiToken/CreateApiToken/CreateApiToken';
 import CreateEnvironment from 'component/environments/CreateEnvironment/CreateEnvironment';
 import EditEnvironment from 'component/environments/EditEnvironment/EditEnvironment';
-import { CreateContext } from 'component/context/CreateContext/CreateContext';
 import { EditContext } from 'component/context/EditContext/EditContext';
 import EditTagType from 'component/tags/EditTagType/EditTagType';
 import CreateTagType from 'component/tags/CreateTagType/CreateTagType';
@@ -46,8 +45,11 @@ import { EventHistoryPage } from 'component/history/EventHistoryPage/EventHistor
 import { FeatureEventHistoryPage } from 'component/history/FeatureEventHistoryPage/FeatureEventHistoryPage';
 import { CreateStrategy } from 'component/strategies/CreateStrategy/CreateStrategy';
 import { EditStrategy } from 'component/strategies/EditStrategy/EditStrategy';
-import { SegmentsList } from 'component/segments/SegmentList/SegmentList';
 import { SplashPage } from 'component/splash/SplashPage/SplashPage';
+import { CreateUnleashContextPage } from 'component/context/CreateUnleashContext/CreateUnleashContextPage';
+import { CreateSegment } from 'component/segments/CreateSegment/CreateSegment';
+import { EditSegment } from 'component/segments/EditSegment/EditSegment';
+import { SegmentsList } from 'component/segments/SegmentList/SegmentList';
 
 export const routes = [
     // Splash
@@ -198,7 +200,7 @@ export const routes = [
         path: '/context/create',
         parent: '/context',
         title: 'Create',
-        component: CreateContext,
+        component: CreateUnleashContextPage,
         type: 'protected',
         flag: C,
         menu: {},
@@ -329,7 +331,26 @@ export const routes = [
     },
 
     // Segments
-
+    {
+        path: '/segments/create',
+        title: 'Segments',
+        component: CreateSegment,
+        hidden: false,
+        type: 'protected',
+        layout: 'main',
+        menu: {},
+        flag: SE,
+    },
+    {
+        path: '/segments/edit/:segmentId',
+        title: 'Segments',
+        component: EditSegment,
+        hidden: false,
+        type: 'protected',
+        layout: 'main',
+        menu: {},
+        flag: SE,
+    },
     {
         path: '/segments',
         title: 'Segments',

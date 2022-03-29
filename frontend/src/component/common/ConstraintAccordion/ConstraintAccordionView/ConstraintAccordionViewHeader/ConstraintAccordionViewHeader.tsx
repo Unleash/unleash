@@ -17,10 +17,10 @@ import { useLocationSettings } from 'hooks/useLocationSettings';
 interface IConstraintAccordionViewHeaderProps {
     compact: boolean;
     constraint: IConstraint;
-    onDelete: () => void;
-    onEdit: () => void;
+    onDelete?: () => void;
+    onEdit?: () => void;
     singleValue: boolean;
-    environmentId: string;
+    environmentId?: string;
 }
 
 export const ConstraintAccordionViewHeader = ({
@@ -38,15 +38,19 @@ export const ConstraintAccordionViewHeader = ({
 
     const minWidthHeader = compact || smallScreen ? '100px' : '175px';
 
-    const onEditClick = (event: React.SyntheticEvent) => {
-        event.stopPropagation();
-        onEdit();
-    };
+    const onEditClick =
+        onEdit &&
+        ((event: React.SyntheticEvent) => {
+            event.stopPropagation();
+            onEdit();
+        });
 
-    const onDeleteClick = (event: React.SyntheticEvent) => {
-        event.stopPropagation();
-        onDelete();
-    };
+    const onDeleteClick =
+        onDelete &&
+        ((event: React.SyntheticEvent) => {
+            event.stopPropagation();
+            onDelete();
+        });
 
     return (
         <div className={styles.headerContainer}>
@@ -92,22 +96,33 @@ export const ConstraintAccordionViewHeader = ({
                 </div>
             </div>
             <div className={styles.headerActions}>
-                <PermissionIconButton
-                    onClick={onEditClick}
-                    permission={UPDATE_FEATURE_STRATEGY}
-                    projectId={projectId}
-                    environmentId={environmentId}
-                >
-                    <Edit titleAccess="edit constraint" />
-                </PermissionIconButton>
-                <PermissionIconButton
-                    onClick={onDeleteClick}
-                    permission={UPDATE_FEATURE_STRATEGY}
-                    projectId={projectId}
-                    environmentId={environmentId}
-                >
-                    <Delete titleAccess="delete constraint" />
-                </PermissionIconButton>
+                <ConditionallyRender
+                    condition={Boolean(onEditClick)}
+                    show={
+                        <PermissionIconButton
+                            onClick={onEditClick}
+                            permission={UPDATE_FEATURE_STRATEGY}
+                            projectId={projectId}
+                            environmentId={environmentId}
+                            hidden={!onEdit}
+                        >
+                            <Edit titleAccess="edit constraint" />
+                        </PermissionIconButton>
+                    }
+                />
+                <ConditionallyRender
+                    condition={Boolean(onDeleteClick)}
+                    show={
+                        <PermissionIconButton
+                            onClick={onDeleteClick}
+                            permission={UPDATE_FEATURE_STRATEGY}
+                            projectId={projectId}
+                            environmentId={environmentId}
+                        >
+                            <Delete titleAccess="delete constraint" />
+                        </PermissionIconButton>
+                    }
+                />
             </div>
         </div>
     );

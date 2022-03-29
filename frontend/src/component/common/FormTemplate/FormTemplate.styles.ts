@@ -1,5 +1,7 @@
 import { makeStyles } from '@material-ui/core/styles';
 
+export const formTemplateSidebarWidth = '27.5rem';
+
 export const useStyles = makeStyles(theme => ({
     container: {
         minHeight: '80vh',
@@ -8,8 +10,9 @@ export const useStyles = makeStyles(theme => ({
         margin: '0 auto',
         borderRadius: '1rem',
         overflow: 'hidden',
-        [theme.breakpoints.down(900)]: {
+        [theme.breakpoints.down(1100)]: {
             flexDirection: 'column',
+            minHeight: 0,
         },
     },
     modal: {
@@ -19,8 +22,10 @@ export const useStyles = makeStyles(theme => ({
     sidebar: {
         backgroundColor: theme.palette.primary.light,
         padding: '2rem',
-        width: '35%',
-        [theme.breakpoints.down(900)]: {
+        flexGrow: 0,
+        flexShrink: 0,
+        width: formTemplateSidebarWidth,
+        [theme.breakpoints.down(1100)]: {
             width: '100%',
         },
         [theme.breakpoints.down(500)]: {
@@ -41,6 +46,8 @@ export const useStyles = makeStyles(theme => ({
     },
     description: {
         color: '#fff',
+        zIndex: 1,
+        position: 'relative',
     },
     linkContainer: {
         margin: '1.5rem 0',
@@ -59,9 +66,12 @@ export const useStyles = makeStyles(theme => ({
         backgroundColor: '#fff',
         display: 'flex',
         flexDirection: 'column',
-        padding: '2rem',
-        width: '65%',
-        [theme.breakpoints.down(900)]: {
+        padding: '3rem',
+        flexGrow: 1,
+        [theme.breakpoints.down(1200)]: {
+            padding: '2rem',
+        },
+        [theme.breakpoints.down(1100)]: {
             width: '100%',
         },
         [theme.breakpoints.down(500)]: {
@@ -70,15 +80,12 @@ export const useStyles = makeStyles(theme => ({
     },
     icon: { fill: '#fff' },
     mobileGuidanceBgContainer: {
+        zIndex: 1,
         position: 'absolute',
-        right: '-3px',
-        top: '-3px',
-        backgroundColor: theme.palette.primary.light,
+        right: -3,
+        top: -3,
     },
     mobileGuidanceBackground: {
-        position: 'absolute',
-        right: '-3px',
-        top: '-3px',
         width: '75px',
         height: '75px',
     },

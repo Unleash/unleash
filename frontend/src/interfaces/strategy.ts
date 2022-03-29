@@ -2,9 +2,13 @@ import { Operator } from 'constants/operators';
 
 export interface IFeatureStrategy {
     id: string;
+    strategyName?: string;
     name: string;
     constraints: IConstraint[];
     parameters: IParameter;
+    featureName?: string;
+    projectId?: string;
+    environment?: string;
 }
 
 export interface IStrategy {

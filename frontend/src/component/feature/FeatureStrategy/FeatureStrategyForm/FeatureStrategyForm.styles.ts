@@ -2,13 +2,15 @@ import { makeStyles } from '@material-ui/core/styles';
 
 export const useStyles = makeStyles(theme => ({
     form: {
-        '& > * + *': {
-            paddingTop: theme.spacing(4),
-            marginTop: theme.spacing(4),
-            borderTopStyle: 'solid',
-            borderTopWidth: 1,
-            borderTopColor: theme.palette.grey[200],
-        },
+        display: 'grid',
+        gap: '1rem',
+    },
+    hr: {
+        width: '100%',
+        height: 1,
+        margin: '1rem 0',
+        border: 'none',
+        background: theme.palette.grey[200],
     },
     title: {
         display: 'grid',

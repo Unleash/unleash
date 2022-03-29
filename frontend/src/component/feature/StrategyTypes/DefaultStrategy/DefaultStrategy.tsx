@@ -6,7 +6,7 @@ interface IDefaultStrategyProps {
 }
 
 const DefaultStrategy = ({ strategyDefinition }: IDefaultStrategyProps) => {
-    return <h6>{strategyDefinition?.description}</h6>;
+    return <p>{strategyDefinition?.description}</p>;
 };
 
 export default DefaultStrategy;

@@ -1,4 +1,4 @@
-import { IStrategyPayload } from 'interfaces/strategy';
+import { IStrategyPayload, IFeatureStrategy } from 'interfaces/strategy';
 import useAPI from '../useApi/useApi';
 
 const useFeatureStrategyApi = () => {
@@ -11,21 +11,14 @@ const useFeatureStrategyApi = () => {
         featureId: string,
         environmentId: string,
         payload: IStrategyPayload
-    ) => {
+    ): Promise<IFeatureStrategy> => {
         const path = `api/admin/projects/${projectId}/features/${featureId}/environments/${environmentId}/strategies`;
         const req = createRequest(
             path,
             { method: 'POST', body: JSON.stringify(payload) },
             'addStrategyToFeature'
         );
-
-        try {
-            const res = await makeRequest(req.caller, req.id);
-
-            return res;
-        } catch (e) {
-            throw e;
-        }
+        return (await makeRequest(req.caller, req.id)).json();
     };
 
     const deleteStrategyFromFeature = async (
@@ -33,21 +26,14 @@ const useFeatureStrategyApi = () => {
         featureId: string,
         environmentId: string,
         strategyId: string
-    ) => {
+    ): Promise<void> => {
         const path = `api/admin/projects/${projectId}/features/${featureId}/environments/${environmentId}/strategies/${strategyId}`;
         const req = createRequest(
             path,
             { method: 'DELETE' },
             'deleteStrategyFromFeature'
         );
-
-        try {
-            const res = await makeRequest(req.caller, req.id);
-
-            return res;
-        } catch (e) {
-            throw e;
-        }
+        await makeRequest(req.caller, req.id);
     };
 
     const updateStrategyOnFeature = async (
@@ -56,21 +42,14 @@ const useFeatureStrategyApi = () => {
         environmentId: string,
         strategyId: string,
         payload: IStrategyPayload
-    ) => {
+    ): Promise<void> => {
         const path = `api/admin/projects/${projectId}/features/${featureId}/environments/${environmentId}/strategies/${strategyId}`;
         const req = createRequest(
             path,
             { method: 'PUT', body: JSON.stringify(payload) },
             'updateStrategyOnFeature'
         );
-
-        try {
-            const res = await makeRequest(req.caller, req.id);
-
-            return res;
-        } catch (e) {
-            throw e;
-        }
+        await makeRequest(req.caller, req.id);
     };
 
     return {

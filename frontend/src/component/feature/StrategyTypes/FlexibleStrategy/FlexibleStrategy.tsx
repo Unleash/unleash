@@ -78,16 +78,16 @@ const FlexibleStrategy = ({
 
             <br />
             <div>
-                <Tooltip title="Stickiness defines what parameter should be used to ensure that your users get consistency in features. By default unleash will use the first value present in the context in the order of userId, sessionId and random.">
-                    <Typography
-                        variant="subtitle2"
-                        style={{
-                            marginBottom: '0.5rem',
-                            display: 'flex',
-                            alignItems: 'center',
-                        }}
-                    >
-                        Stickiness
+                <Typography
+                    variant="subtitle2"
+                    style={{
+                        marginBottom: '0.5rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                    }}
+                >
+                    Stickiness
+                    <Tooltip title="Stickiness defines what parameter should be used to ensure that your users get consistency in features. By default unleash will use the first value present in the context in the order of userId, sessionId and random.">
                         <Info
                             style={{
                                 fontSize: '1rem',
@@ -95,8 +95,8 @@ const FlexibleStrategy = ({
                                 marginLeft: '0.2rem',
                             }}
                         />
-                    </Typography>
-                </Tooltip>
+                    </Tooltip>
+                </Typography>
                 <Select
                     id="stickiness-select"
                     name="stickiness"
@@ -112,16 +112,16 @@ const FlexibleStrategy = ({
                 &nbsp;
                 <br />
                 <br />
-                <Tooltip title="GroupId is used to ensure that different toggles will hash differently for the same user. The groupId defaults to feature toggle name, but you can override it to correlate rollout of multiple feature toggles.">
-                    <Typography
-                        variant="subtitle2"
-                        style={{
-                            marginBottom: '0.5rem',
-                            display: 'flex',
-                            alignItems: 'center',
-                        }}
-                    >
-                        GroupId
+                <Typography
+                    variant="subtitle2"
+                    style={{
+                        marginBottom: '0.5rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                    }}
+                >
+                    GroupId
+                    <Tooltip title="GroupId is used to ensure that different toggles will hash differently for the same user. The groupId defaults to feature toggle name, but you can override it to correlate rollout of multiple feature toggles.">
                         <Info
                             style={{
                                 fontSize: '1rem',
@@ -129,8 +129,8 @@ const FlexibleStrategy = ({
                                 marginLeft: '0.2rem',
                             }}
                         />
-                    </Typography>
-                </Tooltip>
+                    </Tooltip>
+                </Typography>
                 <Input
                     label="groupId"
                     value={groupId || ''}

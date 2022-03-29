@@ -1,4 +1,3 @@
-import { useHistory } from 'react-router-dom';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { useContextForm } from '../hooks/useContextForm';
@@ -10,10 +9,19 @@ import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashCon
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 
-export const CreateContext = () => {
+interface ICreateContextProps {
+    onSubmit: () => void;
+    onCancel: () => void;
+    modal?: boolean;
+}
+
+export const CreateUnleashContext = ({
+    onSubmit,
+    onCancel,
+    modal,
+}: ICreateContextProps) => {
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
-    const history = useHistory();
     const {
         contextName,
         contextDesc,
@@ -34,6 +42,7 @@ export const CreateContext = () => {
 
     const handleSubmit = async (e: Event) => {
         e.preventDefault();
+        e.stopPropagation();
         const validName = await validateContext();
 
         if (validName) {
@@ -41,12 +50,12 @@ export const CreateContext = () => {
             try {
                 await createContext(payload);
                 refetchUnleashContext();
-                history.push('/context');
                 setToastData({
                     title: 'Context created',
                     confetti: true,
                     type: 'success',
                 });
+                onSubmit();
             } catch (error: unknown) {
                 setToastApiError(formatUnknownError(error));
             }
@@ -62,10 +71,6 @@ export const CreateContext = () => {
 --data-raw '${JSON.stringify(getContextPayload(), undefined, 2)}'`;
     };
 
-    const onCancel = () => {
-        history.goBack();
-    };
-
     return (
         <FormTemplate
             loading={loading}
@@ -74,6 +79,7 @@ export const CreateContext = () => {
             They can be used together with strategy constraints as part of the activation strategy evaluation."
             documentationLink="https://docs.getunleash.io/how-to/how-to-define-custom-context-fields"
             formatApiCode={formatApiCode}
+            modal={modal}
         >
             <ContextForm
                 errors={errors}

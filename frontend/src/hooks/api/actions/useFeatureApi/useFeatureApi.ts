@@ -26,23 +26,14 @@ const useFeatureApi = () => {
     };
 
     const validateConstraint = async (
-        projectId: string,
-        featureName: string,
         constraint: IConstraint
-    ) => {
-        const path = `api/admin/projects/${projectId}/features/${featureName}/constraint/validate`;
+    ): Promise<void> => {
+        const path = `api/admin/constraints/validate`;
         const req = createRequest(path, {
             method: 'POST',
             body: JSON.stringify(constraint),
         });
-
-        try {
-            const res = await makeRequest(req.caller, req.id);
-
-            return res;
-        } catch (e) {
-            throw e;
-        }
+        await makeRequest(req.caller, req.id);
     };
 
     const createFeatureToggle = async (

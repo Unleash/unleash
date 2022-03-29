@@ -1,10 +1,14 @@
 import { useStyles } from './SegmentListItem.styles';
 import { TableCell, TableRow, Typography } from '@material-ui/core';
 import { Delete, Edit } from '@material-ui/icons';
-import { ADMIN } from 'component/providers/AccessProvider/permissions';
+import {
+    ADMIN,
+    UPDATE_SEGMENT,
+} from 'component/providers/AccessProvider/permissions';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import TimeAgo from 'react-timeago';
 import { ISegment } from 'interfaces/segment';
+import { useHistory } from 'react-router-dom';
 
 interface ISegmentListItemProps {
     id: number;
@@ -28,6 +32,7 @@ export const SegmentListItem = ({
     setDelDialog,
 }: ISegmentListItemProps) => {
     const styles = useStyles();
+    const { push } = useHistory();
 
     return (
         <TableRow className={styles.tableRow}>
@@ -55,11 +60,12 @@ export const SegmentListItem = ({
             <TableCell align="right">
                 <PermissionIconButton
                     data-loading
-                    aria-label="Edit"
-                    onClick={() => {}}
-                    permission={ADMIN}
+                    onClick={() => {
+                        push(`/segments/edit/${id}`);
+                    }}
+                    permission={UPDATE_SEGMENT}
                 >
-                    <Edit />
+                    <Edit titleAccess="Edit segment" />
                 </PermissionIconButton>
                 <PermissionIconButton
                     data-loading

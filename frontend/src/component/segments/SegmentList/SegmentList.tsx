@@ -18,7 +18,6 @@ import { SegmentListItem } from './SegmentListItem/SegmentListItem';
 import { ISegment } from 'interfaces/segment';
 import { useStyles } from './SegmentList.styles';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
-import { SegmentDeleteConfirm } from '../SegmentDeleteConfirm/SegmentDeleteConfirm';
 import { useSegmentsApi } from 'hooks/api/actions/useSegmentsApi/useSegmentsApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
@@ -27,17 +26,17 @@ import ConditionallyRender from 'component/common/ConditionallyRender';
 import HeaderTitle from 'component/common/HeaderTitle';
 import PageContent from 'component/common/PageContent';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
+import { SegmentDelete } from '../SegmentDelete/SegmentDelete';
 
 export const SegmentsList = () => {
     const history = useHistory();
     const { hasAccess } = useContext(AccessContext);
-    const { segments, refetchSegments } = useSegments();
+    const { segments = [], refetchSegments } = useSegments();
     const { deleteSegment } = useSegmentsApi();
     const { page, pages, nextPage, prevPage, setPageIndex, pageIndex } =
         usePagination(segments, 10);
     const [currentSegment, setCurrentSegment] = useState<ISegment>();
     const [delDialog, setDelDialog] = useState(false);
-    const [confirmName, setConfirmName] = useState('');
     const { setToastData, setToastApiError } = useToast();
 
     const styles = useStyles();
@@ -46,7 +45,7 @@ export const SegmentsList = () => {
         if (!currentSegment?.id) return;
         try {
             await deleteSegment(currentSegment?.id);
-            refetchSegments();
+            await refetchSegments();
             setToastData({
                 type: 'success',
                 title: 'Successfully deleted segment',
@@ -55,7 +54,6 @@ export const SegmentsList = () => {
             setToastApiError(formatUnknownError(error));
         }
         setDelDialog(false);
-        setConfirmName('');
     };
 
     const renderSegments = () => {
@@ -77,9 +75,9 @@ export const SegmentsList = () => {
 
     const renderNoSegments = () => {
         return (
-            <div className={styles.container}>
+            <div className={styles.empty}>
                 <Typography className={styles.title}>
-                    There are no segments created yet.
+                    No segments yet!
                 </Typography>
                 <p className={styles.subtitle}>
                     Segment makes it easy for you to define who should be
@@ -109,73 +107,72 @@ export const SegmentsList = () => {
                 />
             }
         >
-            <div className={styles.main}>
-                <Table>
-                    <TableHead>
-                        <TableRow className={styles.tableRow}>
-                            <TableCell
-                                className={styles.firstHeader}
-                                classes={{ root: styles.cell }}
-                            >
-                                Name
-                            </TableCell>
-                            <TableCell
-                                classes={{ root: styles.cell }}
-                                className={styles.hideSM}
-                            >
-                                Description
-                            </TableCell>
-                            <TableCell
-                                classes={{ root: styles.cell }}
-                                className={styles.hideXS}
-                            >
-                                Created on
-                            </TableCell>
-                            <TableCell
-                                classes={{ root: styles.cell }}
-                                className={styles.hideXS}
-                            >
-                                Created By
-                            </TableCell>
-                            <TableCell
-                                align="right"
-                                classes={{ root: styles.cell }}
-                                className={styles.lastHeader}
-                            >
-                                {hasAccess(UPDATE_SEGMENT) ? 'Actions' : ''}
-                            </TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        <ConditionallyRender
-                            condition={segments.length > 0}
-                            show={renderSegments()}
-                        />
-                    </TableBody>
-
-                    <PaginateUI
-                        pages={pages}
-                        pageIndex={pageIndex}
-                        setPageIndex={setPageIndex}
-                        nextPage={nextPage}
-                        prevPage={prevPage}
+            <Table>
+                <TableHead>
+                    <TableRow className={styles.tableRow}>
+                        <TableCell
+                            className={styles.firstHeader}
+                            classes={{ root: styles.cell }}
+                        >
+                            Name
+                        </TableCell>
+                        <TableCell
+                            classes={{ root: styles.cell }}
+                            className={styles.hideSM}
+                        >
+                            Description
+                        </TableCell>
+                        <TableCell
+                            classes={{ root: styles.cell }}
+                            className={styles.hideXS}
+                        >
+                            Created on
+                        </TableCell>
+                        <TableCell
+                            classes={{ root: styles.cell }}
+                            className={styles.hideXS}
+                        >
+                            Created By
+                        </TableCell>
+                        <TableCell
+                            align="right"
+                            classes={{ root: styles.cell }}
+                            className={styles.lastHeader}
+                        >
+                            {hasAccess(UPDATE_SEGMENT) ? 'Actions' : ''}
+                        </TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    <ConditionallyRender
+                        condition={segments.length > 0}
+                        show={renderSegments()}
                     />
-                </Table>
-                <ConditionallyRender
-                    condition={segments.length === 0}
-                    show={renderNoSegments()}
-                />
-                {currentSegment && (
-                    <SegmentDeleteConfirm
-                        segment={currentSegment}
+                </TableBody>
+            </Table>
+            <PaginateUI
+                pages={pages}
+                pageIndex={pageIndex}
+                setPageIndex={setPageIndex}
+                nextPage={nextPage}
+                prevPage={prevPage}
+                style={{ position: 'static', marginTop: '2rem' }}
+            />
+            <ConditionallyRender
+                condition={segments.length === 0}
+                show={renderNoSegments()}
+            />
+            <ConditionallyRender
+                condition={Boolean(currentSegment)}
+                show={() => (
+                    <SegmentDelete
+                        segment={currentSegment!}
                         open={delDialog}
                         setDeldialogue={setDelDialog}
                         handleDeleteSegment={onDeleteSegment}
-                        confirmName={confirmName}
-                        setConfirmName={setConfirmName}
                     />
                 )}
-            </div>
+            />
         </PageContent>
     );
 };

@@ -1,9 +1,5 @@
 import React, { useState, useContext } from 'react';
 import { IFeatureStrategy } from 'interfaces/strategy';
-import {
-    getFeatureStrategyIcon,
-    formatStrategyName,
-} from 'utils/strategyNames';
 import { FeatureStrategyType } from '../FeatureStrategyType/FeatureStrategyType';
 import { FeatureStrategyEnabled } from '../FeatureStrategyEnabled/FeatureStrategyEnabled';
 import { FeatureStrategyConstraints } from '../FeatureStrategyConstraints/FeatureStrategyConstraints';
@@ -18,12 +14,13 @@ import { formatFeaturePath } from '../FeatureStrategyEdit/FeatureStrategyEdit';
 import { useHistory } from 'react-router-dom';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import ConditionallyRender from 'component/common/ConditionallyRender';
-import { C } from 'component/common/flags';
 import { STRATEGY_FORM_SUBMIT_ID } from 'testIds';
-import { FeatureStrategyConstraints2 } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints2/FeatureStrategyConstraints2';
-import { useConstraintsValidation } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints2/useConstraintsValidation';
+import { useConstraintsValidation } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
 import AccessContext from 'contexts/AccessContext';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
+import { FeatureStrategyConstraintsCO } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/FeatureStrategyConstraintsCO';
+import { FeatureStrategySegment } from 'component/feature/FeatureStrategy/FeatureStrategySegment/FeatureStrategySegment';
+import { ISegment } from 'interfaces/segment';
 
 interface IFeatureStrategyFormProps {
     feature: IFeatureToggle;
@@ -35,22 +32,25 @@ interface IFeatureStrategyFormProps {
     setStrategy: React.Dispatch<
         React.SetStateAction<Partial<IFeatureStrategy>>
     >;
+    segments: ISegment[];
+    setSegments: React.Dispatch<React.SetStateAction<ISegment[]>>;
 }
 
 export const FeatureStrategyForm = ({
     feature,
-    strategy,
-    setStrategy,
     environmentId,
     permission,
     onSubmit,
     loading,
+    strategy,
+    setStrategy,
+    segments,
+    setSegments,
 }: IFeatureStrategyFormProps) => {
     const styles = useStyles();
     const [showProdGuard, setShowProdGuard] = useState(false);
+    const hasValidConstraints = useConstraintsValidation(strategy.constraints);
     const enableProdGuard = useFeatureStrategyProdGuard(feature, environmentId);
-    const StrategyIcon = getFeatureStrategyIcon(strategy.name ?? '');
-    const strategyName = formatStrategyName(strategy.name ?? '');
     const { hasAccess } = useContext(AccessContext);
     const { push } = useHistory();
 
@@ -73,12 +73,6 @@ export const FeatureStrategyForm = ({
         }
     };
 
-    const hasValidConstraints = useConstraintsValidation(
-        feature.project,
-        feature.name,
-        strategy.constraints
-    );
-
     if (uiConfigError) {
         throw uiConfigError;
     }
@@ -88,9 +82,9 @@ export const FeatureStrategyForm = ({
         return null;
     }
 
-    // TODO(olav): Remove uiConfig.flags.CO when new constraints are released.
+    // TODO(olav): Remove FeatureStrategyConstraints when CO is out.
     const FeatureStrategyConstraintsImplementation = uiConfig.flags.CO
-        ? FeatureStrategyConstraints2
+        ? FeatureStrategyConstraintsCO
         : FeatureStrategyConstraints;
     const disableSubmitButtonFromConstraints = uiConfig.flags.CO
         ? !hasValidConstraints
@@ -98,28 +92,36 @@ export const FeatureStrategyForm = ({
 
     return (
         <form className={styles.form} onSubmit={onSubmitOrProdGuard}>
-            <h2 className={styles.title}>
-                <StrategyIcon className={styles.icon} aria-hidden />
-                <span className={styles.name}>{strategyName}</span>
-            </h2>
             <div>
                 <FeatureStrategyEnabled
                     feature={feature}
                     environmentId={environmentId}
                 />
             </div>
+            <hr className={styles.hr} />
             <ConditionallyRender
-                condition={Boolean(uiConfig.flags[C])}
+                condition={Boolean(uiConfig.flags.SE)}
                 show={
-                    <div>
-                        <FeatureStrategyConstraintsImplementation
-                            projectId={feature.project}
-                            environmentId={environmentId}
-                            strategy={strategy}
-                            setStrategy={setStrategy}
-                        />
-                    </div>
+                    <FeatureStrategySegment
+                        segments={segments}
+                        setSegments={setSegments}
+                    />
                 }
+            />
+            <ConditionallyRender
+                condition={Boolean(uiConfig.flags.C)}
+                show={
+                    <FeatureStrategyConstraintsImplementation
+                        projectId={feature.project}
+                        environmentId={environmentId}
+                        strategy={strategy}
+                        setStrategy={setStrategy}
+                    />
+                }
+            />
+            <ConditionallyRender
+                condition={Boolean(uiConfig.flags.SE || uiConfig.flags.C)}
+                show={<hr className={styles.hr} />}
             />
             <FeatureStrategyType
                 strategy={strategy}
@@ -130,6 +132,7 @@ export const FeatureStrategyForm = ({
                     environmentId
                 )}
             />
+            <hr className={styles.hr} />
             <div className={styles.buttons}>
                 <PermissionButton
                     permission={permission}

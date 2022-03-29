@@ -16,21 +16,18 @@ interface ICreateProps {
     title: string;
     description: string;
     documentationLink: string;
+    documentationLinkLabel?: string;
     loading?: boolean;
     modal?: boolean;
     formatApiCode: () => string;
 }
-
-// Components in this file:
-// FormTemplate
-// MobileGuidance
-// Guidance
 
 const FormTemplate: React.FC<ICreateProps> = ({
     title,
     description,
     children,
     documentationLink,
+    documentationLinkLabel,
     loading,
     modal,
     formatApiCode,
@@ -38,7 +35,7 @@ const FormTemplate: React.FC<ICreateProps> = ({
     const { setToastData } = useToast();
     const styles = useStyles();
     const commonStyles = useCommonStyles();
-    const smallScreen = useMediaQuery(`(max-width:${899}px)`);
+    const smallScreen = useMediaQuery(`(max-width:${1099}px)`);
 
     const copyCommand = () => {
         if (copy(formatApiCode())) {
@@ -71,6 +68,7 @@ const FormTemplate: React.FC<ICreateProps> = ({
                         <MobileGuidance
                             description={description}
                             documentationLink={documentationLink}
+                            documentationLinkLabel={documentationLinkLabel}
                         />
                     </div>
                 }
@@ -93,6 +91,7 @@ const FormTemplate: React.FC<ICreateProps> = ({
                     <Guidance
                         description={description}
                         documentationLink={documentationLink}
+                        documentationLinkLabel={documentationLinkLabel}
                     >
                         <h3 className={styles.subtitle}>
                             API Command{' '}
@@ -111,11 +110,13 @@ const FormTemplate: React.FC<ICreateProps> = ({
 interface IMobileGuidance {
     description: string;
     documentationLink: string;
+    documentationLinkLabel?: string;
 }
 
 const MobileGuidance = ({
     description,
     documentationLink,
+    documentationLinkLabel,
 }: IMobileGuidance) => {
     const [open, setOpen] = useState(false);
     const styles = useStyles();
@@ -135,6 +136,7 @@ const MobileGuidance = ({
                 <Guidance
                     description={description}
                     documentationLink={documentationLink}
+                    documentationLinkLabel={documentationLinkLabel}
                 />
             </Collapse>
         </>
@@ -144,12 +146,14 @@ const MobileGuidance = ({
 interface IGuidanceProps {
     description: string;
     documentationLink: string;
+    documentationLinkLabel?: string;
 }
 
 const Guidance: React.FC<IGuidanceProps> = ({
     description,
     children,
     documentationLink,
+    documentationLinkLabel = 'Learn more',
 }) => {
     const styles = useStyles();
 
@@ -165,7 +169,7 @@ const Guidance: React.FC<IGuidanceProps> = ({
                     rel="noopener noreferrer"
                     target="_blank"
                 >
-                    Learn more
+                    {documentationLinkLabel}
                 </a>
             </div>
 

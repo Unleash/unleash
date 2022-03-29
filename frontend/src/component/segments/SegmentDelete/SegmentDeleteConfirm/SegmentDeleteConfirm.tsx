@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Dialogue from 'component/common/Dialogue';
 import Input from 'component/common/Input/Input';
 import { useStyles } from './SegmentDeleteConfirm.styles';
@@ -9,8 +9,6 @@ interface ISegmentDeleteConfirmProps {
     open: boolean;
     setDeldialogue: React.Dispatch<React.SetStateAction<boolean>>;
     handleDeleteSegment: (id: number) => Promise<void>;
-    confirmName: string;
-    setConfirmName: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export const SegmentDeleteConfirm = ({
@@ -18,10 +16,9 @@ export const SegmentDeleteConfirm = ({
     open,
     setDeldialogue,
     handleDeleteSegment,
-    confirmName,
-    setConfirmName,
 }: ISegmentDeleteConfirmProps) => {
     const styles = useStyles();
+    const [confirmName, setConfirmName] = useState('');
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
         setConfirmName(e.currentTarget.value);
@@ -37,7 +34,10 @@ export const SegmentDeleteConfirm = ({
             open={open}
             primaryButtonText="Delete segment"
             secondaryButtonText="Cancel"
-            onClick={() => handleDeleteSegment(segment.id)}
+            onClick={() => {
+                handleDeleteSegment(segment.id);
+                setConfirmName('');
+            }}
             disabledPrimaryButton={segment?.name !== confirmName}
             onClose={handleCancel}
             formId={formId}

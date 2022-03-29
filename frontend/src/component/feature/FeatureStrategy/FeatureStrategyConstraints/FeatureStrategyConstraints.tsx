@@ -63,7 +63,7 @@ export const FeatureStrategyConstraints = ({
     };
 
     return (
-        <>
+        <div>
             <List disablePadding dense>
                 {strategy.constraints?.map((constraint, index) => (
                     <ListItem key={index} disableGutters dense>
@@ -101,7 +101,7 @@ export const FeatureStrategyConstraints = ({
             >
                 Add constraints
             </PermissionButton>
-        </>
+        </div>
     );
 };
 

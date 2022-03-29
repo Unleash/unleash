@@ -3,8 +3,6 @@ import { useEffect, useState } from 'react';
 import { IConstraint } from 'interfaces/strategy';
 
 export const useConstraintsValidation = (
-    projectId: string,
-    featureId: string,
     constraints?: IConstraint[]
 ): boolean => {
     // An empty list of constraints is valid. An undefined list is not.
@@ -19,7 +17,7 @@ export const useConstraintsValidation = (
         }
 
         const validationRequests = constraints.map(constraint => {
-            return validateConstraint(projectId, featureId, constraint);
+            return validateConstraint(constraint);
         });
 
         Promise.all(validationRequests)
@@ -27,7 +25,7 @@ export const useConstraintsValidation = (
             .catch(() => setValid(false));
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [projectId, featureId, constraints]);
+    }, [constraints]);
 
     return valid;
 };

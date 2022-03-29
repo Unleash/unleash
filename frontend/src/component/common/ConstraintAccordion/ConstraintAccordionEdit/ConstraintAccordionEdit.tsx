@@ -13,8 +13,6 @@ import { cleanConstraint } from 'utils/cleanConstraint';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { useParams } from 'react-router-dom';
-import { IFeatureViewParams } from 'interfaces/params';
 import { IUnleashContextDefinition } from 'interfaces/context';
 import { useConstraintInput } from './ConstraintAccordionEditBody/useConstraintInput/useConstraintInput';
 import { Operator } from 'constants/operators';
@@ -63,7 +61,6 @@ export const ConstraintAccordionEdit = ({
     const [contextDefinition, setContextDefinition] = useState(
         resolveContextDefinition(context, localConstraint.contextName)
     );
-    const { projectId, featureId } = useParams<IFeatureViewParams>();
     const { validateConstraint } = useFeatureApi();
     const [expanded, setExpanded] = useState(false);
     const [action, setAction] = useState('');
@@ -160,8 +157,7 @@ export const ConstraintAccordionEdit = ({
 
         if (typeValidatorResult) {
             try {
-                await validateConstraint(projectId, featureId, localConstraint);
-
+                await validateConstraint(localConstraint);
                 setError('');
                 setAction(SAVE);
                 triggerTransition();

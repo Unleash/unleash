@@ -19,6 +19,9 @@ import {
 import { getStrategyObject } from 'utils/getStrategyObject';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
+import { ISegment } from 'interfaces/segment';
+import { useSegmentsApi } from 'hooks/api/actions/useSegmentsApi/useSegmentsApi';
+import { formatStrategyName } from 'utils/strategyNames';
 
 export const FeatureStrategyCreate = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -26,9 +29,11 @@ export const FeatureStrategyCreate = () => {
     const environmentId = useRequiredQueryParam('environmentId');
     const strategyName = useRequiredQueryParam('strategyName');
     const [strategy, setStrategy] = useState<Partial<IFeatureStrategy>>({});
+    const [segments, setSegments] = useState<ISegment[]>([]);
     const { strategies } = useStrategies();
 
     const { addStrategyToFeature, loading } = useFeatureStrategyApi();
+    const { setStrategySegments } = useSegmentsApi();
     const { feature, refetchFeature } = useFeature(projectId, featureId);
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
@@ -42,12 +47,18 @@ export const FeatureStrategyCreate = () => {
 
     const onSubmit = async () => {
         try {
-            await addStrategyToFeature(
+            const created = await addStrategyToFeature(
                 projectId,
                 featureId,
                 environmentId,
                 createStrategyPayload(strategy)
             );
+            await setStrategySegments({
+                environmentId,
+                projectId,
+                strategyId: created.id,
+                segmentIds: segments.map(s => s.id),
+            });
             setToastData({
                 title: 'Strategy created',
                 type: 'success',
@@ -63,7 +74,7 @@ export const FeatureStrategyCreate = () => {
     return (
         <FormTemplate
             modal
-            title="Add feature strategy"
+            title={formatStrategyName(strategyName)}
             description={featureStrategyHelp}
             documentationLink={featureStrategyDocsLink}
             formatApiCode={() =>
@@ -80,6 +91,8 @@ export const FeatureStrategyCreate = () => {
                 feature={feature}
                 strategy={strategy}
                 setStrategy={setStrategy}
+                segments={segments}
+                setSegments={setSegments}
                 environmentId={environmentId}
                 onSubmit={onSubmit}
                 loading={loading}

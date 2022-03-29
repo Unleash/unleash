@@ -6,10 +6,8 @@ export const useSegmentsApi = () => {
         propagateErrors: true,
     });
 
-    const PATH = 'api/admin/segments';
-
-    const createSegment = async (segment: ISegmentPayload, user: any) => {
-        const req = createRequest(PATH, {
+    const createSegment = async (segment: ISegmentPayload) => {
+        const req = createRequest(formatSegmentsPath(), {
             method: 'POST',
             body: JSON.stringify(segment),
         });
@@ -17,16 +15,11 @@ export const useSegmentsApi = () => {
         return makeRequest(req.caller, req.id);
     };
 
-    const deleteSegment = async (id: number) => {
-        const req = createRequest(`${PATH}/${id}`, {
-            method: 'DELETE',
-        });
-
-        return makeRequest(req.caller, req.id);
-    };
-
-    const updateSegment = async (segment: ISegmentPayload) => {
-        const req = createRequest(PATH, {
+    const updateSegment = async (
+        segmentId: number,
+        segment: ISegmentPayload
+    ) => {
+        const req = createRequest(formatSegmentPath(segmentId), {
             method: 'PUT',
             body: JSON.stringify(segment),
         });
@@ -34,5 +27,45 @@ export const useSegmentsApi = () => {
         return makeRequest(req.caller, req.id);
     };
 
-    return { createSegment, deleteSegment, updateSegment, errors, loading };
+    const deleteSegment = async (segmentId: number) => {
+        const req = createRequest(formatSegmentPath(segmentId), {
+            method: 'DELETE',
+        });
+        return makeRequest(req.caller, req.id);
+    };
+
+    const setStrategySegments = async (payload: {
+        projectId: string;
+        environmentId: string;
+        strategyId: string;
+        segmentIds: number[];
+    }) => {
+        const req = createRequest(formatStrategiesPath(), {
+            method: 'POST',
+            body: JSON.stringify(payload),
+        });
+
+        return makeRequest(req.caller, req.id);
+    };
+
+    return {
+        createSegment,
+        deleteSegment,
+        updateSegment,
+        setStrategySegments,
+        errors,
+        loading,
+    };
+};
+
+const formatSegmentsPath = (): string => {
+    return 'api/admin/segments';
+};
+
+const formatSegmentPath = (segmentId: number): string => {
+    return `${formatSegmentsPath()}/${segmentId}`;
+};
+
+const formatStrategiesPath = (): string => {
+    return `${formatSegmentsPath()}/strategies`;
 };

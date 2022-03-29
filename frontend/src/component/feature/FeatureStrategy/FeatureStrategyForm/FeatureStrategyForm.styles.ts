@@ -32,5 +32,6 @@ export const useStyles = makeStyles(theme => ({
         display: 'flex',
         justifyContent: 'end',
         gap: '1rem',
+        paddingBottom: '5rem',
     },
 }));

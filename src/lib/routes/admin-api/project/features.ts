@@ -10,7 +10,6 @@ import {
     CREATE_FEATURE_STRATEGY,
     DELETE_FEATURE,
     DELETE_FEATURE_STRATEGY,
-    NONE,
     UPDATE_FEATURE,
     UPDATE_FEATURE_ENVIRONMENT,
     UPDATE_FEATURE_STRATEGY,
@@ -73,7 +72,6 @@ export default class ProjectFeaturesController extends Controller {
         this.featureService = featureToggleServiceV2;
         this.logger = config.getLogger('/admin-api/project/features.ts');
 
-        // Environments
         this.get(`${PATH_ENV}`, this.getEnvironment);
         this.post(
             `${PATH_ENV}/on`,
@@ -85,14 +83,13 @@ export default class ProjectFeaturesController extends Controller {
             this.toggleEnvironmentOff,
             UPDATE_FEATURE_ENVIRONMENT,
         );
-        // activation strategies
+
         this.get(`${PATH_STRATEGIES}`, this.getStrategies);
         this.post(
             `${PATH_STRATEGIES}`,
             this.addStrategy,
             CREATE_FEATURE_STRATEGY,
         );
-
         this.get(`${PATH_STRATEGY}`, this.getStrategy);
         this.put(
             `${PATH_STRATEGY}`,
@@ -109,18 +106,10 @@ export default class ProjectFeaturesController extends Controller {
             this.deleteStrategy,
             DELETE_FEATURE_STRATEGY,
         );
-        this.post(
-            `${PATH_FEATURE}/constraint/validate`,
-            this.validateConstraint,
-            NONE,
-        );
 
-        // feature toggles
         this.get(PATH, this.getFeatures);
         this.post(PATH, this.createFeature, CREATE_FEATURE);
-
         this.post(PATH_FEATURE_CLONE, this.cloneFeature, CREATE_FEATURE);
-
         this.get(PATH_FEATURE, this.getFeature);
         this.put(PATH_FEATURE, this.updateFeature, UPDATE_FEATURE);
         this.patch(PATH_FEATURE, this.patchFeature, UPDATE_FEATURE);
@@ -341,13 +330,6 @@ export default class ProjectFeaturesController extends Controller {
             userName,
         );
         res.status(200).json(updatedStrategy);
-    }
-
-    async validateConstraint(req: Request, res: Response): Promise<void> {
-        const constraint: IConstraint = { ...req.body };
-
-        await this.featureService.validateConstraint(constraint);
-        res.status(204).send();
     }
 
     async getStrategy(

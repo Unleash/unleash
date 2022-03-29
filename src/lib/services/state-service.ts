@@ -22,13 +22,14 @@ import { IUnleashConfig } from '../types/option';
 import {
     FeatureToggle,
     IEnvironment,
-    IImportFile,
     IFeatureEnvironment,
     IFeatureStrategy,
-    ITag,
     IImportData,
+    IImportFile,
     IProject,
+    ISegment,
     IStrategyConfig,
+    ITag,
 } from '../types/model';
 import { Logger } from '../logger';
 import {
@@ -47,6 +48,8 @@ import { IFeatureEnvironmentStore } from '../types/stores/feature-environment-st
 import { IUnleashStores } from '../types/stores';
 import { DEFAULT_ENV } from '../util/constants';
 import { GLOBAL_ENV } from '../types/environment';
+import { ISegmentStore } from '../types/stores/segment-store';
+import { PartialSome } from '../types/partial';
 
 export interface IBackupOption {
     includeFeatureToggles: boolean;
@@ -61,6 +64,7 @@ interface IExportIncludeOptions {
     includeProjects?: boolean;
     includeTags?: boolean;
     includeEnvironments?: boolean;
+    includeSegments?: boolean;
 }
 
 export default class StateService {
@@ -86,6 +90,8 @@ export default class StateService {
 
     private environmentStore: IEnvironmentStore;
 
+    private segmentStore: ISegmentStore;
+
     constructor(
         stores: IUnleashStores,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
@@ -100,6 +106,7 @@ export default class StateService {
         this.projectStore = stores.projectStore;
         this.featureTagStore = stores.featureTagStore;
         this.environmentStore = stores.environmentStore;
+        this.segmentStore = stores.segmentStore;
         this.logger = getLogger('services/state-service.js');
     }
 
@@ -226,6 +233,20 @@ export default class StateService {
                 dropBeforeImport,
                 keepExisting,
             });
+        }
+
+        if (importData.segments) {
+            await this.importSegments(
+                data.segments,
+                userName,
+                dropBeforeImport,
+            );
+        }
+
+        if (importData.featureStrategySegments) {
+            await this.importFeatureStrategySegments(
+                data.featureStrategySegments,
+            );
         }
     }
 
@@ -596,6 +617,35 @@ export default class StateService {
         }
     }
 
+    async importSegments(
+        segments: PartialSome<ISegment, 'id'>[],
+        userName: string,
+        dropBeforeImport: boolean,
+    ): Promise<void> {
+        if (dropBeforeImport) {
+            await this.segmentStore.deleteAll();
+        }
+
+        await Promise.all(
+            segments.map((segment) =>
+                this.segmentStore.create(segment, { username: userName }),
+            ),
+        );
+    }
+
+    async importFeatureStrategySegments(
+        featureStrategySegments: {
+            featureStrategyId: string;
+            segmentId: number;
+        }[],
+    ): Promise<void> {
+        await Promise.all(
+            featureStrategySegments.map(({ featureStrategyId, segmentId }) =>
+                this.segmentStore.addToStrategy(segmentId, featureStrategyId),
+            ),
+        );
+    }
+
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async export({
         includeFeatureToggles = true,
@@ -603,6 +653,7 @@ export default class StateService {
         includeProjects = true,
         includeTags = true,
         includeEnvironments = true,
+        includeSegments = true,
     }: IExportIncludeOptions): Promise<{
         features: FeatureToggle[];
         strategies: IStrategy[];
@@ -639,6 +690,10 @@ export default class StateService {
             includeFeatureToggles
                 ? this.featureEnvironmentStore.getAll()
                 : Promise.resolve([]),
+            includeSegments ? this.segmentStore.getAll() : Promise.resolve([]),
+            includeSegments
+                ? this.segmentStore.getAllFeatureStrategySegments()
+                : Promise.resolve([]),
         ]).then(
             ([
                 features,
@@ -650,6 +705,8 @@ export default class StateService {
                 featureStrategies,
                 environments,
                 featureEnvironments,
+                segments,
+                featureStrategySegments,
             ]) => ({
                 version: 3,
                 features,
@@ -665,6 +722,8 @@ export default class StateService {
                 featureEnvironments: featureEnvironments.filter((fE) =>
                     features.some((f) => fE.featureName === f.name),
                 ),
+                segments,
+                featureStrategySegments,
             }),
         );
     }

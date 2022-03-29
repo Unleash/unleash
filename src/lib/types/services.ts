@@ -24,6 +24,7 @@ import FeatureTagService from '../services/feature-tag-service';
 import ProjectHealthService from '../services/project-health-service';
 import ClientMetricsServiceV2 from '../services/client-metrics/metrics-service-v2';
 import UserSplashService from '../services/user-splash-service';
+import { SegmentService } from '../services/segment-service';
 
 export interface IUnleashServices {
     accessService: AccessService;
@@ -53,4 +54,5 @@ export interface IUnleashServices {
     userService: UserService;
     versionService: VersionService;
     userSplashService: UserSplashService;
+    segmentService: SegmentService;
 }

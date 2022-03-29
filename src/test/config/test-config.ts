@@ -7,6 +7,7 @@ import {
 import getLogger from '../fixtures/no-logger';
 
 import { createConfig } from '../../lib/create-config';
+import { experimentalSegmentsConfig } from '../../lib/experimental';
 
 function mergeAll<T>(objects: Partial<T>[]): T {
     return merge.all<T>(objects.filter((i) => i));
@@ -19,6 +20,9 @@ export function createTestConfig(config?: IUnleashOptions): IUnleashConfig {
         server: { secret: 'really-secret' },
         session: {
             db: false,
+        },
+        experimental: {
+            segments: experimentalSegmentsConfig(),
         },
         versionCheck: { enable: false },
     };

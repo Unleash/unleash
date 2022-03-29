@@ -60,6 +60,9 @@ export interface IFeatureToggleClient {
     variants: IVariant[];
     enabled: boolean;
     strategies: IStrategyConfig[];
+    impressionData?: boolean;
+    lastSeenAt?: Date;
+    createdAt?: Date;
 }
 
 export interface IFeatureEnvironmentInfo {
@@ -340,4 +343,18 @@ export interface ICustomRole {
 export interface IProjectWithCount extends IProject {
     featureCount: number;
     memberCount: number;
+}
+
+export interface ISegment {
+    id: number;
+    name: string;
+    description?: string;
+    constraints: IConstraint[];
+    createdBy?: string;
+    createdAt: Date;
+}
+
+export interface IFeatureStrategySegment {
+    featureStrategyId: string;
+    segmentId: number;
 }

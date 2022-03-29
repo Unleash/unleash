@@ -43,6 +43,8 @@
     "test:watch": "yarn test --watch",
     "test:coverage": "NODE_ENV=test PORT=4243 jest --coverage --forceExit --testTimeout=10000",
     "test:coverage:jest": "NODE_ENV=test PORT=4243 jest --silent --ci --json --coverage --testLocationInResults --outputFile=\"report.json\" --forceExit --testTimeout=10000",
+    "seed:setup": "ts-node src/test/e2e/seed/segment.seed.ts",
+    "seed:serve": "UNLEASH_DATABASE_NAME=unleash_test UNLEASH_DATABASE_SCHEMA=seed yarn run start:dev",
     "clean": "del-cli --force dist"
   },
   "jest": {

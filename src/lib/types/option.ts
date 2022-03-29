@@ -1,6 +1,7 @@
 import EventEmitter from 'events';
 import { LogLevel, LogProvider } from '../logger';
 import { IApiTokenCreate } from './models/api-token';
+import { IExperimentalOptions } from '../experimental';
 
 export type EventHook = (eventName: string, data: object) => void;
 
@@ -91,9 +92,7 @@ export interface IUnleashOptions {
     authentication?: Partial<IAuthOption>;
     ui?: object;
     import?: Partial<IImportOption>;
-    experimental?: {
-        [key: string]: object;
-    };
+    experimental?: IExperimentalOptions;
     email?: Partial<IEmailOption>;
     secureHeaders?: boolean;
     enableOAS?: boolean;
@@ -146,9 +145,7 @@ export interface IUnleashConfig {
     authentication: IAuthOption;
     ui: IUIConfig;
     import: IImportOption;
-    experimental: {
-        [key: string]: any;
-    };
+    experimental?: IExperimentalOptions;
     email: IEmailOption;
     secureHeaders: boolean;
     enableOAS: boolean;

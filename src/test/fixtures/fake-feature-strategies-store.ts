@@ -270,6 +270,10 @@ export default class FakeFeatureStrategiesStore
     ): Promise<boolean> {
         return Promise.resolve(enabled);
     }
+
+    getStrategiesBySegment(): Promise<IFeatureStrategy[]> {
+        throw new Error('Method not implemented.');
+    }
 }
 
 module.exports = FakeFeatureStrategiesStore;

@@ -56,7 +56,7 @@ export default async function getApp(
 
     app.use(compression());
     app.use(cookieParser());
-    app.use(express.json({ strict: false, limit: '1mb' }));
+    app.use(express.json({ strict: false }));
     if (unleashSession) {
         app.use(unleashSession);
     }

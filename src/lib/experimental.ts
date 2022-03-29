@@ -12,6 +12,8 @@ export interface IExperimentalSegments {
     enableSegmentsClientApi: boolean;
     enableSegmentsAdminApi: boolean;
     inlineSegmentConstraints: boolean;
+    segmentValuesLimit: number;
+    strategySegmentsLimit: number;
 }
 
 export const experimentalSegmentsConfig = (): IExperimentalSegments => {
@@ -19,5 +21,7 @@ export const experimentalSegmentsConfig = (): IExperimentalSegments => {
         enableSegmentsAdminApi: true,
         enableSegmentsClientApi: true,
         inlineSegmentConstraints: true,
+        segmentValuesLimit: 100,
+        strategySegmentsLimit: 5,
     };
 };

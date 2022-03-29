@@ -12,9 +12,13 @@ import {
 } from '../types/events';
 import User from '../types/user';
 import { IFeatureStrategiesStore } from '../types/stores/feature-strategies-store';
+import { IExperimentalOptions } from '../experimental';
+import BadDataError from '../error/bad-data-error';
 
 export class SegmentService {
     private logger: Logger;
+
+    private experimental?: IExperimentalOptions;
 
     private segmentStore: ISegmentStore;
 
@@ -31,8 +35,12 @@ export class SegmentService {
             IUnleashStores,
             'segmentStore' | 'featureStrategiesStore' | 'eventStore'
         >,
-        { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
+        {
+            getLogger,
+            experimental,
+        }: Pick<IUnleashConfig, 'getLogger' | 'experimental'>,
     ) {
+        this.experimental = experimental;
         this.segmentStore = segmentStore;
         this.featureStrategiesStore = featureStrategiesStore;
         this.eventStore = eventStore;
@@ -63,6 +71,8 @@ export class SegmentService {
 
     async create(data: unknown, user: User): Promise<void> {
         const input = await segmentSchema.validateAsync(data);
+        this.validateSegmentValuesLimit(input);
+
         const segment = await this.segmentStore.create(input, user);
 
         await this.eventStore.store({
@@ -74,6 +84,8 @@ export class SegmentService {
 
     async update(id: number, data: unknown, user: User): Promise<void> {
         const input = await segmentSchema.validateAsync(data);
+        this.validateSegmentValuesLimit(input);
+
         const preData = await this.segmentStore.get(id);
         const segment = await this.segmentStore.update(id, input);
 
@@ -97,11 +109,46 @@ export class SegmentService {
 
     // Used by unleash-enterprise.
     async addToStrategy(id: number, strategyId: string): Promise<void> {
+        await this.validateStrategySegmentLimit(strategyId);
         await this.segmentStore.addToStrategy(id, strategyId);
     }
 
     // Used by unleash-enterprise.
     async removeFromStrategy(id: number, strategyId: string): Promise<void> {
         await this.segmentStore.removeFromStrategy(id, strategyId);
+    }
+
+    private async validateStrategySegmentLimit(
+        strategyId: string,
+    ): Promise<void> {
+        const limit = this.experimental?.segments?.strategySegmentsLimit;
+
+        if (typeof limit === 'undefined') {
+            return;
+        }
+
+        if ((await this.getByStrategy(strategyId)).length >= limit) {
+            throw new BadDataError(
+                `Strategies may not have more than ${limit} segments`,
+            );
+        }
+    }
+
+    private validateSegmentValuesLimit(segment: Omit<ISegment, 'id'>): void {
+        const limit = this.experimental?.segments?.segmentValuesLimit;
+
+        if (typeof limit === 'undefined') {
+            return;
+        }
+
+        const valuesCount = segment.constraints
+            .flatMap((constraint) => constraint.values?.length ?? 0)
+            .reduce((acc, length) => acc + length, 0);
+
+        if (valuesCount > limit) {
+            throw new BadDataError(
+                `Segments may not have more than ${limit} values`,
+            );
+        }
     }
 }

@@ -141,6 +141,7 @@ module.exports = {
                                 'api/admin/features-archive',
                                 'api/admin/metrics',
                                 'api/admin/projects',
+                                'api/admin/segments',
                                 'api/admin/state',
                                 'api/admin/strategies',
                                 'api/admin/user-admin',

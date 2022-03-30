@@ -255,6 +255,7 @@ module.exports = {
                         'advanced/toggle_variants',
                         'user_guide/projects',
                         'user_guide/rbac',
+                        'reference/segments',
                         'advanced/enterprise-authentication',
                         'advanced/stickiness',
                         'advanced/strategy_constraints',

@@ -1,0 +1,40 @@
+---
+title: Segments
+---
+
+:::info Availability
+Strategy constraints are available to Unleash Pro and Enterprise users from Unleash 4.10 and onwards.
+:::
+
+A **segment** is a reusable collection of [strategy constraints](../advanced/strategy-constraints.md).
+Like with strategy constraints, you apply segments to [feature toggle activation strategies](../user_guide/activation-strategies.md).
+
+You can apply the same segment to multiple activation strategies.
+If you update the segment, the changes will affect every strategy that uses that segment.
+
+
+## Structure and evaluation
+
+Segments are collections of strategy constraints. To satisfy a segment, *all* the constraints in the collection must be satisfied.
+
+If an activation strategy has a segment *and* additional constraints applied, the segment *and* the strategies must all be satisfied.
+
+## Creating, updating, and deleting segments
+
+Segments can be created, edited, and deleted from the segments page in the admin UI or via the API (see the [segments API documentation](../api/admin/feature-toggles-api-v2.md)).
+
+A segment that is in use **cannot** be deleted. If you'd like to delete a segment that is in use, you must first remove the segment from all the activation strategies that are currently using it.
+
+[image of the segments page and the segments item in the menu?]
+
+## When to use segments
+
+Segments let you create user groups based on data available in the Unleash context.
+These groups can be as simple or complex as you want to make them.
+You could, for example, use segments to target:
+- Users in a specific region
+- Users on a specific device type
+- Users who signed up before a specific point in time
+or any combination thereof. Because segments stay in sync across strategies, any changes will propagate to all the activation strategies that use them.
+
+If you need to keep time-based feature availability in sync across, you can use segments to achieve this too. For instance, you could create a "Black Friday" segment which is only satisfied on that specific Friday and use that to synchronize the availability of a number of related features.

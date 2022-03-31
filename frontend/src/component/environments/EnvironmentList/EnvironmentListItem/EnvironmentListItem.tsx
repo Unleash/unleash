@@ -22,7 +22,7 @@ import {
     UPDATE_ENVIRONMENT,
 } from 'component/providers/AccessProvider/permissions';
 import { useDrag, useDrop, DropTargetMonitor } from 'react-dnd';
-import { XYCoord } from 'dnd-core';
+import { XYCoord, Identifier } from 'dnd-core';
 import DisabledIndicator from 'component/common/DisabledIndicator/DisabledIndicator';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { useHistory } from 'react-router-dom';
@@ -41,6 +41,10 @@ interface DragItem {
     index: number;
     id: string;
     type: string;
+}
+
+interface CollectedProps {
+    handlerId: Identifier | null;
 }
 
 const EnvironmentListItem = ({
@@ -65,7 +69,7 @@ const EnvironmentListItem = ({
         }),
     });
 
-    const [{ handlerId }, drop] = useDrop({
+    const [{ handlerId }, drop] = useDrop<DragItem, unknown, CollectedProps>({
         accept: ACCEPT_TYPE,
         collect(monitor) {
             return {

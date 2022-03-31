@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/core/styles';
 
 export const useCommonStyles = makeStyles(theme => ({
     contentSpacingY: {
@@ -24,12 +24,14 @@ export const useCommonStyles = makeStyles(theme => ({
     },
     divider: {
         margin: '1rem 0',
+        // @ts-expect-error
         backgroundColor: theme.palette.division.main,
         height: '3px',
         width: '100%',
     },
     largeDivider: {
         margin: '2rem 0',
+        // @ts-expect-error
         backgroundColor: theme.palette.division.main,
         height: '3px',
         width: '100%',
@@ -112,6 +114,11 @@ export const useCommonStyles = makeStyles(theme => ({
         right: '40px',
         top: '40px',
         transform: 'translateY(-400px)',
+        [theme.breakpoints.down('xs')]: {
+            right: 20,
+            left: 10,
+            top: 40,
+        },
     },
     fadeInTopEnter: {
         transform: 'translateY(100px)',

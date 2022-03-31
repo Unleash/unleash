@@ -9,6 +9,10 @@ export const useStyles = makeStyles(theme => ({
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
+        [theme.breakpoints.down('xs')]: {
+            width: '50px',
+            height: '50px',
+        },
     },
     check: {
         color: '#fff',

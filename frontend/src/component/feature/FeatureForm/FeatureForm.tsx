@@ -140,7 +140,7 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                     data-test={CF_DESC_ID}
                     onChange={e => setDescription(e.target.value)}
                 />
-                <FormControl>
+                <FormControl className={styles.input}>
                     <Typography
                         variant="subtitle1"
                         className={styles.roleSubtitle}

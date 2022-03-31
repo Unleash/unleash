@@ -2,11 +2,11 @@ import { makeStyles } from '@material-ui/core/styles';
 
 export const useStyles = makeStyles(theme => ({
     container: {
-        width: '450px',
+        maxWidth: '450px',
         background: '#fff',
         boxShadow: '2px 2px 4px rgba(0,0,0,0.4)',
         zIndex: 500,
-        margin: '0 auto',
+        margin: '0 0.8rem',
         borderRadius: '12.5px',
         padding: '2rem',
     },

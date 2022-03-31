@@ -11,6 +11,9 @@ export const useStyles = makeStyles(theme => ({
         width: '20%',
         borderRight: `1px solid ${theme.palette.grey[300]}`,
         padding: '1rem 0',
+        [theme.breakpoints.down('sm')]: {
+            width: '35%',
+        },
     },
     listItem: {
         padding: '0.75rem 2rem',

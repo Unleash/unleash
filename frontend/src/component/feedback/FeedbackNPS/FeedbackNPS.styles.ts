@@ -8,8 +8,6 @@ export const useStyles = makeStyles(theme => ({
         boxShadow: '2px 2px 4px 4px rgba(143,143,143, 0.25)',
         padding: '1.5rem',
         maxWidth: '400px',
-        width: '400px',
-        height: '200px',
     },
     animateContainer: {
         zIndex: 9999,

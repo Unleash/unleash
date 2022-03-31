@@ -32,10 +32,10 @@ export interface IAuthOptions {
 }
 
 export interface IAuthFeedback {
-    neverShow: boolean;
     feedbackId: string;
+    neverShow?: boolean;
     given?: string;
-    userId: number;
+    userId?: number;
 }
 
 export interface IAuthSplash {

@@ -6,15 +6,17 @@ import { useConstraintsValidation } from 'hooks/api/getters/useConstraintsValida
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
-import React from 'react';
+import React, { useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useSegmentForm } from '../hooks/useSegmentForm';
 import { SegmentForm } from '../SegmentForm/SegmentForm';
+import { feedbackCESContext } from 'component/feedback/FeedbackCESContext/FeedbackCESContext';
 
 export const CreateSegment = () => {
     const { uiConfig } = useUiConfig();
     const { setToastData, setToastApiError } = useToast();
+    const { showFeedbackCES } = useContext(feedbackCESContext);
     const history = useHistory();
     const { createSegment, loading } = useSegmentsApi();
     const { refetchSegments } = useSegments();
@@ -53,6 +55,11 @@ export const CreateSegment = () => {
                 title: 'Segment created',
                 confetti: true,
                 type: 'success',
+            });
+            showFeedbackCES({
+                title: 'How easy was it to create a segment?',
+                text: 'Please help us understand how we can improve segments',
+                path: '/segments/create',
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));

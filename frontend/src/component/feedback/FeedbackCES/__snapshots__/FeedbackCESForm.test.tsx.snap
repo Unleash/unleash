@@ -1,0 +1,222 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FeedbackCESForm 1`] = `
+<div
+  className="makeStyles-container-1"
+>
+  <h1
+    className="makeStyles-title-3"
+  >
+    Please help us improve
+  </h1>
+  <form
+    aria-live="polite"
+    className="makeStyles-form-2"
+    onSubmit={[Function]}
+  >
+    <p
+      className="makeStyles-subtitle-4"
+    >
+      a
+    </p>
+    <div
+      className="makeStyles-scoreInput-8"
+    >
+      <span
+        className="makeStyles-scoreHelp-9"
+      >
+        Very difficult
+      </span>
+      <label
+        className="makeStyles-scoreValue-10"
+      >
+        <input
+          checked={false}
+          name="score"
+          onChange={[Function]}
+          type="radio"
+          value={1}
+        />
+        <span>
+          1
+        </span>
+      </label>
+      <label
+        className="makeStyles-scoreValue-10"
+      >
+        <input
+          checked={false}
+          name="score"
+          onChange={[Function]}
+          type="radio"
+          value={2}
+        />
+        <span>
+          2
+        </span>
+      </label>
+      <label
+        className="makeStyles-scoreValue-10"
+      >
+        <input
+          checked={false}
+          name="score"
+          onChange={[Function]}
+          type="radio"
+          value={3}
+        />
+        <span>
+          3
+        </span>
+      </label>
+      <label
+        className="makeStyles-scoreValue-10"
+      >
+        <input
+          checked={false}
+          name="score"
+          onChange={[Function]}
+          type="radio"
+          value={4}
+        />
+        <span>
+          4
+        </span>
+      </label>
+      <label
+        className="makeStyles-scoreValue-10"
+      >
+        <input
+          checked={false}
+          name="score"
+          onChange={[Function]}
+          type="radio"
+          value={5}
+        />
+        <span>
+          5
+        </span>
+      </label>
+      <label
+        className="makeStyles-scoreValue-10"
+      >
+        <input
+          checked={false}
+          name="score"
+          onChange={[Function]}
+          type="radio"
+          value={6}
+        />
+        <span>
+          6
+        </span>
+      </label>
+      <label
+        className="makeStyles-scoreValue-10"
+      >
+        <input
+          checked={false}
+          name="score"
+          onChange={[Function]}
+          type="radio"
+          value={7}
+        />
+        <span>
+          7
+        </span>
+      </label>
+      <span
+        className="makeStyles-scoreHelp-9"
+      >
+        Very easy
+      </span>
+    </div>
+    <div
+      hidden={true}
+    >
+      <label
+        className="makeStyles-textLabel-5"
+        htmlFor="comment"
+      >
+        b
+      </label>
+      <div
+        className="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
+      >
+        <div
+          className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-multiline MuiOutlinedInput-multiline"
+          onClick={[Function]}
+        >
+          <textarea
+            aria-invalid={false}
+            autoFocus={false}
+            className="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMultiline MuiOutlinedInput-inputMultiline"
+            disabled={false}
+            onAnimationStart={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            required={false}
+            rows={3}
+            value=""
+          />
+          <fieldset
+            aria-hidden={true}
+            className="PrivateNotchedOutline-root-11 MuiOutlinedInput-notchedOutline"
+            style={
+              Object {
+                "paddingLeft": 8,
+              }
+            }
+          >
+            <legend
+              className="PrivateNotchedOutline-legend-12"
+              style={
+                Object {
+                  "width": 0.01,
+                }
+              }
+            >
+              <span
+                dangerouslySetInnerHTML={
+                  Object {
+                    "__html": "&#8203;",
+                  }
+                }
+              />
+            </legend>
+          </fieldset>
+        </div>
+      </div>
+    </div>
+    <div
+      className="makeStyles-buttons-6"
+      hidden={true}
+    >
+      <button
+        className="MuiButtonBase-root MuiButton-root MuiButton-contained makeStyles-button-7 MuiButton-containedPrimary Mui-disabled Mui-disabled"
+        disabled={true}
+        onBlur={[Function]}
+        onDragLeave={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseLeave={[Function]}
+        onMouseUp={[Function]}
+        onTouchEnd={[Function]}
+        onTouchMove={[Function]}
+        onTouchStart={[Function]}
+        tabIndex={-1}
+        type="submit"
+      >
+        <span
+          className="MuiButton-label"
+        >
+          Send feedback
+        </span>
+      </button>
+    </div>
+  </form>
+</div>
+`;

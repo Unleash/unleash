@@ -1,5 +1,5 @@
 import ConditionallyRender from 'component/common/ConditionallyRender';
-import Feedback from 'component/common/Feedback/Feedback';
+import { FeedbackNPS } from 'component/feedback/FeedbackNPS/FeedbackNPS';
 import LayoutPicker from 'component/layout/LayoutPicker/LayoutPicker';
 import Loader from 'component/common/Loader/Loader';
 import NotFound from 'component/common/NotFound/NotFound';
@@ -72,7 +72,7 @@ export const App = () => {
                                 <Route path="/404" component={NotFound} />
                                 <Redirect to="/404" />
                             </Switch>
-                            <Feedback openUrl="http://feedback.unleash.run" />
+                            <FeedbackNPS openUrl="http://feedback.unleash.run" />
                             <SplashPageRedirect />
                         </LayoutPicker>
                     </div>

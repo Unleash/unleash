@@ -13,6 +13,7 @@ import ScrollToTop from 'component/scrollToTop';
 import AccessProvider from './component/providers/AccessProvider/AccessProvider';
 import { getBasePath } from 'utils/formatPath';
 import UIProvider from './component/providers/UIProvider/UIProvider';
+import { FeedbackCESProvider } from 'component/feedback/FeedbackCESContext/FeedbackCESProvider';
 
 ReactDOM.render(
     <DndProvider backend={HTML5Backend}>
@@ -21,10 +22,12 @@ ReactDOM.render(
                 <Router basename={`${getBasePath()}`}>
                     <ThemeProvider theme={mainTheme}>
                         <StylesProvider injectFirst>
-                            <CssBaseline />
-                            <ScrollToTop>
-                                <Route path="/" component={App} />
-                            </ScrollToTop>
+                            <FeedbackCESProvider>
+                                <CssBaseline />
+                                <ScrollToTop>
+                                    <Route path="/" component={App} />
+                                </ScrollToTop>
+                            </FeedbackCESProvider>
                         </StylesProvider>
                     </ThemeProvider>
                 </Router>

@@ -4,44 +4,37 @@ import classnames from 'classnames';
 import CloseIcon from '@material-ui/icons/Close';
 import { ReactComponent as Logo } from 'assets/icons/logoPlain.svg';
 import { useCommonStyles } from 'common.styles';
-import { useStyles } from './Feedback.styles';
-import AnimateOnMount from '../AnimateOnMount/AnimateOnMount';
-import ConditionallyRender from '../ConditionallyRender';
-import { formatApiPath } from 'utils/formatPath';
+import { useStyles } from 'component/feedback/FeedbackNPS/FeedbackNPS.styles';
+import AnimateOnMount from 'component/common/AnimateOnMount/AnimateOnMount';
+import ConditionallyRender from 'component/common/ConditionallyRender';
 import UIContext from 'contexts/UIContext';
-import { PNPS_FEEDBACK_ID, showPnpsFeedback } from '../util';
+import {
+    PNPS_FEEDBACK_ID,
+    showNPSFeedback,
+} from 'component/feedback/FeedbackNPS/showNPSFeedback';
 import { useAuthFeedback } from 'hooks/api/getters/useAuth/useAuthFeedback';
+import { useAuthFeedbackApi } from 'hooks/api/actions/useAuthFeedbackApi/useAuthFeedbackApi';
 
-interface IFeedbackProps {
+interface IFeedbackNPSProps {
     openUrl: string;
 }
 
-const Feedback = ({ openUrl }: IFeedbackProps) => {
+export const FeedbackNPS = ({ openUrl }: IFeedbackNPSProps) => {
     const { showFeedback, setShowFeedback } = useContext(UIContext);
-    const { feedback, refetchFeedback } = useAuthFeedback();
+    const { createFeedback, updateFeedback } = useAuthFeedbackApi();
+    const { feedback } = useAuthFeedback();
     const [answeredNotNow, setAnsweredNotNow] = useState(false);
     const styles = useStyles();
     const commonStyles = useCommonStyles();
     const feedbackId = PNPS_FEEDBACK_ID;
 
     const onConfirm = async () => {
-        const url = formatApiPath('api/admin/feedback');
-
         try {
-            await fetch(url, {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ feedbackId }),
-            });
-            await refetchFeedback();
+            await createFeedback({ feedbackId });
         } catch (err) {
             console.warn(err);
             setShowFeedback(false);
         }
-
         // Await api call to register confirmation
         window.open(openUrl, '_blank');
         setTimeout(() => {
@@ -50,32 +43,18 @@ const Feedback = ({ openUrl }: IFeedbackProps) => {
     };
 
     const onDontShowAgain = async () => {
-        const feedbackId = 'pnps';
-        const url = formatApiPath(
-            `api/admin/feedback/${encodeURIComponent(feedbackId)}`
-        );
-
         try {
-            await fetch(url, {
-                method: 'PUT',
-                credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ feedbackId, neverShow: true }),
-            });
-            await refetchFeedback();
+            await updateFeedback({ feedbackId, neverShow: true });
         } catch (err) {
             console.warn(err);
             setShowFeedback(false);
         }
-
         setTimeout(() => {
             setShowFeedback(false);
         }, 100);
     };
 
-    if (!showPnpsFeedback(feedback)) {
+    if (!showNPSFeedback(feedback)) {
         return null;
     }
 
@@ -152,5 +131,3 @@ const Feedback = ({ openUrl }: IFeedbackProps) => {
         </AnimateOnMount>
     );
 };
-
-export default Feedback;

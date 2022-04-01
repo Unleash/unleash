@@ -13,28 +13,29 @@ The segments API is available to Pro and Enterprise users from Unleash 4.10.
 To use the admin API, you'll need to [create and use an admin API token](../../user_guide/token.md).
 :::
 
-The segments API lets you create, read, update, and delete [segments](../../reference/segments.mdx).
+The segments API lets you create, read, update, and delete [segments](../../reference/segments.mdx). All payload
 
-### Get all segments
+## Get all segments
+
+Retrieve all segments that exist in this Unleash instance. Returns a list of [segment objects](#isegment).
 
 <ApiRequest verb="Get" url={basePath} title="Retrieve all existing segments."/>
 
-<details>
+<details open>
 
-<summary>Responses</summary>
+<summary>Example responses</summary>
 
-##### 200 OK
-
-The user no longer has the specified role in the project. If the user had this role prior to this API request, they will have been removed from the project. This response has no body.
-
-##### 400 Bad Request
-
-You tried to remove the only user with the role `owner` in the project:
+### 200 OK
 
 ``` json
 [
   {
-    "msg": "A project must have at least one owner."
+    "id": 1,
+    "name": "my-segment",
+    "description": "a segment description",
+    "constraints": [],
+    "createdBy": "user id",
+    "createdAt": "2022-04-01T14:02:25.491Z"
   }
 ]
 ```

@@ -8,6 +8,8 @@ import FeatureOverviewExecutionChips from './FeatureOverviewExecutionChips/Featu
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import Constraint from 'component/common/Constraint/Constraint';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { FeatureOverviewSegment } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewSegment/FeatureOverviewSegment';
 
 interface IFeatureOverviewExecutionProps {
     parameters: IParameter;
@@ -23,6 +25,7 @@ const FeatureOverviewExecution = ({
 }: IFeatureOverviewExecutionProps) => {
     const styles = useStyles();
     const { strategies } = useStrategies();
+    const { uiConfig } = useUiConfig();
 
     if (!parameters) return null;
 
@@ -239,15 +242,16 @@ const FeatureOverviewExecution = ({
     return (
         <>
             <ConditionallyRender
+                condition={Boolean(uiConfig.flags.SE)}
+                show={<FeatureOverviewSegment strategyId={strategy.id} />}
+            />
+            <ConditionallyRender
                 condition={constraints.length > 0}
                 show={
-                    <>
-                        <div className={styles.constraintsContainer}>
-                            <p>Enabled for match:</p>
-                            {renderConstraints()}
-                            <StrategySeparator text="AND" />
-                        </div>
-                    </>
+                    <div className={styles.constraintsContainer}>
+                        {renderConstraints()}
+                        <StrategySeparator text="AND" />
+                    </div>
                 }
             />
             <ConditionallyRender

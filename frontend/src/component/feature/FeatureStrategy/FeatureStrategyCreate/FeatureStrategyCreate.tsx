@@ -53,12 +53,14 @@ export const FeatureStrategyCreate = () => {
                 environmentId,
                 createStrategyPayload(strategy)
             );
-            await setStrategySegments({
-                environmentId,
-                projectId,
-                strategyId: created.id,
-                segmentIds: segments.map(s => s.id),
-            });
+            if (uiConfig.flags.SE) {
+                await setStrategySegments({
+                    environmentId,
+                    projectId,
+                    strategyId: created.id,
+                    segmentIds: segments.map(s => s.id),
+                });
+            }
             setToastData({
                 title: 'Strategy created',
                 type: 'success',

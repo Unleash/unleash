@@ -25,13 +25,17 @@ export const FeatureStrategyEdit = () => {
     const [strategy, setStrategy] = useState<Partial<IFeatureStrategy>>({});
     const [segments, setSegments] = useState<ISegment[]>([]);
     const { updateStrategyOnFeature, loading } = useFeatureStrategyApi();
-    const { segments: savedStrategySegments } = useSegments(strategyId);
     const { feature, refetchFeature } = useFeature(projectId, featureId);
     const { setStrategySegments } = useSegmentsApi();
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
     const { unleashUrl } = uiConfig;
     const { push } = useHistory();
+
+    const {
+        segments: savedStrategySegments,
+        refetchSegments: refetchSavedStrategySegments,
+    } = useSegments(strategyId);
 
     useEffect(() => {
         const savedStrategy = feature.environments
@@ -54,12 +58,15 @@ export const FeatureStrategyEdit = () => {
                 strategyId,
                 createStrategyPayload(strategy)
             );
-            await setStrategySegments({
-                environmentId,
-                projectId,
-                strategyId,
-                segmentIds: segments.map(s => s.id),
-            });
+            if (uiConfig.flags.SE) {
+                await setStrategySegments({
+                    environmentId,
+                    projectId,
+                    strategyId,
+                    segmentIds: segments.map(s => s.id),
+                });
+                await refetchSavedStrategySegments();
+            }
             setToastData({
                 title: 'Strategy updated',
                 type: 'success',

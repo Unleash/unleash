@@ -1,9 +1,45 @@
 ---
 title: /api/admin/segments
 ---
-export const basePath = "/api/admin/segments"
+import ApiRequest from '@site/src/components/ApiRequest'
+export const basePath = "api/admin/segments"
+export const path = (p) => `api/admin/segments/${p}`
 
-### Get all segments: `GET /{{{basePath}}}`
+:::info Availability
+The segments API is available to Pro and Enterprise users from Unleash 4.10.
+:::
+
+:::note
+To use the admin API, you'll need to [create and use an admin API token](../../user_guide/token.md).
+:::
+
+The segments API lets you create, read, update, and delete [segments](../../reference/segments.mdx).
+
+### Get all segments
+
+<ApiRequest verb="Get" url={basePath} title="Retrieve all existing segments."/>
+
+<details>
+
+<summary>Responses</summary>
+
+##### 200 OK
+
+The user no longer has the specified role in the project. If the user had this role prior to this API request, they will have been removed from the project. This response has no body.
+
+##### 400 Bad Request
+
+You tried to remove the only user with the role `owner` in the project:
+
+``` json
+[
+  {
+    "msg": "A project must have at least one owner."
+  }
+]
+```
+
+</details>
 
 ### Create segment: `POST /`
 

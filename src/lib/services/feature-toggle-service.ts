@@ -197,7 +197,7 @@ class FeatureToggleService {
         }
 
         if (oneOf(DATE_OPERATORS, operator)) {
-            validateDate(constraint.value);
+            await validateDate(constraint.value);
         }
 
         if (

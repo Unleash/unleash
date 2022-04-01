@@ -183,7 +183,7 @@ It's important that you use an up-to-date client SDK if you're using the advance
 If you use the new constraints with old SDKs, here's how it'll affect _some_ of the SDKs (the list is not exhaustive):
 - The Node.js and Go client SDKs will ignore the new constraints completely: the constraints will not affect the toggle's status.
 - The Python client SDK will evaluate the toggle to false, as it cannot evaluate the constraint successfully.
-- The Ruby and PHP SDKs raise exceptions if the provided operator is not `IN` or `NOT_IN`.
+- The .NET, Ruby, and PHP SDKs raise exceptions if the provided operator is not `IN` or `NOT_IN`.
 
 Please inspect the [SDK compatibility table to see which version of your preferred SDK introduced support for this feature](../sdks/index.md#strategy-constraints).
 

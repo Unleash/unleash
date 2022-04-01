@@ -17,40 +17,67 @@ import CodeBlock from '@theme/CodeBlock';
 
 const indentation = 2;
 
-const Component = ({ verb, payload, url, title }) => {
+type Props = {
+    verb: string,
+    payload?: any,
+    url: string,
+    title?: string
+}
+
+type PropsWithoutPayload = Omit<Props, 'payload'>
+
+
+const Component: React.FC<Props> = ({ verb, payload, url, title }) => {
     const verbUpper = verb?.toUpperCase() || '';
     const prettyPayload = JSON.stringify(payload, null, indentation);
+
+    const httpBlock = (payload ? `
+${verbUpper} <unleash-url>/${url}
+Authorization: <API-token>
+content-type: application/json
+
+${prettyPayload}` :`
+${verbUpper} <unleash-url>/${url}
+Authorization: <API-token>
+content-type: application/json`).trim()
+
+    const curlBlock = (payload ? `
+curl -H "Content-Type: application/json" \\
+     -H "Authorization: <API-token>" \\
+     -X ${verbUpper} \\
+     -d '${prettyPayload}' \\
+     <unleash-url>/${url}` : `
+curl -H "Content-Type: application/json" \\
+     -H "Authorization: <API-token>" \\
+     -X ${verbUpper} \\
+     <unleash-url>/${url}` ).trim()
+
+    const httpieBlock = (payload ?
+                         `echo '${prettyPayload}' \\
+| http ${verbUpper} \\
+  <unleash-url>/${url} \\
+  Authorization:<API-token>`
+        : `
+http ${verbUpper} \\
+  <unleash-url>/${url} \\
+  Authorization:<API-token>`.trim()
+        ).trim()
 
     return (
         <Tabs>
             <TabItem value="http" label="HTTP">
                 <CodeBlock language="http" title={title}>
-                    {`
-${verbUpper} <unleash-url>/${url}
-Authorization: <API-token>
-content-type: application/json
-
-${prettyPayload}
-`.trim()}
+                    {httpBlock}
                 </CodeBlock>
             </TabItem>
             <TabItem value="curl" label="cURL">
                 <CodeBlock language="bash" title={title}>
-                    {`
-curl -H "Content-Type: application/json" \\
-     -H "Authorization: <API-token>" \\
-     -X ${verbUpper} \\
-     -d '${prettyPayload}' \\
-     <unleash-url>/${url}
-`.trim()}
+            {curlBlock}
                 </CodeBlock>
             </TabItem>
             <TabItem value="httpie" label="HTTPie">
                 <CodeBlock language="bash" title={title}>
-                    {`echo '${prettyPayload}' \\
-| http ${verbUpper} \\
-  <unleash-url>/${url} \\
-  Authorization:<API-token>`.trim()}
+                    {httpieBlock}
                 </CodeBlock>
             </TabItem>
         </Tabs>

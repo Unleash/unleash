@@ -16,41 +16,40 @@ const Template = (args) => (
     </BrowserRouter>
 );
 
-export const Step1 = Template.bind({});
-Step1.args = {
-    open: true,
-    seedData: {
-        currentStep: 1,
-    },
+export const GET = Template.bind({});
+GET.args = {
+    verb: 'get',
+    url: 'api/admin/segments',
+    title: 'List all segments (example).',
 };
 
-export const Step2 = Template.bind({});
-Step2.args = {
-    seedData: {
-        currentStep: 2,
-    },
-    open: true,
+export const POST = Template.bind({});
+POST.args = {
+    verb: 'post',
+    payload: { name: '<feature-toggle-name>', impressionData: true },
+    url: 'api/admin/projects/<project-id>/features',
+    title: 'Create a feature toggle with impression data enabled. (example)',
 };
 
-export const Step3 = Template.bind({});
-Step3.args = {
-    seedData: {
-        currentStep: 3,
-    },
-    open: true,
+export const PUT = Template.bind({});
+PUT.args = {
+    verb: 'put',
+    payload: { name: '<feature-toggle-name>', impressionData: true },
+    url: 'api/admin/projects/<project-id>/features/<feature-id>',
+    title: 'Create a feature toggle with impression data enabled (example).',
 };
 
-export const Step4 = Template.bind({});
-Step4.args = {
-    seedData: {
-        currentStep: 4,
-    },
-    open: true,
+export const PATCH = Template.bind({});
+PATCH.args = {
+    verb: 'patch',
+    payload: [{ op: 'replace', path: '/impressionData', value: true }],
+    url: 'api/admin/projects/<project-id>/features/<feature-toggle-name>',
+    title: 'Enable impression data on an existing toggle (example).',
 };
 
-export const WithLocalStorage = Template.bind({});
-WithLocalStorage.args = {
-    open: true,
+export const DELETE = Template.bind({});
+DELETE.args = {
+    verb: 'delete',
+    url: 'api/admin/projects/<project-id>/features/<feature-toggle-id>',
+    title: 'Create a feature toggle with impression data enabled.',
 };
-
-export const Closed = Template.bind({});

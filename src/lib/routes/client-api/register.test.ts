@@ -83,3 +83,16 @@ test('should require strategies field', () => {
         })
         .expect(400);
 });
+
+test('should allow an empty instanceId field', () => {
+    expect.assertions(0);
+    return request
+        .post('/api/client/register')
+        .send({
+            appName: 'demo',
+            strategies: ['default'],
+            started: Date.now(),
+            interval: 10,
+        })
+        .expect(202);
+});

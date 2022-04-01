@@ -9,7 +9,10 @@ import {
 } from '../../../../lib/types/model';
 import { randomId } from '../../../../lib/util/random-id';
 import User from '../../../../lib/types/user';
-import { experimentalSegmentsConfig } from '../../../../lib/experimental';
+import {
+    SEGMENT_VALUES_LIMIT,
+    STRATEGY_SEGMENTS_LIMIT,
+} from '../../../../lib/util/segments';
 
 let db: ITestDb;
 let app: IUnleashTest;
@@ -154,31 +157,29 @@ test('should list active segments', async () => {
 });
 
 test('should validate segment constraint values limit', async () => {
-    const { segmentValuesLimit } = experimentalSegmentsConfig();
+    const limit = SEGMENT_VALUES_LIMIT;
 
     const constraints: IConstraint[] = [
         {
             contextName: randomId(),
             operator: 'IN',
-            values: mockConstraintValues(segmentValuesLimit + 1),
+            values: mockConstraintValues(limit + 1),
         },
     ];
 
     await expect(
         createSegment({ name: randomId(), constraints }),
-    ).rejects.toThrow(
-        `Segments may not have more than ${segmentValuesLimit} values`,
-    );
+    ).rejects.toThrow(`Segments may not have more than ${limit} values`);
 });
 
 test('should validate segment constraint values limit with multiple constraints', async () => {
-    const { segmentValuesLimit } = experimentalSegmentsConfig();
+    const limit = SEGMENT_VALUES_LIMIT;
 
     const constraints: IConstraint[] = [
         {
             contextName: randomId(),
             operator: 'IN',
-            values: mockConstraintValues(segmentValuesLimit),
+            values: mockConstraintValues(limit),
         },
         {
             contextName: randomId(),
@@ -189,13 +190,11 @@ test('should validate segment constraint values limit with multiple constraints'
 
     await expect(
         createSegment({ name: randomId(), constraints }),
-    ).rejects.toThrow(
-        `Segments may not have more than ${segmentValuesLimit} values`,
-    );
+    ).rejects.toThrow(`Segments may not have more than ${limit} values`);
 });
 
 test('should validate feature strategy segment limit', async () => {
-    const { strategySegmentsLimit } = experimentalSegmentsConfig();
+    const limit = STRATEGY_SEGMENTS_LIMIT;
 
     await createSegment({ name: 'S1', constraints: [] });
     await createSegment({ name: 'S2', constraints: [] });
@@ -215,7 +214,5 @@ test('should validate feature strategy segment limit', async () => {
 
     await expect(
         addSegmentToStrategy(segments[5].id, feature1.strategies[0].id),
-    ).rejects.toThrow(
-        `Strategies may not have more than ${strategySegmentsLimit} segments`,
-    );
+    ).rejects.toThrow(`Strategies may not have more than ${limit} segments`);
 });

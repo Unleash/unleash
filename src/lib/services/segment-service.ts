@@ -12,13 +12,14 @@ import {
 } from '../types/events';
 import User from '../types/user';
 import { IFeatureStrategiesStore } from '../types/stores/feature-strategies-store';
-import { IExperimentalOptions } from '../experimental';
 import BadDataError from '../error/bad-data-error';
+import {
+    SEGMENT_VALUES_LIMIT,
+    STRATEGY_SEGMENTS_LIMIT,
+} from '../util/segments';
 
 export class SegmentService {
     private logger: Logger;
-
-    private experimental?: IExperimentalOptions;
 
     private segmentStore: ISegmentStore;
 
@@ -35,12 +36,8 @@ export class SegmentService {
             IUnleashStores,
             'segmentStore' | 'featureStrategiesStore' | 'eventStore'
         >,
-        {
-            getLogger,
-            experimental,
-        }: Pick<IUnleashConfig, 'getLogger' | 'experimental'>,
+        { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
     ) {
-        this.experimental = experimental;
         this.segmentStore = segmentStore;
         this.featureStrategiesStore = featureStrategiesStore;
         this.eventStore = eventStore;
@@ -121,7 +118,7 @@ export class SegmentService {
     private async validateStrategySegmentLimit(
         strategyId: string,
     ): Promise<void> {
-        const limit = this.experimental?.segments?.strategySegmentsLimit;
+        const limit = STRATEGY_SEGMENTS_LIMIT;
 
         if (typeof limit === 'undefined') {
             return;
@@ -135,11 +132,7 @@ export class SegmentService {
     }
 
     private validateSegmentValuesLimit(segment: Omit<ISegment, 'id'>): void {
-        const limit = this.experimental?.segments?.segmentValuesLimit;
-
-        if (typeof limit === 'undefined') {
-            return;
-        }
+        const limit = SEGMENT_VALUES_LIMIT;
 
         const valuesCount = segment.constraints
             .flatMap((constraint) => constraint.values?.length ?? 0)

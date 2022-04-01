@@ -54,3 +54,31 @@ You tried to remove the only user with the role `owner` in the project:
 ### List segments applied to a specific strategy: `GET /strategies/:strategyId`
 
 ### Replace activation strategy segments `POST /strategies/:strategyId`
+
+## Types
+
+### `ISegment`: segment interface {#isegment}
+
+``` ts
+export interface ISegment {
+    id: number;
+    name: string;
+    description?: string;
+    constraints: IConstraint[];
+    createdBy?: string;
+    createdAt: Date;
+}
+```
+
+### `IConstraint`: constraint interface {#iconstraint}
+
+```ts
+export interface IConstraint {
+    contextName: string;
+    operator: string;
+    values?: string[];
+    value?: string;
+    inverted?: boolean;
+    caseInsensitive?: boolean;
+}
+```

@@ -9,6 +9,10 @@ import {
 } from '../../../../lib/types/model';
 import { randomId } from '../../../../lib/util/random-id';
 import User from '../../../../lib/types/user';
+import {
+    SEGMENT_VALUES_LIMIT,
+    STRATEGY_SEGMENTS_LIMIT,
+} from '../../../../lib/util/segments';
 
 let db: ITestDb;
 let app: IUnleashTest;
@@ -78,6 +82,12 @@ const mockConstraints = (): IConstraint[] => {
     }));
 };
 
+const mockConstraintValues = (length: number): string[] => {
+    return Array.from({ length }).map(() => {
+        return randomId();
+    });
+};
+
 beforeAll(async () => {
     db = await dbInit('segments', getLogger);
     app = await setupApp(db.stores);
@@ -144,4 +154,65 @@ test('should list active segments', async () => {
     expect(collectIds(clientSegments)).toEqual(
         collectIds([segment1, segment2]),
     );
+});
+
+test('should validate segment constraint values limit', async () => {
+    const limit = SEGMENT_VALUES_LIMIT;
+
+    const constraints: IConstraint[] = [
+        {
+            contextName: randomId(),
+            operator: 'IN',
+            values: mockConstraintValues(limit + 1),
+        },
+    ];
+
+    await expect(
+        createSegment({ name: randomId(), constraints }),
+    ).rejects.toThrow(`Segments may not have more than ${limit} values`);
+});
+
+test('should validate segment constraint values limit with multiple constraints', async () => {
+    const limit = SEGMENT_VALUES_LIMIT;
+
+    const constraints: IConstraint[] = [
+        {
+            contextName: randomId(),
+            operator: 'IN',
+            values: mockConstraintValues(limit),
+        },
+        {
+            contextName: randomId(),
+            operator: 'IN',
+            values: mockConstraintValues(1),
+        },
+    ];
+
+    await expect(
+        createSegment({ name: randomId(), constraints }),
+    ).rejects.toThrow(`Segments may not have more than ${limit} values`);
+});
+
+test('should validate feature strategy segment limit', async () => {
+    const limit = STRATEGY_SEGMENTS_LIMIT;
+
+    await createSegment({ name: 'S1', constraints: [] });
+    await createSegment({ name: 'S2', constraints: [] });
+    await createSegment({ name: 'S3', constraints: [] });
+    await createSegment({ name: 'S4', constraints: [] });
+    await createSegment({ name: 'S5', constraints: [] });
+    await createSegment({ name: 'S6', constraints: [] });
+    await createFeatureToggle(mockFeatureToggle());
+    const [feature1] = await fetchFeatures();
+    const segments = await fetchSegments();
+
+    await addSegmentToStrategy(segments[0].id, feature1.strategies[0].id);
+    await addSegmentToStrategy(segments[1].id, feature1.strategies[0].id);
+    await addSegmentToStrategy(segments[2].id, feature1.strategies[0].id);
+    await addSegmentToStrategy(segments[3].id, feature1.strategies[0].id);
+    await addSegmentToStrategy(segments[4].id, feature1.strategies[0].id);
+
+    await expect(
+        addSegmentToStrategy(segments[5].id, feature1.strategies[0].id),
+    ).rejects.toThrow(`Strategies may not have more than ${limit} segments`);
 });

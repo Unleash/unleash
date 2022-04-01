@@ -34,7 +34,7 @@ Retrieve all segments that exist in this Unleash instance. Returns a list of [se
     "name": "my-segment",
     "description": "a segment description",
     "constraints": [],
-    "createdBy": "user id",
+    "createdBy": "user@example.com",
     "createdAt": "2022-04-01T14:02:25.491Z"
   }
 ]
@@ -42,21 +42,95 @@ Retrieve all segments that exist in this Unleash instance. Returns a list of [se
 
 </details>
 
-### Create segment: `POST /`
+## Create segment
 
-### Get segment by id: `GET /:id`
+Create a new segment with the specified configuration.
 
-### Update segment by id: `PUT /:id`
+<ApiRequest verb="post" url={basePath} title="Create a new segment."
+payload={{
+  "name": "my-segment",
+  "description": "a segment description",
+  "constraints": []
+}}
+/>
 
-### Delete segment by id: `DELETE /:id`
 
-### List strategies that use a specific segment: `GET /:id/strategies`
+<details open>
 
-### List segments applied to a specific strategy: `GET /strategies/:strategyId`
+<summary>Example responses</summary>
 
-### Replace activation strategy segments `POST /strategies/:strategyId`
+### 200 OK
+
+Contains the newly created segment object.
+
+``` json
+{
+  "id": 1,
+  "name": "my-segment",
+  "description": "a segment description",
+  "constraints": [],
+  "createdBy": "user@example.com",
+  "createdAt": "2022-04-01T14:02:25.491Z"
+}
+```
+
+### 400 Bad request
+
+A segment with the provided name already exists.
+
+</details>
+
+### Payload structure
+
+Use a JSON object with the following parameters to create a new segment.
+
+| Parameter     | Type                                       | Required | Description                                    | Example value                                    |
+|---------------|--------------------------------------------|----------|------------------------------------------------|--------------------------------------------------|
+| `name`        | string                                     | Yes      | The name of the segment. Must be URL friendly. | `"mobile-users"`                                 |
+| `description` | string                                     | No       | A description of the segment.                  | `"This segment is for users on mobile devices."` |
+| `constraints` | list of [constraint objects](#iconstraint) | Yes      | The constraints in this segment.               | `[]`                                              |
+
+## Get segment by ID
+
+Retrieves the segment with the specified ID.
+<ApiRequest verb="Get" url={`${ basePath }/<segment-id>`} title="Retrieve the segment with the provided ID."/>
+
+<details open>
+
+<summary>Example responses</summary>
+
+### 200 OK
+
+``` json
+{
+  "id": 1,
+  "name": "my-segment",
+  "description": "a segment description",
+  "constraints": [],
+  "createdBy": "user@example.com",
+  "createdAt": "2022-04-01T14:02:25.491Z"
+}
+```
+
+### 404 Not Found
+
+No segment with the provided ID exists.
+
+</details>
+
+## Update segment by id: `PUT /:id`
+
+## Delete segment by id: `DELETE /:id`
+
+## List strategies that use a specific segment: `GET /:id/strategies`
+
+## List segments applied to a specific strategy: `GET /strategies/:strategyId`
+
+## Replace activation strategy segments `POST /strategies/:strategyId`
 
 ## Types
+
+### Segment creation payload
 
 ### `ISegment`: segment interface {#isegment}
 

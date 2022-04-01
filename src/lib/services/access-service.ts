@@ -406,7 +406,7 @@ export class AccessService {
         const rolePermissions = role.permissions;
         const newRole = await this.roleStore.create(baseRole);
         if (rolePermissions) {
-            this.store.addEnvironmentPermissionsToRole(
+            await this.store.addEnvironmentPermissionsToRole(
                 newRole.id,
                 rolePermissions,
             );
@@ -425,8 +425,8 @@ export class AccessService {
         const rolePermissions = role.permissions;
         const newRole = await this.roleStore.update(baseRole);
         if (rolePermissions) {
-            this.store.wipePermissionsFromRole(newRole.id);
-            this.store.addEnvironmentPermissionsToRole(
+            await this.store.wipePermissionsFromRole(newRole.id);
+            await this.store.addEnvironmentPermissionsToRole(
                 newRole.id,
                 rolePermissions,
             );

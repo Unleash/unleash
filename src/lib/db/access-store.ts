@@ -181,7 +181,7 @@ export class AccessStore implements IAccessStore {
                 environment: permission.environment,
             };
         });
-        this.db.batchInsert(T.ROLE_PERMISSION, rows);
+        await this.db.batchInsert(T.ROLE_PERMISSION, rows);
     }
 
     async unlinkUserRoles(userId: number): Promise<void> {

@@ -3,10 +3,10 @@ import { Button, IconButton } from '@material-ui/core';
 import classnames from 'classnames';
 import CloseIcon from '@material-ui/icons/Close';
 import { ReactComponent as Logo } from 'assets/icons/logoPlain.svg';
-import { useCommonStyles } from 'common.styles';
 import { useStyles } from 'component/feedback/FeedbackNPS/FeedbackNPS.styles';
 import AnimateOnMount from 'component/common/AnimateOnMount/AnimateOnMount';
 import ConditionallyRender from 'component/common/ConditionallyRender';
+import { useCommonStyles } from 'themes/commonStyles';
 import UIContext from 'contexts/UIContext';
 import {
     PNPS_FEEDBACK_ID,

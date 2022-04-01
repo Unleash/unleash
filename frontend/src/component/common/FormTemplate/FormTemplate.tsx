@@ -10,7 +10,7 @@ import useToast from 'hooks/useToast';
 import React, { useState } from 'react';
 import classNames from 'classnames';
 import { ReactComponent as MobileGuidanceBG } from 'assets/img/mobileGuidanceBg.svg';
-import { useCommonStyles } from 'common.styles';
+import { useCommonStyles } from 'themes/commonStyles';
 
 interface ICreateProps {
     title: string;

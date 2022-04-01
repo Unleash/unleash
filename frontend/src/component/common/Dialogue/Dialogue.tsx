@@ -9,7 +9,7 @@ import {
 
 import ConditionallyRender from '../ConditionallyRender/ConditionallyRender';
 import { useStyles } from './Dialogue.styles';
-import { DIALOGUE_CONFIRM_ID } from 'testIds';
+import { DIALOGUE_CONFIRM_ID } from 'utils/testIds';
 
 interface IDialogue {
     primaryButtonText?: string;

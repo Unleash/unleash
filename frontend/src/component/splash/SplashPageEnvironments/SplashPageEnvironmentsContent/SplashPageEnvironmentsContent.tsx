@@ -7,7 +7,7 @@ import {
     FiberManualRecordOutlined,
 } from '@material-ui/icons';
 import ConditionallyRender from 'component/common/ConditionallyRender';
-import { CLOSE_SPLASH } from 'testIds';
+import { CLOSE_SPLASH } from 'utils/testIds';
 
 interface ISplashPageEnvironmentsContentProps {
     components: React.ReactNode[];

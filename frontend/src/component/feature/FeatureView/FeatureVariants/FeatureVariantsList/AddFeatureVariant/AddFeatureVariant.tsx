@@ -11,7 +11,7 @@ import { Info } from '@material-ui/icons';
 import { weightTypes } from './enums';
 import { OverrideConfig } from './OverrideConfig/OverrideConfig';
 import ConditionallyRender from 'component/common/ConditionallyRender';
-import { useCommonStyles } from 'common.styles';
+import { useCommonStyles } from 'themes/commonStyles';
 import Dialogue from 'component/common/Dialogue';
 import { modalStyles, trim } from 'component/common/util';
 import PermissionSwitch from 'component/common/PermissionSwitch/PermissionSwitch';

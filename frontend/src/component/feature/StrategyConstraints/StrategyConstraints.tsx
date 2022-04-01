@@ -1,7 +1,7 @@
 import { Button, Tooltip, Typography } from '@material-ui/core';
 import { Info } from '@material-ui/icons';
 import { IConstraint } from 'interfaces/strategy';
-import { useCommonStyles } from 'common.styles';
+import { useCommonStyles } from 'themes/commonStyles';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { C } from 'component/common/flags';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';

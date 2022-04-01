@@ -17,7 +17,7 @@ import AccessContext from 'contexts/AccessContext';
 import { useStyles } from './styles';
 import ListPlaceholder from 'component/common/ListPlaceholder/ListPlaceholder';
 import { getCreateTogglePath } from 'utils/routePathHelpers';
-import { NAVIGATE_TO_CREATE_FEATURE } from 'testIds';
+import { NAVIGATE_TO_CREATE_FEATURE } from 'utils/testIds';
 import { resolveFilteredProjectId } from 'hooks/useFeaturesFilter';
 
 const FeatureToggleList = ({

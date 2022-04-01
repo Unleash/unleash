@@ -2,7 +2,7 @@ import React, { SyntheticEvent, useState } from 'react';
 import { Button, Typography } from '@material-ui/core';
 import classnames from 'classnames';
 import { useStyles } from './EditProfile.styles';
-import { useCommonStyles } from 'common.styles';
+import { useCommonStyles } from 'themes/commonStyles';
 import PasswordChecker from 'component/user/common/ResetPasswordForm/PasswordChecker/PasswordChecker';
 import PasswordMatcher from 'component/user/common/ResetPasswordForm/PasswordMatcher/PasswordMatcher';
 import { Alert } from '@material-ui/lab';

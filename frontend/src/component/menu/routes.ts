@@ -10,7 +10,7 @@ import AdminInvoice from 'component/admin/invoice/InvoiceAdminPage';
 import AdminUsers from 'component/admin/users/UsersAdmin';
 import { AuthSettings } from 'component/admin/auth/AuthSettings';
 import Login from 'component/user/Login/Login';
-import { C, E, EEA, P, RE, SE } from 'component/common/flags';
+import { C, EEA, P, RE, SE } from 'component/common/flags';
 import { NewUser } from 'component/user/NewUser/NewUser';
 import ResetPassword from 'component/user/ResetPassword/ResetPassword';
 import ForgottenPassword from 'component/user/ForgottenPassword/ForgottenPassword';
@@ -50,8 +50,26 @@ import { CreateUnleashContextPage } from 'component/context/CreateUnleashContext
 import { CreateSegment } from 'component/segments/CreateSegment/CreateSegment';
 import { EditSegment } from 'component/segments/EditSegment/EditSegment';
 import { SegmentsList } from 'component/segments/SegmentList/SegmentList';
+import { FunctionComponent } from 'react';
 
-export const routes = [
+interface Route {
+    path: string;
+    title: string;
+    type: string;
+    layout?: string;
+    parent?: string;
+    flag?: string;
+    hidden?: Boolean;
+    component: FunctionComponent;
+
+    menu: {
+        mobile?: boolean;
+        advanced?: boolean;
+        adminSettings?: boolean;
+    };
+}
+
+export const routes: Route[] = [
     // Splash
     {
         path: '/splash/:splashId',
@@ -108,7 +126,6 @@ export const routes = [
         title: 'FeatureView',
         component: FeatureView,
         type: 'protected',
-        flags: E,
         menu: {},
     },
     {
@@ -516,7 +533,8 @@ export const routes = [
     },
 ];
 
-export const getRoute = path => routes.find(route => route.path === path);
+export const getRoute = (path: string) =>
+    routes.find(route => route.path === path);
 
 export const baseRoutes = routes.filter(route => !route.hidden);
 

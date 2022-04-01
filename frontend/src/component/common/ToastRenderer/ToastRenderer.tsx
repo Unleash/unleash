@@ -1,6 +1,6 @@
 import { Portal } from '@material-ui/core';
 import { useContext, useEffect } from 'react';
-import { useCommonStyles } from 'common.styles';
+import { useCommonStyles } from 'themes/commonStyles';
 import UIContext from 'contexts/UIContext';
 import { useStyles } from './ToastRenderer.styles';
 import AnimateOnMount from '../AnimateOnMount/AnimateOnMount';

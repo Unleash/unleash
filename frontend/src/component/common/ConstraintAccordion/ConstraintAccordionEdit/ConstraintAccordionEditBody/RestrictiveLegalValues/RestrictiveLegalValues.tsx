@@ -1,5 +1,5 @@
 import { Checkbox, FormControlLabel } from '@material-ui/core';
-import { useCommonStyles } from 'common.styles';
+import { useCommonStyles } from 'themes/commonStyles';
 import ConditionallyRender from 'component/common/ConditionallyRender';
 import { useEffect, useState } from 'react';
 import { ConstraintValueSearch } from 'component/common/ConstraintAccordion/ConstraintValueSearch/ConstraintValueSearch';

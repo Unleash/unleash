@@ -5,7 +5,7 @@ import { REMOVE_USER_ERROR } from 'hooks/api/actions/useAdminUsersApi/useAdminUs
 import { Alert } from '@material-ui/lab';
 import useLoading from 'hooks/useLoading';
 import { Avatar, Typography } from '@material-ui/core';
-import { useCommonStyles } from 'common.styles';
+import { useCommonStyles } from 'themes/commonStyles';
 import { IUser } from 'interfaces/user';
 
 interface IDeleteUserProps {

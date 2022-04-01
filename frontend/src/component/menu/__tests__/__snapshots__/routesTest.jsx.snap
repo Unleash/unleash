@@ -51,7 +51,6 @@ Array [
   },
   Object {
     "component": [Function],
-    "flags": "E",
     "menu": Object {},
     "parent": "/projects",
     "path": "/projects/:projectId/features/:featureId",

@@ -22,6 +22,7 @@ describe('auth', () => {
             expect(req.body.password).to.equal('unleash4all');
         }).as('passwordLogin');
 
+        cy.wait(1000);
         cy.get('[data-test="LOGIN_EMAIL_ID"]').type('admin');
         cy.get('[data-test="LOGIN_PASSWORD_ID"]').type('unleash4all');
         cy.get("[data-test='LOGIN_BUTTON']").click();

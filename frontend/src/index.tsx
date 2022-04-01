@@ -1,5 +1,5 @@
 import 'whatwg-fetch';
-import './app.css';
+import 'themes/app.css';
 
 import ReactDOM from 'react-dom';
 import { Route, BrowserRouter as Router } from 'react-router-dom';
@@ -8,12 +8,12 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { StylesProvider } from '@material-ui/core/styles';
 import mainTheme from 'themes/mainTheme';
-import { App } from './component/App';
-import ScrollToTop from 'component/scrollToTop';
-import AccessProvider from './component/providers/AccessProvider/AccessProvider';
+import { App } from 'component/App';
+import { ScrollTop } from 'component/common/ScrollTop/ScrollTop';
+import AccessProvider from 'component/providers/AccessProvider/AccessProvider';
 import { getBasePath } from 'utils/formatPath';
-import UIProvider from './component/providers/UIProvider/UIProvider';
 import { FeedbackCESProvider } from 'component/feedback/FeedbackCESContext/FeedbackCESProvider';
+import UIProvider from 'component/providers/UIProvider/UIProvider';
 
 ReactDOM.render(
     <DndProvider backend={HTML5Backend}>
@@ -24,9 +24,8 @@ ReactDOM.render(
                         <StylesProvider injectFirst>
                             <FeedbackCESProvider>
                                 <CssBaseline />
-                                <ScrollToTop>
-                                    <Route path="/" component={App} />
-                                </ScrollToTop>
+                                <ScrollTop />
+                                <Route path="/" component={App} />
                             </FeedbackCESProvider>
                         </StylesProvider>
                     </ThemeProvider>

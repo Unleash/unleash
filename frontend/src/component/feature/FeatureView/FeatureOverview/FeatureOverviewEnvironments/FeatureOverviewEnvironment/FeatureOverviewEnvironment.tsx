@@ -25,7 +25,7 @@ import FeatureOverviewEnvironmentBody from './FeatureOverviewEnvironmentBody/Fea
 import FeatureOverviewEnvironmentFooter from './FeatureOverviewEnvironmentFooter/FeatureOverviewEnvironmentFooter';
 import FeatureOverviewEnvironmentMetrics from './FeatureOverviewEnvironmentMetrics/FeatureOverviewEnvironmentMetrics';
 import { FeatureStrategyMenu } from 'component/feature/FeatureStrategy/FeatureStrategyMenu/FeatureStrategyMenu';
-import { FEATURE_ENVIRONMENT_ACCORDION } from 'testIds';
+import { FEATURE_ENVIRONMENT_ACCORDION } from 'utils/testIds';
 
 interface IStrategyIconObject {
     count: number;

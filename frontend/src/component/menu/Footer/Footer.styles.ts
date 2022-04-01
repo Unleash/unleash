@@ -1,7 +1,8 @@
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/core/styles';
 
 export const useStyles = makeStyles(theme => ({
     footer: {
+        // @ts-expect-error
         background: theme.palette.footer.background,
         padding: '2rem 4rem',
         width: '100%',
@@ -17,6 +18,7 @@ export const useStyles = makeStyles(theme => ({
         margin: 0,
         '& a': {
             textDecoration: 'none',
+            // @ts-expect-error
             color: theme.palette.footer.main,
         },
     },

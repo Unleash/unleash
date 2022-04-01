@@ -1,6 +1,6 @@
 import { ChangeEvent, useState } from 'react';
 import { Grid, TextField } from '@material-ui/core';
-import { useCommonStyles } from 'common.styles';
+import { useCommonStyles } from 'themes/commonStyles';
 import icons from 'component/application/iconNames';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import useApplicationsApi from 'hooks/api/actions/useApplicationsApi/useApplicationsApi';

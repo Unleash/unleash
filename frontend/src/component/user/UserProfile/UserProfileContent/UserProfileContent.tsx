@@ -10,8 +10,8 @@ import {
     Typography,
 } from '@material-ui/core';
 import classnames from 'classnames';
-import { useStyles } from './UserProfileContent.styles';
-import { useCommonStyles } from 'common.styles';
+import { useStyles } from 'component/user/UserProfile/UserProfileContent/UserProfileContent.styles';
+import { useCommonStyles } from 'themes/commonStyles';
 import { Alert } from '@material-ui/lab';
 import EditProfile from '../EditProfile/EditProfile';
 import legacyStyles from '../../user.module.scss';

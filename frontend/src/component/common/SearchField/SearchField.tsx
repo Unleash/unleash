@@ -3,7 +3,7 @@ import classnames from 'classnames';
 import { debounce } from 'debounce';
 import { InputBase, Chip } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
-import { useStyles } from './styles';
+import { useStyles } from 'component/common/SearchField/styles';
 import ConditionallyRender from 'component/common/ConditionallyRender';
 
 interface ISearchFieldProps {

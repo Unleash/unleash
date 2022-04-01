@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/core/styles';
 
 export const useStyles = makeStyles(theme => ({
     listItem: {
@@ -11,15 +11,16 @@ export const useStyles = makeStyles(theme => ({
     listItemMetric: {
         width: '40px',
         marginRight: '0.25rem',
-        flexShrink: '0',
+        flexShrink: 0,
     },
     listItemType: {
         width: '40px',
         textAlign: 'center',
         marginRight: '0',
-        flexShrink: '0',
+        flexShrink: 0,
     },
     listItemSvg: {
+        // @ts-expect-error
         fill: theme.palette.icons.lightGrey,
     },
     listItemLink: {

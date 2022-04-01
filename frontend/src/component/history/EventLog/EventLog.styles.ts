@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/core/styles';
 
 export const useStyles = makeStyles(theme => ({
     eventEntry: {
@@ -13,15 +13,19 @@ export const useStyles = makeStyles(theme => ({
             whiteSpace: 'pre',
             fontFamily: 'monospace',
             lineHeight: '100%',
+            // @ts-expect-error
             color: theme.palette.code.main,
         },
         '& code > .diff-N': {
+            // @ts-expect-error
             color: theme.palette.code.diffAdd,
         },
         '& code > .diff-D': {
+            // @ts-expect-error
             color: theme.palette.code.diffSub,
         },
         '& code > .diff-A, .diff-E': {
+            // @ts-expect-error
             color: theme.palette.code.diffNeutral,
         },
         '& dl': {

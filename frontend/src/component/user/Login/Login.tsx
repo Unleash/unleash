@@ -1,5 +1,5 @@
 import ConditionallyRender from 'component/common/ConditionallyRender';
-import { useStyles } from './Login.styles';
+import { useStyles } from 'component/user/Login/Login.styles';
 import useQueryParams from 'hooks/useQueryParams';
 import ResetPasswordSuccess from '../common/ResetPasswordSuccess/ResetPasswordSuccess';
 import StandaloneLayout from '../common/StandaloneLayout/StandaloneLayout';

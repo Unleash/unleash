@@ -9,7 +9,7 @@ import Input from 'component/common/Input/Input';
 import {
     FLEXIBLE_STRATEGY_GROUP_ID,
     FLEXIBLE_STRATEGY_STICKINESS_ID,
-} from 'testIds';
+} from 'utils/testIds';
 
 const builtInStickinessOptions = [
     { key: 'default', label: 'default' },

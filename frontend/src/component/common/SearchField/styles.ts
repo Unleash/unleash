@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/core/styles';
 
 export const useStyles = makeStyles(theme => ({
     container: {
@@ -10,6 +10,7 @@ export const useStyles = makeStyles(theme => ({
     search: {
         display: 'flex',
         alignItems: 'center',
+        // @ts-expect-error
         backgroundColor: theme.palette.searchField.main,
         borderRadius: '25px',
         padding: '0.25rem 0.5rem',

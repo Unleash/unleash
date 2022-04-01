@@ -9,7 +9,7 @@ import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { useContext } from 'react';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import UIContext from 'contexts/UIContext';
-import { CF_CREATE_BTN_ID } from 'testIds';
+import { CF_CREATE_BTN_ID } from 'utils/testIds';
 import { formatUnknownError } from 'utils/formatUnknownError';
 
 const CreateFeature = () => {

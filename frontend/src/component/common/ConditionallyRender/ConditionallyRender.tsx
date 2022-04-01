@@ -1,10 +1,18 @@
+import { ReactNode } from 'react';
+
 interface IConditionallyRenderProps {
     condition: boolean;
     show: TargetElement;
     elseShow?: TargetElement;
 }
 
-type TargetElement = JSX.Element | JSX.Element[] | RenderFunc | null;
+type TargetElement =
+    | JSX.Element
+    | JSX.Element[]
+    | RenderFunc
+    | ReactNode
+    | null;
+
 type RenderFunc = () => JSX.Element;
 
 const ConditionallyRender = ({

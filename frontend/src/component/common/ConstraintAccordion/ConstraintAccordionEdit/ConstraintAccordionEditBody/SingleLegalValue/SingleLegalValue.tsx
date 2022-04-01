@@ -9,7 +9,7 @@ import {
 } from '@material-ui/core';
 import { ConstraintValueSearch } from 'component/common/ConstraintAccordion/ConstraintValueSearch/ConstraintValueSearch';
 import ConditionallyRender from 'component/common/ConditionallyRender';
-import { useCommonStyles } from 'common.styles';
+import { useCommonStyles } from 'themes/commonStyles';
 
 // Parent component
 

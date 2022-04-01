@@ -9,7 +9,7 @@ import { Alert } from '@material-ui/lab';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { DELETE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
-import { STRATEGY_FORM_REMOVE_ID } from 'testIds';
+import { STRATEGY_FORM_REMOVE_ID } from 'utils/testIds';
 import ConditionallyRender from 'component/common/ConditionallyRender';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { Delete } from '@material-ui/icons';

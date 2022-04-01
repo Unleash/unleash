@@ -4,7 +4,7 @@ import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import classnames from 'classnames';
 import { Edit, ExpandMore } from '@material-ui/icons';
 
-import { useCommonStyles } from 'common.styles';
+import { useCommonStyles } from 'themes/commonStyles';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import PercentageCircle from 'component/common/PercentageCircle/PercentageCircle';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';

@@ -28,7 +28,7 @@ import HeaderTitle from 'component/common/HeaderTitle';
 import { useStyles } from './StrategiesList.styles';
 import AccessContext from 'contexts/AccessContext';
 import Dialogue from 'component/common/Dialogue';
-import { ADD_NEW_STRATEGY_ID } from 'testIds';
+import { ADD_NEW_STRATEGY_ID } from 'utils/testIds';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { formatStrategyName } from 'utils/strategyNames';

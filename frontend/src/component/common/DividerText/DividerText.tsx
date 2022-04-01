@@ -1,5 +1,5 @@
 import { Typography } from '@material-ui/core';
-import { useStyles } from './DividerText.styles';
+import { useStyles } from 'component/common/DividerText/DividerText.styles';
 
 interface IDividerTextProps {
     text: string;

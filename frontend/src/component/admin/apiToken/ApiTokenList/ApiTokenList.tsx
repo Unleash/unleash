@@ -27,7 +27,7 @@ import { useStyles } from './ApiTokenList.styles';
 import Secret from './secret';
 import { Delete, FileCopy } from '@material-ui/icons';
 import Dialogue from 'component/common/Dialogue';
-import { CREATE_API_TOKEN_BUTTON } from 'testIds';
+import { CREATE_API_TOKEN_BUTTON } from 'utils/testIds';
 import { Alert } from '@material-ui/lab';
 import copy from 'copy-to-clipboard';
 import { useLocationSettings } from 'hooks/useLocationSettings';

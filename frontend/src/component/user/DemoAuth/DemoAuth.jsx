@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Button, TextField } from '@material-ui/core';
 import styles from './DemoAuth.module.scss';
 import { ReactComponent as Logo } from 'assets/img/logo.svg';
-import { LOGIN_BUTTON, LOGIN_EMAIL_ID } from 'testIds';
+import { LOGIN_BUTTON, LOGIN_EMAIL_ID } from 'utils/testIds';
 import { useHistory } from 'react-router-dom';
 import { useAuthApi } from 'hooks/api/actions/useAuthApi/useAuthApi';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';

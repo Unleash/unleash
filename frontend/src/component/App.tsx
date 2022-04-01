@@ -1,6 +1,6 @@
 import ConditionallyRender from 'component/common/ConditionallyRender';
 import { FeedbackNPS } from 'component/feedback/FeedbackNPS/FeedbackNPS';
-import LayoutPicker from 'component/layout/LayoutPicker/LayoutPicker';
+import { LayoutPicker } from 'component/layout/LayoutPicker/LayoutPicker';
 import Loader from 'component/common/Loader/Loader';
 import NotFound from 'component/common/NotFound/NotFound';
 import ProtectedRoute from 'component/common/ProtectedRoute/ProtectedRoute';

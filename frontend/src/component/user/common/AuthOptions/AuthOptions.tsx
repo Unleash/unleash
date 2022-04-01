@@ -1,11 +1,11 @@
 import { Button } from '@material-ui/core';
 import classnames from 'classnames';
-import { useCommonStyles } from 'common.styles';
+import { useCommonStyles } from 'themes/commonStyles';
 import { ReactComponent as GoogleSvg } from 'assets/icons/google.svg';
 import LockRounded from '@material-ui/icons/LockRounded';
 import ConditionallyRender from 'component/common/ConditionallyRender';
 import { IAuthOptions } from 'hooks/api/getters/useAuth/useAuthEndpoint';
-import { SSO_LOGIN_BUTTON } from 'testIds';
+import { SSO_LOGIN_BUTTON } from 'utils/testIds';
 
 interface IAuthOptionProps {
     options?: IAuthOptions[];

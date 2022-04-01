@@ -21,7 +21,7 @@ import PermissionSwitch from 'component/common/PermissionSwitch/PermissionSwitch
 import { IProjectEnvironment } from 'interfaces/environments';
 import { getEnabledEnvs } from './helpers';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
-import { useCommonStyles } from 'common.styles';
+import { useCommonStyles } from 'themes/commonStyles';
 
 interface ProjectEnvironmentListProps {
     projectId: string;

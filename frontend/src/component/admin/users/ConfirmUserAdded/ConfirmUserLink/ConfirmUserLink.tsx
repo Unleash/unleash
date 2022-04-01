@@ -1,6 +1,6 @@
 import { Typography } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
-import { useCommonStyles } from 'common.styles';
+import { useCommonStyles } from 'themes/commonStyles';
 import Dialogue from 'component/common/Dialogue';
 import UserInviteLink from './UserInviteLink/UserInviteLink';
 

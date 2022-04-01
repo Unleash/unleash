@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 import { Modal, Backdrop } from '@material-ui/core';
 import Fade from '@material-ui/core/Fade';
 import { useStyles } from 'component/common/SidebarModal/SidebarModal.styles';
-import { SIDEBAR_MODAL_ID } from 'testIds';
+import { SIDEBAR_MODAL_ID } from 'utils/testIds';
 
 interface ISidebarModalProps {
     open: boolean;

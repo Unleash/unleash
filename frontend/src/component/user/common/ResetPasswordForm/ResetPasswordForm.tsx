@@ -9,7 +9,7 @@ import React, {
     useState,
 } from 'react';
 import { useHistory } from 'react-router';
-import { useCommonStyles } from 'common.styles';
+import { useCommonStyles } from 'themes/commonStyles';
 import { OK } from 'constants/statusCodes';
 import ConditionallyRender from 'component/common/ConditionallyRender';
 import ResetPasswordError from '../ResetPasswordError/ResetPasswordError';

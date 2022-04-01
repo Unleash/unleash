@@ -4,7 +4,7 @@ import EventJson from './EventJson/EventJson';
 import PageContent from 'component/common/PageContent/PageContent';
 import HeaderTitle from 'component/common/HeaderTitle';
 import EventCard from './EventCard/EventCard';
-import { useStyles } from './EventLog.styles.js';
+import { useStyles } from './EventLog.styles';
 import { formatDateYMDHMS } from 'utils/formatDate';
 
 const EventLog = ({

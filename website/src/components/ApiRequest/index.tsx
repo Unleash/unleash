@@ -22,7 +22,7 @@ const Component = ({ verb, payload, url, title }) => {
     const prettyPayload = JSON.stringify(payload, null, indentation);
 
     return (
-        <Tabs groupId="api-request">
+        <Tabs>
             <TabItem value="http" label="HTTP">
                 <CodeBlock language="http" title={title}>
                     {`

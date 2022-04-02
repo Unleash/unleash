@@ -21,7 +21,7 @@ Retrieve all segments that exist in this Unleash instance. Returns a list of [se
 
 <ApiRequest verb="Get" url={basePath} title="Retrieve all existing segments."/>
 
-<details open>
+<details>
 
 <summary>Example responses</summary>
 
@@ -55,26 +55,15 @@ payload={{
 />
 
 
-<details open>
+<details>
 
 <summary>Example responses</summary>
 
-### 200 OK
+### 201 Created
 
-Contains the newly created segment object.
+The segment was successfully created. This response has no body.
 
-``` json
-{
-  "id": 1,
-  "name": "my-segment",
-  "description": "a segment description",
-  "constraints": [],
-  "createdBy": "user@example.com",
-  "createdAt": "2022-04-01T14:02:25.491Z"
-}
-```
-
-### 400 Bad request
+### 400 Bad Request
 
 A segment with the provided name already exists.
 
@@ -82,9 +71,9 @@ A segment with the provided name already exists.
 
 ### Payload structure
 
-Use a JSON object with the following parameters to create a new segment.
+Use a JSON object with the following properties to create a new segment.
 
-| Parameter     | Type                                       | Required | Description                                    | Example value                                    |
+| Property     | Type                                       | Required | Description                                    | Example value                                    |
 |---------------|--------------------------------------------|----------|------------------------------------------------|--------------------------------------------------|
 | `name`        | string                                     | Yes      | The name of the segment. Must be URL friendly. | `"mobile-users"`                                 |
 | `description` | string                                     | No       | A description of the segment.                  | `"This segment is for users on mobile devices."` |
@@ -95,7 +84,7 @@ Use a JSON object with the following parameters to create a new segment.
 Retrieves the segment with the specified ID.
 <ApiRequest verb="Get" url={`${ basePath }/<segment-id>`} title="Retrieve the segment with the provided ID."/>
 
-<details open>
+<details>
 
 <summary>Example responses</summary>
 
@@ -118,15 +107,163 @@ No segment with the provided ID exists.
 
 </details>
 
-## Update segment by id: `PUT /:id`
+## Update an existing segment
 
-## Delete segment by id: `DELETE /:id`
+Replace the data of the specified segment with the provided payload.
 
-## List strategies that use a specific segment: `GET /:id/strategies`
 
-## List segments applied to a specific strategy: `GET /strategies/:strategyId`
+<ApiRequest verb="put" url={`${ basePath }/<segment-id>`} title="Update a segment with new data."
+payload={{
+  "name": "my-segment",
+  "description": "this is a newly provided description.",
+  "constraints": []
+}}
+/>
 
-## Replace activation strategy segments `POST /strategies/:strategyId`
+<details>
+
+<summary>Example responses</summary>
+
+### 204 No Content
+
+The update was successful. This response has no body.
+
+### 404 Not Found
+
+No segment with the provided ID exists.
+
+</details>
+
+## Delete a segment
+
+Delete the request with the specified ID.
+
+<ApiRequest verb="delete" url={`${ basePath }/<segment-id>`} title="Delete a segment." />
+
+<details>
+
+<summary>Example responses</summary>
+
+### 204 No Content
+
+The segment was deleted successfully.
+
+### 404 Not Found
+
+No segment with the provided ID exists.
+
+### 409 Conflict
+
+The segment is being used by at least one strategy and can not be deleted. To delete the segment, first remove it from any strategies that use it.
+
+</details>
+
+## List strategies that use a specific segment
+
+Retrieve all strategies that use the specified segment. Returns a list of [activation strategy objects](#ifeaturestrategy).
+
+<ApiRequest verb="Get" url={`${basePath}/<segment-id>/strategies`} title="Retrieve all activation strategies that use the specified segment."/>
+
+<details>
+
+<summary>Example responses</summary>
+
+### 200 OK
+
+``` json
+[
+  {
+    "id": "strategy-id",
+    "featureName": "my-feature",
+    "projectId": "my-project",
+    "environment": "development",
+    "strategyName": "my strategy",
+    "parameters": {},
+    "constraints": [],
+    "createdAt": "2022-04-01T14:02:25.491Z"
+  }
+]
+```
+
+### 404 Not Found
+
+No segment with the provided id exists.
+
+</details>
+
+## List segments applied to a specific strategy
+
+Retrieve all segments that are applied to the specified strategy. Returns a list of [segment objects](#isegment).
+
+<ApiRequest verb="Get" url={`${basePath}/strategies/<strategy-id>`} title="Retrieve all segments that are used by the specified strategy."/>
+
+<details>
+
+<summary>Example responses</summary>
+
+### 200 OK
+
+``` json
+[
+  {
+    "id": 1,
+    "name": "my-segment",
+    "description": "a segment description",
+    "constraints": [],
+    "createdBy": "user@example.com",
+    "createdAt": "2022-04-01T14:02:25.491Z"
+  }
+]
+```
+
+### 404 Not Found
+
+No strategy with the provided id exists.
+
+</details>
+
+
+## Replace activation strategy segments
+
+Replace the segments applied to the specified activation strategy with the provided segment list.
+
+<ApiRequest verb="post" url={`${basePath}/strategies`} title="Replace the segments to the specified strategy."
+payload={{
+  "projectId": "my-project",
+  "strategyId": "my-strategy",
+  "environmentId": "development",
+  "segmentIds": []
+}}
+/>
+
+<details>
+
+<summary>Example responses</summary>
+
+### 201 Created
+
+The strategy's list of segments was succesfully updated.
+
+### 403 Forbidden
+
+You do not have access to edit this activation strategy.
+
+### 404 Not Found
+
+No strategy with the provided ID exists.
+
+</details>
+
+### Payload structure
+
+Use a JSON object with the following properties to update the list of applied segments.
+
+| Property        | Type                          | Required | Description                                       | Example value   |
+|-----------------|-------------------------------|----------|---------------------------------------------------|-----------------|
+| `projectId`     | string                        | Yes      | The ID of the feature toggle's project.           | `"my-project"`  |
+| `strategyId`    | string                        | Yes      | The ID of the strategy.                           | `"my-strategy"` |
+| `environmentId` | string                        | Yes      | The ID of the environment.                        | `"development"` |
+| "segmentIds"    | list of segment IDs (numbers) | Yes      | The list of segment IDs to apply to the strategy. | `[]`            |
 
 ## Types
 
@@ -155,5 +292,21 @@ export interface IConstraint {
     value?: string;
     inverted?: boolean;
     caseInsensitive?: boolean;
+}
+```
+
+### `IFeatureStrategy`: strategy interface {#ifeaturestrategy}
+
+``` ts
+export interface IFeatureStrategy {
+    id: string;
+    featureName: string;
+    projectId: string;
+    environment: string;
+    strategyName: string;
+    parameters: object;
+    sortOrder?: number;
+    constraints: IConstraint[];
+    createdAt?: Date;
 }
 ```

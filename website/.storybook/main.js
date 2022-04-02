@@ -56,9 +56,6 @@ module.exports = {
             ),
         ];
 
-        // const docusaurusAliases = await loadDocusaurusAliases();
-        // console.log(docusaurusAliases);
-
         config.resolve.alias = {
             ...config.resolve.alias,
             '@site': path.resolve(__dirname, '../'),

@@ -62,41 +62,17 @@ module.exports = {
         config.resolve.alias = {
             ...config.resolve.alias,
             '@site': path.resolve(__dirname, '../'),
-            '@docusaurus/theme-common': path.resolve(
-                __dirname,
-                '../',
-                'node_modules',
-                '@docusaurus',
+            '@docusaurus/theme-common': docusaurusPath(
                 'theme-common',
                 'src',
                 'index.ts',
             ),
-            '@docusaurus/utils-common': path.resolve(
-                __dirname,
-                '../',
-                'node_modules',
-                '@docusaurus',
-                'utils-common',
-                'lib',
-            ),
-            '@docusaurus/plugin-content-docs': path.resolve(
-                __dirname,
-                '../',
-                'node_modules',
-                '@docusaurus',
+            '@docusaurus/utils-common': docusaurusPath('utils-common', 'lib'),
+            '@docusaurus/plugin-content-docs': docusaurusPath(
                 'plugin-content-docs',
                 'src',
             ),
-            '@docusaurus': path.resolve(
-                __dirname,
-                '../',
-                'node_modules',
-                '@docusaurus',
-                'core',
-                'lib',
-                'client',
-                'exports',
-            ),
+            '@docusaurus': docusaurusPath('core', 'lib', 'client', 'exports'),
             '@generated': path.resolve(__dirname, '../', '.docusaurus'),
         };
 

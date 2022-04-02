@@ -64,7 +64,7 @@ http ${verbUpper} \\
         ).trim()
 
     return (
-        <Tabs>
+        <Tabs groupId="api-request">
             <TabItem value="http" label="HTTP">
                 <CodeBlock language="http" title={title}>
                     {httpBlock}

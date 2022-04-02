@@ -24,9 +24,6 @@ type Props = {
     title?: string
 }
 
-type PropsWithoutPayload = Omit<Props, 'payload'>
-
-
 const Component: React.FC<Props> = ({ verb, payload, url, title }) => {
     const verbUpper = verb?.toUpperCase() || '';
     const prettyPayload = JSON.stringify(payload, null, indentation);

@@ -3,7 +3,7 @@ title: /api/admin/segments
 ---
 import ApiRequest from '@site/src/components/ApiRequest'
 export const basePath = "api/admin/segments"
-export const path = (p) => `api/admin/segments/${p}`
+export const path = (p) => `${basePath}/${p}`
 
 :::info Availability
 The segments API is available to Pro and Enterprise users from Unleash 4.10.
@@ -82,7 +82,7 @@ Use a JSON object with the following properties to create a new segment.
 ## Get segment by ID
 
 Retrieves the segment with the specified ID.
-<ApiRequest verb="Get" url={`${ basePath }/<segment-id>`} title="Retrieve the segment with the provided ID."/>
+<ApiRequest verb="Get" url={path("<segment-id>")} title="Retrieve the segment with the provided ID."/>
 
 <details>
 
@@ -112,7 +112,7 @@ No segment with the provided ID exists.
 Replace the data of the specified segment with the provided payload.
 
 
-<ApiRequest verb="put" url={`${ basePath }/<segment-id>`} title="Update a segment with new data."
+<ApiRequest verb="put" url={path("<segment-id>")} title="Update a segment with new data."
 payload={{
   "name": "my-segment",
   "description": "this is a newly provided description.",
@@ -138,7 +138,7 @@ No segment with the provided ID exists.
 
 Delete the request with the specified ID.
 
-<ApiRequest verb="delete" url={`${ basePath }/<segment-id>`} title="Delete a segment." />
+<ApiRequest verb="delete" url={path("<segment-id>")} title="Delete a segment." />
 
 <details>
 
@@ -162,7 +162,7 @@ The segment is being used by at least one strategy and can not be deleted. To de
 
 Retrieve all strategies that use the specified segment. Returns a list of [activation strategy objects](#ifeaturestrategy).
 
-<ApiRequest verb="Get" url={`${basePath}/<segment-id>/strategies`} title="Retrieve all activation strategies that use the specified segment."/>
+<ApiRequest verb="Get" url={path("<segment-id>/strategies")} title="Retrieve all activation strategies that use the specified segment."/>
 
 <details>
 
@@ -195,7 +195,7 @@ No segment with the provided id exists.
 
 Retrieve all segments that are applied to the specified strategy. Returns a list of [segment objects](#isegment).
 
-<ApiRequest verb="Get" url={`${basePath}/strategies/<strategy-id>`} title="Retrieve all segments that are used by the specified strategy."/>
+<ApiRequest verb="Get" url={path("strategies/<strategy-id>")} title="Retrieve all segments that are used by the specified strategy."/>
 
 <details>
 
@@ -227,7 +227,7 @@ No strategy with the provided id exists.
 
 Replace the segments applied to the specified activation strategy with the provided segment list.
 
-<ApiRequest verb="post" url={`${basePath}/strategies`} title="Replace the segments to the specified strategy."
+<ApiRequest verb="post" url={path("strategies")} title="Replace the segments to the specified strategy."
 payload={{
   "projectId": "my-project",
   "strategyId": "my-strategy",
@@ -242,7 +242,7 @@ payload={{
 
 ### 201 Created
 
-The strategy's list of segments was succesfully updated.
+The strategy's list of segments was successfully updated.
 
 ### 403 Forbidden
 

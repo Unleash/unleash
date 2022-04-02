@@ -31,6 +31,18 @@ module.exports = {
             );
 
         config.resolve.plugins = [
+            // add a "layered" approach to theme resolution that matches
+            // Docusaurus' theme resolution:
+            // https://docusaurus.io/docs/2.0.0-beta.17/advanced/client#theme-aliases
+            //
+            // First, check to see if the referenced component has
+            // been swizzled and exists in `../src/theme`.
+            //
+            // If it's not there, check the `theme-classic/lib-next/theme` directory in
+            // `node_modules`.
+            //
+            // Finally, if it's not found anywhere else, check the
+            // `theme-fallback` directory.
             new AliasPlugin(
                 'described-resolve',
                 [

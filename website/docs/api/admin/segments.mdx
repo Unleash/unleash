@@ -346,13 +346,10 @@ Some constraint operators only support single values. If a constraint uses one o
 ``` json
 {
   "id": "64fbe72b-d107-4b26-b6b8-4fead08d286c",
-  "constraints": [],
-  "environment": "default",
+  "environment": "development",
   "featureName": "my-feature",
-  "parameters": {},
   "projectId": "my-project",
-  "strategyName": "flexibleRollout",
-  "createdAt": "2022-05-30T20:45:24.000Z"
+  "strategyName": "flexibleRollout"
 }
 ```
 
@@ -361,11 +358,7 @@ Some constraint operators only support single values. If a constraint uses one o
 | Property       | Type                                                          | Required | Description                                                                                                                                                       | Example value                            |
 |----------------|---------------------------------------------------------------|----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------|
 | `id`           | GUID string                                                 | No       | The ID of the strategy.                                                                                                                                           | `"64fbe72b-d107-4b26-b6b8-4fead08d286c"` |
-| `constraints`  | a list of [constraint objects](#constraint-type-description). | No       | The list of constraints applied to this strategy.                                                                                                                 | `[]`                                     |
 | `environment`  | string                                                        | Yes      | The name of the strategy's environment.                                                                                                                           | `"development"`                          |
 | `featureName`  | string                                                        | Yes      | The name of the feature the strategy is applied to.                                                                                                               | `"my-feature"`                           |
-| `parameters`   | object                                                        | Yes      | Parameters for the strategy.                                                                                                                                      | `{}`                                     |
 | `projectId`    | string                                                        | Yes      | The name of the current project.                                                                                                                                  | `"my-project"`                           |
 | `strategyName` | string                                                        | Yes      | The name of the strategy.                                                                                                                                         | `"flexibleRollout"`                           |
-| `parameters`   | boolean string                                                | No       | Whether the constraint operator is case sensitive or not. Only [applies to some string-based operators](../../advanced/strategy-constraints.md#string-operators). | `false`                                  |
-| `createdAt`   | timestamp string                                           | Yes      | The time when the segment was created. Format: `YYYY-MM-DDThh:mm:ss.sTZD` | `"2022-04-23T13:56:24.45+01:00"` |

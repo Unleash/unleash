@@ -236,6 +236,19 @@ payload={{
 }}
 />
 
+### Remove all segments from an activation strategy
+
+To remove all segments from an activation strategy, use this endpoint and provide an empty list of `segmentIds`. For instance, the following payload would remove all segments from the strategy "my-strategy".
+
+``` json
+{
+  "projectId": "my-project",
+  "strategyId": "my-strategy",
+  "environmentId": "development",
+  "segmentIds": []
+}
+```
+
 <details>
 
 <summary>Example responses</summary>

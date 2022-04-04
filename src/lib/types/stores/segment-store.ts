@@ -23,4 +23,6 @@ export interface ISegmentStore extends Store<ISegment, number> {
     removeFromStrategy(id: number, strategyId: string): Promise<void>;
 
     getAllFeatureStrategySegments(): Promise<IFeatureStrategySegment[]>;
+
+    getByName(name: string): Promise<ISegment>;
 }

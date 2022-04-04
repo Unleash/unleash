@@ -2,6 +2,7 @@ import { IUnleashConfig } from '../types/option';
 import { IEventStore } from '../types/stores/event-store';
 import { IUnleashStores } from '../types';
 import { Logger } from '../logger';
+import NameExistsError from '../error/name-exists-error';
 import { ISegmentStore } from '../types/stores/segment-store';
 import { IFeatureStrategy, ISegment } from '../types/model';
 import { segmentSchema } from './segment-schema';
@@ -69,6 +70,7 @@ export class SegmentService {
     async create(data: unknown, user: User): Promise<void> {
         const input = await segmentSchema.validateAsync(data);
         this.validateSegmentValuesLimit(input);
+        await this.validateName(input.name);
 
         const segment = await this.segmentStore.create(input, user);
 
@@ -82,8 +84,13 @@ export class SegmentService {
     async update(id: number, data: unknown, user: User): Promise<void> {
         const input = await segmentSchema.validateAsync(data);
         this.validateSegmentValuesLimit(input);
-
         const preData = await this.segmentStore.get(id);
+
+        if (preData.name !== input.name) {
+            // If the name has changed, make sure it's still unique
+            await this.validateName(input.name);
+        }
+
         const segment = await this.segmentStore.update(id, input);
 
         await this.eventStore.store({
@@ -113,6 +120,17 @@ export class SegmentService {
     // Used by unleash-enterprise.
     async removeFromStrategy(id: number, strategyId: string): Promise<void> {
         await this.segmentStore.removeFromStrategy(id, strategyId);
+    }
+
+    async validateName(name: string): Promise<void> {
+        if (!name) throw new BadDataError('Segment name is not valid');
+
+        try {
+            await this.segmentStore.getByName(name);
+        } catch (error) {
+            return;
+        }
+        throw new NameExistsError('Segment name already exists');
     }
 
     private async validateStrategySegmentLimit(

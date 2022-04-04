@@ -50,5 +50,9 @@ export default class FakeSegmentStore implements ISegmentStore {
         return [];
     }
 
+    async getByName(): Promise<ISegment> {
+        throw new Error('Method not implemented.');
+    }
+
     destroy(): void {}
 }

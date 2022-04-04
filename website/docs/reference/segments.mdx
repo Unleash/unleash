@@ -30,11 +30,13 @@ A segment that is in use **cannot** be deleted. If you'd like to delete a segmen
 ## When to use segments
 
 Segments let you create user groups based on data available in the Unleash context.
-These groups can be as simple or complex as you want to make them.
+These groups can be as simple or as complex as you want to make them.
 You could, for example, use segments to target:
 - Users in a specific region
 - Users on a specific device type
 - Users who signed up before a specific point in time
-or any combination thereof. Because segments stay in sync across strategies, any changes will propagate to all the activation strategies that use them.
+or any combination thereof.
 
-If you need to keep time-based feature availability in sync across, you can use segments to achieve this too. For instance, you could create a "Black Friday" segment which is only satisfied on that specific Friday and use that to synchronize the availability of a number of related features.
+Because segments stay in sync across strategies, any changes will propagate to all the activation strategies that use them. This also makes them ideal for use cases such as activating or deactivating multiple feature toggles at the same time. In other words, you can use segments to
+- release one or more new features at a specified time
+- create events with start and end times and guarantee that features will only be active during that period

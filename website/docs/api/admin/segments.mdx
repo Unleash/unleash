@@ -17,7 +17,7 @@ The segments API lets you create, read, update, and delete [segments](../../refe
 
 ## Get all segments
 
-Retrieve all segments that exist in this Unleash instance. Returns a list of [segment objects](#isegment).
+Retrieve all segments that exist in this Unleash instance. Returns a list of [segment objects](#segment-type-description).
 
 <ApiRequest verb="Get" url={basePath} title="Retrieve all existing segments."/>
 
@@ -77,7 +77,7 @@ Use a JSON object with the following properties to create a new segment.
 |---------------|--------------------------------------------|----------|----------------------------------|--------------------------------------------------|
 | `name`        | string                                     | Yes      | The name of the segment.         | `"mobile-users"`                                 |
 | `description` | string                                     | No       | A description of the segment.    | `"This segment is for users on mobile devices."` |
-| `constraints` | list of [constraint objects](#iconstraint) | Yes      | The constraints in this segment. | `[]`                                             |
+| `constraints` | list of [constraint objects](#constraint-type-description) | Yes      | The constraints in this segment. | `[]`                                             |
 
 ## Get segment by ID
 
@@ -160,7 +160,7 @@ The segment is being used by at least one strategy and can not be deleted. To de
 
 ## List strategies that use a specific segment
 
-Retrieve all strategies that use the specified segment. Returns a list of [activation strategy objects](#ifeaturestrategy).
+Retrieve all strategies that use the specified segment. Returns a list of [activation strategy objects](#activation-strategy-type-description).
 
 <ApiRequest verb="Get" url={path("<segment-id>/strategies")} title="Retrieve all activation strategies that use the specified segment."/>
 
@@ -193,7 +193,7 @@ No segment with the provided id exists.
 
 ## List segments applied to a specific strategy
 
-Retrieve all segments that are applied to the specified strategy. Returns a list of [segment objects](#isegment).
+Retrieve all segments that are applied to the specified strategy. Returns a list of [segment objects](#segment-type-description).
 
 <ApiRequest verb="Get" url={path("strategies/<strategy-id>")} title="Retrieve all segments that are used by the specified strategy."/>
 
@@ -280,44 +280,83 @@ Use a JSON object with the following properties to update the list of applied se
 
 ## Types
 
-### `ISegment`: segment interface {#isegment}
+The segments API exposes the following types:
 
-``` ts
-export interface ISegment {
-    id: number;
-    name: string;
-    description?: string;
-    constraints: IConstraint[];
-    createdBy?: string;
-    createdAt: Date;
+### Segment {#segment-type-description}
+
+#### Example
+
+``` json
+{
+  "id": 12054,
+  "name": "segment name",
+  "description": "segment description",
+  "constraints": [],
+  "createdBy": "you@example.com",
+  "createdAt": "2022-05-23T15:45:22.000Z"
 }
 ```
 
-### `IConstraint`: constraint interface {#iconstraint}
+#### Description
 
-```ts
-export interface IConstraint {
-    contextName: string;
-    operator: string;
-    values?: string[];
-    value?: string;
-    inverted?: boolean;
-    caseInsensitive?: boolean;
+| Property      | Type                                                       | Required | Description                                                               | Example value                    |
+|---------------|------------------------------------------------------------|----------|---------------------------------------------------------------------------|----------------------------------|
+| `id`          | number                                                     | Yes      | The segment's ID.                                                         | `546`                            |
+| `name`        | string                                                     | Yes      | The segment's name                                                        | `"my-segment"`                   |
+| `description` | string                                                     | No       | An optional description of the segment.                                   | `"segment description"`          |
+| `constraints` | list of [constraint objects](#constraint-type-description) | Yes      | The list of constraint objects in the segment.                            | `[]`                             |
+| `createdBy`   | string                                                     | No       | An identifier for who created the segment.                                | `"you@example.com"`              |
+| `createdAt`   | timestamp string                                           | Yes      | The time when the segment was created. Format: `YYYY-MM-DDThh:mm:ss.sTZD` | `"2022-04-23T13:56:24.45+01:00"` |
+
+
+### Constraint {#constraint-type-description}
+
+#### Example
+
+```json
+{
+    "contextName": "appName",
+    "operator": "STR_CONTAINS",
+    "values": [],
+    "inverted": false,
+    "caseInsensitive": false
 }
 ```
 
-### `IFeatureStrategy`: strategy interface {#ifeaturestrategy}
+#### Description
 
-``` ts
-export interface IFeatureStrategy {
-    id: string;
-    featureName: string;
-    projectId: string;
-    environment: string;
-    strategyName: string;
-    parameters: object;
-    sortOrder?: number;
-    constraints: IConstraint[];
-    createdAt?: Date;
+:::note `values` and `value`
+Some constraint operators only support single values. If a constraint uses one of these operators, the payload will contain a `value` property with the correct value. However, for backwards compatibility reasons, the payload will *also* contain a `values` property. If the operator accepts multiple values, the `value` property will not be present. Visit the [strategy constraints documentation](../../advanced/strategy-constraints.md) for more information on what operators support what number of values.
+:::
+
+| Property          | Type                                                                                          | Required | Description                                                                                                                                                       | Example value            |
+|-------------------|-----------------------------------------------------------------------------------------------|----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------|
+| `contextName`     | string                                                                                        | Yes      | The name of the context field targeted by the constraint.                                                                                                         | `"myContextField"`       |
+| `operator`        | string, the name of one of the [constraint operators](../../advanced/strategy-constraints.md) | Yes      | The operator to apply to the context field.                                                                                                                       | `"DATE_BEFORE"`          |
+| `values`          | a list of strings                                                                             | Yes      | The list of values to apply the constraint operator to.                                                                                                           | `["value a", "value b"]` |
+| `value`           | string                                                                                        | No       | The value to apply the constraint operator to.                                                                                                                    | `"15"`                   |
+| `inverted`        | boolean                                                                                       | No       | Whether the result of [the constraint will be negated or not](../../advanced/strategy-constraints.md#constraint-negation).                                        | `false`                  |
+| `caseInsensitive` | boolean string                                                                                | No       | Whether the constraint operator is case sensitive or not. Only [applies to some string-based operators](../../advanced/strategy-constraints.md#string-operators). | `false`                  |
+
+
+### Activation strategy {#activation-strategy-type-description}
+
+#### Example
+
+``` json
+{
+  "id": "strategy-id",
+  "name": "flexibleRollout",
+  "constraints": [],
+  "parameters": {}
 }
 ```
+
+#### Description
+
+| Property       | Type                                                          | Required | Description                                                                                                                                                       | Example value     |
+|----------------|---------------------------------------------------------------|----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------|
+| `id`           | string                                                        | No       | The ID of the strategy.                                                                                                                                           | `"strategy id"`   |
+| `name`         | string                                                        | Yes      | The name of the activation strategy.                                                                                                                              | `flexibleRollout` |
+| `constraints`  | a list of [constraint objects](#constraint-type-description). | No       | The list of constraints applied to this strategy.                                                                                                                 | `[]`              |
+| `parameters`   | object                                                        | Yes      | A list of parameters for the strategy.                                                                                                                            | `{}`              |

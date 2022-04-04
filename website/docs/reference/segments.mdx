@@ -12,6 +12,17 @@ Like with strategy constraints, you apply segments to [feature toggle activation
 You can apply the same segment to multiple activation strategies.
 If you update the segment, the changes will affect every strategy that uses that segment.
 
+Segments let you create user groups based on data available in the Unleash context.
+These groups can be as simple or as complex as you want to make them.
+You could, for example, use segments to target:
+- Users in a specific region
+- Users on a specific device type
+- Users who signed up before a specific point in time
+or any combination thereof.
+
+Because segments stay in sync across strategies, any changes will propagate to all the activation strategies that use them. This also makes them ideal for use cases such as activating or deactivating multiple feature toggles at the same time. In other words, you can use segments to
+- release one or more new features at a specified time
+- create events with start and end times and guarantee that features will only be active during that period
 
 ## Structure and evaluation
 
@@ -26,17 +37,3 @@ Segments can be created, edited, and deleted from the segments page in the admin
 A segment that is in use **cannot** be deleted. If you'd like to delete a segment that is in use, you must first remove the segment from all the activation strategies that are currently using it.
 
 [image of the segments page and the segments item in the menu?]
-
-## When to use segments
-
-Segments let you create user groups based on data available in the Unleash context.
-These groups can be as simple or as complex as you want to make them.
-You could, for example, use segments to target:
-- Users in a specific region
-- Users on a specific device type
-- Users who signed up before a specific point in time
-or any combination thereof.
-
-Because segments stay in sync across strategies, any changes will propagate to all the activation strategies that use them. This also makes them ideal for use cases such as activating or deactivating multiple feature toggles at the same time. In other words, you can use segments to
-- release one or more new features at a specified time
-- create events with start and end times and guarantee that features will only be active during that period

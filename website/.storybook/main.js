@@ -1,3 +1,5 @@
+const AliasPlugin = require('enhanced-resolve/lib/AliasPlugin');
+
 module.exports = {
     stories: [
         '../src/**/*.stories.mdx',
@@ -19,19 +21,67 @@ module.exports = {
     webpackFinal: async (config) => {
         const path = require('path');
 
-        config.resolve.alias = {
-            ...config.resolve.alias,
-            '@site': path.resolve(__dirname, '../'),
-            '@docusaurus': path.resolve(
+        const docusaurusPath = (...paths) =>
+            path.resolve(
                 __dirname,
                 '../',
                 'node_modules',
                 '@docusaurus',
-                'core',
-                'lib',
-                'client',
-                'exports',
+                ...paths,
+            );
+
+        config.resolve.plugins = [
+            // add a "layered" approach to theme resolution that matches
+            // Docusaurus' theme resolution:
+            // https://docusaurus.io/docs/2.0.0-beta.17/advanced/client#theme-aliases
+            //
+            // First, check to see if the referenced component has
+            // been swizzled and exists in `../src/theme`.
+            //
+            // If it's not there, check the `theme-classic/lib-next/theme` directory in
+            // `node_modules`.
+            //
+            // Finally, if it's not found anywhere else, check the
+            // `theme-fallback` directory.
+            new AliasPlugin(
+                'described-resolve',
+                [
+                    {
+                        name: '@theme',
+                        alias: [
+                            path.resolve(__dirname, '../', 'src', 'theme'),
+                            docusaurusPath(
+                                'theme-classic',
+                                'lib-next',
+                                'theme',
+                            ),
+                            docusaurusPath(
+                                'core',
+                                'lib',
+                                'client',
+                                'theme-fallback',
+                            ),
+                        ],
+                    },
+                ],
+                'resolve',
             ),
+        ];
+
+        config.resolve.alias = {
+            ...config.resolve.alias,
+            '@site': path.resolve(__dirname, '../'),
+            '@docusaurus/theme-common': docusaurusPath(
+                'theme-common',
+                'src',
+                'index.ts',
+            ),
+            '@docusaurus/utils-common': docusaurusPath('utils-common', 'lib'),
+            '@docusaurus/plugin-content-docs': docusaurusPath(
+                'plugin-content-docs',
+                'src',
+            ),
+            '@docusaurus': docusaurusPath('core', 'lib', 'client', 'exports'),
             '@generated': path.resolve(__dirname, '../', '.docusaurus'),
         };
 
@@ -43,6 +93,12 @@ module.exports = {
                 return {
                     ...rule,
                     exclude: /\.module\.css$/,
+                };
+            } else if (rule.test.toString() === '/\\.(mjs|tsx?|jsx?)$/') {
+                return {
+                    ...rule,
+                    // don't exclude docusaurus files
+                    exclude: /node_modules\/(?!@docusaurus)/,
                 };
             } else return rule;
         });

@@ -95,6 +95,7 @@ const defaultDbOptions: IDBOption = {
     },
     schema: process.env.DATABASE_SCHEMA || 'public',
     disableMigration: false,
+    applicationName: process.env.DATABASE_APPLICATION_NAME || 'unleash',
 };
 
 const defaultSessionOption: ISessionOption = {

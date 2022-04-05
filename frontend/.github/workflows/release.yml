@@ -19,7 +19,15 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-    - run: yarn
+    - run: |
+        yarn
+        yarn test
+    - name: Publish to NPM
+      run: |
+        TAG=$(echo $GITHUB_REF_NAME | grep -oP '^v\d+\.\d+\.\d+-?\K(\w+)?')
+        npm publish --tag ${TAG:-latest}
+      env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
     - uses: aws-actions/configure-aws-credentials@v1
       with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -28,12 +36,6 @@ jobs:
     - name: Get the version
       id: get_version
       run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
-    - name: Publish to NPM
-        run: |
-          TAG=$(echo $GITHUB_REF_NAME | grep -oP '^v\d+\.\d+\.\d+-?\K(\w+)?')
-          npm publish --tag ${TAG:-latest}
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
     - name: Publish static assets to S3
       run: |
         aws s3 cp build/ s3://getunleash-static/unleash/${{ steps.get_version.outputs.VERSION }} --recursive

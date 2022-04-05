@@ -10,6 +10,7 @@ export interface IUser {
     rootRole: number;
     seenAt: string | null;
     username?: string;
+    isAPI: boolean;
 }
 
 export interface IPermission {

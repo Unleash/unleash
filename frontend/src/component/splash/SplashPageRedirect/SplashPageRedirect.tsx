@@ -5,19 +5,27 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { IFlags } from 'interfaces/uiConfig';
 import { IAuthSplash } from 'hooks/api/getters/useAuth/useAuthEndpoint';
 import { activeSplashIds, SplashId } from 'component/splash/splash';
+import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 
 export const SplashPageRedirect = () => {
     const { pathname } = useLocation();
+    const { user } = useAuthUser();
     const { splash } = useAuthSplash();
     const { uiConfig, loading } = useUiConfig();
 
-    if (!splash || !uiConfig || loading) {
+    if (!user || !splash || !uiConfig || loading) {
         // Wait for everything to load.
         return null;
     }
 
     if (matchPath(pathname, { path: '/splash/:splashId' })) {
         // We've already redirected to the splash page.
+        return null;
+    }
+
+    // Read-only API users should never see splash screens
+    // since they don't have access to mark them as seen.
+    if (user.isAPI) {
         return null;
     }
 

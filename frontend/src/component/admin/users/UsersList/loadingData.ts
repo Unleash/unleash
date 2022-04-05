@@ -14,6 +14,7 @@ const loadingData: IUser[] = [
         createdAt: '2021-04-21T12:09:55.923Z',
         rootRole: 1,
         inviteLink: '',
+        isAPI: false,
     },
     {
         id: 16,
@@ -27,6 +28,7 @@ const loadingData: IUser[] = [
         createdAt: '2021-04-21T15:54:02.765Z',
         rootRole: 2,
         inviteLink: '',
+        isAPI: false,
     },
     {
         id: 3,
@@ -40,6 +42,7 @@ const loadingData: IUser[] = [
         createdAt: '2021-04-21T12:33:17.712Z',
         rootRole: 1,
         inviteLink: '',
+        isAPI: false,
     },
     {
         id: 4,
@@ -53,6 +56,7 @@ const loadingData: IUser[] = [
         createdAt: '2021-04-21T15:54:02.765Z',
         rootRole: 2,
         inviteLink: '',
+        isAPI: false,
     },
     {
         id: 5,
@@ -66,6 +70,7 @@ const loadingData: IUser[] = [
         createdAt: '2021-04-21T12:33:17.712Z',
         rootRole: 1,
         inviteLink: '',
+        isAPI: false,
     },
 ];
 

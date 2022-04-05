@@ -127,7 +127,7 @@ The are numbers of ways you can run Unleash.
 3. Unleash Open-Source - Self host with Node.js [Guide](https://docs.getunleash.io/deploy/getting_started#start-unleash-server)
 4. Unleash Open-Source - Helm chart [artifacthub.io](https://artifacthub.io/packages/helm/unleash/unleash)
 
-### Run from Docker
+## Run from Docker
 
 1. Create a network by running the following command:
 

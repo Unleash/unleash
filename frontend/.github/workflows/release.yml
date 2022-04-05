@@ -22,7 +22,7 @@ jobs:
         registry-url: 'https://registry.npmjs.org'
     - run: |
         yarn install --frozen-lockfile          
-      run: |
+    - run: |
         TAG=$(echo $GITHUB_REF_NAME | grep -oP '^v\d+\.\d+\.\d+-?\K(\w+)?')
         npm publish --tag ${TAG:-latest}
       env:

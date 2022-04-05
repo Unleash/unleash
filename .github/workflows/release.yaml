@@ -1,4 +1,4 @@
-name: 'Release unleash-server'
+name: 'Publish to npm'
 on:
   push:
     tags:
@@ -22,8 +22,7 @@ jobs:
         registry-url: 'https://registry.npmjs.org'
     - run: |
         yarn install --frozen-lockfile
-        yarn lint
-        yarn run test          
+        yarn lint         
     - run: |
         TAG=$(echo $GITHUB_REF_NAME | grep -oP '^v\d+\.\d+\.\d+-?\K(\w+)?')
         npm publish --tag ${TAG:-latest}

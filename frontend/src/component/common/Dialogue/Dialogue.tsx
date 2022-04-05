@@ -24,7 +24,6 @@ interface IDialogue {
     disabledPrimaryButton?: boolean;
     formId?: string;
     permissionButton?: JSX.Element;
-    hideSecondaryButton?: boolean;
 }
 
 const Dialogue: React.FC<IDialogue> = ({
@@ -40,7 +39,6 @@ const Dialogue: React.FC<IDialogue> = ({
     fullWidth = false,
     formId,
     permissionButton,
-    hideSecondaryButton,
 }) => {
     const styles = useStyles();
     const handleClick = formId
@@ -94,7 +92,7 @@ const Dialogue: React.FC<IDialogue> = ({
                 />
 
                 <ConditionallyRender
-                    condition={Boolean(onClose || !hideSecondaryButton)}
+                    condition={Boolean(onClose)}
                     show={
                         <Button onClick={onClose}>
                             {secondaryButtonText || 'No, take me back'}

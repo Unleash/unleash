@@ -32,7 +32,6 @@ export const SegmentDeleteUsedSegment = ({
             open={open}
             primaryButtonText="OK"
             onClick={handleCancel}
-            hideSecondaryButton
         >
             <p>
                 The following feature toggles are using the{' '}

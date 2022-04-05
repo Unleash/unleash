@@ -20,8 +20,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: |
-        yarn
-        yarn test
+        yarn install --frozen-lockfile
     - name: Publish to NPM
       run: |
         TAG=$(echo $GITHUB_REF_NAME | grep -oP '^v\d+\.\d+\.\d+-?\K(\w+)?')

@@ -1,6 +1,6 @@
 <div align="center">
 
-[![Build and tests](https://github.com/Unleash/unleash/workflows/build/badge.svg?branch=main)](https://github.com/Unleash/unleash/actions/workflows/build.yaml)
+[![Build and Tests](https://github.com/Unleash/unleash/workflows/Build%20%26%20Tests/badge.svg?branch=main)](https://github.com/Unleash/unleash/actions/workflows/build.yaml)
 [![Coverage Status](https://coveralls.io/repos/github/Unleash/unleash/badge.svg?branch=main&)](https://coveralls.io/github/Unleash/unleash?branch=main) [![npm](https://img.shields.io/npm/v/unleash-server)](https://www.npmjs.com/package/unleash-server) [![Docker Pulls](https://img.shields.io/docker/pulls/unleashorg/unleash-server)](https://hub.docker.com/r/unleashorg/unleash-server)
 
 [![Deploy to Heroku](./.github/deploy-heroku-20.png)](https://www.heroku.com/deploy/?template=https://github.com/Unleash/unleash)

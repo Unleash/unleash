@@ -13,9 +13,44 @@
 
 </div>
 
-Unleash is an open-source feature management platform. It provides a great overview of all feature toggles/flags across all your applications and services. Unleash enables software teams all over the world to take full control of how they enabled new functionality to end-users.
+Unleash is an open-source feature management platform. It provides a great overview of all feature toggles/flags across all your applications and services. Unleash lets software teams all over the world take full control of how they enable new functionality to end-users.
 
-Unleash comes with [official client SDKs](https://docs.getunleash.io/sdks) for all the popular languages.
+Unleash has [official client SDKs](https://docs.getunleash.io/sdks) for a number of the most popular languages around. Can't find one for the language you want? Check out the [community-contributed SDKs](https://docs.getunleash.io/sdks#community-sdks) instead!
+
+[what is feature management + unleash]
+[who uses Unleash? Show that you can scale from small to laaarge]
+
+## Get started in 2 steps
+
+### 1. Start Unleash
+
+With `git` and `docker` installed, it's easy to get started immediately!
+
+Run this script:
+``` bash
+git clone git@github.com:Unleash/unleash-docker.git
+cd unleash-docker
+docker compose up -d
+```
+
+Then point your browser to `localhost:4242` and log in using
+  - username: `admin`
+  - password: `unleash4all`
+
+### 2. Connect your SDK
+
+Find your preferred SDK in [our list of official SDKs](#unleash-sdks) and import it into your project. Follow the setup guides for your specific SDK.
+
+If you use the docker compose file from the previous step, here's the configuration details you'll need to get going:
+- For front-end SDKs, use:
+  - URL: `http://localhost:3000`
+  - `clientKey`: `proxy-client-key`
+- For server-side SDKs, use:
+  - Unleash API URL: `http://localhost:4242`
+  - API token: `default:development.unleash-insecure-api-token`
+
+If you use a different setup, your configuration details will most likely also be different.
+
 
 ## Features
 

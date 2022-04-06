@@ -3,7 +3,6 @@ import { IEventStore } from '../types/stores/event-store';
 import { IUnleashStores } from '../types';
 import { Logger } from '../logger';
 import NameExistsError from '../error/name-exists-error';
-import NotFoundError from '../error/notfound-error';
 import { ISegmentStore } from '../types/stores/segment-store';
 import { IFeatureStrategy, ISegment } from '../types/model';
 import { segmentSchema } from './segment-schema';

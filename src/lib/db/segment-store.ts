@@ -170,13 +170,13 @@ export default class SegmentStore implements ISegmentStore {
         }));
     }
 
-    async getByName(name: string): Promise<ISegment> {
+    async existsByName(name: string): Promise<boolean> {
         const rows: ISegmentRow[] = await this.db
             .select(this.prefixColumns())
             .from(T.segments)
             .where({ name });
 
-        return this.mapRow(rows[0]);
+        return Boolean(rows[0]);
     }
 
     prefixColumns(): string[] {

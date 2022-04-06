@@ -24,5 +24,5 @@ export interface ISegmentStore extends Store<ISegment, number> {
 
     getAllFeatureStrategySegments(): Promise<IFeatureStrategySegment[]>;
 
-    getByName(name: string): Promise<ISegment>;
+    existsByName(name: string): Promise<boolean>;
 }

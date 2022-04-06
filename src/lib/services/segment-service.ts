@@ -3,6 +3,7 @@ import { IEventStore } from '../types/stores/event-store';
 import { IUnleashStores } from '../types';
 import { Logger } from '../logger';
 import NameExistsError from '../error/name-exists-error';
+import NotFoundError from '../error/notfound-error';
 import { ISegmentStore } from '../types/stores/segment-store';
 import { IFeatureStrategy, ISegment } from '../types/model';
 import { segmentSchema } from './segment-schema';
@@ -122,14 +123,13 @@ export class SegmentService {
     }
 
     async validateName(name: string): Promise<void> {
-        if (!name) throw new BadDataError('Segment name is not valid');
-
-        try {
-            await this.segmentStore.getByName(name);
-        } catch (error) {
-            return;
+        if (!name) {
+            throw new BadDataError('Segment name cannot be empty');
         }
-        throw new NameExistsError('Segment name already exists');
+
+        if (await this.segmentStore.existsByName(name)) {
+            throw new NameExistsError('Segment name already exists');
+        }
     }
 
     private async validateStrategySegmentLimit(

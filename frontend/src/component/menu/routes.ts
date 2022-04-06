@@ -445,6 +445,15 @@ export const routes: IRoute[] = [
         menu: {},
     },
     {
+        path: '/admin/roles',
+        parent: '/admin',
+        title: 'Project Roles',
+        component: ProjectRoles,
+        type: 'protected',
+        flag: RE,
+        menu: { adminSettings: true },
+    },
+    {
         path: '/admin/auth',
         parent: '/admin',
         title: 'Single Sign-On',
@@ -458,15 +467,6 @@ export const routes: IRoute[] = [
         component: AdminInvoice,
         hidden: true,
         type: 'protected',
-        menu: { adminSettings: true },
-    },
-    {
-        path: '/admin/roles',
-        parent: '/admin',
-        title: 'Project Roles',
-        component: ProjectRoles,
-        type: 'protected',
-        flag: RE,
         menu: { adminSettings: true },
     },
     {

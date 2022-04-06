@@ -396,16 +396,6 @@ Array [
   },
   Object {
     "component": [Function],
-    "menu": Object {
-      "adminSettings": true,
-    },
-    "parent": "/admin",
-    "path": "/admin/auth",
-    "title": "Single Sign-On",
-    "type": "protected",
-  },
-  Object {
-    "component": [Function],
     "flag": "RE",
     "menu": Object {
       "adminSettings": true,
@@ -413,6 +403,16 @@ Array [
     "parent": "/admin",
     "path": "/admin/roles",
     "title": "Project Roles",
+    "type": "protected",
+  },
+  Object {
+    "component": [Function],
+    "menu": Object {
+      "adminSettings": true,
+    },
+    "parent": "/admin",
+    "path": "/admin/auth",
+    "title": "Single Sign-On",
     "type": "protected",
   },
   Object {

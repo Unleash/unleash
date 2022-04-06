@@ -9,6 +9,14 @@ import {
 import { IAvailablePermissions, IPermission } from 'lib/types/model';
 
 class AccessStoreMock implements IAccessStore {
+    updateUserProjectRole(
+        userId: number,
+        roleId: number,
+        projectId: string,
+    ): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+
     removeUserFromRole(
         userId: number,
         roleId: number,

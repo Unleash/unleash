@@ -1,0 +1,77 @@
+{
+  "version": 3,
+  "features": [
+    {
+      "name": "seed_feature_1",
+      "description": null,
+      "type": "release",
+      "project": "default",
+      "stale": false,
+      "variants": [],
+      "createdAt": "2022-03-17T20:18:55.643Z",
+      "lastSeenAt": null,
+      "impressionData": false
+    }
+  ],
+  "featureStrategies": [
+    {
+      "id": "854adc48-7d4e-4433-9c36-5a4cd15491dc",
+      "featureName": "seed_feature_1",
+      "projectId": "default",
+      "environment": "default",
+      "strategyName": "bc555d20-cfef-490f-a30d-d922e5675b0e",
+      "parameters": {},
+      "constraints": [],
+      "createdAt": "2022-03-17T20:18:55.667Z"
+    }
+  ],
+  "featureEnvironments": [
+    {
+      "enabled": true,
+      "featureName": "seed_feature_1",
+      "environment": "default"
+    }
+  ],
+  "segments": [
+    {
+      "id": 1,
+      "name": "seed_segment_1",
+      "description": null,
+      "constraints": [
+        {
+          "values": [
+            "878a9f99-96a0-46",
+            "894fc669-f53d-43"
+          ],
+          "operator": "IN",
+          "contextName": "x"
+        }
+      ],
+      "createdBy": "some-user",
+      "createdAt": "2022-03-17T20:18:55.696Z"
+    },
+    {
+      "id": 2,
+      "name": "seed_segment_2",
+      "description": null,
+      "constraints": [
+        {
+          "values": [
+            "894fc669-f53d-43",
+            "15fecdbf-d3b6-48"
+          ],
+          "operator": "IN",
+          "contextName": "x"
+        }
+      ],
+      "createdBy": "some-user",
+      "createdAt": "2022-03-17T20:18:55.696Z"
+    }
+  ],
+  "featureStrategySegments": [
+    {
+      "featureStrategyId": "854adc48-7d4e-4433-9c36-5a4cd15491dc",
+      "segmentId": 1
+    }
+  ]
+}

@@ -21,7 +21,7 @@ npm install unleash-proxy-client
 
 **Step 2: Initialize the SDK**
 
-You need to have an Unleash-hosted instance, and the proxy needs to be enabled. In addition you will need a proxy-specific `clientKey` in order to connect to the Unleash-hosted Proxy. For more on how to set up client keys, [consult the Unleash Proxy docs](unleash-proxy.md#configuration-variables).
+You need to have an Unleash Proxy server running. In addition you will need a proxy-specific `clientKey` in order to connect to the Unleash Proxy. For more on how to set up client keys, [consult the Unleash Proxy docs](unleash-proxy.md#configuration-variables).
 
 ```js
 import { UnleashClient } from 'unleash-proxy-client';

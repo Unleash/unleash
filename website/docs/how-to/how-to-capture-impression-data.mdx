@@ -1,0 +1,89 @@
+---
+title: How to capture impression data
+---
+import ApiRequest from '@site/src/components/ApiRequest'
+import VideoContent from '@site/src/components/VideoContent.jsx'
+
+:::info Placeholders
+Placeholders in the code samples below are delimited by angle brackets (i.e. `<placeholder-name>`). You will need to replace them with the values that are correct in _your_ situation for the code samples to run properly.
+:::
+
+Unleash allows you to gather [**impression data**](../advanced/impression-data.md) from your feature toggles, giving you complete visibility into who checked what toggles and when. What you do with this data is entirely up to you, but a common use case is to send it off to an aggregation and analytics service such as [Posthog](https://posthog.com/) or [Google Analytics](https://analytics.google.com/), either just for monitoring purposes or to facilitate [A/B testing](../topics/a-b-testing.md).
+
+This guide will take you through everything you need to do in Unleash to facilitate such a workflow. It will show you how to send data to Posthog as an example sink, but the exact same principles will apply to any other service of the same kind.
+
+<VideoContent videoUrls={["https://www.youtube.com/embed/bxYdeMb9ffw"]}>
+This content in this guide is also available in video format.
+</VideoContent>
+
+## Prerequisites
+
+We will assume that you have the necessary details for your third-party service:
+
+- **where to send the data to**. We'll refer to this in the code samples below as **`<sink-url>`**.
+- **what format the data needs to be in**. This will determine how you transform the event data before you send it.
+
+In addition, you'll need to have a toggle to record impression data for and an [Unleash client SDK](../sdks/index.md) that supports impression data. This guide will use the [JavaScript proxy SDK](../sdks/proxy-javascript.md).
+
+When you have those things sorted, follow the below steps.
+
+## Step 1: Enable impression data for your feature toggle {#step-1}
+
+Because impression data is an **opt-in feature**, the first step is to enable it for the feature you want to gather data from. You can use both the UI and the API.
+
+### Enabling impression data for new feature toggles {#step-1-new-toggles}
+
+When you create a new feature toggle via the UI, there's an option at the end of the form that you must enable:
+
+![The create feature toggle form. There's a toggle at the end of the form that enables or disables impression data. It's labeled "impression data".](/img/enable-impression-data.png)
+
+To create a feature toggle with impression data enabled, set the `impressionData` option to `true` in the request payload, as seen below. For more options, check the [reference docs on creating features](../api/admin/feature-toggles-api-v2.md#create-toggle).
+
+<ApiRequest verb="post" payload={{name: "<feature-toggle-name>", impressionData: true}} url="api/admin/projects/<project-id>/features" title="Create a feature toggle with impression data enabled."/>
+
+### Enabling impression data for existing feature toggles {#step-1-existing-toggles}
+
+To enable impression data for an existing toggle, use the "edit" button on the toggle's page in the admin UI. It will take you to a form that looks like the toggle creation form. Use the "impression data" toggle to enable impression data the same way you would when [enabling impression data for a new feature toggle](#step-1-new-toggles).
+
+![The create feature toggle form. There's a toggle at the end of the form that enables or disables impression data. It's labeled "impression data".](/img/enable-impression-data-existing-toggle.png)
+
+To enable impression data for an existing toggle, use the [API's toggle patching functionality](../api/admin/feature-toggles-api-v2.md#patch-toggle):
+
+<ApiRequest verb="patch" payload={[{op: "replace", path: "/impressionData", value: true}]} url="api/admin/projects/<project-id>/features/<feature-toggle-name>" title="Enable impression data on an existing toggle."/>
+
+
+## Step 2: Capture impression events in your client {#step-2}
+
+In your client SDK, initialize the library for the third party service you're using.
+For the full details on setting up a Posthog client, see [the official Posthog JavaScript client docs](https://posthog.com/docs/integrate/client/js).
+The steps below will use extracts from said documentation.
+
+After initializing the library, you'll probably also want to identify the current user, so that events can be correlated properly:
+
+``` js title="Identify the user."
+posthog.identify(userId);
+```
+
+### Capture and transform the event
+
+Attach an event listener to Unleash that listens for `"impression"` events. Inside the listener, transform the event data to the format you want and send it to your analytics service.
+
+``` js title="Capture, transform, and send impression data."
+// listen for impression events
+unleash.on("impression", (event) => {
+
+    // capture and transform events
+    posthog.capture(event.eventType, {
+        ...event.context,
+        distinct_id: event.context?.userId,
+        featureName: event.featureName,
+        enabled: event.enabled,
+        variant: event.variant,
+    });
+
+});
+```
+
+Posthog expects an object with a `distinct_id` property that it uses to correlate data.
+Additionally, you can add whatever properties you want, such as the feature toggle name, its state and/or variant, or the whole Unleash context.
+The `posthog.capture` method sends the event data to your Posthog instance.

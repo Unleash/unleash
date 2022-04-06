@@ -12,7 +12,7 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: setup git config
       run: |
         git config --global user.name "${GH_NAME}"
@@ -25,3 +25,6 @@ jobs:
         GH_EMAIL: 'ivarconr@gmail.com'
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
         DEPLOYMENT_BRANCH: 'main'
+        UNLEASH_FEEDBACK_TARGET_URL: ${{ secrets.DOCS_FEEDBACK_TARGET_URL }}
+        UNLEASH_PROXY_CLIENT_KEY: ${{ secrets.UNLEASH_PROXY_CLIENT_KEY_PRODUCTION }}
+        UNLEASH_PROXY_URL: ${{ secrets.UNLEASH_PROXY_URL_PRODUCTION }}

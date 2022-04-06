@@ -2,25 +2,17 @@
 id: configuring_unleash
 title: Configuring Unleash
 ---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 
 > This is the guide on how to configure **Unleash v4 self-hosted**. If you are still using Unleash v3 you should checkout [configuring Unleash v3](./configuring_unleash_v3)
 
 ## Must configure
 
-### Database details {#database-details}
+### Database
 
-In order for Unleash server to work, you must setup database connection details.
-
-- If using docker, use environment variables
-  - `DATABASE_HOST` - the database hostname - defaults to `localhost`
-  - `DATABASE_PORT` - the port the database is listening on - defaults to `5432`
-  - `DATABASE_USERNAME` - the user configured for access - defaults to `unleash_user`
-  - `DATABASE_PASSWORD` - the password for the user - defaults to `passord`
-  - `DATABASE_NAME` - the name of the database - defaults to `unleash`
-  - `DATABASE_SSL` - a json object representing SSL configuration or `false` for not using SSL
-  - `DATABASE_SCHEMA` - Which schema to use - defaults to `public`
-- We also support `DATABASE_URL` see [libpq's doc](https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING) for full format explanation. In short: `postgres://USER:PASSWORD@HOST:PORT/DATABASE`
-- If you're using secret files from kubernetes and would like to load a `DATABASE_URL` format from a file, use `DATABASE_URL_FILE` and point it to a path containing a connection URL.
+In order for Unleash server to work, you need a running database and its connection details. See the [database configuration section](#database-configuration) for the available options and configuration details.
 
 ## Nice to configure
 
@@ -89,21 +81,9 @@ unleash.start(unleashOptions);
      ```
       The tokens can be of any API token type. Note that _admin_ tokens **must** target all environments and projects (i.e. use `'*'` for `environments` and `project` and start the secret with `*:*.`).
 
-      You can also use the environment variable `INIT_ADMIN_API_TOKENS` to create API tokens on startup. This variable should be set to a comma-separated list of API tokens to initialize (for instance `*:*.some-random-string, *:*.some-other-token`). With the environment variable, all tokens will be created as admin tokens and Unleash will assign a username automatically.
+      You can also use the environment variables `INIT_ADMIN_API_TOKENS` or `INIT_CLIENT_API_TOKENS` to create API admin or client tokens on startup. Both variables require a comma-separated list of API tokens to initialize (for instance `*:*.some-random-string, *:*.some-other-token`). The tokens found in `INIT_ADMIN_API_TOKENS` and `INIT_CLIENT_API_TOKENS` will be created as admin and client tokens respectively and Unleash will assign a username automatically.
 - **databaseUrl** - (_deprecated_) the postgres database url to connect to. Only used if _db_ object is not specified, and overrides the _db_ object and any environment variables that change parts of it (like `DATABASE_SSL`). Should include username/password. This value may also be set via the `DATABASE_URL` environment variable. Alternatively, if you would like to read the database url from a file, you may set the `DATABASE_URL_FILE` environment variable with the full file path. The contents of the file must be the database url exactly.
-- **db** - The database configuration object taking the following properties:
-  - _user_ - the database username (`DATABASE_USERNAME`)
-  - _password_ - the database password (`DATABASE_PASSWORD`)
-  - _host_ - the database hostname (`DATABASE_HOST`)
-  - _port_ - the database port defaults to 5432 (`DATABASE_PORT`)
-  - _database_ - the database name to be used (`DATABASE_NAME`)
-  - _ssl_ - an object describing ssl options, see https://node-postgres.com/features/ssl (`DATABASE_SSL`, as a stringified json object)
-  - _schema_ - the postgres database schema to use. Defaults to 'public'. (`DATABASE_SCHEMA`)
-  - _version_ - the postgres database version. Used to connect a non-standard database. Defaults to `undefined`, which let the underlying adapter to detect the version automatically. (`DATABASE_VERSION`)
-  - _pool_ - an object describing pool options, see https://knexjs.org/#Installation-pooling. We support the following three fields:
-    - _min_ - minimum connections in connections pool (defaults to 0) (`DATABASE_POOL_MIN`)
-    - _max_ - maximum connections in connections pool (defaults to 4) (`DATABASE_POOL_MAX`)
-    - _idleTimeoutMillis_ - time in milliseconds a connection must be idle before being marked as a candidate for eviction (defaults to 30000) (`DATABASE_POOL_IDLE_TIMEOUT_MS`)
+- **db** - The database configuration object. See [the database configuration section](#database-configuration) for a full overview of the available properties.
 - **disableLegacyFeaturesApi** (boolean) - whether to disable the [legacy features API](../api/admin/feature-toggles-api.md). Defaults to `false` (`DISABLE_LEGACY_FEATURES_API`). Introduced in Unleash 4.6.
 - **email** - the email object configuring an SMTP server for sending welcome mails and password reset mails
   - `host` - The server URL to your SMTP server
@@ -131,6 +111,10 @@ unleash.start(unleashOptions);
 - **versionCheck** - the object deciding where to check for latest version
   - `url` - The url to check version (Defaults to `https://version.unleash.run`) - Overridable with (`UNLEASH_VERSION_URL`)
   - `enable` - Whether version checking is enabled (defaults to true) - Overridable with (`CHECK_VERSION`) (if anything other than `true`, does not check)
+- **environmentEnableOverrides** - A list of environment names to force enable at startup. This is feature should be
+  used with caution. When passed a list, this will enable each environment in that list and disable all other environments. You can't use this to disable all environments, passing an empty list will do nothing. If one of the given environments is not already enabled on startup then it will also enable projects and toggles for that environment. Note that if one of the passed environments doesn't already exist this will do nothing aside from log a warning.
+
+  You can also set the environment variable `ENABLED_ENVIRONMENTS` to a comma delimited string of environment names to override environments.
 
 ### Disabling Auto-Start {#disabling-auto-start}
 
@@ -199,7 +183,134 @@ function getLogger(name) {
 
 The logger interface with its `debug`, `info`, `warn` and `error` methods expects format string support as seen in `debug` or the JavaScript `console` object. Many commonly used logging implementations cover this API, e.g., bunyan, pino or winston.
 
-## Database pooling connection timeouts {#database-pooling-connection-timeouts}
+## Database configuration
 
-- Please be aware of the default values of connection pool about idle session handling.
-- If you have a network component which closes idle sessions on tcp layer, please ensure, that the connection pool idleTimeoutMillis setting is lower than the timespan as the network component will close the idle connection.
+:::info
+In-code configuration values take precedence over environment values: If you provide a database username both via environment variables and in code with the Unleash options object, Unleash will use the in-code username.
+:::
+
+You cannot run the Unleash server without a database. You must provide Unleash with database connection details for it to start correctly.
+
+The available options are listed in the table below. Options can be specified either via JavaScript (only when starting Unleash via code) or via environment variables. The "property name" column below gives the name of the property on the Unleash options' `db` object.
+
+| Property name            | Environment variable            | Default value  | Description                                                                                                                                                                              |
+|--------------------------|---------------------------------|----------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `user`                   | `DATABASE_USERNAME`             | `unleash_user` | The database username.                                                                                                                                                                   |
+| `password`               | `DATABASE_PASSWORD`             | `passord`      | The database password.                                                                                                                                                                   |
+| `host`                   | `DATABASE_HOST`                 | `localhost`    | The database hostname.                                                                                                                                                                   |
+| `port`                   | `DATABASE_PORT`                 | `5432`         | The database port.                                                                                                                                                                       |
+| `database`               | `DATABASE_NAME`                 | `unleash`      | The name of the database.                                                                                                                                                                |
+| `ssl`                    | `DATABASE_SSL`                  | N/A            | An object describing SSL options. In code, provide a regular JavaScript object. When using the environment variable, provide a **stringified JSON object**.                              |
+| `pool`                   | N/A (use the below variables)  |                | An object describing database pool options. With environment variables, use the options below directly.                                                                                  |
+| `pool.min`               | `DATABASE_POOL_MIN`             | 0              | The minimum number of connections in the connection pool.                                                                                                                                |
+| `pool.max`               | `DATABASE_POOL_MAX`             | 4              | The maximum number of connections in the connection pool.                                                                                                                                |
+| `pool.idleTimeoutMillis` | `DATABASE_POOL_IDLE_TIMEOUT_MS` | 30000          | The amount of time (in milliseconds) that a connection must be idle for before it is marked as a candidate for eviction.                                                                 |
+
+Alternatively, you can use a [libpq connection string](https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING) to connect to the database. You can provide it directly or from a file by using one of the below options. In JavaScript, these are top-level properties of the root configuration object, *not* the `db` object.
+
+| Property name     | Environment variable | Default value | Description                                                                                                                                                                              |
+|-------------------|----------------------|---------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `databaseUrl`     | `DATABASE_URL`       | N/A           | A string that matches the [libpq connection string](https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING), such as `postgres://USER:PASSWORD@HOST:PORT/DATABASE`. |
+| `databaseUrlFile` | `DATABASE_URL_FILE`  | N/A           | The path to a file that contains a [libpq connection string](https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING).                                               |
+
+
+Below is an example JavaScript configuration object.
+
+``` js
+const unleashOptions = {
+  databaseUrl: "postgres:/USER:PASSWORD@HOST:PORT/DATABASE",
+  databaseUrlFile: "/path/to/file",
+  db: {
+    user: 'unleash_user',
+    password: 'passord',
+    host: 'localhost',
+    port: 5432,
+    database: 'unleash',
+    ssl: false,
+    pool: {
+      min: 0,
+      max: 4,
+      idleTimeoutMillis: 30000,
+    },
+  },
+};
+```
+
+### `db.ssl` vs `DATABASE_SSL` options
+
+When initializing Unleash from code, you'll provide the `db.ssl` option as a JavaScript object. As such, any functions will get evaluated before the object is used for configuration. When using the `DATABASE_SSL` environment variable, you must provide the value as a stringified JSON object. The object will get parsed before being used for configuration, but no further evaluation will take place.
+
+If you want to read content from a file, you should either initialize Unleash via JavaScript or manually interpolate the required values into the environment variable:
+
+<Tabs groupId="db-configuration-options">
+
+<TabItem value="js" label="JavaScript" default>
+
+``` js title="Reading from the file system in JavaScript"
+const unleashOptions = {
+    db: {
+        // other options omitted for brevity
+        ssl: {
+            ca: fs.readFileSync('/path/to/server-certificates/root.crt').toString(),
+        }
+    }}
+```
+
+</TabItem>
+
+<TabItem value="env" label="Environment variables (bash)">
+
+``` bash title="Reading from the file system with bash"
+DATABASE_SSL="{ \"key\": \"$(cat /path/to/server-certificates/root.crt)\" }"
+```
+
+</TabItem>
+
+</Tabs>
+
+
+
+### Enabling self-signed certificates
+
+
+To use self-signed certificates, you should set the SSL property `rejectUnauthorized` to `false` and set the `ca` property to the value of the certificate:
+
+<Tabs groupId="db-configuration-options">
+
+<TabItem value="js" label="JavaScript" default>
+
+``` js title="Enable self-signed certificates"
+const unleashOptions = {
+    db: {
+        // other options omitted for brevity
+        ssl: {
+            rejectUnauthorized: false,
+            ca: fs.readFileSync('/path/to/server-certificates/root.crt').toString(),
+        }
+    }}
+
+```
+
+</TabItem>
+
+<TabItem value="env" label="Environment variables (bash)">
+
+``` bash title="Enable self-signed certificates"
+DATABASE_SSL="{ \"rejectUnauthorized\": false, \"key\": \"$(cat /path/to/server-certificates/root.crt)\" }"
+```
+
+</TabItem>
+
+</Tabs>
+
+Visit [the node-postgres library's SSL section](https://node-postgres.com/features/ssl) for more information.
+
+### Supported Postgres SSL modes
+
+Unleash builds directly on the [node-postgres library](https://node-postgres.com/features/ssl), so we support all the same SSL modes that they support. As of version 8 (released on February 25th 2020), [node-postgres no longer supports all sslmodes](https://node-postgres.com/announcements#2020-02-25). For this reason, Unleash cannot support all of Postgres' SSL modes. Specifically, Unleash **does not support** `sslmode=prefer`. Instead you must know whether you require an SSL connection ahead of time.
+
+### Troubleshooting: database pooling connection timeouts {#database-pooling-connection-timeouts}
+
+- Check the default values of connection pool about idle session handling.
+
+- If you have a network component which closes idle sessions on the TCP layer, make sure that the connection pool's `idleTimeoutMillis` setting is lower than the `timespan` setting. If it isn't, then the network component will close the connection.

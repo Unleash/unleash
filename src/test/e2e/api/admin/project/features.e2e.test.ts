@@ -14,6 +14,8 @@ import ApiUser from '../../../../../lib/types/api-user';
 import { ApiTokenType } from '../../../../../lib/types/models/api-token';
 import IncompatibleProjectError from '../../../../../lib/error/incompatible-project-error';
 import { IVariant, WeightType } from '../../../../../lib/types/model';
+import { v4 as uuidv4 } from 'uuid';
+import supertest from 'supertest';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -512,13 +514,19 @@ test('Should patch feature toggle', async () => {
     const name = 'new.toggle.patch';
     await app.request
         .post(url)
-        .send({ name, description: 'some', type: 'release' })
+        .send({
+            name,
+            description: 'some',
+            type: 'release',
+            impressionData: true,
+        })
         .expect(201);
     await app.request
         .patch(`${url}/${name}`)
         .send([
             { op: 'replace', path: '/description', value: 'New desc' },
             { op: 'replace', path: '/type', value: 'kill-switch' },
+            { op: 'replace', path: '/impressionData', value: false },
         ])
         .expect(200);
 
@@ -527,6 +535,7 @@ test('Should patch feature toggle', async () => {
     expect(toggle.name).toBe(name);
     expect(toggle.description).toBe('New desc');
     expect(toggle.type).toBe('kill-switch');
+    expect(toggle.impressionData).toBe(false);
     expect(toggle.archived).toBeFalsy();
     const events = await db.stores.eventStore.getAll({
         type: FEATURE_METADATA_UPDATED,
@@ -1982,4 +1991,185 @@ test('should not update project with PATCH', async () => {
             expect(res.body.project).toBe('default');
         })
         .expect(200);
+});
+
+test('Can create a feature with impression data', async () => {
+    await app.request
+        .post('/api/admin/projects/default/features')
+        .send({
+            name: 'new.toggle.with.impressionData',
+            impressionData: true,
+        })
+        .expect(201)
+        .expect((res) => {
+            expect(res.body.impressionData).toBe(true);
+        });
+});
+
+test('Can create a feature without impression data', async () => {
+    await app.request
+        .post('/api/admin/projects/default/features')
+        .send({
+            name: 'new.toggle.without.impressionData',
+        })
+        .expect(201)
+        .expect((res) => {
+            expect(res.body.impressionData).toBe(false);
+        });
+});
+
+test('Can update impression data with PUT', async () => {
+    const toggle = {
+        name: 'update.toggle.with.impressionData',
+        impressionData: true,
+    };
+    await app.request
+        .post('/api/admin/projects/default/features')
+        .send(toggle)
+        .expect(201)
+        .expect((res) => {
+            expect(res.body.impressionData).toBe(true);
+        });
+
+    await app.request
+        .put(`/api/admin/projects/default/features/${toggle.name}`)
+        .send({ ...toggle, impressionData: false })
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.impressionData).toBe(false);
+        });
+});
+
+test('Can create toggle with impression data on different project', async () => {
+    await db.stores.projectStore.create({
+        id: 'impression-data',
+        name: 'ImpressionData',
+        description: '',
+    });
+
+    const toggle = {
+        name: 'project.impression.data',
+        impressionData: true,
+    };
+
+    await app.request
+        .post('/api/admin/projects/impression-data/features')
+        .send(toggle)
+        .expect(201)
+        .expect((res) => {
+            expect(res.body.impressionData).toBe(true);
+        });
+
+    await app.request
+        .put(`/api/admin/projects/impression-data/features/${toggle.name}`)
+        .send({ ...toggle, impressionData: false })
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.impressionData).toBe(false);
+        });
+});
+
+test('should reject invalid constraint values for multi-valued constraints', async () => {
+    const project = await db.stores.projectStore.create({
+        id: uuidv4(),
+        name: uuidv4(),
+        description: '',
+    });
+
+    const toggle = await db.stores.featureToggleStore.create(project.id, {
+        name: uuidv4(),
+        impressionData: true,
+    });
+
+    const mockStrategy = (values: string[]) => ({
+        name: uuidv4(),
+        constraints: [{ contextName: 'userId', operator: 'IN', values }],
+    });
+
+    const featureStrategiesPath = `/api/admin/projects/${project.id}/features/${toggle.name}/environments/default/strategies`;
+
+    await app.request
+        .post(featureStrategiesPath)
+        .send(mockStrategy([]))
+        .expect(400);
+    await app.request
+        .post(featureStrategiesPath)
+        .send(mockStrategy(['']))
+        .expect(400);
+    const { body: strategy } = await app.request
+        .post(featureStrategiesPath)
+        .send(mockStrategy(['a']))
+        .expect(200);
+
+    await app.request
+        .put(`${featureStrategiesPath}/${strategy.id}`)
+        .send(mockStrategy([]))
+        .expect(400);
+    await app.request
+        .put(`${featureStrategiesPath}/${strategy.id}`)
+        .send(mockStrategy(['']))
+        .expect(400);
+    await app.request
+        .put(`${featureStrategiesPath}/${strategy.id}`)
+        .send(mockStrategy(['a']))
+        .expect(200);
+});
+
+test('should add default constraint values for single-valued constraints', async () => {
+    const project = await db.stores.projectStore.create({
+        id: uuidv4(),
+        name: uuidv4(),
+        description: '',
+    });
+
+    const toggle = await db.stores.featureToggleStore.create(project.id, {
+        name: uuidv4(),
+        impressionData: true,
+    });
+
+    const constraintValue = {
+        contextName: 'userId',
+        operator: 'NUM_EQ',
+        value: '1',
+    };
+
+    const constraintValues = {
+        contextName: 'userId',
+        operator: 'IN',
+        values: ['a', 'b', 'c'],
+    };
+
+    const mockStrategy = (constraint: unknown) => ({
+        name: uuidv4(),
+        constraints: [constraint],
+    });
+
+    const expectValues = (res: supertest.Response, values: unknown[]) => {
+        expect(res.body.constraints.length).toEqual(1);
+        expect(res.body.constraints[0].values).toEqual(values);
+    };
+
+    const featureStrategiesPath = `/api/admin/projects/${project.id}/features/${toggle.name}/environments/default/strategies`;
+
+    await app.request
+        .post(featureStrategiesPath)
+        .send(mockStrategy(constraintValue))
+        .expect(200)
+        .expect((res) => expectValues(res, []));
+    const { body: strategy } = await app.request
+        .post(featureStrategiesPath)
+        .send(mockStrategy(constraintValues))
+        .expect(200)
+        .expect((res) => expectValues(res, constraintValues.values));
+
+    await app.request
+        .put(`${featureStrategiesPath}/${strategy.id}`)
+        .send(mockStrategy(constraintValue))
+        .expect(200)
+        .expect((res) => expectValues(res, []));
+    await app.request
+        .put(`${featureStrategiesPath}/${strategy.id}`)
+        .send(mockStrategy(constraintValues))
+        .expect(200)
+        .expect((res) => expectValues(res, constraintValues.values));
 });

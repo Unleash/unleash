@@ -28,6 +28,7 @@ import { FeatureEnvironmentStore } from './feature-environment-store';
 import { ClientMetricsStoreV2 } from './client-metrics-store-v2';
 import UserSplashStore from './user-splash-store';
 import RoleStore from './role-store';
+import SegmentStore from './segment-store';
 
 export const createStores = (
     config: IUnleashConfig,
@@ -51,7 +52,7 @@ export const createStores = (
         contextFieldStore: new ContextFieldStore(db, getLogger),
         settingStore: new SettingStore(db, getLogger),
         userStore: new UserStore(db, getLogger),
-        projectStore: new ProjectStore(db, getLogger),
+        projectStore: new ProjectStore(db, eventBus, getLogger),
         tagStore: new TagStore(db, eventBus, getLogger),
         tagTypeStore: new TagTypeStore(db, eventBus, getLogger),
         addonStore: new AddonStore(db, eventBus, getLogger),
@@ -69,6 +70,7 @@ export const createStores = (
             db,
             eventBus,
             getLogger,
+            config.experimental,
         ),
         environmentStore: new EnvironmentStore(db, eventBus, getLogger),
         featureTagStore: new FeatureTagStore(db, eventBus, getLogger),
@@ -79,6 +81,7 @@ export const createStores = (
         ),
         userSplashStore: new UserSplashStore(db, eventBus, getLogger),
         roleStore: new RoleStore(db, eventBus, getLogger),
+        segmentStore: new SegmentStore(db, eventBus, getLogger),
     };
 };
 

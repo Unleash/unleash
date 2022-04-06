@@ -2,7 +2,7 @@ import { Knex } from 'knex';
 import { Logger, LogProvider } from '../logger';
 
 import NotFoundError from '../error/notfound-error';
-import { IProject } from '../types/model';
+import { IProject, IProjectWithCount } from '../types/model';
 import {
     IProjectHealthUpdate,
     IProjectInsert,
@@ -10,6 +10,9 @@ import {
     IProjectStore,
 } from '../types/stores/project-store';
 import { DEFAULT_ENV } from '../util/constants';
+import metricsHelper from '../util/metrics-helper';
+import { DB_TIME } from '../metric-events';
+import EventEmitter from 'events';
 
 const COLUMNS = [
     'id',
@@ -21,14 +24,26 @@ const COLUMNS = [
 ];
 const TABLE = 'projects';
 
+export interface IEnvironmentProjectLink {
+    environmentName: string;
+    projectId: string;
+}
+
 class ProjectStore implements IProjectStore {
     private db: Knex;
 
     private logger: Logger;
 
-    constructor(db: Knex, getLogger: LogProvider) {
+    private timer: Function;
+
+    constructor(db: Knex, eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
         this.logger = getLogger('project-store.ts');
+        this.timer = (action) =>
+            metricsHelper.wrapTimer(eventBus, DB_TIME, {
+                store: 'project',
+                action,
+            });
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -44,11 +59,60 @@ class ProjectStore implements IProjectStore {
 
     async exists(id: string): Promise<boolean> {
         const result = await this.db.raw(
-            `SELECT EXISTS (SELECT 1 FROM ${TABLE} WHERE id = ?) AS present`,
+            `SELECT EXISTS(SELECT 1 FROM ${TABLE} WHERE id = ?) AS present`,
             [id],
         );
         const { present } = result.rows[0];
         return present;
+    }
+
+    async getProjectsWithCounts(
+        query?: IProjectQuery,
+    ): Promise<IProjectWithCount[]> {
+        const projectTimer = this.timer('getProjectsWithCount');
+        let projects = this.db(TABLE)
+            .select(
+                this.db.raw(
+                    'projects.id, projects.name, projects.description, projects.health, projects.updated_at, count(features.name) AS number_of_features',
+                ),
+            )
+            .leftJoin('features', 'features.project', 'projects.id')
+            .groupBy('projects.id')
+            .orderBy('projects.name', 'asc');
+        if (query) {
+            projects = projects.where(query);
+        }
+        const projectAndFeatureCount = await projects;
+
+        // @ts-ignore
+        const projectsWithFeatureCount = projectAndFeatureCount.map(
+            this.mapProjectWithCountRow,
+        );
+        projectTimer();
+        const memberTimer = this.timer('getMemberCount');
+        const memberCount = await this.db.raw(
+            `SELECT count(role_id) as member_count, project FROM role_user GROUP BY project`,
+        );
+        memberTimer();
+        const memberMap = new Map<string, number>(
+            memberCount.rows.map((c) => [c.project, Number(c.member_count)]),
+        );
+        return projectsWithFeatureCount.map((r) => {
+            return { ...r, memberCount: memberMap.get(r.id) };
+        });
+    }
+
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    mapProjectWithCountRow(row): IProjectWithCount {
+        return {
+            name: row.name,
+            id: row.id,
+            description: row.description,
+            health: row.health,
+            featureCount: row.number_of_features,
+            memberCount: row.number_of_users || 0,
+            updatedAt: row.updated_at,
+        };
     }
 
     async getAll(query: IProjectQuery = {}): Promise<IProject[]> {
@@ -71,7 +135,7 @@ class ProjectStore implements IProjectStore {
 
     async hasProject(id: string): Promise<boolean> {
         const result = await this.db.raw(
-            `SELECT EXISTS (SELECT 1 FROM ${TABLE} WHERE id = ?) AS present`,
+            `SELECT EXISTS(SELECT 1 FROM ${TABLE} WHERE id = ?) AS present`,
             [id],
         );
         const { present } = result.rows[0];
@@ -138,6 +202,15 @@ class ProjectStore implements IProjectStore {
         }
     }
 
+    async getProjectLinksForEnvironments(
+        environments: string[],
+    ): Promise<IEnvironmentProjectLink[]> {
+        let rows = await this.db('project_environments')
+            .select(['project_id', 'environment_name'])
+            .whereIn('environment_name', environments);
+        return rows.map(this.mapLinkRow);
+    }
+
     async deleteEnvironmentForProject(
         id: string,
         environment: string,
@@ -193,6 +266,14 @@ class ProjectStore implements IProjectStore {
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    mapLinkRow(row): IEnvironmentProjectLink {
+        return {
+            environmentName: row.environment_name,
+            projectId: row.project_id,
+        };
+    }
+
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     mapRow(row): IProject {
         if (!row) {
             throw new NotFoundError('No project found');
@@ -208,5 +289,5 @@ class ProjectStore implements IProjectStore {
         };
     }
 }
+
 export default ProjectStore;
-module.exports = ProjectStore;

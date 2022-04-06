@@ -57,7 +57,7 @@ The easiest way to run Unleash is via Docker. We have published a [docker image 
 
    ```bash
    docker run \
-      -e UNLEASH_PROXY_CLIENT_KEYS=some-public-key \
+      -e UNLEASH_PROXY_CLIENT_KEYS=some-secret \
       -e UNLEASH_URL='https://app.unleash-hosted.com/demo/api/' \
       -e UNLEASH_API_TOKEN=56907a2fa53c1d16101d509a10b78e36190b0f918d9f122d \
       -p 3000:3000 \
@@ -168,7 +168,7 @@ Refer the [custom activation strategy documentation](../advanced/custom-activati
 
 The Unleash Proxy has a very simple API. It takes the [Unleash Context](../user_guide/unleash_context) as input and will return the feature toggles relevant for that specific context.
 
-![The Unleash Proxy](/img/The-Unleash-Proxy-API.png).
+![The Unleash Proxy](/img/The-Unleash-Proxy-API.png)
 
 ### Payload
 
@@ -215,7 +215,7 @@ The data for a toggle without [variants](../advanced/feature-toggle-variants.md)
 
 - **`name`**: the name of the feature.
 - **`enabled`**: whether the toggle is enabled or not. Will always be `true`.
-- **`variant`**: describes whether the toggle has variants and, if it does, what variant is active for this user. If a toggle doesn't have any variants, it will always be `{"name": "disabled", "enabled": true}`.
+- **`variant`**: describes whether the toggle has variants and, if it does, what variant is active for this user. If a toggle doesn't have any variants, it will always be `{"name": "disabled", "enabled": false}`.
 
 :::note
 Unleash uses a fallback variant called "disabled" to indicate that a toggle has no variants. However, you are free to create a variant called "disabled" yourself. In that case you can tell them apart by checking the variant's `enabled` property: if the toggle has no variants, `enabled` will be `false`. If the toggle is the "disabled" variant that you created, it will have `enabled` set to `true`.

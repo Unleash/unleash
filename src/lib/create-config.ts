@@ -182,27 +182,47 @@ const formatServerOptions = (
     };
 };
 
-const loadInitApiTokens = () => {
-    if (process.env.INIT_ADMIN_API_TOKENS) {
-        const initApiTokens = process.env.INIT_ADMIN_API_TOKENS.split(/,\s?/);
-        const tokens = initApiTokens.map((secret) => {
-            const [project = '*', rest] = secret.split(':');
-            const [environment = '*'] = rest.split('.');
-            const token = {
-                createdAt: undefined,
-                project,
-                environment,
-                secret,
-                type: ApiTokenType.ADMIN,
-                username: 'admin',
-            };
-            validateApiToken(token);
-            return token;
-        });
-        return tokens;
-    } else {
+const loadTokensFromString = (tokenString: String, tokenType: ApiTokenType) => {
+    if (!tokenString) {
         return [];
     }
+    const initApiTokens = tokenString.split(/,\s?/);
+    const tokens = initApiTokens.map((secret) => {
+        const [project = '*', rest] = secret.split(':');
+        const [environment = '*'] = rest.split('.');
+        const token = {
+            createdAt: undefined,
+            project,
+            environment,
+            secret,
+            type: tokenType,
+            username: 'admin',
+        };
+        validateApiToken(token);
+        return token;
+    });
+    return tokens;
+};
+
+const loadInitApiTokens = () => {
+    return [
+        ...loadTokensFromString(
+            process.env.INIT_ADMIN_API_TOKENS,
+            ApiTokenType.ADMIN,
+        ),
+        ...loadTokensFromString(
+            process.env.INIT_CLIENT_API_TOKENS,
+            ApiTokenType.CLIENT,
+        ),
+    ];
+};
+
+const loadEnvironmentEnableOverrides = () => {
+    const environmentsString = process.env.ENABLED_ENVIRONMENTS;
+    if (environmentsString) {
+        return environmentsString.split(',');
+    }
+    return [];
 };
 
 export function createConfig(options: IUnleashOptions): IUnleashConfig {
@@ -263,6 +283,8 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         { initApiTokens: initApiTokens },
     ]);
 
+    const environmentEnableOverrides = loadEnvironmentEnableOverrides();
+
     const importSetting: IImportOption = mergeAll([
         defaultImport,
         options.import,
@@ -311,6 +333,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         eventHook: options.eventHook,
         enterpriseVersion: options.enterpriseVersion,
         eventBus: new EventEmitter(),
+        environmentEnableOverrides,
     };
 }
 

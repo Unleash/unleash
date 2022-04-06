@@ -6,7 +6,10 @@ import { IUser } from './user';
 export interface IConstraint {
     contextName: string;
     operator: string;
-    values: string[];
+    values?: string[];
+    value?: string;
+    inverted?: boolean;
+    caseInsensitive?: boolean;
 }
 export enum WeightType {
     VARIABLE = 'variable',
@@ -38,6 +41,7 @@ export interface FeatureToggleDTO {
     stale?: boolean;
     archived?: boolean;
     createdAt?: Date;
+    impressionData?: boolean;
 }
 
 export interface FeatureToggle extends FeatureToggleDTO {
@@ -56,6 +60,9 @@ export interface IFeatureToggleClient {
     variants: IVariant[];
     enabled: boolean;
     strategies: IStrategyConfig[];
+    impressionData?: boolean;
+    lastSeenAt?: Date;
+    createdAt?: Date;
 }
 
 export interface IFeatureEnvironmentInfo {
@@ -336,4 +343,18 @@ export interface ICustomRole {
 export interface IProjectWithCount extends IProject {
     featureCount: number;
     memberCount: number;
+}
+
+export interface ISegment {
+    id: number;
+    name: string;
+    description?: string;
+    constraints: IConstraint[];
+    createdBy?: string;
+    createdAt: Date;
+}
+
+export interface IFeatureStrategySegment {
+    featureStrategyId: string;
+    segmentId: number;
 }

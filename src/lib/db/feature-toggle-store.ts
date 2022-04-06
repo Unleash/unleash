@@ -15,6 +15,7 @@ const FEATURE_COLUMNS = [
     'stale',
     'variants',
     'created_at',
+    'impression_data',
     'last_seen_at',
 ];
 
@@ -27,6 +28,7 @@ export interface FeaturesTable {
     project: string;
     last_seen_at?: Date;
     created_at?: Date;
+    impression_data: boolean;
 }
 
 const TABLE = 'features';
@@ -166,6 +168,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             variants: sortedVariants,
             createdAt: row.created_at,
             lastSeenAt: row.last_seen_at,
+            impressionData: row.impression_data,
         };
     }
 
@@ -188,6 +191,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             archived: data.archived || false,
             stale: data.stale,
             created_at: data.createdAt,
+            impression_data: data.impressionData,
         };
         if (!row.created_at) {
             delete row.created_at;

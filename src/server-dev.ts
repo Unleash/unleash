@@ -2,6 +2,7 @@ import { start } from './lib/server-impl';
 import { createConfig } from './lib/create-config';
 import { LogLevel } from './lib/logger';
 import { ApiTokenType } from './lib/types/models/api-token';
+import { experimentalSegmentsConfig } from './lib/experimental';
 
 process.nextTick(async () => {
     try {
@@ -12,7 +13,8 @@ process.nextTick(async () => {
                     password: 'passord',
                     host: 'localhost',
                     port: 5432,
-                    database: 'unleash',
+                    database: process.env.UNLEASH_DATABASE_NAME || 'unleash',
+                    schema: process.env.UNLEASH_DATABASE_SCHEMA,
                     ssl: false,
                 },
                 server: {
@@ -29,9 +31,8 @@ process.nextTick(async () => {
                     enable: false,
                 },
                 experimental: {
-                    metricsV2: {
-                        enabled: true,
-                    },
+                    metricsV2: { enabled: true },
+                    segments: experimentalSegmentsConfig(),
                 },
                 authentication: {
                     initApiTokens: [

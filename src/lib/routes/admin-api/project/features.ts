@@ -72,7 +72,6 @@ export default class ProjectFeaturesController extends Controller {
         this.featureService = featureToggleServiceV2;
         this.logger = config.getLogger('/admin-api/project/features.ts');
 
-        // Environments
         this.get(`${PATH_ENV}`, this.getEnvironment);
         this.post(
             `${PATH_ENV}/on`,
@@ -85,7 +84,6 @@ export default class ProjectFeaturesController extends Controller {
             UPDATE_FEATURE_ENVIRONMENT,
         );
 
-        // activation strategies
         this.get(`${PATH_STRATEGIES}`, this.getStrategies);
         this.post(
             `${PATH_STRATEGIES}`,
@@ -109,12 +107,9 @@ export default class ProjectFeaturesController extends Controller {
             DELETE_FEATURE_STRATEGY,
         );
 
-        // feature toggles
         this.get(PATH, this.getFeatures);
         this.post(PATH, this.createFeature, CREATE_FEATURE);
-
         this.post(PATH_FEATURE_CLONE, this.cloneFeature, CREATE_FEATURE);
-
         this.get(PATH_FEATURE, this.getFeature);
         this.put(PATH_FEATURE, this.updateFeature, UPDATE_FEATURE);
         this.patch(PATH_FEATURE, this.patchFeature, UPDATE_FEATURE);

@@ -8,6 +8,7 @@ import NotFoundError from '../error/notfound-error';
 import {
     ProjectUserAddedEvent,
     ProjectUserRemovedEvent,
+    ProjectUserUpdateRoleEvent,
     PROJECT_CREATED,
     PROJECT_DELETED,
     PROJECT_UPDATED,
@@ -35,6 +36,8 @@ import NoAccessError from '../error/no-access-error';
 import IncompatibleProjectError from '../error/incompatible-project-error';
 import { DEFAULT_PROJECT } from '../types/project';
 import { IFeatureTagStore } from 'lib/types/stores/feature-tag-store';
+import ProjectWithoutOwnerError from '../error/project-without-owner-error';
+import { IUserStore } from 'lib/types/stores/user-store';
 
 const getCreatedBy = (user: User) => user.email || user.username;
 
@@ -64,6 +67,8 @@ export default class ProjectService {
 
     private tagStore: IFeatureTagStore;
 
+    private userStore: IUserStore;
+
     constructor(
         {
             projectStore,
@@ -73,6 +78,7 @@ export default class ProjectService {
             environmentStore,
             featureEnvironmentStore,
             featureTagStore,
+            userStore,
         }: Pick<
             IUnleashStores,
             | 'projectStore'
@@ -82,6 +88,7 @@ export default class ProjectService {
             | 'environmentStore'
             | 'featureEnvironmentStore'
             | 'featureTagStore'
+            | 'userStore'
         >,
         config: IUnleashConfig,
         accessService: AccessService,
@@ -96,28 +103,12 @@ export default class ProjectService {
         this.featureTypeStore = featureTypeStore;
         this.featureToggleService = featureToggleService;
         this.tagStore = featureTagStore;
+        this.userStore = userStore;
         this.logger = config.getLogger('services/project-service.js');
     }
 
     async getProjects(query?: IProjectQuery): Promise<IProjectWithCount[]> {
-        const projects = await this.store.getAll(query);
-        const projectsWithCount = await Promise.all(
-            projects.map(async (p) => {
-                let featureCount = 0;
-                let memberCount = 0;
-                try {
-                    featureCount =
-                        await this.featureToggleService.getFeatureCountForProject(
-                            p.id,
-                        );
-                    memberCount = await this.getMembers(p.id);
-                } catch (e) {
-                    this.logger.warn('Error fetching project counts', e);
-                }
-                return { ...p, featureCount, memberCount };
-            }),
-        );
-        return projectsWithCount;
+        return this.store.getProjectsWithCounts(query);
     }
 
     async getProject(id: string): Promise<IProject> {
@@ -295,6 +286,7 @@ export default class ProjectService {
         const [roles, users] = await this.accessService.getProjectRoleUsers(
             projectId,
         );
+        const user = await this.userStore.get(userId);
 
         const role = roles.find((r) => r.id === roleId);
         if (!role) {
@@ -314,7 +306,12 @@ export default class ProjectService {
             new ProjectUserAddedEvent({
                 project: projectId,
                 createdBy,
-                data: { roleId, userId, roleName: role.name },
+                data: {
+                    roleId,
+                    userId,
+                    roleName: role.name,
+                    email: user.email,
+                },
             }),
         );
     }
@@ -326,6 +323,32 @@ export default class ProjectService {
         userId: number,
         createdBy?: string,
     ): Promise<void> {
+        const role = await this.findProjectRole(projectId, roleId);
+
+        await this.validateAtLeastOneOwner(projectId, role);
+
+        await this.accessService.removeUserFromRole(userId, role.id, projectId);
+
+        const user = await this.userStore.get(userId);
+
+        await this.eventStore.store(
+            new ProjectUserRemovedEvent({
+                project: projectId,
+                createdBy,
+                preData: {
+                    roleId,
+                    userId,
+                    roleName: role.name,
+                    email: user.email,
+                },
+            }),
+        );
+    }
+
+    async findProjectRole(
+        projectId: string,
+        roleId: number,
+    ): Promise<IRoleDescriptor> {
         const roles = await this.accessService.getRolesForProject(projectId);
         const role = roles.find((r) => r.id === roleId);
         if (!role) {
@@ -333,24 +356,66 @@ export default class ProjectService {
                 `Couldn't find roleId=${roleId} on project=${projectId}`,
             );
         }
+        return role;
+    }
 
-        if (role.name === RoleName.OWNER) {
+    async validateAtLeastOneOwner(
+        projectId: string,
+        currentRole: IRoleDescriptor,
+    ): Promise<void> {
+        if (currentRole.name === RoleName.OWNER) {
             const users = await this.accessService.getProjectUsersForRole(
-                role.id,
+                currentRole.id,
                 projectId,
             );
             if (users.length < 2) {
-                throw new Error('A project must have at least one owner');
+                throw new ProjectWithoutOwnerError();
             }
         }
+    }
 
-        await this.accessService.removeUserFromRole(userId, role.id, projectId);
+    async changeRole(
+        projectId: string,
+        roleId: number,
+        userId: number,
+        createdBy: string,
+    ): Promise<void> {
+        const usersWithRoles = await this.getUsersWithAccess(projectId);
+        const user = usersWithRoles.users.find((u) => u.id === userId);
+        const currentRole = usersWithRoles.roles.find(
+            (r) => r.id === user.roleId,
+        );
+
+        if (currentRole.id === roleId) {
+            // Nothing to do....
+            return;
+        }
+
+        await this.validateAtLeastOneOwner(projectId, currentRole);
+
+        await this.accessService.updateUserProjectRole(
+            userId,
+            roleId,
+            projectId,
+        );
+        const role = await this.findProjectRole(projectId, roleId);
 
         await this.eventStore.store(
-            new ProjectUserRemovedEvent({
+            new ProjectUserUpdateRoleEvent({
                 project: projectId,
                 createdBy,
-                preData: { roleId, userId, roleName: role.name },
+                preData: {
+                    userId,
+                    roleId: currentRole.id,
+                    roleName: currentRole.name,
+                    email: user.email,
+                },
+                data: {
+                    userId,
+                    roleId,
+                    roleName: role.name,
+                    email: user.email,
+                },
             }),
         );
     }
@@ -383,5 +448,3 @@ export default class ProjectService {
         };
     }
 }
-
-module.exports = ProjectService;

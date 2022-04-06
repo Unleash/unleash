@@ -3,6 +3,7 @@ import { createTestConfig } from '../../test/config/test-config';
 import { IUnleashConfig } from '../server-impl';
 import { ApiTokenType } from '../types/models/api-token';
 import FakeApiTokenStore from '../../test/fixtures/fake-api-token-store';
+import FakeEnvironmentStore from '../../test/fixtures/fake-environment-store';
 
 test('Should init api token', async () => {
     const token = {
@@ -19,11 +20,12 @@ test('Should init api token', async () => {
         },
     });
     const apiTokenStore = new FakeApiTokenStore();
+    const environmentStore = new FakeEnvironmentStore();
     const insertCalled = new Promise((resolve) => {
         apiTokenStore.on('insert', resolve);
     });
 
-    new ApiTokenService({ apiTokenStore }, config);
+    new ApiTokenService({ apiTokenStore, environmentStore }, config);
 
     await insertCalled;
 

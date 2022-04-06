@@ -5,9 +5,15 @@ title: Activation Strategies
 
 It is powerful to be able to turn a feature on and off instantaneously, without redeploying the application. The next level of control comes when you are able to enable a feature for specific users or enable it for a small subset of users. We achieve this level of control with the help of activation strategies. The most straightforward strategy is the standard strategy, which basically means that the feature should be enabled to everyone.
 
-The definition of an activation strategy lives in the Unleash API and can be created via the Unleash UI. The implementation of activation strategies lives in various client implementations.
+Unleash comes with a number of built-in strategies (described below) and also lets you add your own [custom activation strategies](../advanced/custom-activation-strategy.md) if you need more control.
+However, while activation strategies are *defined* on the server, the server does not *implement* the strategies. Instead, activation strategy implementation is done client-side. This means that it is *the client* that decides whether a feature should be enabled or not.
 
-Unleash comes with a few common activation strategies. Some of them require the client to provide the [unleash-context](unleash-context.md), which gives the necessary context for Unleash. The built-in activation strategies are:
+All [server-side client SDKs](../sdks/index.md#server-side-sdks) and the [Unleash Proxy](../sdks/unleash-proxy.md) implement the default strategies (and allow you to add your own [custom strategy implementations](../advanced/custom-activation-strategy.md#implementation)).
+The [front-end client SDKs](../sdks/index.md#front-end-sdks) do not do the evaluation themselves, instead relying on the [Unleash Proxy](../sdks/unleash-proxy.md) to take care of the implementation and evaluation.
+
+Some activation strategies require the client to provide the current [Unleash context](unleash-context.md) to the toggle evaluation function for the evaluation to be done correctly.
+
+The following activation strategies are bundled with Unleash and always available:
 
 - [Standard](#standard)
 - [UserIDs](#userids)

@@ -3,17 +3,25 @@ import {
     IProjectInsert,
     IProjectStore,
 } from '../../lib/types/stores/project-store';
-import { IProject } from '../../lib/types/model';
+import { IProject, IProjectWithCount } from '../../lib/types/model';
 import NotFoundError from '../../lib/error/notfound-error';
+import { IEnvironmentProjectLink } from 'lib/db/project-store';
 
 export default class FakeProjectStore implements IProjectStore {
+    projects: IProject[] = [];
+
+    projectEnvironment: Map<string, Set<string>> = new Map();
+
     getEnvironmentsForProject(): Promise<string[]> {
         throw new Error('Method not implemented.');
     }
 
-    projects: IProject[] = [];
-
-    projectEnvironment: Map<string, Set<string>> = new Map();
+    getProjectLinksForEnvironments(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        environments: string[],
+    ): Promise<IEnvironmentProjectLink[]> {
+        throw new Error('Method not implemented.');
+    }
 
     async addEnvironmentToProject(
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -24,6 +32,12 @@ export default class FakeProjectStore implements IProjectStore {
         const environments = this.projectEnvironment.get(id) || new Set();
         environments.add(environment);
         this.projectEnvironment.set(id, environments);
+    }
+
+    async getProjectsWithCounts(): Promise<IProjectWithCount[]> {
+        return this.projects.map((p) => {
+            return { ...p, memberCount: 0, featureCount: 0 };
+        });
     }
 
     private createInternal(project: IProjectInsert): IProject {

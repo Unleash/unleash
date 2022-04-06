@@ -1,4 +1,5 @@
 import joi from 'joi';
+import { ALL_OPERATORS } from '../util/constants';
 import { nameType } from '../routes/util';
 
 export const nameSchema = joi
@@ -7,9 +8,16 @@ export const nameSchema = joi
     .options({ stripUnknown: true, allowUnknown: false, abortEarly: false });
 
 export const constraintSchema = joi.object().keys({
-    contextName: joi.string(),
-    operator: joi.string(),
-    values: joi.array().items(joi.string().min(1).max(100)).min(1).optional(),
+    contextName: joi.string().required(),
+    operator: joi
+        .string()
+        .valid(...ALL_OPERATORS)
+        .required(),
+    // Constraints must have a values array to support legacy SDKs.
+    values: joi.array().items(joi.string().min(1).max(100)).default([]),
+    value: joi.optional(),
+    caseInsensitive: joi.boolean().optional(),
+    inverted: joi.boolean().optional(),
 });
 
 export const strategiesSchema = joi.object().keys({
@@ -56,6 +64,12 @@ export const featureMetadataSchema = joi
         archived: joi.boolean().default(false),
         type: joi.string().default('release'),
         description: joi.string().allow('').allow(null).optional(),
+        impressionData: joi
+            .boolean()
+            .allow(true)
+            .allow(false)
+            .default(false)
+            .optional(),
         createdAt: joi.date().optional().allow(null),
     })
     .options({ allowUnknown: false, stripUnknown: true, abortEarly: false });
@@ -70,6 +84,12 @@ export const featureSchema = joi
         type: joi.string().default('release'),
         project: joi.string().default('default'),
         description: joi.string().allow('').allow(null).optional(),
+        impressionData: joi
+            .boolean()
+            .allow(true)
+            .allow(false)
+            .default(false)
+            .optional(),
         strategies: joi
             .array()
             .min(0)

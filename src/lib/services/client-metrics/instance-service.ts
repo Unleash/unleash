@@ -18,6 +18,7 @@ import { clientRegisterSchema } from './schema';
 import { minutesToMilliseconds, secondsToMilliseconds } from 'date-fns';
 import { IClientMetricsStoreV2 } from '../../types/stores/client-metrics-store-v2';
 import { clientMetricsSchema } from './schema';
+import { PartialSome } from '../../types/partial';
 
 export default class ClientInstanceService {
     apps = {};
@@ -90,7 +91,7 @@ export default class ClientInstanceService {
     }
 
     public async registerInstance(
-        data: IClientApp,
+        data: PartialSome<IClientApp, 'instanceId'>,
         clientIp: string,
     ): Promise<void> {
         const value = await clientMetricsSchema.validateAsync(data);
@@ -103,7 +104,7 @@ export default class ClientInstanceService {
     }
 
     public async registerClient(
-        data: IClientApp,
+        data: PartialSome<IClientApp, 'instanceId'>,
         clientIp: string,
     ): Promise<void> {
         const value = await clientRegisterSchema.validateAsync(data);

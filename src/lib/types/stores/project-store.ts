@@ -1,4 +1,5 @@
-import { IProject } from '../model';
+import { IEnvironmentProjectLink } from 'lib/db/project-store';
+import { IProject, IProjectWithCount } from '../model';
 import { Store } from './store';
 
 export interface IProjectInsert {
@@ -32,6 +33,10 @@ export interface IProjectStore extends Store<IProject, string> {
     deleteEnvironmentForProject(id: string, environment: string): Promise<void>;
     getEnvironmentsForProject(id: string): Promise<string[]>;
     getMembers(projectId: string): Promise<number>;
+    getProjectsWithCounts(query?: IProjectQuery): Promise<IProjectWithCount[]>;
     count(): Promise<number>;
     getAll(query?: IProjectQuery): Promise<IProject[]>;
+    getProjectLinksForEnvironments(
+        environments: string[],
+    ): Promise<IEnvironmentProjectLink[]>;
 }

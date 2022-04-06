@@ -66,6 +66,8 @@ export const handleErrors: (
             return res.status(409).json(error).end();
         case 'RoleInUseError':
             return res.status(400).json(error).end();
+        case 'ProjectWithoutOwnerError':
+            return res.status(409).json(error).end();
         default:
             logger.error('Server failed executing request', error);
             return res.status(500).end();

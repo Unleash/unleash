@@ -14,6 +14,7 @@ import {
     IStrategyConfig,
 } from '../types/model';
 import { IFeatureStrategiesStore } from '../types/stores/feature-strategies-store';
+import { PartialSome } from '../types/partial';
 
 const COLUMNS = [
     'id',
@@ -36,6 +37,7 @@ const mapperToColumnNames = {
 const T = {
     features: 'features',
     featureStrategies: 'feature_strategies',
+    featureStrategySegment: 'feature_strategy_segment',
     featureEnvs: 'feature_environments',
 };
 
@@ -128,7 +130,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
 
     async exists(key: string): Promise<boolean> {
         const result = await this.db.raw(
-            `SELECT EXISTS (SELECT 1 FROM ${T.featureStrategies} WHERE id = ?) AS present`,
+            `SELECT EXISTS(SELECT 1 FROM ${T.featureStrategies} WHERE id = ?) AS present`,
             [key],
         );
         const { present } = result.rows[0];
@@ -148,9 +150,9 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
     }
 
     async createStrategyFeatureEnv(
-        strategyConfig: Omit<IFeatureStrategy, 'id' | 'createdAt'>,
+        strategyConfig: PartialSome<IFeatureStrategy, 'id' | 'createdAt'>,
     ): Promise<IFeatureStrategy> {
-        const strategyRow = mapInput({ ...strategyConfig, id: uuidv4() });
+        const strategyRow = mapInput({ id: uuidv4(), ...strategyConfig });
         const rows = await this.db<IFeatureStrategiesTable>(T.featureStrategies)
             .insert(strategyRow)
             .returning('*');
@@ -206,6 +208,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 'features.project as project',
                 'features.stale as stale',
                 'features.variants as variants',
+                'features.impression_data as impression_data',
                 'features.created_at as created_at',
                 'features.last_seen_at as last_seen_at',
                 'feature_environments.enabled as enabled',
@@ -249,6 +252,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                     acc.environments = {};
                 }
                 acc.name = r.name;
+                acc.impressionData = r.impression_data;
                 acc.description = r.description;
                 acc.project = r.project;
                 acc.stale = r.stale;
@@ -419,6 +423,27 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         await this.db(T.featureStrategies)
             .where({ feature_name: featureName })
             .update({ project_name: newProjectId });
+    }
+
+    async getStrategiesBySegment(
+        segmentId: number,
+    ): Promise<IFeatureStrategy[]> {
+        const stopTimer = this.timer('getStrategiesBySegment');
+        const rows = await this.db
+            .select(this.prefixColumns())
+            .from<IFeatureStrategiesTable>(T.featureStrategies)
+            .join(
+                T.featureStrategySegment,
+                `${T.featureStrategySegment}.feature_strategy_id`,
+                `${T.featureStrategies}.id`,
+            )
+            .where(`${T.featureStrategySegment}.segment_id`, '=', segmentId);
+        stopTimer();
+        return rows.map(mapRow);
+    }
+
+    prefixColumns(): string[] {
+        return COLUMNS.map((c) => `${T.featureStrategies}.${c}`);
     }
 }
 

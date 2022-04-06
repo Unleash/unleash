@@ -220,6 +220,14 @@ export class AccessService {
         return this.store.removeUserFromRole(userId, roleId, projectId);
     }
 
+    async updateUserProjectRole(
+        userId: number,
+        roleId: number,
+        projectId: string,
+    ): Promise<void> {
+        return this.store.updateUserProjectRole(userId, roleId, projectId);
+    }
+
     //This actually only exists for testing purposes
     async addPermissionToRole(
         roleId: number,
@@ -398,7 +406,7 @@ export class AccessService {
         const rolePermissions = role.permissions;
         const newRole = await this.roleStore.create(baseRole);
         if (rolePermissions) {
-            this.store.addEnvironmentPermissionsToRole(
+            await this.store.addEnvironmentPermissionsToRole(
                 newRole.id,
                 rolePermissions,
             );
@@ -417,8 +425,8 @@ export class AccessService {
         const rolePermissions = role.permissions;
         const newRole = await this.roleStore.update(baseRole);
         if (rolePermissions) {
-            this.store.wipePermissionsFromRole(newRole.id);
-            this.store.addEnvironmentPermissionsToRole(
+            await this.store.wipePermissionsFromRole(newRole.id);
+            await this.store.addEnvironmentPermissionsToRole(
                 newRole.id,
                 rolePermissions,
             );

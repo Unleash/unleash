@@ -181,7 +181,7 @@ export class AccessStore implements IAccessStore {
                 environment: permission.environment,
             };
         });
-        this.db.batchInsert(T.ROLE_PERMISSION, rows);
+        await this.db.batchInsert(T.ROLE_PERMISSION, rows);
     }
 
     async unlinkUserRoles(userId: number): Promise<void> {
@@ -245,6 +245,19 @@ export class AccessStore implements IAccessStore {
                 project: projectId,
             })
             .delete();
+    }
+
+    async updateUserProjectRole(
+        userId: number,
+        roleId: number,
+        projectId: string,
+    ): Promise<void> {
+        return this.db(T.ROLE_USER)
+            .where({
+                user_id: userId,
+                project: projectId,
+            })
+            .update('role_id', roleId);
     }
 
     async removeRolesOfTypeForUser(

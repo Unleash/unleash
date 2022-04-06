@@ -10,32 +10,87 @@
     --unleash-color-purple: #635dc5;
     --unleash-color-gray: #ecebeb;
 
-    --unleash-color-admonition-background: var(--unleash-color-gray);
-    --unleash-color-admonition-border: #999;
-    --unleash-color-admonition-text: #2b2b2b;
-
-    --ifm-color-primary: #39535b;
-    --ifm-color-primary-dark: #334b52;
-    --ifm-color-primary-darker: #30474d;
-    --ifm-color-primary-darkest: #283a40;
-    --ifm-color-primary-light: #3f5b64;
-    --ifm-color-primary-lighter: #425f69;
-    --ifm-color-primary-lightest: #4a6c76;
     --ifm-code-font-size: 90%;
     --ifm-font-size-base: 15px;
-    --ifm-link-color: var(--unleash-color-purple);
-    --ifm-menu-color-background-active: var(--unleash-color-gray);
-    --ifm-menu-color-background-hover: var(--unleash-color-gray);
     --navbar-link-color: #122d33;
 }
-
 
 footer {
     --ifm-footer-link-hover-color: var(--ifm-footer-link-color);
 }
 
+html[data-theme='light'] {
+    --ifm-color-primary-lightest: #8783d2;
+    --ifm-color-primary-lighter: #7b76ce;
+    --ifm-color-primary-light: #6f6ac9;
+    --ifm-color-primary: var(--unleash-color-purple);
+    --ifm-color-primary-dark: #5953be;
+    --ifm-color-primary-darker: #4f4ab7;
+    --ifm-color-primary-darkest: #4540b0;
+
+    --ifm-menu-color-background-active: var(--unleash-color-gray);
+    --ifm-menu-color-background-hover: var(--unleash-color-gray);
+
+    --unleash-color-admonition-background: var(--unleash-color-gray);
+    --unleash-color-admonition-border: #999;
+    --unleash-color-admonition-text: #2b2b2b;
+
+    --ifm-background-color: #fff;
+}
+
+html[data-theme='dark'] {
+    --ifm-color-primary-lightest: #d1d1ff;
+    --ifm-color-primary-lighter: #c9c9ff;
+    --ifm-color-primary-light: #c2c0ff;
+    --ifm-color-primary: #bab8ff;
+    --ifm-color-primary-dark: #a09de4;
+    --ifm-color-primary-darker: #8582c9;
+    --ifm-color-primary-darkest: #6b67ae;
+
+    --unleash-color-purple: var(--ifm-color-primary);
+    --unleash-color-gray: #333;
+    --ifm-menu-color-background-active: var(--unleash-color-gray);
+    --ifm-menu-color-background-hover: var(--unleash-color-gray);
+
+    --ifm-link-color: var(--ifm-color-primary);
+
+    --unleash-color-admonition-background: var(
+        --ifm-color-secondary-contrast-background
+    );
+
+    --unleash-img-background-color: #fff;
+
+    --docsearch-primary-color: var(--ifm-color-primary-darkest);
+}
+
+.visually-hidden {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: auto;
+    margin: 0;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+    white-space: nowrap;
+}
+
+main img {
+    background: var(--unleash-img-background-color);
+    display: block;
+    margin: auto;
+    border: var(--ifm-global-border-width) solid var(--unleash-color-gray);
+    border-radius: var(--ifm-global-radius);
+    box-shadow: var(--ifm-global-shadow-lw);
+}
+
 [class^='docTitle'] {
     font-size: 2.5rem !important;
+}
+
+.navbar-sidebar__back {
+    /* hide the 'back to main menu' item in the narrow menu. */
+    display: none;
 }
 
 li.theme-doc-sidebar-item-category-level-1 > div::before {

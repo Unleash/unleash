@@ -41,6 +41,7 @@ export const PROJECT_DELETED = 'project-deleted';
 export const PROJECT_IMPORT = 'project-import';
 export const PROJECT_USER_ADDED = 'project-user-added';
 export const PROJECT_USER_REMOVED = 'project-user-removed';
+export const PROJECT_USER_ROLE_CHANGED = 'project-user-role-changed';
 export const DROP_PROJECTS = 'drop-projects';
 export const TAG_CREATED = 'tag-created';
 export const TAG_DELETED = 'tag-deleted';
@@ -60,6 +61,9 @@ export const USER_UPDATED = 'user-updated';
 export const USER_DELETED = 'user-deleted';
 export const DROP_ENVIRONMENTS = 'drop-environments';
 export const ENVIRONMENT_IMPORT = 'environment-import';
+export const SEGMENT_CREATED = 'segment-created';
+export const SEGMENT_UPDATED = 'segment-updated';
+export const SEGMENT_DELETED = 'segment-deleted';
 
 export const CLIENT_METRICS = 'client-metrics';
 
@@ -409,6 +413,27 @@ export class ProjectUserRemovedEvent extends BaseEvent {
         const { project, preData } = p;
         this.project = project;
         this.data = null;
+        this.preData = preData;
+    }
+}
+
+export class ProjectUserUpdateRoleEvent extends BaseEvent {
+    readonly project: string;
+
+    readonly data: any;
+
+    readonly preData: any;
+
+    constructor(eventData: {
+        project: string;
+        createdBy: string;
+        data: any;
+        preData: any;
+    }) {
+        super(PROJECT_USER_REMOVED, eventData.createdBy);
+        const { project, data, preData } = eventData;
+        this.project = project;
+        this.data = data;
         this.preData = preData;
     }
 }

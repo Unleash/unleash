@@ -6,6 +6,7 @@ import NameExistsError from '../error/name-exists-error';
 import InvalidOperationError from '../error/invalid-operation-error';
 import { FOREIGN_KEY_VIOLATION } from '../error/db-error';
 import {
+    constraintSchema,
     featureMetadataSchema,
     nameSchema,
     variantsArraySchema,
@@ -39,6 +40,7 @@ import {
     FeatureToggleDTO,
     FeatureToggleLegacy,
     FeatureToggleWithEnvironment,
+    IConstraint,
     IEnvironmentDetail,
     IFeatureEnvironmentInfo,
     IFeatureOverview,
@@ -50,9 +52,23 @@ import {
 } from '../types/model';
 import { IFeatureEnvironmentStore } from '../types/stores/feature-environment-store';
 import { IFeatureToggleClientStore } from '../types/stores/feature-toggle-client-store';
-import { DEFAULT_ENV } from '../util/constants';
+import {
+    DATE_OPERATORS,
+    DEFAULT_ENV,
+    NUM_OPERATORS,
+    SEMVER_OPERATORS,
+    STRING_OPERATORS,
+} from '../util/constants';
 import { applyPatch, deepClone, Operation } from 'fast-json-patch';
 import { OperationDeniedError } from '../error/operation-denied-error';
+import {
+    validateDate,
+    validateLegalValues,
+    validateNumber,
+    validateSemver,
+    validateString,
+} from '../util/validators/constraint-types';
+import { IContextFieldStore } from 'lib/types/stores/context-field-store';
 
 interface IFeatureContext {
     featureName: string;
@@ -62,6 +78,10 @@ interface IFeatureContext {
 interface IFeatureStrategyContext extends IFeatureContext {
     environment: string;
 }
+
+const oneOf = (values: string[], match: string) => {
+    return values.some((value) => value === match);
+};
 
 class FeatureToggleService {
     private logger: Logger;
@@ -80,6 +100,8 @@ class FeatureToggleService {
 
     private eventStore: IEventStore;
 
+    private contextFieldStore: IContextFieldStore;
+
     constructor(
         {
             featureStrategiesStore,
@@ -89,6 +111,7 @@ class FeatureToggleService {
             eventStore,
             featureTagStore,
             featureEnvironmentStore,
+            contextFieldStore,
         }: Pick<
             IUnleashStores,
             | 'featureStrategiesStore'
@@ -98,6 +121,7 @@ class FeatureToggleService {
             | 'eventStore'
             | 'featureTagStore'
             | 'featureEnvironmentStore'
+            | 'contextFieldStore'
         >,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
     ) {
@@ -109,6 +133,7 @@ class FeatureToggleService {
         this.projectStore = projectStore;
         this.eventStore = eventStore;
         this.featureEnvironmentStore = featureEnvironmentStore;
+        this.contextFieldStore = contextFieldStore;
     }
 
     async validateFeatureContext({
@@ -138,6 +163,65 @@ class FeatureToggleService {
                 'You can not change the featureName for an activation strategy.',
             );
         }
+    }
+
+    async validateConstraints(
+        constraints: IConstraint[],
+    ): Promise<IConstraint[]> {
+        const validations = constraints.map((constraint) => {
+            return this.validateConstraint(constraint);
+        });
+
+        return Promise.all(validations);
+    }
+
+    async validateConstraint(input: IConstraint): Promise<IConstraint> {
+        const constraint = await constraintSchema.validateAsync(input);
+        const { operator } = constraint;
+        const contextDefinition = await this.contextFieldStore.get(
+            constraint.contextName,
+        );
+
+        if (oneOf(NUM_OPERATORS, operator)) {
+            await validateNumber(constraint.value);
+        }
+
+        if (oneOf(STRING_OPERATORS, operator)) {
+            await validateString(constraint.values);
+        }
+
+        if (oneOf(SEMVER_OPERATORS, operator)) {
+            // Semver library is not asynchronous, so we do not
+            // need to await here.
+            validateSemver(constraint.value);
+        }
+
+        if (oneOf(DATE_OPERATORS, operator)) {
+            await validateDate(constraint.value);
+        }
+
+        if (
+            oneOf(
+                [...DATE_OPERATORS, ...SEMVER_OPERATORS, ...NUM_OPERATORS],
+                operator,
+            )
+        ) {
+            if (contextDefinition?.legalValues?.length > 0) {
+                validateLegalValues(
+                    contextDefinition.legalValues,
+                    constraint.value,
+                );
+            }
+        } else {
+            if (contextDefinition?.legalValues?.length > 0) {
+                validateLegalValues(
+                    contextDefinition.legalValues,
+                    constraint.values,
+                );
+            }
+        }
+
+        return constraint;
     }
 
     async patchFeature(
@@ -200,6 +284,13 @@ class FeatureToggleService {
     ): Promise<IStrategyConfig> {
         const { featureName, projectId, environment } = context;
         await this.validateFeatureContext(context);
+
+        if (strategyConfig.constraints?.length > 0) {
+            strategyConfig.constraints = await this.validateConstraints(
+                strategyConfig.constraints,
+            );
+        }
+
         try {
             const newFeatureStrategy =
                 await this.featureStrategiesStore.createStrategyFeatureEnv({
@@ -257,6 +348,12 @@ class FeatureToggleService {
         this.validateFeatureStrategyContext(existingStrategy, context);
 
         if (existingStrategy.id === id) {
+            if (updates.constraints?.length > 0) {
+                updates.constraints = await this.validateConstraints(
+                    updates.constraints,
+                );
+            }
+
             const strategy = await this.featureStrategiesStore.updateStrategy(
                 id,
                 updates,

@@ -15,7 +15,7 @@ export const clientMetricsSchema = joi
     .keys({
         environment: joi.string().optional(),
         appName: joi.string().required(),
-        instanceId: joi.string().required(),
+        instanceId: joi.string().default('default'),
         bucket: joi
             .object()
             .required()
@@ -48,7 +48,7 @@ export const clientRegisterSchema = joi
     .options({ stripUnknown: true })
     .keys({
         appName: joi.string().required(),
-        instanceId: joi.string().required(),
+        instanceId: joi.string().default('default'),
         sdkVersion: joi.string().optional(),
         strategies: joi
             .array()

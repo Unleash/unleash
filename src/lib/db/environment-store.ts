@@ -163,6 +163,28 @@ export default class EnvironmentStore implements IEnvironmentStore {
         return mapRow(row[0]);
     }
 
+    async disable(environments: IEnvironment[]): Promise<void> {
+        await this.db(TABLE)
+            .update({
+                enabled: false,
+            })
+            .whereIn(
+                'name',
+                environments.map((env) => env.name),
+            );
+    }
+
+    async enable(environments: IEnvironment[]): Promise<void> {
+        await this.db(TABLE)
+            .update({
+                enabled: true,
+            })
+            .whereIn(
+                'name',
+                environments.map((env) => env.name),
+            );
+    }
+
     async delete(name: string): Promise<void> {
         await this.db(TABLE).where({ name, protected: false }).del();
     }

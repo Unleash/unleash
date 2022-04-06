@@ -1,17 +1,21 @@
 import { weightTypes } from '../feature/FeatureView/FeatureVariants/FeatureVariantsList/AddFeatureVariant/enums';
+import { IFlags } from 'interfaces/uiConfig';
+import { IRoute } from 'interfaces/route';
+import { IFeatureVariant } from 'interfaces/featureToggle';
 
-export const filterByFlags = flags => r => {
-    if (r.flag && !flags[r.flag]) {
-        return false;
+export const filterByFlags = (flags: IFlags) => (r: IRoute) => {
+    if (!r.flag) {
+        return true;
     }
-    return true;
+
+    return (flags as unknown as Record<string, boolean>)[r.flag];
 };
 
 export const scrollToTop = () => {
     window.scrollTo(0, 0);
 };
 
-export const trim = value => {
+export const trim = (value: string): string => {
     if (value && value.trim) {
         return value.trim();
     } else {
@@ -19,7 +23,7 @@ export const trim = value => {
     }
 };
 
-export function updateWeight(variants, totalWeight) {
+export function updateWeight(variants: IFeatureVariant[], totalWeight: number) {
     if (variants.length === 0) {
         return [];
     }
@@ -48,7 +52,9 @@ export function updateWeight(variants, totalWeight) {
         throw new Error('There must be at least one variable variant');
     }
 
-    const percentage = parseInt(remainingPercentage / variableVariantCount);
+    const percentage = parseInt(
+        String(remainingPercentage / variableVariantCount)
+    );
 
     return variants.map(variant => {
         if (variant.weightType !== weightTypes.FIX) {

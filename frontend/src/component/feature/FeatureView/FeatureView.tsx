@@ -141,7 +141,6 @@ export const FeatureView = () => {
                                     permission={CREATE_FEATURE}
                                     projectId={projectId}
                                     data-loading
-                                    // @ts-expect-error
                                     component={Link}
                                     to={`/projects/${projectId}/features/${featureId}/strategies/copy`}
                                 >

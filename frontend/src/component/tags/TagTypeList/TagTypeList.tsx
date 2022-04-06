@@ -27,10 +27,14 @@ import useTagTypes from 'hooks/api/getters/useTagTypes/useTagTypes';
 import useToast from 'hooks/useToast';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { ITagType } from 'interfaces/tags';
 
 export const TagTypeList = () => {
     const { hasAccess } = useContext(AccessContext);
-    const [deletion, setDeletion] = useState({ open: false });
+    const [deletion, setDeletion] = useState<{
+        open: boolean;
+        name?: string;
+    }>({ open: false });
     const history = useHistory();
     const smallScreen = useMediaQuery('(max-width:700px)');
     const { deleteTagType } = useTagTypesApi();
@@ -39,14 +43,16 @@ export const TagTypeList = () => {
 
     const deleteTag = async () => {
         try {
-            await deleteTagType(deletion.name);
-            refetch();
-            setDeletion({ open: false });
-            setToastData({
-                type: 'success',
-                show: true,
-                text: 'Successfully deleted tag type.',
-            });
+            if (deletion.name) {
+                await deleteTagType(deletion.name);
+                refetch();
+                setDeletion({ open: false });
+                setToastData({
+                    type: 'success',
+                    show: true,
+                    title: 'Successfully deleted tag type.',
+                });
+            }
         } catch (error) {
             setToastApiError(formatUnknownError(error));
         }
@@ -91,7 +97,7 @@ export const TagTypeList = () => {
         />
     );
 
-    const renderTagType = tagType => {
+    const renderTagType = (tagType: ITagType) => {
         let link = (
             <Link to={`/tag-types/edit/${tagType.name}`}>
                 <strong>{tagType.name}</strong>
@@ -126,7 +132,7 @@ export const TagTypeList = () => {
                     component={Link}
                     to={`/tag-types/edit/${tagType.name}`}
                 >
-                    <Edit className={styles.icon} />
+                    <Edit className={styles.icon} titleAccess="Edit tag type" />
                 </PermissionIconButton>
                 <ConditionallyRender
                     condition={hasAccess(DELETE_TAG_TYPE)}

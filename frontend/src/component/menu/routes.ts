@@ -50,26 +50,9 @@ import { CreateUnleashContextPage } from 'component/context/CreateUnleashContext
 import { CreateSegment } from 'component/segments/CreateSegment/CreateSegment';
 import { EditSegment } from 'component/segments/EditSegment/EditSegment';
 import { SegmentsList } from 'component/segments/SegmentList/SegmentList';
-import { FunctionComponent } from 'react';
+import { IRoute } from 'interfaces/route';
 
-interface Route {
-    path: string;
-    title: string;
-    type: string;
-    layout?: string;
-    parent?: string;
-    flag?: string;
-    hidden?: Boolean;
-    component: FunctionComponent;
-
-    menu: {
-        mobile?: boolean;
-        advanced?: boolean;
-        adminSettings?: boolean;
-    };
-}
-
-export const routes: Route[] = [
+export const routes: IRoute[] = [
     // Splash
     {
         path: '/splash/:splashId',

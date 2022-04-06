@@ -49,7 +49,6 @@ const FeatureOverviewMetaData = () => {
                                     <PermissionIconButton
                                         projectId={projectId}
                                         permission={UPDATE_FEATURE}
-                                        // @ts-expect-error
                                         component={Link}
                                         to={`/projects/${projectId}/features/${featureId}/settings`}
                                     >
@@ -65,7 +64,6 @@ const FeatureOverviewMetaData = () => {
                                     <PermissionIconButton
                                         projectId={projectId}
                                         permission={UPDATE_FEATURE}
-                                        // @ts-expect-error
                                         component={Link}
                                         to={`/projects/${projectId}/features/${featureId}/settings`}
                                     >

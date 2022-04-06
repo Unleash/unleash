@@ -69,7 +69,7 @@ const Constraint = ({
                 show={
                     <div className={styles.btnContainer}>
                         <PermissionIconButton
-                            onClick={editCallback}
+                            onClick={editCallback!}
                             permission={UPDATE_FEATURE}
                             projectId={projectId}
                             disabled={disabledEdit}
@@ -78,7 +78,7 @@ const Constraint = ({
                         </PermissionIconButton>
 
                         <PermissionIconButton
-                            onClick={deleteCallback}
+                            onClick={deleteCallback!}
                             permission={UPDATE_FEATURE}
                             projectId={projectId}
                         >

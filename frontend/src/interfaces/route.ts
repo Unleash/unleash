@@ -1,14 +1,19 @@
-import React from 'react';
+import { FunctionComponent } from 'react';
 
-interface IRoute {
+export interface IRoute {
     path: string;
-    icon?: string;
-    title?: string;
-    component: React.ComponentType;
+    title: string;
     type: string;
-    hidden?: boolean;
-    flag?: string;
+    layout?: string;
     parent?: string;
+    flag?: string;
+    hidden?: boolean;
+    component: FunctionComponent;
+    menu: IRouteMenu;
 }
 
-export default IRoute;
+interface IRouteMenu {
+    mobile?: boolean;
+    advanced?: boolean;
+    adminSettings?: boolean;
+}

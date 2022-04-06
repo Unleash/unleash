@@ -10,7 +10,7 @@ import {
     sortFeaturesByExpiredAtDescending,
     sortFeaturesByStatusAscending,
     sortFeaturesByStatusDescending,
-} from '../component/Reporting/utils';
+} from 'component/Reporting/utils';
 
 import {
     LAST_SEEN,
@@ -19,7 +19,8 @@ import {
     EXPIRED,
     STATUS,
     REPORT,
-} from '../component/Reporting/constants';
+} from 'component/Reporting/constants';
+import { IFeatureToggleListItem } from 'interfaces/featureToggle';
 
 const useSort = () => {
     const [sortData, setSortData] = useState({
@@ -27,7 +28,7 @@ const useSort = () => {
         ascending: true,
     });
 
-    const handleSortName = features => {
+    const handleSortName = (features: IFeatureToggleListItem[]) => {
         if (sortData.ascending) {
             return sortFeaturesByNameAscending(features);
         }
@@ -35,35 +36,35 @@ const useSort = () => {
         return sortFeaturesByNameDescending(features);
     };
 
-    const handleSortLastSeen = features => {
+    const handleSortLastSeen = (features: IFeatureToggleListItem[]) => {
         if (sortData.ascending) {
             return sortFeaturesByLastSeenAscending(features);
         }
         return sortFeaturesByLastSeenDescending(features);
     };
 
-    const handleSortCreatedAt = features => {
+    const handleSortCreatedAt = (features: IFeatureToggleListItem[]) => {
         if (sortData.ascending) {
             return sortFeaturesByCreatedAtAscending(features);
         }
         return sortFeaturesByCreatedAtDescending(features);
     };
 
-    const handleSortExpiredAt = features => {
+    const handleSortExpiredAt = (features: IFeatureToggleListItem[]) => {
         if (sortData.ascending) {
             return sortFeaturesByExpiredAtAscending(features);
         }
         return sortFeaturesByExpiredAtDescending(features);
     };
 
-    const handleSortStatus = features => {
+    const handleSortStatus = (features: IFeatureToggleListItem[]) => {
         if (sortData.ascending) {
             return sortFeaturesByStatusAscending(features);
         }
         return sortFeaturesByStatusDescending(features);
     };
 
-    const sort = features => {
+    const sort = (features: IFeatureToggleListItem[]) => {
         switch (sortData.sortKey) {
             case NAME:
                 return handleSortName(features);

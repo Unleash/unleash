@@ -9,15 +9,17 @@ import {
     sortFeaturesByExpiredAtDescending,
     sortFeaturesByStatusAscending,
     sortFeaturesByStatusDescending,
-} from './utils';
+} from 'component/Reporting/utils';
+import { IFeatureToggleListItem } from 'interfaces/featureToggle';
 
-const getTestData = () => [
+const getTestData = (): IFeatureToggleListItem[] => [
     {
         name: 'abe',
         createdAt: '2021-02-14T02:42:34.515Z',
         lastSeenAt: '2021-02-21T19:34:21.830Z',
         type: 'release',
         stale: false,
+        environments: [],
     },
     {
         name: 'bet',
@@ -25,6 +27,7 @@ const getTestData = () => [
         lastSeenAt: '2021-02-19T19:34:21.830Z',
         type: 'release',
         stale: false,
+        environments: [],
     },
     {
         name: 'cat',
@@ -32,6 +35,7 @@ const getTestData = () => [
         lastSeenAt: '2021-02-18T19:34:21.830Z',
         type: 'experiment',
         stale: true,
+        environments: [],
     },
 ];
 

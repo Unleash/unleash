@@ -3,6 +3,9 @@ import { IFeatureStrategy } from './strategy';
 export interface IFeatureToggleListItem {
     type: string;
     name: string;
+    stale?: boolean;
+    lastSeenAt?: string;
+    createdAt: string;
     environments: IEnvironments[];
 }
 

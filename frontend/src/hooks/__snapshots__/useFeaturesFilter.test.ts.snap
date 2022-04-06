@@ -9,7 +9,7 @@ Object {
   "filtered": Array [
     Object {
       "archived": false,
-      "createdAt": "22006-01-02T15:04:05Z",
+      "createdAt": "2006-01-02T15:04:05Z",
       "description": "1",
       "enabled": false,
       "environments": Array [],
@@ -81,7 +81,7 @@ Object {
   "filtered": Array [
     Object {
       "archived": false,
-      "createdAt": "22006-01-02T15:04:05Z",
+      "createdAt": "2006-01-02T15:04:05Z",
       "description": "1",
       "enabled": false,
       "environments": Array [],
@@ -96,7 +96,7 @@ Object {
     },
     Object {
       "archived": false,
-      "createdAt": "22006-01-02T15:04:05Z",
+      "createdAt": "2006-01-02T15:04:05Z",
       "description": "1",
       "enabled": false,
       "environments": Array [],
@@ -111,7 +111,7 @@ Object {
     },
     Object {
       "archived": false,
-      "createdAt": "22006-01-02T15:04:05Z",
+      "createdAt": "2006-01-02T15:04:05Z",
       "description": "1",
       "enabled": false,
       "environments": Array [],
@@ -137,7 +137,7 @@ Object {
   "filtered": Array [
     Object {
       "archived": false,
-      "createdAt": "22006-01-02T15:04:05Z",
+      "createdAt": "2006-01-02T15:04:05Z",
       "description": "1",
       "enabled": false,
       "environments": Array [],
@@ -152,7 +152,7 @@ Object {
     },
     Object {
       "archived": false,
-      "createdAt": "22006-01-02T15:04:05Z",
+      "createdAt": "2006-01-02T15:04:05Z",
       "description": "1",
       "enabled": false,
       "environments": Array [],
@@ -179,7 +179,7 @@ Object {
   "filtered": Array [
     Object {
       "archived": false,
-      "createdAt": "22006-01-02T15:04:05Z",
+      "createdAt": "2006-01-02T15:04:05Z",
       "description": "1",
       "enabled": false,
       "environments": Array [],
@@ -194,7 +194,7 @@ Object {
     },
     Object {
       "archived": false,
-      "createdAt": "22006-01-02T15:04:05Z",
+      "createdAt": "2006-01-02T15:04:05Z",
       "description": "1",
       "enabled": false,
       "environments": Array [],

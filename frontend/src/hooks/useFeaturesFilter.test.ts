@@ -102,7 +102,7 @@ const mockFeatureToggle = (
         strategies: [],
         variants: [],
         environments: [],
-        createdAt: '22006-01-02T15:04:05Z',
+        createdAt: '2006-01-02T15:04:05Z',
         lastSeenAt: '2006-01-02T15:04:05Z',
         ...overrides,
     };

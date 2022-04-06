@@ -1,26 +1,37 @@
 import { IconButton, Tooltip, IconButtonProps } from '@material-ui/core';
-import React, { useContext } from 'react';
+import React, { useContext, ReactNode } from 'react';
 import AccessContext from 'contexts/AccessContext';
+import { Link } from 'react-router-dom';
 
-interface IPermissionIconButtonProps extends IconButtonProps {
+interface IPermissionIconButtonProps {
     permission: string;
-    Icon?: React.ElementType;
-    onClick?: (e: any) => void;
     projectId?: string;
     environmentId?: string;
     className?: string;
     title?: string;
+    children?: ReactNode;
+    disabled?: boolean;
+    hidden?: boolean;
+    type?: 'button';
+    edge?: IconButtonProps['edge'];
 }
 
-const PermissionIconButton: React.FC<IPermissionIconButtonProps> = ({
+interface IButtonProps extends IPermissionIconButtonProps {
+    onClick: (event: React.SyntheticEvent) => void;
+}
+
+interface ILinkProps extends IPermissionIconButtonProps {
+    component: typeof Link;
+    to: string;
+}
+
+const PermissionIconButton = ({
     permission,
-    Icon,
-    onClick,
     projectId,
     children,
     environmentId,
     ...rest
-}) => {
+}: IButtonProps | ILinkProps) => {
     const { hasAccess } = useContext(AccessContext);
     let access;
 
@@ -39,7 +50,7 @@ const PermissionIconButton: React.FC<IPermissionIconButtonProps> = ({
     return (
         <Tooltip title={tooltipText} arrow>
             <span>
-                <IconButton onClick={onClick} disabled={!access} {...rest}>
+                <IconButton disabled={!access} {...rest}>
                     {children}
                 </IconButton>
             </span>

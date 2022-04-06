@@ -100,7 +100,7 @@ export const ConstraintAccordionViewHeader = ({
                     condition={Boolean(onEditClick)}
                     show={
                         <PermissionIconButton
-                            onClick={onEditClick}
+                            onClick={onEditClick!}
                             permission={UPDATE_FEATURE_STRATEGY}
                             projectId={projectId}
                             environmentId={environmentId}
@@ -114,7 +114,7 @@ export const ConstraintAccordionViewHeader = ({
                     condition={Boolean(onDeleteClick)}
                     show={
                         <PermissionIconButton
-                            onClick={onDeleteClick}
+                            onClick={onDeleteClick!}
                             permission={UPDATE_FEATURE_STRATEGY}
                             projectId={projectId}
                             environmentId={environmentId}

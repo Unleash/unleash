@@ -4,38 +4,54 @@ import differenceInDays from 'date-fns/differenceInDays';
 import { EXPERIMENT, OPERATIONAL, RELEASE } from 'constants/featureToggleTypes';
 
 import { FOURTYDAYS, SEVENDAYS } from './constants';
+import { IFeatureToggleListItem } from 'interfaces/featureToggle';
 
-export const toggleExpiryByTypeMap = {
+export const toggleExpiryByTypeMap: Record<string, number> = {
     [EXPERIMENT]: FOURTYDAYS,
     [RELEASE]: FOURTYDAYS,
     [OPERATIONAL]: SEVENDAYS,
 };
 
-export const applyCheckedToFeatures = (features, checkedState) =>
-    features.map(feature => ({ ...feature, checked: checkedState }));
+export interface IFeatureToggleListItemCheck extends IFeatureToggleListItem {
+    checked: boolean;
+}
 
-export const getCheckedState = (name, features) => {
+export const applyCheckedToFeatures = (
+    features: IFeatureToggleListItem[],
+    checkedState: boolean
+): IFeatureToggleListItemCheck[] => {
+    return features.map(feature => ({
+        ...feature,
+        checked: checkedState,
+    }));
+};
+
+export const getCheckedState = (
+    name: string,
+    features: IFeatureToggleListItemCheck[]
+) => {
     const feature = features.find(feature => feature.name === name);
 
     if (feature) {
-        return feature.checked ? feature.checked : false;
+        return feature.checked;
     }
+
     return false;
 };
 
-export const getDiffInDays = (date, now) =>
+export const getDiffInDays = (date: Date, now: Date) =>
     Math.abs(differenceInDays(date, now));
 
-export const formatProjectOptions = projects =>
-    projects.map(project => ({ key: project.id, label: project.name }));
-
-export const expired = (diff, type) => {
+export const expired = (diff: number, type: string) => {
     if (diff >= toggleExpiryByTypeMap[type]) return true;
     return false;
 };
 
-export const getObjectProperties = (target, ...keys) => {
-    const newObject = {};
+export const getObjectProperties = <T extends object>(
+    target: T,
+    ...keys: (keyof T)[]
+): Partial<T> => {
+    const newObject: Partial<T> = {};
 
     keys.forEach(key => {
         if (target[key] !== undefined) {
@@ -46,7 +62,9 @@ export const getObjectProperties = (target, ...keys) => {
     return newObject;
 };
 
-export const sortFeaturesByNameAscending = features => {
+export const sortFeaturesByNameAscending = (
+    features: IFeatureToggleListItem[]
+): IFeatureToggleListItem[] => {
     const sorted = [...features];
     sorted.sort((a, b) => {
         if (a.name < b.name) {
@@ -60,10 +78,14 @@ export const sortFeaturesByNameAscending = features => {
     return sorted;
 };
 
-export const sortFeaturesByNameDescending = features =>
+export const sortFeaturesByNameDescending = (
+    features: IFeatureToggleListItem[]
+): IFeatureToggleListItem[] =>
     sortFeaturesByNameAscending([...features]).reverse();
 
-export const sortFeaturesByLastSeenAscending = features => {
+export const sortFeaturesByLastSeenAscending = (
+    features: IFeatureToggleListItem[]
+): IFeatureToggleListItem[] => {
     const sorted = [...features];
     sorted.sort((a, b) => {
         if (!a.lastSeenAt) return -1;
@@ -77,10 +99,14 @@ export const sortFeaturesByLastSeenAscending = features => {
     return sorted;
 };
 
-export const sortFeaturesByLastSeenDescending = features =>
+export const sortFeaturesByLastSeenDescending = (
+    features: IFeatureToggleListItem[]
+): IFeatureToggleListItem[] =>
     sortFeaturesByLastSeenAscending([...features]).reverse();
 
-export const sortFeaturesByCreatedAtAscending = features => {
+export const sortFeaturesByCreatedAtAscending = (
+    features: IFeatureToggleListItem[]
+): IFeatureToggleListItem[] => {
     const sorted = [...features];
     sorted.sort((a, b) => {
         const dateA = parseISO(a.createdAt);
@@ -91,10 +117,14 @@ export const sortFeaturesByCreatedAtAscending = features => {
     return sorted;
 };
 
-export const sortFeaturesByCreatedAtDescending = features =>
+export const sortFeaturesByCreatedAtDescending = (
+    features: IFeatureToggleListItem[]
+): IFeatureToggleListItem[] =>
     sortFeaturesByCreatedAtAscending([...features]).reverse();
 
-export const sortFeaturesByExpiredAtAscending = features => {
+export const sortFeaturesByExpiredAtAscending = (
+    features: IFeatureToggleListItem[]
+): IFeatureToggleListItem[] => {
     const sorted = [...features];
     sorted.sort((a, b) => {
         const now = new Date();
@@ -120,7 +150,9 @@ export const sortFeaturesByExpiredAtAscending = features => {
     return sorted;
 };
 
-export const sortFeaturesByExpiredAtDescending = features => {
+export const sortFeaturesByExpiredAtDescending = (
+    features: IFeatureToggleListItem[]
+): IFeatureToggleListItem[] => {
     const sorted = [...features];
     const now = new Date();
     sorted.sort((a, b) => {
@@ -146,7 +178,9 @@ export const sortFeaturesByExpiredAtDescending = features => {
     return sorted;
 };
 
-export const sortFeaturesByStatusAscending = features => {
+export const sortFeaturesByStatusAscending = (
+    features: IFeatureToggleListItem[]
+): IFeatureToggleListItem[] => {
     const sorted = [...features];
     sorted.sort((a, b) => {
         if (a.stale) return 1;
@@ -156,15 +190,17 @@ export const sortFeaturesByStatusAscending = features => {
     return sorted;
 };
 
-export const sortFeaturesByStatusDescending = features =>
+export const sortFeaturesByStatusDescending = (
+    features: IFeatureToggleListItem[]
+): IFeatureToggleListItem[] =>
     sortFeaturesByStatusAscending([...features]).reverse();
 
-export const pluralize = (items, word) => {
+export const pluralize = (items: number, word: string): string => {
     if (items === 1) return `${items} ${word}`;
     return `${items} ${word}s`;
 };
 
-export const getDates = dateString => {
+export const getDates = (dateString: string): [Date, Date] => {
     const date = parseISO(dateString);
     const now = new Date();
 

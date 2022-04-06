@@ -1,5 +1,5 @@
 import React from 'react';
-import { TagTypeList } from '../TagTypeList';
+import { TagTypeList } from 'component/tags/TagTypeList/TagTypeList';
 import renderer from 'react-test-renderer';
 import { MemoryRouter } from 'react-router-dom';
 import { ThemeProvider } from '@material-ui/styles';

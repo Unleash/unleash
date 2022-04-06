@@ -27,7 +27,7 @@
     "file-loader": "6.2.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "unleash-proxy-client": "^1.11.0",
+    "unleash-proxy-client": "1.11.0",
     "url-loader": "4.1.1"
   },
   "resolutions": {
@@ -52,19 +52,19 @@
     ]
   },
   "devDependencies": {
-    "@babel/core": "^7.17.4",
-    "@docusaurus/module-type-aliases": "^2.0.0-beta.16",
-    "@storybook/addon-actions": "^6.4.19",
-    "@storybook/addon-essentials": "^6.4.19",
-    "@storybook/addon-interactions": "^6.4.19",
-    "@storybook/addon-links": "^6.4.19",
-    "@storybook/react": "^6.4.19",
-    "@storybook/testing-library": "^0.0.9",
-    "@tsconfig/docusaurus": "^1.0.4",
-    "babel-loader": "^8.2.3",
-    "enhanced-resolve": "^5.9.2",
-    "react-router": "^6.3.0",
-    "storybook-addon-root-attribute": "^1.0.2",
-    "typescript": "^4.6.2"
+    "@babel/core": "7.17.9",
+    "@docusaurus/module-type-aliases": "2.0.0-beta.18",
+    "@storybook/addon-actions": "6.4.20",
+    "@storybook/addon-essentials": "6.4.20",
+    "@storybook/addon-interactions": "6.4.20",
+    "@storybook/addon-links": "6.4.20",
+    "@storybook/react": "6.4.20",
+    "@storybook/testing-library": "0.0.9",
+    "@tsconfig/docusaurus": "1.0.5",
+    "babel-loader": "8.2.4",
+    "enhanced-resolve": "5.9.2",
+    "react-router": "6.3.0",
+    "storybook-addon-root-attribute": "1.0.2",
+    "typescript": "4.6.3"
   }
 }

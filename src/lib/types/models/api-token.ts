@@ -8,12 +8,22 @@ export enum ApiTokenType {
     ADMIN = 'admin',
 }
 
+export interface ILegacyApiTokenCreate {
+    secret: string;
+    username: string;
+    type: ApiTokenType;
+    environment: string;
+    project?: string;
+    projects?: string[];
+    expiresAt?: Date;
+}
+
 export interface IApiTokenCreate {
     secret: string;
     username: string;
     type: ApiTokenType;
     environment: string;
-    project: string;
+    projects: string[];
     expiresAt?: Date;
 }
 
@@ -24,12 +34,58 @@ export interface IApiToken extends IApiTokenCreate {
     project: string;
 }
 
+export const isAllProjects = (projects: string[]): boolean => {
+    return projects && projects.length === 1 && projects[0] === ALL;
+};
+
+export const mapLegacyProjects = (
+    project?: string,
+    projects?: string[],
+): string[] => {
+    let cleanedProjects;
+    if (project) {
+        cleanedProjects = [project];
+    } else if (projects) {
+        cleanedProjects = projects;
+        if (cleanedProjects.includes('*')) {
+            cleanedProjects = ['*'];
+        }
+    } else {
+        throw new BadDataError(
+            'API tokens must either contain a project or projects field',
+        );
+    }
+    return cleanedProjects;
+};
+
+export const mapLegacyToken = (
+    token: Omit<ILegacyApiTokenCreate, 'secret'>,
+): Omit<IApiTokenCreate, 'secret'> => {
+    const cleanedProjects = mapLegacyProjects(token.project, token.projects);
+    return {
+        username: token.username,
+        type: token.type,
+        environment: token.environment,
+        projects: cleanedProjects,
+        expiresAt: token.expiresAt,
+    };
+};
+
+export const mapLegacyTokenWithSecret = (
+    token: ILegacyApiTokenCreate,
+): IApiTokenCreate => {
+    return {
+        ...mapLegacyToken(token),
+        secret: token.secret,
+    };
+};
+
 export const validateApiToken = ({
     type,
-    project,
+    projects,
     environment,
 }: Omit<IApiTokenCreate, 'secret'>): void => {
-    if (type === ApiTokenType.ADMIN && project !== ALL) {
+    if (type === ApiTokenType.ADMIN && !isAllProjects(projects)) {
         throw new BadDataError(
             'Admin token cannot be scoped to single project',
         );

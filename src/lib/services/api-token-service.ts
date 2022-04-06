@@ -7,9 +7,12 @@ import ApiUser from '../types/api-user';
 import {
     ApiTokenType,
     IApiToken,
+    ILegacyApiTokenCreate,
     IApiTokenCreate,
     validateApiToken,
     validateApiTokenEnvironment,
+    mapLegacyToken,
+    mapLegacyTokenWithSecret,
 } from '../types/models/api-token';
 import { IApiTokenStore } from '../types/stores/api-token-store';
 import { FOREIGN_KEY_VIOLATION } from '../error/db-error';
@@ -67,13 +70,15 @@ export class ApiTokenService {
         return this.store.getAllActive();
     }
 
-    private async initApiTokens(tokens: IApiTokenCreate[]) {
+    private async initApiTokens(tokens: ILegacyApiTokenCreate[]) {
         const tokenCount = await this.store.count();
         if (tokenCount > 0) {
             return;
         }
         try {
-            const createAll = tokens.map((t) => this.insertNewApiToken(t));
+            const createAll = tokens
+                .map(mapLegacyTokenWithSecret)
+                .map((t) => this.insertNewApiToken(t));
             await Promise.all(createAll);
         } catch (e) {
             this.logger.error('Unable to create initial Admin API tokens');
@@ -89,7 +94,7 @@ export class ApiTokenService {
             return new ApiUser({
                 username: token.username,
                 permissions,
-                project: token.project,
+                projects: token.projects,
                 environment: token.environment,
                 type: token.type,
             });
@@ -108,7 +113,17 @@ export class ApiTokenService {
         return this.store.delete(secret);
     }
 
+    /**
+     * @deprecated This may be removed in a future release, prefer createApiTokenWithProjects
+     */
     public async createApiToken(
+        newToken: Omit<ILegacyApiTokenCreate, 'secret'>,
+    ): Promise<IApiToken> {
+        const token = mapLegacyToken(newToken);
+        return this.createApiTokenWithProjects(token);
+    }
+
+    public async createApiTokenWithProjects(
         newToken: Omit<IApiTokenCreate, 'secret'>,
     ): Promise<IApiToken> {
         validateApiToken(newToken);
@@ -131,8 +146,11 @@ export class ApiTokenService {
         } catch (error) {
             if (error.code === FOREIGN_KEY_VIOLATION) {
                 let { message } = error;
-                if (error.constraint === 'api_tokens_project_fkey') {
-                    message = `Project=${newApiToken.project} does not exist`;
+                if (error.constraint === 'api_token_project_project_fkey') {
+                    message = `Project=${this.findInvalidProject(
+                        error.detail,
+                        newApiToken.projects,
+                    )} does not exist`;
                 } else if (error.constraint === 'api_tokens_environment_fkey') {
                     message = `Environment=${newApiToken.environment} does not exist`;
                 }
@@ -142,9 +160,23 @@ export class ApiTokenService {
         }
     }
 
-    private generateSecretKey({ project, environment }) {
+    private findInvalidProject(errorDetails, projects) {
+        if (!errorDetails) {
+            return 'invalid';
+        }
+        let invalidProject = projects.find((project) => {
+            return errorDetails.includes(`=(${project})`);
+        });
+        return invalidProject || 'invalid';
+    }
+
+    private generateSecretKey({ projects, environment }) {
         const randomStr = crypto.randomBytes(28).toString('hex');
-        return `${project}:${environment}.${randomStr}`;
+        if (projects.length > 1) {
+            return `[]:${environment}.${randomStr}`;
+        } else {
+            return `${projects[0]}:${environment}.${randomStr}`;
+        }
     }
 
     destroy(): void {

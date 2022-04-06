@@ -9,13 +9,16 @@ import {
     ApiTokenType,
     IApiToken,
     IApiTokenCreate,
+    isAllProjects,
 } from '../types/models/api-token';
+import { ALL_PROJECTS } from '../../lib/services/access-service';
 
 const TABLE = 'api_tokens';
+const API_LINK_TABLE = 'api_token_project';
 
 const ALL = '*';
 
-interface ITokenTable {
+interface ITokenInsert {
     id: number;
     secret: string;
     username: string;
@@ -24,28 +27,50 @@ interface ITokenTable {
     created_at: Date;
     seen_at?: Date;
     environment: string;
+}
+
+interface ITokenRow extends ITokenInsert {
     project: string;
 }
+
+const tokenRowReducer = (acc, tokenRow) => {
+    const { project, ...token } = tokenRow;
+    if (!acc[tokenRow.secret]) {
+        acc[tokenRow.secret] = {
+            secret: token.secret,
+            username: token.username,
+            type: token.type,
+            project: ALL,
+            projects: [ALL],
+            environment: token.environment ? token.environment : ALL,
+            expiresAt: token.expires_at,
+            createdAt: token.created_at,
+        };
+    }
+    const currentToken = acc[tokenRow.secret];
+    if (tokenRow.project) {
+        if (isAllProjects(currentToken.projects)) {
+            currentToken.projects = [];
+        }
+        currentToken.projects.push(tokenRow.project);
+        currentToken.project = currentToken.projects.join(',');
+    }
+    return acc;
+};
 
 const toRow = (newToken: IApiTokenCreate) => ({
     username: newToken.username,
     secret: newToken.secret,
     type: newToken.type,
-    project: newToken.project === ALL ? undefined : newToken.project,
     environment:
         newToken.environment === ALL ? undefined : newToken.environment,
     expires_at: newToken.expiresAt,
 });
 
-const toToken = (row: ITokenTable): IApiToken => ({
-    secret: row.secret,
-    username: row.username,
-    type: row.type,
-    environment: row.environment ? row.environment : ALL,
-    project: row.project ? row.project : ALL,
-    expiresAt: row.expires_at,
-    createdAt: row.created_at,
-});
+const toTokens = (rows: any[]): IApiToken[] => {
+    const tokens = rows.reduce(tokenRowReducer, {});
+    return Object.values(tokens);
+};
 
 export class ApiTokenStore implements IApiTokenStore {
     private logger: Logger;
@@ -72,26 +97,64 @@ export class ApiTokenStore implements IApiTokenStore {
 
     async getAll(): Promise<IApiToken[]> {
         const stopTimer = this.timer('getAll');
-        const rows = await this.db<ITokenTable>(TABLE);
+        const rows = await this.makeTokenProjectQuery();
         stopTimer();
-        return rows.map(toToken);
+        return toTokens(rows);
     }
 
     async getAllActive(): Promise<IApiToken[]> {
         const stopTimer = this.timer('getAllActive');
-        const rows = await this.db<ITokenTable>(TABLE)
+        const rows = await this.makeTokenProjectQuery()
             .where('expires_at', 'IS', null)
             .orWhere('expires_at', '>', 'now()');
         stopTimer();
-        return rows.map(toToken);
+        return toTokens(rows);
+    }
+
+    private makeTokenProjectQuery() {
+        return this.db<ITokenRow>(`${TABLE} as tokens`)
+            .leftJoin(
+                `${API_LINK_TABLE} as token_project_link`,
+                'tokens.secret',
+                'token_project_link.secret',
+            )
+            .select(
+                'tokens.secret',
+                'username',
+                'type',
+                'expires_at',
+                'created_at',
+                'seen_at',
+                'environment',
+                'token_project_link.project',
+            );
     }
 
     async insert(newToken: IApiTokenCreate): Promise<IApiToken> {
-        const [row] = await this.db<ITokenTable>(TABLE).insert(
-            toRow(newToken),
-            ['created_at'],
-        );
-        return { ...newToken, createdAt: row.created_at };
+        const response = await this.db.transaction(async (tx) => {
+            const [row] = await tx<ITokenInsert>(TABLE).insert(
+                toRow(newToken),
+                ['created_at'],
+            );
+
+            const updateProjectTasks = (newToken.projects || [])
+                .filter((project) => {
+                    return project !== ALL_PROJECTS;
+                })
+                .map((project) => {
+                    return tx.raw(
+                        `INSERT INTO ${API_LINK_TABLE} VALUES (?, ?)`,
+                        [newToken.secret, project],
+                    );
+                });
+            await Promise.all(updateProjectTasks);
+            return {
+                ...newToken,
+                project: newToken.projects?.join(',') || '*',
+                createdAt: row.created_at,
+            };
+        });
+        return response;
     }
 
     destroy(): void {}
@@ -106,25 +169,25 @@ export class ApiTokenStore implements IApiTokenStore {
     }
 
     async get(key: string): Promise<IApiToken> {
-        const row = await this.db(TABLE).where('secret', key).first();
-        return toToken(row);
+        const row = await this.makeTokenProjectQuery().where('secret', key);
+        return toTokens(row)[0];
     }
 
     async delete(secret: string): Promise<void> {
-        return this.db<ITokenTable>(TABLE).where({ secret }).del();
+        return this.db<ITokenRow>(TABLE).where({ secret }).del();
     }
 
     async deleteAll(): Promise<void> {
-        return this.db<ITokenTable>(TABLE).del();
+        return this.db<ITokenRow>(TABLE).del();
     }
 
     async setExpiry(secret: string, expiresAt: Date): Promise<IApiToken> {
-        const rows = await this.db<ITokenTable>(TABLE)
+        const rows = await this.makeTokenProjectQuery()
             .update({ expires_at: expiresAt })
             .where({ secret })
             .returning('*');
         if (rows.length > 0) {
-            return toToken(rows[0]);
+            return toTokens(rows)[0];
         }
         throw new NotFoundError('Could not find api-token.');
     }

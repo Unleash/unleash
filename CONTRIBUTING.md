@@ -62,7 +62,7 @@ The controller takes care of the following:
 ## Creating a release
 In order to produce a release you will need to be a Unleash core team member and have the Unleash admin role assigned on the Unleash organization on GitHub. 
 
-# Step 1: create a new version tag
+### Step 1: create a new version tag
 
 Use npm to set the version in package.json and specify a version tag. 
 
@@ -78,3 +78,11 @@ This command will trigger an internal verification step where we will perform th
 - *STEP 4. Test* - Validate that all test runs green. 
 
 If all steps completes a single commit is produced on the main branch where the `version` property in package.json is updated, and a git tag is created to point to that tag specifically.
+
+### Step 2: push tag
+
+```sh
+git push origin main --follow-tags
+```
+
+This will push the new tag and a GitHub action will trigger on the new version tag, build the release and publish it to npm. 

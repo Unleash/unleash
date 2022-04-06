@@ -92,7 +92,6 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
                     label="Token Type"
                     id="api_key_type"
                     name="type"
-                    // @ts-expect-error
                     IconComponent={KeyboardArrowDownOutlined}
                     className={styles.selectInput}
                 />
@@ -105,7 +104,8 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
                     options={selectableProjects}
                     onChange={e => setProject(e.target.value as string)}
                     label="Project"
-                    // @ts-expect-error
+                    id="api_key_project"
+                    name="project"
                     IconComponent={KeyboardArrowDownOutlined}
                     className={styles.selectInput}
                 />
@@ -120,7 +120,6 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
                     label="Environment"
                     id="api_key_environment"
                     name="environment"
-                    // @ts-expect-error
                     IconComponent={KeyboardArrowDownOutlined}
                     className={styles.selectInput}
                 />

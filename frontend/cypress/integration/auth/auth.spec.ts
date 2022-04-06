@@ -4,7 +4,7 @@ export {};
 
 describe('auth', () => {
     it('renders the password login', () => {
-        cy.intercept('GET', '/api/admin/user', {
+        cy.intercept('GET', '/api/admin/**', {
             statusCode: 401,
             body: {
                 defaultHidden: false,
@@ -29,7 +29,7 @@ describe('auth', () => {
     });
 
     it('renders does not render password login if defaultHidden is true', () => {
-        cy.intercept('GET', '/api/admin/user', {
+        cy.intercept('GET', '/api/admin/**', {
             statusCode: 401,
             body: {
                 defaultHidden: true,
@@ -48,7 +48,7 @@ describe('auth', () => {
     it('renders google auth when options are specified', () => {
         const ssoPath = '/auth/google/login';
 
-        cy.intercept('GET', '/api/admin/user', {
+        cy.intercept('GET', '/api/admin/**', {
             statusCode: 401,
             body: {
                 defaultHidden: true,
@@ -77,7 +77,7 @@ describe('auth', () => {
     it('renders oidc auth when options are specified', () => {
         const ssoPath = '/auth/oidc/login';
 
-        cy.intercept('GET', '/api/admin/user', {
+        cy.intercept('GET', '/api/admin/**', {
             statusCode: 401,
             body: {
                 defaultHidden: true,
@@ -106,7 +106,7 @@ describe('auth', () => {
     it('renders saml auth when options are specified', () => {
         const ssoPath = '/auth/saml/login';
 
-        cy.intercept('GET', '/api/admin/user', {
+        cy.intercept('GET', '/api/admin/**', {
             statusCode: 401,
             body: {
                 defaultHidden: true,
@@ -133,7 +133,7 @@ describe('auth', () => {
     });
 
     it('can visit forgot password when password auth is enabled', () => {
-        cy.intercept('GET', '/api/admin/user', {
+        cy.intercept('GET', '/api/admin/**', {
             statusCode: 401,
             body: {
                 defaultHidden: false,
@@ -151,7 +151,7 @@ describe('auth', () => {
     it('renders demo auth correctly', () => {
         const email = 'hello@hello.com';
 
-        cy.intercept('GET', '/api/admin/user', {
+        cy.intercept('GET', '/api/admin/**', {
             statusCode: 401,
             body: {
                 defaultHidden: false,
@@ -174,7 +174,7 @@ describe('auth', () => {
     it('renders email auth correctly', () => {
         const email = 'hello@hello.com';
 
-        cy.intercept('GET', '/api/admin/user', {
+        cy.intercept('GET', '/api/admin/**', {
             statusCode: 401,
             body: {
                 defaultHidden: false,

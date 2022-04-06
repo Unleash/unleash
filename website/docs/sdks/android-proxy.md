@@ -58,7 +58,7 @@ val myAppContext = UnleashContext.newBuilder()
 
 To create a client, use the `UnleashConfig.newBuilder` method. When building a configuration, you'll need to provide it with:
 - `proxyUrl`: the URL your proxy is available at
-- `clientSecret`: the [proxy secret](/sdks/unleash-proxy#configuration-variables) you wish to use
+- `clientKey`: the [proxy client key](/sdks/unleash-proxy#configuration-variables) you wish to use (this method was known as `clientSecret` prior to version 0.4.0)
 - `pollMode`: how you want to load the toggle status
 
 As of v0.1 the SDK supports an automatic polling with an adjustable poll period or loading the state from disk. Most users will probably want to use the polling client, but it's nice to know that you can instantiate your client without actually needing Internet if you choose loading from File
@@ -73,7 +73,7 @@ import io.getunleash.polling.PollingModes
 
 val unleashConfig = UnleashConfig.newBuilder()
     .proxyUrl("URL to your proxy installation")
-    .clientSecret("yourProxySecret")
+    .clientKey("yourProxySecret")
     .pollMode(PollingModes.autoPoll(Duration.ofSeconds(60)) {
         // This lambda will be called every time polling the server updates the toggle state
         featuresUpdated()
@@ -94,7 +94,7 @@ val pollingMode = PollingModes.fileMode(toggles)
 
 val unleashConfig = UnleashConfig.newBuilder()
     .proxyUrl("Doesn't matter since we don't use it when sent a file")
-    .clientSecret("Doesn't matter since we don't use it when sent a file")
+    .clientKey("Doesn't matter since we don't use it when sent a file")
     .pollMode(pollingMode)
     .build()
 ```

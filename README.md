@@ -17,6 +17,7 @@ Unleash is an open-source feature management platform. It provides a great overv
 
 Unleash has [official client SDKs](https://docs.getunleash.io/sdks) for a number of the most popular languages around. Can't find one for the language you want? Check out the [community-contributed SDKs](https://docs.getunleash.io/sdks#community-sdks) instead!
 
+
 [what is feature management + unleash]
 [who uses Unleash? Show that you can scale from small to laaarge]
 
@@ -172,7 +173,7 @@ if (unleash.isEnabled("AwesomeFeature")) {
 }
 ```
 
-# Running Unleash
+## Running Unleash
 
 The are numbers of ways you can run Unleash.
 
@@ -181,7 +182,7 @@ The are numbers of ways you can run Unleash.
 3. Unleash Open-Source - Self host with Node.js [Guide](https://docs.getunleash.io/deploy/getting_started#start-unleash-server)
 4. Unleash Open-Source - Helm chart [artifacthub.io](https://artifacthub.io/packages/helm/unleash/unleash)
 
-## Run from Docker
+### Run from Docker
 
 1. Create a network by running the following command:
 
@@ -212,7 +213,7 @@ The first time Unleash starts it will create a default user which you can use to
 - username: `admin`
 - password: `unleash4all`
 
-# Users of Unleash
+## Users of Unleash
 
 Unleash is trusted by thousands of companies all over the world (we are tracking more than 90 countries already). Proud Open-Source users:
 
@@ -220,7 +221,7 @@ Unleash is trusted by thousands of companies all over the world (we are tracking
 
 _(PS! feel free to submit your logo!)_
 
-# In the media
+## In the media
 
 - [Free Code Camp: Feature toggles - Why and how to add to your software](https://www.youtube.com/watch?v=-yHZ9uLVSp4)
 - [Feature toggling transient errors in load tests](https://nrkbeta.no/2021/08/23/feature-toggling-transient-errors-in-load-tests/) (English)

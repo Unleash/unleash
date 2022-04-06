@@ -87,7 +87,6 @@ export class SegmentService {
         const preData = await this.segmentStore.get(id);
 
         if (preData.name !== input.name) {
-            // If the name has changed, make sure it's still unique
             await this.validateName(input.name);
         }
 

@@ -30,6 +30,7 @@ export interface IDBOption {
     };
     schema: string;
     disableMigration: boolean;
+    applicationName?: string;
 }
 
 export interface ISessionOption {

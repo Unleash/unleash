@@ -11,6 +11,7 @@ Object {
   },
   "db": Object {
     "acquireConnectionTimeout": 30000,
+    "applicationName": "unleash",
     "database": "unleash_db",
     "disableMigration": false,
     "driver": "postgres",

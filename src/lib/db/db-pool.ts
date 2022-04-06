@@ -9,7 +9,10 @@ export function createDb({
     return knex({
         client: 'pg',
         version: db.version,
-        connection: db,
+        connection: {
+            ...db,
+            application_name: db.applicationName,
+        },
         pool: db.pool,
         searchPath: db.schema,
         asyncStackTraces: true,

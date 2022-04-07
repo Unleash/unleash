@@ -205,6 +205,7 @@ The available options are listed in the table below. Options can be specified ei
 | `pool.min`               | `DATABASE_POOL_MIN`             | 0              | The minimum number of connections in the connection pool.                                                                                                                                |
 | `pool.max`               | `DATABASE_POOL_MAX`             | 4              | The maximum number of connections in the connection pool.                                                                                                                                |
 | `pool.idleTimeoutMillis` | `DATABASE_POOL_IDLE_TIMEOUT_MS` | 30000          | The amount of time (in milliseconds) that a connection must be idle for before it is marked as a candidate for eviction.                                                                 |
+| `applicationName`        | `DATABASE_APPLICATION_NAME`     | `unleash`      | The name of the application that created this Client instance.                                                                                    |
 
 Alternatively, you can use a [libpq connection string](https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING) to connect to the database. You can provide it directly or from a file by using one of the below options. In JavaScript, these are top-level properties of the root configuration object, *not* the `db` object.
 

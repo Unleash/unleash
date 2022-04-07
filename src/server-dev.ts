@@ -16,6 +16,7 @@ process.nextTick(async () => {
                     database: process.env.UNLEASH_DATABASE_NAME || 'unleash',
                     schema: process.env.UNLEASH_DATABASE_SCHEMA,
                     ssl: false,
+                    applicationName: 'unleash',
                 },
                 server: {
                     enableRequestLogger: true,

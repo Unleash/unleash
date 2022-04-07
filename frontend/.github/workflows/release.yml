@@ -21,7 +21,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
         registry-url: 'https://registry.npmjs.org'
     - run: |
-        yarn install --frozen-lockfile          
+        yarn install --frozen-lockfile
     - run: |
         TAG=$(echo $GITHUB_REF_NAME | grep -oP '^v\d+\.\d+\.\d+-?\K(\w+)?')
         npm publish --tag ${TAG:-latest}
@@ -38,4 +38,3 @@ jobs:
     - name: Publish static assets to S3
       run: |
         aws s3 cp build/ s3://getunleash-static/unleash/${{ steps.get_version.outputs.VERSION }} --recursive
-

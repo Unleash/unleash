@@ -7,7 +7,7 @@
 [![Join Unleash on Slack](https://img.shields.io/badge/slack-join-635dc5?logo=slack)](https://slack.unleash.run)
 
 <a href="https://getunleash.io" title="Unleash - Create with freedom. Release with confidence">
-    <img src="./.github/Logo_DarkBlue_Transparent_Portrait.svg" width="200">
+    <img src="./.github/github_header_opaque_landscape.svg" alt="The Unleash website" width="200">
 </a>
 
 </div>

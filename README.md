@@ -20,7 +20,6 @@ Feature toggles make it easy to test how your code works with real production da
 
 Unleash is the largest open source solution for feature flagging on GitHub. There's 12 official client and server SDKs and 10+ community SDKs available; you can even make your own if you want to. You can use Unleash with any language and any framework.
 
-
 ## Get started in 2 steps
 
 ### 1. Start Unleash
@@ -63,6 +62,12 @@ if (unleash.isEnabled("AwesomeFeature")) {
   // do old, boring stuff
 }
 ```
+
+### Run Unleash on a service?
+
+If you don't want to run Unleash locally, we also provide easy deployment setups for Heroku and Digital Ocean:
+
+[![Deploy to Heroku](./.github/deploy-heroku-20.png)](https://www.heroku.com/deploy/?template=https://github.com/Unleash/unleash) [![Deploy to DigitalOcean](./.github/deploy-digital.svg)](https://cloud.digitalocean.com/apps/new?repo=https://github.com/Unleash/unleash/tree/main&refcode=0e1d75187044)
 
 ## Community and help
 

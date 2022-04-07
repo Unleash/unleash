@@ -14,19 +14,20 @@
 
 </div>
 
-Unleash is an open-source feature management platform. It provides a great overview of all feature toggles/flags across all your applications and services. Unleash lets software teams all over the world take full control of how they enable new functionality to end-users.
+## About Unleash
 
-Unleash has [official client SDKs](https://docs.getunleash.io/sdks) for a number of the most popular languages around. Can't find one for the language you want? Check out the [community-contributed SDKs](https://docs.getunleash.io/sdks#community-sdks) instead!
+Unleash is an open source feature management solution. It improves the workflow of your development team and leads to quicker software delivery. Unleash increases efficiency and gives teams *full control* of how and when they enable new functionality for end users. Unleash lets teams ship code to production in *smaller* releases *whenever* they want.
 
+Feature toggles make it easy to test how your code works with real production data without the fear that you'll accidentally break your users' experience. It also helps your team work on multiple features in parallel without each maintaining an separate feature branch.
 
-[what is feature management + unleash]
-[who uses Unleash? Show that you can scale from small to laaarge]
+Unleash is the largest open source solution for feature flagging on GitHub. There's 12 official client and server SDKs and 10+ community SDKs available; you can even make your own if you want to. You can use Unleash with any language and any framework.
+
 
 ## Get started in 2 steps
 
 ### 1. Start Unleash
 
-With `git` and `docker` installed, it's easy to get started immediately!
+With `git` and `docker` installed, it's easy to get started:
 
 Run this script:
 ``` bash

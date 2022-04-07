@@ -24,7 +24,7 @@ Unleash is the largest open source solution for feature flagging on GitHub. Ther
 
 ### 1. Start Unleash
 
-With `git` and `docker` installed, it's easy to get started:
+With [`git`](https://git-scm.com/) and [`docker`](https://www.docker.com/) installed, it's easy to get started:
 
 Run this script:
 ``` bash

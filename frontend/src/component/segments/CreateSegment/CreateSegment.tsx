@@ -12,6 +12,9 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { useSegmentForm } from '../hooks/useSegmentForm';
 import { SegmentForm } from '../SegmentForm/SegmentForm';
 import { feedbackCESContext } from 'component/feedback/FeedbackCESContext/FeedbackCESContext';
+import { segmentsDocsLink } from 'component/segments/SegmentDocs/SegmentDocs';
+import { useSegmentValuesCount } from 'component/segments/hooks/useSegmentValuesCount';
+import { SEGMENT_VALUES_LIMIT } from 'utils/segmentLimits';
 
 export const CreateSegment = () => {
     const { uiConfig } = useUiConfig();
@@ -34,6 +37,8 @@ export const CreateSegment = () => {
     } = useSegmentForm();
 
     const hasValidConstraints = useConstraintsValidation(constraints);
+    const segmentValuesCount = useSegmentValuesCount(constraints);
+    const atSegmentValuesLimit = segmentValuesCount >= SEGMENT_VALUES_LIMIT;
 
     const formatApiCode = () => {
         return `curl --location --request POST '${
@@ -71,7 +76,7 @@ export const CreateSegment = () => {
             loading={loading}
             title="Create segment"
             description={segmentsFormDescription}
-            documentationLink={segmentsFormDocsLink}
+            documentationLink={segmentsDocsLink}
             documentationLinkLabel="More about segments"
             formatApiCode={formatApiCode}
         >
@@ -90,7 +95,7 @@ export const CreateSegment = () => {
                 <CreateButton
                     name="segment"
                     permission={CREATE_SEGMENT}
-                    disabled={!hasValidConstraints}
+                    disabled={!hasValidConstraints || atSegmentValuesLimit}
                 />
             </SegmentForm>
         </FormTemplate>
@@ -102,6 +107,3 @@ export const segmentsFormDescription = `
     A segment is a reusable collection of constraints.
     You can create and apply a segment when configuring activation strategies for a feature toggle or at any time from the segments page in the navigation menu.
 `;
-
-// TODO(olav): Update link when the segments docs are ready.
-export const segmentsFormDocsLink = 'https://docs.getunleash.io';

@@ -12,11 +12,11 @@ import { useHistory } from 'react-router-dom';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useSegmentForm } from '../hooks/useSegmentForm';
 import { SegmentForm } from '../SegmentForm/SegmentForm';
-import {
-    segmentsFormDocsLink,
-    segmentsFormDescription,
-} from 'component/segments/CreateSegment/CreateSegment';
+import { segmentsFormDescription } from 'component/segments/CreateSegment/CreateSegment';
 import { UpdateButton } from 'component/common/UpdateButton/UpdateButton';
+import { segmentsDocsLink } from 'component/segments/SegmentDocs/SegmentDocs';
+import { useSegmentValuesCount } from 'component/segments/hooks/useSegmentValuesCount';
+import { SEGMENT_VALUES_LIMIT } from 'utils/segmentLimits';
 
 export const EditSegment = () => {
     const segmentId = useRequiredPathParam('segmentId');
@@ -44,6 +44,8 @@ export const EditSegment = () => {
     );
 
     const hasValidConstraints = useConstraintsValidation(constraints);
+    const segmentValuesCount = useSegmentValuesCount(constraints);
+    const atSegmentValuesLimit = segmentValuesCount >= SEGMENT_VALUES_LIMIT;
 
     const formatApiCode = () => {
         return `curl --location --request PUT '${
@@ -77,7 +79,7 @@ export const EditSegment = () => {
             loading={loading}
             title="Edit segment"
             description={segmentsFormDescription}
-            documentationLink={segmentsFormDocsLink}
+            documentationLink={segmentsDocsLink}
             documentationLinkLabel="More about segments"
             formatApiCode={formatApiCode}
         >
@@ -95,7 +97,7 @@ export const EditSegment = () => {
             >
                 <UpdateButton
                     permission={UPDATE_SEGMENT}
-                    disabled={!hasValidConstraints}
+                    disabled={!hasValidConstraints || atSegmentValuesLimit}
                 />
             </SegmentForm>
         </FormTemplate>

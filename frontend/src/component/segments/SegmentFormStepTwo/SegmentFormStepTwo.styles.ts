@@ -1,7 +1,12 @@
 import { makeStyles } from '@material-ui/core/styles';
 
 export const useStyles = makeStyles(theme => ({
-    container: {},
+    warning: {
+        marginBottom: '1.5rem',
+    },
+    error: {
+        marginTop: '1.5rem',
+    },
     form: {
         display: 'flex',
         flexDirection: 'column',
@@ -20,6 +25,9 @@ export const useStyles = makeStyles(theme => ({
         justifyContent: 'flex-end',
         borderTop: `1px solid ${theme.palette.grey[300]}`,
         paddingTop: 15,
+    },
+    errorsContainer: {
+        marginTop: '1rem',
     },
     cancelButton: {
         marginLeft: '1.5rem',

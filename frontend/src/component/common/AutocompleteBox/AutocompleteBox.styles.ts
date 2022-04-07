@@ -18,12 +18,17 @@ export const useStyles = makeStyles(theme => ({
         borderBottomLeftRadius: 50,
         color: '#fff',
     },
+    iconDisabled: {
+        background: theme.palette.primary.light,
+    },
     autocomplete: {
         flex: 1,
     },
     inputRoot: {
         borderTopLeftRadius: 0,
         borderBottomLeftRadius: 0,
+        borderTopRightRadius: 50,
+        borderBottomRightRadius: 50,
         '& fieldset': {
             borderColor: theme.palette,
             borderLeftColor: 'transparent',

@@ -19,6 +19,12 @@ import {
     AutocompleteBox,
     IAutocompleteBoxOption,
 } from 'component/common/AutocompleteBox/AutocompleteBox';
+import {
+    SegmentDocsValuesWarning,
+    SegmentDocsValuesError,
+} from 'component/segments/SegmentDocs/SegmentDocs';
+import { useSegmentValuesCount } from 'component/segments/hooks/useSegmentValuesCount';
+import { SEGMENT_VALUES_LIMIT } from 'utils/segmentLimits';
 
 interface ISegmentFormPartTwoProps {
     constraints: IConstraint[];
@@ -37,6 +43,8 @@ export const SegmentFormStepTwo: React.FC<ISegmentFormPartTwoProps> = ({
     const styles = useStyles();
     const { context = [] } = useUnleashContext();
     const [open, setOpen] = useState(false);
+    const segmentValuesCount = useSegmentValuesCount(constraints);
+    const overSegmentValuesLimit = segmentValuesCount > SEGMENT_VALUES_LIMIT;
 
     const autocompleteOptions = context.map(c => ({
         value: c.name,
@@ -48,8 +56,11 @@ export const SegmentFormStepTwo: React.FC<ISegmentFormPartTwoProps> = ({
     };
 
     return (
-        <div className={styles.form}>
-            <div className={styles.container}>
+        <>
+            <div className={styles.form}>
+                <div className={styles.warning}>
+                    <SegmentDocsValuesWarning />
+                </div>
                 <div>
                     <p className={styles.inputDescription}>
                         Select the context fields you want to include in the
@@ -87,8 +98,14 @@ export const SegmentFormStepTwo: React.FC<ISegmentFormPartTwoProps> = ({
                     >
                         Add context field
                     </PermissionButton>
+                    {overSegmentValuesLimit && (
+                        <div className={styles.error}>
+                            <SegmentDocsValuesError
+                                values={segmentValuesCount}
+                            />
+                        </div>
+                    )}
                 </div>
-
                 <ConditionallyRender
                     condition={constraints.length === 0}
                     show={
@@ -109,7 +126,6 @@ export const SegmentFormStepTwo: React.FC<ISegmentFormPartTwoProps> = ({
                     />
                 </div>
             </div>
-
             <div className={styles.buttonContainer}>
                 <Button
                     type="button"
@@ -129,6 +145,6 @@ export const SegmentFormStepTwo: React.FC<ISegmentFormPartTwoProps> = ({
                     Cancel
                 </Button>
             </div>
-        </div>
+        </>
     );
 };

@@ -2,12 +2,14 @@ import { useStyles } from 'component/common/AutocompleteBox/AutocompleteBox.styl
 import { Search, ArrowDropDown } from '@material-ui/icons';
 import { Autocomplete, AutocompleteRenderInputParams } from '@material-ui/lab';
 import { TextField } from '@material-ui/core';
+import classNames from 'classnames';
 
 interface IAutocompleteBoxProps {
     label: string;
     options: IAutocompleteBoxOption[];
     value?: IAutocompleteBoxOption[];
     onChange: (value: IAutocompleteBoxOption[]) => void;
+    disabled?: boolean;
 }
 
 export interface IAutocompleteBoxOption {
@@ -20,6 +22,7 @@ export const AutocompleteBox = ({
     options,
     value = [],
     onChange,
+    disabled,
 }: IAutocompleteBoxProps) => {
     const styles = useStyles();
 
@@ -29,7 +32,13 @@ export const AutocompleteBox = ({
 
     return (
         <div className={styles.container}>
-            <div className={styles.icon} aria-hidden>
+            <div
+                className={classNames(
+                    styles.icon,
+                    disabled && styles.iconDisabled
+                )}
+                aria-hidden
+            >
                 <Search />
             </div>
             <Autocomplete
@@ -41,6 +50,7 @@ export const AutocompleteBox = ({
                 onChange={(event, value) => onChange(value || [])}
                 renderInput={renderInput}
                 getOptionLabel={value => value.label}
+                disabled={disabled}
                 multiple
             />
         </div>

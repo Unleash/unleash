@@ -5,6 +5,7 @@ import { Clear, VisibilityOff, Visibility } from '@material-ui/icons';
 import { useStyles } from './FeatureStrategySegmentChip.styles';
 import ConditionallyRender from 'component/common/ConditionallyRender';
 import { constraintAccordionListId } from 'component/common/ConstraintAccordion/ConstraintAccordionList/ConstraintAccordionList';
+import { Tooltip } from '@material-ui/core';
 
 interface IFeatureStrategySegmentListProps {
     segment: ISegment;
@@ -39,20 +40,15 @@ export const FeatureStrategySegmentChip = ({
     const togglePreviewIcon = (
         <ConditionallyRender
             condition={segment === preview}
-            show={
-                <VisibilityOff
-                    titleAccess="Hide preview"
-                    className={styles.icon}
-                />
-            }
-            elseShow={
-                <Visibility
-                    titleAccess="Show preview"
-                    className={styles.icon}
-                />
-            }
+            show={<VisibilityOff titleAccess="Hide" className={styles.icon} />}
+            elseShow={<Visibility titleAccess="Show" className={styles.icon} />}
         />
     );
+
+    const previewIconTooltip =
+        segment === preview
+            ? 'Hide segment constraints'
+            : 'Preview segment constraints';
 
     return (
         <span className={styles.chip}>
@@ -63,18 +59,26 @@ export const FeatureStrategySegmentChip = ({
             >
                 {segment.name}
             </Link>
-            <button
-                type="button"
-                onClick={onTogglePreview}
-                className={styles.button}
-                aria-expanded={segment === preview}
-                aria-controls={constraintAccordionListId}
-            >
-                {togglePreviewIcon}
-            </button>
-            <button type="button" onClick={onRemove} className={styles.button}>
-                <Clear titleAccess="Remove" className={styles.icon} />
-            </button>
+            <Tooltip title={previewIconTooltip}>
+                <button
+                    type="button"
+                    onClick={onTogglePreview}
+                    className={styles.button}
+                    aria-expanded={segment === preview}
+                    aria-controls={constraintAccordionListId}
+                >
+                    {togglePreviewIcon}
+                </button>
+            </Tooltip>
+            <Tooltip title="Remove segment">
+                <button
+                    type="button"
+                    onClick={onRemove}
+                    className={styles.button}
+                >
+                    <Clear titleAccess="Remove" className={styles.icon} />
+                </button>
+            </Tooltip>
         </span>
     );
 };

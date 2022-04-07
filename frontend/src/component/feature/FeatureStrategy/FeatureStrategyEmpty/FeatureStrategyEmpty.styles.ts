@@ -10,8 +10,6 @@ export const useStyles = makeStyles(theme => ({
         color: 'inherit',
     },
     envName: {
-        position: 'relative',
-        top: '6px',
         fontWeight: 'bold',
     },
 }));

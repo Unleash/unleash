@@ -3,13 +3,12 @@ import { IConstraint, IFeatureStrategy, IParameter } from 'interfaces/strategy';
 import ConditionallyRender from 'component/common/ConditionallyRender';
 import PercentageCircle from 'component/common/PercentageCircle/PercentageCircle';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
-import { useStyles } from './FeatureOverviewExecution.styles';
 import FeatureOverviewExecutionChips from './FeatureOverviewExecutionChips/FeatureOverviewExecutionChips';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
-import Constraint from 'component/common/Constraint/Constraint';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { FeatureOverviewSegment } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewSegment/FeatureOverviewSegment';
+import { ConstraintAccordionList } from 'component/common/ConstraintAccordion/ConstraintAccordionList/ConstraintAccordionList';
 
 interface IFeatureOverviewExecutionProps {
     parameters: IParameter;
@@ -23,46 +22,27 @@ const FeatureOverviewExecution = ({
     constraints = [],
     strategy,
 }: IFeatureOverviewExecutionProps) => {
-    const styles = useStyles();
     const { strategies } = useStrategies();
     const { uiConfig } = useUiConfig();
 
-    if (!parameters) return null;
+    if (!parameters) {
+        return null;
+    }
 
     const definition = strategies.find(strategyDefinition => {
         return strategyDefinition.name === strategy.name;
     });
 
-    const renderConstraints = () => {
-        return constraints.map((constraint, index) => {
-            if (index !== constraints.length - 1) {
-                return (
-                    <Fragment key={`${constraint.contextName}-${index}`}>
-                        <Constraint constraint={constraint} />
-
-                        <StrategySeparator text="AND" />
-                    </Fragment>
-                );
-            }
-            return (
-                <Constraint
-                    constraint={constraint}
-                    key={`${constraint.contextName}-${index}`}
-                />
-            );
-        });
-    };
-
     const renderParameters = () => {
         if (definition?.editable) return null;
 
-        return Object.keys(parameters).map((key, index) => {
+        return Object.keys(parameters).map(key => {
             switch (key) {
                 case 'rollout':
                 case 'Rollout':
                     return (
                         <Fragment key={key}>
-                            <p className={styles.text}>
+                            <p>
                                 {parameters[key]}% of your base{' '}
                                 {constraints.length > 0
                                     ? 'who match constraints'
@@ -145,7 +125,7 @@ const FeatureOverviewExecution = ({
                 case 'percentage':
                     return (
                         <Fragment key={param?.name}>
-                            <p className={styles.text}>
+                            <p>
                                 {strategy?.parameters[param.name]}% of your base{' '}
                                 {constraints?.length > 0
                                     ? 'who match constraints'
@@ -165,7 +145,7 @@ const FeatureOverviewExecution = ({
                 case 'boolean':
                     return (
                         <Fragment key={param.name}>
-                            <p className={styles.text} key={param.name}>
+                            <p key={param.name}>
                                 <StringTruncator
                                     maxLength={15}
                                     maxWidth="150"
@@ -192,7 +172,7 @@ const FeatureOverviewExecution = ({
                             key={param.name}
                             show={
                                 <>
-                                    <p className={styles.text}>
+                                    <p>
                                         <StringTruncator
                                             maxWidth="150"
                                             maxLength={15}
@@ -216,7 +196,7 @@ const FeatureOverviewExecution = ({
                             key={param.name}
                             show={
                                 <>
-                                    <p className={styles.text}>
+                                    <p>
                                         <StringTruncator
                                             maxLength={15}
                                             maxWidth="150"
@@ -248,10 +228,10 @@ const FeatureOverviewExecution = ({
             <ConditionallyRender
                 condition={constraints.length > 0}
                 show={
-                    <div className={styles.constraintsContainer}>
-                        {renderConstraints()}
+                    <>
+                        <ConstraintAccordionList constraints={constraints} />
                         <StrategySeparator text="AND" />
-                    </div>
+                    </>
                 }
             />
             <ConditionallyRender

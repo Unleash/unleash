@@ -20,39 +20,20 @@ export const useStyles = makeStyles(theme => ({
         width: '26px',
         height: '26px',
     },
-    accordionRoot: { margin: 0, boxShadow: 'none' },
-    negated: {
-        position: 'absolute',
-        color: '#fff',
-        backgroundColor: theme.palette.primary.light,
-        padding: '0.1rem 0.2rem',
-        fontSize: '0.7rem',
-        fontWeight: 'bold',
-        top: '-15px',
-        left: '42px',
-        borderRadius: '3px',
-    },
     accordion: {
         border: `1px solid ${theme.palette.grey[300]}`,
         borderRadius: '5px',
         backgroundColor: '#fff',
+        boxShadow: 'none',
         margin: 0,
-
-        ['&:before']: {
-            height: 0,
+    },
+    accordionRoot: {
+        '&:before': {
+            opacity: '0 !important',
         },
     },
     accordionEdit: {
         backgroundColor: '#F6F6FA',
-    },
-    operator: {
-        border: `1px solid ${theme.palette.secondary.main}`,
-        padding: '0.25rem 1rem',
-        color: theme.palette.secondary.main,
-        textTransform: 'uppercase',
-        borderRadius: '5px',
-        margin: '0rem 2rem',
-        fontSize: theme.fontSizes.smallBody,
     },
     headerMetaInfo: {
         display: 'flex',
@@ -79,6 +60,14 @@ export const useStyles = makeStyles(theme => ({
     },
     headerValuesExpand: {
         fontSize: theme.fontSizes.smallBody,
+    },
+    headerConstraintContainer: {
+        minWidth: '220px',
+        position: 'relative',
+        paddingRight: '1rem',
+        [theme.breakpoints.down(650)]: {
+            paddingRight: 0,
+        },
     },
     headerViewValuesContainer: {
         [theme.breakpoints.down(990)]: {
@@ -132,6 +121,7 @@ export const useStyles = makeStyles(theme => ({
     },
     headerActions: {
         marginLeft: 'auto',
+        whiteSpace: 'nowrap',
         [theme.breakpoints.down(660)]: {
             marginLeft: '0',
             marginTop: '0.5rem',
@@ -152,7 +142,7 @@ export const useStyles = makeStyles(theme => ({
         padding: '0.25rem 1rem',
         height: '85px',
         [theme.breakpoints.down(770)]: {
-            height: '175px',
+            height: '200px',
         },
     },
     settingsParagraph: {

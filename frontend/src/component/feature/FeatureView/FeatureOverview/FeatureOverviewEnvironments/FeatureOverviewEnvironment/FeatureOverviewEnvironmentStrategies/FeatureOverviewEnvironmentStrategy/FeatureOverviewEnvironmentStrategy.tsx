@@ -65,7 +65,6 @@ const FeatureOverviewEnvironmentStrategy = ({
                     />
                 </div>
             </div>
-
             <div className={styles.body}>
                 <FeatureOverviewExecution
                     parameters={parameters}

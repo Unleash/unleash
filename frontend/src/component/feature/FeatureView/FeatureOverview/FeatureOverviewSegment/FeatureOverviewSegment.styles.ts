@@ -6,7 +6,6 @@ export const useStyles = makeStyles(theme => ({
         padding: '1rem',
         fontSize: theme.fontSizes.smallBody,
         backgroundColor: theme.palette.grey[200],
-        margin: '0.5rem 0',
         position: 'relative',
         borderRadius: '5px',
         textAlign: 'center',

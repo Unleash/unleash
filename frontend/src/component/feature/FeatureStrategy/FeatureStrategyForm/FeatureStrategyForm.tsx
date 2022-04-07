@@ -18,7 +18,6 @@ import { STRATEGY_FORM_SUBMIT_ID } from 'utils/testIds';
 import { useConstraintsValidation } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
 import AccessContext from 'contexts/AccessContext';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
-import { FeatureStrategyConstraintsCO } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/FeatureStrategyConstraintsCO';
 import { FeatureStrategySegment } from 'component/feature/FeatureStrategy/FeatureStrategySegment/FeatureStrategySegment';
 import { ISegment } from 'interfaces/segment';
 
@@ -77,18 +76,10 @@ export const FeatureStrategyForm = ({
         throw uiConfigError;
     }
 
-    // Wait for uiConfig to load for the correct uiConfig.flags.CO value.
+    // Wait for uiConfig to load to get the correct flags.
     if (uiConfigLoading) {
         return null;
     }
-
-    // TODO(olav): Remove FeatureStrategyConstraints when CO is out.
-    const FeatureStrategyConstraintsImplementation = uiConfig.flags.CO
-        ? FeatureStrategyConstraintsCO
-        : FeatureStrategyConstraints;
-    const disableSubmitButtonFromConstraints = uiConfig.flags.CO
-        ? !hasValidConstraints
-        : false;
 
     return (
         <form className={styles.form} onSubmit={onSubmitOrProdGuard}>
@@ -109,9 +100,9 @@ export const FeatureStrategyForm = ({
                 }
             />
             <ConditionallyRender
-                condition={Boolean(uiConfig.flags.C)}
+                condition={Boolean(uiConfig.flags.C || uiConfig.flags.CO)}
                 show={
-                    <FeatureStrategyConstraintsImplementation
+                    <FeatureStrategyConstraints
                         projectId={feature.project}
                         environmentId={environmentId}
                         strategy={strategy}
@@ -120,7 +111,9 @@ export const FeatureStrategyForm = ({
                 }
             />
             <ConditionallyRender
-                condition={Boolean(uiConfig.flags.SE || uiConfig.flags.C)}
+                condition={Boolean(
+                    uiConfig.flags.SE || uiConfig.flags.C || uiConfig.flags.CO
+                )}
                 show={<hr className={styles.hr} />}
             />
             <FeatureStrategyType
@@ -141,7 +134,7 @@ export const FeatureStrategyForm = ({
                     variant="contained"
                     color="primary"
                     type="submit"
-                    disabled={loading || disableSubmitButtonFromConstraints}
+                    disabled={loading || !hasValidConstraints}
                     data-test={STRATEGY_FORM_SUBMIT_ID}
                 >
                     Save strategy

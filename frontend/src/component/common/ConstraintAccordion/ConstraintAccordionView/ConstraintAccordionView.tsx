@@ -41,10 +41,7 @@ export const ConstraintAccordionView = ({
     return (
         <Accordion
             className={styles.accordion}
-            classes={{
-                root: styles.accordionRoot,
-            }}
-            style={{ boxShadow: 'none' }}
+            classes={{ root: styles.accordionRoot }}
         >
             <AccordionSummary
                 className={styles.summary}

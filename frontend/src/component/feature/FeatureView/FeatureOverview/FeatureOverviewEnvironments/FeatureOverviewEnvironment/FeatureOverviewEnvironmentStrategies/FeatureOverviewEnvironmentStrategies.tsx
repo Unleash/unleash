@@ -10,28 +10,16 @@ const FeatureOverviewEnvironmentStrategies = ({
     strategies,
     environmentName,
 }: FeatureOverviewEnvironmentStrategiesProps) => {
-    const renderStrategies = () => {
-        return strategies.map(strategy => {
-            return (
+    return (
+        <>
+            {strategies.map(strategy => (
                 <FeatureOverviewEnvironmentStrategy
                     key={strategy.id}
                     strategy={strategy}
                     environmentId={environmentName}
                 />
-            );
-        });
-    };
-
-    return (
-        <div
-            style={{
-                display: 'flex',
-                justifyContent: 'center',
-                flexWrap: 'wrap',
-            }}
-        >
-            {renderStrategies()}
-        </div>
+            ))}
+        </>
     );
 };
 

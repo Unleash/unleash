@@ -8,7 +8,7 @@ import { oneOf } from 'utils/oneOf';
 import ConditionallyRender from 'component/common/ConditionallyRender';
 import { useStyles } from 'component/common/ConstraintAccordion/ConstraintAccordion.styles';
 import { ConstraintValueSearch } from 'component/common/ConstraintAccordion/ConstraintValueSearch/ConstraintValueSearch';
-import { formatConstraintValue } from 'component/common/Constraint/formatConstraintValue';
+import { formatConstraintValue } from 'utils/formatConstraintValue';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 
 interface IConstraintAccordionViewBodyProps {

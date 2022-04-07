@@ -61,6 +61,7 @@ export const useStyles = makeStyles(theme => ({
     },
     separatorText: {
         fontSize: theme.fontSizes.smallBody,
+        textAlign: 'center',
         padding: '0 1rem',
     },
     rightWing: {

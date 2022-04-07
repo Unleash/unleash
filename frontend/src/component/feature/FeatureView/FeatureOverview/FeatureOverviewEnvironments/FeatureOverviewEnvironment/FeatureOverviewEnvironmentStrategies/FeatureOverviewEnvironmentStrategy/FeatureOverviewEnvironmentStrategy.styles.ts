@@ -2,10 +2,11 @@ import { makeStyles } from '@material-ui/core/styles';
 
 export const useStyles = makeStyles(theme => ({
     container: {
-        borderRadius: '12.5px',
+        borderRadius: theme.borders.radius.main,
         border: `1px solid ${theme.palette.grey[300]}`,
-        width: '400px',
-        margin: '0.3rem',
+        '& + &': {
+            marginTop: '1rem',
+        },
     },
     header: {
         padding: '0.5rem',
@@ -22,9 +23,8 @@ export const useStyles = makeStyles(theme => ({
     },
     body: {
         padding: '1rem',
-        display: 'flex',
-        justifyContent: 'center',
-        flexDirection: 'column',
-        alignItems: 'center',
+        display: 'grid',
+        gap: '1rem',
+        justifyItems: 'center',
     },
 }));

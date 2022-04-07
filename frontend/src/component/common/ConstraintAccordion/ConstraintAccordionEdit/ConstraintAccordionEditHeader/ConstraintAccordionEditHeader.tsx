@@ -6,17 +6,17 @@ import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { ConstraintIcon } from 'component/common/ConstraintAccordion/ConstraintIcon';
 import { Help } from '@material-ui/icons';
 import ConditionallyRender from 'component/common/ConditionallyRender';
-import {
-    allOperators,
-    dateOperators,
-    DATE_AFTER,
-    IN,
-} from 'constants/operators';
+import { dateOperators, DATE_AFTER, IN } from 'constants/operators';
 import { SAVE } from '../ConstraintAccordionEdit';
 import { resolveText } from './helpers';
 import { oneOf } from 'utils/oneOf';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Operator } from 'constants/operators';
+import { ConstraintOperatorSelect } from 'component/common/ConstraintAccordion/ConstraintOperatorSelect/ConstraintOperatorSelect';
+import {
+    operatorsForContext,
+    CURRENT_TIME_CONTEXT_FIELD,
+} from 'utils/operatorsForContext';
 
 interface IConstraintAccordionViewHeader {
     localConstraint: IConstraint;
@@ -26,12 +26,6 @@ interface IConstraintAccordionViewHeader {
     action: string;
     compact: boolean;
 }
-
-const constraintOperators = allOperators.map(operator => {
-    return { key: operator, label: operator };
-});
-
-export const CURRENT_TIME_CONTEXT_FIELD = 'currentTime';
 
 export const ConstraintAccordionEditHeader = ({
     compact,
@@ -43,6 +37,7 @@ export const ConstraintAccordionEditHeader = ({
 }: IConstraintAccordionViewHeader) => {
     const styles = useStyles();
     const { context } = useUnleashContext();
+    const { contextName, operator } = localConstraint;
 
     /* We need a special case to handle the currenTime context field. Since
     this field will be the only one to allow DATE_BEFORE and DATE_AFTER operators
@@ -51,8 +46,8 @@ export const ConstraintAccordionEditHeader = ({
     data). */
     useEffect(() => {
         if (
-            localConstraint.contextName === CURRENT_TIME_CONTEXT_FIELD &&
-            !oneOf(dateOperators, localConstraint.operator)
+            contextName === CURRENT_TIME_CONTEXT_FIELD &&
+            !oneOf(dateOperators, operator)
         ) {
             setLocalConstraint(prev => ({
                 ...prev,
@@ -60,48 +55,22 @@ export const ConstraintAccordionEditHeader = ({
                 value: new Date().toISOString(),
             }));
         } else if (
-            localConstraint.contextName !== CURRENT_TIME_CONTEXT_FIELD &&
-            oneOf(dateOperators, localConstraint.operator)
+            contextName !== CURRENT_TIME_CONTEXT_FIELD &&
+            oneOf(dateOperators, operator)
         ) {
             setOperator(IN);
         }
-    }, [
-        localConstraint.contextName,
-        setOperator,
-        localConstraint.operator,
-        setLocalConstraint,
-    ]);
+    }, [contextName, setOperator, operator, setLocalConstraint]);
 
-    if (!context) return null;
+    if (!context) {
+        return null;
+    }
+
     const constraintNameOptions = context.map(context => {
         return { key: context.name, label: context.name };
     });
 
-    const filteredOperators = constraintOperators.filter(operator => {
-        if (
-            oneOf(dateOperators, operator.label) &&
-            localConstraint.contextName !== CURRENT_TIME_CONTEXT_FIELD
-        ) {
-            return false;
-        }
-
-        if (
-            !oneOf(dateOperators, operator.label) &&
-            localConstraint.contextName === CURRENT_TIME_CONTEXT_FIELD
-        ) {
-            return false;
-        }
-
-        return true;
-    });
-
-    const onChange = (
-        event: React.ChangeEvent<{
-            name?: string;
-            value: unknown;
-        }>
-    ) => {
-        const operator = event.target.value as Operator;
+    const onOperatorChange = (operator: Operator) => {
         if (oneOf(dateOperators, operator)) {
             setLocalConstraint(prev => ({
                 ...prev,
@@ -124,42 +93,34 @@ export const ConstraintAccordionEditHeader = ({
                         label="Context Field"
                         autoFocus
                         options={constraintNameOptions}
-                        value={localConstraint.contextName || ''}
+                        value={contextName || ''}
                         onChange={e => setContextName(String(e.target.value))}
                         className={styles.headerSelect}
                     />
                 </div>
                 <div className={styles.bottomSelect}>
-                    <GeneralSelect
-                        id="operator-select"
-                        name="operator"
-                        label="Operator"
-                        options={filteredOperators}
-                        value={localConstraint.operator}
-                        onChange={onChange}
-                        className={styles.headerSelect}
-                    />
+                    <div className={styles.headerSelect}>
+                        <ConstraintOperatorSelect
+                            options={operatorsForContext(contextName)}
+                            value={operator}
+                            onChange={onOperatorChange}
+                        />
+                    </div>
                 </div>
             </div>
-
             <ConditionallyRender
                 condition={!compact}
                 show={
                     <p className={styles.headerText}>
-                        {resolveText(
-                            localConstraint.operator,
-                            localConstraint.contextName
-                        )}
+                        {resolveText(operator, contextName)}
                     </p>
                 }
             />
-
             <ConditionallyRender
                 condition={action === SAVE}
                 show={<p className={styles.editingBadge}>Updating...</p>}
                 elseShow={<p className={styles.editingBadge}>Editing</p>}
             />
-
             <a
                 href="https://docs.getunleash.io/advanced/strategy_constraints"
                 style={{ marginLeft: 'auto' }}

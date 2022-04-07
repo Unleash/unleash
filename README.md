@@ -54,6 +54,18 @@ If you use the docker compose file from the previous step, here's the configurat
 
 If you use a different setup, your configuration details will most likely also be different.
 
+### Check a feature toggle
+
+Checking the state of a feature toggle in your code is easy! The syntax will vary depending on your language, but all you need is a simple function call to check whether a toggle is available. Here's how it might look in Java:
+
+```java
+if (unleash.isEnabled("AwesomeFeature")) {
+  // do new, flashy thing
+} else {
+  // do old, boring stuff
+}
+```
+
 ## Community and help
 
 We know that learning a new tool can be hard and time-consuming. We have a growing community that loves to help out. Please don't hesitate about reaching out to get help.

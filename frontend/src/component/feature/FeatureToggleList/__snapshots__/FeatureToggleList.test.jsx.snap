@@ -142,32 +142,6 @@ exports[`renders correctly with one feature 1`] = `
                 </span>
               </button>
             </div>
-            <a
-              aria-disabled={true}
-              className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary Mui-disabled Mui-disabled"
-              data-test="NAVIGATE_TO_CREATE_FEATURE"
-              href="/projects/default/create-toggle"
-              onBlur={[Function]}
-              onClick={[Function]}
-              onDragLeave={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              onKeyUp={[Function]}
-              onMouseDown={[Function]}
-              onMouseLeave={[Function]}
-              onMouseUp={[Function]}
-              onTouchEnd={[Function]}
-              onTouchMove={[Function]}
-              onTouchStart={[Function]}
-              role="button"
-              tabIndex={-1}
-            >
-              <span
-                className="MuiButton-label"
-              >
-                New feature toggle
-              </span>
-            </a>
           </div>
         </div>
       </div>
@@ -339,32 +313,6 @@ exports[`renders correctly with one feature without permissions 1`] = `
                 />
               </button>
             </div>
-            <a
-              aria-disabled={true}
-              className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary Mui-disabled Mui-disabled"
-              data-test="NAVIGATE_TO_CREATE_FEATURE"
-              href="/projects/default/create-toggle"
-              onBlur={[Function]}
-              onClick={[Function]}
-              onDragLeave={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              onKeyUp={[Function]}
-              onMouseDown={[Function]}
-              onMouseLeave={[Function]}
-              onMouseUp={[Function]}
-              onTouchEnd={[Function]}
-              onTouchMove={[Function]}
-              onTouchStart={[Function]}
-              role="button"
-              tabIndex={-1}
-            >
-              <span
-                className="MuiButton-label"
-              >
-                New feature toggle
-              </span>
-            </a>
           </div>
         </div>
       </div>

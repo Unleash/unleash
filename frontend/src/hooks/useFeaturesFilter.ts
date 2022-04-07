@@ -36,16 +36,6 @@ export const useFeaturesFilter = (
     };
 };
 
-// Return the current project ID a project has been selected,
-// or the 'default' project if showing all projects.
-export const resolveFilteredProjectId = (filter: IFeaturesFilter): string => {
-    if (!filter.project || filter.project === '*') {
-        return 'default';
-    }
-
-    return filter.project;
-};
-
 const filterFeatures = (
     features: IFeatureToggle[],
     filter: IFeaturesFilter

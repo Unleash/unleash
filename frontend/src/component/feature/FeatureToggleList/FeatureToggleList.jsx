@@ -2,9 +2,8 @@ import { useContext } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { Link } from 'react-router-dom';
-import { Button, IconButton, List, ListItem, Tooltip } from '@material-ui/core';
+import { List, ListItem } from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { Add } from '@material-ui/icons';
 import FeatureToggleListItem from './FeatureToggleListItem';
 import { SearchField } from 'component/common/SearchField/SearchField';
 import FeatureToggleListActions from './FeatureToggleListActions';
@@ -12,13 +11,11 @@ import ConditionallyRender from 'component/common/ConditionallyRender/Conditiona
 import PageContent from 'component/common/PageContent/PageContent';
 import HeaderTitle from 'component/common/HeaderTitle';
 import loadingFeatures from './loadingFeatures';
-import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import AccessContext from 'contexts/AccessContext';
 import { useStyles } from './styles';
 import ListPlaceholder from 'component/common/ListPlaceholder/ListPlaceholder';
-import { getCreateTogglePath } from 'utils/routePathHelpers';
-import { NAVIGATE_TO_CREATE_FEATURE } from 'utils/testIds';
-import { resolveFilteredProjectId } from 'hooks/useFeaturesFilter';
+import { CreateFeatureButton } from '../CreateFeatureButton/CreateFeatureButton';
+import { useCreateFeaturePath } from '../CreateFeatureButton/useCreateFeaturePath';
 
 const FeatureToggleList = ({
     features,
@@ -32,6 +29,7 @@ const FeatureToggleList = ({
     setSort,
 }) => {
     const { hasAccess } = useContext(AccessContext);
+    const createFeature = useCreateFeaturePath(filter);
     const styles = useStyles();
     const smallScreen = useMediaQuery('(max-width:800px)');
     const mobileView = useMediaQuery('(max-width:600px)');
@@ -40,9 +38,6 @@ const FeatureToggleList = ({
         const query = v && typeof v === 'string' ? v.trim() : '';
         setFilter(prev => ({ ...prev, query }));
     };
-
-    const resolvedProjectId = resolveFilteredProjectId(filter);
-    const createURL = getCreateTogglePath(resolvedProjectId, flags.E);
 
     const renderFeatures = () => {
         features.forEach(e => {
@@ -83,11 +78,15 @@ const FeatureToggleList = ({
                             </ListItem>
                         }
                         elseShow={
-                            <ListPlaceholder
-                                text="No features available. Get started by adding a
-                                new feature toggle."
-                                link={createURL}
-                                linkText="Add your first toggle"
+                            <ConditionallyRender
+                                condition={Boolean(createFeature?.access)}
+                                show={() => (
+                                    <ListPlaceholder
+                                        text="No features available. Get started by adding a new feature toggle."
+                                        link={createFeature.path}
+                                        linkText="Add your first toggle"
+                                    />
+                                )}
                             />
                         }
                     />
@@ -143,49 +142,9 @@ const FeatureToggleList = ({
                                 <ConditionallyRender
                                     condition={!archive}
                                     show={
-                                        <ConditionallyRender
-                                            condition={smallScreen}
-                                            show={
-                                                <Tooltip title="Create feature toggle">
-                                                    <IconButton
-                                                        component={Link}
-                                                        to={createURL}
-                                                        data-test={
-                                                            NAVIGATE_TO_CREATE_FEATURE
-                                                        }
-                                                        disabled={
-                                                            !hasAccess(
-                                                                CREATE_FEATURE,
-                                                                resolvedProjectId
-                                                            )
-                                                        }
-                                                    >
-                                                        <Add />
-                                                    </IconButton>
-                                                </Tooltip>
-                                            }
-                                            elseShow={
-                                                <Button
-                                                    to={createURL}
-                                                    color="primary"
-                                                    variant="contained"
-                                                    component={Link}
-                                                    data-test={
-                                                        NAVIGATE_TO_CREATE_FEATURE
-                                                    }
-                                                    disabled={
-                                                        !hasAccess(
-                                                            CREATE_FEATURE,
-                                                            resolvedProjectId
-                                                        )
-                                                    }
-                                                    className={classnames({
-                                                        skeleton: loading,
-                                                    })}
-                                                >
-                                                    New feature toggle
-                                                </Button>
-                                            }
+                                        <CreateFeatureButton
+                                            filter={filter}
+                                            loading={loading}
                                         />
                                     }
                                 />

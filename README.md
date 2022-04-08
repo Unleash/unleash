@@ -69,6 +69,10 @@ If you don't want to run Unleash locally, we also provide easy deployment setups
 
 [![Deploy to Heroku](./.github/deploy-heroku-20.png)](https://www.heroku.com/deploy/?template=https://github.com/Unleash/unleash) [![Deploy to DigitalOcean](./.github/deploy-digital.svg)](https://cloud.digitalocean.com/apps/new?repo=https://github.com/Unleash/unleash/tree/main&refcode=0e1d75187044)
 
+### Configure and run Unleash anywhere
+
+The above sections show you how to get up and running quickly and easily. When you're ready to start configuring and customizing Unleash for your own environment, check out the documentation for [getting started with self-managed deployments](https://docs.getunleash.io/deploy/getting_started), [Unleash configuration options](https://docs.getunleash.io/deploy/configuring_unleash), or [running Unleash locally via docker](https://docs.getunleash.io/user_guide/quickstart#i-want-to-run-unleash-locally).
+
 ## Online demo
 
 Try out [the Unleash online demo](https://www.getunleash.io/interactive-demo).

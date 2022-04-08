@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
+import { IApiTokenCreate } from 'hooks/api/actions/useApiTokensApi/useApiTokensApi';
+
+export type ApiTokenFormErrorType = 'username' | 'projects';
 
 export const useApiTokenForm = () => {
     const { environments } = useEnvironments();
@@ -7,9 +10,11 @@ export const useApiTokenForm = () => {
 
     const [username, setUsername] = useState('');
     const [type, setType] = useState('CLIENT');
-    const [project, setProject] = useState('*');
+    const [projects, setProjects] = useState<string[]>(['*']);
     const [environment, setEnvironment] = useState<string>();
-    const [errors, setErrors] = useState({});
+    const [errors, setErrors] = useState<
+        Partial<Record<ApiTokenFormErrorType, string>>
+    >({});
 
     useEffect(() => {
         setEnvironment(type === 'ADMIN' ? '*' : initialEnvironment);
@@ -18,7 +23,7 @@ export const useApiTokenForm = () => {
     const setTokenType = (value: string) => {
         if (value === 'ADMIN') {
             setType(value);
-            setProject('*');
+            setProjects(['*']);
             setEnvironment('*');
         } else {
             setType(value);
@@ -26,37 +31,44 @@ export const useApiTokenForm = () => {
         }
     };
 
-    const getApiTokenPayload = () => {
-        return {
-            username: username,
-            type: type,
-            project: project,
-            environment: environment,
-        };
-    };
+    const getApiTokenPayload = (): IApiTokenCreate => ({
+        username,
+        type,
+        environment,
+        projects,
+    });
 
     const isValid = () => {
+        const newErrors: Partial<Record<ApiTokenFormErrorType, string>> = {};
         if (!username) {
-            setErrors({ username: 'Username is required.' });
-            return false;
-        } else {
-            setErrors({});
-            return true;
+            newErrors['username'] = 'Username is required';
         }
+        if (projects.length === 0) {
+            newErrors['projects'] = 'At least one project is required';
+        }
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
     };
 
-    const clearErrors = () => {
-        setErrors({});
+    const clearErrors = (error?: ApiTokenFormErrorType) => {
+        if (error) {
+            const newErrors = { ...errors };
+            delete newErrors[error];
+            setErrors(newErrors);
+        } else {
+            setErrors({});
+        }
     };
 
     return {
         username,
         type,
-        project,
+        projects,
         environment,
         setUsername,
         setTokenType,
-        setProject,
+        setProjects,
         setEnvironment,
         getApiTokenPayload,
         isValid,

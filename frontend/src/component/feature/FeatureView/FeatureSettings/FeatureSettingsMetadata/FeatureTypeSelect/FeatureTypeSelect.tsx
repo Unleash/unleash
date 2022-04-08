@@ -30,7 +30,6 @@ const FeatureTypeSelect = ({
 
     return (
         <>
-            {/* @ts-expect-error */}
             <GeneralSelect
                 disabled={!editable}
                 options={options}

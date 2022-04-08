@@ -23,11 +23,11 @@ export const CreateApiToken = () => {
         getApiTokenPayload,
         username,
         type,
-        project,
+        projects,
         environment,
         setUsername,
         setTokenType,
-        setProject,
+        setProjects,
         setEnvironment,
         isValid,
         errors,
@@ -84,12 +84,12 @@ export const CreateApiToken = () => {
             <ApiTokenForm
                 username={username}
                 type={type}
-                project={project}
+                projects={projects}
                 environment={environment}
                 setEnvironment={setEnvironment}
                 setTokenType={setTokenType}
                 setUsername={setUsername}
-                setProject={setProject}
+                setProjects={setProjects}
                 errors={errors}
                 handleSubmit={handleSubmit}
                 handleCancel={handleCancel}

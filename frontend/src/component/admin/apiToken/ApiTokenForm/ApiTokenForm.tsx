@@ -6,54 +6,53 @@ import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import Input from 'component/common/Input/Input';
 import { useStyles } from './ApiTokenForm.styles';
+import { SelectProjectInput } from './SelectProjectInput/SelectProjectInput';
+import { ApiTokenFormErrorType } from '../hooks/useApiTokenForm';
 interface IApiTokenFormProps {
     username: string;
     type: string;
-    project: string;
+    projects: string[];
     environment?: string;
     setTokenType: (value: string) => void;
     setUsername: React.Dispatch<React.SetStateAction<string>>;
-    setProject: React.Dispatch<React.SetStateAction<string>>;
+    setProjects: React.Dispatch<React.SetStateAction<string[]>>;
     setEnvironment: React.Dispatch<React.SetStateAction<string | undefined>>;
     handleSubmit: (e: any) => void;
     handleCancel: () => void;
     errors: { [key: string]: string };
     mode: 'Create' | 'Edit';
-    clearErrors: () => void;
+    clearErrors: (error?: ApiTokenFormErrorType) => void;
 }
+
 const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
     children,
     username,
     type,
-    project,
+    projects,
     environment,
     setUsername,
     setTokenType,
-    setProject,
+    setProjects,
     setEnvironment,
     handleSubmit,
     handleCancel,
     errors,
     clearErrors,
-    mode,
 }) => {
     const TYPE_ADMIN = 'ADMIN';
     const styles = useStyles();
     const { environments } = useEnvironments();
-    const { projects } = useProjects();
+    const { projects: availableProjects } = useProjects();
 
     const selectableTypes = [
         { key: 'CLIENT', label: 'Client', title: 'Client SDK token' },
         { key: 'ADMIN', label: 'Admin', title: 'Admin API token' },
     ];
 
-    const selectableProjects = [{ id: '*', name: 'ALL' }, ...projects].map(
-        i => ({
-            key: i.id,
-            label: i.name,
-            title: i.name,
-        })
-    );
+    const selectableProjects = availableProjects.map(i => ({
+        value: i.id,
+        label: i.name,
+    }));
 
     const selectableEnvs =
         type === TYPE_ADMIN
@@ -79,7 +78,7 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
                     label="Username"
                     error={errors.username !== undefined}
                     errorText={errors.username}
-                    onFocus={() => clearErrors()}
+                    onFocus={() => clearErrors('username')}
                     autoFocus
                 />
                 <p className={styles.inputDescription}>
@@ -93,21 +92,19 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
                     id="api_key_type"
                     name="type"
                     IconComponent={KeyboardArrowDownOutlined}
+                    fullWidth
                     className={styles.selectInput}
                 />
                 <p className={styles.inputDescription}>
                     Which project do you want to give access to?
                 </p>
-                <GeneralSelect
+                <SelectProjectInput
                     disabled={type === TYPE_ADMIN}
-                    value={project}
                     options={selectableProjects}
-                    onChange={e => setProject(e.target.value as string)}
-                    label="Project"
-                    id="api_key_project"
-                    name="project"
-                    IconComponent={KeyboardArrowDownOutlined}
-                    className={styles.selectInput}
+                    defaultValue={projects}
+                    onChange={setProjects}
+                    error={errors?.projects}
+                    onFocus={() => clearErrors('projects')}
                 />
                 <p className={styles.inputDescription}>
                     Which environment should the token have access to?
@@ -121,6 +118,7 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
                     id="api_key_environment"
                     name="environment"
                     IconComponent={KeyboardArrowDownOutlined}
+                    fullWidth
                     className={styles.selectInput}
                 />
             </div>

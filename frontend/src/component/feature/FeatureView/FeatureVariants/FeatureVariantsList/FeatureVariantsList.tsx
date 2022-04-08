@@ -115,7 +115,6 @@ const FeatureOverviewVariants = () => {
 
         return (
             <section style={{ paddingTop: '16px' }}>
-                {/* @ts-expect-error */}
                 <GeneralSelect
                     label="Stickiness"
                     options={options}

@@ -17,17 +17,13 @@ export interface ISelectOption {
 }
 
 export interface ISelectMenuProps extends SelectProps {
-    name: string;
-    id: string;
+    name?: string;
     value?: string;
     label?: string;
-    autoFocus?: boolean;
     options: ISelectOption[];
-    style?: object;
     onChange?: OnGeneralSelectChange;
     disabled?: boolean;
     fullWidth?: boolean;
-    className?: string;
     classes?: any;
     defaultValue?: string;
 }
@@ -43,10 +39,8 @@ const GeneralSelect: React.FC<ISelectMenuProps> = ({
     label = '',
     options,
     onChange,
-    defaultValue,
     id,
     disabled = false,
-    autoFocus,
     className,
     classes,
     fullWidth,
@@ -74,13 +68,11 @@ const GeneralSelect: React.FC<ISelectMenuProps> = ({
         >
             <InputLabel htmlFor={id}>{label}</InputLabel>
             <Select
-                defaultValue={defaultValue}
                 name={name}
                 disabled={disabled}
                 onChange={onChange}
                 className={className}
                 label={label}
-                autoFocus={autoFocus}
                 id={id}
                 value={value}
                 IconComponent={KeyboardArrowDownOutlined}

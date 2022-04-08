@@ -43,4 +43,10 @@ export const useStyles = makeStyles(theme => ({
         position: 'absolute',
         top: '-8px',
     },
+    selectOptionsLink: {
+        cursor: 'pointer',
+    },
+    selectOptionCheckbox: {
+        marginRight: '0.2rem',
+    },
 }));

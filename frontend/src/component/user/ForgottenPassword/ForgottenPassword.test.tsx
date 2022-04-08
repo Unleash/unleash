@@ -1,15 +1,11 @@
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import { FORGOTTEN_PASSWORD_FIELD } from 'utils/testIds';
 import React from 'react';
-import { TestContext } from 'utils/testContext';
 import ForgottenPassword from 'component/user/ForgottenPassword/ForgottenPassword';
+import { render } from 'utils/testRenderer';
 
 test('should render password auth', async () => {
-    render(
-        <TestContext>
-            <ForgottenPassword />
-        </TestContext>
-    );
+    render(<ForgottenPassword />);
 
     await screen.findByTestId(FORGOTTEN_PASSWORD_FIELD);
 });

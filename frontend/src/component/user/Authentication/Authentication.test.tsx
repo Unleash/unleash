@@ -1,5 +1,5 @@
 import Authentication from 'component/user/Authentication/Authentication';
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import {
     LOGIN_PASSWORD_ID,
     LOGIN_EMAIL_ID,
@@ -8,7 +8,7 @@ import {
     SSO_LOGIN_BUTTON,
 } from 'utils/testIds';
 import React from 'react';
-import { TestContext } from 'utils/testContext';
+import { render } from 'utils/testRenderer';
 import { testServerSetup, testServerRoute } from 'utils/testServer';
 
 const server = testServerSetup();
@@ -22,11 +22,7 @@ test('should render password auth', async () => {
         options: [],
     });
 
-    render(
-        <TestContext>
-            <Authentication redirect="/" />
-        </TestContext>
-    );
+    render(<Authentication redirect="/" />);
 
     await screen.findByTestId(AUTH_PAGE_ID);
     expect(screen.getByTestId(LOGIN_EMAIL_ID)).toBeInTheDocument();
@@ -43,11 +39,7 @@ test('should not render password auth if defaultHidden is true', async () => {
         options: [],
     });
 
-    render(
-        <TestContext>
-            <Authentication redirect="/" />
-        </TestContext>
-    );
+    render(<Authentication redirect="/" />);
 
     await screen.findByTestId(AUTH_PAGE_ID);
     expect(screen.queryByTestId(LOGIN_EMAIL_ID)).not.toBeInTheDocument();
@@ -64,11 +56,7 @@ test('should render demo auth', async () => {
         options: [],
     });
 
-    render(
-        <TestContext>
-            <Authentication redirect="/" />
-        </TestContext>
-    );
+    render(<Authentication redirect="/" />);
 
     await screen.findByTestId(AUTH_PAGE_ID);
     expect(screen.getByTestId(LOGIN_EMAIL_ID)).toBeInTheDocument();
@@ -85,11 +73,7 @@ test('should render email auth', async () => {
         options: [],
     });
 
-    render(
-        <TestContext>
-            <Authentication redirect="/" />
-        </TestContext>
-    );
+    render(<Authentication redirect="/" />);
 
     await screen.findByTestId(AUTH_PAGE_ID);
     expect(screen.getByTestId(LOGIN_EMAIL_ID)).toBeInTheDocument();
@@ -121,11 +105,7 @@ const testSSOAuthOption = async (authOption: string) => {
         type: 'password',
     });
 
-    render(
-        <TestContext>
-            <Authentication redirect="/" />
-        </TestContext>
-    );
+    render(<Authentication redirect="/" />);
 
     const ssoLink = await screen.findByTestId(testId);
     expect(ssoLink.getAttribute('href')).toEqual(path);

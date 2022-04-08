@@ -85,7 +85,7 @@ We know that learning a new tool can be hard and time-consuming. We have a growi
 
 [![Join Unleash on Slack](https://img.shields.io/badge/slack-join-635dc5?logo=slack)](https://slack.unleash.run)
 
-💬 ![Join Unleash on Slack](https://slack.unleash.run) if you want ask open questions about Unleash, feature toggling or discuss these topics in general.
+💬 [Join Unleash on Slack](https://slack.unleash.run) if you want ask open questions about Unleash, feature toggling or discuss these topics in general.
 
 💻 [Create a GitHub issue](https://github.com/Unleash/unleash/issues/new) if you have found a bug or have ideas on how to improve Unleash.
 
@@ -147,7 +147,7 @@ Read more in the [*system overview* section of the Unleash documentation](https:
 
 To connect your application to Unleash you'll need to use a client SDK for your programming language.
 
-**Official server-side SDKs**:
+**Official server-side SDKs:**
 
 - [Go SDK](https://docs.getunleash.io/sdks/go_sdk)
 - [Java SDK](https://docs.getunleash.io/sdks/java_sdk)
@@ -167,7 +167,7 @@ The front-end SDKs connects via the [Unleash Proxy](https://docs.getunleash.io/s
 - [React SDK](https://docs.getunleash.io/sdks/proxy-react)
 - [iOS SDK](https://docs.getunleash.io/sdks/proxy-ios)
 
-**Community SDKs**
+**Community SDKs:**
 
 If none of the official SDKs fit your need, there's also a number of [community-developed SDKs](https://docs.getunleash.io/sdks#community-sdks) where you might find an implementation for your preferred language (such as  [Elixir](https://gitlab.com/afontaine/unleash_ex), [Dart](https://pub.dev/packages/unleash), [Clojure](https://github.com/AppsFlyer/unleash-client-clojure), and more).
 

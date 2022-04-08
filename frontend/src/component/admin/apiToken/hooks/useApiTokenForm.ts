@@ -11,6 +11,8 @@ export const useApiTokenForm = () => {
     const [username, setUsername] = useState('');
     const [type, setType] = useState('CLIENT');
     const [projects, setProjects] = useState<string[]>(['*']);
+    const [memorizedProjects, setMemorizedProjects] =
+        useState<string[]>(projects);
     const [environment, setEnvironment] = useState<string>();
     const [errors, setErrors] = useState<
         Partial<Record<ApiTokenFormErrorType, string>>
@@ -23,10 +25,12 @@ export const useApiTokenForm = () => {
     const setTokenType = (value: string) => {
         if (value === 'ADMIN') {
             setType(value);
+            setMemorizedProjects(projects);
             setProjects(['*']);
             setEnvironment('*');
         } else {
             setType(value);
+            setProjects(memorizedProjects);
             setEnvironment(initialEnvironment);
         }
     };

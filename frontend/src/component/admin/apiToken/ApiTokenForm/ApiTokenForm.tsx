@@ -49,9 +49,9 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
         { key: 'ADMIN', label: 'Admin', title: 'Admin API token' },
     ];
 
-    const selectableProjects = availableProjects.map(i => ({
-        value: i.id,
-        label: i.name,
+    const selectableProjects = availableProjects.map(project => ({
+        value: project.id,
+        label: project.name,
     }));
 
     const selectableEnvs =

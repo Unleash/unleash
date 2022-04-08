@@ -1,9 +1,8 @@
+import React, { FC } from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
 import { render as rtlRender, RenderOptions } from '@testing-library/react';
 import { SWRConfig } from 'swr';
-import { ThemeProvider } from '@material-ui/core/styles';
-import theme from 'themes/mainTheme';
-import React from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import { MainThemeProvider } from 'themes/MainThemeProvider';
 
 export const render = (
     ui: JSX.Element,
@@ -20,12 +19,12 @@ export const render = (
     });
 };
 
-const Wrapper: React.FC = ({ children }) => {
+const Wrapper: FC = ({ children }) => {
     return (
         <SWRConfig value={{ provider: () => new Map() }}>
-            <BrowserRouter>
-                <ThemeProvider theme={theme}>{children}</ThemeProvider>
-            </BrowserRouter>
+            <MainThemeProvider>
+                <Router>{children}</Router>
+            </MainThemeProvider>
         </SWRConfig>
     );
 };

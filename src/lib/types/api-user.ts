@@ -4,7 +4,8 @@ import { CLIENT } from './permissions';
 interface IApiUserData {
     username: string;
     permissions?: string[];
-    project: string;
+    projects?: string[];
+    project?: string;
     environment: string;
     type: ApiTokenType;
 }
@@ -16,7 +17,7 @@ export default class ApiUser {
 
     readonly permissions: string[];
 
-    readonly project: string;
+    readonly projects: string[];
 
     readonly environment: string;
 
@@ -25,6 +26,7 @@ export default class ApiUser {
     constructor({
         username,
         permissions = [CLIENT],
+        projects,
         project,
         environment,
         type,
@@ -34,8 +36,12 @@ export default class ApiUser {
         }
         this.username = username;
         this.permissions = permissions;
-        this.project = project;
         this.environment = environment;
         this.type = type;
+        if (projects && projects.length > 0) {
+            this.projects = projects;
+        } else {
+            this.projects = [project];
+        }
     }
 }

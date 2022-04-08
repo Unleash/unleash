@@ -194,7 +194,7 @@ test('creates new client token: project & environment defaults to "*"', async ()
             expect(res.body.type).toBe('client');
             expect(res.body.secret.length > 16).toBe(true);
             expect(res.body.environment).toBe(DEFAULT_ENV);
-            expect(res.body.project).toBe(ALL);
+            expect(res.body.projects[0]).toBe(ALL);
         });
 });
 
@@ -213,7 +213,7 @@ test('creates new client token with project & environment set', async () => {
             expect(res.body.type).toBe('client');
             expect(res.body.secret.length > 16).toBe(true);
             expect(res.body.environment).toBe(DEFAULT_ENV);
-            expect(res.body.project).toBe('default');
+            expect(res.body.projects[0]).toBe('default');
         });
 });
 

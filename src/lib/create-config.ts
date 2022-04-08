@@ -21,7 +21,11 @@ import { defaultCustomAuthDenyAll } from './default-custom-auth-deny-all';
 import { formatBaseUri } from './util/format-base-uri';
 import { minutesToMilliseconds, secondsToMilliseconds } from 'date-fns';
 import EventEmitter from 'events';
-import { ApiTokenType, validateApiToken } from './types/models/api-token';
+import {
+    ApiTokenType,
+    mapLegacyToken,
+    validateApiToken,
+} from './types/models/api-token';
 
 const safeToUpper = (s: string) => (s ? s.toUpperCase() : s);
 
@@ -199,7 +203,7 @@ const loadTokensFromString = (tokenString: String, tokenType: ApiTokenType) => {
             type: tokenType,
             username: 'admin',
         };
-        validateApiToken(token);
+        validateApiToken(mapLegacyToken(token));
         return token;
     });
     return tokens;

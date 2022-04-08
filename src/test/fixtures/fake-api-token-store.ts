@@ -50,6 +50,7 @@ export default class FakeApiTokenStore
     async insert(newToken: IApiTokenCreate): Promise<IApiToken> {
         const apiToken = {
             createdAt: new Date(),
+            project: newToken.projects?.join(',') || '*',
             ...newToken,
         };
         this.tokens.push(apiToken);

@@ -19,13 +19,17 @@ export default class FakeFeatureToggleClientStore
                 if (featureQuery.project) {
                     return (
                         toggle.name.startsWith(featureQuery.namePrefix) &&
-                        featureQuery.project.includes(toggle.project)
+                        featureQuery.project.some((project) =>
+                            project.includes(toggle.project),
+                        )
                     );
                 }
                 return toggle.name.startsWith(featureQuery.namePrefix);
             }
             if (featureQuery.project) {
-                return featureQuery.project.includes(toggle.project);
+                return featureQuery.project.some((project) =>
+                    project.includes(toggle.project),
+                );
             }
             return toggle.archived === archived;
         });

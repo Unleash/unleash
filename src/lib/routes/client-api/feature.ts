@@ -10,7 +10,7 @@ import { IFeatureToggleQuery } from '../../types/model';
 import NotFoundError from '../../error/notfound-error';
 import { IAuthRequest } from '../unleash-types';
 import ApiUser from '../../types/api-user';
-import { ALL } from '../../types/models/api-token';
+import { ALL, isAllProjects } from '../../types/models/api-token';
 
 const version = 2;
 
@@ -65,8 +65,8 @@ export default class FeatureController extends Controller {
 
         const override: QueryOverride = {};
         if (user instanceof ApiUser) {
-            if (user.project !== ALL) {
-                override.project = [user.project];
+            if (!isAllProjects(user.projects)) {
+                override.project = user.projects;
             }
             if (user.environment !== ALL) {
                 override.environment = user.environment;

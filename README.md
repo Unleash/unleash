@@ -179,7 +179,7 @@ _(PS! feel free to submit your logo!)_
 
 ## Want to know more about Unleash?
 
-### Videos and podcasts?
+### Videos and podcasts
 
 - [The Unleash YouTube channel](https://www.youtube.com/channel/UCJjGVOc5QBbEje-r7nZEa4A)
 - [*Feature toggles — Why and how to add to your software* — freeCodeCamp (YouTube)](https://www.youtube.com/watch?v=-yHZ9uLVSp4&t=0s)

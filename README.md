@@ -75,8 +75,6 @@ Try out [the Unleash online demo](https://www.getunleash.io/interactive-demo).
 
 ![The Unleash UI. It shows a project and its users, feature toggles and tabs for health, access, and environments.](./.github/github_online_demo.svg)
 
-[Get image from Nicolae here]
-
 ## Community and help — sharing is caring
 
 We know that learning a new tool can be hard and time-consuming. We have a growing community that loves to help out. Please don't hesitate to reach out for help.

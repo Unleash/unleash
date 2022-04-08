@@ -5,6 +5,7 @@ import {
     semVerOperators,
     dateOperators,
     numOperators,
+    inOperators,
 } from 'constants/operators';
 import React, { useState, ChangeEvent } from 'react';
 import { formatOperatorDescription } from 'component/common/ConstraintAccordion/ConstraintOperator/formatOperatorDescription';
@@ -61,7 +62,8 @@ export const ConstraintOperatorSelect = ({
                         key={operator}
                         value={operator}
                         className={classNames(
-                            needSeparatorAbove(operator) && styles.separator
+                            needSeparatorAbove(options, operator) &&
+                                styles.separator
                         )}
                     >
                         <div className={styles.optionContainer}>
@@ -77,15 +79,20 @@ export const ConstraintOperatorSelect = ({
     );
 };
 
-const needSeparatorAbove = (operator: Operator): boolean => {
-    const groups = [
-        stringOperators,
-        numOperators,
-        dateOperators,
-        semVerOperators,
-    ];
+const needSeparatorAbove = (options: Operator[], option: Operator): boolean => {
+    if (option === options[0]) {
+        return false;
+    }
 
-    return groups.some(group => {
-        return group[0] === operator;
+    return operatorGroups.some(group => {
+        return group[0] === option;
     });
 };
+
+const operatorGroups = [
+    inOperators,
+    stringOperators,
+    numOperators,
+    dateOperators,
+    semVerOperators,
+];

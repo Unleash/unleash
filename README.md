@@ -150,14 +150,16 @@ If you're looking for one of the following features, please take a look at our [
 - tighter security
 - more hosting options (we can even host it for you!)
 
-<br/><br/>
+<br/>
+
 ## Architecture
 
 <img src="./.github/Unleash_architecture.svg" title="Unleash System Overview" />
 
 Read more in the [*system overview* section of the Unleash documentation](https://docs.getunleash.io/user_guide/unleash_overview#system-overview).
 
-<br/><br/>
+<br/>
+
 ## Unleash SDKs
 
 To connect your application to Unleash you'll need to use a client SDK for your programming language.
@@ -186,7 +188,8 @@ The front-end SDKs connects via the [Unleash Proxy](https://docs.getunleash.io/s
 
 If none of the official SDKs fit your need, there's also a number of [community-developed SDKs](https://docs.getunleash.io/sdks#community-sdks) where you might find an implementation for your preferred language (such as  [Elixir](https://gitlab.com/afontaine/unleash_ex), [Dart](https://pub.dev/packages/unleash), [Clojure](https://github.com/AppsFlyer/unleash-client-clojure), and more).
 
-<br/><br/>
+<br/>
+
 ## Users of Unleash
 
 **Unleash is trusted by thousands of companies all over the world**.
@@ -195,7 +198,8 @@ If none of the official SDKs fit your need, there's also a number of [community-
 
 ![The Unleash logo encircled by logos for Finn.no, nav (the Norwegian Labour and Welfare Administration), Budgets, Otovo, and Amedia. The encircling logos are all connected to the Unleash logo.](./.github/github_unleash_users.svg)
 
-<br/><br/>
+<br/>
+
 ## Want to know more about Unleash?
 
 ### Videos and podcasts

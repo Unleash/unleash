@@ -95,44 +95,49 @@ We'd love to have your help too: Please feel free to open issues or provide pull
 
 Check out [the CONTRIBUTING.md file](./CONTRIBUTING.md) for contribution guidelines and the [Unleash developer guide](./website/docs/contributing/developer-guide.md) for tips on environment setup, running the tests, and running Unleash from source.
 
-## Features
+## Features our users love
 
-**Open-Source**
+### Flexibility and adaptability
 
-- Boolean feature toggles (on/off)
-- Canary release (Gradual rollout)
-- Targeted release
-- Experimentation (A/B testing)
-- Kill Switches
-- Custom activation strategies
-- Privacy first (GDPR) where end-user data never leaves your application
-- Audit logs
-- Addons integrating with other popular tools (Slack, Teams, Datadog, etc.)
-- It is secure (Enable Secure Headers with strict HTTPS only mode)
-- Extremely scalable with evaluations on the client-side. Used in enterprises handling more than 10k req/s. [Read more about our architecture](https://docs.getunleash.io/)
-- Dashboard to manage technical debt
-- Admin APIs
-- Flexible architecture and can be hosted anywhere
-- [Docker image available](https://hub.docker.com/r/unleashorg/unleash-server)
+- Get an easy overview of all feature toggles across all your environments, applications and services
+- Use included [activation strategies](https://docs.getunleash.io/user_guide/activation_strategy) for most common use cases, or use a [custom activation strategy](https://docs.getunleash.io/advanced/custom_activation_strategy) to support any need you might have
+- Organise feature toggles by [feature toggle tags](https://docs.getunleash.io/advanced/tags)
+- [Canary releases / gradual rollouts](https://docs.getunleash.io/user_guide/activation_strategy#gradual-rollout)
+- Targeted releases: release features to specific [users](https://docs.getunleash.io/user_guide/activation_strategy#userids), [IPs](https://docs.getunleash.io/user_guide/activation_strategy#ips), or [hostnames](https://docs.getunleash.io/user_guide/activation_strategy#hostnames)
+- [Kill switches](https://docs.getunleash.io/advanced/feature_toggle_types#feature-toggle-types)
+- [A/B testing](https://docs.getunleash.io/topics/a-b-testing)
+- 2 [environments](https://docs.getunleash.io/topics/a-b-testing)
+- Out-of-the-box integrations with popular tools ([Slack](https://docs.getunleash.io/addons/slack), [Microsoft Teams](https://docs.getunleash.io/addons/teams), [Datadog](https://docs.getunleash.io/addons/datadog)) + integrate with anything with [webhooks](https://docs.getunleash.io/addons/webhook)
+- [Dashboard for managing technical debt](https://docs.getunleash.io/user_guide/technical_debt) and [stale toggles](https://docs.getunleash.io/user_guide/technical_debt#stale-and-potentially-stale-toggles)
+- API-first: *everything* can be automated. No exceptions.
+- [12 official client SDKs](https://docs.getunleash.io/sdks#official-sdks), and ten [community-contributed client SDKs](https://docs.getunleash.io/sdks#community-sdks)
+- Run it via Docker with the [official Docker image](https://hub.docker.com/r/unleashorg/unleash-server) or as a pure Node.js application
 
-**Enterprise**
+### Security & performance
 
-[Unleash Enterprise](https://www.getunleash.io/plans) builds directly on top of the Open-Source (open-core) and provides additional advanced functionality:
+- Privacy by design (GDPR and Schrems II). End-user data never leaves your application.
+- [Audit logs](https://docs.getunleash.io/advanced/audit_log)
+- Enforce [OWASP's secure headers](https://owasp.org/www-project-secure-headers/) via the strict HTTPS-only mode
+- Flexible hosting options: host it on premise or in the cloud (*any* cloud)
+- Scale [the Unleash Proxy](https://docs.getunleash.io/sdks/unleash-proxy) independently of the Unleash server to support any number of front-end clients without overloading your Unleash instance
 
-- Project support
-- Advanced segmentation
-- Environments (unlimited)
-- SSO (SAML 2.0, OpenID Connect, etc)
-- A cloud offering where the Unleash team host, monitor, scale, patches, upgrades and take full backups for you
-- Self-hosted possible
-- SLA guarantees
-- Support
+### Looking for more features?
+
+If you're looking for one of the following features, please take a look at our [Pro and Enterprise plans](https://www.getunleash.io/plans):
+- [role-based access control (RBAC)](https://docs.getunleash.io/user_guide/rbac)
+- [single sign-on (SSO)](https://docs.getunleash.io/advanced/enterprise-authentication)
+- more environments
+- [feature toggles project support](https://docs.getunleash.io/user_guide/projects)
+- [advanced segmentation](https://docs.getunleash.io/reference/segments)
+- [additional strategy constraints](https://docs.getunleash.io/advanced/strategy_constraints)
+- tighter security
+- more hosting options (we can even host it for you!)
 
 ## Unleash SDKs
 
 In order to connect your application to Unleash you need to use a client SDK for your programming language.
 
-**Official Server SDKs**:
+**Official server-side SDKs**:
 
 - [Go SDK](https://docs.getunleash.io/sdks/go_sdk)
 - [Java SDK](https://docs.getunleash.io/sdks/java_sdk)

@@ -141,32 +141,31 @@ Read more in the [*system overview* section of the Unleash documentation](https:
 
 ## Unleash SDKs
 
-In order to connect your application to Unleash you need to use a client SDK for your programming language.
+To connect your application to Unleash you'll need to use a client SDK for your programming language.
 
 **Official server-side SDKs**:
 
 - [Go SDK](https://docs.getunleash.io/sdks/go_sdk)
 - [Java SDK](https://docs.getunleash.io/sdks/java_sdk)
 - [Node.js SDK](https://docs.getunleash.io/sdks/node_sdk)
-- [Python SDK](https://docs.getunleash.io/sdks/python_sdk)
 - [PHP SDK](https://docs.getunleash.io/sdks/php_sdk)
+- [Python SDK](https://docs.getunleash.io/sdks/python_sdk)
 - [Ruby SDK](https://docs.getunleash.io/sdks/ruby_sdk)
 - [Rust SDK](https://github.com/unleash/unleash-client-rust)
 - [.NET SDK](https://docs.getunleash.io/sdks/dot_net_sdk)
 
-**Official Frontend SDKs:**
+**Official front-end SDKs:**
 
-The frontend SDKs connects via the [Unleash Proxy](https://docs.getunleash.io/sdks/unleash-proxy) in order to ensure Privacy, scalability and security.
+The front-end SDKs connects via the [Unleash Proxy](https://docs.getunleash.io/sdks/unleash-proxy) in order to ensure privacy, scalability and security.
 
 - [Android SDK](https://docs.getunleash.io/sdks/android_proxy_sdk)
-- [iOS SDK](https://docs.getunleash.io/sdks/proxy-ios)
 - [Javascript SDK](https://docs.getunleash.io/sdks/proxy-javascript)
 - [React SDK](https://docs.getunleash.io/sdks/proxy-react)
+- [iOS SDK](https://docs.getunleash.io/sdks/proxy-ios)
 
 **Community SDKs**
 
-In addition there exists a good list of [community developed SDKs](https://docs.getunleash.io/sdks/community), so there might already exist an implementation for your favorite programming language (e.g. [Elixir](https://gitlab.com/afontaine/unleash_ex), [Dart](https://pub.dev/packages/unleash), [Clojure](https://github.com/AppsFlyer/unleash-client-clojure), [NestJS](https://github.com/pmb0/nestjs-unleash), [Kotlin](https://github.com/silvercar/unleash-client-kotlin), [PHP](https://gitlab.com/minds/unleash-client-php) and more.)
-
+If none of the official SDKs fit your need, there's also a number of [community-developed SDKs](https://docs.getunleash.io/sdks#community-sdks) where you might find an implementation for your preferred language (such as  [Elixir](https://gitlab.com/afontaine/unleash_ex), [Dart](https://pub.dev/packages/unleash), [Clojure](https://github.com/AppsFlyer/unleash-client-clojure), and more).
 
 ## What is a feature toggle?
 

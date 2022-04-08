@@ -97,7 +97,7 @@ export const CreateSegment = () => {
                     name="segment"
                     permission={CREATE_SEGMENT}
                     disabled={!hasValidConstraints || atSegmentValuesLimit}
-                    data-test={SEGMENT_CREATE_BTN_ID}
+                    data-testid={SEGMENT_CREATE_BTN_ID}
                 />
             </SegmentForm>
         </FormTemplate>

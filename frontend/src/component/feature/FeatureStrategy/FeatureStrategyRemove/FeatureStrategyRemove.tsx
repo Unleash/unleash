@@ -68,7 +68,7 @@ export const FeatureStrategyRemove = ({
                         environmentId={environmentId}
                         disabled={disabled}
                         permission={DELETE_FEATURE_STRATEGY}
-                        data-test={STRATEGY_FORM_REMOVE_ID}
+                        data-testid={STRATEGY_FORM_REMOVE_ID}
                         type="button"
                     >
                         <Delete titleAccess="Delete strategy" />
@@ -81,7 +81,7 @@ export const FeatureStrategyRemove = ({
                         environmentId={environmentId}
                         disabled={disabled}
                         permission={DELETE_FEATURE_STRATEGY}
-                        data-test={STRATEGY_FORM_REMOVE_ID}
+                        data-testid={STRATEGY_FORM_REMOVE_ID}
                         color="secondary"
                         variant="text"
                         type="button"

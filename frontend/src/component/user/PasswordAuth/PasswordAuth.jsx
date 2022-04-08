@@ -108,7 +108,7 @@ const PasswordAuth = ({ authDetails, redirect }) => {
                                 error={!!usernameError}
                                 helperText={usernameError}
                                 autoComplete="true"
-                                data-test={LOGIN_EMAIL_ID}
+                                data-testid={LOGIN_EMAIL_ID}
                                 variant="outlined"
                                 size="small"
                             />
@@ -120,14 +120,14 @@ const PasswordAuth = ({ authDetails, redirect }) => {
                                 error={!!passwordError}
                                 helperText={passwordError}
                                 autoComplete="true"
-                                data-test={LOGIN_PASSWORD_ID}
+                                data-testid={LOGIN_PASSWORD_ID}
                             />
                             <Button
                                 variant="contained"
                                 color="primary"
                                 type="submit"
                                 style={{ width: '150px', margin: '1rem auto' }}
-                                data-test={LOGIN_BUTTON}
+                                data-testid={LOGIN_BUTTON}
                             >
                                 Sign in
                             </Button>

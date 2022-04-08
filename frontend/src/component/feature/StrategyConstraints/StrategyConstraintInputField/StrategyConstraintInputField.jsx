@@ -117,7 +117,7 @@ const StrategyConstraintInputField = ({
                                 multiple
                                 size="small"
                                 options={options}
-                                data-test={CONSTRAINT_AUTOCOMPLETE_ID}
+                                data-testid={CONSTRAINT_AUTOCOMPLETE_ID}
                                 value={values || []}
                                 getOptionLabel={option => option.label}
                                 onBlur={onBlur}

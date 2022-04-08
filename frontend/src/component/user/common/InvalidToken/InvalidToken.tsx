@@ -27,7 +27,7 @@ const InvalidToken = () => {
                 color="primary"
                 component={Link}
                 to="forgotten-password"
-                data-test={INVALID_TOKEN_BUTTON}
+                data-testid={INVALID_TOKEN_BUTTON}
             >
                 Reset password
             </Button>

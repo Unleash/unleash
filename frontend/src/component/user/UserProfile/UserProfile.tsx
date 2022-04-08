@@ -71,7 +71,7 @@ const UserProfile = ({
                     <Avatar
                         alt="user image"
                         src={imageUrl}
-                        data-test={HEADER_USER_AVATAR}
+                        data-testid={HEADER_USER_AVATAR}
                     />
                     <KeyboardArrowDownIcon />
                 </Button>

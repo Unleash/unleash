@@ -52,7 +52,7 @@ const GeneralSelect: React.FC<ISelectMenuProps> = ({
                 key={option.key}
                 value={option.key}
                 title={option.title || ''}
-                data-test={`${SELECT_ITEM_ID}-${option.label}`}
+                data-testid={`${SELECT_ITEM_ID}-${option.label}`}
                 disabled={option.disabled}
             >
                 {option.label}

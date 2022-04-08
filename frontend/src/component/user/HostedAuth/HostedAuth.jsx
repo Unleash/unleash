@@ -109,7 +109,7 @@ const HostedAuth = ({ authDetails, redirect }) => {
                                 helperText={usernameError}
                                 variant="outlined"
                                 size="small"
-                                data-test={LOGIN_EMAIL_ID}
+                                data-testid={LOGIN_EMAIL_ID}
                             />
                             <PasswordField
                                 label="Password"
@@ -118,7 +118,7 @@ const HostedAuth = ({ authDetails, redirect }) => {
                                 value={password}
                                 error={!!passwordError}
                                 helperText={passwordError}
-                                data-test={LOGIN_PASSWORD_ID}
+                                data-testid={LOGIN_PASSWORD_ID}
                             />
                             <Grid container>
                                 <Button
@@ -126,7 +126,7 @@ const HostedAuth = ({ authDetails, redirect }) => {
                                     color="primary"
                                     type="submit"
                                     className={styles.button}
-                                    data-test={LOGIN_BUTTON}
+                                    data-testid={LOGIN_BUTTON}
                                 >
                                     Sign in
                                 </Button>

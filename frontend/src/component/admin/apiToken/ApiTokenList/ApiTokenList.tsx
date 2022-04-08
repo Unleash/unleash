@@ -247,7 +247,7 @@ export const ApiTokenList = () => {
                                                 '/admin/api/create-token'
                                             )
                                         }
-                                        data-test={CREATE_API_TOKEN_BUTTON}
+                                        data-testid={CREATE_API_TOKEN_BUTTON}
                                     >
                                         New API token
                                     </Button>

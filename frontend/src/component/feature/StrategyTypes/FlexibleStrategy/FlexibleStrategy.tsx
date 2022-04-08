@@ -104,7 +104,7 @@ const FlexibleStrategy = ({
                     options={stickinessOptions}
                     value={stickiness}
                     disabled={!editable}
-                    data-test={FLEXIBLE_STRATEGY_STICKINESS_ID}
+                    data-testid={FLEXIBLE_STRATEGY_STICKINESS_ID}
                     onChange={e =>
                         onUpdate('stickiness')(e, e.target.value as number)
                     }
@@ -136,7 +136,7 @@ const FlexibleStrategy = ({
                     value={groupId || ''}
                     disabled={!editable}
                     onChange={e => onUpdate('groupId')(e, e.target.value)}
-                    data-test={FLEXIBLE_STRATEGY_GROUP_ID}
+                    data-testid={FLEXIBLE_STRATEGY_GROUP_ID}
                 />
             </div>
         </div>

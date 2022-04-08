@@ -41,7 +41,7 @@ const SelectMenu: React.FC<ISelectMenuProps> = ({
                 key={option.key}
                 value={option.key}
                 title={option.title || ''}
-                data-test={`${SELECT_ITEM_ID}-${option.label}`}
+                data-testid={`${SELECT_ITEM_ID}-${option.label}`}
             >
                 {option.label}
             </MenuItem>

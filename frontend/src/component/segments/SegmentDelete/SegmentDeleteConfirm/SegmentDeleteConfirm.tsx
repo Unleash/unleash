@@ -55,7 +55,7 @@ export const SegmentDeleteConfirm = ({
                     value={confirmName}
                     label="Segment name"
                     className={styles.deleteInput}
-                    data-test={SEGMENT_DIALOG_NAME_ID}
+                    data-testid={SEGMENT_DIALOG_NAME_ID}
                 />
             </form>
         </Dialogue>

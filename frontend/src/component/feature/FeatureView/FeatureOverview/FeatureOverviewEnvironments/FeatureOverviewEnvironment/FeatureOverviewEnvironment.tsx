@@ -89,7 +89,7 @@ const FeatureOverviewEnvironment = ({
         <div className={styles.featureOverviewEnvironment}>
             <Accordion
                 style={{ boxShadow: 'none' }}
-                data-test={`${FEATURE_ENVIRONMENT_ACCORDION}_${env.name}`}
+                data-testid={`${FEATURE_ENVIRONMENT_ACCORDION}_${env.name}`}
             >
                 <AccordionSummary
                     className={styles.accordionHeader}

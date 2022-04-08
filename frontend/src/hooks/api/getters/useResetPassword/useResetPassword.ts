@@ -11,7 +11,7 @@ const getFetcher = (token: string) => () => {
     }).then(res => res.json());
 };
 
-const INVALID_TOKEN_ERROR = 'InvalidTokenError';
+export const INVALID_TOKEN_ERROR = 'InvalidTokenError';
 const USED_TOKEN_ERROR = 'UsedTokenError';
 
 const useResetPassword = (options: SWRConfiguration = {}) => {

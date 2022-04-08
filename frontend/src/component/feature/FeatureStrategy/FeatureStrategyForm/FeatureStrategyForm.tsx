@@ -135,7 +135,7 @@ export const FeatureStrategyForm = ({
                     color="primary"
                     type="submit"
                     disabled={loading || !hasValidConstraints}
-                    data-test={STRATEGY_FORM_SUBMIT_ID}
+                    data-testid={STRATEGY_FORM_SUBMIT_ID}
                 >
                     Save strategy
                 </PermissionButton>

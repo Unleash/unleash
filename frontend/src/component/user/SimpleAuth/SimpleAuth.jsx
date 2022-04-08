@@ -51,14 +51,14 @@ const SimpleAuth = ({ authDetails, redirect }) => {
                 <TextField
                     value={email}
                     onChange={handleChange}
-                    inputProps={{ 'data-test': 'email-input-field' }}
+                    inputProps={{ 'data-testid': 'email-input-field' }}
                     size="small"
                     variant="outlined"
                     label="Email"
                     name="email"
                     required
                     type="email"
-                    data-test={LOGIN_EMAIL_ID}
+                    data-testid={LOGIN_EMAIL_ID}
                 />
                 <br />
 
@@ -68,7 +68,7 @@ const SimpleAuth = ({ authDetails, redirect }) => {
                         variant="contained"
                         color="primary"
                         className={styles.button}
-                        data-test={LOGIN_BUTTON}
+                        data-testid={LOGIN_BUTTON}
                     >
                         Sign in
                     </Button>

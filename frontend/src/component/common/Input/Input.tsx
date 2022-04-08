@@ -48,7 +48,7 @@ const Input = ({
                 onChange={onChange}
                 FormHelperTextProps={{
                     // @ts-expect-error
-                    ['data-test']: INPUT_ERROR_TEXT,
+                    ['data-testid']: INPUT_ERROR_TEXT,
                     classes: {
                         root: styles.helperText,
                     },

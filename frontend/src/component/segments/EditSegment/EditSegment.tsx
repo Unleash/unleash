@@ -99,7 +99,7 @@ export const EditSegment = () => {
                 <UpdateButton
                     permission={UPDATE_SEGMENT}
                     disabled={!hasValidConstraints || atSegmentValuesLimit}
-                    data-test={SEGMENT_SAVE_BTN_ID}
+                    data-testid={SEGMENT_SAVE_BTN_ID}
                 />
             </SegmentForm>
         </FormTemplate>

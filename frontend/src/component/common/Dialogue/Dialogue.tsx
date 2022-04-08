@@ -81,7 +81,7 @@ const Dialogue: React.FC<IDialogue> = ({
                                     onClick={handleClick}
                                     autoFocus={!formId}
                                     disabled={disabledPrimaryButton}
-                                    data-test={DIALOGUE_CONFIRM_ID}
+                                    data-testid={DIALOGUE_CONFIRM_ID}
                                     type={formId ? 'submit' : 'button'}
                                 >
                                     {primaryButtonText || "Yes, I'm sure"}

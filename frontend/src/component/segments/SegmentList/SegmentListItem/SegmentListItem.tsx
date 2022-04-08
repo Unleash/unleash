@@ -83,7 +83,7 @@ export const SegmentListItem = ({
                         setDelDialog(true);
                     }}
                     permission={ADMIN}
-                    data-test={`${SEGMENT_DELETE_BTN_ID}_${name}`}
+                    data-testid={`${SEGMENT_DELETE_BTN_ID}_${name}`}
                 >
                     <Delete />
                 </PermissionIconButton>

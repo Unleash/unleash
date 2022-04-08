@@ -277,7 +277,7 @@ export const AddVariant = ({
                     type="name"
                     disabled={editing}
                     onChange={setVariantValue}
-                    data-test={'VARIANT_NAME_INPUT'}
+                    data-testid={'VARIANT_NAME_INPUT'}
                 />
                 <br />
                 <Grid container>
@@ -299,7 +299,7 @@ export const AddVariant = ({
                                                 projectId={projectId}
                                                 name="weightType"
                                                 checked={isFixWeight}
-                                                data-test={
+                                                data-testid={
                                                     'VARIANT_WEIGHT_TYPE'
                                                 }
                                                 onChange={setVariantWeightType}
@@ -320,7 +320,7 @@ export const AddVariant = ({
                                     id="weight"
                                     label="Weight"
                                     name="weight"
-                                    data-test={'VARIANT_WEIGHT_INPUT'}
+                                    data-testid={'VARIANT_WEIGHT_INPUT'}
                                     InputProps={{
                                         endAdornment: (
                                             <InputAdornment position="start">
@@ -373,7 +373,7 @@ export const AddVariant = ({
                             className={commonStyles.fullWidth}
                             value={payload.value}
                             onChange={onPayload}
-                            data-test={'VARIANT_PAYLOAD_VALUE'}
+                            data-testid={'VARIANT_PAYLOAD_VALUE'}
                             placeholder={
                                 payload.type === 'json'
                                     ? '{ "hello": "world" }'

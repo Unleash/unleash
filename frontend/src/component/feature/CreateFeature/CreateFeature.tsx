@@ -105,7 +105,7 @@ const CreateFeature = () => {
                     name="Feature"
                     permission={CREATE_FEATURE}
                     projectId={project}
-                    data-test={CF_CREATE_BTN_ID}
+                    data-testid={CF_CREATE_BTN_ID}
                 />
             </FeatureForm>
         </FormTemplate>

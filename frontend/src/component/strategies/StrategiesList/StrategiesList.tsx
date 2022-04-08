@@ -69,7 +69,7 @@ export const StrategiesList = () => {
                     condition={smallScreen}
                     show={
                         <PermissionIconButton
-                            data-test={ADD_NEW_STRATEGY_ID}
+                            data-testid={ADD_NEW_STRATEGY_ID}
                             onClick={() => history.push('/strategies/create')}
                             permission={CREATE_STRATEGY}
                         >
@@ -81,7 +81,7 @@ export const StrategiesList = () => {
                             onClick={() => history.push('/strategies/create')}
                             color="primary"
                             permission={CREATE_STRATEGY}
-                            data-test={ADD_NEW_STRATEGY_ID}
+                            data-testid={ADD_NEW_STRATEGY_ID}
                         >
                             New strategy
                         </PermissionButton>

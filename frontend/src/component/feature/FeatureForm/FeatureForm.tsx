@@ -84,7 +84,7 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                     onFocus={() => clearErrors()}
                     value={name}
                     onChange={e => setName(trim(e.target.value))}
-                    data-test={CF_NAME_ID}
+                    data-testid={CF_NAME_ID}
                     onBlur={validateToggleName}
                 />
                 <p className={styles.inputDescription}>
@@ -97,7 +97,7 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                     label={'Toggle type'}
                     id="feature-type-select"
                     editable
-                    data-test={CF_TYPE_ID}
+                    data-testid={CF_TYPE_ID}
                     IconComponent={KeyboardArrowDownOutlined}
                     className={styles.selectInput}
                 />
@@ -137,7 +137,7 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                     label="Description"
                     placeholder="A short description of the feature toggle"
                     value={description}
-                    data-test={CF_DESC_ID}
+                    data-testid={CF_DESC_ID}
                     onChange={e => setDescription(e.target.value)}
                 />
                 <FormControl className={styles.input}>

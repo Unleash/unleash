@@ -23,7 +23,7 @@ const FeatureVariantListItem = ({
 
     return (
         <TableRow>
-            <TableCell data-test={'VARIANT_NAME'}>{variant.name}</TableCell>
+            <TableCell data-testid={'VARIANT_NAME'}>{variant.name}</TableCell>
             <TableCell className={styles.chipContainer}>
                 <ConditionallyRender
                     condition={Boolean(variant.payload)}
@@ -43,10 +43,10 @@ const FeatureVariantListItem = ({
                     }
                 />
             </TableCell>
-            <TableCell data-test={'VARIANT_WEIGHT'}>
+            <TableCell data-testid={'VARIANT_WEIGHT'}>
                 {variant.weight / 10.0} %
             </TableCell>
-            <TableCell data-test={'VARIANT_WEIGHT_TYPE'}>
+            <TableCell data-testid={'VARIANT_WEIGHT_TYPE'}>
                 {variant.weightType === FIX ? 'Fix' : 'Variable'}
             </TableCell>
             <ConditionallyRender
@@ -55,13 +55,13 @@ const FeatureVariantListItem = ({
                     <TableCell className={styles.actions}>
                         <div className={styles.actionsContainer}>
                             <IconButton
-                                data-test={'VARIANT_EDIT_BUTTON'}
+                                data-testid={'VARIANT_EDIT_BUTTON'}
                                 onClick={() => editVariant(variant.name)}
                             >
                                 <Edit />
                             </IconButton>
                             <IconButton
-                                data-test={`VARIANT_DELETE_BUTTON_${variant.name}`}
+                                data-testid={`VARIANT_DELETE_BUTTON_${variant.name}`}
                                 onClick={e => {
                                     e.stopPropagation();
                                     setDelDialog({

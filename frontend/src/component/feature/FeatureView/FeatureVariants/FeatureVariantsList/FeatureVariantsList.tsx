@@ -292,7 +292,7 @@ const FeatureOverviewVariants = () => {
                         setShowAddVariant(true);
                     }}
                     className={styles.addVariantButton}
-                    data-test={'ADD_VARIANT_BUTTON'}
+                    data-testid={'ADD_VARIANT_BUTTON'}
                     permission={UPDATE_FEATURE_VARIANTS}
                     projectId={projectId}
                 >

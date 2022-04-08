@@ -29,7 +29,7 @@ export const SidebarModal = ({
             aria-label={label}
             BackdropComponent={Backdrop}
             BackdropProps={{ timeout: TRANSITION_DURATION }}
-            data-test={SIDEBAR_MODAL_ID}
+            data-testid={SIDEBAR_MODAL_ID}
         >
             <Fade timeout={TRANSITION_DURATION} in={open}>
                 <div className={styles.modal}>{children}</div>

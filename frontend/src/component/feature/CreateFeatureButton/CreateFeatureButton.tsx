@@ -32,7 +32,7 @@ export const CreateFeatureButton = ({
                     <IconButton
                         component={Link}
                         to={createFeature.path}
-                        data-test={NAVIGATE_TO_CREATE_FEATURE}
+                        data-testid={NAVIGATE_TO_CREATE_FEATURE}
                         disabled={!createFeature.access}
                     >
                         <Add titleAccess="New" />
@@ -45,7 +45,7 @@ export const CreateFeatureButton = ({
                     color="primary"
                     variant="contained"
                     component={Link}
-                    data-test={NAVIGATE_TO_CREATE_FEATURE}
+                    data-testid={NAVIGATE_TO_CREATE_FEATURE}
                     disabled={!createFeature.access}
                     className={classnames({ skeleton: loading })}
                 >

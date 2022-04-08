@@ -45,12 +45,12 @@ const DemoAuth = ({ authDetails, redirect }) => {
                         value={email}
                         className={styles.emailField}
                         onChange={handleChange}
-                        inputProps={{ 'data-test': 'email-input-field' }}
+                        inputProps={{ 'data-testid': 'email-input-field' }}
                         size="small"
                         variant="outlined"
                         label="Email"
                         name="email"
-                        data-test={LOGIN_EMAIL_ID}
+                        data-testid={LOGIN_EMAIL_ID}
                         required
                         type="email"
                     />
@@ -60,7 +60,7 @@ const DemoAuth = ({ authDetails, redirect }) => {
                         variant="contained"
                         color="primary"
                         className={styles.button}
-                        data-test={LOGIN_BUTTON}
+                        data-testid={LOGIN_BUTTON}
                     >
                         Sign in
                     </Button>

@@ -96,7 +96,7 @@ const ForgottenPassword = () => {
                         placeholder="email"
                         type="email"
                         data-loading
-                        data-test={FORGOTTEN_PASSWORD_FIELD}
+                        data-testid={FORGOTTEN_PASSWORD_FIELD}
                         value={email}
                         onChange={e => {
                             setEmail(e.target.value);

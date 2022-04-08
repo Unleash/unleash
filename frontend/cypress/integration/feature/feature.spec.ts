@@ -42,61 +42,61 @@ describe('feature', () => {
 
     beforeEach(() => {
         cy.visit('/');
-        cy.get('[data-test="LOGIN_EMAIL_ID"]').type(AUTH_USER);
+        cy.get('[data-testid="LOGIN_EMAIL_ID"]').type(AUTH_USER);
 
         if (AUTH_PASSWORD) {
-            cy.get('[data-test="LOGIN_PASSWORD_ID"]').type(AUTH_PASSWORD);
+            cy.get('[data-testid="LOGIN_PASSWORD_ID"]').type(AUTH_PASSWORD);
         }
 
-        cy.get("[data-test='LOGIN_BUTTON']").click();
+        cy.get("[data-testid='LOGIN_BUTTON']").click();
         // Wait for the login redirect to complete.
-        cy.get('[data-test=HEADER_USER_AVATAR');
+        cy.get('[data-testid=HEADER_USER_AVATAR');
     });
 
     it('can create a feature toggle', () => {
-        if (document.querySelector("[data-test='CLOSE_SPLASH']")) {
-            cy.get("[data-test='CLOSE_SPLASH']").click();
+        if (document.querySelector("[data-testid='CLOSE_SPLASH']")) {
+            cy.get("[data-testid='CLOSE_SPLASH']").click();
         }
 
-        cy.get('[data-test=NAVIGATE_TO_CREATE_FEATURE').click();
+        cy.get('[data-testid=NAVIGATE_TO_CREATE_FEATURE').click();
 
         cy.intercept('POST', '/api/admin/projects/default/features').as(
             'createFeature'
         );
 
-        cy.get("[data-test='CF_NAME_ID'").type(featureToggleName);
-        cy.get("[data-test='CF_DESC_ID'").type('hello-world');
-        cy.get("[data-test='CF_CREATE_BTN_ID']").click();
+        cy.get("[data-testid='CF_NAME_ID'").type(featureToggleName);
+        cy.get("[data-testid='CF_DESC_ID'").type('hello-world');
+        cy.get("[data-testid='CF_CREATE_BTN_ID']").click();
         cy.wait('@createFeature');
         cy.url().should('include', featureToggleName);
     });
 
     it('gives an error if a toggle exists with the same name', () => {
-        cy.get('[data-test=NAVIGATE_TO_CREATE_FEATURE').click();
+        cy.get('[data-testid=NAVIGATE_TO_CREATE_FEATURE').click();
 
         cy.intercept('POST', '/api/admin/projects/default/features').as(
             'createFeature'
         );
 
-        cy.get("[data-test='CF_NAME_ID'").type(featureToggleName);
-        cy.get("[data-test='CF_DESC_ID'").type('hello-world');
-        cy.get("[data-test='CF_CREATE_BTN_ID']").click();
-        cy.get("[data-test='INPUT_ERROR_TEXT']").contains(
+        cy.get("[data-testid='CF_NAME_ID'").type(featureToggleName);
+        cy.get("[data-testid='CF_DESC_ID'").type('hello-world');
+        cy.get("[data-testid='CF_CREATE_BTN_ID']").click();
+        cy.get("[data-testid='INPUT_ERROR_TEXT']").contains(
             'A feature with this name already exists'
         );
     });
 
     it('gives an error if a toggle name is url unsafe', () => {
-        cy.get('[data-test=NAVIGATE_TO_CREATE_FEATURE').click();
+        cy.get('[data-testid=NAVIGATE_TO_CREATE_FEATURE').click();
 
         cy.intercept('POST', '/api/admin/projects/default/features').as(
             'createFeature'
         );
 
-        cy.get("[data-test='CF_NAME_ID'").type('featureToggleUnsafe####$#//');
-        cy.get("[data-test='CF_DESC_ID'").type('hello-world');
-        cy.get("[data-test='CF_CREATE_BTN_ID']").click();
-        cy.get("[data-test='INPUT_ERROR_TEXT']").contains(
+        cy.get("[data-testid='CF_NAME_ID'").type('featureToggleUnsafe####$#//');
+        cy.get("[data-testid='CF_DESC_ID'").type('hello-world');
+        cy.get("[data-testid='CF_CREATE_BTN_ID']").click();
+        cy.get("[data-testid='INPUT_ERROR_TEXT']").contains(
             `"name" must be URL friendly`
         );
     });
@@ -107,16 +107,16 @@ describe('feature', () => {
         );
 
         cy.wait(1000);
-        cy.get('[data-test=ROLLOUT_SLIDER_ID')
+        cy.get('[data-testid=ROLLOUT_SLIDER_ID')
             .click()
             .type('{leftarrow}'.repeat(20));
 
         if (ENTERPRISE) {
-            cy.get('[data-test=ADD_CONSTRAINT_ID]').click();
-            cy.get('[data-test=CONSTRAINT_AUTOCOMPLETE_ID]')
+            cy.get('[data-testid=ADD_CONSTRAINT_ID]').click();
+            cy.get('[data-testid=CONSTRAINT_AUTOCOMPLETE_ID]')
                 .type('{downArrow}'.repeat(1))
                 .type('{enter}');
-            cy.get('[data-test=DIALOGUE_CONFIRM_ID]').click();
+            cy.get('[data-testid=DIALOGUE_CONFIRM_ID]').click();
         }
 
         cy.intercept(
@@ -140,7 +140,7 @@ describe('feature', () => {
             }
         ).as('addStrategyToFeature');
 
-        cy.get(`[data-test=STRATEGY_FORM_SUBMIT_ID]`).first().click();
+        cy.get(`[data-testid=STRATEGY_FORM_SUBMIT_ID]`).first().click();
         cy.wait('@addStrategyToFeature');
     });
 
@@ -150,18 +150,18 @@ describe('feature', () => {
         );
 
         cy.wait(1000);
-        cy.get('[data-test=ROLLOUT_SLIDER_ID')
+        cy.get('[data-testid=ROLLOUT_SLIDER_ID')
             .click()
             .type('{rightArrow}'.repeat(10));
 
-        cy.get('[data-test=FLEXIBLE_STRATEGY_STICKINESS_ID]')
+        cy.get('[data-testid=FLEXIBLE_STRATEGY_STICKINESS_ID]')
             .first()
             .click()
-            .get('[data-test=SELECT_ITEM_ID-sessionId')
+            .get('[data-testid=SELECT_ITEM_ID-sessionId')
             .first()
             .click();
 
-        cy.get('[data-test=FLEXIBLE_STRATEGY_GROUP_ID]')
+        cy.get('[data-testid=FLEXIBLE_STRATEGY_GROUP_ID]')
             .first()
             .clear()
             .type('new-group-id');
@@ -186,7 +186,7 @@ describe('feature', () => {
             }
         ).as('updateStrategy');
 
-        cy.get(`[data-test=STRATEGY_FORM_SUBMIT_ID]`).first().click();
+        cy.get(`[data-testid=STRATEGY_FORM_SUBMIT_ID]`).first().click();
         cy.wait('@updateStrategy');
     });
 
@@ -203,9 +203,11 @@ describe('feature', () => {
             }
         ).as('deleteStrategy');
 
-        cy.get('[data-test=FEATURE_ENVIRONMENT_ACCORDION_development]').click();
-        cy.get('[data-test=STRATEGY_FORM_REMOVE_ID]').click();
-        cy.get('[data-test=DIALOGUE_CONFIRM_ID]').click();
+        cy.get(
+            '[data-testid=FEATURE_ENVIRONMENT_ACCORDION_development]'
+        ).click();
+        cy.get('[data-testid=STRATEGY_FORM_REMOVE_ID]').click();
+        cy.get('[data-testid=DIALOGUE_CONFIRM_ID]').click();
         cy.wait('@deleteStrategy');
     });
 
@@ -215,19 +217,19 @@ describe('feature', () => {
         );
 
         if (ENTERPRISE) {
-            cy.get('[data-test=ADD_CONSTRAINT_ID]').click();
-            cy.get('[data-test=CONSTRAINT_AUTOCOMPLETE_ID]')
+            cy.get('[data-testid=ADD_CONSTRAINT_ID]').click();
+            cy.get('[data-testid=CONSTRAINT_AUTOCOMPLETE_ID]')
                 .type('{downArrow}'.repeat(1))
                 .type('{enter}');
-            cy.get('[data-test=DIALOGUE_CONFIRM_ID]').click();
+            cy.get('[data-testid=DIALOGUE_CONFIRM_ID]').click();
         }
 
-        cy.get('[data-test=STRATEGY_INPUT_LIST]')
+        cy.get('[data-testid=STRATEGY_INPUT_LIST]')
             .type('user1')
             .type('{enter}')
             .type('user2')
             .type('{enter}');
-        cy.get('[data-test=ADD_TO_STRATEGY_INPUT_LIST]').click();
+        cy.get('[data-testid=ADD_TO_STRATEGY_INPUT_LIST]').click();
 
         cy.intercept(
             'POST',
@@ -249,7 +251,7 @@ describe('feature', () => {
             }
         ).as('addStrategyToFeature');
 
-        cy.get(`[data-test=STRATEGY_FORM_SUBMIT_ID]`).first().click();
+        cy.get(`[data-testid=STRATEGY_FORM_SUBMIT_ID]`).first().click();
         cy.wait('@addStrategyToFeature');
     });
 
@@ -278,32 +280,32 @@ describe('feature', () => {
             }
         ).as('variantCreation');
 
-        cy.get('[data-test=ADD_VARIANT_BUTTON]').click();
+        cy.get('[data-testid=ADD_VARIANT_BUTTON]').click();
         cy.wait(1000);
-        cy.get('[data-test=VARIANT_NAME_INPUT]').type(variantName);
-        cy.get('[data-test=DIALOGUE_CONFIRM_ID]').click();
+        cy.get('[data-testid=VARIANT_NAME_INPUT]').type(variantName);
+        cy.get('[data-testid=DIALOGUE_CONFIRM_ID]').click();
         cy.wait('@variantCreation');
-        cy.get('[data-test=ADD_VARIANT_BUTTON]').click();
+        cy.get('[data-testid=ADD_VARIANT_BUTTON]').click();
         cy.wait(1000);
-        cy.get('[data-test=VARIANT_NAME_INPUT]').type(secondVariantName);
-        cy.get('[data-test=DIALOGUE_CONFIRM_ID]').click();
+        cy.get('[data-testid=VARIANT_NAME_INPUT]').type(secondVariantName);
+        cy.get('[data-testid=DIALOGUE_CONFIRM_ID]').click();
         cy.wait('@variantCreation');
     });
 
     it('can set weight to fixed value for one of the variants', () => {
         cy.visit(`/projects/default/features/${featureToggleName}/variants`);
 
-        cy.get('[data-test=VARIANT_EDIT_BUTTON]').first().click();
+        cy.get('[data-testid=VARIANT_EDIT_BUTTON]').first().click();
         cy.wait(1000);
-        cy.get('[data-test=VARIANT_NAME_INPUT]')
+        cy.get('[data-testid=VARIANT_NAME_INPUT]')
             .children()
             .find('input')
             .should('have.attr', 'disabled');
-        cy.get('[data-test=VARIANT_WEIGHT_TYPE]')
+        cy.get('[data-testid=VARIANT_WEIGHT_TYPE]')
             .children()
             .find('input')
             .check();
-        cy.get('[data-test=VARIANT_WEIGHT_INPUT]').clear().type('15');
+        cy.get('[data-testid=VARIANT_WEIGHT_INPUT]').clear().type('15');
 
         cy.intercept(
             'PATCH',
@@ -321,9 +323,9 @@ describe('feature', () => {
             }
         ).as('variantUpdate');
 
-        cy.get('[data-test=DIALOGUE_CONFIRM_ID]').click();
+        cy.get('[data-testid=DIALOGUE_CONFIRM_ID]').click();
         cy.wait('@variantUpdate');
-        cy.get('[data-test=VARIANT_WEIGHT]')
+        cy.get('[data-testid=VARIANT_WEIGHT]')
             .first()
             .should('have.text', '15 %');
     });
@@ -332,10 +334,10 @@ describe('feature', () => {
         const variantName = 'to-be-deleted';
 
         cy.visit(`/projects/default/features/${featureToggleName}/variants`);
-        cy.get('[data-test=ADD_VARIANT_BUTTON]').click();
+        cy.get('[data-testid=ADD_VARIANT_BUTTON]').click();
         cy.wait(1000);
-        cy.get('[data-test=VARIANT_NAME_INPUT]').type(variantName);
-        cy.get('[data-test=DIALOGUE_CONFIRM_ID]').click();
+        cy.get('[data-testid=VARIANT_NAME_INPUT]').type(variantName);
+        cy.get('[data-testid=DIALOGUE_CONFIRM_ID]').click();
 
         cy.intercept(
             'PATCH',
@@ -348,8 +350,8 @@ describe('feature', () => {
             }
         ).as('delete');
 
-        cy.get(`[data-test=VARIANT_DELETE_BUTTON_${variantName}]`).click();
-        cy.get('[data-test=DIALOGUE_CONFIRM_ID]').click();
+        cy.get(`[data-testid=VARIANT_DELETE_BUTTON_${variantName}]`).click();
+        cy.get('[data-testid=DIALOGUE_CONFIRM_ID]').click();
         cy.wait('@delete');
     });
 });

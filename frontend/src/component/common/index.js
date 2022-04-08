@@ -80,7 +80,7 @@ export const FormButtons = ({
 }) => (
     <div>
         <Button
-            data-test={primaryButtonTestId}
+            data-testid={primaryButtonTestId}
             type="submit"
             color="primary"
             variant="contained"

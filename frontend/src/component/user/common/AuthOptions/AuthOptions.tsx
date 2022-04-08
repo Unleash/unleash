@@ -29,7 +29,7 @@ const AuthOptions = ({ options }: IAuthOptionProps) => {
                         variant="outlined"
                         href={o.path}
                         size="small"
-                        data-test={`${SSO_LOGIN_BUTTON}-${o.type}`}
+                        data-testid={`${SSO_LOGIN_BUTTON}-${o.type}`}
                         style={{ height: '40px', color: '#000' }}
                         startIcon={
                             <ConditionallyRender

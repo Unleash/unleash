@@ -118,5 +118,7 @@
       "cypress"
     ]
   },
-  "dependencies": {}
+  "dependencies": {
+    "pkginfo": "^0.4.1"
+  }
 }

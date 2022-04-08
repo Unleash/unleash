@@ -73,6 +73,8 @@ If you don't want to run Unleash locally, we also provide easy deployment setups
 
 Try out [the Unleash online demo](https://www.getunleash.io/interactive-demo).
 
+![The Unleash UI. It shows a project and its users, feature toggles and tabs for health, access, and environments.](./.github/github_online_demo.svg)
+
 [Get image from Nicolae here]
 
 ## Community and help — sharing is caring

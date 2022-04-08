@@ -38,7 +38,7 @@ cd unleash-docker
 docker compose up -d
 ```
 
-Then point your browser to `localhost:4242` and log in using
+Then point your browser to `localhost:4242` and log in using:
   - username: `admin`
   - password: `unleash4all`
 
@@ -130,7 +130,7 @@ Check out [the CONTRIBUTING.md file](./CONTRIBUTING.md) for contribution guideli
 - [12 official client SDKs](https://docs.getunleash.io/sdks#official-sdks), and ten [community-contributed client SDKs](https://docs.getunleash.io/sdks#community-sdks)
 - Run it via Docker with the [official Docker image](https://hub.docker.com/r/unleashorg/unleash-server) or as a pure Node.js application
 
-### Security & performance
+### Security and performance
 
 - Privacy by design (GDPR and Schrems II). End-user data never leaves your application.
 - [Audit logs](https://docs.getunleash.io/advanced/audit_log)

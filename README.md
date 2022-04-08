@@ -169,23 +169,28 @@ If none of the official SDKs fit your need, there's also a number of [community-
 
 ## Users of Unleash
 
-Unleash is trusted by thousands of companies all over the world (we are tracking more than 90 countries already). Proud Open-Source users:
+**Unleash is trusted by thousands of companies all over the world**.
+
+**Proud Open-Source users:**
 
 <a href="https://www.nav.no" title="NAV.no"><img src="./.github/ext-logos/nav.jpg" height="70" style="padding: 10px; border: 1px solid silver"></a> <a href="https://www.otovo.com" title="Otovo"><img src="./.github/ext-logos/otovo.png" height="70" style="padding: 10px; border: 1px solid silver"></a> <a href="https://www.amedia.no/" title="Amedia"><img src="./.github/ext-logos/amedia-logo.png" height="70" style="padding: 10px; border: 1px solid silver"></a> <a href="https://budgets.money" title="Budgets"><img src="./.github/ext-logos/budgets.png" height="70" style="padding: 10px; border: 1px solid silver"></a> <a href="https://www.finn.no" title="FINN.no"><img src="./.github/ext-logos/finn.jpg" height="70" style="padding: 10px; border: 1px solid silver"></a>
 
 _(PS! feel free to submit your logo!)_
 
-## In the media
+## Want to know more about Unleash?
 
-- [Free Code Camp: Feature toggles - Why and how to add to your software](https://www.youtube.com/watch?v=-yHZ9uLVSp4)
-- [Feature toggling transient errors in load tests](https://nrkbeta.no/2021/08/23/feature-toggling-transient-errors-in-load-tests/) (English)
-- [The Code Kitchen Episode 7: Feature flags with Unleash](https://share.fireside.fm/episode/zD-4e4KI+Pr379KBv) (English)
-- [Utviklerpodden, 1 - Feature Flags og Unleash med Fredrik Oseberg](https://pod.space/utviklerpodden/feature-flags-og-unleash-med-fredrik-oseberg) (Norwegian)
-- [Node Weekly issue 380](https://nodeweekly.com/issues/380)
-- [Console 42 - The open-source newsletter](https://console.substack.com/p/console-42)
-- [This Week in Rust 340](https://this-week-in-rust.org/blog/2020/05/27/this-week-in-rust-340/)
-- [Unleash-hosted - Unleash as a Service](https://www.unleash-hosted.com)
-- [Medium blog](https://medium.com/unleash-hosted)
-- [Blog: Unleash your features gradually!](http://bytes.schibsted.com/unleash-features-gradually/)
-- [Presentation: Unleash your features gradually!](http://ivarconr.github.io/feature-toggles-presentation/sch-dev-lunch-2017/#1)
-- http://martinfowler.com/bliki/FeatureToggle.html
+### Videos and podcasts?
+
+- [The Unleash YouTube channel](https://www.youtube.com/channel/UCJjGVOc5QBbEje-r7nZEa4A)
+- [*Feature toggles — Why and how to add to your software* — freeCodeCamp (YouTube)](https://www.youtube.com/watch?v=-yHZ9uLVSp4&t=0s)
+- [*Feature flags with Unleash* — The Code Kitchen (podcast)](https://share.fireside.fm/episode/zD-4e4KI+Pr379KBv)
+- [*Feature Flags og Unleash med Fredrik Oseberg* — Utviklerpodden (podcast; Norwegian)](https://pod.space/utviklerpodden/feature-flags-og-unleash-med-fredrik-oseberg)
+
+### Articles and more
+
+- [The Unleash Blog](https://www.getunleash.io/blog)
+- [*Designing the Rust Unleash API client* — Medium](https://medium.com/cognite/designing-the-rust-unleash-api-client-6809c95aa568)
+- [*FeatureToggle* by Martin Fowler](http://martinfowler.com/bliki/FeatureToggle.html)
+- [*Feature toggling transient errors in load tests* — nrkbeta](https://nrkbeta.no/2021/08/23/feature-toggling-transient-errors-in-load-tests/)
+- [*An Interview with Ivar of Unleash* — Console](https://console.substack.com/p/console-42)
+- [*Unleash your features gradually*](http://ivarconr.github.io/feature-toggles-presentation/sch-dev-lunch-2017/#1 " "), slideshow/presentation by Ivar, the creator of Unleash

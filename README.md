@@ -12,7 +12,6 @@
 
 </div>
 
-<br/><br/>
 ## About Unleash
 
 Unleash is an open source feature management solution. It improves the workflow of your development team and leads to quicker software delivery. Unleash increases efficiency and gives teams *full control* of how and when they enable new functionality for end users. Unleash lets teams ship code to production in *smaller* releases *whenever* they want.
@@ -21,7 +20,8 @@ Feature toggles make it easy to test how your code works with real production da
 
 Unleash is the largest open source solution for feature flagging on GitHub. There's 12 official client and server SDKs and 10+ community SDKs available; you can even make your own if you want to. You can use Unleash with any language and any framework.
 
-<br/><br/>
+<br/>
+
 ## Get started in 2 steps
 
 ### 1. Start Unleash
@@ -75,14 +75,16 @@ If you don't want to run Unleash locally, we also provide easy deployment setups
 
 The above sections show you how to get up and running quickly and easily. When you're ready to start configuring and customizing Unleash for your own environment, check out the documentation for [getting started with self-managed deployments](https://docs.getunleash.io/deploy/getting_started), [Unleash configuration options](https://docs.getunleash.io/deploy/configuring_unleash), or [running Unleash locally via docker](https://docs.getunleash.io/user_guide/quickstart#i-want-to-run-unleash-locally).
 
-<br/><br/>
+<br/>
+
 ## Online demo
 
 Try out [the Unleash online demo](https://www.getunleash.io/interactive-demo).
 
 ![The Unleash UI. It shows a project and its users, feature toggles and tabs for health, access, and environments.](./.github/github_online_demo.svg)
 
-<br/><br/>
+<br/>
+
 ## Community and help — sharing is caring
 
 We know that learning a new tool can be hard and time-consuming. We have a growing community that loves to help out. Please don't hesitate to reach out for help.
@@ -95,7 +97,8 @@ We know that learning a new tool can be hard and time-consuming. We have a growi
 
 📚 [Visit the documentation](https://docs.getunleash.io/) for more in-depth descriptions, how-to guides, and more.
 
-<br/><br/>
+<br/>
+
 ## Contribute to Unleash
 
 Building Unleash is a collaborative effort, and we owe a lot of gratitude to many smart and talented individuals.
@@ -104,7 +107,8 @@ We'd love to have your help too: Please feel free to open issues or provide pull
 
 Check out [the CONTRIBUTING.md file](./CONTRIBUTING.md) for contribution guidelines and the [Unleash developer guide](./website/docs/contributing/developer-guide.md) for tips on environment setup, running the tests, and running Unleash from source.
 
-<br/><br/>
+<br/>
+
 ## Features our users love
 
 ### Flexibility and adaptability

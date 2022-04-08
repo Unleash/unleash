@@ -4,6 +4,9 @@
     <img src="./.github/github_header_opaque_landscape.svg" alt="The Unleash website">
 </a>
 
+<br/>
+<br/>
+    
 [![Build and Tests](https://img.shields.io/github/workflow/status/unleash/unleash/Build%20%26%20Tests)](https://github.com/Unleash/unleash/actions/workflows/build.yaml)
 [![Coverage Status](https://coveralls.io/repos/github/Unleash/unleash/badge.svg?branch=main&)](https://coveralls.io/github/Unleash/unleash?branch=main) [![npm](https://img.shields.io/npm/v/unleash-server)](https://www.npmjs.com/package/unleash-server)
 [![Docker Pulls](https://img.shields.io/docker/pulls/unleashorg/unleash-server)](https://hub.docker.com/r/unleashorg/unleash-server)

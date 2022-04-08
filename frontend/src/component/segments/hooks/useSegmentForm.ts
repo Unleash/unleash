@@ -1,5 +1,6 @@
 import { IConstraint } from 'interfaces/strategy';
 import { useEffect, useState } from 'react';
+import { useSegmentValidation } from 'hooks/api/getters/useSegmentValidation/useSegmentValidation';
 
 export const useSegmentForm = (
     initialName = '',
@@ -11,6 +12,7 @@ export const useSegmentForm = (
     const [constraints, setConstraints] =
         useState<IConstraint[]>(initialConstraints);
     const [errors, setErrors] = useState({});
+    const nameError = useSegmentValidation(name, initialName);
 
     useEffect(() => {
         setName(initialName);
@@ -24,6 +26,13 @@ export const useSegmentForm = (
         setConstraints(initialConstraints);
         // eslint-disable-next-line
     }, [JSON.stringify(initialConstraints)]);
+
+    useEffect(() => {
+        setErrors(errors => ({
+            ...errors,
+            name: nameError,
+        }));
+    }, [nameError]);
 
     const getSegmentPayload = () => {
         return {

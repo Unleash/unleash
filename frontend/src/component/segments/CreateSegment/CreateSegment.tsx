@@ -15,6 +15,7 @@ import { feedbackCESContext } from 'component/feedback/FeedbackCESContext/Feedba
 import { segmentsDocsLink } from 'component/segments/SegmentDocs/SegmentDocs';
 import { useSegmentValuesCount } from 'component/segments/hooks/useSegmentValuesCount';
 import { SEGMENT_VALUES_LIMIT } from 'utils/segmentLimits';
+import { SEGMENT_CREATE_BTN_ID } from 'utils/testIds';
 
 export const CreateSegment = () => {
     const { uiConfig } = useUiConfig();
@@ -96,6 +97,7 @@ export const CreateSegment = () => {
                     name="segment"
                     permission={CREATE_SEGMENT}
                     disabled={!hasValidConstraints || atSegmentValuesLimit}
+                    data-test={SEGMENT_CREATE_BTN_ID}
                 />
             </SegmentForm>
         </FormTemplate>

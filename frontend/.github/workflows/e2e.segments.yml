@@ -1,4 +1,4 @@
-name: e2e:feature
+name: e2e:segments
 # https://docs.github.com/en/actions/reference/events-that-trigger-workflows
 on: [deployment_status]
 jobs:
@@ -20,6 +20,6 @@ jobs:
           env: AUTH_USER=admin,AUTH_PASSWORD=unleash4all
           config: baseUrl=${{ github.event.deployment_status.target_url }}
           record: true
-          spec: cypress/integration/feature/feature.spec.ts
+          spec: cypress/integration/segments/segments.spec.ts
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}

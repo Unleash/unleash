@@ -3,6 +3,7 @@ import Dialogue from 'component/common/Dialogue';
 import Input from 'component/common/Input/Input';
 import { useStyles } from './SegmentDeleteConfirm.styles';
 import { ISegment } from 'interfaces/segment';
+import { SEGMENT_DIALOG_NAME_ID } from 'utils/testIds';
 
 interface ISegmentDeleteConfirmProps {
     segment: ISegment;
@@ -54,6 +55,7 @@ export const SegmentDeleteConfirm = ({
                     value={confirmName}
                     label="Segment name"
                     className={styles.deleteInput}
+                    data-test={SEGMENT_DIALOG_NAME_ID}
                 />
             </form>
         </Dialogue>

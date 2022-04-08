@@ -17,6 +17,7 @@ import { UpdateButton } from 'component/common/UpdateButton/UpdateButton';
 import { segmentsDocsLink } from 'component/segments/SegmentDocs/SegmentDocs';
 import { useSegmentValuesCount } from 'component/segments/hooks/useSegmentValuesCount';
 import { SEGMENT_VALUES_LIMIT } from 'utils/segmentLimits';
+import { SEGMENT_SAVE_BTN_ID } from 'utils/testIds';
 
 export const EditSegment = () => {
     const segmentId = useRequiredPathParam('segmentId');
@@ -98,6 +99,7 @@ export const EditSegment = () => {
                 <UpdateButton
                     permission={UPDATE_SEGMENT}
                     disabled={!hasValidConstraints || atSegmentValuesLimit}
+                    data-test={SEGMENT_SAVE_BTN_ID}
                 />
             </SegmentForm>
         </FormTemplate>

@@ -4,6 +4,11 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { useStyles } from 'component/segments/SegmentFormStepOne/SegmentFormStepOne.styles';
 import { SegmentFormStep } from '../SegmentForm/SegmentForm';
+import {
+    SEGMENT_NAME_ID,
+    SEGMENT_DESC_ID,
+    SEGMENT_NEXT_BTN_ID,
+} from 'utils/testIds';
 
 interface ISegmentFormPartOneProps {
     name: string;
@@ -41,9 +46,9 @@ export const SegmentFormStepOne: React.FC<ISegmentFormPartOneProps> = ({
                     onChange={e => setName(e.target.value)}
                     error={Boolean(errors.name)}
                     errorText={errors.name}
-                    onFocus={() => clearErrors()}
                     autoFocus
                     required
+                    data-test={SEGMENT_NAME_ID}
                 />
                 <p className={styles.inputDescription}>
                     What is the segment description?
@@ -55,7 +60,7 @@ export const SegmentFormStepOne: React.FC<ISegmentFormPartOneProps> = ({
                     onChange={e => setDescription(e.target.value)}
                     error={Boolean(errors.description)}
                     errorText={errors.description}
-                    onFocus={() => clearErrors()}
+                    data-test={SEGMENT_DESC_ID}
                 />
             </div>
             <div className={styles.buttonContainer}>
@@ -64,7 +69,8 @@ export const SegmentFormStepOne: React.FC<ISegmentFormPartOneProps> = ({
                     variant="contained"
                     color="primary"
                     onClick={() => setCurrentStep(2)}
-                    disabled={name.length === 0}
+                    disabled={name.length === 0 || Boolean(errors.name)}
+                    data-test={SEGMENT_NEXT_BTN_ID}
                 >
                     Next
                 </Button>

@@ -1,7 +1,16 @@
 {
   "rewrites": [
-    { "source": "/api/:match*", "destination": "https://unleash.herokuapp.com/api/:match*" },
-    { "source": "/logout", "destination": "https://unleash.herokuapp.com/logout" },
-    { "source": "/auth/:match*", "destination": "https://unleash.herokuapp.com/auth/:match*" }
+    {
+      "source": "/api/:match*",
+      "destination": "https://unleash4.herokuapp.com/api/:match*"
+    },
+    {
+      "source": "/logout",
+      "destination": "https://unleash4.herokuapp.com/logout"
+    },
+    {
+      "source": "/auth/:match*",
+      "destination": "https://unleash4.herokuapp.com/auth/:match*"
+    }
   ]
 }

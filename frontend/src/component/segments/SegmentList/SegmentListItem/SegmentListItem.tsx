@@ -9,6 +9,7 @@ import PermissionIconButton from 'component/common/PermissionIconButton/Permissi
 import TimeAgo from 'react-timeago';
 import { ISegment } from 'interfaces/segment';
 import { useHistory } from 'react-router-dom';
+import { SEGMENT_DELETE_BTN_ID } from 'utils/testIds';
 
 interface ISegmentListItemProps {
     id: number;
@@ -82,6 +83,7 @@ export const SegmentListItem = ({
                         setDelDialog(true);
                     }}
                     permission={ADMIN}
+                    data-test={`${SEGMENT_DELETE_BTN_ID}_${name}`}
                 >
                     <Delete />
                 </PermissionIconButton>

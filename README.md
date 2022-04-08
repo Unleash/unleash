@@ -133,6 +133,12 @@ If you're looking for one of the following features, please take a look at our [
 - tighter security
 - more hosting options (we can even host it for you!)
 
+## Architecture
+
+<img src="./.github/Unleash_architecture.svg" title="Unleash System Overview" />
+
+Read more in the [*system overview* section of the Unleash documentation](https://docs.getunleash.io/user_guide/unleash_overview#system-overview).
+
 ## Unleash SDKs
 
 In order to connect your application to Unleash you need to use a client SDK for your programming language.
@@ -161,11 +167,6 @@ The frontend SDKs connects via the [Unleash Proxy](https://docs.getunleash.io/sd
 
 In addition there exists a good list of [community developed SDKs](https://docs.getunleash.io/sdks/community), so there might already exist an implementation for your favorite programming language (e.g. [Elixir](https://gitlab.com/afontaine/unleash_ex), [Dart](https://pub.dev/packages/unleash), [Clojure](https://github.com/AppsFlyer/unleash-client-clojure), [NestJS](https://github.com/pmb0/nestjs-unleash), [Kotlin](https://github.com/silvercar/unleash-client-kotlin), [PHP](https://gitlab.com/minds/unleash-client-php) and more.)
 
-## Architecture
-
-<img src="./.github/Unleash_architecture.svg" title="Unleash System Overview" />
-
-[Read more in the Unleash documentation](https://docs.getunleash.io/)
 
 ## What is a feature toggle?
 

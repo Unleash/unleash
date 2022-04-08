@@ -171,11 +171,9 @@ If none of the official SDKs fit your need, there's also a number of [community-
 
 **Unleash is trusted by thousands of companies all over the world**.
 
-**Proud Open-Source users:**
+**Proud Open-Source users:** (send us a message if you want to add your logo here)
 
-<a href="https://www.nav.no" title="NAV.no"><img src="./.github/ext-logos/nav.jpg" height="70" style="padding: 10px; border: 1px solid silver"></a> <a href="https://www.otovo.com" title="Otovo"><img src="./.github/ext-logos/otovo.png" height="70" style="padding: 10px; border: 1px solid silver"></a> <a href="https://www.amedia.no/" title="Amedia"><img src="./.github/ext-logos/amedia-logo.png" height="70" style="padding: 10px; border: 1px solid silver"></a> <a href="https://budgets.money" title="Budgets"><img src="./.github/ext-logos/budgets.png" height="70" style="padding: 10px; border: 1px solid silver"></a> <a href="https://www.finn.no" title="FINN.no"><img src="./.github/ext-logos/finn.jpg" height="70" style="padding: 10px; border: 1px solid silver"></a>
-
-_(PS! feel free to submit your logo!)_
+![The Unleash logo encircled by logos for Finn.no, nav (the Norwegian Labour and Welfare Administration), Budgets, Otovo, and Amedia. The encircling logos are all connected to the Unleash logo.](./.github/github_unleash_users.svg)
 
 ## Want to know more about Unleash?
 

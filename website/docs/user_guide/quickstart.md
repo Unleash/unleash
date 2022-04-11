@@ -24,7 +24,7 @@ In order to create a toggle through the UI, [you can follow this guide](create-f
 Connection details:
 
 ```
-Api URL: https://app.unleash-hosted.com/demo/proxy
+Api URL: https://app.unleash-hosted.com/demo/api/proxy
 Secret key: proxy-123 (edited)
 ```
 
@@ -41,7 +41,7 @@ Here is a connection example using the javascript proxy SDK:
 import { UnleashClient } from 'unleash-proxy-client';
 
 const unleash = new UnleashClient({
-  url: 'https://app.unleash-hosted.com/demo/proxy',
+  url: 'https://app.unleash-hosted.com/demo/api/proxy',
   clientKey: 'proxy-123',
   appName: 'my-webapp',
 });

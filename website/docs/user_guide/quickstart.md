@@ -25,7 +25,7 @@ Connection details:
 
 ```
 Api URL: https://app.unleash-hosted.com/demo/api/proxy
-Secret key: proxy-123 (edited)
+Secret key: proxy-123
 ```
 
 Now you can open your application code and connect through one of the proxy SDKs:

@@ -1,4 +1,11 @@
 import { validateSemver, validateLegalValues } from './constraint-types';
+import { ILegalValue } from '../../types/stores/context-field-store';
+
+const legalValues: Readonly<ILegalValue[]> = [
+    { value: '100' },
+    { value: '200' },
+    { value: '300' },
+];
 
 test('semver validation should throw with bad format', () => {
     const badSemver = 'a.b.c';
@@ -54,7 +61,6 @@ test('semver validation should fail with leading v', () => {
 
 /* Legal values tests */
 test('should fail validation if value does not exist in single legal value', () => {
-    const legalValues = ['100', '200', '300'];
     const value = '500';
     expect.assertions(1);
 
@@ -68,7 +74,6 @@ test('should fail validation if value does not exist in single legal value', () 
 });
 
 test('should pass validation if value exists in single legal value', () => {
-    const legalValues = ['100', '200', '300'];
     const value = '100';
     expect.assertions(0);
 
@@ -82,7 +87,6 @@ test('should pass validation if value exists in single legal value', () => {
 });
 
 test('should fail validation if one of the values does not exist in multiple legal values', () => {
-    const legalValues = ['100', '200', '300'];
     const values = ['500', '100'];
     expect.assertions(1);
 
@@ -96,7 +100,6 @@ test('should fail validation if one of the values does not exist in multiple leg
 });
 
 test('should pass validation if all of the values exists in legal values', () => {
-    const legalValues = ['100', '200', '300'];
     const values = ['200', '100'];
     expect.assertions(0);
 

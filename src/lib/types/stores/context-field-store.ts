@@ -5,7 +5,12 @@ export interface IContextFieldDto {
     description: string;
     stickiness: boolean;
     sortOrder: number;
-    legalValues?: string[];
+    legalValues?: ILegalValue[];
+}
+
+export interface ILegalValue {
+    value: string;
+    description?: string;
 }
 
 export interface IContextField extends IContextFieldDto {

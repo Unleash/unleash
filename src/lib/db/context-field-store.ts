@@ -16,12 +16,12 @@ const COLUMNS = [
 ];
 const TABLE = 'context_fields';
 
-const mapRow: (IContextRow) => IContextField = (row) => ({
+const mapRow: (object) => IContextField = (row) => ({
     name: row.name,
     description: row.description,
     stickiness: row.stickiness,
     sortOrder: row.sort_order,
-    legalValues: row.legal_values ? row.legal_values.split(',') : undefined,
+    legalValues: row.legal_values || [],
     createdAt: row.created_at,
 });
 
@@ -52,7 +52,7 @@ class ContextFieldStore implements IContextFieldStore {
             description: data.description,
             stickiness: data.stickiness,
             sort_order: data.sortOrder, // eslint-disable-line
-            legal_values: data.legalValues ? data.legalValues.join(',') : undefined, // eslint-disable-line
+            legal_values: JSON.stringify(data.legalValues || []),
         };
     }
 

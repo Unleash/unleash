@@ -6,6 +6,7 @@ import {
     constraintStringTypeSchema,
 } from '../../schema/constraint-value-types';
 import BadDataError from '../../error/bad-data-error';
+import { ILegalValue } from '../../types/stores/context-field-store';
 
 export const validateNumber = async (value: unknown): Promise<void> => {
     await constraintNumberTypeSchema.validateAsync(value);
@@ -31,18 +32,22 @@ export const validateDate = async (value: unknown): Promise<void> => {
 };
 
 export const validateLegalValues = (
-    legalValues: string[],
+    legalValues: Readonly<ILegalValue[]>,
     match: string[] | string,
 ): void => {
+    const legalStrings = legalValues.map((legalValue) => {
+        return legalValue.value;
+    });
+
     if (Array.isArray(match)) {
         // Compare arrays to arrays
-        const valid = match.every((value) => legalValues.includes(value));
+        const valid = match.every((value) => legalStrings.includes(value));
         if (!valid)
             throw new BadDataError(
                 `input values are not specified as a legal value on this context field`,
             );
     } else {
-        const valid = legalValues.includes(match);
+        const valid = legalStrings.includes(match);
         if (!valid)
             throw new BadDataError(
                 `${match} is not specified as a legal value on this context field`,

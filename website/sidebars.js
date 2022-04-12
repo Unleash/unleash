@@ -259,6 +259,7 @@ module.exports = {
                     label: 'Unleash concepts',
                     items: [
                         'user_guide/activation_strategy',
+                        'reference/api-tokens',
                         'advanced/archived_toggles',
                         'advanced/audit_log',
                         'advanced/impression-data',

@@ -1,6 +1,6 @@
 ---
 id: index
-title: Introduction
+title: Client SDK overview
 slug: /sdks
 ---
 

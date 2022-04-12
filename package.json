@@ -168,6 +168,10 @@
     "typescript": "4.6.3"
   },
   "resolutions": {
+    "@wesleytodd/openapi/mocha": "^9.2.2",
+    "@wesleytodd/openapi/redoc": "^2.0.0-rc.66",
+    "@wesleytodd/openapi/swagger-parser": "^10.0.3",
+    "@wesleytodd/openapi/swagger-ui-dist": "^4.10.3",
     "db-migrate/rc/minimist": "^1.2.5",
     "knex/liftoff/object.map/**/kind-of": "^6.0.3",
     "knex/liftoff/findup-sync/micromatc/kind-of": "^6.0.3",

@@ -255,26 +255,6 @@ However in some settings you would like a bit more logic around it to make it as
 
 The proxy is also ideal fit for serverless functions such as AWS Lambda. In that scenario the proxy can run on a small container near the serverless function, preferably in the same VPC, giving the lambda extremely fast access to feature flags, at a predictable cost.
 
-## Configuration options
-
-Regardless of how you choose to run the it, the proxy will need access to these three variables:
-
-- **`unleashUrl`** / **`UNLEASH_URL`**
-
-  The URL of your Unleash instance's API. For instance, to connect to the [Unleash demo app](https://app.unleash-hosted.com/demo/), you would use `https://app.unleash-hosted.com/demo/api/`
-
-- **`unleashApiToken`** / **`UNLEASH_API_TOKEN`**
-
-  The API token to connect to your Unleash project. For more information on how these work and how to create them, check out the [API token documentation](../user_guide/token.md).
-
-- **`clientKeys`** / **`UNLEASH_PROXY_CLIENT_KEYS`**
-
-  A list of client keys that the proxy will accept. For the proxy to accept an incoming request, the client must use one of these keys for authorization. In client SDKs, this is usually known as a `clientKey` or a `clientSecret`. If you query the proxy directly via HTTP, this is the `authorization` header.
-
-  When using an environment variable to set the proxy secrets, the value should be a comma-separated list of strings, such as `secret-one,secret-two`.
-
-There are many more configuration options available. You'll find all [available options on github](https://github.com/Unleash/unleash-proxy#available-options).
-
 ## Bootstrapping the Unleash Proxy {#bootstrap}
 
 ## Scaling the Unleash Proxy
@@ -285,5 +265,3 @@ There are many more configuration options available. You'll find all [available 
 
 { how to connect the proxy, what setups are possible etc. }
 See #bootstrap
-
-## Configuration options

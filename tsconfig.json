@@ -78,7 +78,6 @@
     "snapshots",
     "coverage",
     "website",
-    "setupJest.js",
     "scripts"
   ]
 }

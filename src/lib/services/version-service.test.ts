@@ -1,4 +1,4 @@
-import fetchMock from 'jest-fetch-mock';
+import nock from 'nock';
 import createStores from '../../test/fixtures/store';
 import version from '../util/version';
 import getLogger from '../../test/fixtures/no-logger';
@@ -6,7 +6,11 @@ import getLogger from '../../test/fixtures/no-logger';
 import VersionService from './version-service';
 
 beforeEach(() => {
-    fetchMock.resetMocks();
+    nock.disableNetConnect();
+});
+
+afterEach(() => {
+    nock.enableNetConnect();
 });
 
 test('yields current versions', async () => {
@@ -17,13 +21,15 @@ test('yields current versions', async () => {
         oss: '5.0.0',
         enterprise: '5.0.0',
     };
-    fetchMock.mockResponse(
-        JSON.stringify({
-            latest: false,
-            versions: latest,
-        }),
-        { status: 200 },
-    );
+    nock(testurl)
+        .post('/')
+        .reply(() => [
+            200,
+            JSON.stringify({
+                latest: false,
+                versions: latest,
+            }),
+        ]);
     const service = new VersionService(
         { settingStore },
         {
@@ -50,13 +56,15 @@ test('supports setting enterprise version as well', async () => {
         oss: '4.0.0',
         enterprise: '4.0.0',
     };
-    fetchMock.mockResponse(
-        JSON.stringify({
-            latest: false,
-            versions: latest,
-        }),
-        { status: 200 },
-    );
+    nock(testurl)
+        .post('/')
+        .reply(() => [
+            200,
+            JSON.stringify({
+                latest: false,
+                versions: latest,
+            }),
+        ]);
 
     const service = new VersionService(
         { settingStore },
@@ -85,13 +93,15 @@ test('if version check is not enabled should not make any calls', async () => {
         oss: '4.0.0',
         enterprise: '4.0.0',
     };
-    fetchMock.mockResponse(
-        JSON.stringify({
-            latest: false,
-            versions: latest,
-        }),
-        { status: 200 },
-    );
+    const scope = nock(testurl)
+        .get('/')
+        .reply(() => [
+            200,
+            JSON.stringify({
+                latest: false,
+                versions: latest,
+            }),
+        ]);
 
     const service = new VersionService(
         { settingStore },
@@ -103,11 +113,12 @@ test('if version check is not enabled should not make any calls', async () => {
     );
     await service.checkLatestVersion();
     const versionInfo = service.getVersionInfo();
-    expect(fetchMock.mock.calls).toHaveLength(0);
+    expect(scope.isDone()).toBeFalsy();
     expect(versionInfo.current.oss).toBe(version);
     expect(versionInfo.current.enterprise).toBe(enterpriseVersion);
     // @ts-ignore
     expect(versionInfo.latest.oss).toBeFalsy();
     // @ts-ignore
     expect(versionInfo.latest.enterprise).toBeFalsy();
+    nock.cleanAll();
 });

@@ -1,4 +1,5 @@
-import fetch, { Response } from 'node-fetch';
+import { Response } from 'node-fetch';
+import fetch from 'make-fetch-happen';
 import { addonDefinitionSchema } from './addon-schema';
 import { IUnleashConfig } from '../types/option';
 import { Logger } from '../logger';
@@ -41,23 +42,18 @@ export default abstract class Addon {
         url: string,
         options = {},
         retries: number = 1,
-        backoff: number = 300,
     ): Promise<Response> {
-        const retryCodes = [408, 500, 502, 503, 504, 522, 524];
         let res;
         try {
-            res = await fetch(url, options);
-        } catch (error) {
-            res = { status: 500, ok: false };
-        }
-        if (res.ok) {
+            res = await fetch(url, {
+                retry: {
+                    retries,
+                },
+                ...options,
+            });
             return res;
-        }
-        if (retries > 0 && retryCodes.includes(res.status)) {
-            setTimeout(
-                () => this.fetchRetry(url, options, retries - 1, backoff * 2),
-                backoff,
-            );
+        } catch (e) {
+            res = { statusCode: e.code, ok: false };
         }
         return res;
     }

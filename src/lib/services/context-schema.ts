@@ -5,7 +5,7 @@ export const nameSchema = joi.object().keys({ name: nameType });
 
 const legalValueSchema = joi.object().keys({
     value: joi.string().min(1).max(100).required(),
-    description: joi.string().min(1).max(100).optional(),
+    description: joi.string().allow('').allow(null).optional(),
 });
 
 export const contextSchema = joi

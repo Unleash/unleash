@@ -15,7 +15,11 @@ export const SelectAllButton: FC<SelectAllButtonProps> = ({
 
     return (
         <Box sx={{ ml: 3.5, my: 0.5 }}>
-            <Link onClick={onClick} className={styles.selectOptionsLink}>
+            <Link
+                onClick={onClick}
+                className={styles.selectOptionsLink}
+                component="button"
+            >
                 {isAllSelected ? 'Deselect all' : 'Select all'}
             </Link>
         </Box>

@@ -17,6 +17,7 @@ import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import { IAutocompleteBoxOption } from 'component/common/AutocompleteBox/AutocompleteBox';
 import { useStyles } from '../ApiTokenForm.styles';
 import { SelectAllButton } from './SelectAllButton/SelectAllButton';
+import ConditionallyRender from 'component/common/ConditionallyRender';
 
 const ALL_PROJECTS = '*';
 
@@ -47,7 +48,10 @@ export const SelectProjectInput: VFC<ISelectProjectInputProps> = ({
     const [isWildcardSelected, selectWildcard] = useState(
         typeof defaultValue === 'string' || defaultValue.includes(ALL_PROJECTS)
     );
-    const isAllSelected = projects.length === options.length;
+    const isAllSelected =
+        projects.length > 0 &&
+        projects.length === options.length &&
+        projects[0] !== ALL_PROJECTS;
 
     const onAllProjectsChange = (
         e: ChangeEvent<HTMLInputElement>,
@@ -60,6 +64,14 @@ export const SelectProjectInput: VFC<ISelectProjectInputProps> = ({
             selectWildcard(false);
             onChange(projects.includes(ALL_PROJECTS) ? [] : projects);
         }
+    };
+
+    const onSelectAllClick = () => {
+        const newProjects = isAllSelected
+            ? []
+            : options.map(({ value }) => value);
+        setProjects(newProjects);
+        onChange(newProjects);
     };
 
     const renderOption = (
@@ -79,13 +91,14 @@ export const SelectProjectInput: VFC<ISelectProjectInputProps> = ({
 
     const renderGroup = ({ key, children }: AutocompleteRenderGroupParams) => (
         <Fragment key={key}>
-            <SelectAllButton
-                isAllSelected={isAllSelected}
-                onClick={() => {
-                    setProjects(
-                        isAllSelected ? [] : options.map(({ value }) => value)
-                    );
-                }}
+            <ConditionallyRender
+                condition={options.length > 2}
+                show={
+                    <SelectAllButton
+                        isAllSelected={isAllSelected}
+                        onClick={onSelectAllClick}
+                    />
+                }
             />
             {children}
         </Fragment>

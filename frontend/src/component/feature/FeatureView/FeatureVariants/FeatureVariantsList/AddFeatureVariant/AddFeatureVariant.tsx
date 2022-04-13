@@ -25,6 +25,7 @@ import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { useStyles } from './AddFeatureVariant.styles';
 import Input from 'component/common/Input/Input';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 
 const payloadOptions = [
     { key: 'string', label: 'string' },
@@ -64,6 +65,7 @@ export const AddVariant = ({
     const { projectId, featureId } = useParams<IFeatureViewParams>();
     const { feature } = useFeature(projectId, featureId);
     const [variants, setVariants] = useState<IFeatureVariant[]>([]);
+    const { context } = useUnleashContext();
 
     const isValidJSON = (input: string): boolean => {
         try {
@@ -236,10 +238,13 @@ export const AddVariant = ({
 
     const onAddOverride = (e: React.SyntheticEvent) => {
         e.preventDefault();
-        setOverrides([
-            ...overrides,
-            ...[{ contextName: 'userId', values: [] }],
-        ]);
+
+        if (context.length > 0) {
+            setOverrides([
+                ...overrides,
+                ...[{ contextName: context[0].name, values: [] }],
+            ]);
+        }
     };
 
     const isFixWeight = data.weightType === weightTypes.FIX;

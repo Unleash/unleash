@@ -105,4 +105,4 @@ app.listen(port, () =>
 
 When the proxy process has started up correctly, you can start querying its `/proxy` endpoint. If it's running correctly, you'll get back a JSON object with a list of toggles. The list may be empty if you haven't added any toggles for the corresponding project/environment yet.
 
-<ApiRequest verb="get" url="api/admin/projects/<project-id>/features" title="Request toggles from the Unleash Proxy"/>
+<ApiRequest verb="get" url="proxy" endpointType="proxy" title="Request toggles from the Unleash Proxy"/>

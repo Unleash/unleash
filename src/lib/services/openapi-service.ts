@@ -1,13 +1,9 @@
-import openapi from '@wesleytodd/openapi';
+import openapi, { ExpressOpenApi } from '@wesleytodd/openapi';
 import { Express, RequestHandler } from 'express';
 import { OpenAPIV3 } from 'openapi-types';
 import { IUnleashConfig } from '../types/option';
 import { createOpenApiSchema } from '../openapi';
-import {
-    AdminApiOperation,
-    ClientApiOperation,
-    ExpressOpenApi,
-} from '../openapi/types';
+import { AdminApiOperation, ClientApiOperation } from '../openapi/types';
 
 export class OpenApiService {
     private readonly config: IUnleashConfig;

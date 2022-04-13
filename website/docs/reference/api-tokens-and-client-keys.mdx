@@ -20,7 +20,7 @@ Use admin tokens to:
 - automate Unleash behavior such as creating feature toggles, projects, etc.
 - write custom Unleash UIs to replace the default Unleash admin UI
 
-Do _not_ use admin tokens for:
+Do **not** use admin tokens for:
 - [Client SDKs](../sdks/index.md): You will _not_ be able to read toggle data from multiple environments. Use [client tokens](#client-tokens) instead.
 
 Support for scoped admin tokens with more fine-grained permissions is currently in the planning stage.
@@ -40,8 +40,8 @@ Use client tokens:
 - In [server-side client SDKs](../sdks/index.md#server-side-sdks)
 - To connect [the Unleash Proxy](../sdks/unleash-proxy.md) to the Unleash API
 
-Do _not_ use client tokens:
-- In [front-end SDKs](../sdks/index.md#front-end-sdks). You will _not_ be able to connect to the Unleash server due to CORS restrictions. Use [Proxy client keys](#proxy-client-keys) instead.
+Do **not** use client tokens in:
+- [Front-end SDKs](../sdks/index.md#front-end-sdks). You will _not_ be able to connect to the Unleash server due to CORS restrictions. Configure an [Unleash Proxy](../sdks/unleash-proxy.md) and use [Proxy client keys](#proxy-client-keys) instead.
 
 ### Format
 
@@ -99,5 +99,5 @@ Use Proxy client keys to:
 - Connect [Proxy client SDKs](../sdks/index.md#front-end-sdks) to the [Unleash Proxy](../sdks/unleash-proxy.md)
 - Connect your own custom Proxy clients (or pure HTTP requests) to the Unleash Proxy
 
-Do *not* use Proxy client keys to:
+Do **not** use Proxy client keys to:
 - Connect to the Unleash API. It will not work. Use an appropriate [API token](#api-tokens) instead.

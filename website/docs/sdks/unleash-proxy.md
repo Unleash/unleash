@@ -254,14 +254,3 @@ However in some settings you would like a bit more logic around it to make it as
 - [iOS Proxy SDK](/sdks/proxy-ios)
 
 The proxy is also ideal fit for serverless functions such as AWS Lambda. In that scenario the proxy can run on a small container near the serverless function, preferably in the same VPC, giving the lambda extremely fast access to feature flags, at a predictable cost.
-
-## Bootstrapping the Unleash Proxy {#bootstrap}
-
-## Scaling the Unleash Proxy
-
-## Hosting the Unleash Proxy
-
-## Proxy connection
-
-{ how to connect the proxy, what setups are possible etc. }
-See #bootstrap

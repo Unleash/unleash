@@ -123,7 +123,7 @@ Check out [the CONTRIBUTING.md file](./CONTRIBUTING.md) for contribution guideli
 - Targeted releases: release features to specific [users](https://docs.getunleash.io/user_guide/activation_strategy#userids), [IPs](https://docs.getunleash.io/user_guide/activation_strategy#ips), or [hostnames](https://docs.getunleash.io/user_guide/activation_strategy#hostnames)
 - [Kill switches](https://docs.getunleash.io/advanced/feature_toggle_types#feature-toggle-types)
 - [A/B testing](https://docs.getunleash.io/topics/a-b-testing)
-- 2 [environments](https://docs.getunleash.io/topics/a-b-testing)
+- 2 [environments](https://docs.getunleash.io/user_guide/environments)
 - Out-of-the-box integrations with popular tools ([Slack](https://docs.getunleash.io/addons/slack), [Microsoft Teams](https://docs.getunleash.io/addons/teams), [Datadog](https://docs.getunleash.io/addons/datadog)) + integrate with anything with [webhooks](https://docs.getunleash.io/addons/webhook)
 - [Dashboard for managing technical debt](https://docs.getunleash.io/user_guide/technical_debt) and [stale toggles](https://docs.getunleash.io/user_guide/technical_debt#stale-and-potentially-stale-toggles)
 - API-first: *everything* can be automated. No exceptions.

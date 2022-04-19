@@ -4,5 +4,10 @@ export interface IUnleashContextDefinition {
     createdAt: string;
     sortOrder: number;
     stickiness: boolean;
-    legalValues?: string[];
+    legalValues?: ILegalValue[];
+}
+
+export interface ILegalValue {
+    value: string;
+    description?: string;
 }

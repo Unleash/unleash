@@ -1,26 +1,27 @@
 import { useEffect, useState } from 'react';
 import useContextsApi from 'hooks/api/actions/useContextsApi/useContextsApi';
+import { ILegalValue } from 'interfaces/context';
 
 export const useContextForm = (
-    initialcontextName = '',
-    initialcontextDesc = '',
-    initialLegalValues = [] as string[],
+    initialContextName = '',
+    initialContextDesc = '',
+    initialLegalValues = [] as ILegalValue[],
     initialStickiness = false
 ) => {
-    const [contextName, setContextName] = useState(initialcontextName);
-    const [contextDesc, setContextDesc] = useState(initialcontextDesc);
+    const [contextName, setContextName] = useState(initialContextName);
+    const [contextDesc, setContextDesc] = useState(initialContextDesc);
     const [legalValues, setLegalValues] = useState(initialLegalValues);
     const [stickiness, setStickiness] = useState(initialStickiness);
     const [errors, setErrors] = useState({});
     const { validateContextName } = useContextsApi();
 
     useEffect(() => {
-        setContextName(initialcontextName);
-    }, [initialcontextName]);
+        setContextName(initialContextName);
+    }, [initialContextName]);
 
     useEffect(() => {
-        setContextDesc(initialcontextDesc);
-    }, [initialcontextDesc]);
+        setContextDesc(initialContextDesc);
+    }, [initialContextDesc]);
 
     useEffect(() => {
         setLegalValues(initialLegalValues);
@@ -66,8 +67,12 @@ export const useContextForm = (
         }
     };
 
-    const clearErrors = () => {
-        setErrors({});
+    const clearErrors = (key?: string) => {
+        if (key) {
+            setErrors(prev => ({ ...prev, [key]: undefined }));
+        } else {
+            setErrors({});
+        }
     };
 
     return {

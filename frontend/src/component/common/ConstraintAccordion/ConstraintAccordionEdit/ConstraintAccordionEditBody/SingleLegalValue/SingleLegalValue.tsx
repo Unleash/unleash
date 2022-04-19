@@ -1,23 +1,20 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { ConstraintFormHeader } from '../ConstraintFormHeader/ConstraintFormHeader';
-import {
-    FormControl,
-    FormLabel,
-    FormControlLabel,
-    RadioGroup,
-    Radio,
-} from '@material-ui/core';
+import { FormControl, RadioGroup, Radio } from '@material-ui/core';
 import { ConstraintValueSearch } from 'component/common/ConstraintAccordion/ConstraintValueSearch/ConstraintValueSearch';
 import ConditionallyRender from 'component/common/ConditionallyRender';
 import { useCommonStyles } from 'themes/commonStyles';
-
-// Parent component
+import { ILegalValue } from 'interfaces/context';
+import {
+    LegalValueLabel,
+    filterLegalValues,
+} from '../LegalValueLabel/LegalValueLabel';
 
 interface ISingleLegalValueProps {
     setValue: (value: string) => void;
     value?: string;
     type: string;
-    legalValues: string[];
+    legalValues: ILegalValue[];
     error: string;
     setError: React.Dispatch<React.SetStateAction<string>>;
 }
@@ -32,21 +29,18 @@ export const SingleLegalValue = ({
 }: ISingleLegalValueProps) => {
     const [filter, setFilter] = useState('');
     const styles = useCommonStyles();
+    const filteredValues = filterLegalValues(legalValues, filter);
 
     return (
         <>
             <ConstraintFormHeader>
                 Add a single {type.toLowerCase()} value
             </ConstraintFormHeader>
-
             <ConstraintValueSearch filter={filter} setFilter={setFilter} />
             <ConditionallyRender
                 condition={Boolean(legalValues.length)}
                 show={
                     <FormControl component="fieldset">
-                        <FormLabel component="legend">
-                            Available values
-                        </FormLabel>
                         <RadioGroup
                             aria-label="selected-value"
                             name="selected"
@@ -56,10 +50,13 @@ export const SingleLegalValue = ({
                                 setValue(e.target.value);
                             }}
                         >
-                            <RadioOptions
-                                legalValues={legalValues}
-                                filter={filter}
-                            />
+                            {filteredValues.map(match => (
+                                <LegalValueLabel
+                                    key={match.value}
+                                    legal={match}
+                                    control={<Radio />}
+                                />
+                            ))}
                         </RadioGroup>
                     </FormControl>
                 }
@@ -71,31 +68,6 @@ export const SingleLegalValue = ({
                 condition={Boolean(error)}
                 show={<p className={styles.error}>{error}</p>}
             />
-        </>
-    );
-};
-
-// Child components
-interface IRadioOptionsProps {
-    legalValues: string[];
-    filter: string;
-}
-
-const RadioOptions = ({ legalValues, filter }: IRadioOptionsProps) => {
-    return (
-        <>
-            {legalValues
-                .filter(legalValue => legalValue.includes(filter))
-                .map((value, index) => {
-                    return (
-                        <FormControlLabel
-                            key={`${value}-${index}`}
-                            value={value}
-                            control={<Radio />}
-                            label={value}
-                        />
-                    );
-                })}
         </>
     );
 };

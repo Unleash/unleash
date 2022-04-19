@@ -1,24 +1,26 @@
 import Input from 'component/common/Input/Input';
-import { TextField, Button, Switch, Chip, Typography } from '@material-ui/core';
+import { TextField, Button, Switch, Typography } from '@material-ui/core';
 import { useStyles } from './ContextForm.styles';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Add } from '@material-ui/icons';
-import { trim } from 'component/common/util';
+import { ILegalValue } from 'interfaces/context';
+import { ContextFormChip } from 'component/context/ContectFormChip/ContextFormChip';
+import { ContextFormChipList } from 'component/context/ContectFormChip/ContextFormChipList';
 
 interface IContextForm {
     contextName: string;
     contextDesc: string;
-    legalValues: Array<string>;
+    legalValues: ILegalValue[];
     stickiness: boolean;
     setContextName: React.Dispatch<React.SetStateAction<string>>;
     setContextDesc: React.Dispatch<React.SetStateAction<string>>;
     setStickiness: React.Dispatch<React.SetStateAction<boolean>>;
-    setLegalValues: React.Dispatch<React.SetStateAction<string[]>>;
+    setLegalValues: React.Dispatch<React.SetStateAction<ILegalValue[]>>;
     handleSubmit: (e: any) => void;
     onCancel: () => void;
     errors: { [key: string]: string };
     mode: 'Create' | 'Edit';
-    clearErrors: () => void;
+    clearErrors: (key?: string) => void;
     validateContext?: () => void;
     setErrors: React.Dispatch<React.SetStateAction<Object>>;
 }
@@ -45,54 +47,64 @@ export const ContextForm: React.FC<IContextForm> = ({
 }) => {
     const styles = useStyles();
     const [value, setValue] = useState('');
-    const [focused, setFocused] = useState(false);
+    const [valueDesc, setValueDesc] = useState('');
+    const [valueFocused, setValueFocused] = useState(false);
 
-    const submit = (event: React.SyntheticEvent) => {
+    const isMissingValue = valueDesc.trim() && !value.trim();
+
+    const isDuplicateValue = legalValues.some(legalValue => {
+        return legalValue.value.trim() === value.trim();
+    });
+
+    useEffect(() => {
+        setErrors(prev => ({
+            ...prev,
+            tag: isMissingValue
+                ? 'Value cannot be empty'
+                : isDuplicateValue
+                ? 'Duplicate value'
+                : undefined,
+        }));
+    }, [setErrors, isMissingValue, isDuplicateValue]);
+
+    const onSubmit = (event: React.SyntheticEvent) => {
         event.preventDefault();
-        if (focused) return;
         handleSubmit(event);
     };
 
-    const handleKeyDown = (event: React.KeyboardEvent) => {
-        if (event.key === ENTER && focused) {
-            addLegalValue();
-            return;
-        } else if (event.key === ENTER) {
-            handleSubmit(event);
+    const onKeyDown = (event: React.KeyboardEvent) => {
+        if (event.key === ENTER) {
+            event.preventDefault();
+            if (valueFocused) {
+                addLegalValue();
+            } else {
+                handleSubmit(event);
+            }
         }
     };
 
-    const sortIgnoreCase = (a: string, b: string) => {
-        a = a.toLowerCase();
-        b = b.toLowerCase();
-        if (a === b) return 0;
-        if (a > b) return 1;
-        return -1;
+    const sortLegalValues = (a: ILegalValue, b: ILegalValue) => {
+        return a.value.toLowerCase().localeCompare(b.value.toLowerCase());
     };
 
     const addLegalValue = () => {
-        clearErrors();
-        if (!value) {
-            return;
+        const next: ILegalValue = {
+            value: value.trim(),
+            description: valueDesc.trim(),
+        };
+        if (next.value && !isDuplicateValue) {
+            setValue('');
+            setValueDesc('');
+            setLegalValues(prev => [...prev, next].sort(sortLegalValues));
         }
-
-        if (legalValues.indexOf(value) !== -1) {
-            setErrors(prev => ({
-                ...prev,
-                tag: 'Duplicate legal value',
-            }));
-            return;
-        }
-        setLegalValues(prev => [...prev, trim(value)].sort(sortIgnoreCase));
-        setValue('');
     };
-    const removeLegalValue = (index: number) => {
-        const filteredValues = legalValues.filter((_, i) => i !== index);
-        setLegalValues([...filteredValues]);
+
+    const removeLegalValue = (value: ILegalValue) => {
+        setLegalValues(prev => prev.filter(p => p.value !== value.value));
     };
 
     return (
-        <form onSubmit={submit} className={styles.form}>
+        <form onSubmit={onSubmit} className={styles.form}>
             <div className={styles.container}>
                 <p className={styles.inputDescription}>
                     What is your context name?
@@ -102,10 +114,10 @@ export const ContextForm: React.FC<IContextForm> = ({
                     label="Context name"
                     value={contextName}
                     disabled={mode === 'Edit'}
-                    onChange={e => setContextName(trim(e.target.value))}
+                    onChange={e => setContextName(e.target.value.trim())}
                     error={Boolean(errors.name)}
                     errorText={errors.name}
-                    onFocus={() => clearErrors()}
+                    onFocus={() => clearErrors('name')}
                     onBlur={validateContext}
                     autoFocus
                 />
@@ -119,25 +131,15 @@ export const ContextForm: React.FC<IContextForm> = ({
                     multiline
                     maxRows={4}
                     value={contextDesc}
+                    size="small"
                     onChange={e => setContextDesc(e.target.value)}
                 />
                 <p className={styles.inputDescription}>
                     Which values do you want to allow?
                 </p>
-                {legalValues.map((value, index) => {
-                    return (
-                        <Chip
-                            key={index + value}
-                            label={value}
-                            className={styles.tagValue}
-                            onDelete={() => removeLegalValue(index)}
-                            title="Remove value"
-                        />
-                    );
-                })}
                 <div className={styles.tagContainer}>
                     <TextField
-                        label="Value (optional)"
+                        label="Legal value (optional)"
                         name="value"
                         className={styles.tagInput}
                         value={value}
@@ -145,20 +147,47 @@ export const ContextForm: React.FC<IContextForm> = ({
                         helperText={errors.tag}
                         variant="outlined"
                         size="small"
-                        onChange={e => setValue(trim(e.target.value))}
-                        onKeyPress={e => handleKeyDown(e)}
-                        onBlur={e => setFocused(false)}
-                        onFocus={e => setFocused(true)}
+                        onChange={e => setValue(e.target.value)}
+                        onKeyPress={e => onKeyDown(e)}
+                        onBlur={() => setValueFocused(false)}
+                        onFocus={() => setValueFocused(true)}
+                        inputProps={{ maxLength: 100 }}
+                    />
+                    <TextField
+                        label="Value description (optional)"
+                        className={styles.tagInput}
+                        value={valueDesc}
+                        variant="outlined"
+                        size="small"
+                        onChange={e => setValueDesc(e.target.value)}
+                        onKeyPress={e => onKeyDown(e)}
+                        onBlur={() => setValueFocused(false)}
+                        onFocus={() => setValueFocused(true)}
+                        inputProps={{ maxLength: 100 }}
                     />
                     <Button
+                        className={styles.tagButton}
                         startIcon={<Add />}
                         onClick={addLegalValue}
-                        variant="contained"
+                        variant="outlined"
                         color="primary"
+                        disabled={!value.trim() || isDuplicateValue}
                     >
                         Add
                     </Button>
                 </div>
+                <ContextFormChipList>
+                    {legalValues.map(legalValue => {
+                        return (
+                            <ContextFormChip
+                                key={legalValue.value}
+                                label={legalValue.value}
+                                description={legalValue.description}
+                                onRemove={() => removeLegalValue(legalValue)}
+                            />
+                        );
+                    })}
+                </ContextFormChipList>
                 <p className={styles.inputHeader}>Custom stickiness</p>
                 <p>
                     By enabling stickiness on this context field you can use it

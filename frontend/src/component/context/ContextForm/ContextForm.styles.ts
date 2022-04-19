@@ -20,17 +20,16 @@ export const useStyles = makeStyles(theme => ({
         },
     },
     tagContainer: {
-        display: 'flex',
-        alignItems: 'flex-start',
+        display: 'grid',
+        gridTemplateColumns: '1fr auto',
+        gap: '0.5rem',
         marginBottom: '1rem',
     },
     tagInput: {
-        width: '75%',
-        marginRight: 'auto',
+        gridColumn: 1,
     },
-    tagValue: {
-        marginRight: '3px',
-        marginBottom: '1rem',
+    tagButton: {
+        gridColumn: 2,
     },
     buttonContainer: {
         marginTop: 'auto',

@@ -18,6 +18,7 @@ import {
     IN_OPERATORS_FREETEXT,
     Input,
 } from '../useConstraintInput/useConstraintInput';
+import React from 'react';
 
 interface IResolveInputProps {
     contextDefinition: IUnleashContextDefinition;
@@ -81,7 +82,7 @@ export const ResolveInput = ({
                             type="number"
                             legalValues={
                                 contextDefinition.legalValues?.filter(
-                                    (value: string) => Number(value)
+                                    legalValue => Number(legalValue.value)
                                 ) || []
                             }
                             error={error}

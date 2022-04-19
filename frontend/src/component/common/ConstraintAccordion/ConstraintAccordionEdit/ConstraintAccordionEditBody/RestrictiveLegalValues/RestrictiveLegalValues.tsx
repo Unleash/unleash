@@ -1,13 +1,17 @@
-import { Checkbox, FormControlLabel } from '@material-ui/core';
+import { Checkbox } from '@material-ui/core';
 import { useCommonStyles } from 'themes/commonStyles';
 import ConditionallyRender from 'component/common/ConditionallyRender';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ConstraintValueSearch } from 'component/common/ConstraintAccordion/ConstraintValueSearch/ConstraintValueSearch';
 import { ConstraintFormHeader } from '../ConstraintFormHeader/ConstraintFormHeader';
+import { ILegalValue } from 'interfaces/context';
+import {
+    LegalValueLabel,
+    filterLegalValues,
+} from '../LegalValueLabel/LegalValueLabel';
 
-// Parent component
 interface IRestrictiveLegalValuesProps {
-    legalValues: string[];
+    legalValues: ILegalValue[];
     values: string[];
     setValues: (values: string[]) => void;
     beforeValues?: JSX.Element;
@@ -36,6 +40,8 @@ export const RestrictiveLegalValues = ({
     setError,
 }: IRestrictiveLegalValuesProps) => {
     const [filter, setFilter] = useState('');
+    const filteredValues = filterLegalValues(legalValues, filter);
+
     // Lazily initialise the values because there might be a lot of them.
     const [valuesMap, setValuesMap] = useState(() => createValuesMap(values));
     const styles = useCommonStyles();
@@ -63,54 +69,24 @@ export const RestrictiveLegalValues = ({
                 Select values from a predefined set
             </ConstraintFormHeader>
             <ConstraintValueSearch filter={filter} setFilter={setFilter} />
-            <LegalValueOptions
-                legalValues={legalValues}
-                filter={filter}
-                onChange={onChange}
-                valuesMap={valuesMap}
-            />
+            {filteredValues.map(match => (
+                <LegalValueLabel
+                    key={match.value}
+                    legal={match}
+                    control={
+                        <Checkbox
+                            checked={Boolean(valuesMap[match.value])}
+                            onChange={() => onChange(match.value)}
+                            name={match.value}
+                            color="primary"
+                        />
+                    }
+                />
+            ))}
             <ConditionallyRender
                 condition={Boolean(error)}
                 show={<p className={styles.error}>{error}</p>}
             />
-        </>
-    );
-};
-
-// Child component
-interface ILegalValueOptionsProps {
-    legalValues: string[];
-    filter: string;
-    onChange: (legalValue: string) => void;
-    valuesMap: IValuesMap;
-}
-
-const LegalValueOptions = ({
-    legalValues,
-    filter,
-    onChange,
-    valuesMap,
-}: ILegalValueOptionsProps) => {
-    return (
-        <>
-            {legalValues
-                .filter(legalValue => legalValue.includes(filter))
-                .map(legalValue => {
-                    return (
-                        <FormControlLabel
-                            key={legalValue}
-                            control={
-                                <Checkbox
-                                    checked={Boolean(valuesMap[legalValue])}
-                                    onChange={() => onChange(legalValue)}
-                                    color="primary"
-                                    name={legalValue}
-                                />
-                            }
-                            label={legalValue}
-                        />
-                    );
-                })}
         </>
     );
 };

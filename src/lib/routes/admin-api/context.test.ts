@@ -103,7 +103,7 @@ test('should create a context field with legal values', () => {
         .send({
             name: 'page',
             description: 'Bla bla',
-            legalValues: ['blue', 'red'],
+            legalValues: [{ value: 'blue' }, { value: 'red' }],
         })
         .set('Content-Type', 'application/json')
         .expect(201);
@@ -137,7 +137,7 @@ test('should not create a context field with duplicate legal values', () => {
         .send({
             name: 'page',
             description: 'Bla bla',
-            legalValues: ['blue', 'blue'],
+            legalValues: [{ value: 'blue' }, { value: 'blue' }],
         })
         .set('Content-Type', 'application/json')
         .expect(400);
@@ -151,7 +151,11 @@ test('should update a context field with new legal values', () => {
         .send({
             name: 'environment',
             description: 'Used target application envrionments',
-            legalValues: ['local', 'stage', 'production'],
+            legalValues: [
+                { value: 'local' },
+                { value: 'stage' },
+                { value: 'production' },
+            ],
         })
         .set('Content-Type', 'application/json')
         .expect(200);

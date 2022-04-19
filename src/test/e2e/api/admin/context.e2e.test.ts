@@ -50,29 +50,75 @@ test('should create context field', async () => {
 });
 
 test('should create context field with legalValues', async () => {
-    expect.assertions(0);
-    return app.request
+    expect.assertions(3);
+
+    const data = {
+        name: 'region',
+        description: 'A region',
+        legalValues: [
+            { value: 'north' },
+            { value: 'south', description: 'south-desc' },
+        ],
+    };
+
+    await app.request
         .post('/api/admin/context')
-        .send({
-            name: 'region',
-            description: 'A region',
-            legalValues: ['north', 'south'],
-        })
+        .send(data)
         .set('Content-Type', 'application/json')
         .expect(201);
+
+    const res = await app.request.get(`/api/admin/context/${data.name}`);
+    expect(res.body.name).toEqual(data.name);
+    expect(res.body.description).toEqual(data.description);
+    expect(res.body.legalValues).toEqual(data.legalValues);
 });
 
 test('should update context field with legalValues', async () => {
-    expect.assertions(0);
-    return app.request
+    expect.assertions(3);
+
+    const data = {
+        name: 'environment',
+        description: 'Updated description',
+        legalValues: [
+            { value: 'dev', description: 'dev-desc' },
+            { value: 'prod' },
+        ],
+    };
+
+    await app.request
         .put('/api/admin/context/environment')
-        .send({
-            name: 'environment',
-            description: 'Updated description',
-            legalValues: ['dev', 'prod'],
-        })
+        .send(data)
         .set('Content-Type', 'application/json')
         .expect(200);
+
+    const res = await app.request.get(`/api/admin/context/${data.name}`);
+    expect(res.body.name).toEqual(data.name);
+    expect(res.body.description).toEqual(data.description);
+    expect(res.body.legalValues).toEqual(data.legalValues);
+});
+
+test('should reject string legalValues', async () => {
+    await app.request
+        .put('/api/admin/context/environment')
+        .send({ name: 'environment', legalValues: ['a'] })
+        .set('Content-Type', 'application/json')
+        .expect(400);
+});
+
+test('should reject empty legalValues', async () => {
+    await app.request
+        .put('/api/admin/context/environment')
+        .send({ name: 'environment', legalValues: [{ description: 'b' }] })
+        .set('Content-Type', 'application/json')
+        .expect(400);
+});
+
+test('should reject legalValues without value', async () => {
+    await app.request
+        .put('/api/admin/context/environment')
+        .send({ name: 'environment', legalValues: [{ description: 'b' }] })
+        .set('Content-Type', 'application/json')
+        .expect(400);
 });
 
 test('should create context field with stickiness', async () => {

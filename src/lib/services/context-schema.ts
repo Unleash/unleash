@@ -3,6 +3,11 @@ import { nameType } from '../routes/util';
 
 export const nameSchema = joi.object().keys({ name: nameType });
 
+const legalValueSchema = joi.object().keys({
+    value: joi.string().min(1).max(100).required(),
+    description: joi.string().allow('').allow(null).optional(),
+});
+
 export const contextSchema = joi
     .object()
     .keys({
@@ -11,9 +16,9 @@ export const contextSchema = joi
         legalValues: joi
             .array()
             .allow(null)
-            .unique()
+            .unique((a, b) => a.value === b.value)
             .optional()
-            .items(joi.string().max(100)),
+            .items(legalValueSchema),
         stickiness: joi.boolean().optional().default(false),
     })
     .options({ allowUnknown: false, stripUnknown: true });

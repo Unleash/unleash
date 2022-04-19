@@ -5,6 +5,10 @@ title: Unleash Proxy
 
 > The unleash-proxy is compatible with all Unleash Enterprise versions and Unleash Open-Source v4. You should reach out to **support@getunleash.io** if you want the Unleash Team to host the Unleash Proxy for you.
 
+:::tip
+Looking for how to run the Unleash proxy? Check out the [_How to run the Unleash Proxy_ guide](../how-to/how-to-run-the-unleash-proxy.mdx)!
+:::
+
 A lot of our users wanted to use feature toggles in their single-page and native applications. To solve this in a performant and privacy concerned way we built The Unleash Proxy
 
 The Unleash Proxy sits between the Unleash API and the application. It provides a simple and super-fast API, as it has all the data it needs available in memory.
@@ -19,95 +23,44 @@ The proxy solves three important aspects:
 
 _The Unleash Proxy uses the Unleash SDK and exposes a simple API_. The Proxy will synchronize with the Unleash API in the background and provide a simple HTTP API for clients.
 
-## How to Run the Unleash Proxy
+## Configuration
 
-The Unleash Proxy is Open Source and [available on github](https://github.com/Unleash/unleash-proxy). You can either run it as a docker image or as part of a [node.js express application](https://github.com/Unleash/unleash-proxy#run-with-nodejs).
+:::info
+You **must configure** these three variables for the proxy to start successfully:
+- `unleashUrl` / `UNLEASH_URL`
 
-### Configuration variables
+- `unleashApiToken` / `UNLEASH_API_TOKEN`
 
-Regardless of how you choose to run the it, the proxy will need access to these three variables:
+- `clientKeys` / `UNLEASH_PROXY_CLIENT_KEYS`
+:::
 
-- **`unleashUrl`** / **`UNLEASH_URL`**
+The Proxy has a large number of configuration options that you can use to adjust it to your specific use case. The table below lists all the available options.
 
-  The URL of your Unleash instance's API. For instance, to connect to the [Unleash demo app](https://app.unleash-hosted.com/demo/), you would use `https://app.unleash-hosted.com/demo/api/`
+| Option                 | Environment Variable             | Default value      | Required | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+|------------------------|----------------------------------|--------------------|:--------:|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `clientKeys`           | `UNLEASH_PROXY_CLIENT_KEYS`      | n/a                | yes      | List of [client keys](../reference/api-tokens-and-client-keys.mdx#proxy-client-keys) that the proxy should accept. When querying the proxy, Proxy SDKs must set the request's _client keys header_ to one of these values. The default client keys header is `Authorization`. When using an environment variable to set the proxy secrets, the value should be a comma-separated list of strings, such as `secret-one,secret-two`.                                        |
+|                        |                                  |                    |          |                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| `clientKeysHeaderName` | `CLIENT_KEY_HEADER_NAME`         | `"authorization"`  | no       | The name of the HTTP header to use for client keys. Incoming requests must set the value of this header to one of the Proxy's `clientKeys` to be authorized successfully.                                                                                                                                                                                                                                                                                                 |
+| `customStrategies`     | `UNLEASH_CUSTOM_STRATEGIES_FILE` | `[]`               | no       | Use this option to inject implementation of custom activation strategies. If you are using `UNLEASH_CUSTOM_STRATEGIES_FILE`: provide a valid path to a JavaScript file which exports an array of custom activation strategies.                                                                                                                                                                                                                                            |
+| `environment`          | `UNLEASH_ENVIRONMENT`            | `undefined`        | no       | If set this will be the `environment` used by the proxy in the Unleash Context. It will not be possible for proxy SDKs to override the environment if set.                                                                                                                                                                                                                                                                                                                |
+| `logLevel`             | `LOG_LEVEL `                     | `"warn"`           | no       | Used to set `logLevel`. Supported options: `"debug"`, `"info"`, `"warn"`, `"error"` and `"fatal"`                                                                                                                                                                                                                                                                                                                                                                         |
+| `logger`               | n/a                              | `SimpleLogger`     | no       | Register a custom logger.                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| `metricsInterval`      | `UNLEASH_METRICS_INTERVAL`       | `30000`            | no       | How often the proxy should send usage metrics back to Unleash, defined in ms.                                                                                                                                                                                                                                                                                                                                                                                             |
+| `namePrefix`           | `UNLEASH_NAME_PREFIX`            | `undefined`        | no       | If set, the Proxy will only fetch toggles whose name start with the provided prefix.                                                                                                                                                                                                                                                                                                                                                                                      |
+| `projectName`          | `UNLEASH_PROJECT_NAME`           | `undefined`        | no       | If set, the Proxy will only fetch toggles belonging to the project with this ID.                                                                                                                                                                                                                                                                                                                                                                                          |
+| `proxyBasePath`        | `PROXY_BASE_PATH`                | `""`               | no       | The base path to run the proxy from. "/proxy" will be added at the end. For instance, if `proxyBasePath` is `"base/path"`, the proxy will run at `/base/path/proxy`.                                                                                                                                                                                                                                                                                                      |
+| `proxyPort`            | `PORT`                           | `3000`             | no       | The port to run the proxy on.                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| `proxySecrets`         | `UNLEASH_PROXY_SECRETS`          | n/a                | no       | Deprecated alias for `clientKeys`. Please use `clientKeys` instead.                                                                                                                                                                                                                                                                                                                                                                                                       |
+| `refreshInterval`      | `UNLEASH_FETCH_INTERVAL`         | `5000`             | no       | How often the proxy should query Unleash for updates, defined in ms.                                                                                                                                                                                                                                                                                                                                                                                                      |
+| `tags`                 | `UNLEASH_TAGS`                   | `undefined`        | no       | If set, the proxy will only fetch feature toggles with these [tags](../advanced/tags.md). The format should be `tagName:tagValue,tagName2:tagValue2`                                                                                                                                                                                                                                                                                                                      |
+| `trustProxy`           | `TRUST_PROXY `                   | `false`            | no       | If enabled, the Unleash Proxy will know that it is itself sitting behind a proxy and that the `X-Forwarded-*` header fields (which otherwise may be easily spoofed) can be trusted. The proxy will automatically enrich the IP address in the Unleash Context. Can be `true/false` (trust all proxies) or a string (trust only given IP/CIDR (e.g. `'127.0.0.1'`)). If it is a string, it can also be a list of comma separated values (e.g. `'127.0.0.1,192.168.1.1/24'` |
+| `unleashApiToken`      | `UNLEASH_API_TOKEN`              | n/a                | yes      | The [client API token](../reference/api-tokens-and-client-keys.mdx#client-tokens) for connecting to Unleash API.                                                                                                                                                                                                                                                                                                                                                          |
+| `unleashAppName`       | `UNLEASH_APP_NAME`               | `"unleash-proxy" ` | no       | The application name to use when registering with Unleash                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| `unleashInstanceId`    | `UNLEASH_INSTANCE_ID`            | auto-generated     | no       | A unique(-ish) identifier for your instance. Typically a hostname, pod id or something similar. Unleash uses this to separate metrics from the client SDKs with the same `unleashAppName`.                                                                                                                                                                                                                                                                                |
+| `unleashUrl`           | `UNLEASH_URL`                    | n/a                | yes      | The API URL of the Unleash instance you want to connect to.                                                                                                                                                                                                                                                                                                                                                                                                               |
 
-- **`unleashApiToken`** / **`UNLEASH_API_TOKEN`**
 
-  The API token to connect to your Unleash project. For more information on how these work and how to create them, check out the [API token documentation](../user_guide/token.md).
-
-- **`clientKeys`** / **`UNLEASH_PROXY_CLIENT_KEYS`**
-
-  A list of client keys that the proxy will accept. For the proxy to accept an incoming request, the client must use one of these keys for authorization. In client SDKs, this is usually known as a `clientKey` or a `clientSecret`. If you query the proxy directly via HTTP, this is the `authorization` header.
-
-  When using an environment variable to set the proxy secrets, the value should be a comma-separated list of strings, such as `secret-one,secret-two`.
-
-There are many more configuration options available. You'll find all [available options on github](https://github.com/Unleash/unleash-proxy#available-options).
-
-
-### Running the proxy via Docker
-
-The easiest way to run Unleash is via Docker. We have published a [docker image on docker hub](https://hub.docker.com/r/unleashorg/unleash-proxy).
-
-1. **Pull the Proxy image**
-   ```bash
-   docker pull unleashorg/unleash-proxy
-   ```
-
-2. **Start the proxy**
-
-   ```bash
-   docker run \
-      -e UNLEASH_PROXY_CLIENT_KEYS=some-secret \
-      -e UNLEASH_URL='https://app.unleash-hosted.com/demo/api/' \
-      -e UNLEASH_API_TOKEN=56907a2fa53c1d16101d509a10b78e36190b0f918d9f122d \
-      -p 3000:3000 \
-      unleashorg/unleash-proxy
-   ```
-
-    You should see the following output:
-
-   ```bash
-   Unleash-proxy is listening on port 3000!
-   ```
-
-### Running the proxy using Node.js
-
-To run the Proxy via Node.js, you'll have to create your own Node.js project and use the Unleash Proxy as a dependency. Assuming you've already set up your project, here's the steps to take to start the proxy as part of your app:
-
-1. **Install the Unleash Proxy package**
-   ``` shell npm2yarn
-   npm install @unleash/proxy
-   ```
-
-2. **Initialize and start the proxy in your code.** A fully working sample app that uses the proxy:
-   ``` js
-   const port = 3000;
-
-   const { createApp } = require('@unleash/proxy');
-
-   const app = createApp({
-       unleashUrl: 'https://app.unleash-hosted.com/demo/api/',
-       unleashApiToken: '56907a2fa53c1d16101d509a10b78e36190b0f918d9f122d',
-       clientKeys: ['some-secret', 'another-proxy-secret', 's1'],
-       refreshInterval: 1000,
-   });
-
-   app.listen(port, () =>
-       console.log(`Unleash Proxy listening on http://localhost:${port}/proxy`),
-   );
-   ```
-
-### Verify that the proxy is working
-
-In order to verify the proxy you can use curl and see that you get a few evaluated feature toggles back. Assuming that the proxy is running on port 3000 and that your proxy client key is `some-secret`, you could run this command :
-
-```bash
-curl http://localhost:3000/proxy -H "Authorization: some-secret"
-```
-
-The output is of the form described in the [payload section](#payload).
-
-### Health endpoint
+## Health endpoint
 
 The proxy will try to synchronize with the Unleash API at startup, until it has successfully done that the proxy will return `HTTP 503 - Not Read?` for all request. You can use the health endpoint to validate that the proxy is ready to recieve requests:
 

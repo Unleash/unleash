@@ -53,3 +53,11 @@ DELETE.args = {
     url: 'api/admin/projects/<project-id>/features/<feature-toggle-id>',
     title: 'Create a feature toggle with impression data enabled.',
 };
+
+export const GETProxy = Template.bind({});
+GETProxy.args = {
+    verb: 'get',
+    url: 'proxy',
+    title: 'Request toggles from the Unleash Proxy',
+    endpointType: 'Proxy API',
+};

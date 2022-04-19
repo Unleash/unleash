@@ -51,6 +51,17 @@ module.exports = {
                     items: ['user_guide/api-token', 'advanced/api_access'],
                 },
                 {
+                    type: 'category',
+                    link: {
+                        type: 'generated-index',
+                        title: 'How-to: The Unleash Proxy',
+                        description: 'Learn how to work with the Unleash Proxy',
+                        slug: '/how-to/proxy',
+                    },
+                    label: 'Unleash Proxy guides',
+                    items: ['how-to/how-to-run-the-unleash-proxy'],
+                },
+                {
                     label: 'Feature toggles, strategies, context',
                     items: [
                         'how-to/how-to-add-strategy-constraints',
@@ -58,6 +69,7 @@ module.exports = {
                         'user_guide/create_feature_toggle',
                         'how-to/how-to-define-custom-context-fields',
                         'how-to/how-to-use-custom-strategies',
+                        'how-to/how-to-capture-impression-data',
                         'how-to/how-to-schedule-feature-releases',
                     ],
                     type: 'category',
@@ -247,6 +259,7 @@ module.exports = {
                     label: 'Unleash concepts',
                     items: [
                         'user_guide/activation_strategy',
+                        'reference/api-tokens-and-client-keys',
                         'advanced/archived_toggles',
                         'advanced/audit_log',
                         'advanced/impression-data',

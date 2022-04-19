@@ -18,47 +18,67 @@ import CodeBlock from '@theme/CodeBlock';
 const indentation = 2;
 
 type Props = {
-    verb: string,
-    payload?: any,
-    url: string,
-    title?: string
-}
+    verb: string;
+    payload?: any;
+    url: string;
+    title?: string;
+    endpointType?: 'Proxy API' | 'Unleash server API';
+};
 
-const Component: React.FC<Props> = ({ verb, payload, url, title }) => {
+const Component: React.FC<Props> = ({
+    verb,
+    payload,
+    url,
+    title,
+    endpointType = 'Unleash server API',
+}) => {
     const verbUpper = verb?.toUpperCase() || '';
     const prettyPayload = JSON.stringify(payload, null, indentation);
+    const [baseUrl, authToken] =
+        endpointType === 'Unleash server API'
+            ? ['unleash-url', 'API-token']
+            : ['proxy-url', 'proxy-client-key'];
 
-    const httpBlock = (payload ? `
-${verbUpper} <unleash-url>/${url}
-Authorization: <API-token>
+    const httpBlock = (
+        payload
+            ? `
+${verbUpper} <${baseUrl}>/${url}
+Authorization: <${authToken}>
 content-type: application/json
 
-${prettyPayload}` :`
-${verbUpper} <unleash-url>/${url}
-Authorization: <API-token>
-content-type: application/json`).trim()
+${prettyPayload}`
+            : `
+${verbUpper} <${baseUrl}>/${url}
+Authorization: <${authToken}>
+content-type: application/json`
+    ).trim();
 
-    const curlBlock = (payload ? `
+    const curlBlock = (
+        payload
+            ? `
 curl -H "Content-Type: application/json" \\
-     -H "Authorization: <API-token>" \\
+     -H "Authorization: <${authToken}>" \\
      -X ${verbUpper} \\
      -d '${prettyPayload}' \\
-     <unleash-url>/${url}` : `
+     <${baseUrl}>/${url}`
+            : `
 curl -H "Content-Type: application/json" \\
-     -H "Authorization: <API-token>" \\
+     -H "Authorization: <${authToken}>" \\
      -X ${verbUpper} \\
-     <unleash-url>/${url}` ).trim()
+     <${baseUrl}>/${url}`
+    ).trim();
 
-    const httpieBlock = (payload ?
-                         `echo '${prettyPayload}' \\
+    const httpieBlock = (
+        payload
+            ? `echo '${prettyPayload}' \\
 | http ${verbUpper} \\
-  <unleash-url>/${url} \\
-  Authorization:<API-token>`
-        : `
+  <${baseUrl}>/${url} \\
+  Authorization:<${authToken}>`
+            : `
 http ${verbUpper} \\
-  <unleash-url>/${url} \\
-  Authorization:<API-token>`.trim()
-        ).trim()
+  <${baseUrl}>/${url} \\
+  Authorization:<${authToken}>`.trim()
+    ).trim();
 
     return (
         <Tabs groupId="api-request">
@@ -69,7 +89,7 @@ http ${verbUpper} \\
             </TabItem>
             <TabItem value="curl" label="cURL">
                 <CodeBlock language="bash" title={title}>
-            {curlBlock}
+                    {curlBlock}
                 </CodeBlock>
             </TabItem>
             <TabItem value="httpie" label="HTTPie">

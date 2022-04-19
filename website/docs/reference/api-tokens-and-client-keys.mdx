@@ -14,15 +14,15 @@ Use API tokens to connect to the Unleash server API. API tokens come in two dist
 - [Admin tokens](#admin-tokens)
 - [Client tokens](#client-tokens)
 
-Both types have use [the same format](#format) but have different intended uses. API tokens are considered to be *secrets* and should _not_ be exposed to end users.
+Both types use [the same format](#format) but have different intended uses. API tokens are considered to be *secrets* and should _not_ be exposed to end users.
 
 ### Admin tokens
 
 **Admin tokens** grant *full read and write access* to all resources in the Unleash server API. Admin tokens have access to all projects, all environments, and all global resources (find out more about [resources in the RBAC document](../user_guide/rbac.md#core-principles)).
 
 Use admin tokens to:
-- automate Unleash behavior such as creating feature toggles, projects, etc.
-- write custom Unleash UIs to replace the default Unleash admin UI
+- Automate Unleash behavior such as creating feature toggles, projects, etc.
+- Write custom Unleash UIs to replace the default Unleash admin UI.
 
 Do **not** use admin tokens for:
 - [Client SDKs](../sdks/index.md): You will _not_ be able to read toggle data from multiple environments. Use [client tokens](#client-tokens) instead.
@@ -72,7 +72,7 @@ The parts are separated by two different separators: A colon (`:`) between the p
 
 The **project(s)** part is one of:
 - The id of a specific project, for example: `default`. This indicates that the token is **only valid for this project**.
-- A pair of opening and closing square brackets: `[]`. This indicates that the token is **valid for a discrete list of projects**.  The list of projects is not shown in the token.
+- A pair of opening and closing square brackets: `[]`. This indicates that the token is **valid for a discrete list of projects**. The list of projects is not shown in the token.
 - An asterisk: `*`. This indicates that the token is **valid for all projects (current and future)**.
 
 The **environment** is the name of an environment on your Unleash server, such as `development`.

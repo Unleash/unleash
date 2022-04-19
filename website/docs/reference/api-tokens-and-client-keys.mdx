@@ -2,7 +2,13 @@
 title: API tokens and client keys
 ---
 
-Unleash has a number of tokens/keys that all have slightly different use cases. Here's the list of all of them:
+For Unleash to be of any use, it requires at least a server and a [consuming client](../sdks/index.md).
+More advanced use cases may call for multiple clients, automated feature toggle updates, the [Unleash proxy](../sdks/unleash-proxy.md) and [Unleash proxy clients](../sdks/index.md#front-end-sdks), and more. To facilitate communication between all these moving parts, Unleash uses a system of API tokens and client keys, all with a specific purpose in mind.
+
+This document details the three kinds of tokens and keys that you will need to fully connect any Unleash system:
+- [Admin tokens](#admin-tokens) for updating resources in Unleash
+- [Client tokens](#client-tokens) for connecting server-side client SDKs and the Unleash proxy to the Unleash server
+- [Proxy client keys](#proxy-client-keys) for connecting proxy client SDKs to the Unleash proxy.
 
 ## API tokens
 

@@ -59,7 +59,7 @@
     "@storybook/addon-interactions": "6.4.22",
     "@storybook/addon-links": "6.4.22",
     "@storybook/react": "6.4.22",
-    "@storybook/testing-library": "0.0.9",
+    "@storybook/testing-library": "0.0.10",
     "@tsconfig/docusaurus": "1.0.5",
     "babel-loader": "8.2.4",
     "enhanced-resolve": "5.9.3",

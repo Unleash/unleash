@@ -74,7 +74,7 @@ const UserProfileContent = ({
                     )}
                 >
                     <Avatar
-                        alt="user image"
+                        alt="Your Gravatar"
                         src={imageUrl}
                         className={profileAvatarClasses}
                     />

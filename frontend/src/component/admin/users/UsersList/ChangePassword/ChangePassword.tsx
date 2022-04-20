@@ -104,7 +104,7 @@ const ChangePassword = ({
                 <div className={commonStyles.flexRow}>
                     <Avatar
                         variant="rounded"
-                        alt={user.name}
+                        alt="Gravatar"
                         src={user.imageUrl}
                         title={`${
                             user.name || user.email || user.username

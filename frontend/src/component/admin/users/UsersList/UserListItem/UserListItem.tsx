@@ -50,7 +50,7 @@ const UserListItem = ({
             <TableCell align="center" className={styles.hideXS}>
                 <Avatar
                     data-loading
-                    alt={user.name}
+                    alt="Gravatar"
                     src={user.imageUrl}
                     className={styles.avatar}
                     title={`${user.name || user.email || user.username} (id: ${

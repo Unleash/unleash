@@ -45,7 +45,7 @@ export const ProjectAccessListItem = ({
     return (
         <ListItem key={user.id} button>
             <ListItemAvatar>
-                <Avatar alt={user.name} src={user.imageUrl} />
+                <Avatar alt="Gravatar" src={user.imageUrl} />
             </ListItemAvatar>
             <ListItemText
                 id={labelId}

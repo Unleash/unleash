@@ -94,7 +94,7 @@ export const ConstraintAccordionEditHeader = ({
                         autoFocus
                         options={constraintNameOptions}
                         value={contextName || ''}
-                        onChange={e => setContextName(String(e.target.value))}
+                        onChange={setContextName}
                         className={styles.headerSelect}
                     />
                 </div>

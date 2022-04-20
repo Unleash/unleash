@@ -1,5 +1,4 @@
 import { useContext, useState } from 'react';
-import PropTypes from 'prop-types';
 import { Link, useHistory } from 'react-router-dom';
 import {
     Button,
@@ -160,10 +159,4 @@ export const TagTypeList = () => {
             />
         </PageContent>
     );
-};
-
-TagTypeList.propTypes = {
-    tagTypes: PropTypes.array.isRequired,
-    fetchTagTypes: PropTypes.func.isRequired,
-    removeTagType: PropTypes.func.isRequired,
 };

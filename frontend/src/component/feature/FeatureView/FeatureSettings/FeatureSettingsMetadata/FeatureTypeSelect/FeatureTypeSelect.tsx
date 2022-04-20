@@ -1,21 +1,23 @@
 import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
 import GeneralSelect, {
     ISelectOption,
+    IGeneralSelectProps,
 } from 'component/common/GeneralSelect/GeneralSelect';
 
+interface IFeatureTypeSelectProps
+    extends Omit<IGeneralSelectProps, 'options' | 'value'> {
+    value: string;
+    editable: boolean;
+}
+
 const FeatureTypeSelect = ({
-    // @ts-expect-error
     editable,
-    // @ts-expect-error
     value,
-    // @ts-expect-error
     id,
-    // @ts-expect-error
     label,
-    // @ts-expect-error
     onChange,
     ...rest
-}) => {
+}: IFeatureTypeSelectProps) => {
     const { featureTypes } = useFeatureTypes();
 
     const options: ISelectOption[] = featureTypes.map(t => ({

@@ -1,11 +1,15 @@
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
-import { IProject } from 'interfaces/project';
-import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
+import { IProjectCard } from 'interfaces/project';
+import GeneralSelect, {
+    ISelectOption,
+    IGeneralSelectProps,
+} from 'component/common/GeneralSelect/GeneralSelect';
+import React from 'react';
 
-interface IFeatureProjectSelect {
+interface IFeatureProjectSelectProps
+    extends Omit<IGeneralSelectProps, 'options'> {
     enabled: boolean;
     value: string;
-    onChange: (e: any) => void;
     filter: (project: string) => void;
 }
 
@@ -15,14 +19,14 @@ const FeatureProjectSelect = ({
     onChange,
     filter,
     ...rest
-}: IFeatureProjectSelect) => {
+}: IFeatureProjectSelectProps) => {
     const { projects } = useProjects();
 
     if (!enabled) {
         return null;
     }
 
-    const formatOption = (project: IProject) => {
+    const formatOption = (project: IProjectCard) => {
         return {
             key: project.id,
             label: project.name,
@@ -30,28 +34,23 @@ const FeatureProjectSelect = ({
         };
     };
 
-    let options;
+    let options: ISelectOption[];
+
     if (filter) {
         options = projects
-            .filter(project => {
-                return filter(project.id);
-            })
-            // @ts-expect-error
+            .filter(project => filter(project.id))
             .map(formatOption);
     } else {
-        // @ts-expect-error
         options = projects.map(formatOption);
     }
 
     if (value && !options.find(o => o.key === value)) {
-        // @ts-expect-error
         options.push({ key: value, label: value });
     }
 
     return (
         <GeneralSelect
             label="Project"
-            // @ts-expect-error
             options={options}
             value={value}
             onChange={onChange}

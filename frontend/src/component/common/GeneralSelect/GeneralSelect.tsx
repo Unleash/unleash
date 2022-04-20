@@ -8,6 +8,7 @@ import {
 } from '@material-ui/core';
 import { SELECT_ITEM_ID } from 'utils/testIds';
 import { KeyboardArrowDownOutlined } from '@material-ui/icons';
+import { SelectInputProps } from '@material-ui/core/Select/SelectInput';
 
 export interface ISelectOption {
     key: string;
@@ -16,24 +17,19 @@ export interface ISelectOption {
     disabled?: boolean;
 }
 
-export interface ISelectMenuProps extends SelectProps {
+export interface IGeneralSelectProps extends Omit<SelectProps, 'onChange'> {
     name?: string;
     value?: string;
     label?: string;
     options: ISelectOption[];
-    onChange?: OnGeneralSelectChange;
+    onChange: (key: string) => void;
     disabled?: boolean;
     fullWidth?: boolean;
     classes?: any;
     defaultValue?: string;
 }
 
-export type OnGeneralSelectChange = (
-    event: React.ChangeEvent<{ name?: string; value: unknown }>,
-    child: React.ReactNode
-) => void;
-
-const GeneralSelect: React.FC<ISelectMenuProps> = ({
+const GeneralSelect: React.FC<IGeneralSelectProps> = ({
     name,
     value = '',
     label = '',
@@ -59,6 +55,11 @@ const GeneralSelect: React.FC<ISelectMenuProps> = ({
             </MenuItem>
         ));
 
+    const onSelectChange: SelectInputProps['onChange'] = event => {
+        event.preventDefault();
+        onChange(String(event.target.value));
+    };
+
     return (
         <FormControl
             variant="outlined"
@@ -70,7 +71,7 @@ const GeneralSelect: React.FC<ISelectMenuProps> = ({
             <Select
                 name={name}
                 disabled={disabled}
-                onChange={onChange}
+                onChange={onSelectChange}
                 className={className}
                 label={label}
                 id={id}

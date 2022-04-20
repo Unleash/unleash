@@ -54,7 +54,7 @@ export const OverrideConfig = ({
                         classes={{
                             root: classnames(commonStyles.fullWidth),
                         }}
-                        onChange={updateOverrideType(i)}
+                        onChange={updateOverrideType(i, o.contextName)}
                     />
                 </Grid>
                 <Grid md={7} sm={7} xs={6} item>

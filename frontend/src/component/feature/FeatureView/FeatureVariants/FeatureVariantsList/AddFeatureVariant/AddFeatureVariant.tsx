@@ -1,4 +1,4 @@
-import React, { useEffect, useState, ChangeEvent } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Button,
     FormControl,
@@ -189,14 +189,9 @@ export const AddVariant = ({
         }
     };
 
-    const onPayload = (e: ChangeEvent<{ name?: string; value: unknown }>) => {
-        e.preventDefault();
+    const onPayload = (name: string) => (value: string) => {
         setError({ payload: '' });
-        setPayload({
-            ...payload,
-            // @ts-expect-error
-            [e.target.name]: e.target.value,
-        });
+        setPayload({ ...payload, [name]: value });
     };
 
     const onCancel = (e: React.SyntheticEvent) => {
@@ -206,13 +201,12 @@ export const AddVariant = ({
     };
 
     const updateOverrideType =
-        (index: number) => (e: ChangeEvent<HTMLInputElement>) => {
-            e.preventDefault();
+        (index: number, contextName: string) => (value: string) => {
             setOverrides(
                 overrides.map((o, i) => {
                     if (i === index) {
                         // @ts-expect-error
-                        o[e.target.name] = e.target.value;
+                        o[contextName] = value;
                     }
 
                     return o;
@@ -367,7 +361,7 @@ export const AddVariant = ({
                             className={styles.select}
                             value={payload.type}
                             options={payloadOptions}
-                            onChange={onPayload}
+                            onChange={onPayload('type')}
                         />
                     </Grid>
                     <Grid item md={8} sm={8} xs={6}>
@@ -377,7 +371,7 @@ export const AddVariant = ({
                             name="value"
                             className={commonStyles.fullWidth}
                             value={payload.value}
-                            onChange={onPayload}
+                            onChange={e => onPayload('value')(e.target.value)}
                             data-testid={'VARIANT_PAYLOAD_VALUE'}
                             placeholder={
                                 payload.type === 'json'

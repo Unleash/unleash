@@ -57,10 +57,9 @@ export const StrategyParameter = ({
     errors,
 }: IStrategyParameterProps) => {
     const styles = useStyles();
-    const handleTypeChange = (
-        event: React.ChangeEvent<{ name?: string; value: unknown }>
-    ) => {
-        set({ type: event.target.value });
+
+    const onTypeChange = (type: string) => {
+        set({ type });
     };
 
     const renderParamTypeDescription = () => {
@@ -102,7 +101,7 @@ export const StrategyParameter = ({
                 name="type"
                 options={paramTypesOptions}
                 value={input.type}
-                onChange={handleTypeChange}
+                onChange={onTypeChange}
                 id={`prop-type-${index}-select`}
                 className={styles.input}
             />

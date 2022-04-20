@@ -65,8 +65,7 @@ const FeatureSettingsMetadata = () => {
             <FeatureTypeSelect
                 value={type}
                 id="feature-type-select"
-                // @ts-expect-error
-                onChange={e => setType(e.target.value)}
+                onChange={setType}
                 label="Feature type"
                 editable={editable}
             />

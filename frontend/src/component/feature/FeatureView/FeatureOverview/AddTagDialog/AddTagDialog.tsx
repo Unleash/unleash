@@ -94,7 +94,7 @@ const AddTagDialog = ({ open, setOpen }: IAddTagDialogProps) => {
                                 autoFocus
                                 name="type"
                                 value={tag.type}
-                                onChange={e => setValue('type', e.target.value)}
+                                onChange={type => setValue('type', type)}
                             />
                             <br />
                             <Input

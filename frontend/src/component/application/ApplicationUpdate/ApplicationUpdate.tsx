@@ -22,12 +22,12 @@ export const ApplicationUpdate = ({ application }: IApplicationUpdateProps) => {
     const { setToastData, setToastApiError } = useToast();
     const commonStyles = useCommonStyles();
 
-    const handleChange = async (
-        evt: ChangeEvent<{ name?: string | undefined; value: unknown }>,
+    const onChange = async (
         field: string,
-        value: string
+        value: string,
+        event?: ChangeEvent
     ) => {
-        evt.preventDefault();
+        event?.preventDefault();
         try {
             await storeApplicationMetaData(appName, field, value);
             refetchApplication();
@@ -51,9 +51,7 @@ export const ApplicationUpdate = ({ application }: IApplicationUpdateProps) => {
                         label="Icon"
                         options={icons.map(v => ({ key: v, label: v }))}
                         value={icon || 'apps'}
-                        onChange={e =>
-                            handleChange(e, 'icon', e.target.value as string)
-                        }
+                        onChange={key => onChange('icon', key)}
                     />
                 </Grid>
                 <Grid item>
@@ -65,7 +63,7 @@ export const ApplicationUpdate = ({ application }: IApplicationUpdateProps) => {
                         type="url"
                         variant="outlined"
                         size="small"
-                        onBlur={e => handleChange(e, 'url', localUrl)}
+                        onBlur={e => onChange('url', localUrl, e)}
                     />
                 </Grid>
                 <Grid item>
@@ -77,7 +75,7 @@ export const ApplicationUpdate = ({ application }: IApplicationUpdateProps) => {
                         rows={2}
                         onChange={e => setLocalDescription(e.target.value)}
                         onBlur={e =>
-                            handleChange(e, 'description', localDescription)
+                            onChange('description', localDescription, e)
                         }
                     />
                 </Grid>

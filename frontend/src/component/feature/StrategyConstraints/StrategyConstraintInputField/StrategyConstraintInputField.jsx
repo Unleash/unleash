@@ -90,9 +90,7 @@ const StrategyConstraintInputField = ({
                     label="Context Field"
                     options={constraintContextNames}
                     value={constraint.contextName || ''}
-                    onChange={evt =>
-                        updateConstraint(evt.target.value, 'contextName')
-                    }
+                    onChange={value => updateConstraint(value, 'contextName')}
                     className={styles.contextField}
                 />
             </td>
@@ -102,9 +100,7 @@ const StrategyConstraintInputField = ({
                     label="Operator"
                     options={constraintOperators}
                     value={constraint.operator}
-                    onChange={evt =>
-                        updateConstraint(evt.target.value, 'operator')
-                    }
+                    onChange={value => updateConstraint(value, 'operator')}
                     className={styles.operator}
                 />
             </td>

@@ -87,7 +87,7 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
                 <GeneralSelect
                     options={selectableTypes}
                     value={type}
-                    onChange={e => setTokenType(e.target.value as string)}
+                    onChange={setTokenType}
                     label="Token Type"
                     id="api_key_type"
                     name="type"
@@ -113,7 +113,7 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
                     disabled={type === TYPE_ADMIN}
                     options={selectableEnvs}
                     value={environment}
-                    onChange={e => setEnvironment(e.target.value as string)}
+                    onChange={setEnvironment}
                     label="Environment"
                     id="api_key_environment"
                     name="environment"

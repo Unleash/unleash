@@ -1,5 +1,5 @@
 import GeneralSelect, {
-    OnGeneralSelectChange,
+    IGeneralSelectProps,
 } from 'component/common/GeneralSelect/GeneralSelect';
 
 interface IFeatureMetricsHoursProps {
@@ -13,8 +13,8 @@ export const FeatureMetricsHours = ({
     hoursBack,
     setHoursBack,
 }: IFeatureMetricsHoursProps) => {
-    const onChange: OnGeneralSelectChange = event => {
-        setHoursBack(parseFeatureMetricsHour(event.target.value));
+    const onChange: IGeneralSelectProps['onChange'] = key => {
+        setHoursBack(parseFeatureMetricsHour(key));
     };
 
     return (

@@ -92,8 +92,7 @@ const FeatureSettingsProject = () => {
         <>
             <FeatureProjectSelect
                 value={project}
-                onChange={e => setProject(e.target.value)}
-                // @ts-expect-error
+                onChange={setProject}
                 label="Project"
                 enabled={editable}
                 filter={filterProjects()}

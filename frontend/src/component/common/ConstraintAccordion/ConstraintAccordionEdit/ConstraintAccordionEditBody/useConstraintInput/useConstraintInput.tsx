@@ -8,7 +8,6 @@ import {
 import { IUnleashContextDefinition } from 'interfaces/context';
 import { IConstraint } from 'interfaces/strategy';
 import React, { useCallback, useEffect, useState } from 'react';
-import { exists } from 'utils/exists';
 import { oneOf } from 'utils/oneOf';
 
 import {
@@ -18,6 +17,7 @@ import {
     dateValidatorGenerator,
     ConstraintValidatorOutput,
 } from './constraintValidators';
+import { nonEmptyArray } from 'utils/nonEmptyArray';
 
 interface IUseConstraintInputProps {
     contextDefinition: IUnleashContextDefinition;
@@ -75,22 +75,22 @@ export const useConstraintInput = ({
 
     const resolveInputType = useCallback(() => {
         if (
-            exists(contextDefinition.legalValues) &&
+            nonEmptyArray(contextDefinition.legalValues) &&
             oneOf(inOperators, localConstraint.operator)
         ) {
             setInput(IN_OPERATORS_LEGAL_VALUES);
         } else if (
-            exists(contextDefinition.legalValues) &&
+            nonEmptyArray(contextDefinition.legalValues) &&
             oneOf(stringOperators, localConstraint.operator)
         ) {
             setInput(STRING_OPERATORS_LEGAL_VALUES);
         } else if (
-            exists(contextDefinition.legalValues) &&
+            nonEmptyArray(contextDefinition.legalValues) &&
             oneOf(numOperators, localConstraint.operator)
         ) {
             setInput(NUM_OPERATORS_LEGAL_VALUES);
         } else if (
-            exists(contextDefinition.legalValues) &&
+            nonEmptyArray(contextDefinition.legalValues) &&
             oneOf(semVerOperators, localConstraint.operator)
         ) {
             setInput(SEMVER_OPERATORS_LEGAL_VALUES);

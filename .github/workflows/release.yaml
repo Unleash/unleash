@@ -1,0 +1,30 @@
+name: 'Publish to npm'
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [14.x]
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Publish to npm
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        registry-url: 'https://registry.npmjs.org'
+    - run: |
+        yarn install --frozen-lockfile
+    - run: |
+        LATEST=$(npm show unleash-server version)
+        TAG=$(node scripts/npm-tag.js $LATEST)
+        npm publish --tag ${TAG:-latest}
+      env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

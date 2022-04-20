@@ -75,6 +75,7 @@
     "dist",
     "snapshots",
     "coverage",
-    "websitev2"
+    "websitev2",
+    "scripts"
   ]
 }

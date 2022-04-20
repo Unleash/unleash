@@ -70,7 +70,7 @@ const FeatureOverviewTags: React.FC<IFeatureOverviewTagsProps> = ({
                     return (
                         <img
                             style={style}
-                            alt="slack"
+                            alt="Slack"
                             src={formatAssetPath(slackIcon)}
                         />
                     );
@@ -78,7 +78,7 @@ const FeatureOverviewTags: React.FC<IFeatureOverviewTagsProps> = ({
                     return (
                         <img
                             style={style}
-                            alt="jira"
+                            alt="JIRA"
                             src={formatAssetPath(jiraIcon)}
                         />
                     );
@@ -86,7 +86,7 @@ const FeatureOverviewTags: React.FC<IFeatureOverviewTagsProps> = ({
                     return (
                         <img
                             style={style}
-                            alt="webhook"
+                            alt="Webhook"
                             src={formatAssetPath(webhookIcon)}
                         />
                     );

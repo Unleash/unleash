@@ -25,7 +25,7 @@ const getAddonIcon = (name: string): ReactElement => {
             return (
                 <img
                     style={style}
-                    alt="Slack Logo"
+                    alt="Slack logo"
                     src={formatAssetPath(slackIcon)}
                 />
             );
@@ -33,7 +33,7 @@ const getAddonIcon = (name: string): ReactElement => {
             return (
                 <img
                     style={style}
-                    alt="JIRA Logo"
+                    alt="JIRA logo"
                     src={formatAssetPath(jiraIcon)}
                 />
             );
@@ -49,7 +49,7 @@ const getAddonIcon = (name: string): ReactElement => {
             return (
                 <img
                     style={style}
-                    alt="Microsoft Teams Logo"
+                    alt="Microsoft Teams logo"
                     src={formatAssetPath(teamsIcon)}
                 />
             );
@@ -57,7 +57,7 @@ const getAddonIcon = (name: string): ReactElement => {
             return (
                 <img
                     style={style}
-                    alt="Datadog"
+                    alt="Datadog logo"
                     src={formatAssetPath(dataDogIcon)}
                 />
             );

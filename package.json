@@ -77,7 +77,7 @@
     ]
   },
   "dependencies": {
-    "async": "^3.1.1",
+    "async": "^3.2.3",
     "bcryptjs": "^2.4.3",
     "compression": "^1.7.4",
     "connect-session-knex": "^2.1.0",

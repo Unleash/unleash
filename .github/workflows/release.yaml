@@ -24,7 +24,7 @@ jobs:
         yarn install --frozen-lockfile
     - run: |
         LATEST=$(npm show unleash-server version)
-        TAG=${node scripts/npm-tag.js $LATEST}
+        TAG=$(node scripts/npm-tag.js $LATEST)
         npm publish --tag ${TAG:-latest}
       env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

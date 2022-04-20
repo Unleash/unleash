@@ -16,7 +16,7 @@ interface IFeatureOverviewEnvSwitchProps {
     env: IFeatureEnvironment;
     callback?: () => void;
     text?: string;
-    showInfoBox?: () => void;
+    showInfoBox: () => void;
 }
 
 const FeatureOverviewEnvSwitch = ({
@@ -44,14 +44,14 @@ const FeatureOverviewEnvSwitch = ({
             if (callback) {
                 callback();
             }
-        } catch (e) {
-            // @ts-expect-error
-            if (e.message === ENVIRONMENT_STRATEGY_ERROR) {
-                // @ts-expect-error
-                showInfoBox(true);
+        } catch (error: unknown) {
+            if (
+                error instanceof Error &&
+                error.message === ENVIRONMENT_STRATEGY_ERROR
+            ) {
+                showInfoBox();
             } else {
-                // @ts-expect-error
-                setToastApiError(e.message);
+                setToastApiError(formatUnknownError(error));
             }
         }
     };

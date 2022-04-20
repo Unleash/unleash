@@ -23,7 +23,8 @@ jobs:
     - run: |
         yarn install --frozen-lockfile
     - run: |
-        TAG=$(echo $GITHUB_REF_NAME | grep -oP '^v\d+\.\d+\.\d+-?\K(\w+)?')
+        LATEST=$(npm show unleash-server version)
+        TAG=${node scripts/npm-tag.js $LATEST}
         npm publish --tag ${TAG:-latest}
       env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

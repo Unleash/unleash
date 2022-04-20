@@ -76,6 +76,7 @@
     "snapshots",
     "coverage",
     "websitev2",
-    "setupJest.js"
+    "setupJest.js",
+    "scripts"
   ]
 }

@@ -7,7 +7,7 @@ import Header from 'component/menu/Header/Header';
 import Footer from 'component/menu/Footer/Footer';
 import Proclamation from 'component/common/Proclamation/Proclamation';
 import BreadcrumbNav from 'component/common/BreadcrumbNav/BreadcrumbNav';
-import { ReactComponent as Texture } from 'assets/img/texture.svg';
+import textureImage from 'assets/img/texture.png';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const useStyles = makeStyles(theme => ({
@@ -49,16 +49,17 @@ export const MainLayout = ({ children }: IMainLayoutProps) => {
                         </div>
                     </Grid>
                     <div style={{ overflow: 'hidden' }}>
-                        <div
+                        <img
+                            src={textureImage}
+                            alt=""
                             style={{
                                 position: 'fixed',
-                                right: '0',
-                                bottom: '-4px',
                                 zIndex: 1,
+                                bottom: 0,
+                                right: 0,
+                                width: 400,
                             }}
-                        >
-                            <Texture />
-                        </div>
+                        />
                     </div>
                 </div>
                 <Footer />

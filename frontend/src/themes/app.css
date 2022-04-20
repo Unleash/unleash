@@ -133,6 +133,10 @@ p {
     padding: 0;
 }
 
+a {
+    color: inherit;
+}
+
 #app {
     height: 100%;
 }

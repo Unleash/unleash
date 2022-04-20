@@ -131,6 +131,26 @@ const mainTheme = {
         semi: 700,
         bold: 700,
     },
+    v2: {
+        palette: {
+            primary: '',
+            grey: {
+                '10': '#F7F7FA',
+                '20': '#F2F2F5',
+                '30': '#EAEAED',
+                '40': '#E1E1E3',
+                '50': '#BDBDBF',
+                '70': '#78787A',
+                '90': '#202021',
+            },
+        },
+        fontSizes: {
+            headerIcon: '18px',
+        },
+        boxShadows: {
+            primary: '0px 2px 4px rgba(129, 122, 254, 0.2)',
+        },
+    },
 };
 
 export default createTheme(mainTheme as unknown as Theme);

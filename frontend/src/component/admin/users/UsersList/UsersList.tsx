@@ -1,5 +1,5 @@
 /* eslint-disable no-alert */
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import {
     Table,
     TableBody,
@@ -7,6 +7,7 @@ import {
     TableHead,
     TableRow,
 } from '@material-ui/core';
+import classnames from 'classnames';
 import ChangePassword from './ChangePassword/ChangePassword';
 import DeleteUser from './DeleteUser/DeleteUser';
 import ConditionallyRender from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -25,9 +26,16 @@ import IRole from 'interfaces/role';
 import useToast from 'hooks/useToast';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { useUsersFilter } from 'hooks/useUsersFilter';
+import { useUsersSort } from 'hooks/useUsersSort';
+import { TableCellSortable } from 'component/common/Table/TableCellSortable/TableCellSortable';
 import { useStyles } from './UserListItem/UserListItem.styles';
 
-const UsersList = () => {
+interface IUsersListProps {
+    search: string;
+}
+
+const UsersList = ({ search }: IUsersListProps) => {
     const styles = useStyles();
     const { users, roles, refetch, loading } = useUsers();
     const { setToastData, setToastApiError } = useToast();
@@ -49,8 +57,14 @@ const UsersList = () => {
     const [inviteLink, setInviteLink] = useState('');
     const [delUser, setDelUser] = useState<IUser>();
     const ref = useLoading(loading);
+    const { filtered, setFilter } = useUsersFilter(users);
+    const { sorted, sort, setSort } = useUsersSort(filtered);
     const { page, pages, nextPage, prevPage, setPageIndex, pageIndex } =
-        usePagination(users, 50);
+        usePagination(sorted, 50);
+
+    useEffect(() => {
+        setFilter(filter => ({ ...filter, query: search }));
+    }, [search, setFilter]);
 
     const closeDelDialog = () => {
         setDelDialog(false);
@@ -109,6 +123,7 @@ const UsersList = () => {
                     openDelDialog={openDelDialog}
                     locationSettings={locationSettings}
                     renderRole={renderRole}
+                    search={search}
                 />
             ));
         }
@@ -123,6 +138,7 @@ const UsersList = () => {
                     openDelDialog={openDelDialog}
                     locationSettings={locationSettings}
                     renderRole={renderRole}
+                    search={search}
                 />
             );
         });
@@ -134,17 +150,50 @@ const UsersList = () => {
         <div ref={ref}>
             <Table>
                 <TableHead>
-                    <TableRow>
-                        <TableCell className={styles.hideXS}></TableCell>
-                        <TableCell className={styles.hideSM}>Created</TableCell>
-                        <TableCell>Name</TableCell>
+                    <TableRow className={styles.tableCellHeader}>
+                        <TableCellSortable
+                            className={classnames(
+                                styles.hideSM,
+                                styles.shrinkTableCell
+                            )}
+                            name="created"
+                            sort={sort}
+                            setSort={setSort}
+                        >
+                            Created on
+                        </TableCellSortable>
+                        <TableCell
+                            align="center"
+                            className={classnames(
+                                styles.hideXS,
+                                styles.firstColumnSM
+                            )}
+                        >
+                            Avatar
+                        </TableCell>
+                        <TableCellSortable
+                            name="name"
+                            sort={sort}
+                            className={classnames(styles.firstColumnXS)}
+                            setSort={setSort}
+                        >
+                            Name
+                        </TableCellSortable>
                         <TableCell className={styles.hideSM}>
                             Username
                         </TableCell>
-                        <TableCell align="center" className={styles.hideXS}>
+                        <TableCellSortable
+                            className={classnames(
+                                styles.hideXS,
+                                styles.shrinkTableCell
+                            )}
+                            name="role"
+                            sort={sort}
+                            setSort={setSort}
+                        >
                             Role
-                        </TableCell>
-                        <TableCell align="right">
+                        </TableCellSortable>
+                        <TableCell align="center">
                             {hasAccess(ADMIN) ? 'Actions' : ''}
                         </TableCell>
                     </TableRow>
@@ -158,6 +207,14 @@ const UsersList = () => {
                     prevPage={prevPage}
                 />
             </Table>
+            <ConditionallyRender
+                condition={!pages.length && search.length > 0}
+                show={
+                    <p className={styles.errorMessage}>
+                        There are no results for "{search}"
+                    </p>
+                }
+            />
             <br />
 
             <ConfirmUserAdded

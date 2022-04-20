@@ -8,6 +8,8 @@ interface IAnimateOnMountProps {
     leave: string;
     container?: string;
     style?: React.CSSProperties;
+    onStart?: () => void;
+    onEnd?: () => void;
 }
 
 const AnimateOnMount: FC<IAnimateOnMountProps> = ({
@@ -18,6 +20,8 @@ const AnimateOnMount: FC<IAnimateOnMountProps> = ({
     container,
     children,
     style,
+    onStart,
+    onEnd,
 }) => {
     const [show, setShow] = useState(mounted);
     const [styles, setStyles] = useState('');
@@ -27,6 +31,7 @@ const AnimateOnMount: FC<IAnimateOnMountProps> = ({
         if (mountedRef.current !== mounted || mountedRef === null) {
             if (mounted) {
                 setShow(true);
+                onStart?.();
                 setTimeout(() => {
                     setStyles(enter);
                 }, 50);
@@ -37,11 +42,12 @@ const AnimateOnMount: FC<IAnimateOnMountProps> = ({
                 setStyles(leave);
             }
         }
-    }, [mounted, enter, leave]);
+    }, [mounted, enter, onStart, leave]);
 
     const onTransitionEnd = () => {
         if (!mounted) {
             setShow(false);
+            onEnd?.();
         }
     };
 

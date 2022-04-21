@@ -9,6 +9,8 @@ import Proclamation from 'component/common/Proclamation/Proclamation';
 import BreadcrumbNav from 'component/common/BreadcrumbNav/BreadcrumbNav';
 import textureImage from 'assets/img/texture.png';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { SkipNavLink } from 'component/common/SkipNav/SkipNavLink';
+import { SkipNavTarget } from 'component/common/SkipNav/SkipNavTarget';
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -35,7 +37,9 @@ export const MainLayout = ({ children }: IMainLayoutProps) => {
 
     return (
         <>
+            <SkipNavLink />
             <Header />
+            <SkipNavTarget />
             <Grid container className={muiStyles.container}>
                 <main className={classnames(styles.contentWrapper)}>
                     <Grid item className={styles.content} xs={12} sm={12}>

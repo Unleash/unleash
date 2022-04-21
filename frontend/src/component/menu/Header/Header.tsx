@@ -61,34 +61,32 @@ const Header = () => {
 
     if (smallScreen) {
         return (
-            <>
-                <AppBar className={styles.header} position="static">
-                    <Container className={styles.container}>
-                        <Tooltip title="Menu">
-                            <IconButton
-                                className={styles.drawerButton}
-                                onClick={toggleDrawer}
-                                aria-controls="header-drawer"
-                                aria-expanded={openDrawer}
-                            >
-                                <MenuIcon />
-                            </IconButton>
-                        </Tooltip>
-                        <DrawerMenu
-                            title={name}
-                            flags={flags}
-                            links={links}
-                            open={openDrawer}
-                            toggleDrawer={toggleDrawer}
-                            admin={admin}
-                            routes={filteredMainRoutes}
-                        />
-                        <div className={styles.userContainer}>
-                            <UserProfile />
-                        </div>
-                    </Container>
-                </AppBar>
-            </>
+            <AppBar className={styles.header} position="static">
+                <Container className={styles.container}>
+                    <Tooltip title="Menu">
+                        <IconButton
+                            className={styles.drawerButton}
+                            onClick={toggleDrawer}
+                            aria-controls="header-drawer"
+                            aria-expanded={openDrawer}
+                        >
+                            <MenuIcon />
+                        </IconButton>
+                    </Tooltip>
+                    <DrawerMenu
+                        title={name}
+                        flags={flags}
+                        links={links}
+                        open={openDrawer}
+                        toggleDrawer={toggleDrawer}
+                        admin={admin}
+                        routes={filteredMainRoutes}
+                    />
+                    <div className={styles.userContainer}>
+                        <UserProfile />
+                    </div>
+                </Container>
+            </AppBar>
         );
     }
 

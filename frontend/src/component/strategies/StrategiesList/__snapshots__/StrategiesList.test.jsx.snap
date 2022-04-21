@@ -20,11 +20,11 @@ exports[`renders correctly with one strategy 1`] = `
         className=""
         data-loading={true}
       >
-        <h2
-          className="MuiTypography-root makeStyles-headerTitle-7 MuiTypography-h2"
+        <h1
+          className="MuiTypography-root makeStyles-headerTitle-7 MuiTypography-h1"
         >
           Strategies
-        </h2>
+        </h1>
       </div>
       <div
         className="makeStyles-headerActions-8"
@@ -290,11 +290,11 @@ exports[`renders correctly with one strategy without permissions 1`] = `
         className=""
         data-loading={true}
       >
-        <h2
-          className="MuiTypography-root makeStyles-headerTitle-7 MuiTypography-h2"
+        <h1
+          className="MuiTypography-root makeStyles-headerTitle-7 MuiTypography-h1"
         >
           Strategies
-        </h2>
+        </h1>
       </div>
       <div
         className="makeStyles-headerActions-8"

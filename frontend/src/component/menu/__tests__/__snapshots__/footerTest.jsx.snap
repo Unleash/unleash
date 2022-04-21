@@ -18,10 +18,12 @@ exports[`should render DrawerMenu 1`] = `
       <section
         title="API details"
       >
-        <h4>
+        <h2
+          className="makeStyles-title-4"
+        >
           Unleash 3.x
            
-        </h4>
+        </h2>
         <br />
         <small>
           The enterprise ready feature toggle service.
@@ -41,9 +43,11 @@ exports[`should render DrawerMenu 1`] = `
           <section
             title="Unleash SDK"
           >
-            <h4>
+            <h2
+              className="makeStyles-title-4"
+            >
               Server SDKs
-            </h4>
+            </h2>
             <ul
               className="MuiList-root makeStyles-list-2 MuiList-dense MuiList-padding"
             >
@@ -210,9 +214,11 @@ exports[`should render DrawerMenu 1`] = `
           <section
             title="Unleash SDK"
           >
-            <h4>
+            <h2
+              className="makeStyles-title-4"
+            >
               Frontend SDKs
-            </h4>
+            </h2>
             <ul
               className="MuiList-root makeStyles-list-2 MuiList-dense MuiList-padding"
             >
@@ -318,9 +324,11 @@ exports[`should render DrawerMenu 1`] = `
           className="MuiGrid-root MuiGrid-item"
         >
           <section>
-            <h4>
+            <h2
+              className="makeStyles-title-4"
+            >
               About
-            </h4>
+            </h2>
             <ul
               className="MuiList-root makeStyles-list-2 MuiList-dense MuiList-padding"
             >
@@ -446,10 +454,12 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
       <section
         title="API details"
       >
-        <h4>
+        <h2
+          className="makeStyles-title-4"
+        >
           Unleash 3.x
            
-        </h4>
+        </h2>
         <br />
         <small>
           The enterprise ready feature toggle service.
@@ -469,9 +479,11 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
           <section
             title="Unleash SDK"
           >
-            <h4>
+            <h2
+              className="makeStyles-title-4"
+            >
               Server SDKs
-            </h4>
+            </h2>
             <ul
               className="MuiList-root makeStyles-list-2 MuiList-dense MuiList-padding"
             >
@@ -638,9 +650,11 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
           <section
             title="Unleash SDK"
           >
-            <h4>
+            <h2
+              className="makeStyles-title-4"
+            >
               Frontend SDKs
-            </h4>
+            </h2>
             <ul
               className="MuiList-root makeStyles-list-2 MuiList-dense MuiList-padding"
             >
@@ -746,9 +760,11 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
           className="MuiGrid-root MuiGrid-item"
         >
           <section>
-            <h4>
+            <h2
+              className="makeStyles-title-4"
+            >
               About
-            </h4>
+            </h2>
             <ul
               className="MuiList-root makeStyles-list-2 MuiList-dense MuiList-padding"
             >

@@ -5,6 +5,7 @@ import {
     formatUpdateNotification,
     IPartialUiConfig,
 } from './apidetails.helpers';
+import { FooterTitle } from 'component/menu/Footer/FooterTitle';
 
 interface IApiDetailsProps {
     uiConfig: IPartialUiConfig;
@@ -18,13 +19,13 @@ export const ApiDetails = (props: IApiDetailsProps): ReactElement => {
 
     return (
         <section title="API details">
-            <h4>
+            <FooterTitle>
                 {currentVersion}{' '}
                 <ConditionallyRender
                     condition={Boolean(environment)}
                     show={<small>({environment})</small>}
                 />
-            </h4>
+            </FooterTitle>
             <ConditionallyRender
                 condition={Boolean(updateNotification)}
                 show={

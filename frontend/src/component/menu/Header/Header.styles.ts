@@ -28,6 +28,11 @@ export const useStyles = makeStyles(theme => ({
             padding: '0',
         },
     },
+    nav: {
+        display: 'flex',
+        alignItems: 'center',
+        flexGrow: 1,
+    },
     drawerButton: {
         color: '#000',
     },

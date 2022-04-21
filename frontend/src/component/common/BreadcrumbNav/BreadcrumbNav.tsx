@@ -40,7 +40,10 @@ const BreadcrumbNav = () => {
                 <ConditionallyRender
                     condition={paths.length > 1}
                     show={
-                        <Breadcrumbs className={styles.breadcrumbNav}>
+                        <Breadcrumbs
+                            className={styles.breadcrumbNav}
+                            aria-label="Breadcrumbs"
+                        >
                             {paths.map((path, index) => {
                                 const lastItem = index === paths.length - 1;
                                 if (lastItem) {

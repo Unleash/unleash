@@ -84,7 +84,7 @@ const FormTemplate: React.FC<ICreateProps> = ({
                     show={<Loader />}
                     elseShow={
                         <>
-                            <h2 className={styles.title}>{title}</h2>
+                            <h1 className={styles.title}>{title}</h1>
                             {children}
                         </>
                     }
@@ -98,14 +98,14 @@ const FormTemplate: React.FC<ICreateProps> = ({
                         documentationLink={documentationLink}
                         documentationLinkLabel={documentationLinkLabel}
                     >
-                        <h3 className={styles.subtitle}>
+                        <h2 className={styles.subtitle}>
                             API Command{' '}
                             <Tooltip title="Copy command">
                                 <IconButton onClick={copyCommand}>
                                     <FileCopy className={styles.icon} />
                                 </IconButton>
                             </Tooltip>
-                        </h3>
+                        </h2>
                         <Codebox text={formatApiCode()} />
                     </Guidance>
                 }

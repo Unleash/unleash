@@ -37,7 +37,7 @@ export const MainLayout = ({ children }: IMainLayoutProps) => {
         <>
             <Header />
             <Grid container className={muiStyles.container}>
-                <div className={classnames(styles.contentWrapper)}>
+                <main className={classnames(styles.contentWrapper)}>
                     <Grid item className={styles.content} xs={12} sm={12}>
                         <div
                             className={muiStyles.contentContainer}
@@ -61,7 +61,7 @@ export const MainLayout = ({ children }: IMainLayoutProps) => {
                             }}
                         />
                     </div>
-                </div>
+                </main>
                 <Footer />
             </Grid>
         </>

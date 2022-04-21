@@ -4,9 +4,8 @@ import PropTypes from 'prop-types';
 import GitHubIcon from '@material-ui/icons/GitHub';
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import ExitToApp from '@material-ui/icons/ExitToApp';
-
+import { Link } from 'react-router-dom';
 import styles from './drawer.module.scss';
-
 import { ReactComponent as LogoIcon } from 'assets/icons/logoBg.svg';
 import NavigationLink from './Header/NavigationLink/NavigationLink';
 import ConditionallyRender from 'component/common/ConditionallyRender';
@@ -49,16 +48,23 @@ export const DrawerMenu = ({
         <Drawer
             className={styles.drawer}
             open={open}
-            anchor={'left'}
-            onClose={() => toggleDrawer()}
+            anchor="left"
+            onClose={toggleDrawer}
         >
-            <div className={styles.drawerContainer}>
+            <nav id="header-drawer" className={styles.drawerContainer}>
                 <div>
-                    <span className={[styles.drawerTitle].join(' ')}>
-                        <LogoIcon className={styles.drawerTitleLogo} />
-
+                    <Link
+                        to="/"
+                        className={styles.drawerTitle}
+                        aria-label="Home"
+                        onClick={() => toggleDrawer()}
+                    >
+                        <LogoIcon
+                            className={styles.drawerTitleLogo}
+                            aria-label="Unleash logo"
+                        />
                         <span className={styles.drawerTitleText}>{title}</span>
-                    </span>
+                    </Link>
                 </div>
                 <Divider />
                 <List className={styles.drawerList}>
@@ -101,7 +107,7 @@ export const DrawerMenu = ({
                         Sign out
                     </a>
                 </div>
-            </div>
+            </nav>
         </Drawer>
     );
 };

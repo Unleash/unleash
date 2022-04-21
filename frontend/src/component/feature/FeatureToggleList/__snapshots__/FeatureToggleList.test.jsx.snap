@@ -5,8 +5,9 @@ exports[`renders correctly with one feature 1`] = `
   <div
     className="makeStyles-searchBarContainer-3"
   >
-    <div
+    <form
       className="makeStyles-container-6"
+      role="search"
     >
       <div
         className="makeStyles-search-7 makeStyles-searchBar-4"
@@ -28,18 +29,18 @@ exports[`renders correctly with one feature 1`] = `
         >
           <input
             aria-label="search"
-            className="MuiInputBase-input"
+            className="MuiInputBase-input MuiInputBase-inputTypeSearch"
             onAnimationStart={[Function]}
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
             placeholder="Search..."
-            type="text"
+            type="search"
             value=""
           />
         </div>
       </div>
-    </div>
+    </form>
     <a
       href="/archive"
       onClick={[Function]}
@@ -66,11 +67,11 @@ exports[`renders correctly with one feature 1`] = `
           className=""
           data-loading={true}
         >
-          <h2
-            className="MuiTypography-root makeStyles-headerTitle-15 MuiTypography-h2"
+          <h1
+            className="MuiTypography-root makeStyles-headerTitle-15 MuiTypography-h1"
           >
             Features 
-          </h2>
+          </h1>
         </div>
         <div
           className="makeStyles-headerActions-16"
@@ -176,8 +177,9 @@ exports[`renders correctly with one feature without permissions 1`] = `
   <div
     className="makeStyles-searchBarContainer-3"
   >
-    <div
+    <form
       className="makeStyles-container-6"
+      role="search"
     >
       <div
         className="makeStyles-search-7 makeStyles-searchBar-4"
@@ -199,18 +201,18 @@ exports[`renders correctly with one feature without permissions 1`] = `
         >
           <input
             aria-label="search"
-            className="MuiInputBase-input"
+            className="MuiInputBase-input MuiInputBase-inputTypeSearch"
             onAnimationStart={[Function]}
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
             placeholder="Search..."
-            type="text"
+            type="search"
             value=""
           />
         </div>
       </div>
-    </div>
+    </form>
     <a
       href="/archive"
       onClick={[Function]}
@@ -237,11 +239,11 @@ exports[`renders correctly with one feature without permissions 1`] = `
           className=""
           data-loading={true}
         >
-          <h2
-            className="MuiTypography-root makeStyles-headerTitle-15 MuiTypography-h2"
+          <h1
+            className="MuiTypography-root makeStyles-headerTitle-15 MuiTypography-h1"
           >
             Features 
-          </h2>
+          </h1>
         </div>
         <div
           className="makeStyles-headerActions-16"

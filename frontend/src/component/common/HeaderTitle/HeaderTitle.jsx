@@ -22,7 +22,7 @@ const HeaderTitle = ({
         <div className={styles.headerTitleContainer}>
             <div className={headerClasses} data-loading>
                 <Typography
-                    variant={variant || 'h2'}
+                    variant={variant || 'h1'}
                     className={classnames(styles.headerTitle, className)}
                 >
                     {title}

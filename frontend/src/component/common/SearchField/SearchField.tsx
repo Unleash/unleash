@@ -46,7 +46,7 @@ export const SearchField = ({
     };
 
     return (
-        <div className={styles.container}>
+        <form className={styles.container} role="search">
             <div className={classnames(styles.search, className)}>
                 <SearchIcon className={styles.searchIcon} />
                 <InputBase
@@ -57,6 +57,7 @@ export const SearchField = ({
                     onChange={handleChange}
                     onBlur={updateNow}
                     onKeyPress={handleKeyPress}
+                    type="search"
                 />
             </div>
             <ConditionallyRender
@@ -69,6 +70,6 @@ export const SearchField = ({
                     />
                 }
             />
-        </div>
+        </form>
     );
 };

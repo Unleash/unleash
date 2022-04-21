@@ -59,123 +59,107 @@ const Header = () => {
         adminRoutes: routes.adminRoutes.filter(filterByFlags(flags)),
     };
 
-    return (
-        <>
-            <AppBar className={styles.header} position="static">
-                <Container className={styles.container}>
-                    <ConditionallyRender
-                        condition={smallScreen}
-                        show={
-                            <Tooltip title="Menu">
-                                <IconButton
-                                    className={styles.drawerButton}
-                                    onClick={toggleDrawer}
-                                >
-                                    <MenuIcon />
-                                </IconButton>
-                            </Tooltip>
-                        }
-                        elseShow={
-                            <Link
-                                to="/"
-                                className={commonStyles.flexRow}
-                                aria-label="Home"
+    if (smallScreen) {
+        return (
+            <>
+                <AppBar className={styles.header} position="static">
+                    <Container className={styles.container}>
+                        <Tooltip title="Menu">
+                            <IconButton
+                                className={styles.drawerButton}
+                                onClick={toggleDrawer}
+                                aria-controls="header-drawer"
+                                aria-expanded={openDrawer}
                             >
-                                <UnleashLogo
-                                    className={styles.logo}
-                                    aria-label="Unleash logo"
-                                />
-                            </Link>
-                        }
-                    />
+                                <MenuIcon />
+                            </IconButton>
+                        </Tooltip>
+                        <DrawerMenu
+                            title={name}
+                            flags={flags}
+                            links={links}
+                            open={openDrawer}
+                            toggleDrawer={toggleDrawer}
+                            admin={admin}
+                            routes={filteredMainRoutes}
+                        />
+                        <div className={styles.userContainer}>
+                            <UserProfile />
+                        </div>
+                    </Container>
+                </AppBar>
+            </>
+        );
+    }
 
-                    <DrawerMenu
-                        title={name}
-                        flags={flags}
-                        links={links}
-                        open={openDrawer}
-                        toggleDrawer={toggleDrawer}
-                        admin={admin}
-                        routes={filteredMainRoutes}
+    return (
+        <AppBar className={styles.header} position="static">
+            <Container className={styles.container}>
+                <Link to="/" className={commonStyles.flexRow} aria-label="Home">
+                    <UnleashLogo
+                        className={styles.logo}
+                        aria-label="Unleash logo"
                     />
-                    <ConditionallyRender
-                        condition={!smallScreen}
-                        show={
-                            <div className={styles.links}>
-                                <Link to="/projects">Projects</Link>
-                                <Link to="/features">Feature toggles</Link>
+                </Link>
+                <nav className={styles.nav}>
+                    <div className={styles.links}>
+                        <Link to="/projects">Projects</Link>
+                        <Link to="/features">Feature toggles</Link>
 
-                                <button
-                                    className={styles.advancedNavButton}
-                                    onClick={e =>
-                                        setAnchorElAdvanced(e.currentTarget)
-                                    }
-                                >
-                                    Configure
-                                    <KeyboardArrowDown />
-                                </button>
-                                <NavigationMenu
-                                    id="settings-navigation"
-                                    options={filteredMainRoutes.mainNavRoutes}
-                                    anchorEl={anchorElAdvanced}
-                                    handleClose={handleCloseAdvanced}
-                                    style={{ top: '30px', left: '-55px' }}
-                                />
-                            </div>
-                        }
-                    />
+                        <button
+                            className={styles.advancedNavButton}
+                            onClick={e => setAnchorElAdvanced(e.currentTarget)}
+                        >
+                            Configure
+                            <KeyboardArrowDown />
+                        </button>
+                        <NavigationMenu
+                            id="settings-navigation"
+                            options={filteredMainRoutes.mainNavRoutes}
+                            anchorEl={anchorElAdvanced}
+                            handleClose={handleCloseAdvanced}
+                            style={{ top: '30px', left: '-55px' }}
+                        />
+                    </div>
                     <div className={styles.userContainer}>
+                        <Tooltip title="Go to the documentation">
+                            <a
+                                href="https://docs.getunleash.io/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className={styles.docsLink}
+                            >
+                                <MenuBookIcon className={styles.docsIcon} />
+                            </a>
+                        </Tooltip>
                         <ConditionallyRender
-                            condition={!smallScreen}
+                            condition={admin}
                             show={
-                                <>
-                                    <Tooltip title="Go to the documentation">
-                                        <a
-                                            href="https://docs.getunleash.io/"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className={styles.docsLink}
-                                        >
-                                            <MenuBookIcon
-                                                className={styles.docsIcon}
-                                            />
-                                        </a>
-                                    </Tooltip>
-                                    <ConditionallyRender
-                                        condition={admin}
-                                        show={
-                                            <Tooltip title="Settings">
-                                                <IconButton
-                                                    onClick={e =>
-                                                        setAnchorEl(
-                                                            e.currentTarget
-                                                        )
-                                                    }
-                                                >
-                                                    <SettingsIcon
-                                                        className={
-                                                            styles.docsIcon
-                                                        }
-                                                    />
-                                                </IconButton>
-                                            </Tooltip>
+                                <Tooltip title="Settings">
+                                    <IconButton
+                                        onClick={e =>
+                                            setAnchorEl(e.currentTarget)
                                         }
-                                    />
-                                    <NavigationMenu
-                                        id="admin-navigation"
-                                        options={filteredMainRoutes.adminRoutes}
-                                        anchorEl={anchorEl}
-                                        handleClose={handleClose}
-                                        style={{ top: '40px', left: '-125px' }}
-                                    />
-                                </>
+                                    >
+                                        <SettingsIcon
+                                            className={styles.docsIcon}
+                                        />
+                                    </IconButton>
+                                </Tooltip>
                             }
                         />
+                        <NavigationMenu
+                            id="admin-navigation"
+                            options={filteredMainRoutes.adminRoutes}
+                            anchorEl={anchorEl}
+                            handleClose={handleClose}
+                            style={{ top: '40px', left: '-125px' }}
+                        />{' '}
                         <UserProfile />
                     </div>
-                </Container>
-            </AppBar>
-        </>
+                </nav>
+            </Container>
+        </AppBar>
     );
 };
 

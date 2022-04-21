@@ -4,6 +4,7 @@ import { List, ListItem, ListItemText, Grid } from '@material-ui/core';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ApiDetails } from './ApiDetails/ApiDetails';
 import { useStyles } from './Footer.styles';
+import { FooterTitle } from './FooterTitle';
 
 export const Footer = () => {
     const styles = useStyles();
@@ -24,7 +25,7 @@ export const Footer = () => {
                     <Grid container spacing={7} direction="row">
                         <Grid item>
                             <section title="Unleash SDK">
-                                <h4>Server SDKs</h4>
+                                <FooterTitle>Server SDKs</FooterTitle>
                                 <List className={styles.list} dense>
                                     <ListItem className={styles.listItem}>
                                         <ListItemText
@@ -135,7 +136,7 @@ export const Footer = () => {
                         </Grid>
                         <Grid item>
                             <section title="Unleash SDK">
-                                <h4>Frontend SDKs</h4>
+                                <FooterTitle>Frontend SDKs</FooterTitle>
                                 <List className={styles.list} dense>
                                     <ListItem className={styles.listItem}>
                                         <ListItemText
@@ -207,7 +208,7 @@ export const Footer = () => {
                         </Grid>
                         <Grid item>
                             <section>
-                                <h4>About</h4>
+                                <FooterTitle>About</FooterTitle>
                                 <List className={styles.list} dense>
                                     <ListItem className={styles.listItem}>
                                         <ListItemText

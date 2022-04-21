@@ -20,11 +20,11 @@ exports[`renders a list with elements correctly 1`] = `
         className=""
         data-loading={true}
       >
-        <h2
-          className="MuiTypography-root makeStyles-headerTitle-6 MuiTypography-h2"
+        <h1
+          className="MuiTypography-root makeStyles-headerTitle-6 MuiTypography-h1"
         >
           Tag Types
-        </h2>
+        </h1>
       </div>
       <div
         className="makeStyles-headerActions-7"
@@ -96,11 +96,11 @@ exports[`renders an empty list correctly 1`] = `
         className=""
         data-loading={true}
       >
-        <h2
-          className="MuiTypography-root makeStyles-headerTitle-6 MuiTypography-h2"
+        <h1
+          className="MuiTypography-root makeStyles-headerTitle-6 MuiTypography-h1"
         >
           Tag Types
-        </h2>
+        </h1>
       </div>
       <div
         className="makeStyles-headerActions-7"

@@ -1,6 +1,6 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
-import { ApiDetails } from '../Footer/ApiDetails/ApiDetails';
+import { ApiDetails } from 'component/menu/Footer/ApiDetails/ApiDetails';
+import { render } from 'utils/testRenderer';
 
 test('renders correctly with empty version', () => {
     const uiConfig = {
@@ -10,8 +10,8 @@ test('renders correctly with empty version', () => {
         version: '',
     };
 
-    const tree = renderer.create(<ApiDetails uiConfig={uiConfig} />).toJSON();
-    expect(tree).toMatchSnapshot();
+    render(<ApiDetails uiConfig={uiConfig} />);
+    expect(document.body).toMatchSnapshot();
 });
 
 test('renders correctly with ui-config', () => {
@@ -22,8 +22,8 @@ test('renders correctly with ui-config', () => {
         version: '1.1.0',
     };
 
-    const tree = renderer.create(<ApiDetails uiConfig={uiConfig} />).toJSON();
-    expect(tree).toMatchSnapshot();
+    render(<ApiDetails uiConfig={uiConfig} />);
+    expect(document.body).toMatchSnapshot();
 });
 
 test('renders correctly without uiConfig', () => {
@@ -32,8 +32,8 @@ test('renders correctly without uiConfig', () => {
         version: '1.1.0',
     };
 
-    const tree = renderer.create(<ApiDetails uiConfig={uiConfig} />).toJSON();
-    expect(tree).toMatchSnapshot();
+    render(<ApiDetails uiConfig={uiConfig} />);
+    expect(document.body).toMatchSnapshot();
 });
 
 test('renders correctly with versionInfo', () => {
@@ -48,6 +48,6 @@ test('renders correctly with versionInfo', () => {
         },
     };
 
-    const tree = renderer.create(<ApiDetails uiConfig={uiConfig} />).toJSON();
-    expect(tree).toMatchSnapshot();
+    render(<ApiDetails uiConfig={uiConfig} />);
+    expect(document.body).toMatchSnapshot();
 });

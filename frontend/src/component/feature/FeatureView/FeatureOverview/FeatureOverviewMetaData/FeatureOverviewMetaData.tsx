@@ -30,9 +30,9 @@ const FeatureOverviewMetaData = () => {
             <div className={styles.paddingContainerTop}>
                 <div className={styles.metaDataHeader} data-loading>
                     <IconComponent className={styles.headerIcon} />{' '}
-                    <h3 className={styles.header}>
+                    <h2 className={styles.header}>
                         {capitalize(type || '')} toggle
-                    </h3>
+                    </h2>
                 </div>
                 <div className={styles.body}>
                     <span className={styles.bodyItem} data-loading>

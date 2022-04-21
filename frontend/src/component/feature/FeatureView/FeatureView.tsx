@@ -119,12 +119,12 @@ export const FeatureView = () => {
                     <div className={styles.header}>
                         <div className={styles.innerContainer}>
                             <div className={styles.toggleInfoContainer}>
-                                <h2
+                                <h1
                                     className={styles.featureViewHeader}
                                     data-loading
                                 >
                                     {feature.name}{' '}
-                                </h2>
+                                </h1>
                                 <ConditionallyRender
                                     condition={!smallScreen}
                                     show={<StatusChip stale={feature?.stale} />}

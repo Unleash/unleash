@@ -77,7 +77,6 @@
     ]
   },
   "dependencies": {
-    "@wesleytodd/openapi": "^0.1.0",
     "async": "^3.2.3",
     "bcryptjs": "^2.4.3",
     "compression": "^1.7.4",
@@ -118,6 +117,7 @@
     "serve-favicon": "^2.5.0",
     "stoppable": "^1.1.0",
     "type-is": "^1.6.18",
+    "unleash-express-openapi": "unleash/express-openapi#cd12cff",
     "unleash-frontend": "4.10.0-beta.6",
     "uuid": "^8.3.2",
     "semver": "^7.3.5"
@@ -168,8 +168,6 @@
     "typescript": "4.6.3"
   },
   "resolutions": {
-    "@wesleytodd/openapi/swagger-parser": "^10.0.3",
-    "@wesleytodd/openapi/swagger-ui-dist": "^4.10.3",
     "db-migrate/rc/minimist": "^1.2.5",
     "knex/liftoff/object.map/**/kind-of": "^6.0.3",
     "knex/liftoff/findup-sync/micromatc/kind-of": "^6.0.3",

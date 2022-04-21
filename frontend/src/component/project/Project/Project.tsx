@@ -9,14 +9,13 @@ import { Edit } from '@material-ui/icons';
 import useToast from 'hooks/useToast';
 import useQueryParams from 'hooks/useQueryParams';
 import { useEffect } from 'react';
-import useTabs from 'hooks/useTabs';
-import TabPanel from 'component/common/TabNav/TabPanel';
 import { ProjectAccess } from '../ProjectAccess/ProjectAccess';
 import ProjectEnvironment from '../ProjectEnvironment/ProjectEnvironment';
 import ProjectOverview from './ProjectOverview';
 import ProjectHealth from './ProjectHealth/ProjectHealth';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
+import { TabPanel } from 'component/common/TabNav/TabPanel/TabPanel';
 
 const Project = () => {
     const { id, activeTab } = useParams<{ id: string; activeTab: string }>();
@@ -26,8 +25,6 @@ const Project = () => {
     const { setToastData } = useToast();
     const styles = useStyles();
     const history = useHistory();
-
-    const { a11yProps, activeTabIdx, setActiveTab } = useTabs(0);
 
     const basePath = `/projects/${id}`;
     const tabData = [
@@ -57,6 +54,10 @@ const Project = () => {
         },
     ];
 
+    const activeTabIdx = activeTab
+        ? tabData.findIndex(tab => tab.name === activeTab)
+        : 0;
+
     useEffect(() => {
         const created = params.get('created');
         const edited = params.get('edited');
@@ -75,29 +76,16 @@ const Project = () => {
         /* eslint-disable-next-line */
     }, []);
 
-    useEffect(() => {
-        const tabIdx = tabData.findIndex(tab => tab.name === activeTab);
-        if (tabIdx > 0) {
-            setActiveTab(tabIdx);
-        } else {
-            setActiveTab(0);
-        }
-
-        /* eslint-disable-next-line */
-    }, []);
-
     const renderTabs = () => {
         return tabData.map((tab, index) => {
             return (
                 <Tab
                     data-loading
                     key={tab.title}
+                    id={`tab-${index}`}
+                    aria-controls={`tabpanel-${index}`}
                     label={tab.title}
-                    {...a11yProps(index)}
-                    onClick={() => {
-                        setActiveTab(index);
-                        history.push(tab.path);
-                    }}
+                    onClick={() => history.push(tab.path)}
                     className={styles.tabButton}
                 />
             );
@@ -150,9 +138,6 @@ const Project = () => {
                 <div className={styles.tabContainer}>
                     <Tabs
                         value={activeTabIdx}
-                        onChange={(_, tabId) => {
-                            setActiveTab(tabId);
-                        }}
                         indicatorColor="primary"
                         textColor="primary"
                     >

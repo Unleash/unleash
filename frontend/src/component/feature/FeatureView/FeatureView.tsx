@@ -5,7 +5,6 @@ import { Link, Route, useHistory, useParams, Switch } from 'react-router-dom';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import useProject from 'hooks/api/getters/useProject/useProject';
-import useTabs from 'hooks/useTabs';
 import useToast from 'hooks/useToast';
 import { IFeatureViewParams } from 'interfaces/params';
 import {
@@ -33,7 +32,6 @@ export const FeatureView = () => {
     const { projectId, featureId } = useParams<IFeatureViewParams>();
     const { refetch: projectRefetch } = useProject(projectId);
     const [openTagDialog, setOpenTagDialog] = useState(false);
-    const { a11yProps } = useTabs(0);
     const { archiveFeatureToggle } = useFeatureApi();
     const { setToastData, setToastApiError } = useToast();
     const [showDelDialog, setShowDelDialog] = useState(false);
@@ -102,10 +100,7 @@ export const FeatureView = () => {
                     key={tab.title}
                     label={tab.title}
                     value={tab.path}
-                    {...a11yProps(index)}
-                    onClick={() => {
-                        history.push(tab.path);
-                    }}
+                    onClick={() => history.push(tab.path)}
                     className={styles.tabButton}
                 />
             );

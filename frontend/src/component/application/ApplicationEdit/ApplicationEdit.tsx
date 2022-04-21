@@ -13,7 +13,6 @@ import ConditionallyRender from 'component/common/ConditionallyRender/Conditiona
 import { UPDATE_APPLICATION } from 'component/providers/AccessProvider/permissions';
 import { ApplicationView } from '../ApplicationView/ApplicationView';
 import { ApplicationUpdate } from '../ApplicationUpdate/ApplicationUpdate';
-import TabNav from 'component/common/TabNav/TabNav';
 import Dialogue from 'component/common/Dialogue';
 import PageContent from 'component/common/PageContent';
 import HeaderTitle from 'component/common/HeaderTitle';
@@ -26,6 +25,7 @@ import useToast from 'hooks/useToast';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { formatDateYMD } from 'utils/formatDate';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { TabNav } from 'component/common/TabNav/TabNav/TabNav';
 
 export const ApplicationEdit = () => {
     const history = useHistory();

@@ -1,45 +1,43 @@
-import React, { useState } from 'react';
+import React, { useState, ReactNode } from 'react';
 import classnames from 'classnames';
-import PropTypes from 'prop-types';
 import { Tabs, Tab, Paper } from '@material-ui/core';
+import { useStyles } from 'component/common/TabNav/TabNav/TabNav.styles';
+import { TabPanel } from 'component/common/TabNav/TabPanel/TabPanel';
 
-import TabPanel from './TabPanel';
+interface ITabNavProps {
+    tabData: ITabData[];
+    className?: string;
+    navClass?: string;
+    startingTab?: number;
+}
 
-import { useStyles } from './styles';
-import { useHistory } from 'react-router-dom';
+interface ITabData {
+    label: string;
+    component: ReactNode;
+}
 
-const a11yProps = index => ({
-    id: `tab-${index}`,
-    'aria-controls': `tabpanel-${index}`,
-});
-
-const TabNav = ({
+export const TabNav = ({
     tabData,
     className = '',
     navClass = '',
     startingTab = 0,
-}) => {
+}: ITabNavProps) => {
     const styles = useStyles();
     const [activeTab, setActiveTab] = useState(startingTab);
-    const history = useHistory();
 
     const renderTabs = () =>
         tabData.map((tab, index) => (
             <Tab
                 key={`${tab.label}_${index}`}
                 label={tab.label}
-                {...a11yProps(index)}
-                onClick={() => history.push(tab.path)}
+                id={`tab-${index}`}
+                aria-controls={`tabpanel-${index}`}
             />
         ));
 
     const renderTabPanels = () =>
         tabData.map((tab, index) => (
-            <TabPanel
-                key={`tab_panel_${index}`}
-                value={activeTab}
-                index={index}
-            >
+            <TabPanel key={index} value={activeTab} index={index}>
                 {tab.component}
             </TabPanel>
         ));
@@ -63,12 +61,3 @@ const TabNav = ({
         </>
     );
 };
-
-TabNav.propTypes = {
-    tabData: PropTypes.array.isRequired,
-    navClass: PropTypes.string,
-    className: PropTypes.string,
-    startingTab: PropTypes.number,
-};
-
-export default TabNav;

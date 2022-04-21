@@ -16,8 +16,7 @@ jobs:
         node-version: 14.x
     - name: install contributors
       run: |
-        npm i svg-contributors -g
-        dummysvg -o unleash -n unleash
+        npx svg-contributors -o unleash -n unleash
     - uses: aws-actions/configure-aws-credentials@v1
       with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}

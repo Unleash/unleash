@@ -106,7 +106,9 @@ const FeatureOverviewTags: React.FC<IFeatureOverviewTagsProps> = ({
             data-loading
             label={t.value}
             key={`${t.type}:${t.value}`}
-            deleteIcon={<Close className={styles.closeIcon} />}
+            deleteIcon={
+                <Close className={styles.closeIcon} titleAccess="Remove" />
+            }
             onDelete={
                 canDeleteTag
                     ? () => {

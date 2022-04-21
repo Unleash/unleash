@@ -128,14 +128,17 @@ exports[`renders correctly with one feature 1`] = `
                       className="material-icons MuiIcon-root"
                     >
                       <svg
-                        aria-hidden={true}
                         className="MuiSvgIcon-root"
                         focusable="false"
+                        role="img"
                         viewBox="0 0 24 24"
                       >
                         <path
                           d="M7 10l5 5 5-5z"
                         />
+                        <title>
+                          Toggle
+                        </title>
                       </svg>
                     </span>
                   </span>
@@ -296,14 +299,17 @@ exports[`renders correctly with one feature without permissions 1`] = `
                       className="material-icons MuiIcon-root"
                     >
                       <svg
-                        aria-hidden={true}
                         className="MuiSvgIcon-root"
                         focusable="false"
+                        role="img"
                         viewBox="0 0 24 24"
                       >
                         <path
                           d="M7 10l5 5 5-5z"
                         />
+                        <title>
+                          Toggle
+                        </title>
                       </svg>
                     </span>
                   </span>

@@ -69,9 +69,10 @@ export const FeatureStrategyRemove = ({
                         disabled={disabled}
                         permission={DELETE_FEATURE_STRATEGY}
                         data-testid={STRATEGY_FORM_REMOVE_ID}
+                        tooltip="Delete strategy"
                         type="button"
                     >
-                        <Delete titleAccess="Delete strategy" />
+                        <Delete />
                     </PermissionIconButton>
                 }
                 elseShow={

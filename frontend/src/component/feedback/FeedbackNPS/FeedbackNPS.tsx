@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { Button, IconButton } from '@material-ui/core';
+import { Button, IconButton, Tooltip } from '@material-ui/core';
 import classnames from 'classnames';
 import CloseIcon from '@material-ui/icons/Close';
 import { ReactComponent as Logo } from 'assets/icons/logoPlain.svg';
@@ -73,12 +73,14 @@ export const FeedbackNPS = ({ openUrl }: IFeedbackNPSProps) => {
                         commonStyles.contentSpacingY
                     )}
                 >
-                    <IconButton
-                        className={styles.close}
-                        onClick={() => setShowFeedback(false)}
-                    >
-                        <CloseIcon />
-                    </IconButton>
+                    <Tooltip title="Close">
+                        <IconButton
+                            className={styles.close}
+                            onClick={() => setShowFeedback(false)}
+                        >
+                            <CloseIcon />
+                        </IconButton>
+                    </Tooltip>
                     <Logo className={styles.logo} />
                     <ConditionallyRender
                         condition={answeredNotNow}

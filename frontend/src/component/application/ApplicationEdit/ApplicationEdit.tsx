@@ -112,13 +112,13 @@ export const ApplicationEdit = () => {
                                 condition={Boolean(url)}
                                 show={
                                     <IconButton component={Link} href={url}>
-                                        <LinkIcon />
+                                        <LinkIcon titleAccess={url} />
                                     </IconButton>
                                 }
                             />
 
                             <PermissionButton
-                                title="Delete application"
+                                tooltip="Delete application"
                                 onClick={toggleModal}
                                 permission={UPDATE_APPLICATION}
                             >

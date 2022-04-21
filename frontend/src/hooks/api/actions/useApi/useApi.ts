@@ -14,6 +14,7 @@ import {
     NotFoundError,
 } from 'utils/apiUtils';
 import { formatApiPath } from 'utils/formatPath';
+import { ACCESS_DENIED_TEXT } from 'utils/formatAccessText';
 
 type ApiErrorHandler = (
     setErrors: Dispatch<SetStateAction<{}>>,
@@ -125,8 +126,7 @@ const useAPI = ({
             } else {
                 setErrors(prev => ({
                     ...prev,
-                    unauthorized:
-                        'You are not authorized to perform this operation',
+                    unauthorized: ACCESS_DENIED_TEXT,
                 }));
             }
 

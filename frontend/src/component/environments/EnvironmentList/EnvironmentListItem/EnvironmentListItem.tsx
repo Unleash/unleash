@@ -155,46 +155,38 @@ const EnvironmentListItem = ({
             <ConditionallyRender
                 condition={updatePermission}
                 show={
-                    <Tooltip title="Drag to reorder">
-                        <div>
-                            <IconButton>
-                                <DragIndicator titleAccess="Drag" />
-                            </IconButton>
-                        </div>
-                    </Tooltip>
+                    <IconButton>
+                        <DragIndicator titleAccess="Drag" cursor="grab" />
+                    </IconButton>
                 }
             />
             <ConditionallyRender
                 condition={updatePermission}
                 show={
                     <Tooltip title={`${tooltipText} environment`}>
-                        <div>
-                            <IconButton
-                                onClick={() => {
-                                    setSelectedEnv(env);
-                                    setToggleDialog(prev => !prev);
-                                }}
-                            >
-                                <OfflineBolt titleAccess="Toggle" />
-                            </IconButton>
-                        </div>
+                        <IconButton
+                            onClick={() => {
+                                setSelectedEnv(env);
+                                setToggleDialog(prev => !prev);
+                            }}
+                        >
+                            <OfflineBolt />
+                        </IconButton>
                     </Tooltip>
                 }
             />
             <ConditionallyRender
                 condition={updatePermission}
                 show={
-                    <Tooltip title="Update environment">
-                        <div>
-                            <IconButton
-                                disabled={env.protected}
-                                onClick={() => {
-                                    history.push(`/environments/${env.name}`);
-                                }}
-                            >
-                                <Edit titleAccess="Edit" />
-                            </IconButton>
-                        </div>
+                    <Tooltip title="Edit environment">
+                        <IconButton
+                            disabled={env.protected}
+                            onClick={() => {
+                                history.push(`/environments/${env.name}`);
+                            }}
+                        >
+                            <Edit />
+                        </IconButton>
                     </Tooltip>
                 }
             />
@@ -202,17 +194,15 @@ const EnvironmentListItem = ({
                 condition={hasAccess(DELETE_ENVIRONMENT)}
                 show={
                     <Tooltip title="Delete environment">
-                        <div>
-                            <IconButton
-                                disabled={env.protected}
-                                onClick={() => {
-                                    setDeldialogue(true);
-                                    setSelectedEnv(env);
-                                }}
-                            >
-                                <Delete titleAccess="Delete" />
-                            </IconButton>
-                        </div>
+                        <IconButton
+                            disabled={env.protected}
+                            onClick={() => {
+                                setDeldialogue(true);
+                                setSelectedEnv(env);
+                            }}
+                        >
+                            <Delete />
+                        </IconButton>
                     </Tooltip>
                 }
             />

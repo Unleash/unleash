@@ -1,4 +1,9 @@
-import { Checkbox, FormControlLabel, IconButton } from '@material-ui/core';
+import {
+    Checkbox,
+    FormControlLabel,
+    IconButton,
+    Tooltip,
+} from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
 import { useStyles } from './StrategyParameter.styles';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
@@ -74,7 +79,7 @@ export const StrategyParameter = ({
                 condition={index === 0}
                 show={
                     <p className={styles.input}>
-                        The parameters define how the strategy will look like.
+                        The parameters define what the strategy will look like.
                     </p>
                 }
             />
@@ -88,13 +93,15 @@ export const StrategyParameter = ({
                     error={Boolean(errors?.[`paramName${index}`])}
                     errorText={errors?.[`paramName${index}`]}
                 />
-                <IconButton
-                    onClick={() => {
-                        setParams(params.filter((e, i) => i !== index));
-                    }}
-                >
-                    <Delete titleAccess="Delete" />
-                </IconButton>
+                <Tooltip title="Remove parameter">
+                    <IconButton
+                        onClick={() => {
+                            setParams(params.filter((e, i) => i !== index));
+                        }}
+                    >
+                        <Delete />
+                    </IconButton>
+                </Tooltip>
             </div>
             <GeneralSelect
                 label="Type*"

@@ -1,7 +1,7 @@
 import { useStyles } from './Toast.styles';
 import classnames from 'classnames';
 import { useContext } from 'react';
-import { IconButton } from '@material-ui/core';
+import { IconButton, Tooltip } from '@material-ui/core';
 import CheckMarkBadge from 'component/common/CheckmarkBadge/CheckMarkBadge';
 import UIContext from 'contexts/UIContext';
 import ConditionallyRender from 'component/common/ConditionallyRender';
@@ -76,14 +76,15 @@ const Toast = ({ title, text, type, confetti }: IToast) => {
                                 />
                             </div>
                         </div>
-
-                        <IconButton
-                            color="primary"
-                            onClick={hide}
-                            className={styles.buttonStyle}
-                        >
-                            <Close />
-                        </IconButton>
+                        <Tooltip title="Close">
+                            <IconButton
+                                color="primary"
+                                onClick={hide}
+                                className={styles.buttonStyle}
+                            >
+                                <Close />
+                            </IconButton>
+                        </Tooltip>
                     </div>
                 </div>
             </div>

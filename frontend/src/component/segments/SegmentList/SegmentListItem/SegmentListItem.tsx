@@ -65,12 +65,12 @@ export const SegmentListItem = ({
                         push(`/segments/edit/${id}`);
                     }}
                     permission={UPDATE_SEGMENT}
+                    tooltip="Edit segment"
                 >
-                    <Edit titleAccess="Edit segment" />
+                    <Edit />
                 </PermissionIconButton>
                 <PermissionIconButton
                     data-loading
-                    aria-label="Remove segment"
                     onClick={() => {
                         setCurrentSegment({
                             id,
@@ -83,6 +83,7 @@ export const SegmentListItem = ({
                         setDelDialog(true);
                     }}
                     permission={ADMIN}
+                    tooltip="Remove segment"
                     data-testid={`${SEGMENT_DELETE_BTN_ID}_${name}`}
                 >
                     <Delete />

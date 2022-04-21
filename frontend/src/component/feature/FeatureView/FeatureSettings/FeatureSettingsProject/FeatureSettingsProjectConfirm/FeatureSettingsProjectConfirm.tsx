@@ -90,7 +90,10 @@ const FeatureSettingsProjectConfirm = ({
                         </p>
                         <div className={styles.iconContainer}>
                             <div className={styles.errorIconContainer}>
-                                <Error className={styles.check} />
+                                <Error
+                                    className={styles.check}
+                                    titleAccess="Error"
+                                />
                             </div>
                         </div>
                     </div>

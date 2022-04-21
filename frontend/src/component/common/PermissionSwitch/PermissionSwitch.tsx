@@ -1,6 +1,8 @@
-import { Switch, Tooltip, SwitchProps } from '@material-ui/core';
+import { Switch, SwitchProps } from '@material-ui/core';
 import AccessContext from 'contexts/AccessContext';
 import React, { useContext } from 'react';
+import { formatAccessText } from 'utils/formatAccessText';
+import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
 
 interface IPermissionSwitchProps extends SwitchProps {
     permission: string;
@@ -38,12 +40,8 @@ const PermissionSwitch = React.forwardRef<
         access = hasAccess(permission);
     }
 
-    const tooltipText = !access
-        ? "You don't have access to perform this operation"
-        : '';
-
     return (
-        <Tooltip title={tooltipText} arrow>
+        <TooltipResolver title={formatAccessText(access, tooltip)} arrow>
             <span data-loading>
                 <Switch
                     onChange={onChange}
@@ -53,7 +51,7 @@ const PermissionSwitch = React.forwardRef<
                     {...rest}
                 />
             </span>
-        </Tooltip>
+        </TooltipResolver>
     );
 });
 

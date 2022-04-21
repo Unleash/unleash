@@ -145,6 +145,7 @@ const FeatureToggleListItem = ({
                             !projectExists()
                         }
                         onClick={reviveFeature}
+                        tooltip="Revive feature"
                     >
                         <Undo />
                     </PermissionIconButton>

@@ -1,6 +1,6 @@
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
-import { Grid, IconButton, TextField } from '@material-ui/core';
+import { Grid, IconButton, TextField, Tooltip } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
 import { useStyles } from './OverrideConfig.styles';
 import { Autocomplete } from '@material-ui/lab';
@@ -98,9 +98,11 @@ export const OverrideConfig = ({
                     />
                 </Grid>
                 <Grid item md={1}>
-                    <IconButton onClick={removeOverride(i)}>
-                        <Delete />
-                    </IconButton>
+                    <Tooltip title="Remove">
+                        <IconButton onClick={removeOverride(i)}>
+                            <Delete />
+                        </IconButton>
+                    </Tooltip>
                 </Grid>
             </Grid>
         );

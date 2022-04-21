@@ -17,6 +17,7 @@ import {
     operatorsForContext,
     CURRENT_TIME_CONTEXT_FIELD,
 } from 'utils/operatorsForContext';
+import { Tooltip } from '@material-ui/core';
 
 interface IConstraintAccordionViewHeader {
     localConstraint: IConstraint;
@@ -121,14 +122,16 @@ export const ConstraintAccordionEditHeader = ({
                 show={<p className={styles.editingBadge}>Updating...</p>}
                 elseShow={<p className={styles.editingBadge}>Editing</p>}
             />
-            <a
-                href="https://docs.getunleash.io/advanced/strategy_constraints"
-                style={{ marginLeft: 'auto' }}
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-                <Help className={styles.help} />
-            </a>
+            <Tooltip title="Help">
+                <a
+                    href="https://docs.getunleash.io/advanced/strategy_constraints"
+                    style={{ marginLeft: 'auto' }}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    <Help className={styles.help} />
+                </a>
+            </Tooltip>
         </div>
     );
 };

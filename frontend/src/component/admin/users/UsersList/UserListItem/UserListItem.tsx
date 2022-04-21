@@ -87,7 +87,6 @@ const UserListItem = ({
                         <Tooltip title="Edit user" arrow>
                             <IconButton
                                 data-loading
-                                aria-label="Edit user"
                                 onClick={() =>
                                     history.push(`/admin/users/${user.id}/edit`)
                                 }
@@ -98,7 +97,6 @@ const UserListItem = ({
                         <Tooltip title="Change password" arrow>
                             <IconButton
                                 data-loading
-                                aria-label="Change password"
                                 onClick={openPwDialog(user)}
                             >
                                 <Lock />
@@ -107,7 +105,6 @@ const UserListItem = ({
                         <Tooltip title="Remove user" arrow>
                             <IconButton
                                 data-loading
-                                aria-label="Remove user"
                                 onClick={openDelDialog(user)}
                             >
                                 <Delete />

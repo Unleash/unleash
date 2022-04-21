@@ -128,6 +128,7 @@ const Project = () => {
                             permission={UPDATE_PROJECT}
                             projectId={project?.id}
                             onClick={() => history.push(`/projects/${id}/edit`)}
+                            tooltip="Edit project"
                             data-loading
                         >
                             <Edit />

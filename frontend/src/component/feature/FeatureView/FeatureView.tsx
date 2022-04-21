@@ -143,32 +143,36 @@ export const FeatureView = () => {
                                     data-loading
                                     component={Link}
                                     to={`/projects/${projectId}/features/${featureId}/strategies/copy`}
+                                    tooltip="Copy feature"
                                 >
-                                    <FileCopy titleAccess="Copy" />
+                                    <FileCopy />
                                 </PermissionIconButton>
                                 <PermissionIconButton
                                     permission={DELETE_FEATURE}
                                     projectId={projectId}
+                                    tooltip="Archive feature toggle"
                                     data-loading
                                     onClick={() => setShowDelDialog(true)}
                                 >
-                                    <Archive titleAccess="Archive feature toggle" />
+                                    <Archive />
                                 </PermissionIconButton>
                                 <PermissionIconButton
                                     onClick={() => setOpenStaleDialog(true)}
                                     permission={UPDATE_FEATURE}
                                     projectId={projectId}
+                                    tooltip="Toggle stale status"
                                     data-loading
                                 >
-                                    <WatchLater titleAccess="Toggle stale status" />
+                                    <WatchLater />
                                 </PermissionIconButton>
                                 <PermissionIconButton
                                     onClick={() => setOpenTagDialog(true)}
                                     permission={UPDATE_FEATURE}
                                     projectId={projectId}
+                                    tooltip="Add tag"
                                     data-loading
                                 >
-                                    <Label titleAccess="Add tag" />
+                                    <Label />
                                 </PermissionIconButton>
                             </div>
                         </div>

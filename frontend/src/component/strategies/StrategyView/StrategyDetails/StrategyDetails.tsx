@@ -34,18 +34,18 @@ export const StrategyDetails = ({
                     <ConditionallyRender
                         condition={required}
                         show={
-                            <Tooltip title="Required">
-                                <ListItemAvatar>
-                                    <Add />
-                                </ListItemAvatar>
-                            </Tooltip>
+                            <ListItemAvatar>
+                                <Tooltip title="Required parameter">
+                                    <Add aria-hidden={false} />
+                                </Tooltip>
+                            </ListItemAvatar>
                         }
                         elseShow={
-                            <Tooltip title="Optional">
-                                <ListItemAvatar>
-                                    <RadioButtonChecked />
-                                </ListItemAvatar>
-                            </Tooltip>
+                            <ListItemAvatar>
+                                <Tooltip title="Optional parameter">
+                                    <RadioButtonChecked aria-hidden={false} />
+                                </Tooltip>
+                            </ListItemAvatar>
                         }
                     />
                     <ListItemText

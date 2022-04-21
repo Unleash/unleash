@@ -8,6 +8,7 @@ import {
     TableCell,
     TableHead,
     TableRow,
+    Tooltip,
 } from '@material-ui/core';
 import AccessContext from 'contexts/AccessContext';
 import useToast from 'hooks/useToast';
@@ -200,24 +201,28 @@ export const ApiTokenList = () => {
                                     <Secret value={item.secret} />
                                 </TableCell>
                                 <TableCell className={styles.actionsContainer}>
-                                    <IconButton
-                                        onClick={() => {
-                                            copyToken(item.secret);
-                                        }}
-                                    >
-                                        <FileCopy />
-                                    </IconButton>
+                                    <Tooltip title="Copy token">
+                                        <IconButton
+                                            onClick={() => {
+                                                copyToken(item.secret);
+                                            }}
+                                        >
+                                            <FileCopy />
+                                        </IconButton>
+                                    </Tooltip>
                                     <ConditionallyRender
                                         condition={hasAccess(DELETE_API_TOKEN)}
                                         show={
-                                            <IconButton
-                                                onClick={() => {
-                                                    setDeleteToken(item);
-                                                    setShowDelete(true);
-                                                }}
-                                            >
-                                                <Delete />
-                                            </IconButton>
+                                            <Tooltip title="Delete token">
+                                                <IconButton
+                                                    onClick={() => {
+                                                        setDeleteToken(item);
+                                                        setShowDelete(true);
+                                                    }}
+                                                >
+                                                    <Delete />
+                                                </IconButton>
+                                            </Tooltip>
                                         }
                                     />
                                 </TableCell>

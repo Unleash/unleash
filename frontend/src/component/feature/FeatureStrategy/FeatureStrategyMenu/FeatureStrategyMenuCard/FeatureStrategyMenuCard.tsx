@@ -35,7 +35,7 @@ export const FeatureStrategyMenuCard = ({
     return (
         <Link to={createStrategyPath} className={styles.card}>
             <div className={styles.icon}>
-                <StrategyIcon aria-hidden />
+                <StrategyIcon />
             </div>
             <div>
                 <StringTruncator

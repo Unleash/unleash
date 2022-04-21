@@ -66,12 +66,14 @@ const Header = () => {
                     <ConditionallyRender
                         condition={smallScreen}
                         show={
-                            <IconButton
-                                className={styles.drawerButton}
-                                onClick={toggleDrawer}
-                            >
-                                <MenuIcon titleAccess="Menu" />
-                            </IconButton>
+                            <Tooltip title="Menu">
+                                <IconButton
+                                    className={styles.drawerButton}
+                                    onClick={toggleDrawer}
+                                >
+                                    <MenuIcon />
+                                </IconButton>
+                            </Tooltip>
                         }
                         elseShow={
                             <Link
@@ -136,26 +138,29 @@ const Header = () => {
                                         >
                                             <MenuBookIcon
                                                 className={styles.docsIcon}
-                                                titleAccess="Documentation"
                                             />
                                         </a>
                                     </Tooltip>
                                     <ConditionallyRender
                                         condition={admin}
                                         show={
-                                            <IconButton
-                                                onClick={e =>
-                                                    setAnchorEl(e.currentTarget)
-                                                }
-                                            >
-                                                <SettingsIcon
-                                                    className={styles.docsIcon}
-                                                    titleAccess="Settings"
-                                                />
-                                            </IconButton>
+                                            <Tooltip title="Settings">
+                                                <IconButton
+                                                    onClick={e =>
+                                                        setAnchorEl(
+                                                            e.currentTarget
+                                                        )
+                                                    }
+                                                >
+                                                    <SettingsIcon
+                                                        className={
+                                                            styles.docsIcon
+                                                        }
+                                                    />
+                                                </IconButton>
+                                            </Tooltip>
                                         }
                                     />
-
                                     <NavigationMenu
                                         id="admin-navigation"
                                         options={filteredMainRoutes.adminRoutes}
@@ -166,7 +171,6 @@ const Header = () => {
                                 </>
                             }
                         />
-
                         <UserProfile />
                     </div>
                 </Container>

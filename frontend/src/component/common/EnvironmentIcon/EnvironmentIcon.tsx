@@ -9,6 +9,8 @@ interface IEnvironmentIcon {
 const EnvironmentIcon = ({ enabled, className }: IEnvironmentIcon) => {
     const theme = useTheme();
 
+    const title = enabled ? 'Environment enabled' : 'Environment disabled';
+
     const container = {
         backgroundColor: enabled
             ? theme.palette.primary.light
@@ -31,7 +33,7 @@ const EnvironmentIcon = ({ enabled, className }: IEnvironmentIcon) => {
 
     return (
         <div style={container} className={className}>
-            <Cloud style={icon} />
+            <Cloud style={icon} titleAccess={title} />
         </div>
     );
 };

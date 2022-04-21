@@ -12,7 +12,7 @@ const DropdownMenu = ({
     id,
     title,
     callback,
-    icon = <ArrowDropDown />,
+    icon = <ArrowDropDown titleAccess="Toggle" />,
     label,
     style,
     startIcon,

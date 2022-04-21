@@ -93,7 +93,7 @@ const FeatureOverviewEnvironment = ({
             >
                 <AccordionSummary
                     className={styles.accordionHeader}
-                    expandIcon={<ExpandMore />}
+                    expandIcon={<ExpandMore titleAccess="Toggle" />}
                 >
                     <div className={styles.header} data-loading>
                         <div className={styles.headerTitle}>

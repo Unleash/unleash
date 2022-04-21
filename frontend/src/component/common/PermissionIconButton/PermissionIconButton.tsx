@@ -1,14 +1,17 @@
-import { IconButton, Tooltip, IconButtonProps } from '@material-ui/core';
+import { IconButton, IconButtonProps } from '@material-ui/core';
 import React, { useContext, ReactNode } from 'react';
 import AccessContext from 'contexts/AccessContext';
 import { Link } from 'react-router-dom';
+import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
+import { formatAccessText } from 'utils/formatAccessText';
+import { useId } from 'hooks/useId';
 
 interface IPermissionIconButtonProps {
     permission: string;
     projectId?: string;
     environmentId?: string;
     className?: string;
-    title?: string;
+    tooltip?: string;
     children?: ReactNode;
     disabled?: boolean;
     hidden?: boolean;
@@ -30,9 +33,11 @@ const PermissionIconButton = ({
     projectId,
     children,
     environmentId,
+    tooltip,
     ...rest
 }: IButtonProps | ILinkProps) => {
     const { hasAccess } = useContext(AccessContext);
+    const id = useId();
     let access;
 
     if (projectId && environmentId) {
@@ -43,18 +48,14 @@ const PermissionIconButton = ({
         access = hasAccess(permission);
     }
 
-    const tooltipText = !access
-        ? "You don't have access to perform this operation"
-        : '';
-
     return (
-        <Tooltip title={tooltipText} arrow>
-            <span>
-                <IconButton disabled={!access} {...rest}>
+        <TooltipResolver title={formatAccessText(access, tooltip)}>
+            <span id={id}>
+                <IconButton {...rest} disabled={!access} aria-labelledby={id}>
                     {children}
                 </IconButton>
             </span>
-        </Tooltip>
+        </TooltipResolver>
     );
 };
 

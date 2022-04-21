@@ -6,7 +6,7 @@ export const ConstraintIcon = () => {
 
     return (
         <div className={styles.constraintIconContainer}>
-            <TrackChanges className={styles.constraintIcon} aria-hidden />
+            <TrackChanges className={styles.constraintIcon} />
         </div>
     );
 };

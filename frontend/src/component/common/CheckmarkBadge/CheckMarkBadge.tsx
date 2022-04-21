@@ -12,7 +12,7 @@ const CheckMarkBadge = ({ type, className }: ICheckMarkBadgeProps) => {
     return (
         <div className={classnames(styles.badge, className)}>
             {type === 'error' ? (
-                <Close className={styles.check} />
+                <Close className={styles.check} titleAccess="Error" />
             ) : (
                 <Check className={styles.check} />
             )}

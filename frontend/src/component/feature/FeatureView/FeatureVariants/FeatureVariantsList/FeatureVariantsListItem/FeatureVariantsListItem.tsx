@@ -1,4 +1,10 @@
-import { Chip, IconButton, TableCell, TableRow } from '@material-ui/core';
+import {
+    Chip,
+    IconButton,
+    TableCell,
+    TableRow,
+    Tooltip,
+} from '@material-ui/core';
 import { Delete, Edit } from '@material-ui/icons';
 
 import styles from '../variants.module.scss';
@@ -54,24 +60,28 @@ const FeatureVariantListItem = ({
                 show={
                     <TableCell className={styles.actions}>
                         <div className={styles.actionsContainer}>
-                            <IconButton
-                                data-testid={'VARIANT_EDIT_BUTTON'}
-                                onClick={() => editVariant(variant.name)}
-                            >
-                                <Edit />
-                            </IconButton>
-                            <IconButton
-                                data-testid={`VARIANT_DELETE_BUTTON_${variant.name}`}
-                                onClick={e => {
-                                    e.stopPropagation();
-                                    setDelDialog({
-                                        show: true,
-                                        name: variant.name,
-                                    });
-                                }}
-                            >
-                                <Delete />
-                            </IconButton>
+                            <Tooltip title="Edit variant">
+                                <IconButton
+                                    data-testid={'VARIANT_EDIT_BUTTON'}
+                                    onClick={() => editVariant(variant.name)}
+                                >
+                                    <Edit />
+                                </IconButton>
+                            </Tooltip>
+                            <Tooltip title="Delete variant">
+                                <IconButton
+                                    data-testid={`VARIANT_DELETE_BUTTON_${variant.name}`}
+                                    onClick={e => {
+                                        e.stopPropagation();
+                                        setDelDialog({
+                                            show: true,
+                                            name: variant.name,
+                                        });
+                                    }}
+                                >
+                                    <Delete />
+                                </IconButton>
+                            </Tooltip>
                         </div>
                     </TableCell>
                 }

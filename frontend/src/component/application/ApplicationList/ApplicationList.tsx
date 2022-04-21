@@ -22,7 +22,7 @@ export const ApplicationList = () => {
     const renderNoApplications = () => (
         <>
             <section style={{ textAlign: 'center' }}>
-                <Warning /> <br />
+                <Warning titleAccess="Warning" /> <br />
                 <br />
                 Oh snap, it does not seem like you have connected any
                 applications. To connect your application to Unleash you will

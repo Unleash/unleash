@@ -1,4 +1,4 @@
-import { IconButton } from '@material-ui/core';
+import { IconButton, Tooltip } from '@material-ui/core';
 import CopyIcon from '@material-ui/icons/FileCopy';
 import copy from 'copy-to-clipboard';
 import useToast from 'hooks/useToast';
@@ -14,8 +14,7 @@ export const UserToken = ({ token }: IUserTokenProps) => {
         if (copy(token)) {
             setToastData({
                 type: 'success',
-                title: 'Token copied',
-                text: `Token is copied to clipboard`,
+                title: 'Token copied to clipboard',
             });
         } else
             setToastData({
@@ -38,9 +37,11 @@ export const UserToken = ({ token }: IUserTokenProps) => {
             }}
         >
             {token}
-            <IconButton onClick={copyToken}>
-                <CopyIcon />
-            </IconButton>
+            <Tooltip title="Copy token">
+                <IconButton onClick={copyToken}>
+                    <CopyIcon />
+                </IconButton>
+            </Tooltip>
         </div>
     );
 };

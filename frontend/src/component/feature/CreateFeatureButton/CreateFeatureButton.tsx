@@ -35,7 +35,7 @@ export const CreateFeatureButton = ({
                         data-testid={NAVIGATE_TO_CREATE_FEATURE}
                         disabled={!createFeature.access}
                     >
-                        <Add titleAccess="New" />
+                        <Add />
                     </IconButton>
                 </Tooltip>
             }

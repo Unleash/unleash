@@ -1,15 +1,19 @@
-import { Button, ButtonProps, Tooltip } from '@material-ui/core';
+import { Button, ButtonProps } from '@material-ui/core';
 import { Lock } from '@material-ui/icons';
 import AccessContext from 'contexts/AccessContext';
 import React, { useContext } from 'react';
 import ConditionallyRender from '../ConditionallyRender';
+import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
+import { formatAccessText } from 'utils/formatAccessText';
+import { useId } from 'hooks/useId';
 
-export interface IPermissionButtonProps extends ButtonProps {
+export interface IPermissionButtonProps extends Omit<ButtonProps, 'title'> {
     permission: string | string[];
     onClick?: (e: any) => void;
     disabled?: boolean;
     projectId?: string;
     environmentId?: string;
+    tooltip?: string;
 }
 
 const PermissionButton: React.FC<IPermissionButtonProps> = ({
@@ -21,9 +25,11 @@ const PermissionButton: React.FC<IPermissionButtonProps> = ({
     disabled,
     projectId,
     environmentId,
+    tooltip,
     ...rest
 }) => {
     const { hasAccess } = useContext(AccessContext);
+    const id = useId();
     let access;
 
     const handleAccess = () => {
@@ -53,30 +59,27 @@ const PermissionButton: React.FC<IPermissionButtonProps> = ({
 
     access = handleAccess();
 
-    const tooltipText = !access
-        ? "You don't have access to perform this operation"
-        : '';
-
     return (
-        <Tooltip title={tooltipText} arrow>
-            <span>
+        <TooltipResolver title={formatAccessText(access, tooltip)} arrow>
+            <span id={id}>
                 <Button
                     onClick={onClick}
                     disabled={disabled || !access}
+                    aria-describedby={id}
                     variant={variant}
                     color={color}
                     {...rest}
                     endIcon={
                         <ConditionallyRender
                             condition={!access}
-                            show={<Lock />}
+                            show={<Lock titleAccess="Locked" />}
                         />
                     }
                 >
                     {children}
                 </Button>
             </span>
-        </Tooltip>
+        </TooltipResolver>
     );
 };
 

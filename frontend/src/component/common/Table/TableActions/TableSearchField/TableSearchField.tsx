@@ -57,7 +57,6 @@ export const TableSearchField = ({
                             <Tooltip title="Clear search query" arrow>
                                 <IconButton
                                     size="small"
-                                    aria-label="Clear search query"
                                     onClick={() => {
                                         onChange('');
                                         onBlur?.(true);

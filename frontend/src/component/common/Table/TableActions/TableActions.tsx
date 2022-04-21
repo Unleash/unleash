@@ -53,7 +53,7 @@ export const TableActions = ({ search, onSearch }: ITableActionsProps) => {
                     </Tooltip>
                 }
             />
-            <div className={styles.verticalSeparator}></div>
+            <div className={styles.verticalSeparator} />
         </>
     );
 };

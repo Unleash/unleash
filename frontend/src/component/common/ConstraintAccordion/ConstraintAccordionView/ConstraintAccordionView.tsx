@@ -45,7 +45,7 @@ export const ConstraintAccordionView = ({
         >
             <AccordionSummary
                 className={styles.summary}
-                expandIcon={<ExpandMore />}
+                expandIcon={<ExpandMore titleAccess="Toggle" />}
             >
                 <ConstraintAccordionViewHeader
                     compact={compact}

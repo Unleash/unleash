@@ -56,6 +56,7 @@ const ProjectInfo = ({
             className={permissionButtonClass}
             data-loading
             to={`/projects/${id}/edit`}
+            tooltip="Edit description"
         >
             <Edit />
         </PermissionIconButton>
@@ -82,7 +83,9 @@ const ProjectInfo = ({
                                     elseShow={
                                         <Accordion className={styles.accordion}>
                                             <AccordionSummary
-                                                expandIcon={<ExpandMore />}
+                                                expandIcon={
+                                                    <ExpandMore titleAccess="Toggle" />
+                                                }
                                                 className={styles.accordionBody}
                                             >
                                                 Description

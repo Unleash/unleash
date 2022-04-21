@@ -46,7 +46,7 @@ export const AutocompleteBox = ({
                 classes={{ inputRoot: styles.inputRoot }}
                 options={options}
                 value={value}
-                popupIcon={<ArrowDropDown />}
+                popupIcon={<ArrowDropDown titleAccess="Toggle" />}
                 onChange={(event, value) => onChange(value || [])}
                 renderInput={renderInput}
                 getOptionLabel={value => value.label}

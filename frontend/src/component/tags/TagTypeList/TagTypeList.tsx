@@ -69,7 +69,6 @@ export const TagTypeList = () => {
                             show={
                                 <Tooltip title="Add tag type">
                                     <IconButton
-                                        aria-label="add tag type"
                                         onClick={() =>
                                             history.push('/tag-types/create')
                                         }
@@ -129,9 +128,10 @@ export const TagTypeList = () => {
                 <PermissionIconButton
                     permission={UPDATE_TAG_TYPE}
                     component={Link}
+                    tooltip="Edit tag type"
                     to={`/tag-types/edit/${tagType.name}`}
                 >
-                    <Edit className={styles.icon} titleAccess="Edit tag type" />
+                    <Edit className={styles.icon} />
                 </PermissionIconButton>
                 <ConditionallyRender
                     condition={hasAccess(DELETE_TAG_TYPE)}

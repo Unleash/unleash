@@ -1,4 +1,4 @@
-import { IconButton } from '@material-ui/core';
+import { IconButton, Tooltip } from '@material-ui/core';
 import CopyIcon from '@material-ui/icons/FileCopy';
 import useToast from 'hooks/useToast';
 
@@ -47,9 +47,11 @@ const UserInviteLink = ({ inviteLink }: IInviteLinkProps) => {
             }}
         >
             {inviteLink}
-            <IconButton onClick={handleCopy}>
-                <CopyIcon />
-            </IconButton>
+            <Tooltip title="Copy link">
+                <IconButton onClick={handleCopy}>
+                    <CopyIcon />
+                </IconButton>
+            </Tooltip>
         </div>
     );
 };

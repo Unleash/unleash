@@ -121,7 +121,12 @@ const EnvironmentPermissionAccordion = ({
             <Accordion style={{ boxShadow: 'none' }}>
                 <AccordionSummary
                     className={styles.accordionSummary}
-                    expandIcon={<ExpandMore className={styles.icon} />}
+                    expandIcon={
+                        <ExpandMore
+                            className={styles.icon}
+                            titleAccess="Toggle"
+                        />
+                    }
                 >
                     <div className={styles.accordionHeader}>
                         <StringTruncator

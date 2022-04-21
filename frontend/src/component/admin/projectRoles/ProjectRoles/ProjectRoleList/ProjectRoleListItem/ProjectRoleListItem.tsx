@@ -50,18 +50,17 @@ const RoleListItem = ({
                 <TableCell align="right">
                     <PermissionIconButton
                         data-loading
-                        aria-label="Edit"
                         disabled={type === BUILTIN_ROLE_TYPE}
                         onClick={() => {
                             history.push(`/admin/roles/${id}/edit`);
                         }}
                         permission={ADMIN}
+                        tooltip="Edit role"
                     >
                         <Edit />
                     </PermissionIconButton>
                     <PermissionIconButton
                         data-loading
-                        aria-label="Remove role"
                         disabled={type === BUILTIN_ROLE_TYPE}
                         onClick={() => {
                             // @ts-expect-error
@@ -69,6 +68,7 @@ const RoleListItem = ({
                             setDelDialog(true);
                         }}
                         permission={ADMIN}
+                        tooltip="Remove role"
                     >
                         <Delete />
                     </PermissionIconButton>

@@ -53,8 +53,9 @@ const FeatureOverviewEnvironmentStrategy = ({
                         projectId={projectId}
                         component={Link}
                         to={editStrategyPath}
+                        tooltip="Edit"
                     >
-                        <Edit titleAccess="Edit" />
+                        <Edit />
                     </PermissionIconButton>
                     <FeatureStrategyRemove
                         projectId={projectId}

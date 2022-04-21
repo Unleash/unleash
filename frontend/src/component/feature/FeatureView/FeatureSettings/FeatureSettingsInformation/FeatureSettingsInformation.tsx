@@ -34,8 +34,9 @@ export const FeatureSettingsInformation = ({
                     projectId={projectId}
                     data-loading
                     onClick={onEdit}
+                    tooltip="Edit"
                 >
-                    <Edit titleAccess="Edit" />
+                    <Edit />
                 </PermissionIconButton>
             </div>
             <Typography>

@@ -175,7 +175,7 @@ const StrategyConstraintInputField = ({
             </td>
             <td className={styles.tableCell}>
                 <IconButton onClick={removeConstraint}>
-                    <Delete />
+                    <Delete titleAccess="Remove constraint" />
                 </IconButton>
             </td>
         </tr>

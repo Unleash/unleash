@@ -92,7 +92,10 @@ const StrategyConstraints: React.FC<IStrategyConstraintProps> = ({
                 <Typography variant="subtitle2">
                     {'Constraints '}
 
-                    <Info style={{ fontSize: '0.9rem', color: 'gray' }} />
+                    <Info
+                        style={{ fontSize: '0.9rem', color: 'gray' }}
+                        titleAccess="Help"
+                    />
                 </Typography>
             </Tooltip>
             <table style={{ margin: 0 }}>

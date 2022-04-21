@@ -71,10 +71,9 @@ export const ProjectAccessListItem = ({
                     projectId={projectId}
                     className={styles.iconButton}
                     edge="end"
-                    aria-label="delete"
-                    title="Remove access"
                     onClick={() => handleRemoveAccess(user)}
                     disabled={access.users.length === 1}
+                    tooltip="Remove access"
                 >
                     <Delete />
                 </PermissionIconButton>

@@ -15,6 +15,9 @@ const PasswordField = ({ ...rest }) => {
         e.preventDefault();
     };
 
+    const IconComponent = showPassword ? Visibility : VisibilityOff;
+    const iconTitle = 'Toggle password visibility';
+
     return (
         <TextField
             variant="outlined"
@@ -27,11 +30,10 @@ const PasswordField = ({ ...rest }) => {
                 endAdornment: (
                     <InputAdornment position="end">
                         <IconButton
-                            aria-label="toggle password visibility"
                             onClick={handleClickShowPassword}
                             onMouseDown={handleMouseDownPassword}
                         >
-                            {showPassword ? <Visibility /> : <VisibilityOff />}
+                            <IconComponent titleAccess={iconTitle} />
                         </IconButton>
                     </InputAdornment>
                 ),

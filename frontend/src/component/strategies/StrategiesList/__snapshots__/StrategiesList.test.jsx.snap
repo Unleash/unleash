@@ -30,17 +30,10 @@ exports[`renders correctly with one strategy 1`] = `
         className="makeStyles-headerActions-8"
       >
         <span
-          aria-describedby={null}
-          className=""
-          onBlur={[Function]}
-          onFocus={[Function]}
-          onMouseLeave={[Function]}
-          onMouseOver={[Function]}
-          onTouchEnd={[Function]}
-          onTouchStart={[Function]}
-          title=""
+          id="useId-0"
         >
           <button
+            aria-describedby="useId-0"
             className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
             data-testid="ADD_NEW_STRATEGY_ID"
             disabled={false}
@@ -129,15 +122,17 @@ exports[`renders correctly with one strategy 1`] = `
           <span
             aria-describedby={null}
             className=""
+            id="useId-1"
             onBlur={[Function]}
             onFocus={[Function]}
             onMouseLeave={[Function]}
             onMouseOver={[Function]}
             onTouchEnd={[Function]}
             onTouchStart={[Function]}
-            title=""
+            title="Deprecate strategy"
           >
             <button
+              aria-labelledby="useId-1"
               className="MuiButtonBase-root MuiIconButton-root"
               disabled={false}
               onBlur={[Function]}
@@ -159,17 +154,14 @@ exports[`renders correctly with one strategy 1`] = `
                 className="MuiIconButton-label"
               >
                 <svg
+                  aria-hidden={true}
                   className="MuiSvgIcon-root"
                   focusable="false"
-                  role="img"
                   viewBox="0 0 24 24"
                 >
                   <path
                     d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"
                   />
-                  <title>
-                    Deprecate strategy
-                  </title>
                 </svg>
               </span>
               <span
@@ -257,14 +249,17 @@ exports[`renders correctly with one strategy 1`] = `
               className="MuiIconButton-label"
             >
               <svg
-                aria-hidden={true}
                 className="MuiSvgIcon-root"
                 focusable="false"
+                role="img"
                 viewBox="0 0 24 24"
               >
                 <path
                   d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"
                 />
+                <title>
+                  Delete strategy
+                </title>
               </svg>
             </span>
           </button>
@@ -305,17 +300,10 @@ exports[`renders correctly with one strategy without permissions 1`] = `
         className="makeStyles-headerActions-8"
       >
         <span
-          aria-describedby={null}
-          className=""
-          onBlur={[Function]}
-          onFocus={[Function]}
-          onMouseLeave={[Function]}
-          onMouseOver={[Function]}
-          onTouchEnd={[Function]}
-          onTouchStart={[Function]}
-          title=""
+          id="useId-2"
         >
           <button
+            aria-describedby="useId-2"
             className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
             data-testid="ADD_NEW_STRATEGY_ID"
             disabled={false}
@@ -404,15 +392,17 @@ exports[`renders correctly with one strategy without permissions 1`] = `
           <span
             aria-describedby={null}
             className=""
+            id="useId-3"
             onBlur={[Function]}
             onFocus={[Function]}
             onMouseLeave={[Function]}
             onMouseOver={[Function]}
             onTouchEnd={[Function]}
             onTouchStart={[Function]}
-            title=""
+            title="Deprecate strategy"
           >
             <button
+              aria-labelledby="useId-3"
               className="MuiButtonBase-root MuiIconButton-root"
               disabled={false}
               onBlur={[Function]}
@@ -434,17 +424,14 @@ exports[`renders correctly with one strategy without permissions 1`] = `
                 className="MuiIconButton-label"
               >
                 <svg
+                  aria-hidden={true}
                   className="MuiSvgIcon-root"
                   focusable="false"
-                  role="img"
                   viewBox="0 0 24 24"
                 >
                   <path
                     d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"
                   />
-                  <title>
-                    Deprecate strategy
-                  </title>
                 </svg>
               </span>
               <span
@@ -532,14 +519,17 @@ exports[`renders correctly with one strategy without permissions 1`] = `
               className="MuiIconButton-label"
             >
               <svg
-                aria-hidden={true}
                 className="MuiSvgIcon-root"
                 focusable="false"
+                role="img"
                 viewBox="0 0 24 24"
               >
                 <path
                   d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"
                 />
+                <title>
+                  Delete strategy
+                </title>
               </svg>
             </span>
           </button>

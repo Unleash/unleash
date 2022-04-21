@@ -52,7 +52,10 @@ const FeatureOverviewMetaData = () => {
                                         component={Link}
                                         to={`/projects/${projectId}/features/${featureId}/settings`}
                                     >
-                                        <Edit className={styles.editIcon} />
+                                        <Edit
+                                            className={styles.editIcon}
+                                            titleAccess="Settings"
+                                        />
                                     </PermissionIconButton>
                                 </div>
                             </span>
@@ -66,6 +69,7 @@ const FeatureOverviewMetaData = () => {
                                         permission={UPDATE_FEATURE}
                                         component={Link}
                                         to={`/projects/${projectId}/features/${featureId}/settings`}
+                                        tooltip="Edit description"
                                     >
                                         <Edit className={styles.editIcon} />
                                     </PermissionIconButton>

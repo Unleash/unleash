@@ -104,8 +104,9 @@ export const ConstraintAccordionViewHeader = ({
                             projectId={projectId}
                             environmentId={environmentId}
                             hidden={!onEdit}
+                            tooltip="Edit constraint"
                         >
-                            <Edit titleAccess="edit constraint" />
+                            <Edit />
                         </PermissionIconButton>
                     }
                 />
@@ -116,9 +117,10 @@ export const ConstraintAccordionViewHeader = ({
                             onClick={onDeleteClick!}
                             permission={UPDATE_FEATURE_STRATEGY}
                             projectId={projectId}
+                            tooltip="Delete constraint"
                             environmentId={environmentId}
                         >
-                            <Delete titleAccess="delete constraint" />
+                            <Delete />
                         </PermissionIconButton>
                     }
                 />

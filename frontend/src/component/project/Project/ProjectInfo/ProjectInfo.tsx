@@ -49,17 +49,19 @@ const ProjectInfo = ({
         [styles.permissionButtonShortDesc]: isShortDescription,
     });
     const permissionButton = (
-        <PermissionIconButton
-            permission={UPDATE_PROJECT}
-            projectId={id}
-            component={Link}
-            className={permissionButtonClass}
-            data-loading
-            to={`/projects/${id}/edit`}
-            tooltip="Edit description"
-        >
-            <Edit />
-        </PermissionIconButton>
+        <div>
+            <PermissionIconButton
+                permission={UPDATE_PROJECT}
+                projectId={id}
+                component={Link}
+                className={permissionButtonClass}
+                data-loading
+                to={`/projects/${id}/edit`}
+                tooltip="Edit description"
+            >
+                <Edit />
+            </PermissionIconButton>
+        </div>
     );
 
     return (

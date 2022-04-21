@@ -53,7 +53,7 @@ const FeatureOverviewEnvironmentStrategy = ({
                         projectId={projectId}
                         component={Link}
                         to={editStrategyPath}
-                        tooltip="Edit"
+                        tooltip="Edit strategy"
                     >
                         <Edit />
                     </PermissionIconButton>

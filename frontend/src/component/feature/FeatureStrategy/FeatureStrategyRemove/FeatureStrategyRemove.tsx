@@ -69,7 +69,7 @@ export const FeatureStrategyRemove = ({
                         disabled={disabled}
                         permission={DELETE_FEATURE_STRATEGY}
                         data-testid={STRATEGY_FORM_REMOVE_ID}
-                        tooltip="Delete strategy"
+                        tooltip="Remove strategy"
                         type="button"
                     >
                         <Delete />
@@ -87,20 +87,20 @@ export const FeatureStrategyRemove = ({
                         variant="text"
                         type="button"
                     >
-                        Delete strategy
+                        Remove strategy
                     </PermissionButton>
                 }
             />
             <Dialogue
                 title="Are you sure you want to delete this strategy?"
                 open={openDialogue}
-                primaryButtonText="Delete strategy"
+                primaryButtonText="Remove strategy"
                 secondaryButtonText="Cancel"
                 onClick={onRemove}
                 onClose={() => setOpenDialogue(false)}
             >
                 <Alert severity="error">
-                    Deleting the strategy will change which users receive access
+                    Removing the strategy will change which users receive access
                     to the feature.
                 </Alert>
             </Dialogue>

@@ -81,16 +81,4 @@ export const useStyles = makeStyles(theme => ({
         display: 'flex',
         color: '#000',
     },
-    docsLink: {
-        color: '#000',
-        textDecoration: 'none',
-        padding: '0.25rem 0.8rem',
-        display: 'flex',
-        alignItems: 'center',
-    },
-    docsIcon: {
-        color: '#6C6C6C',
-        height: '25px',
-        width: '25px',
-    },
 }));

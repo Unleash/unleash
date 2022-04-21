@@ -73,7 +73,7 @@ export const ProjectCard = ({
                     className={styles.actionsBtn}
                     data-loading
                     onClick={handleClick}
-                    tooltip="Menu"
+                    tooltip="Options"
                 >
                     <MoreVertIcon />
                 </PermissionIconButton>

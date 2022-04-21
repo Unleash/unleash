@@ -138,7 +138,7 @@ export const FeatureView = () => {
                                     data-loading
                                     component={Link}
                                     to={`/projects/${projectId}/features/${featureId}/strategies/copy`}
-                                    tooltip="Copy feature"
+                                    tooltip="Copy feature toggle"
                                 >
                                     <FileCopy />
                                 </PermissionIconButton>

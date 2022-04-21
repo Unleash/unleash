@@ -120,15 +120,14 @@ const Header = () => {
                         />
                     </div>
                     <div className={styles.userContainer}>
-                        <Tooltip title="Go to the documentation">
-                            <a
+                        <Tooltip title="Documentation">
+                            <IconButton
                                 href="https://docs.getunleash.io/"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className={styles.docsLink}
                             >
-                                <MenuBookIcon className={styles.docsIcon} />
-                            </a>
+                                <MenuBookIcon />
+                            </IconButton>
                         </Tooltip>
                         <ConditionallyRender
                             condition={admin}
@@ -139,9 +138,7 @@ const Header = () => {
                                             setAnchorEl(e.currentTarget)
                                         }
                                     >
-                                        <SettingsIcon
-                                            className={styles.docsIcon}
-                                        />
+                                        <SettingsIcon />
                                     </IconButton>
                                 </Tooltip>
                             }

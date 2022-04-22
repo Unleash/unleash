@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - feat/contributors-generation
 
 jobs:
   build:

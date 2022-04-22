@@ -1,5 +1,6 @@
-import { Popover, List } from '@material-ui/core';
-import NavigationLink from '../NavigationLink/NavigationLink';
+import { Menu, MenuItem } from '@material-ui/core';
+import { Link } from 'react-router-dom';
+import { useStyles } from '../NavigationLink/NavigationLink.styles';
 
 interface INavigationMenuProps {
     options: any[];
@@ -9,36 +10,37 @@ interface INavigationMenuProps {
     style: Object;
 }
 
-const NavigationMenu = ({
+export const NavigationMenu = ({
     options,
     id,
     handleClose,
     anchorEl,
     style,
 }: INavigationMenuProps) => {
+    const styles = useStyles();
+
     return (
-        <Popover
+        <Menu
             id={id}
             onClose={handleClose}
             anchorEl={anchorEl}
             open={Boolean(anchorEl)}
-            onMouseLeave={handleClose}
             style={style}
         >
-            <List>
-                {options.map(option => {
-                    return (
-                        <NavigationLink
-                            key={option.path}
-                            handleClose={handleClose}
-                            path={option.path}
-                            text={option.title}
-                        />
-                    );
-                })}
-            </List>
-        </Popover>
+            {options.map(option => {
+                return (
+                    <MenuItem
+                        key={option.path}
+                        component={Link}
+                        to={option.path}
+                        onClick={handleClose}
+                        classes={{ root: styles.navMenuLink }}
+                    >
+                        <span className={styles.menuItemBox} />
+                        {option.title}
+                    </MenuItem>
+                );
+            })}
+        </Menu>
     );
 };
-
-export default NavigationMenu;

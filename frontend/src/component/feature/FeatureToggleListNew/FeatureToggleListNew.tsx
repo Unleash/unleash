@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import {
     Table,
     TableBody,
@@ -18,6 +18,7 @@ import {
 import PaginateUI from 'component/common/PaginateUI/PaginateUI';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { createGlobalStateHook } from 'hooks/useGlobalState';
+import { AnnouncerContext } from 'component/common/Announcer/AnnouncerContext/AnnouncerContext';
 interface IFeatureToggleListNewProps {
     features: IFeatureToggleListItem[];
     loading: boolean;
@@ -83,6 +84,7 @@ const FeatureToggleListNew = ({
     projectId,
 }: IFeatureToggleListNewProps) => {
     const styles = useStyles();
+    const { setAnnouncement } = useContext(AnnouncerContext);
     const [sortOpt, setSortOpt] = useFeatureToggLeProjectSort();
     const [sortedFeatures, setSortedFeatures] = useState(
         sortList([...features], sortOpt)
@@ -116,6 +118,12 @@ const FeatureToggleListNew = ({
         setSortOpt(newSortOpt);
         setSortedFeatures(sortList([...features], newSortOpt));
         setPageIndex(0);
+
+        setAnnouncement(
+            `Sorted table by ${field}, ${
+                sortOpt.direction ? 'ascending' : 'descending'
+            }`
+        );
     };
 
     const getEnvironments = () => {
@@ -163,6 +171,14 @@ const FeatureToggleListNew = ({
         });
     };
 
+    const ariaSort = (field: string) => {
+        return field === sortOpt.field
+            ? sortOpt.direction
+                ? 'ascending'
+                : 'descending'
+            : undefined;
+    };
+
     return (
         <>
             <Table>
@@ -176,13 +192,15 @@ const FeatureToggleListNew = ({
                                 styles.tableCellHeaderSortable
                             )}
                             align="left"
+                            aria-sort={ariaSort('lastSeenAt')}
                         >
-                            <span
+                            <button
                                 data-loading
                                 onClick={() => updateSort('lastSeenAt')}
+                                className={styles.sortButton}
                             >
                                 Last use
-                            </span>
+                            </button>
                         </TableCell>
                         <TableCell
                             className={classnames(
@@ -192,13 +210,15 @@ const FeatureToggleListNew = ({
                                 styles.tableCellHeaderSortable
                             )}
                             align="center"
+                            aria-sort={ariaSort('type')}
                         >
-                            <span
+                            <button
                                 data-loading
                                 onClick={() => updateSort('type')}
+                                className={styles.sortButton}
                             >
                                 Type
-                            </span>
+                            </button>
                         </TableCell>
                         <TableCell
                             className={classnames(
@@ -208,13 +228,15 @@ const FeatureToggleListNew = ({
                                 styles.tableCellHeaderSortable
                             )}
                             align="left"
+                            aria-sort={ariaSort('name')}
                         >
-                            <span
+                            <button
                                 data-loading
                                 onClick={() => updateSort('name')}
+                                className={styles.sortButton}
                             >
                                 Name
-                            </span>
+                            </button>
                         </TableCell>
                         <TableCell
                             className={classnames(
@@ -224,13 +246,15 @@ const FeatureToggleListNew = ({
                                 styles.tableCellHeaderSortable
                             )}
                             align="left"
+                            aria-sort={ariaSort('createdAt')}
                         >
-                            <span
+                            <button
                                 data-loading
                                 onClick={() => updateSort('createdAt')}
+                                className={styles.sortButton}
                             >
                                 Created
-                            </span>
+                            </button>
                         </TableCell>
                         {getEnvironments().map((env: any) => {
                             return (

@@ -22,4 +22,10 @@ export const useStyles = makeStyles(theme => ({
             },
         },
     },
+    sortButton: {
+        all: 'unset',
+        '&:focus-visible, &:active': {
+            outline: 'revert',
+        },
+    },
 }));

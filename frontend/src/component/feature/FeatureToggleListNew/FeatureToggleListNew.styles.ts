@@ -48,4 +48,10 @@ export const useStyles = makeStyles(theme => ({
         color: theme.palette.primary.main,
         fontWeight: theme.fontWeight.bold,
     },
+    sortButton: {
+        all: 'unset',
+        '&:focus-visible, &:active': {
+            outline: 'revert',
+        },
+    },
 }));

@@ -12,6 +12,7 @@ import AccessProvider from 'component/providers/AccessProvider/AccessProvider';
 import { getBasePath } from 'utils/formatPath';
 import { FeedbackCESProvider } from 'component/feedback/FeedbackCESContext/FeedbackCESProvider';
 import UIProvider from 'component/providers/UIProvider/UIProvider';
+import { AnnouncerProvider } from 'component/common/Announcer/AnnouncerProvider/AnnouncerProvider';
 
 ReactDOM.render(
     <DndProvider backend={HTML5Backend}>
@@ -19,10 +20,12 @@ ReactDOM.render(
             <AccessProvider>
                 <Router basename={`${getBasePath()}`}>
                     <MainThemeProvider>
-                        <FeedbackCESProvider>
-                            <ScrollTop />
-                            <Route path="/" component={App} />
-                        </FeedbackCESProvider>
+                        <AnnouncerProvider>
+                            <FeedbackCESProvider>
+                                <ScrollTop />
+                                <Route path="/" component={App} />
+                            </FeedbackCESProvider>
+                        </AnnouncerProvider>
                     </MainThemeProvider>
                 </Router>
             </AccessProvider>

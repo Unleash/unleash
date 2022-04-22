@@ -4,19 +4,25 @@ on:
   push:
     branches:
       - main
+      - feat/contributors-generation
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - name: Use Node.js 14.x
+    - name: Use Node.js 16.x
       uses: actions/setup-node@v3
       with:
-        node-version: 14.x
-    - name: install contributors
+        node-version: 16.x
+    - uses: actions/checkout@master
+      with:
+        repository: sighphyre/svg-contributors
+        path: './svg-contributors'
+    - name: Create Contributors Image
       run: |
-        npx svg-contributors -o unleash -n unleash
+        npm install --prefix ./svg-contributors
+        ./svg-contributors/bin/contributors -o unleash -n unleash -l 500
     - uses: aws-actions/configure-aws-credentials@v1
       with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -24,4 +30,5 @@ jobs:
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
     - name: Publish static assets to S3
       run: |
-        aws s3 cp ./contributors.svg s3://getunleash-static/docs-assets/contributors.svg
+        ls -l
+        aws s3 cp contributors.svg s3://getunleash-static/docs-assets/contributors.svg

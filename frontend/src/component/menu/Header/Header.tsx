@@ -109,7 +109,7 @@ const Header = () => {
                             onClick={e => setAnchorElAdvanced(e.currentTarget)}
                         >
                             Configure
-                            <KeyboardArrowDown />
+                            <KeyboardArrowDown className={styles.icon} />
                         </button>
                         <NavigationMenu
                             id="settings-navigation"
@@ -126,7 +126,7 @@ const Header = () => {
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
-                                <MenuBookIcon />
+                                <MenuBookIcon className={styles.icon} />
                             </IconButton>
                         </Tooltip>
                         <ConditionallyRender
@@ -137,8 +137,12 @@ const Header = () => {
                                         onClick={e =>
                                             setAnchorEl(e.currentTarget)
                                         }
+                                        className={styles.wideButton}
                                     >
                                         <SettingsIcon />
+                                        <KeyboardArrowDown
+                                            className={styles.icon}
+                                        />
                                     </IconButton>
                                 </Tooltip>
                             }

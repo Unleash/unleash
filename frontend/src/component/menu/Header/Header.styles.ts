@@ -13,7 +13,7 @@ export const useStyles = makeStyles(theme => ({
         display: 'flex',
         justifyContent: 'center',
         marginLeft: '1.5rem',
-        ['& a']: {
+        '& a': {
             textDecoration: 'none',
             color: 'inherit',
             marginRight: '1.5rem',
@@ -80,5 +80,11 @@ export const useStyles = makeStyles(theme => ({
         alignItems: 'center',
         display: 'flex',
         color: '#000',
+    },
+    icon: {
+        color: theme.palette.grey[600],
+    },
+    wideButton: {
+        borderRadius: 100,
     },
 }));

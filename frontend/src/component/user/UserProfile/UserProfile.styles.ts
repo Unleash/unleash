@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles';
 
-export const useStyles = makeStyles({
+export const useStyles = makeStyles(theme => ({
     userProfileMenu: {
         display: 'flex',
     },
@@ -11,4 +11,7 @@ export const useStyles = makeStyles({
         color: 'inherit',
         padding: '0.2rem 1rem',
     },
-});
+    icon: {
+        color: theme.palette.grey[600],
+    },
+}));

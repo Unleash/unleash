@@ -31,7 +31,6 @@ test('clientRegisterSchema should allow null instanceId', () => {
         started: Date.now(),
         interval: 100,
     });
-    //@ts-ignore
     expect(value.instanceId).toBe('default');
 });
 
@@ -43,7 +42,6 @@ test('clientRegisterSchema should use instanceId', () => {
         started: Date.now(),
         interval: 100,
     });
-    //@ts-ignore
     expect(value.instanceId).toBe('some');
 });
 
@@ -56,7 +54,6 @@ test('clientMetricsSchema should allow null instanceId', () => {
             stopped: Date.now(),
         },
     });
-    //@ts-ignore
     expect(value.instanceId).toBe('default');
 });
 
@@ -69,7 +66,6 @@ test('clientMetricsSchema should allow empty ("") instanceId', () => {
             stopped: Date.now(),
         },
     });
-    //@ts-ignore
     expect(value.instanceId).toBe('default');
 });
 

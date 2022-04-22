@@ -34,7 +34,7 @@ export const FeatureMetricsTable = ({ metrics }: IFeatureMetricsTableProps) => {
     }
 
     return (
-        <Table id={FEATURE_METRICS_TABLE_ID}>
+        <Table id={FEATURE_METRICS_TABLE_ID} aria-label="Feature metrics table">
             <TableHead>
                 <TableRow>
                     <TableCell>Time</TableCell>

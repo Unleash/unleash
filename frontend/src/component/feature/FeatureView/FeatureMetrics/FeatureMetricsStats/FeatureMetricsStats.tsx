@@ -8,6 +8,8 @@ interface IFeatureMetricsStatsProps {
     hoursBack: number;
 }
 
+export const FEATURE_METRICS_STATS_ID = 'feature-metrics-stats-id';
+
 export const FeatureMetricsStats = ({
     totalYes,
     totalNo,
@@ -19,7 +21,13 @@ export const FeatureMetricsStats = ({
         hoursBack === 1 ? 'in the last hour' : `in the last ${hoursBack} hours`;
 
     return (
-        <Grid container spacing={2}>
+        <Grid
+            container
+            spacing={2}
+            id={FEATURE_METRICS_STATS_ID}
+            aria-label="Feature metrics summary"
+            component="section"
+        >
             <Grid item xs={12} sm={4}>
                 <article className={styles.item}>
                     <h3 className={styles.title}>Exposure</h3>

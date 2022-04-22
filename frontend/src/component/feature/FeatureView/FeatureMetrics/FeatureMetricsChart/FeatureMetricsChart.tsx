@@ -13,10 +13,10 @@ import {
     Tooltip,
 } from 'chart.js';
 import { useLocationSettings } from 'hooks/useLocationSettings';
-import { FEATURE_METRICS_TABLE_ID } from '../FeatureMetricsTable/FeatureMetricsTable';
 import 'chartjs-adapter-date-fns';
 import { createChartData } from './createChartData';
 import { createChartOptions } from './createChartOptions';
+import { FEATURE_METRICS_STATS_ID } from '../FeatureMetricsStats/FeatureMetricsStats';
 
 interface IFeatureMetricsChartProps {
     metrics: IFeatureMetricsRaw[];
@@ -48,8 +48,8 @@ export const FeatureMetricsChart = ({
             <Line
                 options={options}
                 data={data}
-                aria-label="A line chart with series for all requests, positive requests, and negative requests."
-                aria-describedby={FEATURE_METRICS_TABLE_ID}
+                aria-label="A feature metrics line chart, with three lines: all requests, positive requests, and negative requests."
+                aria-describedby={FEATURE_METRICS_STATS_ID}
             />
         </div>
     );

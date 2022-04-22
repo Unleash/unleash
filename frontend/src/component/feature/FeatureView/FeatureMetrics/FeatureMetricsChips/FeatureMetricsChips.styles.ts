@@ -21,5 +21,12 @@ export const useStyles = makeStyles(theme => ({
             backgroundColor: theme.palette.primary.main,
             color: theme.palette.primary.contrastText,
         },
+        '& > :is(:focus-visible, :active)': {
+            outline: 0,
+            outlineStyle: 'solid',
+            outlineWidth: 2,
+            outlineOffset: 2,
+            outlineColor: theme.palette.primary.main,
+        },
     },
 }));

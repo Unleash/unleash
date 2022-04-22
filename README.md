@@ -112,7 +112,11 @@ Check out [the CONTRIBUTING.md file](./CONTRIBUTING.md) for contribution guideli
 
 ### Contributors
 
+<div align="center">
+
 [![The Unleash contributors](https://cdn.getunleash.io/docs-assets/contributors.svg)](https://github.com/Unleash/unleash/graphs/contributors)
+
+</div>
 
 <br/>
 

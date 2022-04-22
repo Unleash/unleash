@@ -18,6 +18,15 @@ export const createChartData = (
         borderColor: theme.palette.primary.light,
         backgroundColor: theme.palette.primary.light,
         data: createChartPoints(metrics, locationSettings, m => m.yes + m.no),
+        elements: {
+            point: {
+                radius: 6,
+                pointStyle: 'circle',
+            },
+            line: {
+                borderDash: [8, 4],
+            },
+        },
     };
 
     const yesSeries = {
@@ -25,6 +34,12 @@ export const createChartData = (
         borderColor: theme.palette.success.light,
         backgroundColor: theme.palette.success.light,
         data: createChartPoints(metrics, locationSettings, m => m.yes),
+        elements: {
+            point: {
+                radius: 6,
+                pointStyle: 'triangle',
+            },
+        },
     };
 
     const noSeries = {
@@ -32,6 +47,13 @@ export const createChartData = (
         borderColor: theme.palette.error.light,
         backgroundColor: theme.palette.error.light,
         data: createChartPoints(metrics, locationSettings, m => m.no),
+        elements: {
+            point: {
+                radius: 6,
+                pointStyle: 'triangle',
+                pointRotation: 180,
+            },
+        },
     };
 
     return { datasets: [yesSeries, noSeries, requestsSeries] };

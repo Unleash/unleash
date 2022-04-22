@@ -77,14 +77,6 @@ export const createChartOptions = (
                 },
             },
         },
-        elements: {
-            point: {
-                // If we only have one point, always show a dot (since there's no line).
-                // If we have multiple points, only show dots on hover (looks better).
-                radius: metrics.length === 1 ? 6 : 0,
-                hoverRadius: 6,
-            },
-        },
     };
 };
 

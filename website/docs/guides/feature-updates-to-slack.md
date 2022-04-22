@@ -3,6 +3,10 @@ id: feature_updates_to_slack
 title: Feature Updates To slack
 ---
 
+:::caution
+As of **Unleash v4**, this method of doing things is deprecated. If you're looking for ways to integrate with Slack, you should refer to [the Slack add-on guide](../addons/slack.md) instead.
+:::
+
 ## Create a custom Slack WebHook url: {#create-a-custom-slack-webhook-url}
 
 1. Go to [https://slack.com/apps/manage/custom-integrations](https://slack.com/apps/manage/custom-integrations)

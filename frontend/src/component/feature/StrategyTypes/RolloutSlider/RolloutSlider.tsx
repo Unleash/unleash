@@ -90,6 +90,7 @@ const RolloutSlider = ({
                 id="discrete-slider-always"
                 variant="subtitle2"
                 gutterBottom
+                component="h2"
             >
                 {name}
             </Typography>

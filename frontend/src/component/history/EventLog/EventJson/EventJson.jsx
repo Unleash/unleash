@@ -13,11 +13,11 @@ const EventJson = ({ entry }) => {
     const prettyPrinted = JSON.stringify(localEventData, null, 2);
 
     return (
-        <div className={styles.historyItem}>
+        <li className={styles.historyItem}>
             <div>
                 <code className="JSON smalltext man">{prettyPrinted}</code>
             </div>
-        </div>
+        </li>
     );
 };
 

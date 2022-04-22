@@ -85,6 +85,7 @@ const FlexibleStrategy = ({
                         display: 'flex',
                         alignItems: 'center',
                     }}
+                    component="h2"
                 >
                     Stickiness
                     <Tooltip title="Stickiness defines what parameter should be used to ensure that your users get consistency in features. By default unleash will use the first value present in the context in the order of userId, sessionId and random.">
@@ -119,6 +120,7 @@ const FlexibleStrategy = ({
                         display: 'flex',
                         alignItems: 'center',
                     }}
+                    component="h2"
                 >
                     GroupId
                     <Tooltip title="GroupId is used to ensure that different toggles will hash differently for the same user. The groupId defaults to feature toggle name, but you can override it to correlate rollout of multiple feature toggles.">
@@ -133,6 +135,7 @@ const FlexibleStrategy = ({
                 </Typography>
                 <Input
                     label="groupId"
+                    id="groupId-input"
                     value={groupId || ''}
                     disabled={!editable}
                     onChange={e => onUpdate('groupId')(e, e.target.value)}

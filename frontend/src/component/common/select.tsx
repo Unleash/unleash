@@ -49,9 +49,7 @@ const SelectMenu: React.FC<ISelectMenuProps> = ({
 
     return (
         <FormControl variant="outlined" size="small" classes={classes}>
-            <InputLabel htmlFor={id} id={id}>
-                {label}
-            </InputLabel>
+            <InputLabel htmlFor={id}>{label}</InputLabel>
             <Select
                 name={name}
                 disabled={disabled}

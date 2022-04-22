@@ -30,12 +30,12 @@ const EventLog = ({
     let entries;
 
     const renderListItemCards = entry => (
-        <div key={entry.id} className={styles.eventEntry}>
+        <li key={entry.id} className={styles.eventEntry}>
             <EventCard
                 entry={entry}
                 timeFormatted={formatFulldateTime(entry.createdAt)}
             />
-        </div>
+        </li>
     );
 
     if (eventSettings.showData) {

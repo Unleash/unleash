@@ -132,6 +132,7 @@ const FeatureToggleListNewItem = ({
                                     environmentId={env.name}
                                     projectId={projectId}
                                     permission={UPDATE_FEATURE_ENVIRONMENT}
+                                    inputProps={{ 'aria-label': env.name }}
                                     ref={ref}
                                     onClick={() => {
                                         handleToggle(env);

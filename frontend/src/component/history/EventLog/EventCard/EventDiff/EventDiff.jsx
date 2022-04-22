@@ -94,7 +94,7 @@ const EventDiff = ({ entry }) => {
     }
 
     return (
-        <pre style={{ overflowX: 'auto', overflowY: 'hidden' }}>
+        <pre style={{ overflowX: 'auto', overflowY: 'hidden' }} tabIndex={0}>
             <code className="smalltext man">
                 {changes.length === 0 ? '(no changes)' : changes}
             </code>

@@ -79,6 +79,7 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                     disabled={mode === 'Edit'}
                     className={styles.input}
                     label="Name"
+                    id="feature-toggle-name"
                     error={Boolean(errors.name)}
                     errorText={errors.name}
                     onFocus={() => clearErrors()}
@@ -141,6 +142,7 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                         variant="subtitle1"
                         className={styles.roleSubtitle}
                         data-loading
+                        component="h2"
                     >
                         Impression Data
                     </Typography>

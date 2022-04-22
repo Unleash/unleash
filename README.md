@@ -110,6 +110,14 @@ We'd love to have your help too: Please feel free to open issues or provide pull
 
 Check out [the CONTRIBUTING.md file](./CONTRIBUTING.md) for contribution guidelines and the [Unleash developer guide](./website/docs/contributing/developer-guide.md) for tips on environment setup, running the tests, and running Unleash from source.
 
+### Contributors
+
+<div align="center">
+
+[![The Unleash contributors](https://cdn.getunleash.io/docs-assets/contributors.svg)](https://github.com/Unleash/unleash/graphs/contributors)
+
+</div>
+
 <br/>
 
 ## Features our users love

@@ -1,4 +1,4 @@
-import { IRouter, Router, Request, Response } from 'express';
+import { IRouter, Router, Request, Response, RequestHandler } from 'express';
 import { Logger } from 'lib/logger';
 import { IUnleashConfig } from '../types/option';
 import { NONE } from '../types/permissions';
@@ -16,6 +16,16 @@ interface IRequestHandler<
         req: Request<P, ResBody, ReqBody, ReqQuery>,
         res: Response<ResBody>,
     ): Promise<void> | void;
+}
+
+interface IRouteOptions {
+    method: 'get' | 'post' | 'put' | 'patch' | 'delete';
+    path: string;
+    permission?: string;
+    middleware?: RequestHandler[];
+    handler: IRequestHandler;
+    acceptAnyContentType?: boolean;
+    acceptedContentTypes?: string[];
 }
 
 const checkPermission = (permission) => async (req, res, next) => {
@@ -51,7 +61,7 @@ export default class Controller {
         this.config = config;
     }
 
-    wrap(handler: IRequestHandler): IRequestHandler {
+    private useRouteErrorHandler(handler: IRequestHandler): IRequestHandler {
         return async (req: Request, res: Response) => {
             try {
                 await handler(req, res);
@@ -61,12 +71,31 @@ export default class Controller {
         };
     }
 
-    get(path: string, handler: IRequestHandler, permission?: string): void {
-        this.app.get(
-            path,
-            checkPermission(permission),
-            this.wrap(handler.bind(this)),
+    private useContentTypeMiddleware(options: IRouteOptions): RequestHandler[] {
+        const { middleware = [], acceptedContentTypes = [] } = options;
+
+        return options.acceptAnyContentType
+            ? middleware
+            : [requireContentType(...acceptedContentTypes), ...middleware];
+    }
+
+    route(options: IRouteOptions): void {
+        this.app[options.method](
+            options.path,
+            checkPermission(options.permission),
+            this.useContentTypeMiddleware(options),
+            this.useRouteErrorHandler(options.handler.bind(this)),
         );
+    }
+
+    get(path: string, handler: IRequestHandler, permission?: string): void {
+        this.route({
+            method: 'get',
+            path,
+            handler,
+            permission,
+            acceptAnyContentType: true,
+        });
     }
 
     post(
@@ -75,12 +104,13 @@ export default class Controller {
         permission: string,
         ...acceptedContentTypes: string[]
     ): void {
-        this.app.post(
+        this.route({
+            method: 'post',
             path,
-            checkPermission(permission),
-            requireContentType(...acceptedContentTypes),
-            this.wrap(handler.bind(this)),
-        );
+            handler,
+            permission,
+            acceptedContentTypes,
+        });
     }
 
     put(
@@ -89,12 +119,13 @@ export default class Controller {
         permission: string,
         ...acceptedContentTypes: string[]
     ): void {
-        this.app.put(
+        this.route({
+            method: 'put',
             path,
-            checkPermission(permission),
-            requireContentType(...acceptedContentTypes),
-            this.wrap(handler.bind(this)),
-        );
+            handler,
+            permission,
+            acceptedContentTypes,
+        });
     }
 
     patch(
@@ -103,20 +134,23 @@ export default class Controller {
         permission: string,
         ...acceptedContentTypes: string[]
     ): void {
-        this.app.patch(
+        this.route({
+            method: 'patch',
             path,
-            checkPermission(permission),
-            requireContentType(...acceptedContentTypes),
-            this.wrap(handler.bind(this)),
-        );
+            handler,
+            permission,
+            acceptedContentTypes,
+        });
     }
 
     delete(path: string, handler: IRequestHandler, permission: string): void {
-        this.app.delete(
+        this.route({
+            method: 'delete',
             path,
-            checkPermission(permission),
-            this.wrap(handler.bind(this)),
-        );
+            handler,
+            permission,
+            acceptAnyContentType: true,
+        });
     }
 
     fileupload(
@@ -129,7 +163,7 @@ export default class Controller {
             path,
             checkPermission(permission),
             filehandler.bind(this),
-            this.wrap(handler.bind(this)),
+            this.useRouteErrorHandler(handler.bind(this)),
         );
     }
 

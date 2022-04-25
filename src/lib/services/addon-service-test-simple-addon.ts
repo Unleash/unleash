@@ -38,7 +38,7 @@ const definition: IAddonDefinition = {
             sensitive: true,
         },
     ],
-    documentationUrl: 'https:/www.example.com',
+    documentationUrl: 'https://www.example.com',
     events: [
         FEATURE_CREATED,
         FEATURE_UPDATED,

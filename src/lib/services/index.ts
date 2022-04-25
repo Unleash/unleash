@@ -29,6 +29,7 @@ import FeatureTagService from './feature-tag-service';
 import ProjectHealthService from './project-health-service';
 import UserSplashService from './user-splash-service';
 import { SegmentService } from './segment-service';
+import { OpenApiService } from './openapi-service';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -76,6 +77,7 @@ export const createServices = (
     );
     const userSplashService = new UserSplashService(stores, config);
     const segmentService = new SegmentService(stores, config);
+    const openApiService = new OpenApiService(config);
 
     return {
         accessService,
@@ -106,6 +108,7 @@ export const createServices = (
         projectHealthService,
         userSplashService,
         segmentService,
+        openApiService,
     };
 };
 

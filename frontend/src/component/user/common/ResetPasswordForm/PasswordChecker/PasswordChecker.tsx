@@ -1,13 +1,13 @@
-import { Tooltip, Typography } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import classnames from 'classnames';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { BAD_REQUEST, OK } from 'constants/statusCodes';
 import { useStyles } from './PasswordChecker.styles';
-import HelpIcon from '@material-ui/icons/Help';
 import { useCallback } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import { Alert } from '@material-ui/lab';
 import ConditionallyRender from 'component/common/ConditionallyRender';
+import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 
 interface IPasswordCheckerProps {
     password: string;
@@ -157,19 +157,10 @@ const PasswordChecker = ({
 
     return (
         <>
-            <Tooltip
-                arrow
-                title="Your password needs to be at least ten characters long, and include an uppercase letter, a lowercase letter, a number and a symbol to be a valid OWASP password"
-            >
-                <Typography
-                    variant="body2"
-                    className={styles.title}
-                    data-loading
-                >
-                    Please set a strong password
-                    <HelpIcon className={styles.helpIcon} />
-                </Typography>
-            </Tooltip>
+            <Typography variant="body2" className={styles.title} data-loading>
+                Please set a strong password
+                <HelpIcon tooltip="Your password needs to be at least ten characters long, and include an uppercase letter, a lowercase letter, a number and a symbol to be a valid OWASP password" />
+            </Typography>
             <div
                 className={styles.container}
                 style={{

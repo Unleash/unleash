@@ -16,7 +16,12 @@ export const useStyles = makeStyles(theme => ({
     weightInput: {
         marginRight: '0.8rem',
     },
-    label: { marginBottom: '1rem' },
+    label: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: '1ch',
+        marginBottom: '1rem',
+    },
     info: {
         width: '18.5px',
         height: '18.5px',

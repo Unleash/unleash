@@ -1,6 +1,4 @@
-import { Tooltip, Typography } from '@material-ui/core';
-import { Info } from '@material-ui/icons';
-
+import { Typography } from '@material-ui/core';
 import { IParameter } from 'interfaces/strategy';
 import RolloutSlider from '../RolloutSlider/RolloutSlider';
 import Select from 'component/common/select';
@@ -10,6 +8,7 @@ import {
     FLEXIBLE_STRATEGY_GROUP_ID,
     FLEXIBLE_STRATEGY_STICKINESS_ID,
 } from 'utils/testIds';
+import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 
 const builtInStickinessOptions = [
     { key: 'default', label: 'default' },
@@ -81,22 +80,14 @@ const FlexibleStrategy = ({
                 <Typography
                     variant="subtitle2"
                     style={{
-                        marginBottom: '0.5rem',
+                        marginBottom: '1rem',
                         display: 'flex',
-                        alignItems: 'center',
+                        gap: '1ch',
                     }}
                     component="h2"
                 >
                     Stickiness
-                    <Tooltip title="Stickiness defines what parameter should be used to ensure that your users get consistency in features. By default unleash will use the first value present in the context in the order of userId, sessionId and random.">
-                        <Info
-                            style={{
-                                fontSize: '1rem',
-                                color: 'gray',
-                                marginLeft: '0.2rem',
-                            }}
-                        />
-                    </Tooltip>
+                    <HelpIcon tooltip="Stickiness defines what parameter should be used to ensure that your users get consistency in features. By default unleash will use the first value present in the context in the order of userId, sessionId and random." />
                 </Typography>
                 <Select
                     id="stickiness-select"
@@ -116,22 +107,14 @@ const FlexibleStrategy = ({
                 <Typography
                     variant="subtitle2"
                     style={{
-                        marginBottom: '0.5rem',
+                        marginBottom: '1rem',
                         display: 'flex',
-                        alignItems: 'center',
+                        gap: '1ch',
                     }}
                     component="h2"
                 >
                     GroupId
-                    <Tooltip title="GroupId is used to ensure that different toggles will hash differently for the same user. The groupId defaults to feature toggle name, but you can override it to correlate rollout of multiple feature toggles.">
-                        <Info
-                            style={{
-                                fontSize: '1rem',
-                                color: 'gray',
-                                marginLeft: '0.2rem',
-                            }}
-                        />
-                    </Tooltip>
+                    <HelpIcon tooltip="GroupId is used to ensure that different toggles will hash differently for the same user. The groupId defaults to feature toggle name, but you can override it to correlate rollout of multiple feature toggles." />
                 </Typography>
                 <Input
                     label="groupId"

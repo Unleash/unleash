@@ -14,9 +14,6 @@ const StyledSlider = withStyles({
         border: '2px solid currentColor',
         marginTop: -8,
         marginLeft: -12,
-        '&:focus, &:hover, &$active': {
-            boxShadow: 'inherit',
-        },
     },
     active: {},
     valueLabel: {

@@ -35,12 +35,10 @@ export const useStyles = makeStyles(theme => ({
         marginBottom: '0',
         display: 'flex',
         alignItems: 'center',
+        gap: '1ch',
     },
     statusBarSuccess: {
         backgroundColor: theme.palette.primary.main,
-    },
-    helpIcon: {
-        height: '17.5px',
     },
     repeatingError: {
         marginTop: '0.5rem',

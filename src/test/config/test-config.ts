@@ -18,13 +18,10 @@ export function createTestConfig(config?: IUnleashOptions): IUnleashConfig {
         getLogger,
         authentication: { type: IAuthType.NONE, createAdminUser: false },
         server: { secret: 'really-secret' },
-        session: {
-            db: false,
-        },
-        experimental: {
-            segments: experimentalSegmentsConfig(),
-        },
+        session: { db: false },
+        experimental: { segments: experimentalSegmentsConfig() },
         versionCheck: { enable: false },
+        enableOAS: true,
     };
     const options = mergeAll<IUnleashOptions>([testConfig, config]);
     return createConfig(options);

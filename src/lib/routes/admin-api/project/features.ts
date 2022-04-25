@@ -21,6 +21,12 @@ import {
 } from '../../../types/model';
 import { extractUsername } from '../../../util/extract-user';
 import { IAuthRequest } from '../../unleash-types';
+import { createFeatureRequest } from '../../../openapi/spec/create-feature-request';
+import { featureResponse } from '../../../openapi/spec/feature-response';
+import { CreateFeatureSchema } from '../../../openapi/spec/create-feature-schema';
+import { FeatureSchema } from '../../../openapi/spec/feature-schema';
+import { serializeDates } from '../../../util/serialize-dates';
+import { featuresResponse } from '../../../openapi/spec/features-response';
 
 interface FeatureStrategyParams {
     projectId: string;
@@ -56,7 +62,7 @@ const PATH_STRATEGY = `${PATH_STRATEGIES}/:strategyId`;
 
 type ProjectFeaturesServices = Pick<
     IUnleashServices,
-    'featureToggleServiceV2' | 'projectHealthService'
+    'featureToggleServiceV2' | 'projectHealthService' | 'openApiService'
 >;
 
 export default class ProjectFeaturesController extends Controller {
@@ -66,7 +72,7 @@ export default class ProjectFeaturesController extends Controller {
 
     constructor(
         config: IUnleashConfig,
-        { featureToggleServiceV2 }: ProjectFeaturesServices,
+        { featureToggleServiceV2, openApiService }: ProjectFeaturesServices,
     ) {
         super(config);
         this.featureService = featureToggleServiceV2;
@@ -107,10 +113,48 @@ export default class ProjectFeaturesController extends Controller {
             DELETE_FEATURE_STRATEGY,
         );
 
-        this.get(PATH, this.getFeatures);
-        this.post(PATH, this.createFeature, CREATE_FEATURE);
+        this.route({
+            method: 'get',
+            path: PATH,
+            acceptAnyContentType: true,
+            handler: this.getFeatures,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    responses: { 200: featuresResponse },
+                }),
+            ],
+        });
+
         this.post(PATH_FEATURE_CLONE, this.cloneFeature, CREATE_FEATURE);
-        this.get(PATH_FEATURE, this.getFeature);
+
+        this.route({
+            method: 'post',
+            path: PATH,
+            handler: this.createFeature,
+            permission: CREATE_FEATURE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    requestBody: createFeatureRequest,
+                    responses: { 200: featureResponse },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'get',
+            path: PATH_FEATURE,
+            acceptAnyContentType: true,
+            handler: this.getFeature,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    responses: { 200: featureResponse },
+                }),
+            ],
+        });
+
         this.put(PATH_FEATURE, this.updateFeature, UPDATE_FEATURE);
         this.patch(PATH_FEATURE, this.patchFeature, UPDATE_FEATURE);
         this.delete(PATH_FEATURE, this.archiveFeature, DELETE_FEATURE);
@@ -150,17 +194,19 @@ export default class ProjectFeaturesController extends Controller {
     }
 
     async createFeature(
-        req: IAuthRequest<FeatureParams, any, FeatureToggleDTO, any>,
-        res: Response,
+        req: IAuthRequest<FeatureParams, FeatureSchema, CreateFeatureSchema>,
+        res: Response<FeatureSchema>,
     ): Promise<void> {
         const { projectId } = req.params;
+
         const userName = extractUsername(req);
         const created = await this.featureService.createFeatureToggle(
             projectId,
             req.body,
             userName,
         );
-        res.status(201).json(created);
+
+        res.status(201).json(serializeDates(created));
     }
 
     async getFeature(

@@ -25,6 +25,7 @@ import ProjectHealthService from '../services/project-health-service';
 import ClientMetricsServiceV2 from '../services/client-metrics/metrics-service-v2';
 import UserSplashService from '../services/user-splash-service';
 import { SegmentService } from '../services/segment-service';
+import { OpenApiService } from '../services/openapi-service';
 
 export interface IUnleashServices {
     accessService: AccessService;
@@ -55,4 +56,5 @@ export interface IUnleashServices {
     versionService: VersionService;
     userSplashService: UserSplashService;
     segmentService: SegmentService;
+    openApiService: OpenApiService;
 }

@@ -98,6 +98,7 @@
     "joi": "^17.3.0",
     "js-yaml": "^4.1.0",
     "knex": "1.0.4",
+    "json-schema-to-ts": "^1.6.5",
     "log4js": "^6.0.0",
     "memoizee": "^0.4.15",
     "mime": "^2.4.2",
@@ -105,6 +106,7 @@
     "mustache": "^4.1.0",
     "node-fetch": "^2.6.7",
     "nodemailer": "^6.5.0",
+    "openapi-types": "^10.0.0",
     "owasp-password-strength-test": "^1.3.0",
     "parse-database-url": "^0.3.0",
     "pg": "^8.7.3",
@@ -115,6 +117,7 @@
     "serve-favicon": "^2.5.0",
     "stoppable": "^1.1.0",
     "type-is": "^1.6.18",
+    "@unleash/express-openapi": "^0.2.0",
     "unleash-frontend": "4.10.0-beta.6",
     "uuid": "^8.3.2",
     "semver": "^7.3.5"

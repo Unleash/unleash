@@ -1,4 +1,4 @@
-// Partial types for "unleash-express-openapi".
+// Partial types for "@unleash/express-openapi".
 declare module '@unleash/express-openapi' {
     import { RequestHandler } from 'express';
     import { OpenAPIV3 } from 'openapi-types';

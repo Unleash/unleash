@@ -1,4 +1,4 @@
-import openapi, { ExpressOpenApi } from 'unleash-express-openapi';
+import openapi, { ExpressOpenApi } from '@unleash/express-openapi';
 import { Express, RequestHandler } from 'express';
 import { OpenAPIV3 } from 'openapi-types';
 import { IUnleashConfig } from '../types/option';

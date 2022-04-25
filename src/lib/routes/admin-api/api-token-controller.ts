@@ -13,7 +13,7 @@ import { AccessService } from '../../services/access-service';
 import { IAuthRequest } from '../unleash-types';
 import User from '../../types/user';
 import { IUnleashConfig } from '../../types/option';
-import { ApiTokenType } from '../../types/models/api-token';
+import { ApiTokenType, IApiToken } from '../../types/models/api-token';
 import { createApiToken } from '../../schema/api-token-schema';
 
 interface IServices {
@@ -40,28 +40,10 @@ class ApiTokenController extends Controller {
         this.delete('/:token', this.deleteApiToken, DELETE_API_TOKEN);
     }
 
-    private async isTokenAdmin(user: User) {
-        if (user.isAPI) {
-            return user.permissions.includes(ADMIN);
-        }
-
-        return this.accessService.hasPermission(user, UPDATE_API_TOKEN);
-    }
-
     async getAllApiTokens(req: IAuthRequest, res: Response): Promise<void> {
         const { user } = req;
-        const isAdmin = await this.isTokenAdmin(user);
-
-        const tokens = await this.apiTokenService.getAllTokens();
-
-        if (isAdmin) {
-            res.json({ tokens });
-        } else {
-            const filteredTokens = tokens.filter(
-                (t) => !(t.type === ApiTokenType.ADMIN),
-            );
-            res.json({ tokens: filteredTokens });
-        }
+        const tokens = await this.accessibleTokens(user);
+        res.json({ tokens });
     }
 
     async createApiToken(req: IAuthRequest, res: Response): Promise<any> {
@@ -88,6 +70,20 @@ class ApiTokenController extends Controller {
 
         await this.apiTokenService.updateExpiry(token, expiresAt);
         return res.status(200).end();
+    }
+
+    private async accessibleTokens(user: User): Promise<IApiToken[]> {
+        const allTokens = await this.apiTokenService.getAllTokens();
+
+        if (user.isAPI && user.permissions.includes(ADMIN)) {
+            return allTokens;
+        }
+
+        if (await this.accessService.hasPermission(user, UPDATE_API_TOKEN)) {
+            return allTokens;
+        }
+
+        return allTokens.filter((t) => t.type !== ApiTokenType.ADMIN);
     }
 }
 

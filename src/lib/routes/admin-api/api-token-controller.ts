@@ -5,6 +5,7 @@ import {
     ADMIN,
     CREATE_API_TOKEN,
     DELETE_API_TOKEN,
+    READ_API_TOKEN,
     UPDATE_API_TOKEN,
 } from '../../types/permissions';
 import { ApiTokenService } from '../../services/api-token-service';
@@ -34,7 +35,7 @@ class ApiTokenController extends Controller {
         this.accessService = services.accessService;
         this.logger = config.getLogger('api-token-controller.js');
 
-        this.get('/', this.getAllApiTokens);
+        this.get('/', this.getAllApiTokens, READ_API_TOKEN);
         this.post('/', this.createApiToken, CREATE_API_TOKEN);
         this.put('/:token', this.updateApiToken, UPDATE_API_TOKEN);
         this.delete('/:token', this.deleteApiToken, DELETE_API_TOKEN);

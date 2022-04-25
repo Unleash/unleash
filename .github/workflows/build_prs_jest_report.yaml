@@ -5,7 +5,7 @@ on:
 
 jobs:
   build:
-
+    if: github.repository == 'Unleash/unleash'
     runs-on: ubuntu-latest
 
     strategy:

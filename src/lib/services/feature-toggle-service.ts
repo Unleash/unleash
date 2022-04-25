@@ -604,7 +604,7 @@ class FeatureToggleService {
         featureName: string,
         projectId: string,
         newFeatureName: string,
-        replaceGroupId: boolean = true,
+        replaceGroupId: boolean = true, // eslint-disable-line
         userName: string,
     ): Promise<FeatureToggle> {
         this.logger.info(

@@ -1,6 +1,7 @@
 import { Application } from 'express';
 import NoAuthUser from '../types/no-auth-user';
 
+// eslint-disable-next-line
 function noneAuthentication(basePath = '', app: Application): void {
     app.use(`${basePath}/api/admin/`, (req, res, next) => {
         // @ts-ignore

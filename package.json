@@ -38,6 +38,7 @@
     "build": "yarn run copy-templates && tsc --pretty",
     "prepare": "yarn run build",
     "test": "NODE_ENV=test PORT=4243 jest",
+    "test:unit": "NODE_ENV=test PORT=4243 jest --testPathIgnorePatterns=src/test/e2e/**",
     "test:docker": "./scripts/docker-postgres.sh",
     "test:docker:cleanup": "docker rm -f unleash-postgres",
     "test:watch": "yarn test --watch",
@@ -148,7 +149,6 @@
     "eslint": "8.14.0",
     "eslint-config-airbnb-base": "15.0.0",
     "eslint-config-airbnb-typescript": "16.2.0",
-    "eslint-config-prettier": "8.3.0",
     "eslint-config-prettier": "8.5.0",
     "eslint-plugin-import": "2.26.0",
     "eslint-plugin-prettier": "4.0.0",
@@ -169,6 +169,7 @@
     "typescript": "4.6.3"
   },
   "resolutions": {
+    "async": "^3.2.3",
     "db-migrate/rc/minimist": "^1.2.5",
     "knex/liftoff/object.map/**/kind-of": "^6.0.3",
     "knex/liftoff/findup-sync/micromatc/kind-of": "^6.0.3",

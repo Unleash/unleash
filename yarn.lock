@@ -1014,6 +1014,20 @@
     "@typescript-eslint/types" "5.20.0"
     eslint-visitor-keys "^3.0.0"
 
+"@unleash/express-openapi@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@unleash/express-openapi/-/express-openapi-0.2.0.tgz#b43119f587fae5b1e5fc21ee6ee7cf10e028a7d7"
+  integrity sha512-wpZw5/SDc8nWFp5WtlSDbhI0fYNEPKSfcsn8nZKKw3wdylW0jcafYvN3LuJQXIYuHRtn6IYs8Lh+Ne68su7+lA==
+  dependencies:
+    ajv "^6.10.2"
+    http-errors "^1.7.3"
+    merge-deep "^3.0.2"
+    path-to-regexp "^2.4.0"
+    router "^1.3.3"
+    serve-static "^1.13.2"
+    swagger-parser "^10.0.3"
+    swagger-ui-dist "^4.10.3"
+
 abab@^2.0.3, abab@^2.0.5:
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/abab/-/abab-2.0.6.tgz#41b80f2c871d19686216b82309231cfd3cb3d291"
@@ -4414,10 +4428,15 @@ mime@1.6.0:
   resolved "https://registry.yarnpkg.com/mime/-/mime-1.6.0.tgz#32cd9e5c64553bd58d19a568af452acff04981b1"
   integrity sha512-x0Vn8spI+wuJ1O6S7gnbaQg8Pxh4NNHb7KSINmEWKiPE4RKOplvijn+NkmYmmRgP68mc70j2EbeTFRsrswaQeg==
 
-mime@^2.4.2, mime@^2.5.0:
+mime@^2.5.0:
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/mime/-/mime-2.6.0.tgz#a2a682a95cd4d0cb1d6257e28f83da7e35800367"
   integrity sha512-USPkMeET31rOMiarsBNIHZKLGgvKc/LrjofAnBlOttf5ajRvqiRA8QsenbcooctK6d6Ts6aqZXBA+XbkKthiQg==
+
+mime@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/mime/-/mime-3.0.0.tgz#b374550dca3a0c18443b0c950a6a58f1931cf7a7"
+  integrity sha512-jSCU7/VB1loIWBZe14aEYHU/+1UMEHoaO7qxCOVJOw9GgH72VAWppxNcjU+x9a2k3GSIBXNKxXQFqRvvZ7vr3A==
 
 mimic-fn@^2.1.0:
   version "2.1.0"
@@ -6279,19 +6298,6 @@ universalify@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/universalify/-/universalify-2.0.0.tgz#75a4984efedc4b08975c5aeb73f530d02df25717"
   integrity sha512-hAZsKq7Yy11Zu1DE0OzWjw7nnLZmJZYTDZZyEFHZdUhV8FkH5MCfoU1XMaxXovpyW5nq5scPqq0ZDP9Zyl04oQ==
-
-unleash-express-openapi@unleash/express-openapi#cd12cff:
-  version "0.0.0"
-  resolved "https://codeload.github.com/unleash/express-openapi/tar.gz/cd12cffdd75fc175e034cf9052113e7bb42935eb"
-  dependencies:
-    ajv "^6.10.2"
-    http-errors "^1.7.3"
-    merge-deep "^3.0.2"
-    path-to-regexp "^2.4.0"
-    router "^1.3.3"
-    serve-static "^1.13.2"
-    swagger-parser "^10.0.3"
-    swagger-ui-dist "^4.10.3"
 
 unleash-frontend@4.10.0-beta.6:
   version "4.10.0-beta.6"

@@ -1014,6 +1014,20 @@
     "@typescript-eslint/types" "5.20.0"
     eslint-visitor-keys "^3.0.0"
 
+"@unleash/express-openapi@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@unleash/express-openapi/-/express-openapi-0.2.0.tgz#b43119f587fae5b1e5fc21ee6ee7cf10e028a7d7"
+  integrity sha512-wpZw5/SDc8nWFp5WtlSDbhI0fYNEPKSfcsn8nZKKw3wdylW0jcafYvN3LuJQXIYuHRtn6IYs8Lh+Ne68su7+lA==
+  dependencies:
+    ajv "^6.10.2"
+    http-errors "^1.7.3"
+    merge-deep "^3.0.2"
+    path-to-regexp "^2.4.0"
+    router "^1.3.3"
+    serve-static "^1.13.2"
+    swagger-parser "^10.0.3"
+    swagger-ui-dist "^4.10.3"
+
 abab@^2.0.3, abab@^2.0.5:
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/abab/-/abab-2.0.6.tgz#41b80f2c871d19686216b82309231cfd3cb3d291"
@@ -4697,10 +4711,10 @@ onetime@^5.1.0, onetime@^5.1.2:
   dependencies:
     mimic-fn "^2.1.0"
 
-openapi-types@^10.0.0:
-  version "10.0.0"
-  resolved "https://registry.yarnpkg.com/openapi-types/-/openapi-types-10.0.0.tgz#0debbf663b2feed0322030b5b7c9080804076934"
-  integrity sha512-Y8xOCT2eiKGYDzMW9R4x5cmfc3vGaaI4EL2pwhDmodWw1HlK18YcZ4uJxc7Rdp7/gGzAygzH9SXr6GKYIXbRcQ==
+openapi-types@^11.0.0:
+  version "11.0.0"
+  resolved "https://registry.yarnpkg.com/openapi-types/-/openapi-types-11.0.0.tgz#766f1ee2de3fa701947e993564e3d0a362fc2026"
+  integrity sha512-GB+QO6o1hAtKsb8tP3/FTD5jpkdKrf42L4Gel9UySngMurzr+Q9pO+dtnmySQCzoCEfJr39IH6bveEn71xNcVg==
 
 optionator@^0.8.1:
   version "0.8.3"
@@ -6279,19 +6293,6 @@ universalify@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/universalify/-/universalify-2.0.0.tgz#75a4984efedc4b08975c5aeb73f530d02df25717"
   integrity sha512-hAZsKq7Yy11Zu1DE0OzWjw7nnLZmJZYTDZZyEFHZdUhV8FkH5MCfoU1XMaxXovpyW5nq5scPqq0ZDP9Zyl04oQ==
-
-unleash-express-openapi@unleash/express-openapi#cd12cff:
-  version "0.0.0"
-  resolved "https://codeload.github.com/unleash/express-openapi/tar.gz/cd12cffdd75fc175e034cf9052113e7bb42935eb"
-  dependencies:
-    ajv "^6.10.2"
-    http-errors "^1.7.3"
-    merge-deep "^3.0.2"
-    path-to-regexp "^2.4.0"
-    router "^1.3.3"
-    serve-static "^1.13.2"
-    swagger-parser "^10.0.3"
-    swagger-ui-dist "^4.10.3"
 
 unleash-frontend@4.10.0-beta.6:
   version "4.10.0-beta.6"

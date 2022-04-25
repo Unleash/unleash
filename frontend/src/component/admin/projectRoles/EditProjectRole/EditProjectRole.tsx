@@ -104,7 +104,8 @@ const EditProjectRole = () => {
             description="A project role can be
 customised to limit access
 to resources within a project"
-            documentationLink="https://docs.getunleash.io/how-to/how-to-create-and-assign-custom-project-roles"
+            documentationLink="https://docs.getunleash.io/user_guide/rbac#custom-project-roles"
+            documentationLinkLabel="Project roles documentation"
             formatApiCode={formatApiCode}
         >
             <ProjectRoleForm

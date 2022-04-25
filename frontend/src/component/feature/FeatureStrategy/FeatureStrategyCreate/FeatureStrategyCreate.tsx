@@ -15,6 +15,7 @@ import {
     featureStrategyHelp,
     formatFeaturePath,
     createStrategyPayload,
+    featureStrategyDocsLinkLabel,
 } from '../FeatureStrategyEdit/FeatureStrategyEdit';
 import { getStrategyObject } from 'utils/getStrategyObject';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
@@ -79,6 +80,7 @@ export const FeatureStrategyCreate = () => {
             title={formatStrategyName(strategyName)}
             description={featureStrategyHelp}
             documentationLink={featureStrategyDocsLink}
+            documentationLinkLabel={featureStrategyDocsLinkLabel}
             formatApiCode={() =>
                 formatAddStrategyApiCode(
                     projectId,

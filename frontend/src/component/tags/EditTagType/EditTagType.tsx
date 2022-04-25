@@ -61,6 +61,7 @@ const EditTagType = () => {
             title="Edit tag type"
             description="Tag types allow you to group tags together in the management UI"
             documentationLink="https://docs.getunleash.io/"
+            documentationLinkLabel="Tags documentation"
             formatApiCode={formatApiCode}
         >
             <TagForm

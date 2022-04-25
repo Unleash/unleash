@@ -74,6 +74,7 @@ const CreateProject = () => {
             title="Create project"
             description="Projects allows you to group feature toggles together in the management UI."
             documentationLink="https://docs.getunleash.io/user_guide/projects"
+            documentationLinkLabel="Projects documentation"
             formatApiCode={formatApiCode}
         >
             <ProjectForm

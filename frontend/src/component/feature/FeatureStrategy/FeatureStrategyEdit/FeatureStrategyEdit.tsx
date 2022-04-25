@@ -90,6 +90,7 @@ export const FeatureStrategyEdit = () => {
             title={formatStrategyName(strategy.name ?? '')}
             description={featureStrategyHelp}
             documentationLink={featureStrategyDocsLink}
+            documentationLinkLabel={featureStrategyDocsLinkLabel}
             formatApiCode={() =>
                 formatUpdateStrategyApiCode(
                     projectId,
@@ -170,3 +171,5 @@ export const featureStrategyHelp = `
 
 export const featureStrategyDocsLink =
     'https://docs.getunleash.io/user_guide/activation_strategy';
+
+export const featureStrategyDocsLinkLabel = 'Strategies documentation';

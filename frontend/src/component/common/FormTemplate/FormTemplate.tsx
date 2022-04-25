@@ -21,7 +21,7 @@ interface ICreateProps {
     title: string;
     description: string;
     documentationLink: string;
-    documentationLinkLabel?: string;
+    documentationLinkLabel: string;
     loading?: boolean;
     modal?: boolean;
     formatApiCode: () => string;

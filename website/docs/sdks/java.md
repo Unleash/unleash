@@ -24,7 +24,7 @@ First we must add Unleash Client SDK as a dependency to your project. Below is a
 Next we must initialize a new instance of the Unleash Client.
 
 ```java
-UnleashConfig unleashConfig = UnleashConfig.builder()
+UnleashConfig config = UnleashConfig.builder()
         .appName("my.java-app")
         .instanceId("your-instance-1")
         .environment(System.getenv("APP_ENV"))

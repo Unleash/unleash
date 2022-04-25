@@ -596,7 +596,7 @@ export default class StateService {
     async importTagTypes(
         tagTypes: ITagType[],
         keepExisting: boolean,
-        oldTagTypes: ITagType[] = [],
+        oldTagTypes: ITagType[] = [], // eslint-disable-line
         userName: string,
     ): Promise<void> {
         const tagTypesToInsert = tagTypes.filter((tagType) =>

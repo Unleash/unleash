@@ -27,7 +27,7 @@
     "file-loader": "6.2.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "unleash-proxy-client": "1.11.0",
+    "unleash-proxy-client": "2.0.0",
     "url-loader": "4.1.1"
   },
   "resolutions": {
@@ -59,7 +59,7 @@
     "@storybook/addon-interactions": "6.4.22",
     "@storybook/addon-links": "6.4.22",
     "@storybook/react": "6.4.22",
-    "@storybook/testing-library": "0.0.10",
+    "@storybook/testing-library": "0.0.11",
     "@tsconfig/docusaurus": "1.0.5",
     "babel-loader": "8.2.5",
     "enhanced-resolve": "5.9.3",

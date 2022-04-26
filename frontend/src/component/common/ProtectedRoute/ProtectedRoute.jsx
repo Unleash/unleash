@@ -6,9 +6,10 @@ const ProtectedRoute = ({
     renderProps = {},
     ...rest
 }) => {
-    const { pathname } = useLocation();
-    const loginLink =
-        pathname.length > 1 ? `/login?redirect=${pathname}` : '/login';
+    const { pathname, search } = useLocation();
+    const redirect = encodeURIComponent(pathname + search);
+    const loginLink = `/login?redirect=${redirect}`;
+
     return (
         <Route
             {...rest}

@@ -8,6 +8,7 @@ import Authentication from '../Authentication/Authentication';
 import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import { Redirect } from 'react-router-dom';
+import { parseRedirectParam } from 'component/user/Login/parseRedirectParam';
 
 const Login = () => {
     const styles = useStyles();
@@ -18,7 +19,7 @@ const Login = () => {
     const redirect = query.get('redirect') || '/';
 
     if (user) {
-        return <Redirect to={redirect} />;
+        return <Redirect to={parseRedirectParam(redirect)} />;
     }
 
     return (

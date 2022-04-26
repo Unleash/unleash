@@ -4,7 +4,7 @@ title: /api/admin/features
 ---
 
 :::caution Deprecation notice
-This API was deprecated as part of the v4.3 release and will be removed in v5.0. See [the project-based API (/api/admin/projects/:projectId)](./feature-toggles-api-v2.md) instead.
+Most of this API was deprecated as part of the v4.3 release and will be removed in v5.0. You should use [the project-based API (/api/admin/projects/:projectId)](./feature-toggles-api-v2.md) instead. The deprecated endpoints are marked as such in the document below.
 :::
 
 <DeprecationNotice resourceType="endpoint" linkText="blah" linkTarget="#buh" />
@@ -205,12 +205,6 @@ Returns 200-response if the feature toggle was updated successfully.
 
 ## Tag a Feature Toggle {#tag-a-feature-toggle}
 
-:::caution Deprecation notice
-<!-- What is the new version for this endpoint? -->
-This endpoint is deprecated. Please use the [project-based endpoint to tag a feature toggle](./feature-toggles-api-v2.md#fetching-toggles) instead.
-:::
-
-
 `POST https://unleash.host.com/api/admin/features/:featureName/tags`
 
 Used to tag a feature
@@ -236,12 +230,6 @@ If the tuple (type, value) does not already exist, it will be added to the list 
     - Returns _404-NOT-FOUND_ if the `type` was not found
 
 ## Remove a tag from a Feature Toggle {#remove-a-tag-from-a-feature-toggle}
-
-:::caution Deprecation notice
-<!-- Same as the above: how do we work with tags today? -->
-This endpoint is deprecated. Please use the [project-based endpoint to remove tags from a toggle](./feature-toggles-api-v2.md#fetching-toggles) instead.
-:::
-
 
 `DELETE https://unleash.host.com/api/admin/features/:featureName/tags/:type/:value`
 

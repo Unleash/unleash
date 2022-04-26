@@ -6,6 +6,7 @@ import {
     IFeatureResponse,
     featureFetcher,
     formatFeatureApiPath,
+    useFeature,
 } from 'hooks/api/getters/useFeature/useFeature';
 
 // useFeatureImmutable is like useFeature, except it won't refetch data on
@@ -15,6 +16,7 @@ export const useFeatureImmutable = (
     projectId: string,
     featureId: string
 ): IUseFeatureOutput => {
+    const { refetchFeature } = useFeature(projectId, featureId);
     const path = formatFeatureApiPath(projectId, featureId);
 
     const { data, error, mutate } = useSWRImmutable<IFeatureResponse>(
@@ -22,13 +24,14 @@ export const useFeatureImmutable = (
         () => featureFetcher(path)
     );
 
-    const refetchFeature = useCallback(() => {
-        mutate().catch(console.warn);
-    }, [mutate]);
+    const refetch = useCallback(async () => {
+        await mutate();
+        await refetchFeature();
+    }, [mutate, refetchFeature]);
 
     return {
         feature: data?.body || emptyFeature,
-        refetchFeature,
+        refetchFeature: refetch,
         loading: !error && !data,
         status: data?.status,
         error,

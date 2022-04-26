@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { FeatureStrategyForm } from 'component/feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyForm';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -15,6 +14,7 @@ import { ISegment } from 'interfaces/segment';
 import { useSegmentsApi } from 'hooks/api/actions/useSegmentsApi/useSegmentsApi';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { formatStrategyName } from 'utils/strategyNames';
+import { useFeatureImmutable } from 'hooks/api/getters/useFeature/useFeatureImmutable';
 
 export const FeatureStrategyEdit = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -25,12 +25,16 @@ export const FeatureStrategyEdit = () => {
     const [strategy, setStrategy] = useState<Partial<IFeatureStrategy>>({});
     const [segments, setSegments] = useState<ISegment[]>([]);
     const { updateStrategyOnFeature, loading } = useFeatureStrategyApi();
-    const { feature, refetchFeature } = useFeature(projectId, featureId);
     const { setStrategySegments } = useSegmentsApi();
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
     const { unleashUrl } = uiConfig;
     const { push } = useHistory();
+
+    const { feature, refetchFeature } = useFeatureImmutable(
+        projectId,
+        featureId
+    );
 
     const {
         segments: savedStrategySegments,

@@ -1,4 +1,4 @@
-import useSWR, { mutate, SWRConfiguration } from 'swr';
+import useSWR, { SWRConfiguration } from 'swr';
 import { useCallback } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
@@ -17,15 +17,15 @@ export const useFeatureEvents = (
     featureName: string,
     options?: SWRConfiguration
 ): IUseEventsOutput => {
-    const { data, error } = useSWR<{ events: IEvent[] }>(
+    const { data, error, mutate } = useSWR<{ events: IEvent[] }>(
         [PATH, featureName],
         () => fetchFeatureEvents(featureName),
         options
     );
 
     const refetchEvents = useCallback(() => {
-        mutate(PATH).catch(console.warn);
-    }, []);
+        mutate().catch(console.warn);
+    }, [mutate]);
 
     return {
         events: data?.events || [],

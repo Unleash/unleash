@@ -1,11 +1,11 @@
-import useSWR, { mutate, SWRConfiguration } from 'swr';
+import useSWR, { SWRConfiguration } from 'swr';
 import { useCallback } from 'react';
 import { emptyFeature } from './emptyFeature';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { formatApiPath } from 'utils/formatPath';
 import { IFeatureToggle } from 'interfaces/featureToggle';
 
-interface IUseFeatureOutput {
+export interface IUseFeatureOutput {
     feature: IFeatureToggle;
     refetchFeature: () => void;
     loading: boolean;
@@ -13,7 +13,7 @@ interface IUseFeatureOutput {
     error?: Error;
 }
 
-interface IFeatureResponse {
+export interface IFeatureResponse {
     status: number;
     body?: IFeatureToggle;
 }
@@ -23,19 +23,17 @@ export const useFeature = (
     featureId: string,
     options?: SWRConfiguration
 ): IUseFeatureOutput => {
-    const path = formatApiPath(
-        `api/admin/projects/${projectId}/features/${featureId}`
-    );
+    const path = formatFeatureApiPath(projectId, featureId);
 
-    const { data, error } = useSWR<IFeatureResponse>(
-        path,
-        () => fetcher(path),
+    const { data, error, mutate } = useSWR<IFeatureResponse>(
+        ['useFeature', path],
+        () => featureFetcher(path),
         options
     );
 
     const refetchFeature = useCallback(() => {
-        mutate(path).catch(console.warn);
-    }, [path]);
+        mutate().catch(console.warn);
+    }, [mutate]);
 
     return {
         feature: data?.body || emptyFeature,
@@ -46,7 +44,9 @@ export const useFeature = (
     };
 };
 
-const fetcher = async (path: string): Promise<IFeatureResponse> => {
+export const featureFetcher = async (
+    path: string
+): Promise<IFeatureResponse> => {
     const res = await fetch(path);
 
     if (res.status === 404) {
@@ -61,4 +61,13 @@ const fetcher = async (path: string): Promise<IFeatureResponse> => {
         status: res.status,
         body: await res.json(),
     };
+};
+
+export const formatFeatureApiPath = (
+    projectId: string,
+    featureId: string
+): string => {
+    return formatApiPath(
+        `api/admin/projects/${projectId}/features/${featureId}`
+    );
 };

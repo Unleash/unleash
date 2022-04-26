@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useRequiredQueryParam } from 'hooks/useRequiredQueryParam';
-import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { FeatureStrategyForm } from 'component/feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyForm';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -23,6 +22,7 @@ import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/perm
 import { ISegment } from 'interfaces/segment';
 import { useSegmentsApi } from 'hooks/api/actions/useSegmentsApi/useSegmentsApi';
 import { formatStrategyName } from 'utils/strategyNames';
+import { useFeatureImmutable } from 'hooks/api/getters/useFeature/useFeatureImmutable';
 
 export const FeatureStrategyCreate = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -35,11 +35,15 @@ export const FeatureStrategyCreate = () => {
 
     const { addStrategyToFeature, loading } = useFeatureStrategyApi();
     const { setStrategySegments } = useSegmentsApi();
-    const { feature, refetchFeature } = useFeature(projectId, featureId);
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
     const { unleashUrl } = uiConfig;
     const { push } = useHistory();
+
+    const { feature, refetchFeature } = useFeatureImmutable(
+        projectId,
+        featureId
+    );
 
     useEffect(() => {
         // Fill in the default values once the strategies have been fetched.

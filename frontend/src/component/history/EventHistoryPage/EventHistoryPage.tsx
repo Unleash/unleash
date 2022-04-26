@@ -1,9 +1,9 @@
-import { Alert } from '@material-ui/lab';
 import React, { useContext } from 'react';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import ConditionallyRender from 'component/common/ConditionallyRender';
 import AccessContext from 'contexts/AccessContext';
 import { EventHistory } from '../EventHistory/EventHistory';
+import { AdminAlert } from 'component/common/AdminAlert/AdminAlert';
 
 export const EventHistoryPage = () => {
     const { hasAccess } = useContext(AccessContext);
@@ -12,11 +12,7 @@ export const EventHistoryPage = () => {
         <ConditionallyRender
             condition={hasAccess(ADMIN)}
             show={<EventHistory />}
-            elseShow={
-                <Alert severity="error">
-                    You need instance admin to access this section.
-                </Alert>
-            }
+            elseShow={<AdminAlert />}
         />
     );
 };

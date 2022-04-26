@@ -5,12 +5,12 @@ import PageContent from 'component/common/PageContent/PageContent';
 import AccessContext from 'contexts/AccessContext';
 import ConditionallyRender from 'component/common/ConditionallyRender';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
-import { Alert } from '@material-ui/lab';
 import HeaderTitle from 'component/common/HeaderTitle';
 import { TableActions } from 'component/common/Table/TableActions/TableActions';
 import { Button } from '@material-ui/core';
 import { useStyles } from './UserAdmin.styles';
 import { useHistory } from 'react-router-dom';
+import { AdminAlert } from 'component/common/AdminAlert/AdminAlert';
 
 const UsersAdmin = () => {
     const [search, setSearch] = useState('');
@@ -63,11 +63,7 @@ const UsersAdmin = () => {
                 <ConditionallyRender
                     condition={hasAccess(ADMIN)}
                     show={<UsersList search={search} />}
-                    elseShow={
-                        <Alert severity="error">
-                            You need instance admin to access this section.
-                        </Alert>
-                    }
+                    elseShow={<AdminAlert />}
                 />
             </PageContent>
         </div>

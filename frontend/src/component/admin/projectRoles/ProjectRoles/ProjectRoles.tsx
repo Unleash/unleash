@@ -1,5 +1,4 @@
 import { Button } from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
 import { useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import AccessContext from 'contexts/AccessContext';
@@ -10,6 +9,7 @@ import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import AdminMenu from 'component/admin/menu/AdminMenu';
 import { useStyles } from './ProjectRoles.styles';
 import ProjectRoleList from './ProjectRoleList/ProjectRoleList';
+import { AdminAlert } from 'component/common/AdminAlert/AdminAlert';
 
 const ProjectRoles = () => {
     const { hasAccess } = useContext(AccessContext);
@@ -53,11 +53,7 @@ const ProjectRoles = () => {
                 <ConditionallyRender
                     condition={hasAccess(ADMIN)}
                     show={<ProjectRoleList />}
-                    elseShow={
-                        <Alert severity="error">
-                            You need instance admin to access this section.
-                        </Alert>
-                    }
+                    elseShow={<AdminAlert />}
                 />
             </PageContent>
         </div>

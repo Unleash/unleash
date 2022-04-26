@@ -13,10 +13,6 @@ export const useStyles = makeStyles(theme => ({
             justifyContent: 'center',
         },
     },
-    apiError: {
-        maxWidth: '400px',
-        marginBottom: '1rem',
-    },
     center: {
         textAlign: 'center',
     },
@@ -24,9 +20,6 @@ export const useStyles = makeStyles(theme => ({
         textAlign: 'center',
         display: 'flex-inline',
         flexWrap: 'nowrap',
-    },
-    infoBoxContainer: {
-        marginBottom: 40,
     },
     hideSM: {
         [theme.breakpoints.down('sm')]: {

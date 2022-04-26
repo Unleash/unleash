@@ -1,7 +1,5 @@
-import { Fragment, useContext, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useContext, useState } from 'react';
 import {
-    Button,
     IconButton,
     Table,
     TableBody,
@@ -17,19 +15,12 @@ import useApiTokens from 'hooks/api/getters/useApiTokens/useApiTokens';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useApiTokensApi from 'hooks/api/actions/useApiTokensApi/useApiTokensApi';
 import ApiError from 'component/common/ApiError/ApiError';
-import PageContent from 'component/common/PageContent';
-import HeaderTitle from 'component/common/HeaderTitle';
 import ConditionallyRender from 'component/common/ConditionallyRender';
-import {
-    CREATE_API_TOKEN,
-    DELETE_API_TOKEN,
-} from 'component/providers/AccessProvider/permissions';
+import { DELETE_API_TOKEN } from 'component/providers/AccessProvider/permissions';
 import { useStyles } from './ApiTokenList.styles';
 import Secret from './secret';
 import { Delete, FileCopy } from '@material-ui/icons';
 import Dialogue from 'component/common/Dialogue';
-import { CREATE_API_TOKEN_BUTTON } from 'utils/testIds';
-import { Alert } from '@material-ui/lab';
 import copy from 'copy-to-clipboard';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { formatDateYMD } from 'utils/formatDate';
@@ -56,16 +47,9 @@ export const ApiTokenList = () => {
     const { tokens, loading, refetch, error } = useApiTokens();
     const { deleteToken } = useApiTokensApi();
     const ref = useLoading(loading);
-    const history = useHistory();
 
     const renderError = () => {
-        return (
-            <ApiError
-                onClick={refetch}
-                // className={styles.apiError}
-                text="Error fetching api tokens"
-            />
-        );
+        return <ApiError onClick={refetch} text="Error fetching api tokens" />;
     };
 
     const copyToken = (value: string) => {
@@ -236,87 +220,37 @@ export const ApiTokenList = () => {
 
     return (
         <div ref={ref}>
-            <PageContent
-                headerContent={
-                    <HeaderTitle
-                        title="API Access"
-                        actions={
-                            <ConditionallyRender
-                                condition={hasAccess(CREATE_API_TOKEN)}
-                                show={
-                                    <Button
-                                        variant="contained"
-                                        color="primary"
-                                        onClick={() =>
-                                            history.push(
-                                                '/admin/api/create-token'
-                                            )
-                                        }
-                                        data-testid={CREATE_API_TOKEN_BUTTON}
-                                    >
-                                        New API token
-                                    </Button>
-                                }
-                            />
-                        }
-                    />
-                }
+            <ConditionallyRender condition={error} show={renderError()} />
+            <div className={styles.container}>
+                <ConditionallyRender
+                    condition={tokens.length < 1 && !loading}
+                    show={<div>No API tokens available.</div>}
+                    elseShow={renderApiTokens(tokens)}
+                />
+            </div>
+            <Dialogue
+                open={showDelete}
+                onClick={onDeleteToken}
+                onClose={() => {
+                    setShowDelete(false);
+                    setDeleteToken(undefined);
+                }}
+                title="Confirm deletion"
             >
-                <Alert severity="info" className={styles.infoBoxContainer}>
-                    <p>
-                        Read the{' '}
-                        <a
-                            href="https://docs.getunleash.io/docs"
-                            target="_blank"
-                            rel="noreferrer"
-                        >
-                            Getting started guide
-                        </a>{' '}
-                        to learn how to connect to the Unleash API from your
-                        application or programmatically. Please note it can take
-                        up to 1 minute before a new API key is activated.
-                    </p>
+                <div>
+                    Are you sure you want to delete the following API token?
                     <br />
-                    <strong>API URL: </strong>{' '}
-                    <pre style={{ display: 'inline' }}>
-                        {uiConfig.unleashUrl}/api/
-                    </pre>
-                </Alert>
-
-                <ConditionallyRender condition={error} show={renderError()} />
-                <div className={styles.container}>
-                    <ConditionallyRender
-                        condition={tokens.length < 1 && !loading}
-                        show={<div>No API tokens available.</div>}
-                        elseShow={renderApiTokens(tokens)}
-                    />
+                    <ul>
+                        <li>
+                            <strong>username</strong>:{' '}
+                            <code>{delToken?.username}</code>
+                        </li>
+                        <li>
+                            <strong>type</strong>: <code>{delToken?.type}</code>
+                        </li>
+                    </ul>
                 </div>
-
-                <Dialogue
-                    open={showDelete}
-                    onClick={onDeleteToken}
-                    onClose={() => {
-                        setShowDelete(false);
-                        setDeleteToken(undefined);
-                    }}
-                    title="Confirm deletion"
-                >
-                    <div>
-                        Are you sure you want to delete the following API token?
-                        <br />
-                        <ul>
-                            <li>
-                                <strong>username</strong>:{' '}
-                                <code>{delToken?.username}</code>
-                            </li>
-                            <li>
-                                <strong>type</strong>:{' '}
-                                <code>{delToken?.type}</code>
-                            </li>
-                        </ul>
-                    </div>
-                </Dialogue>
-            </PageContent>
+            </Dialogue>
         </div>
     );
 };

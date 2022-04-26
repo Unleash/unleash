@@ -22,16 +22,14 @@ afterEach(async () => {
     await stores.apiTokenStore.deleteAll();
 });
 
-test('none-admins should only get client tokens', async () => {
+test('editor users should only get client tokens', async () => {
     expect.assertions(2);
-
-    const email = 'custom-user@mail.com';
 
     const preHook = (app, config, { userService, accessService }) => {
         app.use('/api/admin/', async (req, res, next) => {
             const role = await accessService.getRootRole(RoleName.EDITOR);
             const user = await userService.createUser({
-                email,
+                email: 'editor@example.com',
                 rootRole: role.id,
             });
             req.user = user;
@@ -65,16 +63,51 @@ test('none-admins should only get client tokens', async () => {
     await destroy();
 });
 
-test('Only token-admins should be allowed to create token', async () => {
+test('viewer users should not be allowed to fetch tokens', async () => {
     expect.assertions(0);
 
-    const email = 'custom-user2@mail.com';
+    const preHook = (app, config, { userService, accessService }) => {
+        app.use('/api/admin/', async (req, res, next) => {
+            const role = await accessService.getRootRole(RoleName.VIEWER);
+            const user = await userService.createUser({
+                email: 'viewer@example.com',
+                rootRole: role.id,
+            });
+            req.user = user;
+            next();
+        });
+    };
+
+    const { request, destroy } = await setupAppWithCustomAuth(stores, preHook);
+
+    await stores.apiTokenStore.insert({
+        username: 'test',
+        secret: '1234',
+        type: ApiTokenType.CLIENT,
+    });
+
+    await stores.apiTokenStore.insert({
+        username: 'test',
+        secret: 'sdfsdf2d',
+        type: ApiTokenType.ADMIN,
+    });
+
+    await request
+        .get('/api/admin/api-tokens')
+        .expect('Content-Type', /json/)
+        .expect(403);
+
+    await destroy();
+});
+
+test('Only token-admins should be allowed to create token', async () => {
+    expect.assertions(0);
 
     const preHook = (app, config, { userService, accessService }) => {
         app.use('/api/admin/', async (req, res, next) => {
             const role = await accessService.getRootRole(RoleName.EDITOR);
             req.user = await userService.createUser({
-                email,
+                email: 'editor2@example.com',
                 rootRole: role.id,
             });
             next();
@@ -97,13 +130,12 @@ test('Only token-admins should be allowed to create token', async () => {
 
 test('Token-admin should be allowed to create token', async () => {
     expect.assertions(0);
-    const email = 'custom-user3@mail.com';
 
     const preHook = (app, config, { userService, accessService }) => {
         app.use('/api/admin/', async (req, res, next) => {
             const role = await accessService.getRootRole(RoleName.ADMIN);
             req.user = await userService.createUser({
-                email,
+                email: 'admin@example.com',
                 rootRole: role.id,
             });
             next();

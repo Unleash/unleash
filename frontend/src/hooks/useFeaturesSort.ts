@@ -1,13 +1,12 @@
-import { IFeatureToggle } from '../interfaces/featureToggle';
 import React, { useMemo } from 'react';
 import { getBasePath } from 'utils/formatPath';
 import { createPersistentGlobalStateHook } from './usePersistentGlobalState';
-import { parseISO } from 'date-fns';
 import {
     expired,
     getDiffInDays,
     toggleExpiryByTypeMap,
 } from 'component/Reporting/utils';
+import { FeatureSchema } from 'openapi';
 
 type FeaturesSortType =
     | 'name'
@@ -27,7 +26,7 @@ interface IFeaturesSort {
 
 export interface IFeaturesSortOutput {
     sort: IFeaturesSort;
-    sorted: IFeatureToggle[];
+    sorted: FeatureSchema[];
     setSort: React.Dispatch<React.SetStateAction<IFeaturesSort>>;
 }
 
@@ -44,7 +43,7 @@ const useFeaturesSortState = createPersistentGlobalStateHook<IFeaturesSort>(
 );
 
 export const useFeaturesSort = (
-    features: IFeatureToggle[]
+    features: FeatureSchema[]
 ): IFeaturesSortOutput => {
     const [sort, setSort] = useFeaturesSortState();
 
@@ -73,9 +72,9 @@ export const createFeaturesFilterSortOptions =
     };
 
 const sortAscendingFeatures = (
-    features: IFeatureToggle[],
+    features: FeatureSchema[],
     sort: IFeaturesSort
-): IFeatureToggle[] => {
+): FeatureSchema[] => {
     switch (sort.type) {
         case 'enabled':
             return sortByEnabled(features);
@@ -102,9 +101,9 @@ const sortAscendingFeatures = (
 };
 
 const sortFeatures = (
-    features: IFeatureToggle[],
+    features: FeatureSchema[],
     sort: IFeaturesSort
-): IFeatureToggle[] => {
+): FeatureSchema[] => {
     const sorted = sortAscendingFeatures(features, sort);
 
     if (sort.desc) {
@@ -115,84 +114,97 @@ const sortFeatures = (
 };
 
 const sortByEnabled = (
-    features: Readonly<IFeatureToggle[]>
-): IFeatureToggle[] => {
+    features: Readonly<FeatureSchema[]>
+): FeatureSchema[] => {
     return [...features].sort((a, b) =>
         a.enabled === b.enabled ? 0 : a.enabled ? -1 : 1
     );
 };
 
-const sortByStale = (
-    features: Readonly<IFeatureToggle[]>
-): IFeatureToggle[] => {
+const sortByStale = (features: Readonly<FeatureSchema[]>): FeatureSchema[] => {
     return [...features].sort((a, b) =>
         a.stale === b.stale ? 0 : a.stale ? -1 : 1
     );
 };
 
 const sortByLastSeen = (
-    features: Readonly<IFeatureToggle[]>
-): IFeatureToggle[] => {
+    features: Readonly<FeatureSchema[]>
+): FeatureSchema[] => {
     return [...features].sort((a, b) =>
         a.lastSeenAt && b.lastSeenAt
-            ? b.lastSeenAt.localeCompare(a.lastSeenAt)
+            ? compareNullableDates(b.lastSeenAt, a.lastSeenAt)
             : a.lastSeenAt
             ? -1
             : b.lastSeenAt
             ? 1
-            : b.createdAt.localeCompare(a.createdAt)
+            : compareNullableDates(b.createdAt, a.createdAt)
     );
 };
 
 const sortByCreated = (
-    features: Readonly<IFeatureToggle[]>
-): IFeatureToggle[] => {
-    return [...features].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+    features: Readonly<FeatureSchema[]>
+): FeatureSchema[] => {
+    return [...features].sort((a, b) =>
+        compareNullableDates(b.createdAt, a.createdAt)
+    );
 };
 
-const sortByName = (features: Readonly<IFeatureToggle[]>): IFeatureToggle[] => {
+const sortByName = (features: Readonly<FeatureSchema[]>): FeatureSchema[] => {
     return [...features].sort((a, b) => a.name.localeCompare(b.name));
 };
 
 const sortByProject = (
-    features: Readonly<IFeatureToggle[]>
-): IFeatureToggle[] => {
+    features: Readonly<FeatureSchema[]>
+): FeatureSchema[] => {
     return [...features].sort((a, b) => a.project.localeCompare(b.project));
 };
 
-const sortByType = (features: Readonly<IFeatureToggle[]>): IFeatureToggle[] => {
-    return [...features].sort((a, b) => a.type.localeCompare(b.type));
+const sortByType = (features: Readonly<FeatureSchema[]>): FeatureSchema[] => {
+    return [...features].sort((a, b) =>
+        a.type && b.type
+            ? a.type.localeCompare(b.type)
+            : a.type
+            ? 1
+            : b.type
+            ? -1
+            : 0
+    );
+};
+
+const compareNullableDates = (
+    a: Date | null | undefined,
+    b: Date | null | undefined
+): number => {
+    return a && b ? a.getTime() - b.getTime() : a ? 1 : b ? -1 : 0;
 };
 const sortByExpired = (
-    features: Readonly<IFeatureToggle[]>
-): IFeatureToggle[] => {
+    features: Readonly<FeatureSchema[]>
+): FeatureSchema[] => {
     return [...features].sort((a, b) => {
         const now = new Date();
-        const dateA = parseISO(a.createdAt);
-        const dateB = parseISO(b.createdAt);
+        const dateA = a.createdAt!;
+        const dateB = b.createdAt!;
 
         const diffA = getDiffInDays(dateA, now);
         const diffB = getDiffInDays(dateB, now);
 
-        if (!expired(diffA, a.type) && expired(diffB, b.type)) {
+        if (!expired(diffA, a.type!) && expired(diffB, b.type!)) {
             return 1;
         }
 
-        if (expired(diffA, a.type) && !expired(diffB, b.type)) {
+        if (expired(diffA, a.type!) && !expired(diffB, b.type!)) {
             return -1;
         }
 
         const expiration = toggleExpiryByTypeMap as Record<string, number>;
-        const expiredByA = diffA - expiration[a.type];
-        const expiredByB = diffB - expiration[b.type];
+        const expiredByA = a.type ? diffA - expiration[a.type] : 0;
+        const expiredByB = b.type ? diffB - expiration[b.type] : 0;
 
         return expiredByB - expiredByA;
     });
 };
 
-const sortByStatus = (
-    features: Readonly<IFeatureToggle[]>
-): IFeatureToggle[] => {
+const sortByStatus = (features: Readonly<FeatureSchema[]>): FeatureSchema[] => {
     return [...features].sort((a, b) => {
         if (a.stale) {
             return 1;

@@ -46,7 +46,7 @@ function getColor(unit?: string): string {
     }
 }
 
-interface FeatureStatusProps {
+interface IFeatureStatusProps {
     lastSeenAt?: string;
     tooltipPlacement?: TooltipProps['placement'];
 }
@@ -54,7 +54,7 @@ interface FeatureStatusProps {
 const FeatureStatus = ({
     lastSeenAt,
     tooltipPlacement,
-}: FeatureStatusProps) => {
+}: IFeatureStatusProps) => {
     const styles = useStyles();
 
     const Wrapper = (

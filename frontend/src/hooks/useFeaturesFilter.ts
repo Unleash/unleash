@@ -1,6 +1,6 @@
-import { IFeatureToggle } from 'interfaces/featureToggle';
 import React, { useMemo } from 'react';
 import { createGlobalStateHook } from 'hooks/useGlobalState';
+import { FeatureSchema } from 'openapi';
 
 export interface IFeaturesFilter {
     query?: string;
@@ -8,7 +8,7 @@ export interface IFeaturesFilter {
 }
 
 export interface IFeaturesSortOutput {
-    filtered: IFeatureToggle[];
+    filtered: FeatureSchema[];
     filter: IFeaturesFilter;
     setFilter: React.Dispatch<React.SetStateAction<IFeaturesFilter>>;
 }
@@ -21,7 +21,7 @@ const useFeaturesFilterState = createGlobalStateHook<IFeaturesFilter>(
 );
 
 export const useFeaturesFilter = (
-    features: IFeatureToggle[]
+    features: FeatureSchema[]
 ): IFeaturesSortOutput => {
     const [filter, setFilter] = useFeaturesFilterState();
 
@@ -37,9 +37,9 @@ export const useFeaturesFilter = (
 };
 
 const filterFeatures = (
-    features: IFeatureToggle[],
+    features: FeatureSchema[],
     filter: IFeaturesFilter
-): IFeatureToggle[] => {
+): FeatureSchema[] => {
     return filterFeaturesByQuery(
         filterFeaturesByProject(features, filter),
         filter
@@ -47,18 +47,18 @@ const filterFeatures = (
 };
 
 const filterFeaturesByProject = (
-    features: IFeatureToggle[],
+    features: FeatureSchema[],
     filter: IFeaturesFilter
-): IFeatureToggle[] => {
+): FeatureSchema[] => {
     return filter.project === '*'
         ? features
         : features.filter(f => f.project === filter.project);
 };
 
 const filterFeaturesByQuery = (
-    features: IFeatureToggle[],
+    features: FeatureSchema[],
     filter: IFeaturesFilter
-): IFeatureToggle[] => {
+): FeatureSchema[] => {
     if (!filter.query) {
         return features;
     }
@@ -78,11 +78,14 @@ const filterFeaturesByQuery = (
 };
 
 const filterFeatureByRegExp = (
-    feature: IFeatureToggle,
+    feature: FeatureSchema,
     filter: IFeaturesFilter,
     regExp: RegExp
 ): boolean => {
-    if (regExp.test(feature.name) || regExp.test(feature.description)) {
+    if (
+        regExp.test(feature.name) ||
+        (feature.description && regExp.test(feature.description))
+    ) {
         return true;
     }
 

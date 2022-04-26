@@ -4,14 +4,14 @@ import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { ISegment } from 'interfaces/segment';
 
-export interface UseSegmentOutput {
+export interface IUseSegmentOutput {
     segment?: ISegment;
     refetchSegment: () => void;
     loading: boolean;
     error?: Error;
 }
 
-export const useSegment = (id: number): UseSegmentOutput => {
+export const useSegment = (id: number): IUseSegmentOutput => {
     const path = formatApiPath(`api/admin/segments/${id}`);
     const { data, error } = useSWR<ISegment>(path, () => fetchSegment(path));
 

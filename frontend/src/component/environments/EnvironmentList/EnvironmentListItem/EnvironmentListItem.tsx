@@ -37,13 +37,13 @@ interface IEnvironmentListItemProps {
     moveListItemApi: (dragIndex: number, hoverIndex: number) => Promise<void>;
 }
 
-interface DragItem {
+interface IDragItem {
     index: number;
     id: string;
     type: string;
 }
 
-interface CollectedProps {
+interface ICollectedProps {
     handlerId: Identifier | null;
 }
 
@@ -69,19 +69,19 @@ const EnvironmentListItem = ({
         }),
     });
 
-    const [{ handlerId }, drop] = useDrop<DragItem, unknown, CollectedProps>({
+    const [{ handlerId }, drop] = useDrop<IDragItem, unknown, ICollectedProps>({
         accept: ACCEPT_TYPE,
         collect(monitor) {
             return {
                 handlerId: monitor.getHandlerId(),
             };
         },
-        drop(item: DragItem, monitor: DropTargetMonitor) {
+        drop(item: IDragItem, monitor: DropTargetMonitor) {
             const dragIndex = item.index;
             const hoverIndex = index;
             moveListItemApi(dragIndex, hoverIndex);
         },
-        hover(item: DragItem, monitor: DropTargetMonitor) {
+        hover(item: IDragItem, monitor: DropTargetMonitor) {
             if (!ref.current) {
                 return;
             }

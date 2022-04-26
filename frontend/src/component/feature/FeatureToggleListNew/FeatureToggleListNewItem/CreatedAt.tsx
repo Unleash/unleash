@@ -2,11 +2,11 @@ import { Tooltip } from '@material-ui/core';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { formatDateYMD, formatDateYMDHMS } from 'utils/formatDate';
 
-interface CreatedAtProps {
+interface ICreatedAtProps {
     time: string;
 }
 
-const CreatedAt = ({ time }: CreatedAtProps) => {
+const CreatedAt = ({ time }: ICreatedAtProps) => {
     const { locationSettings } = useLocationSettings();
 
     return (

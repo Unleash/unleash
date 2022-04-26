@@ -23,11 +23,13 @@ import { getEnabledEnvs } from './helpers';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { useCommonStyles } from 'themes/commonStyles';
 
-interface ProjectEnvironmentListProps {
+interface IProjectEnvironmentListProps {
     projectId: string;
 }
 
-const ProjectEnvironmentList = ({ projectId }: ProjectEnvironmentListProps) => {
+const ProjectEnvironmentList = ({
+    projectId,
+}: IProjectEnvironmentListProps) => {
     // api state
     const [envs, setEnvs] = useState<IProjectEnvironment[]>([]);
     const { setToastData, setToastApiError } = useToast();

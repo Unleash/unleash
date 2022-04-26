@@ -18,6 +18,10 @@ export const FeatureNotFound = () => {
         { name: featureId }
     );
 
+    if (!archivedFeatures) {
+        return null;
+    }
+
     const isArchived = archivedFeatures.some(archivedFeature => {
         return archivedFeature.name === featureId;
     });

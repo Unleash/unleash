@@ -6,7 +6,7 @@ import { useFeaturesSort } from 'hooks/useFeaturesSort';
 
 export const FeatureToggleListContainer = () => {
     const { uiConfig } = useUiConfig();
-    const { features, loading } = useFeatures();
+    const { features = [], loading } = useFeatures();
     const { filtered, filter, setFilter } = useFeaturesFilter(features);
     const { sorted, sort, setSort } = useFeaturesSort(filtered);
 

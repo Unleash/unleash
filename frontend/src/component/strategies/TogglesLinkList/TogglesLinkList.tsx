@@ -9,10 +9,10 @@ import { Pause, PlayArrow } from '@material-ui/icons';
 import styles from 'component/common/common.module.scss';
 import { Link } from 'react-router-dom';
 import ConditionallyRender from 'component/common/ConditionallyRender';
-import { IFeatureToggle } from 'interfaces/featureToggle';
+import { FeatureSchema } from 'openapi';
 
 interface ITogglesLinkListProps {
-    toggles: IFeatureToggle[];
+    toggles: FeatureSchema[];
 }
 
 export const TogglesLinkList = ({ toggles }: ITogglesLinkListProps) => (

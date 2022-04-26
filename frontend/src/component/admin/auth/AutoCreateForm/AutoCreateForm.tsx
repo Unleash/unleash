@@ -10,7 +10,7 @@ import {
     TextField,
 } from '@material-ui/core';
 
-interface Props {
+interface IAutoCreateFormProps {
     data?: {
         enabled: boolean;
         autoCreate: boolean;
@@ -23,7 +23,7 @@ interface Props {
 export const AutoCreateForm = ({
     data = { enabled: false, autoCreate: false },
     setValue,
-}: Props) => {
+}: IAutoCreateFormProps) => {
     const updateAutoCreate = () => {
         setValue('autoCreate', !data.autoCreate);
     };

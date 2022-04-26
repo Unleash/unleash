@@ -1,39 +1,24 @@
-import useSWR, { mutate, SWRConfiguration } from 'swr';
-import { useCallback } from 'react';
-import { formatApiPath } from 'utils/formatPath';
-import handleErrorResponses from '../httpErrorResponseHandler';
-import { IFeatureToggle } from 'interfaces/featureToggle';
-
-const PATH = formatApiPath('api/admin/features');
+import { FeatureSchema } from 'openapi';
+import { openApiAdmin } from 'utils/openapiClient';
+import { useApiGetter } from 'hooks/api/getters/useApiGetter/useApiGetter';
 
 export interface IUseFeaturesOutput {
-    features: IFeatureToggle[];
+    features?: FeatureSchema[];
     refetchFeatures: () => void;
     loading: boolean;
     error?: Error;
 }
 
-export const useFeatures = (options?: SWRConfiguration): IUseFeaturesOutput => {
-    const { data, error } = useSWR<{ features: IFeatureToggle[] }>(
-        PATH,
-        fetchFeatures,
-        options
+export const useFeatures = (): IUseFeaturesOutput => {
+    const { data, refetch, loading, error } = useApiGetter(
+        'apiAdminFeaturesGet',
+        () => openApiAdmin.apiAdminFeaturesGet()
     );
 
-    const refetchFeatures = useCallback(() => {
-        mutate(PATH).catch(console.warn);
-    }, []);
-
     return {
-        features: data?.features || [],
-        loading: !error && !data,
-        refetchFeatures,
+        features: data?.features,
+        refetchFeatures: refetch,
+        loading,
         error,
     };
-};
-
-const fetchFeatures = () => {
-    return fetch(PATH, { method: 'GET' })
-        .then(handleErrorResponses('Features'))
-        .then(res => res.json());
 };

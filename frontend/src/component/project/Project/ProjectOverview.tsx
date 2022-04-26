@@ -3,11 +3,11 @@ import { ProjectFeatureToggles } from './ProjectFeatureToggles/ProjectFeatureTog
 import ProjectInfo from './ProjectInfo/ProjectInfo';
 import { useStyles } from './Project.styles';
 
-interface ProjectOverviewProps {
+interface IProjectOverviewProps {
     projectId: string;
 }
 
-const ProjectOverview = ({ projectId }: ProjectOverviewProps) => {
+const ProjectOverview = ({ projectId }: IProjectOverviewProps) => {
     const { project, loading } = useProject(projectId, {
         refreshInterval: 10000,
     });

@@ -1,8 +1,9 @@
-import { IFeatureTogglePayload } from 'interfaces/featureToggle';
 import { ITag } from 'interfaces/tags';
 import useAPI from '../useApi/useApi';
 import { Operation } from 'fast-json-patch';
 import { IConstraint } from 'interfaces/strategy';
+import { CreateFeatureSchema } from 'openapi';
+import { openApiAdmin } from 'utils/openapiClient';
 
 const useFeatureApi = () => {
     const { makeRequest, createRequest, errors, loading } = useAPI({
@@ -38,21 +39,12 @@ const useFeatureApi = () => {
 
     const createFeatureToggle = async (
         projectId: string,
-        featureToggle: IFeatureTogglePayload
+        createFeatureSchema: CreateFeatureSchema
     ) => {
-        const path = `api/admin/projects/${projectId}/features`;
-        const req = createRequest(path, {
-            method: 'POST',
-            body: JSON.stringify(featureToggle),
+        return openApiAdmin.apiAdminProjectsProjectIdFeaturesPost({
+            projectId,
+            createFeatureSchema,
         });
-
-        try {
-            const res = await makeRequest(req.caller, req.id);
-
-            return res;
-        } catch (e) {
-            throw e;
-        }
     };
 
     const toggleFeatureEnvironmentOn = async (

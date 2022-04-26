@@ -13,12 +13,12 @@ import styles from '../../strategies.module.scss';
 import { TogglesLinkList } from 'component/strategies/TogglesLinkList/TogglesLinkList';
 import { IParameter, IStrategy } from 'interfaces/strategy';
 import { IApplication } from 'interfaces/application';
-import { IFeatureToggle } from 'interfaces/featureToggle';
+import { FeatureSchema } from 'openapi';
 
 interface IStrategyDetailsProps {
     strategy: IStrategy;
     applications: IApplication[];
-    toggles: IFeatureToggle[];
+    toggles: FeatureSchema[];
 }
 
 export const StrategyDetails = ({

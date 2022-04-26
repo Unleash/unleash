@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Redirect, useParams } from 'react-router-dom';
 import { useFeatures } from 'hooks/api/getters/useFeatures/useFeatures';
-import { IFeatureToggle } from 'interfaces/featureToggle';
 import { getTogglePath } from 'utils/routePathHelpers';
+import { FeatureSchema } from 'openapi';
 
 interface IRedirectParams {
     name: string;
@@ -10,12 +10,12 @@ interface IRedirectParams {
 
 const RedirectFeatureView = () => {
     const { name } = useParams<IRedirectParams>();
-    const { features } = useFeatures();
-    const [featureToggle, setFeatureToggle] = useState<IFeatureToggle>();
+    const { features = [] } = useFeatures();
+    const [featureToggle, setFeatureToggle] = useState<FeatureSchema>();
 
     useEffect(() => {
         const toggle = features.find(
-            (toggle: IFeatureToggle) => toggle.name === name
+            (toggle: FeatureSchema) => toggle.name === name
         );
 
         setFeatureToggle(toggle);

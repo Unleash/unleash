@@ -3,11 +3,11 @@ import { Tooltip } from '@material-ui/core';
 import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
 import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
 
-interface FeatureTypeProps {
+interface IFeatureTypeProps {
     type: string;
 }
 
-const FeatureStatus = ({ type }: FeatureTypeProps) => {
+const FeatureStatus = ({ type }: IFeatureTypeProps) => {
     const styles = useStyles();
     const { featureTypes } = useFeatureTypes();
     const IconComponent = getFeatureTypeIcons(type);

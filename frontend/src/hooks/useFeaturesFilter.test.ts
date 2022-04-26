@@ -1,7 +1,8 @@
 import { renderHook, act } from '@testing-library/react-hooks';
 import { useFeaturesFilter } from 'hooks/useFeaturesFilter';
-import { IFeatureToggle } from 'interfaces/featureToggle';
 import { IConstraint, IFeatureStrategy } from 'interfaces/strategy';
+import { FeatureSchema } from 'openapi';
+import parseISO from 'date-fns/parseISO';
 
 test('useFeaturesFilter empty', () => {
     const { result } = renderHook(() => useFeaturesFilter([]));
@@ -88,22 +89,20 @@ test('useFeaturesFilter constraints', () => {
 });
 
 const mockFeatureToggle = (
-    overrides?: Partial<IFeatureToggle>
-): IFeatureToggle => {
+    overrides?: Partial<FeatureSchema>
+): FeatureSchema => {
     return {
         name: '1',
         description: '1',
         type: '1',
         project: '1',
-        archived: false,
         enabled: false,
         stale: false,
         impressionData: false,
         strategies: [],
         variants: [],
-        environments: [],
-        createdAt: '2006-01-02T15:04:05Z',
-        lastSeenAt: '2006-01-02T15:04:05Z',
+        createdAt: parseISO('2006-01-02T15:04:05Z'),
+        lastSeenAt: parseISO('2006-01-02T15:04:05Z'),
         ...overrides,
     };
 };

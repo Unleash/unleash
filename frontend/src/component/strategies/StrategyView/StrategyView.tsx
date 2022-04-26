@@ -14,7 +14,7 @@ import ConditionallyRender from 'component/common/ConditionallyRender';
 export const StrategyView = () => {
     const { name } = useParams<{ name: string }>();
     const { strategies } = useStrategies();
-    const { features } = useFeatures();
+    const { features = [] } = useFeatures();
     const { applications } = useApplications();
     const history = useHistory();
 

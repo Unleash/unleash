@@ -4,7 +4,7 @@ import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { IFeatureStrategy } from 'interfaces/strategy';
 
-export interface useStrategiesBySegmentOutput {
+export interface IUseStrategiesBySegmentOutput {
     strategies?: IFeatureStrategy[];
     refetchUsedSegments: () => void;
     loading: boolean;
@@ -13,7 +13,7 @@ export interface useStrategiesBySegmentOutput {
 
 export const useStrategiesBySegment = (
     id: number
-): useStrategiesBySegmentOutput => {
+): IUseStrategiesBySegmentOutput => {
     const path = formatApiPath(`api/admin/segments/${id}/strategies`);
     const { data, error } = useSWR(path, () => fetchUsedSegment(path));
 

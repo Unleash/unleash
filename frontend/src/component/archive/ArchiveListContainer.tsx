@@ -10,7 +10,13 @@ export const ArchiveListContainer = () => {
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
     const { reviveFeature } = useFeatureArchiveApi();
-    const { archivedFeatures, loading, refetchArchived } = useFeaturesArchive();
+
+    const {
+        archivedFeatures = [],
+        refetchArchived,
+        loading,
+    } = useFeaturesArchive();
+
     const { filtered, filter, setFilter } = useFeaturesFilter(archivedFeatures);
     const { sorted, sort, setSort } = useFeaturesSort(filtered);
 

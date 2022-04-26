@@ -4,11 +4,11 @@ import ConditionallyRender from 'component/common/ConditionallyRender';
 import ReportToggleList from 'component/Reporting/ReportToggleList/ReportToggleList';
 import { ReportCard } from 'component/Reporting/ReportCard/ReportCard';
 
-interface ProjectHealthProps {
+interface IProjectHealthProps {
     projectId: string;
 }
 
-const ProjectHealth = ({ projectId }: ProjectHealthProps) => {
+const ProjectHealth = ({ projectId }: IProjectHealthProps) => {
     const { healthReport, refetchHealthReport, error } =
         useHealthReport(projectId);
 

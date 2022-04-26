@@ -1,7 +1,7 @@
 import { IFeatureStrategy } from 'interfaces/strategy';
 import FeatureOverviewEnvironmentStrategy from './FeatureOverviewEnvironmentStrategy/FeatureOverviewEnvironmentStrategy';
 
-interface FeatureOverviewEnvironmentStrategiesProps {
+interface IFeatureOverviewEnvironmentStrategiesProps {
     strategies: IFeatureStrategy[];
     environmentName: string;
 }
@@ -9,7 +9,7 @@ interface FeatureOverviewEnvironmentStrategiesProps {
 const FeatureOverviewEnvironmentStrategies = ({
     strategies,
     environmentName,
-}: FeatureOverviewEnvironmentStrategiesProps) => {
+}: IFeatureOverviewEnvironmentStrategiesProps) => {
     return (
         <>
             {strategies.map(strategy => (

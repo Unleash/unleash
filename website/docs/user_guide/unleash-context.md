@@ -23,7 +23,7 @@ The below table gives a brief overview over what the fields' intended usage is, 
 | `environment`[^1] | `string`              | static   | the environment the app is running in                                                                                                               |
 | `userId`          | `string`              | dynamic  | an identifier for the current user                                                                                                                  |
 | `sessionId`       | `string`              | dynamic  | an identifier for the current session                                                                                                               |
-| `remoteAddress`   | `string`              | dynamic  | an identifier for the current session                                                                                                               |
+| `remoteAddress`   | `string`              | dynamic  | the app's IP address                                                                                                                                |
 | `properties`      | `Map<string, string>` | dynamic  | a key-value store of any data you want                                                                                                              |
 | `currentTime`[^2] | `DateTime`/`string`   | dynamic  | A `DateTime` (or similar) data class instance or a string in an RFC3339-compatible format. **Defaults to the current time** if not set by the user. |
 

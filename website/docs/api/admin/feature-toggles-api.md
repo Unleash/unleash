@@ -7,8 +7,6 @@ title: /api/admin/features
 Most of this API was deprecated as part of the v4.3 release and will be removed in v5.0. You should use [the project-based API (/api/admin/projects/:projectId)](./feature-toggles-api-v2.md) instead. The deprecated endpoints are marked as such in the document below.
 :::
 
-<DeprecationNotice resourceType="endpoint" linkText="blah" linkTarget="#buh" />
-
 
 :::info
 In order to access the admin API endpoints you need to identify yourself. Unless you're using the `none` authentication method, you'll need to [create an **admin** token](/user_guide/api-token) and add an Authorization header using the token.

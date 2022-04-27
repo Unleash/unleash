@@ -63,6 +63,8 @@ export const NewUser = () => {
                                 <TextField
                                     data-loading
                                     value={data?.email || ''}
+                                    id="username"
+                                    label="Username"
                                     variant="outlined"
                                     size="small"
                                     className={styles.emailField}

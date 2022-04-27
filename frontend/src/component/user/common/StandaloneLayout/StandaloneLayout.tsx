@@ -21,10 +21,10 @@ const StandaloneLayout: FC<IStandaloneLayout> = ({
 
     return (
         <div className={styles.container}>
-            <div className={styles.leftContainer}>{banner}</div>
-            <div className={styles.rightContainer}>
+            <header className={styles.leftContainer}>{banner}</header>
+            <main className={styles.rightContainer}>
                 <div className={styles.innerRightContainer}>{children}</div>
-            </div>
+            </main>
         </div>
     );
 };

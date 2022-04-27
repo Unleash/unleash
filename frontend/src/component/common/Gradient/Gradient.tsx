@@ -4,6 +4,7 @@ interface IGradientProps {
     from: string;
     to: string;
     style?: object;
+    className?: string;
 }
 
 const Gradient: React.FC<IGradientProps> = ({

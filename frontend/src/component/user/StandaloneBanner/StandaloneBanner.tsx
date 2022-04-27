@@ -20,7 +20,6 @@ const StandaloneBanner: FC<IStandaloneBannerProps> = ({ title, children }) => {
             from={theme.palette.primary.main}
             // @ts-expect-error
             to={theme.palette.login.gradient.bottom}
-            // @ts-expect-error
             className={styles.gradient}
         >
             <div className={styles.container}>
@@ -35,8 +34,18 @@ const StandaloneBanner: FC<IStandaloneBannerProps> = ({ title, children }) => {
             <div className={styles.logoContainer}>
                 <ConditionallyRender
                     condition={smallScreen}
-                    show={<LogoWithText className={styles.logo} />}
-                    elseShow={<Logo className={styles.logo} />}
+                    show={
+                        <LogoWithText
+                            className={styles.logo}
+                            aria-label="Unleash logo"
+                        />
+                    }
+                    elseShow={
+                        <Logo
+                            className={styles.logo}
+                            aria-label="Unleash logo"
+                        />
+                    }
                 />
             </div>
         </Gradient>

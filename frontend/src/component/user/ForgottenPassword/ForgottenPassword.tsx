@@ -49,8 +49,7 @@ const ForgottenPassword = () => {
                 )}
                 ref={ref}
             >
-                <Typography
-                    variant="h2"
+                <h2
                     className={classnames(
                         commonStyles.title,
                         commonStyles.textCenter
@@ -58,7 +57,7 @@ const ForgottenPassword = () => {
                     data-loading
                 >
                     Forgotten password
-                </Typography>
+                </h2>
                 <ConditionallyRender
                     condition={attempted}
                     show={

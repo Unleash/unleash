@@ -102,6 +102,7 @@ const PasswordAuth = ({ authDetails, redirect }) => {
                             <TextField
                                 label="Username or email"
                                 name="username"
+                                id="username"
                                 type="string"
                                 onChange={evt => setUsername(evt.target.value)}
                                 value={username}
@@ -111,11 +112,13 @@ const PasswordAuth = ({ authDetails, redirect }) => {
                                 data-testid={LOGIN_EMAIL_ID}
                                 variant="outlined"
                                 size="small"
+                                autoFocus
                             />
                             <PasswordField
                                 label="Password"
                                 onChange={evt => setPassword(evt.target.value)}
                                 name="password"
+                                id="password"
                                 value={password}
                                 error={!!passwordError}
                                 helperText={passwordError}

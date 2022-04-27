@@ -46,7 +46,7 @@ Array [
     "menu": Object {},
     "parent": "/projects",
     "path": "/projects/:projectId/features/:featureId/edit",
-    "title": "Edit Feature",
+    "title": "Edit feature",
     "type": "protected",
   },
   Object {
@@ -122,7 +122,7 @@ Array [
       "mobile": true,
     },
     "path": "/features",
-    "title": "Feature Toggles",
+    "title": "Feature toggles",
     "type": "protected",
   },
   Object {
@@ -169,7 +169,7 @@ Array [
       "mobile": true,
     },
     "path": "/context",
-    "title": "Context Fields",
+    "title": "Context fields",
     "type": "protected",
   },
   Object {
@@ -331,14 +331,14 @@ Array [
       "adminSettings": true,
     },
     "path": "/history",
-    "title": "Event History",
+    "title": "Event log",
     "type": "protected",
   },
   Object {
     "component": [Function],
     "menu": Object {},
     "path": "/archive",
-    "title": "Archived Toggles",
+    "title": "Archived toggles",
     "type": "protected",
   },
   Object {
@@ -402,7 +402,7 @@ Array [
     },
     "parent": "/admin",
     "path": "/admin/roles",
-    "title": "Project Roles",
+    "title": "Project roles",
     "type": "protected",
   },
   Object {
@@ -412,7 +412,7 @@ Array [
     },
     "parent": "/admin",
     "path": "/admin/auth",
-    "title": "Single Sign-On",
+    "title": "Single sign-on",
     "type": "protected",
   },
   Object {

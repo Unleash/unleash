@@ -6,6 +6,7 @@ import { Typography } from '@material-ui/core';
 import ConditionallyRender from '../ConditionallyRender/ConditionallyRender';
 
 import { useStyles } from './styles';
+import { usePageTitle } from 'hooks/usePageTitle';
 
 const HeaderTitle = ({
     title,
@@ -17,6 +18,8 @@ const HeaderTitle = ({
 }) => {
     const styles = useStyles();
     const headerClasses = classnames({ skeleton: loading });
+
+    usePageTitle(title);
 
     return (
         <div className={styles.headerTitleContainer}>

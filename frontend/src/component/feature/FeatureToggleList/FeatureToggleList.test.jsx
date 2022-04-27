@@ -6,6 +6,7 @@ import renderer from 'react-test-renderer';
 import theme from 'themes/mainTheme';
 import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import AccessProvider from 'component/providers/AccessProvider/AccessProvider';
+import { AnnouncerProvider } from 'component/common/Announcer/AnnouncerProvider/AnnouncerProvider';
 
 jest.mock('./FeatureToggleListItem/FeatureToggleListItem', () => ({
     __esModule: true,
@@ -24,18 +25,22 @@ test('renders correctly with one feature', () => {
     const tree = renderer.create(
         <MemoryRouter>
             <ThemeProvider theme={theme}>
-                <AccessProvider permissions={[{ permission: CREATE_FEATURE }]}>
-                    <FeatureToggleList
-                        updateSetting={jest.fn()}
-                        filter={{}}
-                        setFilter={jest.fn()}
-                        sort={{}}
-                        setSort={jest.fn()}
-                        features={features}
-                        fetcher={jest.fn()}
-                        flags={{}}
-                    />
-                </AccessProvider>
+                <AnnouncerProvider>
+                    <AccessProvider
+                        permissions={[{ permission: CREATE_FEATURE }]}
+                    >
+                        <FeatureToggleList
+                            updateSetting={jest.fn()}
+                            filter={{}}
+                            setFilter={jest.fn()}
+                            sort={{}}
+                            setSort={jest.fn()}
+                            features={features}
+                            fetcher={jest.fn()}
+                            flags={{}}
+                        />
+                    </AccessProvider>
+                </AnnouncerProvider>
             </ThemeProvider>
         </MemoryRouter>
     );
@@ -52,17 +57,21 @@ test('renders correctly with one feature without permissions', () => {
     const tree = renderer.create(
         <MemoryRouter>
             <ThemeProvider theme={theme}>
-                <AccessProvider permissions={[{ permission: CREATE_FEATURE }]}>
-                    <FeatureToggleList
-                        filter={{}}
-                        setFilter={jest.fn()}
-                        sort={{}}
-                        setSort={jest.fn()}
-                        features={features}
-                        fetcher={jest.fn()}
-                        flags={{}}
-                    />
-                </AccessProvider>
+                <AnnouncerProvider>
+                    <AccessProvider
+                        permissions={[{ permission: CREATE_FEATURE }]}
+                    >
+                        <FeatureToggleList
+                            filter={{}}
+                            setFilter={jest.fn()}
+                            sort={{}}
+                            setSort={jest.fn()}
+                            features={features}
+                            fetcher={jest.fn()}
+                            flags={{}}
+                        />
+                    </AccessProvider>
+                </AnnouncerProvider>
             </ThemeProvider>
         </MemoryRouter>
     );

@@ -10,7 +10,7 @@ export const FeatureEventHistory = ({ toggleName }) => {
     }
 
     return (
-        <EventLog history={events} hideName title="Change log" displayInline />
+        <EventLog history={events} hideName title="Event log" displayInline />
     );
 };
 

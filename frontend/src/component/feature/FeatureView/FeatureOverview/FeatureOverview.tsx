@@ -10,15 +10,16 @@ import {
     formatFeaturePath,
 } from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import { usePageTitle } from 'hooks/usePageTitle';
 
 const FeatureOverview = () => {
     const styles = useStyles();
     const { push } = useHistory();
-
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const featurePath = formatFeaturePath(projectId, featureId);
     const onSidebarClose = () => push(featurePath);
+    usePageTitle(featureId);
 
     return (
         <div className={styles.container}>

@@ -16,12 +16,14 @@ import { FeatureMetricsChips } from './FeatureMetricsChips/FeatureMetricsChips';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import ConditionallyRender from 'component/common/ConditionallyRender';
 import { useStyles } from './FeatureMetrics.styles';
+import { usePageTitle } from 'hooks/usePageTitle';
 
 export const FeatureMetrics = () => {
     const { projectId, featureId } = useParams<IFeatureViewParams>();
     const environments = useFeatureMetricsEnvironments(projectId, featureId);
     const applications = useFeatureMetricsApplications(featureId);
     const styles = useStyles();
+    usePageTitle('Metrics');
 
     const [hoursBack = FEATURE_METRIC_HOURS_BACK_MAX, setHoursBack] =
         useQueryStringNumberState('hoursBack');

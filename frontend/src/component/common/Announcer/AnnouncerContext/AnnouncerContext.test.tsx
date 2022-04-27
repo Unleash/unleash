@@ -1,8 +1,8 @@
 import { render } from 'utils/testRenderer';
-import { AnnouncerProvider } from 'component/common/Announcer/AnnouncerProvider/AnnouncerProvider';
 import { AnnouncerContext } from 'component/common/Announcer/AnnouncerContext/AnnouncerContext';
 import { useContext, useEffect } from 'react';
 import { screen } from '@testing-library/react';
+import { ANNOUNCER_ELEMENT_TEST_ID } from 'utils/testIds';
 
 test('AnnouncerContext', async () => {
     const TestComponent = () => {
@@ -16,12 +16,9 @@ test('AnnouncerContext', async () => {
         return null;
     };
 
-    render(
-        <AnnouncerProvider>
-            <TestComponent />
-        </AnnouncerProvider>
-    );
+    render(<TestComponent />);
 
-    expect(screen.getByRole('status')).not.toHaveTextContent('Foo');
-    expect(screen.getByRole('status')).toHaveTextContent('Bar');
+    const el = screen.getByTestId(ANNOUNCER_ELEMENT_TEST_ID);
+    expect(el).not.toHaveTextContent('Foo');
+    expect(el).toHaveTextContent('Bar');
 });

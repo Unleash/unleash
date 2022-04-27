@@ -3,12 +3,15 @@ import ApiError from 'component/common/ApiError/ApiError';
 import ConditionallyRender from 'component/common/ConditionallyRender';
 import ReportToggleList from 'component/Reporting/ReportToggleList/ReportToggleList';
 import { ReportCard } from 'component/Reporting/ReportCard/ReportCard';
+import { usePageTitle } from 'hooks/usePageTitle';
 
 interface IProjectHealthProps {
     projectId: string;
 }
 
 const ProjectHealth = ({ projectId }: IProjectHealthProps) => {
+    usePageTitle('Project health');
+
     const { healthReport, refetchHealthReport, error } =
         useHealthReport(projectId);
 

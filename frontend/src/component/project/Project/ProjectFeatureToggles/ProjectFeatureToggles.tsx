@@ -49,7 +49,7 @@ export const ProjectFeatureToggles = ({
             headerContent={
                 <HeaderTitle
                     className={styles.title}
-                    title={`Feature toggles (${filteredFeatures.length})`}
+                    title={`Project features (${filteredFeatures.length})`}
                     actions={
                         <div className={styles.actionsContainer}>
                             <SearchField

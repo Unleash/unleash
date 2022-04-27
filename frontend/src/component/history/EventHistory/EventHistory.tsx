@@ -8,5 +8,5 @@ export const EventHistory = () => {
         return null;
     }
 
-    return <EventLog history={events} title="Recent changes" />;
+    return <EventLog history={events} title="Event log" />;
 };

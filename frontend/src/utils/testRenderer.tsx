@@ -3,6 +3,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { render as rtlRender, RenderOptions } from '@testing-library/react';
 import { SWRConfig } from 'swr';
 import { MainThemeProvider } from 'themes/MainThemeProvider';
+import { AnnouncerProvider } from 'component/common/Announcer/AnnouncerProvider/AnnouncerProvider';
 
 export const render = (
     ui: JSX.Element,
@@ -23,7 +24,9 @@ const Wrapper: FC = ({ children }) => {
     return (
         <SWRConfig value={{ provider: () => new Map() }}>
             <MainThemeProvider>
-                <Router>{children}</Router>
+                <AnnouncerProvider>
+                    <Router>{children}</Router>
+                </AnnouncerProvider>
             </MainThemeProvider>
         </SWRConfig>
     );

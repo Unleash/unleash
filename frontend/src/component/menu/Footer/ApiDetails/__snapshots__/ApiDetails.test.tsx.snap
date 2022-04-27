@@ -23,6 +23,13 @@ exports[`renders correctly with empty version 1`] = `
       </small>
       <br />
     </section>
+    <div
+      aria-atomic="true"
+      aria-live="polite"
+      class="makeStyles-container-2"
+      data-testid="ANNOUNCER_ELEMENT_TEST_ID"
+      role="status"
+    />
   </div>
 </body>
 `;
@@ -34,7 +41,7 @@ exports[`renders correctly with ui-config 1`] = `
       title="API details"
     >
       <h2
-        class="makeStyles-title-2"
+        class="makeStyles-title-3"
       >
         Unleash 1.1.0
          
@@ -50,6 +57,13 @@ exports[`renders correctly with ui-config 1`] = `
       </small>
       <br />
     </section>
+    <div
+      aria-atomic="true"
+      aria-live="polite"
+      class="makeStyles-container-4"
+      data-testid="ANNOUNCER_ELEMENT_TEST_ID"
+      role="status"
+    />
   </div>
 </body>
 `;
@@ -61,7 +75,7 @@ exports[`renders correctly with versionInfo 1`] = `
       title="API details"
     >
       <h2
-        class="makeStyles-title-4"
+        class="makeStyles-title-7"
       >
         Unleash 1.2.3
          
@@ -77,6 +91,13 @@ exports[`renders correctly with versionInfo 1`] = `
         1
       </small>
     </section>
+    <div
+      aria-atomic="true"
+      aria-live="polite"
+      class="makeStyles-container-8"
+      data-testid="ANNOUNCER_ELEMENT_TEST_ID"
+      role="status"
+    />
   </div>
 </body>
 `;
@@ -88,7 +109,7 @@ exports[`renders correctly without uiConfig 1`] = `
       title="API details"
     >
       <h2
-        class="makeStyles-title-3"
+        class="makeStyles-title-5"
       >
         Unleash 1.1.0
          
@@ -97,6 +118,13 @@ exports[`renders correctly without uiConfig 1`] = `
       <small />
       <br />
     </section>
+    <div
+      aria-atomic="true"
+      aria-live="polite"
+      class="makeStyles-container-6"
+      data-testid="ANNOUNCER_ELEMENT_TEST_ID"
+      role="status"
+    />
   </div>
 </body>
 `;

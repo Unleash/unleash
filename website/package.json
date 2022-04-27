@@ -27,7 +27,7 @@
     "file-loader": "6.2.0",
     "react": "18.1.0",
     "react-dom": "18.1.0",
-    "unleash-proxy-client": "2.0.0",
+    "unleash-proxy-client": "2.0.1",
     "url-loader": "4.1.1"
   },
   "resolutions": {

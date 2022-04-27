@@ -256,7 +256,7 @@ Used to archive a feature toggle. A feature toggle can never be totally be delet
 ## Enable a Feature Toggle {#enable-a-feature-toggle}
 
 :::caution Deprecation notice
-This endpoint is deprecated. Please use the [project-based endpoint to enable feature toggles](./feature-toggles-api-v2.md#where?) instead.
+This endpoint is deprecated. Please use the [project-based endpoint to enable feature toggles](./feature-toggles-api-v2.md#enable-env) instead.
 :::
 
 
@@ -290,7 +290,7 @@ None
 ## Disable a Feature Toggle {#disable-a-feature-toggle}
 
 :::caution Deprecation notice
-This endpoint is deprecated. Please use the [project-based endpoint to disable feature toggles](./feature-toggles-api-v2.md#where?) instead.
+This endpoint is deprecated. Please use the [project-based endpoint to disable feature toggles](./feature-toggles-api-v2.md#disable-env) instead.
 :::
 
 `POST: http://unleash.host.com/api/admin/features/:featureName/toggle/off`

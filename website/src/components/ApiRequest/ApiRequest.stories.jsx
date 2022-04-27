@@ -31,6 +31,13 @@ POST.args = {
     title: 'Create a feature toggle with impression data enabled. (example)',
 };
 
+export const POSTWithoutPayload = Template.bind({});
+POSTWithoutPayload.args = {
+    verb: 'post',
+    url: 'api/admin/projects/<projectId>/features/<featureName>/environments/<environment>/on',
+    title: 'Disable a toggle in an env.',
+};
+
 export const PUT = Template.bind({});
 PUT.args = {
     verb: 'put',

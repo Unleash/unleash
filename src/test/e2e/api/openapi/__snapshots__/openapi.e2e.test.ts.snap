@@ -52,6 +52,7 @@ Object {
   "components": Object {
     "schemas": Object {
       "constraintSchema": Object {
+        "additionalProperties": false,
         "properties": Object {
           "contextName": Object {
             "type": "string",
@@ -93,6 +94,7 @@ Object {
         "type": "object",
       },
       "featureSchema": Object {
+        "additionalProperties": false,
         "properties": Object {
           "createdAt": Object {
             "format": "date",
@@ -145,6 +147,7 @@ Object {
         "type": "object",
       },
       "featuresSchema": Object {
+        "additionalProperties": false,
         "properties": Object {
           "features": Object {
             "items": Object {
@@ -163,6 +166,7 @@ Object {
         "type": "object",
       },
       "overrideSchema": Object {
+        "additionalProperties": false,
         "properties": Object {
           "contextName": Object {
             "type": "string",
@@ -181,6 +185,7 @@ Object {
         "type": "object",
       },
       "strategySchema": Object {
+        "additionalProperties": false,
         "properties": Object {
           "constraints": Object {
             "items": Object {
@@ -207,6 +212,7 @@ Object {
         "type": "object",
       },
       "variantSchema": Object {
+        "additionalProperties": false,
         "properties": Object {
           "name": Object {
             "type": "string",

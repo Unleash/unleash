@@ -646,7 +646,6 @@ export default class StateService {
         );
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async export({
         includeFeatureToggles = true,
         includeStrategies = true,

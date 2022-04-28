@@ -50,7 +50,6 @@ export default class ArchiveController extends Controller {
         );
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async getArchivedFeatures(
         req: Request,
         res: Response<FeaturesSchema>,
@@ -71,7 +70,6 @@ export default class ArchiveController extends Controller {
         res.status(200).end();
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async reviveFeatureToggle(req: IAuthRequest, res: Response): Promise<void> {
         const userName = extractUsername(req);
         const { featureName } = req.params;

@@ -118,7 +118,6 @@ async function createApp(
     });
 }
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 async function start(opts: IUnleashOptions = {}): Promise<IUnleash> {
     const config = createConfig(opts);
     const logger = config.getLogger('server-impl.js');
@@ -143,7 +142,6 @@ async function start(opts: IUnleashOptions = {}): Promise<IUnleash> {
     return unleash;
 }
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 async function create(opts: IUnleashOptions): Promise<IUnleash> {
     const config = createConfig(opts);
     const logger = config.getLogger('server-impl.js');

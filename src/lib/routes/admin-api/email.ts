@@ -2,6 +2,7 @@ import { ADMIN } from '../../types/permissions';
 import { TemplateFormat } from '../../services/email-service';
 import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
+import { Request, Response } from 'express';
 
 const Controller = require('../controller');
 
@@ -17,8 +18,7 @@ export default class EmailController extends Controller {
         this.get('/preview/text/:template', this.getTextPreview, ADMIN);
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    async getHtmlPreview(req, res): Promise<void> {
+    async getHtmlPreview(req: Request, res: Response): Promise<void> {
         const { template } = req.params;
         const ctx = req.query;
         const data = await this.emailService.compileTemplate(
@@ -32,8 +32,7 @@ export default class EmailController extends Controller {
         res.end();
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    async getTextPreview(req, res) {
+    async getTextPreview(req: Request, res: Response): Promise<void> {
         const { template } = req.params;
         const ctx = req.query;
         const data = await this.emailService.compileTemplate(

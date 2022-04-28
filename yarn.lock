@@ -6600,10 +6600,10 @@ universalify@^2.0.0:
   resolved "https://registry.yarnpkg.com/universalify/-/universalify-2.0.0.tgz#75a4984efedc4b08975c5aeb73f530d02df25717"
   integrity sha512-hAZsKq7Yy11Zu1DE0OzWjw7nnLZmJZYTDZZyEFHZdUhV8FkH5MCfoU1XMaxXovpyW5nq5scPqq0ZDP9Zyl04oQ==
 
-unleash-frontend@4.10.0-beta.7:
-  version "4.10.0-beta.7"
-  resolved "https://registry.yarnpkg.com/unleash-frontend/-/unleash-frontend-4.10.0-beta.7.tgz#d9a494960e72b4a08ec1e679341e3ca6cf8e1229"
-  integrity sha512-MmLKFssmuCG18bGKBsRNU8q3GAAtvyi7JzgGRIaUIAsgeKhMAmTyXPvaL9SfERvucU3xLlO759WEoQEVrpzCdQ==
+unleash-frontend@4.10.0-beta.8:
+  version "4.10.0-beta.8"
+  resolved "https://registry.yarnpkg.com/unleash-frontend/-/unleash-frontend-4.10.0-beta.8.tgz#740b359d1e875f2ce9ea1516f26322e5d18041e0"
+  integrity sha512-Ok/DV7B+llwqhxRGZYODo4Kz2D9/09+Klz0vVSHIisnx9hMVRINqhzvWlEjMtDcuZswSfMpJqTSgYNnfQaBb+w==
   dependencies:
     pkginfo "^0.4.1"
 

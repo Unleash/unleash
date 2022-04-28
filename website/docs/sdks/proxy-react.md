@@ -14,7 +14,7 @@ For more detailed information, check out [the React Proxy SDK on GitHub](https:/
 npm install @unleash/proxy-client-react
 ```
 
-## Initialize the client
+## Initialization
 
 The snippet below shows you how to initialize the client. We recommend that you do this in your entry point file (typically index.js/ts) to ensure that you only have _one_ instance of it.
 

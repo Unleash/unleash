@@ -12,6 +12,8 @@ import {
     CREATE_STRATEGY,
     UPDATE_STRATEGY,
 } from '../../types/permissions';
+import { Request, Response } from 'express';
+import { IAuthRequest } from '../unleash-types';
 
 const version = 1;
 
@@ -45,8 +47,7 @@ class StrategyController extends Controller {
         );
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    async getAllStrategies(req, res): Promise<void> {
+    async getAllStrategies(req: Request, res: Response): Promise<void> {
         try {
             const strategies = await this.strategyService.getStrategies();
             res.json({ version, strategies });
@@ -55,8 +56,7 @@ class StrategyController extends Controller {
         }
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    async getStrategy(req, res): Promise<void> {
+    async getStrategy(req: Request, res: Response): Promise<void> {
         try {
             const { name } = req.params;
             const strategy = await this.strategyService.getStrategy(name);
@@ -66,8 +66,7 @@ class StrategyController extends Controller {
         }
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    async removeStrategy(req, res): Promise<void> {
+    async removeStrategy(req: IAuthRequest, res: Response): Promise<void> {
         const strategyName = req.params.name;
         const userName = extractUsername(req);
 
@@ -79,8 +78,7 @@ class StrategyController extends Controller {
         }
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    async createStrategy(req, res): Promise<void> {
+    async createStrategy(req: IAuthRequest, res: Response): Promise<void> {
         const userName = extractUsername(req);
         try {
             await this.strategyService.createStrategy(req.body, userName);
@@ -90,8 +88,7 @@ class StrategyController extends Controller {
         }
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    async updateStrategy(req, res): Promise<void> {
+    async updateStrategy(req: IAuthRequest, res: Response): Promise<void> {
         const userName = extractUsername(req);
         try {
             await this.strategyService.updateStrategy(req.body, userName);
@@ -101,8 +98,7 @@ class StrategyController extends Controller {
         }
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    async deprecateStrategy(req, res): Promise<void> {
+    async deprecateStrategy(req: IAuthRequest, res: Response): Promise<void> {
         const userName = extractUsername(req);
         const { strategyName } = req.params;
         if (strategyName === 'default') {
@@ -120,8 +116,7 @@ class StrategyController extends Controller {
         }
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    async reactivateStrategy(req, res): Promise<void> {
+    async reactivateStrategy(req: IAuthRequest, res: Response): Promise<void> {
         const userName = extractUsername(req);
         const { strategyName } = req.params;
         try {

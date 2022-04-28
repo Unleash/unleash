@@ -1,40 +1,71 @@
-import fetchMock from 'jest-fetch-mock';
+import nock from 'nock';
 import noLogger from '../../test/fixtures/no-logger';
 
 import SlackAddon from './slack';
 
 beforeEach(() => {
-    fetchMock.resetMocks();
+    nock.disableNetConnect();
 });
 
-test('Retries if fetch throws', async () => {
+test('Does not retry if request succeeds', async () => {
     const url = 'https://test.some.com';
-    jest.useFakeTimers('modern');
     const addon = new SlackAddon({
         getLogger: noLogger,
         unleashUrl: url,
     });
-    fetchMock.mockIf('https://test.some.com', 'OK', {
-        status: 201,
-        statusText: 'ACCEPTED',
-    });
-    await addon.fetchRetry(url);
-    jest.advanceTimersByTime(1000);
-    jest.useRealTimers();
+    nock(url).get('/').reply(201);
+    const res = await addon.fetchRetry(url);
+    expect(res.ok).toBe(true);
 });
 
-test('does not crash even if fetch throws', async () => {
+test('Retries once, and succeeds', async () => {
     const url = 'https://test.some.com';
-    jest.useFakeTimers('modern');
     const addon = new SlackAddon({
         getLogger: noLogger,
         unleashUrl: url,
     });
-    fetchMock.mockResponse(() => {
-        throw new Error('Network error');
+    nock(url).get('/').replyWithError('testing retry');
+    nock(url).get('/').reply(200);
+    const res = await addon.fetchRetry(url);
+    expect(res.ok).toBe(true);
+    expect(nock.isDone()).toBe(true);
+});
+
+test('Does not throw if response is error', async () => {
+    const url = 'https://test.some.com';
+    const addon = new SlackAddon({
+        getLogger: noLogger,
+        unleashUrl: url,
     });
-    await addon.fetchRetry(url);
-    jest.advanceTimersByTime(1000);
-    expect(fetchMock.mock.calls).toHaveLength(2);
-    jest.useRealTimers();
+    nock(url).get('/').twice().replyWithError('testing retry');
+    const res = await addon.fetchRetry(url);
+    expect(res.ok).toBe(false);
+});
+
+test('Supports custom number of retries', async () => {
+    const url = 'https://test.some.com';
+    const addon = new SlackAddon({
+        getLogger: noLogger,
+        unleashUrl: url,
+    });
+    let retries = 0;
+    nock(url).get('/').twice().replyWithError('testing retry');
+    nock(url).get('/').reply(201);
+    const res = await addon.fetchRetry(
+        url,
+        {
+            onRetry: () => {
+                retries = retries + 1;
+            },
+        },
+        2,
+    );
+
+    expect(retries).toBe(2);
+    expect(res.ok).toBe(true);
+    expect(nock.isDone()).toBe(true);
+});
+
+afterEach(() => {
+    nock.enableNetConnect();
 });

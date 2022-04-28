@@ -1,4 +1,4 @@
-import fetch from 'node-fetch';
+import fetch from 'make-fetch-happen';
 import { IUnleashStores } from '../types/stores';
 import { IUnleashConfig } from '../types/option';
 import version from '../util/version';

@@ -4,7 +4,7 @@ title: Svelte proxy SDK
 ---
 
 <div class="alert alert--info" role="alert">
-  <em>Svelte proxy SDK is currently at version 0.0.1 and is experimental</em>.
+  <em>Svelte proxy SDK is currently at version 0.0.2 and is experimental</em>.
 </div>
 <br/>
 

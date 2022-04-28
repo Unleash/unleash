@@ -70,7 +70,7 @@
     "immer": "^9.0.12",
     "lodash.clonedeep": "4.5.0",
     "msw": "^0.39.2",
-    "prettier": "2.6.1",
+    "prettier": "2.6.2",
     "prop-types": "15.8.1",
     "react": "17.0.2",
     "react-chartjs-2": "4.1.0",

@@ -68,6 +68,9 @@ curl -H "Content-Type: application/json" \\
      <${baseUrl}>/${url}`
     ).trim();
 
+    const httpieBlockFormatSpecifier =
+        verbUpper === 'POST' && !prettyPayload ? '--json' : '';
+
     const httpieBlock = (
         payload
             ? `echo '${prettyPayload}' \\
@@ -77,7 +80,8 @@ curl -H "Content-Type: application/json" \\
             : `
 http ${verbUpper} \\
   <${baseUrl}>/${url} \\
-  Authorization:<${authToken}>`.trim()
+  Authorization:<${authToken}> \\
+  ${httpieBlockFormatSpecifier}`.trim()
     ).trim();
 
     return (

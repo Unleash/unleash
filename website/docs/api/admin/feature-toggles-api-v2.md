@@ -2,8 +2,15 @@
 id: feature-toggles-v2
 title: /api/admin/projects/:projectId
 ---
+import ApiRequest from '@site/src/components/ApiRequest'
 
-> In order to access the admin API endpoints you need to identify yourself. You'll need to [create an ADMIN token](/user_guide/api-token) and add an Authorization header using the token.
+:::info
+In order to access the admin API endpoints you need to identify yourself. Unless you're using the `none` authentication method, you'll need to [create an **admin** token](/user_guide/api-token) and add an Authorization header using the token.
+:::
+
+
+## Fetching Feature Toggles {#fetching-feature-toggles}
+
 
 **Available since Unleash v4.3**
 
@@ -14,11 +21,14 @@ In this document we will guide you on how you can work with feature toggles and 
 - A feature toggle can take different configuration, activation strategies, per environment.
 
 
-> We will in this guide use [HTTPie](https://httpie.io) commands to show examples on how to interact with the API.
+:::note
+This document lists HTTP request data and [cURL](https://curl.se/) and [HTTPie](https://httpie.io) command examples for all endpoints. Further examples use HTTPie.
+:::
 
 ### Get Project Overview {#fetching-project}
 
-`http://localhost:4242/api/admin/projects/:projectId`
+
+<ApiRequest verb="get" url="api/admin/projects/:project-id" title="Get a project overview"/>
 
 This endpoint will give you an general overview of a project. It will return essential details about a project, in addition it will return all feature toggles and high level environment details per feature toggle.
 
@@ -87,7 +97,8 @@ From the results we can see that we have received two feature toggles, _demo_, _
 
 ### Get All Feature Toggles {#fetching-toggles}
 
-`http://localhost:4242/api/admin/projects/:projectId/features`
+
+<ApiRequest verb="get" url="api/admin/projects/:projectId/features" title="Get all feature toggles in a project"/>
 
 This endpoint will return all feature toggles and high level environment details per feature toggle for a given _projectId_
 
@@ -149,7 +160,7 @@ Authorization:$KEY
 ```
 ### Create Feature Toggle {#create-toggle}
 
-`http://localhost:4242/api/admin/projects/:projectId/features`
+<ApiRequest verb="post" url="api/admin/projects/:projectId/features" title="Create a feature toggle with the specified details (example data)" payload={{ name: "my-feature-toggle" }}/>
 
 This endpoint will accept HTTP POST request to create a new feature toggle for a given _projectId_
 
@@ -207,7 +218,7 @@ Possible Errors:
 
 ### Get Feature Toggle {#get-toggle}
 
-`http://localhost:4242/api/admin/projects/:projectId/features/:featureName`
+<ApiRequest verb="get" url="api/admin/projects/:projectId/features/:featureName" title="Retrieve a named feature toggle"/>
 
 This endpoint will return the feature toggles with the defined name and _projectId_. We will also see the list of environments and all activation strategies configured per environment.
 
@@ -259,7 +270,7 @@ Possible Errors:
 
 ### Update Feature Toggle {#update-toggle}
 
-`http://localhost:4242/api/admin/projects/:projectId/features/:featureName`
+<ApiRequest verb="put" url="api/admin/projects/:projectId/features/:featureName" title="Update a feature toggle entry (example data)" payload={{ name: "demo", description: "An updated feature toggle description." }}/>
 
 This endpoint will accept HTTP PUT request to update the feature toggle metadata.
 
@@ -296,7 +307,8 @@ Some fields is not possible to change via this endpoint:
 
 ## Patch Feature Toggle {#patch-toggle}
 
-`http://localhost:4242/api/admin/projects/:projectId/features/:featureName`
+
+<ApiRequest verb="patch" url="api/admin/projects/:projectId/features/:featureName" title="Patch a feature toggle (example data)" payload={[{op: "replace", path: "/description", value: "patched description"}]}/>
 
 This endpoint will accept HTTP PATCH request to update the feature toggle metadata.
 
@@ -332,16 +344,16 @@ Some fields is not possible to change via this endpoint:
 - lastSeen
 
 
-### Clone Feature Toggle {#create-toggle}
+### Clone Feature Toggle {#clone-toggle}
 
-`http://localhost:4242/api/admin/projects/:projectId/features/:featureName/clone`
+<ApiRequest verb="post" url="api/admin/projects/:projectId/features/:featureName/clone" title="Clone a feature toggle (example data)" payload={{ name: "newToggleName"}}/>
 
-This endpoint will accept HTTP POST request to clone an existing feature toggle with all strategies and variants. It is not possible to clone archived feature toggles. The newly created feature toggle will be disabled for all environments.
+This endpoint will accept HTTP POST request to clone an existing feature toggle with all strategies and variants.  When cloning a toggle, you **must** provide a new name for it. You can not clone archived feature toggles. The newly created feature toggle will be disabled for all environments.
 
 **Example Query**
 
 ```bash
-echo '{ "name": "newName" }' | \
+echo '{ "name": "DemoNew" }' | \
 http POST http://localhost:4242/api/admin/projects/default/features/Demo/clone \
 Authorization:$KEY`
 ```
@@ -388,9 +400,9 @@ Possible Errors:
 
 ### Archive Feature Toggle {#archive-toggle}
 
-`http://localhost:4242/api/admin/projects/:projectId/features/:featureName`
+<ApiRequest verb="delete" url="api/admin/projects/:projectId/features/:featureName" title="Archive a named feature toggle"/>
 
-This endpoint will accept HTTP PUT request to update the feature toggle metadata.
+This endpoint will accept HTTP DELETE requests to archive a feature toggle.
 
 **Example Query**
 
@@ -414,7 +426,13 @@ Transfer-Encoding: chunked
 
 ### Add strategy to Feature Toggle {#add-strategy}
 
-`http://localhost:4242/api/admin/projects/:projectId/features/:featureName/environments/:environment/strategies`
+<ApiRequest verb="post" url="api/admin/projects/:projectId/features/:featureName/environments/:environment/strategies" title="Add a new strategy to the named feature toggle in the named environment (example data)" payload={{name: "flexibleRollout",
+        parameters: {
+            rollout: 20,
+            groupId: "demo",
+            stickiness: "default"
+          }
+      }}/>
 
 This endpoint will allow you to add a new strategy to a feature toggle in a given environment.
 
@@ -450,6 +468,14 @@ Authorization:$KEY
 
 ### Update strategy configuration {#update-strategy}
 
+<ApiRequest verb="put" url="api/admin/projects/:projectId/features/:featureName/environments/:environment/strategies/:strategy-id" title="Overwrite the specified strategy on the named feature toggle in the named environment (example data)" payload={{name: "flexibleRollout",
+        parameters: {
+            rollout: 25,
+            groupId: "demo",
+            stickiness: "default"
+          }
+      }}/>
+
 **Example Query**
 
 ```bash
@@ -482,6 +508,8 @@ Authorization:$KEY
 
 ## Patch strategy configuration {#patch-strategy}
 
+<ApiRequest verb="patch" url="api/admin/projects/:project-id/features/:featureName/environments/:environment/strategies/:strategyId" title="Patch update a strategy definition (example data)" payload={[{"op": "replace", "path": "/parameters/rollout", "value": 50}]}/>
+
 **Example Query**
 
 ```bash
@@ -509,6 +537,8 @@ Authorization:$KEY
 
 ### Delete strategy from Feature Toggle {#delete-strategy}
 
+<ApiRequest verb="delete" url="api/admin/projects/:projectId/features/:featureName/environments/:environment/strategies/:strategyId" title="Delete the strategy with the given ID"/>
+
 **Example Query**
 
 ```bash
@@ -528,7 +558,11 @@ Transfer-Encoding: chunked
 Vary: Accept-Encoding
 ```
 
-### Enable environment for Feature Toggle {#enable-env}
+## Enabling and disabling toggles
+
+### Enable Feature Toggle in an Environment {#enable-env}
+
+<ApiRequest verb="post" url="api/admin/projects/:projectId/features/:featureName/environments/:environment/on" title="Activate the named toggle in the given environment"/>
 
 **Example Query**
 
@@ -551,9 +585,45 @@ Possible Errors:
 
 - _409 Conflict_ - You can not enable the environment before it has strategies.
 
+
+###  Disable Feature Toggle in an Environment {#disable-env}
+
+<ApiRequest verb="post" url="api/admin/projects/:projectId/features/:featureName/environments/:environment/off" title="Disable the named toggle in the given environment"/>
+
+**Example Query**
+
+```bash
+http POST http://localhost:4242/api/admin/projects/default/features/demo/environments/development/off Authorization:$KEY --json
+```
+
+**Example response:**
+
+```
+HTTP/1.1 200 OK
+Access-Control-Allow-Origin: *
+Connection: keep-alive
+Date: Tue, 07 Sep 2021 20:49:51 GMT
+Keep-Alive: timeout=60
+Transfer-Encoding: chunked
+```
+
+
 ## Feature Variants
 
 ### Put variants for Feature Toggle {#update-variants}
+
+<ApiRequest verb="put" url="api/admin/projects/:projectId/features/:featureName/variants" title="Create (overwrite) variants for a feature toggle (example data)" payload={[
+	{
+		"name": "variant1",
+		"weightType": "fix",
+		"weight": 650
+	},
+	{
+		"name": "variant2",
+		"weightType": "variable",
+		"weight": 123
+	}
+]}/>
 
 This overwrites the current variants for the feature toggle specified in the :featureName parameter.
 The backend will validate the input for the following invariants
@@ -610,6 +680,12 @@ Content-Type: application/json; charset=utf-8
 
 ### PATCH variants for a feature toggle
 
+<ApiRequest verb="patch" url="api/admin/projects/:projectId/features/:featureName/variants" title="Create (overwrite) variants for a feature toggle (example data)" payload={[{"op": "add", "path": "/1", "value": {
+  "name": "new-variant",
+  "weightType": "fix",
+  "weight": 200
+}}]}/>
+
 **Example Query**
 
 ```bash
@@ -654,9 +730,7 @@ You can add and remove users to a project using the `/api/admin/projects/:projec
 
 ### Add a user to a project
 
-``` http
-POST /api/admin/projects/:projectId/users/:userId/roles/:roleId
-```
+<ApiRequest verb="POST" url="api/admin/projects/:projectId/users/:userId/roles/:roleId" title="Add a user to a project (example data)" payload={{ userId: 25, projectId: "myProject", roleId: "1" }}/>
 
 This will add a user to a project and give the user a specified role within that project.
 
@@ -704,9 +778,8 @@ Authorization:$KEY
 
 ### Change a user's role in a project
 
-``` http
-PUT /api/admin/projects/:projectId/users/:userId/roles/:roleId
-```
+
+<ApiRequest verb="PUT" url="api/admin/projects/:projectId/users/:userId/roles/:roleId" title="Update a user's role in a project" payload={{ userId: 25, projectId: "myProject", roleId: "3" }}/>
 
 This will change the user's project role to the role specified by `:roleId`. If the user has not been added to the project, nothing happens.
 
@@ -753,9 +826,7 @@ Authorization:$KEY
 
 ### Remove a user from a project
 
-``` http
-DELETE /api/admin/projects/:projectId/users/:userId/roles/:roleId
-```
+<ApiRequest verb="DELETE" url="api/admin/projects/:projectId/users/:userId/roles/:roleId" title="Delete a user from a project"/>
 
 This removes the specified role from the user in the project. Because users can only have one role in a project, this effectively removes the user from the project. The user _must_ have the role indicated by the `:roleId` URL parameter for the request to succeed.
 

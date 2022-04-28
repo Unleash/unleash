@@ -66,7 +66,7 @@
     "debounce": "1.2.1",
     "deep-diff": "1.0.2",
     "fast-json-patch": "3.1.1",
-    "http-proxy-middleware": "2.0.4",
+    "http-proxy-middleware": "2.0.6",
     "immer": "^9.0.12",
     "lodash.clonedeep": "4.5.0",
     "msw": "^0.39.2",

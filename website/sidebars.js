@@ -202,6 +202,8 @@ module.exports = {
                                 'sdks/proxy-ios',
                                 'sdks/proxy-javascript',
                                 'sdks/proxy-react',
+                                'sdks/proxy-vue',
+                                'sdks/proxy-svelte'
                             ],
                         },
                         {

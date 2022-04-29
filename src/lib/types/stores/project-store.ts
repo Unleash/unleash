@@ -1,4 +1,4 @@
-import { IEnvironmentProjectLink } from 'lib/db/project-store';
+import { IEnvironmentProjectLink } from '../../db/project-store';
 import { IProject, IProjectWithCount } from '../model';
 import { Store } from './store';
 

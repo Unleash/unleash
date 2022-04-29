@@ -25,6 +25,7 @@ import Input from 'component/common/Input/Input';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
+import produce from 'immer';
 
 const payloadOptions = [
     { key: 'string', label: 'string' },
@@ -199,27 +200,18 @@ export const AddVariant = ({
         closeDialog();
     };
 
-    const updateOverrideType =
-        (index: number, contextName: string) => (value: string) => {
-            setOverrides(
-                overrides.map((o, i) => {
-                    if (i === index) {
-                        // @ts-expect-error
-                        o[contextName] = value;
-                    }
-
-                    return o;
-                })
-            );
-        };
+    const updateOverrideType = (index: number) => (value: string) => {
+        setOverrides(
+            produce(draft => {
+                draft[index].contextName = value;
+            })
+        );
+    };
 
     const updateOverrideValues = (index: number, values: string[]) => {
         setOverrides(
-            overrides.map((o, i) => {
-                if (i === index) {
-                    o.values = values;
-                }
-                return o;
+            produce(draft => {
+                draft[index].values = values;
             })
         );
     };

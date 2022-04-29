@@ -162,7 +162,7 @@ If you're looking for one of the following features, please take a look at our [
 
 ## Architecture
 
-<img src="./.github/unleash-architecture.svg" title="Unleash System Overview" />
+<img src="./website/static/img/unleash-architecture.svg" title="Unleash System Overview" />
 
 Read more in the [*system overview* section of the Unleash documentation](https://docs.getunleash.io/user_guide/unleash_overview#system-overview).
 

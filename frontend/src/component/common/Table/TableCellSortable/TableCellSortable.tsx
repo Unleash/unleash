@@ -60,18 +60,33 @@ export const TableCellSortable = ({
         <TableCell aria-sort={ariaSort} className={cellClassName}>
             <button className={styles.sortButton} onClick={onSortClick}>
                 {children}
+                <ConditionallyRender
+                    condition={sort.type === name}
+                    show={
+                        <ConditionallyRender
+                            condition={Boolean(sort.desc)}
+                            show={
+                                <KeyboardArrowDown
+                                    className={styles.icon}
+                                    fontSize="inherit"
+                                />
+                            }
+                            elseShow={
+                                <KeyboardArrowUp
+                                    className={styles.icon}
+                                    fontSize="inherit"
+                                />
+                            }
+                        />
+                    }
+                    elseShow={
+                        <UnfoldMoreOutlined
+                            className={styles.icon}
+                            fontSize="inherit"
+                        />
+                    }
+                />
             </button>
-            <ConditionallyRender
-                condition={sort.type === name}
-                show={
-                    <ConditionallyRender
-                        condition={Boolean(sort.desc)}
-                        show={<KeyboardArrowDown />}
-                        elseShow={<KeyboardArrowUp />}
-                    />
-                }
-                elseShow={<UnfoldMoreOutlined />}
-            />
         </TableCell>
     );
 };

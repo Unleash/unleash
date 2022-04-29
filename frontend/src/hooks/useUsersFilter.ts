@@ -43,20 +43,14 @@ const filterUsersByQuery = (users: IUser[], filter: IUsersFilter): IUser[] => {
         return users;
     }
 
-    // Try to parse the search query as a RegExp.
-    // Return all users if it can't be parsed.
-    try {
-        const regExp = new RegExp(filter.query, 'i');
-        return users.filter(user => filterUserByRegExp(user, regExp));
-    } catch (err) {
-        if (err instanceof SyntaxError) {
-            return users;
-        } else {
-            throw err;
-        }
-    }
+    return users.filter(user => {
+        return filterUserByText(user, filter.query);
+    });
 };
 
-const filterUserByRegExp = (user: IUser, regExp: RegExp): boolean =>
-    regExp.test(user.name ?? '') ||
-    regExp.test(user.username ?? user.email ?? '');
+const filterUserByText = (user: IUser, search: string = ''): boolean => {
+    const fieldsToSearch = [user.name ?? '', user.username ?? user.email ?? ''];
+    return fieldsToSearch.some(field =>
+        field.toLowerCase().includes(search.toLowerCase())
+    );
+};

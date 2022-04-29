@@ -92,9 +92,9 @@ export const EditSegment = () => {
                 setDescription={setDescription}
                 constraints={constraints}
                 setConstraints={setConstraints}
-                mode="Edit"
                 errors={errors}
                 clearErrors={clearErrors}
+                mode="edit"
             >
                 <UpdateButton
                     permission={UPDATE_SEGMENT}

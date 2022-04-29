@@ -89,9 +89,9 @@ export const CreateSegment = () => {
                 setDescription={setDescription}
                 constraints={constraints}
                 setConstraints={setConstraints}
-                mode="Create"
                 errors={errors}
                 clearErrors={clearErrors}
+                mode="create"
             >
                 <CreateButton
                     name="segment"

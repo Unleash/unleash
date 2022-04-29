@@ -7,7 +7,6 @@ import { ConstraintAccordionView } from './ConstraintAccordionView/ConstraintAcc
 interface IConstraintAccordionProps {
     compact: boolean;
     editing: boolean;
-    environmentId?: string;
     constraint: IConstraint;
     onCancel: () => void;
     onEdit?: () => void;
@@ -19,7 +18,6 @@ export const ConstraintAccordion = ({
     constraint,
     compact = false,
     editing,
-    environmentId,
     onEdit,
     onCancel,
     onDelete,
@@ -43,7 +41,6 @@ export const ConstraintAccordion = ({
                     constraint={constraint}
                     onEdit={onEdit}
                     onDelete={onDelete}
-                    environmentId={environmentId}
                     compact={compact}
                 />
             }

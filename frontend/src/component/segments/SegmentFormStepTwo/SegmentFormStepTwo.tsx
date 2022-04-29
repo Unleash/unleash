@@ -1,11 +1,15 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useContext } from 'react';
 import { Button } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
 import ConditionallyRender from 'component/common/ConditionallyRender';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { CreateUnleashContext } from 'component/context/CreateUnleashContext/CreateUnleashContext';
-import { CREATE_CONTEXT_FIELD } from 'component/providers/AccessProvider/permissions';
+import {
+    CREATE_CONTEXT_FIELD,
+    CREATE_SEGMENT,
+    UPDATE_SEGMENT,
+} from 'component/providers/AccessProvider/permissions';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import { IConstraint } from 'interfaces/strategy';
 import { useHistory } from 'react-router-dom';
@@ -14,7 +18,7 @@ import {
     ConstraintAccordionList,
     IConstraintAccordionListRef,
 } from 'component/common/ConstraintAccordion/ConstraintAccordionList/ConstraintAccordionList';
-import { SegmentFormStep } from '../SegmentForm/SegmentForm';
+import { SegmentFormStep, SegmentFormMode } from '../SegmentForm/SegmentForm';
 import {
     AutocompleteBox,
     IAutocompleteBoxOption,
@@ -25,11 +29,13 @@ import {
 } from 'component/segments/SegmentDocs/SegmentDocs';
 import { useSegmentValuesCount } from 'component/segments/hooks/useSegmentValuesCount';
 import { SEGMENT_VALUES_LIMIT } from 'utils/segmentLimits';
+import AccessContext from 'contexts/AccessContext';
 
 interface ISegmentFormPartTwoProps {
     constraints: IConstraint[];
     setConstraints: React.Dispatch<React.SetStateAction<IConstraint[]>>;
     setCurrentStep: React.Dispatch<React.SetStateAction<SegmentFormStep>>;
+    mode: SegmentFormMode;
 }
 
 export const SegmentFormStepTwo: React.FC<ISegmentFormPartTwoProps> = ({
@@ -37,14 +43,17 @@ export const SegmentFormStepTwo: React.FC<ISegmentFormPartTwoProps> = ({
     constraints,
     setConstraints,
     setCurrentStep,
+    mode,
 }) => {
     const constraintsAccordionListRef = useRef<IConstraintAccordionListRef>();
     const history = useHistory();
     const styles = useStyles();
+    const { hasAccess } = useContext(AccessContext);
     const { context = [] } = useUnleashContext();
     const [open, setOpen] = useState(false);
     const segmentValuesCount = useSegmentValuesCount(constraints);
     const overSegmentValuesLimit = segmentValuesCount > SEGMENT_VALUES_LIMIT;
+    const modePermission = mode === 'create' ? CREATE_SEGMENT : UPDATE_SEGMENT;
 
     const autocompleteOptions = context.map(c => ({
         value: c.name,
@@ -122,7 +131,11 @@ export const SegmentFormStepTwo: React.FC<ISegmentFormPartTwoProps> = ({
                     <ConstraintAccordionList
                         ref={constraintsAccordionListRef}
                         constraints={constraints}
-                        setConstraints={setConstraints}
+                        setConstraints={
+                            hasAccess(modePermission)
+                                ? setConstraints
+                                : undefined
+                        }
                     />
                 </div>
             </div>

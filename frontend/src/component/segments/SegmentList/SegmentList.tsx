@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import {
     Table,
     TableBody,
@@ -7,12 +7,8 @@ import {
     TableRow,
     Typography,
 } from '@material-ui/core';
-import AccessContext from 'contexts/AccessContext';
 import usePagination from 'hooks/usePagination';
-import {
-    CREATE_SEGMENT,
-    UPDATE_SEGMENT,
-} from 'component/providers/AccessProvider/permissions';
+import { CREATE_SEGMENT } from 'component/providers/AccessProvider/permissions';
 import PaginateUI from 'component/common/PaginateUI/PaginateUI';
 import { SegmentListItem } from './SegmentListItem/SegmentListItem';
 import { ISegment } from 'interfaces/segment';
@@ -32,7 +28,6 @@ import { NAVIGATE_TO_CREATE_SEGMENT } from 'utils/testIds';
 
 export const SegmentsList = () => {
     const history = useHistory();
-    const { hasAccess } = useContext(AccessContext);
     const { segments = [], refetchSegments } = useSegments();
     const { deleteSegment } = useSegmentsApi();
     const { page, pages, nextPage, prevPage, setPageIndex, pageIndex } =
@@ -145,7 +140,7 @@ export const SegmentsList = () => {
                             classes={{ root: styles.cell }}
                             className={styles.lastHeader}
                         >
-                            {hasAccess(UPDATE_SEGMENT) ? 'Actions' : ''}
+                            Action
                         </TableCell>
                     </TableRow>
                 </TableHead>

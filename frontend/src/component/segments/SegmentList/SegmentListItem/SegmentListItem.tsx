@@ -2,14 +2,15 @@ import { useStyles } from './SegmentListItem.styles';
 import { TableCell, TableRow, Typography } from '@material-ui/core';
 import { Delete, Edit } from '@material-ui/icons';
 import {
-    ADMIN,
     UPDATE_SEGMENT,
+    DELETE_SEGMENT,
 } from 'component/providers/AccessProvider/permissions';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import TimeAgo from 'react-timeago';
 import { ISegment } from 'interfaces/segment';
 import { useHistory } from 'react-router-dom';
 import { SEGMENT_DELETE_BTN_ID } from 'utils/testIds';
+import React from 'react';
 
 interface ISegmentListItemProps {
     id: number;
@@ -82,7 +83,7 @@ export const SegmentListItem = ({
                         });
                         setDelDialog(true);
                     }}
-                    permission={ADMIN}
+                    permission={DELETE_SEGMENT}
                     tooltip="Remove segment"
                     data-testid={`${SEGMENT_DELETE_BTN_ID}_${name}`}
                 >

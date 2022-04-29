@@ -7,6 +7,8 @@ import { SegmentFormStepList } from 'component/segments/SegmentFormStepList/Segm
 import ConditionallyRender from 'component/common/ConditionallyRender';
 
 export type SegmentFormStep = 1 | 2;
+export type SegmentFormMode = 'create' | 'edit';
+
 interface ISegmentProps {
     name: string;
     description: string;
@@ -16,8 +18,8 @@ interface ISegmentProps {
     setConstraints: React.Dispatch<React.SetStateAction<IConstraint[]>>;
     handleSubmit: (e: any) => void;
     errors: { [key: string]: string };
-    mode: 'Create' | 'Edit';
     clearErrors: () => void;
+    mode: SegmentFormMode;
 }
 
 export const SegmentForm: React.FC<ISegmentProps> = ({
@@ -31,6 +33,7 @@ export const SegmentForm: React.FC<ISegmentProps> = ({
     handleSubmit,
     errors,
     clearErrors,
+    mode,
 }) => {
     const styles = useStyles();
     const totalSteps = 2;
@@ -61,6 +64,7 @@ export const SegmentForm: React.FC<ISegmentProps> = ({
                             constraints={constraints}
                             setConstraints={setConstraints}
                             setCurrentStep={setCurrentStep}
+                            mode={mode}
                         >
                             {children}
                         </SegmentFormStepTwo>

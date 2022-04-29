@@ -17,7 +17,6 @@ import {
 
 import { useStyles } from '../ConstraintAccordion.styles';
 interface IConstraintAccordionViewProps {
-    environmentId?: string;
     constraint: IConstraint;
     onDelete?: () => void;
     onEdit?: () => void;
@@ -26,7 +25,6 @@ interface IConstraintAccordionViewProps {
 
 export const ConstraintAccordionView = ({
     compact,
-    environmentId,
     constraint,
     onEdit,
     onDelete,
@@ -49,7 +47,6 @@ export const ConstraintAccordionView = ({
             >
                 <ConstraintAccordionViewHeader
                     compact={compact}
-                    environmentId={environmentId}
                     constraint={constraint}
                     onEdit={onEdit}
                     onDelete={onDelete}

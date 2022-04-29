@@ -1,15 +1,11 @@
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
-import { Chip, useMediaQuery } from '@material-ui/core';
+import { Chip, useMediaQuery, IconButton } from '@material-ui/core';
 import { ConstraintIcon } from 'component/common/ConstraintAccordion/ConstraintIcon';
 import { Delete, Edit } from '@material-ui/icons';
 import { IConstraint } from 'interfaces/strategy';
 
 import { useStyles } from 'component/common/ConstraintAccordion/ConstraintAccordion.styles';
 import ConditionallyRender from 'component/common/ConditionallyRender';
-import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
-import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
-import { useParams } from 'react-router-dom';
-import { IFeatureViewParams } from 'interfaces/params';
 import React from 'react';
 import { formatConstraintValue } from 'utils/formatConstraintValue';
 import { useLocationSettings } from 'hooks/useLocationSettings';
@@ -21,7 +17,6 @@ interface IConstraintAccordionViewHeaderProps {
     onDelete?: () => void;
     onEdit?: () => void;
     singleValue: boolean;
-    environmentId?: string;
 }
 
 export const ConstraintAccordionViewHeader = ({
@@ -30,11 +25,9 @@ export const ConstraintAccordionViewHeader = ({
     onEdit,
     onDelete,
     singleValue,
-    environmentId,
 }: IConstraintAccordionViewHeaderProps) => {
     const styles = useStyles();
     const { locationSettings } = useLocationSettings();
-    const { projectId } = useParams<IFeatureViewParams>();
     const smallScreen = useMediaQuery(`(max-width:${790}px)`);
 
     const minWidthHeader = compact || smallScreen ? '100px' : '175px';
@@ -97,32 +90,19 @@ export const ConstraintAccordionViewHeader = ({
             <div className={styles.headerActions}>
                 <ConditionallyRender
                     condition={Boolean(onEditClick)}
-                    show={
-                        <PermissionIconButton
-                            onClick={onEditClick!}
-                            permission={UPDATE_FEATURE_STRATEGY}
-                            projectId={projectId}
-                            environmentId={environmentId}
-                            hidden={!onEdit}
-                            tooltip="Edit constraint"
-                        >
-                            <Edit />
-                        </PermissionIconButton>
-                    }
+                    show={() => (
+                        <IconButton type="button" onClick={onEditClick}>
+                            <Edit titleAccess="Edit constraint" />
+                        </IconButton>
+                    )}
                 />
                 <ConditionallyRender
                     condition={Boolean(onDeleteClick)}
-                    show={
-                        <PermissionIconButton
-                            onClick={onDeleteClick!}
-                            permission={UPDATE_FEATURE_STRATEGY}
-                            projectId={projectId}
-                            tooltip="Delete constraint"
-                            environmentId={environmentId}
-                        >
-                            <Delete />
-                        </PermissionIconButton>
-                    }
+                    show={() => (
+                        <IconButton type="button" onClick={onDeleteClick}>
+                            <Delete titleAccess="Delete constraint" />
+                        </IconButton>
+                    )}
                 />
             </div>
         </div>

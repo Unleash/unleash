@@ -1,6 +1,11 @@
 import { IConstraint, IFeatureStrategy } from 'interfaces/strategy';
-import React, { useMemo } from 'react';
+import React, { useMemo, useContext } from 'react';
 import { ConstraintAccordionList } from 'component/common/ConstraintAccordion/ConstraintAccordionList/ConstraintAccordionList';
+import AccessContext from 'contexts/AccessContext';
+import {
+    UPDATE_FEATURE_STRATEGY,
+    CREATE_FEATURE_STRATEGY,
+} from 'component/providers/AccessProvider/permissions';
 
 interface IFeatureStrategyConstraintsProps {
     projectId: string;
@@ -17,6 +22,8 @@ export const FeatureStrategyConstraints = ({
     strategy,
     setStrategy,
 }: IFeatureStrategyConstraintsProps) => {
+    const { hasAccess } = useContext(AccessContext);
+
     const constraints = useMemo(() => {
         return strategy.constraints ?? [];
     }, [strategy]);
@@ -28,13 +35,23 @@ export const FeatureStrategyConstraints = ({
         }));
     };
 
+    const showCreateButton = hasAccess(
+        CREATE_FEATURE_STRATEGY,
+        projectId,
+        environmentId
+    );
+
+    const allowEditAndDelete = hasAccess(
+        UPDATE_FEATURE_STRATEGY,
+        projectId,
+        environmentId
+    );
+
     return (
         <ConstraintAccordionList
-            projectId={projectId}
-            environmentId={environmentId}
             constraints={constraints}
-            setConstraints={setConstraints}
-            showCreateButton
+            setConstraints={allowEditAndDelete ? setConstraints : undefined}
+            showCreateButton={showCreateButton}
         />
     );
 };

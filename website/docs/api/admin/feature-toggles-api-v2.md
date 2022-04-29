@@ -616,7 +616,16 @@ Transfer-Encoding: chunked
 	{
 		"name": "variant1",
 		"weightType": "fix",
-		"weight": 650
+		"weight": 650,
+        "payload": {
+          "type": "json",
+          "value": "{\"key1\": \"value\", \"key2\": 123}"
+        },
+        "stickiness": "userId",
+        "overrides": [ {
+          "contextName": "userId",
+          "values": ["1", "23"]
+        } ]
 	},
 	{
 		"name": "variant2",
@@ -639,7 +648,16 @@ echo '[
 	{
 		"name": "variant1",
 		"weightType": "fix",
-		"weight": 650
+		"weight": 650,
+        "payload": {
+          "type": "json",
+          "value": "{\"key1\": \"value\", \"key2\": 123}"
+        },
+        "stickiness": "userId",
+        "overrides": [{
+          "contextName": "userId",
+          "values": ["1", "23"]
+        }]
 	},
 	{
 		"name": "variant2",

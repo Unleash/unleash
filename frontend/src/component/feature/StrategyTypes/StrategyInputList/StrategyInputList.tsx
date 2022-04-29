@@ -3,6 +3,7 @@ import { Button, Chip, TextField, Typography } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
 import ConditionallyRender from 'component/common/ConditionallyRender';
 import { ADD_TO_STRATEGY_INPUT_LIST, STRATEGY_INPUT_LIST } from 'utils/testIds';
+import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 
 interface IStrategyInputList {
     name: string;
@@ -80,7 +81,13 @@ const StrategyInputList = ({
                 {list.map((entryValue, index) => (
                     <Chip
                         key={index + entryValue}
-                        label={entryValue}
+                        label={
+                            <StringTruncator
+                                maxWidth="300"
+                                text={entryValue}
+                                maxLength={50}
+                            />
+                        }
                         style={{ marginRight: '3px' }}
                         onDelete={disabled ? undefined : () => onClose(index)}
                         title="Remove value"

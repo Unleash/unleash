@@ -1,6 +1,7 @@
 import { Chip } from '@material-ui/core';
 import ConditionallyRender from 'component/common/ConditionallyRender';
 import { useStyles } from './FeatureOverviewExecutionChips.styles';
+import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 
 interface IFeatureOverviewExecutionChipsProps {
     value: string[];
@@ -24,10 +25,16 @@ const FeatureOverviewExecutionChips = ({
                             {value.length > 1 ? `${text}s` : text} will get
                             access.
                         </p>
-                        {value.map((userId: string) => (
+                        {value.map((v: string) => (
                             <Chip
-                                key={userId}
-                                label={userId}
+                                key={v}
+                                label={
+                                    <StringTruncator
+                                        maxWidth="300"
+                                        text={v}
+                                        maxLength={50}
+                                    />
+                                }
                                 className={styles.chip}
                             />
                         ))}

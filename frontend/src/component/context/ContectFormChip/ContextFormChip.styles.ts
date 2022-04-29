@@ -11,6 +11,7 @@ export const useStyles = makeStyles(theme => ({
         padding: '0.5rem',
         background: theme.palette.grey[200],
         borderRadius: theme.borders.radius.main,
+        wordBreak: 'break-word',
     },
     label: {
         fontSize: theme.fontSizes.smallBody,

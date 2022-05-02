@@ -30,7 +30,7 @@ export default class ArchiveController extends Controller {
 
         this.route({
             method: 'get',
-            path: '/features',
+            path: '/features/:projectId?',
             acceptAnyContentType: true,
             handler: this.getArchivedFeatures,
             middleware: [
@@ -51,11 +51,13 @@ export default class ArchiveController extends Controller {
     }
 
     async getArchivedFeatures(
-        req: Request,
+        req: Request<{ projectId?: string }, any, any, any>,
         res: Response<FeaturesSchema>,
     ): Promise<void> {
+        const { projectId } = req.params;
         const features = await this.featureService.getMetadataForAllFeatures(
             true,
+            projectId,
         );
         res.json({ version: 2, features });
     }

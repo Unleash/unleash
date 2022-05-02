@@ -1,7 +1,7 @@
+import { useEffect, useState } from 'react';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Checkbox } from '@material-ui/core';
 import { useCommonStyles } from 'themes/commonStyles';
-import ConditionallyRender from 'component/common/ConditionallyRender';
-import React, { useEffect, useState } from 'react';
 import { ConstraintValueSearch } from 'component/common/ConstraintAccordion/ConstraintValueSearch/ConstraintValueSearch';
 import { ConstraintFormHeader } from '../ConstraintFormHeader/ConstraintFormHeader';
 import { ILegalValue } from 'interfaces/context';

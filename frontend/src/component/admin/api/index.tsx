@@ -1,7 +1,7 @@
-import AdminMenu from '../menu/AdminMenu';
-import ConditionallyRender from 'component/common/ConditionallyRender';
-import { ApiTokenPage } from 'component/admin/apiToken/ApiTokenPage/ApiTokenPage';
 import { useLocation } from 'react-router-dom';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { ApiTokenPage } from 'component/admin/apiToken/ApiTokenPage/ApiTokenPage';
+import AdminMenu from '../menu/AdminMenu';
 
 const ApiPage = () => {
     const { pathname } = useLocation();

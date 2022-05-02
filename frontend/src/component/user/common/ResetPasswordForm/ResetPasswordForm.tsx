@@ -11,7 +11,7 @@ import React, {
 import { useHistory } from 'react-router';
 import { useCommonStyles } from 'themes/commonStyles';
 import { OK } from 'constants/statusCodes';
-import ConditionallyRender from 'component/common/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import ResetPasswordError from '../ResetPasswordError/ResetPasswordError';
 import PasswordChecker from './PasswordChecker/PasswordChecker';
 import PasswordMatcher from './PasswordMatcher/PasswordMatcher';

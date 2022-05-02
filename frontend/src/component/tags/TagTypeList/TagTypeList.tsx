@@ -10,14 +10,14 @@ import {
     Tooltip,
 } from '@material-ui/core';
 import { Add, Delete, Edit, Label } from '@material-ui/icons';
-import HeaderTitle from 'component/common/HeaderTitle';
+import { HeaderTitle } from 'component/common/HeaderTitle/HeaderTitle';
 import PageContent from 'component/common/PageContent/PageContent';
-import ConditionallyRender from 'component/common/ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
     DELETE_TAG_TYPE,
     UPDATE_TAG_TYPE,
 } from 'component/providers/AccessProvider/permissions';
-import Dialogue from 'component/common/Dialogue/Dialogue';
+import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import styles from './TagTypeList.module.scss';
 import AccessContext from 'contexts/AccessContext';

@@ -1,21 +1,21 @@
-import HeaderTitle from 'component/common/HeaderTitle';
-import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
-import { Add } from '@material-ui/icons';
-import PageContent from 'component/common/PageContent';
-import { List } from '@material-ui/core';
-import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
-import { IEnvironment, ISortOrderPayload } from 'interfaces/environments';
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import EnvironmentDeleteConfirm from './EnvironmentDeleteConfirm/EnvironmentDeleteConfirm';
+import { List } from '@material-ui/core';
+import { Add } from '@material-ui/icons';
 import useToast from 'hooks/useToast';
+import { IEnvironment, ISortOrderPayload } from 'interfaces/environments';
+import { HeaderTitle } from 'component/common/HeaderTitle/HeaderTitle';
+import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
+import PageContent from 'component/common/PageContent';
+import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import useEnvironmentApi from 'hooks/api/actions/useEnvironmentApi/useEnvironmentApi';
-import EnvironmentListItem from './EnvironmentListItem/EnvironmentListItem';
-import EnvironmentToggleConfirm from './EnvironmentToggleConfirm/EnvironmentToggleConfirm';
 import useProjectRolePermissions from 'hooks/api/getters/useProjectRolePermissions/useProjectRolePermissions';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import EnvironmentListItem from './EnvironmentListItem/EnvironmentListItem';
+import EnvironmentToggleConfirm from './EnvironmentToggleConfirm/EnvironmentToggleConfirm';
+import EnvironmentDeleteConfirm from './EnvironmentDeleteConfirm/EnvironmentDeleteConfirm';
 
 const EnvironmentList = () => {
     const defaultEnv = {

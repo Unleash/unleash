@@ -10,7 +10,7 @@ import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { IFeatureViewParams } from 'interfaces/params';
 import useToast from 'hooks/useToast';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
-import ConditionallyRender from 'component/common/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { formatUnknownError } from 'utils/formatUnknownError';
 
 const FeatureSettingsMetadata = () => {

@@ -9,7 +9,7 @@ import { Delete, Edit } from '@material-ui/icons';
 
 import styles from '../variants.module.scss';
 import { IFeatureVariant } from 'interfaces/featureToggle';
-import ConditionallyRender from 'component/common/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { weightTypes } from '../AddFeatureVariant/enums';
 
 interface IFeatureVariantListItem {

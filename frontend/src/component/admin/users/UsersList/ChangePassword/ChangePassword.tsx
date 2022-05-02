@@ -3,11 +3,11 @@ import classnames from 'classnames';
 import { Avatar, TextField, Typography } from '@material-ui/core';
 import { trim } from 'component/common/util';
 import { modalStyles } from 'component/admin/users/util';
-import Dialogue from 'component/common/Dialogue/Dialogue';
+import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import PasswordChecker from 'component/user/common/ResetPasswordForm/PasswordChecker/PasswordChecker';
 import { useCommonStyles } from 'themes/commonStyles';
 import PasswordMatcher from 'component/user/common/ResetPasswordForm/PasswordMatcher/PasswordMatcher';
-import ConditionallyRender from 'component/common/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Alert } from '@material-ui/lab';
 import { IUser } from 'interfaces/user';
 

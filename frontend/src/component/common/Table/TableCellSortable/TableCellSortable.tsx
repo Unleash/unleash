@@ -7,7 +7,7 @@ import {
     KeyboardArrowUp,
 } from '@material-ui/icons';
 import { IUsersSort, UsersSortType } from 'hooks/useUsersSort';
-import ConditionallyRender from 'component/common/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useStyles } from 'component/common/Table/TableCellSortable/TableCellSortable.styles';
 import { AnnouncerContext } from 'component/common/Announcer/AnnouncerContext/AnnouncerContext';
 

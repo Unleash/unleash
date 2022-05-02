@@ -1,7 +1,7 @@
 import { useFeatures } from 'hooks/api/getters/useFeatures/useFeatures';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useFeaturesFilter } from 'hooks/useFeaturesFilter';
-import FeatureToggleList from './FeatureToggleList';
+import { FeatureToggleList } from './FeatureToggleList';
 import { useFeaturesSort } from 'hooks/useFeaturesSort';
 
 export const FeatureToggleListContainer = () => {

@@ -10,12 +10,12 @@ import { IProjectViewParams } from 'interfaces/params';
 import usePagination from 'hooks/usePagination';
 import PaginateUI from 'component/common/PaginateUI/PaginateUI';
 import useToast from 'hooks/useToast';
-import ConfirmDialogue from 'component/common/Dialogue';
+import { Dialogue as ConfirmDialogue } from 'component/common/Dialogue/Dialogue';
 import useProjectAccess, {
     IProjectAccessUser,
 } from 'hooks/api/getters/useProjectAccess/useProjectAccess';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
-import HeaderTitle from 'component/common/HeaderTitle';
+import { HeaderTitle } from 'component/common/HeaderTitle/HeaderTitle';
 import { ProjectAccessList } from './ProjectAccessList/ProjectAccessList';
 
 export const ProjectAccess = () => {

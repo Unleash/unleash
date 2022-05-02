@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import ConditionallyRender from '../ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import classnames from 'classnames';
 import { useStyles } from './PaginationUI.styles';
 

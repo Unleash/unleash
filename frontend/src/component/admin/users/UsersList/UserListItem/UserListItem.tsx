@@ -10,7 +10,7 @@ import classnames from 'classnames';
 import { Delete, Edit, Lock } from '@material-ui/icons';
 import { SyntheticEvent, useContext } from 'react';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
-import ConditionallyRender from 'component/common/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import AccessContext from 'contexts/AccessContext';
 import { IUser } from 'interfaces/user';
 import { useHistory } from 'react-router-dom';

@@ -15,7 +15,7 @@ import {
 import { Apps } from '@material-ui/icons';
 
 import styles from './common.module.scss';
-import ConditionallyRender from './ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from './ConditionallyRender/ConditionallyRender';
 
 export { styles };
 
@@ -112,38 +112,6 @@ export const IconLink = ({ url, icon: IconComponent }) => (
 IconLink.propTypes = {
     url: PropTypes.string,
     icon: PropTypes.object,
-};
-
-export const DropdownButton = ({
-    label,
-    id,
-    className = styles.dropdownButton,
-    title,
-    icon,
-    startIcon,
-    style,
-    ...rest
-}) => (
-    <Button
-        id={id}
-        className={className}
-        title={title}
-        style={style}
-        {...rest}
-        startIcon={startIcon}
-        endIcon={<Icon>{icon}</Icon>}
-    >
-        {label}
-    </Button>
-);
-
-DropdownButton.propTypes = {
-    label: PropTypes.string,
-    style: PropTypes.object,
-    id: PropTypes.string,
-    title: PropTypes.string,
-    icon: PropTypes.object,
-    startIcon: PropTypes.object,
 };
 
 export const MenuItemWithIcon = React.forwardRef(

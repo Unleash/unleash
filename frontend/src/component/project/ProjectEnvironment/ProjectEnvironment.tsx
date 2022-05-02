@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import ConditionallyRender from 'component/common/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useStyles } from './ProjectEnvironment.styles';
 
 import useLoading from 'hooks/useLoading';
 import PageContent from 'component/common/PageContent';
-import HeaderTitle from 'component/common/HeaderTitle';
+import { HeaderTitle } from 'component/common/HeaderTitle/HeaderTitle';
 import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
 
 import ApiError from 'component/common/ApiError/ApiError';
@@ -214,7 +214,7 @@ const ProjectEnvironmentList = ({
                             />
                             <EnvironmentDisableConfirm
                                 env={selectedEnv}
-                                open={!!selectedEnv}
+                                open={Boolean(selectedEnv)}
                                 handleDisableEnvironment={
                                     handleDisableEnvironment
                                 }

@@ -6,7 +6,7 @@ import {
     ListItemText,
 } from '@material-ui/core';
 import { Delete, Edit, Visibility, VisibilityOff } from '@material-ui/icons';
-import ConditionallyRender from 'component/common/ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
     DELETE_ADDON,
     UPDATE_ADDON,
@@ -20,7 +20,7 @@ import { ReactElement, useContext, useState } from 'react';
 import AccessContext from 'contexts/AccessContext';
 import { IAddon } from 'interfaces/addons';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
-import Dialogue from 'component/common/Dialogue';
+import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { formatUnknownError } from 'utils/formatUnknownError';
 
 interface IConfigureAddonsProps {

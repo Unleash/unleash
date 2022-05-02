@@ -19,7 +19,7 @@ import {
     CREATE_FEATURE,
     CREATE_STRATEGY,
 } from 'component/providers/AccessProvider/permissions';
-import ConditionallyRender from 'component/common/ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { getTogglePath } from 'utils/routePathHelpers';
 import useApplication from 'hooks/api/getters/useApplication/useApplication';
 import AccessContext from 'contexts/AccessContext';

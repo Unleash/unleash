@@ -1,24 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, VFC } from 'react';
 import classnames from 'classnames';
 import { debounce } from 'debounce';
 import { InputBase, Chip } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import { useStyles } from 'component/common/SearchField/styles';
-import ConditionallyRender from 'component/common/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface ISearchFieldProps {
-    updateValue: React.Dispatch<React.SetStateAction<string>>;
+    updateValue: (value: string) => void;
     initialValue?: string;
     className?: string;
     showValueChip?: boolean;
 }
 
-export const SearchField = ({
+export const SearchField: VFC<ISearchFieldProps> = ({
     updateValue,
     initialValue = '',
     className = '',
     showValueChip,
-}: ISearchFieldProps) => {
+}) => {
     const styles = useStyles();
     const [localValue, setLocalValue] = useState(initialValue);
     const debounceUpdateValue = debounce(updateValue, 500);

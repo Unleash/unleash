@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { IconButton, Tooltip } from '@material-ui/core';
 import { Search } from '@material-ui/icons';
-import ConditionallyRender from 'component/common/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import AnimateOnMount from 'component/common/AnimateOnMount/AnimateOnMount';
 import { TableSearchField } from 'component/common/Table/TableActions/TableSearchField/TableSearchField';
 import { useStyles } from 'component/common/Table/TableActions/TableActions.styles';

@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { stringOperators } from 'constants/operators';
 import { IConstraint } from 'interfaces/strategy';
 import { oneOf } from 'utils/oneOf';
-import ConditionallyRender from 'component/common/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useStyles } from 'component/common/ConstraintAccordion/ConstraintAccordion.styles';
 import { ConstraintValueSearch } from 'component/common/ConstraintAccordion/ConstraintValueSearch/ConstraintValueSearch';
 import { formatConstraintValue } from 'utils/formatConstraintValue';

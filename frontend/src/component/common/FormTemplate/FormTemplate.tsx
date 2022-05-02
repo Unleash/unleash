@@ -8,7 +8,7 @@ import {
     Tooltip,
 } from '@material-ui/core';
 import { FileCopy, Info } from '@material-ui/icons';
-import ConditionallyRender from '../ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import Loader from '../Loader/Loader';
 import copy from 'copy-to-clipboard';
 import useToast from 'hooks/useToast';

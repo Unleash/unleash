@@ -17,7 +17,7 @@ import useProjectAccess, {
     IProjectAccessUser,
 } from 'hooks/api/getters/useProjectAccess/useProjectAccess';
 import { IProjectRole } from 'interfaces/role';
-import ConditionallyRender from 'component/common/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface IProjectAccessAddUserProps {
     roles: IProjectRole[];

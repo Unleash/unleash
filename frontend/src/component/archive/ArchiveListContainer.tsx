@@ -1,5 +1,5 @@
 import { useFeaturesArchive } from 'hooks/api/getters/useFeaturesArchive/useFeaturesArchive';
-import FeatureToggleList from '../feature/FeatureToggleList/FeatureToggleList';
+import { FeatureToggleList } from '../feature/FeatureToggleList/FeatureToggleList';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useFeaturesFilter } from 'hooks/useFeaturesFilter';
 import { useFeatureArchiveApi } from 'hooks/api/actions/useFeatureArchiveApi/useReviveFeatureApi';
@@ -20,7 +20,7 @@ export const ArchiveListContainer = () => {
     const { filtered, filter, setFilter } = useFeaturesFilter(archivedFeatures);
     const { sorted, sort, setSort } = useFeaturesSort(filtered);
 
-    const revive = (feature: string) => {
+    const onRevive = (feature: string) => {
         reviveFeature(feature)
             .then(refetchArchived)
             .then(() =>
@@ -38,13 +38,13 @@ export const ArchiveListContainer = () => {
         <FeatureToggleList
             features={sorted}
             loading={loading}
-            revive={revive}
+            onRevive={onRevive}
             flags={uiConfig.flags}
             filter={filter}
             setFilter={setFilter}
             sort={sort}
             setSort={setSort}
-            archive
+            isArchive
         />
     );
 };

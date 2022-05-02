@@ -1,5 +1,5 @@
 import React from 'react';
-import Dialogue from 'component/common/Dialogue';
+import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { useStyles } from '../SegmentDeleteConfirm/SegmentDeleteConfirm.styles';
 import { ISegment } from 'interfaces/segment';
 import { IFeatureStrategy } from 'interfaces/strategy';

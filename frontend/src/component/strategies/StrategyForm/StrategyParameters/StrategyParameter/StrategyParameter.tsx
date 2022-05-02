@@ -8,7 +8,7 @@ import { Delete } from '@material-ui/icons';
 import { useStyles } from './StrategyParameter.styles';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import Input from 'component/common/Input/Input';
-import ConditionallyRender from 'component/common/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import React from 'react';
 import { ICustomStrategyParameter } from 'interfaces/strategy';
 

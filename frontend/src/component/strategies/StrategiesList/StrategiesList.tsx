@@ -22,12 +22,12 @@ import {
     DELETE_STRATEGY,
     UPDATE_STRATEGY,
 } from 'component/providers/AccessProvider/permissions';
-import ConditionallyRender from 'component/common/ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import PageContent from 'component/common/PageContent/PageContent';
-import HeaderTitle from 'component/common/HeaderTitle';
+import { HeaderTitle } from 'component/common/HeaderTitle/HeaderTitle';
 import { useStyles } from './StrategiesList.styles';
 import AccessContext from 'contexts/AccessContext';
-import Dialogue from 'component/common/Dialogue';
+import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { ADD_NEW_STRATEGY_ID } from 'utils/testIds';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';

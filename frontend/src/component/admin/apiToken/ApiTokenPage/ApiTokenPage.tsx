@@ -4,8 +4,8 @@ import { Button } from '@material-ui/core';
 import AccessContext from 'contexts/AccessContext';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import PageContent from 'component/common/PageContent';
-import HeaderTitle from 'component/common/HeaderTitle';
-import ConditionallyRender from 'component/common/ConditionallyRender';
+import { HeaderTitle } from 'component/common/HeaderTitle/HeaderTitle';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
     CREATE_API_TOKEN,
     READ_API_TOKEN,

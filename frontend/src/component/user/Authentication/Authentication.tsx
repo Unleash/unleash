@@ -1,5 +1,5 @@
 import SimpleAuth from '../SimpleAuth/SimpleAuth';
-import AuthenticationCustomComponent from 'component/user/AuthenticationCustomComponent';
+import { AuthenticationCustomComponent } from 'component/user/AuthenticationCustomComponent';
 import PasswordAuth from '../PasswordAuth/PasswordAuth';
 import HostedAuth from '../HostedAuth/HostedAuth';
 import DemoAuth from '../DemoAuth/DemoAuth';
@@ -11,7 +11,7 @@ import {
 } from 'constants/authTypes';
 import SecondaryLoginActions from '../common/SecondaryLoginActions/SecondaryLoginActions';
 import useQueryParams from 'hooks/useQueryParams';
-import ConditionallyRender from 'component/common/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Alert } from '@material-ui/lab';
 import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
 import { AUTH_PAGE_ID } from 'utils/testIds';

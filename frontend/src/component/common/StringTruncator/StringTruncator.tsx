@@ -1,5 +1,5 @@
 import { Tooltip } from '@material-ui/core';
-import ConditionallyRender from '../ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface IStringTruncatorProps {
     text: string;

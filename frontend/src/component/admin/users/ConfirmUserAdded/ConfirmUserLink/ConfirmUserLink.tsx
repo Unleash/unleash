@@ -1,7 +1,7 @@
 import { Typography } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import { useCommonStyles } from 'themes/commonStyles';
-import Dialogue from 'component/common/Dialogue';
+import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import UserInviteLink from './UserInviteLink/UserInviteLink';
 
 interface IConfirmUserLink {

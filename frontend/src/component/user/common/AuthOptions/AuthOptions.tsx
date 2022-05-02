@@ -3,7 +3,7 @@ import classnames from 'classnames';
 import { useCommonStyles } from 'themes/commonStyles';
 import { ReactComponent as GoogleSvg } from 'assets/icons/google.svg';
 import LockRounded from '@material-ui/icons/LockRounded';
-import ConditionallyRender from 'component/common/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { IAuthOptions } from 'hooks/api/getters/useAuth/useAuthEndpoint';
 import { SSO_LOGIN_BUTTON } from 'utils/testIds';
 

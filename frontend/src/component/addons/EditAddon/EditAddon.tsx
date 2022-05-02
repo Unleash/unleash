@@ -3,18 +3,11 @@ import useAddons from 'hooks/api/getters/useAddons/useAddons';
 import { AddonForm } from '../AddonForm/AddonForm';
 import cloneDeep from 'lodash.clonedeep';
 import { IAddon } from 'interfaces/addons';
+import { DEFAULT_DATA } from '../CreateAddon/CreateAddon';
 
 interface IAddonEditParams {
     addonId: string;
 }
-
-const DEFAULT_DATA = {
-    provider: '',
-    description: '',
-    enabled: true,
-    parameters: {},
-    events: [],
-};
 
 export const EditAddon = () => {
     const { addonId } = useParams<IAddonEditParams>();
@@ -26,12 +19,10 @@ export const EditAddon = () => {
         (addon: IAddon) => addon.id === Number(addonId)
     ) || { ...cloneDeep(DEFAULT_DATA) };
     const provider = addon
-        ? // @ts-expect-error
-          providers.find(provider => provider.name === addon.provider)
+        ? providers.find(provider => provider.name === addon.provider)
         : undefined;
 
     return (
-        // @ts-expect-error
         <AddonForm
             editMode={editMode}
             provider={provider}

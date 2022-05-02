@@ -11,11 +11,11 @@ import webhookIcon from 'assets/icons/webhooks.svg';
 import { formatAssetPath } from 'utils/formatPath';
 import useTagTypes from 'hooks/api/getters/useTagTypes/useTagTypes';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
-import Dialogue from 'component/common/Dialogue';
+import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { ITag } from 'interfaces/tags';
 import useToast from 'hooks/useToast';
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
-import ConditionallyRender from 'component/common/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import AccessContext from 'contexts/AccessContext';
 import { formatUnknownError } from 'utils/formatUnknownError';
 

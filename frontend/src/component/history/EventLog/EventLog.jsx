@@ -2,7 +2,7 @@ import { List, Switch, FormControlLabel } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import EventJson from './EventJson/EventJson';
 import PageContent from 'component/common/PageContent/PageContent';
-import HeaderTitle from 'component/common/HeaderTitle';
+import { HeaderTitle } from 'component/common/HeaderTitle/HeaderTitle';
 import EventCard from './EventCard/EventCard';
 import { useStyles } from './EventLog.styles';
 import { formatDateYMDHMS } from 'utils/formatDate';

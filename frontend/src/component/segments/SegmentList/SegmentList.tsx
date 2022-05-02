@@ -18,8 +18,8 @@ import { useSegmentsApi } from 'hooks/api/actions/useSegmentsApi/useSegmentsApi'
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { Link, useHistory } from 'react-router-dom';
-import ConditionallyRender from 'component/common/ConditionallyRender';
-import HeaderTitle from 'component/common/HeaderTitle';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { HeaderTitle } from 'component/common/HeaderTitle/HeaderTitle';
 import PageContent from 'component/common/PageContent';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { SegmentDelete } from '../SegmentDelete/SegmentDelete';

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { ISegment } from 'interfaces/segment';
 import { Clear, VisibilityOff, Visibility } from '@material-ui/icons';
 import { useStyles } from './FeatureStrategySegmentChip.styles';
-import ConditionallyRender from 'component/common/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { constraintAccordionListId } from 'component/common/ConstraintAccordion/ConstraintAccordionList/ConstraintAccordionList';
 import { Tooltip } from '@material-ui/core';
 

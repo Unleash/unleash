@@ -1,17 +1,16 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, VFC } from 'react';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
 import { AppBar, Container, IconButton, Tooltip } from '@material-ui/core';
-import { DrawerMenu } from '../drawer';
 import MenuIcon from '@material-ui/icons/Menu';
 import SettingsIcon from '@material-ui/icons/Settings';
 import UserProfile from 'component/user/UserProfile';
-import ConditionallyRender from 'component/common/ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import { ReactComponent as UnleashLogo } from 'assets/img/logoDarkWithText.svg';
 
-import { useStyles } from './Header.styles';
+import { DrawerMenu } from './DrawerMenu/DrawerMenu';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useCommonStyles } from 'themes/commonStyles';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
@@ -21,8 +20,9 @@ import { getRoutes } from 'component/menu/routes';
 import { KeyboardArrowDown } from '@material-ui/icons';
 import { filterByFlags } from 'component/common/util';
 import { useAuthPermissions } from 'hooks/api/getters/useAuth/useAuthPermissions';
+import { useStyles } from './Header.styles';
 
-const Header = () => {
+const Header: VFC = () => {
     const theme = useTheme();
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
     const [anchorElAdvanced, setAnchorElAdvanced] =
@@ -31,7 +31,9 @@ const Header = () => {
     const [admin, setAdmin] = useState(false);
     const { permissions } = useAuthPermissions();
     const commonStyles = useCommonStyles();
-    const { uiConfig } = useUiConfig();
+    const {
+        uiConfig: { links, name, flags },
+    } = useUiConfig();
     const smallScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const styles = useStyles();
     const [openDrawer, setOpenDrawer] = useState(false);
@@ -50,7 +52,6 @@ const Header = () => {
         }
     }, [permissions]);
 
-    const { links, name, flags } = uiConfig;
     const routes = getRoutes();
 
     const filteredMainRoutes = {

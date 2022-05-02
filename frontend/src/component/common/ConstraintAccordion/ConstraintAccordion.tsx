@@ -1,5 +1,5 @@
 import { IConstraint } from 'interfaces/strategy';
-import ConditionallyRender from 'component/common/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 import { ConstraintAccordionEdit } from './ConstraintAccordionEdit/ConstraintAccordionEdit';
 import { ConstraintAccordionView } from './ConstraintAccordionView/ConstraintAccordionView';

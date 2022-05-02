@@ -1,9 +1,6 @@
 import { TextField } from '@material-ui/core';
-import {
-    IAddonConfig,
-    IAddonProvider,
-    IAddonProviderParams,
-} from 'interfaces/addons';
+import { IAddonConfig, IAddonProviderParams } from 'interfaces/addons';
+import { ChangeEventHandler } from 'react';
 
 const resolveType = ({ type = 'text', sensitive = false }, value: string) => {
     if (sensitive && value === MASKED_VALUE) {
@@ -17,31 +14,29 @@ const resolveType = ({ type = 'text', sensitive = false }, value: string) => {
 
 const MASKED_VALUE = '*****';
 
-interface IAddonParameterProps {
-    provider: IAddonProvider;
-    errors: Record<string, string>;
+export interface IAddonParameterProps {
+    parametersErrors: Record<string, string>;
     definition: IAddonProviderParams;
-    setParameterValue: (param: string) => void;
+    setParameterValue: (param: string) => ChangeEventHandler<HTMLInputElement>;
     config: IAddonConfig;
 }
 
 export const AddonParameter = ({
     definition,
     config,
-    errors,
+    parametersErrors,
     setParameterValue,
 }: IAddonParameterProps) => {
     const value = config.parameters[definition.name] || '';
     const type = resolveType(definition, value);
-    // @ts-expect-error
-    const error = errors.parameters[definition.name];
+    const error = parametersErrors[definition.name];
 
     return (
         <div style={{ width: '80%', marginTop: '25px' }}>
             <TextField
                 size="small"
                 style={{ width: '100%' }}
-                rows={definition.type === 'textfield' ? 9 : 0}
+                minRows={definition.type === 'textfield' ? 9 : 0}
                 multiline={definition.type === 'textfield'}
                 type={type}
                 label={definition.displayName}
@@ -51,8 +46,7 @@ export const AddonParameter = ({
                     shrink: true,
                 }}
                 value={value}
-                error={error}
-                // @ts-expect-error
+                error={Boolean(error)}
                 onChange={setParameterValue(definition.name)}
                 variant="outlined"
                 helperText={definition.description}

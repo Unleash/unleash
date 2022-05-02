@@ -4,7 +4,7 @@ import Gradient from 'component/common/Gradient/Gradient';
 import { ReactComponent as Logo } from 'assets/icons/logoWhiteBg.svg';
 import { ReactComponent as LogoWithText } from 'assets/img/logoWhiteTransparentHorizontal.svg';
 import { useStyles } from './StandaloneBanner.styles';
-import ConditionallyRender from 'component/common/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface IStandaloneBannerProps {
     title: string;

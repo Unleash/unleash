@@ -5,12 +5,12 @@ import { styles as commonStyles } from 'component/common';
 import { IAddonProvider } from 'interfaces/addons';
 
 interface IAddonProps {
-    provider: IAddonProvider;
+    provider?: IAddonProvider;
     checkedEvents: string[];
     setEventValue: (
         name: string
     ) => (event: React.ChangeEvent<HTMLInputElement>) => void;
-    error: Record<string, string>;
+    error?: string;
 }
 
 export const AddonEvents = ({

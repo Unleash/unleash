@@ -1,6 +1,6 @@
 import { ListItem } from '@material-ui/core';
 import { Link } from 'react-router-dom';
-import ConditionallyRender from '../ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useStyles } from 'component/common/ListPlaceholder/ListPlaceholder.styles';
 
 interface IListPlaceholderProps {

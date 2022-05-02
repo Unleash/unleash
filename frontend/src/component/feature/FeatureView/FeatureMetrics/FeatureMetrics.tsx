@@ -14,7 +14,7 @@ import { useQueryStringNumberState } from 'hooks/useQueryStringNumberState';
 import { useQueryStringState } from 'hooks/useQueryStringState';
 import { FeatureMetricsChips } from './FeatureMetricsChips/FeatureMetricsChips';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
-import ConditionallyRender from 'component/common/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useStyles } from './FeatureMetrics.styles';
 import { usePageTitle } from 'hooks/usePageTitle';
 

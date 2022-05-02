@@ -8,16 +8,16 @@ import {
 } from '@material-ui/core';
 import { weightTypes } from './enums';
 import { OverrideConfig } from './OverrideConfig/OverrideConfig';
-import ConditionallyRender from 'component/common/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useCommonStyles } from 'themes/commonStyles';
-import Dialogue from 'component/common/Dialogue';
+import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { modalStyles, trim } from 'component/common/util';
 import PermissionSwitch from 'component/common/PermissionSwitch/PermissionSwitch';
 import { UPDATE_FEATURE_VARIANTS } from 'component/providers/AccessProvider/permissions';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { useParams } from 'react-router-dom';
 import { IFeatureViewParams } from 'interfaces/params';
-import { IFeatureVariant, IOverride } from 'interfaces/featureToggle';
+import { IFeatureVariant } from 'interfaces/featureToggle';
 import cloneDeep from 'lodash.clonedeep';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { useStyles } from './AddFeatureVariant.styles';
@@ -25,7 +25,7 @@ import Input from 'component/common/Input/Input';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
-import produce from 'immer';
+import { useOverrides } from './useOverrides';
 
 const payloadOptions = [
     { key: 'string', label: 'string' },
@@ -59,7 +59,7 @@ export const AddVariant = ({
     const styles = useStyles();
     const [data, setData] = useState<Record<string, string>>({});
     const [payload, setPayload] = useState(EMPTY_PAYLOAD);
-    const [overrides, setOverrides] = useState<IOverride[]>([]);
+    const [overrides, overridesDispatch] = useOverrides([]);
     const [error, setError] = useState<Record<string, string>>({});
     const commonStyles = useCommonStyles();
     const { projectId, featureId } = useParams<IFeatureViewParams>();
@@ -93,14 +93,17 @@ export const AddVariant = ({
                 setPayload(EMPTY_PAYLOAD);
             }
             if (editVariant.overrides) {
-                setOverrides(editVariant.overrides);
+                overridesDispatch({
+                    type: 'SET',
+                    payload: editVariant.overrides,
+                });
             } else {
-                setOverrides([]);
+                overridesDispatch({ type: 'CLEAR' });
             }
         } else {
             setData({});
             setPayload(EMPTY_PAYLOAD);
-            setOverrides([]);
+            overridesDispatch({ type: 'CLEAR' });
         }
         setError({});
     };
@@ -112,13 +115,11 @@ export const AddVariant = ({
         if (feature) {
             setClonedVariants(feature.variants);
         }
-        /* eslint-disable-next-line react-hooks/exhaustive-deps */
-    }, [feature.variants]);
+    }, [feature.variants]); // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
         clear();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [editVariant]);
+    }, [editVariant]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const setVariantValue = (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -200,35 +201,12 @@ export const AddVariant = ({
         closeDialog();
     };
 
-    const updateOverrideType = (index: number) => (value: string) => {
-        setOverrides(
-            produce(draft => {
-                draft[index].contextName = value;
-            })
-        );
-    };
-
-    const updateOverrideValues = (index: number, values: string[]) => {
-        setOverrides(
-            produce(draft => {
-                draft[index].values = values;
-            })
-        );
-    };
-
-    const removeOverride = (index: number) => (e: React.SyntheticEvent) => {
-        e.preventDefault();
-        setOverrides(overrides.filter((o, i) => i !== index));
-    };
-
-    const onAddOverride = (e: React.SyntheticEvent) => {
-        e.preventDefault();
-
+    const onAddOverride = () => {
         if (context.length > 0) {
-            setOverrides([
-                ...overrides,
-                ...[{ contextName: context[0].name, values: [] }],
-            ]);
+            overridesDispatch({
+                type: 'ADD',
+                payload: { contextName: context[0].name, values: [] },
+            });
         }
     };
 
@@ -381,9 +359,7 @@ export const AddVariant = ({
                 />
                 <OverrideConfig
                     overrides={overrides}
-                    removeOverride={removeOverride}
-                    updateOverrideType={updateOverrideType}
-                    updateOverrideValues={updateOverrideValues}
+                    overridesDispatch={overridesDispatch}
                 />
                 <Button
                     onClick={onAddOverride}

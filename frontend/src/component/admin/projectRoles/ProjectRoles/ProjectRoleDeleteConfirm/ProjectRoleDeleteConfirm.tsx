@@ -1,7 +1,7 @@
 import { Alert } from '@material-ui/lab';
 import React from 'react';
 import { IProjectRole } from 'interfaces/role';
-import Dialogue from 'component/common/Dialogue';
+import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import Input from 'component/common/Input/Input';
 import { useStyles } from './ProjectRoleDeleteConfirm.styles';
 

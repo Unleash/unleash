@@ -2,18 +2,19 @@ import { useParams } from 'react-router-dom';
 import useAddons from 'hooks/api/getters/useAddons/useAddons';
 import { AddonForm } from '../AddonForm/AddonForm';
 import cloneDeep from 'lodash.clonedeep';
+import { IAddon } from 'interfaces/addons';
 
 interface IAddonCreateParams {
     providerId: string;
 }
 
-const DEFAULT_DATA = {
+export const DEFAULT_DATA = {
     provider: '',
     description: '',
     enabled: true,
     parameters: {},
     events: [],
-};
+} as unknown as IAddon; // TODO: improve type
 
 export const CreateAddon = () => {
     const { providerId } = useParams<IAddonCreateParams>();
@@ -31,7 +32,6 @@ export const CreateAddon = () => {
     };
 
     return (
-        // @ts-expect-error
         <AddonForm
             editMode={editMode}
             provider={provider}

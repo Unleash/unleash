@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Alert } from '@material-ui/lab';
-import ConditionallyRender from '../ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Typography } from '@material-ui/core';
 import { useStyles } from './Proclamation.styles';
 import { IProclamationToast } from 'interfaces/uiConfig';

@@ -1,4 +1,6 @@
-import ConditionallyRender from 'component/common/ConditionallyRender';
+import { createElement } from 'react';
+import { Redirect, Route, Switch } from 'react-router-dom';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { FeedbackNPS } from 'component/feedback/FeedbackNPS/FeedbackNPS';
 import { LayoutPicker } from 'component/layout/LayoutPicker/LayoutPicker';
 import Loader from 'component/common/Loader/Loader';
@@ -6,12 +8,12 @@ import NotFound from 'component/common/NotFound/NotFound';
 import ProtectedRoute from 'component/common/ProtectedRoute/ProtectedRoute';
 import SWRProvider from 'component/providers/SWRProvider/SWRProvider';
 import ToastRenderer from 'component/common/ToastRenderer/ToastRenderer';
-import styles from 'component/styles.module.scss';
-import { Redirect, Route, Switch } from 'react-router-dom';
 import { routes } from 'component/menu/routes';
 import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import { SplashPageRedirect } from 'component/splash/SplashPageRedirect/SplashPageRedirect';
+import { IRoute } from 'interfaces/route';
+import styles from 'component/styles.module.scss';
 
 export const App = () => {
     const { authDetails } = useAuthDetails();
@@ -23,8 +25,7 @@ export const App = () => {
         return !isLoggedIn;
     };
 
-    // Change this to IRoute once snags with HashRouter and TS is worked out
-    const renderRoute = (route: any) => {
+    const renderRoute = (route: IRoute) => {
         if (route.type === 'protected') {
             const unauthorized = isUnauthorized();
             return (
@@ -40,13 +41,7 @@ export const App = () => {
             <Route
                 key={route.path}
                 path={route.path}
-                render={props => (
-                    <route.component
-                        {...props}
-                        isUnauthorized={isUnauthorized}
-                        authDetails={authDetails}
-                    />
-                )}
+                render={() => createElement(route.component, {}, null)}
             />
         );
     };
@@ -65,8 +60,9 @@ export const App = () => {
                                     exact
                                     path="/"
                                     unauthorized={isUnauthorized()}
-                                    component={Redirect}
-                                    renderProps={{ to: '/features' }}
+                                    component={() => (
+                                        <Redirect to="/features" />
+                                    )}
                                 />
                                 {routes.map(renderRoute)}
                                 <Route path="/404" component={NotFound} />

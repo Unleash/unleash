@@ -1,5 +1,5 @@
 import { Typography } from '@material-ui/core';
-import Dialogue from 'component/common/Dialogue';
+import { Dialogue } from 'component/common/Dialogue/Dialogue';
 
 import { ReactComponent as EmailIcon } from 'assets/icons/email.svg';
 import { useStyles } from './ConfirmUserEmail.styles';

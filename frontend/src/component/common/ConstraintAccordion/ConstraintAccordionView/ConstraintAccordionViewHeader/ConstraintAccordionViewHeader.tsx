@@ -5,7 +5,7 @@ import { Delete, Edit } from '@material-ui/icons';
 import { IConstraint } from 'interfaces/strategy';
 
 import { useStyles } from 'component/common/ConstraintAccordion/ConstraintAccordion.styles';
-import ConditionallyRender from 'component/common/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import React from 'react';
 import { formatConstraintValue } from 'utils/formatConstraintValue';
 import { useLocationSettings } from 'hooks/useLocationSettings';

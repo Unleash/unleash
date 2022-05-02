@@ -2,6 +2,12 @@ import useSWR, { mutate, SWRConfiguration } from 'swr';
 import { useState, useEffect } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
+import { IAddon, IAddonProvider } from 'interfaces/addons';
+
+interface IAddonsResponse {
+    addons: IAddon[];
+    providers: IAddonProvider[];
+}
 
 const useAddons = (options: SWRConfiguration = {}) => {
     const fetcher = async () => {
@@ -14,7 +20,7 @@ const useAddons = (options: SWRConfiguration = {}) => {
 
     const KEY = `api/admin/addons`;
 
-    const { data, error } = useSWR(KEY, fetcher, options);
+    const { data, error } = useSWR<IAddonsResponse>(KEY, fetcher, options);
     const [loading, setLoading] = useState(!error && !data);
 
     const refetchAddons = () => {

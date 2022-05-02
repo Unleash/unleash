@@ -1,5 +1,5 @@
 import { Chip } from '@material-ui/core';
-import ConditionallyRender from 'component/common/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useStyles } from './FeatureOverviewExecutionChips.styles';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 

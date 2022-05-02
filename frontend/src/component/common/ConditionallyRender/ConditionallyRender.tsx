@@ -15,7 +15,7 @@ type TargetElement =
 
 type RenderFunc = () => JSX.Element;
 
-const ConditionallyRender = ({
+export const ConditionallyRender = ({
     condition,
     show,
     elseShow,
@@ -51,5 +51,3 @@ const ConditionallyRender = ({
     }
     return null;
 };
-
-export default ConditionallyRender;

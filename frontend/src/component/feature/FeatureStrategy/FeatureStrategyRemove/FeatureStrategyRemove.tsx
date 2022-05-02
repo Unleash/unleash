@@ -4,13 +4,13 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { useHistory } from 'react-router-dom';
 import useToast from 'hooks/useToast';
 import { formatFeaturePath } from '../FeatureStrategyEdit/FeatureStrategyEdit';
-import Dialogue from 'component/common/Dialogue';
+import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { Alert } from '@material-ui/lab';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { DELETE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { STRATEGY_FORM_REMOVE_ID } from 'utils/testIds';
-import ConditionallyRender from 'component/common/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { Delete } from '@material-ui/icons';
 

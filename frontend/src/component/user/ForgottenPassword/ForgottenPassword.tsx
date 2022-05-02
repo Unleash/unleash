@@ -7,7 +7,7 @@ import { useCommonStyles } from 'themes/commonStyles';
 import useLoading from 'hooks/useLoading';
 import { FORGOTTEN_PASSWORD_FIELD } from 'utils/testIds';
 import { formatApiPath } from 'utils/formatPath';
-import ConditionallyRender from 'component/common/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import DividerText from 'component/common/DividerText/DividerText';
 import StandaloneLayout from '../common/StandaloneLayout/StandaloneLayout';
 import { useStyles } from './ForgottenPassword.styles';

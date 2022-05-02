@@ -4,7 +4,7 @@ import { useContext } from 'react';
 import { IconButton, Tooltip } from '@material-ui/core';
 import CheckMarkBadge from 'component/common/CheckmarkBadge/CheckMarkBadge';
 import UIContext from 'contexts/UIContext';
-import ConditionallyRender from 'component/common/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import Close from '@material-ui/icons/Close';
 import { IToast } from 'interfaces/toast';
 

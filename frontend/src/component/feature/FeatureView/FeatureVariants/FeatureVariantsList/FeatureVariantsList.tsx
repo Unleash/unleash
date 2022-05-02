@@ -19,7 +19,7 @@ import { IFeatureViewParams } from 'interfaces/params';
 import AccessContext from 'contexts/AccessContext';
 import FeatureVariantListItem from './FeatureVariantsListItem/FeatureVariantsListItem';
 import { UPDATE_FEATURE_VARIANTS } from 'component/providers/AccessProvider/permissions';
-import ConditionallyRender from 'component/common/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { IFeatureVariant } from 'interfaces/featureToggle';
@@ -165,7 +165,7 @@ const FeatureOverviewVariants = () => {
     };
 
     const removeVariant = async (name: string) => {
-        let updatedVariants = variants.filter(v => v.name !== name);
+        let updatedVariants = variants.filter(value => value.name !== name);
         try {
             await updateVariants(
                 updatedVariants,

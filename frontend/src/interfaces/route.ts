@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import { VoidFunctionComponent } from 'react';
 
 export interface IRoute {
     path: string;
@@ -8,7 +8,7 @@ export interface IRoute {
     parent?: string;
     flag?: string;
     hidden?: boolean;
-    component: FunctionComponent;
+    component: VoidFunctionComponent;
     menu: IRouteMenu;
 }
 

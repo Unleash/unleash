@@ -6,7 +6,7 @@ import {
     FiberManualRecord,
     FiberManualRecordOutlined,
 } from '@material-ui/icons';
-import ConditionallyRender from 'component/common/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { CLOSE_SPLASH } from 'utils/testIds';
 
 interface ISplashPageEnvironmentsContentProps {

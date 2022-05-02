@@ -6,8 +6,8 @@ import { useStyles } from './PasswordChecker.styles';
 import { useCallback } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import { Alert } from '@material-ui/lab';
-import ConditionallyRender from 'component/common/ConditionallyRender';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface IPasswordCheckerProps {
     password: string;

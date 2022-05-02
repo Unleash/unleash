@@ -1,8 +1,13 @@
-import { IconButton, InputAdornment, TextField } from '@material-ui/core';
+import {
+    IconButton,
+    InputAdornment,
+    TextField,
+    TextFieldProps,
+} from '@material-ui/core';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
-import React, { useState } from 'react';
+import React, { useState, VFC } from 'react';
 
-const PasswordField = ({ ...rest }) => {
+const PasswordField: VFC<TextFieldProps> = ({ ...rest }) => {
     const [showPassword, setShowPassword] = useState(false);
 
     const handleClickShowPassword = () => {

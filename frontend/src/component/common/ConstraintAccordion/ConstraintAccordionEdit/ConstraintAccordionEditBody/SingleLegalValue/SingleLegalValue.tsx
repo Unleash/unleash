@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ConstraintFormHeader } from '../ConstraintFormHeader/ConstraintFormHeader';
 import { FormControl, RadioGroup, Radio } from '@material-ui/core';
 import { ConstraintValueSearch } from 'component/common/ConstraintAccordion/ConstraintValueSearch/ConstraintValueSearch';
-import ConditionallyRender from 'component/common/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useCommonStyles } from 'themes/commonStyles';
 import { ILegalValue } from 'interfaces/context';
 import {

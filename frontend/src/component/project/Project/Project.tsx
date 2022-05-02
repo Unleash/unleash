@@ -2,7 +2,7 @@ import { useHistory, useParams } from 'react-router';
 import useProject from 'hooks/api/getters/useProject/useProject';
 import useLoading from 'hooks/useLoading';
 import ApiError from 'component/common/ApiError/ApiError';
-import ConditionallyRender from 'component/common/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useStyles } from './Project.styles';
 import { Tab, Tabs } from '@material-ui/core';
 import { Edit } from '@material-ui/icons';

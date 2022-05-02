@@ -12,7 +12,7 @@ import {
     Edit,
     OfflineBolt,
 } from '@material-ui/icons';
-import ConditionallyRender from 'component/common/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 import { IEnvironment } from 'interfaces/environments';
 import React, { useContext, useRef } from 'react';

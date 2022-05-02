@@ -2,8 +2,8 @@ import { capitalize } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import React from 'react';
 import { IEnvironment } from 'interfaces/environments';
-import ConditionallyRender from 'component/common/ConditionallyRender';
-import Dialogue from 'component/common/Dialogue';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import EnvironmentCard from '../EnvironmentCard/EnvironmentCard';
 
 interface IEnvironmentToggleConfirmProps {

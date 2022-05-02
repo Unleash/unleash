@@ -6,7 +6,7 @@ import { useCommonStyles } from 'themes/commonStyles';
 import PasswordChecker from 'component/user/common/ResetPasswordForm/PasswordChecker/PasswordChecker';
 import PasswordMatcher from 'component/user/common/ResetPasswordForm/PasswordMatcher/PasswordMatcher';
 import { Alert } from '@material-ui/lab';
-import ConditionallyRender from 'component/common/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useLoading from 'hooks/useLoading';
 import {
     BAD_REQUEST,

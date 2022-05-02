@@ -5,7 +5,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import { ReactComponent as Logo } from 'assets/icons/logoPlain.svg';
 import { useStyles } from 'component/feedback/FeedbackNPS/FeedbackNPS.styles';
 import AnimateOnMount from 'component/common/AnimateOnMount/AnimateOnMount';
-import ConditionallyRender from 'component/common/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useCommonStyles } from 'themes/commonStyles';
 import UIContext from 'contexts/UIContext';
 import {

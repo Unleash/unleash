@@ -4,7 +4,7 @@ import ResetPasswordDetails from '../common/ResetPasswordDetails/ResetPasswordDe
 
 import { useStyles } from './ResetPassword.styles';
 import { Typography } from '@material-ui/core';
-import ConditionallyRender from 'component/common/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import InvalidToken from '../common/InvalidToken/InvalidToken';
 import useResetPassword from 'hooks/api/getters/useResetPassword/useResetPassword';
 import StandaloneLayout from '../common/StandaloneLayout/StandaloneLayout';

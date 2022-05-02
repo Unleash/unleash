@@ -10,7 +10,7 @@ const useFeatureApi = () => {
         propagateErrors: true,
     });
 
-    const validateFeatureToggleName = async (name: string) => {
+    const validateFeatureToggleName = async (name: string | undefined) => {
         const path = `api/admin/features/validate`;
         const req = createRequest(path, {
             method: 'POST',

@@ -1,7 +1,7 @@
 import { useHealthReport } from 'hooks/api/getters/useHealthReport/useHealthReport';
 import ApiError from 'component/common/ApiError/ApiError';
-import ConditionallyRender from 'component/common/ConditionallyRender';
-import ReportToggleList from 'component/Reporting/ReportToggleList/ReportToggleList';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { ReportToggleList } from 'component/Reporting/ReportToggleList/ReportToggleList';
 import { ReportCard } from 'component/Reporting/ReportCard/ReportCard';
 import { usePageTitle } from 'hooks/usePageTitle';
 

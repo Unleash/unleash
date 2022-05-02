@@ -9,8 +9,8 @@ import {
 } from '@material-ui/core';
 import OpenInNew from '@material-ui/icons/OpenInNew';
 import PageContent from 'component/common/PageContent';
-import HeaderTitle from 'component/common/HeaderTitle';
-import ConditionallyRender from 'component/common/ConditionallyRender';
+import { HeaderTitle } from 'component/common/HeaderTitle/HeaderTitle';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { formatApiPath } from 'utils/formatPath';
 import useInvoices from 'hooks/api/getters/useInvoices/useInvoices';
 import { IInvoice } from 'interfaces/invoice';

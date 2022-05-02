@@ -7,8 +7,8 @@ import { useWeakMap } from 'hooks/useWeakMap';
 import { objectId } from 'utils/objectId';
 import { useStyles } from './ConstraintAccordionList.styles';
 import { createEmptyConstraint } from 'component/common/ConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
-import ConditionallyRender from 'component/common/ConditionallyRender';
 import { Button } from '@material-ui/core';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface IConstraintAccordionListProps {
     constraints: IConstraint[];

@@ -6,7 +6,7 @@ import { ConstraintFormHeader } from './ConstraintFormHeader/ConstraintFormHeade
 import { useStyles } from './ConstraintAccordionEditBody.styles';
 import React from 'react';
 import { newOperators } from 'constants/operators';
-import ConditionallyRender from 'component/common/ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { oneOf } from 'utils/oneOf';
 import { OperatorUpgradeAlert } from 'component/common/OperatorUpgradeAlert/OperatorUpgradeAlert';
 

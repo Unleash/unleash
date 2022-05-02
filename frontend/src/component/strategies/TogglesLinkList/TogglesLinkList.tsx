@@ -8,7 +8,7 @@ import {
 import { Pause, PlayArrow } from '@material-ui/icons';
 import styles from 'component/common/common.module.scss';
 import { Link } from 'react-router-dom';
-import ConditionallyRender from 'component/common/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { FeatureSchema } from 'openapi';
 
 interface ITogglesLinkListProps {

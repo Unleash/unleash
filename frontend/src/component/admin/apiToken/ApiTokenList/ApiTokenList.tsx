@@ -1,5 +1,6 @@
 import { useContext, useState } from 'react';
 import {
+    Box,
     IconButton,
     Table,
     TableBody,
@@ -15,16 +16,15 @@ import useApiTokens from 'hooks/api/getters/useApiTokens/useApiTokens';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useApiTokensApi from 'hooks/api/actions/useApiTokensApi/useApiTokensApi';
 import ApiError from 'component/common/ApiError/ApiError';
-import ConditionallyRender from 'component/common/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { DELETE_API_TOKEN } from 'component/providers/AccessProvider/permissions';
-import { useStyles } from './ApiTokenList.styles';
-import Secret from './secret';
 import { Delete, FileCopy } from '@material-ui/icons';
-import Dialogue from 'component/common/Dialogue';
+import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import copy from 'copy-to-clipboard';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { formatDateYMD } from 'utils/formatDate';
 import { ProjectsList } from './ProjectsList/ProjectsList';
+import { useStyles } from './ApiTokenList.styles';
 
 interface IApiToken {
     createdAt: Date;
@@ -182,7 +182,13 @@ export const ApiTokenList = () => {
                                     }
                                 />
                                 <TableCell className={styles.hideMD}>
-                                    <Secret value={item.secret} />
+                                    <Box
+                                        component="span"
+                                        display="inline-block"
+                                        width="250px"
+                                    >
+                                        ************************************
+                                    </Box>
                                 </TableCell>
                                 <TableCell className={styles.actionsContainer}>
                                     <Tooltip title="Copy token">

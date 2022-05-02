@@ -2,7 +2,7 @@ import { DialogContentText } from '@material-ui/core';
 import { useParams } from 'react-router';
 import React, { useState } from 'react';
 import { IFeatureViewParams } from 'interfaces/params';
-import Dialogue from 'component/common/Dialogue';
+import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import Input from 'component/common/Input/Input';
 import { useStyles } from './AddTagDialog.styles';
 import { trim } from 'component/common/util';

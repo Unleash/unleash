@@ -8,7 +8,7 @@ import {
 } from 'component/Reporting/utils';
 import { FeatureSchema } from 'openapi';
 
-type FeaturesSortType =
+export type FeaturesSortType =
     | 'name'
     | 'expired'
     | 'type'
@@ -19,7 +19,7 @@ type FeaturesSortType =
     | 'status'
     | 'project';
 
-interface IFeaturesSort {
+export interface IFeaturesSort {
     type: FeaturesSortType;
     desc?: boolean;
 }

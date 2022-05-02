@@ -5,7 +5,7 @@ import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashCon
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { ConstraintIcon } from 'component/common/ConstraintAccordion/ConstraintIcon';
 import { Help } from '@material-ui/icons';
-import ConditionallyRender from 'component/common/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { dateOperators, DATE_AFTER, IN } from 'constants/operators';
 import { SAVE } from '../ConstraintAccordionEdit';
 import { resolveText } from './helpers';

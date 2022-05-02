@@ -3,13 +3,15 @@ import differenceInDays from 'date-fns/differenceInDays';
 
 import { EXPERIMENT, OPERATIONAL, RELEASE } from 'constants/featureToggleTypes';
 
-import { FOURTYDAYS, SEVENDAYS } from './constants';
 import { IFeatureToggleListItem } from 'interfaces/featureToggle';
 
+const FORTY_DAYS = 40;
+const SEVEN_DAYS = 7;
+
 export const toggleExpiryByTypeMap: Record<string, number> = {
-    [EXPERIMENT]: FOURTYDAYS,
-    [RELEASE]: FOURTYDAYS,
-    [OPERATIONAL]: SEVENDAYS,
+    [EXPERIMENT]: FORTY_DAYS,
+    [RELEASE]: FORTY_DAYS,
+    [OPERATIONAL]: SEVEN_DAYS,
 };
 
 export interface IFeatureToggleListItemCheck extends IFeatureToggleListItem {

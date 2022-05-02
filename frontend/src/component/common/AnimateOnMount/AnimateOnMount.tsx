@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, FC } from 'react';
-import ConditionallyRender from '../ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface IAnimateOnMountProps {
     mounted: boolean;

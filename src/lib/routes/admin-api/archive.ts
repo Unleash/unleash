@@ -30,9 +30,23 @@ export default class ArchiveController extends Controller {
 
         this.route({
             method: 'get',
-            path: '/features/:projectId?',
+            path: '/features',
             acceptAnyContentType: true,
             handler: this.getArchivedFeatures,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    responses: { 200: featuresResponse },
+                    deprecated: true,
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'get',
+            path: '/features/:projectId',
+            acceptAnyContentType: true,
+            handler: this.getArchivedFeaturesByProjectId,
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
@@ -51,14 +65,25 @@ export default class ArchiveController extends Controller {
     }
 
     async getArchivedFeatures(
-        req: Request<{ projectId?: string }, any, any, any>,
+        req: Request,
+        res: Response<FeaturesSchema>,
+    ): Promise<void> {
+        const features = await this.featureService.getMetadataForAllFeatures(
+            true,
+        );
+        res.json({ version: 2, features });
+    }
+
+    async getArchivedFeaturesByProjectId(
+        req: Request<{ projectId: string }, any, any, any>,
         res: Response<FeaturesSchema>,
     ): Promise<void> {
         const { projectId } = req.params;
-        const features = await this.featureService.getMetadataForAllFeatures(
-            true,
-            projectId,
-        );
+        const features =
+            await this.featureService.getMetadataForAllFeaturesByProjectId(
+                true,
+                projectId,
+            );
         res.json({ version: 2, features });
     }
 

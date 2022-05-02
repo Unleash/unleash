@@ -1,9 +1,9 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles(theme => ({
+export const useStyles = makeStyles()(theme => ({
     newUser: {
         width: '350px',
-        [theme.breakpoints.down('xs')]: {
+        [theme.breakpoints.down('sm')]: {
             width: '100%',
         },
     },
@@ -42,7 +42,7 @@ export const useStyles = makeStyles(theme => ({
     emailField: {
         minWidth: '300px',
         width: '100%',
-        [theme.breakpoints.down('xs')]: {
+        [theme.breakpoints.down('sm')]: {
             minWidth: '100%',
         },
     },

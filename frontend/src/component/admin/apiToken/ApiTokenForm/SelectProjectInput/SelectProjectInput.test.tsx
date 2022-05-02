@@ -36,7 +36,7 @@ describe('SelectProjectInput', () => {
         expect(checkbox).toBeChecked();
 
         const selectInputContainer = screen.getByTestId('select-input');
-        const input = within(selectInputContainer).getByRole('textbox');
+        const input = within(selectInputContainer).getByRole('combobox');
         expect(input).toBeDisabled();
     });
 
@@ -72,7 +72,7 @@ describe('SelectProjectInput', () => {
         expect(checkbox).not.toBeChecked();
 
         const selectInputContainer = screen.getByTestId('select-input');
-        const input = within(selectInputContainer).getByRole('textbox');
+        const input = within(selectInputContainer).getByRole('combobox');
         expect(input).toBeEnabled();
     });
 
@@ -138,7 +138,7 @@ describe('SelectProjectInput', () => {
             />
         );
         const input = await screen.findByLabelText('Projects');
-        user.type(input, 'alp');
+        await user.type(input, 'alp');
 
         await waitFor(() => {
             expect(screen.getByText('Alpha')).toBeVisible();
@@ -153,8 +153,8 @@ describe('SelectProjectInput', () => {
             expect(screen.getByText('Alpaca')).toBeVisible();
         });
 
-        user.clear(input);
-        user.type(input, 'bravo');
+        await user.clear(input);
+        await user.type(input, 'bravo');
         await waitFor(() => {
             expect(screen.getByText('Bravo')).toBeVisible();
         });

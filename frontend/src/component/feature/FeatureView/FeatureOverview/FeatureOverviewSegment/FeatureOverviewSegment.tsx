@@ -11,7 +11,7 @@ interface IFeatureOverviewSegmentProps {
 export const FeatureOverviewSegment = ({
     strategyId,
 }: IFeatureOverviewSegmentProps) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
     const { segments } = useSegments(strategyId);
 
     if (!segments || segments.length === 0) {

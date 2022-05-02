@@ -1,4 +1,4 @@
-import { IconButton, IconButtonProps } from '@material-ui/core';
+import { IconButton, IconButtonProps } from '@mui/material';
 import React, { useContext, ReactNode } from 'react';
 import AccessContext from 'contexts/AccessContext';
 import { Link } from 'react-router-dom';
@@ -51,7 +51,12 @@ const PermissionIconButton = ({
     return (
         <TooltipResolver title={formatAccessText(access, tooltip)}>
             <span id={id}>
-                <IconButton {...rest} disabled={!access} aria-labelledby={id}>
+                <IconButton
+                    {...rest}
+                    disabled={!access}
+                    aria-labelledby={id}
+                    size="large"
+                >
                     {children}
                 </IconButton>
             </span>

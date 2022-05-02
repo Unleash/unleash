@@ -4,8 +4,8 @@ import {
     ListItemAvatar,
     ListItemText,
     Tooltip,
-} from '@material-ui/core';
-import { Pause, PlayArrow } from '@material-ui/icons';
+} from '@mui/material';
+import { Pause, PlayArrow } from '@mui/icons-material';
 import styles from 'component/common/common.module.scss';
 import { Link } from 'react-router-dom';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';

@@ -5,10 +5,10 @@ import ReactDOM from 'react-dom';
 import { Route, BrowserRouter as Router } from 'react-router-dom';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { MainThemeProvider } from 'themes/MainThemeProvider';
+import { ThemeProvider } from 'themes/ThemeProvider';
 import { App } from 'component/App';
 import { ScrollTop } from 'component/common/ScrollTop/ScrollTop';
-import AccessProvider from 'component/providers/AccessProvider/AccessProvider';
+import { AccessProvider } from 'component/providers/AccessProvider/AccessProvider';
 import { getBasePath } from 'utils/formatPath';
 import { FeedbackCESProvider } from 'component/feedback/FeedbackCESContext/FeedbackCESProvider';
 import UIProvider from 'component/providers/UIProvider/UIProvider';
@@ -19,14 +19,14 @@ ReactDOM.render(
         <UIProvider>
             <AccessProvider>
                 <Router basename={`${getBasePath()}`}>
-                    <MainThemeProvider>
+                    <ThemeProvider>
                         <AnnouncerProvider>
                             <FeedbackCESProvider>
                                 <ScrollTop />
                                 <Route path="/" component={App} />
                             </FeedbackCESProvider>
                         </AnnouncerProvider>
-                    </MainThemeProvider>
+                    </ThemeProvider>
                 </Router>
             </AccessProvider>
         </UIProvider>

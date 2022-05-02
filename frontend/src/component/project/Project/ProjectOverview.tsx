@@ -12,7 +12,7 @@ const ProjectOverview = ({ projectId }: IProjectOverviewProps) => {
         refreshInterval: 10000,
     });
     const { members, features, health, description } = project;
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     return (
         <div>

@@ -6,8 +6,8 @@ import {
     TableRow,
     TableCell,
     Button,
-} from '@material-ui/core';
-import OpenInNew from '@material-ui/icons/OpenInNew';
+} from '@mui/material';
+import OpenInNew from '@mui/icons-material/OpenInNew';
 import PageContent from 'component/common/PageContent';
 import { HeaderTitle } from 'component/common/HeaderTitle/HeaderTitle';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';

@@ -1,4 +1,10 @@
-import { Select, MenuItem, FormControl, InputLabel } from '@material-ui/core';
+import {
+    Select,
+    MenuItem,
+    FormControl,
+    InputLabel,
+    SelectChangeEvent,
+} from '@mui/material';
 import {
     Operator,
     stringOperators,
@@ -7,7 +13,7 @@ import {
     numOperators,
     inOperators,
 } from 'constants/operators';
-import React, { useState, ChangeEvent } from 'react';
+import React, { useState } from 'react';
 import { formatOperatorDescription } from 'component/common/ConstraintAccordion/ConstraintOperator/formatOperatorDescription';
 import { useStyles } from 'component/common/ConstraintAccordion/ConstraintOperatorSelect/ConstraintOperatorSelect.styles';
 import classNames from 'classnames';
@@ -23,12 +29,10 @@ export const ConstraintOperatorSelect = ({
     value,
     onChange,
 }: IConstraintOperatorSelectProps) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
     const [open, setOpen] = useState(false);
 
-    const onSelectChange = (
-        event: ChangeEvent<{ name?: string; value: unknown }>
-    ) => {
+    const onSelectChange = (event: SelectChangeEvent) => {
         onChange(event.target.value as Operator);
     };
 

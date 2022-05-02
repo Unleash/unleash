@@ -1,4 +1,4 @@
-import { Button, FormControlLabel, Switch } from '@material-ui/core';
+import { Button, FormControlLabel, Switch } from '@mui/material';
 import { IConstraint } from 'interfaces/strategy';
 import { CANCEL } from '../ConstraintAccordionEdit';
 
@@ -31,7 +31,7 @@ export const ConstraintAccordionEditBody: React.FC<
     setAction,
     onSubmit,
 }) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     return (
         <>

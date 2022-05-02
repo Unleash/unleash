@@ -1,4 +1,4 @@
-import { Button } from '@material-ui/core';
+import { Button } from '@mui/material';
 import { useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import AccessContext from 'contexts/AccessContext';
@@ -13,7 +13,7 @@ import { AdminAlert } from 'component/common/AdminAlert/AdminAlert';
 
 const ProjectRoles = () => {
     const { hasAccess } = useContext(AccessContext);
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
     const history = useHistory();
 
     return (

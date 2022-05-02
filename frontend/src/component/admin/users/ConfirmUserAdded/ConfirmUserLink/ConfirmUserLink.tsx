@@ -1,6 +1,6 @@
-import { Typography } from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
-import { useCommonStyles } from 'themes/commonStyles';
+import { Typography } from '@mui/material';
+import { Alert } from '@mui/material';
+import { useThemeStyles } from 'themes/themeStyles';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import UserInviteLink from './UserInviteLink/UserInviteLink';
 
@@ -15,7 +15,7 @@ const ConfirmUserLink = ({
     closeConfirm,
     inviteLink,
 }: IConfirmUserLink) => {
-    const commonStyles = useCommonStyles();
+    const { classes: themeStyles } = useThemeStyles();
     return (
         <Dialogue
             open={open}
@@ -23,7 +23,7 @@ const ConfirmUserLink = ({
             primaryButtonText="Close"
             title="Team member added"
         >
-            <div className={commonStyles.contentSpacingYLarge}>
+            <div className={themeStyles.contentSpacingYLarge}>
                 <Typography variant="body1">
                     A new team member has been added. Please provide them with
                     the following link to get started:

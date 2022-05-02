@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { List } from '@material-ui/core';
-import { Add } from '@material-ui/icons';
+import { List } from '@mui/material';
+import { Add } from '@mui/icons-material';
 import useToast from 'hooks/useToast';
 import { IEnvironment, ISortOrderPayload } from 'interfaces/environments';
 import { HeaderTitle } from 'component/common/HeaderTitle/HeaderTitle';

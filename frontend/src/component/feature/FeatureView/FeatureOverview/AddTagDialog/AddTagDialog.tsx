@@ -1,4 +1,4 @@
-import { DialogContentText } from '@material-ui/core';
+import { DialogContentText } from '@mui/material';
 import { useParams } from 'react-router';
 import React, { useState } from 'react';
 import { IFeatureViewParams } from 'interfaces/params';
@@ -26,7 +26,7 @@ interface IDefaultTag {
 
 const AddTagDialog = ({ open, setOpen }: IAddTagDialogProps) => {
     const DEFAULT_TAG: IDefaultTag = { type: 'simple', value: '' };
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
     const { featureId } = useParams<IFeatureViewParams>();
     const { addTagToFeature, loading } = useFeatureApi();
     const { refetch } = useTags(featureId);

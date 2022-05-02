@@ -1,6 +1,6 @@
 import { calculatePercentage } from 'utils/calculatePercentage';
 import { useStyles } from './FeatureMetricsStats.styles';
-import { Grid } from '@material-ui/core';
+import { Grid } from '@mui/material';
 
 interface IFeatureMetricsStatsProps {
     totalYes: number;
@@ -15,7 +15,7 @@ export const FeatureMetricsStats = ({
     totalNo,
     hoursBack,
 }: IFeatureMetricsStatsProps) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     const hoursSuffix =
         hoursBack === 1 ? 'in the last hour' : `in the last ${hoursBack} hours`;

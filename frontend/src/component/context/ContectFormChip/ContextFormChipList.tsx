@@ -2,7 +2,7 @@ import { useStyles } from 'component/context/ContectFormChip/ContextFormChipList
 import React from 'react';
 
 export const ContextFormChipList: React.FC = ({ children }) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     return <ul className={styles.container}>{children}</ul>;
 };

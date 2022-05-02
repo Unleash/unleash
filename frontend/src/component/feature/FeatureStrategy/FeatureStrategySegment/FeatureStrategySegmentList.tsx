@@ -14,7 +14,7 @@ export const FeatureStrategySegmentList = ({
     segments,
     setSegments,
 }: IFeatureStrategySegmentListProps) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
     const [preview, setPreview] = useState<ISegment>();
     const lastSegmentIndex = segments.length - 1;
 

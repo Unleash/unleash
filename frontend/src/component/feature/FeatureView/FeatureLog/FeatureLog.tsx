@@ -5,7 +5,7 @@ import { IFeatureViewParams } from 'interfaces/params';
 import { FeatureEventHistory } from 'component/history/FeatureEventHistory/FeatureEventHistory';
 
 const FeatureLog = () => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
     const { projectId, featureId } = useParams<IFeatureViewParams>();
     const { feature } = useFeature(projectId, featureId);
 

@@ -11,8 +11,8 @@ import {
     Button,
     Avatar,
     Typography,
-} from '@material-ui/core';
-import { Apps } from '@material-ui/icons';
+} from '@mui/material';
+import { Apps } from '@mui/icons-material';
 
 import styles from './common.module.scss';
 import { ConditionallyRender } from './ConditionallyRender/ConditionallyRender';

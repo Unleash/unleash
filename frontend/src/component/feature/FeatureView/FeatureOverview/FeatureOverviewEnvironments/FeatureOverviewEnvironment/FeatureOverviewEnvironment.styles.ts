@@ -1,6 +1,6 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles(theme => ({
+export const useStyles = makeStyles()(theme => ({
     featureOverviewEnvironment: {
         borderRadius: '12.5px',
         padding: '0.2rem',
@@ -13,6 +13,14 @@ export const useStyles = makeStyles(theme => ({
     accordionHeader: {
         boxShadow: 'none',
         padding: '1rem 2rem',
+        [theme.breakpoints.down(400)]: {
+            padding: '0.5rem 1rem',
+        },
+    },
+    accordionBodyInnerContainer: {
+        [theme.breakpoints.down(400)]: {
+            padding: '0.5rem',
+        },
     },
     accordionBody: {
         width: '100%',
@@ -28,11 +36,23 @@ export const useStyles = makeStyles(theme => ({
     headerTitle: {
         display: 'flex',
         alignItems: 'center',
+        [theme.breakpoints.down(560)]: {
+            flexDirection: 'column',
+            textAlign: 'center',
+        },
+    },
+    headerIcon: {
+        [theme.breakpoints.down(560)]: {
+            marginBottom: '0.5rem',
+        },
     },
     disabledIndicatorPos: {
         position: 'absolute',
         top: '15px',
         left: '20px',
+        [theme.breakpoints.down(560)]: {
+            top: '13px',
+        },
     },
     iconContainer: {
         backgroundColor: theme.palette.primary.light,
@@ -90,27 +110,9 @@ export const useStyles = makeStyles(theme => ({
             top: '5px',
         },
     },
-    [theme.breakpoints.down(560)]: {
-        disabledIndicatorPos: {
-            top: '13px',
-        },
-        headerTitle: {
-            flexDirection: 'column',
+    truncator: {
+        [theme.breakpoints.down(560)]: {
             textAlign: 'center',
-        },
-        headerIcon: {
-            marginBottom: '0.5rem',
-        },
-        truncator: {
-            textAlign: 'center',
-        },
-    },
-    [theme.breakpoints.down(400)]: {
-        accordionHeader: {
-            padding: '0.5rem 1rem',
-        },
-        accordionBodyInnerContainer: {
-            padding: '0.5rem',
         },
     },
     strategyIcon: {

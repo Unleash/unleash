@@ -1,4 +1,5 @@
-import { Button, Chip, makeStyles } from '@material-ui/core';
+import { Button, Chip } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 import Input from 'component/common/Input/Input';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import React, { useState } from 'react';
@@ -13,7 +14,7 @@ interface IFreeTextInputProps {
     setError: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles()(theme => ({
     valueChip: {
         margin: '0 0.5rem 0.5rem 0',
     },
@@ -58,7 +59,7 @@ export const FreeTextInput = ({
     setError,
 }: IFreeTextInputProps) => {
     const [inputValues, setInputValues] = useState('');
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     const onKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === ENTER) {
@@ -137,7 +138,7 @@ const ConstraintValueChips = ({
     values,
     removeValue,
 }: IConstraintValueChipsProps) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
     return (
         <>
             {values.map((value, index) => {

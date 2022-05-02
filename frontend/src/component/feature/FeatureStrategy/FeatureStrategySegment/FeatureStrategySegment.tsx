@@ -21,7 +21,7 @@ export const FeatureStrategySegment = ({
 }: IFeatureStrategySegmentProps) => {
     const atSegmentsLimit = selectedSegments.length >= STRATEGY_SEGMENTS_LIMIT;
     const { segments: allSegments } = useSegments();
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     if (!allSegments || allSegments.length === 0) {
         return null;

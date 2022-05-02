@@ -1,5 +1,5 @@
-import { Typography } from '@material-ui/core';
-import { useCommonStyles } from 'themes/commonStyles';
+import { Typography } from '@mui/material';
+import { useThemeStyles } from 'themes/themeStyles';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { UserToken } from './UserToken/UserToken';
 
@@ -14,7 +14,8 @@ export const ConfirmToken = ({
     closeConfirm,
     token,
 }: IConfirmUserLink) => {
-    const commonStyles = useCommonStyles();
+    const { classes: themeStyles } = useThemeStyles();
+
     return (
         <Dialogue
             open={open}
@@ -22,7 +23,7 @@ export const ConfirmToken = ({
             primaryButtonText="Close"
             title="New token created"
         >
-            <div className={commonStyles.contentSpacingYLarge}>
+            <div className={themeStyles.contentSpacingYLarge}>
                 <Typography variant="body1">
                     Your new token has been created successfully.
                 </Typography>

@@ -80,21 +80,21 @@ export class BaseAPI {
         let fetchParams = { url, init };
         for (const middleware of this.middleware) {
             if (middleware.pre) {
-                fetchParams = await middleware.pre({
+                fetchParams = (await middleware.pre({
                     fetch: this.fetchApi,
                     ...fetchParams,
-                }) || fetchParams;
+                })) || fetchParams;
             }
         }
         let response = await (this.configuration.fetchApi || fetch)(fetchParams.url, fetchParams.init);
         for (const middleware of this.middleware) {
             if (middleware.post) {
-                response = await middleware.post({
+                response = (await middleware.post({
                     fetch: this.fetchApi,
                     url: fetchParams.url,
                     init: fetchParams.init,
                     response: response.clone(),
-                }) || response;
+                })) || response;
             }
         }
         return response;

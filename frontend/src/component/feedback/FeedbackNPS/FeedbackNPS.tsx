@@ -1,12 +1,12 @@
 import { useContext, useState } from 'react';
-import { Button, IconButton, Tooltip } from '@material-ui/core';
+import { Button, IconButton, Tooltip } from '@mui/material';
 import classnames from 'classnames';
-import CloseIcon from '@material-ui/icons/Close';
+import CloseIcon from '@mui/icons-material/Close';
 import { ReactComponent as Logo } from 'assets/icons/logoPlain.svg';
 import { useStyles } from 'component/feedback/FeedbackNPS/FeedbackNPS.styles';
 import AnimateOnMount from 'component/common/AnimateOnMount/AnimateOnMount';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useCommonStyles } from 'themes/commonStyles';
+import { useThemeStyles } from 'themes/themeStyles';
 import UIContext from 'contexts/UIContext';
 import {
     PNPS_FEEDBACK_ID,
@@ -24,8 +24,8 @@ export const FeedbackNPS = ({ openUrl }: IFeedbackNPSProps) => {
     const { createFeedback, updateFeedback } = useAuthFeedbackApi();
     const { feedback } = useAuthFeedback();
     const [answeredNotNow, setAnsweredNotNow] = useState(false);
-    const styles = useStyles();
-    const commonStyles = useCommonStyles();
+    const { classes: styles } = useStyles();
+    const { classes: themeStyles } = useThemeStyles();
     const feedbackId = PNPS_FEEDBACK_ID;
 
     const onConfirm = async () => {
@@ -61,22 +61,23 @@ export const FeedbackNPS = ({ openUrl }: IFeedbackNPSProps) => {
     return (
         <AnimateOnMount
             mounted={showFeedback}
-            start={commonStyles.fadeInTopStart}
-            enter={commonStyles.fadeInTopEnter}
-            leave={commonStyles.fadeInTopLeave}
+            start={themeStyles.fadeInTopStart}
+            enter={themeStyles.fadeInTopEnter}
+            leave={themeStyles.fadeInTopLeave}
             container={styles.animateContainer}
         >
             <div className={styles.feedback}>
                 <div
                     className={classnames(
                         styles.container,
-                        commonStyles.contentSpacingY
+                        themeStyles.contentSpacingY
                     )}
                 >
                     <Tooltip title="Close">
                         <IconButton
                             className={styles.close}
                             onClick={() => setShowFeedback(false)}
+                            size="large"
                         >
                             <CloseIcon />
                         </IconButton>

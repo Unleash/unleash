@@ -3,8 +3,8 @@ import {
     InputAdornment,
     TextField,
     TextFieldProps,
-} from '@material-ui/core';
-import { Visibility, VisibilityOff } from '@material-ui/icons';
+} from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import React, { useState, VFC } from 'react';
 
 const PasswordField: VFC<TextFieldProps> = ({ ...rest }) => {
@@ -37,6 +37,7 @@ const PasswordField: VFC<TextFieldProps> = ({ ...rest }) => {
                         <IconButton
                             onClick={handleClickShowPassword}
                             onMouseDown={handleMouseDownPassword}
+                            size="large"
                         >
                             <IconComponent titleAccess={iconTitle} />
                         </IconButton>

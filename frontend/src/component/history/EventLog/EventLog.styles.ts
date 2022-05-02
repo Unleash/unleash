@@ -1,11 +1,11 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles(theme => ({
+export const useStyles = makeStyles()(theme => ({
     eventEntry: {
-        border: theme.borders.default,
+        border: `1px solid ${theme.palette.grey[100]}`,
         padding: '1rem',
         margin: '1rem 0',
-        borderRadius: theme.borders.radius.main,
+        borderRadius: theme.borderRadius.main,
     },
     history: {
         '& code': {
@@ -13,20 +13,16 @@ export const useStyles = makeStyles(theme => ({
             whiteSpace: 'pre',
             fontFamily: 'monospace',
             lineHeight: '100%',
-            // @ts-expect-error
-            color: theme.palette.code.main,
+            color: theme.code.main,
         },
         '& code > .diff-N': {
-            // @ts-expect-error
-            color: theme.palette.code.diffAdd,
+            color: theme.code.diffAdd,
         },
         '& code > .diff-D': {
-            // @ts-expect-error
-            color: theme.palette.code.diffSub,
+            color: theme.code.diffSub,
         },
         '& code > .diff-A, .diff-E': {
-            // @ts-expect-error
-            color: theme.palette.code.diffNeutral,
+            color: theme.code.diffNeutral,
         },
         '& dl': {
             padding: '0',

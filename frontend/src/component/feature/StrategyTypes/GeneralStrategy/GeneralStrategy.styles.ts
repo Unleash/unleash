@@ -1,6 +1,6 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles(theme => ({
+export const useStyles = makeStyles()(theme => ({
     helpText: {
         color: 'rgba(0, 0, 0, 0.54)',
         fontSize: theme.fontSizes.smallerBody,

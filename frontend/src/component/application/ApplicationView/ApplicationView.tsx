@@ -7,14 +7,14 @@ import {
     ListItemAvatar,
     ListItemText,
     Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 import {
     Extension,
     FlagRounded,
     Report,
     SvgIconComponent,
     Timeline,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import {
     CREATE_FEATURE,
     CREATE_STRATEGY,

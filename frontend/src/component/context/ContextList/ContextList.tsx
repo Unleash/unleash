@@ -1,5 +1,5 @@
 import { useContext, useState, VFC } from 'react';
-import { Add, Album, Delete, Edit } from '@material-ui/icons';
+import { Add, Album, Delete, Edit } from '@mui/icons-material';
 import { Link, useHistory } from 'react-router-dom';
 import {
     Button,
@@ -10,7 +10,7 @@ import {
     ListItemText,
     Tooltip,
     useMediaQuery,
-} from '@material-ui/core';
+} from '@mui/material';
 import PageContent from 'component/common/PageContent/PageContent';
 import { HeaderTitle } from 'component/common/HeaderTitle/HeaderTitle';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -36,7 +36,7 @@ const ContextList: VFC = () => {
     const { removeContext } = useContextsApi();
     const { setToastData, setToastApiError } = useToast();
     const history = useHistory();
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     const onDeleteContext = async () => {
         try {
@@ -85,6 +85,7 @@ const ContextList: VFC = () => {
                                 onClick={() =>
                                     history.push(`/context/edit/${field.name}`)
                                 }
+                                size="large"
                             >
                                 <Edit />
                             </IconButton>
@@ -101,6 +102,7 @@ const ContextList: VFC = () => {
                                     setName(field.name);
                                     setShowDelDialogue(true);
                                 }}
+                                size="large"
                             >
                                 <Delete />
                             </IconButton>
@@ -119,6 +121,7 @@ const ContextList: VFC = () => {
                         <Tooltip title="Add context type">
                             <IconButton
                                 onClick={() => history.push('/context/create')}
+                                size="large"
                             >
                                 <Add />
                             </IconButton>

@@ -1,5 +1,5 @@
 import Input from 'component/common/Input/Input';
-import { TextField, Button } from '@material-ui/core';
+import { TextField, Button } from '@mui/material';
 import { useStyles } from './ProjectForm.styles';
 import React from 'react';
 import { trim } from 'component/common/util';
@@ -34,7 +34,7 @@ const ProjectForm: React.FC<IProjectForm> = ({
     validateProjectId,
     clearErrors,
 }) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     return (
         <form onSubmit={handleSubmit} className={styles.form}>

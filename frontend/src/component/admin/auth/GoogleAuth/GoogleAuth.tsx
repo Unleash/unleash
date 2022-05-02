@@ -5,8 +5,8 @@ import {
     Grid,
     Switch,
     TextField,
-} from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
+} from '@mui/material';
+import { Alert } from '@mui/material';
 import PageContent from 'component/common/PageContent/PageContent';
 import AccessContext from 'contexts/AccessContext';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
@@ -93,7 +93,7 @@ export const GoogleAuth = () => {
                 </Grid>
             </Grid>
             <form onSubmit={onSubmit}>
-                <Grid container spacing={3}>
+                <Grid container spacing={3} mb={2}>
                     <Grid item xs={5}>
                         <strong>Enable</strong>
                         <p>
@@ -115,7 +115,7 @@ export const GoogleAuth = () => {
                         />
                     </Grid>
                 </Grid>
-                <Grid container spacing={3}>
+                <Grid container spacing={3} mb={2}>
                     <Grid item xs={5}>
                         <strong>Client ID</strong>
                         <p>
@@ -137,7 +137,7 @@ export const GoogleAuth = () => {
                         />
                     </Grid>
                 </Grid>
-                <Grid container spacing={3}>
+                <Grid container spacing={3} mb={2}>
                     <Grid item md={5}>
                         <strong>Client Secret</strong>
                         <p>
@@ -159,7 +159,7 @@ export const GoogleAuth = () => {
                         />
                     </Grid>
                 </Grid>
-                <Grid container spacing={3}>
+                <Grid container spacing={3} mb={2}>
                     <Grid item md={5}>
                         <strong>Unleash hostname</strong>
                         <p>
@@ -186,7 +186,7 @@ export const GoogleAuth = () => {
                         />
                     </Grid>
                 </Grid>
-                <Grid container spacing={3}>
+                <Grid container spacing={3} mb={2}>
                     <Grid item md={5}>
                         <strong>Auto-create users</strong>
                         <p>
@@ -202,7 +202,7 @@ export const GoogleAuth = () => {
                         />
                     </Grid>
                 </Grid>
-                <Grid container spacing={3}>
+                <Grid container spacing={3} mb={2}>
                     <Grid item md={5}>
                         <strong>Email domains</strong>
                         <p>

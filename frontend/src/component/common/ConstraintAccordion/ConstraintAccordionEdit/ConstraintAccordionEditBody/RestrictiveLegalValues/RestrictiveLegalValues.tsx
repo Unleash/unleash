@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { Checkbox } from '@material-ui/core';
-import { useCommonStyles } from 'themes/commonStyles';
+import { Checkbox } from '@mui/material';
+import { useThemeStyles } from 'themes/themeStyles';
 import { ConstraintValueSearch } from 'component/common/ConstraintAccordion/ConstraintValueSearch/ConstraintValueSearch';
 import { ConstraintFormHeader } from '../ConstraintFormHeader/ConstraintFormHeader';
 import { ILegalValue } from 'interfaces/context';
@@ -44,7 +44,7 @@ export const RestrictiveLegalValues = ({
 
     // Lazily initialise the values because there might be a lot of them.
     const [valuesMap, setValuesMap] = useState(() => createValuesMap(values));
-    const styles = useCommonStyles();
+    const { classes: styles } = useThemeStyles();
 
     useEffect(() => {
         setValuesMap(createValuesMap(values));

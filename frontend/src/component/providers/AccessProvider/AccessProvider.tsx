@@ -1,4 +1,4 @@
-import { ReactElement, ReactNode, useCallback, useMemo } from 'react';
+import { ReactElement, ReactNode, useMemo } from 'react';
 import AccessContext, { IAccessContext } from 'contexts/AccessContext';
 import { ADMIN } from './permissions';
 import { IPermission } from 'interfaces/user';
@@ -6,46 +6,29 @@ import { useAuthPermissions } from 'hooks/api/getters/useAuth/useAuthPermissions
 
 interface IAccessProviderProps {
     children: ReactNode;
-    permissions?: IPermission[];
 }
 
-// TODO(olav): Mock useAuth instead of using props.permissions in tests.
-const AccessProvider = (props: IAccessProviderProps): ReactElement => {
-    const auth = useAuthPermissions();
-    const permissions = props.permissions ?? auth.permissions;
-
-    const isAdmin: boolean = useMemo(() => {
-        return checkAdmin(permissions);
-    }, [permissions]);
-
-    const hasAccess = useCallback(
-        (permission: string, project?: string, environment?: string) => {
-            return checkPermissions(
-                permissions,
-                permission,
-                project,
-                environment
-            );
-        },
-        [permissions]
-    );
+export const AccessProvider = ({
+    children,
+}: IAccessProviderProps): ReactElement => {
+    const { permissions } = useAuthPermissions();
 
     const value: IAccessContext = useMemo(
         () => ({
-            isAdmin,
-            hasAccess,
+            isAdmin: checkAdmin(permissions),
+            hasAccess: hasAccess.bind(null, permissions),
         }),
-        [isAdmin, hasAccess]
+        [permissions]
     );
 
     return (
         <AccessContext.Provider value={value}>
-            {props.children}
+            {children}
         </AccessContext.Provider>
     );
 };
 
-const checkAdmin = (permissions: IPermission[] | undefined): boolean => {
+export const checkAdmin = (permissions: IPermission[] | undefined): boolean => {
     if (!permissions) {
         return false;
     }
@@ -55,7 +38,7 @@ const checkAdmin = (permissions: IPermission[] | undefined): boolean => {
     });
 };
 
-const checkPermissions = (
+export const hasAccess = (
     permissions: IPermission[] | undefined,
     permission: string,
     project?: string,
@@ -107,5 +90,3 @@ const checkPermission = (
         p.environment === null
     );
 };
-
-export default AccessProvider;

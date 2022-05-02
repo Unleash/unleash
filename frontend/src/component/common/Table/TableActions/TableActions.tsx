@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { IconButton, Tooltip } from '@material-ui/core';
-import { Search } from '@material-ui/icons';
+import { IconButton, Tooltip } from '@mui/material';
+import { Search } from '@mui/icons-material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import AnimateOnMount from 'component/common/AnimateOnMount/AnimateOnMount';
 import { TableSearchField } from 'component/common/Table/TableActions/TableSearchField/TableSearchField';
@@ -15,7 +15,7 @@ export const TableActions = ({ search, onSearch }: ITableActionsProps) => {
     const [searchExpanded, setSearchExpanded] = useState(false);
     const [animating, setAnimating] = useState(false);
 
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     const onBlur = (clear = false) => {
         if (!search || clear) {
@@ -47,6 +47,7 @@ export const TableActions = ({ search, onSearch }: ITableActionsProps) => {
                         <IconButton
                             aria-label="Search users"
                             onClick={() => setSearchExpanded(true)}
+                            size="large"
                         >
                             <Search />
                         </IconButton>

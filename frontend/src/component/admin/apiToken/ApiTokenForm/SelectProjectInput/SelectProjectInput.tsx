@@ -5,15 +5,17 @@ import {
     TextField,
     Box,
     Paper,
-} from '@material-ui/core';
+} from '@mui/material';
+import { Autocomplete } from '@mui/material';
+
 import {
-    Autocomplete,
     AutocompleteRenderGroupParams,
     AutocompleteRenderInputParams,
     AutocompleteRenderOptionState,
-} from '@material-ui/lab';
-import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@material-ui/icons/CheckBox';
+} from '@mui/material/Autocomplete';
+
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { IAutocompleteBoxOption } from 'component/common/AutocompleteBox/AutocompleteBox';
 import { useStyles } from '../ApiTokenForm.styles';
 import { SelectAllButton } from './SelectAllButton/SelectAllButton';
@@ -41,7 +43,7 @@ export const SelectProjectInput: VFC<ISelectProjectInputProps> = ({
     error,
     onFocus,
 }) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
     const [projects, setProjects] = useState<string[]>(
         typeof defaultValue === 'string' ? [defaultValue] : defaultValue
     );
@@ -75,10 +77,11 @@ export const SelectProjectInput: VFC<ISelectProjectInputProps> = ({
     };
 
     const renderOption = (
+        props: object,
         option: IAutocompleteBoxOption,
         { selected }: AutocompleteRenderOptionState
     ) => (
-        <>
+        <li {...props}>
             <Checkbox
                 icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
                 checkedIcon={<CheckBoxIcon fontSize="small" />}
@@ -86,7 +89,7 @@ export const SelectProjectInput: VFC<ISelectProjectInputProps> = ({
                 className={styles.selectOptionCheckbox}
             />
             {option.label}
-        </>
+        </li>
     );
 
     const renderGroup = ({ key, children }: AutocompleteRenderGroupParams) => (

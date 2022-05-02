@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-    FormControlLabel,
-    Switch,
-    TextField,
-    Tooltip,
-} from '@material-ui/core';
+import { FormControlLabel, Switch, TextField, Tooltip } from '@mui/material';
 import StrategyInputList from '../StrategyInputList/StrategyInputList';
 import RolloutSlider from '../RolloutSlider/RolloutSlider';
 import { IParameter, IStrategy } from 'interfaces/strategy';
@@ -23,7 +18,7 @@ const GeneralStrategy = ({
     updateParameter,
     editable,
 }: IGeneralStrategyProps) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
     const onChangeTextField = (
         field: string,
         evt: React.ChangeEvent<HTMLInputElement>
@@ -34,11 +29,7 @@ const GeneralStrategy = ({
         updateParameter(field, value);
     };
 
-    const onChangePercentage = (
-        field: string,
-        evt: React.ChangeEvent<{}>,
-        newValue: any
-    ) => {
+    const onChangePercentage = (field: string, evt: Event, newValue: any) => {
         evt.preventDefault();
         updateParameter(field, newValue);
     };

@@ -1,6 +1,6 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles(theme => ({
+export const useStyles = makeStyles()(theme => ({
     link: {
         position: 'fixed',
         overflow: 'hidden',
@@ -12,7 +12,7 @@ export const useStyles = makeStyles(theme => ({
         textDecoration: 'none',
         background: theme.palette.primary.dark,
         color: theme.palette.primary.contrastText,
-        borderRadius: theme.borders.radius.main,
+        borderRadius: theme.borderRadius.main,
         fontSize: theme.fontSizes.smallBody,
 
         [theme.breakpoints.down(960)]: {

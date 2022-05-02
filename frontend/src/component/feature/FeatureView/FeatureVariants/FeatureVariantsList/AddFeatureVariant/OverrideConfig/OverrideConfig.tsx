@@ -1,11 +1,11 @@
 import { ChangeEvent, VFC } from 'react';
 import classnames from 'classnames';
-import { Grid, IconButton, TextField, Tooltip } from '@material-ui/core';
-import { Delete } from '@material-ui/icons';
+import { Grid, IconButton, TextField, Tooltip } from '@mui/material';
+import { Delete } from '@mui/icons-material';
 import { useStyles } from './OverrideConfig.styles';
-import { Autocomplete } from '@material-ui/lab';
+import { Autocomplete } from '@mui/material';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
-import { useCommonStyles } from 'themes/commonStyles';
+import { useThemeStyles } from 'themes/themeStyles';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { InputListField } from 'component/common/InputListField/InputListField';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
@@ -21,8 +21,8 @@ export const OverrideConfig: VFC<IOverrideConfigProps> = ({
     overrides,
     overridesDispatch,
 }) => {
-    const styles = useStyles();
-    const commonStyles = useCommonStyles();
+    const { classes: styles } = useStyles();
+    const { classes: themeStyles } = useThemeStyles();
 
     const { context } = useUnleashContext();
     const contextNames = context.map(({ name }) => ({
@@ -77,7 +77,7 @@ export const OverrideConfig: VFC<IOverrideConfigProps> = ({
                                 value={override.contextName}
                                 options={contextNames}
                                 classes={{
-                                    root: classnames(commonStyles.fullWidth),
+                                    root: classnames(themeStyles.fullWidth),
                                 }}
                                 onChange={(value: string) => {
                                     overridesDispatch({
@@ -96,7 +96,10 @@ export const OverrideConfig: VFC<IOverrideConfigProps> = ({
                                     <Autocomplete
                                         multiple
                                         id={`override-select-${index}`}
-                                        getOptionSelected={(option, value) => {
+                                        isOptionEqualToValue={(
+                                            option,
+                                            value
+                                        ) => {
                                             return option === value;
                                         }}
                                         options={legalValues}
@@ -138,6 +141,7 @@ export const OverrideConfig: VFC<IOverrideConfigProps> = ({
                                             payload: index,
                                         });
                                     }}
+                                    size="large"
                                 >
                                     <Delete />
                                 </IconButton>

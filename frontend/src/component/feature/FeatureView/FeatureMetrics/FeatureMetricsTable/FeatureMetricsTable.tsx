@@ -7,7 +7,7 @@ import {
     TableRow,
     useMediaQuery,
     useTheme,
-} from '@material-ui/core';
+} from '@mui/material';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { useMemo } from 'react';
 import { formatDateYMDHMS } from 'utils/formatDate';
@@ -20,7 +20,7 @@ interface IFeatureMetricsTableProps {
 
 export const FeatureMetricsTable = ({ metrics }: IFeatureMetricsTableProps) => {
     const theme = useTheme();
-    const smallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+    const smallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const { locationSettings } = useLocationSettings();
 
     const sortedMetrics = useMemo(() => {

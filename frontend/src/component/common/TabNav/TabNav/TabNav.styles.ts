@@ -1,8 +1,12 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles(theme => ({
+export const useStyles = makeStyles()(theme => ({
     tabNav: {
-        // @ts-expect-error
         backgroundColor: theme.palette.tabs.main,
+    },
+    tab: {
+        [theme.breakpoints.up('lg')]: {
+            minWidth: 160,
+        },
     },
 }));

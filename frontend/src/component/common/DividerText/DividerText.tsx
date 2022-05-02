@@ -1,4 +1,4 @@
-import { Typography } from '@material-ui/core';
+import { Typography } from '@mui/material';
 import { useStyles } from 'component/common/DividerText/DividerText.styles';
 
 interface IDividerTextProps {
@@ -6,7 +6,7 @@ interface IDividerTextProps {
 }
 
 const DividerText = ({ text, ...rest }: IDividerTextProps) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     return (
         <div className={styles.container} {...rest}>

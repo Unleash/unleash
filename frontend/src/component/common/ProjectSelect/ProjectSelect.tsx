@@ -1,5 +1,5 @@
 import React, { MouseEventHandler, useMemo, VFC } from 'react';
-import { MenuItem, Typography } from '@material-ui/core';
+import { MenuItem, Typography } from '@mui/material';
 import DropdownMenu, { IDropdownMenuProps } from '../DropdownMenu/DropdownMenu';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { IProjectCard } from 'interfaces/project';

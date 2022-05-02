@@ -1,6 +1,6 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles(theme => ({
+export const useStyles = makeStyles()(theme => ({
     tableRow: {
         '&:hover': {
             backgroundColor: theme.palette.grey[200],
@@ -27,12 +27,12 @@ export const useStyles = makeStyles(theme => ({
     },
     tableCellEnv: {
         width: '90px',
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             display: 'none',
         },
     },
     tableCellCreated: {
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             display: 'none',
         },
     },

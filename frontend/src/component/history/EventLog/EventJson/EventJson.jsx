@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useStyles } from './EventJson.styles';
 
 const EventJson = ({ entry }) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     const localEventData = JSON.parse(JSON.stringify(entry));
     delete localEventData.description;

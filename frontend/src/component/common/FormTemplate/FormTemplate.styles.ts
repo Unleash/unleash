@@ -1,8 +1,8 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from 'tss-react/mui';
 
 export const formTemplateSidebarWidth = '27.5rem';
 
-export const useStyles = makeStyles(theme => ({
+export const useStyles = makeStyles()(theme => ({
     container: {
         minHeight: '80vh',
         width: '100%',
@@ -42,7 +42,8 @@ export const useStyles = makeStyles(theme => ({
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        fontWeight: 'normal',
+        fontWeight: theme.fontWeight.bold,
+        fontSize: theme.fontSizes.subHeader,
     },
     description: {
         color: '#fff',

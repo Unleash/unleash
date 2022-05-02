@@ -1,10 +1,5 @@
-import {
-    Checkbox,
-    FormControlLabel,
-    IconButton,
-    Tooltip,
-} from '@material-ui/core';
-import { Delete } from '@material-ui/icons';
+import { Checkbox, FormControlLabel, IconButton, Tooltip } from '@mui/material';
+import { Delete } from '@mui/icons-material';
 import { useStyles } from './StrategyParameter.styles';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import Input from 'component/common/Input/Input';
@@ -61,7 +56,7 @@ export const StrategyParameter = ({
     setParams,
     errors,
 }: IStrategyParameterProps) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     const onTypeChange = (type: string) => {
         set({ type });
@@ -98,6 +93,7 @@ export const StrategyParameter = ({
                         onClick={() => {
                             setParams(params.filter((e, i) => i !== index));
                         }}
+                        size="large"
                     >
                         <Delete />
                     </IconButton>

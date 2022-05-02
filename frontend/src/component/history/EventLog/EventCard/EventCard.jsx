@@ -4,7 +4,7 @@ import { useStyles } from './EventCard.styles';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const EventCard = ({ entry, timeFormatted }) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     return (
         <div>

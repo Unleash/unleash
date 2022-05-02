@@ -12,16 +12,16 @@ import useToast from 'hooks/useToast';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import useProject from 'hooks/api/getters/useProject/useProject';
-import { FormControlLabel, FormGroup } from '@material-ui/core';
+import { FormControlLabel, FormGroup } from '@mui/material';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import EnvironmentDisableConfirm from './EnvironmentDisableConfirm/EnvironmentDisableConfirm';
 import { Link } from 'react-router-dom';
-import { Alert } from '@material-ui/lab';
+import { Alert } from '@mui/material';
 import PermissionSwitch from 'component/common/PermissionSwitch/PermissionSwitch';
 import { IProjectEnvironment } from 'interfaces/environments';
 import { getEnabledEnvs } from './helpers';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
-import { useCommonStyles } from 'themes/commonStyles';
+import { useThemeStyles } from 'themes/themeStyles';
 
 interface IProjectEnvironmentListProps {
     projectId: string;
@@ -39,13 +39,13 @@ const ProjectEnvironmentList = ({
     const { project, refetch: refetchProject } = useProject(projectId);
     const { removeEnvironmentFromProject, addEnvironmentToProject } =
         useProjectApi();
-    const commonStyles = useCommonStyles();
+    const { classes: themeStyles } = useThemeStyles();
 
     // local state
     const [selectedEnv, setSelectedEnv] = useState<IProjectEnvironment>();
     const [confirmName, setConfirmName] = useState('');
     const ref = useLoading(loading);
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     useEffect(() => {
         const envs = environments.map(e => ({
@@ -130,7 +130,7 @@ const ProjectEnvironmentList = ({
     };
 
     const genLabel = (env: IProjectEnvironment) => (
-        <div className={commonStyles.flexRow}>
+        <div className={themeStyles.flexRow}>
             <code>
                 <StringTruncator
                     text={env.name}

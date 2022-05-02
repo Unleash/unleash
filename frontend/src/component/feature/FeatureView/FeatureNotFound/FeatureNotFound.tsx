@@ -9,7 +9,7 @@ import { useFeaturesArchive } from 'hooks/api/getters/useFeaturesArchive/useFeat
 export const FeatureNotFound = () => {
     const { projectId, featureId } = useParams<IFeatureViewParams>();
     const { archivedFeatures } = useFeaturesArchive();
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
     const { uiConfig } = useUiConfig();
 
     const createFeatureTogglePath = getCreateTogglePath(

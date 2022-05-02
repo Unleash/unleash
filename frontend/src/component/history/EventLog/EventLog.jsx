@@ -1,4 +1,4 @@
-import { List, Switch, FormControlLabel } from '@material-ui/core';
+import { List, Switch, FormControlLabel } from '@mui/material';
 import PropTypes from 'prop-types';
 import EventJson from './EventJson/EventJson';
 import PageContent from 'component/common/PageContent/PageContent';
@@ -15,7 +15,7 @@ const EventLog = ({
     locationSettings,
     displayInline,
 }) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
     const toggleShowDiff = () => {
         setEventSettings({ showData: !eventSettings.showData });
     };

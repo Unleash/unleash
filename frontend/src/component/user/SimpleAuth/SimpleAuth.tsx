@@ -1,5 +1,5 @@
 import { ChangeEventHandler, FormEventHandler, useState, VFC } from 'react';
-import { Button, TextField } from '@material-ui/core';
+import { Button, TextField } from '@mui/material';
 import styles from './SimpleAuth.module.scss';
 import { useHistory } from 'react-router-dom';
 import { useAuthApi } from 'hooks/api/actions/useAuthApi/useAuthApi';

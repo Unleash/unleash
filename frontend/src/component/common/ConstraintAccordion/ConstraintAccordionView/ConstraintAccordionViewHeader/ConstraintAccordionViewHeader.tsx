@@ -1,7 +1,7 @@
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
-import { Chip, useMediaQuery, IconButton } from '@material-ui/core';
+import { Chip, useMediaQuery, IconButton } from '@mui/material';
 import { ConstraintIcon } from 'component/common/ConstraintAccordion/ConstraintIcon';
-import { Delete, Edit } from '@material-ui/icons';
+import { Delete, Edit } from '@mui/icons-material';
 import { IConstraint } from 'interfaces/strategy';
 
 import { useStyles } from 'component/common/ConstraintAccordion/ConstraintAccordion.styles';
@@ -26,7 +26,7 @@ export const ConstraintAccordionViewHeader = ({
     onDelete,
     singleValue,
 }: IConstraintAccordionViewHeaderProps) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
     const { locationSettings } = useLocationSettings();
     const smallScreen = useMediaQuery(`(max-width:${790}px)`);
 

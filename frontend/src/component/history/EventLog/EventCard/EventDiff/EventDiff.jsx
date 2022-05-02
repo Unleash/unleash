@@ -11,7 +11,7 @@ const DIFF_PREFIXES = {
 };
 
 const EventDiff = ({ entry }) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     const KLASSES = {
         A: styles.blue, // array edited

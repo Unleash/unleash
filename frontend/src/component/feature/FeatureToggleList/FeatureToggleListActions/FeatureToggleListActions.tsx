@@ -1,5 +1,5 @@
 import { Dispatch, MouseEventHandler, SetStateAction, VFC } from 'react';
-import { MenuItem, Typography } from '@material-ui/core';
+import { MenuItem, Typography } from '@mui/material';
 import DropdownMenu from 'component/common/DropdownMenu/DropdownMenu';
 import ProjectSelect from 'component/common/ProjectSelect/ProjectSelect';
 import useLoading from 'hooks/useLoading';
@@ -30,7 +30,7 @@ export const FeatureToggleListActions: VFC<IFeatureToggleListActionsProps> = ({
     setSort,
     loading = false,
 }) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
     const { uiConfig } = useUiConfig();
     const ref = useLoading(loading);
 

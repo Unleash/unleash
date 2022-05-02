@@ -1,6 +1,6 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles(theme => ({
+export const useStyles = makeStyles()(theme => ({
     container: {
         maxWidth: '450px',
         background: '#fff',
@@ -49,7 +49,7 @@ export const useStyles = makeStyles(theme => ({
     buttonStyle: {
         position: 'absolute',
         top: '-33px',
-        right: '-29px',
+        right: '-33px',
     },
     '@keyframes drop': {
         '0%': {

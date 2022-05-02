@@ -1,6 +1,6 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles(theme => ({
+export const useStyles = makeStyles()(theme => ({
     container: {
         width: '100%',
         transform: 'translateY(-30px)',
@@ -17,7 +17,7 @@ export const useStyles = makeStyles(theme => ({
     button: {
         width: '150px',
         marginTop: '1.15rem',
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             width: '100px',
         },
     },

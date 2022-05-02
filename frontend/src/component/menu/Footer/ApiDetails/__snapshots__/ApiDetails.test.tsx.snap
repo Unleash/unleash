@@ -7,7 +7,7 @@ exports[`renders correctly with empty version 1`] = `
       title="API details"
     >
       <h2
-        class="makeStyles-title-1"
+        class="tss-cxwipi-title"
       >
         Unleash 
          
@@ -26,7 +26,7 @@ exports[`renders correctly with empty version 1`] = `
     <div
       aria-atomic="true"
       aria-live="polite"
-      class="makeStyles-container-2"
+      class="tss-1cl4o05-container"
       data-testid="ANNOUNCER_ELEMENT_TEST_ID"
       role="status"
     />
@@ -41,7 +41,7 @@ exports[`renders correctly with ui-config 1`] = `
       title="API details"
     >
       <h2
-        class="makeStyles-title-3"
+        class="tss-cxwipi-title"
       >
         Unleash 1.1.0
          
@@ -60,7 +60,7 @@ exports[`renders correctly with ui-config 1`] = `
     <div
       aria-atomic="true"
       aria-live="polite"
-      class="makeStyles-container-4"
+      class="tss-1cl4o05-container"
       data-testid="ANNOUNCER_ELEMENT_TEST_ID"
       role="status"
     />
@@ -75,7 +75,7 @@ exports[`renders correctly with versionInfo 1`] = `
       title="API details"
     >
       <h2
-        class="makeStyles-title-7"
+        class="tss-cxwipi-title"
       >
         Unleash 1.2.3
          
@@ -94,7 +94,7 @@ exports[`renders correctly with versionInfo 1`] = `
     <div
       aria-atomic="true"
       aria-live="polite"
-      class="makeStyles-container-8"
+      class="tss-1cl4o05-container"
       data-testid="ANNOUNCER_ELEMENT_TEST_ID"
       role="status"
     />
@@ -109,7 +109,7 @@ exports[`renders correctly without uiConfig 1`] = `
       title="API details"
     >
       <h2
-        class="makeStyles-title-5"
+        class="tss-cxwipi-title"
       >
         Unleash 1.1.0
          
@@ -121,7 +121,7 @@ exports[`renders correctly without uiConfig 1`] = `
     <div
       aria-atomic="true"
       aria-live="polite"
-      class="makeStyles-container-6"
+      class="tss-1cl4o05-container"
       data-testid="ANNOUNCER_ELEMENT_TEST_ID"
       role="status"
     />

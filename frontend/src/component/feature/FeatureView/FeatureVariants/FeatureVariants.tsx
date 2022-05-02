@@ -3,8 +3,9 @@ import FeatureOverviewVariants from './FeatureVariantsList/FeatureVariantsList';
 import { usePageTitle } from 'hooks/usePageTitle';
 
 const FeatureVariants = () => {
-    const styles = useStyles();
     usePageTitle('Variants');
+
+    const { classes: styles } = useStyles();
 
     return (
         <div className={styles.container}>

@@ -1,9 +1,9 @@
 import { memo, ReactNode } from 'react';
 import classnames from 'classnames';
 import { Link } from 'react-router-dom';
-import { Checkbox } from '@material-ui/core';
-import CheckIcon from '@material-ui/icons/Check';
-import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined';
+import { Checkbox } from '@mui/material';
+import CheckIcon from '@mui/icons-material/Check';
+import ReportProblemOutlinedIcon from '@mui/icons-material/ReportProblemOutlined';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import FeatureStatus from 'component/feature/FeatureView/FeatureStatus/FeatureStatus';
 import {
@@ -41,7 +41,7 @@ export const ReportToggleListItem = memo<IReportToggleListItemProps>(
         bulkActionsOn,
         setFeatures,
     }) => {
-        const styles = useStyles();
+        const { classes: styles } = useStyles();
         const nameMatches = (feature: { name: string }) =>
             feature.name === name;
 

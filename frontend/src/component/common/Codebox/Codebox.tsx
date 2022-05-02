@@ -5,7 +5,7 @@ interface ICodeboxProps {
 }
 
 const Codebox = ({ text }: ICodeboxProps) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     return (
         <div className={styles.container}>

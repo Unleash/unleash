@@ -4,8 +4,8 @@ import {
     AccordionSummary,
     Checkbox,
     FormControlLabel,
-} from '@material-ui/core';
-import { ExpandMore } from '@material-ui/icons';
+} from '@mui/material';
+import { ExpandMore } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
 import {
     IPermission,
@@ -34,7 +34,7 @@ const EnvironmentPermissionAccordion = ({
 }: IEnvironmentPermissionAccordionProps) => {
     const [permissionMap, setPermissionMap] = useState<PermissionMap>({});
     const [permissionCount, setPermissionCount] = useState(0);
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     useEffect(() => {
         const permissionMap = environment?.permissions?.reduce(

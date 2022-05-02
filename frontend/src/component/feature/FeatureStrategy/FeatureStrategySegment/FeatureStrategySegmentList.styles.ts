@@ -1,6 +1,6 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles(theme => ({
+export const useStyles = makeStyles()(theme => ({
     title: {
         margin: 0,
         fontSize: theme.fontSizes.bodySize,
@@ -20,6 +20,6 @@ export const useStyles = makeStyles(theme => ({
         marginBlock: '0.2rem',
         display: 'grid',
         alignItems: 'center',
-        borderRadius: theme.borders.radius.main,
+        borderRadius: theme.borderRadius.main,
     },
 }));

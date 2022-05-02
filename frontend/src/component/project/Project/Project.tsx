@@ -4,8 +4,8 @@ import useLoading from 'hooks/useLoading';
 import ApiError from 'component/common/ApiError/ApiError';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useStyles } from './Project.styles';
-import { Tab, Tabs } from '@material-ui/core';
-import { Edit } from '@material-ui/icons';
+import { Tab, Tabs } from '@mui/material';
+import { Edit } from '@mui/icons-material';
 import useToast from 'hooks/useToast';
 import useQueryParams from 'hooks/useQueryParams';
 import { useEffect } from 'react';
@@ -23,7 +23,7 @@ const Project = () => {
     const { project, error, loading, refetch } = useProject(id);
     const ref = useLoading(loading);
     const { setToastData } = useToast();
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
     const history = useHistory();
 
     const basePath = `/projects/${id}`;

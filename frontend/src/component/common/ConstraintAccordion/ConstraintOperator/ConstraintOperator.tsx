@@ -9,7 +9,7 @@ interface IConstraintOperatorProps {
 export const ConstraintOperator = ({
     constraint,
 }: IConstraintOperatorProps) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     const operatorName = constraint.operator;
     const operatorText = formatOperatorDescription(constraint.operator);

@@ -1,4 +1,4 @@
-import { Typography } from '@material-ui/core';
+import { Typography } from '@mui/material';
 import { IParameter } from 'interfaces/strategy';
 import RolloutSlider from '../RolloutSlider/RolloutSlider';
 import Select from 'component/common/select';
@@ -30,19 +30,11 @@ const FlexibleStrategy = ({
     context,
     editable = true,
 }: IFlexibleStrategyProps) => {
-    const onUpdate =
-        (field: string) =>
-        (
-            e: React.ChangeEvent<{ name?: string; value: unknown }>,
-            newValue: number
-        ) => {
-            updateParameter(field, newValue);
-        };
+    const onUpdate = (field: string) => (newValue: string) => {
+        updateParameter(field, newValue);
+    };
 
-    const updateRollout = (
-        e: React.ChangeEvent<{}>,
-        value: number | number[]
-    ) => {
+    const updateRollout = (e: Event, value: number | number[]) => {
         updateParameter('rollout', value.toString());
     };
 
@@ -97,9 +89,7 @@ const FlexibleStrategy = ({
                     value={stickiness}
                     disabled={!editable}
                     data-testid={FLEXIBLE_STRATEGY_STICKINESS_ID}
-                    onChange={e =>
-                        onUpdate('stickiness')(e, e.target.value as number)
-                    }
+                    onChange={e => onUpdate('stickiness')(e.target.value)}
                 />
                 &nbsp;
                 <br />
@@ -121,7 +111,7 @@ const FlexibleStrategy = ({
                     id="groupId-input"
                     value={groupId || ''}
                     disabled={!editable}
-                    onChange={e => onUpdate('groupId')(e, e.target.value)}
+                    onChange={e => onUpdate('groupId')(e.target.value)}
                     data-testid={FLEXIBLE_STRATEGY_GROUP_ID}
                 />
             </div>

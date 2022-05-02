@@ -6,7 +6,7 @@ import {
     ListItemAvatar,
     ListItemSecondaryAction,
     ListItemText,
-} from '@material-ui/core';
+} from '@mui/material';
 import { CREATE_ADDON } from 'component/providers/AccessProvider/permissions';
 import { useHistory } from 'react-router-dom';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';

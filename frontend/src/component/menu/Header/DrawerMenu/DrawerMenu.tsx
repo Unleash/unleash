@@ -1,9 +1,9 @@
 import React, { ReactNode, VFC } from 'react';
 import { Link } from 'react-router-dom';
-import { Divider, Drawer, List } from '@material-ui/core';
-import GitHubIcon from '@material-ui/icons/GitHub';
-import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
-import ExitToApp from '@material-ui/icons/ExitToApp';
+import { Divider, Drawer, List } from '@mui/material';
+import GitHubIcon from '@mui/icons-material/GitHub';
+import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
+import ExitToApp from '@mui/icons-material/ExitToApp';
 import { ReactComponent as LogoIcon } from 'assets/icons/logoBg.svg';
 import NavigationLink from '../NavigationLink/NavigationLink';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';

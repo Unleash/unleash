@@ -5,8 +5,9 @@ import {
     ListItemSecondaryAction,
     ListItemText,
     MenuItem,
-} from '@material-ui/core';
-import { Delete } from '@material-ui/icons';
+    SelectChangeEvent,
+} from '@mui/material';
+import { Delete } from '@mui/icons-material';
 import { useParams } from 'react-router-dom';
 import {
     IProjectAccessOutput,
@@ -21,12 +22,7 @@ import React from 'react';
 
 interface IProjectAccessListItemProps {
     user: IProjectAccessUser;
-    handleRoleChange: (userId: number) => (
-        evt: React.ChangeEvent<{
-            name?: string;
-            value: unknown;
-        }>
-    ) => void;
+    handleRoleChange: (userId: number) => (evt: SelectChangeEvent) => void;
     handleRemoveAccess: (user: IProjectAccessUser) => void;
     access: IProjectAccessOutput;
 }
@@ -38,7 +34,7 @@ export const ProjectAccessListItem = ({
     handleRemoveAccess,
 }: IProjectAccessListItemProps) => {
     const { id: projectId } = useParams<IProjectViewParams>();
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     const labelId = `checkbox-list-secondary-label-${user.id}`;
 

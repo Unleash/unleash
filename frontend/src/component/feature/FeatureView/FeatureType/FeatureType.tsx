@@ -1,5 +1,5 @@
 import { useStyles } from './FeatureType.styles';
-import { Tooltip } from '@material-ui/core';
+import { Tooltip } from '@mui/material';
 import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
 import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
 
@@ -8,13 +8,12 @@ interface IFeatureTypeProps {
 }
 
 const FeatureStatus = ({ type }: IFeatureTypeProps) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
     const { featureTypes } = useFeatureTypes();
     const IconComponent = getFeatureTypeIcons(type);
 
     const typeName = featureTypes.filter(t => t.id === type).map(t => t.name);
-
-    const title = `This is a "${typeName || type}" toggle`;
+    const title = `"${typeName || type}" toggle`;
 
     return (
         <Tooltip arrow placement="right" title={title}>

@@ -1,13 +1,13 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles(theme => ({
+export const useStyles = makeStyles()(theme => ({
     projectInfo: {
         width: '225px',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         boxShadow: 'none',
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             flexDirection: 'row',
             alignItems: 'stretch',
             width: '100%',
@@ -34,7 +34,7 @@ export const useStyles = makeStyles(theme => ({
     },
     projectIcon: {
         margin: '2rem 0',
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             margin: '0 0 0.25rem 0',
             width: '53px',
         },
@@ -45,7 +45,7 @@ export const useStyles = makeStyles(theme => ({
     emphazisedText: {
         fontSize: '1.5rem',
         marginBottom: '1rem',
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             fontSize: '1rem',
             marginBottom: '2rem',
         },
@@ -58,7 +58,7 @@ export const useStyles = makeStyles(theme => ({
         borderRadius: '10px',
         width: '100%',
         padding: '1.5rem 1rem 1.5rem 1rem',
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             margin: '0 0.25rem',
             display: 'flex',
             flexDirection: 'column',
@@ -85,7 +85,7 @@ export const useStyles = makeStyles(theme => ({
     infoLink: {
         textDecoration: 'none',
         color: '#635dc5',
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             position: 'absolute',
             bottom: '5px',
         },
@@ -100,7 +100,7 @@ export const useStyles = makeStyles(theme => ({
         justifyContent: 'flex-start',
     },
     linkText: {
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             display: 'none',
         },
     },

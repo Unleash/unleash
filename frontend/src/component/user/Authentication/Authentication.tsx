@@ -12,7 +12,7 @@ import {
 import SecondaryLoginActions from '../common/SecondaryLoginActions/SecondaryLoginActions';
 import useQueryParams from 'hooks/useQueryParams';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { Alert } from '@material-ui/lab';
+import { Alert } from '@mui/material';
 import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
 import { AUTH_PAGE_ID } from 'utils/testIds';
 

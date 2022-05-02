@@ -1,4 +1,4 @@
-import { List } from '@material-ui/core';
+import { List, SelectChangeEvent } from '@mui/material';
 import {
     IProjectAccessOutput,
     IProjectAccessUser,
@@ -8,12 +8,7 @@ import React from 'react';
 
 interface IProjectAccesListProps {
     page: IProjectAccessUser[];
-    handleRoleChange: (userId: number) => (
-        evt: React.ChangeEvent<{
-            name?: string;
-            value: unknown;
-        }>
-    ) => void;
+    handleRoleChange: (userId: number) => (evt: SelectChangeEvent) => void;
     handleRemoveAccess: (user: IProjectAccessUser) => void;
     access: IProjectAccessOutput;
 }

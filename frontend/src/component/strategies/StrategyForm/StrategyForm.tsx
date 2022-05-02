@@ -1,7 +1,7 @@
 import Input from 'component/common/Input/Input';
-import { Button } from '@material-ui/core';
+import { Button } from '@mui/material';
 import { useStyles } from './StrategyForm.styles';
-import { Add } from '@material-ui/icons';
+import { Add } from '@mui/icons-material';
 import { trim } from 'component/common/util';
 import { StrategyParameters } from './StrategyParameters/StrategyParameters';
 import { ICustomStrategyParameter } from 'interfaces/strategy';
@@ -36,7 +36,7 @@ export const StrategyForm: React.FC<IStrategyFormProps> = ({
     mode,
     clearErrors,
 }) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
     const updateParameter = (index: number, updated: object) => {
         let item = { ...params[index] };
         params[index] = Object.assign({}, item, updated);

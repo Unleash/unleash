@@ -20,7 +20,7 @@ export const SegmentDeleteUsedSegment = ({
     setDeldialogue,
     strategies,
 }: ISegmentDeleteUsedSegmentProps) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     const handleCancel = () => {
         setDeldialogue(false);

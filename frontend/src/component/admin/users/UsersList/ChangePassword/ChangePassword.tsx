@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import classnames from 'classnames';
-import { Avatar, TextField, Typography } from '@material-ui/core';
+import { Avatar, TextField, Typography } from '@mui/material';
 import { trim } from 'component/common/util';
 import { modalStyles } from 'component/admin/users/util';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import PasswordChecker from 'component/user/common/ResetPasswordForm/PasswordChecker/PasswordChecker';
-import { useCommonStyles } from 'themes/commonStyles';
+import { useThemeStyles } from 'themes/themeStyles';
 import PasswordMatcher from 'component/user/common/ResetPasswordForm/PasswordMatcher/PasswordMatcher';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { Alert } from '@material-ui/lab';
+import { Alert } from '@mui/material';
 import { IUser } from 'interfaces/user';
 
 interface IChangePasswordProps {
@@ -27,7 +27,7 @@ const ChangePassword = ({
     const [data, setData] = useState({});
     const [error, setError] = useState<Record<string, string>>({});
     const [validPassword, setValidPassword] = useState(false);
-    const commonStyles = useCommonStyles();
+    const { classes: themeStyles } = useThemeStyles();
 
     // @ts-expect-error
     const updateField = e => {
@@ -90,8 +90,8 @@ const ChangePassword = ({
             <form
                 onSubmit={submit}
                 className={classnames(
-                    commonStyles.contentSpacingY,
-                    commonStyles.flexColumn
+                    themeStyles.contentSpacingY,
+                    themeStyles.flexColumn
                 )}
             >
                 <ConditionallyRender
@@ -101,7 +101,7 @@ const ChangePassword = ({
                 <Typography variant="subtitle1">
                     Changing password for user
                 </Typography>
-                <div className={commonStyles.flexRow}>
+                <div className={themeStyles.flexRow}>
                     <Avatar
                         variant="rounded"
                         alt="Gravatar"

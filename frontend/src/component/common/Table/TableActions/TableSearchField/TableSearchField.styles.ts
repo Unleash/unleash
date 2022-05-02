@@ -1,6 +1,6 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles(theme => ({
+export const useStyles = makeStyles()(theme => ({
     container: {
         display: 'flex',
         alignItems: 'center',
@@ -15,12 +15,12 @@ export const useStyles = makeStyles(theme => ({
         borderRadius: '25px',
         padding: '3px 5px 3px 12px',
         maxWidth: '450px',
-        [theme.breakpoints.down('xs')]: {
+        [theme.breakpoints.down('sm')]: {
             width: '100%',
         },
         '&.search-container:focus-within': {
             borderColor: theme.palette.primary.light,
-            boxShadow: theme.v2.boxShadows.primary,
+            boxShadow: theme.boxShadows.main,
         },
     },
     searchIcon: {

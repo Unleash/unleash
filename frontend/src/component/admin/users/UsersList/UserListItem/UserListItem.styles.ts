@@ -1,18 +1,19 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from 'tss-react/mui';
+import { unleashGrey } from 'themes/themeColors';
 
-export const useStyles = makeStyles(theme => ({
+export const useStyles = makeStyles()(theme => ({
     tableRow: {
         '& > td': {
             padding: '4px 16px',
-            borderColor: theme.v2.palette.grey[30],
+            borderColor: unleashGrey[300],
         },
         '&:hover': {
-            backgroundColor: theme.v2.palette.grey[10],
+            backgroundColor: unleashGrey[100],
         },
     },
     tableCellHeader: {
         '& > th': {
-            backgroundColor: theme.v2.palette.grey[20],
+            backgroundColor: unleashGrey[200],
             fontWeight: 'normal',
             border: 0,
             '&:first-child': {
@@ -42,24 +43,24 @@ export const useStyles = makeStyles(theme => ({
         margin: 'auto',
     },
     firstColumnSM: {
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             borderTopLeftRadius: '8px',
             borderBottomLeftRadius: '8px',
         },
     },
     firstColumnXS: {
-        [theme.breakpoints.down('xs')]: {
+        [theme.breakpoints.down('sm')]: {
             borderTopLeftRadius: '8px',
             borderBottomLeftRadius: '8px',
         },
     },
     hideSM: {
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             display: 'none',
         },
     },
     hideXS: {
-        [theme.breakpoints.down('xs')]: {
+        [theme.breakpoints.down('sm')]: {
             display: 'none',
         },
     },

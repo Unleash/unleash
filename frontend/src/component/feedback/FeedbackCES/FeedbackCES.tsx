@@ -1,4 +1,4 @@
-import { Modal } from '@material-ui/core';
+import { Modal } from '@mui/material';
 import React, { useContext } from 'react';
 import {
     feedbackCESContext,
@@ -6,7 +6,7 @@ import {
 } from 'component/feedback/FeedbackCESContext/FeedbackCESContext';
 import { FeedbackCESForm } from 'component/feedback/FeedbackCES/FeedbackCESForm';
 import { useStyles } from 'component/feedback/FeedbackCES/FeedbackCES.styles';
-import { CloseOutlined } from '@material-ui/icons';
+import { CloseOutlined } from '@mui/icons-material';
 
 export interface IFeedbackCESProps {
     state?: IFeedbackCESState;
@@ -14,7 +14,7 @@ export interface IFeedbackCESProps {
 
 export const FeedbackCES = ({ state }: IFeedbackCESProps) => {
     const { hideFeedbackCES } = useContext(feedbackCESContext);
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     const closeButton = (
         <button className={styles.close} onClick={hideFeedbackCES}>

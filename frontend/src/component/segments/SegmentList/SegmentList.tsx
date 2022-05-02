@@ -6,7 +6,7 @@ import {
     TableHead,
     TableRow,
     Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 import usePagination from 'hooks/usePagination';
 import { CREATE_SEGMENT } from 'component/providers/AccessProvider/permissions';
 import PaginateUI from 'component/common/PaginateUI/PaginateUI';
@@ -36,7 +36,7 @@ export const SegmentsList = () => {
     const [delDialog, setDelDialog] = useState(false);
     const { setToastData, setToastApiError } = useToast();
 
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     const onDeleteSegment = async () => {
         if (!currentSegment?.id) return;

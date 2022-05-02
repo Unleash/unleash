@@ -1,7 +1,7 @@
-import LocationOnIcon from '@material-ui/icons/LocationOn';
-import PeopleIcon from '@material-ui/icons/People';
-import LanguageIcon from '@material-ui/icons/Language';
-import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import PeopleIcon from '@mui/icons-material/People';
+import LanguageIcon from '@mui/icons-material/Language';
+import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 import RolloutIcon from 'component/common/RolloutIcon/RolloutIcon';
 import { ElementType } from 'react';
 

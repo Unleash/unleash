@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { List, ListItem } from '@material-ui/core';
+import { List, ListItem } from '@mui/material';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import { FeatureStrategyMenuCard } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCard';
 

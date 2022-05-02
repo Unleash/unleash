@@ -1,4 +1,4 @@
-import { Check, Close } from '@material-ui/icons';
+import { Check, Close } from '@mui/icons-material';
 import { useStyles } from './CheckMarkBadge.styles';
 import classnames from 'classnames';
 
@@ -8,7 +8,7 @@ interface ICheckMarkBadgeProps {
 }
 
 const CheckMarkBadge = ({ type, className }: ICheckMarkBadgeProps) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
     return (
         <div className={classnames(styles.badge, className)}>
             {type === 'error' ? (

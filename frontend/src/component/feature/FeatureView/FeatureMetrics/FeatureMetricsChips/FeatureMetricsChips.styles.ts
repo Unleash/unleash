@@ -1,6 +1,6 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles(theme => ({
+export const useStyles = makeStyles()(theme => ({
     title: {
         margin: 0,
         marginBottom: '.5rem',
@@ -20,13 +20,6 @@ export const useStyles = makeStyles(theme => ({
         '& > [aria-pressed=true]': {
             backgroundColor: theme.palette.primary.main,
             color: theme.palette.primary.contrastText,
-        },
-        '& > :is(:focus-visible, :active)': {
-            outline: 0,
-            outlineStyle: 'solid',
-            outlineWidth: 2,
-            outlineOffset: 2,
-            outlineColor: theme.palette.primary.main,
         },
     },
 }));

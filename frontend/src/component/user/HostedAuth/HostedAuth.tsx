@@ -1,8 +1,8 @@
 import { FormEventHandler, useState, VFC } from 'react';
 import classnames from 'classnames';
-import { Button, Grid, TextField, Typography } from '@material-ui/core';
+import { Button, Grid, TextField, Typography } from '@mui/material';
 import { useHistory } from 'react-router';
-import { useCommonStyles } from 'themes/commonStyles';
+import { useThemeStyles } from 'themes/themeStyles';
 import { useStyles } from './HostedAuth.styles';
 import useQueryParams from 'hooks/useQueryParams';
 import AuthOptions from '../common/AuthOptions/AuthOptions';
@@ -21,8 +21,8 @@ interface IHostedAuthProps {
 }
 
 const HostedAuth: VFC<IHostedAuthProps> = ({ authDetails, redirect }) => {
-    const commonStyles = useCommonStyles();
-    const styles = useStyles();
+    const { classes: themeStyles } = useThemeStyles();
+    const { classes: styles } = useStyles();
     const { refetchUser } = useAuthUser();
     const history = useHistory();
     const params = useQueryParams();
@@ -106,7 +106,7 @@ const HostedAuth: VFC<IHostedAuthProps> = ({ authDetails, redirect }) => {
                         <div
                             className={classnames(
                                 styles.contentContainer,
-                                commonStyles.contentSpacingY
+                                themeStyles.contentSpacingY
                             )}
                         >
                             <TextField

@@ -1,5 +1,5 @@
 import { useStyles } from 'component/context/ContectFormChip/ContextFormChip.styles';
-import { Cancel } from '@material-ui/icons';
+import { Cancel } from '@mui/icons-material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface IContextFormChipProps {
@@ -13,7 +13,7 @@ export const ContextFormChip = ({
     description,
     onRemove,
 }: IContextFormChipProps) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     return (
         <li className={styles.container}>

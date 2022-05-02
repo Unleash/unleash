@@ -1,6 +1,6 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles(theme => ({
+export const useStyles = makeStyles()(theme => ({
     listItem: {
         padding: '0',
         margin: '1rem 0',
@@ -20,8 +20,7 @@ export const useStyles = makeStyles(theme => ({
         flexShrink: 0,
     },
     listItemSvg: {
-        // @ts-expect-error
-        fill: theme.palette.icons.lightGrey,
+        fill: theme.palette.grey[300],
     },
     listItemLink: {
         marginLeft: '0.25rem',

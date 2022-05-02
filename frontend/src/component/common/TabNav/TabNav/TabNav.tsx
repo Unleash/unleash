@@ -1,6 +1,6 @@
 import React, { useState, ReactNode } from 'react';
 import classnames from 'classnames';
-import { Tabs, Tab, Paper } from '@material-ui/core';
+import { Tabs, Tab, Paper } from '@mui/material';
 import { useStyles } from 'component/common/TabNav/TabNav/TabNav.styles';
 import { TabPanel } from 'component/common/TabNav/TabPanel/TabPanel';
 
@@ -22,7 +22,7 @@ export const TabNav = ({
     navClass = '',
     startingTab = 0,
 }: ITabNavProps) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
     const [activeTab, setActiveTab] = useState(startingTab);
 
     const renderTabs = () =>
@@ -32,6 +32,7 @@ export const TabNav = ({
                 label={tab.label}
                 id={`tab-${index}`}
                 aria-controls={`tabpanel-${index}`}
+                className={styles.tab}
             />
         ));
 

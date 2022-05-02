@@ -1,4 +1,4 @@
-import { LibraryBooks } from '@material-ui/icons';
+import { LibraryBooks } from '@mui/icons-material';
 
 export const defaultValue = {
     name: 'Unleash',

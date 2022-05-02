@@ -9,7 +9,7 @@ import {
     TableHead,
     TableRow,
     Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 import { AddVariant } from './AddFeatureVariant/AddFeatureVariant';
 
 import { useContext, useEffect, useState } from 'react';

@@ -1,8 +1,8 @@
 import { memo } from 'react';
 import classnames from 'classnames';
 import { Link } from 'react-router-dom';
-import { Chip, ListItem, Tooltip } from '@material-ui/core';
-import { Undo } from '@material-ui/icons';
+import { Chip, ListItem, Tooltip } from '@mui/material';
+import { Undo } from '@mui/icons-material';
 import TimeAgo from 'react-timeago';
 import { IAccessContext } from 'contexts/AccessContext';
 import StatusChip from 'component/common/StatusChip/StatusChip';
@@ -14,9 +14,9 @@ import FeatureStatus from 'component/feature/FeatureView/FeatureStatus/FeatureSt
 import FeatureType from 'component/feature/FeatureView/FeatureType/FeatureType';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
-import { styles as commonStyles } from 'component/common'; // FIXME: remove
 import { FeatureSchema } from 'openapi';
-import { useStyles } from './styles'; // FIXME: cleanup
+import { styles as themeStyles } from 'component/common';
+import { useStyles } from './styles';
 
 interface IFeatureToggleListItemProps {
     feature: FeatureSchema;
@@ -28,7 +28,7 @@ interface IFeatureToggleListItemProps {
 
 export const FeatureToggleListItem = memo<IFeatureToggleListItemProps>(
     ({ feature, onRevive, hasAccess, flags = {}, className, ...rest }) => {
-        const styles = useStyles();
+        const { classes: styles } = useStyles();
 
         const { projects } = useProjects();
         const isArchive = Boolean(onRevive);
@@ -76,7 +76,7 @@ export const FeatureToggleListItem = memo<IFeatureToggleListItemProps>(
                 <span
                     className={classnames(
                         styles.listItemType,
-                        commonStyles.hideLt600
+                        themeStyles.hideLt600
                     )}
                 >
                     <FeatureType type={type as string} />
@@ -88,12 +88,12 @@ export const FeatureToggleListItem = memo<IFeatureToggleListItemProps>(
                             <Link
                                 to={getTogglePath(feature.project, name)}
                                 className={classnames(
-                                    commonStyles.listLink,
-                                    commonStyles.truncate
+                                    themeStyles.listLink,
+                                    themeStyles.truncate
                                 )}
                             >
                                 <Tooltip title={description || ''}>
-                                    <span className={commonStyles.toggleName}>
+                                    <span className={themeStyles.toggleName}>
                                         {name}&nbsp;
                                     </span>
                                 </Tooltip>
@@ -111,7 +111,7 @@ export const FeatureToggleListItem = memo<IFeatureToggleListItemProps>(
                                     />
                                 </small>
                                 <div>
-                                    <span className={commonStyles.truncate}>
+                                    <span className={themeStyles.truncate}>
                                         <small>{description}</small>
                                     </span>
                                 </div>
@@ -120,7 +120,7 @@ export const FeatureToggleListItem = memo<IFeatureToggleListItemProps>(
                         elseShow={
                             <>
                                 <Tooltip title={description || ''}>
-                                    <span className={commonStyles.toggleName}>
+                                    <span className={themeStyles.toggleName}>
                                         {name}&nbsp;{' '}
                                     </span>
                                 </Tooltip>
@@ -138,7 +138,7 @@ export const FeatureToggleListItem = memo<IFeatureToggleListItemProps>(
                                     />
                                 </small>
                                 <div>
-                                    <span className={commonStyles.truncate}>
+                                    <span className={themeStyles.truncate}>
                                         <small>{description}</small>
                                     </span>
                                 </div>
@@ -149,7 +149,7 @@ export const FeatureToggleListItem = memo<IFeatureToggleListItemProps>(
                 <span
                     className={classnames(
                         styles.listItemStrategies,
-                        commonStyles.hideLt920
+                        themeStyles.hideLt920
                     )}
                 >
                     <StatusChip stale={Boolean(stale)} showActive={false} />

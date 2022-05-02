@@ -1,11 +1,11 @@
 import React, { SyntheticEvent, useState } from 'react';
-import { Button, Typography } from '@material-ui/core';
+import { Button, Typography } from '@mui/material';
 import classnames from 'classnames';
 import { useStyles } from './EditProfile.styles';
-import { useCommonStyles } from 'themes/commonStyles';
+import { useThemeStyles } from 'themes/themeStyles';
 import PasswordChecker from 'component/user/common/ResetPasswordForm/PasswordChecker/PasswordChecker';
 import PasswordMatcher from 'component/user/common/ResetPasswordForm/PasswordMatcher/PasswordMatcher';
-import { Alert } from '@material-ui/lab';
+import { Alert } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useLoading from 'hooks/useLoading';
 import {
@@ -27,8 +27,8 @@ const EditProfile = ({
     setEditingProfile,
     setUpdatedPassword,
 }: IEditProfileProps) => {
-    const styles = useStyles();
-    const commonStyles = useCommonStyles();
+    const { classes: styles } = useStyles();
+    const { classes: themeStyles } = useThemeStyles();
     const [loading, setLoading] = useState(false);
     const [validPassword, setValidPassword] = useState(false);
     const [error, setError] = useState('');
@@ -103,10 +103,7 @@ const EditProfile = ({
                 }
             />
             <form
-                className={classnames(
-                    styles.form,
-                    commonStyles.contentSpacingY
-                )}
+                className={classnames(styles.form, themeStyles.contentSpacingY)}
             >
                 <PasswordChecker
                     password={password}

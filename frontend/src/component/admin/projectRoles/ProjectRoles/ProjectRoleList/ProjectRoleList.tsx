@@ -5,7 +5,7 @@ import {
     TableCell,
     TableHead,
     TableRow,
-} from '@material-ui/core';
+} from '@mui/material';
 import AccessContext from 'contexts/AccessContext';
 import usePagination from 'hooks/usePagination';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
@@ -24,7 +24,7 @@ const ROOTROLE = 'root';
 const ProjectRoleList = () => {
     const { hasAccess } = useContext(AccessContext);
     const { roles } = useProjectRoles();
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     const paginationFilter = (role: IRole) => role?.type !== ROOTROLE;
 

@@ -1,13 +1,13 @@
 import { SplashPageEnvironmentsContent } from 'component/splash/SplashPageEnvironments/SplashPageEnvironmentsContent/SplashPageEnvironmentsContent';
 import { SplashPageEnvironmentsContainer } from 'component/splash/SplashPageEnvironments/SplashPageEnvironmentsContainer/SplashPageEnvironmentsContainer';
-import { VpnKey, CloudCircle } from '@material-ui/icons';
+import { VpnKey, CloudCircle } from '@mui/icons-material';
 import { useStyles } from 'component/splash/SplashPageEnvironments/SplashPageEnvironments.styles';
 import { ReactComponent as Logo1 } from 'assets/img/splashEnv1.svg';
 import { ReactComponent as Logo2 } from 'assets/img/splashEnv2.svg';
 import { useHistory } from 'react-router-dom';
 
 export const SplashPageEnvironments = () => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
     const { push } = useHistory();
 
     const onFinish = () => {

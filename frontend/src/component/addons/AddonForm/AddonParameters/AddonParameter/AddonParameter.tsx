@@ -1,4 +1,4 @@
-import { TextField } from '@material-ui/core';
+import { TextField } from '@mui/material';
 import { IAddonConfig, IAddonProviderParams } from 'interfaces/addons';
 import { ChangeEventHandler } from 'react';
 

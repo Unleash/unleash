@@ -4,7 +4,7 @@ import { useStyles } from 'component/common/ConstraintAccordion/ConstraintAccord
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { ConstraintIcon } from 'component/common/ConstraintAccordion/ConstraintIcon';
-import { Help } from '@material-ui/icons';
+import { Help } from '@mui/icons-material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { dateOperators, DATE_AFTER, IN } from 'constants/operators';
 import { SAVE } from '../ConstraintAccordionEdit';
@@ -17,7 +17,7 @@ import {
     operatorsForContext,
     CURRENT_TIME_CONTEXT_FIELD,
 } from 'utils/operatorsForContext';
-import { Tooltip } from '@material-ui/core';
+import { Tooltip } from '@mui/material';
 
 interface IConstraintAccordionViewHeader {
     localConstraint: IConstraint;
@@ -36,7 +36,7 @@ export const ConstraintAccordionEditHeader = ({
     setOperator,
     action,
 }: IConstraintAccordionViewHeader) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
     const { context } = useUnleashContext();
     const { contextName, operator } = localConstraint;
 

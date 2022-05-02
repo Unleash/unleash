@@ -1,6 +1,6 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles(theme => ({
+export const useStyles = makeStyles()(theme => ({
     splashContainer: {
         position: 'fixed',
     },
@@ -8,7 +8,7 @@ export const useStyles = makeStyles(theme => ({
         textAlign: 'center',
         marginBottom: '20px',
         lineHeight: '1.3',
-        [theme.breakpoints.down('xs')]: {
+        [theme.breakpoints.down('sm')]: {
             marginTop: '1rem',
         },
     },
@@ -16,7 +16,7 @@ export const useStyles = makeStyles(theme => ({
         padding: '0px 40px',
         marginBottom: '15px',
         fontSize: '17px',
-        [theme.breakpoints.down('xs')]: {
+        [theme.breakpoints.down('sm')]: {
             padding: '0 20px',
         },
     },
@@ -24,7 +24,7 @@ export const useStyles = makeStyles(theme => ({
         padding: '0px 20px',
         fontSize: '17px',
         marginTop: '15px',
-        [theme.breakpoints.down('xs')]: {
+        [theme.breakpoints.down('sm')]: {
             padding: '0 20px',
         },
     },
@@ -32,7 +32,7 @@ export const useStyles = makeStyles(theme => ({
         fontSize: '150px',
         display: 'block',
         margin: 'auto',
-        [theme.breakpoints.down('xs')]: {
+        [theme.breakpoints.down('sm')]: {
             fontSize: '90px',
         },
     },
@@ -42,7 +42,7 @@ export const useStyles = makeStyles(theme => ({
         display: 'block',
         margin: 'auto',
         marginTop: '2rem',
-        [theme.breakpoints.down('xs')]: {
+        [theme.breakpoints.down('sm')]: {
             width: '80%',
             height: '80%',
             marginTop: '0rem',

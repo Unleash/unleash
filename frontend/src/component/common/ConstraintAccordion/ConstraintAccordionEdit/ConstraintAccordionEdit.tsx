@@ -4,11 +4,7 @@ import { IConstraint } from 'interfaces/strategy';
 import { useStyles } from '../ConstraintAccordion.styles';
 import { ConstraintAccordionEditBody } from './ConstraintAccordionEditBody/ConstraintAccordionEditBody';
 import { ConstraintAccordionEditHeader } from './ConstraintAccordionEditHeader/ConstraintAccordionEditHeader';
-import {
-    Accordion,
-    AccordionDetails,
-    AccordionSummary,
-} from '@material-ui/core';
+import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
 import { cleanConstraint } from 'utils/cleanConstraint';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
@@ -64,7 +60,7 @@ export const ConstraintAccordionEdit = ({
     const { validateConstraint } = useFeatureApi();
     const [expanded, setExpanded] = useState(false);
     const [action, setAction] = useState('');
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     useEffect(() => {
         // Setting expanded to true on mount will cause the accordion

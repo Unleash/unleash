@@ -7,7 +7,7 @@ import {
     Typography,
     Radio,
     Switch,
-} from '@material-ui/core';
+} from '@mui/material';
 import { useStyles } from './UserForm.styles';
 import React from 'react';
 import useUsers from 'hooks/api/getters/useUsers/useUsers';
@@ -47,7 +47,7 @@ const UserForm: React.FC<IUserForm> = ({
     clearErrors,
     mode,
 }) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
     const { roles } = useUsers();
     const { bootstrap } = useUiBootstrap();
 

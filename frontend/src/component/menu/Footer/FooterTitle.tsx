@@ -6,7 +6,7 @@ interface IFooterTitleProps {
 }
 
 export const FooterTitle = ({ children }: IFooterTitleProps) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     return <h2 className={styles.title}>{children}</h2>;
 };

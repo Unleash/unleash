@@ -5,11 +5,11 @@ import {
     FormControlLabel,
     Grid,
     InputAdornment,
-} from '@material-ui/core';
+} from '@mui/material';
 import { weightTypes } from './enums';
 import { OverrideConfig } from './OverrideConfig/OverrideConfig';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useCommonStyles } from 'themes/commonStyles';
+import { useThemeStyles } from 'themes/themeStyles';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { modalStyles, trim } from 'component/common/util';
 import PermissionSwitch from 'component/common/PermissionSwitch/PermissionSwitch';
@@ -56,12 +56,12 @@ export const AddVariant = ({
     title,
     editing,
 }: IAddVariantProps) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
     const [data, setData] = useState<Record<string, string>>({});
     const [payload, setPayload] = useState(EMPTY_PAYLOAD);
     const [overrides, overridesDispatch] = useOverrides([]);
     const [error, setError] = useState<Record<string, string>>({});
-    const commonStyles = useCommonStyles();
+    const { classes: themeStyles } = useThemeStyles();
     const { projectId, featureId } = useParams<IFeatureViewParams>();
     const { feature } = useFeature(projectId, featureId);
     const [variants, setVariants] = useState<IFeatureVariant[]>([]);
@@ -230,7 +230,7 @@ export const AddVariant = ({
             <form
                 id={formId}
                 onSubmit={submit}
-                className={commonStyles.contentSpacingY}
+                className={themeStyles.contentSpacingY}
             >
                 <p className={styles.error}>{error.general}</p>
                 <Input
@@ -269,7 +269,7 @@ export const AddVariant = ({
                                                 name="weightType"
                                                 checked={isFixWeight}
                                                 data-testid={
-                                                    'VARIANT_WEIGHT_TYPE'
+                                                    'VARIANT_WEIGHT_CHECK'
                                                 }
                                                 onChange={setVariantWeightType}
                                             />
@@ -336,7 +336,7 @@ export const AddVariant = ({
                             name="variant-payload-value"
                             id="variant-payload-value"
                             label="Value"
-                            className={commonStyles.fullWidth}
+                            className={themeStyles.fullWidth}
                             value={payload.value}
                             onChange={e => onPayload('value')(e.target.value)}
                             data-testid={'VARIANT_PAYLOAD_VALUE'}

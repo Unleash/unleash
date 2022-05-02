@@ -1,4 +1,4 @@
-import { Tooltip } from '@material-ui/core';
+import { Tooltip } from '@mui/material';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { formatDateYMD, formatDateYMDHMS } from 'utils/formatDate';
 

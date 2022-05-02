@@ -1,7 +1,7 @@
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import { useParams } from 'react-router-dom';
 import { IFeatureViewParams } from 'interfaces/params';
-import { DialogContentText } from '@material-ui/core';
+import { DialogContentText } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';

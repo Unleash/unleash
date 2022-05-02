@@ -9,7 +9,7 @@ interface IFeatureOverviewEnvironmentFooterProps {
 const FeatureOverviewEnvironmentFooter = ({
     environmentMetric,
 }: IFeatureOverviewEnvironmentFooterProps) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     if (!environmentMetric) {
         return null;

@@ -1,4 +1,4 @@
-import { Button } from '@material-ui/core';
+import { Button } from '@mui/material';
 import { useStyles } from './EnvironmentForm.styles';
 import React from 'react';
 import Input from 'component/common/Input/Input';
@@ -31,7 +31,7 @@ const EnvironmentForm: React.FC<IEnvironmentForm> = ({
     mode,
     clearErrors,
 }) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     return (
         <form onSubmit={handleSubmit} className={styles.form}>

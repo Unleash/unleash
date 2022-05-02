@@ -6,11 +6,11 @@ import {
     PERMISSION,
 } from '../constants/featureToggleTypes';
 
-import LoopIcon from '@material-ui/icons/Loop';
-import TimelineIcon from '@material-ui/icons/Timeline';
-import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
-import PanToolIcon from '@material-ui/icons/PanTool';
-import BuildIcon from '@material-ui/icons/Build';
+import LoopIcon from '@mui/icons-material/Loop';
+import TimelineIcon from '@mui/icons-material/Timeline';
+import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
+import PanToolIcon from '@mui/icons-material/PanTool';
+import BuildIcon from '@mui/icons-material/Build';
 
 export const getFeatureTypeIcons = (type: string) => {
     switch (type) {

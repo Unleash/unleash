@@ -7,9 +7,9 @@ import {
     FormEventHandler,
     MouseEventHandler,
 } from 'react';
-import { TextField, FormControlLabel, Switch, Button } from '@material-ui/core';
+import { TextField, FormControlLabel, Switch, Button } from '@mui/material';
 import produce from 'immer';
-import { styles as commonStyles } from 'component/common';
+import { styles as themeStyles } from 'component/common';
 import { trim } from 'component/common/util';
 import { IAddon, IAddonProvider } from 'interfaces/addons';
 import { AddonParameters } from './AddonParameters/AddonParameters';
@@ -19,10 +19,10 @@ import PageContent from 'component/common/PageContent/PageContent';
 import { useHistory } from 'react-router-dom';
 import useAddonsApi from 'hooks/api/actions/useAddonsApi/useAddonsApi';
 import useToast from 'hooks/useToast';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from 'tss-react/mui';
 import { formatUnknownError } from 'utils/formatUnknownError';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles()(theme => ({
     nameInput: {
         marginRight: '1.5rem',
     },
@@ -51,7 +51,7 @@ export const AddonForm: VFC<IAddonFormProps> = ({
     const { createAddon, updateAddon } = useAddonsApi();
     const { setToastData, setToastApiError } = useToast();
     const history = useHistory();
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     const [formValues, setFormValues] = useState(initialValues);
     const [errors, setErrors] = useState<{
@@ -190,7 +190,7 @@ export const AddonForm: VFC<IAddonFormProps> = ({
                 <a href={documentationUrl} target="_blank" rel="noreferrer">
                     Read more
                 </a>
-                <p className={commonStyles.error}>{errors.general}</p>
+                <p className={themeStyles.error}>{errors.general}</p>
             </section>
             <form onSubmit={onSubmit}>
                 <section className={styles.formSection}>

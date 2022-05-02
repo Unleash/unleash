@@ -1,5 +1,5 @@
-import { Edit } from '@material-ui/icons';
-import { useTheme } from '@material-ui/core/styles';
+import { Edit } from '@mui/icons-material';
+import { useTheme } from '@mui/material/styles';
 import { Link, useParams } from 'react-router-dom';
 import { IFeatureViewParams } from 'interfaces/params';
 import { IFeatureStrategy } from 'interfaces/strategy';
@@ -26,7 +26,7 @@ const FeatureOverviewEnvironmentStrategy = ({
 }: IFeatureOverviewEnvironmentStrategyProps) => {
     const { projectId, featureId } = useParams<IFeatureViewParams>();
     const theme = useTheme();
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
     const Icon = getFeatureStrategyIcon(strategy.name);
     const { parameters, constraints } = strategy;
 

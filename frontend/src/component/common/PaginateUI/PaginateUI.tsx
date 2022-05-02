@@ -3,11 +3,11 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import classnames from 'classnames';
 import { useStyles } from './PaginationUI.styles';
 
-import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
-import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
-import DoubleArrowIcon from '@material-ui/icons/DoubleArrow';
-import { useMediaQuery, useTheme } from '@material-ui/core';
+import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
+import { useMediaQuery, useTheme } from '@mui/material';
 
 interface IPaginateUIProps {
     pages: any[];
@@ -28,10 +28,10 @@ const PaginateUI = ({
 }: IPaginateUIProps) => {
     const STARTLIMIT = 6;
     const theme = useTheme();
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
     const [limit, setLimit] = useState(STARTLIMIT);
     const [start, setStart] = useState(0);
-    const matches = useMediaQuery(theme.breakpoints.down('sm'));
+    const matches = useMediaQuery(theme.breakpoints.down('md'));
 
     useEffect(() => {
         if (matches) {

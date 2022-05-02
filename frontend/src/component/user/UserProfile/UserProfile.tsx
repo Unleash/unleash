@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import classnames from 'classnames';
-import { Avatar, Button, ClickAwayListener } from '@material-ui/core';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import { Avatar, Button, ClickAwayListener } from '@mui/material';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useStyles } from 'component/user/UserProfile/UserProfile.styles';
-import { useCommonStyles } from 'themes/commonStyles';
+import { useThemeStyles } from 'themes/themeStyles';
 import UserProfileContent from './UserProfileContent/UserProfileContent';
 import { IUser } from 'interfaces/user';
 import { ILocationSettings } from 'hooks/useLocationSettings';
@@ -26,8 +26,8 @@ const UserProfile = ({
     const [showProfile, setShowProfile] = useState(false);
     const [currentLocale, setCurrentLocale] = useState<string>();
 
-    const styles = useStyles();
-    const commonStyles = useCommonStyles();
+    const { classes: styles } = useStyles();
+    const { classes: themeStyles } = useThemeStyles();
 
     const [possibleLocales, setPossibleLocales] = useState([
         'en-US',
@@ -61,12 +61,13 @@ const UserProfile = ({
             <div className={styles.profileContainer}>
                 <Button
                     className={classnames(
-                        commonStyles.flexRow,
-                        commonStyles.itemsCenter,
+                        themeStyles.flexRow,
+                        themeStyles.itemsCenter,
+                        themeStyles.focusable,
                         styles.button
                     )}
                     onClick={() => setShowProfile(prev => !prev)}
-                    role="button"
+                    color="secondary"
                     disableRipple
                 >
                     <Avatar

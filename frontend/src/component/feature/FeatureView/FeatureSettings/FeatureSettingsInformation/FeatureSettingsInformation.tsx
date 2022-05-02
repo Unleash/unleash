@@ -1,5 +1,5 @@
-import { Typography } from '@material-ui/core';
-import { Edit } from '@material-ui/icons';
+import { Typography } from '@mui/material';
+import { Edit } from '@mui/icons-material';
 import { useHistory } from 'react-router-dom';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
@@ -15,7 +15,7 @@ export const FeatureSettingsInformation = ({
     projectId,
     featureId,
 }: IFeatureSettingsInformationProps) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
     const { feature } = useFeature(projectId, featureId);
     const history = useHistory();
 
@@ -45,7 +45,7 @@ export const FeatureSettingsInformation = ({
             <Typography>
                 Description:{' '}
                 <strong>
-                    {feature.description.length === 0
+                    {!feature.description?.length
                         ? 'no description'
                         : feature.description}
                 </strong>

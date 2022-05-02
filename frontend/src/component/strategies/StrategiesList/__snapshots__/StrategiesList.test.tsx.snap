@@ -1,0 +1,277 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+Array [
+  <div
+    className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 mui-1ps6pg7-MuiPaper-root"
+    style={
+      Object {
+        "borderRadius": "10px",
+        "boxShadow": "none",
+      }
+    }
+  >
+    <div
+      className="tss-16iyfoa-headerContainer"
+    >
+      <div
+        className="tss-14s7qul-headerTitleContainer"
+      >
+        <div
+          className=""
+          data-loading={true}
+        >
+          <h1
+            className="MuiTypography-root MuiTypography-h1 tss-whbfmi-headerTitle mui-1inkmva-MuiTypography-root"
+          >
+            Strategies
+          </h1>
+        </div>
+        <div
+          className="tss-ap2nhp-headerActions"
+        >
+          <span
+            id="useId-0"
+          >
+            <button
+              aria-describedby="useId-0"
+              className="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  mui-16l97z4-MuiButtonBase-root-MuiButton-root"
+              data-testid="ADD_NEW_STRATEGY_ID"
+              disabled={false}
+              onBlur={[Function]}
+              onClick={[Function]}
+              onContextMenu={[Function]}
+              onDragLeave={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyUp={[Function]}
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              onTouchEnd={[Function]}
+              onTouchMove={[Function]}
+              onTouchStart={[Function]}
+              tabIndex={0}
+              type="button"
+            >
+              New strategy
+              <span
+                className="MuiButton-endIcon MuiButton-iconSizeMedium mui-9tj150-MuiButton-endIcon"
+              />
+              <span
+                className="MuiTouchRipple-root mui-8je8zh-MuiTouchRipple-root"
+              />
+            </button>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div
+      className="tss-kiw3z8-bodyContainer"
+    >
+      <ul
+        className="MuiList-root MuiList-padding mui-h4y409-MuiList-root"
+      >
+        <li
+          className="MuiListItem-root MuiListItem-gutters MuiListItem-padding tss-18csf3q-listItem mui-uz8enf-MuiListItem-root"
+          disabled={false}
+        >
+          <div
+            className="MuiListItemAvatar-root mui-1e9lk82-MuiListItemAvatar-root"
+          >
+            <svg
+              aria-hidden={true}
+              className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mui-i4bv87-MuiSvgIcon-root"
+              data-testid="ExtensionIcon"
+              focusable="false"
+              style={
+                Object {
+                  "color": "#0000008a",
+                }
+              }
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M20.5 11H19V7c0-1.1-.9-2-2-2h-4V3.5C13 2.12 11.88 1 10.5 1S8 2.12 8 3.5V5H4c-1.1 0-1.99.9-1.99 2v3.8H3.5c1.49 0 2.7 1.21 2.7 2.7s-1.21 2.7-2.7 2.7H2V20c0 1.1.9 2 2 2h3.8v-1.5c0-1.49 1.21-2.7 2.7-2.7 1.49 0 2.7 1.21 2.7 2.7V22H17c1.1 0 2-.9 2-2v-4h1.5c1.38 0 2.5-1.12 2.5-2.5S21.88 11 20.5 11z"
+              />
+            </svg>
+          </div>
+          <div
+            className="MuiListItemText-root MuiListItemText-multiline mui-konndc-MuiListItemText-root"
+          >
+            <span
+              className="MuiTypography-root MuiTypography-body1 MuiListItemText-primary mui-1k7ov6f-MuiTypography-root"
+            >
+              <a
+                href="/strategies/flexibleRollout"
+                onClick={[Function]}
+              >
+                <strong>
+                  Gradual rollout
+                </strong>
+              </a>
+            </span>
+            <p
+              className="MuiTypography-root MuiTypography-body2 MuiListItemText-secondary mui-1yab20-MuiTypography-root"
+            >
+              Roll out to a percentage of your userbase, and ensure that the experience is the same for the user on each visit.
+            </p>
+          </div>
+          <div>
+            <span
+              aria-label="Deprecate strategy"
+              aria-labelledby={null}
+              className=""
+              data-mui-internal-clone-element={true}
+              id="useId-1"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              onMouseLeave={[Function]}
+              onMouseOver={[Function]}
+              onTouchEnd={[Function]}
+              onTouchStart={[Function]}
+            >
+              <button
+                aria-labelledby="useId-1"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
+                disabled={false}
+                onBlur={[Function]}
+                onClick={[Function]}
+                onContextMenu={[Function]}
+                onDragLeave={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyUp={[Function]}
+                onMouseDown={[Function]}
+                onMouseLeave={[Function]}
+                onMouseUp={[Function]}
+                onTouchEnd={[Function]}
+                onTouchMove={[Function]}
+                onTouchStart={[Function]}
+                tabIndex={0}
+                type="button"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mui-i4bv87-MuiSvgIcon-root"
+                  data-testid="VisibilityIcon"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"
+                  />
+                </svg>
+                <span
+                  className="MuiTouchRipple-root mui-8je8zh-MuiTouchRipple-root"
+                />
+              </button>
+            </span>
+          </div>
+          <div
+            aria-label="You cannot delete a built-in strategy"
+            aria-labelledby={null}
+            className=""
+            data-mui-internal-clone-element={true}
+            onBlur={[Function]}
+            onFocus={[Function]}
+            onMouseLeave={[Function]}
+            onMouseOver={[Function]}
+            onTouchEnd={[Function]}
+            onTouchStart={[Function]}
+          >
+            <button
+              className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeLarge mui-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
+              disabled={true}
+              onBlur={[Function]}
+              onContextMenu={[Function]}
+              onDragLeave={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyUp={[Function]}
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              onTouchEnd={[Function]}
+              onTouchMove={[Function]}
+              onTouchStart={[Function]}
+              tabIndex={-1}
+              type="button"
+            >
+              <svg
+                className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mui-i4bv87-MuiSvgIcon-root"
+                data-testid="EditIcon"
+                focusable="false"
+                role="img"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+                />
+                <title>
+                  Edit strategy
+                </title>
+              </svg>
+            </button>
+          </div>
+          <div
+            aria-label="You cannot delete a built-in strategy"
+            aria-labelledby={null}
+            className=""
+            data-mui-internal-clone-element={true}
+            onBlur={[Function]}
+            onFocus={[Function]}
+            onMouseLeave={[Function]}
+            onMouseOver={[Function]}
+            onTouchEnd={[Function]}
+            onTouchStart={[Function]}
+          >
+            <button
+              className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeLarge mui-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
+              disabled={true}
+              onBlur={[Function]}
+              onContextMenu={[Function]}
+              onDragLeave={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyUp={[Function]}
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              onTouchEnd={[Function]}
+              onTouchMove={[Function]}
+              onTouchStart={[Function]}
+              tabIndex={-1}
+              type="button"
+            >
+              <svg
+                className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mui-i4bv87-MuiSvgIcon-root"
+                data-testid="DeleteIcon"
+                focusable="false"
+                role="img"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"
+                />
+                <title>
+                  Delete strategy
+                </title>
+              </svg>
+            </button>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>,
+  <div
+    aria-atomic={true}
+    aria-live="polite"
+    className="tss-1cl4o05-container"
+    data-testid="ANNOUNCER_ELEMENT_TEST_ID"
+    role="status"
+  >
+    Navigated to Strategies
+  </div>,
+]
+`;

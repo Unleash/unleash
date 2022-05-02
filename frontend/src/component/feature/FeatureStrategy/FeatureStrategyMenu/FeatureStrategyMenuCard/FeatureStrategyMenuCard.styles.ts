@@ -1,6 +1,6 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles(theme => ({
+export const useStyles = makeStyles()(theme => ({
     card: {
         display: 'grid',
         gridTemplateColumns: '3rem 1fr',
@@ -8,6 +8,7 @@ export const useStyles = makeStyles(theme => ({
         padding: '1rem',
         color: 'inherit',
         textDecoration: 'inherit',
+        lineHeight: 1.25,
         borderWidth: 1,
         borderStyle: 'solid',
         borderColor: theme.palette.grey[400],
@@ -32,10 +33,8 @@ export const useStyles = makeStyles(theme => ({
     },
     name: {
         fontWeight: theme.fontWeight.bold,
-        color: theme.palette.grey[700],
     },
     description: {
         fontSize: theme.fontSizes.smallBody,
-        lineHeight: 1.25,
     },
 }));

@@ -1,4 +1,4 @@
-import { Alert } from '@material-ui/lab';
+import { Alert } from '@mui/material';
 import { useStyles } from 'component/segments/SegmentDocs/SegmentDocs.styles';
 import {
     STRATEGY_SEGMENTS_LIMIT,
@@ -6,7 +6,7 @@ import {
 } from 'utils/segmentLimits';
 
 export const SegmentDocsWarning = () => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     return (
         <Alert severity="warning">

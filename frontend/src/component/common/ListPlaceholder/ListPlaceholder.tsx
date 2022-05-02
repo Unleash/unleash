@@ -1,4 +1,4 @@
-import { ListItem } from '@material-ui/core';
+import { ListItem } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useStyles } from 'component/common/ListPlaceholder/ListPlaceholder.styles';
@@ -10,7 +10,7 @@ interface IListPlaceholderProps {
 }
 
 const ListPlaceholder = ({ text, link, linkText }: IListPlaceholderProps) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     return (
         <ListItem className={styles.emptyStateListItem}>

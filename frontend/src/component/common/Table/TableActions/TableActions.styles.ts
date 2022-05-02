@@ -1,6 +1,7 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from 'tss-react/mui';
+import { unleashGrey } from 'themes/themeColors';
 
-export const useStyles = makeStyles(theme => ({
+export const useStyles = makeStyles()(theme => ({
     fieldWidth: {
         width: '49px',
         '& .search-icon': {
@@ -52,7 +53,7 @@ export const useStyles = makeStyles(theme => ({
     },
     verticalSeparator: {
         height: '100%',
-        backgroundColor: theme.v2.palette.grey[50],
+        backgroundColor: unleashGrey[500],
         width: '1px',
         display: 'inline-block',
         marginLeft: '16px',

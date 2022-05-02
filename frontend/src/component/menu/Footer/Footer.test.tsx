@@ -1,14 +1,12 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
 import { MemoryRouter } from 'react-router-dom';
-import { ThemeProvider } from '@material-ui/core';
-
 import Footer from './Footer';
-import theme from 'themes/mainTheme';
+import { ThemeProvider } from 'themes/ThemeProvider';
 
 test('should render DrawerMenu', () => {
     const tree = renderer.create(
-        <ThemeProvider theme={theme}>
+        <ThemeProvider>
             <MemoryRouter>
                 <Footer />
             </MemoryRouter>
@@ -20,7 +18,7 @@ test('should render DrawerMenu', () => {
 
 test('should render DrawerMenu with "features" selected', () => {
     const tree = renderer.create(
-        <ThemeProvider theme={theme}>
+        <ThemeProvider>
             <MemoryRouter initialEntries={['/features']}>
                 <Footer />
             </MemoryRouter>

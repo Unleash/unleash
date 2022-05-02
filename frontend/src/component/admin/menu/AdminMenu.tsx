@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { Paper, Tab, Tabs } from '@material-ui/core';
+import { Paper, Tab, Tabs } from '@mui/material';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const navLinkStyle = {

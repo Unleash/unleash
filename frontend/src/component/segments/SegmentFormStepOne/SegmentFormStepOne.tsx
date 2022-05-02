@@ -1,4 +1,4 @@
-import { Button } from '@material-ui/core';
+import { Button } from '@mui/material';
 import Input from 'component/common/Input/Input';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -31,7 +31,7 @@ export const SegmentFormStepOne: React.FC<ISegmentFormPartOneProps> = ({
     setCurrentStep,
 }) => {
     const history = useHistory();
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     return (
         <div className={styles.form}>

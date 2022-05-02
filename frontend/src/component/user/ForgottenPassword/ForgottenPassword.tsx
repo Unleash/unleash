@@ -1,9 +1,9 @@
-import { Button, TextField, Typography } from '@material-ui/core';
-import { AlertTitle, Alert } from '@material-ui/lab';
+import { Button, TextField, Typography } from '@mui/material';
+import { AlertTitle, Alert } from '@mui/material';
 import classnames from 'classnames';
 import { SyntheticEvent, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useCommonStyles } from 'themes/commonStyles';
+import { useThemeStyles } from 'themes/themeStyles';
 import useLoading from 'hooks/useLoading';
 import { FORGOTTEN_PASSWORD_FIELD } from 'utils/testIds';
 import { formatApiPath } from 'utils/formatPath';
@@ -17,8 +17,8 @@ const ForgottenPassword = () => {
     const [attempted, setAttempted] = useState(false);
     const [loading, setLoading] = useState(false);
     const [attemptedEmail, setAttemptedEmail] = useState('');
-    const commonStyles = useCommonStyles();
-    const styles = useStyles();
+    const { classes: themeStyles } = useThemeStyles();
+    const { classes: styles } = useStyles();
     const ref = useLoading(loading);
 
     const onClick = async (e: SyntheticEvent) => {
@@ -43,16 +43,16 @@ const ForgottenPassword = () => {
         <StandaloneLayout>
             <div
                 className={classnames(
-                    commonStyles.contentSpacingY,
-                    commonStyles.flexColumn,
+                    themeStyles.contentSpacingY,
+                    themeStyles.flexColumn,
                     styles.forgottenPassword
                 )}
                 ref={ref}
             >
                 <h2
                     className={classnames(
-                        commonStyles.title,
-                        commonStyles.textCenter
+                        themeStyles.title,
+                        themeStyles.textCenter
                     )}
                     data-loading
                 >
@@ -77,14 +77,14 @@ const ForgottenPassword = () => {
                 <form
                     onSubmit={onClick}
                     className={classnames(
-                        commonStyles.contentSpacingY,
-                        commonStyles.flexColumn
+                        themeStyles.contentSpacingY,
+                        themeStyles.flexColumn
                     )}
                 >
                     <Typography
                         variant="body1"
                         data-loading
-                        className={commonStyles.textCenter}
+                        className={themeStyles.textCenter}
                     >
                         Please provide your email address. If it exists in the
                         system we'll send a new reset link.

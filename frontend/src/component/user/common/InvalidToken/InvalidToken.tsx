@@ -1,20 +1,20 @@
-import { Button, Typography } from '@material-ui/core';
+import { Button, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { INVALID_TOKEN_BUTTON } from 'utils/testIds';
-import { useCommonStyles } from 'themes/commonStyles';
+import { useThemeStyles } from 'themes/themeStyles';
 import classnames from 'classnames';
 
 const InvalidToken = () => {
-    const commonStyles = useCommonStyles();
+    const { classes: themeStyles } = useThemeStyles();
     return (
         <div
             className={classnames(
-                commonStyles.contentSpacingY,
-                commonStyles.flexColumn,
-                commonStyles.itemsCenter
+                themeStyles.contentSpacingY,
+                themeStyles.flexColumn,
+                themeStyles.itemsCenter
             )}
         >
-            <Typography variant="h2" className={commonStyles.title}>
+            <Typography variant="h2" className={themeStyles.title}>
                 Invalid token
             </Typography>
             <Typography variant="subtitle1">

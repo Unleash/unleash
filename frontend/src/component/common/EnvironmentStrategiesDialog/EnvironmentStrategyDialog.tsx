@@ -19,7 +19,7 @@ const EnvironmentStrategyDialog = ({
     projectId,
     onClose,
 }: IEnvironmentStrategyDialogProps) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
     const history = useHistory();
 
     const createStrategyPath = formatCreateStrategyPath(

@@ -3,7 +3,7 @@ import {
     FormControlLabel,
     Radio,
     RadioGroup,
-} from '@material-ui/core';
+} from '@mui/material';
 import { useStyles } from './EnvironmentTypeSelector.styles';
 import React from 'react';
 
@@ -16,7 +16,7 @@ const EnvironmentTypeSelector = ({
     onChange,
     value,
 }: IEnvironmentTypeSelectorProps) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
     return (
         <FormControl component="fieldset">
             <RadioGroup

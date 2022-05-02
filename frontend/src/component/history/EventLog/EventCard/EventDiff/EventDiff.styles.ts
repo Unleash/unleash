@@ -1,16 +1,13 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles(theme => ({
+export const useStyles = makeStyles()(theme => ({
     blue: {
-        // @ts-expect-error
-        color: theme.palette.code.edited,
+        color: theme.code.edited,
     },
     negative: {
-        // @ts-expect-error
-        color: theme.palette.code.diffSub,
+        color: theme.code.diffSub,
     },
     positive: {
-        // @ts-expect-error
-        color: theme.palette.code.diffAdd,
+        color: theme.code.diffAdd,
     },
 }));

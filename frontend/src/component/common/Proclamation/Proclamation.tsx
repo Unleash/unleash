@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Alert } from '@material-ui/lab';
+import { Alert } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { Typography } from '@material-ui/core';
+import { Typography } from '@mui/material';
 import { useStyles } from './Proclamation.styles';
 import { IProclamationToast } from 'interfaces/uiConfig';
 
@@ -22,7 +22,7 @@ const renderProclamation = (id: string) => {
 
 const Proclamation = ({ toast }: IProclamationProps) => {
     const [show, setShow] = useState(false);
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     useEffect(() => {
         setShow(renderProclamation(toast?.id || ''));

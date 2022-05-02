@@ -1,13 +1,8 @@
 import { useStyles } from './FormTemplate.styles';
-import MenuBookIcon from '@material-ui/icons/MenuBook';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
 import Codebox from '../Codebox/Codebox';
-import {
-    Collapse,
-    IconButton,
-    useMediaQuery,
-    Tooltip,
-} from '@material-ui/core';
-import { FileCopy, Info } from '@material-ui/icons';
+import { Collapse, IconButton, useMediaQuery, Tooltip } from '@mui/material';
+import { FileCopy, Info } from '@mui/icons-material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import Loader from '../Loader/Loader';
 import copy from 'copy-to-clipboard';
@@ -15,7 +10,7 @@ import useToast from 'hooks/useToast';
 import React, { useState } from 'react';
 import classNames from 'classnames';
 import { ReactComponent as MobileGuidanceBG } from 'assets/img/mobileGuidanceBg.svg';
-import { useCommonStyles } from 'themes/commonStyles';
+import { useThemeStyles } from 'themes/themeStyles';
 
 interface ICreateProps {
     title: string;
@@ -38,8 +33,8 @@ const FormTemplate: React.FC<ICreateProps> = ({
     formatApiCode,
 }) => {
     const { setToastData } = useToast();
-    const styles = useStyles();
-    const commonStyles = useCommonStyles();
+    const { classes: styles } = useStyles();
+    const { classes: themeStyles } = useThemeStyles();
     const smallScreen = useMediaQuery(`(max-width:${1099}px)`);
 
     const copyCommand = () => {
@@ -69,7 +64,7 @@ const FormTemplate: React.FC<ICreateProps> = ({
             <ConditionallyRender
                 condition={smallScreen}
                 show={
-                    <div className={commonStyles.relative}>
+                    <div className={themeStyles.relative}>
                         <MobileGuidance
                             description={description}
                             documentationLink={documentationLink}
@@ -101,7 +96,7 @@ const FormTemplate: React.FC<ICreateProps> = ({
                         <h2 className={styles.subtitle}>
                             API Command{' '}
                             <Tooltip title="Copy command">
-                                <IconButton onClick={copyCommand}>
+                                <IconButton onClick={copyCommand} size="large">
                                     <FileCopy className={styles.icon} />
                                 </IconButton>
                             </Tooltip>
@@ -126,7 +121,7 @@ const MobileGuidance = ({
     documentationLinkLabel,
 }: IMobileGuidance) => {
     const [open, setOpen] = useState(false);
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     return (
         <>
@@ -137,6 +132,7 @@ const MobileGuidance = ({
                 <IconButton
                     className={styles.mobileGuidanceButton}
                     onClick={() => setOpen(prev => !prev)}
+                    size="large"
                 >
                     <Info className={styles.infoIcon} />
                 </IconButton>
@@ -164,7 +160,7 @@ const Guidance: React.FC<IGuidanceProps> = ({
     documentationLink,
     documentationLinkLabel = 'Learn more',
 }) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     return (
         <aside className={styles.sidebar}>

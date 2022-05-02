@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { Alert } from '@material-ui/lab';
+import { Alert } from '@mui/material';
 import { IFeatureToggle } from 'interfaces/featureToggle';
 import { formatFeaturePath } from '../FeatureStrategyEdit/FeatureStrategyEdit';
 

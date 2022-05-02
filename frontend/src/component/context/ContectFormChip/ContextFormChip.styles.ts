@@ -1,6 +1,6 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles(theme => ({
+export const useStyles = makeStyles()(theme => ({
     container: {
         display: 'grid',
         lineHeight: 1.25,
@@ -10,7 +10,7 @@ export const useStyles = makeStyles(theme => ({
         gap: '0.5rem',
         padding: '0.5rem',
         background: theme.palette.grey[200],
-        borderRadius: theme.borders.radius.main,
+        borderRadius: theme.borderRadius.main,
         wordBreak: 'break-word',
     },
     label: {

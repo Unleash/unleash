@@ -1,5 +1,5 @@
 import { useState, useEffect, VFC } from 'react';
-import { Paper, MenuItem } from '@material-ui/core';
+import { Paper, MenuItem } from '@mui/material';
 import { useFeaturesSort } from 'hooks/useFeaturesSort';
 import { IFeatureToggleListItem } from 'interfaces/featureToggle';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -25,7 +25,7 @@ export const ReportToggleList: VFC<IReportToggleListProps> = ({
     features,
     selectedProject,
 }) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
     const [checkAll, setCheckAll] = useState(false);
     const [localFeatures, setFeatures] = useState<IFeatureToggleListItem[]>([]);
     // @ts-expect-error

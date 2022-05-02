@@ -1,5 +1,5 @@
 import useLoading from 'hooks/useLoading';
-import { TextField, Typography } from '@material-ui/core';
+import { TextField, Typography } from '@mui/material';
 import StandaloneBanner from '../StandaloneBanner/StandaloneBanner';
 import ResetPasswordDetails from '../common/ResetPasswordDetails/ResetPasswordDetails';
 import { useStyles } from './NewUser.styles';
@@ -16,7 +16,7 @@ export const NewUser = () => {
     const { token, data, loading, setLoading, invalidToken } =
         useResetPassword();
     const ref = useLoading(loading);
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     return (
         <div ref={ref}>

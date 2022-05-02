@@ -1,4 +1,4 @@
-import { Menu, MenuItem } from '@material-ui/core';
+import { Menu, MenuItem } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useStyles } from '../NavigationLink/NavigationLink.styles';
 
@@ -17,7 +17,7 @@ export const NavigationMenu = ({
     anchorEl,
     style,
 }: INavigationMenuProps) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     return (
         <Menu

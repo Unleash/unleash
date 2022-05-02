@@ -1,5 +1,5 @@
-import { Tooltip } from '@material-ui/core';
-import { Info } from '@material-ui/icons';
+import { Tooltip } from '@mui/material';
+import { Info } from '@mui/icons-material';
 import { useStyles } from 'component/common/HelpIcon/HelpIcon.styles';
 import React from 'react';
 
@@ -9,7 +9,7 @@ interface IHelpIconProps {
 }
 
 export const HelpIcon = ({ tooltip, style }: IHelpIconProps) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     return (
         <Tooltip title={tooltip} arrow>

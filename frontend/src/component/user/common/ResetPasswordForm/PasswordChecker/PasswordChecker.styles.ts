@@ -1,6 +1,6 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles(theme => ({
+export const useStyles = makeStyles()(theme => ({
     container: {
         border: '1px solid #f1f1f1',
         borderRadius: '3px',
@@ -10,8 +10,7 @@ export const useStyles = makeStyles(theme => ({
     },
     headerContainer: { display: 'flex', padding: '0.5rem' },
     divider: {
-        // @ts-expect-error
-        backgroundColor: theme.palette.borders?.main,
+        backgroundColor: theme.palette.grey[100],
         height: '1px',
         width: '100%',
     },

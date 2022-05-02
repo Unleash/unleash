@@ -1,11 +1,11 @@
 import React, { ReactNode, useContext } from 'react';
-import { TableCell } from '@material-ui/core';
+import { TableCell } from '@mui/material';
 import classnames from 'classnames';
 import {
     UnfoldMoreOutlined,
     KeyboardArrowDown,
     KeyboardArrowUp,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import { IUsersSort, UsersSortType } from 'hooks/useUsersSort';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useStyles } from 'component/common/Table/TableCellSortable/TableCellSortable.styles';
@@ -31,7 +31,7 @@ export const TableCellSortable = ({
     children,
 }: ITableCellSortableProps) => {
     const { setAnnouncement } = useContext(AnnouncerContext);
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     const ariaSort =
         sort.type === name

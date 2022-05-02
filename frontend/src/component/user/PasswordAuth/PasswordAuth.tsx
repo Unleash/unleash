@@ -1,14 +1,14 @@
 import { FormEventHandler, useState, VFC } from 'react';
 import classnames from 'classnames';
-import { Button, TextField } from '@material-ui/core';
+import { Button, TextField } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useHistory } from 'react-router';
-import { useCommonStyles } from 'themes/commonStyles';
+import { useThemeStyles } from 'themes/themeStyles';
 import { useStyles } from './PasswordAuth.styles';
 import useQueryParams from 'hooks/useQueryParams';
 import AuthOptions from '../common/AuthOptions/AuthOptions';
 import DividerText from 'component/common/DividerText/DividerText';
-import { Alert } from '@material-ui/lab';
+import { Alert } from '@mui/material';
 import { LOGIN_BUTTON, LOGIN_EMAIL_ID, LOGIN_PASSWORD_ID } from 'utils/testIds';
 import PasswordField from 'component/common/PasswordField/PasswordField';
 import { useAuthApi } from 'hooks/api/actions/useAuthApi/useAuthApi';
@@ -26,8 +26,8 @@ interface IPasswordAuthProps {
 }
 
 const PasswordAuth: VFC<IPasswordAuthProps> = ({ authDetails, redirect }) => {
-    const commonStyles = useCommonStyles();
-    const styles = useStyles();
+    const { classes: themeStyles } = useThemeStyles();
+    const { classes: styles } = useStyles();
     const history = useHistory();
     const { refetchUser } = useAuthUser();
     const params = useQueryParams();
@@ -110,7 +110,7 @@ const PasswordAuth: VFC<IPasswordAuthProps> = ({ authDetails, redirect }) => {
                         <div
                             className={classnames(
                                 styles.contentContainer,
-                                commonStyles.contentSpacingY
+                                themeStyles.contentSpacingY
                             )}
                         >
                             <TextField

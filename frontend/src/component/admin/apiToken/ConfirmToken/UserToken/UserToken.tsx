@@ -1,5 +1,5 @@
-import { IconButton, Tooltip } from '@material-ui/core';
-import CopyIcon from '@material-ui/icons/FileCopy';
+import { IconButton, Tooltip } from '@mui/material';
+import CopyIcon from '@mui/icons-material/FileCopy';
 import copy from 'copy-to-clipboard';
 import useToast from 'hooks/useToast';
 
@@ -38,7 +38,7 @@ export const UserToken = ({ token }: IUserTokenProps) => {
         >
             {token}
             <Tooltip title="Copy token">
-                <IconButton onClick={copyToken}>
+                <IconButton onClick={copyToken} size="large">
                     <CopyIcon />
                 </IconButton>
             </Tooltip>

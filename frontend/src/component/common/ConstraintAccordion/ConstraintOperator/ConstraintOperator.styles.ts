@@ -1,9 +1,9 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles(theme => ({
+export const useStyles = makeStyles()(theme => ({
     container: {
         padding: '0.5rem 0.75rem',
-        borderRadius: theme.borders.radius.main,
+        borderRadius: theme.borderRadius.main,
         backgroundColor: theme.palette.grey[200],
         lineHeight: 1.25,
     },
@@ -21,7 +21,7 @@ export const useStyles = makeStyles(theme => ({
         '& > span': {
             display: 'inline-block',
             padding: '0 0.25rem',
-            borderRadius: theme.borders.radius.main,
+            borderRadius: theme.borderRadius.main,
             fontSize: theme.fontSizes.smallerBody,
             backgroundColor: theme.palette.primary.light,
             color: 'white',

@@ -1,4 +1,4 @@
-import { Alert, AlertTitle } from '@material-ui/lab';
+import { Alert, AlertTitle } from '@mui/material';
 
 const ResetPasswordSuccess = () => {
     return (

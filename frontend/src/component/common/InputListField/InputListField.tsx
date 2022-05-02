@@ -1,5 +1,5 @@
 import { VFC } from 'react';
-import { TextField, TextFieldProps } from '@material-ui/core';
+import { TextField, TextFieldProps } from '@mui/material';
 
 interface IInputListFieldProps {
     label: string;

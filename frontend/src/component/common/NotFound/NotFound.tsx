@@ -1,4 +1,4 @@
-import { Button, Typography } from '@material-ui/core';
+import { Button, Typography } from '@mui/material';
 import { useHistory } from 'react-router';
 
 import { ReactComponent as LogoIcon } from 'assets/icons/logoBg.svg';
@@ -7,7 +7,7 @@ import { useStyles } from './NotFound.styles';
 
 const NotFound = () => {
     const history = useHistory();
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     const onClickHome = () => {
         history.push('/');

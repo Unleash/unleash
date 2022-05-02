@@ -1,6 +1,15 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useCommonStyles = makeStyles(theme => ({
+export const useThemeStyles = makeStyles()(theme => ({
+    focusable: {
+        '&:focus-visible': {
+            outline: 0,
+            outlineStyle: 'solid',
+            outlineWidth: 2,
+            outlineOffset: 2,
+            outlineColor: theme.palette.primary.main,
+        },
+    },
     contentSpacingY: {
         '& > *': {
             marginTop: '0.5rem !important',
@@ -24,14 +33,12 @@ export const useCommonStyles = makeStyles(theme => ({
     },
     divider: {
         margin: '1rem 0',
-        // @ts-expect-error
         backgroundColor: theme.palette.division.main,
         height: '3px',
         width: '100%',
     },
     largeDivider: {
         margin: '2rem 0',
-        // @ts-expect-error
         backgroundColor: theme.palette.division.main,
         height: '3px',
         width: '100%',
@@ -114,7 +121,7 @@ export const useCommonStyles = makeStyles(theme => ({
         right: '40px',
         top: '40px',
         transform: 'translateY(-400px)',
-        [theme.breakpoints.down('xs')]: {
+        [theme.breakpoints.down('sm')]: {
             right: 20,
             left: 10,
             top: 40,

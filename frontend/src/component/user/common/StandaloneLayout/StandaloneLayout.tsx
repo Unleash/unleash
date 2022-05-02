@@ -11,7 +11,7 @@ const StandaloneLayout: FC<IStandaloneLayout> = ({
     children,
     BannerComponent,
 }) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     let banner = <StandaloneBanner title="Unleash" />;
 

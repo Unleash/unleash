@@ -1,4 +1,4 @@
-import { Switch, SwitchProps } from '@material-ui/core';
+import { Switch, SwitchProps } from '@mui/material';
 import AccessContext from 'contexts/AccessContext';
 import React, { useContext } from 'react';
 import { formatAccessText } from 'utils/formatAccessText';

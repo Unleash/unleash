@@ -1,10 +1,10 @@
 import { useStyles } from './ProjectInfo.styles';
 import { Link } from 'react-router-dom';
-import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import classnames from 'classnames';
-import { Edit, ExpandMore } from '@material-ui/icons';
+import { Edit, ExpandMore } from '@mui/icons-material';
 
-import { useCommonStyles } from 'themes/commonStyles';
+import { useThemeStyles } from 'themes/themeStyles';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import PercentageCircle from 'component/common/PercentageCircle/PercentageCircle';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
@@ -14,7 +14,7 @@ import {
     AccordionActions,
     AccordionDetails,
     AccordionSummary,
-} from '@material-ui/core';
+} from '@mui/material';
 import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
 
 interface IProjectInfoProps {
@@ -31,8 +31,8 @@ const ProjectInfo = ({
     health,
     description,
 }: IProjectInfoProps) => {
-    const commonStyles = useCommonStyles();
-    const styles = useStyles();
+    const { classes: themeStyles } = useThemeStyles();
+    const { classes: styles } = useStyles();
     const { uiConfig } = useUiConfig();
 
     let link = `/admin/users`;
@@ -138,8 +138,8 @@ const ProjectInfo = ({
                     <Link
                         data-loading
                         className={classnames(
-                            commonStyles.flexRow,
-                            commonStyles.justifyCenter,
+                            themeStyles.flexRow,
+                            themeStyles.justifyCenter,
                             styles.infoLink
                         )}
                         to={`/projects/${id}/health`}
@@ -167,8 +167,8 @@ const ProjectInfo = ({
                     <Link
                         data-loading
                         className={classnames(
-                            commonStyles.flexRow,
-                            commonStyles.justifyCenter,
+                            themeStyles.flexRow,
+                            themeStyles.justifyCenter,
                             styles.infoLink
                         )}
                         to={link}

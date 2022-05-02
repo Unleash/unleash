@@ -3,7 +3,7 @@ import { useStyles } from './NoItems.styles';
 import React from 'react';
 
 const NoItems: React.FC = ({ children }) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
     return (
         <div className={styles.container}>
             <div className={styles.textContainer}>{children}</div>

@@ -3,7 +3,7 @@ import { formatAssetPath } from 'utils/formatPath';
 import { useStyles } from './Loader.styles';
 
 const Loader = () => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     return (
         <div className={styles.loader} role="alert" aria-label="Loading">

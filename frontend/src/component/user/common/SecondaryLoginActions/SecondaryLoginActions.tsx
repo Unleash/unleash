@@ -1,9 +1,9 @@
-import { Typography } from '@material-ui/core';
+import { Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useStyles } from './SecondaryLoginActions.styles';
 
 const SecondaryLoginActions = () => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
     return (
         <div className={styles.container}>
             <Link to="/forgotten-password" className={styles.link}>

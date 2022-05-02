@@ -4,14 +4,14 @@ import {
     ListItemText,
     Tooltip,
     IconButton,
-} from '@material-ui/core';
+} from '@mui/material';
 import {
     CloudCircle,
     Delete,
     DragIndicator,
     Edit,
     OfflineBolt,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 import { IEnvironment } from 'interfaces/environments';
@@ -57,7 +57,7 @@ const EnvironmentListItem = ({
     setToggleDialog,
 }: IEnvironmentListItemProps) => {
     const history = useHistory();
-    const ref = useRef<HTMLDivElement>(null);
+    const ref = useRef<HTMLLIElement>(null);
     const ACCEPT_TYPE = 'LIST_ITEM';
     const [{ isDragging }, drag] = useDrag({
         type: ACCEPT_TYPE,
@@ -126,7 +126,6 @@ const EnvironmentListItem = ({
     }
 
     return (
-        // @ts-expect-error
         <ListItem
             style={{ position: 'relative', opacity }}
             ref={ref}
@@ -155,7 +154,7 @@ const EnvironmentListItem = ({
             <ConditionallyRender
                 condition={updatePermission}
                 show={
-                    <IconButton>
+                    <IconButton size="large">
                         <DragIndicator titleAccess="Drag" cursor="grab" />
                     </IconButton>
                 }
@@ -169,6 +168,7 @@ const EnvironmentListItem = ({
                                 setSelectedEnv(env);
                                 setToggleDialog(prev => !prev);
                             }}
+                            size="large"
                         >
                             <OfflineBolt />
                         </IconButton>
@@ -184,6 +184,7 @@ const EnvironmentListItem = ({
                             onClick={() => {
                                 history.push(`/environments/${env.name}`);
                             }}
+                            size="large"
                         >
                             <Edit />
                         </IconButton>
@@ -200,6 +201,7 @@ const EnvironmentListItem = ({
                                 setDeldialogue(true);
                                 setSelectedEnv(env);
                             }}
+                            size="large"
                         >
                             <Delete />
                         </IconButton>

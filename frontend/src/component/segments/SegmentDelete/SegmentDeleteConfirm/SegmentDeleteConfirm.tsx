@@ -18,7 +18,7 @@ export const SegmentDeleteConfirm = ({
     setDeldialogue,
     handleDeleteSegment,
 }: ISegmentDeleteConfirmProps) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
     const [confirmName, setConfirmName] = useState('');
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>

@@ -1,13 +1,13 @@
-import { Typography } from '@material-ui/core';
+import { Typography } from '@mui/material';
 import classnames from 'classnames';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { BAD_REQUEST, OK } from 'constants/statusCodes';
 import { useStyles } from './PasswordChecker.styles';
 import { useCallback } from 'react';
 import { formatApiPath } from 'utils/formatPath';
-import { Alert } from '@material-ui/lab';
-import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
+import { Alert } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 
 interface IPasswordCheckerProps {
     password: string;
@@ -41,7 +41,7 @@ const PasswordChecker = ({
     callback,
     style = {},
 }: IPasswordCheckerProps) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
     const [casingError, setCasingError] = useState(true);
     const [numberError, setNumberError] = useState(true);
     const [symbolError, setSymbolError] = useState(true);

@@ -1,4 +1,4 @@
-import { Chip } from '@material-ui/core';
+import { Chip } from '@mui/material';
 import { useStyles } from './StatusChip.styles';
 
 interface IStatusChip {
@@ -7,7 +7,7 @@ interface IStatusChip {
 }
 
 const StatusChip = ({ stale, showActive = true }: IStatusChip) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     if (!stale && !showActive) {
         return null;

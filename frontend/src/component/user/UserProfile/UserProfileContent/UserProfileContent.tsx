@@ -8,11 +8,12 @@ import {
     Paper,
     Select,
     Typography,
-} from '@material-ui/core';
+    SelectChangeEvent,
+} from '@mui/material';
 import classnames from 'classnames';
 import { useStyles } from 'component/user/UserProfile/UserProfileContent/UserProfileContent.styles';
-import { useCommonStyles } from 'themes/commonStyles';
-import { Alert } from '@material-ui/lab';
+import { useThemeStyles } from 'themes/themeStyles';
+import { Alert } from '@mui/material';
 import EditProfile from '../EditProfile/EditProfile';
 import legacyStyles from '../../user.module.scss';
 import { getBasePath } from 'utils/formatPath';
@@ -41,11 +42,11 @@ const UserProfileContent = ({
     setCurrentLocale,
     setLocationSettings,
 }: IUserProfileContentProps) => {
-    const commonStyles = useCommonStyles();
+    const { classes: themeStyles } = useThemeStyles();
     const { uiConfig } = useUiConfig();
     const [updatedPassword, setUpdatedPassword] = useState(false);
     const [editingProfile, setEditingProfile] = useState(false);
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     const profileAvatarClasses = classnames(styles.avatar, {
         [styles.editingAvatar]: editingProfile,
@@ -55,8 +56,8 @@ const UserProfileContent = ({
         [styles.editingEmail]: editingProfile,
     });
 
-    const handleChange = (e: React.ChangeEvent<{ value: unknown }>) => {
-        const locale = e.target.value as string;
+    const handleChange = (e: SelectChangeEvent) => {
+        const locale = e.target.value;
         setCurrentLocale(locale);
         setLocationSettings({ locale });
     };
@@ -68,9 +69,9 @@ const UserProfileContent = ({
                 <Paper
                     className={classnames(
                         styles.profile,
-                        commonStyles.flexColumn,
-                        commonStyles.itemsCenter,
-                        commonStyles.contentSpacingY
+                        themeStyles.flexColumn,
+                        themeStyles.itemsCenter,
+                        themeStyles.contentSpacingY
                     )}
                 >
                     <Avatar
@@ -97,7 +98,6 @@ const UserProfileContent = ({
                                     condition={!uiConfig.disablePasswordAuth}
                                     show={
                                         <Button
-                                            variant="contained"
                                             onClick={() =>
                                                 setEditingProfile(true)
                                             }
@@ -106,7 +106,7 @@ const UserProfileContent = ({
                                         </Button>
                                     }
                                 />
-                                <div className={commonStyles.divider} />
+                                <div className={themeStyles.divider} />
                                 <div className={legacyStyles.showUserSettings}>
                                     <FormControl
                                         variant="outlined"
@@ -146,7 +146,7 @@ const UserProfileContent = ({
                                         </Select>
                                     </FormControl>
                                 </div>
-                                <div className={commonStyles.divider} />
+                                <div className={themeStyles.divider} />
                                 <a
                                     className={styles.link}
                                     href="https://www.getunleash.io/privacy-policy"
@@ -155,7 +155,7 @@ const UserProfileContent = ({
                                 >
                                     Privacy policy
                                 </a>
-                                <div className={commonStyles.divider} />
+                                <div className={themeStyles.divider} />
 
                                 <Button
                                     variant="contained"

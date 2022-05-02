@@ -1,6 +1,6 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles({
+export const useStyles = makeStyles()({
     container: {
         clip: 'rect(0 0 0 0)',
         clipPath: 'inset(50%)',

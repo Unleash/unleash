@@ -23,7 +23,7 @@ const FeatureOverviewExecution = ({
     constraints = [],
     strategy,
 }: IFeatureOverviewExecutionProps) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
     const { strategies } = useStrategies();
     const { uiConfig } = useUiConfig();
 

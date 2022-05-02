@@ -7,8 +7,8 @@ import {
     LinearProgress,
     Link,
     Typography,
-} from '@material-ui/core';
-import { Link as LinkIcon } from '@material-ui/icons';
+} from '@mui/material';
+import { Link as LinkIcon } from '@mui/icons-material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { UPDATE_APPLICATION } from 'component/providers/AccessProvider/permissions';
 import { ApplicationView } from '../ApplicationView/ApplicationView';
@@ -112,7 +112,11 @@ export const ApplicationEdit = () => {
                             <ConditionallyRender
                                 condition={Boolean(url)}
                                 show={
-                                    <IconButton component={Link} href={url}>
+                                    <IconButton
+                                        component={Link}
+                                        href={url}
+                                        size="large"
+                                    >
                                         <LinkIcon titleAccess={url} />
                                     </IconButton>
                                 }

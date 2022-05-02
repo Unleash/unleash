@@ -21,7 +21,7 @@ export const FeatureStrategyMenuCard = ({
     environmentId,
     strategy,
 }: IFeatureStrategyMenuCardProps) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
     const StrategyIcon = getFeatureStrategyIcon(strategy.name);
     const strategyName = formatStrategyName(strategy.name);
 

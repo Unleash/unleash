@@ -1,8 +1,8 @@
 import { Dispatch, SetStateAction, useContext, VFC } from 'react';
 import classnames from 'classnames';
 import { Link } from 'react-router-dom';
-import { List, ListItem } from '@material-ui/core';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { List, ListItem } from '@mui/material';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { IFlags } from 'interfaces/uiConfig';
 import { SearchField } from 'component/common/SearchField/SearchField';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -62,7 +62,7 @@ export const FeatureToggleList: VFC<IFeatureToggleListProps> = ({
 }) => {
     const { hasAccess } = useContext(AccessContext);
     const createFeature = useCreateFeaturePath(filter);
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
     const smallScreen = useMediaQuery('(max-width:800px)');
     const mobileView = useMediaQuery('(max-width:600px)');
 

@@ -1,6 +1,6 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles(theme => ({
+export const useStyles = makeStyles()(theme => ({
     splashMainContainer: {
         backgroundColor: theme.palette.primary.light,
         width: '100%',
@@ -9,7 +9,7 @@ export const useStyles = makeStyles(theme => ({
         justifyContent: 'center',
         alignItems: 'center',
         padding: '3rem 0',
-        [theme.breakpoints.down('xs')]: {
+        [theme.breakpoints.down('sm')]: {
             padding: '0',
         },
     },
@@ -24,7 +24,7 @@ export const useStyles = makeStyles(theme => ({
         display: 'flex',
         overflowX: 'hidden',
         flexDirection: 'column',
-        [theme.breakpoints.down('xs')]: {
+        [theme.breakpoints.down('sm')]: {
             top: '0px',
             left: '0px',
             right: '0px',

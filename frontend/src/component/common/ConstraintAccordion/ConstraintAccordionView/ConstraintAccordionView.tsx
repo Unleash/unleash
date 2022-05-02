@@ -1,9 +1,5 @@
-import {
-    Accordion,
-    AccordionSummary,
-    AccordionDetails,
-} from '@material-ui/core';
-import { ExpandMore } from '@material-ui/icons';
+import { Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
+import { ExpandMore } from '@mui/icons-material';
 import { IConstraint } from 'interfaces/strategy';
 
 import { ConstraintAccordionViewBody } from './ConstraintAccordionViewBody/ConstraintAccordionViewBody';
@@ -29,7 +25,7 @@ export const ConstraintAccordionView = ({
     onEdit,
     onDelete,
 }: IConstraintAccordionViewProps) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     const singleValue = oneOf(
         [...semVerOperators, ...numOperators, ...dateOperators],

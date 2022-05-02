@@ -16,7 +16,7 @@ const FeatureOverviewEnvironmentBody = ({
     getOverviewText,
 }: IFeatureOverviewEnvironmentBodyProps) => {
     const { projectId, featureId } = useParams<IFeatureViewParams>();
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     if (!featureEnvironment) {
         return null;

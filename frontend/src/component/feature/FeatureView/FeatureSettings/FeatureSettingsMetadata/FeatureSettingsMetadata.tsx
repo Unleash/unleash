@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import * as jsonpatch from 'fast-json-patch';
-import { TextField } from '@material-ui/core';
+import { TextField } from '@mui/material';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import FeatureTypeSelect from './FeatureTypeSelect/FeatureTypeSelect';
 import { useParams } from 'react-router';

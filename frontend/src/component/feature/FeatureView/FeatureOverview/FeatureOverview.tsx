@@ -13,7 +13,7 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { usePageTitle } from 'hooks/usePageTitle';
 
 const FeatureOverview = () => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
     const { push } = useHistory();
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');

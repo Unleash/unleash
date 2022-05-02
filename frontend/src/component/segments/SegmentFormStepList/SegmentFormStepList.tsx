@@ -1,4 +1,4 @@
-import { FiberManualRecord } from '@material-ui/icons';
+import { FiberManualRecord } from '@mui/icons-material';
 import { useStyles } from './SegmentFormStepList.styles';
 import React from 'react';
 import classNames from 'classnames';
@@ -12,7 +12,7 @@ export const SegmentFormStepList: React.FC<ISegmentFormStepListProps> = ({
     total,
     current,
 }) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     // Create a list with all the step numbers, e.g. [1, 2, 3].
     const steps: number[] = Array.from({ length: total }).map((_, i) => {

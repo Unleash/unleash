@@ -1,4 +1,4 @@
-import { Tooltip, TooltipProps } from '@material-ui/core';
+import { Tooltip, TooltipProps } from '@mui/material';
 
 interface ITooltipResolverProps extends Omit<TooltipProps, 'title'> {
     title: string | undefined;

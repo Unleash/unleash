@@ -8,7 +8,7 @@ import {
     TableHead,
     TableRow,
     Tooltip,
-} from '@material-ui/core';
+} from '@mui/material';
 import AccessContext from 'contexts/AccessContext';
 import useToast from 'hooks/useToast';
 import useLoading from 'hooks/useLoading';
@@ -18,7 +18,7 @@ import useApiTokensApi from 'hooks/api/actions/useApiTokensApi/useApiTokensApi';
 import ApiError from 'component/common/ApiError/ApiError';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { DELETE_API_TOKEN } from 'component/providers/AccessProvider/permissions';
-import { Delete, FileCopy } from '@material-ui/icons';
+import { Delete, FileCopy } from '@mui/icons-material';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import copy from 'copy-to-clipboard';
 import { useLocationSettings } from 'hooks/useLocationSettings';
@@ -37,7 +37,7 @@ interface IApiToken {
 }
 
 export const ApiTokenList = () => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
     const { hasAccess } = useContext(AccessContext);
     const { uiConfig } = useUiConfig();
     const [showDelete, setShowDelete] = useState(false);
@@ -196,6 +196,7 @@ export const ApiTokenList = () => {
                                             onClick={() => {
                                                 copyToken(item.secret);
                                             }}
+                                            size="large"
                                         >
                                             <FileCopy />
                                         </IconButton>
@@ -209,6 +210,7 @@ export const ApiTokenList = () => {
                                                         setDeleteToken(item);
                                                         setShowDelete(true);
                                                     }}
+                                                    size="large"
                                                 >
                                                     <Delete />
                                                 </IconButton>

@@ -106,16 +106,8 @@ describe('feature', () => {
             `/projects/default/features/${featureToggleName}/strategies/create?environmentId=development&strategyName=flexibleRollout`
         );
 
-        cy.wait(1000);
-        cy.get('[data-testid=ROLLOUT_SLIDER_ID')
-            .click()
-            .type('{leftarrow}'.repeat(20));
-
         if (ENTERPRISE) {
             cy.get('[data-testid=ADD_CONSTRAINT_ID]').click();
-            cy.get('[data-testid=CONSTRAINT_AUTOCOMPLETE_ID]')
-                .type('{downArrow}'.repeat(1))
-                .type('{enter}');
             cy.get('[data-testid=DIALOGUE_CONFIRM_ID]').click();
         }
 
@@ -126,7 +118,7 @@ describe('feature', () => {
                 expect(req.body.name).to.equal('flexibleRollout');
                 expect(req.body.parameters.groupId).to.equal(featureToggleName);
                 expect(req.body.parameters.stickiness).to.equal('default');
-                expect(req.body.parameters.rollout).to.equal('30');
+                expect(req.body.parameters.rollout).to.equal(100);
 
                 if (ENTERPRISE) {
                     expect(req.body.constraints.length).to.equal(1);
@@ -149,11 +141,6 @@ describe('feature', () => {
             `/projects/default/features/${featureToggleName}/strategies/edit?environmentId=development&strategyId=${strategyId}`
         );
 
-        cy.wait(1000);
-        cy.get('[data-testid=ROLLOUT_SLIDER_ID')
-            .click()
-            .type('{rightArrow}'.repeat(10));
-
         cy.get('[data-testid=FLEXIBLE_STRATEGY_STICKINESS_ID]')
             .first()
             .click()
@@ -172,7 +159,7 @@ describe('feature', () => {
             req => {
                 expect(req.body.parameters.groupId).to.equal('new-group-id');
                 expect(req.body.parameters.stickiness).to.equal('sessionId');
-                expect(req.body.parameters.rollout).to.equal('60');
+                expect(req.body.parameters.rollout).to.equal(100);
 
                 if (ENTERPRISE) {
                     expect(req.body.constraints.length).to.equal(1);
@@ -301,10 +288,7 @@ describe('feature', () => {
             .children()
             .find('input')
             .should('have.attr', 'disabled');
-        cy.get('[data-testid=VARIANT_WEIGHT_TYPE]')
-            .children()
-            .find('input')
-            .check();
+        cy.get('[data-testid=VARIANT_WEIGHT_CHECK]').find('input').check();
         cy.get('[data-testid=VARIANT_WEIGHT_INPUT]').clear().type('15');
 
         cy.intercept(

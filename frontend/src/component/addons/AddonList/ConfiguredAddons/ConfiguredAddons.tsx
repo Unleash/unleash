@@ -4,8 +4,8 @@ import {
     ListItemAvatar,
     ListItemSecondaryAction,
     ListItemText,
-} from '@material-ui/core';
-import { Delete, Edit, Visibility, VisibilityOff } from '@material-ui/icons';
+} from '@mui/material';
+import { Delete, Edit, Visibility, VisibilityOff } from '@mui/icons-material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
     DELETE_ADDON,

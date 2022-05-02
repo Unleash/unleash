@@ -14,7 +14,7 @@ import AccessContext from 'contexts/AccessContext';
 import { HeaderTitle } from 'component/common/HeaderTitle/HeaderTitle';
 import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
 import { CREATE_PROJECT } from 'component/providers/AccessProvider/permissions';
-import { Add } from '@material-ui/icons';
+import { Add } from '@mui/icons-material';
 import ApiError from 'component/common/ApiError/ApiError';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { SearchField } from 'component/common/SearchField/SearchField';
@@ -46,7 +46,7 @@ function resolveCreateButtonData(isOss: boolean, hasAccess: boolean) {
 export const ProjectListNew = () => {
     const { hasAccess } = useContext(AccessContext);
     const history = useHistory();
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
     const { projects, loading, error, refetch } = useProjects();
     const [fetchedProjects, setFetchedProjects] = useState<projectMap>({});
     const ref = useLoading(loading);

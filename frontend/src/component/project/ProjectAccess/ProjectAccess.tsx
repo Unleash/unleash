@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-no-target-blank */
 import React, { useState } from 'react';
-import { Alert } from '@material-ui/lab';
+import { Alert, SelectChangeEvent } from '@mui/material';
 import { ProjectAccessAddUser } from './ProjectAccessAddUser/ProjectAccessAddUser';
 import PageContent from 'component/common/PageContent';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -20,7 +20,7 @@ import { ProjectAccessList } from './ProjectAccessList/ProjectAccessList';
 
 export const ProjectAccess = () => {
     const { id: projectId } = useParams<IProjectViewParams>();
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
     const { access, refetchProjectAccess } = useProjectAccess(projectId);
     const { setToastData } = useToast();
     const { isOss } = useUiConfig();
@@ -46,13 +46,7 @@ export const ProjectAccess = () => {
     }
 
     const handleRoleChange =
-        (userId: number) =>
-        async (
-            evt: React.ChangeEvent<{
-                name?: string;
-                value: unknown;
-            }>
-        ) => {
+        (userId: number) => async (evt: SelectChangeEvent) => {
             const roleId = Number(evt.target.value);
             try {
                 await changeUserRole(projectId, roleId, userId);

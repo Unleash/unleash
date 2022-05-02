@@ -1,7 +1,7 @@
 import { useStyles } from './FeatureStatus.styles';
 import TimeAgo from 'react-timeago';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { Tooltip, TooltipProps } from '@material-ui/core';
+import { Tooltip, TooltipProps } from '@mui/material';
 import React from 'react';
 
 function generateUnit(unit?: string): string {
@@ -55,7 +55,7 @@ const FeatureStatus = ({
     lastSeenAt,
     tooltipPlacement,
 }: IFeatureStatusProps) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     const Wrapper = (
         props: React.PropsWithChildren<{ color: string; toolTip: string }>

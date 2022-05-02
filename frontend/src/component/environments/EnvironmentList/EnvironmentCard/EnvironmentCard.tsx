@@ -1,4 +1,4 @@
-import { CloudCircle } from '@material-ui/icons';
+import { CloudCircle } from '@mui/icons-material';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { useStyles } from './EnvironmentCard.styles';
 
@@ -8,7 +8,7 @@ interface IEnvironmentProps {
 }
 
 const EnvironmentCard = ({ name, type }: IEnvironmentProps) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
     return (
         <div className={styles.container}>
             <div className={styles.header}>

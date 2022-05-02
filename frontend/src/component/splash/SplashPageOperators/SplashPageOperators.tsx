@@ -1,12 +1,12 @@
 import { useStyles } from 'component/splash/SplashPageOperators/SplashPageOperators.styles';
 import { Link, useHistory } from 'react-router-dom';
-import { Button, IconButton } from '@material-ui/core';
-import { CloseOutlined } from '@material-ui/icons';
+import { Button, IconButton } from '@mui/material';
+import { CloseOutlined } from '@mui/icons-material';
 import { OperatorUpgradeAlert } from 'component/common/OperatorUpgradeAlert/OperatorUpgradeAlert';
 
 export const SplashPageOperators = () => {
     const { push } = useHistory();
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     return (
         <section className={styles.container}>
@@ -16,6 +16,7 @@ export const SplashPageOperators = () => {
                     <IconButton
                         className={styles.close}
                         onClick={() => push('/')}
+                        size="large"
                     >
                         <CloseOutlined titleAccess="Close" />
                     </IconButton>

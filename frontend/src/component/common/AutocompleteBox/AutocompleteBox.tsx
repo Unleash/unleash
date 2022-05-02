@@ -1,7 +1,8 @@
 import { useStyles } from 'component/common/AutocompleteBox/AutocompleteBox.styles';
-import { Search, ArrowDropDown } from '@material-ui/icons';
-import { Autocomplete, AutocompleteRenderInputParams } from '@material-ui/lab';
-import { TextField } from '@material-ui/core';
+import { Search, ArrowDropDown } from '@mui/icons-material';
+import { Autocomplete } from '@mui/material';
+import { AutocompleteRenderInputParams } from '@mui/material/Autocomplete';
+import { TextField } from '@mui/material';
 import classNames from 'classnames';
 
 interface IAutocompleteBoxProps {
@@ -24,7 +25,7 @@ export const AutocompleteBox = ({
     onChange,
     disabled,
 }: IAutocompleteBoxProps) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     const renderInput = (params: AutocompleteRenderInputParams) => {
         return <TextField {...params} variant="outlined" label={label} />;
@@ -51,6 +52,7 @@ export const AutocompleteBox = ({
                 renderInput={renderInput}
                 getOptionLabel={value => value.label}
                 disabled={disabled}
+                size="small"
                 multiple
             />
         </div>

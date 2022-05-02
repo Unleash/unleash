@@ -1,8 +1,8 @@
 import { useStyles } from './ProjectRoleListItem.styles';
-import { TableCell, TableRow, Typography } from '@material-ui/core';
-import { Delete, Edit } from '@material-ui/icons';
+import { TableCell, TableRow, Typography } from '@mui/material';
+import { Delete, Edit } from '@mui/icons-material';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
-import SupervisedUserCircleIcon from '@material-ui/icons/SupervisedUserCircle';
+import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { IProjectRole } from 'interfaces/role';
 import { useHistory } from 'react-router-dom';
@@ -28,7 +28,7 @@ const RoleListItem = ({
     setDelDialog,
 }: IRoleListItemProps) => {
     const history = useHistory();
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     return (
         <>

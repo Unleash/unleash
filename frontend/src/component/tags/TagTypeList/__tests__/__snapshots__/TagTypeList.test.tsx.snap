@@ -2,7 +2,7 @@
 
 exports[`renders an empty list correctly 1`] = `
 <div
-  className="MuiPaper-root MuiPaper-elevation1 MuiPaper-rounded"
+  className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 mui-1ps6pg7-MuiPaper-root"
   style={
     Object {
       "borderRadius": "10px",
@@ -11,29 +11,30 @@ exports[`renders an empty list correctly 1`] = `
   }
 >
   <div
-    className="makeStyles-headerContainer-1"
+    className="tss-16iyfoa-headerContainer"
   >
     <div
-      className="makeStyles-headerTitleContainer-5"
+      className="tss-14s7qul-headerTitleContainer"
     >
       <div
         className=""
         data-loading={true}
       >
         <h1
-          className="MuiTypography-root makeStyles-headerTitle-6 MuiTypography-h1"
+          className="MuiTypography-root MuiTypography-h1 tss-whbfmi-headerTitle mui-1inkmva-MuiTypography-root"
         >
           Tag Types
         </h1>
       </div>
       <div
-        className="makeStyles-headerActions-7"
+        className="tss-ap2nhp-headerActions"
       >
         <button
-          className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+          className="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  mui-16l97z4-MuiButtonBase-root-MuiButton-root"
           disabled={false}
           onBlur={[Function]}
           onClick={[Function]}
+          onContextMenu={[Function]}
           onDragLeave={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
@@ -47,23 +48,19 @@ exports[`renders an empty list correctly 1`] = `
           tabIndex={0}
           type="button"
         >
-          <span
-            className="MuiButton-label"
-          >
-            New tag type
-          </span>
+          New tag type
         </button>
       </div>
     </div>
   </div>
   <div
-    className="makeStyles-bodyContainer-2"
+    className="tss-kiw3z8-bodyContainer"
   >
     <ul
-      className="MuiList-root MuiList-padding"
+      className="MuiList-root MuiList-padding mui-h4y409-MuiList-root"
     >
       <li
-        className="MuiListItem-root MuiListItem-gutters"
+        className="MuiListItem-root MuiListItem-gutters MuiListItem-padding mui-uz8enf-MuiListItem-root"
         disabled={false}
       >
         No entries

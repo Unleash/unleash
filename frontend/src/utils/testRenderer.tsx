@@ -2,10 +2,10 @@ import React, { FC } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { render as rtlRender, RenderOptions } from '@testing-library/react';
 import { SWRConfig } from 'swr';
-import { MainThemeProvider } from 'themes/MainThemeProvider';
-import { AnnouncerProvider } from 'component/common/Announcer/AnnouncerProvider/AnnouncerProvider';
+import { ThemeProvider } from 'themes/ThemeProvider';
 import { IPermission } from 'interfaces/user';
-import AccessProvider from 'component/providers/AccessProvider/AccessProvider';
+import { AnnouncerProvider } from 'component/common/Announcer/AnnouncerProvider/AnnouncerProvider';
+import { AccessProviderMock } from 'component/providers/AccessProvider/AccessProviderMock';
 
 export const render = (
     ui: JSX.Element,
@@ -22,13 +22,13 @@ export const render = (
 
     const Wrapper: FC = ({ children }) => (
         <SWRConfig value={{ provider: () => new Map() }}>
-            <AccessProvider permissions={permissions}>
-                <AnnouncerProvider>
-                    <MainThemeProvider>
+            <AccessProviderMock permissions={permissions}>
+                <ThemeProvider>
+                    <AnnouncerProvider>
                         <Router>{children}</Router>
-                    </MainThemeProvider>
-                </AnnouncerProvider>
-            </AccessProvider>
+                    </AnnouncerProvider>
+                </ThemeProvider>
+            </AccessProviderMock>
         </SWRConfig>
     );
 

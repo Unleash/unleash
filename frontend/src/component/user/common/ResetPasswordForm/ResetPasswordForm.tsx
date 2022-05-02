@@ -1,4 +1,4 @@
-import { Button } from '@material-ui/core';
+import { Button } from '@mui/material';
 import classnames from 'classnames';
 import React, {
     Dispatch,
@@ -9,7 +9,7 @@ import React, {
     useState,
 } from 'react';
 import { useHistory } from 'react-router';
-import { useCommonStyles } from 'themes/commonStyles';
+import { useThemeStyles } from 'themes/themeStyles';
 import { OK } from 'constants/statusCodes';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import ResetPasswordError from '../ResetPasswordError/ResetPasswordError';
@@ -25,8 +25,8 @@ interface IResetPasswordProps {
 }
 
 const ResetPasswordForm = ({ token, setLoading }: IResetPasswordProps) => {
-    const styles = useStyles();
-    const commonStyles = useCommonStyles();
+    const { classes: styles } = useStyles();
+    const { classes: themeStyles } = useThemeStyles();
     const [apiError, setApiError] = useState(false);
     const [password, setPassword] = useState('');
     const [showPasswordChecker, setShowPasswordChecker] = useState(false);
@@ -104,7 +104,7 @@ const ResetPasswordForm = ({ token, setLoading }: IResetPasswordProps) => {
             <form
                 onSubmit={handleSubmit}
                 className={classnames(
-                    commonStyles.contentSpacingY,
+                    themeStyles.contentSpacingY,
                     styles.container
                 )}
             >

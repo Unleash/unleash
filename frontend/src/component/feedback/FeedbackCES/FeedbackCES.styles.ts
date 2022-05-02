@@ -1,6 +1,6 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles(theme => ({
+export const useStyles = makeStyles()(theme => ({
     overlay: {
         pointerEvents: 'none',
         display: 'grid',
@@ -18,7 +18,7 @@ export const useStyles = makeStyles(theme => ({
         background: 'white',
         boxShadow: '0 0 1rem rgba(0, 0, 0, 0.25)',
         borderRadius: '1rem',
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             padding: '2rem',
         },
     },

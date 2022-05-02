@@ -3,7 +3,7 @@ import InvoiceList from './InvoiceList';
 import AccessContext from 'contexts/AccessContext';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { Alert } from '@material-ui/lab';
+import { Alert } from '@mui/material';
 
 const InvoiceAdminPage = () => {
     const { hasAccess } = useContext(AccessContext);

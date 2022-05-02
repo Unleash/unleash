@@ -1,21 +1,21 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from 'tss-react/mui';
+import { unleashGrey } from 'themes/themeColors';
 
-export const useStyles = makeStyles(theme => ({
+export const useStyles = makeStyles()(theme => ({
     tableCellHeaderSortable: {
         padding: 0,
         position: 'relative',
         cursor: 'pointer',
-        overflow: 'hidden',
         '& > svg': {
-            fontSize: theme.v2.fontSizes.headerIcon,
+            fontSize: 18,
             verticalAlign: 'middle',
-            color: theme.v2.palette.grey[70],
+            color: unleashGrey[700],
             marginLeft: '4px',
         },
         '&.sorted': {
             fontWeight: 'bold',
             '& > svg': {
-                color: theme.v2.palette.grey[90],
+                color: unleashGrey[900],
             },
         },
     },
@@ -29,14 +29,14 @@ export const useStyles = makeStyles(theme => ({
         display: 'flex',
         alignItems: 'center',
         '&:hover': {
-            backgroundColor: theme.v2.palette.grey[40],
+            backgroundColor: unleashGrey[400],
             '& > svg': {
-                color: theme.v2.palette.grey[90],
+                color: unleashGrey[900],
             },
         },
     },
     icon: {
         marginLeft: theme.spacing(0.5),
-        fontSize: theme.v2.fontSizes.headerIcon,
+        fontSize: 18,
     },
 }));

@@ -8,8 +8,8 @@ import {
     ListItemIcon,
     ListItemText,
     Tooltip,
-} from '@material-ui/core';
-import { Add, Delete, Edit, Label } from '@material-ui/icons';
+} from '@mui/material';
+import { Add, Delete, Edit, Label } from '@mui/icons-material';
 import { HeaderTitle } from 'component/common/HeaderTitle/HeaderTitle';
 import PageContent from 'component/common/PageContent/PageContent';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -18,7 +18,7 @@ import {
     UPDATE_TAG_TYPE,
 } from 'component/providers/AccessProvider/permissions';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import styles from './TagTypeList.module.scss';
 import AccessContext from 'contexts/AccessContext';
 import useTagTypesApi from 'hooks/api/actions/useTagTypesApi/useTagTypesApi';
@@ -72,6 +72,7 @@ export const TagTypeList = () => {
                                         onClick={() =>
                                             history.push('/tag-types/create')
                                         }
+                                        size="large"
                                     >
                                         <Add />
                                     </IconButton>
@@ -110,6 +111,7 @@ export const TagTypeList = () => {
                             name: tagType.name,
                         })
                     }
+                    size="large"
                 >
                     <Delete />
                 </IconButton>

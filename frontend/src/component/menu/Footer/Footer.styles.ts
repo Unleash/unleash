@@ -1,9 +1,8 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles(theme => ({
+export const useStyles = makeStyles()(theme => ({
     footer: {
-        // @ts-expect-error
-        background: theme.palette.footer.background,
+        background: 'white',
         padding: '2rem 4rem',
         width: '100%',
         flexGrow: 1,
@@ -18,7 +17,6 @@ export const useStyles = makeStyles(theme => ({
         margin: 0,
         '& a': {
             textDecoration: 'none',
-            // @ts-expect-error
             color: theme.palette.footer.main,
         },
     },

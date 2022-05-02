@@ -1,15 +1,14 @@
-import { ThemeProvider } from '@material-ui/core';
-import renderer from 'react-test-renderer';
 import { FeedbackCESForm } from './FeedbackCESForm';
-import mainTheme from 'themes/mainTheme';
+import { ThemeProvider } from 'themes/ThemeProvider';
+import { render } from 'utils/testRenderer';
 
 test('FeedbackCESForm', () => {
     const onClose = () => {
         throw new Error('Unexpected onClose call.');
     };
 
-    const tree = renderer.create(
-        <ThemeProvider theme={mainTheme}>
+    render(
+        <ThemeProvider>
             <FeedbackCESForm
                 onClose={onClose}
                 state={{ title: 'a', text: 'b', path: '/c' }}
@@ -17,5 +16,5 @@ test('FeedbackCESForm', () => {
         </ThemeProvider>
     );
 
-    expect(tree).toMatchSnapshot();
+    expect(document.body).toMatchSnapshot();
 });

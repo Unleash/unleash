@@ -30,7 +30,7 @@ const FeatureOverviewEnvSwitch = ({
         useFeatureApi();
     const { refetchFeature } = useFeature(projectId, featureId);
     const { setToastData, setToastApiError } = useToast();
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     const handleToggleEnvironmentOn = async () => {
         try {

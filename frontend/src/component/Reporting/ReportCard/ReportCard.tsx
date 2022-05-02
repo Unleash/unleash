@@ -1,7 +1,7 @@
 import classnames from 'classnames';
-import { Paper } from '@material-ui/core';
-import CheckIcon from '@material-ui/icons/Check';
-import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined';
+import { Paper } from '@mui/material';
+import CheckIcon from '@mui/icons-material/Check';
+import ReportProblemOutlinedIcon from '@mui/icons-material/ReportProblemOutlined';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import styles from './ReportCard.module.scss';
 import ReactTimeAgo from 'react-timeago';

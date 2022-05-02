@@ -1,10 +1,10 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles(theme => ({
+export const useStyles = makeStyles()(theme => ({
     container: {
         display: 'flex',
         flexWrap: 'wrap',
-        [theme.breakpoints.down('xs')]: {
+        [theme.breakpoints.down('sm')]: {
             justifyContent: 'center',
         },
     },
@@ -27,13 +27,13 @@ export const useStyles = makeStyles(theme => ({
         gap: '1rem',
         justifyContent: 'space-between',
         alignItems: 'center',
-        [theme.breakpoints.down('xs')]: {
+        [theme.breakpoints.down('sm')]: {
             display: 'block',
         },
     },
     searchBar: {
         minWidth: 450,
-        [theme.breakpoints.down('xs')]: {
+        [theme.breakpoints.down('sm')]: {
             minWidth: '100%',
         },
     },

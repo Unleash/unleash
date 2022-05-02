@@ -1,5 +1,5 @@
-import { Button } from '@material-ui/core';
-import { KeyboardArrowDownOutlined } from '@material-ui/icons';
+import { Button } from '@mui/material';
+import { KeyboardArrowDownOutlined } from '@mui/icons-material';
 import React from 'react';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
@@ -40,7 +40,7 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
     clearErrors,
 }) => {
     const TYPE_ADMIN = 'ADMIN';
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
     const { environments } = useEnvironments();
     const { projects: availableProjects } = useProjects();
 

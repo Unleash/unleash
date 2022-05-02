@@ -5,7 +5,7 @@ interface IDisabledIndicator {
 }
 
 const DisabledIndicator = ({ className }: IDisabledIndicator) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
     return (
         <span className={classnames(styles.indicator, className)}>
             disabled

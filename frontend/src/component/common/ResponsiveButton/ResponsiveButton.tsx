@@ -1,4 +1,4 @@
-import { useMediaQuery } from '@material-ui/core';
+import { useMediaQuery } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import PermissionButton from '../PermissionButton/PermissionButton';
 import PermissionIconButton from '../PermissionIconButton/PermissionIconButton';

@@ -1,6 +1,6 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles(theme => ({
+export const useStyles = makeStyles()(theme => ({
     actionsContainer: {
         display: 'flex',
         alignItems: 'center',
@@ -14,19 +14,18 @@ export const useStyles = makeStyles(theme => ({
         gap: '1rem',
         justifyContent: 'space-between',
         alignItems: 'center',
-        [theme.breakpoints.down('xs')]: {
+        [theme.breakpoints.down('sm')]: {
             display: 'block',
         },
     },
     searchBar: {
         minWidth: '450px',
-        [theme.breakpoints.down('xs')]: {
+        [theme.breakpoints.down('sm')]: {
             minWidth: '100%',
         },
     },
     emptyStateListItem: {
-        // @ts-expect-error
-        border: `2px dashed ${theme.palette.borders.main}`,
+        border: `2px dashed ${theme.palette.grey[100]}`,
         padding: '0.8rem',
         textAlign: 'center',
         display: 'flex',

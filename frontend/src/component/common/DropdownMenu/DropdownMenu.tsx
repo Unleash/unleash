@@ -5,8 +5,8 @@ import {
     useState,
     VFC,
 } from 'react';
-import { Menu } from '@material-ui/core';
-import { ArrowDropDown } from '@material-ui/icons';
+import { Menu } from '@mui/material';
+import { ArrowDropDown } from '@mui/icons-material';
 import { DropdownButton } from './DropdownButton/DropdownButton';
 
 export interface IDropdownMenuProps {

@@ -1,6 +1,6 @@
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import { Alert } from '@material-ui/lab';
-import { Checkbox, FormControlLabel } from '@material-ui/core';
+import { Alert } from '@mui/material';
+import { Checkbox, FormControlLabel } from '@mui/material';
 import { PRODUCTION } from 'constants/environmentTypes';
 import { IFeatureToggle } from 'interfaces/featureToggle';
 import { createPersistentGlobalStateHook } from 'hooks/usePersistentGlobalState';

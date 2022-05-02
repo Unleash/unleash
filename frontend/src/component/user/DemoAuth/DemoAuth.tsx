@@ -1,5 +1,5 @@
 import { ChangeEventHandler, FormEventHandler, useState, VFC } from 'react';
-import { Button, TextField } from '@material-ui/core';
+import { Button, TextField } from '@mui/material';
 import styles from './DemoAuth.module.scss';
 import { ReactComponent as Logo } from 'assets/img/logo.svg';
 import { LOGIN_BUTTON, LOGIN_EMAIL_ID } from 'utils/testIds';

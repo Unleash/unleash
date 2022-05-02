@@ -1,8 +1,8 @@
 import { useStyles } from './ConstraintAccordion.styles';
-import { TrackChanges } from '@material-ui/icons';
+import { TrackChanges } from '@mui/icons-material';
 
 export const ConstraintIcon = () => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     return (
         <div className={styles.constraintIconContainer}>

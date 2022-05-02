@@ -11,7 +11,7 @@ import { Redirect } from 'react-router-dom';
 import { parseRedirectParam } from 'component/user/Login/parseRedirectParam';
 
 const Login = () => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
     const { authDetails } = useAuthDetails();
     const { user } = useAuthUser();
     const query = useQueryParams();

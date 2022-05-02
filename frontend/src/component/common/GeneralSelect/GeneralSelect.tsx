@@ -5,10 +5,10 @@ import {
     MenuItem,
     Select,
     SelectProps,
-} from '@material-ui/core';
+    SelectChangeEvent,
+} from '@mui/material';
 import { SELECT_ITEM_ID } from 'utils/testIds';
-import { KeyboardArrowDownOutlined } from '@material-ui/icons';
-import { SelectInputProps } from '@material-ui/core/Select/SelectInput';
+import { KeyboardArrowDownOutlined } from '@mui/icons-material';
 
 export interface ISelectOption {
     key: string;
@@ -55,7 +55,7 @@ const GeneralSelect: React.FC<IGeneralSelectProps> = ({
             </MenuItem>
         ));
 
-    const onSelectChange: SelectInputProps['onChange'] = event => {
+    const onSelectChange = (event: SelectChangeEvent) => {
         event.preventDefault();
         onChange(String(event.target.value));
     };

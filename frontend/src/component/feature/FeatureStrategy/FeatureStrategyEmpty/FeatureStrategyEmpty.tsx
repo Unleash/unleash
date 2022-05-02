@@ -14,7 +14,7 @@ export const FeatureStrategyEmpty = ({
     featureId,
     environmentId,
 }: IFeatureStrategyEmptyProps) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     return (
         <NoItems>

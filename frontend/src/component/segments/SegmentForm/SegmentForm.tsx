@@ -35,7 +35,7 @@ export const SegmentForm: React.FC<ISegmentProps> = ({
     clearErrors,
     mode,
 }) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
     const totalSteps = 2;
     const [currentStep, setCurrentStep] = useState<SegmentFormStep>(1);
 

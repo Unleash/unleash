@@ -1,7 +1,7 @@
 import React from 'react';
-import { Grid, FormControlLabel, Checkbox } from '@material-ui/core';
+import { Grid, FormControlLabel, Checkbox } from '@mui/material';
 
-import { styles as commonStyles } from 'component/common';
+import { styles as themeStyles } from 'component/common';
 import { IAddonProvider } from 'interfaces/addons';
 
 interface IAddonProps {
@@ -24,7 +24,7 @@ export const AddonEvents = ({
     return (
         <React.Fragment>
             <h4>Events</h4>
-            <span className={commonStyles.error}>{error}</span>
+            <span className={themeStyles.error}>{error}</span>
             <Grid container spacing={0}>
                 {provider.events.map(e => (
                     <Grid item xs={4} key={e}>

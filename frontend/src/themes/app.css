@@ -154,3 +154,10 @@ a {
         --drawer-padding: 0.75rem 1.25rem;
     }
 }
+
+input.hide-clear[type='search']::-webkit-search-decoration,
+input.hide-clear[type='search']::-webkit-search-cancel-button,
+input.hide-clear[type='search']::-webkit-search-results-button,
+input.hide-clear[type='search']::-webkit-search-results-decoration {
+    display: none;
+}

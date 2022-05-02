@@ -9,7 +9,7 @@ interface IFeedbackCESScoreProps {
 }
 
 export const FeedbackCESScore = ({ form, setForm }: IFeedbackCESScoreProps) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     const onScoreChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setForm(

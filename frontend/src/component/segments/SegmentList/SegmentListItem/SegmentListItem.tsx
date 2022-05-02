@@ -1,6 +1,6 @@
 import { useStyles } from './SegmentListItem.styles';
-import { TableCell, TableRow, Typography } from '@material-ui/core';
-import { Delete, Edit } from '@material-ui/icons';
+import { TableCell, TableRow, Typography } from '@mui/material';
+import { Delete, Edit } from '@mui/icons-material';
 import {
     UPDATE_SEGMENT,
     DELETE_SEGMENT,
@@ -33,7 +33,7 @@ export const SegmentListItem = ({
     setCurrentSegment,
     setDelDialog,
 }: ISegmentListItemProps) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
     const { push } = useHistory();
 
     return (

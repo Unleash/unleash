@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import classnames from 'classnames';
 import { HeaderTitle } from 'component/common/HeaderTitle/HeaderTitle';
-import { Paper } from '@material-ui/core';
+import { Paper } from '@mui/material';
 import { useStyles } from './styles';
 
 const PageContent = ({
@@ -14,7 +14,7 @@ const PageContent = ({
     bodyClass = '',
     ...rest
 }) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     const headerClasses = classnames(styles.headerContainer, {
         [styles.paddingDisabled]: disablePadding,

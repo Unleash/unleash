@@ -1,6 +1,6 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles(theme => ({
+export const useStyles = makeStyles()(theme => ({
     container: {
         borderRadius: '10px',
         color: '#fff',
@@ -10,6 +10,11 @@ export const useStyles = makeStyles(theme => ({
         maxWidth: '350px',
         minWidth: '350px',
         marginRight: '1rem',
+        [theme.breakpoints.down(1000)]: {
+            width: '100%',
+            maxWidth: 'none',
+            minWidth: 'auto',
+        },
     },
     paddingContainerTop: {
         padding: '1.5rem 1.5rem 0 1.5rem',
@@ -49,12 +54,5 @@ export const useStyles = makeStyles(theme => ({
     },
     editIcon: {
         color: '#fff',
-    },
-    [theme.breakpoints.down(1000)]: {
-        container: {
-            width: '100%',
-            maxWidth: 'none',
-            minWidth: 'auto',
-        },
     },
 }));

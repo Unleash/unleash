@@ -1,6 +1,6 @@
 import React, { useRef, useState, useContext } from 'react';
-import { Button } from '@material-ui/core';
-import { Add } from '@material-ui/icons';
+import { Button } from '@mui/material';
+import { Add } from '@mui/icons-material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
@@ -47,8 +47,8 @@ export const SegmentFormStepTwo: React.FC<ISegmentFormPartTwoProps> = ({
 }) => {
     const constraintsAccordionListRef = useRef<IConstraintAccordionListRef>();
     const history = useHistory();
-    const styles = useStyles();
     const { hasAccess } = useContext(AccessContext);
+    const { classes: styles } = useStyles();
     const { context = [] } = useUnleashContext();
     const [open, setOpen] = useState(false);
     const segmentValuesCount = useSegmentValuesCount(constraints);

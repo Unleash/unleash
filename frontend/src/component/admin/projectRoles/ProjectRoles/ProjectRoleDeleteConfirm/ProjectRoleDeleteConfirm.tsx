@@ -1,4 +1,4 @@
-import { Alert } from '@material-ui/lab';
+import { Alert } from '@mui/material';
 import React from 'react';
 import { IProjectRole } from 'interfaces/role';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
@@ -22,7 +22,7 @@ const ProjectRoleDeleteConfirm = ({
     confirmName,
     setConfirmName,
 }: IProjectRoleDeleteConfirmProps) => {
-    const styles = useStyles();
+    const { classes: styles } = useStyles();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
         setConfirmName(e.currentTarget.value);

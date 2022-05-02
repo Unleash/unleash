@@ -1,4 +1,4 @@
-import { Alert } from '@material-ui/lab';
+import { Alert } from '@mui/material';
 
 export const AdminAlert = () => {
     return (

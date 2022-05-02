@@ -2,10 +2,10 @@ import React from 'react';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { REMOVE_USER_ERROR } from 'hooks/api/actions/useAdminUsersApi/useAdminUsersApi';
-import { Alert } from '@material-ui/lab';
+import { Alert } from '@mui/material';
 import useLoading from 'hooks/useLoading';
-import { Avatar, Typography } from '@material-ui/core';
-import { useCommonStyles } from 'themes/commonStyles';
+import { Avatar, Typography } from '@mui/material';
+import { useThemeStyles } from 'themes/themeStyles';
 import { IUser } from 'interfaces/user';
 
 interface IDeleteUserProps {
@@ -26,7 +26,7 @@ const DeleteUser = ({
     userApiErrors,
 }: IDeleteUserProps) => {
     const ref = useLoading(userLoading);
-    const commonStyles = useCommonStyles();
+    const { classes: themeStyles } = useThemeStyles();
 
     return (
         <Dialogue
@@ -50,7 +50,7 @@ const DeleteUser = ({
                         </Alert>
                     }
                 />
-                <div data-loading className={commonStyles.flexRow}>
+                <div data-loading className={themeStyles.flexRow}>
                     <Avatar
                         variant="rounded"
                         alt="Gravatar"

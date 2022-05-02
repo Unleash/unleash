@@ -4,7 +4,7 @@ const input = `<!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="utf-8" />
-        <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+        <link rel="icon" href="::faviconPrefix::/favicon.ico" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="baseUriPath" content="::baseUriPath::" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -14,7 +14,7 @@ const input = `<!DOCTYPE html>
         <link
             href="https://fonts.googleapis.com/icon?family=Material+Icons"
             rel="stylesheet"
-        />
+        /> 
         <link
             href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700"
             rel="stylesheet"
@@ -67,4 +67,21 @@ test('rewriteHTML substitutes asset paths correctly without baseUriPath', () => 
             ' <script src="/static/js/main.6bcf6c41.chunk.js"></script>',
         ),
     ).toBe(true);
+});
+
+test('rewriteHTML swaps out faviconPath if cdnPrefix is set', () => {
+    const result = rewriteHTML(input, '', 'https://cdn.getunleash.io/v4.1.0');
+    expect(
+        result.includes(
+            '<link rel="icon" href="https://cdn.getunleash.io/favicon.ico" />',
+        ),
+    ).toBe(true);
+});
+
+test('rewriteHTML sets favicon path to root', () => {
+    const result = rewriteHTML(input, '');
+    console.log(result);
+    expect(result.includes('<link rel="icon" href="/favicon.ico" />')).toBe(
+        true,
+    );
 });

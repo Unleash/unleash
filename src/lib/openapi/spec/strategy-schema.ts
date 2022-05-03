@@ -1,6 +1,8 @@
 import { createSchemaObject, CreateSchemaType } from '../types';
+import { constraintSchema } from './constraint-schema';
+import { parametersSchema } from './parameters-schema';
 
-export const schema = {
+const schema = {
     type: 'object',
     additionalProperties: false,
     required: ['id', 'name', 'constraints', 'parameters'],
@@ -13,13 +15,9 @@ export const schema = {
         },
         constraints: {
             type: 'array',
-            items: {
-                $ref: '#/components/schemas/constraintSchema',
-            },
+            items: constraintSchema,
         },
-        parameters: {
-            type: 'object',
-        },
+        parameters: parametersSchema,
     },
 } as const;
 

@@ -11,6 +11,7 @@ import FeatureToggleService from '../../services/feature-toggle-service';
 import { IAuthRequest } from '../unleash-types';
 import { featuresResponse } from '../../openapi/spec/features-response';
 import { FeaturesSchema } from '../../openapi/spec/features-schema';
+import { serializeDates } from '../../util/serialize-dates';
 
 export default class ArchiveController extends Controller {
     private readonly logger: Logger;
@@ -71,7 +72,11 @@ export default class ArchiveController extends Controller {
         const features = await this.featureService.getMetadataForAllFeatures(
             true,
         );
-        res.json({ version: 2, features });
+
+        res.json({
+            version: 2,
+            features: features.map(serializeDates),
+        });
     }
 
     async getArchivedFeaturesByProjectId(
@@ -84,7 +89,10 @@ export default class ArchiveController extends Controller {
                 true,
                 projectId,
             );
-        res.json({ version: 2, features });
+        res.json({
+            version: 2,
+            features: features.map(serializeDates),
+        });
     }
 
     async deleteFeature(

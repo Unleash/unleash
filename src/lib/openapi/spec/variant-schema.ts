@@ -1,9 +1,10 @@
 import { createSchemaObject, CreateSchemaType } from '../types';
+import { overrideSchema } from './override-schema';
 
-export const schema = {
+const schema = {
     type: 'object',
     additionalProperties: false,
-    required: ['name', 'weight', 'weightType', 'stickiness', 'overrides'],
+    required: ['name', 'weight', 'weightType', 'stickiness'],
     properties: {
         name: {
             type: 'string',
@@ -22,9 +23,7 @@ export const schema = {
         },
         overrides: {
             type: 'array',
-            items: {
-                $ref: '#/components/schemas/overrideSchema',
-            },
+            items: overrideSchema,
         },
     },
 } as const;

@@ -126,7 +126,53 @@ Object {
           },
           "strategies": Object {
             "items": Object {
-              "$ref": "#/components/schemas/strategySchema",
+              "additionalProperties": false,
+              "properties": Object {
+                "constraints": Object {
+                  "items": Object {
+                    "additionalProperties": false,
+                    "properties": Object {
+                      "contextName": Object {
+                        "type": "string",
+                      },
+                      "operator": Object {
+                        "type": "string",
+                      },
+                      "values": Object {
+                        "items": Object {
+                          "type": "string",
+                        },
+                        "type": "array",
+                      },
+                    },
+                    "required": Array [
+                      "contextName",
+                      "operator",
+                    ],
+                    "type": "object",
+                  },
+                  "type": "array",
+                },
+                "id": Object {
+                  "type": "string",
+                },
+                "name": Object {
+                  "type": "string",
+                },
+                "parameters": Object {
+                  "additionalProperties": Object {
+                    "type": "string",
+                  },
+                  "type": "object",
+                },
+              },
+              "required": Array [
+                "id",
+                "name",
+                "constraints",
+                "parameters",
+              ],
+              "type": "object",
             },
             "type": "array",
           },
@@ -135,7 +181,53 @@ Object {
           },
           "variants": Object {
             "items": Object {
-              "$ref": "#/components/schemas/variantSchema",
+              "additionalProperties": false,
+              "properties": Object {
+                "name": Object {
+                  "type": "string",
+                },
+                "overrides": Object {
+                  "items": Object {
+                    "additionalProperties": false,
+                    "properties": Object {
+                      "contextName": Object {
+                        "type": "string",
+                      },
+                      "values": Object {
+                        "items": Object {
+                          "type": "string",
+                        },
+                        "type": "array",
+                      },
+                    },
+                    "required": Array [
+                      "contextName",
+                      "values",
+                    ],
+                    "type": "object",
+                  },
+                  "type": "array",
+                },
+                "payload": Object {
+                  "type": "object",
+                },
+                "stickiness": Object {
+                  "type": "string",
+                },
+                "weight": Object {
+                  "type": "number",
+                },
+                "weightType": Object {
+                  "type": "string",
+                },
+              },
+              "required": Array [
+                "name",
+                "weight",
+                "weightType",
+                "stickiness",
+              ],
+              "type": "object",
             },
             "type": "array",
           },
@@ -151,7 +243,149 @@ Object {
         "properties": Object {
           "features": Object {
             "items": Object {
-              "$ref": "#/components/schemas/featureSchema",
+              "additionalProperties": false,
+              "properties": Object {
+                "createdAt": Object {
+                  "format": "date",
+                  "nullable": true,
+                  "type": "string",
+                },
+                "description": Object {
+                  "type": "string",
+                },
+                "enabled": Object {
+                  "type": "boolean",
+                },
+                "impressionData": Object {
+                  "type": "boolean",
+                },
+                "lastSeenAt": Object {
+                  "format": "date",
+                  "nullable": true,
+                  "type": "string",
+                },
+                "name": Object {
+                  "type": "string",
+                },
+                "project": Object {
+                  "type": "string",
+                },
+                "stale": Object {
+                  "type": "boolean",
+                },
+                "strategies": Object {
+                  "items": Object {
+                    "additionalProperties": false,
+                    "properties": Object {
+                      "constraints": Object {
+                        "items": Object {
+                          "additionalProperties": false,
+                          "properties": Object {
+                            "contextName": Object {
+                              "type": "string",
+                            },
+                            "operator": Object {
+                              "type": "string",
+                            },
+                            "values": Object {
+                              "items": Object {
+                                "type": "string",
+                              },
+                              "type": "array",
+                            },
+                          },
+                          "required": Array [
+                            "contextName",
+                            "operator",
+                          ],
+                          "type": "object",
+                        },
+                        "type": "array",
+                      },
+                      "id": Object {
+                        "type": "string",
+                      },
+                      "name": Object {
+                        "type": "string",
+                      },
+                      "parameters": Object {
+                        "additionalProperties": Object {
+                          "type": "string",
+                        },
+                        "type": "object",
+                      },
+                    },
+                    "required": Array [
+                      "id",
+                      "name",
+                      "constraints",
+                      "parameters",
+                    ],
+                    "type": "object",
+                  },
+                  "type": "array",
+                },
+                "type": Object {
+                  "type": "string",
+                },
+                "variants": Object {
+                  "items": Object {
+                    "additionalProperties": false,
+                    "properties": Object {
+                      "name": Object {
+                        "type": "string",
+                      },
+                      "overrides": Object {
+                        "items": Object {
+                          "additionalProperties": false,
+                          "properties": Object {
+                            "contextName": Object {
+                              "type": "string",
+                            },
+                            "values": Object {
+                              "items": Object {
+                                "type": "string",
+                              },
+                              "type": "array",
+                            },
+                          },
+                          "required": Array [
+                            "contextName",
+                            "values",
+                          ],
+                          "type": "object",
+                        },
+                        "type": "array",
+                      },
+                      "payload": Object {
+                        "type": "object",
+                      },
+                      "stickiness": Object {
+                        "type": "string",
+                      },
+                      "weight": Object {
+                        "type": "number",
+                      },
+                      "weightType": Object {
+                        "type": "string",
+                      },
+                    },
+                    "required": Array [
+                      "name",
+                      "weight",
+                      "weightType",
+                      "stickiness",
+                    ],
+                    "type": "object",
+                  },
+                  "type": "array",
+                },
+              },
+              "required": Array [
+                "name",
+                "project",
+              ],
+              "type": "object",
             },
             "type": "array",
           },
@@ -184,12 +418,37 @@ Object {
         ],
         "type": "object",
       },
+      "parametersSchema": Object {
+        "additionalProperties": Object {
+          "type": "string",
+        },
+        "type": "object",
+      },
       "strategySchema": Object {
         "additionalProperties": false,
         "properties": Object {
           "constraints": Object {
             "items": Object {
-              "$ref": "#/components/schemas/constraintSchema",
+              "additionalProperties": false,
+              "properties": Object {
+                "contextName": Object {
+                  "type": "string",
+                },
+                "operator": Object {
+                  "type": "string",
+                },
+                "values": Object {
+                  "items": Object {
+                    "type": "string",
+                  },
+                  "type": "array",
+                },
+              },
+              "required": Array [
+                "contextName",
+                "operator",
+              ],
+              "type": "object",
             },
             "type": "array",
           },
@@ -200,6 +459,9 @@ Object {
             "type": "string",
           },
           "parameters": Object {
+            "additionalProperties": Object {
+              "type": "string",
+            },
             "type": "object",
           },
         },
@@ -219,7 +481,23 @@ Object {
           },
           "overrides": Object {
             "items": Object {
-              "$ref": "#/components/schemas/overrideSchema",
+              "additionalProperties": false,
+              "properties": Object {
+                "contextName": Object {
+                  "type": "string",
+                },
+                "values": Object {
+                  "items": Object {
+                    "type": "string",
+                  },
+                  "type": "array",
+                },
+              },
+              "required": Array [
+                "contextName",
+                "values",
+              ],
+              "type": "object",
             },
             "type": "array",
           },
@@ -241,7 +519,6 @@ Object {
           "weight",
           "weightType",
           "stickiness",
-          "overrides",
         ],
         "type": "object",
       },

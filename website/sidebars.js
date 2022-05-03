@@ -69,7 +69,6 @@ module.exports = {
                         'user_guide/create_feature_toggle',
                         'how-to/how-to-define-custom-context-fields',
                         'how-to/how-to-use-custom-strategies',
-                        'how-to/how-to-capture-impression-data',
                         'how-to/how-to-schedule-feature-releases',
                     ],
                     type: 'category',
@@ -202,8 +201,8 @@ module.exports = {
                                 'sdks/proxy-ios',
                                 'sdks/proxy-javascript',
                                 'sdks/proxy-react',
+                                'sdks/proxy-svelte',
                                 'sdks/proxy-vue',
-                                'sdks/proxy-svelte'
                             ],
                         },
                         {

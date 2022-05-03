@@ -17,6 +17,9 @@ export const useStyles = makeStyles()(theme => ({
         [theme.breakpoints.down('sm')]: {
             display: 'block',
         },
+        '&.dense': {
+            marginBottom: '1rem',
+        },
     },
     searchBar: {
         minWidth: '450px',

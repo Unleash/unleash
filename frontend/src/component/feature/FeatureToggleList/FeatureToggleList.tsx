@@ -28,6 +28,7 @@ interface IFeatureToggleListProps {
     sort: IFeaturesSort;
     setSort: Dispatch<SetStateAction<IFeaturesSort>>;
     onRevive?: (feature: string) => void;
+    inProject?: boolean;
     isArchive?: boolean;
 }
 
@@ -52,6 +53,7 @@ const loadingFeaturesPlaceholder: FeatureSchema[] = Array(10)
 export const FeatureToggleList: VFC<IFeatureToggleListProps> = ({
     features,
     onRevive,
+    inProject,
     isArchive,
     loading,
     flags,
@@ -95,6 +97,7 @@ export const FeatureToggleList: VFC<IFeatureToggleListProps> = ({
                         onRevive={onRevive}
                         hasAccess={hasAccess}
                         flags={flags}
+                        inProject={inProject}
                     />
                 ))}
                 elseShow={
@@ -128,12 +131,18 @@ export const FeatureToggleList: VFC<IFeatureToggleListProps> = ({
         : '';
 
     const headerTitle = isArchive
-        ? `Archived Features ${searchResultsHeader}`
+        ? inProject
+            ? `Project Archived Features ${searchResultsHeader}`
+            : `Archived Features ${searchResultsHeader}`
         : `Features ${searchResultsHeader}`;
 
     return (
         <div>
-            <div className={styles.searchBarContainer}>
+            <div
+                className={classnames(styles.searchBarContainer, {
+                    dense: inProject,
+                })}
+            >
                 <SearchField
                     initialValue={filter.query}
                     updateValue={setFilterQuery}
@@ -164,6 +173,7 @@ export const FeatureToggleList: VFC<IFeatureToggleListProps> = ({
                                             sort={sort}
                                             setSort={setSort}
                                             loading={loading}
+                                            inProject={inProject}
                                         />
                                     }
                                 />

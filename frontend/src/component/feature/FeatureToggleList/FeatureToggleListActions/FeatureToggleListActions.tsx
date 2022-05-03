@@ -13,7 +13,7 @@ import {
 import { useStyles } from './styles';
 import { IFeaturesFilter } from 'hooks/useFeaturesFilter';
 
-const sortOptions = createFeaturesFilterSortOptions();
+let sortOptions = createFeaturesFilterSortOptions();
 
 interface IFeatureToggleListActionsProps {
     filter: IFeaturesFilter;
@@ -21,6 +21,7 @@ interface IFeatureToggleListActionsProps {
     sort: IFeaturesSort;
     setSort: Dispatch<SetStateAction<IFeaturesSort>>;
     loading?: boolean;
+    inProject?: boolean;
 }
 
 export const FeatureToggleListActions: VFC<IFeatureToggleListActionsProps> = ({
@@ -29,6 +30,7 @@ export const FeatureToggleListActions: VFC<IFeatureToggleListActionsProps> = ({
     sort,
     setSort,
     loading = false,
+    inProject,
 }) => {
     const { classes: styles } = useStyles();
     const { uiConfig } = useUiConfig();
@@ -45,6 +47,10 @@ export const FeatureToggleListActions: VFC<IFeatureToggleListActionsProps> = ({
 
     const selectedOption =
         sortOptions.find(o => o.type === sort.type) || sortOptions[0];
+
+    if (inProject) {
+        sortOptions = sortOptions.filter(option => option.type !== 'project');
+    }
 
     const renderSortingOptions = () =>
         sortOptions.map(option => (
@@ -73,7 +79,7 @@ export const FeatureToggleListActions: VFC<IFeatureToggleListActionsProps> = ({
                 data-loading
             />
             <ConditionallyRender
-                condition={uiConfig.flags.P}
+                condition={uiConfig.flags.P && !inProject}
                 show={
                     <ProjectSelect
                         currentProjectId={filter.project}

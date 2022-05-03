@@ -1,7 +1,10 @@
 import useSWR, { SWRConfiguration, mutate } from 'swr';
 import { useCallback } from 'react';
 
-type CacheKey = 'apiAdminFeaturesGet' | 'apiAdminArchiveFeaturesGet';
+type CacheKey =
+    | 'apiAdminFeaturesGet'
+    | 'apiAdminArchiveFeaturesGet'
+    | ['apiAdminArchiveFeaturesGet', string?];
 
 interface IUseApiGetterOutput<T> {
     data?: T;

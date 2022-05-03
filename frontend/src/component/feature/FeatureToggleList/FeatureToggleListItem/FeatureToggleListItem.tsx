@@ -23,11 +23,20 @@ interface IFeatureToggleListItemProps {
     onRevive?: (id: string) => void;
     hasAccess: IAccessContext['hasAccess'];
     flags?: IFlags;
+    inProject?: boolean;
     className?: string;
 }
 
 export const FeatureToggleListItem = memo<IFeatureToggleListItemProps>(
-    ({ feature, onRevive, hasAccess, flags = {}, className, ...rest }) => {
+    ({
+        feature,
+        onRevive,
+        hasAccess,
+        flags = {},
+        inProject,
+        className,
+        ...rest
+    }) => {
         const { classes: styles } = useStyles();
 
         const { projects } = useProjects();
@@ -153,21 +162,30 @@ export const FeatureToggleListItem = memo<IFeatureToggleListItemProps>(
                     )}
                 >
                     <StatusChip stale={Boolean(stale)} showActive={false} />
-                    <Link
-                        to={`/projects/${project}`}
-                        style={{ textDecoration: 'none' }}
-                        className={classnames({
-                            [`${styles.disabledLink}`]: !projectExists(),
-                        })}
-                    >
-                        <Chip
-                            color="primary"
-                            variant="outlined"
-                            style={{ marginLeft: '8px', cursor: 'pointer' }}
-                            title={`Project: ${project}`}
-                            label={project}
-                        />
-                    </Link>
+                    <ConditionallyRender
+                        condition={!inProject}
+                        show={
+                            <Link
+                                to={`/projects/${project}`}
+                                style={{ textDecoration: 'none' }}
+                                className={classnames({
+                                    [`${styles.disabledLink}`]:
+                                        !projectExists(),
+                                })}
+                            >
+                                <Chip
+                                    color="primary"
+                                    variant="outlined"
+                                    style={{
+                                        marginLeft: '8px',
+                                        cursor: 'pointer',
+                                    }}
+                                    title={`Project: ${project}`}
+                                    label={project}
+                                />
+                            </Link>
+                        }
+                    />
                 </span>
                 <ConditionallyRender
                     condition={isArchive}

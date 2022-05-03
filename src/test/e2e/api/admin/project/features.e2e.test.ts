@@ -16,6 +16,7 @@ import IncompatibleProjectError from '../../../../../lib/error/incompatible-proj
 import { IVariant, WeightType } from '../../../../../lib/types/model';
 import { v4 as uuidv4 } from 'uuid';
 import supertest from 'supertest';
+import { randomId } from '../../../../../lib/util/random-id';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -704,12 +705,7 @@ test('Can add strategy to feature toggle to a "some-env-2"', async () => {
         .post(
             `/api/admin/projects/default/features/${featureName}/environments/${envName}/strategies`,
         )
-        .send({
-            name: 'default',
-            parameters: {
-                userId: 'string',
-            },
-        })
+        .send({ name: 'default', parameters: { userId: 'string' } })
         .expect(200);
     await app.request
         .get(`/api/admin/projects/default/features/${featureName}`)
@@ -734,23 +730,13 @@ test('Can update strategy on feature toggle', async () => {
     // add strategy
     const { body: strategy } = await app.request
         .post(`${featurePath}/environments/${envName}/strategies`)
-        .send({
-            name: 'default',
-            parameters: {
-                userIds: '',
-            },
-        })
+        .send({ name: 'default', parameters: { userIds: '' } })
         .expect(200);
 
     // update strategy
     await app.request
         .put(`${featurePath}/environments/${envName}/strategies/${strategy.id}`)
-        .send({
-            name: 'default',
-            parameters: {
-                userIds: '1234',
-            },
-        })
+        .send({ name: 'default', parameters: { userIds: 1234 } })
         .expect(200);
 
     const { body } = await app.request.get(`${featurePath}`);
@@ -761,6 +747,47 @@ test('Can update strategy on feature toggle', async () => {
     expect(defaultEnv.strategies[0].parameters).toStrictEqual({
         userIds: '1234',
     });
+});
+
+test('should coerce all strategy parameter values to strings', async () => {
+    const envName = 'default';
+    const featureName = randomId();
+    const projectPath = '/api/admin/projects/default';
+    const featurePath = `${projectPath}/features/${featureName}`;
+
+    await app.request
+        .post(`${projectPath}/features`)
+        .send({ name: featureName })
+        .expect(201);
+
+    await app.request
+        .post(`${featurePath}/environments/${envName}/strategies`)
+        .send({ name: 'default', parameters: { foo: 1234 } })
+        .expect(200);
+
+    const { body } = await app.request.get(`${featurePath}`);
+    const defaultEnv = body.environments[0];
+    expect(defaultEnv.strategies).toHaveLength(1);
+    expect(defaultEnv.strategies[0].parameters).toStrictEqual({
+        foo: '1234',
+    });
+});
+
+test('should limit the length of parameter values', async () => {
+    const envName = 'default';
+    const featureName = randomId();
+    const projectPath = '/api/admin/projects/default';
+    const featurePath = `${projectPath}/features/${featureName}`;
+
+    await app.request
+        .post(`${projectPath}/features`)
+        .send({ name: featureName })
+        .expect(201);
+
+    await app.request
+        .post(`${featurePath}/environments/${envName}/strategies`)
+        .send({ name: 'default', parameters: { foo: 'x'.repeat(101) } })
+        .expect(400);
 });
 
 test('Can NOT delete strategy with wrong projectId', async () => {

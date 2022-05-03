@@ -144,6 +144,7 @@ Object {
           },
           "parameters": Object {
             "additionalProperties": Object {
+              "maxLength": 100,
               "type": "string",
             },
             "type": "object",
@@ -231,6 +232,7 @@ Object {
                 },
                 "parameters": Object {
                   "additionalProperties": Object {
+                    "maxLength": 100,
                     "type": "string",
                   },
                   "type": "object",
@@ -389,6 +391,7 @@ Object {
                       },
                       "parameters": Object {
                         "additionalProperties": Object {
+                          "maxLength": 100,
                           "type": "string",
                         },
                         "type": "object",
@@ -499,6 +502,7 @@ Object {
       },
       "parametersSchema": Object {
         "additionalProperties": Object {
+          "maxLength": 100,
           "type": "string",
         },
         "type": "object",
@@ -548,6 +552,7 @@ Object {
           },
           "parameters": Object {
             "additionalProperties": Object {
+              "maxLength": 100,
               "type": "string",
             },
             "type": "object",

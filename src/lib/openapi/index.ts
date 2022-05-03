@@ -1,6 +1,7 @@
 import { OpenAPIV3 } from 'openapi-types';
 import { constraintSchema } from './spec/constraint-schema';
 import { createFeatureSchema } from './spec/create-feature-schema';
+import { createStrategySchema } from './spec/create-strategy-schema';
 import { featureSchema } from './spec/feature-schema';
 import { featuresSchema } from './spec/features-schema';
 import { overrideSchema } from './spec/override-schema';
@@ -34,6 +35,7 @@ export const createOpenApiSchema = (
             schemas: {
                 constraintSchema,
                 createFeatureSchema,
+                createStrategySchema,
                 featureSchema,
                 featuresSchema,
                 overrideSchema,

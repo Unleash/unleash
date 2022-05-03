@@ -54,10 +54,19 @@ Object {
       "constraintSchema": Object {
         "additionalProperties": false,
         "properties": Object {
+          "caseInsensitive": Object {
+            "type": "boolean",
+          },
           "contextName": Object {
             "type": "string",
           },
+          "inverted": Object {
+            "type": "boolean",
+          },
           "operator": Object {
+            "type": "string",
+          },
+          "value": Object {
             "type": "string",
           },
           "values": Object {
@@ -91,6 +100,58 @@ Object {
         "required": Array [
           "name",
         ],
+        "type": "object",
+      },
+      "createStrategySchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "constraints": Object {
+            "items": Object {
+              "additionalProperties": false,
+              "properties": Object {
+                "caseInsensitive": Object {
+                  "type": "boolean",
+                },
+                "contextName": Object {
+                  "type": "string",
+                },
+                "inverted": Object {
+                  "type": "boolean",
+                },
+                "operator": Object {
+                  "type": "string",
+                },
+                "value": Object {
+                  "type": "string",
+                },
+                "values": Object {
+                  "items": Object {
+                    "type": "string",
+                  },
+                  "type": "array",
+                },
+              },
+              "required": Array [
+                "contextName",
+                "operator",
+              ],
+              "type": "object",
+            },
+            "type": "array",
+          },
+          "name": Object {
+            "type": "string",
+          },
+          "parameters": Object {
+            "additionalProperties": Object {
+              "type": "string",
+            },
+            "type": "object",
+          },
+          "sortOrder": Object {
+            "type": "number",
+          },
+        },
         "type": "object",
       },
       "featureSchema": Object {
@@ -132,10 +193,19 @@ Object {
                   "items": Object {
                     "additionalProperties": false,
                     "properties": Object {
+                      "caseInsensitive": Object {
+                        "type": "boolean",
+                      },
                       "contextName": Object {
                         "type": "string",
                       },
+                      "inverted": Object {
+                        "type": "boolean",
+                      },
                       "operator": Object {
+                        "type": "string",
+                      },
+                      "value": Object {
                         "type": "string",
                       },
                       "values": Object {
@@ -281,10 +351,19 @@ Object {
                         "items": Object {
                           "additionalProperties": false,
                           "properties": Object {
+                            "caseInsensitive": Object {
+                              "type": "boolean",
+                            },
                             "contextName": Object {
                               "type": "string",
                             },
+                            "inverted": Object {
+                              "type": "boolean",
+                            },
                             "operator": Object {
+                              "type": "string",
+                            },
+                            "value": Object {
                               "type": "string",
                             },
                             "values": Object {
@@ -431,10 +510,19 @@ Object {
             "items": Object {
               "additionalProperties": false,
               "properties": Object {
+                "caseInsensitive": Object {
+                  "type": "boolean",
+                },
                 "contextName": Object {
                   "type": "string",
                 },
+                "inverted": Object {
+                  "type": "boolean",
+                },
                 "operator": Object {
+                  "type": "string",
+                },
+                "value": Object {
                   "type": "string",
                 },
                 "values": Object {
@@ -702,6 +790,124 @@ Object {
               },
             },
             "description": "featureResponse",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/projects/{projectId}/features/{featureName}/environments/{environment}/strategies": Object {
+      "post": Object {
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+          Object {
+            "in": "path",
+            "name": "featureName",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+          Object {
+            "in": "path",
+            "name": "environment",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/createStrategySchema",
+              },
+            },
+          },
+          "required": true,
+        },
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/strategySchema",
+                },
+              },
+            },
+            "description": "strategyResponse",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/projects/{projectId}/features/{featureName}/environments/{environment}/strategies/{strategyId}": Object {
+      "put": Object {
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+          Object {
+            "in": "path",
+            "name": "featureName",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+          Object {
+            "in": "path",
+            "name": "environment",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+          Object {
+            "in": "path",
+            "name": "strategyId",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/createStrategySchema",
+              },
+            },
+          },
+          "required": true,
+        },
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/strategySchema",
+                },
+              },
+            },
+            "description": "strategyResponse",
           },
         },
         "tags": Array [

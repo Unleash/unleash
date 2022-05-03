@@ -722,7 +722,6 @@ test('Can add strategy to feature toggle to a "some-env-2"', async () => {
 test('Can update strategy on feature toggle', async () => {
     const envName = 'default';
     const featureName = 'feature.strategy.update.strat';
-
     const projectPath = '/api/admin/projects/default';
     const featurePath = `${projectPath}/features/${featureName}`;
 
@@ -1110,7 +1109,7 @@ test('Can patch a strategy based on id', async () => {
         )
         .expect(200)
         .expect((res) => {
-            expect(res.body.parameters.rollout).toBe(42);
+            expect(res.body.parameters.rollout).toBe('42');
         });
 });
 
@@ -1209,7 +1208,7 @@ test('Deleting a strategy should include name of feature strategy was deleted fr
         .post(
             `/api/admin/projects/default/features/${featureName}/environments/${environment}/strategies`,
         )
-        .send({ name: 'default', constraints: [], properties: {} })
+        .send({ name: 'default', constraints: [] })
         .expect(200)
         .expect((res) => {
             strategyId = res.body.id;
@@ -1257,7 +1256,7 @@ test('Enabling environment creates a FEATURE_ENVIRONMENT_ENABLED event', async (
         .post(
             `/api/admin/projects/default/features/${featureName}/environments/${environment}/strategies`,
         )
-        .send({ name: 'default', constraints: [], properties: {} })
+        .send({ name: 'default', constraints: [] })
         .expect(200);
 
     await app.request
@@ -1299,7 +1298,7 @@ test('Disabling environment creates a FEATURE_ENVIRONMENT_DISABLED event', async
         .post(
             `/api/admin/projects/default/features/${featureName}/environments/${environment}/strategies`,
         )
-        .send({ name: 'default', constraints: [], properties: {} })
+        .send({ name: 'default', constraints: [] })
         .expect(200);
 
     await app.request

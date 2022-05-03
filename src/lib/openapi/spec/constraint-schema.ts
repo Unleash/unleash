@@ -11,11 +11,20 @@ const schema = {
         operator: {
             type: 'string',
         },
+        caseInsensitive: {
+            type: 'boolean',
+        },
+        inverted: {
+            type: 'boolean',
+        },
         values: {
             type: 'array',
             items: {
                 type: 'string',
             },
+        },
+        value: {
+            type: 'string',
         },
     },
 } as const;

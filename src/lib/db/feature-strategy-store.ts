@@ -53,6 +53,15 @@ interface IFeatureStrategiesTable {
     created_at?: Date;
 }
 
+function ensureStringValues(data: object): { [key: string]: string } {
+    const stringEntries = Object.entries(data).map(([key, value]) => [
+        key,
+        String(value),
+    ]);
+
+    return Object.fromEntries(stringEntries);
+}
+
 function mapRow(row: IFeatureStrategiesTable): IFeatureStrategy {
     return {
         id: row.id,
@@ -60,7 +69,7 @@ function mapRow(row: IFeatureStrategiesTable): IFeatureStrategy {
         projectId: row.project_name,
         environment: row.environment,
         strategyName: row.strategy_name,
-        parameters: row.parameters,
+        parameters: ensureStringValues(row.parameters),
         constraints: (row.constraints as unknown as IConstraint[]) || [],
         createdAt: row.created_at,
         sortOrder: row.sort_order,

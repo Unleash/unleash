@@ -69,7 +69,6 @@ module.exports = {
                         'user_guide/create_feature_toggle',
                         'how-to/how-to-define-custom-context-fields',
                         'how-to/how-to-use-custom-strategies',
-                        'how-to/how-to-capture-impression-data',
                         'how-to/how-to-schedule-feature-releases',
                     ],
                     type: 'category',

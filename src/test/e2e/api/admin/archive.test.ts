@@ -68,6 +68,58 @@ test('Should get archived toggles via admin', async () => {
         });
 });
 
+test('Should get archived toggles via project', async () => {
+    await db.stores.featureToggleStore.deleteAll();
+
+    await db.stores.projectStore.create({
+        id: 'proj-1',
+        name: 'proj-1',
+        description: '',
+    });
+    await db.stores.projectStore.create({
+        id: 'proj-2',
+        name: 'proj-2',
+        description: '',
+    });
+
+    await db.stores.featureToggleStore.create('proj-1', {
+        name: 'feat-proj-1',
+        archived: true,
+    });
+    await db.stores.featureToggleStore.create('proj-2', {
+        name: 'feat-proj-2',
+        archived: true,
+    });
+    await db.stores.featureToggleStore.create('proj-2', {
+        name: 'feat-proj-2-2',
+        archived: true,
+    });
+
+    await app.request
+        .get('/api/admin/archive/features/proj-1')
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .expect((res) => {
+            expect(res.body.features).toHaveLength(1);
+        });
+
+    await app.request
+        .get('/api/admin/archive/features/proj-2')
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .expect((res) => {
+            expect(res.body.features).toHaveLength(2);
+        });
+
+    await app.request
+        .get('/api/admin/archive/features')
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .expect((res) => {
+            expect(res.body.features).toHaveLength(3);
+        });
+});
+
 test('Should be able to revive toggle', async () => {
     await app.request.post('/api/admin/projects/default/features').send({
         name: 'archived.revival',

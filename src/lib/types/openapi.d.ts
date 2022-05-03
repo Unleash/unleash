@@ -3,7 +3,7 @@ declare module '@unleash/express-openapi' {
     import { RequestHandler } from 'express';
     import { OpenAPIV3 } from 'openapi-types';
 
-    export interface ExpressOpenApi extends RequestHandler {
+    export interface IExpressOpenApi extends RequestHandler {
         validPath: (operation: OpenAPIV3.OperationObject) => RequestHandler;
         schema: (name: string, schema: OpenAPIV3.SchemaObject) => void;
         swaggerui: RequestHandler;
@@ -13,5 +13,5 @@ declare module '@unleash/express-openapi' {
         docsPath: string,
         document: Omit<OpenAPIV3.Document, 'paths'>,
         options?: { coerce: boolean },
-    ): ExpressOpenApi;
+    ): IExpressOpenApi;
 }

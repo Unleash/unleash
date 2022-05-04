@@ -29,6 +29,8 @@ import { featuresResponse } from '../../../openapi/spec/features-response';
 import { featureEnvironmentInfoResponse } from '../../../openapi/spec/feature-environment-info-response';
 import { strategiesResponse } from '../../../openapi/spec/strategies-response';
 import { strategyResponse } from '../../../openapi/spec/strategy-response';
+import { emptyResponse } from '../../../openapi/spec/emty-response';
+import { updateFeatureRequest } from '../../../openapi/spec/update-feature-request';
 
 interface FeatureStrategyParams {
     projectId: string;
@@ -89,6 +91,44 @@ export default class ProjectFeaturesController extends Controller {
 
         this.route({
             method: 'post',
+            path: `${PATH_ENV}/off`,
+            handler: this.toggleEnvironmentOff,
+            permission: UPDATE_FEATURE_ENVIRONMENT,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    responses: { 200: featureResponse },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'post',
+            path: `${PATH_ENV}/on`,
+            handler: this.toggleEnvironmentOn,
+            permission: UPDATE_FEATURE_ENVIRONMENT,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    responses: { 200: featureResponse },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'get',
+            path: PATH_STRATEGIES,
+            handler: this.getStrategies,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    responses: { 200: strategiesResponse },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'post',
             path: PATH_STRATEGIES,
             handler: this.addStrategy,
             permission: CREATE_FEATURE_STRATEGY,
@@ -102,50 +142,8 @@ export default class ProjectFeaturesController extends Controller {
         });
 
         this.route({
-            method: 'post',
-            path: `${PATH_ENV}/off`,
-            acceptAnyContentType: true,
-            handler: this.toggleEnvironmentOff,
-            permission: UPDATE_FEATURE_ENVIRONMENT,
-            middleware: [
-                openApiService.validPath({
-                    tags: ['admin'],
-                    responses: { 200: featureResponse },
-                }),
-            ],
-        });
-
-        this.route({
             method: 'get',
-            path: `${PATH_STRATEGIES}`,
-            acceptAnyContentType: true,
-            handler: this.getStrategies,
-            middleware: [
-                openApiService.validPath({
-                    tags: ['admin'],
-                    responses: { 200: strategiesResponse },
-                }),
-            ],
-        });
-
-        this.route({
-            method: 'post',
-            path: `${PATH_STRATEGIES}`,
-            acceptAnyContentType: true,
-            handler: this.addStrategy,
-            permission: CREATE_FEATURE_STRATEGY,
-            middleware: [
-                openApiService.validPath({
-                    tags: ['admin'],
-                    responses: { 200: strategyResponse },
-                }),
-            ],
-        });
-
-        this.route({
-            method: 'get',
-            path: `${PATH_STRATEGY}`,
-            acceptAnyContentType: true,
+            path: PATH_STRATEGY,
             handler: this.getStrategy,
             middleware: [
                 openApiService.validPath({
@@ -157,8 +155,7 @@ export default class ProjectFeaturesController extends Controller {
 
         this.route({
             method: 'put',
-            path: `${PATH_STRATEGY}`,
-            acceptAnyContentType: true,
+            path: PATH_STRATEGY,
             handler: this.updateStrategy,
             permission: UPDATE_FEATURE_STRATEGY,
             middleware: [
@@ -171,8 +168,7 @@ export default class ProjectFeaturesController extends Controller {
         });
         this.route({
             method: 'patch',
-            path: `${PATH_STRATEGY}`,
-            acceptAnyContentType: true,
+            path: PATH_STRATEGY,
             handler: this.patchStrategy,
             permission: UPDATE_FEATURE_STRATEGY,
             middleware: [
@@ -192,7 +188,7 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
-                    responses: { 200: { description: 'OK' } },
+                    responses: { 200: emptyResponse },
                 }),
             ],
         });
@@ -260,6 +256,7 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
+                    requestBody: updateFeatureRequest,
                     responses: { 200: featureResponse },
                 }),
             ],
@@ -288,7 +285,7 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
-                    responses: { 200: { description: 'OK' } },
+                    responses: { 200: emptyResponse },
                 }),
             ],
         });

@@ -9,6 +9,7 @@ import { constraintSchema } from './spec/constraint-schema';
 import { tagSchema } from './spec/tag-schema';
 import { tagsSchema } from './spec/tags-schema';
 import { strategiesSchema } from './spec/strategies-schema';
+import { featureEnvironmentInfoSchema } from './spec/feature-environment-info-schema';
 
 // Create the base OpenAPI schema, with everything except paths.
 export const createOpenApiSchema = (
@@ -36,6 +37,7 @@ export const createOpenApiSchema = (
             },
             schemas: {
                 createFeatureSchema,
+                featureEnvironmentInfoSchema,
                 featuresSchema,
                 featureSchema,
                 strategySchema,

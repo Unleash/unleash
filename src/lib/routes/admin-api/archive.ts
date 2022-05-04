@@ -42,6 +42,20 @@ export default class ArchiveController extends Controller {
             ],
         });
 
+        this.route({
+            method: 'get',
+            path: '/features/:projectId',
+            acceptAnyContentType: true,
+            handler: this.getArchivedFeaturesByProjectId,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    responses: { 200: featuresResponse },
+                    deprecated: true,
+                }),
+            ],
+        });
+
         this.delete('/:featureName', this.deleteFeature, DELETE_FEATURE);
         this.post(
             '/revive/:featureName',
@@ -57,6 +71,19 @@ export default class ArchiveController extends Controller {
         const features = await this.featureService.getMetadataForAllFeatures(
             true,
         );
+        res.json({ version: 2, features });
+    }
+
+    async getArchivedFeaturesByProjectId(
+        req: Request<{ projectId: string }, any, any, any>,
+        res: Response<FeaturesSchema>,
+    ): Promise<void> {
+        const { projectId } = req.params;
+        const features =
+            await this.featureService.getMetadataForAllFeaturesByProjectId(
+                true,
+                projectId,
+            );
         res.json({ version: 2, features });
     }
 

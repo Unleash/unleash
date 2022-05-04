@@ -997,6 +997,13 @@ class FeatureToggleService {
         return this.featureToggleStore.getAll({ archived });
     }
 
+    async getMetadataForAllFeaturesByProjectId(
+        archived: boolean,
+        project: string,
+    ): Promise<FeatureToggle[]> {
+        return this.featureToggleStore.getAll({ archived, project });
+    }
+
     async getProjectId(name: string): Promise<string> {
         return this.featureToggleStore.getProjectId(name);
     }

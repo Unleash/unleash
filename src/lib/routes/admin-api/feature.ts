@@ -5,10 +5,9 @@ import Controller from '../controller';
 
 import { extractUsername } from '../../util/extract-user';
 import {
-    UPDATE_FEATURE,
-    DELETE_FEATURE,
     CREATE_FEATURE,
-    NONE,
+    DELETE_FEATURE,
+    UPDATE_FEATURE,
 } from '../../types/permissions';
 import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
@@ -20,6 +19,8 @@ import { IAuthRequest } from '../unleash-types';
 import { DEFAULT_ENV } from '../../util/constants';
 import { featuresResponse } from '../../openapi/spec/features-response';
 import { FeaturesSchema } from '../../openapi/spec/features-schema';
+import { tagsResponse } from '../../openapi/spec/tags-response';
+import { tagResponse } from '../../openapi/spec/tag-response';
 
 const version = 1;
 
@@ -74,14 +75,59 @@ class FeatureController extends Controller {
             ],
         });
 
-        this.post('/validate', this.validate, NONE);
-        this.get('/:featureName/tags', this.listTags);
-        this.post('/:featureName/tags', this.addTag, UPDATE_FEATURE);
-        this.delete(
-            '/:featureName/tags/:type/:value',
-            this.removeTag,
-            UPDATE_FEATURE,
-        );
+        this.route({
+            method: 'post',
+            path: '/validate',
+            acceptAnyContentType: true,
+            handler: this.validate,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    responses: { 200: { description: 'OK' } },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'get',
+            path: '/:featureName/tags',
+            acceptAnyContentType: true,
+            handler: this.listTags,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    responses: { 200: tagsResponse },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'post',
+            path: '/:featureName/tags',
+            permission: UPDATE_FEATURE,
+            acceptAnyContentType: true,
+            handler: this.addTag,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    responses: { 200: tagResponse },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'delete',
+            path: '/:featureName/tags/:type/:value',
+            permission: UPDATE_FEATURE,
+            acceptAnyContentType: true,
+            handler: this.removeTag,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    responses: { 200: { description: 'OK' } },
+                }),
+            ],
+        });
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types

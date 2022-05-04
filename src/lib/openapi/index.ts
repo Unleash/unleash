@@ -6,6 +6,9 @@ import { variantSchema } from './spec/variant-schema';
 import { overrideSchema } from './spec/override-schema';
 import { createFeatureSchema } from './spec/create-feature-schema';
 import { constraintSchema } from './spec/constraint-schema';
+import { tagSchema } from './spec/tag-schema';
+import { tagsSchema } from './spec/tags-schema';
+import { strategiesSchema } from './spec/strategies-schema';
 
 // Create the base OpenAPI schema, with everything except paths.
 export const createOpenApiSchema = (
@@ -36,9 +39,12 @@ export const createOpenApiSchema = (
                 featuresSchema,
                 featureSchema,
                 strategySchema,
+                strategiesSchema,
                 variantSchema,
                 overrideSchema,
                 constraintSchema,
+                tagSchema,
+                tagsSchema,
             },
         },
     };

@@ -7,6 +7,7 @@ export const schema = {
     properties: {
         id: {
             type: 'string',
+            nullable: true,
         },
         name: {
             type: 'string',
@@ -19,6 +20,9 @@ export const schema = {
         },
         parameters: {
             type: 'object',
+        },
+        sortOrder: {
+            type: 'number',
         },
     },
 } as const;

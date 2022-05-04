@@ -43,8 +43,8 @@ const schema = {
             items: strategySchema,
         },
         variants: {
-            items: variantSchema,
             type: 'array',
+            items: variantSchema,
         },
     },
 } as const;

@@ -8,10 +8,10 @@ import { constraintSchema } from './spec/constraint-schema';
 import { tagSchema } from './spec/tag-schema';
 import { tagsSchema } from './spec/tags-schema';
 import { strategiesSchema } from './spec/strategies-schema';
-import { featureEnvironmentInfoSchema } from './spec/feature-environment-info-schema';
 import { createStrategySchema } from './spec/create-strategy-schema';
 import { featureSchema } from './spec/feature-schema';
 import { parametersSchema } from './spec/parameters-schema';
+import { featureEnvironmentInfoSchema } from './spec/feature-environment-info-schema';
 
 export const createOpenApiSchema = (
     serverUrl?: string,
@@ -39,7 +39,6 @@ export const createOpenApiSchema = (
             schemas: {
                 constraintSchema,
                 createFeatureSchema,
-                featureEnvironmentInfoSchema,
                 createStrategySchema,
                 featureSchema,
                 featuresSchema,
@@ -50,6 +49,7 @@ export const createOpenApiSchema = (
                 variantSchema,
                 tagSchema,
                 tagsSchema,
+                featureEnvironmentInfoSchema,
             },
         },
     };

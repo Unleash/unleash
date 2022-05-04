@@ -1,16 +1,11 @@
 import { createSchemaObject, CreateSchemaType } from '../types';
 
 export const schema = {
-    type: 'object',
+    type: 'array',
     additionalProperties: false,
-    required: ['version', 'features'],
-    properties: {
-        strategies: {
-            type: 'array',
-            items: {
-                $ref: '#/components/schemas/strategySchema',
-            },
-        },
+    required: ['strategies'],
+    items: {
+        $ref: '#/components/schemas/strategySchema',
     },
 } as const;
 

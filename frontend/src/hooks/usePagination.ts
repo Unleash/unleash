@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
-import { paginate } from '../utils/paginate';
+import { paginate } from 'utils/paginate';
 
-const usePagination = (
-    data: any[],
+const usePagination = <T>(
+    data: T[],
     limit: number,
-    filterFunc?: (item: any) => boolean
+    filterFunc?: (item: T) => boolean
 ) => {
-    const [paginatedData, setPaginatedData] = useState([[]]);
+    const [paginatedData, setPaginatedData] = useState<T[][]>([[]]);
     const [pageIndex, setPageIndex] = useState(0);
 
     useEffect(() => {

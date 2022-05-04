@@ -39,13 +39,8 @@ const UsersList = ({ search }: IUsersListProps) => {
     const { classes: styles } = useStyles();
     const { users, roles, refetch, loading } = useUsers();
     const { setToastData, setToastApiError } = useToast();
-    const {
-        removeUser,
-        changePassword,
-        validatePassword,
-        userLoading,
-        userApiErrors,
-    } = useAdminUsersApi();
+    const { removeUser, changePassword, userLoading, userApiErrors } =
+        useAdminUsersApi();
     const { hasAccess } = useContext(AccessContext);
     const { locationSettings } = useLocationSettings();
     const [pwDialog, setPwDialog] = useState<{ open: boolean; user?: IUser }>({
@@ -87,12 +82,11 @@ const UsersList = ({ search }: IUsersListProps) => {
         setPwDialog({ open: false });
     };
 
-    const onDeleteUser = async () => {
+    const onDeleteUser = async (user: IUser) => {
         try {
-            // @ts-expect-error
-            await removeUser(delUser);
+            await removeUser(user.id);
             setToastData({
-                title: `${delUser?.name} has been deleted`,
+                title: `${user.name} has been deleted`,
                 type: 'success',
             });
             refetch();
@@ -131,7 +125,6 @@ const UsersList = ({ search }: IUsersListProps) => {
         return page.map(user => {
             return (
                 <UserListItem
-                    // @ts-expect-error
                     key={user.id}
                     user={user}
                     openPwDialog={openPwDialog}
@@ -224,16 +217,17 @@ const UsersList = ({ search }: IUsersListProps) => {
                 inviteLink={inviteLink}
             />
 
-            <ChangePassword
-                showDialog={pwDialog.open}
-                closeDialog={closePwDialog}
-                // @ts-expect-error
-                changePassword={changePassword}
-                validatePassword={validatePassword}
-                // @ts-expect-error
-                user={pwDialog.user}
+            <ConditionallyRender
+                condition={Boolean(pwDialog.user)}
+                show={() => (
+                    <ChangePassword
+                        showDialog={pwDialog.open}
+                        closeDialog={closePwDialog}
+                        changePassword={changePassword}
+                        user={pwDialog.user!}
+                    />
+                )}
             />
-
             <ConditionallyRender
                 condition={Boolean(delUser)}
                 show={
@@ -241,7 +235,7 @@ const UsersList = ({ search }: IUsersListProps) => {
                         showDialog={delDialog}
                         closeDialog={closeDelDialog}
                         user={delUser!}
-                        removeUser={onDeleteUser}
+                        removeUser={() => onDeleteUser(delUser!)}
                         userLoading={userLoading}
                         userApiErrors={userApiErrors}
                     />

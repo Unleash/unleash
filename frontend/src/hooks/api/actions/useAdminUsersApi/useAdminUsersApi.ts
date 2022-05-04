@@ -36,13 +36,11 @@ const useAdminUsersApi = () => {
         return makeRequest(req.caller, req.id);
     };
 
-    const removeUser = async (user: IUserPayload) => {
+    const removeUser = async (userId: number) => {
         const requestId = 'removeUser';
         const req = createRequest(
-            `api/admin/user-admin/${user.id}`,
-            {
-                method: 'DELETE',
-            },
+            `api/admin/user-admin/${userId}`,
+            { method: 'DELETE' },
             requestId
         );
 
@@ -63,10 +61,10 @@ const useAdminUsersApi = () => {
         return makeRequest(req.caller, req.id);
     };
 
-    const changePassword = async (user: IUserPayload, password: string) => {
+    const changePassword = async (userId: number, password: string) => {
         const requestId = 'changePassword';
         const req = createRequest(
-            `api/admin/user-admin/${user.id}/change-password`,
+            `api/admin/user-admin/${userId}/change-password`,
             {
                 method: 'POST',
                 body: JSON.stringify({ password }),

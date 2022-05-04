@@ -11,14 +11,12 @@ import { useStyles } from './FeatureToggleListNew.styles';
 import FeatureToggleListNewItem from './FeatureToggleListNewItem/FeatureToggleListNewItem';
 import usePagination from 'hooks/usePagination';
 import loadingFeatures from './FeatureToggleListNewItem/loadingFeatures';
-import {
-    IFeatureToggle,
-    IFeatureToggleListItem,
-} from 'interfaces/featureToggle';
+import { IFeatureToggleListItem } from 'interfaces/featureToggle';
 import PaginateUI from 'component/common/PaginateUI/PaginateUI';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { createGlobalStateHook } from 'hooks/useGlobalState';
 import { AnnouncerContext } from 'component/common/Announcer/AnnouncerContext/AnnouncerContext';
+
 interface IFeatureToggleListNewProps {
     features: IFeatureToggleListItem[];
     loading: boolean;
@@ -86,9 +84,10 @@ const FeatureToggleListNew = ({
     const { classes: styles } = useStyles();
     const { setAnnouncement } = useContext(AnnouncerContext);
     const [sortOpt, setSortOpt] = useFeatureToggLeProjectSort();
-    const [sortedFeatures, setSortedFeatures] = useState(
-        sortList([...features], sortOpt)
-    );
+
+    const [sortedFeatures, setSortedFeatures] = useState<
+        IFeatureToggleListItem[]
+    >(sortList([...features], sortOpt));
 
     const { page, pages, nextPage, prevPage, setPageIndex, pageIndex } =
         usePagination(sortedFeatures, 50);
@@ -156,7 +155,7 @@ const FeatureToggleListNew = ({
             });
         }
 
-        return page.map((feature: IFeatureToggle) => {
+        return page.map((feature: IFeatureToggleListItem) => {
             return (
                 <FeatureToggleListNewItem
                     key={feature.name}

@@ -1,5 +1,9 @@
 import { Fragment } from 'react';
-import { IConstraint, IFeatureStrategy, IParameter } from 'interfaces/strategy';
+import {
+    IFeatureStrategy,
+    IFeatureStrategyParameters,
+    IConstraint,
+} from 'interfaces/strategy';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import PercentageCircle from 'component/common/PercentageCircle/PercentageCircle';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
@@ -10,9 +14,14 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { FeatureOverviewSegment } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewSegment/FeatureOverviewSegment';
 import { ConstraintAccordionList } from 'component/common/ConstraintAccordion/ConstraintAccordionList/ConstraintAccordionList';
 import { useStyles } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewExecution/FeatureOverviewExecution.styles';
+import {
+    parseParameterString,
+    parseParameterNumber,
+    parseParameterStrings,
+} from 'utils/parseParameter';
 
 interface IFeatureOverviewExecutionProps {
-    parameters: IParameter;
+    parameters: IFeatureStrategyParameters;
     constraints?: IConstraint[];
     strategy: IFeatureStrategy;
     percentageFill?: string;
@@ -52,15 +61,16 @@ const FeatureOverviewExecution = ({
                                 is included.
                             </p>
 
-                            <PercentageCircle percentage={parameters[key]} />
+                            <PercentageCircle
+                                percentage={parseParameterNumber(
+                                    parameters[key]
+                                )}
+                            />
                         </Fragment>
                     );
                 case 'userIds':
                 case 'UserIds':
-                    const users = parameters[key]
-                        .split(',')
-                        .filter((userId: string) => userId);
-
+                    const users = parseParameterStrings(parameters[key]);
                     return (
                         <FeatureOverviewExecutionChips
                             key={key}
@@ -70,10 +80,7 @@ const FeatureOverviewExecution = ({
                     );
                 case 'hostNames':
                 case 'HostNames':
-                    const hosts = parameters[key]
-                        .split(',')
-                        .filter((hosts: string) => hosts);
-
+                    const hosts = parseParameterStrings(parameters[key]);
                     return (
                         <FeatureOverviewExecutionChips
                             key={key}
@@ -82,10 +89,7 @@ const FeatureOverviewExecution = ({
                         />
                     );
                 case 'IPs':
-                    const IPs = parameters[key]
-                        .split(',')
-                        .filter((hosts: string) => hosts);
-
+                    const IPs = parseParameterStrings(parameters[key]);
                     return (
                         <FeatureOverviewExecutionChips
                             key={key}
@@ -108,10 +112,9 @@ const FeatureOverviewExecution = ({
             const notLastItem = index !== definition?.parameters?.length - 1;
             switch (param?.type) {
                 case 'list':
-                    const values = strategy?.parameters[param.name]
-                        .split(',')
-                        .filter((val: string) => val);
-
+                    const values = parseParameterStrings(
+                        strategy?.parameters[param.name]
+                    );
                     return (
                         <Fragment key={param?.name}>
                             <FeatureOverviewExecutionChips
@@ -134,9 +137,10 @@ const FeatureOverviewExecution = ({
                                     : ''}{' '}
                                 is included.
                             </p>
-
                             <PercentageCircle
-                                percentage={strategy.parameters[param.name]}
+                                percentage={parseParameterNumber(
+                                    strategy.parameters[param.name]
+                                )}
                             />
                             <ConditionallyRender
                                 condition={notLastItem}
@@ -156,7 +160,10 @@ const FeatureOverviewExecution = ({
                                 {strategy.parameters[param.name]}
                             </p>
                             <ConditionallyRender
-                                condition={strategy.parameters[param.name]}
+                                condition={
+                                    typeof strategy.parameters[param.name] !==
+                                    'undefined'
+                                }
                                 show={
                                     <ConditionallyRender
                                         condition={notLastItem}
@@ -167,10 +174,15 @@ const FeatureOverviewExecution = ({
                         </Fragment>
                     );
                 case 'string':
-                    const value = strategy.parameters[param.name];
+                    const value = parseParameterString(
+                        strategy.parameters[param.name]
+                    );
                     return (
                         <ConditionallyRender
-                            condition={value !== undefined}
+                            condition={
+                                typeof strategy.parameters[param.name] !==
+                                'undefined'
+                            }
                             key={param.name}
                             show={
                                 <>
@@ -198,7 +210,9 @@ const FeatureOverviewExecution = ({
                         />
                     );
                 case 'number':
-                    const number = strategy.parameters[param.name];
+                    const number = parseParameterNumber(
+                        strategy.parameters[param.name]
+                    );
                     return (
                         <ConditionallyRender
                             condition={number !== undefined}

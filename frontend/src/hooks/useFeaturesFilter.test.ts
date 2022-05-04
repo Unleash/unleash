@@ -1,8 +1,8 @@
 import { renderHook, act } from '@testing-library/react-hooks';
 import { useFeaturesFilter } from 'hooks/useFeaturesFilter';
-import { IConstraint, IFeatureStrategy } from 'interfaces/strategy';
-import { FeatureSchema } from 'openapi';
+import { FeatureSchema, FeatureSchemaStrategies } from 'openapi';
 import parseISO from 'date-fns/parseISO';
+import { IConstraint } from 'interfaces/strategy';
 
 test('useFeaturesFilter empty', () => {
     const { result } = renderHook(() => useFeaturesFilter([]));
@@ -108,8 +108,8 @@ const mockFeatureToggle = (
 };
 
 const mockFeatureStrategy = (
-    overrides?: Partial<IFeatureStrategy>
-): IFeatureStrategy => {
+    overrides?: Partial<FeatureSchemaStrategies>
+): FeatureSchemaStrategies => {
     return {
         id: '1',
         name: '1',

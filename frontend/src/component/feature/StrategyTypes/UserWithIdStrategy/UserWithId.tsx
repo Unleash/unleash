@@ -1,8 +1,9 @@
-import { IParameter } from 'interfaces/strategy';
+import { IFeatureStrategyParameters } from 'interfaces/strategy';
 import StrategyInputList from '../StrategyInputList/StrategyInputList';
+import { parseParameterStrings } from 'utils/parseParameter';
 
 interface IUserWithIdStrategyProps {
-    parameters: IParameter;
+    parameters: IFeatureStrategyParameters;
     updateParameter: (field: string, value: string) => void;
     editable: boolean;
 }
@@ -12,18 +13,11 @@ const UserWithIdStrategy = ({
     parameters,
     updateParameter,
 }: IUserWithIdStrategyProps) => {
-    const value = parameters.userIds;
-
-    let list: string[] = [];
-    if (typeof value === 'string') {
-        list = value.trim().split(',').filter(Boolean);
-    }
-
     return (
         <div>
             <StrategyInputList
                 name="userIds"
-                list={list}
+                list={parseParameterStrings(parameters.userIds)}
                 disabled={!editable}
                 setConfig={updateParameter}
             />

@@ -4,6 +4,7 @@ import Input from 'component/common/Input/Input';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import React, { useState } from 'react';
 import { ConstraintFormHeader } from '../ConstraintFormHeader/ConstraintFormHeader';
+import { parseParameterStrings } from 'utils/parseParameter';
 
 interface IFreeTextInputProps {
     values: string[];
@@ -74,17 +75,9 @@ export const FreeTextInput = ({
             return;
         }
         setError('');
-
-        if (inputValues.includes(',')) {
-            const newValues = inputValues
-                .split(',')
-                .filter(values => values)
-                .map(value => value.trim());
-            setValues(uniqueValues([...values, ...newValues]));
-        } else {
-            setValues(uniqueValues([...values, inputValues.trim()]));
-        }
-
+        setValues(
+            uniqueValues([...values, ...parseParameterStrings(inputValues)])
+        );
         setInputValues('');
     };
 

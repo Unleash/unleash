@@ -4,16 +4,16 @@ import { useStyles } from './StrategyForm.styles';
 import { Add } from '@mui/icons-material';
 import { trim } from 'component/common/util';
 import { StrategyParameters } from './StrategyParameters/StrategyParameters';
-import { ICustomStrategyParameter } from 'interfaces/strategy';
+import { IStrategyParameter } from 'interfaces/strategy';
 import React from 'react';
 
 interface IStrategyFormProps {
     strategyName: string;
     strategyDesc: string;
-    params: ICustomStrategyParameter[];
+    params: IStrategyParameter[];
     setStrategyName: React.Dispatch<React.SetStateAction<string>>;
     setStrategyDesc: React.Dispatch<React.SetStateAction<string>>;
-    setParams: React.Dispatch<React.SetStateAction<ICustomStrategyParameter[]>>;
+    setParams: React.Dispatch<React.SetStateAction<IStrategyParameter[]>>;
     handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
     handleCancel: () => void;
     errors: { [key: string]: string };

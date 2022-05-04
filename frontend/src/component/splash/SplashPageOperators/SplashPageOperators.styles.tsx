@@ -72,7 +72,7 @@ export const useStyles = makeStyles()(theme => ({
         color: 'inherit',
     },
     button: {
-        background: 'white',
+        background: 'white !important',
         color: theme.palette.primary.main,
     },
 }));

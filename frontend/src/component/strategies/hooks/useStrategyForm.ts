@@ -1,11 +1,11 @@
-import { ICustomStrategyParameter } from 'interfaces/strategy';
+import { IStrategyParameter } from 'interfaces/strategy';
 import { useEffect, useState } from 'react';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 
 export const useStrategyForm = (
     initialStrategyName: string = '',
     initialStrategyDesc: string = '',
-    initialParams: ICustomStrategyParameter[] = []
+    initialParams: IStrategyParameter[] = []
 ) => {
     const [strategyName, setStrategyName] = useState(initialStrategyName);
     const [strategyDesc, setStrategyDesc] = useState(initialStrategyDesc);

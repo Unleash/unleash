@@ -1,11 +1,11 @@
 export const resolveDefaultParamValue = (
     name: string,
     featureToggleName: string
-): string | number => {
+): string => {
     switch (name) {
         case 'percentage':
         case 'rollout':
-            return 100;
+            return '100';
         case 'stickiness':
             return 'default';
         case 'groupId':

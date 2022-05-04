@@ -72,14 +72,9 @@ export const FeatureToggleListItem = memo<IFeatureToggleListItemProps>(
                 className={classnames(styles.listItem, className)}
             >
                 <span className={styles.listItemMetric}>
-                    <ConditionallyRender
-                        condition={Boolean(lastSeenAt)}
-                        show={() => (
-                            <FeatureStatus
-                                lastSeenAt={lastSeenAt as Date}
-                                tooltipPlacement="left"
-                            />
-                        )}
+                    <FeatureStatus
+                        lastSeenAt={lastSeenAt}
+                        tooltipPlacement="left"
                     />
                 </span>
                 <span

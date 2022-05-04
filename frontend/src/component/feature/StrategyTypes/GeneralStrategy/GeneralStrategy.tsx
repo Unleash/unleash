@@ -2,13 +2,18 @@ import React from 'react';
 import { FormControlLabel, Switch, TextField, Tooltip } from '@mui/material';
 import StrategyInputList from '../StrategyInputList/StrategyInputList';
 import RolloutSlider from '../RolloutSlider/RolloutSlider';
-import { IParameter, IStrategy } from 'interfaces/strategy';
+import { IStrategy, IFeatureStrategyParameters } from 'interfaces/strategy';
 import { useStyles } from './GeneralStrategy.styles';
+import {
+    parseParameterNumber,
+    parseParameterStrings,
+    parseParameterString,
+} from 'utils/parseParameter';
 
 interface IGeneralStrategyProps {
-    parameters: IParameter;
+    parameters: IFeatureStrategyParameters;
     strategyDefinition: IStrategy;
-    updateParameter: (field: string, value: any) => void;
+    updateParameter: (field: string, value: string) => void;
     editable: boolean;
 }
 
@@ -29,9 +34,13 @@ const GeneralStrategy = ({
         updateParameter(field, value);
     };
 
-    const onChangePercentage = (field: string, evt: Event, newValue: any) => {
+    const onChangePercentage = (
+        field: string,
+        evt: Event,
+        newValue: number | number[]
+    ) => {
         evt.preventDefault();
-        updateParameter(field, newValue);
+        updateParameter(field, newValue.toString());
     };
 
     const handleSwitchChange = (field: string, currentValue: any) => {
@@ -47,15 +56,8 @@ const GeneralStrategy = ({
         <>
             {strategyDefinition.parameters.map(
                 ({ name, type, description, required }) => {
-                    let value = parameters[name];
-
                     if (type === 'percentage') {
-                        if (
-                            value == null ||
-                            (typeof value === 'string' && value === '')
-                        ) {
-                            value = 0;
-                        }
+                        const value = parseParameterNumber(parameters[name]);
                         return (
                             <div key={name}>
                                 <br />
@@ -66,7 +68,7 @@ const GeneralStrategy = ({
                                         name
                                     )}
                                     disabled={!editable}
-                                    value={1 * value}
+                                    value={value}
                                     minLabel="off"
                                     maxLabel="on"
                                 />
@@ -78,15 +80,12 @@ const GeneralStrategy = ({
                             </div>
                         );
                     } else if (type === 'list') {
-                        let list: string[] = [];
-                        if (typeof value === 'string') {
-                            list = value.trim().split(',').filter(Boolean);
-                        }
+                        const values = parseParameterStrings(parameters[name]);
                         return (
                             <div key={name}>
                                 <StrategyInputList
                                     name={name}
-                                    list={list}
+                                    list={values}
                                     disabled={!editable}
                                     setConfig={updateParameter}
                                 />
@@ -99,8 +98,9 @@ const GeneralStrategy = ({
                         );
                     } else if (type === 'number') {
                         const regex = new RegExp('^\\d+$');
+                        const value = parseParameterString(parameters[name]);
                         const error =
-                            value?.length > 0 ? !regex.test(value) : false;
+                            value.length > 0 ? !regex.test(value) : false;
 
                         return (
                             <div key={name} className={styles.generalSection}>
@@ -130,6 +130,7 @@ const GeneralStrategy = ({
                             </div>
                         );
                     } else if (type === 'boolean') {
+                        const value = parseParameterString(parameters[name]);
                         return (
                             <div key={name} style={{ padding: '20px 0' }}>
                                 <Tooltip
@@ -154,6 +155,7 @@ const GeneralStrategy = ({
                             </div>
                         );
                     } else {
+                        const value = parseParameterString(parameters[name]);
                         return (
                             <div key={name} className={styles.generalSection}>
                                 <TextField

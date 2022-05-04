@@ -23,52 +23,52 @@ import {
 /**
  * 
  * @export
- * @interface VariantSchema
+ * @interface FeatureSchemaVariants
  */
-export interface VariantSchema {
+export interface FeatureSchemaVariants {
     /**
      * 
      * @type {string}
-     * @memberof VariantSchema
+     * @memberof FeatureSchemaVariants
      */
     name: string;
     /**
      * 
      * @type {number}
-     * @memberof VariantSchema
+     * @memberof FeatureSchemaVariants
      */
     weight: number;
     /**
      * 
      * @type {string}
-     * @memberof VariantSchema
+     * @memberof FeatureSchemaVariants
      */
     weightType: string;
     /**
      * 
      * @type {string}
-     * @memberof VariantSchema
+     * @memberof FeatureSchemaVariants
      */
     stickiness: string;
     /**
      * 
      * @type {object}
-     * @memberof VariantSchema
+     * @memberof FeatureSchemaVariants
      */
     payload?: object;
     /**
      * 
      * @type {Array<FeatureSchemaOverrides>}
-     * @memberof VariantSchema
+     * @memberof FeatureSchemaVariants
      */
     overrides?: Array<FeatureSchemaOverrides>;
 }
 
-export function VariantSchemaFromJSON(json: any): VariantSchema {
-    return VariantSchemaFromJSONTyped(json, false);
+export function FeatureSchemaVariantsFromJSON(json: any): FeatureSchemaVariants {
+    return FeatureSchemaVariantsFromJSONTyped(json, false);
 }
 
-export function VariantSchemaFromJSONTyped(json: any, ignoreDiscriminator: boolean): VariantSchema {
+export function FeatureSchemaVariantsFromJSONTyped(json: any, ignoreDiscriminator: boolean): FeatureSchemaVariants {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -83,7 +83,7 @@ export function VariantSchemaFromJSONTyped(json: any, ignoreDiscriminator: boole
     };
 }
 
-export function VariantSchemaToJSON(value?: VariantSchema | null): any {
+export function FeatureSchemaVariantsToJSON(value?: FeatureSchemaVariants | null): any {
     if (value === undefined) {
         return undefined;
     }

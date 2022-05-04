@@ -15,19 +15,49 @@
 
 import * as runtime from '../runtime';
 import {
+    ChangeProjectSchema,
+    ChangeProjectSchemaFromJSON,
+    ChangeProjectSchemaToJSON,
     CreateFeatureSchema,
     CreateFeatureSchemaFromJSON,
     CreateFeatureSchemaToJSON,
+    CreateStrategySchema,
+    CreateStrategySchemaFromJSON,
+    CreateStrategySchemaToJSON,
     FeatureSchema,
     FeatureSchemaFromJSON,
     FeatureSchemaToJSON,
     FeaturesSchema,
     FeaturesSchemaFromJSON,
     FeaturesSchemaToJSON,
+    StrategySchema,
+    StrategySchemaFromJSON,
+    StrategySchemaToJSON,
 } from '../models';
 
 export interface ApiAdminArchiveFeaturesProjectIdGetRequest {
     projectId: string;
+}
+
+export interface ApiAdminProjectsProjectIdFeaturesFeatureNameChangeProjectPostRequest {
+    projectId: string;
+    featureName: string;
+    changeProjectSchema: ChangeProjectSchema;
+}
+
+export interface ApiAdminProjectsProjectIdFeaturesFeatureNameEnvironmentsEnvironmentStrategiesPostRequest {
+    projectId: string;
+    featureName: string;
+    environment: string;
+    createStrategySchema: CreateStrategySchema;
+}
+
+export interface ApiAdminProjectsProjectIdFeaturesFeatureNameEnvironmentsEnvironmentStrategiesStrategyIdPutRequest {
+    projectId: string;
+    featureName: string;
+    environment: string;
+    strategyId: string;
+    createStrategySchema: CreateStrategySchema;
 }
 
 export interface ApiAdminProjectsProjectIdFeaturesFeatureNameGetRequest {
@@ -134,6 +164,146 @@ export class AdminApi extends runtime.BaseAPI {
      */
     async apiAdminFeaturesGet(initOverrides?: RequestInit): Promise<FeaturesSchema> {
         const response = await this.apiAdminFeaturesGetRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiAdminProjectsProjectIdFeaturesFeatureNameChangeProjectPostRaw(requestParameters: ApiAdminProjectsProjectIdFeaturesFeatureNameChangeProjectPostRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
+            throw new runtime.RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling apiAdminProjectsProjectIdFeaturesFeatureNameChangeProjectPost.');
+        }
+
+        if (requestParameters.featureName === null || requestParameters.featureName === undefined) {
+            throw new runtime.RequiredError('featureName','Required parameter requestParameters.featureName was null or undefined when calling apiAdminProjectsProjectIdFeaturesFeatureNameChangeProjectPost.');
+        }
+
+        if (requestParameters.changeProjectSchema === null || requestParameters.changeProjectSchema === undefined) {
+            throw new runtime.RequiredError('changeProjectSchema','Required parameter requestParameters.changeProjectSchema was null or undefined when calling apiAdminProjectsProjectIdFeaturesFeatureNameChangeProjectPost.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // apiKey authentication
+        }
+
+        const response = await this.request({
+            path: `/api/admin/projects/{projectId}/features/{featureName}/changeProject`.replace(`{${"projectId"}}`, encodeURIComponent(String(requestParameters.projectId))).replace(`{${"featureName"}}`, encodeURIComponent(String(requestParameters.featureName))),
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: ChangeProjectSchemaToJSON(requestParameters.changeProjectSchema),
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async apiAdminProjectsProjectIdFeaturesFeatureNameChangeProjectPost(requestParameters: ApiAdminProjectsProjectIdFeaturesFeatureNameChangeProjectPostRequest, initOverrides?: RequestInit): Promise<void> {
+        await this.apiAdminProjectsProjectIdFeaturesFeatureNameChangeProjectPostRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
+    async apiAdminProjectsProjectIdFeaturesFeatureNameEnvironmentsEnvironmentStrategiesPostRaw(requestParameters: ApiAdminProjectsProjectIdFeaturesFeatureNameEnvironmentsEnvironmentStrategiesPostRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<StrategySchema>> {
+        if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
+            throw new runtime.RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling apiAdminProjectsProjectIdFeaturesFeatureNameEnvironmentsEnvironmentStrategiesPost.');
+        }
+
+        if (requestParameters.featureName === null || requestParameters.featureName === undefined) {
+            throw new runtime.RequiredError('featureName','Required parameter requestParameters.featureName was null or undefined when calling apiAdminProjectsProjectIdFeaturesFeatureNameEnvironmentsEnvironmentStrategiesPost.');
+        }
+
+        if (requestParameters.environment === null || requestParameters.environment === undefined) {
+            throw new runtime.RequiredError('environment','Required parameter requestParameters.environment was null or undefined when calling apiAdminProjectsProjectIdFeaturesFeatureNameEnvironmentsEnvironmentStrategiesPost.');
+        }
+
+        if (requestParameters.createStrategySchema === null || requestParameters.createStrategySchema === undefined) {
+            throw new runtime.RequiredError('createStrategySchema','Required parameter requestParameters.createStrategySchema was null or undefined when calling apiAdminProjectsProjectIdFeaturesFeatureNameEnvironmentsEnvironmentStrategiesPost.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // apiKey authentication
+        }
+
+        const response = await this.request({
+            path: `/api/admin/projects/{projectId}/features/{featureName}/environments/{environment}/strategies`.replace(`{${"projectId"}}`, encodeURIComponent(String(requestParameters.projectId))).replace(`{${"featureName"}}`, encodeURIComponent(String(requestParameters.featureName))).replace(`{${"environment"}}`, encodeURIComponent(String(requestParameters.environment))),
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: CreateStrategySchemaToJSON(requestParameters.createStrategySchema),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => StrategySchemaFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiAdminProjectsProjectIdFeaturesFeatureNameEnvironmentsEnvironmentStrategiesPost(requestParameters: ApiAdminProjectsProjectIdFeaturesFeatureNameEnvironmentsEnvironmentStrategiesPostRequest, initOverrides?: RequestInit): Promise<StrategySchema> {
+        const response = await this.apiAdminProjectsProjectIdFeaturesFeatureNameEnvironmentsEnvironmentStrategiesPostRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiAdminProjectsProjectIdFeaturesFeatureNameEnvironmentsEnvironmentStrategiesStrategyIdPutRaw(requestParameters: ApiAdminProjectsProjectIdFeaturesFeatureNameEnvironmentsEnvironmentStrategiesStrategyIdPutRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<StrategySchema>> {
+        if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
+            throw new runtime.RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling apiAdminProjectsProjectIdFeaturesFeatureNameEnvironmentsEnvironmentStrategiesStrategyIdPut.');
+        }
+
+        if (requestParameters.featureName === null || requestParameters.featureName === undefined) {
+            throw new runtime.RequiredError('featureName','Required parameter requestParameters.featureName was null or undefined when calling apiAdminProjectsProjectIdFeaturesFeatureNameEnvironmentsEnvironmentStrategiesStrategyIdPut.');
+        }
+
+        if (requestParameters.environment === null || requestParameters.environment === undefined) {
+            throw new runtime.RequiredError('environment','Required parameter requestParameters.environment was null or undefined when calling apiAdminProjectsProjectIdFeaturesFeatureNameEnvironmentsEnvironmentStrategiesStrategyIdPut.');
+        }
+
+        if (requestParameters.strategyId === null || requestParameters.strategyId === undefined) {
+            throw new runtime.RequiredError('strategyId','Required parameter requestParameters.strategyId was null or undefined when calling apiAdminProjectsProjectIdFeaturesFeatureNameEnvironmentsEnvironmentStrategiesStrategyIdPut.');
+        }
+
+        if (requestParameters.createStrategySchema === null || requestParameters.createStrategySchema === undefined) {
+            throw new runtime.RequiredError('createStrategySchema','Required parameter requestParameters.createStrategySchema was null or undefined when calling apiAdminProjectsProjectIdFeaturesFeatureNameEnvironmentsEnvironmentStrategiesStrategyIdPut.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // apiKey authentication
+        }
+
+        const response = await this.request({
+            path: `/api/admin/projects/{projectId}/features/{featureName}/environments/{environment}/strategies/{strategyId}`.replace(`{${"projectId"}}`, encodeURIComponent(String(requestParameters.projectId))).replace(`{${"featureName"}}`, encodeURIComponent(String(requestParameters.featureName))).replace(`{${"environment"}}`, encodeURIComponent(String(requestParameters.environment))).replace(`{${"strategyId"}}`, encodeURIComponent(String(requestParameters.strategyId))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: CreateStrategySchemaToJSON(requestParameters.createStrategySchema),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => StrategySchemaFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiAdminProjectsProjectIdFeaturesFeatureNameEnvironmentsEnvironmentStrategiesStrategyIdPut(requestParameters: ApiAdminProjectsProjectIdFeaturesFeatureNameEnvironmentsEnvironmentStrategiesStrategyIdPutRequest, initOverrides?: RequestInit): Promise<StrategySchema> {
+        const response = await this.apiAdminProjectsProjectIdFeaturesFeatureNameEnvironmentsEnvironmentStrategiesStrategyIdPutRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

@@ -1,11 +1,11 @@
 import { StrategyParameter } from './StrategyParameter/StrategyParameter';
 import React from 'react';
-import { ICustomStrategyParameter } from 'interfaces/strategy';
+import { IStrategyParameter } from 'interfaces/strategy';
 
 interface IStrategyParametersProps {
-    input: ICustomStrategyParameter[];
+    input: IStrategyParameter[];
     updateParameter: (index: number, updated: object) => void;
-    setParams: React.Dispatch<React.SetStateAction<ICustomStrategyParameter[]>>;
+    setParams: React.Dispatch<React.SetStateAction<IStrategyParameter[]>>;
     errors: { [key: string]: string };
 }
 

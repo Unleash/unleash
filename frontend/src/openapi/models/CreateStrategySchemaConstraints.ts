@@ -16,52 +16,52 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface ConstraintSchema
+ * @interface CreateStrategySchemaConstraints
  */
-export interface ConstraintSchema {
+export interface CreateStrategySchemaConstraints {
     /**
      * 
      * @type {string}
-     * @memberof ConstraintSchema
+     * @memberof CreateStrategySchemaConstraints
      */
     contextName: string;
     /**
      * 
      * @type {string}
-     * @memberof ConstraintSchema
+     * @memberof CreateStrategySchemaConstraints
      */
     operator: string;
     /**
      * 
      * @type {boolean}
-     * @memberof ConstraintSchema
+     * @memberof CreateStrategySchemaConstraints
      */
     caseInsensitive?: boolean;
     /**
      * 
      * @type {boolean}
-     * @memberof ConstraintSchema
+     * @memberof CreateStrategySchemaConstraints
      */
     inverted?: boolean;
     /**
      * 
      * @type {Array<string>}
-     * @memberof ConstraintSchema
+     * @memberof CreateStrategySchemaConstraints
      */
     values?: Array<string>;
     /**
      * 
      * @type {string}
-     * @memberof ConstraintSchema
+     * @memberof CreateStrategySchemaConstraints
      */
     value?: string;
 }
 
-export function ConstraintSchemaFromJSON(json: any): ConstraintSchema {
-    return ConstraintSchemaFromJSONTyped(json, false);
+export function CreateStrategySchemaConstraintsFromJSON(json: any): CreateStrategySchemaConstraints {
+    return CreateStrategySchemaConstraintsFromJSONTyped(json, false);
 }
 
-export function ConstraintSchemaFromJSONTyped(json: any, ignoreDiscriminator: boolean): ConstraintSchema {
+export function CreateStrategySchemaConstraintsFromJSONTyped(json: any, ignoreDiscriminator: boolean): CreateStrategySchemaConstraints {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -76,7 +76,7 @@ export function ConstraintSchemaFromJSONTyped(json: any, ignoreDiscriminator: bo
     };
 }
 
-export function ConstraintSchemaToJSON(value?: ConstraintSchema | null): any {
+export function CreateStrategySchemaConstraintsToJSON(value?: CreateStrategySchemaConstraints | null): any {
     if (value === undefined) {
         return undefined;
     }

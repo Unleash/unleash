@@ -23,40 +23,40 @@ import {
 /**
  * 
  * @export
- * @interface StrategySchema
+ * @interface FeatureSchemaStrategies
  */
-export interface StrategySchema {
+export interface FeatureSchemaStrategies {
     /**
      * 
      * @type {string}
-     * @memberof StrategySchema
+     * @memberof FeatureSchemaStrategies
      */
     id: string;
     /**
      * 
      * @type {string}
-     * @memberof StrategySchema
+     * @memberof FeatureSchemaStrategies
      */
     name: string;
     /**
      * 
      * @type {Array<CreateStrategySchemaConstraints>}
-     * @memberof StrategySchema
+     * @memberof FeatureSchemaStrategies
      */
     constraints: Array<CreateStrategySchemaConstraints>;
     /**
      * 
      * @type {{ [key: string]: string; }}
-     * @memberof StrategySchema
+     * @memberof FeatureSchemaStrategies
      */
     parameters: { [key: string]: string; };
 }
 
-export function StrategySchemaFromJSON(json: any): StrategySchema {
-    return StrategySchemaFromJSONTyped(json, false);
+export function FeatureSchemaStrategiesFromJSON(json: any): FeatureSchemaStrategies {
+    return FeatureSchemaStrategiesFromJSONTyped(json, false);
 }
 
-export function StrategySchemaFromJSONTyped(json: any, ignoreDiscriminator: boolean): StrategySchema {
+export function FeatureSchemaStrategiesFromJSONTyped(json: any, ignoreDiscriminator: boolean): FeatureSchemaStrategies {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -69,7 +69,7 @@ export function StrategySchemaFromJSONTyped(json: any, ignoreDiscriminator: bool
     };
 }
 
-export function StrategySchemaToJSON(value?: StrategySchema | null): any {
+export function FeatureSchemaStrategiesToJSON(value?: FeatureSchemaStrategies | null): any {
     if (value === undefined) {
         return undefined;
     }

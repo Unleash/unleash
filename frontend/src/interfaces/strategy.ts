@@ -5,10 +5,20 @@ export interface IFeatureStrategy {
     strategyName?: string;
     name: string;
     constraints: IConstraint[];
-    parameters: IParameter;
+    parameters: IFeatureStrategyParameters;
     featureName?: string;
     projectId?: string;
     environment?: string;
+}
+
+export interface IFeatureStrategyParameters {
+    [key: string]: string | number | undefined;
+}
+
+export interface IFeatureStrategyPayload {
+    name?: string;
+    constraints: IConstraint[];
+    parameters: IFeatureStrategyParameters;
 }
 
 export interface IStrategy {
@@ -17,7 +27,20 @@ export interface IStrategy {
     editable: boolean;
     deprecated: boolean;
     description: string;
-    parameters: IParameter[];
+    parameters: IStrategyParameter[];
+}
+
+export interface IStrategyParameter {
+    name: string;
+    description: string;
+    required: boolean;
+    type: string;
+}
+
+export interface IStrategyPayload {
+    name: string;
+    description: string;
+    parameters: IStrategyParameter[];
 }
 
 export interface IConstraint {
@@ -27,38 +50,4 @@ export interface IConstraint {
     caseInsensitive?: boolean;
     operator: Operator;
     contextName: string;
-    [index: string]: unknown;
-}
-
-export interface IParameter {
-    groupId?: string;
-    rollout?: string;
-    stickiness?: string;
-
-    [index: string]: any;
-}
-
-export interface IStrategyPayload {
-    name?: string;
-    constraints: IConstraint[];
-    parameters: IParameter;
-}
-export interface ICustomStrategyParameter {
-    name: string;
-    description: string;
-    required: boolean;
-    type: string;
-}
-
-export interface ICustomStrategyPayload {
-    name: string;
-    description: string;
-    parameters: IParameter[];
-}
-
-export interface ICustomStrategy {
-    name: string;
-    description: string;
-    parameters: IParameter[];
-    editable: boolean;
 }

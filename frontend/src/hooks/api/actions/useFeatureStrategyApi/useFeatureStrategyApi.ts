@@ -1,4 +1,4 @@
-import { IStrategyPayload, IFeatureStrategy } from 'interfaces/strategy';
+import { IFeatureStrategyPayload, IFeatureStrategy } from 'interfaces/strategy';
 import useAPI from '../useApi/useApi';
 
 const useFeatureStrategyApi = () => {
@@ -10,7 +10,7 @@ const useFeatureStrategyApi = () => {
         projectId: string,
         featureId: string,
         environmentId: string,
-        payload: IStrategyPayload
+        payload: IFeatureStrategyPayload
     ): Promise<IFeatureStrategy> => {
         const path = `api/admin/projects/${projectId}/features/${featureId}/environments/${environmentId}/strategies`;
         const req = createRequest(
@@ -41,7 +41,7 @@ const useFeatureStrategyApi = () => {
         featureId: string,
         environmentId: string,
         strategyId: string,
-        payload: IStrategyPayload
+        payload: IFeatureStrategyPayload
     ): Promise<void> => {
         const path = `api/admin/projects/${projectId}/features/${featureId}/environments/${environmentId}/strategies/${strategyId}`;
         const req = createRequest(

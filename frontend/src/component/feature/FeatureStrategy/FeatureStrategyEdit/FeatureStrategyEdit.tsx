@@ -8,7 +8,7 @@ import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFe
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useHistory } from 'react-router-dom';
 import useToast from 'hooks/useToast';
-import { IFeatureStrategy, IStrategyPayload } from 'interfaces/strategy';
+import { IFeatureStrategy, IFeatureStrategyPayload } from 'interfaces/strategy';
 import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { ISegment } from 'interfaces/segment';
 import { useSegmentsApi } from 'hooks/api/actions/useSegmentsApi/useSegmentsApi';
@@ -122,7 +122,7 @@ export const FeatureStrategyEdit = () => {
 
 export const createStrategyPayload = (
     strategy: Partial<IFeatureStrategy>
-): IStrategyPayload => {
+): IFeatureStrategyPayload => {
     return {
         name: strategy.name,
         constraints: strategy.constraints ?? [],

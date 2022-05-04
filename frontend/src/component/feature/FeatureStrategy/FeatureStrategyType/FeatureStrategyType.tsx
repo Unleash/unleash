@@ -28,7 +28,7 @@ export const FeatureStrategyType = ({
         return definition.name === strategy.name;
     });
 
-    const updateParameter = (field: string, value: unknown) => {
+    const updateParameter = (field: string, value: string) => {
         setStrategy(
             produce(draft => {
                 draft.parameters = draft.parameters ?? {};
@@ -48,7 +48,7 @@ export const FeatureStrategyType = ({
             return (
                 <FlexibleStrategy
                     context={context}
-                    parameters={strategy.parameters ?? []}
+                    parameters={strategy.parameters ?? {}}
                     updateParameter={updateParameter}
                     editable={hasAccess}
                 />
@@ -56,7 +56,7 @@ export const FeatureStrategyType = ({
         case 'userWithId':
             return (
                 <UserWithIdStrategy
-                    parameters={strategy.parameters ?? []}
+                    parameters={strategy.parameters ?? {}}
                     updateParameter={updateParameter}
                     editable={hasAccess}
                 />
@@ -65,7 +65,7 @@ export const FeatureStrategyType = ({
             return (
                 <GeneralStrategy
                     strategyDefinition={strategyDefinition}
-                    parameters={strategy.parameters ?? []}
+                    parameters={strategy.parameters ?? {}}
                     updateParameter={updateParameter}
                     editable={hasAccess}
                 />

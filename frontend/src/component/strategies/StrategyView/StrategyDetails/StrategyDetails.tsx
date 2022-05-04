@@ -11,7 +11,7 @@ import { AppsLinkList } from 'component/common';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import styles from '../../strategies.module.scss';
 import { TogglesLinkList } from 'component/strategies/TogglesLinkList/TogglesLinkList';
-import { IParameter, IStrategy } from 'interfaces/strategy';
+import { IStrategy, IStrategyParameter } from 'interfaces/strategy';
 import { IApplication } from 'interfaces/application';
 import { FeatureSchema } from 'openapi';
 
@@ -27,7 +27,7 @@ export const StrategyDetails = ({
     toggles,
 }: IStrategyDetailsProps) => {
     const { parameters = [] } = strategy;
-    const renderParameters = (params: IParameter[]) => {
+    const renderParameters = (params: IStrategyParameter[]) => {
         if (params.length > 0) {
             return params.map(({ name, type, description, required }, i) => (
                 <ListItem key={`${name}-${i}`}>

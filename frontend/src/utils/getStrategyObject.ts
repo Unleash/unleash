@@ -1,4 +1,8 @@
-import { IStrategy, IParameter } from '../interfaces/strategy';
+import {
+    IStrategy,
+    IStrategyParameter,
+    IFeatureStrategyParameters,
+} from 'interfaces/strategy';
 import { resolveDefaultParamValue } from 'utils/resolveDefaultParamValue';
 
 export const getStrategyObject = (
@@ -9,9 +13,10 @@ export const getStrategyObject = (
     const selectedStrategy = selectableStrategies.find(
         strategy => strategy.name === name
     );
-    const parameters = {} as IParameter;
 
-    selectedStrategy?.parameters.forEach(({ name }: IParameter) => {
+    const parameters: IFeatureStrategyParameters = {};
+
+    selectedStrategy?.parameters.forEach(({ name }: IStrategyParameter) => {
         parameters[name] = resolveDefaultParamValue(name, featureId);
     });
 

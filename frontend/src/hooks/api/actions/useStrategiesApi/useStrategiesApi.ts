@@ -1,4 +1,4 @@
-import { ICustomStrategyPayload } from 'interfaces/strategy';
+import { IStrategyPayload } from 'interfaces/strategy';
 import useAPI from '../useApi/useApi';
 
 const useStrategiesApi = () => {
@@ -7,7 +7,7 @@ const useStrategiesApi = () => {
     });
     const URI = 'api/admin/strategies';
 
-    const createStrategy = async (strategy: ICustomStrategyPayload) => {
+    const createStrategy = async (strategy: IStrategyPayload) => {
         const req = createRequest(URI, {
             method: 'POST',
             body: JSON.stringify(strategy),
@@ -22,7 +22,7 @@ const useStrategiesApi = () => {
         }
     };
 
-    const updateStrategy = async (strategy: ICustomStrategyPayload) => {
+    const updateStrategy = async (strategy: IStrategyPayload) => {
         const path = `${URI}/${strategy.name}`;
         const req = createRequest(path, {
             method: 'PUT',
@@ -38,7 +38,7 @@ const useStrategiesApi = () => {
         }
     };
 
-    const removeStrategy = async (strategy: ICustomStrategyPayload) => {
+    const removeStrategy = async (strategy: IStrategyPayload) => {
         const path = `${URI}/${strategy.name}`;
         const req = createRequest(path, { method: 'DELETE' });
 
@@ -51,7 +51,7 @@ const useStrategiesApi = () => {
         }
     };
 
-    const deprecateStrategy = async (strategy: ICustomStrategyPayload) => {
+    const deprecateStrategy = async (strategy: IStrategyPayload) => {
         const path = `${URI}/${strategy.name}/deprecate`;
         const req = createRequest(path, {
             method: 'POST',
@@ -66,7 +66,7 @@ const useStrategiesApi = () => {
         }
     };
 
-    const reactivateStrategy = async (strategy: ICustomStrategyPayload) => {
+    const reactivateStrategy = async (strategy: IStrategyPayload) => {
         const path = `${URI}/${strategy.name}/reactivate`;
         const req = createRequest(path, { method: 'POST' });
 

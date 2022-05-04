@@ -1,5 +1,5 @@
 import { Typography } from '@mui/material';
-import { IParameter } from 'interfaces/strategy';
+import { IFeatureStrategyParameters } from 'interfaces/strategy';
 import RolloutSlider from '../RolloutSlider/RolloutSlider';
 import Select from 'component/common/select';
 import React from 'react';
@@ -9,6 +9,10 @@ import {
     FLEXIBLE_STRATEGY_STICKINESS_ID,
 } from 'utils/testIds';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
+import {
+    parseParameterNumber,
+    parseParameterString,
+} from 'utils/parseParameter';
 
 const builtInStickinessOptions = [
     { key: 'default', label: 'default' },
@@ -18,8 +22,8 @@ const builtInStickinessOptions = [
 ];
 
 interface IFlexibleStrategyProps {
-    parameters: IParameter;
-    updateParameter: (field: string, value: any) => void;
+    parameters: IFeatureStrategyParameters;
+    updateParameter: (field: string, value: string) => void;
     context: any;
     editable: boolean;
 }
@@ -54,15 +58,15 @@ const FlexibleStrategy = ({
     const stickinessOptions = resolveStickiness();
 
     const rollout =
-        parameters.rollout !== undefined ? parameters.rollout : '100';
-    const stickiness = parameters.stickiness;
-    const groupId = parameters.groupId;
+        parameters.rollout !== undefined
+            ? parseParameterNumber(parameters.rollout)
+            : 100;
 
     return (
         <div>
             <RolloutSlider
                 name="Rollout"
-                value={parseInt(rollout)}
+                value={rollout}
                 disabled={!editable}
                 onChange={updateRollout}
             />
@@ -86,7 +90,7 @@ const FlexibleStrategy = ({
                     name="stickiness"
                     label="Stickiness"
                     options={stickinessOptions}
-                    value={stickiness}
+                    value={parseParameterString(parameters.stickiness)}
                     disabled={!editable}
                     data-testid={FLEXIBLE_STRATEGY_STICKINESS_ID}
                     onChange={e => onUpdate('stickiness')(e.target.value)}
@@ -109,7 +113,7 @@ const FlexibleStrategy = ({
                 <Input
                     label="groupId"
                     id="groupId-input"
-                    value={groupId || ''}
+                    value={parseParameterString(parameters.groupId)}
                     disabled={!editable}
                     onChange={e => onUpdate('groupId')(e.target.value)}
                     data-testid={FLEXIBLE_STRATEGY_GROUP_ID}

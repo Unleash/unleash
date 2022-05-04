@@ -5,7 +5,7 @@ import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import Input from 'component/common/Input/Input';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import React from 'react';
-import { ICustomStrategyParameter } from 'interfaces/strategy';
+import { IStrategyParameter } from 'interfaces/strategy';
 
 const paramTypesOptions = [
     {
@@ -41,10 +41,10 @@ const paramTypesOptions = [
 
 interface IStrategyParameterProps {
     set: React.Dispatch<React.SetStateAction<object>>;
-    input: ICustomStrategyParameter;
+    input: IStrategyParameter;
     index: number;
-    params: ICustomStrategyParameter[];
-    setParams: React.Dispatch<React.SetStateAction<ICustomStrategyParameter[]>>;
+    params: IStrategyParameter[];
+    setParams: React.Dispatch<React.SetStateAction<IStrategyParameter[]>>;
     errors: { [key: string]: string };
 }
 

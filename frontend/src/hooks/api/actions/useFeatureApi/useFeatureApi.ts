@@ -1,9 +1,9 @@
 import { ITag } from 'interfaces/tags';
 import useAPI from '../useApi/useApi';
 import { Operation } from 'fast-json-patch';
-import { IConstraint } from 'interfaces/strategy';
 import { CreateFeatureSchema } from 'openapi';
 import { openApiAdmin } from 'utils/openapiClient';
+import { IConstraint } from 'interfaces/strategy';
 
 const useFeatureApi = () => {
     const { makeRequest, createRequest, errors, loading } = useAPI({

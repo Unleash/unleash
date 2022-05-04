@@ -29,82 +29,82 @@ import {
 /**
  * 
  * @export
- * @interface FeatureSchema
+ * @interface FeaturesSchemaFeatures
  */
-export interface FeatureSchema {
+export interface FeaturesSchemaFeatures {
     /**
      * 
      * @type {string}
-     * @memberof FeatureSchema
+     * @memberof FeaturesSchemaFeatures
      */
     name: string;
     /**
      * 
      * @type {string}
-     * @memberof FeatureSchema
+     * @memberof FeaturesSchemaFeatures
      */
     type?: string;
     /**
      * 
      * @type {string}
-     * @memberof FeatureSchema
+     * @memberof FeaturesSchemaFeatures
      */
     description?: string;
     /**
      * 
      * @type {string}
-     * @memberof FeatureSchema
+     * @memberof FeaturesSchemaFeatures
      */
     project: string;
     /**
      * 
      * @type {boolean}
-     * @memberof FeatureSchema
+     * @memberof FeaturesSchemaFeatures
      */
     enabled?: boolean;
     /**
      * 
      * @type {boolean}
-     * @memberof FeatureSchema
+     * @memberof FeaturesSchemaFeatures
      */
     stale?: boolean;
     /**
      * 
      * @type {boolean}
-     * @memberof FeatureSchema
+     * @memberof FeaturesSchemaFeatures
      */
     impressionData?: boolean;
     /**
      * 
      * @type {Date}
-     * @memberof FeatureSchema
+     * @memberof FeaturesSchemaFeatures
      */
     createdAt?: Date | null;
     /**
      * 
      * @type {Date}
-     * @memberof FeatureSchema
+     * @memberof FeaturesSchemaFeatures
      */
     lastSeenAt?: Date | null;
     /**
      * 
      * @type {Array<FeatureSchemaStrategies>}
-     * @memberof FeatureSchema
+     * @memberof FeaturesSchemaFeatures
      */
     strategies?: Array<FeatureSchemaStrategies>;
     /**
      * 
      * @type {Array<FeatureSchemaVariants>}
-     * @memberof FeatureSchema
+     * @memberof FeaturesSchemaFeatures
      */
     variants?: Array<FeatureSchemaVariants>;
 }
 
-export function FeatureSchemaFromJSON(json: any): FeatureSchema {
-    return FeatureSchemaFromJSONTyped(json, false);
+export function FeaturesSchemaFeaturesFromJSON(json: any): FeaturesSchemaFeatures {
+    return FeaturesSchemaFeaturesFromJSONTyped(json, false);
 }
 
-export function FeatureSchemaFromJSONTyped(json: any, ignoreDiscriminator: boolean): FeatureSchema {
+export function FeaturesSchemaFeaturesFromJSONTyped(json: any, ignoreDiscriminator: boolean): FeaturesSchemaFeatures {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -124,7 +124,7 @@ export function FeatureSchemaFromJSONTyped(json: any, ignoreDiscriminator: boole
     };
 }
 
-export function FeatureSchemaToJSON(value?: FeatureSchema | null): any {
+export function FeaturesSchemaFeaturesToJSON(value?: FeaturesSchemaFeatures | null): any {
     if (value === undefined) {
         return undefined;
     }

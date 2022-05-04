@@ -47,7 +47,7 @@ function getColor(unit?: string): string {
 }
 
 interface IFeatureStatusProps {
-    lastSeenAt?: string | Date;
+    lastSeenAt?: string | Date | null;
     tooltipPlacement?: TooltipProps['placement'];
 }
 
@@ -75,7 +75,7 @@ const FeatureStatus = ({
     return (
         <ConditionallyRender
             condition={Boolean(lastSeenAt)}
-            show={
+            show={() => (
                 <TimeAgo
                     date={lastSeenAt!}
                     title=""
@@ -98,7 +98,7 @@ const FeatureStatus = ({
                         );
                     }}
                 />
-            }
+            )}
             elseShow={
                 <Wrapper
                     toolTip="No usage reported from connected applications"

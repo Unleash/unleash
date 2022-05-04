@@ -36,7 +36,7 @@ import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import useStrategiesApi from 'hooks/api/actions/useStrategiesApi/useStrategiesApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { ICustomStrategy } from 'interfaces/strategy';
+import { IStrategy } from 'interfaces/strategy';
 
 interface IDialogueMetaData {
     show: boolean;
@@ -102,7 +102,7 @@ export const StrategiesList = () => {
         </Link>
     );
 
-    const onReactivateStrategy = (strategy: ICustomStrategy) => {
+    const onReactivateStrategy = (strategy: IStrategy) => {
         setDialogueMetaData({
             show: true,
             title: 'Really reactivate strategy?',
@@ -122,7 +122,7 @@ export const StrategiesList = () => {
         });
     };
 
-    const onDeprecateStrategy = (strategy: ICustomStrategy) => {
+    const onDeprecateStrategy = (strategy: IStrategy) => {
         setDialogueMetaData({
             show: true,
             title: 'Really deprecate strategy?',
@@ -142,7 +142,7 @@ export const StrategiesList = () => {
         });
     };
 
-    const onDeleteStrategy = (strategy: ICustomStrategy) => {
+    const onDeleteStrategy = (strategy: IStrategy) => {
         setDialogueMetaData({
             show: true,
             title: 'Really delete strategy?',
@@ -162,7 +162,7 @@ export const StrategiesList = () => {
         });
     };
 
-    const reactivateButton = (strategy: ICustomStrategy) => (
+    const reactivateButton = (strategy: IStrategy) => (
         <PermissionIconButton
             onClick={() => onReactivateStrategy(strategy)}
             permission={UPDATE_STRATEGY}
@@ -172,7 +172,7 @@ export const StrategiesList = () => {
         </PermissionIconButton>
     );
 
-    const deprecateButton = (strategy: ICustomStrategy) => (
+    const deprecateButton = (strategy: IStrategy) => (
         <ConditionallyRender
             condition={strategy.name === 'default'}
             show={
@@ -198,7 +198,7 @@ export const StrategiesList = () => {
         />
     );
 
-    const editButton = (strategy: ICustomStrategy) => (
+    const editButton = (strategy: IStrategy) => (
         <ConditionallyRender
             condition={strategy?.editable}
             show={
@@ -224,7 +224,7 @@ export const StrategiesList = () => {
         />
     );
 
-    const deleteButton = (strategy: ICustomStrategy) => (
+    const deleteButton = (strategy: IStrategy) => (
         <ConditionallyRender
             condition={strategy?.editable}
             show={

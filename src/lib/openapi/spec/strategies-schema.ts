@@ -3,8 +3,6 @@ import { strategySchema } from './strategy-schema';
 
 export const schema = {
     type: 'array',
-    additionalProperties: false,
-    required: [],
     items: strategySchema,
 } as const;
 

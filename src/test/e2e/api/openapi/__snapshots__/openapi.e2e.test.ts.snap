@@ -279,6 +279,36 @@ Object {
         ],
       },
     },
+    "/api/admin/archive/features/{projectId}": Object {
+      "get": Object {
+        "deprecated": true,
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/featuresSchema",
+                },
+              },
+            },
+            "description": "featuresResponse",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
     "/api/admin/features/": Object {
       "get": Object {
         "deprecated": true,

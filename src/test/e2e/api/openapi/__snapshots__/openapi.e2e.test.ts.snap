@@ -679,7 +679,7 @@ Object {
         ],
       },
     },
-    "/api/admin/features/": Object {
+    "/api/admin/features": Object {
       "get": Object {
         "deprecated": true,
         "responses": Object {

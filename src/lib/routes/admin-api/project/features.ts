@@ -14,7 +14,11 @@ import {
     UPDATE_FEATURE_ENVIRONMENT,
     UPDATE_FEATURE_STRATEGY,
 } from '../../../types/permissions';
-import { FeatureToggleDTO, IStrategyConfig } from '../../../types/model';
+import {
+    FeatureToggleDTO,
+    IConstraint,
+    IStrategyConfig,
+} from '../../../types/model';
 import { extractUsername } from '../../../util/extract-user';
 import { IAuthRequest } from '../../unleash-types';
 import { createFeatureRequest } from '../../../openapi/spec/create-feature-request';
@@ -22,11 +26,10 @@ import { featureResponse } from '../../../openapi/spec/feature-response';
 import { CreateFeatureSchema } from '../../../openapi/spec/create-feature-schema';
 import { FeatureSchema } from '../../../openapi/spec/feature-schema';
 import { serializeDates } from '../../../util/serialize-dates';
-import { createStrategyRequest } from '../../../openapi/spec/create-strategy-request';
-import { CreateStrategySchema } from '../../../openapi/spec/create-strategy-schema';
-import { strategyResponse } from '../../../openapi/spec/strategy-response';
-import { StrategySchema } from '../../../openapi/spec/strategy-schema';
 import { featuresResponse } from '../../../openapi/spec/features-response';
+import { featureEnvironmentInfoResponse } from '../../../openapi/spec/feature-environment-info-response';
+import { strategiesResponse } from '../../../openapi/spec/strategies-response';
+import { strategyResponse } from '../../../openapi/spec/strategy-response';
 
 interface FeatureStrategyParams {
     projectId: string;
@@ -45,6 +48,12 @@ interface ProjectParam {
 
 interface StrategyIdParams extends FeatureStrategyParams {
     strategyId: string;
+}
+
+interface StrategyUpdateBody {
+    name?: string;
+    constraints?: IConstraint[];
+    parameters?: object;
 }
 
 const PATH = '/:projectId/features';
@@ -72,63 +81,126 @@ export default class ProjectFeaturesController extends Controller {
         this.featureService = featureToggleServiceV2;
         this.logger = config.getLogger('/admin-api/project/features.ts');
 
-        this.get(`${PATH_ENV}`, this.getEnvironment);
-
-        this.post(
-            `${PATH_ENV}/on`,
-            this.toggleEnvironmentOn,
-            UPDATE_FEATURE_ENVIRONMENT,
-        );
-
-        this.post(
-            `${PATH_ENV}/off`,
-            this.toggleEnvironmentOff,
-            UPDATE_FEATURE_ENVIRONMENT,
-        );
-
-        this.get(`${PATH_STRATEGIES}`, this.getStrategies);
+        this.route({
+            method: 'get',
+            path: PATH_ENV,
+            acceptAnyContentType: true,
+            handler: this.getEnvironment,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    responses: { 200: featureEnvironmentInfoResponse },
+                }),
+            ],
+        });
 
         this.route({
             method: 'post',
-            path: PATH_STRATEGIES,
+            path: `${PATH_ENV}/on`,
+            acceptAnyContentType: true,
+            handler: this.toggleEnvironmentOn,
+            permission: UPDATE_FEATURE_ENVIRONMENT,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    responses: { 200: featureResponse },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'post',
+            path: `${PATH_ENV}/off`,
+            acceptAnyContentType: true,
+            handler: this.toggleEnvironmentOff,
+            permission: UPDATE_FEATURE_ENVIRONMENT,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    responses: { 200: featureResponse },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'get',
+            path: `${PATH_STRATEGIES}`,
+            acceptAnyContentType: true,
+            handler: this.getStrategies,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    responses: { 200: strategiesResponse },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'post',
+            path: `${PATH_STRATEGIES}`,
+            acceptAnyContentType: true,
             handler: this.addStrategy,
             permission: CREATE_FEATURE_STRATEGY,
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
-                    requestBody: createStrategyRequest,
                     responses: { 200: strategyResponse },
                 }),
             ],
         });
 
-        this.get(`${PATH_STRATEGY}`, this.getStrategy);
+        this.route({
+            method: 'get',
+            path: `${PATH_STRATEGY}`,
+            acceptAnyContentType: true,
+            handler: this.getStrategy,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    responses: { 200: strategyResponse },
+                }),
+            ],
+        });
 
         this.route({
             method: 'put',
-            path: PATH_STRATEGY,
+            path: `${PATH_STRATEGY}`,
+            acceptAnyContentType: true,
             handler: this.updateStrategy,
             permission: UPDATE_FEATURE_STRATEGY,
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
-                    requestBody: createStrategyRequest,
                     responses: { 200: strategyResponse },
                 }),
             ],
         });
-
-        this.patch(
-            `${PATH_STRATEGY}`,
-            this.patchStrategy,
-            UPDATE_FEATURE_STRATEGY,
-        );
-
-        this.delete(
-            `${PATH_STRATEGY}`,
-            this.deleteStrategy,
-            DELETE_FEATURE_STRATEGY,
-        );
+        this.route({
+            method: 'patch',
+            path: `${PATH_STRATEGY}`,
+            acceptAnyContentType: true,
+            handler: this.patchStrategy,
+            permission: UPDATE_FEATURE_STRATEGY,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    responses: { 200: strategyResponse },
+                }),
+            ],
+        });
+        this.route({
+            method: 'delete',
+            path: `${PATH_STRATEGY}`,
+            acceptAnyContentType: true,
+            handler: this.deleteStrategy,
+            permission: DELETE_FEATURE_STRATEGY,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    responses: { 200: { description: 'OK' } },
+                }),
+            ],
+        });
 
         this.route({
             method: 'get',
@@ -143,7 +215,19 @@ export default class ProjectFeaturesController extends Controller {
             ],
         });
 
-        this.post(PATH_FEATURE_CLONE, this.cloneFeature, CREATE_FEATURE);
+        this.route({
+            method: 'post',
+            path: PATH_FEATURE_CLONE,
+            acceptAnyContentType: true,
+            handler: this.cloneFeature,
+            permission: CREATE_FEATURE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    responses: { 200: featureResponse },
+                }),
+            ],
+        });
 
         this.route({
             method: 'post',
@@ -172,9 +256,47 @@ export default class ProjectFeaturesController extends Controller {
             ],
         });
 
-        this.put(PATH_FEATURE, this.updateFeature, UPDATE_FEATURE);
-        this.patch(PATH_FEATURE, this.patchFeature, UPDATE_FEATURE);
-        this.delete(PATH_FEATURE, this.archiveFeature, DELETE_FEATURE);
+        this.route({
+            method: 'put',
+            path: PATH_FEATURE,
+            acceptAnyContentType: true,
+            handler: this.updateFeature,
+            permission: UPDATE_FEATURE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    responses: { 200: featureResponse },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'patch',
+            path: PATH_FEATURE,
+            acceptAnyContentType: true,
+            handler: this.patchFeature,
+            permission: UPDATE_FEATURE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    responses: { 200: featureResponse },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'delete',
+            path: PATH_FEATURE,
+            acceptAnyContentType: true,
+            handler: this.archiveFeature,
+            permission: DELETE_FEATURE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    responses: { 200: { description: 'OK' } },
+                }),
+            ],
+        });
     }
 
     async getFeatures(
@@ -335,8 +457,8 @@ export default class ProjectFeaturesController extends Controller {
     }
 
     async addStrategy(
-        req: IAuthRequest<FeatureStrategyParams, any, IStrategyConfig>,
-        res: Response<StrategySchema>,
+        req: IAuthRequest<FeatureStrategyParams, any, IStrategyConfig, any>,
+        res: Response,
     ): Promise<void> {
         const { projectId, featureName, environment } = req.params;
         const userName = extractUsername(req);
@@ -363,8 +485,8 @@ export default class ProjectFeaturesController extends Controller {
     }
 
     async updateStrategy(
-        req: IAuthRequest<StrategyIdParams, any, CreateStrategySchema>,
-        res: Response<StrategySchema>,
+        req: IAuthRequest<StrategyIdParams, any, StrategyUpdateBody, any>,
+        res: Response,
     ): Promise<void> {
         const { strategyId, environment, projectId, featureName } = req.params;
         const userName = extractUsername(req);

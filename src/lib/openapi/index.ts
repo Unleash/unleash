@@ -1,14 +1,16 @@
 import { OpenAPIV3 } from 'openapi-types';
-import { constraintSchema } from './spec/constraint-schema';
-import { createFeatureSchema } from './spec/create-feature-schema';
-import { createStrategySchema } from './spec/create-strategy-schema';
-import { featureSchema } from './spec/feature-schema';
 import { featuresSchema } from './spec/features-schema';
-import { overrideSchema } from './spec/override-schema';
-import { parametersSchema } from './spec/parameters-schema';
+import { featureSchema } from './spec/feature-schema';
 import { strategySchema } from './spec/strategy-schema';
 import { variantSchema } from './spec/variant-schema';
+import { overrideSchema } from './spec/override-schema';
+import { createFeatureSchema } from './spec/create-feature-schema';
+import { constraintSchema } from './spec/constraint-schema';
+import { tagSchema } from './spec/tag-schema';
+import { tagsSchema } from './spec/tags-schema';
+import { strategiesSchema } from './spec/strategies-schema';
 
+// Create the base OpenAPI schema, with everything except paths.
 export const createOpenApiSchema = (
     serverUrl?: string,
 ): Omit<OpenAPIV3.Document, 'paths'> => {
@@ -33,15 +35,16 @@ export const createOpenApiSchema = (
                 },
             },
             schemas: {
-                constraintSchema,
                 createFeatureSchema,
-                createStrategySchema,
-                featureSchema,
                 featuresSchema,
-                overrideSchema,
-                parametersSchema,
+                featureSchema,
                 strategySchema,
+                strategiesSchema,
                 variantSchema,
+                overrideSchema,
+                constraintSchema,
+                tagSchema,
+                tagsSchema,
             },
         },
     };

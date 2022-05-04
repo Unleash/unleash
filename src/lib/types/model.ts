@@ -19,7 +19,7 @@ export interface IStrategyConfig {
     id?: string;
     name: string;
     constraints: IConstraint[];
-    parameters: object;
+    parameters: { [key: string]: string };
     sortOrder?: number;
 }
 export interface IFeatureStrategy {
@@ -28,7 +28,7 @@ export interface IFeatureStrategy {
     projectId: string;
     environment: string;
     strategyName: string;
-    parameters: object;
+    parameters: { [key: string]: string };
     sortOrder?: number;
     constraints: IConstraint[];
     createdAt?: Date;

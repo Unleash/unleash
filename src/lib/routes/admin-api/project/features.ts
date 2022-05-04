@@ -14,11 +14,7 @@ import {
     UPDATE_FEATURE_ENVIRONMENT,
     UPDATE_FEATURE_STRATEGY,
 } from '../../../types/permissions';
-import {
-    FeatureToggleDTO,
-    IConstraint,
-    IStrategyConfig,
-} from '../../../types/model';
+import { FeatureToggleDTO, IStrategyConfig } from '../../../types/model';
 import { extractUsername } from '../../../util/extract-user';
 import { IAuthRequest } from '../../unleash-types';
 import { createFeatureRequest } from '../../../openapi/spec/create-feature-request';
@@ -26,6 +22,9 @@ import { featureResponse } from '../../../openapi/spec/feature-response';
 import { CreateFeatureSchema } from '../../../openapi/spec/create-feature-schema';
 import { FeatureSchema } from '../../../openapi/spec/feature-schema';
 import { serializeDates } from '../../../util/serialize-dates';
+import { createStrategyRequest } from '../../../openapi/spec/create-strategy-request';
+import { CreateStrategySchema } from '../../../openapi/spec/create-strategy-schema';
+import { StrategySchema } from '../../../openapi/spec/strategy-schema';
 import { featuresResponse } from '../../../openapi/spec/features-response';
 import { featureEnvironmentInfoResponse } from '../../../openapi/spec/feature-environment-info-response';
 import { strategiesResponse } from '../../../openapi/spec/strategies-response';
@@ -48,12 +47,6 @@ interface ProjectParam {
 
 interface StrategyIdParams extends FeatureStrategyParams {
     strategyId: string;
-}
-
-interface StrategyUpdateBody {
-    name?: string;
-    constraints?: IConstraint[];
-    parameters?: object;
 }
 
 const PATH = '/:projectId/features';
@@ -96,14 +89,14 @@ export default class ProjectFeaturesController extends Controller {
 
         this.route({
             method: 'post',
-            path: `${PATH_ENV}/on`,
-            acceptAnyContentType: true,
-            handler: this.toggleEnvironmentOn,
-            permission: UPDATE_FEATURE_ENVIRONMENT,
+            path: PATH_STRATEGIES,
+            handler: this.addStrategy,
+            permission: CREATE_FEATURE_STRATEGY,
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
-                    responses: { 200: featureResponse },
+                    requestBody: createStrategyRequest,
+                    responses: { 200: strategyResponse },
                 }),
             ],
         });
@@ -171,6 +164,7 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
+                    requestBody: createStrategyRequest,
                     responses: { 200: strategyResponse },
                 }),
             ],
@@ -184,6 +178,7 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
+                    requestBody: createStrategyRequest,
                     responses: { 200: strategyResponse },
                 }),
             ],
@@ -457,8 +452,8 @@ export default class ProjectFeaturesController extends Controller {
     }
 
     async addStrategy(
-        req: IAuthRequest<FeatureStrategyParams, any, IStrategyConfig, any>,
-        res: Response,
+        req: IAuthRequest<FeatureStrategyParams, any, IStrategyConfig>,
+        res: Response<StrategySchema>,
     ): Promise<void> {
         const { projectId, featureName, environment } = req.params;
         const userName = extractUsername(req);
@@ -485,8 +480,8 @@ export default class ProjectFeaturesController extends Controller {
     }
 
     async updateStrategy(
-        req: IAuthRequest<StrategyIdParams, any, StrategyUpdateBody, any>,
-        res: Response,
+        req: IAuthRequest<StrategyIdParams, any, CreateStrategySchema>,
+        res: Response<StrategySchema>,
     ): Promise<void> {
         const { strategyId, environment, projectId, featureName } = req.params;
         const userName = extractUsername(req);

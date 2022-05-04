@@ -19,6 +19,7 @@ import { IAuthRequest } from '../unleash-types';
 import { DEFAULT_ENV } from '../../util/constants';
 import { featuresResponse } from '../../openapi/spec/features-response';
 import { FeaturesSchema } from '../../openapi/spec/features-schema';
+import { serializeDates } from '../../util/serialize-dates';
 import { tagsResponse } from '../../openapi/spec/tags-response';
 import { tagResponse } from '../../openapi/spec/tag-response';
 
@@ -166,7 +167,10 @@ class FeatureController extends Controller {
         const query = await this.prepQuery(req.query);
         const features = await this.service.getFeatureToggles(query);
 
-        res.json({ version, features });
+        res.json({
+            version,
+            features: features.map(serializeDates),
+        });
     }
 
     async getToggle(

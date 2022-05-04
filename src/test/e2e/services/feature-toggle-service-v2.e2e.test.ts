@@ -75,14 +75,12 @@ test('Should be able to update existing strategy configuration', async () => {
     expect(createdConfig.name).toEqual('default');
     const updatedConfig = await service.updateStrategy(
         createdConfig.id,
-        {
-            parameters: { b2b: true },
-        },
+        { parameters: { b2b: 'true' } },
         { projectId, featureName, environment: DEFAULT_ENV },
         username,
     );
     expect(createdConfig.id).toEqual(updatedConfig.id);
-    expect(updatedConfig.parameters).toEqual({ b2b: true });
+    expect(updatedConfig.parameters).toEqual({ b2b: 'true' });
 });
 
 test('Should be able to get strategy by id', async () => {

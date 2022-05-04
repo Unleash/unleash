@@ -1,6 +1,6 @@
 import { createSchemaObject, CreateSchemaType } from '../types';
 
-export const schema = {
+const schema = {
     type: 'object',
     additionalProperties: false,
     required: ['contextName', 'operator'],
@@ -11,11 +11,20 @@ export const schema = {
         operator: {
             type: 'string',
         },
+        caseInsensitive: {
+            type: 'boolean',
+        },
+        inverted: {
+            type: 'boolean',
+        },
         values: {
             type: 'array',
             items: {
                 type: 'string',
             },
+        },
+        value: {
+            type: 'string',
         },
     },
 } as const;

@@ -1,4 +1,5 @@
 import { createSchemaObject, CreateSchemaType } from '../types';
+import { strategySchema } from './strategy-schema';
 
 const schema = {
     type: 'object',
@@ -16,12 +17,10 @@ const schema = {
         },
         strategies: {
             type: 'array',
-            items: {
-                $ref: '#/components/schemas/strategySchema',
-            },
+            items: strategySchema,
         },
     },
-} as const;
+};
 
 export type FeatureEnvironmentInfoSchema = CreateSchemaType<typeof schema>;
 

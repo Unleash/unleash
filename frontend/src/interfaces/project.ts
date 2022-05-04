@@ -7,7 +7,7 @@ export interface IProjectCard {
     health: number;
     description: string;
     featureCount: number;
-    memberCount: number;
+    memberCount?: number;
 }
 
 export interface IProject {

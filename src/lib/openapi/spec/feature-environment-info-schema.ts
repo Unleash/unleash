@@ -3,7 +3,7 @@ import { createSchemaObject, CreateSchemaType } from '../types';
 const schema = {
     type: 'object',
     additionalProperties: false,
-    required: ['value', 'type'],
+    required: ['name', 'environment', 'enabled', 'strategies'],
     properties: {
         name: {
             type: 'string',

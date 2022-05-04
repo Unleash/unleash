@@ -69,6 +69,7 @@ import {
     validateString,
 } from '../util/validators/constraint-types';
 import { IContextFieldStore } from 'lib/types/stores/context-field-store';
+import { Saved, Unsaved } from '../types/saved';
 
 interface IFeatureContext {
     featureName: string;
@@ -268,7 +269,7 @@ class FeatureToggleService {
 
     featureStrategyToPublic(
         featureStrategy: IFeatureStrategy,
-    ): IStrategyConfig {
+    ): Saved<IStrategyConfig> {
         return {
             id: featureStrategy.id,
             name: featureStrategy.strategyName,
@@ -278,10 +279,10 @@ class FeatureToggleService {
     }
 
     async createStrategy(
-        strategyConfig: Omit<IStrategyConfig, 'id'>,
+        strategyConfig: Unsaved<IStrategyConfig>,
         context: IFeatureStrategyContext,
         createdBy: string,
-    ): Promise<IStrategyConfig> {
+    ): Promise<Saved<IStrategyConfig>> {
         const { featureName, projectId, environment } = context;
         await this.validateFeatureContext(context);
 
@@ -342,7 +343,7 @@ class FeatureToggleService {
         updates: Partial<IFeatureStrategy>,
         context: IFeatureStrategyContext,
         userName: string,
-    ): Promise<IStrategyConfig> {
+    ): Promise<Saved<IStrategyConfig>> {
         const { projectId, environment, featureName } = context;
         const existingStrategy = await this.featureStrategiesStore.get(id);
         this.validateFeatureStrategyContext(existingStrategy, context);
@@ -392,7 +393,7 @@ class FeatureToggleService {
         this.validateFeatureStrategyContext(existingStrategy, context);
 
         if (existingStrategy.id === id) {
-            existingStrategy.parameters[name] = value;
+            existingStrategy.parameters[name] = String(value);
             const strategy = await this.featureStrategiesStore.updateStrategy(
                 id,
                 existingStrategy,

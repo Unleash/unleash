@@ -1,4 +1,6 @@
 import { createSchemaObject, CreateSchemaType } from '../types';
+import { strategySchema } from './strategy-schema';
+import { variantSchema } from './variant-schema';
 
 const schema = {
     type: 'object',
@@ -38,14 +40,10 @@ const schema = {
         },
         strategies: {
             type: 'array',
-            items: {
-                $ref: '#/components/schemas/strategySchema',
-            },
+            items: strategySchema,
         },
         variants: {
-            items: {
-                $ref: '#/components/schemas/variantSchema',
-            },
+            items: variantSchema,
             type: 'array',
         },
     },

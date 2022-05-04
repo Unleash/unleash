@@ -1,6 +1,6 @@
 import { createSchemaObject, CreateSchemaType } from '../types';
 
-export const schema = {
+const schema = {
     type: 'object',
     additionalProperties: false,
     required: ['contextName', 'values'],

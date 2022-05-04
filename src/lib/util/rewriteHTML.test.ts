@@ -14,7 +14,7 @@ const input = `<!DOCTYPE html>
         <link
             href="https://fonts.googleapis.com/icon?family=Material+Icons"
             rel="stylesheet"
-        /> 
+        />
         <link
             href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700"
             rel="stylesheet"
@@ -80,7 +80,6 @@ test('rewriteHTML swaps out faviconPath if cdnPrefix is set', () => {
 
 test('rewriteHTML sets favicon path to root', () => {
     const result = rewriteHTML(input, '');
-    console.log(result);
     expect(result.includes('<link rel="icon" href="/favicon.ico" />')).toBe(
         true,
     );

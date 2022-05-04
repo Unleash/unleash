@@ -1,6 +1,7 @@
 import { createSchemaObject, CreateSchemaType } from '../types';
+import { featureSchema } from './feature-schema';
 
-export const schema = {
+const schema = {
     type: 'object',
     additionalProperties: false,
     required: ['version', 'features'],
@@ -10,9 +11,7 @@ export const schema = {
         },
         features: {
             type: 'array',
-            items: {
-                $ref: '#/components/schemas/featureSchema',
-            },
+            items: featureSchema,
         },
     },
 } as const;

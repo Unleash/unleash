@@ -1,4 +1,4 @@
-import openapi, { ExpressOpenApi } from '@unleash/express-openapi';
+import openapi, { IExpressOpenApi } from '@unleash/express-openapi';
 import { Express, RequestHandler } from 'express';
 import { OpenAPIV3 } from 'openapi-types';
 import { IUnleashConfig } from '../types/option';
@@ -8,13 +8,14 @@ import { AdminApiOperation, ClientApiOperation } from '../openapi/types';
 export class OpenApiService {
     private readonly config: IUnleashConfig;
 
-    private readonly api: ExpressOpenApi;
+    private readonly api: IExpressOpenApi;
 
     constructor(config: IUnleashConfig) {
         this.config = config;
         this.api = openapi(
             this.docsPath(),
             createOpenApiSchema(config.server?.unleashUrl),
+            { coerce: true },
         );
     }
 

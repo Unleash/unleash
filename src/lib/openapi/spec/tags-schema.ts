@@ -1,6 +1,7 @@
 import { createSchemaObject, CreateSchemaType } from '../types';
+import { tagSchema } from './tag-schema';
 
-export const schema = {
+const schema = {
     type: 'object',
     additionalProperties: false,
     required: ['version', 'tags'],
@@ -10,9 +11,7 @@ export const schema = {
         },
         tags: {
             type: 'array',
-            items: {
-                $ref: '#/components/schemas/tagSchema',
-            },
+            items: tagSchema,
         },
     },
 } as const;

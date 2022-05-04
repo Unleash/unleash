@@ -1,12 +1,11 @@
 import { OpenAPIV3 } from 'openapi-types';
+import { strategiesSchema } from './strategies-schema';
 
 export const strategiesResponse: OpenAPIV3.ResponseObject = {
-    description: 'featuresResponse',
+    description: 'strategiesResponse',
     content: {
         'application/json': {
-            schema: {
-                $ref: '#/components/schemas/strategiesSchema',
-            },
+            schema: strategiesSchema,
         },
     },
 };

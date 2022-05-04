@@ -5,7 +5,7 @@ export const tagsResponse: OpenAPIV3.ResponseObject = {
     content: {
         'application/json': {
             schema: {
-                $ref: '#/components/schemas/tagsResponseSchema',
+                $ref: '#/components/schemas/tagsSchema',
             },
         },
     },

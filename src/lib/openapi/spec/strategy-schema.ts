@@ -1,33 +1,32 @@
 import { createSchemaObject, CreateSchemaType } from '../types';
-import { constraintSchema } from './constraint-schema';
-import { parametersSchema } from './parameters-schema';
 
-export const strategySchemaDefinition = {
+export const schema = {
     type: 'object',
     additionalProperties: false,
-    required: ['name', 'constraints', 'parameters'],
+    required: ['id', 'name', 'constraints', 'parameters'],
     properties: {
         id: {
             type: 'string',
+            nullable: true,
         },
         name: {
             type: 'string',
         },
+        constraints: {
+            type: 'array',
+            items: {
+                $ref: '#/components/schemas/constraintSchema',
+            },
+        },
+        parameters: {
+            type: 'object',
+        },
         sortOrder: {
             type: 'number',
         },
-        constraints: {
-            type: 'array',
-            items: { $ref: '#/components/schemas/constraintSchema' },
-        },
-        parameters: { $ref: '#/components/schemas/parametersSchema' },
-    },
-    'components/schemas': {
-        constraintSchema,
-        parametersSchema,
     },
 } as const;
 
-export type StrategySchema = CreateSchemaType<typeof strategySchemaDefinition>;
+export type StrategySchema = CreateSchemaType<typeof schema>;
 
-export const strategySchema = createSchemaObject(strategySchemaDefinition);
+export const strategySchema = createSchemaObject(schema);

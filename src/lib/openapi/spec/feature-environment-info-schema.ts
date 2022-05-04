@@ -1,18 +1,14 @@
 import { createSchemaObject, CreateSchemaType } from '../types';
-import { featureStrategySchema } from './feature-strategy-schema';
 
-let schema = {
+const schema = {
     type: 'object',
     additionalProperties: false,
-    required: ['name', 'environment', 'enabled', 'strategies'],
+    required: ['value', 'type'],
     properties: {
         name: {
             type: 'string',
         },
         environment: {
-            type: 'string',
-        },
-        type: {
             type: 'string',
         },
         enabled: {
@@ -21,12 +17,9 @@ let schema = {
         strategies: {
             type: 'array',
             items: {
-                $ref: '#/components/schemas/featureStrategySchema',
+                $ref: '#/components/schemas/strategySchema',
             },
         },
-    },
-    'components/schemas': {
-        featureStrategySchema,
     },
 } as const;
 

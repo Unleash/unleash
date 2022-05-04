@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { applyPatch, Operation } from 'fast-json-patch';
 import Controller from '../../controller';
 import { IUnleashConfig } from '../../../types/option';
-import { IUnleashServices } from '../../../types';
+import { IUnleashServices } from '../../../types/services';
 import FeatureToggleService from '../../../services/feature-toggle-service';
 import { Logger } from '../../../logger';
 import {
@@ -14,29 +14,22 @@ import {
     UPDATE_FEATURE_ENVIRONMENT,
     UPDATE_FEATURE_STRATEGY,
 } from '../../../types/permissions';
+import {
+    FeatureToggleDTO,
+    IConstraint,
+    IStrategyConfig,
+} from '../../../types/model';
 import { extractUsername } from '../../../util/extract-user';
 import { IAuthRequest } from '../../unleash-types';
 import { createFeatureRequest } from '../../../openapi/spec/create-feature-request';
 import { featureResponse } from '../../../openapi/spec/feature-response';
 import { CreateFeatureSchema } from '../../../openapi/spec/create-feature-schema';
 import { FeatureSchema } from '../../../openapi/spec/feature-schema';
-import { createStrategyRequest } from '../../../openapi/spec/create-strategy-request';
-import { StrategySchema } from '../../../openapi/spec/strategy-schema';
+import { serializeDates } from '../../../util/serialize-dates';
 import { featuresResponse } from '../../../openapi/spec/features-response';
 import { featureEnvironmentInfoResponse } from '../../../openapi/spec/feature-environment-info-response';
 import { strategiesResponse } from '../../../openapi/spec/strategies-response';
 import { strategyResponse } from '../../../openapi/spec/strategy-response';
-import { emptyResponse } from '../../../openapi/spec/empty-response';
-import { updateFeatureRequest } from '../../../openapi/spec/update-feature-request';
-import { patchRequest } from '../../../openapi/spec/patch-request';
-import { updateStrategyRequest } from '../../../openapi/spec/update-strategy-request';
-import { cloneFeatureRequest } from '../../../openapi/spec/clone-feature-request';
-import { FeatureEnvironmentInfoSchema } from '../../../openapi/spec/feature-environment-info-schema';
-import { ParametersSchema } from '../../../openapi/spec/parameters-schema';
-import { FeaturesSchema } from '../../../openapi/spec/features-schema';
-import { UpdateFeatureSchema } from '../../../openapi/spec/updateFeatureSchema';
-import { UpdateStrategySchema } from '../../../openapi/spec/update-strategy-schema';
-import { CreateStrategySchema } from '../../../openapi/spec/create-strategy-schema';
 
 interface FeatureStrategyParams {
     projectId: string;
@@ -55,6 +48,12 @@ interface ProjectParam {
 
 interface StrategyIdParams extends FeatureStrategyParams {
     strategyId: string;
+}
+
+interface StrategyUpdateBody {
+    name?: string;
+    constraints?: IConstraint[];
+    parameters?: object;
 }
 
 const PATH = '/:projectId/features';
@@ -90,7 +89,6 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
-                    operationId: 'getEnvironment',
                     responses: { 200: featureEnvironmentInfoResponse },
                 }),
             ],
@@ -98,13 +96,13 @@ export default class ProjectFeaturesController extends Controller {
 
         this.route({
             method: 'post',
-            path: `${PATH_ENV}/off`,
-            handler: this.toggleEnvironmentOff,
+            path: `${PATH_ENV}/on`,
+            acceptAnyContentType: true,
+            handler: this.toggleEnvironmentOn,
             permission: UPDATE_FEATURE_ENVIRONMENT,
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
-                    operationId: 'toggleEnvironmentOff',
                     responses: { 200: featureResponse },
                 }),
             ],
@@ -112,13 +110,13 @@ export default class ProjectFeaturesController extends Controller {
 
         this.route({
             method: 'post',
-            path: `${PATH_ENV}/on`,
-            handler: this.toggleEnvironmentOn,
+            path: `${PATH_ENV}/off`,
+            acceptAnyContentType: true,
+            handler: this.toggleEnvironmentOff,
             permission: UPDATE_FEATURE_ENVIRONMENT,
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
-                    operationId: 'toggleEnvironmentOn',
                     responses: { 200: featureResponse },
                 }),
             ],
@@ -126,13 +124,12 @@ export default class ProjectFeaturesController extends Controller {
 
         this.route({
             method: 'get',
-            path: PATH_STRATEGIES,
-            handler: this.getStrategies,
+            path: `${PATH_STRATEGIES}`,
             acceptAnyContentType: true,
+            handler: this.getStrategies,
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
-                    operationId: 'getStrategies',
                     responses: { 200: strategiesResponse },
                 }),
             ],
@@ -140,14 +137,13 @@ export default class ProjectFeaturesController extends Controller {
 
         this.route({
             method: 'post',
-            path: PATH_STRATEGIES,
+            path: `${PATH_STRATEGIES}`,
+            acceptAnyContentType: true,
             handler: this.addStrategy,
             permission: CREATE_FEATURE_STRATEGY,
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
-                    operationId: 'addStrategy',
-                    requestBody: createStrategyRequest,
                     responses: { 200: strategyResponse },
                 }),
             ],
@@ -155,13 +151,12 @@ export default class ProjectFeaturesController extends Controller {
 
         this.route({
             method: 'get',
-            path: PATH_STRATEGY,
-            handler: this.getStrategy,
+            path: `${PATH_STRATEGY}`,
             acceptAnyContentType: true,
+            handler: this.getStrategy,
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
-                    operationId: 'getStrategy',
                     responses: { 200: strategyResponse },
                 }),
             ],
@@ -169,43 +164,40 @@ export default class ProjectFeaturesController extends Controller {
 
         this.route({
             method: 'put',
-            path: PATH_STRATEGY,
+            path: `${PATH_STRATEGY}`,
+            acceptAnyContentType: true,
             handler: this.updateStrategy,
             permission: UPDATE_FEATURE_STRATEGY,
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
-                    operationId: 'updateStrategy',
-                    requestBody: updateStrategyRequest,
                     responses: { 200: strategyResponse },
                 }),
             ],
         });
         this.route({
             method: 'patch',
-            path: PATH_STRATEGY,
+            path: `${PATH_STRATEGY}`,
+            acceptAnyContentType: true,
             handler: this.patchStrategy,
             permission: UPDATE_FEATURE_STRATEGY,
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
-                    operationId: 'patchStrategy',
-                    requestBody: patchRequest,
                     responses: { 200: strategyResponse },
                 }),
             ],
         });
         this.route({
             method: 'delete',
-            path: PATH_STRATEGY,
+            path: `${PATH_STRATEGY}`,
             acceptAnyContentType: true,
             handler: this.deleteStrategy,
             permission: DELETE_FEATURE_STRATEGY,
             middleware: [
                 openApiService.validPath({
-                    operationId: 'deleteStrategy',
                     tags: ['admin'],
-                    responses: { 200: emptyResponse },
+                    responses: { 200: { description: 'OK' } },
                 }),
             ],
         });
@@ -218,23 +210,7 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
-                    operationId: 'getFeatures',
                     responses: { 200: featuresResponse },
-                }),
-            ],
-        });
-
-        this.route({
-            method: 'post',
-            path: PATH,
-            handler: this.createFeature,
-            permission: CREATE_FEATURE,
-            middleware: [
-                openApiService.validPath({
-                    tags: ['admin'],
-                    operationId: 'createFeature',
-                    requestBody: createFeatureRequest,
-                    responses: { 200: featureResponse },
                 }),
             ],
         });
@@ -248,8 +224,20 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
-                    operationId: 'cloneFeature',
-                    requestBody: cloneFeatureRequest,
+                    responses: { 200: featureResponse },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'post',
+            path: PATH,
+            handler: this.createFeature,
+            permission: CREATE_FEATURE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    requestBody: createFeatureRequest,
                     responses: { 200: featureResponse },
                 }),
             ],
@@ -262,7 +250,6 @@ export default class ProjectFeaturesController extends Controller {
             handler: this.getFeature,
             middleware: [
                 openApiService.validPath({
-                    operationId: 'getFeature',
                     tags: ['admin'],
                     responses: { 200: featureResponse },
                 }),
@@ -278,8 +265,6 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
-                    operationId: 'updateFeature',
-                    requestBody: updateFeatureRequest,
                     responses: { 200: featureResponse },
                 }),
             ],
@@ -294,8 +279,6 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
-                    operationId: 'patchFeature',
-                    requestBody: patchRequest,
                     responses: { 200: featureResponse },
                 }),
             ],
@@ -310,8 +293,7 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
-                    operationId: 'archiveFeature',
-                    responses: { 200: emptyResponse },
+                    responses: { 200: { description: 'OK' } },
                 }),
             ],
         });
@@ -319,7 +301,7 @@ export default class ProjectFeaturesController extends Controller {
 
     async getFeatures(
         req: Request<ProjectParam, any, any, any>,
-        res: Response<FeaturesSchema>,
+        res: Response,
     ): Promise<void> {
         const { projectId } = req.params;
         const features = await this.featureService.getFeatureOverview(
@@ -335,7 +317,7 @@ export default class ProjectFeaturesController extends Controller {
             { name: string; replaceGroupId: boolean },
             any
         >,
-        res: Response<FeatureSchema>,
+        res: Response,
     ): Promise<void> {
         const { projectId, featureName } = req.params;
         const { name, replaceGroupId } = req.body;
@@ -363,7 +345,7 @@ export default class ProjectFeaturesController extends Controller {
             userName,
         );
 
-        res.status(201).json(created);
+        res.status(201).json(serializeDates(created));
     }
 
     async getFeature(
@@ -379,10 +361,10 @@ export default class ProjectFeaturesController extends Controller {
         req: IAuthRequest<
             { projectId: string; featureName: string },
             any,
-            UpdateFeatureSchema,
+            FeatureToggleDTO,
             any
         >,
-        res: Response<FeatureSchema>,
+        res: Response,
     ): Promise<void> {
         const { projectId, featureName } = req.params;
         const data = req.body;
@@ -403,7 +385,7 @@ export default class ProjectFeaturesController extends Controller {
             Operation[],
             any
         >,
-        res: Response<FeatureSchema>,
+        res: Response,
     ): Promise<void> {
         const { projectId, featureName } = req.params;
         const updated = await this.featureService.patchFeature(
@@ -423,7 +405,7 @@ export default class ProjectFeaturesController extends Controller {
             any,
             any
         >,
-        res: Response<void>,
+        res: Response,
     ): Promise<void> {
         const { featureName } = req.params;
         const userName = extractUsername(req);
@@ -433,7 +415,7 @@ export default class ProjectFeaturesController extends Controller {
 
     async getEnvironment(
         req: Request<FeatureStrategyParams, any, any, any>,
-        res: Response<FeatureEnvironmentInfoSchema>,
+        res: Response,
     ): Promise<void> {
         const { environment, featureName, projectId } = req.params;
         const environmentInfo = await this.featureService.getEnvironmentInfo(
@@ -446,7 +428,7 @@ export default class ProjectFeaturesController extends Controller {
 
     async toggleEnvironmentOn(
         req: IAuthRequest<FeatureStrategyParams, any, any, any>,
-        res: Response<void>,
+        res: Response,
     ): Promise<void> {
         const { featureName, environment, projectId } = req.params;
         await this.featureService.updateEnabled(
@@ -461,7 +443,7 @@ export default class ProjectFeaturesController extends Controller {
 
     async toggleEnvironmentOff(
         req: IAuthRequest<FeatureStrategyParams, any, any, any>,
-        res: Response<void>,
+        res: Response,
     ): Promise<void> {
         const { featureName, environment, projectId } = req.params;
         await this.featureService.updateEnabled(
@@ -475,8 +457,8 @@ export default class ProjectFeaturesController extends Controller {
     }
 
     async addStrategy(
-        req: IAuthRequest<FeatureStrategyParams, any, CreateStrategySchema>,
-        res: Response<StrategySchema>,
+        req: IAuthRequest<FeatureStrategyParams, any, IStrategyConfig, any>,
+        res: Response,
     ): Promise<void> {
         const { projectId, featureName, environment } = req.params;
         const userName = extractUsername(req);
@@ -490,7 +472,7 @@ export default class ProjectFeaturesController extends Controller {
 
     async getStrategies(
         req: Request<FeatureStrategyParams, any, any, any>,
-        res: Response<StrategySchema[]>,
+        res: Response,
     ): Promise<void> {
         const { projectId, featureName, environment } = req.params;
         const featureStrategies =
@@ -503,8 +485,8 @@ export default class ProjectFeaturesController extends Controller {
     }
 
     async updateStrategy(
-        req: IAuthRequest<StrategyIdParams, any, UpdateStrategySchema>,
-        res: Response<StrategySchema>,
+        req: IAuthRequest<StrategyIdParams, any, StrategyUpdateBody, any>,
+        res: Response,
     ): Promise<void> {
         const { strategyId, environment, projectId, featureName } = req.params;
         const userName = extractUsername(req);
@@ -519,7 +501,7 @@ export default class ProjectFeaturesController extends Controller {
 
     async patchStrategy(
         req: IAuthRequest<StrategyIdParams, any, Operation[], any>,
-        res: Response<StrategySchema>,
+        res: Response,
     ): Promise<void> {
         const { strategyId, projectId, environment, featureName } = req.params;
         const userName = extractUsername(req);
@@ -537,7 +519,7 @@ export default class ProjectFeaturesController extends Controller {
 
     async getStrategy(
         req: IAuthRequest<StrategyIdParams, any, any, any>,
-        res: Response<StrategySchema>,
+        res: Response,
     ): Promise<void> {
         this.logger.info('Getting strategy');
         const { strategyId } = req.params;
@@ -548,7 +530,7 @@ export default class ProjectFeaturesController extends Controller {
 
     async deleteStrategy(
         req: IAuthRequest<StrategyIdParams, any, any, any>,
-        res: Response<void>,
+        res: Response,
     ): Promise<void> {
         this.logger.info('Deleting strategy');
         const { environment, projectId, featureName } = req.params;
@@ -570,7 +552,7 @@ export default class ProjectFeaturesController extends Controller {
             { name: string; value: string | number },
             any
         >,
-        res: Response<StrategySchema>,
+        res: Response,
     ): Promise<void> {
         const { strategyId, environment, projectId, featureName } = req.params;
         const userName = extractUsername(req);
@@ -589,7 +571,7 @@ export default class ProjectFeaturesController extends Controller {
 
     async getStrategyParameters(
         req: Request<StrategyIdParams, any, any, any>,
-        res: Response<ParametersSchema>,
+        res: Response,
     ): Promise<void> {
         this.logger.info('Getting strategy parameters');
         const { strategyId } = req.params;

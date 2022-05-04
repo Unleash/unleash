@@ -19,13 +19,8 @@ import { IAuthRequest } from '../unleash-types';
 import { DEFAULT_ENV } from '../../util/constants';
 import { featuresResponse } from '../../openapi/spec/features-response';
 import { FeaturesSchema } from '../../openapi/spec/features-schema';
-import { serializeDates } from '../../util/serialize-dates';
 import { tagsResponse } from '../../openapi/spec/tags-response';
 import { tagResponse } from '../../openapi/spec/tag-response';
-import { createTagRequest } from '../../openapi/spec/create-tag-request';
-import { emptyResponse } from '../../openapi/spec/empty-response';
-import { TagSchema } from '../../openapi/spec/tag-schema';
-import { TagsResponseSchema } from '../../openapi/spec/tags-response-schema';
 
 const version = 1;
 
@@ -68,13 +63,12 @@ class FeatureController extends Controller {
 
         this.route({
             method: 'get',
-            path: '',
+            path: '/',
             acceptAnyContentType: true,
             handler: this.getAllToggles,
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
-                    operationId: 'getAllToggles',
                     responses: { 200: featuresResponse },
                     deprecated: true,
                 }),
@@ -84,12 +78,12 @@ class FeatureController extends Controller {
         this.route({
             method: 'post',
             path: '/validate',
+            acceptAnyContentType: true,
             handler: this.validate,
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
-                    operationId: 'validateFeature',
-                    responses: { 200: emptyResponse },
+                    responses: { 200: { description: 'OK' } },
                 }),
             ],
         });
@@ -97,12 +91,11 @@ class FeatureController extends Controller {
         this.route({
             method: 'get',
             path: '/:featureName/tags',
-            handler: this.listTags,
             acceptAnyContentType: true,
+            handler: this.listTags,
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
-                    operationId: 'listTags',
                     responses: { 200: tagsResponse },
                 }),
             ],
@@ -112,13 +105,12 @@ class FeatureController extends Controller {
             method: 'post',
             path: '/:featureName/tags',
             permission: UPDATE_FEATURE,
+            acceptAnyContentType: true,
             handler: this.addTag,
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
-                    operationId: 'addTag',
-                    requestBody: createTagRequest,
-                    responses: { 201: tagResponse },
+                    responses: { 200: tagResponse },
                 }),
             ],
         });
@@ -132,8 +124,7 @@ class FeatureController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
-                    operationId: 'removeTag',
-                    responses: { 200: emptyResponse },
+                    responses: { 200: { description: 'OK' } },
                 }),
             ],
         });
@@ -174,10 +165,8 @@ class FeatureController extends Controller {
     ): Promise<void> {
         const query = await this.prepQuery(req.query);
         const features = await this.service.getFeatureToggles(query);
-        res.json({
-            version,
-            features: features.map(serializeDates),
-        });
+
+        res.json({ version, features });
     }
 
     async getToggle(
@@ -189,23 +178,12 @@ class FeatureController extends Controller {
         res.json(feature).end();
     }
 
-    async listTags(
-        req: Request<{ featureName: string }, any, any, any>,
-        res: Response<TagsResponseSchema>,
-    ): Promise<void> {
+    async listTags(req: Request, res: Response): Promise<void> {
         const tags = await this.tagService.listTags(req.params.featureName);
         res.json({ version, tags });
     }
 
-    async addTag(
-        req: IAuthRequest<
-            { featureName: string },
-            Response<TagSchema>,
-            TagSchema,
-            any
-        >,
-        res: Response<TagSchema>,
-    ): Promise<void> {
+    async addTag(req: IAuthRequest, res: Response): Promise<void> {
         const { featureName } = req.params;
         const userName = extractUsername(req);
         const tag = await this.tagService.addTag(
@@ -217,20 +195,14 @@ class FeatureController extends Controller {
     }
 
     // TODO
-    async removeTag(
-        req: IAuthRequest<{ featureName: string; type: string; value: string }>,
-        res: Response<void>,
-    ): Promise<void> {
+    async removeTag(req: IAuthRequest, res: Response): Promise<void> {
         const { featureName, type, value } = req.params;
         const userName = extractUsername(req);
         await this.tagService.removeTag(featureName, { type, value }, userName);
         res.status(200).end();
     }
 
-    async validate(
-        req: Request<any, any, { name: string }, any>,
-        res: Response<void>,
-    ): Promise<void> {
+    async validate(req: Request, res: Response): Promise<void> {
         const { name } = req.body;
 
         await this.service.validateName(name);

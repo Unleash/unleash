@@ -12,6 +12,7 @@ import { createStrategySchema } from './spec/create-strategy-schema';
 import { featureSchema } from './spec/feature-schema';
 import { parametersSchema } from './spec/parameters-schema';
 import { featureEnvironmentInfoSchema } from './spec/feature-environment-info-schema';
+import { emptyResponseSchema } from './spec/empty-response-schema';
 
 export const createOpenApiSchema = (
     serverUrl?: string,
@@ -42,6 +43,8 @@ export const createOpenApiSchema = (
                 createStrategySchema,
                 featureSchema,
                 featuresSchema,
+                featureEnvironmentInfoSchema,
+                emptyResponseSchema,
                 overrideSchema,
                 parametersSchema,
                 strategySchema,
@@ -49,7 +52,6 @@ export const createOpenApiSchema = (
                 variantSchema,
                 tagSchema,
                 tagsSchema,
-                featureEnvironmentInfoSchema,
             },
         },
     };

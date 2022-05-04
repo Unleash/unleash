@@ -8,10 +8,9 @@ const schema = {
             type: 'string',
         },
         replaceGroupId: {
-            type: 'boolean',
+            type: 'string',
         },
     },
-    'components/schemas': {},
 } as const;
 
 export type CloneFeatureSchema = CreateSchemaType<typeof schema>;

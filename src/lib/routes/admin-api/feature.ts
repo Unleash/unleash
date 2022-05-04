@@ -21,6 +21,8 @@ import { featuresResponse } from '../../openapi/spec/features-response';
 import { FeaturesSchema } from '../../openapi/spec/features-schema';
 import { tagsResponse } from '../../openapi/spec/tags-response';
 import { tagResponse } from '../../openapi/spec/tag-response';
+import { emptyResponse } from 'lib/openapi/spec/emty-response';
+import { createTagRequest } from '../../openapi/spec/create-tag-request';
 
 const version = 1;
 
@@ -78,12 +80,11 @@ class FeatureController extends Controller {
         this.route({
             method: 'post',
             path: '/validate',
-            acceptAnyContentType: true,
             handler: this.validate,
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
-                    responses: { 200: { description: 'OK' } },
+                    responses: { 200: emptyResponse },
                 }),
             ],
         });
@@ -91,7 +92,6 @@ class FeatureController extends Controller {
         this.route({
             method: 'get',
             path: '/:featureName/tags',
-            acceptAnyContentType: true,
             handler: this.listTags,
             middleware: [
                 openApiService.validPath({
@@ -105,11 +105,11 @@ class FeatureController extends Controller {
             method: 'post',
             path: '/:featureName/tags',
             permission: UPDATE_FEATURE,
-            acceptAnyContentType: true,
             handler: this.addTag,
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
+                    requestBody: createTagRequest,
                     responses: { 200: tagResponse },
                 }),
             ],
@@ -124,7 +124,7 @@ class FeatureController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
-                    responses: { 200: { description: 'OK' } },
+                    responses: { 200: emptyResponse },
                 }),
             ],
         });

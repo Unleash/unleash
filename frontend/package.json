@@ -94,7 +94,7 @@
     "swr": "1.3.0",
     "tss-react": "^3.6.2",
     "typescript": "4.6.4",
-    "vite": "^2.9.6",
+    "vite": "2.9.8",
     "vite-plugin-env-compatible": "^1.1.1",
     "vite-plugin-svgr": "^2.0.0",
     "vite-tsconfig-paths": "^3.4.1",

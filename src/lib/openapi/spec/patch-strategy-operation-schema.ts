@@ -1,5 +1,5 @@
 import { createSchemaObject, CreateSchemaType } from '../types';
-import { featureSchema } from './feature-schema';
+import { strategySchema } from './strategy-schema';
 
 //Add operation
 const addOperationSchema = {
@@ -13,14 +13,14 @@ const addOperationSchema = {
             type: 'string',
             enum: ['add'],
         },
-        value: featureSchema,
+        value: strategySchema,
     },
 } as const;
 
-export type PatchFeatureAddOperationSchema = CreateSchemaType<
+export type PatchStrategyAddOperationSchema = CreateSchemaType<
     typeof addOperationSchema
 >;
-export const patchFeatureAddOperationSchema =
+export const patchStrategyAddOperationSchema =
     createSchemaObject(addOperationSchema);
 
 //Remove operation
@@ -38,10 +38,10 @@ const removeOperationSchema = {
     },
 } as const;
 
-export type PatchFeatureRemoveOperationSchema = CreateSchemaType<
+export type PatchStrategyRemoveOperationSchema = CreateSchemaType<
     typeof removeOperationSchema
 >;
-export const patchFeatureRemoveOperationSchema = createSchemaObject(
+export const patchStrategyRemoveOperationSchema = createSchemaObject(
     removeOperationSchema,
 );
 
@@ -57,14 +57,14 @@ const replaceOperationSchema = {
             type: 'string',
             enum: ['replace'],
         },
-        value: featureSchema,
+        value: strategySchema,
     },
 } as const;
 
-export type PatchFeatureReplaceOperationSchema = CreateSchemaType<
+export type PatchStrategyReplaceOperationSchema = CreateSchemaType<
     typeof replaceOperationSchema
 >;
-export const patchFeatureReplaceOperationSchema = createSchemaObject(
+export const patchStrategyReplaceOperationSchema = createSchemaObject(
     replaceOperationSchema,
 );
 
@@ -85,10 +85,10 @@ const moveOperationSchema = {
     },
 } as const;
 
-export type PatchFeatureMoveOperationSchema = CreateSchemaType<
+export type PatchStrategyMoveOperationSchema = CreateSchemaType<
     typeof moveOperationSchema
 >;
-export const patchFeatureMoveOperationSchema =
+export const patchStrategyMoveOperationSchema =
     createSchemaObject(moveOperationSchema);
 
 //Copy Operation
@@ -108,10 +108,10 @@ const copyOperationSchema = {
     },
 } as const;
 
-export type PatchFeatureCopyOperationSchema = CreateSchemaType<
+export type PatchStrategyCopyOperationSchema = CreateSchemaType<
     typeof copyOperationSchema
 >;
-export const patchFeatureCopyOperationSchema =
+export const patchStrategyCopyOperationSchema =
     createSchemaObject(copyOperationSchema);
 
 //Test Operation
@@ -125,14 +125,14 @@ const testOperationSchema = {
             type: 'string',
             enum: ['test'],
         },
-        value: featureSchema,
+        value: strategySchema,
     },
 } as const;
 
-export type PatchFeatureTestOperationSchema = CreateSchemaType<
+export type PatchStrategyTestOperationSchema = CreateSchemaType<
     typeof testOperationSchema
 >;
-export const patchFeatureTestOperationSchema =
+export const patchStrategyTestOperationSchema =
     createSchemaObject(testOperationSchema);
 
 //Get Operation
@@ -147,32 +147,32 @@ const getOperationSchema = {
             type: 'string',
             enum: ['_get'],
         },
-        value: featureSchema,
+        value: strategySchema,
     },
 } as const;
 
-export type PatchFeatureGetOperationSchema = CreateSchemaType<
+export type PatchStrategyGetOperationSchema = CreateSchemaType<
     typeof getOperationSchema
 >;
-export const patchFeatureGetOperationSchema =
+export const patchStrategyGetOperationSchema =
     createSchemaObject(getOperationSchema);
 
 const schema = {
     type: 'object',
     oneOf: [
-        patchFeatureAddOperationSchema,
-        patchFeatureRemoveOperationSchema,
-        patchFeatureReplaceOperationSchema,
-        patchFeatureMoveOperationSchema,
-        patchFeatureCopyOperationSchema,
-        patchFeatureTestOperationSchema,
-        patchFeatureGetOperationSchema,
+        patchStrategyAddOperationSchema,
+        patchStrategyRemoveOperationSchema,
+        patchStrategyReplaceOperationSchema,
+        patchStrategyMoveOperationSchema,
+        patchStrategyCopyOperationSchema,
+        patchStrategyTestOperationSchema,
+        patchStrategyGetOperationSchema,
     ],
     discriminator: {
         propertyName: 'op',
     },
 } as const;
 
-export type PatchFeatureOperationSchema = CreateSchemaType<typeof schema>;
+export type PatchStrategyOperationSchema = CreateSchemaType<typeof schema>;
 
-export const patchFeatureOperationSchema = createSchemaObject(schema);
+export const patchStrategyOperationSchema = createSchemaObject(schema);

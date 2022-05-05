@@ -34,6 +34,7 @@ import { updateFeatureRequest } from '../../../openapi/spec/update-feature-reque
 import { patchFeatureRequest } from '../../../openapi/spec/patch-feature-request';
 import { patchStrategyRequest } from '../../../openapi/spec/patch-strategy-request';
 import { updateStrategyRequest } from '../../../openapi/spec/update-strategy-request';
+import { cloneFeatureRequest } from '../../../openapi/spec/clone-feature-request';
 
 interface FeatureStrategyParams {
     projectId: string;
@@ -87,6 +88,7 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
+                    operationId: 'getEnvironment',
                     responses: { 200: featureEnvironmentInfoResponse },
                 }),
             ],
@@ -100,6 +102,7 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
+                    operationId: 'toggleEnvironmentOff',
                     responses: { 200: featureResponse },
                 }),
             ],
@@ -113,6 +116,7 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
+                    operationId: 'toggleEnvironmentOn',
                     responses: { 200: featureResponse },
                 }),
             ],
@@ -126,6 +130,7 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
+                    operationId: 'getStrategies',
                     responses: { 200: strategiesResponse },
                 }),
             ],
@@ -139,6 +144,7 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
+                    operationId: 'addStrategy',
                     requestBody: createStrategyRequest,
                     responses: { 200: strategyResponse },
                 }),
@@ -153,6 +159,7 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
+                    operationId: 'getStrategy',
                     responses: { 200: strategyResponse },
                 }),
             ],
@@ -166,6 +173,7 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
+                    operationId: 'updateStrategy',
                     requestBody: updateStrategyRequest,
                     responses: { 200: strategyResponse },
                 }),
@@ -179,6 +187,7 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
+                    operationId: 'patchStrategy',
                     requestBody: patchStrategyRequest,
                     responses: { 200: strategyResponse },
                 }),
@@ -192,6 +201,7 @@ export default class ProjectFeaturesController extends Controller {
             permission: DELETE_FEATURE_STRATEGY,
             middleware: [
                 openApiService.validPath({
+                    operationId: 'deleteStrategy',
                     tags: ['admin'],
                     responses: { 200: emptyResponse },
                 }),
@@ -206,6 +216,7 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
+                    operationId: 'getFeatures',
                     responses: { 200: featuresResponse },
                 }),
             ],
@@ -220,6 +231,8 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
+                    operationId: 'cloneFeature',
+                    requestBody: cloneFeatureRequest,
                     responses: { 200: featureResponse },
                 }),
             ],
@@ -233,6 +246,7 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
+                    operationId: 'createFeature',
                     requestBody: createFeatureRequest,
                     responses: { 200: featureResponse },
                 }),
@@ -246,6 +260,7 @@ export default class ProjectFeaturesController extends Controller {
             handler: this.getFeature,
             middleware: [
                 openApiService.validPath({
+                    operationId: 'getFeature',
                     tags: ['admin'],
                     responses: { 200: featureResponse },
                 }),
@@ -261,6 +276,7 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
+                    operationId: 'updateFeature',
                     requestBody: updateFeatureRequest,
                     responses: { 200: featureResponse },
                 }),
@@ -276,6 +292,7 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
+                    operationId: 'patchFeature',
                     requestBody: patchFeatureRequest,
                     responses: { 200: featureResponse },
                 }),
@@ -291,6 +308,7 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
+                    operationId: 'archiveFeature',
                     responses: { 200: emptyResponse },
                 }),
             ],

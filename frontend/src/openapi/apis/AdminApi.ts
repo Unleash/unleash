@@ -151,7 +151,7 @@ export class AdminApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/api/admin/features/`,
+            path: `/api/admin/features`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,

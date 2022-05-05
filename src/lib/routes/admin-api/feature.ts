@@ -72,6 +72,7 @@ class FeatureController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
+                    operationId: 'getAllToggles',
                     responses: { 200: featuresResponse },
                     deprecated: true,
                 }),
@@ -85,6 +86,7 @@ class FeatureController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
+                    operationId: 'validate',
                     responses: { 200: emptyResponse },
                 }),
             ],
@@ -98,6 +100,7 @@ class FeatureController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
+                    operationId: 'listTags',
                     responses: { 200: tagsResponse },
                 }),
             ],
@@ -111,6 +114,7 @@ class FeatureController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
+                    operationId: 'addTag',
                     requestBody: createTagRequest,
                     responses: { 200: tagResponse },
                 }),
@@ -126,6 +130,7 @@ class FeatureController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
+                    operationId: 'removeTag',
                     responses: { 200: emptyResponse },
                 }),
             ],

@@ -33,6 +33,8 @@ import {
     patchStrategyReplaceOperationSchema,
     patchStrategyTestOperationSchema,
 } from './spec/patch-strategy-operation-schema';
+import { featureToggleDtoSchema } from './spec/feature-toggle-dto-schema';
+import { updateStrategySchema } from './spec/update-strategy-schema';
 
 export const createOpenApiSchema = (
     serverUrl?: string,
@@ -64,6 +66,7 @@ export const createOpenApiSchema = (
                 featureSchema,
                 featuresSchema,
                 featureEnvironmentInfoSchema,
+                featureToggleDtoSchema,
                 emptyResponseSchema,
                 overrideSchema,
                 parametersSchema,
@@ -85,6 +88,7 @@ export const createOpenApiSchema = (
                 patchStrategyOperationSchema,
                 strategySchema,
                 strategiesSchema,
+                updateStrategySchema,
                 variantSchema,
                 tagSchema,
                 tagsSchema,

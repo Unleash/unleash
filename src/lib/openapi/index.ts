@@ -25,6 +25,7 @@ import { updateFeatureSchema } from './spec/updateFeatureSchema';
 import { updateStrategySchema } from './spec/update-strategy-schema';
 import { patchFeatureSchema } from './spec/patch-feature-schema';
 import { patchStrategySchema } from './spec/patch-strategy-schema';
+import { cloneFeatureSchema } from './spec/clone-feature-schema';
 
 export const createOpenApiSchema = (
     serverUrl?: string,
@@ -51,6 +52,7 @@ export const createOpenApiSchema = (
             },
             schemas: {
                 constraintSchema,
+                cloneFeatureSchema,
                 createFeatureSchema,
                 createStrategySchema,
                 featureSchema,

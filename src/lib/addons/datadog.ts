@@ -29,7 +29,7 @@ export default class DatadogAddon extends Addon {
 
         const { tags: eventTags } = event;
         const tags =
-            eventTags && eventTags.map((tag) => `${tag.value}:${tag.type}`);
+            eventTags && eventTags.map((tag) => `${tag.type}:${tag.value}`);
         const body = {
             text: `%%% \n ${text} \n %%% `,
             title: 'Unleash notification update',

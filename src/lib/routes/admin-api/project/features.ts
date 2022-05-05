@@ -30,7 +30,7 @@ import { featureEnvironmentInfoResponse } from '../../../openapi/spec/feature-en
 import { strategiesResponse } from '../../../openapi/spec/strategies-response';
 import { strategyResponse } from '../../../openapi/spec/strategy-response';
 import { emptyResponse } from '../../../openapi/spec/emty-response';
-import { updateFeatureToggleRequest } from '../../../openapi/spec/update-feature-toggle-request';
+import { updateFeatureRequest } from '../../../openapi/spec/update-feature-request';
 import { patchFeatureRequest } from '../../../openapi/spec/patch-feature-request';
 import { patchStrategyRequest } from '../../../openapi/spec/patch-strategy-request';
 import { updateStrategyRequest } from '../../../openapi/spec/update-strategy-request';
@@ -259,7 +259,7 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
-                    requestBody: updateFeatureToggleRequest,
+                    requestBody: updateFeatureRequest,
                     responses: { 200: featureResponse },
                 }),
             ],

@@ -397,35 +397,6 @@ Object {
         ],
         "type": "object",
       },
-      "featureToggleDtoSchema": Object {
-        "properties": Object {
-          "archived": Object {
-            "type": "string",
-          },
-          "createdAt": Object {
-            "type": "string",
-          },
-          "description": Object {
-            "type": "string",
-          },
-          "impressionData": Object {
-            "type": "boolean",
-          },
-          "name": Object {
-            "type": "string",
-          },
-          "stale": Object {
-            "type": "string",
-          },
-          "type": Object {
-            "type": "string",
-          },
-        },
-        "required": Array [
-          "name",
-        ],
-        "type": "object",
-      },
       "featuresSchema": Object {
         "additionalProperties": false,
         "properties": Object {
@@ -3005,6 +2976,35 @@ Object {
         "required": Array [
           "version",
           "tags",
+        ],
+        "type": "object",
+      },
+      "updateFeatureSchema": Object {
+        "properties": Object {
+          "archived": Object {
+            "type": "string",
+          },
+          "createdAt": Object {
+            "type": "string",
+          },
+          "description": Object {
+            "type": "string",
+          },
+          "impressionData": Object {
+            "type": "boolean",
+          },
+          "name": Object {
+            "type": "string",
+          },
+          "stale": Object {
+            "type": "string",
+          },
+          "type": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "name",
         ],
         "type": "object",
       },

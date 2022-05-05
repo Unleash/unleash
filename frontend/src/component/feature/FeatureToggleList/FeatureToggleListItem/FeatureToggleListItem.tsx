@@ -27,6 +27,9 @@ interface IFeatureToggleListItemProps {
     className?: string;
 }
 
+/**
+ * @deprecated
+ */
 export const FeatureToggleListItem = memo<IFeatureToggleListItemProps>(
     ({
         feature,

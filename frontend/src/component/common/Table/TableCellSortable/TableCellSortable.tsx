@@ -23,6 +23,9 @@ interface ITableCellSortableProps {
     children: ReactNode;
 }
 
+/**
+ * @deprecated No longer in use. See `SortableTableHeader`. Remove when Users table is refactored.
+ */
 export const TableCellSortable = ({
     className,
     name,
@@ -40,12 +43,6 @@ export const TableCellSortable = ({
                 : 'ascending'
             : undefined;
 
-    const cellClassName = classnames(
-        className,
-        styles.tableCellHeaderSortable,
-        sort.type === name && 'sorted'
-    );
-
     const onSortClick = () => {
         setSort(prev => ({
             desc: !Boolean(prev.desc),
@@ -57,7 +54,14 @@ export const TableCellSortable = ({
     };
 
     return (
-        <TableCell aria-sort={ariaSort} className={cellClassName}>
+        <TableCell
+            aria-sort={ariaSort}
+            className={classnames(
+                className,
+                styles.tableCellHeaderSortable,
+                sort.type === name && 'sorted'
+            )}
+        >
             <button className={styles.sortButton} onClick={onSortClick}>
                 {children}
                 <ConditionallyRender

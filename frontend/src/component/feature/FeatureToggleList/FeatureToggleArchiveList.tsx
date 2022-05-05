@@ -9,12 +9,10 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import PageContent from 'component/common/PageContent/PageContent';
 import { HeaderTitle } from 'component/common/HeaderTitle/HeaderTitle';
 import AccessContext from 'contexts/AccessContext';
-import ListPlaceholder from 'component/common/ListPlaceholder/ListPlaceholder';
 import { IFeaturesFilter } from 'hooks/useFeaturesFilter';
 import { FeatureToggleListItem } from './FeatureToggleListItem/FeatureToggleListItem';
 import { FeatureToggleListActions } from './FeatureToggleListActions/FeatureToggleListActions';
 import { CreateFeatureButton } from '../CreateFeatureButton/CreateFeatureButton';
-import { useCreateFeaturePath } from '../CreateFeatureButton/useCreateFeaturePath';
 import { IFeaturesSort } from 'hooks/useFeaturesSort';
 import { FeatureSchema } from 'openapi';
 import { useStyles } from './styles';
@@ -63,7 +61,6 @@ export const FeatureToggleList: VFC<IFeatureToggleListProps> = ({
     setSort,
 }) => {
     const { hasAccess } = useContext(AccessContext);
-    const createFeature = useCreateFeaturePath(filter);
     const { classes: styles } = useStyles();
     const smallScreen = useMediaQuery('(max-width:800px)');
     const mobileView = useMediaQuery('(max-width:600px)');
@@ -101,26 +98,9 @@ export const FeatureToggleList: VFC<IFeatureToggleListProps> = ({
                     />
                 ))}
                 elseShow={
-                    <ConditionallyRender
-                        condition={Boolean(isArchive)}
-                        show={
-                            <ListItem className={styles.emptyStateListItem}>
-                                No archived features.
-                            </ListItem>
-                        }
-                        elseShow={
-                            <ConditionallyRender
-                                condition={Boolean(createFeature?.access)}
-                                show={() => (
-                                    <ListPlaceholder
-                                        text="No features available. Get started by adding a new feature toggle."
-                                        link={createFeature?.path}
-                                        linkText="Add your first toggle"
-                                    />
-                                )}
-                            />
-                        }
-                    />
+                    <ListItem className={styles.emptyStateListItem}>
+                        No archived features.
+                    </ListItem>
                 }
             />
         );

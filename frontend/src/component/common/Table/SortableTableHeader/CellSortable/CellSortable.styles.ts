@@ -4,23 +4,11 @@ export const useStyles = makeStyles()(theme => ({
     tableCellHeaderSortable: {
         padding: 0,
         position: 'relative',
-        cursor: 'pointer',
-        '& > svg': {
-            fontSize: 18,
-            verticalAlign: 'middle',
-            color: theme.palette.grey[700],
-            marginLeft: '4px',
-        },
-        '&.sorted': {
-            fontWeight: 'bold',
-            '& > svg': {
-                color: theme.palette.grey[900],
-            },
-        },
     },
     sortButton: {
         all: 'unset',
         padding: theme.spacing(2),
+        fontWeight: theme.fontWeight.medium,
         width: '100%',
         '&:focus-visible, &:active': {
             outline: 'revert',
@@ -29,13 +17,11 @@ export const useStyles = makeStyles()(theme => ({
         alignItems: 'center',
         '&:hover': {
             backgroundColor: theme.palette.grey[400],
-            '& > svg': {
-                color: theme.palette.grey[900],
-            },
         },
+        boxSizing: 'inherit',
+        cursor: 'pointer',
     },
-    icon: {
-        marginLeft: theme.spacing(0.5),
-        fontSize: 18,
+    sorted: {
+        fontWeight: theme.fontWeight.bold,
     },
 }));

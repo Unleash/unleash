@@ -12,7 +12,7 @@ import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 import PanToolIcon from '@mui/icons-material/PanTool';
 import BuildIcon from '@mui/icons-material/Build';
 
-export const getFeatureTypeIcons = (type: string) => {
+export const getFeatureTypeIcons = (type?: string) => {
     switch (type) {
         case RELEASE:
             return LoopIcon;

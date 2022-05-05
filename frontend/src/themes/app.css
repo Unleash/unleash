@@ -38,6 +38,7 @@ button {
     z-index: 9999;
     box-shadow: none;
     fill: none;
+    pointer-events: none;
 }
 
 .skeleton::before {

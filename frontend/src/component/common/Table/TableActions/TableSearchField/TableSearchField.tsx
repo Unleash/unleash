@@ -1,11 +1,11 @@
 import { IconButton, InputBase, Tooltip } from '@mui/material';
 import { Search, Close } from '@mui/icons-material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useStyles } from 'component/common/Table/TableActions/TableSearchField/TableSearchField.styles';
 import classnames from 'classnames';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { useStyles } from './TableSearchField.styles';
 
 interface ITableSearchFieldProps {
-    value: string;
+    value?: string;
     onChange: (value: string) => void;
     className?: string;
     placeholder?: string;
@@ -13,7 +13,7 @@ interface ITableSearchFieldProps {
 }
 
 export const TableSearchField = ({
-    value,
+    value = '',
     onChange,
     className,
     placeholder,

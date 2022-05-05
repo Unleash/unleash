@@ -11,7 +11,7 @@ exports[`renders an empty list correctly 1`] = `
   }
 >
   <div
-    className="tss-16iyfoa-headerContainer"
+    className="tss-8bhpw1-headerContainer"
   >
     <div
       className="tss-14s7qul-headerTitleContainer"
@@ -21,7 +21,7 @@ exports[`renders an empty list correctly 1`] = `
         data-loading={true}
       >
         <h1
-          className="MuiTypography-root MuiTypography-h1 tss-whbfmi-headerTitle mui-1inkmva-MuiTypography-root"
+          className="MuiTypography-root MuiTypography-h1 tss-whbfmi-headerTitle mui-ylrecv-MuiTypography-root"
         >
           Tag Types
         </h1>
@@ -30,7 +30,7 @@ exports[`renders an empty list correctly 1`] = `
         className="tss-ap2nhp-headerActions"
       >
         <button
-          className="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  mui-16l97z4-MuiButtonBase-root-MuiButton-root"
+          className="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  mui-1aw3qf3-MuiButtonBase-root-MuiButton-root"
           disabled={false}
           onBlur={[Function]}
           onClick={[Function]}
@@ -60,7 +60,7 @@ exports[`renders an empty list correctly 1`] = `
       className="MuiList-root MuiList-padding mui-h4y409-MuiList-root"
     >
       <li
-        className="MuiListItem-root MuiListItem-gutters MuiListItem-padding mui-uz8enf-MuiListItem-root"
+        className="MuiListItem-root MuiListItem-gutters MuiListItem-padding mui-vlytkl-MuiListItem-root"
         disabled={false}
       >
         No entries

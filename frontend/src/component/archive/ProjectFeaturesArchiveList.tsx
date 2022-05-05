@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { useProjectFeaturesArchive } from 'hooks/api/getters/useProjectFeaturesArchive/useProjectFeaturesArchive';
-import { FeatureToggleList } from '../feature/FeatureToggleList/FeatureToggleList';
+import { FeatureToggleList } from '../feature/FeatureToggleList/FeatureToggleArchiveList';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useFeaturesFilter } from 'hooks/useFeaturesFilter';
 import { useFeatureArchiveApi } from 'hooks/api/actions/useFeatureArchiveApi/useReviveFeatureApi';

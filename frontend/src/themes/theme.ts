@@ -1,4 +1,5 @@
 import { createTheme } from '@mui/material/styles';
+import { colors } from './colors';
 
 export default createTheme({
     borderRadius: {
@@ -13,6 +14,10 @@ export default createTheme({
         fontWeightMedium: '700',
         allVariants: { lineHeight: 1.4 },
         button: { lineHeight: 1.75 },
+        h1: {
+            fontSize: '1.5rem',
+            lineHeight: 1.875,
+        },
     },
     fontSizes: {
         mainHeader: '1.2rem',
@@ -37,15 +42,16 @@ export default createTheme({
     },
     palette: {
         primary: {
-            main: '#635DC5',
-            light: '#817AFE',
-            dark: '#635DC5',
+            main: colors.purple[800],
+            light: colors.purple[700],
+            dark: colors.purple[900],
         },
         secondary: {
-            main: '#635DC5',
-            light: '#817AFE',
-            dark: '#635DC5',
+            main: colors.purple[800],
+            light: colors.purple[700],
+            dark: colors.purple[900],
         },
+        grey: colors.grey,
         neutral: {
             main: '#18243e',
         },
@@ -61,17 +67,35 @@ export default createTheme({
         tabs: {
             main: '#efefef',
         },
-        error: {
-            main: '#d95e5e',
-        },
         success: {
-            main: '#3bd86e',
+            light: colors.green[100],
+            main: colors.green[700],
+            dark: colors.green[800],
+        },
+        warning: {
+            light: colors.orange[200],
+            main: colors.orange[700],
+            dark: colors.orange[800],
+        },
+        error: {
+            light: colors.red[200],
+            main: colors.red[700],
+            dark: colors.red[800],
         },
         division: {
             main: '#f1f1f1',
         },
         footer: {
             main: '#000',
+        },
+    },
+    components: {
+        MuiTableHead: {
+            styleOverrides: {
+                root: {
+                    background: colors.grey[200],
+                },
+            },
         },
     },
 });

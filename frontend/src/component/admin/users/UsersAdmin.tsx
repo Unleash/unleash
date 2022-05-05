@@ -32,7 +32,7 @@ const UsersAdmin = () => {
                                 show={
                                     <div className={styles.tableActions}>
                                         <TableActions
-                                            search={search}
+                                            initialSearchValue={search}
                                             onSearch={search =>
                                                 setSearch(search)
                                             }

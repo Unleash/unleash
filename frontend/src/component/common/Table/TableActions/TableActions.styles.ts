@@ -1,9 +1,18 @@
 import { makeStyles } from 'tss-react/mui';
-import { unleashGrey } from 'themes/themeColors';
 
 export const useStyles = makeStyles()(theme => ({
+    tableActions: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'flex-end',
+        '&>button': {
+            padding: theme.spacing(1),
+            flexShrink: 0,
+        },
+        paddingRight: theme.spacing(1),
+    },
     fieldWidth: {
-        width: '49px',
+        width: '45px',
         '& .search-icon': {
             marginRight: 0,
         },
@@ -19,7 +28,7 @@ export const useStyles = makeStyles()(theme => ({
         },
     },
     fieldWidthEnter: {
-        width: '100%',
+        width: '250px',
         transition: 'width 0.6s',
         '& .search-icon': {
             marginRight: '8px',
@@ -37,7 +46,7 @@ export const useStyles = makeStyles()(theme => ({
         },
     },
     fieldWidthLeave: {
-        width: '49px',
+        width: '45px',
         transition: 'width 0.6s',
         '& .search-icon': {
             marginRight: 0,
@@ -53,11 +62,11 @@ export const useStyles = makeStyles()(theme => ({
     },
     verticalSeparator: {
         height: '100%',
-        backgroundColor: unleashGrey[500],
+        backgroundColor: theme.palette.grey[500],
         width: '1px',
         display: 'inline-block',
-        marginLeft: '16px',
-        marginRight: '32px',
+        marginLeft: theme.spacing(2),
+        marginRight: theme.spacing(4),
         padding: '10px 0',
         verticalAlign: 'middle',
     },

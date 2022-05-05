@@ -18,6 +18,9 @@ interface IPaginateUIProps {
     style?: React.CSSProperties;
 }
 
+/**
+ * @deprecated
+ */
 const PaginateUI = ({
     pages,
     pageIndex,

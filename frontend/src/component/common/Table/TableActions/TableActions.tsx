@@ -1,60 +1,87 @@
-import { useState } from 'react';
+import { FC, useState } from 'react';
 import { IconButton, Tooltip } from '@mui/material';
 import { Search } from '@mui/icons-material';
+import { useAsyncDebounce } from 'react-table';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import AnimateOnMount from 'component/common/AnimateOnMount/AnimateOnMount';
-import { TableSearchField } from 'component/common/Table/TableActions/TableSearchField/TableSearchField';
-import { useStyles } from 'component/common/Table/TableActions/TableActions.styles';
+import { TableSearchField } from './TableSearchField/TableSearchField';
+import { useStyles } from './TableActions.styles';
 
 interface ITableActionsProps {
-    search: string;
-    onSearch: (value: string) => void;
+    initialSearchValue?: string;
+    onSearch?: (value: string) => void;
+    searchTip?: string;
+    isSeparated?: boolean;
 }
 
-export const TableActions = ({ search, onSearch }: ITableActionsProps) => {
-    const [searchExpanded, setSearchExpanded] = useState(false);
+export const TableActions: FC<ITableActionsProps> = ({
+    initialSearchValue: search,
+    onSearch = () => {},
+    searchTip = 'Search',
+    children,
+    isSeparated,
+}) => {
+    const [searchExpanded, setSearchExpanded] = useState(Boolean(search));
+    const [searchInputState, setSearchInputState] = useState(search);
     const [animating, setAnimating] = useState(false);
+    const debouncedOnSearch = useAsyncDebounce(onSearch, 200);
 
     const { classes: styles } = useStyles();
 
     const onBlur = (clear = false) => {
-        if (!search || clear) {
+        if (!searchInputState || clear) {
             setSearchExpanded(false);
         }
     };
 
+    const onSearchChange = (value: string) => {
+        debouncedOnSearch(value);
+        setSearchInputState(value);
+    };
+
     return (
-        <>
-            <AnimateOnMount
-                mounted={searchExpanded}
-                start={styles.fieldWidth}
-                enter={styles.fieldWidthEnter}
-                leave={styles.fieldWidthLeave}
-                onStart={() => setAnimating(true)}
-                onEnd={() => setAnimating(false)}
-            >
-                <TableSearchField
-                    value={search}
-                    onChange={onSearch}
-                    placeholder="Search users..."
-                    onBlur={onBlur}
-                />
-            </AnimateOnMount>
+        <div className={styles.tableActions}>
             <ConditionallyRender
-                condition={!searchExpanded && !animating}
+                condition={Boolean(onSearch)}
                 show={
-                    <Tooltip title="Search users" arrow>
-                        <IconButton
-                            aria-label="Search users"
-                            onClick={() => setSearchExpanded(true)}
-                            size="large"
+                    <>
+                        <AnimateOnMount
+                            mounted={searchExpanded}
+                            start={styles.fieldWidth}
+                            enter={styles.fieldWidthEnter}
+                            leave={styles.fieldWidthLeave}
+                            onStart={() => setAnimating(true)}
+                            onEnd={() => setAnimating(false)}
                         >
-                            <Search />
-                        </IconButton>
-                    </Tooltip>
+                            <TableSearchField
+                                value={searchInputState!}
+                                onChange={onSearchChange}
+                                placeholder={`${searchTip}...`}
+                                onBlur={onBlur}
+                            />
+                        </AnimateOnMount>
+                        <ConditionallyRender
+                            condition={!searchExpanded && !animating}
+                            show={
+                                <Tooltip title={searchTip} arrow>
+                                    <IconButton
+                                        aria-label={searchTip}
+                                        onClick={() => setSearchExpanded(true)}
+                                        size="large"
+                                    >
+                                        <Search />
+                                    </IconButton>
+                                </Tooltip>
+                            }
+                        />
+                    </>
                 }
             />
-            <div className={styles.verticalSeparator} />
-        </>
+            <ConditionallyRender
+                condition={Boolean(isSeparated)}
+                show={<div className={styles.verticalSeparator} />}
+            />
+            {children}
+        </div>
     );
 };

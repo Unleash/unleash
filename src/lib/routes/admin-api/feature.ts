@@ -21,8 +21,8 @@ import { featuresResponse } from '../../openapi/spec/features-response';
 import { FeaturesSchema } from '../../openapi/spec/features-schema';
 import { tagsResponse } from '../../openapi/spec/tags-response';
 import { tagResponse } from '../../openapi/spec/tag-response';
-import { emptyResponse } from 'lib/openapi/spec/emty-response';
 import { createTagRequest } from '../../openapi/spec/create-tag-request';
+import { emptyResponse } from '../../openapi/spec/emty-response';
 
 const version = 1;
 

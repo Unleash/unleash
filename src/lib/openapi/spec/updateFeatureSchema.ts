@@ -1,5 +1,4 @@
 import { createSchemaObject, CreateSchemaType } from '../types';
-import { constraintSchema } from './constraint-schema';
 
 const schema = {
     type: 'object',
@@ -15,25 +14,17 @@ const schema = {
             type: 'string',
         },
         stale: {
-            type: 'boolean',
+            type: 'string',
         },
         archived: {
-            type: 'boolean',
+            type: 'string',
         },
         createdAt: {
             type: 'string',
-            format: 'date',
         },
         impressionData: {
             type: 'boolean',
         },
-        constraints: {
-            type: 'array',
-            items: { $ref: '#/components/schemas/constraintSchema' },
-        },
-    },
-    'components/schemas': {
-        constraintSchema,
     },
 } as const;
 

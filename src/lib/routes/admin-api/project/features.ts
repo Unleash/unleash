@@ -31,6 +31,7 @@ import { strategiesResponse } from '../../../openapi/spec/strategies-response';
 import { strategyResponse } from '../../../openapi/spec/strategy-response';
 import { emptyResponse } from '../../../openapi/spec/emty-response';
 import { updateFeatureRequest } from '../../../openapi/spec/update-feature-request';
+import { patchFeatureRequest } from '../../../openapi/spec/patch-feature-request';
 
 interface FeatureStrategyParams {
     projectId: string;
@@ -271,6 +272,7 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
+                    requestBody: patchFeatureRequest,
                     responses: { 200: featureResponse },
                 }),
             ],

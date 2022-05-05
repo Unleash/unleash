@@ -2,7 +2,7 @@ import { createSchemaObject, CreateSchemaType } from '../types';
 import { constraintSchema } from './constraint-schema';
 import { parametersSchema } from './parameters-schema';
 
-const schema = {
+export const strategySchemaDefinition = {
     type: 'object',
     additionalProperties: false,
     required: ['id', 'name', 'constraints', 'parameters'],
@@ -21,6 +21,6 @@ const schema = {
     },
 } as const;
 
-export type StrategySchema = CreateSchemaType<typeof schema>;
+export type StrategySchema = CreateSchemaType<typeof strategySchemaDefinition>;
 
-export const strategySchema = createSchemaObject(schema);
+export const strategySchema = createSchemaObject(strategySchemaDefinition);

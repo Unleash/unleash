@@ -12,7 +12,7 @@ import {
 } from 'component/providers/AccessProvider/permissions';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import { IConstraint } from 'interfaces/strategy';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useStyles } from 'component/segments/SegmentFormStepTwo/SegmentFormStepTwo.styles';
 import {
     ConstraintAccordionList,
@@ -46,7 +46,7 @@ export const SegmentFormStepTwo: React.FC<ISegmentFormPartTwoProps> = ({
     mode,
 }) => {
     const constraintsAccordionListRef = useRef<IConstraintAccordionListRef>();
-    const history = useHistory();
+    const navigate = useNavigate();
     const { hasAccess } = useContext(AccessContext);
     const { classes: styles } = useStyles();
     const { context = [] } = useUnleashContext();
@@ -152,7 +152,7 @@ export const SegmentFormStepTwo: React.FC<ISegmentFormPartTwoProps> = ({
                     type="button"
                     className={styles.cancelButton}
                     onClick={() => {
-                        history.push('/segments');
+                        navigate('/segments');
                     }}
                 >
                     Cancel

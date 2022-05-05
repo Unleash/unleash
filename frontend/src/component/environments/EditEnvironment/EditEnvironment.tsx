@@ -5,21 +5,21 @@ import useEnvironment from 'hooks/api/getters/useEnvironment/useEnvironment';
 import useProjectRolePermissions from 'hooks/api/getters/useProjectRolePermissions/useProjectRolePermissions';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
-import { useHistory, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import EnvironmentForm from '../EnvironmentForm/EnvironmentForm';
 import useEnvironmentForm from '../hooks/useEnvironmentForm';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
 const EditEnvironment = () => {
     const { uiConfig } = useUiConfig();
     const { setToastData, setToastApiError } = useToast();
-
-    const { id } = useParams<{ id: string }>();
+    const id = useRequiredPathParam('id');
     const { environment } = useEnvironment(id);
     const { updateEnvironment } = useEnvironmentApi();
 
-    const history = useHistory();
+    const navigate = useNavigate();
     const { name, type, setName, setType, errors, clearErrors } =
         useEnvironmentForm(environment.name, environment.type);
     const { refetch } = useProjectRolePermissions();
@@ -45,7 +45,7 @@ const EditEnvironment = () => {
         try {
             await updateEnvironment(id, editPayload());
             refetch();
-            history.push('/environments');
+            navigate('/environments');
             setToastData({
                 type: 'success',
                 title: 'Successfully updated environment.',
@@ -56,7 +56,7 @@ const EditEnvironment = () => {
     };
 
     const handleCancel = () => {
-        history.goBack();
+        navigate(-1);
     };
 
     return (

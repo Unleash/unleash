@@ -1,7 +1,7 @@
 import { FormEventHandler, useState, VFC } from 'react';
 import classnames from 'classnames';
 import { Button, Grid, TextField, Typography } from '@mui/material';
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router';
 import { useThemeStyles } from 'themes/themeStyles';
 import { useStyles } from './HostedAuth.styles';
 import useQueryParams from 'hooks/useQueryParams';
@@ -24,7 +24,7 @@ const HostedAuth: VFC<IHostedAuthProps> = ({ authDetails, redirect }) => {
     const { classes: themeStyles } = useThemeStyles();
     const { classes: styles } = useStyles();
     const { refetchUser } = useAuthUser();
-    const history = useHistory();
+    const navigate = useNavigate();
     const params = useQueryParams();
     const { passwordAuth } = useAuthApi();
     const [username, setUsername] = useState(params.get('email') || '');
@@ -58,7 +58,7 @@ const HostedAuth: VFC<IHostedAuthProps> = ({ authDetails, redirect }) => {
         try {
             await passwordAuth(authDetails.path, username, password);
             refetchUser();
-            history.push(redirect);
+            navigate(redirect);
         } catch (error: any) {
             if (
                 error instanceof NotFoundError ||

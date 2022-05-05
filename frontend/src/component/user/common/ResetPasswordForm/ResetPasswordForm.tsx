@@ -8,7 +8,7 @@ import React, {
     useEffect,
     useState,
 } from 'react';
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router';
 import { useThemeStyles } from 'themes/themeStyles';
 import { OK } from 'constants/statusCodes';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -33,7 +33,7 @@ const ResetPasswordForm = ({ token, setLoading }: IResetPasswordProps) => {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [matchingPasswords, setMatchingPasswords] = useState(false);
     const [validOwaspPassword, setValidOwaspPassword] = useState(false);
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const submittable = matchingPasswords && validOwaspPassword;
 
@@ -74,7 +74,7 @@ const ResetPasswordForm = ({ token, setLoading }: IResetPasswordProps) => {
             const res = await makeResetPasswordReq();
             setLoading(false);
             if (res.status === OK) {
-                history.push('login?reset=true');
+                navigate('login?reset=true');
                 setApiError(false);
             } else {
                 setApiError(true);

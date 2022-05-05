@@ -1,5 +1,5 @@
 import { useContext, useMemo, useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { mutate } from 'swr';
 import { getProjectFetcher } from 'hooks/api/getters/useProject/getProjectFetcher';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
@@ -45,7 +45,7 @@ function resolveCreateButtonData(isOss: boolean, hasAccess: boolean) {
 
 export const ProjectListNew = () => {
     const { hasAccess } = useContext(AccessContext);
-    const history = useHistory();
+    const navigate = useNavigate();
     const { classes: styles } = useStyles();
     const { projects, loading, error, refetch } = useProjects();
     const [fetchedProjects, setFetchedProjects] = useState<projectMap>({});
@@ -94,12 +94,7 @@ export const ProjectListNew = () => {
             return (
                 <Link
                     key={project.id}
-                    to={{
-                        pathname: `/projects/${project.id}`,
-                        state: {
-                            projectName: project.name,
-                        },
-                    }}
+                    to={`/projects/${project.id}`}
                     className={styles.cardLink}
                 >
                     <ProjectCard
@@ -151,7 +146,7 @@ export const ProjectListNew = () => {
                         actions={
                             <ResponsiveButton
                                 Icon={Add}
-                                onClick={() => history.push('/projects/create')}
+                                onClick={() => navigate('/projects/create')}
                                 maxWidth="700px"
                                 permission={CREATE_PROJECT}
                                 disabled={createButtonData.disabled}

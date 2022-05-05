@@ -14,8 +14,6 @@ import { AddVariant } from './AddFeatureVariant/AddFeatureVariant';
 
 import { useContext, useEffect, useState } from 'react';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
-import { useParams } from 'react-router';
-import { IFeatureViewParams } from 'interfaces/params';
 import AccessContext from 'contexts/AccessContext';
 import FeatureVariantListItem from './FeatureVariantsListItem/FeatureVariantsListItem';
 import { UPDATE_FEATURE_VARIANTS } from 'component/providers/AccessProvider/permissions';
@@ -30,10 +28,12 @@ import cloneDeep from 'lodash.clonedeep';
 import useDeleteVariantMarkup from './FeatureVariantsListItem/useDeleteVariantMarkup';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
 const FeatureOverviewVariants = () => {
     const { hasAccess } = useContext(AccessContext);
-    const { projectId, featureId } = useParams<IFeatureViewParams>();
+    const projectId = useRequiredPathParam('projectId');
+    const featureId = useRequiredPathParam('featureId');
     const { feature, refetchFeature } = useFeature(projectId, featureId);
     const [variants, setVariants] = useState<IFeatureVariant[]>([]);
     const [editing, setEditing] = useState(false);

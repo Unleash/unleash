@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
     Button,
     IconButton,
@@ -34,7 +34,7 @@ export const TagTypeList = () => {
         open: boolean;
         name?: string;
     }>({ open: false });
-    const history = useHistory();
+    const navigate = useNavigate();
     const smallScreen = useMediaQuery('(max-width:700px)');
     const { deleteTagType } = useTagTypesApi();
     const { tagTypes, refetch } = useTagTypes();
@@ -70,7 +70,7 @@ export const TagTypeList = () => {
                                 <Tooltip title="Add tag type">
                                     <IconButton
                                         onClick={() =>
-                                            history.push('/tag-types/create')
+                                            navigate('/tag-types/create')
                                         }
                                         size="large"
                                     >
@@ -83,7 +83,7 @@ export const TagTypeList = () => {
                                     variant="contained"
                                     color="primary"
                                     onClick={() =>
-                                        history.push('/tag-types/create')
+                                        navigate('/tag-types/create')
                                     }
                                 >
                                     New tag type

@@ -7,19 +7,19 @@ import useProjectRole from 'hooks/api/getters/useProjectRole/useProjectRole';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
 import { IPermission } from 'interfaces/user';
-import { useParams, useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import useProjectRoleForm from '../hooks/useProjectRoleForm';
 import ProjectRoleForm from '../ProjectRoleForm/ProjectRoleForm';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
 const EditProjectRole = () => {
     const { uiConfig } = useUiConfig();
     const { setToastData, setToastApiError } = useToast();
+    const projectId = useRequiredPathParam('projectId');
+    const { role } = useProjectRole(projectId);
 
-    const { id } = useParams<{ id: string }>();
-    const { role } = useProjectRole(id);
-
-    const history = useHistory();
+    const navigate = useNavigate();
     const {
         roleName,
         roleDesc,
@@ -66,7 +66,7 @@ const EditProjectRole = () => {
 --data-raw '${JSON.stringify(getProjectRolePayload(), undefined, 2)}'`;
     };
 
-    const { refetch } = useProjectRole(id);
+    const { refetch } = useProjectRole(projectId);
     const { editRole, loading } = useProjectRolesApi();
 
     const handleSubmit = async (e: Event) => {
@@ -78,9 +78,9 @@ const EditProjectRole = () => {
 
         if (validName && validPermissions) {
             try {
-                await editRole(id, payload);
+                await editRole(projectId, payload);
                 refetch();
-                history.push('/admin/roles');
+                navigate('/admin/roles');
                 setToastData({
                     type: 'success',
                     title: 'Project role updated',
@@ -94,7 +94,7 @@ const EditProjectRole = () => {
     };
 
     const handleCancel = () => {
-        history.goBack();
+        navigate(-1);
     };
 
     return (

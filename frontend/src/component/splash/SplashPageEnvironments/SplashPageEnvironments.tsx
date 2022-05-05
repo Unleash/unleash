@@ -4,14 +4,14 @@ import { VpnKey, CloudCircle } from '@mui/icons-material';
 import { useStyles } from 'component/splash/SplashPageEnvironments/SplashPageEnvironments.styles';
 import { ReactComponent as Logo1 } from 'assets/img/splashEnv1.svg';
 import { ReactComponent as Logo2 } from 'assets/img/splashEnv2.svg';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export const SplashPageEnvironments = () => {
     const { classes: styles } = useStyles();
-    const { push } = useHistory();
+    const navigate = useNavigate();
 
     const onFinish = () => {
-        push('/');
+        navigate('/');
     };
 
     return (

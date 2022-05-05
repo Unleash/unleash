@@ -6,32 +6,32 @@ import {
     Button,
     InputAdornment,
     SelectChangeEvent,
+    Alert,
 } from '@mui/material';
 import { Search } from '@mui/icons-material';
 import Autocomplete from '@mui/material/Autocomplete';
-import { Alert } from '@mui/material';
 import { ProjectRoleSelect } from '../ProjectRoleSelect/ProjectRoleSelect';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
-import { useParams } from 'react-router-dom';
 import useToast from 'hooks/useToast';
 import useProjectAccess, {
     IProjectAccessUser,
 } from 'hooks/api/getters/useProjectAccess/useProjectAccess';
 import { IProjectRole } from 'interfaces/role';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
 interface IProjectAccessAddUserProps {
     roles: IProjectRole[];
 }
 
 export const ProjectAccessAddUser = ({ roles }: IProjectAccessAddUserProps) => {
-    const { id } = useParams<{ id: string }>();
+    const projectId = useRequiredPathParam('projectId');
     const [user, setUser] = useState<IProjectAccessUser | undefined>();
     const [role, setRole] = useState<IProjectRole | undefined>();
     const [options, setOptions] = useState<IProjectAccessUser[]>([]);
     const [loading, setLoading] = useState(false);
     const { setToastData } = useToast();
-    const { refetchProjectAccess, access } = useProjectAccess(id);
+    const { refetchProjectAccess, access } = useProjectAccess(projectId);
 
     const { searchProjectUser, addUserToRole } = useProjectApi();
 
@@ -114,7 +114,7 @@ export const ProjectAccessAddUser = ({ roles }: IProjectAccessAddUserProps) => {
         }
 
         try {
-            await addUserToRole(id, role.id, user.id);
+            await addUserToRole(projectId, role.id, user.id);
             refetchProjectAccess();
             setUser(undefined);
             setOptions([]);
@@ -129,9 +129,9 @@ export const ProjectAccessAddUser = ({ roles }: IProjectAccessAddUserProps) => {
             if (
                 e
                     .toString()
-                    .includes(`User already has access to project=${id}`)
+                    .includes(`User already has access to project=${projectId}`)
             ) {
-                error = `User already has access to project ${id}`;
+                error = `User already has access to project ${projectId}`;
             } else {
                 error = e.toString() || 'Server problems when adding users.';
             }

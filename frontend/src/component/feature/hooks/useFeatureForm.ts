@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import useQueryParams from 'hooks/useQueryParams';
-import { IFeatureViewParams } from 'interfaces/params';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
 const useFeatureForm = (
     initialName = '',
@@ -11,7 +10,7 @@ const useFeatureForm = (
     initialDescription = '',
     initialImpressionData = false
 ) => {
-    const { projectId } = useParams<IFeatureViewParams>();
+    const projectId = useRequiredPathParam('projectId');
     const params = useQueryParams();
     const { validateFeatureToggleName } = useFeatureApi();
     const toggleQueryName = params.get('name');

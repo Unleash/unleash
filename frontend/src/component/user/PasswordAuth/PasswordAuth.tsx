@@ -2,7 +2,7 @@ import { FormEventHandler, useState, VFC } from 'react';
 import classnames from 'classnames';
 import { Button, TextField } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router';
 import { useThemeStyles } from 'themes/themeStyles';
 import { useStyles } from './PasswordAuth.styles';
 import useQueryParams from 'hooks/useQueryParams';
@@ -28,7 +28,7 @@ interface IPasswordAuthProps {
 const PasswordAuth: VFC<IPasswordAuthProps> = ({ authDetails, redirect }) => {
     const { classes: themeStyles } = useThemeStyles();
     const { classes: styles } = useStyles();
-    const history = useHistory();
+    const navigate = useNavigate();
     const { refetchUser } = useAuthUser();
     const params = useQueryParams();
     const [username, setUsername] = useState(params.get('email') || '');
@@ -63,7 +63,7 @@ const PasswordAuth: VFC<IPasswordAuthProps> = ({ authDetails, redirect }) => {
         try {
             await passwordAuth(authDetails.path, username, password);
             refetchUser();
-            history.push(redirect);
+            navigate(redirect);
         } catch (error: any) {
             if (
                 error instanceof NotFoundError ||

@@ -5,8 +5,6 @@ import { ProjectAccessAddUser } from './ProjectAccessAddUser/ProjectAccessAddUse
 import PageContent from 'component/common/PageContent';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useStyles } from './ProjectAccess.styles';
-import { useParams } from 'react-router-dom';
-import { IProjectViewParams } from 'interfaces/params';
 import usePagination from 'hooks/usePagination';
 import PaginateUI from 'component/common/PaginateUI/PaginateUI';
 import useToast from 'hooks/useToast';
@@ -17,9 +15,10 @@ import useProjectAccess, {
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import { HeaderTitle } from 'component/common/HeaderTitle/HeaderTitle';
 import { ProjectAccessList } from './ProjectAccessList/ProjectAccessList';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
 export const ProjectAccess = () => {
-    const { id: projectId } = useParams<IProjectViewParams>();
+    const projectId = useRequiredPathParam('projectId');
     const { classes: styles } = useStyles();
     const { access, refetchProjectAccess } = useProjectAccess(projectId);
     const { setToastData } = useToast();

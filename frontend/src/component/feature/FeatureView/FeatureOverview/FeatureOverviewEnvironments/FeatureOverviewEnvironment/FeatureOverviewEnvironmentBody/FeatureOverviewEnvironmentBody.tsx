@@ -1,10 +1,9 @@
-import { useParams } from 'react-router-dom';
-import { IFeatureViewParams } from 'interfaces/params';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import FeatureOverviewEnvironmentStrategies from '../FeatureOverviewEnvironmentStrategies/FeatureOverviewEnvironmentStrategies';
 import { useStyles } from '../FeatureOverviewEnvironment.styles';
 import { IFeatureEnvironment } from 'interfaces/featureToggle';
 import { FeatureStrategyEmpty } from 'component/feature/FeatureStrategy/FeatureStrategyEmpty/FeatureStrategyEmpty';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
 interface IFeatureOverviewEnvironmentBodyProps {
     getOverviewText: () => string;
@@ -15,7 +14,8 @@ const FeatureOverviewEnvironmentBody = ({
     featureEnvironment,
     getOverviewText,
 }: IFeatureOverviewEnvironmentBodyProps) => {
-    const { projectId, featureId } = useParams<IFeatureViewParams>();
+    const projectId = useRequiredPathParam('projectId');
+    const featureId = useRequiredPathParam('featureId');
     const { classes: styles } = useStyles();
 
     if (!featureEnvironment) {

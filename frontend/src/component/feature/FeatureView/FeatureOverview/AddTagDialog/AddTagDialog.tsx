@@ -1,7 +1,5 @@
 import { DialogContentText } from '@mui/material';
-import { useParams } from 'react-router';
 import React, { useState } from 'react';
-import { IFeatureViewParams } from 'interfaces/params';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import Input from 'component/common/Input/Input';
 import { useStyles } from './AddTagDialog.styles';
@@ -11,6 +9,7 @@ import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import useTags from 'hooks/api/getters/useTags/useTags';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
 interface IAddTagDialogProps {
     open: boolean;
@@ -27,7 +26,7 @@ interface IDefaultTag {
 const AddTagDialog = ({ open, setOpen }: IAddTagDialogProps) => {
     const DEFAULT_TAG: IDefaultTag = { type: 'simple', value: '' };
     const { classes: styles } = useStyles();
-    const { featureId } = useParams<IFeatureViewParams>();
+    const featureId = useRequiredPathParam('featureId');
     const { addTagToFeature, loading } = useFeatureApi();
     const { refetch } = useTags(featureId);
     const [errors, setErrors] = useState({ tagError: '' });

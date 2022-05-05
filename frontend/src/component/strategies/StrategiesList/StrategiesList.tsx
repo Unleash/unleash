@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import {
     IconButton,
@@ -45,7 +45,7 @@ interface IDialogueMetaData {
 }
 
 export const StrategiesList = () => {
-    const history = useHistory();
+    const navigate = useNavigate();
     const { classes: styles } = useStyles();
     const smallScreen = useMediaQuery('(max-width:700px)');
     const { hasAccess } = useContext(AccessContext);
@@ -70,7 +70,7 @@ export const StrategiesList = () => {
                     show={
                         <PermissionIconButton
                             data-testid={ADD_NEW_STRATEGY_ID}
-                            onClick={() => history.push('/strategies/create')}
+                            onClick={() => navigate('/strategies/create')}
                             permission={CREATE_STRATEGY}
                             tooltip="New strategy"
                         >
@@ -79,7 +79,7 @@ export const StrategiesList = () => {
                     }
                     elseShow={
                         <PermissionButton
-                            onClick={() => history.push('/strategies/create')}
+                            onClick={() => navigate('/strategies/create')}
                             color="primary"
                             permission={CREATE_STRATEGY}
                             data-testid={ADD_NEW_STRATEGY_ID}
@@ -204,7 +204,7 @@ export const StrategiesList = () => {
             show={
                 <PermissionIconButton
                     onClick={() =>
-                        history.push(`/strategies/${strategy?.name}/edit`)
+                        navigate(`/strategies/${strategy?.name}/edit`)
                     }
                     permission={UPDATE_STRATEGY}
                     tooltip="Edit strategy"

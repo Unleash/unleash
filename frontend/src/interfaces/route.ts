@@ -3,7 +3,7 @@ import { VoidFunctionComponent } from 'react';
 export interface IRoute {
     path: string;
     title: string;
-    type: string;
+    type: 'protected' | 'unprotected';
     layout?: string;
     parent?: string;
     flag?: string;

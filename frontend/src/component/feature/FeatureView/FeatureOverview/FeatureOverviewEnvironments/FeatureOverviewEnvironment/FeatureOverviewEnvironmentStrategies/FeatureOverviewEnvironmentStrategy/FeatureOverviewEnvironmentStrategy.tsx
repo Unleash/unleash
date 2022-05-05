@@ -1,7 +1,6 @@
 import { Edit } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
-import { Link, useParams } from 'react-router-dom';
-import { IFeatureViewParams } from 'interfaces/params';
+import { Link } from 'react-router-dom';
 import { IFeatureStrategy } from 'interfaces/strategy';
 import {
     getFeatureStrategyIcon,
@@ -14,6 +13,7 @@ import { useStyles } from './FeatureOverviewEnvironmentStrategy.styles';
 import { formatEditStrategyPath } from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
 import { FeatureStrategyRemove } from 'component/feature/FeatureStrategy/FeatureStrategyRemove/FeatureStrategyRemove';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
 interface IFeatureOverviewEnvironmentStrategyProps {
     environmentId: string;
@@ -24,7 +24,8 @@ const FeatureOverviewEnvironmentStrategy = ({
     environmentId,
     strategy,
 }: IFeatureOverviewEnvironmentStrategyProps) => {
-    const { projectId, featureId } = useParams<IFeatureViewParams>();
+    const projectId = useRequiredPathParam('projectId');
+    const featureId = useRequiredPathParam('featureId');
     const theme = useTheme();
     const { classes: styles } = useStyles();
     const Icon = getFeatureStrategyIcon(strategy.name);

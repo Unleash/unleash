@@ -6,11 +6,12 @@ import useContext from 'hooks/api/getters/useContext/useContext';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
 import { useEffect } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { scrollToTop } from 'component/common/util';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { ContextForm } from '../ContextForm/ContextForm';
 import { useContextForm } from '../hooks/useContextForm';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
 export const EditContext = () => {
     useEffect(() => {
@@ -19,10 +20,10 @@ export const EditContext = () => {
 
     const { uiConfig } = useUiConfig();
     const { setToastData, setToastApiError } = useToast();
-    const { name } = useParams<{ name: string }>();
+    const name = useRequiredPathParam('name');
     const { context, refetch } = useContext(name);
     const { updateContext, loading } = useContextsApi();
-    const history = useHistory();
+    const navigate = useNavigate();
     const {
         contextName,
         contextDesc,
@@ -59,7 +60,7 @@ export const EditContext = () => {
         try {
             await updateContext(payload);
             refetch();
-            history.push('/context');
+            navigate('/context');
             setToastData({
                 title: 'Context information updated',
                 type: 'success',
@@ -70,7 +71,7 @@ export const EditContext = () => {
     };
 
     const onCancel = () => {
-        history.goBack();
+        navigate(-1);
     };
 
     return (

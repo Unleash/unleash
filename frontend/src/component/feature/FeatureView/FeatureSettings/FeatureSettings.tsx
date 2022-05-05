@@ -4,16 +4,16 @@ import { useStyles } from './FeatureSettings.styles';
 import { List, ListItem } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import FeatureSettingsProject from './FeatureSettingsProject/FeatureSettingsProject';
-import { useParams } from 'react-router-dom';
-import { IFeatureViewParams } from 'interfaces/params';
 import { FeatureSettingsInformation } from './FeatureSettingsInformation/FeatureSettingsInformation';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
 const METADATA = 'metadata';
 const PROJECT = 'project';
 
 export const FeatureSettings = () => {
     const { classes: styles } = useStyles();
-    const { projectId, featureId } = useParams<IFeatureViewParams>();
+    const projectId = useRequiredPathParam('projectId');
+    const featureId = useRequiredPathParam('featureId');
     const [settings, setSettings] = useState(METADATA);
 
     return (

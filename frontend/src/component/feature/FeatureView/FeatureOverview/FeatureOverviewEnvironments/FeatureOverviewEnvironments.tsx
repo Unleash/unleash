@@ -1,11 +1,10 @@
-import { useParams } from 'react-router-dom';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
-import { IFeatureViewParams } from 'interfaces/params';
-
 import FeatureOverviewEnvironment from './FeatureOverviewEnvironment/FeatureOverviewEnvironment';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
 const FeatureOverviewEnvironments = () => {
-    const { projectId, featureId } = useParams<IFeatureViewParams>();
+    const projectId = useRequiredPathParam('projectId');
+    const featureId = useRequiredPathParam('featureId');
     const { feature } = useFeature(projectId, featureId);
 
     if (!feature) return null;

@@ -1,6 +1,6 @@
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import useProjectRolesApi from 'hooks/api/actions/useProjectRolesApi/useProjectRolesApi';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import ProjectRoleForm from '../ProjectRoleForm/ProjectRoleForm';
 import useProjectRoleForm from '../hooks/useProjectRoleForm';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -12,7 +12,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 const CreateProjectRole = () => {
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
-    const history = useHistory();
+    const navigate = useNavigate();
     const {
         roleName,
         roleDesc,
@@ -43,7 +43,7 @@ const CreateProjectRole = () => {
             const payload = getProjectRolePayload();
             try {
                 await createRole(payload);
-                history.push('/admin/roles');
+                navigate('/admin/roles');
                 setToastData({
                     title: 'Project role created',
                     text: 'Now you can start assigning your project roles to project members.',
@@ -66,7 +66,7 @@ const CreateProjectRole = () => {
     };
 
     const handleCancel = () => {
-        history.goBack();
+        navigate(-1);
     };
 
     return (

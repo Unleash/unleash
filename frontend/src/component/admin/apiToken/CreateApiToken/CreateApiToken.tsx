@@ -1,5 +1,5 @@
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import ApiTokenForm from '../ApiTokenForm/ApiTokenForm';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import useApiTokensApi from 'hooks/api/actions/useApiTokensApi/useApiTokensApi';
@@ -15,7 +15,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 export const CreateApiToken = () => {
     const { setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
-    const history = useHistory();
+    const navigate = useNavigate();
     const [showConfirm, setShowConfirm] = useState(false);
     const [token, setToken] = useState('');
 
@@ -57,7 +57,7 @@ export const CreateApiToken = () => {
 
     const closeConfirm = () => {
         setShowConfirm(false);
-        history.push('/admin/api');
+        navigate('/admin/api');
     };
 
     const formatApiCode = () => {
@@ -70,7 +70,7 @@ export const CreateApiToken = () => {
     };
 
     const handleCancel = () => {
-        history.goBack();
+        navigate(-1);
     };
 
     return (

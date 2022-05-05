@@ -8,7 +8,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useToast from 'hooks/useToast';
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useSegmentForm } from '../hooks/useSegmentForm';
 import { SegmentForm } from '../SegmentForm/SegmentForm';
@@ -24,7 +24,7 @@ export const EditSegment = () => {
     const { segment } = useSegment(Number(segmentId));
     const { uiConfig } = useUiConfig();
     const { setToastData, setToastApiError } = useToast();
-    const history = useHistory();
+    const navigate = useNavigate();
     const { updateSegment, loading } = useSegmentsApi();
     const { refetchSegments } = useSegments();
 
@@ -64,7 +64,7 @@ export const EditSegment = () => {
             try {
                 await updateSegment(segment.id, getSegmentPayload());
                 await refetchSegments();
-                history.push('/segments/');
+                navigate('/segments/');
                 setToastData({
                     title: 'Segment updated',
                     type: 'success',

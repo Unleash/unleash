@@ -1,5 +1,3 @@
-import { useParams } from 'react-router';
-import { IFeatureViewParams } from 'interfaces/params';
 import { useFeatureMetricsRaw } from 'hooks/api/getters/useFeatureMetricsRaw/useFeatureMetricsRaw';
 import PageContent from 'component/common/PageContent';
 import { useEffect, useMemo, useState } from 'react';
@@ -17,9 +15,11 @@ import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useStyles } from './FeatureMetrics.styles';
 import { usePageTitle } from 'hooks/usePageTitle';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
 export const FeatureMetrics = () => {
-    const { projectId, featureId } = useParams<IFeatureViewParams>();
+    const projectId = useRequiredPathParam('projectId');
+    const featureId = useRequiredPathParam('featureId');
     const environments = useFeatureMetricsEnvironments(projectId, featureId);
     const applications = useFeatureMetricsApplications(featureId);
     const { classes: styles } = useStyles();

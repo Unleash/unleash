@@ -1,18 +1,18 @@
 import { Tooltip } from '@mui/material';
 import { useState } from 'react';
-import { useParams } from 'react-router';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
-import { IFeatureViewParams } from 'interfaces/params';
 import EnvironmentStrategyDialog from 'component/common/EnvironmentStrategiesDialog/EnvironmentStrategyDialog';
 import FeatureOverviewEnvSwitch from './FeatureOverviewEnvSwitch/FeatureOverviewEnvSwitch';
 import { useStyles } from './FeatureOverviewEnvSwitches.styles';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
 const FeatureOverviewEnvSwitches = () => {
     const { classes: styles } = useStyles();
-    const { featureId, projectId } = useParams<IFeatureViewParams>();
-    useFeatureApi();
+    const projectId = useRequiredPathParam('projectId');
+    const featureId = useRequiredPathParam('featureId');
     const { feature } = useFeature(projectId, featureId);
+    useFeatureApi();
 
     const [showInfoBox, setShowInfoBox] = useState(false);
     const [environmentName, setEnvironmentName] = useState('');

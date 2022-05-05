@@ -25,7 +25,7 @@ import { useDrag, useDrop, DropTargetMonitor } from 'react-dnd';
 import { XYCoord, Identifier } from 'dnd-core';
 import DisabledIndicator from 'component/common/DisabledIndicator/DisabledIndicator';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 interface IEnvironmentListItemProps {
     env: IEnvironment;
@@ -56,7 +56,7 @@ const EnvironmentListItem = ({
     moveListItemApi,
     setToggleDialog,
 }: IEnvironmentListItemProps) => {
-    const history = useHistory();
+    const navigate = useNavigate();
     const ref = useRef<HTMLLIElement>(null);
     const ACCEPT_TYPE = 'LIST_ITEM';
     const [{ isDragging }, drag] = useDrag({
@@ -182,7 +182,7 @@ const EnvironmentListItem = ({
                         <IconButton
                             disabled={env.protected}
                             onClick={() => {
-                                history.push(`/environments/${env.name}`);
+                                navigate(`/environments/${env.name}`);
                             }}
                             size="large"
                         >

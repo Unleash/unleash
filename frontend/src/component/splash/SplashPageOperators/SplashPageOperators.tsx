@@ -1,11 +1,11 @@
 import { useStyles } from 'component/splash/SplashPageOperators/SplashPageOperators.styles';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button, IconButton } from '@mui/material';
 import { CloseOutlined } from '@mui/icons-material';
 import { OperatorUpgradeAlert } from 'component/common/OperatorUpgradeAlert/OperatorUpgradeAlert';
 
 export const SplashPageOperators = () => {
-    const { push } = useHistory();
+    const navigate = useNavigate();
     const { classes: styles } = useStyles();
 
     return (
@@ -15,7 +15,7 @@ export const SplashPageOperators = () => {
                     <h1 className={styles.title}>New strategy operators</h1>
                     <IconButton
                         className={styles.close}
-                        onClick={() => push('/')}
+                        onClick={() => navigate('/')}
                         size="large"
                     >
                         <CloseOutlined titleAccess="Close" />

@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 
-const render = () => <Redirect to="/admin/users" />;
+const render = () => <Navigate to="/admin/users" replace />;
 
 render.propTypes = {
     match: PropTypes.object.isRequired,

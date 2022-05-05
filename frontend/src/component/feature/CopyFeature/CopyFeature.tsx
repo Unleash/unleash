@@ -5,13 +5,14 @@ import {
     FormEventHandler,
     ChangeEventHandler,
 } from 'react';
-import { Link, useHistory, useParams } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
     Button,
     TextField,
     Switch,
     Paper,
     FormControlLabel,
+    Alert,
 } from '@mui/material';
 import { FileCopy } from '@mui/icons-material';
 import { styles as themeStyles } from 'component/common';
@@ -19,10 +20,10 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import styles from './CopyFeature.module.scss';
 import { trim } from 'component/common/util';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { Alert } from '@mui/material';
 import { getTogglePath } from 'utils/routePathHelpers';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
 export const CopyFeatureToggle = () => {
     const [replaceGroupId, setReplaceGroupId] = useState(true);
@@ -31,12 +32,10 @@ export const CopyFeatureToggle = () => {
     const [newToggleName, setNewToggleName] = useState<string>();
     const { cloneFeatureToggle, validateFeatureToggleName } = useFeatureApi();
     const inputRef = useRef<HTMLInputElement>();
-    const { name: copyToggleName, id: projectId } = useParams<{
-        name: string;
-        id: string;
-    }>();
-    const { feature } = useFeature(projectId, copyToggleName);
-    const history = useHistory();
+    const featureId = useRequiredPathParam('featureId');
+    const projectId = useRequiredPathParam('projectId');
+    const { feature } = useFeature(projectId, featureId);
+    const navigate = useNavigate();
 
     useEffect(() => {
         inputRef.current?.focus();
@@ -69,11 +68,11 @@ export const CopyFeatureToggle = () => {
         }
 
         try {
-            await cloneFeatureToggle(projectId, copyToggleName, {
+            await cloneFeatureToggle(projectId, featureId, {
                 name: newToggleName as string,
                 replaceGroupId,
             });
-            history.push(getTogglePath(projectId, newToggleName as string));
+            navigate(getTogglePath(projectId, newToggleName as string));
         } catch (error) {
             setApiError(formatUnknownError(error));
         }
@@ -87,7 +86,7 @@ export const CopyFeatureToggle = () => {
             style={{ overflow: 'visible' }}
         >
             <div className={styles.header}>
-                <h1>Copy&nbsp;{copyToggleName}</h1>
+                <h1>Copy&nbsp;{featureId}</h1>
             </div>
             <ConditionallyRender
                 condition={Boolean(apiError)}
@@ -97,8 +96,8 @@ export const CopyFeatureToggle = () => {
                 <p className={styles.text}>
                     You are about to create a new feature toggle by cloning the
                     configuration of feature toggle&nbsp;
-                    <Link to={getTogglePath(projectId, copyToggleName)}>
-                        {copyToggleName}
+                    <Link to={getTogglePath(projectId, featureId)}>
+                        {featureId}
                     </Link>
                     . You must give the new feature toggle a unique name before
                     you can proceed.

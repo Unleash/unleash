@@ -11,7 +11,7 @@ import {
     DELETE_ADDON,
     UPDATE_ADDON,
 } from 'component/providers/AccessProvider/permissions';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import PageContent from 'component/common/PageContent/PageContent';
 import useAddons from 'hooks/api/getters/useAddons/useAddons';
 import useToast from 'hooks/useToast';
@@ -32,7 +32,7 @@ export const ConfiguredAddons = ({ getAddonIcon }: IConfigureAddonsProps) => {
     const { updateAddon, removeAddon } = useAddonsApi();
     const { setToastData, setToastApiError } = useToast();
     const { hasAccess } = useContext(AccessContext);
-    const history = useHistory();
+    const navigate = useNavigate();
     const [showDelete, setShowDelete] = useState(false);
     const [deletedAddon, setDeletedAddon] = useState<IAddon>({
         id: 0,
@@ -124,7 +124,7 @@ export const ConfiguredAddons = ({ getAddonIcon }: IConfigureAddonsProps) => {
                 <PermissionIconButton
                     permission={UPDATE_ADDON}
                     tooltip="Edit Addon"
-                    onClick={() => history.push(`/addons/edit/${addon.id}`)}
+                    onClick={() => navigate(`/addons/edit/${addon.id}`)}
                 >
                     <Edit />
                 </PermissionIconButton>

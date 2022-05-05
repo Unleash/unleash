@@ -1,20 +1,20 @@
 import { Button, Typography } from '@mui/material';
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router';
 
 import { ReactComponent as LogoIcon } from 'assets/icons/logoBg.svg';
 
 import { useStyles } from './NotFound.styles';
 
 const NotFound = () => {
-    const history = useHistory();
+    const navigate = useNavigate();
     const { classes: styles } = useStyles();
 
     const onClickHome = () => {
-        history.push('/');
+        navigate('/');
     };
 
     const onClickBack = () => {
-        history.goBack();
+        navigate(-1);
     };
 
     return (

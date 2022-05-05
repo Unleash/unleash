@@ -5,7 +5,7 @@ import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { IProjectRole } from 'interfaces/role';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import React from 'react';
 
 interface IRoleListItemProps {
@@ -27,7 +27,7 @@ const RoleListItem = ({
     setCurrentRole,
     setDelDialog,
 }: IRoleListItemProps) => {
-    const history = useHistory();
+    const navigate = useNavigate();
     const { classes: styles } = useStyles();
 
     return (
@@ -52,7 +52,7 @@ const RoleListItem = ({
                         data-loading
                         disabled={type === BUILTIN_ROLE_TYPE}
                         onClick={() => {
-                            history.push(`/admin/roles/${id}/edit`);
+                            navigate(`/admin/roles/${id}/edit`);
                         }}
                         permission={ADMIN}
                         tooltip="Edit role"

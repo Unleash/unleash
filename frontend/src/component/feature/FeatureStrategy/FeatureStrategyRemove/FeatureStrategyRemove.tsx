@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFeatureStrategyApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import useToast from 'hooks/useToast';
 import { formatFeaturePath } from '../FeatureStrategyEdit/FeatureStrategyEdit';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
@@ -35,7 +35,7 @@ export const FeatureStrategyRemove = ({
     const { deleteStrategyFromFeature } = useFeatureStrategyApi();
     const { refetchFeature } = useFeature(projectId, featureId);
     const { setToastData, setToastApiError } = useToast();
-    const { push } = useHistory();
+    const navigate = useNavigate();
 
     const onRemove = async (event: React.FormEvent) => {
         try {
@@ -51,7 +51,7 @@ export const FeatureStrategyRemove = ({
                 type: 'success',
             });
             refetchFeature();
-            push(formatFeaturePath(projectId, featureId));
+            navigate(formatFeaturePath(projectId, featureId));
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }

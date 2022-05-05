@@ -1,10 +1,9 @@
 import { useContext, useEffect, useState } from 'react';
-import { useHistory, useParams } from 'react-router';
+import { useNavigate } from 'react-router';
 import AccessContext from 'contexts/AccessContext';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import useToast from 'hooks/useToast';
-import { IFeatureViewParams } from 'interfaces/params';
 import { MOVE_FEATURE_TOGGLE } from 'component/providers/AccessProvider/permissions';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
@@ -13,10 +12,12 @@ import FeatureSettingsProjectConfirm from './FeatureSettingsProjectConfirm/Featu
 import { IPermission } from 'interfaces/user';
 import { useAuthPermissions } from 'hooks/api/getters/useAuth/useAuthPermissions';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
 const FeatureSettingsProject = () => {
     const { hasAccess } = useContext(AccessContext);
-    const { projectId, featureId } = useParams<IFeatureViewParams>();
+    const projectId = useRequiredPathParam('projectId');
+    const featureId = useRequiredPathParam('featureId');
     const { feature, refetchFeature } = useFeature(projectId, featureId);
     const [project, setProject] = useState(feature.project);
     const [dirty, setDirty] = useState(false);
@@ -25,7 +26,7 @@ const FeatureSettingsProject = () => {
     const { permissions = [] } = useAuthPermissions();
     const { changeFeatureProject } = useFeatureApi();
     const { setToastData, setToastApiError } = useToast();
-    const history = useHistory();
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (project !== feature.project) {
@@ -59,9 +60,9 @@ const FeatureSettingsProject = () => {
             });
             setDirty(false);
             setShowConfirmDialog(false);
-            history.replace(
-                `/projects/${newProject}/features/${featureId}/settings`
-            );
+            navigate(`/projects/${newProject}/features/${featureId}/settings`, {
+                replace: true,
+            });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }

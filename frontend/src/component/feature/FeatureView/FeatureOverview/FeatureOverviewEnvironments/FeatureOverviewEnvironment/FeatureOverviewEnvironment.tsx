@@ -6,11 +6,9 @@ import {
 } from '@mui/material';
 import { ExpandMore } from '@mui/icons-material';
 import React from 'react';
-import { useParams } from 'react-router';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import useFeatureMetrics from 'hooks/api/getters/useFeatureMetrics/useFeatureMetrics';
 import { IFeatureEnvironment } from 'interfaces/featureToggle';
-import { IFeatureViewParams } from 'interfaces/params';
 import { getFeatureMetrics } from 'utils/getFeatureMetrics';
 import {
     getFeatureStrategyIcon,
@@ -26,6 +24,7 @@ import FeatureOverviewEnvironmentFooter from './FeatureOverviewEnvironmentFooter
 import FeatureOverviewEnvironmentMetrics from './FeatureOverviewEnvironmentMetrics/FeatureOverviewEnvironmentMetrics';
 import { FeatureStrategyMenu } from 'component/feature/FeatureStrategy/FeatureStrategyMenu/FeatureStrategyMenu';
 import { FEATURE_ENVIRONMENT_ACCORDION } from 'utils/testIds';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
 interface IStrategyIconObject {
     count: number;
@@ -41,7 +40,8 @@ const FeatureOverviewEnvironment = ({
     env,
 }: IFeatureOverviewEnvironmentProps) => {
     const { classes: styles } = useStyles();
-    const { projectId, featureId } = useParams<IFeatureViewParams>();
+    const projectId = useRequiredPathParam('projectId');
+    const featureId = useRequiredPathParam('featureId');
     const { metrics } = useFeatureMetrics(projectId, featureId);
     const { feature } = useFeature(projectId, featureId);
 

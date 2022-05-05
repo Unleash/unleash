@@ -13,7 +13,7 @@ import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import AccessContext from 'contexts/AccessContext';
 import { IUser } from 'interfaces/user';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { ILocationSettings } from 'hooks/useLocationSettings';
 import { formatDateYMD } from 'utils/formatDate';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
@@ -37,7 +37,7 @@ const UserListItem = ({
     search,
 }: IUserListItemProps) => {
     const { hasAccess } = useContext(AccessContext);
-    const history = useHistory();
+    const navigate = useNavigate();
     const { classes: styles } = useStyles();
 
     return (
@@ -88,7 +88,7 @@ const UserListItem = ({
                             <IconButton
                                 data-loading
                                 onClick={() =>
-                                    history.push(`/admin/users/${user.id}/edit`)
+                                    navigate(`/admin/users/${user.id}/edit`)
                                 }
                                 size="large"
                             >

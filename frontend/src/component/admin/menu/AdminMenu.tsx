@@ -19,6 +19,14 @@ const activeNavLinkStyle: React.CSSProperties = {
     padding: '0.8rem 1.5rem',
 };
 
+const createNavLinkStyle = (props: {
+    isActive: boolean;
+}): React.CSSProperties => {
+    return props.isActive
+        ? { ...navLinkStyle, ...activeNavLinkStyle }
+        : navLinkStyle;
+};
+
 function AdminMenu() {
     const { uiConfig } = useUiConfig();
     const { pathname } = useLocation();
@@ -36,11 +44,7 @@ function AdminMenu() {
                 <Tab
                     value="/admin/users"
                     label={
-                        <NavLink
-                            to="/admin/users"
-                            activeStyle={activeNavLinkStyle}
-                            style={navLinkStyle}
-                        >
+                        <NavLink to="/admin/users" style={createNavLinkStyle}>
                             <span>Users</span>
                         </NavLink>
                     }
@@ -51,8 +55,7 @@ function AdminMenu() {
                         label={
                             <NavLink
                                 to="/admin/roles"
-                                activeStyle={activeNavLinkStyle}
-                                style={navLinkStyle}
+                                style={createNavLinkStyle}
                             >
                                 <span>PROJECT ROLES</span>
                             </NavLink>
@@ -63,11 +66,7 @@ function AdminMenu() {
                 <Tab
                     value="/admin/api"
                     label={
-                        <NavLink
-                            to="/admin/api"
-                            activeStyle={activeNavLinkStyle}
-                            style={navLinkStyle}
-                        >
+                        <NavLink to="/admin/api" style={createNavLinkStyle}>
                             API Access
                         </NavLink>
                     }
@@ -75,11 +74,7 @@ function AdminMenu() {
                 <Tab
                     value="/admin/auth"
                     label={
-                        <NavLink
-                            to="/admin/auth"
-                            activeStyle={activeNavLinkStyle}
-                            style={navLinkStyle}
-                        >
+                        <NavLink to="/admin/auth" style={createNavLinkStyle}>
                             Single Sign-On
                         </NavLink>
                     }

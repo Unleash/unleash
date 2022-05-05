@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { List } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import useToast from 'hooks/useToast';
@@ -36,7 +36,7 @@ const EnvironmentList = () => {
     const [toggleDialog, setToggleDialog] = useState(false);
     const [confirmName, setConfirmName] = useState('');
 
-    const history = useHistory();
+    const navigate = useNavigate();
     const { setToastApiError, setToastData } = useToast();
     const {
         deleteEnvironment,
@@ -155,7 +155,7 @@ const EnvironmentList = () => {
         ));
 
     const navigateToCreateEnvironment = () => {
-        history.push('/environments/create');
+        navigate('/environments/create');
     };
     return (
         <PageContent

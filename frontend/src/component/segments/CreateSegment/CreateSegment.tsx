@@ -7,7 +7,7 @@ import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
 import React, { useContext } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useSegmentForm } from '../hooks/useSegmentForm';
 import { SegmentForm } from '../SegmentForm/SegmentForm';
@@ -21,7 +21,7 @@ export const CreateSegment = () => {
     const { uiConfig } = useUiConfig();
     const { setToastData, setToastApiError } = useToast();
     const { showFeedbackCES } = useContext(feedbackCESContext);
-    const history = useHistory();
+    const navigate = useNavigate();
     const { createSegment, loading } = useSegmentsApi();
     const { refetchSegments } = useSegments();
 
@@ -56,7 +56,7 @@ export const CreateSegment = () => {
         try {
             await createSegment(getSegmentPayload());
             await refetchSegments();
-            history.push('/segments/');
+            navigate('/segments/');
             setToastData({
                 title: 'Segment created',
                 confetti: true,

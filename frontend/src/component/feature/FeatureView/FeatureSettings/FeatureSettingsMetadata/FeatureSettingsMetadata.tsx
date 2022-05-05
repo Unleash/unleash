@@ -3,19 +3,19 @@ import * as jsonpatch from 'fast-json-patch';
 import { TextField } from '@mui/material';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import FeatureTypeSelect from './FeatureTypeSelect/FeatureTypeSelect';
-import { useParams } from 'react-router';
 import AccessContext from 'contexts/AccessContext';
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
-import { IFeatureViewParams } from 'interfaces/params';
 import useToast from 'hooks/useToast';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
 const FeatureSettingsMetadata = () => {
     const { hasAccess } = useContext(AccessContext);
-    const { projectId, featureId } = useParams<IFeatureViewParams>();
+    const projectId = useRequiredPathParam('projectId');
+    const featureId = useRequiredPathParam('featureId');
     const { feature, refetchFeature } = useFeature(projectId, featureId);
     const [description, setDescription] = useState(feature.description);
     const [type, setType] = useState(feature.type);

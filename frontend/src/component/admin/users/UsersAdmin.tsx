@@ -9,13 +9,13 @@ import { Button } from '@mui/material';
 import { TableActions } from 'component/common/Table/TableActions/TableActions';
 import { HeaderTitle } from 'component/common/HeaderTitle/HeaderTitle';
 import { useStyles } from './UserAdmin.styles';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { AdminAlert } from 'component/common/AdminAlert/AdminAlert';
 
 const UsersAdmin = () => {
     const [search, setSearch] = useState('');
     const { hasAccess } = useContext(AccessContext);
-    const history = useHistory();
+    const navigate = useNavigate();
     const { classes: styles } = useStyles();
 
     return (
@@ -41,9 +41,7 @@ const UsersAdmin = () => {
                                             variant="contained"
                                             color="primary"
                                             onClick={() =>
-                                                history.push(
-                                                    '/admin/create-user'
-                                                )
+                                                navigate('/admin/create-user')
                                             }
                                         >
                                             New user

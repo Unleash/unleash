@@ -1,6 +1,6 @@
 import { useContext, useState, VFC } from 'react';
 import { Add, Album, Delete, Edit } from '@mui/icons-material';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
     Button,
     IconButton,
@@ -35,7 +35,7 @@ const ContextList: VFC = () => {
     const { context, refetchUnleashContext } = useUnleashContext();
     const { removeContext } = useContextsApi();
     const { setToastData, setToastApiError } = useToast();
-    const history = useHistory();
+    const navigate = useNavigate();
     const { classes: styles } = useStyles();
 
     const onDeleteContext = async () => {
@@ -83,7 +83,7 @@ const ContextList: VFC = () => {
                         <Tooltip title="Edit context field">
                             <IconButton
                                 onClick={() =>
-                                    history.push(`/context/edit/${field.name}`)
+                                    navigate(`/context/edit/${field.name}`)
                                 }
                                 size="large"
                             >
@@ -120,7 +120,7 @@ const ContextList: VFC = () => {
                     show={
                         <Tooltip title="Add context type">
                             <IconButton
-                                onClick={() => history.push('/context/create')}
+                                onClick={() => navigate('/context/create')}
                                 size="large"
                             >
                                 <Add />
@@ -129,7 +129,7 @@ const ContextList: VFC = () => {
                     }
                     elseShow={
                         <Button
-                            onClick={() => history.push('/context/create')}
+                            onClick={() => navigate('/context/create')}
                             color="primary"
                             variant="contained"
                         >

@@ -15,8 +15,6 @@ import { modalStyles, trim } from 'component/common/util';
 import PermissionSwitch from 'component/common/PermissionSwitch/PermissionSwitch';
 import { UPDATE_FEATURE_VARIANTS } from 'component/providers/AccessProvider/permissions';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
-import { useParams } from 'react-router-dom';
-import { IFeatureViewParams } from 'interfaces/params';
 import { IFeatureVariant } from 'interfaces/featureToggle';
 import cloneDeep from 'lodash.clonedeep';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
@@ -26,6 +24,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { useOverrides } from './useOverrides';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
 const payloadOptions = [
     { key: 'string', label: 'string' },
@@ -62,7 +61,8 @@ export const AddVariant = ({
     const [overrides, overridesDispatch] = useOverrides([]);
     const [error, setError] = useState<Record<string, string>>({});
     const { classes: themeStyles } = useThemeStyles();
-    const { projectId, featureId } = useParams<IFeatureViewParams>();
+    const projectId = useRequiredPathParam('projectId');
+    const featureId = useRequiredPathParam('featureId');
     const { feature } = useFeature(projectId, featureId);
     const [variants, setVariants] = useState<IFeatureVariant[]>([]);
     const { context } = useUnleashContext();

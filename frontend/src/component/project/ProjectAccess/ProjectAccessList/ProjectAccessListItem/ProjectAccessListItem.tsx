@@ -8,17 +8,16 @@ import {
     SelectChangeEvent,
 } from '@mui/material';
 import { Delete } from '@mui/icons-material';
-import { useParams } from 'react-router-dom';
 import {
     IProjectAccessOutput,
     IProjectAccessUser,
 } from 'hooks/api/getters/useProjectAccess/useProjectAccess';
-import { IProjectViewParams } from 'interfaces/params';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
 import { ProjectRoleSelect } from 'component/project/ProjectAccess/ProjectRoleSelect/ProjectRoleSelect';
 import { useStyles } from '../ProjectAccessListItem/ProjectAccessListItem.styles';
 import React from 'react';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
 interface IProjectAccessListItemProps {
     user: IProjectAccessUser;
@@ -33,7 +32,7 @@ export const ProjectAccessListItem = ({
     handleRoleChange,
     handleRemoveAccess,
 }: IProjectAccessListItemProps) => {
-    const { id: projectId } = useParams<IProjectViewParams>();
+    const projectId = useRequiredPathParam('projectId');
     const { classes: styles } = useStyles();
 
     const labelId = `checkbox-list-secondary-label-${user.id}`;

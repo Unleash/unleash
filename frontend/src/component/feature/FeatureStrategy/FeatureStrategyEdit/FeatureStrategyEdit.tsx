@@ -6,7 +6,7 @@ import { useRequiredQueryParam } from 'hooks/useRequiredQueryParam';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFeatureStrategyApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import useToast from 'hooks/useToast';
 import { IFeatureStrategy, IFeatureStrategyPayload } from 'interfaces/strategy';
 import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
@@ -29,7 +29,7 @@ export const FeatureStrategyEdit = () => {
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
     const { unleashUrl } = uiConfig;
-    const { push } = useHistory();
+    const navigate = useNavigate();
 
     const { feature, refetchFeature } = useFeatureImmutable(
         projectId,
@@ -77,7 +77,7 @@ export const FeatureStrategyEdit = () => {
                 confetti: true,
             });
             refetchFeature();
-            push(formatFeaturePath(projectId, featureId));
+            navigate(formatFeaturePath(projectId, featureId));
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }

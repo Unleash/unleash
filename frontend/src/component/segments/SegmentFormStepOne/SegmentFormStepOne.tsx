@@ -1,7 +1,7 @@
 import { Button } from '@mui/material';
 import Input from 'component/common/Input/Input';
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useStyles } from 'component/segments/SegmentFormStepOne/SegmentFormStepOne.styles';
 import { SegmentFormStep } from '../SegmentForm/SegmentForm';
 import {
@@ -30,7 +30,7 @@ export const SegmentFormStepOne: React.FC<ISegmentFormPartOneProps> = ({
     clearErrors,
     setCurrentStep,
 }) => {
-    const history = useHistory();
+    const navigate = useNavigate();
     const { classes: styles } = useStyles();
 
     return (
@@ -78,7 +78,7 @@ export const SegmentFormStepOne: React.FC<ISegmentFormPartOneProps> = ({
                     type="button"
                     className={styles.cancelButton}
                     onClick={() => {
-                        history.push('/segments');
+                        navigate('/segments');
                     }}
                 >
                     Cancel

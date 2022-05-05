@@ -8,6 +8,7 @@ export const useStyles = makeStyles()({
         minHeight: '100vh',
         padding: '2rem',
         position: 'fixed',
+        inset: 0,
         backgroundColor: '#fff',
         width: '100%',
     },

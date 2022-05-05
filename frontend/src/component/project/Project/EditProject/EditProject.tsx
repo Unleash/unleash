@@ -1,4 +1,4 @@
-import { useHistory, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import ProjectForm from '../ProjectForm/ProjectForm';
 import useProjectForm from '../hooks/useProjectForm';
 import { UpdateButton } from 'component/common/UpdateButton/UpdateButton';
@@ -9,13 +9,14 @@ import useProject from 'hooks/api/getters/useProject/useProject';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
 const EditProject = () => {
     const { uiConfig } = useUiConfig();
     const { setToastData, setToastApiError } = useToast();
-    const { id } = useParams<{ id: string }>();
+    const id = useRequiredPathParam('projectId');
     const { project } = useProject(id);
-    const history = useHistory();
+    const navigate = useNavigate();
     const {
         projectId,
         projectName,
@@ -52,7 +53,7 @@ const EditProject = () => {
             try {
                 await editProject(id, payload);
                 refetch();
-                history.push(`/projects/${id}`);
+                navigate(`/projects/${id}`);
                 setToastData({
                     title: 'Project information updated',
                     type: 'success',
@@ -64,7 +65,7 @@ const EditProject = () => {
     };
 
     const handleCancel = () => {
-        history.goBack();
+        navigate(-1);
     };
 
     return (

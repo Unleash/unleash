@@ -8,7 +8,7 @@ import {
     ListItemText,
 } from '@mui/material';
 import { CREATE_ADDON } from 'component/providers/AccessProvider/permissions';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 
 interface IProvider {
@@ -29,7 +29,7 @@ export const AvailableAddons = ({
     providers,
     getAddonIcon,
 }: IAvailableAddonsProps) => {
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const renderProvider = (provider: IProvider) => (
         <ListItem key={provider.name}>
@@ -41,9 +41,7 @@ export const AvailableAddons = ({
             <ListItemSecondaryAction>
                 <PermissionButton
                     permission={CREATE_ADDON}
-                    onClick={() =>
-                        history.push(`/addons/create/${provider.name}`)
-                    }
+                    onClick={() => navigate(`/addons/create/${provider.name}`)}
                 >
                     Configure
                 </PermissionButton>

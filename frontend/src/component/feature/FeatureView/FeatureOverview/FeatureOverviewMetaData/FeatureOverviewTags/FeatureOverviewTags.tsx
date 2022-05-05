@@ -1,9 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { Chip } from '@mui/material';
 import { Close, Label } from '@mui/icons-material';
-import { useParams } from 'react-router-dom';
 import useTags from 'hooks/api/getters/useTags/useTags';
-import { IFeatureViewParams } from 'interfaces/params';
 import { useStyles } from './FeatureOverviewTags.styles';
 import slackIcon from 'assets/icons/slack.svg';
 import jiraIcon from 'assets/icons/jira.svg';
@@ -18,6 +16,7 @@ import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import AccessContext from 'contexts/AccessContext';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
 interface IFeatureOverviewTagsProps extends React.HTMLProps<HTMLButtonElement> {
     projectId: string;
@@ -33,7 +32,7 @@ const FeatureOverviewTags: React.FC<IFeatureOverviewTagsProps> = ({
         type: '',
     });
     const { classes: styles } = useStyles();
-    const { featureId } = useParams<IFeatureViewParams>();
+    const featureId = useRequiredPathParam('featureId');
     const { tags, refetch } = useTags(featureId);
     const { tagTypes } = useTagTypes();
     const { deleteTagFromFeature } = useFeatureApi();

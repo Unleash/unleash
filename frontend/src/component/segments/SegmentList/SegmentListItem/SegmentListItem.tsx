@@ -8,7 +8,7 @@ import {
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import TimeAgo from 'react-timeago';
 import { ISegment } from 'interfaces/segment';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { SEGMENT_DELETE_BTN_ID } from 'utils/testIds';
 import React from 'react';
 
@@ -34,7 +34,7 @@ export const SegmentListItem = ({
     setDelDialog,
 }: ISegmentListItemProps) => {
     const { classes: styles } = useStyles();
-    const { push } = useHistory();
+    const navigate = useNavigate();
 
     return (
         <TableRow className={styles.tableRow}>
@@ -63,7 +63,7 @@ export const SegmentListItem = ({
                 <PermissionIconButton
                     data-loading
                     onClick={() => {
-                        push(`/segments/edit/${id}`);
+                        navigate(`/segments/edit/${id}`);
                     }}
                     permission={UPDATE_SEGMENT}
                     tooltip="Edit segment"

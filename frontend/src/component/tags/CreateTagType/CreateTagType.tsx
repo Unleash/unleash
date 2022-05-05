@@ -1,4 +1,4 @@
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import useTagTypeForm from '../TagTypeForm/useTagTypeForm';
 import TagTypeForm from '../TagTypeForm/TagTypeForm';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
@@ -12,7 +12,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 const CreateTagType = () => {
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
-    const history = useHistory();
+    const navigate = useNavigate();
     const {
         tagName,
         tagDesc,
@@ -33,7 +33,7 @@ const CreateTagType = () => {
             const payload = getTagPayload();
             try {
                 await createTag(payload);
-                history.push('/tag-types');
+                navigate('/tag-types');
                 setToastData({
                     title: 'Tag type created',
                     confetti: true,
@@ -55,7 +55,7 @@ const CreateTagType = () => {
     };
 
     const handleCancel = () => {
-        history.goBack();
+        navigate(-1);
     };
 
     return (

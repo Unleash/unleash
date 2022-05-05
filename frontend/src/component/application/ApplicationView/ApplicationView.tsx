@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import {
     Grid,
     List,
@@ -25,10 +25,11 @@ import useApplication from 'hooks/api/getters/useApplication/useApplication';
 import AccessContext from 'contexts/AccessContext';
 import { formatDateYMDHMS } from 'utils/formatDate';
 import { useLocationSettings } from 'hooks/useLocationSettings';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
 export const ApplicationView = () => {
     const { hasAccess } = useContext(AccessContext);
-    const { name } = useParams<{ name: string }>();
+    const name = useRequiredPathParam('name');
     const { application } = useApplication(name);
     const { locationSettings } = useLocationSettings();
     const { instances, strategies, seenToggles } = application;
@@ -147,7 +148,7 @@ export const ApplicationView = () => {
                                     permission: CREATE_STRATEGY,
                                 })}
                                 elseShow={foundListItem({
-                                    viewUrl: '/strategies/view',
+                                    viewUrl: '/strategies',
                                     name,
                                     Icon: Extension,
                                     description,

@@ -6,7 +6,7 @@ import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFeatureStrategyApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import useToast from 'hooks/useToast';
 import { IFeatureStrategy } from 'interfaces/strategy';
 import {
@@ -38,7 +38,7 @@ export const FeatureStrategyCreate = () => {
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
     const { unleashUrl } = uiConfig;
-    const { push } = useHistory();
+    const navigate = useNavigate();
 
     const { feature, refetchFeature } = useFeatureImmutable(
         projectId,
@@ -72,7 +72,7 @@ export const FeatureStrategyCreate = () => {
                 confetti: true,
             });
             refetchFeature();
-            push(formatFeaturePath(projectId, featureId));
+            navigate(formatFeaturePath(projectId, featureId));
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }

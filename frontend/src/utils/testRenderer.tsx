@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import { render as rtlRender, RenderOptions } from '@testing-library/react';
 import { SWRConfig } from 'swr';
 import { ThemeProvider } from 'themes/ThemeProvider';
@@ -25,7 +25,7 @@ export const render = (
             <AccessProviderMock permissions={permissions}>
                 <ThemeProvider>
                     <AnnouncerProvider>
-                        <Router>{children}</Router>
+                        <BrowserRouter>{children}</BrowserRouter>
                     </AnnouncerProvider>
                 </ThemeProvider>
             </AccessProviderMock>

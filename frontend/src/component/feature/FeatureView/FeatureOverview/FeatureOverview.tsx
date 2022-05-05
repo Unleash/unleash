@@ -2,7 +2,7 @@ import FeatureOverviewMetaData from './FeatureOverviewMetaData/FeatureOverviewMe
 import { useStyles } from './FeatureOverview.styles';
 import FeatureOverviewEnvironments from './FeatureOverviewEnvironments/FeatureOverviewEnvironments';
 import FeatureOverviewEnvSwitches from './FeatureOverviewEnvSwitches/FeatureOverviewEnvSwitches';
-import { Switch, Route, useHistory } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import { FeatureStrategyCreate } from 'component/feature/FeatureStrategy/FeatureStrategyCreate/FeatureStrategyCreate';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import {
@@ -14,11 +14,11 @@ import { usePageTitle } from 'hooks/usePageTitle';
 
 const FeatureOverview = () => {
     const { classes: styles } = useStyles();
-    const { push } = useHistory();
+    const navigate = useNavigate();
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const featurePath = formatFeaturePath(projectId, featureId);
-    const onSidebarClose = () => push(featurePath);
+    const onSidebarClose = () => navigate(featurePath);
     usePageTitle(featureId);
 
     return (
@@ -30,26 +30,32 @@ const FeatureOverview = () => {
             <div className={styles.mainContent}>
                 <FeatureOverviewEnvironments />
             </div>
-            <Switch>
-                <Route path="/projects/:projectId/features/:featureId/strategies/create">
-                    <SidebarModal
-                        label="Create feature strategy"
-                        onClose={onSidebarClose}
-                        open
-                    >
-                        <FeatureStrategyCreate />
-                    </SidebarModal>
-                </Route>
-                <Route path="/projects/:projectId/features/:featureId/strategies/edit">
-                    <SidebarModal
-                        label="Edit feature strategy"
-                        onClose={onSidebarClose}
-                        open
-                    >
-                        <FeatureStrategyEdit />
-                    </SidebarModal>
-                </Route>
-            </Switch>
+            <Routes>
+                <Route
+                    path="strategies/create"
+                    element={
+                        <SidebarModal
+                            label="Create feature strategy"
+                            onClose={onSidebarClose}
+                            open
+                        >
+                            <FeatureStrategyCreate />
+                        </SidebarModal>
+                    }
+                />
+                <Route
+                    path="strategies/edit"
+                    element={
+                        <SidebarModal
+                            label="Edit feature strategy"
+                            onClose={onSidebarClose}
+                            open
+                        >
+                            <FeatureStrategyEdit />
+                        </SidebarModal>
+                    }
+                />
+            </Routes>
         </div>
     );
 };

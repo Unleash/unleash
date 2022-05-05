@@ -1,4 +1,4 @@
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import PermissionButton from '../PermissionButton/PermissionButton';
@@ -20,7 +20,7 @@ const EnvironmentStrategyDialog = ({
     onClose,
 }: IEnvironmentStrategyDialogProps) => {
     const { classes: styles } = useStyles();
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const createStrategyPath = formatCreateStrategyPath(
         projectId,
@@ -31,7 +31,7 @@ const EnvironmentStrategyDialog = ({
 
     const onClick = () => {
         onClose();
-        history.push(createStrategyPath);
+        navigate(createStrategyPath);
     };
 
     return (

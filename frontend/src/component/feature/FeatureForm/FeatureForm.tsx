@@ -16,7 +16,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { trim } from 'component/common/util';
 import Input from 'component/common/Input/Input';
 import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import React from 'react';
 import { useAuthPermissions } from 'hooks/api/getters/useAuth/useAuthPermissions';
 
@@ -60,7 +60,7 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
 }) => {
     const { classes: styles } = useStyles();
     const { featureTypes } = useFeatureTypes();
-    const history = useHistory();
+    const navigate = useNavigate();
     const { permissions } = useAuthPermissions();
     const editable = mode !== 'Edit';
 
@@ -116,7 +116,9 @@ const FeatureForm: React.FC<IFeatureToggleForm> = ({
                     value={project}
                     onChange={projectId => {
                         setProject(projectId);
-                        history.replace(`/projects/${projectId}/create-toggle`);
+                        navigate(`/projects/${projectId}/create-toggle`, {
+                            replace: true,
+                        });
                     }}
                     enabled={editable}
                     filter={projectFilterGenerator(permissions, CREATE_FEATURE)}

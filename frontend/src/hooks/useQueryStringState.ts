@@ -1,12 +1,12 @@
 import { useCallback, useMemo } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 // Store a value in the query string. Call setState to update the query string.
 export const useQueryStringState = (
     key: string
 ): [string | undefined, (value: string) => void] => {
     const { search } = window.location;
-    const { replace } = useHistory();
+    const navigate = useNavigate();
 
     const params = useMemo(() => {
         return new URLSearchParams(search);
@@ -16,9 +16,9 @@ export const useQueryStringState = (
         (value: string) => {
             const next = new URLSearchParams(search);
             next.set(key, value);
-            replace({ search: next.toString() });
+            navigate({ search: next.toString() }, { replace: true });
         },
-        [key, search, replace]
+        [key, search, navigate]
     );
 
     return [params.get(key) || undefined, setState];

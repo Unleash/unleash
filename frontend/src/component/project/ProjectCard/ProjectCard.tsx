@@ -3,7 +3,7 @@ import { useStyles } from './ProjectCard.styles';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { ReactComponent as ProjectIcon } from 'assets/icons/projectIcon.svg';
 import { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
@@ -36,7 +36,7 @@ export const ProjectCard = ({
     const [anchorEl, setAnchorEl] = useState(null);
     const [showDelDialog, setShowDelDialog] = useState(false);
     const { deleteProject } = useProjectApi();
-    const history = useHistory();
+    const navigate = useNavigate();
     const { setToastData, setToastApiError } = useToast();
 
     // @ts-expect-error
@@ -92,7 +92,7 @@ export const ProjectCard = ({
                     <MenuItem
                         onClick={e => {
                             e.preventDefault();
-                            history.push(getProjectEditPath(id));
+                            navigate(getProjectEditPath(id));
                         }}
                     >
                         <Edit className={classes.icon} />

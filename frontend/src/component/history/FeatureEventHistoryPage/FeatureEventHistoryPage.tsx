@@ -1,9 +1,9 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
 import { FeatureEventHistory } from '../FeatureEventHistory/FeatureEventHistory';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
 export const FeatureEventHistoryPage = () => {
-    const { toggleName } = useParams<{ toggleName: string }>();
+    const toggleName = useRequiredPathParam('toggleName');
 
     return <FeatureEventHistory toggleName={toggleName} />;
 };

@@ -1,5 +1,5 @@
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
-import { useHistory, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import FeatureForm from '../FeatureForm/FeatureForm';
 import useFeatureForm from '../hooks/useFeatureForm';
 import * as jsonpatch from 'fast-json-patch';
@@ -9,14 +9,15 @@ import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
-import { IFeatureViewParams } from 'interfaces/params';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
 const EditFeature = () => {
+    const projectId = useRequiredPathParam('projectId');
+    const featureId = useRequiredPathParam('featureId');
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
-    const history = useHistory();
-    const { projectId, featureId } = useParams<IFeatureViewParams>();
+    const navigate = useNavigate();
     const { patchFeatureToggle, loading } = useFeatureApi();
     const { feature } = useFeature(projectId, featureId);
 
@@ -53,7 +54,7 @@ const EditFeature = () => {
         const patch = createPatch();
         try {
             await patchFeatureToggle(project, featureId, patch);
-            history.push(`/projects/${project}/features/${name}`);
+            navigate(`/projects/${project}/features/${name}`);
             setToastData({
                 title: 'Toggle updated successfully',
                 type: 'success',
@@ -73,7 +74,7 @@ const EditFeature = () => {
     };
 
     const handleCancel = () => {
-        history.goBack();
+        navigate(-1);
     };
 
     return (

@@ -1,4 +1,4 @@
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
@@ -13,7 +13,7 @@ import { CreateButton } from 'component/common/CreateButton/CreateButton';
 export const CreateStrategy = () => {
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
-    const history = useHistory();
+    const navigate = useNavigate();
     const {
         strategyName,
         strategyDesc,
@@ -41,7 +41,7 @@ export const CreateStrategy = () => {
             try {
                 await createStrategy(payload);
                 refetchStrategies();
-                history.push(`/strategies/${strategyName}`);
+                navigate(`/strategies/${strategyName}`);
                 setToastData({
                     title: 'Strategy created',
                     text: 'Successfully created strategy',
@@ -64,7 +64,7 @@ export const CreateStrategy = () => {
     };
 
     const handleCancel = () => {
-        history.goBack();
+        navigate(-1);
     };
 
     return (

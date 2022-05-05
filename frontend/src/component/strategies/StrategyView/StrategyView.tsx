@@ -1,5 +1,5 @@
 import { Grid } from '@mui/material';
-import { useParams, useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { UPDATE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import PageContent from 'component/common/PageContent/PageContent';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
@@ -10,13 +10,14 @@ import { HeaderTitle } from 'component/common/HeaderTitle/HeaderTitle';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { Edit } from '@mui/icons-material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
 export const StrategyView = () => {
-    const { name } = useParams<{ name: string }>();
+    const name = useRequiredPathParam('name');
     const { strategies } = useStrategies();
     const { features = [] } = useFeatures();
     const { applications } = useApplications();
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const toggles = features.filter(toggle => {
         return toggle?.strategies?.find(strategy => strategy.name === name);
@@ -25,7 +26,7 @@ export const StrategyView = () => {
     const strategy = strategies.find(strategy => strategy.name === name);
 
     const handleEdit = () => {
-        history.push(`/strategies/${name}/edit`);
+        navigate(`/strategies/${name}/edit`);
     };
 
     if (!strategy) return null;

@@ -17,7 +17,7 @@ import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { useSegmentsApi } from 'hooks/api/actions/useSegmentsApi/useSegmentsApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { HeaderTitle } from 'component/common/HeaderTitle/HeaderTitle';
 import PageContent from 'component/common/PageContent';
@@ -27,7 +27,7 @@ import { SegmentDocsWarning } from 'component/segments/SegmentDocs/SegmentDocs';
 import { NAVIGATE_TO_CREATE_SEGMENT } from 'utils/testIds';
 
 export const SegmentsList = () => {
-    const history = useHistory();
+    const navigate = useNavigate();
     const { segments = [], refetchSegments } = useSegments();
     const { deleteSegment } = useSegmentsApi();
     const { page, pages, nextPage, prevPage, setPageIndex, pageIndex } =
@@ -95,7 +95,7 @@ export const SegmentsList = () => {
                     title="Segments"
                     actions={
                         <PermissionButton
-                            onClick={() => history.push('/segments/create')}
+                            onClick={() => navigate('/segments/create')}
                             permission={CREATE_SEGMENT}
                             data-testid={NAVIGATE_TO_CREATE_SEGMENT}
                         >

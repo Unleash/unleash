@@ -7,7 +7,7 @@ import { DEMO_TYPE } from 'constants/authTypes';
 import Authentication from '../Authentication/Authentication';
 import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
-import { Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { parseRedirectParam } from 'component/user/Login/parseRedirectParam';
 
 const Login = () => {
@@ -19,7 +19,7 @@ const Login = () => {
     const redirect = query.get('redirect') || '/';
 
     if (user) {
-        return <Redirect to={parseRedirectParam(redirect)} />;
+        return <Navigate to={parseRedirectParam(redirect)} replace />;
     }
 
     return (

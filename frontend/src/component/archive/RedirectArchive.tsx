@@ -1,7 +1,7 @@
-import { Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 
 const RedirectArchive = () => {
-    return <Redirect to="/archive" />;
+    return <Navigate to="/archive" replace />;
 };
 
 export default RedirectArchive;

@@ -1,6 +1,6 @@
 import { Button } from '@mui/material';
 import { useContext } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import AccessContext from 'contexts/AccessContext';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { HeaderTitle } from 'component/common/HeaderTitle/HeaderTitle';
@@ -14,7 +14,7 @@ import { AdminAlert } from 'component/common/AdminAlert/AdminAlert';
 const ProjectRoles = () => {
     const { hasAccess } = useContext(AccessContext);
     const { classes: styles } = useStyles();
-    const history = useHistory();
+    const navigate = useNavigate();
 
     return (
         <div>
@@ -32,7 +32,7 @@ const ProjectRoles = () => {
                                         variant="contained"
                                         color="primary"
                                         onClick={() =>
-                                            history.push(
+                                            navigate(
                                                 '/admin/create-project-role'
                                             )
                                         }

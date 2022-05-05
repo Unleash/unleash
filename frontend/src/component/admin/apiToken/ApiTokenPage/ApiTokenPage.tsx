@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@mui/material';
 import AccessContext from 'contexts/AccessContext';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -20,7 +20,7 @@ export const ApiTokenPage = () => {
     const { classes: styles } = useStyles();
     const { hasAccess } = useContext(AccessContext);
     const { uiConfig } = useUiConfig();
-    const history = useHistory();
+    const navigate = useNavigate();
 
     return (
         <PageContent
@@ -35,7 +35,7 @@ export const ApiTokenPage = () => {
                                     variant="contained"
                                     color="primary"
                                     onClick={() =>
-                                        history.push('/admin/api/create-token')
+                                        navigate('/admin/api/create-token')
                                     }
                                     data-testid={CREATE_API_TOKEN_BUTTON}
                                 >

@@ -1,24 +1,18 @@
-import { VFC } from 'react';
-import { Route, useLocation, Redirect, RouteProps } from 'react-router-dom';
+import { IRoute } from 'interfaces/route';
+import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
+import { LoginRedirect } from 'component/common/LoginRedirect/LoginRedirect';
 
 interface IProtectedRouteProps {
-    unauthorized?: boolean;
+    route: IRoute;
 }
 
-const ProtectedRoute: VFC<IProtectedRouteProps & RouteProps> = ({
-    component: Component,
-    unauthorized,
-    ...rest
-}) => {
-    const { pathname, search } = useLocation();
-    const redirect = encodeURIComponent(pathname + search);
-    const loginLink = `/login?redirect=${redirect}`;
+export const ProtectedRoute = ({ route }: IProtectedRouteProps) => {
+    const { user } = useAuthUser();
+    const isLoggedIn = Boolean(user?.id);
 
-    return unauthorized ? (
-        <Route {...rest} render={() => <Redirect to={loginLink} />} />
-    ) : (
-        <Route {...rest} component={Component} />
-    );
+    if (!isLoggedIn && route.type === 'protected') {
+        return <LoginRedirect />;
+    }
+
+    return <route.component />;
 };
-
-export default ProtectedRoute;

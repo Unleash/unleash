@@ -3,7 +3,7 @@ import { Button, TextField } from '@mui/material';
 import styles from './DemoAuth.module.scss';
 import { ReactComponent as Logo } from 'assets/img/logo.svg';
 import { LOGIN_BUTTON, LOGIN_EMAIL_ID } from 'utils/testIds';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuthApi } from 'hooks/api/actions/useAuthApi/useAuthApi';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import useToast from 'hooks/useToast';
@@ -17,7 +17,7 @@ interface IDemoAuthProps {
 
 const DemoAuth: VFC<IDemoAuthProps> = ({ authDetails, redirect }) => {
     const [email, setEmail] = useState('');
-    const history = useHistory();
+    const navigate = useNavigate();
     const { refetchUser } = useAuthUser();
     const { emailAuth } = useAuthApi();
     const { setToastApiError } = useToast();
@@ -28,7 +28,7 @@ const DemoAuth: VFC<IDemoAuthProps> = ({ authDetails, redirect }) => {
         try {
             await emailAuth(authDetails.path, email);
             refetchUser();
-            history.push(redirect);
+            navigate(redirect);
         } catch (error) {
             setToastApiError(formatUnknownError(error));
         }

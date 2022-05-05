@@ -1,5 +1,5 @@
 import { useAuthSplash } from 'hooks/api/getters/useAuth/useAuthSplash';
-import { useLocation, Redirect } from 'react-router-dom';
+import { useLocation, Navigate } from 'react-router-dom';
 import { matchPath } from 'react-router';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { IFlags } from 'interfaces/uiConfig';
@@ -18,7 +18,7 @@ export const SplashPageRedirect = () => {
         return null;
     }
 
-    if (matchPath(pathname, { path: '/splash/:splashId' })) {
+    if (matchPath('/splash/:splashId', pathname)) {
         // We've already redirected to the splash page.
         return null;
     }
@@ -41,7 +41,7 @@ export const SplashPageRedirect = () => {
         return null;
     }
 
-    return <Redirect to={`/splash/${showSplashId}`} />;
+    return <Navigate to={`/splash/${showSplashId}`} replace />;
 };
 
 const hasSeenSplashId = (splashId: SplashId, splash: IAuthSplash): boolean => {

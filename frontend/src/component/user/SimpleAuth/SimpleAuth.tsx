@@ -1,7 +1,7 @@
 import { ChangeEventHandler, FormEventHandler, useState, VFC } from 'react';
 import { Button, TextField } from '@mui/material';
 import styles from './SimpleAuth.module.scss';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuthApi } from 'hooks/api/actions/useAuthApi/useAuthApi';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import { LOGIN_BUTTON, LOGIN_EMAIL_ID } from 'utils/testIds';
@@ -18,7 +18,7 @@ const SimpleAuth: VFC<ISimpleAuthProps> = ({ authDetails, redirect }) => {
     const [email, setEmail] = useState('');
     const { refetchUser } = useAuthUser();
     const { emailAuth } = useAuthApi();
-    const history = useHistory();
+    const navigate = useNavigate();
     const { setToastApiError } = useToast();
 
     const handleSubmit: FormEventHandler<HTMLFormElement> = async evt => {
@@ -27,7 +27,7 @@ const SimpleAuth: VFC<ISimpleAuthProps> = ({ authDetails, redirect }) => {
         try {
             await emailAuth(authDetails.path, email);
             refetchUser();
-            history.push(redirect);
+            navigate(redirect);
         } catch (error) {
             setToastApiError(formatUnknownError(error));
         }

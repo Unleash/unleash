@@ -1,4 +1,4 @@
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import useEnvironmentForm from '../hooks/useEnvironmentForm';
 import EnvironmentForm from '../EnvironmentForm/EnvironmentForm';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
@@ -19,7 +19,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 const CreateEnvironment = () => {
     const { setToastApiError, setToastData } = useToast();
     const { uiConfig } = useUiConfig();
-    const history = useHistory();
+    const navigate = useNavigate();
     const { environments } = useEnvironments();
     const canCreateMoreEnvs = environments.length < 7;
     const { createEnvironment, loading } = useEnvironmentApi();
@@ -49,7 +49,7 @@ const CreateEnvironment = () => {
                     type: 'success',
                     confetti: true,
                 });
-                history.push('/environments');
+                navigate('/environments');
             } catch (error: unknown) {
                 setToastApiError(formatUnknownError(error));
             }
@@ -66,7 +66,7 @@ const CreateEnvironment = () => {
     };
 
     const handleCancel = () => {
-        history.goBack();
+        navigate(-1);
     };
 
     return (

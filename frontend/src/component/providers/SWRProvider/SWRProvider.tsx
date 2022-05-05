@@ -1,12 +1,12 @@
 import { mutate, SWRConfig, useSWRConfig } from 'swr';
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router';
 import useToast from 'hooks/useToast';
 import { formatApiPath } from 'utils/formatPath';
 import React from 'react';
 import { USER_ENDPOINT_PATH } from 'hooks/api/getters/useAuth/useAuthEndpoint';
 
 interface ISWRProviderProps {
-    isUnauthorized: () => boolean;
+    isUnauthorized: boolean;
 }
 
 const INVALID_TOKEN_ERROR = 'InvalidTokenError';
@@ -16,7 +16,7 @@ const SWRProvider: React.FC<ISWRProviderProps> = ({
     isUnauthorized,
 }) => {
     const { cache } = useSWRConfig();
-    const history = useHistory();
+    const navigate = useNavigate();
     const { setToastApiError } = useToast();
 
     // @ts-expect-error
@@ -41,11 +41,11 @@ const SWRProvider: React.FC<ISWRProviderProps> = ({
             // @ts-expect-error
             cache.clear();
 
-            history.push('/login');
+            navigate('/login');
             return;
         }
 
-        if (!isUnauthorized()) {
+        if (!isUnauthorized) {
             setToastApiError(error.message);
         }
     };

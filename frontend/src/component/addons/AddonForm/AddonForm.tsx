@@ -16,7 +16,7 @@ import { AddonParameters } from './AddonParameters/AddonParameters';
 import { AddonEvents } from './AddonEvents/AddonEvents';
 import cloneDeep from 'lodash.clonedeep';
 import PageContent from 'component/common/PageContent/PageContent';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import useAddonsApi from 'hooks/api/actions/useAddonsApi/useAddonsApi';
 import useToast from 'hooks/useToast';
 import { makeStyles } from 'tss-react/mui';
@@ -50,7 +50,7 @@ export const AddonForm: VFC<IAddonFormProps> = ({
 }) => {
     const { createAddon, updateAddon } = useAddonsApi();
     const { setToastData, setToastApiError } = useToast();
-    const history = useHistory();
+    const navigate = useNavigate();
     const { classes: styles } = useStyles();
 
     const [formValues, setFormValues] = useState(initialValues);
@@ -119,7 +119,7 @@ export const AddonForm: VFC<IAddonFormProps> = ({
         };
 
     const onCancel = () => {
-        history.goBack();
+        navigate(-1);
     };
 
     const onSubmit: FormEventHandler<HTMLFormElement> = async event => {
@@ -152,14 +152,14 @@ export const AddonForm: VFC<IAddonFormProps> = ({
         try {
             if (editMode) {
                 await updateAddon(formValues);
-                history.push('/addons');
+                navigate('/addons');
                 setToastData({
                     type: 'success',
                     title: 'Addon updated successfully',
                 });
             } else {
                 await createAddon(formValues);
-                history.push('/addons');
+                navigate('/addons');
                 setToastData({
                     type: 'success',
                     confetti: true,

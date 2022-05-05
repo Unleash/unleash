@@ -1,26 +1,23 @@
 import { capitalize } from '@mui/material';
 import classnames from 'classnames';
-import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useStyles } from './FeatureOverviewMetadata.styles';
-
 import { Edit } from '@mui/icons-material';
-import { IFeatureViewParams } from 'interfaces/params';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import useTags from 'hooks/api/getters/useTags/useTags';
 import FeatureOverviewTags from './FeatureOverviewTags/FeatureOverviewTags';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
 const FeatureOverviewMetaData = () => {
     const { classes: styles } = useStyles();
-    const { projectId, featureId } = useParams<IFeatureViewParams>();
+    const projectId = useRequiredPathParam('projectId');
+    const featureId = useRequiredPathParam('featureId');
     const { tags } = useTags(featureId);
-
     const { feature } = useFeature(projectId, featureId);
-
     const { project, description, type } = feature;
 
     const IconComponent = getFeatureTypeIcons(type);

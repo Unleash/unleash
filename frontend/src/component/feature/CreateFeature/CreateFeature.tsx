@@ -1,5 +1,5 @@
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import FeatureForm from '../FeatureForm/FeatureForm';
 import useFeatureForm from '../hooks/useFeatureForm';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -16,7 +16,7 @@ const CreateFeature = () => {
     const { setToastData, setToastApiError } = useToast();
     const { setShowFeedback } = useContext(UIContext);
     const { uiConfig } = useUiConfig();
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const {
         type,
@@ -46,7 +46,7 @@ const CreateFeature = () => {
             const payload = getTogglePayload();
             try {
                 await createFeatureToggle(project, payload);
-                history.push(`/projects/${project}/features/${name}`);
+                navigate(`/projects/${project}/features/${name}`);
                 setToastData({
                     title: 'Toggle created successfully',
                     text: 'Now you can start using your toggle.',
@@ -70,7 +70,7 @@ const CreateFeature = () => {
     };
 
     const handleCancel = () => {
-        history.goBack();
+        navigate(-1);
     };
 
     return (

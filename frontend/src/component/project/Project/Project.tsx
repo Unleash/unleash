@@ -1,4 +1,4 @@
-import { useHistory, useParams } from 'react-router';
+import { useNavigate } from 'react-router';
 import useProject from 'hooks/api/getters/useProject/useProject';
 import useLoading from 'hooks/useLoading';
 import ApiError from 'component/common/ApiError/ApiError';
@@ -17,27 +17,30 @@ import ProjectHealth from './ProjectHealth/ProjectHealth';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
 import { TabPanel } from 'component/common/TabNav/TabPanel/TabPanel';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 
 const Project = () => {
-    const { id, activeTab } = useParams<{ id: string; activeTab: string }>();
+    const projectId = useRequiredPathParam('projectId');
+    const activeTab = useOptionalPathParam('activeTab');
     const params = useQueryParams();
-    const { project, error, loading, refetch } = useProject(id);
+    const { project, error, loading, refetch } = useProject(projectId);
     const ref = useLoading(loading);
     const { setToastData } = useToast();
     const { classes: styles } = useStyles();
-    const history = useHistory();
+    const navigate = useNavigate();
 
-    const basePath = `/projects/${id}`;
+    const basePath = `/projects/${projectId}`;
     const tabData = [
         {
             title: 'Overview',
-            component: <ProjectOverview projectId={id} />,
+            component: <ProjectOverview projectId={projectId} />,
             path: basePath,
             name: 'overview',
         },
         {
             title: 'Health',
-            component: <ProjectHealth projectId={id} />,
+            component: <ProjectHealth projectId={projectId} />,
             path: `${basePath}/health`,
             name: 'health',
         },
@@ -49,13 +52,13 @@ const Project = () => {
         },
         {
             title: 'Environments',
-            component: <ProjectEnvironment projectId={id} />,
+            component: <ProjectEnvironment projectId={projectId} />,
             path: `${basePath}/environments`,
             name: 'environments',
         },
         {
             title: 'Archive',
-            component: <ProjectFeaturesArchive projectId={id} />,
+            component: <ProjectFeaturesArchive projectId={projectId} />,
             path: `${basePath}/archive`,
             name: 'archive',
         },
@@ -92,7 +95,7 @@ const Project = () => {
                     id={`tab-${index}`}
                     aria-controls={`tabpanel-${index}`}
                     label={tab.title}
-                    onClick={() => history.push(tab.path)}
+                    onClick={() => navigate(tab.path)}
                     className={styles.tabButton}
                 />
             );
@@ -122,7 +125,9 @@ const Project = () => {
                         <PermissionIconButton
                             permission={UPDATE_PROJECT}
                             projectId={project?.id}
-                            onClick={() => history.push(`/projects/${id}/edit`)}
+                            onClick={() =>
+                                navigate(`/projects/${projectId}/edit`)
+                            }
                             tooltip="Edit project"
                             data-loading
                         >

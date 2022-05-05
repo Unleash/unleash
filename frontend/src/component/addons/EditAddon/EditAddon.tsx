@@ -1,17 +1,12 @@
-import { useParams } from 'react-router-dom';
 import useAddons from 'hooks/api/getters/useAddons/useAddons';
 import { AddonForm } from '../AddonForm/AddonForm';
 import cloneDeep from 'lodash.clonedeep';
 import { IAddon } from 'interfaces/addons';
 import { DEFAULT_DATA } from '../CreateAddon/CreateAddon';
-
-interface IAddonEditParams {
-    addonId: string;
-}
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
 export const EditAddon = () => {
-    const { addonId } = useParams<IAddonEditParams>();
-
+    const addonId = useRequiredPathParam('addonId');
     const { providers, addons, refetchAddons } = useAddons();
 
     const editMode = true;

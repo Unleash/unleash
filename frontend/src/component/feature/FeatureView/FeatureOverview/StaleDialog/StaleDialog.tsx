@@ -1,6 +1,4 @@
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
-import { useParams } from 'react-router-dom';
-import { IFeatureViewParams } from 'interfaces/params';
 import { DialogContentText } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
@@ -8,6 +6,7 @@ import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import React from 'react';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
 interface IStaleDialogProps {
     open: boolean;
@@ -17,7 +16,8 @@ interface IStaleDialogProps {
 
 const StaleDialog = ({ open, setOpen, stale }: IStaleDialogProps) => {
     const { setToastData, setToastApiError } = useToast();
-    const { projectId, featureId } = useParams<IFeatureViewParams>();
+    const projectId = useRequiredPathParam('projectId');
+    const featureId = useRequiredPathParam('featureId');
     const { patchFeatureToggle } = useFeatureApi();
     const { refetchFeature } = useFeature(projectId, featureId);
 

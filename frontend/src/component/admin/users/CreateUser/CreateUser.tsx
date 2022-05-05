@@ -1,5 +1,5 @@
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import UserForm from '../UserForm/UserForm';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useAdminUsersApi from 'hooks/api/actions/useAdminUsersApi/useAdminUsersApi';
@@ -15,7 +15,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 const CreateUser = () => {
     const { setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
-    const history = useHistory();
+    const navigate = useNavigate();
     const {
         name,
         setName,
@@ -59,7 +59,7 @@ const CreateUser = () => {
     };
     const closeConfirm = () => {
         setShowConfirm(false);
-        history.push('/admin/user-admin');
+        navigate('/admin/users');
     };
 
     const formatApiCode = () => {
@@ -72,7 +72,7 @@ const CreateUser = () => {
     };
 
     const handleCancel = () => {
-        history.goBack();
+        navigate(-1);
     };
 
     return (

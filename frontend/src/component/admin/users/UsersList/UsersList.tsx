@@ -186,6 +186,17 @@ const UsersList = ({ search }: IUsersListProps) => {
                         >
                             Role
                         </TableCellSortable>
+                        <TableCellSortable
+                            className={classnames(
+                                styles.hideXS,
+                                styles.shrinkTableCell
+                            )}
+                            name="last-seen"
+                            sort={sort}
+                            setSort={setSort}
+                        >
+                            Last seen
+                        </TableCellSortable>
                         <TableCell align="center">
                             {hasAccess(ADMIN) ? 'Actions' : ''}
                         </TableCell>

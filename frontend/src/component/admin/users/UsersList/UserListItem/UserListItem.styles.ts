@@ -16,12 +16,16 @@ export const useStyles = makeStyles()(theme => ({
             fontWeight: 'normal',
             border: 0,
             '&:first-of-type': {
-                borderTopLeftRadius: '8px',
-                borderBottomLeftRadius: '8px',
+                '&, & > button': {
+                    borderTopLeftRadius: theme.spacing(1),
+                    borderBottomLeftRadius: theme.spacing(1),
+                },
             },
             '&:last-of-type': {
-                borderTopRightRadius: '8px',
-                borderBottomRightRadius: '8px',
+                '&, & > button': {
+                    borderTopRightRadius: theme.spacing(1),
+                    borderBottomRightRadius: theme.spacing(1),
+                },
             },
         },
     },

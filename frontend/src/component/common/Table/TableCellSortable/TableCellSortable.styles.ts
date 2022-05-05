@@ -3,7 +3,6 @@ import { makeStyles } from 'tss-react/mui';
 export const useStyles = makeStyles()(theme => ({
     tableCellHeaderSortable: {
         padding: 0,
-        position: 'relative',
         cursor: 'pointer',
         '& > svg': {
             fontSize: 18,

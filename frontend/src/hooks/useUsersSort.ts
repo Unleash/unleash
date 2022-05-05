@@ -5,7 +5,7 @@ import { createPersistentGlobalStateHook } from './usePersistentGlobalState';
 import useUsers from 'hooks/api/getters/useUsers/useUsers';
 import IRole from 'interfaces/role';
 
-export type UsersSortType = 'created' | 'name' | 'role';
+export type UsersSortType = 'created' | 'name' | 'role' | 'last-seen';
 
 export interface IUsersSort {
     type: UsersSortType;
@@ -50,6 +50,7 @@ export const createUsersFilterSortOptions = (): IUsersFilterSortOption[] => {
         { type: 'created', name: 'Created' },
         { type: 'name', name: 'Name' },
         { type: 'role', name: 'Role' },
+        { type: 'last-seen', name: 'Last seen' },
     ];
 };
 
@@ -65,6 +66,8 @@ const sortAscendingUsers = (
             return sortByName(users);
         case 'role':
             return sortByRole(users, roles);
+        case 'last-seen':
+            return sortByLastSeen(users);
         default:
             console.error(`Unknown feature sort type: ${sort.type}`);
             return users;
@@ -111,4 +114,12 @@ const sortByRole = (
 const getRoleName = (roleId: number, roles: Readonly<IRole[]>) => {
     const role = roles.find((role: IRole) => role.id === roleId);
     return role ? role.name : '';
+};
+
+const sortByLastSeen = (users: Readonly<IUser[]>): IUser[] => {
+    return [...users].sort((a, b) => {
+        const aSeenAt = a.seenAt ?? '';
+        const bSeenAt = b.seenAt ?? '';
+        return bSeenAt.localeCompare(aSeenAt);
+    });
 };

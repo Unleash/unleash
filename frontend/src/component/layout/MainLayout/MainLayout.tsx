@@ -11,6 +11,7 @@ import textureImage from 'assets/img/texture.png';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { SkipNavLink } from 'component/common/SkipNav/SkipNavLink';
 import { SkipNavTarget } from 'component/common/SkipNav/SkipNavTarget';
+import { formatAssetPath } from 'utils/formatPath';
 
 const useStyles = makeStyles()(theme => ({
     container: {
@@ -54,7 +55,7 @@ export const MainLayout = ({ children }: IMainLayoutProps) => {
                     </Grid>
                     <div style={{ overflow: 'hidden' }}>
                         <img
-                            src={textureImage}
+                            src={formatAssetPath(textureImage)}
                             alt=""
                             style={{
                                 position: 'fixed',

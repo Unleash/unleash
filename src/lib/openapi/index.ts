@@ -23,6 +23,8 @@ import {
 } from './spec/patch-operation-schema';
 import { updateFeatureSchema } from './spec/updateFeatureSchema';
 import { updateStrategySchema } from './spec/update-strategy-schema';
+import { patchFeatureSchema } from './spec/patch-feature-schema';
+import { patchStrategySchema } from './spec/patch-strategy-schema';
 
 export const createOpenApiSchema = (
     serverUrl?: string,
@@ -63,6 +65,8 @@ export const createOpenApiSchema = (
                 patchMoveOperationSchema,
                 patchOperationSchema,
                 patchCopyOperationSchema,
+                patchFeatureSchema,
+                patchStrategySchema,
                 strategySchema,
                 strategiesSchema,
                 updateStrategySchema,

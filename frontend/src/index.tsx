@@ -1,5 +1,6 @@
 import 'whatwg-fetch';
 import 'themes/app.css';
+import 'regenerator-runtime/runtime';
 
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';

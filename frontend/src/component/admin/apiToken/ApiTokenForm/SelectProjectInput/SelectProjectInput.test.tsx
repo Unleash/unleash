@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import React from 'react';
 import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -7,8 +8,8 @@ import {
     SelectProjectInput,
 } from './SelectProjectInput';
 
-const onChange = jest.fn();
-const onFocus = jest.fn();
+const onChange = vi.fn();
+const onFocus = vi.fn();
 
 const mockProps: ISelectProjectInputProps = {
     options: [

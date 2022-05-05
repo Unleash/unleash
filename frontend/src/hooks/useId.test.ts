@@ -8,15 +8,15 @@ test('useId', () => {
     rerender();
 
     expect(result).toMatchInlineSnapshot(`
-        Object {
-          "all": Array [
-            "useId-0",
-            "useId-0",
-            "useId-0",
-          ],
-          "current": "useId-0",
-          "error": undefined,
-        }
+      {
+        "all": [
+          "useId-0",
+          "useId-0",
+          "useId-0",
+        ],
+        "current": "useId-0",
+        "error": undefined,
+      }
     `);
 });
 
@@ -27,14 +27,14 @@ test('useId prefix', () => {
     rerender();
 
     expect(result).toMatchInlineSnapshot(`
-        Object {
-          "all": Array [
-            "prefix-1",
-            "prefix-1",
-            "prefix-1",
-          ],
-          "current": "prefix-1",
-          "error": undefined,
-        }
+      {
+        "all": [
+          "prefix-1",
+          "prefix-1",
+          "prefix-1",
+        ],
+        "current": "prefix-1",
+        "error": undefined,
+      }
     `);
 });

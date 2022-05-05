@@ -1,13 +1,13 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1
 
 exports[`useFeaturesFilter constraints 1`] = `
-Object {
-  "filter": Object {
+{
+  "filter": {
     "project": "*",
     "query": "xyz",
   },
-  "filtered": Array [
-    Object {
+  "filtered": [
+    {
       "createdAt": 2006-01-02T15:04:05.000Z,
       "description": "1",
       "enabled": false,
@@ -16,45 +16,45 @@ Object {
       "name": "1",
       "project": "a",
       "stale": false,
-      "strategies": Array [
-        Object {
-          "constraints": Array [],
+      "strategies": [
+        {
+          "constraints": [],
           "id": "1",
           "name": "1",
-          "parameters": Object {},
+          "parameters": {},
         },
-        Object {
-          "constraints": Array [],
+        {
+          "constraints": [],
           "id": "1",
           "name": "1",
-          "parameters": Object {},
+          "parameters": {},
         },
-        Object {
-          "constraints": Array [
-            Object {
+        {
+          "constraints": [
+            {
               "contextName": "",
               "operator": "IN",
             },
-            Object {
+            {
               "contextName": "",
               "operator": "IN",
               "value": "xyz",
             },
-            Object {
+            {
               "contextName": "",
               "operator": "IN",
-              "values": Array [
+              "values": [
                 "xyz",
               ],
             },
           ],
           "id": "1",
           "name": "1",
-          "parameters": Object {},
+          "parameters": {},
         },
       ],
       "type": "1",
-      "variants": Array [],
+      "variants": [],
     },
   ],
   "setFilter": [Function],
@@ -62,22 +62,22 @@ Object {
 `;
 
 exports[`useFeaturesFilter empty 1`] = `
-Object {
-  "filter": Object {
+{
+  "filter": {
     "project": "*",
   },
-  "filtered": Array [],
+  "filtered": [],
   "setFilter": [Function],
 }
 `;
 
 exports[`useFeaturesFilter equal 1`] = `
-Object {
-  "filter": Object {
+{
+  "filter": {
     "project": "*",
   },
-  "filtered": Array [
-    Object {
+  "filtered": [
+    {
       "createdAt": 2006-01-02T15:04:05.000Z,
       "description": "1",
       "enabled": false,
@@ -86,11 +86,11 @@ Object {
       "name": "1",
       "project": "1",
       "stale": false,
-      "strategies": Array [],
+      "strategies": [],
       "type": "1",
-      "variants": Array [],
+      "variants": [],
     },
-    Object {
+    {
       "createdAt": 2006-01-02T15:04:05.000Z,
       "description": "1",
       "enabled": false,
@@ -99,11 +99,11 @@ Object {
       "name": "1",
       "project": "1",
       "stale": false,
-      "strategies": Array [],
+      "strategies": [],
       "type": "1",
-      "variants": Array [],
+      "variants": [],
     },
-    Object {
+    {
       "createdAt": 2006-01-02T15:04:05.000Z,
       "description": "1",
       "enabled": false,
@@ -112,9 +112,9 @@ Object {
       "name": "1",
       "project": "1",
       "stale": false,
-      "strategies": Array [],
+      "strategies": [],
       "type": "1",
-      "variants": Array [],
+      "variants": [],
     },
   ],
   "setFilter": [Function],
@@ -122,12 +122,12 @@ Object {
 `;
 
 exports[`useFeaturesFilter project 1`] = `
-Object {
-  "filter": Object {
+{
+  "filter": {
     "project": "2",
   },
-  "filtered": Array [
-    Object {
+  "filtered": [
+    {
       "createdAt": 2006-01-02T15:04:05.000Z,
       "description": "1",
       "enabled": false,
@@ -136,11 +136,11 @@ Object {
       "name": "1",
       "project": "2",
       "stale": false,
-      "strategies": Array [],
+      "strategies": [],
       "type": "1",
-      "variants": Array [],
+      "variants": [],
     },
-    Object {
+    {
       "createdAt": 2006-01-02T15:04:05.000Z,
       "description": "1",
       "enabled": false,
@@ -149,9 +149,9 @@ Object {
       "name": "1",
       "project": "2",
       "stale": false,
-      "strategies": Array [],
+      "strategies": [],
       "type": "1",
-      "variants": Array [],
+      "variants": [],
     },
   ],
   "setFilter": [Function],
@@ -159,13 +159,13 @@ Object {
 `;
 
 exports[`useFeaturesFilter query 1`] = `
-Object {
-  "filter": Object {
+{
+  "filter": {
     "project": "*",
     "query": "bc",
   },
-  "filtered": Array [
-    Object {
+  "filtered": [
+    {
       "createdAt": 2006-01-02T15:04:05.000Z,
       "description": "1",
       "enabled": false,
@@ -174,11 +174,11 @@ Object {
       "name": "1",
       "project": "abc",
       "stale": false,
-      "strategies": Array [],
+      "strategies": [],
       "type": "1",
-      "variants": Array [],
+      "variants": [],
     },
-    Object {
+    {
       "createdAt": 2006-01-02T15:04:05.000Z,
       "description": "1",
       "enabled": false,
@@ -187,9 +187,9 @@ Object {
       "name": "1",
       "project": "abcd",
       "stale": false,
-      "strategies": Array [],
+      "strategies": [],
       "type": "1",
-      "variants": Array [],
+      "variants": [],
     },
   ],
   "setFilter": [Function],

@@ -1,0 +1,368 @@
+// Vitest Snapshot v1
+
+exports[`renders correctly with one feature 1`] = `
+[
+  <div>
+    <div
+      className="makeStyles-searchBarContainer-3"
+    >
+      <form
+        className="makeStyles-container-6"
+        role="search"
+      >
+        <div
+          className="makeStyles-search-7 makeStyles-searchBar-4"
+        >
+          <svg
+            aria-hidden={true}
+            className="MuiSvgIcon-root makeStyles-searchIcon-8"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+            />
+          </svg>
+          <div
+            className="MuiInputBase-root makeStyles-inputRoot-9"
+            onClick={[Function]}
+            onKeyPress={[Function]}
+          >
+            <input
+              aria-label="search"
+              className="MuiInputBase-input MuiInputBase-inputTypeSearch"
+              onAnimationStart={[Function]}
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              placeholder="Search..."
+              type="search"
+              value=""
+            />
+          </div>
+        </div>
+      </form>
+      <a
+        href="/archive"
+        onClick={[Function]}
+      >
+        Archive
+      </a>
+    </div>
+    <div
+      className="MuiPaper-root MuiPaper-elevation1 MuiPaper-rounded"
+      style={
+        {
+          "borderRadius": "10px",
+          "boxShadow": "none",
+        }
+      }
+    >
+      <div
+        className="makeStyles-headerContainer-10"
+      >
+        <div
+          className="makeStyles-headerTitleContainer-14"
+        >
+          <div
+            className=""
+            data-loading={true}
+          >
+            <h1
+              className="MuiTypography-root makeStyles-headerTitle-15 MuiTypography-h1"
+            >
+              Feature toggles
+            </h1>
+          </div>
+          <div
+            className="makeStyles-headerActions-16"
+          >
+            <div
+              className="makeStyles-actionsContainer-1"
+            >
+              <div
+                className="makeStyles-actions-17"
+              >
+                <p
+                  className="MuiTypography-root MuiTypography-body2"
+                  data-loading={true}
+                >
+                  Sorted by:
+                </p>
+                <button
+                  aria-controls="sorting"
+                  aria-haspopup="true"
+                  className="MuiButtonBase-root MuiButton-root MuiButton-text"
+                  data-loading={true}
+                  disabled={false}
+                  id="sorting"
+                  onBlur={[Function]}
+                  onClick={[Function]}
+                  onDragLeave={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={[Function]}
+                  onKeyUp={[Function]}
+                  onMouseDown={[Function]}
+                  onMouseLeave={[Function]}
+                  onMouseUp={[Function]}
+                  onTouchEnd={[Function]}
+                  onTouchMove={[Function]}
+                  onTouchStart={[Function]}
+                  style={
+                    {
+                      "fontWeight": "normal",
+                      "textTransform": "lowercase",
+                    }
+                  }
+                  tabIndex={0}
+                  title="Sort by"
+                  type="button"
+                >
+                  <span
+                    className="MuiButton-label"
+                  >
+                    By Name
+                    <span
+                      className="MuiButton-endIcon MuiButton-iconSizeMedium"
+                    >
+                      <span
+                        aria-hidden={true}
+                        className="material-icons MuiIcon-root"
+                      >
+                        <svg
+                          className="MuiSvgIcon-root"
+                          focusable="false"
+                          role="img"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            d="M7 10l5 5 5-5z"
+                          />
+                          <title>
+                            Toggle
+                          </title>
+                        </svg>
+                      </span>
+                    </span>
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="makeStyles-bodyContainer-11"
+      >
+        <ul
+          className="MuiList-root MuiList-padding"
+        >
+          <ListItem
+            feature={
+              {
+                "name": "Another",
+                "reviveName": "Another",
+              }
+            }
+            flags={{}}
+            hasAccess={[Function]}
+          />
+        </ul>
+      </div>
+    </div>
+  </div>,
+  <div
+    aria-atomic={true}
+    aria-live="polite"
+    className="makeStyles-container-18"
+    data-testid="ANNOUNCER_ELEMENT_TEST_ID"
+    role="status"
+  />,
+]
+`;
+
+exports[`renders correctly with one feature without permissions 1`] = `
+[
+  <div>
+    <div
+      className="makeStyles-searchBarContainer-3"
+    >
+      <form
+        className="makeStyles-container-6"
+        role="search"
+      >
+        <div
+          className="makeStyles-search-7 makeStyles-searchBar-4"
+        >
+          <svg
+            aria-hidden={true}
+            className="MuiSvgIcon-root makeStyles-searchIcon-8"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+            />
+          </svg>
+          <div
+            className="MuiInputBase-root makeStyles-inputRoot-9"
+            onClick={[Function]}
+            onKeyPress={[Function]}
+          >
+            <input
+              aria-label="search"
+              className="MuiInputBase-input MuiInputBase-inputTypeSearch"
+              onAnimationStart={[Function]}
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              placeholder="Search..."
+              type="search"
+              value=""
+            />
+          </div>
+        </div>
+      </form>
+      <a
+        href="/archive"
+        onClick={[Function]}
+      >
+        Archive
+      </a>
+    </div>
+    <div
+      className="MuiPaper-root MuiPaper-elevation1 MuiPaper-rounded"
+      style={
+        {
+          "borderRadius": "10px",
+          "boxShadow": "none",
+        }
+      }
+    >
+      <div
+        className="makeStyles-headerContainer-10"
+      >
+        <div
+          className="makeStyles-headerTitleContainer-14"
+        >
+          <div
+            className=""
+            data-loading={true}
+          >
+            <h1
+              className="MuiTypography-root makeStyles-headerTitle-15 MuiTypography-h1"
+            >
+              Feature toggles
+            </h1>
+          </div>
+          <div
+            className="makeStyles-headerActions-16"
+          >
+            <div
+              className="makeStyles-actionsContainer-1"
+            >
+              <div
+                className="makeStyles-actions-17"
+              >
+                <p
+                  className="MuiTypography-root MuiTypography-body2"
+                  data-loading={true}
+                >
+                  Sorted by:
+                </p>
+                <button
+                  aria-controls="sorting"
+                  aria-haspopup="true"
+                  className="MuiButtonBase-root MuiButton-root MuiButton-text"
+                  data-loading={true}
+                  disabled={false}
+                  id="sorting"
+                  onBlur={[Function]}
+                  onClick={[Function]}
+                  onDragLeave={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={[Function]}
+                  onKeyUp={[Function]}
+                  onMouseDown={[Function]}
+                  onMouseLeave={[Function]}
+                  onMouseUp={[Function]}
+                  onTouchEnd={[Function]}
+                  onTouchMove={[Function]}
+                  onTouchStart={[Function]}
+                  style={
+                    {
+                      "fontWeight": "normal",
+                      "textTransform": "lowercase",
+                    }
+                  }
+                  tabIndex={0}
+                  title="Sort by"
+                  type="button"
+                >
+                  <span
+                    className="MuiButton-label"
+                  >
+                    By Name
+                    <span
+                      className="MuiButton-endIcon MuiButton-iconSizeMedium"
+                    >
+                      <span
+                        aria-hidden={true}
+                        className="material-icons MuiIcon-root"
+                      >
+                        <svg
+                          className="MuiSvgIcon-root"
+                          focusable="false"
+                          role="img"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            d="M7 10l5 5 5-5z"
+                          />
+                          <title>
+                            Toggle
+                          </title>
+                        </svg>
+                      </span>
+                    </span>
+                  </span>
+                  <span
+                    className="MuiTouchRipple-root"
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="makeStyles-bodyContainer-11"
+      >
+        <ul
+          className="MuiList-root MuiList-padding"
+        >
+          <ListItem
+            feature={
+              {
+                "name": "Another",
+                "reviveName": "Another",
+              }
+            }
+            flags={{}}
+            hasAccess={[Function]}
+          />
+        </ul>
+      </div>
+    </div>
+  </div>,
+  <div
+    aria-atomic={true}
+    aria-live="polite"
+    className="makeStyles-container-18"
+    data-testid="ANNOUNCER_ELEMENT_TEST_ID"
+    role="status"
+  >
+    Navigated to Feature toggles
+  </div>,
+]
+`;

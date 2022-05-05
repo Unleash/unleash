@@ -11,6 +11,7 @@
     {
       "source": "/auth/:match*",
       "destination": "https://unleash4.herokuapp.com/auth/:match*"
-    }
+    },
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }

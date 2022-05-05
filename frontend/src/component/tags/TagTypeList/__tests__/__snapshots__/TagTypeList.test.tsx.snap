@@ -1,71 +1,80 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1
 
 exports[`renders an empty list correctly 1`] = `
-<div
-  className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 mui-1ps6pg7-MuiPaper-root"
-  style={
-    Object {
-      "borderRadius": "10px",
-      "boxShadow": "none",
-    }
-  }
->
+[
   <div
-    className="tss-8bhpw1-headerContainer"
+    className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 mui-1ps6pg7-MuiPaper-root"
+    style={
+      {
+        "borderRadius": "10px",
+        "boxShadow": "none",
+      }
+    }
   >
     <div
-      className="tss-14s7qul-headerTitleContainer"
+      className="tss-8bhpw1-headerContainer"
     >
       <div
-        className=""
-        data-loading={true}
+        className="tss-14s7qul-headerTitleContainer"
       >
-        <h1
-          className="MuiTypography-root MuiTypography-h1 tss-whbfmi-headerTitle mui-ylrecv-MuiTypography-root"
+        <div
+          className=""
+          data-loading={true}
         >
-          Tag Types
-        </h1>
-      </div>
-      <div
-        className="tss-ap2nhp-headerActions"
-      >
-        <button
-          className="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  mui-1aw3qf3-MuiButtonBase-root-MuiButton-root"
-          disabled={false}
-          onBlur={[Function]}
-          onClick={[Function]}
-          onContextMenu={[Function]}
-          onDragLeave={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onKeyUp={[Function]}
-          onMouseDown={[Function]}
-          onMouseLeave={[Function]}
-          onMouseUp={[Function]}
-          onTouchEnd={[Function]}
-          onTouchMove={[Function]}
-          onTouchStart={[Function]}
-          tabIndex={0}
-          type="button"
+          <h1
+            className="MuiTypography-root MuiTypography-h1 tss-whbfmi-headerTitle mui-ylrecv-MuiTypography-root"
+          >
+            Tag Types
+          </h1>
+        </div>
+        <div
+          className="tss-ap2nhp-headerActions"
         >
-          New tag type
-        </button>
+          <button
+            className="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  mui-1aw3qf3-MuiButtonBase-root-MuiButton-root"
+            disabled={false}
+            onBlur={[Function]}
+            onClick={[Function]}
+            onContextMenu={[Function]}
+            onDragLeave={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            tabIndex={0}
+            type="button"
+          >
+            New tag type
+          </button>
+        </div>
       </div>
     </div>
-  </div>
-  <div
-    className="tss-kiw3z8-bodyContainer"
-  >
-    <ul
-      className="MuiList-root MuiList-padding mui-h4y409-MuiList-root"
+    <div
+      className="tss-kiw3z8-bodyContainer"
     >
-      <li
-        className="MuiListItem-root MuiListItem-gutters MuiListItem-padding mui-vlytkl-MuiListItem-root"
-        disabled={false}
+      <ul
+        className="MuiList-root MuiList-padding mui-h4y409-MuiList-root"
       >
-        No entries
-      </li>
-    </ul>
-  </div>
-</div>
+        <li
+          className="MuiListItem-root MuiListItem-gutters MuiListItem-padding mui-vlytkl-MuiListItem-root"
+          disabled={false}
+        >
+          No entries
+        </li>
+      </ul>
+    </div>
+  </div>,
+  <div
+    aria-atomic={true}
+    aria-live="polite"
+    className="tss-1cl4o05-container"
+    data-testid="ANNOUNCER_ELEMENT_TEST_ID"
+    role="status"
+  />,
+]
 `;

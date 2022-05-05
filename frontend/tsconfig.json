@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "baseUrl": "./src",
-    "target": "es5",
+    "target": "esnext",
     "lib": [
       "dom",
       "dom.iterable",
@@ -23,5 +23,6 @@
   },
   "include": [
     "src"
-  ]
+  ],
+  "references": [{ "path": "./tsconfig.node.json" }]
 }

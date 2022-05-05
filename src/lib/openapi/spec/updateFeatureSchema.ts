@@ -28,6 +28,6 @@ const schema = {
     },
 } as const;
 
-export type FeatureToggleDtoSchema = CreateSchemaType<typeof schema>;
+export type UpdateFeatureSchema = CreateSchemaType<typeof schema>;
 
-export const featureToggleDtoSchema = createSchemaObject(schema);
+export const updateFeatureSchema = createSchemaObject(schema);

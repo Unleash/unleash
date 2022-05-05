@@ -122,6 +122,7 @@ export default class ProjectFeaturesController extends Controller {
             method: 'get',
             path: PATH_STRATEGIES,
             handler: this.getStrategies,
+            acceptAnyContentType: true,
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
@@ -148,6 +149,7 @@ export default class ProjectFeaturesController extends Controller {
             method: 'get',
             path: PATH_STRATEGY,
             handler: this.getStrategy,
+            acceptAnyContentType: true,
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],

@@ -14,25 +14,13 @@ import { parametersSchema } from './spec/parameters-schema';
 import { featureEnvironmentInfoSchema } from './spec/feature-environment-info-schema';
 import { emptyResponseSchema } from './spec/empty-response-schema';
 import {
-    patchFeatureAddOperationSchema,
-    patchFeatureCopyOperationSchema,
-    patchFeatureGetOperationSchema,
-    patchFeatureMoveOperationSchema,
-    patchFeatureOperationSchema,
-    patchFeatureRemoveOperationSchema,
-    patchFeatureReplaceOperationSchema,
-    patchFeatureTestOperationSchema,
-} from './spec/patch-feature-operation-schema';
-import {
-    patchStrategyAddOperationSchema,
-    patchStrategyCopyOperationSchema,
-    patchStrategyGetOperationSchema,
-    patchStrategyMoveOperationSchema,
-    patchStrategyOperationSchema,
-    patchStrategyRemoveOperationSchema,
-    patchStrategyReplaceOperationSchema,
-    patchStrategyTestOperationSchema,
-} from './spec/patch-strategy-operation-schema';
+    patchAddOperationSchema,
+    patchCopyOperationSchema,
+    patchMoveOperationSchema,
+    patchOperationSchema,
+    patchRemoveOperationSchema,
+    patchReplaceOperationSchema,
+} from './spec/patch-operation-schema';
 import { updateFeatureSchema } from './spec/updateFeatureSchema';
 import { updateStrategySchema } from './spec/update-strategy-schema';
 
@@ -69,22 +57,12 @@ export const createOpenApiSchema = (
                 emptyResponseSchema,
                 overrideSchema,
                 parametersSchema,
-                patchFeatureAddOperationSchema,
-                patchFeatureRemoveOperationSchema,
-                patchFeatureReplaceOperationSchema,
-                patchFeatureMoveOperationSchema,
-                patchFeatureCopyOperationSchema,
-                patchFeatureTestOperationSchema,
-                patchFeatureGetOperationSchema,
-                patchFeatureOperationSchema,
-                patchStrategyAddOperationSchema,
-                patchStrategyRemoveOperationSchema,
-                patchStrategyReplaceOperationSchema,
-                patchStrategyMoveOperationSchema,
-                patchStrategyCopyOperationSchema,
-                patchStrategyTestOperationSchema,
-                patchStrategyGetOperationSchema,
-                patchStrategyOperationSchema,
+                patchAddOperationSchema,
+                patchRemoveOperationSchema,
+                patchReplaceOperationSchema,
+                patchMoveOperationSchema,
+                patchOperationSchema,
+                patchCopyOperationSchema,
                 strategySchema,
                 strategiesSchema,
                 updateStrategySchema,

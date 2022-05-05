@@ -1,9 +1,9 @@
 import { createSchemaObject, CreateSchemaType } from '../types';
-import { patchFeatureOperationSchema } from './patch-feature-operation-schema';
+import { patchOperationSchema } from './patch-operation-schema';
 
 const schema = {
     type: 'array',
-    items: patchFeatureOperationSchema,
+    items: patchOperationSchema,
 } as const;
 
 export type PatchFeatureSchema = CreateSchemaType<typeof schema>;

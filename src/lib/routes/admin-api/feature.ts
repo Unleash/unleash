@@ -94,6 +94,7 @@ class FeatureController extends Controller {
             method: 'get',
             path: '/:featureName/tags',
             handler: this.listTags,
+            acceptAnyContentType: true,
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],

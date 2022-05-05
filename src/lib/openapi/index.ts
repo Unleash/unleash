@@ -13,6 +13,26 @@ import { featureSchema } from './spec/feature-schema';
 import { parametersSchema } from './spec/parameters-schema';
 import { featureEnvironmentInfoSchema } from './spec/feature-environment-info-schema';
 import { emptyResponseSchema } from './spec/empty-response-schema';
+import {
+    patchFeatureAddOperationSchema,
+    patchFeatureCopyOperationSchema,
+    patchFeatureGetOperationSchema,
+    patchFeatureMoveOperationSchema,
+    patchFeatureOperationSchema,
+    patchFeatureRemoveOperationSchema,
+    patchFeatureReplaceOperationSchema,
+    patchFeatureTestOperationSchema,
+} from './spec/patch-feature-operation-schema';
+import {
+    patchStrategyAddOperationSchema,
+    patchStrategyCopyOperationSchema,
+    patchStrategyGetOperationSchema,
+    patchStrategyMoveOperationSchema,
+    patchStrategyOperationSchema,
+    patchStrategyRemoveOperationSchema,
+    patchStrategyReplaceOperationSchema,
+    patchStrategyTestOperationSchema,
+} from './spec/patch-strategy-operation-schema';
 
 export const createOpenApiSchema = (
     serverUrl?: string,
@@ -47,6 +67,22 @@ export const createOpenApiSchema = (
                 emptyResponseSchema,
                 overrideSchema,
                 parametersSchema,
+                patchFeatureAddOperationSchema,
+                patchFeatureRemoveOperationSchema,
+                patchFeatureReplaceOperationSchema,
+                patchFeatureMoveOperationSchema,
+                patchFeatureCopyOperationSchema,
+                patchFeatureTestOperationSchema,
+                patchFeatureGetOperationSchema,
+                patchFeatureOperationSchema,
+                patchStrategyAddOperationSchema,
+                patchStrategyRemoveOperationSchema,
+                patchStrategyReplaceOperationSchema,
+                patchStrategyMoveOperationSchema,
+                patchStrategyCopyOperationSchema,
+                patchStrategyTestOperationSchema,
+                patchStrategyGetOperationSchema,
+                patchStrategyOperationSchema,
                 strategySchema,
                 strategiesSchema,
                 variantSchema,

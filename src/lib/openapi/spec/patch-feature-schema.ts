@@ -6,6 +6,6 @@ const schema = {
     items: patchFeatureOperationSchema,
 } as const;
 
-export type PatchFeatureRequestSchema = CreateSchemaType<typeof schema>;
+export type PatchFeatureSchema = CreateSchemaType<typeof schema>;
 
-export const patchFeatureRequestSchema = createSchemaObject(schema);
+export const patchFeatureSchema = createSchemaObject(schema);

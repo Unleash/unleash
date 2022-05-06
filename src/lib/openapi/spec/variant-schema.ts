@@ -23,11 +23,14 @@ const schema = {
         },
         overrides: {
             type: 'array',
-            items: overrideSchema,
+            items: { $ref: '#/components/schemas/overrideSchema' },
         },
+    },
+    'components/schemas': {
+        overrideSchema: { schema: overrideSchema },
     },
 } as const;
 
 export type VariantSchema = CreateSchemaType<typeof schema>;
-
-export const variantSchema = createSchemaObject(schema);
+const { 'components/schemas': componentsSchemas, ...rest } = schema;
+export const variantSchema = createSchemaObject(rest);

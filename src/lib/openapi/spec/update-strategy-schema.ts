@@ -8,4 +8,5 @@ const schema = {
 
 export type UpdateStrategySchema = CreateSchemaType<typeof schema>;
 
-export const updateStrategySchema = createSchemaObject(schema);
+const { 'components/schemas': componentsSchemas, ...rest } = schema;
+export const updateStrategySchema = createSchemaObject(rest);

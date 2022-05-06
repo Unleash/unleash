@@ -3,9 +3,14 @@ import { patchOperationSchema } from './patch-operation-schema';
 
 const schema = {
     type: 'array',
-    items: patchOperationSchema,
+    items: {
+        $ref: '#/components/schemas/patchOperationSchema',
+    },
+    'components/schemas': {
+        patchOperationSchema: patchOperationSchema,
+    },
 } as const;
 
 export type PatchSchema = CreateSchemaType<typeof schema>;
-
-export const patchSchema = createSchemaObject(schema);
+const { 'components/schemas': componentsSchemas, ...rest } = schema;
+export const patchSchema = createSchemaObject(rest);

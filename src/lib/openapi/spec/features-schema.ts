@@ -11,11 +11,14 @@ const schema = {
         },
         features: {
             type: 'array',
-            items: featureSchema,
+            items: { $ref: '#/components/schemas/featureSchema' },
         },
+    },
+    'components/schemas': {
+        featureSchema: { schema: featureSchema },
     },
 } as const;
 
 export type FeaturesSchema = CreateSchemaType<typeof schema>;
-
-export const featuresSchema = createSchemaObject(schema);
+const { 'components/schemas': componentsSchemas, ...rest } = schema;
+export const featuresSchema = createSchemaObject(rest);

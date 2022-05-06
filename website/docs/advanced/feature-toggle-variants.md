@@ -61,7 +61,7 @@ In the example above, 60 divides cleanly by three. In cases where the remainder 
 #### Overrides
 
 :::note
-Overrides are intended to be used for one-off exceptions and during development and may not be suitable for other use cases.
+Overrides are intended to be used for one-off cases and during development and may not be suitable for other use cases.
 :::
 
 The weighting system automatically assigns users to a specific group for you. If you want to make sure that a specific user or group of users receives a certain variant, though, you can use the override functionality to achieve that.

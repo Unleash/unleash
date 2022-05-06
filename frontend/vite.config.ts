@@ -15,6 +15,7 @@ export default defineConfig({
         exclude: [...configDefaults.exclude, '**/cypress/**'],
     },
     server: {
+        open: true,
         proxy: {
             '/api': {
                 target: API_URL,

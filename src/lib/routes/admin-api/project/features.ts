@@ -31,8 +31,7 @@ import { strategiesResponse } from '../../../openapi/spec/strategies-response';
 import { strategyResponse } from '../../../openapi/spec/strategy-response';
 import { emptyResponse } from '../../../openapi/spec/emty-response';
 import { updateFeatureRequest } from '../../../openapi/spec/update-feature-request';
-import { patchFeatureRequest } from '../../../openapi/spec/patch-feature-request';
-import { patchStrategyRequest } from '../../../openapi/spec/patch-strategy-request';
+import { patchRequest } from '../../../openapi/spec/patch-request';
 import { updateStrategyRequest } from '../../../openapi/spec/update-strategy-request';
 import { cloneFeatureRequest } from '../../../openapi/spec/clone-feature-request';
 
@@ -188,7 +187,7 @@ export default class ProjectFeaturesController extends Controller {
                 openApiService.validPath({
                     tags: ['admin'],
                     operationId: 'patchStrategy',
-                    requestBody: patchStrategyRequest,
+                    requestBody: patchRequest,
                     responses: { 200: strategyResponse },
                 }),
             ],
@@ -293,7 +292,7 @@ export default class ProjectFeaturesController extends Controller {
                 openApiService.validPath({
                     tags: ['admin'],
                     operationId: 'patchFeature',
-                    requestBody: patchFeatureRequest,
+                    requestBody: patchRequest,
                     responses: { 200: featureResponse },
                 }),
             ],

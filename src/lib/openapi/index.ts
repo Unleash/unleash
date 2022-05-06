@@ -23,8 +23,7 @@ import {
 } from './spec/patch-operation-schema';
 import { updateFeatureSchema } from './spec/updateFeatureSchema';
 import { updateStrategySchema } from './spec/update-strategy-schema';
-import { patchFeatureSchema } from './spec/patch-feature-schema';
-import { patchStrategySchema } from './spec/patch-strategy-schema';
+import { patchSchema } from './spec/patch-schema';
 import { cloneFeatureSchema } from './spec/clone-feature-schema';
 
 export const createOpenApiSchema = (
@@ -67,8 +66,7 @@ export const createOpenApiSchema = (
                 patchMoveOperationSchema,
                 patchOperationSchema,
                 patchCopyOperationSchema,
-                patchFeatureSchema,
-                patchStrategySchema,
+                patchSchema,
                 strategySchema,
                 strategiesSchema,
                 updateStrategySchema,

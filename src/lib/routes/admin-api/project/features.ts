@@ -34,6 +34,7 @@ import { updateFeatureRequest } from '../../../openapi/spec/update-feature-reque
 import { patchRequest } from '../../../openapi/spec/patch-request';
 import { updateStrategyRequest } from '../../../openapi/spec/update-strategy-request';
 import { cloneFeatureRequest } from '../../../openapi/spec/clone-feature-request';
+import { FeatureEnvironmentInfoSchema } from '../../../openapi/spec/feature-environment-info-schema';
 
 interface FeatureStrategyParams {
     projectId: string;
@@ -430,7 +431,7 @@ export default class ProjectFeaturesController extends Controller {
 
     async getEnvironment(
         req: Request<FeatureStrategyParams, any, any, any>,
-        res: Response,
+        res: Response<FeatureEnvironmentInfoSchema>,
     ): Promise<void> {
         const { environment, featureName, projectId } = req.params;
         const environmentInfo = await this.featureService.getEnvironmentInfo(

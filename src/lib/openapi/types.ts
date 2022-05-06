@@ -15,7 +15,10 @@ export interface ClientApiOperation
 }
 
 // Create a type from a const schema object.
-export type CreateSchemaType<T> = FromSchema<T>;
+export type CreateSchemaType<T> = FromSchema<
+    T,
+    { definitionsPath: 'components/schemas' }
+>;
 
 // Create an OpenAPIV3.SchemaObject from a const schema object.
 export const createSchemaObject = <T>(schema: T): DeepMutable<T> => schema;

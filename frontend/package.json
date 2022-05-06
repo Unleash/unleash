@@ -53,7 +53,7 @@
     "@types/jest": "27.5.0",
     "@types/lodash.clonedeep": "4.5.7",
     "@types/node": "17.0.18",
-    "@types/react": "17.0.44",
+    "@types/react": "17.0.45",
     "@types/react-dom": "17.0.16",
     "@types/react-router-dom": "5.3.3",
     "@types/react-table": "^7.7.11",

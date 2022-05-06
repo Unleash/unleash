@@ -9,6 +9,7 @@ import { IUser } from 'interfaces/user';
 import { ILocationSettings } from 'hooks/useLocationSettings';
 import { HEADER_USER_AVATAR } from 'utils/testIds';
 import unknownUser from 'assets/icons/unknownUser.png';
+import { useId } from 'hooks/useId';
 
 interface IUserProfileProps {
     profile: IUser;
@@ -25,6 +26,7 @@ const UserProfile = ({
 }: IUserProfileProps) => {
     const [showProfile, setShowProfile] = useState(false);
     const [currentLocale, setCurrentLocale] = useState<string>();
+    const modalId = useId();
 
     const { classes: styles } = useStyles();
     const { classes: themeStyles } = useThemeStyles();
@@ -67,6 +69,8 @@ const UserProfile = ({
                         styles.button
                     )}
                     onClick={() => setShowProfile(prev => !prev)}
+                    aria-controls={showProfile ? modalId : undefined}
+                    aria-expanded={showProfile}
                     color="secondary"
                     disableRipple
                 >
@@ -78,6 +82,7 @@ const UserProfile = ({
                     <KeyboardArrowDownIcon className={styles.icon} />
                 </Button>
                 <UserProfileContent
+                    id={modalId}
                     showProfile={showProfile}
                     imageUrl={imageUrl}
                     profile={profile}

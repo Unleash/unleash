@@ -22,6 +22,7 @@ import { IUser } from 'interfaces/user';
 import { ILocationSettings } from 'hooks/useLocationSettings';
 
 interface IUserProfileContentProps {
+    id: string;
     showProfile: boolean;
     profile: IUser;
     possibleLocales: string[];
@@ -34,6 +35,7 @@ interface IUserProfileContentProps {
 }
 
 const UserProfileContent = ({
+    id,
     showProfile,
     profile,
     possibleLocales,
@@ -67,6 +69,7 @@ const UserProfileContent = ({
             condition={showProfile}
             show={
                 <Paper
+                    id={id}
                     className={classnames(
                         styles.profile,
                         themeStyles.flexColumn,

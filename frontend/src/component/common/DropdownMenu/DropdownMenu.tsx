@@ -55,7 +55,7 @@ const DropdownMenu: VFC<IDropdownMenuProps> = ({
                 onClick={handleOpen}
                 style={style}
                 aria-controls={id}
-                aria-haspopup="true"
+                aria-expanded={Boolean(anchor)}
                 icon={icon}
                 {...rest}
             />

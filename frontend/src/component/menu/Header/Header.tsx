@@ -22,12 +22,14 @@ import { filterByFlags } from 'component/common/util';
 import { useAuthPermissions } from 'hooks/api/getters/useAuth/useAuthPermissions';
 import { useStyles } from './Header.styles';
 import classNames from 'classnames';
+import { useId } from 'hooks/useId';
 
 const Header: VFC = () => {
     const theme = useTheme();
-    const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-    const [anchorElAdvanced, setAnchorElAdvanced] =
-        useState<HTMLButtonElement | null>(null);
+    const adminId = useId();
+    const configId = useId();
+    const [adminRef, setAdminRef] = useState<HTMLButtonElement | null>(null);
+    const [configRef, setConfigRef] = useState<HTMLButtonElement | null>(null);
 
     const [admin, setAdmin] = useState(false);
     const { permissions } = useAuthPermissions();
@@ -40,8 +42,8 @@ const Header: VFC = () => {
     const [openDrawer, setOpenDrawer] = useState(false);
 
     const toggleDrawer = () => setOpenDrawer(prev => !prev);
-    const handleClose = () => setAnchorEl(null);
-    const handleCloseAdvanced = () => setAnchorElAdvanced(null);
+    const onAdminClose = () => setAdminRef(null);
+    const onConfigureClose = () => setConfigRef(null);
 
     useEffect(() => {
         const admin = permissions?.find(
@@ -119,16 +121,18 @@ const Header: VFC = () => {
                         </Link>
                         <button
                             className={styles.advancedNavButton}
-                            onClick={e => setAnchorElAdvanced(e.currentTarget)}
+                            onClick={e => setConfigRef(e.currentTarget)}
+                            aria-controls={configRef ? configId : undefined}
+                            aria-expanded={Boolean(configRef)}
                         >
                             Configure
                             <KeyboardArrowDown className={styles.icon} />
                         </button>
                         <NavigationMenu
-                            id="settings-navigation"
+                            id={configId}
                             options={filteredMainRoutes.mainNavRoutes}
-                            anchorEl={anchorElAdvanced}
-                            handleClose={handleCloseAdvanced}
+                            anchorEl={configRef}
+                            handleClose={onConfigureClose}
                             style={{ top: 10 }}
                         />
                     </div>
@@ -142,7 +146,7 @@ const Header: VFC = () => {
                                 disableRipple
                                 className={themeStyles.focusable}
                             >
-                                <MenuBookIcon className={styles.icon} />
+                                <MenuBookIcon />
                             </IconButton>
                         </Tooltip>
                         <ConditionallyRender
@@ -151,12 +155,16 @@ const Header: VFC = () => {
                                 <Tooltip title="Settings">
                                     <IconButton
                                         onClick={e =>
-                                            setAnchorEl(e.currentTarget)
+                                            setAdminRef(e.currentTarget)
                                         }
                                         className={classNames(
                                             styles.wideButton,
                                             themeStyles.focusable
                                         )}
+                                        aria-controls={
+                                            adminRef ? adminId : undefined
+                                        }
+                                        aria-expanded={Boolean(adminRef)}
                                         size="large"
                                         disableRipple
                                     >
@@ -169,10 +177,10 @@ const Header: VFC = () => {
                             }
                         />
                         <NavigationMenu
-                            id="admin-navigation"
+                            id={adminId}
                             options={filteredMainRoutes.adminRoutes}
-                            anchorEl={anchorEl}
-                            handleClose={handleClose}
+                            anchorEl={adminRef}
+                            handleClose={onAdminClose}
                             style={{ top: 5, left: -100 }}
                         />{' '}
                         <UserProfile />

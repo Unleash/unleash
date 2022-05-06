@@ -126,6 +126,10 @@ The Unleash Proxy has a very simple API. It takes the [Unleash Context](../user_
 
 ### OpenAPI integration and API documentation {#openapi}
 
+:::info Availability
+The OpenAPI integration is available in versions 0.9 and later of the Unleash proxy.
+:::
+
 The proxy exposes an optional OpenAPI spec and Swagger page. If you run it with the `ENABLE_OAS` (environment variable) or `enableOAS` (in-code configuration variable) set to `true`, these can be found at `<base url>/docs/openapi.json` and `<base url>/docs/openapi` respectively.
 
 The swagger page is an interactive page where you can discover and test the API endpoints the proxy exposes. The JSON spec can be used to generate an OpenAPI client with OpenAPI tooling such as the [OpenAPI generator](https://openapi-generator.tech/).

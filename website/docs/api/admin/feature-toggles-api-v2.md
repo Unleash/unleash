@@ -616,7 +616,16 @@ Transfer-Encoding: chunked
 	{
 		"name": "variant1",
 		"weightType": "fix",
-		"weight": 650
+		"weight": 650,
+        "payload": {
+          "type": "json",
+          "value": "{\"key1\": \"value\", \"key2\": 123}"
+        },
+        "stickiness": "userId",
+        "overrides": [ {
+          "contextName": "userId",
+          "values": ["1", "23"]
+        } ]
 	},
 	{
 		"name": "variant2",
@@ -639,7 +648,16 @@ echo '[
 	{
 		"name": "variant1",
 		"weightType": "fix",
-		"weight": 650
+		"weight": 650,
+        "payload": {
+          "type": "json",
+          "value": "{\"key1\": \"value\", \"key2\": 123}"
+        },
+        "stickiness": "userId",
+        "overrides": [{
+          "contextName": "userId",
+          "values": ["1", "23"]
+        }]
 	},
 	{
 		"name": "variant2",
@@ -680,7 +698,7 @@ Content-Type: application/json; charset=utf-8
 
 ### PATCH variants for a feature toggle
 
-<ApiRequest verb="patch" url="api/admin/projects/:projectId/features/:featureName/variants" title="Create (overwrite) variants for a feature toggle (example data)" payload={[{"op": "add", "path": "/1", "value": {
+<ApiRequest verb="patch" url="api/admin/projects/:projectId/features/:featureName/variants" title="Patch variants for a feature toggle (example data)" payload={[{"op": "add", "path": "/1", "value": {
   "name": "new-variant",
   "weightType": "fix",
   "weight": 200

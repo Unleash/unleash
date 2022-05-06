@@ -86,6 +86,7 @@ Object {
   "ui": Object {
     "flags": Object {
       "E": true,
+      "T": false,
     },
   },
   "versionCheck": Object {

@@ -71,7 +71,9 @@ function loadUI(options: IUnleashOptions): IUIConfig {
 
     ui.flags = {
         E: true,
+        T: safeBoolean(process.env.UNLEASH_UI_FLAGS_T, false),
     };
+
     return mergeAll([uiO, ui]);
 }
 

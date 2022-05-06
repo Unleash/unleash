@@ -27,7 +27,7 @@ const schema = {
         },
     },
     'components/schemas': {
-        overrideSchema: { schema: overrideSchema },
+        overrideSchema: overrideSchema,
     },
 } as const;
 

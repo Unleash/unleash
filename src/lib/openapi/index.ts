@@ -12,17 +12,9 @@ import { featureSchema } from './spec/feature-schema';
 import { parametersSchema } from './spec/parameters-schema';
 import { featureEnvironmentInfoSchema } from './spec/feature-environment-info-schema';
 import { emptyResponseSchema } from './spec/empty-response-schema';
-import {
-    patchAddOperationSchema,
-    patchCopyOperationSchema,
-    patchMoveOperationSchema,
-    patchRemoveOperationSchema,
-    patchReplaceOperationSchema,
-    patchOperationSchema,
-} from './spec/patch-operation-schema';
+import { patchOperationSchema } from './spec/patch-operation-schema';
 import { updateFeatureSchema } from './spec/updateFeatureSchema';
 import { updateStrategySchema } from './spec/update-strategy-schema';
-import { patchSchema } from './spec/patch-schema';
 import { cloneFeatureSchema } from './spec/clone-feature-schema';
 
 export const createOpenApiSchema = (
@@ -59,13 +51,7 @@ export const createOpenApiSchema = (
                 emptyResponseSchema,
                 overrideSchema,
                 parametersSchema,
-                patchAddOperationSchema,
-                patchRemoveOperationSchema,
-                patchReplaceOperationSchema,
-                patchMoveOperationSchema,
-                patchCopyOperationSchema,
                 patchOperationSchema,
-                patchSchema,
                 strategySchema,
                 updateStrategySchema,
                 updateFeatureSchema,

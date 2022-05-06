@@ -11,11 +11,16 @@ const schema = {
         },
         tags: {
             type: 'array',
-            items: tagSchema,
+            items: {
+                $ref: '#/components/schemas/tagSchema',
+            },
         },
+    },
+    'components/schemas': {
+        tagSchema: tagSchema,
     },
 } as const;
 
-export type TagsSchema = CreateSchemaType<typeof schema>;
-
-export const tagsSchema = createSchemaObject(schema);
+export type TagsResponseSchema = CreateSchemaType<typeof schema>;
+const { 'components/schemas': componentsSchemas, ...rest } = schema;
+export const tagsResponseSchema = createSchemaObject(rest);

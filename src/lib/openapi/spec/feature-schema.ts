@@ -40,15 +40,19 @@ const schema = {
         },
         strategies: {
             type: 'array',
-            items: strategySchema,
+            items: { $ref: '#/components/schemas/strategySchema' },
         },
         variants: {
             type: 'array',
-            items: variantSchema,
+            items: { $ref: '#/components/schemas/variantSchema' },
         },
+    },
+    'components/schemas': {
+        strategySchema: strategySchema,
+        variantSchema: variantSchema,
     },
 } as const;
 
 export type FeatureSchema = CreateSchemaType<typeof schema>;
-
-export const featureSchema = createSchemaObject(schema);
+const { 'components/schemas': componentsSchemas, ...rest } = schema;
+export const featureSchema = createSchemaObject(rest);

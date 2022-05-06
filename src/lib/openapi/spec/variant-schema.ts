@@ -20,15 +20,6 @@ const schema = {
         },
         payload: {
             type: 'object',
-            required: ['type', 'value'],
-            properties: {
-                type: {
-                    type: 'string',
-                },
-                value: {
-                    type: 'string',
-                },
-            },
         },
         overrides: {
             type: 'array',
@@ -36,10 +27,10 @@ const schema = {
         },
     },
     'components/schemas': {
-        overrideSchema,
+        overrideSchema: { schema: overrideSchema },
     },
 } as const;
 
 export type VariantSchema = CreateSchemaType<typeof schema>;
-
-export const variantSchema = createSchemaObject(schema);
+const { 'components/schemas': componentsSchemas, ...rest } = schema;
+export const variantSchema = createSchemaObject(rest);

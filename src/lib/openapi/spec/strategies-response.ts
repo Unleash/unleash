@@ -5,7 +5,10 @@ export const strategiesResponse: OpenAPIV3.ResponseObject = {
     content: {
         'application/json': {
             schema: {
-                $ref: '#/components/schemas/strategiesSchema',
+                type: 'array',
+                items: {
+                    $ref: '#/components/schemas/strategySchema',
+                },
             },
         },
     },

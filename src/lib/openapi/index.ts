@@ -6,8 +6,7 @@ import { variantSchema } from './spec/variant-schema';
 import { createFeatureSchema } from './spec/create-feature-schema';
 import { constraintSchema } from './spec/constraint-schema';
 import { tagSchema } from './spec/tag-schema';
-import { tagsSchema } from './spec/tags-schema';
-import { strategiesSchema } from './spec/strategies-schema';
+import { tagsResponseSchema } from './spec/tags-response-schema';
 import { createStrategySchema } from './spec/create-strategy-schema';
 import { featureSchema } from './spec/feature-schema';
 import { parametersSchema } from './spec/parameters-schema';
@@ -17,9 +16,9 @@ import {
     patchAddOperationSchema,
     patchCopyOperationSchema,
     patchMoveOperationSchema,
-    patchOperationSchema,
     patchRemoveOperationSchema,
     patchReplaceOperationSchema,
+    patchOperationSchema,
 } from './spec/patch-operation-schema';
 import { updateFeatureSchema } from './spec/updateFeatureSchema';
 import { updateStrategySchema } from './spec/update-strategy-schema';
@@ -64,16 +63,15 @@ export const createOpenApiSchema = (
                 patchRemoveOperationSchema,
                 patchReplaceOperationSchema,
                 patchMoveOperationSchema,
-                patchOperationSchema,
                 patchCopyOperationSchema,
+                patchOperationSchema,
                 patchSchema,
                 strategySchema,
-                strategiesSchema,
                 updateStrategySchema,
                 updateFeatureSchema,
                 variantSchema,
                 tagSchema,
-                tagsSchema,
+                tagsResponseSchema,
             },
         },
     };

@@ -1,12 +1,5 @@
 import { createSchemaObject, CreateSchemaType } from '../types';
 
-const valueSchema = {
-    oneOf: [{ type: 'string' }, { type: 'number' }, { type: 'object' }],
-};
-
-export type PatchValueSchema = CreateSchemaType<typeof valueSchema>;
-export const patchValueSchema = createSchemaObject(valueSchema);
-
 const addOperationSchema = {
     type: 'object',
     required: ['path', 'op', 'value'],
@@ -18,7 +11,7 @@ const addOperationSchema = {
             type: 'string',
             enum: ['add'],
         },
-        value: patchValueSchema,
+        value: {},
     },
 } as const;
 
@@ -59,7 +52,7 @@ const replaceOperationSchema = {
             type: 'string',
             enum: ['replace'],
         },
-        value: patchValueSchema,
+        value: {},
     },
 } as const;
 
@@ -72,6 +65,7 @@ export const patchReplaceOperationSchema = createSchemaObject(
 
 const moveOperationSchema = {
     type: 'object',
+    required: ['path', 'op', 'from'],
     properties: {
         path: {
             type: 'string',
@@ -93,6 +87,7 @@ export const patchMoveOperationSchema = createSchemaObject(moveOperationSchema);
 
 const copyOperationSchema = {
     type: 'object',
+    required: ['path', 'op', 'from'],
     properties: {
         path: {
             type: 'string',
@@ -113,19 +108,22 @@ export type PatchCopyOperationSchema = CreateSchemaType<
 export const patchCopyOperationSchema = createSchemaObject(copyOperationSchema);
 
 const schema = {
-    type: 'object',
-    oneOf: [
-        patchAddOperationSchema,
-        patchRemoveOperationSchema,
-        patchReplaceOperationSchema,
-        patchMoveOperationSchema,
-        patchCopyOperationSchema,
+    anyOf: [
+        { $ref: '#/components/schemas/patchAddOperationSchema' },
+        { $ref: '#/components/schemas/patchRemoveOperationSchema' },
+        { $ref: '#/components/schemas/patchReplaceOperationSchema' },
+        { $ref: '#/components/schemas/patchMoveOperationSchema' },
+        { $ref: '#/components/schemas/patchCopyOperationSchema' },
     ],
-    discriminator: {
-        propertyName: 'op',
+    'components/schemas': {
+        patchAddOperationSchema: patchAddOperationSchema,
+        patchRemoveOperationSchema: patchRemoveOperationSchema,
+        patchReplaceOperationSchema: patchReplaceOperationSchema,
+        patchMoveOperationSchema: patchMoveOperationSchema,
+        patchCopyOperationSchema: patchCopyOperationSchema,
     },
 } as const;
 
 export type PatchOperationSchema = CreateSchemaType<typeof schema>;
-
-export const patchOperationSchema = createSchemaObject(schema);
+const { 'components/schemas': componentsSchemas, ...operationRest } = schema;
+export const patchOperationSchema = createSchemaObject(operationRest);

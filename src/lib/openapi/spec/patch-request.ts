@@ -5,10 +5,7 @@ export const patchRequest: OpenAPIV3.RequestBodyObject = {
     content: {
         'application/json': {
             schema: {
-                type: 'array',
-                items: {
-                    $ref: '#/components/schemas/patchOperationSchema',
-                },
+                $ref: '#/components/schemas/patchSchema',
             },
         },
     },

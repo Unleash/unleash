@@ -901,10 +901,10 @@
     "@types/retry" "*"
     "@types/ssri" "*"
 
-"@types/memoizee@0.4.7":
-  version "0.4.7"
-  resolved "https://registry.npmjs.org/@types/memoizee/-/memoizee-0.4.7.tgz"
-  integrity sha512-EMtvWnRC/W0KYmXxbPJAMg/M1OXkFboSpd/IzkNMDXfoFPE4uom1RHFl8q7m/4R0y9eG1yaoaIPiMHk0vMA0eA==
+"@types/memoizee@0.4.8":
+  version "0.4.8"
+  resolved "https://registry.yarnpkg.com/@types/memoizee/-/memoizee-0.4.8.tgz#04adc0c266a0f5d72db0556fdda2ba17dad9b519"
+  integrity sha512-qDpXKGgwKywnQt/64fH1O0LiPA++QGIYeykEUiZ51HymKVRLnUSGcRuF60IfpPeeXiuRwiR/W4y7S5VzbrgLCA==
 
 "@types/mime@2.0.3":
   version "2.0.3"

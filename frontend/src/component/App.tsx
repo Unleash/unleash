@@ -12,12 +12,14 @@ import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import { SplashPageRedirect } from 'component/splash/SplashPageRedirect/SplashPageRedirect';
 import styles from 'component/styles.module.scss';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 export const App = () => {
     const { authDetails } = useAuthDetails();
     const { user } = useAuthUser();
     const isLoggedIn = Boolean(user?.id);
     const hasFetchedAuth = Boolean(authDetails || user);
+    usePlausibleTracker();
 
     return (
         <SWRProvider isUnauthorized={!isLoggedIn}>

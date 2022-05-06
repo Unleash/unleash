@@ -13,6 +13,7 @@ export const defaultValue = {
         EEA: false,
         CO: false,
         SE: false,
+        T: false,
     },
     links: [
         {

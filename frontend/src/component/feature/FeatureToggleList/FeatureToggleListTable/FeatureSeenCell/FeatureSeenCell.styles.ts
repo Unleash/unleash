@@ -2,6 +2,10 @@ import { makeStyles } from 'tss-react/mui';
 
 export const useStyles = makeStyles()(theme => ({
     container: {
+        display: 'flex',
+        padding: theme.spacing(1.5),
+    },
+    box: {
         width: '38px',
         height: '38px',
         background: 'gray',

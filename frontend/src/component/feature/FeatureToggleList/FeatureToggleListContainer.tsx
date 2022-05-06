@@ -2,7 +2,7 @@ import { useFeatures } from 'hooks/api/getters/useFeatures/useFeatures';
 import { FeatureSchema } from 'openapi';
 import { FeatureToggleListTable } from './FeatureToggleListTable/FeatureToggleListTable';
 
-const featuresPlaceholder: FeatureSchema[] = Array(7).fill({
+const featuresPlaceholder: FeatureSchema[] = Array(15).fill({
     name: 'Name of the feature',
     description: 'Short description of the feature',
     type: '-',

@@ -8,7 +8,6 @@ export const useStyles = makeStyles()(theme => ({
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginTop: theme.spacing(4),
-        marginBottom: theme.spacing(4),
+        margin: theme.spacing(4),
     },
 }));

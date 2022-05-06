@@ -14,6 +14,9 @@ interface ITableActionsProps {
     isSeparated?: boolean;
 }
 
+/**
+ * @deprecated
+ */
 export const TableActions: FC<ITableActionsProps> = ({
     initialSearchValue: search,
     onSearch = () => {},

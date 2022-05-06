@@ -1,28 +1,25 @@
 import { useEffect, useMemo, VFC } from 'react';
-import {
-    Link,
-    Table,
-    TableBody,
-    TableCell,
-    TableRow,
-    useMediaQuery,
-    useTheme,
-} from '@mui/material';
+import { Link, useMediaQuery, useTheme } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { useGlobalFilter, useSortBy, useTable } from 'react-table';
 import useLoading from 'hooks/useLoading';
-import { SortableTableHeader } from 'component/common/Table/SortableTableHeader/SortableTableHeader';
-import { TableActions } from 'component/common/Table/TableActions/TableActions';
-import { TablePanel } from 'component/common/Table/TablePanel/TablePanel';
-import { TableToolbar } from 'component/common/Table/TableToolbar/TableToolbar';
-import TablePlaceholder from 'component/common/Table/TablePlaceholder/TablePlaceholder';
+import {
+    TableContainer,
+    TableToolbar,
+    Table,
+    SortableTableHeader,
+    TableBody,
+    TableCell,
+    TableRow,
+    TablePlaceholder,
+    TableSearch,
+} from 'component/common/Table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { DateCell } from './DateCell/DateCell';
-import { FeatureNameCell } from './FeatureNameCell/FeatureNameCell';
+import { FeatureLinkCell } from './FeatureLinkCell/FeatureLinkCell';
 import { FeatureSeenCell } from './FeatureSeenCell/FeatureSeenCell';
 import { FeatureStaleCell } from './FeatureStaleCell/FeatureStaleCell';
 import { FeatureTypeCell } from './FeatureTypeCell/FeatureTypeCell';
-import { LinkCell } from './LinkCell/LinkCell';
 import { CreateFeatureButton } from '../../CreateFeatureButton/CreateFeatureButton';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
@@ -51,17 +48,29 @@ const columns = [
         accessor: 'lastSeenAt',
         Cell: FeatureSeenCell,
         sortType: 'date',
+        totalWidth: 120,
     },
     {
         Header: 'Type',
         accessor: 'type',
         Cell: FeatureTypeCell,
+        totalWidth: 120,
     },
     {
         Header: 'Feature toggle name',
         accessor: 'name',
-        // @ts-expect-error // TODO: props type
-        Cell: ({ row: { original } }) => <FeatureNameCell {...original} />,
+        Cell: ({
+            row: {
+                // @ts-expect-error -- props type
+                original: { name, description, project },
+            },
+        }) => (
+            <FeatureLinkCell
+                title={name}
+                subtitle={description}
+                to={`/projects/${project}/features/${name}`}
+            />
+        ),
         sortType: 'alphanumeric',
     },
     {
@@ -74,7 +83,7 @@ const columns = [
         Header: 'Project ID',
         accessor: 'project',
         Cell: ({ value }: { value: string }) => (
-            <LinkCell to={`/projects/${value}`}>{value}</LinkCell>
+            <FeatureLinkCell title={value} to={`/projects/${value}`} />
         ),
         sortType: 'alphanumeric',
     },
@@ -123,6 +132,7 @@ export const FeatureToggleListTable: VFC<IExperimentProps> = ({
             initialState,
             sortTypes,
             autoResetGlobalFilter: false,
+            disableSortRemove: true,
         },
         useGlobalFilter,
         useSortBy
@@ -130,7 +140,13 @@ export const FeatureToggleListTable: VFC<IExperimentProps> = ({
 
     useEffect(() => {
         if (isSmallScreen) {
-            setHiddenColumns(['lastSeenAt', 'type', 'stale', 'description']);
+            setHiddenColumns([
+                'lastSeenAt',
+                'type',
+                'stale',
+                'description',
+                'createdAt',
+            ]);
         } else if (isMediumScreen) {
             setHiddenColumns(['lastSeenAt', 'stale', 'description']);
         } else {
@@ -139,27 +155,26 @@ export const FeatureToggleListTable: VFC<IExperimentProps> = ({
     }, [setHiddenColumns, isSmallScreen, isMediumScreen]);
 
     return (
-        <TablePanel
-            ref={ref}
-            header={
-                <TableToolbar title={`Feature Flags (${data.length})`}>
-                    <TableActions isSeparated onSearch={setGlobalFilter}>
-                        <Link
-                            component={RouterLink}
-                            to="/archive"
-                            underline="always"
-                            sx={{ marginRight: 3 }}
-                        >
-                            View archive
-                        </Link>
-                        <CreateFeatureButton
-                            loading={false}
-                            filter={{ query: '', project: 'default' }}
-                        />
-                    </TableActions>
-                </TableToolbar>
-            }
-        >
+        <TableContainer ref={ref}>
+            <TableToolbar title={`Feature toggles (${data.length})`}>
+                <TableSearch
+                    initialValue={globalFilter}
+                    onChange={setGlobalFilter}
+                />
+                <TableToolbar.Divider />
+                <Link
+                    component={RouterLink}
+                    to="/archive"
+                    underline="always"
+                    sx={{ marginRight: 3 }}
+                >
+                    View archive
+                </Link>
+                <CreateFeatureButton
+                    loading={false}
+                    filter={{ query: '', project: 'default' }}
+                />
+            </TableToolbar>
             <SearchHighlightProvider value={globalFilter}>
                 <Table {...getTableProps()}>
                     <SortableTableHeader headerGroups={headerGroups} />
@@ -182,12 +197,24 @@ export const FeatureToggleListTable: VFC<IExperimentProps> = ({
             <ConditionallyRender
                 condition={rows.length === 0}
                 show={
-                    <TablePlaceholder>
-                        No features available. Get started by adding a new
-                        feature toggle.
-                    </TablePlaceholder>
+                    <ConditionallyRender
+                        condition={globalFilter?.length > 0}
+                        show={
+                            <TablePlaceholder>
+                                No features or projects found matching &ldquo;
+                                {globalFilter}
+                                &rdquo;
+                            </TablePlaceholder>
+                        }
+                        elseShow={
+                            <TablePlaceholder>
+                                No features available. Get started by adding a
+                                new feature toggle.
+                            </TablePlaceholder>
+                        }
+                    />
                 }
             />
-        </TablePanel>
+        </TableContainer>
     );
 };

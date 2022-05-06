@@ -7,8 +7,4 @@ export const useStyles = makeStyles()(theme => ({
         borderRadius: theme.spacing(1.5),
         paddingBottom: theme.spacing(4),
     },
-    content: {
-        padding: theme.spacing(4),
-        paddingBottom: 0,
-    },
 }));

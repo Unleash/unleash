@@ -51,22 +51,6 @@ export default createTheme({
             light: colors.purple[700],
             dark: colors.purple[900],
         },
-        grey: colors.grey,
-        neutral: {
-            main: '#18243e',
-        },
-        chips: {
-            main: '#b0bec5',
-        },
-        searchField: {
-            main: '#fff',
-        },
-        iconButtons: {
-            main: '#fff',
-        },
-        tabs: {
-            main: '#efefef',
-        },
         success: {
             light: colors.green[100],
             main: colors.green[700],
@@ -82,6 +66,22 @@ export default createTheme({
             main: colors.red[700],
             dark: colors.red[800],
         },
+        grey: colors.grey,
+        // neutral: {
+        //     main: '#18243e',
+        // },
+        chips: {
+            main: '#b0bec5',
+        },
+        searchField: {
+            main: '#fff',
+        },
+        iconButtons: {
+            main: '#fff',
+        },
+        tabs: {
+            main: '#efefef',
+        },
         division: {
             main: '#f1f1f1',
         },
@@ -94,6 +94,13 @@ export default createTheme({
             styleOverrides: {
                 root: {
                     background: colors.grey[200],
+                },
+            },
+        },
+        MuiLink: {
+            styleOverrides: {
+                root: {
+                    color: colors.purple[900],
                 },
             },
         },

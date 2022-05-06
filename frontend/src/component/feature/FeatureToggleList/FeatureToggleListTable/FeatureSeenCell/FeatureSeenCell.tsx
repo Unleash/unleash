@@ -63,15 +63,18 @@ const Wrapper: FC<{ unit?: string; tooltip: string }> = ({
     const getColor = useFeatureColor();
 
     return (
-        <Tooltip title={tooltip} arrow>
-            <div
-                className={styles.container}
-                style={{ background: getColor(unit) }}
-                data-loading
-            >
-                {children}
-            </div>
-        </Tooltip>
+        <div className={styles.container}>
+            <Tooltip title={tooltip} arrow describeChild>
+                <div
+                    role="tooltip"
+                    className={styles.box}
+                    style={{ background: getColor(unit) }}
+                    data-loading
+                >
+                    {children}
+                </div>
+            </Tooltip>
+        </div>
     );
 };
 

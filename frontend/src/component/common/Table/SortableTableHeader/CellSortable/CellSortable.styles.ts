@@ -4,6 +4,9 @@ export const useStyles = makeStyles()(theme => ({
     tableCellHeaderSortable: {
         padding: 0,
         position: 'relative',
+        '&:hover, &:focus': {
+            backgroundColor: theme.palette.grey[400],
+        },
     },
     sortButton: {
         all: 'unset',
@@ -15,9 +18,6 @@ export const useStyles = makeStyles()(theme => ({
         },
         display: 'flex',
         alignItems: 'center',
-        '&:hover': {
-            backgroundColor: theme.palette.grey[400],
-        },
         boxSizing: 'inherit',
         cursor: 'pointer',
     },

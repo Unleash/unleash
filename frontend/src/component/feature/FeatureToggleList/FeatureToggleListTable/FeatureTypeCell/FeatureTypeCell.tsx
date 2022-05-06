@@ -20,8 +20,10 @@ export const FeatureTypeCell: VFC<IFeatureTypeProps> = ({ value }) => {
     const title = `This is a "${typeName || value}" toggle`;
 
     return (
-        <Tooltip arrow placement="right" title={title}>
-            <IconComponent data-loading className={styles.icon} />
-        </Tooltip>
+        <div className={styles.container}>
+            <Tooltip arrow placement="right" title={title} describeChild>
+                <IconComponent data-loading className={styles.icon} />
+            </Tooltip>
+        </div>
     );
 };

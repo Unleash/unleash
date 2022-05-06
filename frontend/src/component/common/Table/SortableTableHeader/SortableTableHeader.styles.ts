@@ -14,8 +14,4 @@ export const useStyles = makeStyles()(theme => ({
             },
         },
     },
-    icon: {
-        marginLeft: theme.spacing(0.5),
-        fontSize: 18,
-    },
 }));

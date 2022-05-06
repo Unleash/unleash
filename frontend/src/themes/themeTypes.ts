@@ -2,6 +2,9 @@ import { SimplePaletteColorOptions } from '@mui/material';
 
 declare module '@mui/material/styles' {
     interface CustomTheme {
+        /**
+         * @deprecated
+         */
         fontSizes: {
             mainHeader: string;
             subHeader: string;
@@ -9,12 +12,18 @@ declare module '@mui/material/styles' {
             smallBody: string;
             smallerBody: string;
         };
+        /**
+         * @deprecated
+         */
         fontWeight: {
             thin: number;
             medium: number;
             semi: number;
             bold: number;
         };
+        /**
+         * @deprecated
+         */
         code: {
             main: string;
             diffAdd: string;
@@ -23,21 +32,44 @@ declare module '@mui/material/styles' {
             edited: string;
             background: string;
         };
+        /**
+         * @deprecated
+         */
         borderRadius: {
             main: string;
         };
+        /**
+         * @deprecated
+         */
         boxShadows: {
             main: string;
         };
     }
 
     interface CustomPalette {
-        neutral: SimplePaletteColorOptions;
+        /**
+         * @deprecated
+         */
         chips: SimplePaletteColorOptions;
+        /**
+         * @deprecated
+         */
         searchField: SimplePaletteColorOptions;
+        /**
+         * @deprecated
+         */
         iconButtons: SimplePaletteColorOptions;
+        /**
+         * @deprecated
+         */
         tabs: SimplePaletteColorOptions;
+        /**
+         * @deprecated
+         */
         division: SimplePaletteColorOptions;
+        /**
+         * @deprecated
+         */
         footer: SimplePaletteColorOptions;
     }
 

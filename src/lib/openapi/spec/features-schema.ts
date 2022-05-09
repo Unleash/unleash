@@ -20,5 +20,5 @@ const schema = {
 } as const;
 
 export type FeaturesSchema = CreateSchemaType<typeof schema>;
-const { 'components/schemas': componentsSchemas, ...rest } = schema;
-export const featuresSchema = createSchemaObject(rest);
+
+export const featuresSchema = createSchemaObject(schema);

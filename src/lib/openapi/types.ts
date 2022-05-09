@@ -21,4 +21,13 @@ export type CreateSchemaType<T> = FromSchema<
 >;
 
 // Create an OpenAPIV3.SchemaObject from a const schema object.
-export const createSchemaObject = <T>(schema: T): DeepMutable<T> => schema;
+// Make sure the schema contains an object of refs for type generation.
+// Pass an empty 'components/schemas' object if there are no refs in the schema.
+export const createSchemaObject = <
+    T extends { 'components/schemas': { [key: string]: object } },
+>(
+    schema: T,
+): DeepMutable<Omit<T, 'components/schemas'>> => {
+    const { 'components/schemas': schemas, ...rest } = schema;
+    return rest;
+};

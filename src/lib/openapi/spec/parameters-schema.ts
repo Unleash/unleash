@@ -6,6 +6,7 @@ const schema = {
         type: 'string',
         maxLength: 100,
     },
+    'components/schemas': {},
 } as const;
 
 export type ParametersSchema = CreateSchemaType<typeof schema>;

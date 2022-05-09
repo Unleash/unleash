@@ -27,6 +27,7 @@ const schema = {
             type: 'string',
         },
     },
+    'components/schemas': {},
 } as const;
 
 export type ConstraintSchema = CreateSchemaType<typeof schema>;

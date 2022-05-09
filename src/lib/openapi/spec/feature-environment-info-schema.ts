@@ -23,11 +23,10 @@ let schema = {
         },
     },
     'components/schemas': {
-        strategySchema: strategySchema,
+        strategySchema,
     },
 } as const;
 
 export type FeatureEnvironmentInfoSchema = CreateSchemaType<typeof schema>;
 
-const { 'components/schemas': componentsSchemas, ...rest } = schema;
-export const featureEnvironmentInfoSchema = createSchemaObject(rest);
+export const featureEnvironmentInfoSchema = createSchemaObject(schema);

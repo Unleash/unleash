@@ -27,10 +27,10 @@ const schema = {
         },
     },
     'components/schemas': {
-        overrideSchema: overrideSchema,
+        overrideSchema,
     },
 } as const;
 
 export type VariantSchema = CreateSchemaType<typeof schema>;
-const { 'components/schemas': componentsSchemas, ...rest } = schema;
-export const variantSchema = createSchemaObject(rest);
+
+export const variantSchema = createSchemaObject(schema);

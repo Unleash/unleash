@@ -88,7 +88,7 @@ export const StrategyParameter = ({
                     error={Boolean(errors?.[`paramName${index}`])}
                     errorText={errors?.[`paramName${index}`]}
                 />
-                <Tooltip title="Remove parameter">
+                <Tooltip title="Remove parameter" arrow>
                     <IconButton
                         onClick={() => {
                             setParams(params.filter((e, i) => i !== index));

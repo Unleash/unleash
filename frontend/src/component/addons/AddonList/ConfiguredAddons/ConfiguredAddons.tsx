@@ -113,7 +113,7 @@ export const ConfiguredAddons = ({ getAddonIcon }: IConfigureAddonsProps) => {
                 <PermissionIconButton
                     permission={UPDATE_ADDON}
                     onClick={() => toggleAddon(addon)}
-                    tooltip="Toggle addon"
+                    tooltipProps={{ title: 'Toggle addon' }}
                 >
                     <ConditionallyRender
                         condition={addon.enabled}
@@ -123,14 +123,14 @@ export const ConfiguredAddons = ({ getAddonIcon }: IConfigureAddonsProps) => {
                 </PermissionIconButton>
                 <PermissionIconButton
                     permission={UPDATE_ADDON}
-                    tooltip="Edit Addon"
+                    tooltipProps={{ title: 'Edit Addon' }}
                     onClick={() => navigate(`/addons/edit/${addon.id}`)}
                 >
                     <Edit />
                 </PermissionIconButton>
                 <PermissionIconButton
                     permission={DELETE_ADDON}
-                    tooltip="Remove Addon"
+                    tooltipProps={{ title: 'Remove Addon' }}
                     onClick={() => {
                         setDeletedAddon(addon);
                         setShowDelete(true);

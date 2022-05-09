@@ -25,6 +25,7 @@ import { useLocationSettings } from 'hooks/useLocationSettings';
 import { formatDateYMD } from 'utils/formatDate';
 import { ProjectsList } from './ProjectsList/ProjectsList';
 import { useStyles } from './ApiTokenList.styles';
+import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
 
 interface IApiToken {
     createdAt: Date;
@@ -191,7 +192,7 @@ export const ApiTokenList = () => {
                                     </Box>
                                 </TableCell>
                                 <TableCell className={styles.actionsContainer}>
-                                    <Tooltip title="Copy token">
+                                    <Tooltip title="Copy token" arrow>
                                         <IconButton
                                             onClick={() => {
                                                 copyToken(item.secret);
@@ -204,7 +205,7 @@ export const ApiTokenList = () => {
                                     <ConditionallyRender
                                         condition={hasAccess(DELETE_API_TOKEN)}
                                         show={
-                                            <Tooltip title="Delete token">
+                                            <Tooltip title="Delete token" arrow>
                                                 <IconButton
                                                     onClick={() => {
                                                         setDeleteToken(item);

@@ -57,7 +57,7 @@ const ProjectInfo = ({
                 className={permissionButtonClass}
                 data-loading
                 to={`/projects/${id}/edit`}
-                tooltip="Edit description"
+                tooltipProps={{ title: 'Edit description' }}
             >
                 <Edit />
             </PermissionIconButton>

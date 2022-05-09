@@ -136,6 +136,7 @@ const GeneralStrategy = ({
                                 <Tooltip
                                     title={description}
                                     placement="right-end"
+                                    arrow
                                 >
                                     <FormControlLabel
                                         label={name}

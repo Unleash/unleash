@@ -5,13 +5,16 @@ export const useStyles = makeStyles()(theme => ({
         display: 'flex',
         alignItems: 'center',
         borderRadius: '1rem',
+        '& .MuiInputLabel-root[data-shrink="false"]': {
+            top: 3,
+        },
     },
     icon: {
         background: theme.palette.primary.main,
-        height: 40,
+        height: 48,
+        width: 48,
         display: 'flex',
         alignItems: 'center',
-        width: 40,
         justifyContent: 'center',
         paddingLeft: 6,
         borderTopLeftRadius: 40,
@@ -25,6 +28,7 @@ export const useStyles = makeStyles()(theme => ({
         flex: 1,
     },
     inputRoot: {
+        height: 48,
         borderTopLeftRadius: 0,
         borderBottomLeftRadius: 0,
         borderTopRightRadius: 50,

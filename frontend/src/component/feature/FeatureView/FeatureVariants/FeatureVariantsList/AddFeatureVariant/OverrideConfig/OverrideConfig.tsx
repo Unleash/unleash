@@ -132,7 +132,7 @@ export const OverrideConfig: VFC<IOverrideConfigProps> = ({
                             />
                         </Grid>
                         <Grid item md={1}>
-                            <Tooltip title="Remove">
+                            <Tooltip title="Remove" arrow>
                                 <IconButton
                                     onClick={event => {
                                         event.preventDefault();

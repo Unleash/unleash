@@ -44,7 +44,7 @@ export const StrategyView = () => {
                                     permission={UPDATE_STRATEGY}
                                     data-loading
                                     onClick={handleEdit}
-                                    tooltip="Edit strategy"
+                                    tooltipProps={{ title: 'Edit strategy' }}
                                 >
                                     <Edit />
                                 </PermissionIconButton>

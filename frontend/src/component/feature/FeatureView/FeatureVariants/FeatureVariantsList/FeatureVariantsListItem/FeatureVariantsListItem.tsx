@@ -54,7 +54,7 @@ const FeatureVariantListItem = ({
                 show={
                     <TableCell className={styles.actions}>
                         <div className={styles.actionsContainer}>
-                            <Tooltip title="Edit variant">
+                            <Tooltip title="Edit variant" arrow>
                                 <IconButton
                                     data-testid={'VARIANT_EDIT_BUTTON'}
                                     onClick={() => editVariant(variant.name)}
@@ -63,7 +63,7 @@ const FeatureVariantListItem = ({
                                     <Edit />
                                 </IconButton>
                             </Tooltip>
-                            <Tooltip title="Delete variant">
+                            <Tooltip title="Delete variant" arrow>
                                 <IconButton
                                     data-testid={`VARIANT_DELETE_BUTTON_${variant.name}`}
                                     onClick={e => {

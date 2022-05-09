@@ -145,14 +145,18 @@ export const FeatureView = () => {
                                     data-loading
                                     component={Link}
                                     to={`/projects/${projectId}/features/${featureId}/strategies/copy`}
-                                    tooltip="Copy feature toggle"
+                                    tooltipProps={{
+                                        title: 'Copy feature toggle',
+                                    }}
                                 >
                                     <FileCopy />
                                 </PermissionIconButton>
                                 <PermissionIconButton
                                     permission={DELETE_FEATURE}
                                     projectId={projectId}
-                                    tooltip="Archive feature toggle"
+                                    tooltipProps={{
+                                        title: 'Archive feature toggle',
+                                    }}
                                     data-loading
                                     onClick={() => setShowDelDialog(true)}
                                 >
@@ -162,7 +166,9 @@ export const FeatureView = () => {
                                     onClick={() => setOpenStaleDialog(true)}
                                     permission={UPDATE_FEATURE}
                                     projectId={projectId}
-                                    tooltip="Toggle stale status"
+                                    tooltipProps={{
+                                        title: 'Toggle stale status',
+                                    }}
                                     data-loading
                                 >
                                     <WatchLater />
@@ -171,7 +177,7 @@ export const FeatureView = () => {
                                     onClick={() => setOpenTagDialog(true)}
                                     permission={UPDATE_FEATURE}
                                     projectId={projectId}
-                                    tooltip="Add tag"
+                                    tooltipProps={{ title: 'Add tag' }}
                                     data-loading
                                 >
                                     <Label />

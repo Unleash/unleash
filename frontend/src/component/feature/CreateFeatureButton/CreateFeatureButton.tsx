@@ -28,7 +28,7 @@ export const CreateFeatureButton = ({
         <ConditionallyRender
             condition={smallScreen}
             show={
-                <Tooltip title="Create feature toggle">
+                <Tooltip title="Create feature toggle" arrow>
                     <IconButton
                         component={Link}
                         to={createFeature.path}

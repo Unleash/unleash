@@ -2,7 +2,7 @@ import { Card, Menu, MenuItem } from '@mui/material';
 import { useStyles } from './ProjectCard.styles';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { ReactComponent as ProjectIcon } from 'assets/icons/projectIcon.svg';
-import { useState } from 'react';
+import { useState, SyntheticEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
@@ -73,7 +73,7 @@ export const ProjectCard = ({
                     className={classes.actionsBtn}
                     data-loading
                     onClick={handleClick}
-                    tooltip="Options"
+                    tooltipProps={{ title: 'Options' }}
                 >
                     <MoreVertIcon />
                 </PermissionIconButton>
@@ -82,10 +82,9 @@ export const ProjectCard = ({
                     id="project-card-menu"
                     open={Boolean(anchorEl)}
                     anchorEl={anchorEl}
-                    style={{ top: '40px', left: '-60px' }}
-                    onClose={e => {
-                        // @ts-expect-error
-                        e.preventDefault();
+                    style={{ top: 0, left: -100 }}
+                    onClose={(event: SyntheticEvent) => {
+                        event.preventDefault();
                         setAnchorEl(null);
                     }}
                 >

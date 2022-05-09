@@ -47,7 +47,7 @@ const UserInviteLink = ({ inviteLink }: IInviteLinkProps) => {
             }}
         >
             {inviteLink}
-            <Tooltip title="Copy link">
+            <Tooltip title="Copy link" arrow>
                 <IconButton onClick={handleCopy} size="large">
                     <CopyIcon />
                 </IconButton>

@@ -95,7 +95,7 @@ const FormTemplate: React.FC<ICreateProps> = ({
                     >
                         <h2 className={styles.subtitle}>
                             API Command{' '}
-                            <Tooltip title="Copy command">
+                            <Tooltip title="Copy command" arrow>
                                 <IconButton onClick={copyCommand} size="large">
                                     <FileCopy className={styles.icon} />
                                 </IconButton>
@@ -128,7 +128,7 @@ const MobileGuidance = ({
             <div className={styles.mobileGuidanceBgContainer}>
                 <MobileGuidanceBG className={styles.mobileGuidanceBackground} />
             </div>
-            <Tooltip title="Toggle help">
+            <Tooltip title="Toggle help" arrow>
                 <IconButton
                     className={styles.mobileGuidanceButton}
                     onClick={() => setOpen(prev => !prev)}

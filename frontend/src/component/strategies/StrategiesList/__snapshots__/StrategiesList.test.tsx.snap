@@ -117,55 +117,44 @@ exports[`renders correctly 1`] = `
               </p>
             </div>
             <div>
-              <span
+              <button
                 aria-label="Deprecate strategy"
                 aria-labelledby={null}
-                className=""
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
                 data-mui-internal-clone-element={true}
-                id="useId-1"
+                disabled={false}
                 onBlur={[Function]}
+                onClick={[Function]}
+                onContextMenu={[Function]}
+                onDragLeave={[Function]}
                 onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyUp={[Function]}
+                onMouseDown={[Function]}
                 onMouseLeave={[Function]}
                 onMouseOver={[Function]}
+                onMouseUp={[Function]}
                 onTouchEnd={[Function]}
+                onTouchMove={[Function]}
                 onTouchStart={[Function]}
+                tabIndex={0}
+                type="button"
               >
-                <button
-                  aria-labelledby="useId-1"
-                  className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
-                  disabled={false}
-                  onBlur={[Function]}
-                  onClick={[Function]}
-                  onContextMenu={[Function]}
-                  onDragLeave={[Function]}
-                  onFocus={[Function]}
-                  onKeyDown={[Function]}
-                  onKeyUp={[Function]}
-                  onMouseDown={[Function]}
-                  onMouseLeave={[Function]}
-                  onMouseUp={[Function]}
-                  onTouchEnd={[Function]}
-                  onTouchMove={[Function]}
-                  onTouchStart={[Function]}
-                  tabIndex={0}
-                  type="button"
+                <svg
+                  aria-hidden={true}
+                  className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mui-i4bv87-MuiSvgIcon-root"
+                  data-testid="VisibilityIcon"
+                  focusable="false"
+                  viewBox="0 0 24 24"
                 >
-                  <svg
-                    aria-hidden={true}
-                    className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mui-i4bv87-MuiSvgIcon-root"
-                    data-testid="VisibilityIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"
-                    />
-                  </svg>
-                  <span
-                    className="MuiTouchRipple-root mui-8je8zh-MuiTouchRipple-root"
+                  <path
+                    d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"
                   />
-                </button>
-              </span>
+                </svg>
+                <span
+                  className="MuiTouchRipple-root mui-8je8zh-MuiTouchRipple-root"
+                />
+              </button>
             </div>
             <div
               aria-label="You cannot delete a built-in strategy"

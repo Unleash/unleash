@@ -162,7 +162,7 @@ const EnvironmentListItem = ({
             <ConditionallyRender
                 condition={updatePermission}
                 show={
-                    <Tooltip title={`${tooltipText} environment`}>
+                    <Tooltip title={`${tooltipText} environment`} arrow>
                         <IconButton
                             onClick={() => {
                                 setSelectedEnv(env);
@@ -178,7 +178,7 @@ const EnvironmentListItem = ({
             <ConditionallyRender
                 condition={updatePermission}
                 show={
-                    <Tooltip title="Edit environment">
+                    <Tooltip title="Edit environment" arrow>
                         <IconButton
                             disabled={env.protected}
                             onClick={() => {
@@ -194,7 +194,7 @@ const EnvironmentListItem = ({
             <ConditionallyRender
                 condition={hasAccess(DELETE_ENVIRONMENT)}
                 show={
-                    <Tooltip title="Delete environment">
+                    <Tooltip title="Delete environment" arrow>
                         <IconButton
                             disabled={env.protected}
                             onClick={() => {

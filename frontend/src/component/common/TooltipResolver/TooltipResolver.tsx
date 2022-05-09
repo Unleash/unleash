@@ -1,6 +1,6 @@
 import { Tooltip, TooltipProps } from '@mui/material';
 
-interface ITooltipResolverProps extends Omit<TooltipProps, 'title'> {
+export interface ITooltipResolverProps extends Omit<TooltipProps, 'title'> {
     title: string | undefined;
 }
 
@@ -14,7 +14,7 @@ export const TooltipResolver = ({
     }
 
     return (
-        <Tooltip {...rest} title={title}>
+        <Tooltip {...rest} title={title} arrow>
             {children}
         </Tooltip>
     );

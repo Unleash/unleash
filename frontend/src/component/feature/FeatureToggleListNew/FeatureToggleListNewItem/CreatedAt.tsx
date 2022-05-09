@@ -15,6 +15,7 @@ const CreatedAt = ({ time }: ICreatedAtProps) => {
                 time,
                 locationSettings.locale
             )}`}
+            arrow
         >
             <span>{formatDateYMD(time, locationSettings.locale)}</span>
         </Tooltip>

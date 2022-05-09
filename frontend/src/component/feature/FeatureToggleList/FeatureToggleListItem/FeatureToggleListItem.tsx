@@ -99,7 +99,7 @@ export const FeatureToggleListItem = memo<IFeatureToggleListItemProps>(
                                     themeStyles.truncate
                                 )}
                             >
-                                <Tooltip title={description || ''}>
+                                <Tooltip title={description || ''} arrow>
                                     <span className={themeStyles.toggleName}>
                                         {name}&nbsp;
                                     </span>
@@ -126,7 +126,7 @@ export const FeatureToggleListItem = memo<IFeatureToggleListItemProps>(
                         }
                         elseShow={
                             <>
-                                <Tooltip title={description || ''}>
+                                <Tooltip title={description || ''} arrow>
                                     <span className={themeStyles.toggleName}>
                                         {name}&nbsp;{' '}
                                     </span>
@@ -196,7 +196,7 @@ export const FeatureToggleListItem = memo<IFeatureToggleListItemProps>(
                                 !projectExists()
                             }
                             onClick={reviveFeature}
-                            tooltip="Revive feature"
+                            tooltipProps={{ title: 'Revive feature' }}
                         >
                             <Undo />
                         </PermissionIconButton>

@@ -3,7 +3,10 @@ import { Lock } from '@mui/icons-material';
 import AccessContext from 'contexts/AccessContext';
 import React, { useContext } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
+import {
+    TooltipResolver,
+    ITooltipResolverProps,
+} from 'component/common/TooltipResolver/TooltipResolver';
 import { formatAccessText } from 'utils/formatAccessText';
 import { useId } from 'hooks/useId';
 
@@ -13,7 +16,7 @@ export interface IPermissionButtonProps extends Omit<ButtonProps, 'title'> {
     disabled?: boolean;
     projectId?: string;
     environmentId?: string;
-    tooltip?: string;
+    tooltipProps?: Omit<ITooltipResolverProps, 'children'>;
 }
 
 const PermissionButton: React.FC<IPermissionButtonProps> = ({
@@ -25,7 +28,7 @@ const PermissionButton: React.FC<IPermissionButtonProps> = ({
     disabled,
     projectId,
     environmentId,
-    tooltip,
+    tooltipProps,
     ...rest
 }) => {
     const { hasAccess } = useContext(AccessContext);
@@ -60,7 +63,11 @@ const PermissionButton: React.FC<IPermissionButtonProps> = ({
     access = handleAccess();
 
     return (
-        <TooltipResolver title={formatAccessText(access, tooltip)} arrow>
+        <TooltipResolver
+            {...tooltipProps}
+            title={formatAccessText(access, tooltipProps?.title)}
+            arrow
+        >
             <span id={id}>
                 <Button
                     onClick={onClick}

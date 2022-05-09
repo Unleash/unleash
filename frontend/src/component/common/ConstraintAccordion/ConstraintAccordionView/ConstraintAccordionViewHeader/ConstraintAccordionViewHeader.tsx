@@ -1,5 +1,5 @@
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
-import { Chip, useMediaQuery, IconButton } from '@mui/material';
+import { Chip, useMediaQuery, IconButton, Tooltip } from '@mui/material';
 import { ConstraintIcon } from 'component/common/ConstraintAccordion/ConstraintIcon';
 import { Delete, Edit } from '@mui/icons-material';
 import { IConstraint } from 'interfaces/strategy';
@@ -91,17 +91,21 @@ export const ConstraintAccordionViewHeader = ({
                 <ConditionallyRender
                     condition={Boolean(onEditClick)}
                     show={() => (
-                        <IconButton type="button" onClick={onEditClick}>
-                            <Edit titleAccess="Edit constraint" />
-                        </IconButton>
+                        <Tooltip title="Edit constraint" arrow>
+                            <IconButton type="button" onClick={onEditClick}>
+                                <Edit />
+                            </IconButton>
+                        </Tooltip>
                     )}
                 />
                 <ConditionallyRender
                     condition={Boolean(onDeleteClick)}
                     show={() => (
-                        <IconButton type="button" onClick={onDeleteClick}>
-                            <Delete titleAccess="Delete constraint" />
-                        </IconButton>
+                        <Tooltip title="Delete constraint" arrow>
+                            <IconButton type="button" onClick={onDeleteClick}>
+                                <Delete />
+                            </IconButton>
+                        </Tooltip>
                     )}
                 />
             </div>

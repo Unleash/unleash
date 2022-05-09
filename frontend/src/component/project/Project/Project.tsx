@@ -128,7 +128,7 @@ const Project = () => {
                             onClick={() =>
                                 navigate(`/projects/${projectId}/edit`)
                             }
-                            tooltip="Edit project"
+                            tooltipProps={{ title: 'Edit project' }}
                             data-loading
                         >
                             <Edit />

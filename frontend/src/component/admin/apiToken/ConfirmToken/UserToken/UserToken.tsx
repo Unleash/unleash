@@ -37,7 +37,7 @@ export const UserToken = ({ token }: IUserTokenProps) => {
             }}
         >
             {token}
-            <Tooltip title="Copy token">
+            <Tooltip title="Copy token" arrow>
                 <IconButton onClick={copyToken} size="large">
                     <CopyIcon />
                 </IconButton>

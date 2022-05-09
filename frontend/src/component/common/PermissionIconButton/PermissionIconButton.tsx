@@ -2,21 +2,23 @@ import { IconButton, IconButtonProps } from '@mui/material';
 import React, { useContext, ReactNode } from 'react';
 import AccessContext from 'contexts/AccessContext';
 import { Link } from 'react-router-dom';
-import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
+import {
+    TooltipResolver,
+    ITooltipResolverProps,
+} from 'component/common/TooltipResolver/TooltipResolver';
 import { formatAccessText } from 'utils/formatAccessText';
-import { useId } from 'hooks/useId';
 
 interface IPermissionIconButtonProps {
     permission: string;
     projectId?: string;
     environmentId?: string;
     className?: string;
-    tooltip?: string;
     children?: ReactNode;
     disabled?: boolean;
     hidden?: boolean;
     type?: 'button';
     edge?: IconButtonProps['edge'];
+    tooltipProps?: Omit<ITooltipResolverProps, 'children'>;
 }
 
 interface IButtonProps extends IPermissionIconButtonProps {
@@ -33,11 +35,10 @@ const PermissionIconButton = ({
     projectId,
     children,
     environmentId,
-    tooltip,
+    tooltipProps,
     ...rest
 }: IButtonProps | ILinkProps) => {
     const { hasAccess } = useContext(AccessContext);
-    const id = useId();
     let access;
 
     if (projectId && environmentId) {
@@ -49,17 +50,14 @@ const PermissionIconButton = ({
     }
 
     return (
-        <TooltipResolver title={formatAccessText(access, tooltip)}>
-            <span id={id}>
-                <IconButton
-                    {...rest}
-                    disabled={!access}
-                    aria-labelledby={id}
-                    size="large"
-                >
-                    {children}
-                </IconButton>
-            </span>
+        <TooltipResolver
+            {...tooltipProps}
+            title={formatAccessText(access, tooltipProps?.title)}
+            arrow
+        >
+            <IconButton {...rest} disabled={!access} size="large">
+                {children}
+            </IconButton>
         </TooltipResolver>
     );
 };

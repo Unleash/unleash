@@ -72,7 +72,7 @@ export const StrategiesList = () => {
                             data-testid={ADD_NEW_STRATEGY_ID}
                             onClick={() => navigate('/strategies/create')}
                             permission={CREATE_STRATEGY}
-                            tooltip="New strategy"
+                            tooltipProps={{ title: 'New strategy' }}
                         >
                             <Add />
                         </PermissionIconButton>
@@ -166,7 +166,7 @@ export const StrategiesList = () => {
         <PermissionIconButton
             onClick={() => onReactivateStrategy(strategy)}
             permission={UPDATE_STRATEGY}
-            tooltip="Reactivate activation strategy"
+            tooltipProps={{ title: 'Reactivate activation strategy' }}
         >
             <VisibilityOff />
         </PermissionIconButton>
@@ -176,7 +176,10 @@ export const StrategiesList = () => {
         <ConditionallyRender
             condition={strategy.name === 'default'}
             show={
-                <Tooltip title="You cannot deprecate the default strategy">
+                <Tooltip
+                    title="You cannot deprecate the default strategy"
+                    arrow
+                >
                     <div>
                         <IconButton disabled size="large">
                             <Visibility titleAccess="Deprecate strategy" />
@@ -189,7 +192,7 @@ export const StrategiesList = () => {
                     <PermissionIconButton
                         onClick={() => onDeprecateStrategy(strategy)}
                         permission={UPDATE_STRATEGY}
-                        tooltip="Deprecate strategy"
+                        tooltipProps={{ title: 'Deprecate strategy' }}
                     >
                         <Visibility />
                     </PermissionIconButton>
@@ -207,13 +210,13 @@ export const StrategiesList = () => {
                         navigate(`/strategies/${strategy?.name}/edit`)
                     }
                     permission={UPDATE_STRATEGY}
-                    tooltip="Edit strategy"
+                    tooltipProps={{ title: 'Edit strategy' }}
                 >
                     <Edit />
                 </PermissionIconButton>
             }
             elseShow={
-                <Tooltip title="You cannot delete a built-in strategy">
+                <Tooltip title="You cannot delete a built-in strategy" arrow>
                     <div>
                         <IconButton disabled size="large">
                             <Edit titleAccess="Edit strategy" />
@@ -231,13 +234,13 @@ export const StrategiesList = () => {
                 <PermissionIconButton
                     onClick={() => onDeleteStrategy(strategy)}
                     permission={DELETE_STRATEGY}
-                    tooltip="Delete strategy"
+                    tooltipProps={{ title: 'Delete strategy' }}
                 >
                     <Delete />
                 </PermissionIconButton>
             }
             elseShow={
-                <Tooltip title="You cannot delete a built-in strategy">
+                <Tooltip title="You cannot delete a built-in strategy" arrow>
                     <div>
                         <IconButton disabled size="large">
                             <Delete titleAccess="Delete strategy" />

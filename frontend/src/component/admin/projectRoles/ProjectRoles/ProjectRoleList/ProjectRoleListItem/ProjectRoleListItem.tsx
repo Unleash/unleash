@@ -55,7 +55,7 @@ const RoleListItem = ({
                             navigate(`/admin/roles/${id}/edit`);
                         }}
                         permission={ADMIN}
-                        tooltip="Edit role"
+                        tooltipProps={{ title: 'Edit role' }}
                     >
                         <Edit />
                     </PermissionIconButton>
@@ -68,7 +68,7 @@ const RoleListItem = ({
                             setDelDialog(true);
                         }}
                         permission={ADMIN}
-                        tooltip="Remove role"
+                        tooltipProps={{ title: 'Remove role' }}
                     >
                         <Delete />
                     </PermissionIconButton>

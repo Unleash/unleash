@@ -122,7 +122,7 @@ export const ConstraintAccordionEditHeader = ({
                 show={<p className={styles.editingBadge}>Updating...</p>}
                 elseShow={<p className={styles.editingBadge}>Editing</p>}
             />
-            <Tooltip title="Help">
+            <Tooltip title="Help" arrow>
                 <a
                     href="https://docs.getunleash.io/advanced/strategy_constraints"
                     style={{ marginLeft: 'auto' }}

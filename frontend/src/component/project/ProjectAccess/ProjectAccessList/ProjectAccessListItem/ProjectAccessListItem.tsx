@@ -68,7 +68,7 @@ export const ProjectAccessListItem = ({
                     edge="end"
                     onClick={() => handleRemoveAccess(user)}
                     disabled={access.users.length === 1}
-                    tooltip="Remove access"
+                    tooltipProps={{ title: 'Remove access' }}
                 >
                     <Delete />
                 </PermissionIconButton>

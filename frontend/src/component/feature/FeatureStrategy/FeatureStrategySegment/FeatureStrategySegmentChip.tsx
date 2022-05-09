@@ -59,7 +59,7 @@ export const FeatureStrategySegmentChip = ({
             >
                 {segment.name}
             </Link>
-            <Tooltip title={previewIconTooltip}>
+            <Tooltip title={previewIconTooltip} arrow>
                 <button
                     type="button"
                     onClick={onTogglePreview}
@@ -70,7 +70,7 @@ export const FeatureStrategySegmentChip = ({
                     {togglePreviewIcon}
                 </button>
             </Tooltip>
-            <Tooltip title="Remove segment">
+            <Tooltip title="Remove segment" arrow>
                 <button
                     type="button"
                     onClick={onRemove}

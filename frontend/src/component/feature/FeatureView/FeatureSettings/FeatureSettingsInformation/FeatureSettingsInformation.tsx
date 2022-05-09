@@ -34,7 +34,7 @@ export const FeatureSettingsInformation = ({
                     projectId={projectId}
                     data-loading
                     onClick={onEdit}
-                    tooltip="Edit"
+                    tooltipProps={{ title: 'Edit' }}
                 >
                     <Edit />
                 </PermissionIconButton>

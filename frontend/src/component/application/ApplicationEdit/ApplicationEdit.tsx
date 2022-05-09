@@ -124,7 +124,7 @@ export const ApplicationEdit = () => {
                             />
 
                             <PermissionButton
-                                tooltip="Delete application"
+                                tooltipProps={{ title: 'Delete application' }}
                                 onClick={toggleModal}
                                 permission={UPDATE_APPLICATION}
                             >

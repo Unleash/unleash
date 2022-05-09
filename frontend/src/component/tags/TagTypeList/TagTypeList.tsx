@@ -27,6 +27,7 @@ import useToast from 'hooks/useToast';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { ITagType } from 'interfaces/tags';
+import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
 
 export const TagTypeList = () => {
     const { hasAccess } = useContext(AccessContext);
@@ -67,7 +68,7 @@ export const TagTypeList = () => {
                         <ConditionallyRender
                             condition={smallScreen}
                             show={
-                                <Tooltip title="Add tag type">
+                                <Tooltip title="Add tag type" arrow>
                                     <IconButton
                                         onClick={() =>
                                             navigate('/tag-types/create')
@@ -103,7 +104,7 @@ export const TagTypeList = () => {
             </Link>
         );
         let deleteButton = (
-            <Tooltip title={`Delete ${tagType.name}`}>
+            <Tooltip title={`Delete ${tagType.name}`} arrow>
                 <IconButton
                     onClick={() =>
                         setDeletion({
@@ -130,7 +131,7 @@ export const TagTypeList = () => {
                 <PermissionIconButton
                     permission={UPDATE_TAG_TYPE}
                     component={Link}
-                    tooltip="Edit tag type"
+                    tooltipProps={{ title: 'Edit tag type' }}
                     to={`/tag-types/edit/${tagType.name}`}
                 >
                     <Edit className={styles.icon} />

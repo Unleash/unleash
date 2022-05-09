@@ -73,7 +73,7 @@ export const FeedbackNPS = ({ openUrl }: IFeedbackNPSProps) => {
                         themeStyles.contentSpacingY
                     )}
                 >
-                    <Tooltip title="Close">
+                    <Tooltip title="Close" arrow>
                         <IconButton
                             className={styles.close}
                             onClick={() => setShowFeedback(false)}

@@ -67,7 +67,7 @@ const Header: VFC = () => {
         return (
             <AppBar className={styles.header} position="static">
                 <Container className={styles.container}>
-                    <Tooltip title="Menu">
+                    <Tooltip title="Menu" arrow>
                         <IconButton
                             className={styles.drawerButton}
                             onClick={toggleDrawer}
@@ -137,7 +137,7 @@ const Header: VFC = () => {
                         />
                     </div>
                     <div className={styles.userContainer}>
-                        <Tooltip title="Documentation">
+                        <Tooltip title="Documentation" arrow>
                             <IconButton
                                 href="https://docs.getunleash.io/"
                                 target="_blank"
@@ -152,7 +152,7 @@ const Header: VFC = () => {
                         <ConditionallyRender
                             condition={admin}
                             show={
-                                <Tooltip title="Settings">
+                                <Tooltip title="Settings" arrow>
                                     <IconButton
                                         onClick={e =>
                                             setAdminRef(e.currentTarget)

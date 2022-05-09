@@ -8,7 +8,7 @@ const schema = {
             type: 'string',
         },
         replaceGroupId: {
-            type: 'string',
+            type: 'boolean',
         },
     },
     'components/schemas': {},

@@ -178,8 +178,8 @@ class UserStore implements IUserStore {
 
     async count(): Promise<number> {
         return this.db
-            .count('*')
             .from(TABLE)
+            .count('*')
             .then((res) => Number(res[0].count));
     }
 

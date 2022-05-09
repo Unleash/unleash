@@ -5,7 +5,7 @@ import { parametersSchema } from './parameters-schema';
 export const strategySchemaDefinition = {
     type: 'object',
     additionalProperties: false,
-    required: ['id', 'constraints', 'parameters'],
+    required: ['constraints', 'parameters'],
     properties: {
         id: {
             type: 'string',

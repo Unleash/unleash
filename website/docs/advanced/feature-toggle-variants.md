@@ -61,7 +61,7 @@ In the example above, 60 divides cleanly by three. In cases where the remainder 
 #### Overrides
 
 :::note
-Overrides are intended to be used for one-off exceptions during development and may not be suitable for other use cases.
+Overrides are intended to be used for one-off cases and during development and may not be suitable for other use cases.
 :::
 
 The weighting system automatically assigns users to a specific group for you. If you want to make sure that a specific user or group of users receives a certain variant, though, you can use the override functionality to achieve that.
@@ -70,7 +70,10 @@ When adding an override, you choose a [field from the Unleash Context](../user_g
 
 You can use both standard and custom context fields when creating overrides.
 
-Each variant can have multiple overrides, so you can use any number of context fields you want to create overrides.
+Each variant can have multiple overrides, so you can use any number of context fields you want to create overrides. When using multiple overrides, each user only has to match one of them. In other words, if you use the following overrides, the users with IDs *aa599* and *aa65* **and** any users who use the client with ID _123abc_ will receive the specified variant:
+- `userId`: aa599, aa65
+- `clientId`: 123abc
+
 
 Note that if multiple variants use overrides that affect the same user, then Unleash can not guarantee which override will take effect. We recommend that you do not use multiple overrides that can conflict in this way, as it will probably not do what you expect.
 

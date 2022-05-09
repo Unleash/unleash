@@ -42,6 +42,7 @@ The Proxy has a large number of configuration options that you can use to adjust
 |                        |                                  |                    |          |                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | `clientKeysHeaderName` | `CLIENT_KEY_HEADER_NAME`         | `"authorization"`  | no       | The name of the HTTP header to use for client keys. Incoming requests must set the value of this header to one of the Proxy's `clientKeys` to be authorized successfully.                                                                                                                                                                                                                                                                                                 |
 | `customStrategies`     | `UNLEASH_CUSTOM_STRATEGIES_FILE` | `[]`               | no       | Use this option to inject implementation of custom activation strategies. If you are using `UNLEASH_CUSTOM_STRATEGIES_FILE`: provide a valid path to a JavaScript file which exports an array of custom activation strategies.                                                                                                                                                                                                                                            |
+| `enableOAS`            | `ENABLE_OAS`                     | `false`         | no       | Set to `true` to expose the proxy's OpenAPI spec at `/docs/openapi.json` and an interactive Swagger interface at `/docs/openapi`. Read more in the [OpenAPI section](#openapi).|
 | `environment`          | `UNLEASH_ENVIRONMENT`            | `undefined`        | no       | If set this will be the `environment` used by the proxy in the Unleash Context. It will not be possible for proxy SDKs to override the environment if set.                                                                                                                                                                                                                                                                                                                |
 | `logLevel`             | `LOG_LEVEL `                     | `"warn"`           | no       | Used to set `logLevel`. Supported options: `"debug"`, `"info"`, `"warn"`, `"error"` and `"fatal"`                                                                                                                                                                                                                                                                                                                                                                         |
 | `logger`               | n/a                              | `SimpleLogger`     | no       | Register a custom logger.                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
@@ -122,6 +123,18 @@ Refer the [custom activation strategy documentation](../advanced/custom-activati
 The Unleash Proxy has a very simple API. It takes the [Unleash Context](../user_guide/unleash_context) as input and will return the feature toggles relevant for that specific context.
 
 ![The Unleash Proxy](/img/The-Unleash-Proxy-API.png)
+
+### OpenAPI integration and API documentation {#openapi}
+
+:::info Availability
+The OpenAPI integration is available in versions 0.9 and later of the Unleash proxy.
+:::
+
+The proxy can optionally expose a runtime-generated OpenAPI JSON spec and a corresponding OpenAPI UI for its API. The OpenAPI UI page is an interactive page where you can discover and test the API endpoints the proxy exposes. The JSON spec can be used to generate an OpenAPI client with OpenAPI tooling such as the [OpenAPI generator](https://openapi-generator.tech/).
+
+To enable the JSON spec and UI, set `ENABLE_OAS` (environment variable) or `enableOAS` (in-code configuration variable) to `true`.
+
+The spec and UI can then be found at `<base url>/docs/openapi.json` and `<base url>/docs/openapi` respectively.
 
 ### Payload
 

@@ -6,7 +6,7 @@
 
 <br/>
 <br/>
-    
+
 [![Build and Tests](https://img.shields.io/github/workflow/status/unleash/unleash/Build%20%26%20Tests)](https://github.com/Unleash/unleash/actions/workflows/build.yaml)
 [![Coverage Status](https://coveralls.io/repos/github/Unleash/unleash/badge.svg?branch=main&)](https://coveralls.io/github/Unleash/unleash?branch=main) [![npm](https://img.shields.io/npm/v/unleash-server)](https://www.npmjs.com/package/unleash-server)
 [![Docker Pulls](https://img.shields.io/docker/pulls/unleashorg/unleash-server)](https://hub.docker.com/r/unleashorg/unleash-server)
@@ -162,7 +162,7 @@ If you're looking for one of the following features, please take a look at our [
 
 ## Architecture
 
-<img src="./.github/Unleash_architecture.svg" title="Unleash System Overview" />
+<img src="./website/static/img/unleash-architecture.svg" title="Unleash System Overview" />
 
 Read more in the [*system overview* section of the Unleash documentation](https://docs.getunleash.io/user_guide/unleash_overview#system-overview).
 

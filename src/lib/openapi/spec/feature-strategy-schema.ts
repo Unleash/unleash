@@ -2,15 +2,36 @@ import { createSchemaObject, CreateSchemaType } from '../types';
 import { constraintSchema } from './constraint-schema';
 import { parametersSchema } from './parameters-schema';
 
-export const strategySchemaDefinition = {
+export const schema = {
     type: 'object',
     additionalProperties: false,
-    required: ['name', 'constraints', 'parameters'],
+    required: [
+        'id',
+        'featureName',
+        'strategyName',
+        'constraints',
+        'parameters',
+        'environment',
+    ],
     properties: {
         id: {
             type: 'string',
         },
-        name: {
+        createdAt: {
+            type: 'string',
+            format: 'date',
+            nullable: true,
+        },
+        featureName: {
+            type: 'string',
+        },
+        projectId: {
+            type: 'string',
+        },
+        environment: {
+            type: 'string',
+        },
+        strategyName: {
             type: 'string',
         },
         constraints: {
@@ -25,6 +46,6 @@ export const strategySchemaDefinition = {
     },
 } as const;
 
-export type StrategySchema = CreateSchemaType<typeof strategySchemaDefinition>;
+export type FeatureStrategySchema = CreateSchemaType<typeof schema>;
 
-export const strategySchema = createSchemaObject(strategySchemaDefinition);
+export const featureStrategySchema = createSchemaObject(schema);

@@ -441,7 +441,11 @@ export default class ProjectFeaturesController extends Controller {
             environment,
             featureName,
         );
-        res.status(200).json(environmentInfo);
+        res.status(200).json({
+            ...environmentInfo,
+            strategies: environmentInfo.strategies.map(serializeDates),
+        });
+        res.status(200).json(serializeDates(environmentInfo));
     }
 
     async toggleEnvironmentOn(

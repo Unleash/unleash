@@ -16,6 +16,7 @@ import { patchOperationSchema } from './spec/patch-operation-schema';
 import { updateFeatureSchema } from './spec/updateFeatureSchema';
 import { updateStrategySchema } from './spec/update-strategy-schema';
 import { cloneFeatureSchema } from './spec/clone-feature-schema';
+import { featureStrategySchema } from './spec/feature-strategy-schema';
 
 export const createOpenApiSchema = (
     serverUrl?: string,
@@ -48,6 +49,7 @@ export const createOpenApiSchema = (
                 featureSchema,
                 featuresSchema,
                 featureEnvironmentInfoSchema,
+                featureStrategySchema,
                 emptyResponseSchema,
                 overrideSchema,
                 parametersSchema,

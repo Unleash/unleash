@@ -6,11 +6,15 @@ test('serializeDates', () => {
         b: '2',
         c: new Date(),
         d: { e: new Date() },
+        f: [{ g: new Date() }],
     };
 
+    const result = serializeDates(obj);
+
     expect(serializeDates({})).toEqual({});
-    expect(serializeDates(obj).a).toEqual(1);
-    expect(serializeDates(obj).b).toEqual('2');
-    expect(typeof serializeDates(obj).c).toEqual('string');
-    expect(typeof serializeDates(obj).d.e).toEqual('object');
+    expect(result.a).toEqual(1);
+    expect(result.b).toEqual('2');
+    expect(typeof result.c).toEqual('string');
+    expect(typeof result.d.e).toEqual('string');
+    expect(typeof result.f[0].g).toEqual('string');
 });

@@ -11,6 +11,7 @@ const schema = {
             type: 'string',
         },
     },
+    'components/schemas': {},
 } as const;
 
 export type CloneFeatureSchema = CreateSchemaType<typeof schema>;

@@ -17,6 +17,7 @@ const schema = {
             type: 'boolean',
         },
     },
+    'components/schemas': {},
 } as const;
 
 export type CreateFeatureSchema = CreateSchemaType<typeof schema>;

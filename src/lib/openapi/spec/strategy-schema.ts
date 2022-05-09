@@ -20,13 +20,11 @@ export const strategySchemaDefinition = {
         parameters: { $ref: '#/components/schemas/parametersSchema' },
     },
     'components/schemas': {
-        constraintSchema: constraintSchema,
-        parametersSchema: parametersSchema,
+        constraintSchema,
+        parametersSchema,
     },
 } as const;
 
 export type StrategySchema = CreateSchemaType<typeof strategySchemaDefinition>;
-const { 'components/schemas': componentsSchemas, ...rest } =
-    strategySchemaDefinition;
 
-export const strategySchema = createSchemaObject(rest);
+export const strategySchema = createSchemaObject(strategySchemaDefinition);

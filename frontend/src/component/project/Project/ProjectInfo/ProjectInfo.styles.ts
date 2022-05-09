@@ -55,7 +55,7 @@ export const useStyles = makeStyles()(theme => ({
         textAlign: 'center',
         marginBottom: '1rem',
         backgroundColor: '#fff',
-        borderRadius: '10px',
+        borderRadius: theme.shape.borderRadiusLarge,
         width: '100%',
         padding: '1.5rem 1rem 1.5rem 1rem',
         [theme.breakpoints.down('md')]: {

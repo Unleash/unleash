@@ -182,7 +182,7 @@ export const FeatureToggleListTable: VFC<IExperimentProps> = ({
                         {rows.map(row => {
                             prepareRow(row);
                             return (
-                                <TableRow {...row.getRowProps()}>
+                                <TableRow hover {...row.getRowProps()}>
                                     {row.cells.map(cell => (
                                         <TableCell {...cell.getCellProps()}>
                                             {cell.render('Cell')}

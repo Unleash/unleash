@@ -11,7 +11,7 @@ export const useStyles = makeStyles()(theme => ({
     projectToggles: { width: '100%', minHeight: '100%' },
     header: {
         backgroundColor: '#fff',
-        borderRadius: '10px',
+        borderRadius: theme.shape.borderRadiusLarge,
         marginBottom: '1rem',
     },
     innerContainer: {

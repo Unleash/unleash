@@ -12,7 +12,7 @@ export const useStyles = makeStyles()(theme => ({
         alignItems: 'center',
         backgroundColor: theme.palette.background.paper,
         border: `1px solid ${theme.palette.grey[300]}`,
-        borderRadius: '25px',
+        borderRadius: theme.shape.borderRadiusExtraLarge,
         padding: '3px 5px 3px 12px',
         maxWidth: '450px',
         [theme.breakpoints.down('sm')]: {
@@ -34,7 +34,8 @@ export const useStyles = makeStyles()(theme => ({
         },
     },
     clearIcon: {
-        color: theme.palette.grey[600],
+        // color: theme.palette.grey[700],
+        color: 'red',
         fontSize: '18px',
     },
     inputRoot: {

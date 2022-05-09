@@ -33,13 +33,13 @@ export const useThemeStyles = makeStyles()(theme => ({
     },
     divider: {
         margin: '1rem 0',
-        backgroundColor: theme.palette.division.main,
+        backgroundColor: theme.palette.divider,
         height: '3px',
         width: '100%',
     },
     largeDivider: {
         margin: '2rem 0',
-        backgroundColor: theme.palette.division.main,
+        backgroundColor: theme.palette.divider,
         height: '3px',
         width: '100%',
     },

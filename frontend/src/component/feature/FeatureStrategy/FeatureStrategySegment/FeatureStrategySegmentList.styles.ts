@@ -20,6 +20,6 @@ export const useStyles = makeStyles()(theme => ({
         marginBlock: '0.2rem',
         display: 'grid',
         alignItems: 'center',
-        borderRadius: theme.borderRadius.main,
+        borderRadius: theme.shape.borderRadius,
     },
 }));

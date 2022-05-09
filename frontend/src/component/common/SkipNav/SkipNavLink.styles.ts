@@ -12,7 +12,7 @@ export const useStyles = makeStyles()(theme => ({
         textDecoration: 'none',
         background: theme.palette.primary.dark,
         color: theme.palette.primary.contrastText,
-        borderRadius: theme.borderRadius.main,
+        borderRadius: theme.shape.borderRadius,
         fontSize: theme.fontSizes.smallBody,
 
         [theme.breakpoints.down(960)]: {

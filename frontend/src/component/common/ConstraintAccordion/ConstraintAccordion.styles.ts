@@ -75,7 +75,7 @@ export const useStyles = makeStyles()(theme => ({
         },
     },
     editingBadge: {
-        borderRadius: '25px',
+        borderRadius: theme.shape.borderRadiusExtraLarge,
         padding: '0.25rem 0.5rem',
         backgroundColor: '#635DC5',
         color: '#fff',

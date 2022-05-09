@@ -10,7 +10,7 @@ export const useStyles = makeStyles()(theme => ({
         gap: '0.5rem',
         padding: '0.5rem',
         background: theme.palette.grey[200],
-        borderRadius: theme.borderRadius.main,
+        borderRadius: theme.shape.borderRadius,
         wordBreak: 'break-word',
     },
     label: {

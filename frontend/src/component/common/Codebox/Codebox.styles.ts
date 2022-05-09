@@ -4,7 +4,7 @@ export const useStyles = makeStyles()(theme => ({
     container: {
         backgroundColor: theme.palette.primary.main,
         padding: '1rem',
-        borderRadius: '3px',
+        borderRadius: theme.shape.borderRadius,
         position: 'relative',
         maxHeight: '500px',
         overflow: 'auto',

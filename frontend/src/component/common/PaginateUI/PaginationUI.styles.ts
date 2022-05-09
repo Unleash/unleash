@@ -19,7 +19,7 @@ export const useStyles = makeStyles()(theme => ({
         backgroundColor: 'efefef',
         margin: '0 0.2rem',
         width: '31px',
-        borderRadius: '3px',
+        borderRadius: theme.shape.borderRadius,
         padding: '0.25rem 0.5rem',
     },
     paginationButtonActive: {
@@ -29,7 +29,7 @@ export const useStyles = makeStyles()(theme => ({
     },
     idxBtn: {
         border: 'none',
-        borderRadius: '3px',
+        borderRadius: theme.shape.borderRadius,
         background: 'transparent',
         position: 'absolute',
         height: '23px',

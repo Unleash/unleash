@@ -19,7 +19,7 @@ export const useStyles = makeStyles()(theme => ({
     },
     verticalSeparator: {
         height: '100%',
-        backgroundColor: theme.palette.grey[500],
+        borderColor: theme.palette.grey[500],
         width: '1px',
         display: 'inline-block',
         marginLeft: theme.spacing(2),

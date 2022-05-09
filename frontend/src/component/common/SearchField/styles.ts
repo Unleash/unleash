@@ -10,8 +10,8 @@ export const useStyles = makeStyles()(theme => ({
     search: {
         display: 'flex',
         alignItems: 'center',
-        backgroundColor: theme.palette.searchField.main,
-        borderRadius: '25px',
+        backgroundColor: theme.palette.background.default,
+        borderRadius: theme.shape.borderRadiusExtraLarge,
         padding: '0.25rem 0.5rem',
         maxWidth: '450px',
         [theme.breakpoints.down('sm')]: {

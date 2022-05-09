@@ -1,5 +1,3 @@
-import { SimplePaletteColorOptions } from '@mui/material';
-
 declare module '@mui/material/styles' {
     interface CustomTheme {
         /**
@@ -24,6 +22,15 @@ declare module '@mui/material/styles' {
         /**
          * @deprecated
          */
+        boxShadows: {
+            main: string;
+        };
+    }
+
+    interface CustomPalette {
+        /**
+         * Colors for event log output
+         */
         code: {
             main: string;
             diffAdd: string;
@@ -33,44 +40,15 @@ declare module '@mui/material/styles' {
             background: string;
         };
         /**
-         * @deprecated
+         * For 'Seen' column on feature toggles list
          */
-        borderRadius: {
-            main: string;
+        activityIndicators: {
+            unknown: string;
+            recent: string;
+            inactive: string;
+            abandoned: string;
         };
-        /**
-         * @deprecated
-         */
-        boxShadows: {
-            main: string;
-        };
-    }
-
-    interface CustomPalette {
-        /**
-         * @deprecated
-         */
-        chips: SimplePaletteColorOptions;
-        /**
-         * @deprecated
-         */
-        searchField: SimplePaletteColorOptions;
-        /**
-         * @deprecated
-         */
-        iconButtons: SimplePaletteColorOptions;
-        /**
-         * @deprecated
-         */
-        tabs: SimplePaletteColorOptions;
-        /**
-         * @deprecated
-         */
-        division: SimplePaletteColorOptions;
-        /**
-         * @deprecated
-         */
-        footer: SimplePaletteColorOptions;
+        dividerAlternative: string;
     }
 
     interface Theme extends CustomTheme {}
@@ -79,3 +57,12 @@ declare module '@mui/material/styles' {
     interface Palette extends CustomPalette {}
     interface PaletteOptions extends CustomPalette {}
 }
+
+declare module '@mui/system/createTheme/shape' {
+    interface Shape {
+        borderRadiusLarge: string;
+        borderRadiusExtraLarge: string;
+    }
+}
+
+export {};

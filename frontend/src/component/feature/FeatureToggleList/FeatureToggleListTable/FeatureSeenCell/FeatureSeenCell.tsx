@@ -31,21 +31,21 @@ const useFeatureColor = () => {
     return (unit?: string): string => {
         switch (unit) {
             case 'second':
-                return theme.palette.success.light;
+                return theme.palette.activityIndicators.recent;
             case 'minute':
-                return theme.palette.success.light;
+                return theme.palette.activityIndicators.recent;
             case 'hour':
-                return theme.palette.success.light;
+                return theme.palette.activityIndicators.recent;
             case 'day':
-                return theme.palette.success.light;
+                return theme.palette.activityIndicators.recent;
             case 'week':
-                return theme.palette.warning.light;
+                return theme.palette.activityIndicators.inactive;
             case 'month':
-                return theme.palette.error.light;
+                return theme.palette.activityIndicators.abandoned;
             case 'year':
-                return theme.palette.error.light;
+                return theme.palette.activityIndicators.abandoned;
             default:
-                return theme.palette.grey[100];
+                return theme.palette.activityIndicators.unknown;
         }
     };
 };

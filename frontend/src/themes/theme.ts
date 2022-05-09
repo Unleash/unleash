@@ -2,9 +2,6 @@ import { createTheme } from '@mui/material/styles';
 import { colors } from './colors';
 
 export default createTheme({
-    borderRadius: {
-        main: '3px',
-    },
     boxShadows: {
         main: '0px 2px 4px rgba(129, 122, 254, 0.2)',
     },
@@ -20,7 +17,7 @@ export default createTheme({
         },
     },
     fontSizes: {
-        mainHeader: '1.2rem',
+        mainHeader: '1.25rem',
         subHeader: '1.1rem',
         bodySize: '1rem',
         smallBody: '0.9rem',
@@ -32,13 +29,10 @@ export default createTheme({
         semi: 700,
         bold: 700,
     },
-    code: {
-        main: '#0b8c8f',
-        diffAdd: 'green',
-        diffSub: 'red',
-        diffNeutral: 'black',
-        edited: 'blue',
-        background: '#efefef',
+    shape: {
+        borderRadius: '3px',
+        borderRadiusLarge: '10px',
+        borderRadiusExtraLarge: '25px',
     },
     palette: {
         primary: {
@@ -51,42 +45,47 @@ export default createTheme({
             light: colors.purple[700],
             dark: colors.purple[900],
         },
+        info: {
+            light: colors.blue[700],
+            main: colors.blue[700],
+            dark: colors.blue[800],
+        },
         success: {
-            light: colors.green[100],
+            light: colors.green[700],
             main: colors.green[700],
             dark: colors.green[800],
         },
         warning: {
-            light: colors.orange[200],
+            light: colors.orange[700],
             main: colors.orange[700],
             dark: colors.orange[800],
         },
         error: {
-            light: colors.red[200],
+            light: colors.red[700],
             main: colors.red[700],
             dark: colors.red[800],
         },
+        divider: colors.grey[300],
+        dividerAlternative: colors.grey[500],
         grey: colors.grey,
-        // neutral: {
-        //     main: '#18243e',
-        // },
-        chips: {
-            main: '#b0bec5',
+        text: {
+            primary: colors.grey[900],
+            secondary: colors.grey[800],
+            disabled: colors.grey[600],
         },
-        searchField: {
-            main: '#fff',
+        code: {
+            main: '#0b8c8f',
+            diffAdd: 'green',
+            diffSub: 'red',
+            diffNeutral: 'black',
+            edited: 'blue',
+            background: '#efefef',
         },
-        iconButtons: {
-            main: '#fff',
-        },
-        tabs: {
-            main: '#efefef',
-        },
-        division: {
-            main: '#f1f1f1',
-        },
-        footer: {
-            main: '#000',
+        activityIndicators: {
+            unknown: colors.grey[100],
+            recent: colors.green[100],
+            inactive: colors.orange[200],
+            abandoned: colors.red[200],
         },
     },
     components: {
@@ -101,6 +100,24 @@ export default createTheme({
             styleOverrides: {
                 root: {
                     color: colors.purple[900],
+                },
+            },
+        },
+        MuiBreadcrumbs: {
+            styleOverrides: {
+                root: {
+                    '& a': {
+                        color: colors.purple[900],
+                    },
+                },
+            },
+        },
+        MuiTableRow: {
+            styleOverrides: {
+                root: {
+                    '&.MuiTableRow-hover:hover': {
+                        background: colors.grey[100],
+                    },
                 },
             },
         },

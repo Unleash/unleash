@@ -1,6 +1,7 @@
 import { FC, VFC } from 'react';
-import { Box, Toolbar, Typography } from '@mui/material';
+import { Divider, Box, Toolbar } from '@mui/material';
 import { useStyles } from './TableToolbar.styles';
+import { HeaderTitle } from 'component/common/HeaderTitle/HeaderTitle';
 
 interface ITableToolbarProps {
     title: string;
@@ -13,20 +14,24 @@ export const TableToolbarComponent: FC<ITableToolbarProps> & {
 
     return (
         <Toolbar className={styles.toolbar}>
-            <Typography variant="h1" data-loading>
-                {title}
-            </Typography>
+            <HeaderTitle title={title} data-loading />
             <Box className={styles.actions}>{children}</Box>
         </Toolbar>
     );
 };
 
-const Divider: VFC = () => {
+const ToolbarDivider: VFC = () => {
     const { classes: styles } = useStyles();
 
-    return <Box className={styles.verticalSeparator} />;
+    return (
+        <Divider
+            orientation="vertical"
+            variant="middle"
+            className={styles.verticalSeparator}
+        />
+    );
 };
 
-TableToolbarComponent.Divider = Divider;
+TableToolbarComponent.Divider = ToolbarDivider;
 
 export const TableToolbar = TableToolbarComponent;

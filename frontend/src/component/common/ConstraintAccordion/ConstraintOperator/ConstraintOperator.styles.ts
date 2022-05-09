@@ -3,7 +3,7 @@ import { makeStyles } from 'tss-react/mui';
 export const useStyles = makeStyles()(theme => ({
     container: {
         padding: '0.5rem 0.75rem',
-        borderRadius: theme.borderRadius.main,
+        borderRadius: theme.shape.borderRadius,
         backgroundColor: theme.palette.grey[200],
         lineHeight: 1.25,
     },
@@ -21,7 +21,7 @@ export const useStyles = makeStyles()(theme => ({
         '& > span': {
             display: 'inline-block',
             padding: '0 0.25rem',
-            borderRadius: theme.borderRadius.main,
+            borderRadius: theme.shape.borderRadius,
             fontSize: theme.fontSizes.smallerBody,
             backgroundColor: theme.palette.primary.light,
             color: 'white',

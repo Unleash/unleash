@@ -15,7 +15,7 @@ export const useStyles = makeStyles()(theme => ({
     },
     leftContainer: {
         width: '40%',
-        borderRadius: '3px',
+        borderRadius: theme.shape.borderRadius,
         [theme.breakpoints.down('md')]: {
             borderRadius: '0',
             width: '100%',

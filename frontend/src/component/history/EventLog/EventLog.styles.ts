@@ -5,7 +5,7 @@ export const useStyles = makeStyles()(theme => ({
         border: `1px solid ${theme.palette.grey[100]}`,
         padding: '1rem',
         margin: '1rem 0',
-        borderRadius: theme.borderRadius.main,
+        borderRadius: theme.shape.borderRadius,
     },
     history: {
         '& code': {
@@ -13,16 +13,16 @@ export const useStyles = makeStyles()(theme => ({
             whiteSpace: 'pre',
             fontFamily: 'monospace',
             lineHeight: '100%',
-            color: theme.code.main,
+            color: theme.palette.code.main,
         },
         '& code > .diff-N': {
-            color: theme.code.diffAdd,
+            color: theme.palette.code.diffAdd,
         },
         '& code > .diff-D': {
-            color: theme.code.diffSub,
+            color: theme.palette.code.diffSub,
         },
         '& code > .diff-A, .diff-E': {
-            color: theme.code.diffNeutral,
+            color: theme.palette.code.diffNeutral,
         },
         '& dl': {
             padding: '0',

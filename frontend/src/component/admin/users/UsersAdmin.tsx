@@ -38,6 +38,9 @@ const UsersAdmin = () => {
                                             }
                                         />
                                         <Button
+                                            sx={{
+                                                ml: 1.5,
+                                            }}
                                             variant="contained"
                                             color="primary"
                                             onClick={() =>

@@ -1,10 +1,14 @@
 import { makeStyles } from 'tss-react/mui';
 
 export const useStyles = makeStyles()(theme => ({
-    container: { borderRadius: '10px', boxShadow: 'none', display: 'flex' },
+    container: {
+        borderRadius: theme.shape.borderRadiusLarge,
+        boxShadow: 'none',
+        display: 'flex',
+    },
     header: {
         backgroundColor: '#fff',
-        borderRadius: '10px',
+        borderRadius: theme.shape.borderRadiusLarge,
         marginBottom: '1rem',
     },
     toggleInfoContainer: {

@@ -6,6 +6,9 @@ export const useStyles = makeStyles()(theme => ({
         position: 'relative',
         '&:hover, &:focus': {
             backgroundColor: theme.palette.grey[400],
+            '& svg': {
+                color: 'inherit',
+            },
         },
     },
     sortButton: {

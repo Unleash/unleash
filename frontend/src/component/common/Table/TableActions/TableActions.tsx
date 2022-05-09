@@ -80,10 +80,6 @@ export const TableActions: FC<ITableActionsProps> = ({
                     </>
                 }
             />
-            <ConditionallyRender
-                condition={Boolean(isSeparated)}
-                show={<div className={styles.verticalSeparator} />}
-            />
             {children}
         </div>
     );

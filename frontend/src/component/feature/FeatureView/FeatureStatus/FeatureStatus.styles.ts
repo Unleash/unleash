@@ -6,7 +6,7 @@ export const useStyles = makeStyles()(theme => ({
         height: '42px',
         fontSize: '0.7em',
         background: 'gray',
-        borderRadius: '3px',
+        borderRadius: theme.shape.borderRadius,
         textAlign: 'center',
         display: 'flex',
         alignItems: 'center',

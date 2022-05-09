@@ -8,7 +8,6 @@ export const useStyles = makeStyles()(theme => ({
         alignItems: 'center',
     },
     icon: {
-        marginTop: theme.spacing(0.5),
         color: theme.palette.grey[600],
     },
 }));

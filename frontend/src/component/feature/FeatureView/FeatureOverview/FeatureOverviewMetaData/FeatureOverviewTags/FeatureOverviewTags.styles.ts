@@ -2,7 +2,7 @@ import { makeStyles } from 'tss-react/mui';
 
 export const useStyles = makeStyles()(theme => ({
     container: {
-        borderRadius: '10px',
+        borderRadius: theme.shape.borderRadiusLarge,
         backgroundColor: theme.palette.primary.light,
         display: 'flex',
         flexDirection: 'column',

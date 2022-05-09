@@ -2,7 +2,7 @@ import { makeStyles } from 'tss-react/mui';
 
 export const useStyles = makeStyles()(theme => ({
     container: {
-        borderRadius: theme.borderRadius.main,
+        borderRadius: theme.shape.borderRadius,
         border: `1px solid ${theme.palette.grey[300]}`,
         '& + &': {
             marginTop: '1rem',

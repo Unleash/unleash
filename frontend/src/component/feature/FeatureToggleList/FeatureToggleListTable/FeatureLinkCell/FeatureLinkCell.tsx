@@ -25,18 +25,16 @@ export const FeatureLinkCell: FC<IFeatureLinkCellProps> = ({
             component={RouterLink}
             to={to}
             underline="hover"
-            className={styles.container}
+            className={styles.wrapper}
         >
-            <div>
+            <div className={styles.container}>
                 <span data-loading>
                     <Highlighter search={search}>{title}</Highlighter>
                 </span>
-
                 <ConditionallyRender
                     condition={Boolean(subtitle)}
                     show={
                         <>
-                            <br />
                             <Typography
                                 className={styles.description}
                                 component="span"

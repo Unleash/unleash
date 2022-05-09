@@ -10,8 +10,8 @@ export const useStyles = makeStyles()(theme => ({
     wing: {
         width: '80px',
         height: '3px',
-        backgroundColor: theme.palette.division.main,
-        borderRadius: theme.borderRadius.main,
+        backgroundColor: theme.palette.divider,
+        borderRadius: theme.shape.borderRadius,
     },
     text: {
         textAlign: 'center',

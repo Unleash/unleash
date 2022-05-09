@@ -2,12 +2,12 @@ import { makeStyles } from 'tss-react/mui';
 
 export const useStyles = makeStyles()(theme => ({
     blue: {
-        color: theme.code.edited,
+        color: theme.palette.code.edited,
     },
     negative: {
-        color: theme.code.diffSub,
+        color: theme.palette.code.diffSub,
     },
     positive: {
-        color: theme.code.diffAdd,
+        color: theme.palette.code.diffAdd,
     },
 }));

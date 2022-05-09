@@ -18,6 +18,7 @@ export const useStyles = makeStyles()(theme => ({
     },
     tableCellHeaderSortable: {
         cursor: 'pointer',
+        background: theme.palette.grey[50],
     },
     tableCellStatus: {
         width: '60px',

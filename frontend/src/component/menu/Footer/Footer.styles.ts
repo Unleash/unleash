@@ -17,7 +17,7 @@ export const useStyles = makeStyles()(theme => ({
         margin: 0,
         '& a': {
             textDecoration: 'none',
-            color: theme.palette.footer.main,
+            color: theme.palette.text.primary,
         },
     },
 }));

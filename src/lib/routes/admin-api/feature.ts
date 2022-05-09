@@ -88,7 +88,7 @@ class FeatureController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
-                    operationId: 'validate',
+                    operationId: 'validateFeature',
                     responses: { 200: emptyResponse },
                 }),
             ],
@@ -174,7 +174,7 @@ class FeatureController extends Controller {
     ): Promise<void> {
         const query = await this.prepQuery(req.query);
         const features = await this.service.getFeatureToggles(query);
-
+        console.log(features);
         res.json({
             version,
             features: features.map(serializeDates),

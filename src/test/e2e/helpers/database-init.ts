@@ -10,6 +10,7 @@ import EnvironmentStore from '../../../lib/db/environment-store';
 import { IUnleashStores } from '../../../lib/types';
 import { IFeatureEnvironmentStore } from '../../../lib/types/stores/feature-environment-store';
 import { DEFAULT_ENV } from '../../../lib/util/constants';
+import { IUnleashOptions } from 'lib/server-impl';
 
 // require('db-migrate-shared').log.silence(false);
 
@@ -79,7 +80,7 @@ export interface ITestDb {
 export default async function init(
     databaseSchema: string = 'test',
     getLogger: LogProvider = noLoggerProvider,
-    configOverride: any = {},
+    configOverride: Partial<IUnleashOptions> = {},
 ): Promise<ITestDb> {
     const config = createTestConfig({
         db: {

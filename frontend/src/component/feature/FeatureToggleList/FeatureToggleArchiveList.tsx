@@ -6,8 +6,8 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { IFlags } from 'interfaces/uiConfig';
 import { SearchField } from 'component/common/SearchField/SearchField';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import PageContent from 'component/common/PageContent/PageContent';
-import { HeaderTitle } from 'component/common/HeaderTitle/HeaderTitle';
+import { PageContent } from 'component/common/PageContent/PageContent';
+import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import AccessContext from 'contexts/AccessContext';
 import { IFeaturesFilter } from 'hooks/useFeaturesFilter';
 import { FeatureToggleListItem } from './FeatureToggleListItem/FeatureToggleListItem';
@@ -138,8 +138,8 @@ export const FeatureToggleList: VFC<IFeatureToggleListProps> = ({
             </div>
 
             <PageContent
-                headerContent={
-                    <HeaderTitle
+                header={
+                    <PageHeader
                         loading={loading}
                         title={headerTitle}
                         actions={

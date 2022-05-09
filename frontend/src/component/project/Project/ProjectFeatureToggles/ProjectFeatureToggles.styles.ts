@@ -20,8 +20,6 @@ export const useStyles = makeStyles()(theme => ({
         padding: '1rem',
     },
     title: {
-        fontSize: '1rem',
-        fontWeight: 'normal',
         display: 'unset',
         [theme.breakpoints.down(600)]: {
             display: 'none',

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Button, FormControlLabel, Grid, Switch } from '@mui/material';
 import { Alert } from '@mui/material';
-import PageContent from 'component/common/PageContent/PageContent';
+import { PageContent } from 'component/common/PageContent/PageContent';
 import AccessContext from 'contexts/AccessContext';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import useAuthSettings from 'hooks/api/getters/useAuthSettings/useAuthSettings';
@@ -57,7 +57,7 @@ export const PasswordAuth = () => {
         }
     };
     return (
-        <PageContent headerContent="">
+        <PageContent>
             <form onSubmit={onSubmit}>
                 <Grid container spacing={3} mb={2}>
                     <Grid item md={5}>

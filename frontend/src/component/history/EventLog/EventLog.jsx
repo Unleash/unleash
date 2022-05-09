@@ -1,8 +1,8 @@
 import { List, Switch, FormControlLabel } from '@mui/material';
 import PropTypes from 'prop-types';
 import EventJson from './EventJson/EventJson';
-import PageContent from 'component/common/PageContent/PageContent';
-import { HeaderTitle } from 'component/common/HeaderTitle/HeaderTitle';
+import { PageContent } from 'component/common/PageContent/PageContent';
+import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import EventCard from './EventCard/EventCard';
 import { useStyles } from './EventLog.styles';
 import { formatDateYMDHMS } from 'utils/formatDate';
@@ -50,8 +50,8 @@ const EventLog = ({
         <PageContent
             disablePadding={displayInline}
             disableBorder={displayInline}
-            headerContent={
-                <HeaderTitle
+            header={
+                <PageHeader
                     title={title}
                     actions={
                         <FormControlLabel

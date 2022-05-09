@@ -4,8 +4,6 @@ import { Link as RouterLink } from 'react-router-dom';
 import { useGlobalFilter, useSortBy, useTable } from 'react-table';
 import useLoading from 'hooks/useLoading';
 import {
-    TableContainer,
-    TableToolbar,
     Table,
     SortableTableHeader,
     TableBody,
@@ -22,6 +20,8 @@ import { FeatureStaleCell } from './FeatureStaleCell/FeatureStaleCell';
 import { FeatureTypeCell } from './FeatureTypeCell/FeatureTypeCell';
 import { CreateFeatureButton } from '../../CreateFeatureButton/CreateFeatureButton';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { PageContent } from 'component/common/PageContent/PageContent';
+import { PageHeader } from 'component/common/PageHeader/PageHeader';
 
 interface IExperimentProps {
     data: Record<string, any>[];
@@ -106,7 +106,6 @@ export const FeatureToggleListTable: VFC<IExperimentProps> = ({
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const isMediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
-    const ref = useLoading(isLoading);
 
     const initialState = useMemo(
         () => ({
@@ -155,26 +154,35 @@ export const FeatureToggleListTable: VFC<IExperimentProps> = ({
     }, [setHiddenColumns, isSmallScreen, isMediumScreen]);
 
     return (
-        <TableContainer ref={ref}>
-            <TableToolbar title={`Feature toggles (${data.length})`}>
-                <TableSearch
-                    initialValue={globalFilter}
-                    onChange={setGlobalFilter}
+        <PageContent
+            isLoading={isLoading}
+            header={
+                <PageHeader
+                    title={`Feature toggles (${data.length})`}
+                    actions={
+                        <>
+                            <TableSearch
+                                initialValue={globalFilter}
+                                onChange={setGlobalFilter}
+                            />
+                            <PageHeader.Divider />
+                            <Link
+                                component={RouterLink}
+                                to="/archive"
+                                underline="always"
+                                sx={{ marginRight: 3 }}
+                            >
+                                View archive
+                            </Link>
+                            <CreateFeatureButton
+                                loading={false}
+                                filter={{ query: '', project: 'default' }}
+                            />
+                        </>
+                    }
                 />
-                <TableToolbar.Divider />
-                <Link
-                    component={RouterLink}
-                    to="/archive"
-                    underline="always"
-                    sx={{ marginRight: 3 }}
-                >
-                    View archive
-                </Link>
-                <CreateFeatureButton
-                    loading={false}
-                    filter={{ query: '', project: 'default' }}
-                />
-            </TableToolbar>
+            }
+        >
             <SearchHighlightProvider value={globalFilter}>
                 <Table {...getTableProps()}>
                     <SortableTableHeader headerGroups={headerGroups} />
@@ -215,6 +223,6 @@ export const FeatureToggleListTable: VFC<IExperimentProps> = ({
                     />
                 }
             />
-        </TableContainer>
+        </PageContent>
     );
 };

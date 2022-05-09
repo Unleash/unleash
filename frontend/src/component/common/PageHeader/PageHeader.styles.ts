@@ -1,25 +1,30 @@
 import { makeStyles } from 'tss-react/mui';
 
 export const useStyles = makeStyles()(theme => ({
-    toolbar: {
-        paddingLeft: theme.spacing(4),
-        paddingRight: theme.spacing(4),
-        paddingTop: theme.spacing(2),
-        paddingBottom: theme.spacing(2),
-        borderBottom: `1px solid ${theme.palette.divider}`,
+    headerContainer: {
         display: 'flex',
-        flexWrap: 'wrap',
-        alignItems: 'center',
+        flexDirection: 'column',
     },
-    actions: {
-        flex: 1,
+    topContainer: {
         display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        position: 'relative',
+        flexWrap: 'wrap',
+    },
+    headerTitle: {
+        fontSize: theme.fontSizes.mainHeader,
+        fontWeight: 'normal',
+    },
+    headerActions: {
+        display: 'flex',
+        flexGrow: 1,
         justifyContent: 'flex-end',
         alignItems: 'center',
     },
     verticalSeparator: {
         height: '100%',
-        borderColor: theme.palette.grey[500],
+        borderColor: theme.palette.dividerAlternative,
         width: '1px',
         display: 'inline-block',
         marginLeft: theme.spacing(2),

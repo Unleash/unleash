@@ -11,9 +11,9 @@ import useToast from 'hooks/useToast';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import useProjectRolePermissions from 'hooks/api/getters/useProjectRolePermissions/useProjectRolePermissions';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import PageContent from 'component/common/PageContent/PageContent';
+import { PageContent } from 'component/common/PageContent/PageContent';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
-import { HeaderTitle } from 'component/common/HeaderTitle/HeaderTitle';
+import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { formatUnknownError } from 'utils/formatUnknownError';
 
 const CreateEnvironment = () => {
@@ -109,9 +109,7 @@ const CreateEnvironment = () => {
             elseShow={
                 <>
                     <PageContent
-                        headerContent={
-                            <HeaderTitle title="Create environment" />
-                        }
+                        header={<PageHeader title="Create environment" />}
                     >
                         <Alert severity="error">
                             <p>

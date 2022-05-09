@@ -11,8 +11,8 @@ import {
     Tooltip,
     useMediaQuery,
 } from '@mui/material';
-import PageContent from 'component/common/PageContent/PageContent';
-import { HeaderTitle } from 'component/common/HeaderTitle/HeaderTitle';
+import { PageContent } from 'component/common/PageContent/PageContent';
+import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
     CREATE_CONTEXT_FIELD,
@@ -143,11 +143,8 @@ const ContextList: VFC = () => {
 
     return (
         <PageContent
-            headerContent={
-                <HeaderTitle
-                    actions={headerButton()}
-                    title={'Context fields'}
-                />
+            header={
+                <PageHeader actions={headerButton()} title={'Context fields'} />
             }
         >
             <List>

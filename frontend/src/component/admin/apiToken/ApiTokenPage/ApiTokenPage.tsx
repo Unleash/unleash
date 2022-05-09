@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@mui/material';
 import AccessContext from 'contexts/AccessContext';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import PageContent from 'component/common/PageContent';
-import { HeaderTitle } from 'component/common/HeaderTitle/HeaderTitle';
+import { PageContent } from 'component/common/PageContent/PageContent';
+import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
     CREATE_API_TOKEN,
@@ -24,8 +24,8 @@ export const ApiTokenPage = () => {
 
     return (
         <PageContent
-            headerContent={
-                <HeaderTitle
+            header={
+                <PageHeader
                     title="API Access"
                     actions={
                         <ConditionallyRender

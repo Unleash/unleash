@@ -19,8 +19,8 @@ import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { Link, useNavigate } from 'react-router-dom';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { HeaderTitle } from 'component/common/HeaderTitle/HeaderTitle';
-import PageContent from 'component/common/PageContent';
+import { PageHeader } from 'component/common/PageHeader/PageHeader';
+import { PageContent } from 'component/common/PageContent/PageContent';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { SegmentDelete } from '../SegmentDelete/SegmentDelete';
 import { SegmentDocsWarning } from 'component/segments/SegmentDocs/SegmentDocs';
@@ -90,8 +90,8 @@ export const SegmentsList = () => {
 
     return (
         <PageContent
-            headerContent={
-                <HeaderTitle
+            header={
+                <PageHeader
                     title="Segments"
                     actions={
                         <PermissionButton

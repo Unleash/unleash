@@ -7,7 +7,7 @@ import {
     TextField,
 } from '@mui/material';
 import { Alert } from '@mui/material';
-import PageContent from 'component/common/PageContent/PageContent';
+import { PageContent } from 'component/common/PageContent/PageContent';
 import AccessContext from 'contexts/AccessContext';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { AutoCreateForm } from '../AutoCreateForm/AutoCreateForm';
@@ -81,7 +81,7 @@ export const SamlAuth = () => {
     };
 
     return (
-        <PageContent headerContent="">
+        <PageContent>
             <Grid container style={{ marginBottom: '1rem' }}>
                 <Grid item md={12}>
                     <Alert severity="info">

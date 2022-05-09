@@ -3,8 +3,8 @@ import { CircularProgress } from '@mui/material';
 import { Warning } from '@mui/icons-material';
 import { AppsLinkList, styles as themeStyles } from 'component/common';
 import { SearchField } from 'component/common/SearchField/SearchField';
-import PageContent from 'component/common/PageContent/PageContent';
-import { HeaderTitle } from 'component/common/HeaderTitle/HeaderTitle';
+import { PageContent } from 'component/common/PageContent/PageContent';
+import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import useApplications from 'hooks/api/getters/useApplications/useApplications';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
@@ -47,7 +47,7 @@ export const ApplicationList = () => {
             <div className={themeStyles.searchField}>
                 <SearchField initialValue={filter} updateValue={setFilter} />
             </div>
-            <PageContent headerContent={<HeaderTitle title="Applications" />}>
+            <PageContent header={<PageHeader title="Applications" />}>
                 <div className={themeStyles.fullwidth}>
                     <ConditionallyRender
                         condition={filteredApplications.length > 0}

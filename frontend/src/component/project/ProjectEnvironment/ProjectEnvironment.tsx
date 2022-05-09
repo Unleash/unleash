@@ -3,8 +3,8 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { useStyles } from './ProjectEnvironment.styles';
 
 import useLoading from 'hooks/useLoading';
-import PageContent from 'component/common/PageContent';
-import { HeaderTitle } from 'component/common/HeaderTitle/HeaderTitle';
+import { PageContent } from 'component/common/PageContent/PageContent';
+import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
 
 import ApiError from 'component/common/ApiError/ApiError';
@@ -174,8 +174,8 @@ const ProjectEnvironmentList = ({
     return (
         <div ref={ref}>
             <PageContent
-                headerContent={
-                    <HeaderTitle
+                header={
+                    <PageHeader
                         title={`Configure environments for "${project?.name}" project`}
                     />
                 }

@@ -15,7 +15,7 @@ import { IAddon, IAddonProvider } from 'interfaces/addons';
 import { AddonParameters } from './AddonParameters/AddonParameters';
 import { AddonEvents } from './AddonEvents/AddonEvents';
 import cloneDeep from 'lodash.clonedeep';
-import PageContent from 'component/common/PageContent/PageContent';
+import { PageContent } from 'component/common/PageContent/PageContent';
 import { useNavigate } from 'react-router-dom';
 import useAddonsApi from 'hooks/api/actions/useAddonsApi/useAddonsApi';
 import useToast from 'hooks/useToast';
@@ -184,7 +184,7 @@ export const AddonForm: VFC<IAddonFormProps> = ({
     } = provider ? provider : ({} as Partial<IAddonProvider>);
 
     return (
-        <PageContent headerContent={`Configure ${name} addon`}>
+        <PageContent header={`Configure ${name} addon`}>
             <section className={styles.formSection}>
                 {description}&nbsp;
                 <a href={documentationUrl} target="_blank" rel="noreferrer">

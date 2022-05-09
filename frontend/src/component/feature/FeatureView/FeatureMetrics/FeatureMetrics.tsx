@@ -1,5 +1,5 @@
 import { useFeatureMetricsRaw } from 'hooks/api/getters/useFeatureMetricsRaw/useFeatureMetricsRaw';
-import PageContent from 'component/common/PageContent';
+import { PageContent } from 'component/common/PageContent/PageContent';
 import { useEffect, useMemo, useState } from 'react';
 import {
     FEATURE_METRIC_HOURS_BACK_MAX,
@@ -57,7 +57,7 @@ export const FeatureMetrics = () => {
     }
 
     return (
-        <PageContent headerContent="">
+        <PageContent>
             <Grid
                 container
                 component="header"

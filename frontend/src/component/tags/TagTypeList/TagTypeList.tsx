@@ -10,8 +10,8 @@ import {
     Tooltip,
 } from '@mui/material';
 import { Add, Delete, Edit, Label } from '@mui/icons-material';
-import { HeaderTitle } from 'component/common/HeaderTitle/HeaderTitle';
-import PageContent from 'component/common/PageContent/PageContent';
+import { PageHeader } from 'component/common/PageHeader/PageHeader';
+import { PageContent } from 'component/common/PageContent/PageContent';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
     DELETE_TAG_TYPE,
@@ -58,7 +58,7 @@ export const TagTypeList = () => {
     };
 
     let header = (
-        <HeaderTitle
+        <PageHeader
             title="Tag Types"
             actions={
                 <ConditionallyRender
@@ -143,7 +143,7 @@ export const TagTypeList = () => {
         );
     };
     return (
-        <PageContent headerContent={header}>
+        <PageContent header={header}>
             <List>
                 <ConditionallyRender
                     condition={tagTypes.length > 0}

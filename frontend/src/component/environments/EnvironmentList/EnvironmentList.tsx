@@ -4,9 +4,9 @@ import { List } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import useToast from 'hooks/useToast';
 import { IEnvironment, ISortOrderPayload } from 'interfaces/environments';
-import { HeaderTitle } from 'component/common/HeaderTitle/HeaderTitle';
+import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
-import PageContent from 'component/common/PageContent';
+import { PageContent } from 'component/common/PageContent/PageContent';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import useEnvironmentApi from 'hooks/api/actions/useEnvironmentApi/useEnvironmentApi';
 import useProjectRolePermissions from 'hooks/api/getters/useProjectRolePermissions/useProjectRolePermissions';
@@ -159,8 +159,8 @@ const EnvironmentList = () => {
     };
     return (
         <PageContent
-            headerContent={
-                <HeaderTitle
+            header={
+                <PageHeader
                     title="Environments"
                     actions={
                         <>

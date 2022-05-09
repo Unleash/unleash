@@ -89,13 +89,6 @@ export default createTheme({
         },
     },
     components: {
-        MuiTableHead: {
-            styleOverrides: {
-                root: {
-                    background: colors.grey[200],
-                },
-            },
-        },
         MuiLink: {
             styleOverrides: {
                 root: {
@@ -112,12 +105,26 @@ export default createTheme({
                 },
             },
         },
+        MuiTableHead: {
+            styleOverrides: {
+                root: {
+                    background: colors.grey[200],
+                },
+            },
+        },
         MuiTableRow: {
             styleOverrides: {
                 root: {
                     '&.MuiTableRow-hover:hover': {
                         background: colors.grey[100],
                     },
+                },
+            },
+        },
+        MuiTableCell: {
+            styleOverrides: {
+                root: {
+                    borderBottomColor: colors.grey[300],
                 },
             },
         },

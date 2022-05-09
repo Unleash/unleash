@@ -1,9 +1,15 @@
 import { makeStyles } from 'tss-react/mui';
 
 export const useStyles = makeStyles()(theme => ({
+    container: {
+        borderRadius: theme.shape.borderRadiusLarge,
+        boxShadow: 'none',
+    },
     headerContainer: {
         padding: theme.spacing(2, 4),
-        borderBottom: `1px solid ${theme.palette.grey[100]}`,
+        borderBottomStyle: 'solid',
+        borderBottomWidth: 1,
+        borderBottomColor: theme.palette.divider,
         [theme.breakpoints.down('md')]: {
             padding: '1.5rem 1rem',
         },

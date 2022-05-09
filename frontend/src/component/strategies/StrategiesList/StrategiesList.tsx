@@ -23,8 +23,8 @@ import {
     UPDATE_STRATEGY,
 } from 'component/providers/AccessProvider/permissions';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import PageContent from 'component/common/PageContent/PageContent';
-import { HeaderTitle } from 'component/common/HeaderTitle/HeaderTitle';
+import { PageContent } from 'component/common/PageContent/PageContent';
+import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { useStyles } from './StrategiesList.styles';
 import AccessContext from 'contexts/AccessContext';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
@@ -281,9 +281,7 @@ export const StrategiesList = () => {
 
     return (
         <PageContent
-            headerContent={
-                <HeaderTitle title="Strategies" actions={headerButton()} />
-            }
+            header={<PageHeader title="Strategies" actions={headerButton()} />}
         >
             <Dialogue
                 open={dialogueMetaData.show}

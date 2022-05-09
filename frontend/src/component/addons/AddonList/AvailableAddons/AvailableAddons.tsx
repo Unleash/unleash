@@ -1,5 +1,5 @@
 import { ReactElement } from 'react';
-import PageContent from 'component/common/PageContent/PageContent';
+import { PageContent } from 'component/common/PageContent/PageContent';
 import {
     List,
     ListItem,
@@ -49,7 +49,7 @@ export const AvailableAddons = ({
         </ListItem>
     );
     return (
-        <PageContent headerContent="Available addons">
+        <PageContent header="Available addons">
             <List>
                 {providers.map((provider: IProvider) =>
                     renderProvider(provider)

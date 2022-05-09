@@ -1,13 +1,13 @@
 import { useContext, useState } from 'react';
 import UsersList from './UsersList/UsersList';
 import AdminMenu from '../menu/AdminMenu';
-import PageContent from 'component/common/PageContent/PageContent';
+import { PageContent } from 'component/common/PageContent/PageContent';
 import AccessContext from 'contexts/AccessContext';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { Button } from '@mui/material';
 import { TableActions } from 'component/common/Table/TableActions/TableActions';
-import { HeaderTitle } from 'component/common/HeaderTitle/HeaderTitle';
+import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { useStyles } from './UserAdmin.styles';
 import { useNavigate } from 'react-router-dom';
 import { AdminAlert } from 'component/common/AdminAlert/AdminAlert';
@@ -23,8 +23,8 @@ const UsersAdmin = () => {
             <AdminMenu />
             <PageContent
                 bodyClass={styles.userListBody}
-                headerContent={
-                    <HeaderTitle
+                header={
+                    <PageHeader
                         title="Users"
                         actions={
                             <ConditionallyRender

@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Alert, SelectChangeEvent } from '@mui/material';
 import { ProjectAccessAddUser } from './ProjectAccessAddUser/ProjectAccessAddUser';
-import PageContent from 'component/common/PageContent';
+import { PageContent } from 'component/common/PageContent/PageContent';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useStyles } from './ProjectAccess.styles';
 import usePagination from 'hooks/usePagination';
@@ -13,7 +13,7 @@ import useProjectAccess, {
     IProjectAccessUser,
 } from 'hooks/api/getters/useProjectAccess/useProjectAccess';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
-import { HeaderTitle } from 'component/common/HeaderTitle/HeaderTitle';
+import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { ProjectAccessList } from './ProjectAccessList/ProjectAccessList';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
@@ -31,7 +31,7 @@ export const ProjectAccess = () => {
 
     if (isOss()) {
         return (
-            <PageContent headerContent={<HeaderTitle title="Project Access" />}>
+            <PageContent header={<PageHeader title="Project Access" />}>
                 <Alert severity="error">
                     Controlling access to projects requires a paid version of
                     Unleash. Check out{' '}
@@ -90,7 +90,7 @@ export const ProjectAccess = () => {
 
     return (
         <PageContent
-            headerContent={<HeaderTitle title="Project Roles"></HeaderTitle>}
+            header={<PageHeader title="Project Roles"></PageHeader>}
             className={styles.pageContent}
         >
             <ProjectAccessAddUser roles={access?.roles} />

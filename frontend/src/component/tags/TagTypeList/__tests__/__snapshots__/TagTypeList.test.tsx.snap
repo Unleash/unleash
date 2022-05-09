@@ -2,71 +2,71 @@
 
 exports[`renders an empty list correctly 1`] = `
 [
-  <div
-    className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 mui-45jkiv-MuiPaper-root"
-    style={
-      {
-        "borderRadius": "10px",
-        "boxShadow": "none",
-      }
-    }
-  >
+  <div>
     <div
-      className="tss-ee3n06-headerContainer"
+      className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 tss-15amf7-container mui-45jkiv-MuiPaper-root"
     >
       <div
-        className="tss-14s7qul-headerTitleContainer"
+        className="tss-1yjkq3l-headerContainer"
       >
         <div
-          className=""
-          data-loading={true}
+          className="tss-1ylehva-headerContainer"
         >
-          <h1
-            className="MuiTypography-root MuiTypography-h1 tss-7lbvh4-headerTitle mui-ylrecv-MuiTypography-root"
+          <div
+            className="tss-1dw2af8-topContainer"
           >
-            Tag Types
-          </h1>
-        </div>
-        <div
-          className="tss-ap2nhp-headerActions"
-        >
-          <button
-            className="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  mui-1lmzhxi-MuiButtonBase-root-MuiButton-root"
-            disabled={false}
-            onBlur={[Function]}
-            onClick={[Function]}
-            onContextMenu={[Function]}
-            onDragLeave={[Function]}
-            onFocus={[Function]}
-            onKeyDown={[Function]}
-            onKeyUp={[Function]}
-            onMouseDown={[Function]}
-            onMouseLeave={[Function]}
-            onMouseUp={[Function]}
-            onTouchEnd={[Function]}
-            onTouchMove={[Function]}
-            onTouchStart={[Function]}
-            tabIndex={0}
-            type="button"
-          >
-            New tag type
-          </button>
+            <div
+              className=""
+              data-loading={true}
+            >
+              <h1
+                className="MuiTypography-root MuiTypography-h1 tss-7lbvh4-headerTitle mui-ylrecv-MuiTypography-root"
+              >
+                Tag Types
+              </h1>
+            </div>
+            <div
+              className="tss-1u1bjy8-headerActions"
+            >
+              <button
+                className="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  mui-1lmzhxi-MuiButtonBase-root-MuiButton-root"
+                disabled={false}
+                onBlur={[Function]}
+                onClick={[Function]}
+                onContextMenu={[Function]}
+                onDragLeave={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyUp={[Function]}
+                onMouseDown={[Function]}
+                onMouseLeave={[Function]}
+                onMouseUp={[Function]}
+                onTouchEnd={[Function]}
+                onTouchMove={[Function]}
+                onTouchStart={[Function]}
+                tabIndex={0}
+                type="button"
+              >
+                New tag type
+              </button>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-    <div
-      className="tss-kiw3z8-bodyContainer"
-    >
-      <ul
-        className="MuiList-root MuiList-padding mui-h4y409-MuiList-root"
+      <div
+        className="tss-kiw3z8-bodyContainer"
       >
-        <li
-          className="MuiListItem-root MuiListItem-gutters MuiListItem-padding mui-vlytkl-MuiListItem-root"
-          disabled={false}
+        <ul
+          className="MuiList-root MuiList-padding mui-h4y409-MuiList-root"
         >
-          No entries
-        </li>
-      </ul>
+          <li
+            className="MuiListItem-root MuiListItem-gutters MuiListItem-padding mui-vlytkl-MuiListItem-root"
+            disabled={false}
+          >
+            No entries
+          </li>
+        </ul>
+      </div>
     </div>
   </div>,
   <div

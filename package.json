@@ -95,7 +95,7 @@
     "helmet": "^5.0.0",
     "joi": "^17.3.0",
     "js-yaml": "^4.1.0",
-    "knex": "1.0.4",
+    "knex": "1.0.7",
     "json-schema-to-ts": "^2.0.0",
     "log4js": "^6.0.0",
     "make-fetch-happen": "^10.1.2",

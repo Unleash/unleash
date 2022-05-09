@@ -118,7 +118,7 @@ class FeatureController extends Controller {
                     tags: ['admin'],
                     operationId: 'addTag',
                     requestBody: createTagRequest,
-                    responses: { 200: tagResponse },
+                    responses: { 201: tagResponse },
                 }),
             ],
         });

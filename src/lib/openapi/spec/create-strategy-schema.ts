@@ -16,15 +16,16 @@ const schema = {
             type: 'array',
             items: { $ref: '#/components/schemas/constraintSchema' },
         },
-        parameters: { $ref: '#/components/schemas/parametersSchema' },
+        parameters: {
+            $ref: '#/components/schemas/parametersSchema',
+        },
     },
     'components/schemas': {
-        constraintSchema: constraintSchema,
-        parametersSchema: parametersSchema,
+        constraintSchema,
+        parametersSchema,
     },
 } as const;
 
 export type CreateStrategySchema = CreateSchemaType<typeof schema>;
 
-const { 'components/schemas': componentsSchemas, ...rest } = schema;
-export const createStrategySchema = createSchemaObject(rest);
+export const createStrategySchema = createSchemaObject(schema);

@@ -17,10 +17,10 @@ const schema = {
         },
     },
     'components/schemas': {
-        tagSchema: tagSchema,
+        tagSchema,
     },
 } as const;
 
 export type TagsResponseSchema = CreateSchemaType<typeof schema>;
-const { 'components/schemas': componentsSchemas, ...rest } = schema;
-export const tagsResponseSchema = createSchemaObject(rest);
+
+export const tagsResponseSchema = createSchemaObject(schema);

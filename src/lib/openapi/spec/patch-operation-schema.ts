@@ -16,6 +16,7 @@ const schema = {
         },
         value: {},
     },
+    'components/schemas': {},
 } as const;
 
 export type PatchOperationSchema = CreateSchemaType<typeof schema>;

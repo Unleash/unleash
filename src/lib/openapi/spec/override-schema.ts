@@ -15,6 +15,7 @@ const schema = {
             },
         },
     },
+    'components/schemas': {},
 } as const;
 
 export type OverrideSchema = CreateSchemaType<typeof schema>;

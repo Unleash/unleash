@@ -23,6 +23,8 @@ import { tagsResponse } from '../../openapi/spec/tags-response';
 import { tagResponse } from '../../openapi/spec/tag-response';
 import { createTagRequest } from '../../openapi/spec/create-tag-request';
 import { emptyResponse } from '../../openapi/spec/emty-response';
+import { TagSchema } from '../../openapi/spec/tag-schema';
+import { TagsResponseSchema } from '../../openapi/spec/tags-response-schema';
 
 const version = 1;
 
@@ -184,12 +186,15 @@ class FeatureController extends Controller {
         res.json(feature).end();
     }
 
-    async listTags(req: Request, res: Response): Promise<void> {
+    async listTags(
+        req: Request,
+        res: Response<TagsResponseSchema>,
+    ): Promise<void> {
         const tags = await this.tagService.listTags(req.params.featureName);
         res.json({ version, tags });
     }
 
-    async addTag(req: IAuthRequest, res: Response): Promise<void> {
+    async addTag(req: IAuthRequest, res: Response<TagSchema>): Promise<void> {
         const { featureName } = req.params;
         const userName = extractUsername(req);
         const tag = await this.tagService.addTag(
@@ -201,14 +206,14 @@ class FeatureController extends Controller {
     }
 
     // TODO
-    async removeTag(req: IAuthRequest, res: Response): Promise<void> {
+    async removeTag(req: IAuthRequest, res: Response<void>): Promise<void> {
         const { featureName, type, value } = req.params;
         const userName = extractUsername(req);
         await this.tagService.removeTag(featureName, { type, value }, userName);
         res.status(200).end();
     }
 
-    async validate(req: Request, res: Response): Promise<void> {
+    async validate(req: Request, res: Response<void>): Promise<void> {
         const { name } = req.body;
 
         await this.service.validateName(name);

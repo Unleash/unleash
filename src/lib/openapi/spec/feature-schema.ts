@@ -48,11 +48,11 @@ const schema = {
         },
     },
     'components/schemas': {
-        strategySchema: strategySchema,
-        variantSchema: variantSchema,
+        strategySchema,
+        variantSchema,
     },
 } as const;
 
 export type FeatureSchema = CreateSchemaType<typeof schema>;
-const { 'components/schemas': componentsSchemas, ...rest } = schema;
-export const featureSchema = createSchemaObject(rest);
+
+export const featureSchema = createSchemaObject(schema);

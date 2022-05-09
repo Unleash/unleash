@@ -60,4 +60,4 @@ If your webhook endpoint uses a custom SSL certificate,
 you will need to start Unleash with the `NODE_EXTRA_CA_CERTS` environment variable set.
 It needs to point to your custom certificate file in pem format.
 
-For more information: [see node documentation](https://nodejs.org/api/cli.html#node_extra_ca_certsfile)
+For more information, see the [official Node.js documentation on setting extra certificate files](https://nodejs.org/api/cli.html#node_extra_ca_certsfile).

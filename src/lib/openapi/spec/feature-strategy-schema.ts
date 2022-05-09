@@ -7,7 +7,6 @@ export const schema = {
     additionalProperties: false,
     required: [
         'id',
-        'name',
         'featureName',
         'strategyName',
         'constraints',
@@ -16,9 +15,6 @@ export const schema = {
     ],
     properties: {
         id: {
-            type: 'string',
-        },
-        name: {
             type: 'string',
         },
         createdAt: {
@@ -37,9 +33,6 @@ export const schema = {
         },
         strategyName: {
             type: 'string',
-        },
-        sortOrder: {
-            type: 'number',
         },
         constraints: {
             type: 'array',

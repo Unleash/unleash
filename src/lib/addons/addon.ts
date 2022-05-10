@@ -1,4 +1,3 @@
-import { Response } from 'node-fetch';
 import fetch from 'make-fetch-happen';
 import { addonDefinitionSchema } from './addon-schema';
 import { IUnleashConfig } from '../types/option';

@@ -80,7 +80,6 @@ test('rewriteHTML swaps out faviconPath if cdnPrefix is set', () => {
 
 test('rewriteHTML sets favicon path to root', () => {
     const result = rewriteHTML(input, '');
-    console.log(result);
     expect(result.includes('<link rel="icon" href="/favicon.ico" />')).toBe(
         true,
     );

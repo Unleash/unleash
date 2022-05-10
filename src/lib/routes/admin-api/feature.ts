@@ -23,7 +23,7 @@ import { serializeDates } from '../../util/serialize-dates';
 import { tagsResponse } from '../../openapi/spec/tags-response';
 import { tagResponse } from '../../openapi/spec/tag-response';
 import { createTagRequest } from '../../openapi/spec/create-tag-request';
-import { emptyResponse } from '../../openapi/spec/emty-response';
+import { emptyResponse } from '../../openapi/spec/empty-response';
 import { TagSchema } from '../../openapi/spec/tag-schema';
 import { TagsResponseSchema } from '../../openapi/spec/tags-response-schema';
 
@@ -191,14 +191,22 @@ class FeatureController extends Controller {
     }
 
     async listTags(
-        req: Request,
+        req: Request<{ featureName: string }, any, any, any>,
         res: Response<TagsResponseSchema>,
     ): Promise<void> {
         const tags = await this.tagService.listTags(req.params.featureName);
         res.json({ version, tags });
     }
 
-    async addTag(req: IAuthRequest, res: Response<TagSchema>): Promise<void> {
+    async addTag(
+        req: IAuthRequest<
+            { featureName: string },
+            Response<TagSchema>,
+            any,
+            any
+        >,
+        res: Response<TagSchema>,
+    ): Promise<void> {
         const { featureName } = req.params;
         const userName = extractUsername(req);
         const tag = await this.tagService.addTag(

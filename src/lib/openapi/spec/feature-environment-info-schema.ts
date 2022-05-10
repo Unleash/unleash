@@ -12,6 +12,9 @@ let schema = {
         environment: {
             type: 'string',
         },
+        type: {
+            type: 'string',
+        },
         enabled: {
             type: 'boolean',
         },

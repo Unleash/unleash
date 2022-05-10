@@ -71,6 +71,8 @@ import {
 import { IContextFieldStore } from 'lib/types/stores/context-field-store';
 import { Saved, Unsaved } from '../types/saved';
 import { UpdateFeatureSchema } from '../openapi/spec/updateFeatureSchema';
+import { StrategySchema } from '../openapi/spec/strategy-schema';
+import { UpdateStrategySchema } from '../openapi/spec/update-strategy-schema';
 
 interface IFeatureContext {
     featureName: string;
@@ -342,10 +344,10 @@ class FeatureToggleService {
 
     async updateStrategy(
         id: string,
-        updates: Partial<IFeatureStrategy>,
+        updates: UpdateStrategySchema,
         context: IFeatureStrategyContext,
         userName: string,
-    ): Promise<Saved<IStrategyConfig>> {
+    ): Promise<Saved<StrategySchema>> {
         const { projectId, environment, featureName } = context;
         const existingStrategy = await this.featureStrategiesStore.get(id);
         this.validateFeatureStrategyContext(existingStrategy, context);
@@ -709,7 +711,7 @@ class FeatureToggleService {
         );
     }
 
-    async getStrategy(strategyId: string): Promise<IStrategyConfig> {
+    async getStrategy(strategyId: string): Promise<StrategySchema> {
         const strategy = await this.featureStrategiesStore.getStrategyById(
             strategyId,
         );

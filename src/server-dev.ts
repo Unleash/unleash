@@ -23,8 +23,7 @@ process.nextTick(async () => {
                     baseUriPath: '',
                     // keepAliveTimeout: 1,
                     gracefulShutdownEnable: true,
-                    cdnPrefix:
-                        'https://cdn.getunleash.io/unleash/v4.11.0-beta.0',
+                    // cdnPrefix: 'https://cdn.getunleash.io/unleash/v4.4.1',
                 },
                 logLevel: LogLevel.debug,
                 enableOAS: true,

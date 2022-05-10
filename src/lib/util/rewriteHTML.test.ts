@@ -18,8 +18,8 @@ const input = `
             href="https://fonts.googleapis.com/css2?family=Sen:wght@400;700;800&display=swap"
             rel="stylesheet"
         />
-      <script type="module" crossorigin src="/assets/index.556ac563.js"></script>
-      <link rel="stylesheet" href="/assets/index.4b6b260a.css">
+      <script type="module" crossorigin src="/static/index.3409c5c6.js"></script>
+      <link rel="stylesheet" href="/static/index.4b6b260a.css">
     </head>
     <body>
         <div id="app"></div>
@@ -46,7 +46,7 @@ test('rewriteHTML substitutes asset paths correctly with baseUriPath', () => {
     const result = rewriteHTML(input, '/hosted');
     expect(
         result.includes(
-            '<script type="module" crossorigin src="/hosted/assets/index',
+            '<script type="module" crossorigin src="/hosted/static/index',
         ),
     ).toBe(true);
 });
@@ -54,7 +54,7 @@ test('rewriteHTML substitutes asset paths correctly with baseUriPath', () => {
 test('rewriteHTML substitutes asset paths correctly without baseUriPath', () => {
     const result = rewriteHTML(input, '');
     expect(
-        result.includes('<script type="module" crossorigin src="/assets/index'),
+        result.includes('<script type="module" crossorigin src="/static/index'),
     ).toBe(true);
 });
 
@@ -62,7 +62,7 @@ test('rewriteHTML substitutes asset paths correctly with cdnPrefix', () => {
     const result = rewriteHTML(input, '', 'https://cdn.getunleash.io/v4.1.0');
     expect(
         result.includes(
-            '<script type="module" crossorigin src="https://cdn.getunleash.io/v4.1.0/assets/index',
+            '<script type="module" crossorigin src="https://cdn.getunleash.io/v4.1.0/static/index',
         ),
     ).toBe(true);
 });

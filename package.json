@@ -47,7 +47,7 @@
     "seed:setup": "ts-node src/test/e2e/seed/segment.seed.ts",
     "seed:serve": "UNLEASH_DATABASE_NAME=unleash_test UNLEASH_DATABASE_SCHEMA=seed yarn run start:dev",
     "clean": "del-cli --force dist",
-    "preversion": "./scripts/check-release.sh $npm_package_version"
+    "preversion": "./scripts/check-release.sh $npm_new_version"
   },
   "jest": {
     "automock": false,

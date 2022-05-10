@@ -2,10 +2,28 @@ import { ITagType } from './stores/tag-type-store';
 import { LogProvider } from '../logger';
 import { IRole } from './stores/access-store';
 import { IUser } from './user';
+import { ParametersSchema } from '../openapi/spec/parameters-schema';
+
+export type Operator =
+    | 'NOT_IN'
+    | 'IN'
+    | 'STR_ENDS_WITH'
+    | 'STR_STARTS_WITH'
+    | 'STR_CONTAINS'
+    | 'NUM_EQ'
+    | 'NUM_GT'
+    | 'NUM_GTE'
+    | 'NUM_LT'
+    | 'NUM_LTE'
+    | 'DATE_AFTER'
+    | 'DATE_BEFORE'
+    | 'SEMVER_EQ'
+    | 'SEMVER_GT'
+    | 'SEMVER_LT';
 
 export interface IConstraint {
     contextName: string;
-    operator: string;
+    operator: Operator;
     values?: string[];
     value?: string;
     inverted?: boolean;
@@ -19,7 +37,7 @@ export interface IStrategyConfig {
     id?: string;
     name: string;
     constraints: IConstraint[];
-    parameters: { [key: string]: string };
+    parameters: ParametersSchema;
     sortOrder?: number;
 }
 export interface IFeatureStrategy {

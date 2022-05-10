@@ -23,7 +23,6 @@ import { CreateFeatureSchema } from '../../../openapi/spec/create-feature-schema
 import { FeatureSchema } from '../../../openapi/spec/feature-schema';
 import { serializeDates } from '../../../util/serialize-dates';
 import { createStrategyRequest } from '../../../openapi/spec/create-strategy-request';
-import { CreateStrategySchema } from '../../../openapi/spec/create-strategy-schema';
 import { StrategySchema } from '../../../openapi/spec/strategy-schema';
 import { featuresResponse } from '../../../openapi/spec/features-response';
 import { featureEnvironmentInfoResponse } from '../../../openapi/spec/feature-environment-info-response';
@@ -38,6 +37,7 @@ import { FeatureEnvironmentInfoSchema } from '../../../openapi/spec/feature-envi
 import { ParametersSchema } from '../../../openapi/spec/parameters-schema';
 import { FeaturesSchema } from '../../../openapi/spec/features-schema';
 import { UpdateFeatureSchema } from '../../../openapi/spec/updateFeatureSchema';
+import { UpdateStrategySchema } from '../../../openapi/spec/update-strategy-schema';
 
 interface FeatureStrategyParams {
     projectId: string;
@@ -504,7 +504,7 @@ export default class ProjectFeaturesController extends Controller {
     }
 
     async updateStrategy(
-        req: IAuthRequest<StrategyIdParams, any, CreateStrategySchema>,
+        req: IAuthRequest<StrategyIdParams, any, UpdateStrategySchema>,
         res: Response<StrategySchema>,
     ): Promise<void> {
         const { strategyId, environment, projectId, featureName } = req.params;

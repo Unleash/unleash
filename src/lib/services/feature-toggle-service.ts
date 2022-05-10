@@ -302,6 +302,7 @@ class FeatureToggleService {
                     projectId,
                     featureName,
                     environment,
+                    name: 'Some-Name',
                 });
 
             const tags = await this.tagStore.getAllTagsForFeature(featureName);

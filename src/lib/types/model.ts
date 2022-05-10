@@ -24,6 +24,7 @@ export interface IStrategyConfig {
 }
 export interface IFeatureStrategy {
     id: string;
+    name: string;
     featureName: string;
     projectId: string;
     environment: string;

@@ -10,8 +10,10 @@ For more detailed information, check out [the React Proxy SDK on GitHub](https:/
 
 ## Installation
 
+Install the React proxy client and the [JavaScript proxy client](proxy-javascript.md) packages:
+
 ```shell npm2yarn
-npm install @unleash/proxy-client-react
+npm install @unleash/proxy-client-react unleash-proxy-client
 ```
 
 ## Initialization

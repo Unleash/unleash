@@ -29,7 +29,10 @@ client.is_enabled("My Toggle")
 Specifying a default value:
 
 ```Python
-client.is_enabled("My Toggle", default_value=True)
+def custom_fallback(feature_name: str, context: dict) -> bool:
+    return True
+         
+client.is_enabled("My Toggle", fallback_function=custom_fallback)
 ```
 
 Supplying application context:

@@ -26,8 +26,10 @@ test('Can successfully update project for all strategies belonging to feature', 
     const newProjectId = 'different-project';
     const oldProjectId = 'default';
     const environment = 'default';
+    const name = 'some-name';
     await featureStrategiesStore.createStrategyFeatureEnv({
         strategyName: 'default',
+        name,
         projectId: oldProjectId,
         environment,
         featureName,
@@ -37,6 +39,7 @@ test('Can successfully update project for all strategies belonging to feature', 
     });
     await featureStrategiesStore.createStrategyFeatureEnv({
         strategyName: 'default',
+        name,
         projectId: oldProjectId,
         environment,
         featureName,

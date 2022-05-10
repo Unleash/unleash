@@ -11,8 +11,8 @@ export const rewriteHTML = (
     result = result.replace(/::faviconPrefix::/gi, faviconPrefix);
 
     result = result.replace(
-        /\/static/gi,
-        `${cdnPrefix || rewriteValue}/static`,
+        /\/assets/gi,
+        `${cdnPrefix || rewriteValue}/assets`,
     );
 
     return result;

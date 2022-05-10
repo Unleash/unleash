@@ -29,7 +29,7 @@ import { featuresResponse } from '../../../openapi/spec/features-response';
 import { featureEnvironmentInfoResponse } from '../../../openapi/spec/feature-environment-info-response';
 import { strategiesResponse } from '../../../openapi/spec/strategies-response';
 import { strategyResponse } from '../../../openapi/spec/strategy-response';
-import { emptyResponse } from '../../../openapi/spec/emty-response';
+import { emptyResponse } from '../../../openapi/spec/empty-response';
 import { updateFeatureRequest } from '../../../openapi/spec/update-feature-request';
 import { patchRequest } from '../../../openapi/spec/patch-request';
 import { updateStrategyRequest } from '../../../openapi/spec/update-strategy-request';

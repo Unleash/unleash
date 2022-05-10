@@ -58,6 +58,15 @@ test('rewriteHTML substitutes asset paths correctly without baseUriPath', () => 
     ).toBe(true);
 });
 
+test('rewriteHTML substitutes asset paths correctly with cdnPrefix', () => {
+    const result = rewriteHTML(input, '', 'https://cdn.getunleash.io/v4.1.0');
+    expect(
+        result.includes(
+            '<script type="module" crossorigin src="https://cdn.getunleash.io/v4.1.0/assets/index',
+        ),
+    ).toBe(true);
+});
+
 test('rewriteHTML swaps out faviconPath if cdnPrefix is set', () => {
     const result = rewriteHTML(input, '', 'https://cdn.getunleash.io/v4.1.0');
     expect(

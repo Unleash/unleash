@@ -14,7 +14,7 @@ import {
     UPDATE_FEATURE_ENVIRONMENT,
     UPDATE_FEATURE_STRATEGY,
 } from '../../../types/permissions';
-import { FeatureToggleDTO, IStrategyConfig } from '../../../types/model';
+import { IStrategyConfig } from '../../../types/model';
 import { extractUsername } from '../../../util/extract-user';
 import { IAuthRequest } from '../../unleash-types';
 import { createFeatureRequest } from '../../../openapi/spec/create-feature-request';
@@ -37,6 +37,7 @@ import { cloneFeatureRequest } from '../../../openapi/spec/clone-feature-request
 import { FeatureEnvironmentInfoSchema } from '../../../openapi/spec/feature-environment-info-schema';
 import { ParametersSchema } from '../../../openapi/spec/parameters-schema';
 import { FeaturesSchema } from '../../../openapi/spec/features-schema';
+import { UpdateFeatureSchema } from '../../../openapi/spec/updateFeatureSchema';
 
 interface FeatureStrategyParams {
     projectId: string;
@@ -379,7 +380,7 @@ export default class ProjectFeaturesController extends Controller {
         req: IAuthRequest<
             { projectId: string; featureName: string },
             any,
-            FeatureToggleDTO,
+            UpdateFeatureSchema,
             any
         >,
         res: Response<FeatureSchema>,

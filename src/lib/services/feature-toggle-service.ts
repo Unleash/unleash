@@ -70,6 +70,7 @@ import {
 } from '../util/validators/constraint-types';
 import { IContextFieldStore } from 'lib/types/stores/context-field-store';
 import { Saved, Unsaved } from '../types/saved';
+import { UpdateFeatureSchema } from '../openapi/spec/updateFeatureSchema';
 
 interface IFeatureContext {
     featureName: string;
@@ -657,7 +658,7 @@ class FeatureToggleService {
 
     async updateFeatureToggle(
         projectId: string,
-        updatedFeature: FeatureToggleDTO,
+        updatedFeature: UpdateFeatureSchema,
         userName: string,
         featureName: string,
     ): Promise<FeatureToggle> {

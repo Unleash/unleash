@@ -33,6 +33,7 @@ export default defineConfig({
     },
     build: {
         outDir: 'build',
+        assetsDir: 'static',
     },
     plugins: [react(), tsconfigPaths(), svgr(), envCompatible()],
 });

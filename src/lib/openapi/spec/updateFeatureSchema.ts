@@ -1,4 +1,5 @@
 import { createSchemaObject, CreateSchemaType } from '../types';
+import { constraintSchema } from './constraint-schema';
 
 const schema = {
     type: 'object',
@@ -25,8 +26,14 @@ const schema = {
         impressionData: {
             type: 'boolean',
         },
+        constraints: {
+            type: 'array',
+            items: { $ref: '#/components/schemas/constraintSchema' },
+        },
     },
-    'components/schemas': {},
+    'components/schemas': {
+        constraintSchema,
+    },
 } as const;
 
 export type UpdateFeatureSchema = CreateSchemaType<typeof schema>;

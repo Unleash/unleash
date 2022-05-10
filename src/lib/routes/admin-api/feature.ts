@@ -201,7 +201,7 @@ class FeatureController extends Controller {
         req: IAuthRequest<
             { featureName: string },
             Response<TagSchema>,
-            any,
+            TagSchema,
             any
         >,
         res: Response<TagSchema>,
@@ -217,14 +217,20 @@ class FeatureController extends Controller {
     }
 
     // TODO
-    async removeTag(req: IAuthRequest, res: Response<void>): Promise<void> {
+    async removeTag(
+        req: IAuthRequest<{ featureName: string; type: string; value: string }>,
+        res: Response<void>,
+    ): Promise<void> {
         const { featureName, type, value } = req.params;
         const userName = extractUsername(req);
         await this.tagService.removeTag(featureName, { type, value }, userName);
         res.status(200).end();
     }
 
-    async validate(req: Request, res: Response<void>): Promise<void> {
+    async validate(
+        req: Request<any, any, { name: string }, any>,
+        res: Response<void>,
+    ): Promise<void> {
         const { name } = req.body;
 
         await this.service.validateName(name);

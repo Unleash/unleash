@@ -15,13 +15,14 @@ const schema = {
             type: 'string',
         },
         stale: {
-            type: 'string',
+            type: 'boolean',
         },
         archived: {
-            type: 'string',
+            type: 'boolean',
         },
         createdAt: {
             type: 'string',
+            format: 'date',
         },
         impressionData: {
             type: 'boolean',

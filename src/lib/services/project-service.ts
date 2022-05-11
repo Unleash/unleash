@@ -6,21 +6,20 @@ import { nameType } from '../routes/util';
 import { projectSchema } from './project-schema';
 import NotFoundError from '../error/notfound-error';
 import {
-    ProjectUserAddedEvent,
-    ProjectUserRemovedEvent,
-    ProjectUserUpdateRoleEvent,
     PROJECT_CREATED,
     PROJECT_DELETED,
     PROJECT_UPDATED,
+    ProjectUserAddedEvent,
+    ProjectUserRemovedEvent,
+    ProjectUserUpdateRoleEvent,
 } from '../types/events';
-import { IUnleashStores } from '../types/stores';
+import { IUnleashStores } from '../types';
 import { IUnleashConfig } from '../types/option';
 import {
     IProject,
     IProjectOverview,
     IProjectWithCount,
     IUserWithRole,
-    FeatureToggle,
     RoleName,
 } from '../types/model';
 import { IEnvironmentStore } from '../types/stores/environment-store';
@@ -38,6 +37,7 @@ import { DEFAULT_PROJECT } from '../types/project';
 import { IFeatureTagStore } from 'lib/types/stores/feature-tag-store';
 import ProjectWithoutOwnerError from '../error/project-without-owner-error';
 import { IUserStore } from 'lib/types/stores/user-store';
+import { FeatureSchema } from '../openapi/spec/feature-schema';
 
 const getCreatedBy = (user: User) => user.email || user.username;
 
@@ -163,7 +163,7 @@ export default class ProjectService {
     }
 
     async checkProjectsCompatibility(
-        feature: FeatureToggle,
+        feature: FeatureSchema,
         newProjectId: string,
     ): Promise<boolean> {
         const featureEnvs = await this.featureEnvironmentStore.getAll({

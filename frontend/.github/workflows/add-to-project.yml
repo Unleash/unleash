@@ -1,0 +1,14 @@
+name: Add new item to project board
+
+on:
+  issues:
+    types:
+      - opened
+  pull_request:
+    types:
+      - opened
+
+jobs:
+  add-to-project:
+      uses: unleash/.github/.github/workflows/add-item-to-project.yml@main
+      secrets: inherit

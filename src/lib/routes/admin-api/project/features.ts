@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { applyPatch, Operation } from 'fast-json-patch';
 import Controller from '../../controller';
 import { IUnleashConfig } from '../../../types/option';
-import { IUnleashServices } from '../../../types/services';
+import { IUnleashServices } from '../../../types';
 import FeatureToggleService from '../../../services/feature-toggle-service';
 import { Logger } from '../../../logger';
 import {
@@ -14,14 +14,12 @@ import {
     UPDATE_FEATURE_ENVIRONMENT,
     UPDATE_FEATURE_STRATEGY,
 } from '../../../types/permissions';
-import { IStrategyConfig } from '../../../types/model';
 import { extractUsername } from '../../../util/extract-user';
 import { IAuthRequest } from '../../unleash-types';
 import { createFeatureRequest } from '../../../openapi/spec/create-feature-request';
 import { featureResponse } from '../../../openapi/spec/feature-response';
 import { CreateFeatureSchema } from '../../../openapi/spec/create-feature-schema';
 import { FeatureSchema } from '../../../openapi/spec/feature-schema';
-import { serializeDates } from '../../../util/serialize-dates';
 import { createStrategyRequest } from '../../../openapi/spec/create-strategy-request';
 import { StrategySchema } from '../../../openapi/spec/strategy-schema';
 import { featuresResponse } from '../../../openapi/spec/features-response';
@@ -38,6 +36,7 @@ import { ParametersSchema } from '../../../openapi/spec/parameters-schema';
 import { FeaturesSchema } from '../../../openapi/spec/features-schema';
 import { UpdateFeatureSchema } from '../../../openapi/spec/updateFeatureSchema';
 import { UpdateStrategySchema } from '../../../openapi/spec/update-strategy-schema';
+import { CreateStrategySchema } from '../../../openapi/spec/create-strategy-schema';
 
 interface FeatureStrategyParams {
     projectId: string;
@@ -348,7 +347,7 @@ export default class ProjectFeaturesController extends Controller {
             replaceGroupId,
             userName,
         );
-        res.status(201).json(serializeDates(created));
+        res.status(201).json(created);
     }
 
     async createFeature(
@@ -364,7 +363,7 @@ export default class ProjectFeaturesController extends Controller {
             userName,
         );
 
-        res.status(201).json(serializeDates(created));
+        res.status(201).json(created);
     }
 
     async getFeature(
@@ -394,7 +393,7 @@ export default class ProjectFeaturesController extends Controller {
             userName,
             featureName,
         );
-        res.status(200).json(serializeDates(created));
+        res.status(200).json(created);
     }
 
     async patchFeature(
@@ -413,7 +412,7 @@ export default class ProjectFeaturesController extends Controller {
             extractUsername(req),
             req.body,
         );
-        res.status(200).json(serializeDates(updated));
+        res.status(200).json(updated);
     }
 
     // TODO: validate projectId
@@ -442,7 +441,7 @@ export default class ProjectFeaturesController extends Controller {
             environment,
             featureName,
         );
-        res.status(200).json(serializeDates(environmentInfo));
+        res.status(200).json(environmentInfo);
     }
 
     async toggleEnvironmentOn(
@@ -476,7 +475,7 @@ export default class ProjectFeaturesController extends Controller {
     }
 
     async addStrategy(
-        req: IAuthRequest<FeatureStrategyParams, any, IStrategyConfig>,
+        req: IAuthRequest<FeatureStrategyParams, any, CreateStrategySchema>,
         res: Response<StrategySchema>,
     ): Promise<void> {
         const { projectId, featureName, environment } = req.params;

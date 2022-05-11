@@ -363,7 +363,7 @@ test('should not change project if feature toggle project does not match current
         description: 'Blah',
     };
 
-    const toggle = { name: 'test-toggle' };
+    const toggle = { name: 'test-toggle', project: project.name };
 
     await projectService.createProject(project, user);
     await featureToggleService.createFeatureToggle(project.id, toggle, user);
@@ -389,7 +389,7 @@ test('should return 404 if no project is found with the project id', async () =>
         description: 'Blah',
     };
 
-    const toggle = { name: 'test-toggle-2' };
+    const toggle = { name: 'test-toggle', project: project.name };
 
     await projectService.createProject(project, user);
     await featureToggleService.createFeatureToggle(project.id, toggle, user);
@@ -419,7 +419,7 @@ test('should fail if user is not authorized', async () => {
         description: 'Blah',
     };
 
-    const toggle = { name: 'test-toggle-3' };
+    const toggle = { name: 'test-toggle', project: project.name };
     const projectAdmin1 = await stores.userStore.insert({
         name: 'test-change-project-creator',
         email: 'admin-change-project@getunleash.io',
@@ -456,7 +456,7 @@ test('should change project when checks pass', async () => {
         description: 'Blah',
     };
 
-    const toggle = { name: 'test-toggle-4' };
+    const toggle = { name: 'test-toggle-4', project: project.name };
 
     await projectService.createProject(project, user);
     await projectService.createProject(projectDestination, user);

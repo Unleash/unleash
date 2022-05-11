@@ -2,16 +2,13 @@ import { Knex } from 'knex';
 import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
 import { Logger, LogProvider } from '../logger';
-import {
-    IFeatureToggleClient,
-    IFeatureToggleQuery,
-    IStrategyConfig,
-} from '../types/model';
+import { IFeatureToggleClient, IFeatureToggleQuery } from '../types/model';
 import { IFeatureToggleClientStore } from '../types/stores/feature-toggle-client-store';
 import { DEFAULT_ENV } from '../util/constants';
 import { PartialDeep } from '../types/partial';
-import { EventEmitter } from 'stream';
 import { IExperimentalOptions } from '../experimental';
+import { StrategySchema } from '../openapi/spec/strategy-schema';
+import EventEmitter from 'events';
 
 export interface FeaturesTable {
     name: string;
@@ -149,7 +146,9 @@ export default class FeatureToggleClientStore
                 strategies: [],
             };
             if (this.isUnseenStrategyRow(feature, r)) {
-                feature.strategies.push(this.rowToStrategy(r));
+                feature.strategies.push(
+                    FeatureToggleClientStore.rowToStrategy(r),
+                );
             }
             if (inlineSegmentConstraints && r.segment_id) {
                 this.addSegmentToStrategy(feature, r);
@@ -176,13 +175,13 @@ export default class FeatureToggleClientStore
         if (!isAdmin) {
             // We should not send strategy IDs from the client API,
             // as this breaks old versions of the Go SDK (at least).
-            this.removeIdsFromStrategies(features);
+            FeatureToggleClientStore.removeIdsFromStrategies(features);
         }
 
         return features;
     }
 
-    private rowToStrategy(row: Record<string, any>): IStrategyConfig {
+    private static rowToStrategy(row: Record<string, any>): StrategySchema {
         return {
             id: row.strategy_id,
             name: row.strategy_name,
@@ -191,7 +190,7 @@ export default class FeatureToggleClientStore
         };
     }
 
-    private removeIdsFromStrategies(features: IFeatureToggleClient[]) {
+    private static removeIdsFromStrategies(features: IFeatureToggleClient[]) {
         features.forEach((feature) => {
             feature.strategies.forEach((strategy) => {
                 delete strategy.id;

@@ -4,7 +4,7 @@ import { IUnleashStores } from '../types';
 import { Logger } from '../logger';
 import NameExistsError from '../error/name-exists-error';
 import { ISegmentStore } from '../types/stores/segment-store';
-import { IFeatureStrategy, ISegment } from '../types/model';
+import { ISegment } from '../types/model';
 import { segmentSchema } from './segment-schema';
 import {
     SEGMENT_CREATED,
@@ -18,6 +18,7 @@ import {
     SEGMENT_VALUES_LIMIT,
     STRATEGY_SEGMENTS_LIMIT,
 } from '../util/segments';
+import { FeatureStrategySchema } from '../openapi/spec/feature-strategy-schema';
 
 export class SegmentService {
     private logger: Logger;
@@ -63,13 +64,13 @@ export class SegmentService {
     }
 
     // Used by unleash-enterprise.
-    async getStrategies(id: number): Promise<IFeatureStrategy[]> {
+    async getStrategies(id: number): Promise<FeatureStrategySchema[]> {
         return this.featureStrategiesStore.getStrategiesBySegment(id);
     }
 
     async create(data: unknown, user: User): Promise<void> {
         const input = await segmentSchema.validateAsync(data);
-        this.validateSegmentValuesLimit(input);
+        SegmentService.validateSegmentValuesLimit(input);
         await this.validateName(input.name);
 
         const segment = await this.segmentStore.create(input, user);
@@ -83,7 +84,7 @@ export class SegmentService {
 
     async update(id: number, data: unknown, user: User): Promise<void> {
         const input = await segmentSchema.validateAsync(data);
-        this.validateSegmentValuesLimit(input);
+        SegmentService.validateSegmentValuesLimit(input);
         const preData = await this.segmentStore.get(id);
 
         if (preData.name !== input.name) {
@@ -147,7 +148,9 @@ export class SegmentService {
         }
     }
 
-    private validateSegmentValuesLimit(segment: Omit<ISegment, 'id'>): void {
+    private static validateSegmentValuesLimit(
+        segment: Omit<ISegment, 'id'>,
+    ): void {
         const limit = SEGMENT_VALUES_LIMIT;
 
         const valuesCount = segment.constraints

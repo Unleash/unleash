@@ -54,13 +54,15 @@ const schema = {
         },
         variants: {
             type: 'array',
-            items: { $ref: '#/components/schemas/variantSchema' },
+            items: {
+                $ref: '#/components/schemas/variantSchema',
+            },
         },
     },
     'components/schemas': {
+        featureEnvironmentInfoSchema,
         strategySchema,
         variantSchema,
-        featureEnvironmentInfoSchema,
     },
 } as const;
 

@@ -13,6 +13,9 @@ export const strategySchemaDefinition = {
         name: {
             type: 'string',
         },
+        sortOrder: {
+            type: 'number',
+        },
         constraints: {
             type: 'array',
             items: { $ref: '#/components/schemas/constraintSchema' },

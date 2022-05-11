@@ -42,7 +42,7 @@ const FeatureOverviewVariants = () => {
     const { patchFeatureVariants } = useFeatureApi();
     const [editVariant, setEditVariant] = useState({});
     const [showAddVariant, setShowAddVariant] = useState(false);
-    const [stickinessOptions, setStickinessOptions] = useState([]);
+    const [stickinessOptions, setStickinessOptions] = useState<string[]>([]);
     const [delDialog, setDelDialog] = useState({ name: '', show: false });
 
     useEffect(() => {
@@ -58,7 +58,6 @@ const FeatureOverviewVariants = () => {
             ...context.filter(c => c.stickiness).map(c => c.name),
         ];
 
-        // @ts-expect-error
         setStickinessOptions(options);
     }, [context]);
 
@@ -102,15 +101,12 @@ const FeatureOverviewVariants = () => {
         const options = stickinessOptions.map(c => ({ key: c, label: c }));
 
         // guard on stickiness being disabled for context field.
-        // @ts-expect-error
         if (!stickinessOptions.includes(value)) {
-            // @ts-expect-error
             options.push({ key: value, label: value });
         }
 
-        // @ts-expect-error
-        const onChange = event => {
-            updateStickiness(event.target.value);
+        const onChange = (value: string) => {
+            updateStickiness(value).catch(console.warn);
         };
 
         return (

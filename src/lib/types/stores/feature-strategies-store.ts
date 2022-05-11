@@ -1,25 +1,22 @@
-import {
-    FeatureToggleWithEnvironment,
-    IFeatureOverview,
-    IFeatureStrategy,
-    IStrategyConfig,
-    IVariant,
-} from '../model';
+import { FeatureToggleWithEnvironment, IFeatureOverview } from '../model';
 import { Store } from './store';
+import { StrategySchema } from '../../openapi/spec/strategy-schema';
+import { VariantSchema } from '../../openapi/spec/variant-schema';
+import { FeatureStrategySchema } from '../../openapi/spec/feature-strategy-schema';
 
 export interface FeatureConfigurationClient {
     name: string;
     type: string;
     enabled: boolean;
     stale: boolean;
-    strategies: IStrategyConfig[];
-    variants: IVariant[];
+    strategies: StrategySchema[];
+    variants: VariantSchema[];
 }
 export interface IFeatureStrategiesStore
-    extends Store<IFeatureStrategy, string> {
+    extends Store<FeatureStrategySchema, string> {
     createStrategyFeatureEnv(
-        strategyConfig: Omit<IFeatureStrategy, 'id' | 'createdAt'>,
-    ): Promise<IFeatureStrategy>;
+        strategyConfig: Omit<FeatureStrategySchema, 'id' | 'createdAt'>,
+    ): Promise<FeatureStrategySchema>;
     removeAllStrategiesForFeatureEnv(
         featureName: string,
         environment: string,
@@ -28,7 +25,7 @@ export interface IFeatureStrategiesStore
         projectId: string,
         featureName: string,
         environment: string,
-    ): Promise<IFeatureStrategy[]>;
+    ): Promise<FeatureStrategySchema[]>;
     getFeatureToggleWithEnvs(
         featureName: string,
         archived?: boolean,
@@ -37,11 +34,11 @@ export interface IFeatureStrategiesStore
         projectId: string,
         archived: boolean,
     ): Promise<IFeatureOverview[]>;
-    getStrategyById(id: string): Promise<IFeatureStrategy>;
+    getStrategyById(id: string): Promise<FeatureStrategySchema>;
     updateStrategy(
         id: string,
-        updates: Partial<IFeatureStrategy>,
-    ): Promise<IFeatureStrategy>;
+        updates: Partial<FeatureStrategySchema>,
+    ): Promise<FeatureStrategySchema>;
     deleteConfigurationsForProjectAndEnvironment(
         projectId: String,
         environment: String,
@@ -50,5 +47,5 @@ export interface IFeatureStrategiesStore
         featureName: string,
         newProjectId: string,
     ): Promise<void>;
-    getStrategiesBySegment(segmentId: number): Promise<IFeatureStrategy[]>;
+    getStrategiesBySegment(segmentId: number): Promise<FeatureStrategySchema[]>;
 }

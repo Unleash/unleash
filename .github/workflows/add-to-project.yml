@@ -10,5 +10,5 @@ on:
 
 jobs:
   add-to-project:
-      uses: unleash/.github/.github/workflows/add-item-to-project.yml
+      uses: unleash/.github/.github/workflows/add-item-to-project.yml@main
       secrets: inherit

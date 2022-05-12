@@ -9,12 +9,12 @@ import {
     FeatureToggleWithEnvironment,
     IEnvironmentOverview,
     IFeatureOverview,
+    IStrategyConfig,
+    IConstraint,
+    IFeatureStrategy,
 } from '../types/model';
 import { IFeatureStrategiesStore } from '../types/stores/feature-strategies-store';
 import { PartialSome } from '../types/partial';
-import { FeatureStrategySchema } from '../openapi/spec/feature-strategy-schema';
-import { ConstraintSchema } from '../openapi/spec/constraint-schema';
-import { StrategySchema } from '../openapi/spec/strategy-schema';
 
 const COLUMNS = [
     'id',
@@ -62,7 +62,7 @@ function ensureStringValues(data: object): { [key: string]: string } {
     return Object.fromEntries(stringEntries);
 }
 
-function mapRow(row: IFeatureStrategiesTable): FeatureStrategySchema {
+function mapRow(row: IFeatureStrategiesTable): IFeatureStrategy {
     return {
         id: row.id,
         name: 'Some-Name',
@@ -71,13 +71,13 @@ function mapRow(row: IFeatureStrategiesTable): FeatureStrategySchema {
         environment: row.environment,
         strategyName: row.strategy_name,
         parameters: ensureStringValues(row.parameters),
-        constraints: (row.constraints as unknown as ConstraintSchema[]) || [],
+        constraints: (row.constraints as unknown as IConstraint[]) || [],
         createdAt: row.created_at,
         sortOrder: row.sort_order,
     };
 }
 
-function mapInput(input: FeatureStrategySchema): IFeatureStrategiesTable {
+function mapInput(input: IFeatureStrategy): IFeatureStrategiesTable {
     return {
         id: input.id,
         feature_name: input.featureName,
@@ -98,7 +98,7 @@ interface StrategyUpdate {
 }
 
 function mapStrategyUpdate(
-    input: Partial<StrategySchema>,
+    input: Partial<IStrategyConfig>,
 ): Partial<StrategyUpdate> {
     const update: Partial<StrategyUpdate> = {};
     if (input.name !== null) {
@@ -147,7 +147,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         return present;
     }
 
-    async get(key: string): Promise<FeatureStrategySchema> {
+    async get(key: string): Promise<IFeatureStrategy> {
         const row = await this.db(T.featureStrategies)
             .where({ id: key })
             .first();
@@ -160,8 +160,8 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
     }
 
     async createStrategyFeatureEnv(
-        strategyConfig: PartialSome<FeatureStrategySchema, 'id' | 'createdAt'>,
-    ): Promise<FeatureStrategySchema> {
+        strategyConfig: PartialSome<IFeatureStrategy, 'id' | 'createdAt'>,
+    ): Promise<IFeatureStrategy> {
         const strategyRow = mapInput({ id: uuidv4(), ...strategyConfig });
         const rows = await this.db<IFeatureStrategiesTable>(T.featureStrategies)
             .insert(strategyRow)
@@ -178,7 +178,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             .del();
     }
 
-    async getAll(): Promise<FeatureStrategySchema[]> {
+    async getAll(): Promise<IFeatureStrategy[]> {
         const stopTimer = this.timer('getAll');
         const rows = await this.db
             .select(COLUMNS)
@@ -192,7 +192,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         projectId: string,
         featureName: string,
         environment: string,
-    ): Promise<FeatureStrategySchema[]> {
+    ): Promise<IFeatureStrategy[]> {
         const stopTimer = this.timer('getForFeature');
         const rows = await this.db<IFeatureStrategiesTable>(T.featureStrategies)
             .where({
@@ -384,7 +384,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         return [];
     }
 
-    async getStrategyById(id: string): Promise<FeatureStrategySchema> {
+    async getStrategyById(id: string): Promise<IFeatureStrategy> {
         const strat = await this.db(T.featureStrategies).where({ id }).first();
         if (strat) {
             return mapRow(strat);
@@ -394,8 +394,8 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
 
     async updateStrategy(
         id: string,
-        updates: Partial<FeatureStrategySchema>,
-    ): Promise<FeatureStrategySchema> {
+        updates: Partial<IFeatureStrategy>,
+    ): Promise<IFeatureStrategy> {
         const update = mapStrategyUpdate(updates);
         const row = await this.db<IFeatureStrategiesTable>(T.featureStrategies)
             .where({ id })
@@ -407,7 +407,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
     private static getAdminStrategy(
         r: any,
         includeId: boolean = true,
-    ): StrategySchema {
+    ): IStrategyConfig {
         const strategy = {
             name: r.strategy_name,
             constraints: r.constraints || [],
@@ -441,7 +441,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
 
     async getStrategiesBySegment(
         segmentId: number,
-    ): Promise<FeatureStrategySchema[]> {
+    ): Promise<IFeatureStrategy[]> {
         const stopTimer = this.timer('getStrategiesBySegment');
         const rows = await this.db
             .select(this.prefixColumns())

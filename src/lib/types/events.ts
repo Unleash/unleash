@@ -1,7 +1,4 @@
-import { StrategySchema } from '../openapi/spec/strategy-schema';
-import { VariantSchema } from '../openapi/spec/variant-schema';
-import { FeatureSchema } from '../openapi/spec/feature-schema';
-import { TagSchema } from '../openapi/spec/tag-schema';
+import { FeatureToggle, IStrategyConfig, ITag, IVariant } from './model';
 
 export const APPLICATION_CREATED = 'application-created';
 
@@ -78,7 +75,7 @@ export interface IBaseEvent {
     featureName?: string;
     data?: any;
     preData?: any;
-    tags?: TagSchema[];
+    tags?: ITag[];
 }
 
 export interface IEvent extends IBaseEvent {
@@ -91,9 +88,9 @@ class BaseEvent implements IBaseEvent {
 
     readonly createdBy: string;
 
-    readonly tags: TagSchema[];
+    readonly tags: ITag[];
 
-    constructor(type: string, createdBy: string, tags: TagSchema[] = []) {
+    constructor(type: string, createdBy: string, tags: ITag[] = []) {
         this.type = type;
         this.createdBy = createdBy;
         this.tags = tags;
@@ -110,7 +107,7 @@ export class FeatureStaleEvent extends BaseEvent {
         project: string;
         featureName: string;
         createdBy: string;
-        tags: TagSchema[];
+        tags: ITag[];
     }) {
         super(
             p.stale ? FEATURE_STALE_ON : FEATURE_STALE_OFF,
@@ -135,7 +132,7 @@ export class FeatureEnvironmentEvent extends BaseEvent {
         featureName: string;
         environment: string;
         createdBy: string;
-        tags: TagSchema[];
+        tags: ITag[];
     }) {
         super(
             p.enabled
@@ -155,17 +152,17 @@ export class FeatureVariantEvent extends BaseEvent {
 
     readonly featureName: string;
 
-    readonly data: { variants: VariantSchema[] };
+    readonly data: { variants: IVariant[] };
 
-    readonly preData: { variants: VariantSchema[] };
+    readonly preData: { variants: IVariant[] };
 
     constructor(p: {
         project: string;
         featureName: string;
         createdBy: string;
-        tags: TagSchema[];
-        newVariants: VariantSchema[];
-        oldVariants: VariantSchema[];
+        tags: ITag[];
+        newVariants: IVariant[];
+        oldVariants: IVariant[];
     }) {
         super(FEATURE_VARIANTS_UPDATED, p.createdBy, p.tags);
         this.project = p.project;
@@ -190,7 +187,7 @@ export class FeatureChangeProjectEvent extends BaseEvent {
         newProject: string;
         featureName: string;
         createdBy: string;
-        tags: TagSchema[];
+        tags: ITag[];
     }) {
         super(FEATURE_PROJECT_CHANGE, p.createdBy, p.tags);
         const { newProject, oldProject, featureName } = p;
@@ -205,14 +202,14 @@ export class FeatureCreatedEvent extends BaseEvent {
 
     readonly featureName: string;
 
-    readonly data: FeatureSchema;
+    readonly data: FeatureToggle;
 
     constructor(p: {
         project: string;
         featureName: string;
         createdBy: string;
-        data: FeatureSchema;
-        tags: TagSchema[];
+        data: FeatureToggle;
+        tags: ITag[];
     }) {
         super(FEATURE_CREATED, p.createdBy, p.tags);
         const { project, featureName, data } = p;
@@ -231,7 +228,7 @@ export class FeatureArchivedEvent extends BaseEvent {
         project: string;
         featureName: string;
         createdBy: string;
-        tags: TagSchema[];
+        tags: ITag[];
     }) {
         super(FEATURE_ARCHIVED, p.createdBy, p.tags);
         const { project, featureName } = p;
@@ -249,7 +246,7 @@ export class FeatureRevivedEvent extends BaseEvent {
         project: string;
         featureName: string;
         createdBy: string;
-        tags: TagSchema[];
+        tags: ITag[];
     }) {
         super(FEATURE_REVIVED, p.createdBy, p.tags);
         const { project, featureName } = p;
@@ -263,14 +260,14 @@ export class FeatureDeletedEvent extends BaseEvent {
 
     readonly featureName: string;
 
-    readonly preData: FeatureSchema;
+    readonly preData: FeatureToggle;
 
     constructor(p: {
         project: string;
         featureName: string;
-        preData: FeatureSchema;
+        preData: FeatureToggle;
         createdBy: string;
-        tags: TagSchema[];
+        tags: ITag[];
     }) {
         super(FEATURE_DELETED, p.createdBy, p.tags);
         const { project, featureName, preData } = p;
@@ -285,17 +282,17 @@ export class FeatureMetadataUpdateEvent extends BaseEvent {
 
     readonly featureName: string;
 
-    readonly data: FeatureSchema;
+    readonly data: FeatureToggle;
 
-    readonly preData: FeatureSchema;
+    readonly preData: FeatureToggle;
 
     constructor(p: {
         featureName: string;
         createdBy: string;
         project: string;
-        data: FeatureSchema;
-        preData: FeatureSchema;
-        tags: TagSchema[];
+        data: FeatureToggle;
+        preData: FeatureToggle;
+        tags: ITag[];
     }) {
         super(FEATURE_METADATA_UPDATED, p.createdBy, p.tags);
         const { project, featureName, data, preData } = p;
@@ -313,15 +310,15 @@ export class FeatureStrategyAddEvent extends BaseEvent {
 
     readonly environment: string;
 
-    readonly data: StrategySchema;
+    readonly data: IStrategyConfig;
 
     constructor(p: {
         project: string;
         featureName: string;
         environment: string;
         createdBy: string;
-        data: StrategySchema;
-        tags: TagSchema[];
+        data: IStrategyConfig;
+        tags: ITag[];
     }) {
         super(FEATURE_STRATEGY_ADD, p.createdBy, p.tags);
         const { project, featureName, environment, data } = p;
@@ -339,18 +336,18 @@ export class FeatureStrategyUpdateEvent extends BaseEvent {
 
     readonly environment: string;
 
-    readonly data: StrategySchema;
+    readonly data: IStrategyConfig;
 
-    readonly preData: StrategySchema;
+    readonly preData: IStrategyConfig;
 
     constructor(p: {
         project: string;
         featureName: string;
         environment: string;
         createdBy: string;
-        data: StrategySchema;
-        preData: StrategySchema;
-        tags: TagSchema[];
+        data: IStrategyConfig;
+        preData: IStrategyConfig;
+        tags: ITag[];
     }) {
         super(FEATURE_STRATEGY_UPDATE, p.createdBy, p.tags);
         const { project, featureName, environment, data, preData } = p;
@@ -369,15 +366,15 @@ export class FeatureStrategyRemoveEvent extends BaseEvent {
 
     readonly environment: string;
 
-    readonly preData: StrategySchema;
+    readonly preData: IStrategyConfig;
 
     constructor(p: {
         project: string;
         featureName: string;
         environment: string;
         createdBy: string;
-        preData: StrategySchema;
-        tags: TagSchema[];
+        preData: IStrategyConfig;
+        tags: ITag[];
     }) {
         super(FEATURE_STRATEGY_REMOVE, p.createdBy, p.tags);
         const { project, featureName, environment, preData } = p;

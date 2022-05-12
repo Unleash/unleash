@@ -23,20 +23,20 @@ from UnleashClient import UnleashClient
 A check of a simple toggle:
 
 ```python
-client.is_enabled("My Toggle")
+client.is_enabled("my_toggle")
 ```
 
 Specifying a default value:
 
 ```python
-client.is_enabled("My Toggle", default_value=True)
+client.is_enabled("my_toggle", default_value=True)
 ```
 
 Supplying application context:
 
 ```python
 app_context = {"userId": "test@email.com"}
-client.is_enabled("User ID Toggle", app_context)
+client.is_enabled("user_id_toggle", app_context)
 ```
 
 Supplying a fallback function:
@@ -45,7 +45,7 @@ Supplying a fallback function:
 def custom_fallback(feature_name: str, context: dict) -> bool:
     return True
 
-client.is_enabled("My Toggle", fallback_function=custom_fallback)
+client.is_enabled("my_toggle", fallback_function=custom_fallback)
 ```
 
 - Must accept the feature name and context as an argument.
@@ -59,7 +59,7 @@ Checking for a variant:
 ```python
 context = {'userId': '2'}  # Context must have userId, sessionId, or remoteAddr.  If none are present, distribution will be random.
 
-variant = client.get_variant("MyvariantToggle", context)
+variant = client.get_variant("my_variant_toggle", context)
 
 print(variant)
 > {

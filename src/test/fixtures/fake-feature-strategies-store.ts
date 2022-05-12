@@ -4,11 +4,11 @@ import {
     IFeatureOverview,
     IFeatureToggleClient,
     IFeatureToggleQuery,
+    IFeatureStrategy,
+    FeatureToggle,
 } from '../../lib/types/model';
 import NotFoundError from '../../lib/error/notfound-error';
 import { IFeatureStrategiesStore } from '../../lib/types/stores/feature-strategies-store';
-import { FeatureStrategySchema } from '../../lib/openapi/spec/feature-strategy-schema';
-import { FeatureSchema } from '../../lib/openapi/spec/feature-schema';
 
 interface ProjectEnvironment {
     projectName: string;
@@ -22,13 +22,13 @@ export default class FakeFeatureStrategiesStore
 
     projectToEnvironment: ProjectEnvironment[] = [];
 
-    featureStrategies: FeatureStrategySchema[] = [];
+    featureStrategies: IFeatureStrategy[] = [];
 
-    featureToggles: FeatureSchema[] = [];
+    featureToggles: FeatureToggle[] = [];
 
     async createStrategyFeatureEnv(
-        strategyConfig: Omit<FeatureStrategySchema, 'id' | 'createdAt'>,
-    ): Promise<FeatureStrategySchema> {
+        strategyConfig: Omit<IFeatureStrategy, 'id' | 'createdAt'>,
+    ): Promise<IFeatureStrategy> {
         const newStrat = { ...strategyConfig, id: randomUUID() };
         this.featureStrategies.push(newStrat);
         return Promise.resolve(newStrat);
@@ -54,7 +54,7 @@ export default class FakeFeatureStrategiesStore
         return this.featureStrategies.some((s) => s.id === id);
     }
 
-    async get(id: string): Promise<FeatureStrategySchema> {
+    async get(id: string): Promise<IFeatureStrategy> {
         return this.featureStrategies.find((s) => s.id === id);
     }
 
@@ -97,7 +97,7 @@ export default class FakeFeatureStrategiesStore
         return Promise.resolve();
     }
 
-    async getAll(): Promise<FeatureStrategySchema[]> {
+    async getAll(): Promise<IFeatureStrategy[]> {
         return Promise.resolve(this.featureStrategies);
     }
 
@@ -105,7 +105,7 @@ export default class FakeFeatureStrategiesStore
         project_name: string,
         feature_name: string,
         environment: string,
-    ): Promise<FeatureStrategySchema[]> {
+    ): Promise<IFeatureStrategy[]> {
         const rows = this.featureStrategies.filter(
             (fS) =>
                 fS.projectId === project_name &&
@@ -174,7 +174,7 @@ export default class FakeFeatureStrategiesStore
         return Promise.resolve(clientRows);
     }
 
-    async getStrategyById(id: string): Promise<FeatureStrategySchema> {
+    async getStrategyById(id: string): Promise<IFeatureStrategy> {
         const strat = this.featureStrategies.find((fS) => fS.id === id);
         if (strat) {
             return Promise.resolve(strat);
@@ -223,8 +223,8 @@ export default class FakeFeatureStrategiesStore
 
     async updateStrategy(
         id: string,
-        updates: Partial<FeatureStrategySchema>,
-    ): Promise<FeatureStrategySchema> {
+        updates: Partial<IFeatureStrategy>,
+    ): Promise<IFeatureStrategy> {
         this.featureStrategies = this.featureStrategies.map((f) => {
             if (f.id === id) {
                 return { ...f, ...updates };
@@ -275,7 +275,7 @@ export default class FakeFeatureStrategiesStore
         return Promise.resolve(enabled);
     }
 
-    getStrategiesBySegment(): Promise<FeatureStrategySchema[]> {
+    getStrategiesBySegment(): Promise<IFeatureStrategy[]> {
         throw new Error('Method not implemented.');
     }
 }

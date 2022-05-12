@@ -37,6 +37,7 @@ import { FeaturesSchema } from '../../../openapi/spec/features-schema';
 import { UpdateFeatureSchema } from '../../../openapi/spec/updateFeatureSchema';
 import { UpdateStrategySchema } from '../../../openapi/spec/update-strategy-schema';
 import { CreateStrategySchema } from '../../../openapi/spec/create-strategy-schema';
+import StrategyMapper from '../../../openapi/mappers/strategy.mapper';
 
 interface FeatureStrategyParams {
     projectId: string;
@@ -71,6 +72,8 @@ type ProjectFeaturesServices = Pick<
 
 export default class ProjectFeaturesController extends Controller {
     private featureService: FeatureToggleService;
+
+    private strategyMapper: StrategyMapper;
 
     private readonly logger: Logger;
 
@@ -481,7 +484,7 @@ export default class ProjectFeaturesController extends Controller {
         const { projectId, featureName, environment } = req.params;
         const userName = extractUsername(req);
         const featureStrategy = await this.featureService.createStrategy(
-            req.body,
+            this.strategyMapper.mapInput(req.body),
             { environment, projectId, featureName },
             userName,
         );

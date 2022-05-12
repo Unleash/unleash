@@ -3,14 +3,12 @@ import {
     IFeatureToggleStore,
 } from '../../lib/types/stores/feature-toggle-store';
 import NotFoundError from '../../lib/error/notfound-error';
-import { FeatureSchema } from 'lib/openapi/spec/feature-schema';
-import { UpdateFeatureSchema } from '../../lib/openapi/spec/updateFeatureSchema';
-import { VariantSchema } from '../../lib/openapi/spec/variant-schema';
+import { FeatureToggle, FeatureToggleDTO, IVariant } from 'lib/types/model';
 
 export default class FakeFeatureToggleStore implements IFeatureToggleStore {
-    features: FeatureSchema[] = [];
+    features: FeatureToggle[] = [];
 
-    async archive(featureName: string): Promise<FeatureSchema> {
+    async archive(featureName: string): Promise<FeatureToggle> {
         const feature = this.features.find((f) => f.name === featureName);
         if (feature) {
             feature.archived = true;
@@ -47,8 +45,8 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         };
     }
 
-    async create(project: string, data: FeatureSchema): Promise<FeatureSchema> {
-        const inserted: FeatureSchema = { ...data, project };
+    async create(project: string, data: FeatureToggle): Promise<FeatureToggle> {
+        const inserted: FeatureToggle = { ...data, project };
         this.features.push(inserted);
         return inserted;
     }
@@ -70,7 +68,7 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         return this.features.some((f) => f.name === key);
     }
 
-    async get(key: string): Promise<FeatureSchema> {
+    async get(key: string): Promise<FeatureToggle> {
         const feature = this.features.find((f) => f.name === key);
         if (feature) {
             return feature;
@@ -78,19 +76,19 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         throw new NotFoundError(`Could not find feature with name ${key}`);
     }
 
-    async getAll(): Promise<FeatureSchema[]> {
+    async getAll(): Promise<FeatureToggle[]> {
         return this.features.filter((f) => !f.archived);
     }
 
-    async getFeatureMetadata(name: string): Promise<FeatureSchema> {
+    async getFeatureMetadata(name: string): Promise<FeatureToggle> {
         return this.get(name);
     }
 
-    async getBy(query: Partial<IFeatureToggleQuery>): Promise<FeatureSchema[]> {
+    async getBy(query: Partial<IFeatureToggleQuery>): Promise<FeatureToggle[]> {
         return this.features.filter(this.getFilterQuery(query));
     }
 
-    async revive(featureName: string): Promise<FeatureSchema> {
+    async revive(featureName: string): Promise<FeatureToggle> {
         const revive = this.features.find((f) => f.name === featureName);
         if (revive) {
             revive.archived = false;
@@ -100,8 +98,8 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
 
     async update(
         project: string,
-        data: UpdateFeatureSchema,
-    ): Promise<FeatureSchema> {
+        data: FeatureToggleDTO,
+    ): Promise<FeatureToggle> {
         const exists = await this.exists(data.name);
         if (exists) {
             const id = this.features.findIndex((f) => f.name === data.name);
@@ -123,16 +121,16 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         });
     }
 
-    async getVariants(featureName: string): Promise<VariantSchema[]> {
+    async getVariants(featureName: string): Promise<IVariant[]> {
         const feature = await this.get(featureName);
-        return feature.variants as VariantSchema[];
+        return feature.variants as IVariant[];
     }
 
     async saveVariants(
         project: string,
         featureName: string,
-        newVariants: VariantSchema[],
-    ): Promise<FeatureSchema> {
+        newVariants: IVariant[],
+    ): Promise<FeatureToggle> {
         const feature = await this.get(featureName);
         feature.variants = newVariants;
         return feature;

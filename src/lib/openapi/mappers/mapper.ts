@@ -1,3 +1,5 @@
-export interface Mapper<INPUT, OUTPUT> {
-    map(input: INPUT): OUTPUT;
+export interface Mapper<T, S, I extends Partial<T>> {
+    map(input: T): S;
+    inverseMap(input: S): T;
+    mapInput(input: I): S;
 }

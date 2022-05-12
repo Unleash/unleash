@@ -36,7 +36,7 @@ export interface IStrategyConfig {
     id?: string;
     name: string;
     constraints: IConstraint[];
-    parameters: Record<string, string>;
+    parameters: { [key: string]: string };
     sortOrder?: number;
 }
 export interface IFeatureStrategy {

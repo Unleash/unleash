@@ -36,10 +36,18 @@ import { IProjectStore } from '../types/stores/project-store';
 import { IFeatureTagStore } from '../types/stores/feature-tag-store';
 import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
 import {
+    FeatureToggle,
+    FeatureToggleDTO,
     FeatureToggleLegacy,
     FeatureToggleWithEnvironment,
+    IConstraint,
+    IEnvironmentDetail,
+    IFeatureEnvironmentInfo,
     IFeatureOverview,
+    IFeatureStrategy,
     IFeatureToggleQuery,
+    IStrategyConfig,
+    IVariant,
     WeightType,
 } from '../types/model';
 import { IFeatureEnvironmentStore } from '../types/stores/feature-environment-store';
@@ -61,17 +69,7 @@ import {
     validateString,
 } from '../util/validators/constraint-types';
 import { IContextFieldStore } from 'lib/types/stores/context-field-store';
-import { Saved } from '../types/saved';
-import { UpdateFeatureSchema } from '../openapi/spec/updateFeatureSchema';
-import { StrategySchema } from '../openapi/spec/strategy-schema';
-import { UpdateStrategySchema } from '../openapi/spec/update-strategy-schema';
-import { FeatureSchema } from '../openapi/spec/feature-schema';
-import { FeatureStrategySchema } from '../openapi/spec/feature-strategy-schema';
-import { ConstraintSchema } from '../openapi/spec/constraint-schema';
-import { VariantSchema } from '../openapi/spec/variant-schema';
-import { FeatureEnvironmentInfoSchema } from '../openapi/spec/feature-environment-info-schema';
-import { CreateFeatureSchema } from '../openapi/spec/create-feature-schema';
-import { CreateStrategySchema } from '../openapi/spec/create-strategy-schema';
+import { Saved, Unsaved } from '../types/saved';
 
 interface IFeatureContext {
     featureName: string;
@@ -152,7 +150,7 @@ class FeatureToggleService {
     }
 
     validateFeatureStrategyContext(
-        strategy: FeatureStrategySchema,
+        strategy: IFeatureStrategy,
         { featureName, projectId }: IFeatureStrategyContext,
     ): void {
         if (strategy.projectId !== projectId) {
@@ -169,8 +167,8 @@ class FeatureToggleService {
     }
 
     async validateConstraints(
-        constraints: ConstraintSchema[],
-    ): Promise<ConstraintSchema[]> {
+        constraints: IConstraint[],
+    ): Promise<IConstraint[]> {
         const validations = constraints.map((constraint) => {
             return this.validateConstraint(constraint);
         });
@@ -178,9 +176,7 @@ class FeatureToggleService {
         return Promise.all(validations);
     }
 
-    async validateConstraint(
-        input: ConstraintSchema,
-    ): Promise<ConstraintSchema> {
+    async validateConstraint(input: IConstraint): Promise<IConstraint> {
         const constraint = await constraintSchema.validateAsync(input);
         const { operator } = constraint;
         const contextDefinition = await this.contextFieldStore.get(
@@ -234,7 +230,7 @@ class FeatureToggleService {
         featureName: string,
         createdBy: string,
         operations: Operation[],
-    ): Promise<FeatureSchema> {
+    ): Promise<FeatureToggle> {
         const featureToggle = await this.getFeatureMetadata(featureName);
 
         if (operations.some((op) => op.path.indexOf('/variants') >= 0)) {
@@ -272,21 +268,21 @@ class FeatureToggleService {
     }
 
     featureStrategyToPublic(
-        featureStrategy: FeatureStrategySchema,
-    ): Saved<StrategySchema> {
+        featureStrategy: IFeatureStrategy,
+    ): Saved<IStrategyConfig> {
         return {
             id: featureStrategy.id,
             name: featureStrategy.strategyName,
-            constraints: featureStrategy.constraints || [],
+            constraints: featureStrategy.constraints || ([] as any),
             parameters: featureStrategy.parameters,
         };
     }
 
     async createStrategy(
-        strategyConfig: CreateStrategySchema,
+        strategyConfig: Unsaved<IStrategyConfig>,
         context: IFeatureStrategyContext,
         createdBy: string,
-    ): Promise<Saved<StrategySchema>> {
+    ): Promise<Saved<IStrategyConfig>> {
         const { featureName, projectId, environment } = context;
         await this.validateFeatureContext(context);
 
@@ -300,13 +296,14 @@ class FeatureToggleService {
             const newFeatureStrategy =
                 await this.featureStrategiesStore.createStrategyFeatureEnv({
                     strategyName: strategyConfig.name,
-                    constraints: strategyConfig.constraints,
+                    name: strategyConfig.name,
+                    constraints:
+                        strategyConfig.constraints as unknown as IConstraint[],
                     parameters: strategyConfig.parameters,
                     sortOrder: strategyConfig.sortOrder,
                     projectId,
                     featureName,
                     environment,
-                    name: 'Some-Name',
                 });
 
             const tags = await this.tagStore.getAllTagsForFeature(featureName);
@@ -317,7 +314,7 @@ class FeatureToggleService {
                     featureName,
                     createdBy,
                     environment,
-                    data: strategy,
+                    data: strategy as unknown as IStrategyConfig,
                     tags,
                 }),
             );
@@ -345,10 +342,10 @@ class FeatureToggleService {
 
     async updateStrategy(
         id: string,
-        updates: UpdateStrategySchema,
+        updates: Partial<IFeatureStrategy>,
         context: IFeatureStrategyContext,
         userName: string,
-    ): Promise<Saved<StrategySchema>> {
+    ): Promise<Saved<IStrategyConfig>> {
         const { projectId, environment, featureName } = context;
         const existingStrategy = await this.featureStrategiesStore.get(id);
         this.validateFeatureStrategyContext(existingStrategy, context);
@@ -391,7 +388,7 @@ class FeatureToggleService {
         value: string | number,
         context: IFeatureStrategyContext,
         userName: string,
-    ): Promise<StrategySchema> {
+    ): Promise<IStrategyConfig> {
         const { projectId, environment, featureName } = context;
 
         const existingStrategy = await this.featureStrategiesStore.get(id);
@@ -429,7 +426,7 @@ class FeatureToggleService {
      * }
      * @param id - strategy id
      * @param context - Which context does this strategy live in (projectId, featureName, environment)
-     * @param createdBy - strategy created by
+     * @param createdBy
      */
     async deleteStrategy(
         id: string,
@@ -467,7 +464,7 @@ class FeatureToggleService {
         project: string,
         featureName: string,
         environment: string = DEFAULT_ENV,
-    ): Promise<StrategySchema[]> {
+    ): Promise<IStrategyConfig[]> {
         const hasEnv = await this.featureEnvironmentStore.featureHasEnvironment(
             environment,
             featureName,
@@ -512,11 +509,11 @@ class FeatureToggleService {
      * @param featureName
      * @return The list of variants
      */
-    async getVariants(featureName: string): Promise<VariantSchema[]> {
+    async getVariants(featureName: string): Promise<IVariant[]> {
         return this.featureToggleStore.getVariants(featureName);
     }
 
-    async getFeatureMetadata(featureName: string): Promise<FeatureSchema> {
+    async getFeatureMetadata(featureName: string): Promise<FeatureToggle> {
         return this.featureToggleStore.get(featureName);
     }
 
@@ -539,7 +536,7 @@ class FeatureToggleService {
     async getFeatureToggles(
         query?: IFeatureToggleQuery,
         archived: boolean = false,
-    ): Promise<FeatureSchema[]> {
+    ): Promise<FeatureToggle[]> {
         return this.featureToggleClientStore.getAdmin(query, archived);
     }
 
@@ -564,10 +561,10 @@ class FeatureToggleService {
 
     async createFeatureToggle(
         projectId: string,
-        value: CreateFeatureSchema,
+        value: FeatureToggleDTO,
         createdBy: string,
         isValidated: boolean = false,
-    ): Promise<FeatureSchema> {
+    ): Promise<FeatureToggle> {
         this.logger.info(`${createdBy} creates feature toggle ${value.name}`);
         await this.validateName(value.name);
         const exists = await this.projectStore.hasProject(projectId);
@@ -611,7 +608,7 @@ class FeatureToggleService {
         newFeatureName: string,
         replaceGroupId: boolean = true, // eslint-disable-line
         userName: string,
-    ): Promise<FeatureSchema> {
+    ): Promise<FeatureToggle> {
         this.logger.info(
             `${userName} clones feature toggle ${featureName} to ${newFeatureName}`,
         );
@@ -632,8 +629,8 @@ class FeatureToggleService {
         );
 
         const createStrategies = [];
-        newToggle.environments.forEach((e: FeatureEnvironmentInfoSchema) =>
-            e.strategies.forEach((s: FeatureStrategySchema) => {
+        newToggle.environments.forEach((e: IEnvironmentDetail) =>
+            e.strategies.forEach((s: IStrategyConfig) => {
                 if (replaceGroupId && s.parameters.hasOwnProperty('groupId')) {
                     //@ts-ignore
                     s.parameters.groupId = newFeatureName;
@@ -660,10 +657,10 @@ class FeatureToggleService {
 
     async updateFeatureToggle(
         projectId: string,
-        updatedFeature: UpdateFeatureSchema,
+        updatedFeature: FeatureToggleDTO,
         userName: string,
         featureName: string,
-    ): Promise<FeatureSchema> {
+    ): Promise<FeatureToggle> {
         await this.validateFeatureContext({ featureName, projectId });
 
         this.logger.info(`${userName} updates feature toggle ${featureName}`);
@@ -711,7 +708,7 @@ class FeatureToggleService {
         );
     }
 
-    async getStrategy(strategyId: string): Promise<StrategySchema> {
+    async getStrategy(strategyId: string): Promise<IStrategyConfig> {
         const strategy = await this.featureStrategiesStore.getStrategyById(
             strategyId,
         );
@@ -727,7 +724,7 @@ class FeatureToggleService {
         project: string,
         environment: string,
         featureName: string,
-    ): Promise<FeatureEnvironmentInfoSchema> {
+    ): Promise<IFeatureEnvironmentInfo> {
         const envMetadata =
             await this.featureEnvironmentStore.getEnvironmentMetaData(
                 environment,
@@ -831,7 +828,7 @@ class FeatureToggleService {
         environment: string,
         enabled: boolean,
         createdBy: string,
-    ): Promise<FeatureSchema> {
+    ): Promise<FeatureToggle> {
         const hasEnvironment =
             await this.featureEnvironmentStore.featureHasEnvironment(
                 environment,
@@ -908,7 +905,7 @@ class FeatureToggleService {
         featureName: string,
         environment: string,
         userName: string,
-    ): Promise<FeatureSchema> {
+    ): Promise<FeatureToggle> {
         await this.featureToggleStore.get(featureName);
         const isEnabled =
             await this.featureEnvironmentStore.isEnvironmentEnabled(
@@ -934,7 +931,7 @@ class FeatureToggleService {
             );
         const { environments, ...legacyFeature } = feature;
         const defaultEnv = environments.find((e) => e.name === DEFAULT_ENV);
-        const strategies = (defaultEnv?.strategies as StrategySchema[]) || [];
+        const strategies = defaultEnv?.strategies || [];
         const enabled = defaultEnv?.enabled || false;
 
         return { ...legacyFeature, enabled, strategies };
@@ -962,7 +959,7 @@ class FeatureToggleService {
         );
     }
 
-    async getArchivedFeatures(): Promise<FeatureSchema[]> {
+    async getArchivedFeatures(): Promise<FeatureToggle[]> {
         return this.getFeatureToggles({}, true);
     }
 
@@ -998,14 +995,14 @@ class FeatureToggleService {
 
     async getMetadataForAllFeatures(
         archived: boolean,
-    ): Promise<FeatureSchema[]> {
+    ): Promise<FeatureToggle[]> {
         return this.featureToggleStore.getAll({ archived });
     }
 
     async getMetadataForAllFeaturesByProjectId(
         archived: boolean,
         project: string,
-    ): Promise<FeatureSchema[]> {
+    ): Promise<FeatureToggle[]> {
         return this.featureToggleStore.getAll({ archived, project });
     }
 
@@ -1028,7 +1025,7 @@ class FeatureToggleService {
         project: string,
         newVariants: Operation[],
         createdBy: string,
-    ): Promise<FeatureSchema> {
+    ): Promise<FeatureToggle> {
         const oldVariants = await this.getVariants(featureName);
         const { newDocument } = await applyPatch(oldVariants, newVariants);
         return this.saveVariants(featureName, project, newDocument, createdBy);
@@ -1037,9 +1034,9 @@ class FeatureToggleService {
     async saveVariants(
         featureName: string,
         project: string,
-        newVariants: VariantSchema[],
+        newVariants: IVariant[],
         createdBy: string,
-    ): Promise<FeatureSchema> {
+    ): Promise<FeatureToggle> {
         await variantsArraySchema.validateAsync(newVariants);
         const fixedVariants = this.fixVariantWeights(newVariants);
         const oldVariants = await this.featureToggleStore.getVariants(
@@ -1058,13 +1055,13 @@ class FeatureToggleService {
                 createdBy,
                 tags,
                 oldVariants,
-                newVariants: featureToggle.variants as VariantSchema[],
+                newVariants: featureToggle.variants as IVariant[],
             }),
         );
-        return featureToggle;
+        return featureToggle as FeatureToggle;
     }
 
-    fixVariantWeights(variants: VariantSchema[]): VariantSchema[] {
+    fixVariantWeights(variants: IVariant[]): IVariant[] {
         let variableVariants = variants.filter((x) => {
             return x.weightType === WeightType.VARIABLE;
         });

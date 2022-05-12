@@ -2,13 +2,6 @@ import { ITagType } from './stores/tag-type-store';
 import { LogProvider } from '../logger';
 import { IRole } from './stores/access-store';
 import { IUser } from './user';
-import { ParametersSchema } from '../openapi/spec/parameters-schema';
-import { ConstraintSchema } from '../openapi/spec/constraint-schema';
-import { VariantSchema } from '../openapi/spec/variant-schema';
-import { StrategySchema } from '../openapi/spec/strategy-schema';
-import { FeatureStrategySchema } from '../openapi/spec/feature-strategy-schema';
-import { FeatureEnvironmentInfoSchema } from '../openapi/spec/feature-environment-info-schema';
-import { FeatureSchema } from '../openapi/spec/feature-schema';
 
 export type Operator =
     | 'NOT_IN'
@@ -42,8 +35,8 @@ export enum WeightType {
 export interface IStrategyConfig {
     id?: string;
     name: string;
-    constraints: ConstraintSchema;
-    parameters: ParametersSchema;
+    constraints: IConstraint[];
+    parameters: Record<string, string>;
     sortOrder?: number;
 }
 export interface IFeatureStrategy {
@@ -55,7 +48,7 @@ export interface IFeatureStrategy {
     strategyName: string;
     parameters: { [key: string]: string };
     sortOrder?: number;
-    constraints: ConstraintSchema;
+    constraints: IConstraint[];
     createdAt?: Date;
 }
 
@@ -73,7 +66,7 @@ export interface FeatureToggle extends FeatureToggleDTO {
     project: string;
     lastSeenAt?: Date;
     createdAt?: Date;
-    variants?: VariantSchema[];
+    variants?: IVariant[];
 }
 
 export interface IFeatureToggleClient {
@@ -84,7 +77,7 @@ export interface IFeatureToggleClient {
     stale: boolean;
     variants: IVariant[];
     enabled: boolean;
-    strategies: StrategySchema[];
+    strategies: IStrategyConfig[];
     impressionData?: boolean;
     lastSeenAt?: Date;
     createdAt?: Date;
@@ -94,21 +87,21 @@ export interface IFeatureEnvironmentInfo {
     name: string;
     environment: string;
     enabled: boolean;
-    strategies: FeatureStrategySchema[];
+    strategies: IFeatureStrategy[];
 }
 
-export interface FeatureToggleWithEnvironment extends FeatureSchema {
-    environments: FeatureEnvironmentInfoSchema[];
+export interface FeatureToggleWithEnvironment extends FeatureToggle {
+    environments: IEnvironmentDetail[];
 }
 
 // @deprecated
-export interface FeatureToggleLegacy extends FeatureSchema {
-    strategies: StrategySchema[];
+export interface FeatureToggleLegacy extends FeatureToggle {
+    strategies: IStrategyConfig[];
     enabled: boolean;
 }
 
 export interface IEnvironmentDetail extends IEnvironmentOverview {
-    strategies: StrategySchema[];
+    strategies: IStrategyConfig[];
 }
 
 export interface ISortOrder {

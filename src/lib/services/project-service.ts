@@ -116,7 +116,10 @@ export default class ProjectService {
         return this.store.get(id);
     }
 
-    async createProject(newProject: IProject, user: User): Promise<IProject> {
+    async createProject(
+        newProject: Pick<IProject, 'id'>,
+        user: User,
+    ): Promise<IProject> {
         const data = await projectSchema.validateAsync(newProject);
         await this.validateUniqueId(data.id);
 

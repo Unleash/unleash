@@ -230,7 +230,7 @@ class FeatureToggleService {
         featureName: string,
         createdBy: string,
         operations: Operation[],
-    ): Promise<FeatureToggleDTO> {
+    ): Promise<FeatureToggle> {
         const featureToggle = await this.getFeatureMetadata(featureName);
 
         if (operations.some((op) => op.path.indexOf('/variants') >= 0)) {
@@ -273,7 +273,7 @@ class FeatureToggleService {
         return {
             id: featureStrategy.id,
             name: featureStrategy.strategyName,
-            constraints: featureStrategy.constraints || ([] as any),
+            constraints: featureStrategy.constraints || [],
             parameters: featureStrategy.parameters,
         };
     }
@@ -297,8 +297,7 @@ class FeatureToggleService {
                 await this.featureStrategiesStore.createStrategyFeatureEnv({
                     strategyName: strategyConfig.name,
                     name: strategyConfig.name,
-                    constraints:
-                        strategyConfig.constraints as unknown as IConstraint[],
+                    constraints: strategyConfig.constraints,
                     parameters: strategyConfig.parameters,
                     sortOrder: strategyConfig.sortOrder,
                     projectId,
@@ -314,7 +313,7 @@ class FeatureToggleService {
                     featureName,
                     createdBy,
                     environment,
-                    data: strategy as unknown as IStrategyConfig,
+                    data: strategy,
                     tags,
                 }),
             );
@@ -426,7 +425,7 @@ class FeatureToggleService {
      * }
      * @param id - strategy id
      * @param context - Which context does this strategy live in (projectId, featureName, environment)
-     * @param createdBy
+     * @param createdBy - Which user does this strategy belong to
      */
     async deleteStrategy(
         id: string,
@@ -564,7 +563,7 @@ class FeatureToggleService {
         value: FeatureToggleDTO,
         createdBy: string,
         isValidated: boolean = false,
-    ): Promise<FeatureToggleDTO> {
+    ): Promise<FeatureToggle> {
         this.logger.info(`${createdBy} creates feature toggle ${value.name}`);
         await this.validateName(value.name);
         const exists = await this.projectStore.hasProject(projectId);
@@ -597,7 +596,7 @@ class FeatureToggleService {
                 }),
             );
 
-            return createdToggle;
+            return createdToggle as FeatureToggle;
         }
         throw new NotFoundError(`Project with id ${projectId} does not exist`);
     }
@@ -608,7 +607,7 @@ class FeatureToggleService {
         newFeatureName: string,
         replaceGroupId: boolean = true, // eslint-disable-line
         userName: string,
-    ): Promise<FeatureToggleDTO> {
+    ): Promise<FeatureToggle> {
         this.logger.info(
             `${userName} clones feature toggle ${featureName} to ${newFeatureName}`,
         );
@@ -660,7 +659,7 @@ class FeatureToggleService {
         updatedFeature: FeatureToggleDTO,
         userName: string,
         featureName: string,
-    ): Promise<FeatureToggleDTO> {
+    ): Promise<FeatureToggle> {
         await this.validateFeatureContext({ featureName, projectId });
 
         this.logger.info(`${userName} updates feature toggle ${featureName}`);
@@ -688,7 +687,7 @@ class FeatureToggleService {
                 tags,
             }),
         );
-        return featureToggle;
+        return featureToggle as FeatureToggle;
     }
 
     async getFeatureCountForProject(projectId: string): Promise<number> {
@@ -1058,7 +1057,7 @@ class FeatureToggleService {
                 newVariants: featureToggle.variants as IVariant[],
             }),
         );
-        return featureToggle as FeatureToggle;
+        return featureToggle;
     }
 
     fixVariantWeights(variants: IVariant[]): IVariant[] {

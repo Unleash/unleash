@@ -22,6 +22,7 @@ import { IProjectEnvironment } from 'interfaces/environments';
 import { getEnabledEnvs } from './helpers';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { useThemeStyles } from 'themes/themeStyles';
+import { isDescendantOrSelf } from '@testing-library/user-event/dist/types/utils';
 
 interface IProjectEnvironmentListProps {
     projectId: string;
@@ -46,6 +47,7 @@ const ProjectEnvironmentList = ({
     const [confirmName, setConfirmName] = useState('');
     const ref = useLoading(loading);
     const { classes: styles } = useStyles();
+    const { isOss } = useUiConfig();
 
     useEffect(() => {
         const envs = environments.map(e => ({
@@ -146,6 +148,10 @@ const ProjectEnvironmentList = ({
         </div>
     );
 
+    const envIsDisabled = (projectName: string) => {
+        return isOss() && projectName === 'default';
+    };
+
     const renderEnvironments = () => {
         return (
             <FormGroup>
@@ -159,6 +165,7 @@ const ProjectEnvironmentList = ({
                                     env.enabled ? 'Disable' : 'Enable'
                                 } environment`}
                                 size="medium"
+                                disabled={envIsDisabled(env.name)}
                                 projectId={projectId}
                                 permission={UPDATE_PROJECT}
                                 checked={env.enabled}

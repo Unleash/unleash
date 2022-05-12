@@ -2,18 +2,18 @@ import {
     FeatureToggleWithEnvironment,
     IFeatureOverview,
     IFeatureStrategy,
+    IStrategyConfig,
+    IVariant,
 } from '../model';
 import { Store } from './store';
-import { StrategySchema } from '../../openapi/spec/strategy-schema';
-import { VariantSchema } from '../../openapi/spec/variant-schema';
 
 export interface FeatureConfigurationClient {
     name: string;
     type: string;
     enabled: boolean;
     stale: boolean;
-    strategies: StrategySchema[];
-    variants: VariantSchema[];
+    strategies: IStrategyConfig[];
+    variants: IVariant[];
 }
 export interface IFeatureStrategiesStore
     extends Store<IFeatureStrategy, string> {

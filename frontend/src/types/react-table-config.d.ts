@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 /**
  * remove after `react-table` v8
  * https://github.com/TanStack/react-table/issues/2970#issuecomment-756364081

@@ -25,7 +25,6 @@ import { useLocationSettings } from 'hooks/useLocationSettings';
 import { formatDateYMD } from 'utils/formatDate';
 import { ProjectsList } from './ProjectsList/ProjectsList';
 import { useStyles } from './ApiTokenList.styles';
-import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
 
 interface IApiToken {
     createdAt: Date;

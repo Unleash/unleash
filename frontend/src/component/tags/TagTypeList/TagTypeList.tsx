@@ -27,7 +27,6 @@ import useToast from 'hooks/useToast';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { ITagType } from 'interfaces/tags';
-import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
 
 export const TagTypeList = () => {
     const { hasAccess } = useContext(AccessContext);

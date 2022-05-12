@@ -2,7 +2,6 @@ import { useEffect, useMemo, VFC } from 'react';
 import { Link, useMediaQuery, useTheme } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { useGlobalFilter, useSortBy, useTable } from 'react-table';
-import useLoading from 'hooks/useLoading';
 import {
     Table,
     SortableTableHeader,

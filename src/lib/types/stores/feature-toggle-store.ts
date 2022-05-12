@@ -1,5 +1,5 @@
-import { Store } from './store';
 import { FeatureToggle, FeatureToggleDTO, IVariant } from '../model';
+import { Store } from './store';
 
 export interface IFeatureToggleQuery {
     archived: boolean;

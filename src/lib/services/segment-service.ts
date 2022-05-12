@@ -4,7 +4,7 @@ import { IUnleashStores } from '../types';
 import { Logger } from '../logger';
 import NameExistsError from '../error/name-exists-error';
 import { ISegmentStore } from '../types/stores/segment-store';
-import { ISegment } from '../types/model';
+import { IFeatureStrategy, ISegment } from '../types/model';
 import { segmentSchema } from './segment-schema';
 import {
     SEGMENT_CREATED,
@@ -18,7 +18,6 @@ import {
     SEGMENT_VALUES_LIMIT,
     STRATEGY_SEGMENTS_LIMIT,
 } from '../util/segments';
-import { FeatureStrategySchema } from '../openapi/spec/feature-strategy-schema';
 
 export class SegmentService {
     private logger: Logger;
@@ -64,7 +63,7 @@ export class SegmentService {
     }
 
     // Used by unleash-enterprise.
-    async getStrategies(id: number): Promise<FeatureStrategySchema[]> {
+    async getStrategies(id: number): Promise<IFeatureStrategy[]> {
         return this.featureStrategiesStore.getStrategiesBySegment(id);
     }
 

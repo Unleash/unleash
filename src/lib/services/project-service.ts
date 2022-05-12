@@ -16,6 +16,7 @@ import {
 import { IUnleashStores } from '../types';
 import { IUnleashConfig } from '../types/option';
 import {
+    FeatureToggle,
     IProject,
     IProjectOverview,
     IProjectWithCount,
@@ -37,7 +38,6 @@ import { DEFAULT_PROJECT } from '../types/project';
 import { IFeatureTagStore } from 'lib/types/stores/feature-tag-store';
 import ProjectWithoutOwnerError from '../error/project-without-owner-error';
 import { IUserStore } from 'lib/types/stores/user-store';
-import { FeatureSchema } from '../openapi/spec/feature-schema';
 
 const getCreatedBy = (user: User) => user.email || user.username;
 
@@ -163,7 +163,7 @@ export default class ProjectService {
     }
 
     async checkProjectsCompatibility(
-        feature: FeatureSchema,
+        feature: FeatureToggle,
         newProjectId: string,
     ): Promise<boolean> {
         const featureEnvs = await this.featureEnvironmentStore.getAll({

@@ -596,7 +596,7 @@ class FeatureToggleService {
                 }),
             );
 
-            return createdToggle as FeatureToggle;
+            return createdToggle;
         }
         throw new NotFoundError(`Project with id ${projectId} does not exist`);
     }
@@ -687,7 +687,7 @@ class FeatureToggleService {
                 tags,
             }),
         );
-        return featureToggle as FeatureToggle;
+        return featureToggle;
     }
 
     async getFeatureCountForProject(projectId: string): Promise<number> {

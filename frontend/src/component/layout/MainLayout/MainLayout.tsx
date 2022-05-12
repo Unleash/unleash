@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react';
 import classnames from 'classnames';
 import { makeStyles } from 'tss-react/mui';
 import { Grid } from '@mui/material';
-import styles from 'component/styles.module.scss';
+import { useStyles as useAppStyles } from 'component/App.styles';
 import Header from 'component/menu/Header/Header';
 import Footer from 'component/menu/Footer/Footer';
 import Proclamation from 'component/common/Proclamation/Proclamation';
@@ -34,6 +34,7 @@ interface IMainLayoutProps {
 
 export const MainLayout = ({ children }: IMainLayoutProps) => {
     const { classes } = useStyles();
+    const { classes: styles } = useAppStyles();
     const { uiConfig } = useUiConfig();
 
     return (

@@ -4,6 +4,10 @@ import { HeaderGroup } from 'react-table';
 import { useStyles } from './SortableTableHeader.styles';
 import { CellSortable } from './CellSortable/CellSortable';
 
+interface IHeaderGroupColumn extends HeaderGroup<object> {
+    isGrow?: boolean;
+}
+
 interface ISortableTableHeaderProps {
     headerGroups: HeaderGroup<object>[];
 }
@@ -19,7 +23,7 @@ export const SortableTableHeader: VFC<ISortableTableHeaderProps> = ({
                     {...headerGroup.getHeaderGroupProps()}
                     className={styles.tableHeader}
                 >
-                    {headerGroup.headers.map(column => {
+                    {headerGroup.headers.map((column: IHeaderGroupColumn) => {
                         const content = column.render('Header');
 
                         return (
@@ -35,6 +39,7 @@ export const SortableTableHeader: VFC<ISortableTableHeaderProps> = ({
                                 isSortable={column.canSort}
                                 isSorted={column.isSorted}
                                 isDescending={column.isSortedDesc}
+                                isGrow={column.isGrow}
                             >
                                 {content}
                             </CellSortable>

@@ -11,10 +11,11 @@ import { routes } from 'component/menu/routes';
 import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import { SplashPageRedirect } from 'component/splash/SplashPageRedirect/SplashPageRedirect';
-import styles from 'component/styles.module.scss';
+import { useStyles } from './App.styles';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 export const App = () => {
+    const { classes: styles } = useStyles();
     const { authDetails } = useAuthDetails();
     const { user } = useAuthUser();
     const isLoggedIn = Boolean(user?.id);

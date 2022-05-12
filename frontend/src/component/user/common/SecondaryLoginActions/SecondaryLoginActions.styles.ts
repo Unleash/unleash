@@ -9,9 +9,7 @@ export const useStyles = makeStyles()(theme => ({
         },
     },
     link: {
-        textDecoration: 'none',
         fontWeight: 'bold',
-        color: theme.palette.primary.main,
         textAlign: 'center',
     },
     text: { fontWeight: 'bold', marginBottom: '0.5rem' },

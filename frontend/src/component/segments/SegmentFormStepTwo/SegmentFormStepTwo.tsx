@@ -101,7 +101,8 @@ export const SegmentFormStepTwo: React.FC<ISegmentFormPartTwoProps> = ({
                     </SidebarModal>
                     <PermissionButton
                         permission={CREATE_CONTEXT_FIELD}
-                        className={styles.addContextButton}
+                        variant="outlined"
+                        color="primary"
                         startIcon={<Add />}
                         onClick={() => setOpen(true)}
                     >

@@ -195,7 +195,7 @@ const UsersList = ({ search }: IUsersListProps) => {
                             sort={sort}
                             setSort={setSort}
                         >
-                            Last seen
+                            Last login
                         </TableCellSortable>
                         <TableCell align="center">
                             {hasAccess(ADMIN) ? 'Actions' : ''}

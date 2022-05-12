@@ -56,7 +56,7 @@ export const useStyles = makeStyles()(theme => ({
     },
     headerValues: {
         fontSize: theme.fontSizes.smallBody,
-        color: theme.palette.primary.light,
+        color: theme.palette.primary.main,
     },
     headerValuesExpand: {
         fontSize: theme.fontSizes.smallBody,

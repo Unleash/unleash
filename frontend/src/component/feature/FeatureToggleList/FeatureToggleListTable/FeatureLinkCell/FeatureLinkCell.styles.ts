@@ -20,15 +20,12 @@ export const useStyles = makeStyles()(theme => ({
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
+        wordBreak: 'break-all',
     },
     description: {
         color: theme.palette.grey[800],
         textDecoration: 'none',
         fontSize: 'inherit',
         display: 'inline-block',
-        maxWidth: '250px',
-        whiteSpace: 'nowrap',
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
     },
 }));

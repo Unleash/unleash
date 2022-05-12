@@ -27,9 +27,9 @@ export const useStyles = makeStyles()(theme => ({
         flexWrap: 'wrap',
     },
     header: {
-        color: theme.palette.primary.light,
+        color: theme.palette.primary.main,
     },
     icon: {
-        fill: theme.palette.primary.light,
+        fill: theme.palette.primary.main,
     },
 }));

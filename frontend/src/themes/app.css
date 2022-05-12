@@ -135,7 +135,11 @@ p {
 }
 
 a {
-    color: inherit;
+    color: #615bc2;
+}
+
+a:hover {
+    text-decoration: none;
 }
 
 #app {

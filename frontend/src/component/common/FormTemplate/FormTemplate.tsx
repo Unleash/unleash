@@ -1,7 +1,13 @@
 import { useStyles } from './FormTemplate.styles';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import Codebox from '../Codebox/Codebox';
-import { Collapse, IconButton, useMediaQuery, Tooltip } from '@mui/material';
+import {
+    Collapse,
+    IconButton,
+    useMediaQuery,
+    Tooltip,
+    Divider,
+} from '@mui/material';
 import { FileCopy, Info } from '@mui/icons-material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import Loader from '../Loader/Loader';
@@ -93,6 +99,7 @@ const FormTemplate: React.FC<ICreateProps> = ({
                         documentationLink={documentationLink}
                         documentationLinkLabel={documentationLinkLabel}
                     >
+                        <Divider className={styles.sidebarDivider} />
                         <h2 className={styles.subtitle}>
                             API Command{' '}
                             <Tooltip title="Copy command" arrow>

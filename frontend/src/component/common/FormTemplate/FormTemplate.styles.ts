@@ -20,7 +20,7 @@ export const useStyles = makeStyles()(theme => ({
         borderRadius: 0,
     },
     sidebar: {
-        backgroundColor: theme.palette.primary.light,
+        backgroundColor: theme.palette.primary.main,
         padding: '2rem',
         flexGrow: 0,
         flexShrink: 0,
@@ -31,6 +31,10 @@ export const useStyles = makeStyles()(theme => ({
         [theme.breakpoints.down(500)]: {
             padding: '2rem 1rem',
         },
+    },
+    sidebarDivider: {
+        opacity: 0.3,
+        marginBottom: '8px',
     },
     title: {
         marginBottom: '1.5rem',
@@ -62,6 +66,9 @@ export const useStyles = makeStyles()(theme => ({
     documentationLink: {
         color: '#fff',
         display: 'block',
+        '&:hover': {
+            textDecoration: 'none',
+        },
     },
     formContent: {
         backgroundColor: '#fff',

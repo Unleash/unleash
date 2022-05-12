@@ -17,9 +17,6 @@ export const useStyles = makeStyles()(theme => ({
             minWidth: '379px',
         },
     },
-    link: {
-        color: theme.palette.primary.light,
-    },
     label: {
         minWidth: '300px',
         [theme.breakpoints.down(600)]: {

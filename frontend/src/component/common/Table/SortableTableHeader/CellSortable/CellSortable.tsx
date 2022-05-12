@@ -9,6 +9,7 @@ import { SortArrow } from './SortArrow/SortArrow';
 interface ICellSortableProps {
     isSortable?: boolean;
     isSorted?: boolean;
+    isGrow?: boolean;
     isDescending?: boolean;
     ariaTitle?: string;
     onClick?: MouseEventHandler<HTMLButtonElement>;
@@ -18,6 +19,7 @@ export const CellSortable: FC<ICellSortableProps> = ({
     children,
     isSortable = true,
     isSorted = false,
+    isGrow = false,
     isDescending,
     ariaTitle,
     onClick = () => {},
@@ -44,7 +46,10 @@ export const CellSortable: FC<ICellSortableProps> = ({
         <TableCell
             component="th"
             aria-sort={ariaSort}
-            className={classnames(styles.tableCellHeaderSortable)}
+            className={classnames(
+                styles.tableCellHeaderSortable,
+                isGrow && 'grow'
+            )}
         >
             <ConditionallyRender
                 condition={isSortable}

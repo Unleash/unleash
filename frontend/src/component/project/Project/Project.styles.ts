@@ -25,7 +25,7 @@ export const useStyles = makeStyles()(theme => ({
         height: '1px',
     },
     tabContainer: {
-        padding: '1rem 2rem',
+        padding: '0 2rem',
     },
     tabButton: {
         textTransform: 'none',

@@ -26,6 +26,7 @@ export const useStyles = makeStyles()(theme => ({
         display: 'flex',
         width: '100%',
         textAlign: 'left',
+        wordBreak: 'break-all',
     },
     percentageContainer: {
         display: 'flex',

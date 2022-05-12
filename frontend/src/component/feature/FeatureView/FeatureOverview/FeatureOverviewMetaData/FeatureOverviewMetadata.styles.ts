@@ -4,7 +4,7 @@ export const useStyles = makeStyles()(theme => ({
     container: {
         borderRadius: theme.shape.borderRadiusLarge,
         color: '#fff',
-        backgroundColor: theme.palette.primary.light,
+        backgroundColor: theme.palette.primary.main,
         display: 'flex',
         flexDirection: 'column',
         maxWidth: '350px',
@@ -40,6 +40,7 @@ export const useStyles = makeStyles()(theme => ({
     bodyItem: {
         margin: '0.5rem 0',
         fontSize: theme.fontSizes.bodySize,
+        wordBreak: 'break-all',
     },
     headerIcon: {
         marginRight: '1rem',

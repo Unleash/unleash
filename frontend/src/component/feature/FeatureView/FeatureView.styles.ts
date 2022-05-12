@@ -15,6 +15,9 @@ export const useStyles = makeStyles()(theme => ({
         display: 'flex',
         alignItems: 'center',
     },
+    toolbarContainer: {
+        flexShrink: 0,
+    },
     innerContainer: {
         padding: '1rem 2rem',
         display: 'flex',
@@ -30,7 +33,7 @@ export const useStyles = makeStyles()(theme => ({
         height: '1px',
     },
     tabContainer: {
-        padding: '1rem 2rem',
+        padding: '0 2rem',
     },
     tabButton: {
         textTransform: 'none',
@@ -46,6 +49,7 @@ export const useStyles = makeStyles()(theme => ({
         fontWeight: 'normal',
         display: 'flex',
         alignItems: 'center',
+        wordBreak: 'break-all',
     },
     statusContainer: {
         marginLeft: '0.5rem',

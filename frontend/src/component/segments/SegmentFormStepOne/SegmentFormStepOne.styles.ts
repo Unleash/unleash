@@ -23,7 +23,6 @@ export const useStyles = makeStyles()(theme => ({
     },
     cancelButton: {
         marginLeft: '1.5rem',
-        color: theme.palette.primary.light,
     },
     inputDescription: {
         marginBottom: '0.5rem',

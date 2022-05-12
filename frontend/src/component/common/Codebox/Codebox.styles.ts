@@ -2,9 +2,9 @@ import { makeStyles } from 'tss-react/mui';
 
 export const useStyles = makeStyles()(theme => ({
     container: {
-        backgroundColor: theme.palette.primary.main,
+        backgroundColor: theme.palette.sidebarContainer,
         padding: '1rem',
-        borderRadius: theme.shape.borderRadius,
+        borderRadius: theme.shape.borderRadiusMedium,
         position: 'relative',
         maxHeight: '500px',
         overflow: 'auto',

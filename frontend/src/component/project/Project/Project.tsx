@@ -119,7 +119,7 @@ const Project = () => {
                     <h2
                         data-loading
                         className={styles.title}
-                        style={{ margin: 0 }}
+                        style={{ margin: 0, width: '100%' }}
                     >
                         <div className={styles.titleText}>{project?.name}</div>
                         <PermissionIconButton

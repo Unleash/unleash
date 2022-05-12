@@ -30,9 +30,10 @@ export default createTheme({
         bold: 700,
     },
     shape: {
-        borderRadius: '3px',
-        borderRadiusLarge: '10px',
-        borderRadiusExtraLarge: '25px',
+        borderRadius: '4px',
+        borderRadiusMedium: '8px',
+        borderRadiusLarge: '12px',
+        borderRadiusExtraLarge: '20px',
     },
     palette: {
         primary: {
@@ -46,27 +47,30 @@ export default createTheme({
             dark: colors.purple[900],
         },
         info: {
-            light: colors.blue[700],
-            main: colors.blue[700],
-            dark: colors.blue[800],
+            light: colors.blue[50],
+            main: colors.blue[500],
+            dark: colors.blue[700],
         },
         success: {
-            light: colors.green[700],
-            main: colors.green[700],
+            light: colors.green[50],
+            main: colors.green[500],
             dark: colors.green[800],
         },
         warning: {
-            light: colors.orange[700],
-            main: colors.orange[700],
-            dark: colors.orange[800],
+            light: colors.orange[100],
+            main: colors.orange[800],
+            dark: colors.orange[900],
         },
         error: {
-            light: colors.red[700],
+            light: colors.red[50],
             main: colors.red[700],
             dark: colors.red[800],
         },
         divider: colors.grey[300],
         dividerAlternative: colors.grey[500],
+        tableHeaderHover: colors.grey[400],
+        highlight: '#FFEACC',
+        sidebarContainer: 'rgba(32,32,33, 0.2)',
         grey: colors.grey,
         text: {
             primary: colors.grey[900],
@@ -93,14 +97,23 @@ export default createTheme({
             styleOverrides: {
                 root: {
                     color: colors.purple[900],
+                    '&:hover': {
+                        textDecoration: 'none',
+                    },
                 },
             },
         },
         MuiBreadcrumbs: {
             styleOverrides: {
                 root: {
+                    color: colors.grey[900],
+                    fontSize: '0.875rem',
                     '& a': {
                         color: colors.purple[900],
+                        textDecoration: 'underline',
+                        '&:hover': {
+                            textDecoration: 'none',
+                        },
                     },
                 },
             },
@@ -125,6 +138,87 @@ export default createTheme({
             styleOverrides: {
                 root: {
                     borderBottomColor: colors.grey[300],
+                },
+            },
+        },
+        MuiAlert: {
+            styleOverrides: {
+                root: {
+                    borderRadius: '8px',
+                    a: {
+                        color: 'inherit',
+                    },
+                    '&.MuiAlert-standardInfo': {
+                        backgroundColor: colors.blue[50],
+                        color: colors.blue[700],
+                        border: `1px solid ${colors.blue[200]}`,
+                        '& .MuiAlert-icon': {
+                            color: colors.blue[500],
+                        },
+                    },
+                    '&.MuiAlert-standardSuccess': {
+                        backgroundColor: colors.green[50],
+                        color: colors.green[800],
+                        border: `1px solid ${colors.green[300]}`,
+                        '& .MuiAlert-icon': {
+                            color: colors.green[500],
+                        },
+                    },
+                    '&.MuiAlert-standardWarning': {
+                        backgroundColor: colors.orange[100],
+                        color: colors.orange[900],
+                        border: `1px solid ${colors.orange[500]}`,
+                        '& .MuiAlert-icon': {
+                            color: colors.orange[800],
+                        },
+                    },
+                    '&.MuiAlert-standardError': {
+                        backgroundColor: colors.red[50],
+                        color: colors.red[800],
+                        border: `1px solid ${colors.red[300]}`,
+                        '& .MuiAlert-icon': {
+                            color: colors.red[700],
+                        },
+                    },
+                },
+            },
+        },
+        MuiTabs: {
+            styleOverrides: {
+                root: {
+                    '& .MuiTabs-indicator': {
+                        height: '4px',
+                    },
+                },
+            },
+        },
+        MuiTab: {
+            styleOverrides: {
+                root: {
+                    color: colors.grey[900],
+                    fontSize: '1rem',
+                    textTransform: 'none',
+                    fontWeight: 400,
+                    minHeight: '62px',
+                    '&:hover': {
+                        backgroundColor: colors.grey[200],
+                    },
+                    '&.Mui-selected': {
+                        color: colors.grey[900],
+                        fontWeight: 700,
+                    },
+                    '& > span': {
+                        color: colors.purple[900],
+                    },
+                },
+            },
+        },
+        MuiAccordionSummary: {
+            styleOverrides: {
+                root: {
+                    '& > .MuiAccordionSummary-content.Mui-expanded': {
+                        margin: '12px 0',
+                    },
                 },
             },
         },

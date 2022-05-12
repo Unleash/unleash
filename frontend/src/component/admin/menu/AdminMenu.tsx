@@ -57,7 +57,7 @@ function AdminMenu() {
                                 to="/admin/roles"
                                 style={createNavLinkStyle}
                             >
-                                <span>PROJECT ROLES</span>
+                                <span>Project Roles</span>
                             </NavLink>
                         }
                     />

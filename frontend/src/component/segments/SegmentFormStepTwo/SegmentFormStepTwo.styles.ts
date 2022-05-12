@@ -31,7 +31,6 @@ export const useStyles = makeStyles()(theme => ({
     },
     cancelButton: {
         marginLeft: '1.5rem',
-        color: theme.palette.primary.light,
     },
     inputDescription: {
         marginBottom: '1rem',
@@ -61,7 +60,6 @@ export const useStyles = makeStyles()(theme => ({
     },
     backButton: {
         marginRight: 'auto',
-        color: theme.palette.primary.light,
     },
     addContextContainer: {
         marginTop: '1rem',

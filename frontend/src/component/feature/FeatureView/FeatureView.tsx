@@ -138,7 +138,7 @@ export const FeatureView = () => {
                                 />
                             </div>
 
-                            <div>
+                            <div className={styles.toolbarContainer}>
                                 <PermissionIconButton
                                     permission={CREATE_FEATURE}
                                     projectId={projectId}

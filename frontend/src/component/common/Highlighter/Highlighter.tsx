@@ -1,4 +1,5 @@
 import { VFC } from 'react';
+import { useStyles } from './Highlighter.styles';
 
 interface IHighlighterProps {
     search?: string;
@@ -13,6 +14,7 @@ export const Highlighter: VFC<IHighlighterProps> = ({
     children,
     caseSensitive,
 }) => {
+    const { classes } = useStyles();
     if (!children) {
         return null;
     }
@@ -25,6 +27,7 @@ export const Highlighter: VFC<IHighlighterProps> = ({
 
     return (
         <span
+            className={classes.highlighter}
             dangerouslySetInnerHTML={{
                 __html: children?.replaceAll(regex, '<mark>$&</mark>') || '',
             }}

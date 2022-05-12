@@ -71,6 +71,7 @@ const columns = [
             />
         ),
         sortType: 'alphanumeric',
+        isGrow: true,
     },
     {
         Header: 'Created on',

@@ -5,12 +5,16 @@ export const useStyles = makeStyles()(theme => ({
         '& > th': {
             border: 0,
             '&:first-of-type': {
-                borderTopLeftRadius: '8px',
-                borderBottomLeftRadius: '8px',
+                borderTopLeftRadius: theme.shape.borderRadiusMedium,
+                borderBottomLeftRadius: theme.shape.borderRadiusMedium,
             },
             '&:last-of-type': {
-                borderTopRightRadius: '8px',
-                borderBottomRightRadius: '8px',
+                borderTopRightRadius: theme.shape.borderRadiusMedium,
+                borderBottomRightRadius: theme.shape.borderRadiusMedium,
+            },
+            ':not(.grow)': {
+                width: '0.1%',
+                whiteSpace: 'nowrap',
             },
         },
     },

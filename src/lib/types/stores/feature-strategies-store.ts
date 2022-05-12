@@ -1,8 +1,11 @@
-import { FeatureToggleWithEnvironment, IFeatureOverview } from '../model';
+import {
+    FeatureToggleWithEnvironment,
+    IFeatureOverview,
+    IFeatureStrategy,
+} from '../model';
 import { Store } from './store';
 import { StrategySchema } from '../../openapi/spec/strategy-schema';
 import { VariantSchema } from '../../openapi/spec/variant-schema';
-import { FeatureStrategySchema } from '../../openapi/spec/feature-strategy-schema';
 
 export interface FeatureConfigurationClient {
     name: string;
@@ -13,10 +16,10 @@ export interface FeatureConfigurationClient {
     variants: VariantSchema[];
 }
 export interface IFeatureStrategiesStore
-    extends Store<FeatureStrategySchema, string> {
+    extends Store<IFeatureStrategy, string> {
     createStrategyFeatureEnv(
-        strategyConfig: Omit<FeatureStrategySchema, 'id' | 'createdAt'>,
-    ): Promise<FeatureStrategySchema>;
+        strategyConfig: Omit<IFeatureStrategy, 'id' | 'createdAt'>,
+    ): Promise<IFeatureStrategy>;
     removeAllStrategiesForFeatureEnv(
         featureName: string,
         environment: string,
@@ -25,7 +28,7 @@ export interface IFeatureStrategiesStore
         projectId: string,
         featureName: string,
         environment: string,
-    ): Promise<FeatureStrategySchema[]>;
+    ): Promise<IFeatureStrategy[]>;
     getFeatureToggleWithEnvs(
         featureName: string,
         archived?: boolean,
@@ -34,11 +37,11 @@ export interface IFeatureStrategiesStore
         projectId: string,
         archived: boolean,
     ): Promise<IFeatureOverview[]>;
-    getStrategyById(id: string): Promise<FeatureStrategySchema>;
+    getStrategyById(id: string): Promise<IFeatureStrategy>;
     updateStrategy(
         id: string,
-        updates: Partial<FeatureStrategySchema>,
-    ): Promise<FeatureStrategySchema>;
+        updates: Partial<IFeatureStrategy>,
+    ): Promise<IFeatureStrategy>;
     deleteConfigurationsForProjectAndEnvironment(
         projectId: String,
         environment: String,
@@ -47,5 +50,5 @@ export interface IFeatureStrategiesStore
         featureName: string,
         newProjectId: string,
     ): Promise<void>;
-    getStrategiesBySegment(segmentId: number): Promise<FeatureStrategySchema[]>;
+    getStrategiesBySegment(segmentId: number): Promise<IFeatureStrategy[]>;
 }

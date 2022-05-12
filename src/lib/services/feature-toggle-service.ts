@@ -230,7 +230,7 @@ class FeatureToggleService {
         featureName: string,
         createdBy: string,
         operations: Operation[],
-    ): Promise<FeatureToggle> {
+    ): Promise<FeatureToggleDTO> {
         const featureToggle = await this.getFeatureMetadata(featureName);
 
         if (operations.some((op) => op.path.indexOf('/variants') >= 0)) {
@@ -564,7 +564,7 @@ class FeatureToggleService {
         value: FeatureToggleDTO,
         createdBy: string,
         isValidated: boolean = false,
-    ): Promise<FeatureToggle> {
+    ): Promise<FeatureToggleDTO> {
         this.logger.info(`${createdBy} creates feature toggle ${value.name}`);
         await this.validateName(value.name);
         const exists = await this.projectStore.hasProject(projectId);
@@ -608,7 +608,7 @@ class FeatureToggleService {
         newFeatureName: string,
         replaceGroupId: boolean = true, // eslint-disable-line
         userName: string,
-    ): Promise<FeatureToggle> {
+    ): Promise<FeatureToggleDTO> {
         this.logger.info(
             `${userName} clones feature toggle ${featureName} to ${newFeatureName}`,
         );
@@ -660,7 +660,7 @@ class FeatureToggleService {
         updatedFeature: FeatureToggleDTO,
         userName: string,
         featureName: string,
-    ): Promise<FeatureToggle> {
+    ): Promise<FeatureToggleDTO> {
         await this.validateFeatureContext({ featureName, projectId });
 
         this.logger.info(`${userName} updates feature toggle ${featureName}`);

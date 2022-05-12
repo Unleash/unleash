@@ -18,30 +18,30 @@ from UnleashClient import UnleashClient
     client.is_enabled("unleash.beta.variants")
 ```
 
-### Checking if a feature is enabled {#checking-if-a-feature-is-enabled}
+## Checking if a feature is enabled {#checking-if-a-feature-is-enabled}
 
 A check of a simple toggle:
 
-```Python
+```python
 client.is_enabled("My Toggle")
 ```
 
 Specifying a default value:
 
-```Python
+```python
 client.is_enabled("My Toggle", default_value=True)
 ```
 
 Supplying application context:
 
-```Python
+```python
 app_context = {"userId": "test@email.com"}
 client.is_enabled("User ID Toggle", app_context)
 ```
 
 Supplying a fallback function:
 
-```Python
+```python
 def custom_fallback(feature_name: str, context: dict) -> bool:
     return True
 
@@ -52,7 +52,7 @@ client.is_enabled("My Toggle", fallback_function=custom_fallback)
 - Client will evaluate the fallback function only if exception occurs when calling the `is_enabled()` method i.e. feature flag not found or other general exception.
 - If both a `default_value` and `fallback_function` are supplied, client will define the default value by `OR`ing the default value and the output of the fallback function.
 
-### Getting a variant {#getting-a-variant}
+## Getting a variant {#getting-a-variant}
 
 Checking for a variant:
 

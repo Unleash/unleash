@@ -7,12 +7,15 @@ import { MOVE_FEATURE_TOGGLE } from '../../../lib/types/permissions';
 import { createTestConfig } from '../../config/test-config';
 import { RoleName } from '../../../lib/types/model';
 import { randomId } from '../../../lib/util/random-id';
+import EnvironmentService from '../../../lib/services/environment-service';
+import IncompatibleProjectError from '../../../lib/error/incompatible-project-error';
 
 let stores;
 let db: ITestDb;
 
 let projectService: ProjectService;
 let accessService: AccessService;
+let environmentService: EnvironmentService;
 let featureToggleService: FeatureToggleService;
 let user;
 
@@ -30,6 +33,7 @@ beforeAll(async () => {
     });
     accessService = new AccessService(stores, config);
     featureToggleService = new FeatureToggleService(stores, config);
+    environmentService = new EnvironmentService(stores, config);
     projectService = new ProjectService(
         stores,
         config,
@@ -461,6 +465,31 @@ test('should change project when checks pass', async () => {
 
     const updatedFeature = await featureToggleService.getFeature(toggle.name);
     expect(updatedFeature.project).toBe(projectB.id);
+});
+
+test('should require equal project environments to move features', async () => {
+    const projectA = { id: randomId(), name: randomId() };
+    const projectB = { id: randomId(), name: randomId() };
+    const environment = { name: randomId(), type: 'production' };
+    const toggle = { name: randomId() };
+
+    await projectService.createProject(projectA, user);
+    await projectService.createProject(projectB, user);
+    await featureToggleService.createFeatureToggle(projectA.id, toggle, user);
+    await stores.environmentStore.create(environment);
+    await environmentService.addEnvironmentToProject(
+        environment.name,
+        projectB.id,
+    );
+
+    await expect(() =>
+        projectService.changeProject(
+            projectB.id,
+            toggle.name,
+            user,
+            projectA.id,
+        ),
+    ).rejects.toThrowError(IncompatibleProjectError);
 });
 
 test('A newly created project only gets connected to enabled environments', async () => {

@@ -296,7 +296,6 @@ class FeatureToggleService {
             const newFeatureStrategy =
                 await this.featureStrategiesStore.createStrategyFeatureEnv({
                     strategyName: strategyConfig.name,
-                    name: strategyConfig.name,
                     constraints: strategyConfig.constraints,
                     parameters: strategyConfig.parameters,
                     sortOrder: strategyConfig.sortOrder,

@@ -2,17 +2,23 @@ import { Mapper } from './mapper';
 import { IStrategyConfig } from '../../types/model';
 import { StrategySchema } from '../spec/strategy-schema';
 import { CreateStrategySchema } from '../spec/create-strategy-schema';
+import { UpdateStrategySchema } from '../spec/update-strategy-schema';
 
-export default class StrategyMapper
-    implements Mapper<StrategySchema, IStrategyConfig, CreateStrategySchema>
+export class StrategyMapper
+    implements
+        Mapper<
+            StrategySchema,
+            IStrategyConfig,
+            CreateStrategySchema | UpdateStrategySchema
+        >
 {
-    map(input: StrategySchema): IStrategyConfig {
+    fromPublic(input: StrategySchema): IStrategyConfig {
         return {
             ...input,
         };
     }
 
-    inverseMap(input: IStrategyConfig): StrategySchema {
+    toPublic(input: IStrategyConfig): StrategySchema {
         return {
             ...input,
         };

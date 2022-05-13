@@ -37,7 +37,10 @@ import { FeaturesSchema } from '../../../openapi/spec/features-schema';
 import { UpdateFeatureSchema } from '../../../openapi/spec/updateFeatureSchema';
 import { UpdateStrategySchema } from '../../../openapi/spec/update-strategy-schema';
 import { CreateStrategySchema } from '../../../openapi/spec/create-strategy-schema';
-import StrategyMapper from '../../../openapi/mappers/strategy.mapper';
+import {
+    EnvironmentInfoMapper,
+    StrategyMapper,
+} from '../../../openapi/mappers';
 
 interface FeatureStrategyParams {
     projectId: string;
@@ -73,7 +76,10 @@ type ProjectFeaturesServices = Pick<
 export default class ProjectFeaturesController extends Controller {
     private featureService: FeatureToggleService;
 
-    private strategyMapper: StrategyMapper;
+    private strategyMapper: StrategyMapper = new StrategyMapper();
+
+    private environmentMapper: EnvironmentInfoMapper =
+        new EnvironmentInfoMapper();
 
     private readonly logger: Logger;
 
@@ -335,7 +341,7 @@ export default class ProjectFeaturesController extends Controller {
         req: IAuthRequest<
             FeatureParams,
             any,
-            { name: string; replaceGroupId: boolean },
+            { name: string; replaceGroupId?: boolean },
             any
         >,
         res: Response<FeatureSchema>,
@@ -347,7 +353,7 @@ export default class ProjectFeaturesController extends Controller {
             featureName,
             projectId,
             name,
-            replaceGroupId,
+            Boolean(replaceGroupId),
             userName,
         );
         res.status(201).json(created);
@@ -444,7 +450,7 @@ export default class ProjectFeaturesController extends Controller {
             environment,
             featureName,
         );
-        res.status(200).json(environmentInfo);
+        res.status(200).json(this.environmentMapper.toPublic(environmentInfo));
     }
 
     async toggleEnvironmentOn(
@@ -483,12 +489,12 @@ export default class ProjectFeaturesController extends Controller {
     ): Promise<void> {
         const { projectId, featureName, environment } = req.params;
         const userName = extractUsername(req);
-        const featureStrategy = await this.featureService.createStrategy(
+        const strategy = await this.featureService.createStrategy(
             this.strategyMapper.mapInput(req.body),
             { environment, projectId, featureName },
             userName,
         );
-        res.status(200).json(featureStrategy);
+        res.status(200).json(this.strategyMapper.toPublic(strategy));
     }
 
     async getStrategies(
@@ -502,7 +508,9 @@ export default class ProjectFeaturesController extends Controller {
                 featureName,
                 environment,
             );
-        res.status(200).json(featureStrategies);
+        res.status(200).json(
+            featureStrategies.map(this.strategyMapper.toPublic),
+        );
     }
 
     async updateStrategy(
@@ -517,7 +525,7 @@ export default class ProjectFeaturesController extends Controller {
             { environment, projectId, featureName },
             userName,
         );
-        res.status(200).json(updatedStrategy);
+        res.status(200).json(this.strategyMapper.fromPublic(updatedStrategy));
     }
 
     async patchStrategy(
@@ -535,7 +543,7 @@ export default class ProjectFeaturesController extends Controller {
             { environment, projectId, featureName },
             userName,
         );
-        res.status(200).json(updatedStrategy);
+        res.status(200).json(this.strategyMapper.toPublic(updatedStrategy));
     }
 
     async getStrategy(
@@ -546,7 +554,7 @@ export default class ProjectFeaturesController extends Controller {
         const { strategyId } = req.params;
         this.logger.info(strategyId);
         const strategy = await this.featureService.getStrategy(strategyId);
-        res.status(200).json(strategy);
+        res.status(200).json(this.strategyMapper.toPublic(strategy));
     }
 
     async deleteStrategy(
@@ -587,7 +595,7 @@ export default class ProjectFeaturesController extends Controller {
                 { environment, projectId, featureName },
                 userName,
             );
-        res.status(200).json(updatedStrategy);
+        res.status(200).json(this.strategyMapper.toPublic(updatedStrategy));
     }
 
     async getStrategyParameters(

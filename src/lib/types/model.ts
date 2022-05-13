@@ -3,11 +3,9 @@ import { LogProvider } from '../logger';
 import { IRole } from './stores/access-store';
 import { IUser } from './user';
 import { ALL_OPERATORS } from '../util/constants';
+import { AllowedStrings } from '../openapi/types';
 
-export type FromArray<T extends ReadonlyArray<unknown>> =
-    T extends ReadonlyArray<infer Type> ? Type : never;
-
-export type Operator = FromArray<typeof ALL_OPERATORS>;
+export type Operator = AllowedStrings<typeof ALL_OPERATORS>;
 
 export interface IConstraint {
     contextName: string;

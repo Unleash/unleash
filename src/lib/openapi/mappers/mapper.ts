@@ -1,5 +1,5 @@
-export interface Mapper<T, S, I = Partial<T>> {
-    map(input: T): S;
-    inverseMap(input: S): T;
-    mapInput(input: I): S;
+export interface Mapper<PUBLIC, INTERNAL, I = Partial<PUBLIC>> {
+    fromPublic(input: PUBLIC): INTERNAL;
+    toPublic(input: INTERNAL): PUBLIC;
+    mapInput?(input: I): INTERNAL;
 }

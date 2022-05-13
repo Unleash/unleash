@@ -4,26 +4,25 @@ import { HeaderGroup } from 'react-table';
 import { useStyles } from './SortableTableHeader.styles';
 import { CellSortable } from './CellSortable/CellSortable';
 
-interface IHeaderGroupColumn extends HeaderGroup<object> {
-    isGrow?: boolean;
-}
-
 interface ISortableTableHeaderProps {
     headerGroups: HeaderGroup<object>[];
+    className?: string;
 }
 
 export const SortableTableHeader: VFC<ISortableTableHeaderProps> = ({
     headerGroups,
+    className,
 }) => {
     const { classes: styles } = useStyles();
+
     return (
-        <TableHead>
+        <TableHead className={className}>
             {headerGroups.map(headerGroup => (
                 <TableRow
                     {...headerGroup.getHeaderGroupProps()}
                     className={styles.tableHeader}
                 >
-                    {headerGroup.headers.map((column: IHeaderGroupColumn) => {
+                    {headerGroup.headers.map((column: HeaderGroup) => {
                         const content = column.render('Header');
 
                         return (
@@ -39,7 +38,11 @@ export const SortableTableHeader: VFC<ISortableTableHeaderProps> = ({
                                 isSortable={column.canSort}
                                 isSorted={column.isSorted}
                                 isDescending={column.isSortedDesc}
-                                isGrow={column.isGrow}
+                                maxWidth={column.maxWidth}
+                                minWidth={column.minWidth}
+                                width={column.width}
+                                // @ts-expect-error -- check after `react-table` v8
+                                align={column.align}
                             >
                                 {content}
                             </CellSortable>

@@ -22,10 +22,21 @@ export const useStyles = makeStyles()(theme => ({
         justifyContent: 'center',
         wordBreak: 'break-all',
     },
+    title: {
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        display: '-webkit-box',
+        WebkitBoxOrient: 'vertical',
+    },
     description: {
-        color: theme.palette.grey[800],
+        color: theme.palette.text.secondary,
         textDecoration: 'none',
         fontSize: 'inherit',
-        display: 'inline-block',
+        WebkitLineClamp: 1,
+        lineClamp: 1,
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        display: '-webkit-box',
+        WebkitBoxOrient: 'vertical',
     },
 }));

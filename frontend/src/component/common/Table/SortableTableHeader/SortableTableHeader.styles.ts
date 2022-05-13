@@ -12,10 +12,6 @@ export const useStyles = makeStyles()(theme => ({
                 borderTopRightRadius: theme.shape.borderRadiusMedium,
                 borderBottomRightRadius: theme.shape.borderRadiusMedium,
             },
-            ':not(.grow)': {
-                width: '0.1%',
-                whiteSpace: 'nowrap',
-            },
         },
     },
 }));

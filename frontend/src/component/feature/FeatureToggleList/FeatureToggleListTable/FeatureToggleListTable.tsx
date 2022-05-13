@@ -12,34 +12,21 @@ import {
     TableSearch,
 } from 'component/common/Table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { DateCell } from './DateCell/DateCell';
-import { FeatureLinkCell } from './FeatureLinkCell/FeatureLinkCell';
-import { FeatureSeenCell } from './FeatureSeenCell/FeatureSeenCell';
+import { DateCell } from '../../../common/Table/cells/DateCell/DateCell';
+import { FeatureLinkCell } from 'component/common/Table/cells/FeatureLinkCell/FeatureLinkCell';
+import { FeatureSeenCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureSeenCell';
+import { FeatureTypeCell } from 'component/common/Table/cells/FeatureTypeCell/FeatureTypeCell';
 import { FeatureStaleCell } from './FeatureStaleCell/FeatureStaleCell';
-import { FeatureTypeCell } from './FeatureTypeCell/FeatureTypeCell';
 import { CreateFeatureButton } from '../../CreateFeatureButton/CreateFeatureButton';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
+import { sortTypes } from 'utils/sortTypes';
 
 interface IExperimentProps {
     data: Record<string, any>[];
     isLoading?: boolean;
 }
-
-const sortTypes = {
-    date: (a: any, b: any, id: string) =>
-        b?.values?.[id]?.getTime() - a?.values?.[id]?.getTime(),
-    boolean: (v1: any, v2: any, id: string) => {
-        const a = v1?.values?.[id];
-        const b = v2?.values?.[id];
-        return a === b ? 0 : a ? 1 : -1;
-    },
-    alphanumeric: (a: any, b: any, id: string) =>
-        a?.values?.[id]
-            ?.toLowerCase()
-            .localeCompare(b?.values?.[id]?.toLowerCase()),
-};
 
 const columns = [
     {
@@ -47,17 +34,19 @@ const columns = [
         accessor: 'lastSeenAt',
         Cell: FeatureSeenCell,
         sortType: 'date',
-        totalWidth: 120,
+        align: 'center',
     },
     {
         Header: 'Type',
         accessor: 'type',
         Cell: FeatureTypeCell,
-        totalWidth: 120,
+        align: 'center',
     },
     {
         Header: 'Feature toggle name',
         accessor: 'name',
+        maxWidth: 300,
+        width: '67%',
         Cell: ({
             row: {
                 // @ts-expect-error -- props type
@@ -71,7 +60,6 @@ const columns = [
             />
         ),
         sortType: 'alphanumeric',
-        isGrow: true,
     },
     {
         Header: 'Created on',

@@ -2,6 +2,15 @@ import { createTheme } from '@mui/material/styles';
 import { colors } from './colors';
 
 export default createTheme({
+    breakpoints: {
+        values: {
+            xs: 0,
+            sm: 600,
+            md: 960,
+            lg: 1260,
+            xl: 1536,
+        },
+    },
     boxShadows: {
         main: '0px 2px 4px rgba(129, 122, 254, 0.2)',
     },
@@ -20,8 +29,8 @@ export default createTheme({
         mainHeader: '1.25rem',
         subHeader: '1.1rem',
         bodySize: '1rem',
-        smallBody: '0.9rem',
-        smallerBody: '0.8rem',
+        smallBody: `${14 / 16}rem`,
+        smallerBody: `${12 / 16}rem`,
     },
     fontWeight: {
         thin: 300,
@@ -121,7 +130,10 @@ export default createTheme({
         MuiTableHead: {
             styleOverrides: {
                 root: {
-                    background: colors.grey[200],
+                    background: 'transparent',
+                    '& th': {
+                        background: colors.grey[200],
+                    },
                 },
             },
         },

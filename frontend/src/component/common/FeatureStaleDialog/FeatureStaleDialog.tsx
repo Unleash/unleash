@@ -2,24 +2,27 @@ import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import { DialogContentText } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import React from 'react';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
-interface IStaleDialogProps {
-    open: boolean;
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    stale: boolean;
+interface IFeatureStaleDialogProps {
+    isStale: boolean;
+    isOpen: boolean;
+    projectId: string;
+    featureId: string;
+    onClose: () => void;
 }
 
-const StaleDialog = ({ open, setOpen, stale }: IStaleDialogProps) => {
+export const FeatureStaleDialog = ({
+    isStale,
+    isOpen,
+    projectId,
+    featureId,
+    onClose,
+}: IFeatureStaleDialogProps) => {
     const { setToastData, setToastApiError } = useToast();
-    const projectId = useRequiredPathParam('projectId');
-    const featureId = useRequiredPathParam('featureId');
     const { patchFeatureToggle } = useFeatureApi();
-    const { refetchFeature } = useFeature(projectId, featureId);
 
     const toggleToStaleContent = (
         <DialogContentText>
@@ -32,21 +35,20 @@ const StaleDialog = ({ open, setOpen, stale }: IStaleDialogProps) => {
         </DialogContentText>
     );
 
-    const toggleActionText = stale ? 'active' : 'stale';
+    const toggleActionText = isStale ? 'active' : 'stale';
 
     const onSubmit = async (event: React.SyntheticEvent) => {
         event.stopPropagation();
 
         try {
-            const patch = [{ op: 'replace', path: '/stale', value: !stale }];
+            const patch = [{ op: 'replace', path: '/stale', value: !isStale }];
             await patchFeatureToggle(projectId, featureId, patch);
-            refetchFeature();
-            setOpen(false);
+            onClose();
         } catch (err: unknown) {
             setToastApiError(formatUnknownError(err));
         }
 
-        if (stale) {
+        if (isStale) {
             setToastData({
                 type: 'success',
                 title: "And we're back!",
@@ -61,30 +63,22 @@ const StaleDialog = ({ open, setOpen, stale }: IStaleDialogProps) => {
         }
     };
 
-    const onCancel = () => {
-        setOpen(false);
-    };
-
     return (
-        <>
-            <Dialogue
-                open={open}
-                secondaryButtonText={'Cancel'}
-                primaryButtonText={`Flip to ${toggleActionText}`}
-                title={`Set feature status to ${toggleActionText}`}
-                onClick={onSubmit}
-                onClose={onCancel}
-            >
-                <>
-                    <ConditionallyRender
-                        condition={stale}
-                        show={toggleToActiveContent}
-                        elseShow={toggleToStaleContent}
-                    />
-                </>
-            </Dialogue>
-        </>
+        <Dialogue
+            open={isOpen}
+            secondaryButtonText={'Cancel'}
+            primaryButtonText={`Flip to ${toggleActionText}`}
+            title={`Set feature status to ${toggleActionText}`}
+            onClick={onSubmit}
+            onClose={onClose}
+        >
+            <>
+                <ConditionallyRender
+                    condition={isStale}
+                    show={toggleToActiveContent}
+                    elseShow={toggleToStaleContent}
+                />
+            </>
+        </Dialogue>
     );
 };
-
-export default StaleDialog;

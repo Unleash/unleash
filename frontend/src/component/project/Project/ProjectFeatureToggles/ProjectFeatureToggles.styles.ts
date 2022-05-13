@@ -14,7 +14,17 @@ export const useStyles = makeStyles()(theme => ({
             width: 'inherit',
         },
     },
-
+    headerClass: {
+        '& th': {
+            fontSize: theme.fontSizes.smallerBody,
+            lineHeight: '1rem',
+            // fix for padding with different font size in hovered column header
+            'span[data-tooltip] span': {
+                padding: '4px 0',
+                display: 'block',
+            },
+        },
+    },
     bodyClass: { padding: '0.5rem 1rem' },
     header: {
         padding: '1rem',

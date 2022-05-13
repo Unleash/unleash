@@ -7,7 +7,7 @@ exports[`renders correctly 1`] = `
       className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 tss-15wj2kz-container mui-177gdp-MuiPaper-root"
     >
       <div
-        className="tss-1yjkq3l-headerContainer"
+        className="tss-1ywhhai-headerContainer"
       >
         <div
           className="tss-1ylehva-headerContainer"
@@ -66,7 +66,7 @@ exports[`renders correctly 1`] = `
         </div>
       </div>
       <div
-        className="tss-kiw3z8-bodyContainer"
+        className="tss-f35ha2-bodyContainer"
       >
         <ul
           className="MuiList-root MuiList-padding mui-h4y409-MuiList-root"

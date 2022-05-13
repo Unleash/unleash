@@ -28,7 +28,14 @@ export const FeatureLinkCell: FC<IFeatureLinkCellProps> = ({
             className={styles.wrapper}
         >
             <div className={styles.container}>
-                <span data-loading>
+                <span
+                    data-loading
+                    className={styles.title}
+                    style={{
+                        WebkitLineClamp: Boolean(subtitle) ? 1 : 2,
+                        lineClamp: Boolean(subtitle) ? 1 : 2,
+                    }}
+                >
                     <Highlighter search={search}>{title}</Highlighter>
                 </span>
                 <ConditionallyRender

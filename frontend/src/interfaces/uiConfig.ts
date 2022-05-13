@@ -29,6 +29,7 @@ export interface IFlags {
     CO?: boolean;
     SE?: boolean;
     T?: boolean;
+    NEW_PROJECT_OVERVIEW: boolean;
 }
 
 export interface IVersionInfo {

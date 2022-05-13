@@ -23,7 +23,7 @@ export const useStyles = makeStyles()(theme => ({
     content: {
         width: '1250px',
         margin: '16px auto',
-        [theme.breakpoints.down(1260)]: {
+        [theme.breakpoints.down('lg')]: {
             width: '1024px',
         },
         [theme.breakpoints.down(1024)]: {

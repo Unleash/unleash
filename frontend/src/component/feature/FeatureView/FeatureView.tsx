@@ -8,16 +8,13 @@ import {
     Routes,
     useLocation,
 } from 'react-router-dom';
-import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import useProject from 'hooks/api/getters/useProject/useProject';
-import useToast from 'hooks/useToast';
 import {
     CREATE_FEATURE,
     DELETE_FEATURE,
     UPDATE_FEATURE,
 } from 'component/providers/AccessProvider/permissions';
-import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import FeatureLog from './FeatureLog/FeatureLog';
 import FeatureOverview from './FeatureOverview/FeatureOverview';
@@ -27,21 +24,20 @@ import { useStyles } from './FeatureView.styles';
 import { FeatureSettings } from './FeatureSettings/FeatureSettings';
 import useLoading from 'hooks/useLoading';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import StaleDialog from './FeatureOverview/StaleDialog/StaleDialog';
+import { FeatureStaleDialog } from 'component/common/FeatureStaleDialog/FeatureStaleDialog';
 import AddTagDialog from './FeatureOverview/AddTagDialog/AddTagDialog';
 import StatusChip from 'component/common/StatusChip/StatusChip';
-import { formatUnknownError } from 'utils/formatUnknownError';
 import { FeatureNotFound } from 'component/feature/FeatureView/FeatureNotFound/FeatureNotFound';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import { FeatureArchiveDialog } from '../../common/FeatureArchiveDialog/FeatureArchiveDialog';
 
 export const FeatureView = () => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
-
     const { refetch: projectRefetch } = useProject(projectId);
+    const { refetchFeature } = useFeature(projectId, featureId);
+
     const [openTagDialog, setOpenTagDialog] = useState(false);
-    const { archiveFeatureToggle } = useFeatureApi();
-    const { setToastData, setToastApiError } = useToast();
     const [showDelDialog, setShowDelDialog] = useState(false);
     const [openStaleDialog, setOpenStaleDialog] = useState(false);
     const smallScreen = useMediaQuery(`(max-width:${500}px)`);
@@ -57,25 +53,6 @@ export const FeatureView = () => {
     const ref = useLoading(loading);
 
     const basePath = `/projects/${projectId}/features/${featureId}`;
-
-    const archiveToggle = async () => {
-        try {
-            await archiveFeatureToggle(projectId, featureId);
-            setToastData({
-                text: 'Your feature toggle has been archived',
-                type: 'success',
-                title: 'Feature archived',
-            });
-            setShowDelDialog(false);
-            projectRefetch();
-            navigate(`/projects/${projectId}`);
-        } catch (error: unknown) {
-            setToastApiError(formatUnknownError(error));
-            setShowDelDialog(false);
-        }
-    };
-
-    const handleCancel = () => setShowDelDialog(false);
 
     const tabData = [
         {
@@ -202,20 +179,25 @@ export const FeatureView = () => {
                         <Route path="settings" element={<FeatureSettings />} />
                         <Route path="*" element={<FeatureOverview />} />
                     </Routes>
-                    <Dialogue
-                        onClick={() => archiveToggle()}
-                        open={showDelDialog}
-                        onClose={handleCancel}
-                        primaryButtonText="Archive toggle"
-                        secondaryButtonText="Cancel"
-                        title="Archive feature toggle"
-                    >
-                        Are you sure you want to archive this feature toggle?
-                    </Dialogue>
-                    <StaleDialog
-                        stale={feature.stale}
-                        open={openStaleDialog}
-                        setOpen={setOpenStaleDialog}
+                    <FeatureArchiveDialog
+                        isOpen={showDelDialog}
+                        onConfirm={() => {
+                            projectRefetch();
+                            navigate(`/projects/${projectId}`);
+                        }}
+                        onClose={() => setShowDelDialog(false)}
+                        projectId={projectId}
+                        featureId={featureId}
+                    />
+                    <FeatureStaleDialog
+                        isStale={feature.stale}
+                        isOpen={openStaleDialog}
+                        onClose={() => {
+                            setOpenStaleDialog(false);
+                            refetchFeature();
+                        }}
+                        featureId={featureId}
+                        projectId={projectId}
                     />
                     <AddTagDialog
                         open={openTagDialog}

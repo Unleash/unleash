@@ -14,6 +14,7 @@ export const defaultValue = {
         CO: false,
         SE: false,
         T: false,
+        NEW_PROJECT_OVERVIEW: false,
     },
     links: [
         {

@@ -96,7 +96,7 @@ export const useStyles = makeStyles()(theme => ({
     headerText: {
         maxWidth: '400px',
         fontSize: theme.fontSizes.smallBody,
-        [theme.breakpoints.down(1260)]: {
+        [theme.breakpoints.down('xl')]: {
             display: 'none',
         },
     },

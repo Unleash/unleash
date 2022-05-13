@@ -1,4 +1,4 @@
-export const sameArrayItems = <T>(a: T[], b: T[]): boolean => {
+export const arraysHaveSameItems = <T>(a: T[], b: T[]): boolean => {
     const setA = new Set(a);
     const setB = new Set(b);
 

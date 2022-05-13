@@ -38,7 +38,7 @@ import { DEFAULT_PROJECT } from '../types/project';
 import { IFeatureTagStore } from 'lib/types/stores/feature-tag-store';
 import ProjectWithoutOwnerError from '../error/project-without-owner-error';
 import { IUserStore } from 'lib/types/stores/user-store';
-import { sameArrayItems } from '../util/sameArrayItems';
+import { arraysHaveSameItems } from '../util/arraysHaveSameItems';
 
 const getCreatedBy = (user: User) => user.email || user.username;
 
@@ -176,7 +176,7 @@ export default class ProjectService {
         const newEnvs = await this.store.getEnvironmentsForProject(
             newProjectId,
         );
-        return sameArrayItems(
+        return arraysHaveSameItems(
             featureEnvs.map((env) => env.environment),
             newEnvs,
         );

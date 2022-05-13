@@ -2,6 +2,7 @@ import EventEmitter from 'events';
 import { LogLevel, LogProvider } from '../logger';
 import { ILegacyApiTokenCreate } from './models/api-token';
 import { IExperimentalOptions } from '../experimental';
+import SMTPTransport from 'nodemailer/lib/smtp-transport';
 
 export type EventHook = (eventName: string, data: object) => void;
 
@@ -111,6 +112,7 @@ export interface IEmailOption {
     sender: string;
     smtpuser?: string;
     smtppass?: string;
+    transportOptions?: SMTPTransport.Options;
 }
 
 export interface IListeningPipe {

@@ -21,15 +21,6 @@ export enum TransporterType {
     JSON = 'json',
 }
 
-export interface IEmailOptions {
-    host: string;
-    port: number;
-    secure: boolean;
-    sender: string;
-    auth: IAuthOptions;
-    transporterType: TransporterType;
-}
-
 export interface IEmailEnvelope {
     from: string;
     to: string;
@@ -57,10 +48,16 @@ export class EmailService {
             if (email.host === 'test') {
                 this.mailer = createTransport({ jsonTransport: true });
             } else {
-                const connectionString = `${email.smtpuser}:${email.smtppass}@${email.host}:${email.port}`;
-                this.mailer = email.secure
-                    ? createTransport(`smtps://${connectionString}`)
-                    : createTransport(`smtp://${connectionString}`);
+                this.mailer = createTransport({
+                    host: email.host,
+                    port: email.port,
+                    secure: email.secure,
+                    auth: {
+                        user: email.smtpuser ?? '',
+                        pass: email.smtppass ?? '',
+                    },
+                    ...email.transportOptions,
+                });
             }
             this.logger.info(
                 `Initialized transport to ${email.host} on port ${email.port} with user: ${email.smtpuser}`,

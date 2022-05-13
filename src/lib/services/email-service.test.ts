@@ -1,3 +1,4 @@
+import nodemailer from 'nodemailer';
 import { EmailService } from './email-service';
 import noLoggerProvider from '../../test/fixtures/no-logger';
 
@@ -46,4 +47,36 @@ test('Can send welcome mail', async () => {
     );
     expect(content.from).toBe('noreply@getunleash.ai');
     expect(content.subject).toBe('Welcome to Unleash');
+});
+
+test('Can supply additional SMTP transport options', async () => {
+    const spy = jest.spyOn(nodemailer, 'createTransport');
+
+    new EmailService(
+        {
+            host: 'smtp.unleash.test',
+            port: 9999,
+            secure: false,
+            sender: 'noreply@getunleash.ai',
+            transportOptions: {
+                tls: {
+                    rejectUnauthorized: true,
+                },
+            },
+        },
+        noLoggerProvider,
+    );
+
+    expect(spy).toHaveBeenCalledWith({
+        auth: {
+            user: '',
+            pass: '',
+        },
+        host: 'smtp.unleash.test',
+        port: 9999,
+        secure: false,
+        tls: {
+            rejectUnauthorized: true,
+        },
+    });
 });

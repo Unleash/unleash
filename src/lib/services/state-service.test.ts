@@ -239,7 +239,6 @@ test('featureStrategy connected to an archived feature toggle should not be incl
 
     await stores.featureStrategiesStore.createStrategyFeatureEnv({
         featureName,
-        name: 'Some-Name',
         strategyName: 'fstrat-archived-strat',
         environment: GLOBAL_ENV,
         constraints: [],
@@ -259,7 +258,6 @@ test('featureStrategy connected to a feature should be included', async () => {
 
     await stores.featureStrategiesStore.createStrategyFeatureEnv({
         featureName,
-        name: 'Some-Name',
         strategyName: 'fstrat-strat',
         environment: GLOBAL_ENV,
         constraints: [],
@@ -552,7 +550,6 @@ test('exporting to new format works', async () => {
     );
     await stores.featureStrategiesStore.createStrategyFeatureEnv({
         featureName: 'Some-feature',
-        name: 'Some-Name',
         projectId: 'fancy',
         strategyName: 'format',
         environment: 'dev',
@@ -593,7 +590,6 @@ test('featureStrategies can keep existing', async () => {
     );
     await stores.featureStrategiesStore.createStrategyFeatureEnv({
         featureName: 'Some-feature',
-        name: 'Some-Name',
         projectId: 'fancy',
         strategyName: 'format',
         environment: 'dev',
@@ -640,7 +636,6 @@ test('featureStrategies should not keep existing if dropBeforeImport', async () 
     );
     await stores.featureStrategiesStore.createStrategyFeatureEnv({
         featureName: 'Some-feature',
-        name: 'Some-Name',
         projectId: 'fancy',
         strategyName: 'format',
         environment: 'dev',

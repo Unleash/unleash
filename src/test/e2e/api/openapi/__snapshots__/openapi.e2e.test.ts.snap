@@ -51,6 +51,21 @@ exports[`should serve the OpenAPI spec 1`] = `
 Object {
   "components": Object {
     "schemas": Object {
+      "cloneFeatureSchema": Object {
+        "properties": Object {
+          "name": Object {
+            "type": "string",
+          },
+          "replaceGroupId": Object {
+            "type": "boolean",
+          },
+        },
+        "required": Array [
+          "name",
+          "replaceGroupId",
+        ],
+        "type": "object",
+      },
       "constraintSchema": Object {
         "additionalProperties": false,
         "properties": Object {
@@ -64,6 +79,23 @@ Object {
             "type": "boolean",
           },
           "operator": Object {
+            "enum": Array [
+              "NOT_IN",
+              "IN",
+              "STR_ENDS_WITH",
+              "STR_STARTS_WITH",
+              "STR_CONTAINS",
+              "NUM_EQ",
+              "NUM_GT",
+              "NUM_GTE",
+              "NUM_LT",
+              "NUM_LTE",
+              "DATE_AFTER",
+              "DATE_BEFORE",
+              "SEMVER_EQ",
+              "SEMVER_GT",
+              "SEMVER_LT",
+            ],
             "type": "string",
           },
           "value": Object {
@@ -107,35 +139,7 @@ Object {
         "properties": Object {
           "constraints": Object {
             "items": Object {
-              "additionalProperties": false,
-              "properties": Object {
-                "caseInsensitive": Object {
-                  "type": "boolean",
-                },
-                "contextName": Object {
-                  "type": "string",
-                },
-                "inverted": Object {
-                  "type": "boolean",
-                },
-                "operator": Object {
-                  "type": "string",
-                },
-                "value": Object {
-                  "type": "string",
-                },
-                "values": Object {
-                  "items": Object {
-                    "type": "string",
-                  },
-                  "type": "array",
-                },
-              },
-              "required": Array [
-                "contextName",
-                "operator",
-              ],
-              "type": "object",
+              "$ref": "#/components/schemas/constraintSchema",
             },
             "type": "array",
           },
@@ -143,11 +147,7 @@ Object {
             "type": "string",
           },
           "parameters": Object {
-            "additionalProperties": Object {
-              "maxLength": 100,
-              "type": "string",
-            },
-            "type": "object",
+            "$ref": "#/components/schemas/parametersSchema",
           },
           "sortOrder": Object {
             "type": "number",
@@ -173,65 +173,12 @@ Object {
           },
           "strategies": Object {
             "items": Object {
-              "additionalProperties": false,
-              "properties": Object {
-                "constraints": Object {
-                  "items": Object {
-                    "additionalProperties": false,
-                    "properties": Object {
-                      "caseInsensitive": Object {
-                        "type": "boolean",
-                      },
-                      "contextName": Object {
-                        "type": "string",
-                      },
-                      "inverted": Object {
-                        "type": "boolean",
-                      },
-                      "operator": Object {
-                        "type": "string",
-                      },
-                      "value": Object {
-                        "type": "string",
-                      },
-                      "values": Object {
-                        "items": Object {
-                          "type": "string",
-                        },
-                        "type": "array",
-                      },
-                    },
-                    "required": Array [
-                      "contextName",
-                      "operator",
-                    ],
-                    "type": "object",
-                  },
-                  "type": "array",
-                },
-                "id": Object {
-                  "type": "string",
-                },
-                "name": Object {
-                  "type": "string",
-                },
-                "parameters": Object {
-                  "additionalProperties": Object {
-                    "maxLength": 100,
-                    "type": "string",
-                  },
-                  "type": "object",
-                },
-              },
-              "required": Array [
-                "id",
-                "name",
-                "constraints",
-                "parameters",
-              ],
-              "type": "object",
+              "$ref": "#/components/schemas/featureStrategySchema",
             },
             "type": "array",
+          },
+          "type": Object {
+            "type": "string",
           },
         },
         "required": Array [
@@ -245,6 +192,9 @@ Object {
       "featureSchema": Object {
         "additionalProperties": false,
         "properties": Object {
+          "archived": Object {
+            "type": "boolean",
+          },
           "createdAt": Object {
             "format": "date",
             "nullable": true,
@@ -255,6 +205,12 @@ Object {
           },
           "enabled": Object {
             "type": "boolean",
+          },
+          "environments": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/featureEnvironmentInfoSchema",
+            },
+            "type": "array",
           },
           "impressionData": Object {
             "type": "boolean",
@@ -275,63 +231,7 @@ Object {
           },
           "strategies": Object {
             "items": Object {
-              "additionalProperties": false,
-              "properties": Object {
-                "constraints": Object {
-                  "items": Object {
-                    "additionalProperties": false,
-                    "properties": Object {
-                      "caseInsensitive": Object {
-                        "type": "boolean",
-                      },
-                      "contextName": Object {
-                        "type": "string",
-                      },
-                      "inverted": Object {
-                        "type": "boolean",
-                      },
-                      "operator": Object {
-                        "type": "string",
-                      },
-                      "value": Object {
-                        "type": "string",
-                      },
-                      "values": Object {
-                        "items": Object {
-                          "type": "string",
-                        },
-                        "type": "array",
-                      },
-                    },
-                    "required": Array [
-                      "contextName",
-                      "operator",
-                    ],
-                    "type": "object",
-                  },
-                  "type": "array",
-                },
-                "id": Object {
-                  "type": "string",
-                },
-                "name": Object {
-                  "type": "string",
-                },
-                "parameters": Object {
-                  "additionalProperties": Object {
-                    "maxLength": 100,
-                    "type": "string",
-                  },
-                  "type": "object",
-                },
-              },
-              "required": Array [
-                "id",
-                "name",
-                "constraints",
-                "parameters",
-              ],
-              "type": "object",
+              "$ref": "#/components/schemas/strategySchema",
             },
             "type": "array",
           },
@@ -340,53 +240,7 @@ Object {
           },
           "variants": Object {
             "items": Object {
-              "additionalProperties": false,
-              "properties": Object {
-                "name": Object {
-                  "type": "string",
-                },
-                "overrides": Object {
-                  "items": Object {
-                    "additionalProperties": false,
-                    "properties": Object {
-                      "contextName": Object {
-                        "type": "string",
-                      },
-                      "values": Object {
-                        "items": Object {
-                          "type": "string",
-                        },
-                        "type": "array",
-                      },
-                    },
-                    "required": Array [
-                      "contextName",
-                      "values",
-                    ],
-                    "type": "object",
-                  },
-                  "type": "array",
-                },
-                "payload": Object {
-                  "type": "object",
-                },
-                "stickiness": Object {
-                  "type": "string",
-                },
-                "weight": Object {
-                  "type": "number",
-                },
-                "weightType": Object {
-                  "type": "string",
-                },
-              },
-              "required": Array [
-                "name",
-                "weight",
-                "weightType",
-                "stickiness",
-              ],
-              "type": "object",
+              "$ref": "#/components/schemas/variantSchema",
             },
             "type": "array",
           },
@@ -397,164 +251,62 @@ Object {
         ],
         "type": "object",
       },
+      "featureStrategySchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "constraints": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/constraintSchema",
+            },
+            "type": "array",
+          },
+          "createdAt": Object {
+            "format": "date",
+            "nullable": true,
+            "type": "string",
+          },
+          "environment": Object {
+            "type": "string",
+          },
+          "featureName": Object {
+            "type": "string",
+          },
+          "id": Object {
+            "type": "string",
+          },
+          "name": Object {
+            "type": "string",
+          },
+          "parameters": Object {
+            "$ref": "#/components/schemas/parametersSchema",
+          },
+          "projectId": Object {
+            "type": "string",
+          },
+          "sortOrder": Object {
+            "type": "number",
+          },
+          "strategyName": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "id",
+          "name",
+          "featureName",
+          "strategyName",
+          "constraints",
+          "parameters",
+          "environment",
+        ],
+        "type": "object",
+      },
       "featuresSchema": Object {
         "additionalProperties": false,
         "properties": Object {
           "features": Object {
             "items": Object {
-              "additionalProperties": false,
-              "properties": Object {
-                "createdAt": Object {
-                  "format": "date",
-                  "nullable": true,
-                  "type": "string",
-                },
-                "description": Object {
-                  "type": "string",
-                },
-                "enabled": Object {
-                  "type": "boolean",
-                },
-                "impressionData": Object {
-                  "type": "boolean",
-                },
-                "lastSeenAt": Object {
-                  "format": "date",
-                  "nullable": true,
-                  "type": "string",
-                },
-                "name": Object {
-                  "type": "string",
-                },
-                "project": Object {
-                  "type": "string",
-                },
-                "stale": Object {
-                  "type": "boolean",
-                },
-                "strategies": Object {
-                  "items": Object {
-                    "additionalProperties": false,
-                    "properties": Object {
-                      "constraints": Object {
-                        "items": Object {
-                          "additionalProperties": false,
-                          "properties": Object {
-                            "caseInsensitive": Object {
-                              "type": "boolean",
-                            },
-                            "contextName": Object {
-                              "type": "string",
-                            },
-                            "inverted": Object {
-                              "type": "boolean",
-                            },
-                            "operator": Object {
-                              "type": "string",
-                            },
-                            "value": Object {
-                              "type": "string",
-                            },
-                            "values": Object {
-                              "items": Object {
-                                "type": "string",
-                              },
-                              "type": "array",
-                            },
-                          },
-                          "required": Array [
-                            "contextName",
-                            "operator",
-                          ],
-                          "type": "object",
-                        },
-                        "type": "array",
-                      },
-                      "id": Object {
-                        "type": "string",
-                      },
-                      "name": Object {
-                        "type": "string",
-                      },
-                      "parameters": Object {
-                        "additionalProperties": Object {
-                          "maxLength": 100,
-                          "type": "string",
-                        },
-                        "type": "object",
-                      },
-                    },
-                    "required": Array [
-                      "id",
-                      "name",
-                      "constraints",
-                      "parameters",
-                    ],
-                    "type": "object",
-                  },
-                  "type": "array",
-                },
-                "type": Object {
-                  "type": "string",
-                },
-                "variants": Object {
-                  "items": Object {
-                    "additionalProperties": false,
-                    "properties": Object {
-                      "name": Object {
-                        "type": "string",
-                      },
-                      "overrides": Object {
-                        "items": Object {
-                          "additionalProperties": false,
-                          "properties": Object {
-                            "contextName": Object {
-                              "type": "string",
-                            },
-                            "values": Object {
-                              "items": Object {
-                                "type": "string",
-                              },
-                              "type": "array",
-                            },
-                          },
-                          "required": Array [
-                            "contextName",
-                            "values",
-                          ],
-                          "type": "object",
-                        },
-                        "type": "array",
-                      },
-                      "payload": Object {
-                        "type": "object",
-                      },
-                      "stickiness": Object {
-                        "type": "string",
-                      },
-                      "weight": Object {
-                        "type": "number",
-                      },
-                      "weightType": Object {
-                        "type": "string",
-                      },
-                    },
-                    "required": Array [
-                      "name",
-                      "weight",
-                      "weightType",
-                      "stickiness",
-                    ],
-                    "type": "object",
-                  },
-                  "type": "array",
-                },
-              },
-              "required": Array [
-                "name",
-                "project",
-              ],
-              "type": "object",
+              "$ref": "#/components/schemas/featureSchema",
             },
             "type": "array",
           },
@@ -594,189 +346,17 @@ Object {
         },
         "type": "object",
       },
-      "patchAddOperationSchema": Object {
+      "patchOperationSchema": Object {
         "properties": Object {
+          "from": Object {
+            "type": "string",
+          },
           "op": Object {
             "enum": Array [
               "add",
-            ],
-            "type": "string",
-          },
-          "path": Object {
-            "type": "string",
-          },
-          "value": Object {
-            "oneOf": Array [
-              Object {
-                "type": "string",
-              },
-              Object {
-                "type": "number",
-              },
-              Object {
-                "type": "object",
-              },
-            ],
-          },
-        },
-        "required": Array [
-          "path",
-          "op",
-          "value",
-        ],
-        "type": "object",
-      },
-      "patchCopyOperationSchema": Object {
-        "properties": Object {
-          "from": Object {
-            "type": "string",
-          },
-          "op": Object {
-            "enum": Array [
+              "remove",
+              "replace",
               "copy",
-            ],
-            "type": "string",
-          },
-          "path": Object {
-            "type": "string",
-          },
-        },
-        "type": "object",
-      },
-      "patchFeatureSchema": Object {
-        "items": Object {
-          "discriminator": Object {
-            "propertyName": "op",
-          },
-          "oneOf": Array [
-            Object {
-              "properties": Object {
-                "op": Object {
-                  "enum": Array [
-                    "add",
-                  ],
-                  "type": "string",
-                },
-                "path": Object {
-                  "type": "string",
-                },
-                "value": Object {
-                  "oneOf": Array [
-                    Object {
-                      "type": "string",
-                    },
-                    Object {
-                      "type": "number",
-                    },
-                    Object {
-                      "type": "object",
-                    },
-                  ],
-                },
-              },
-              "required": Array [
-                "path",
-                "op",
-                "value",
-              ],
-              "type": "object",
-            },
-            Object {
-              "properties": Object {
-                "op": Object {
-                  "enum": Array [
-                    "remove",
-                  ],
-                  "type": "string",
-                },
-                "path": Object {
-                  "type": "string",
-                },
-              },
-              "required": Array [
-                "path",
-                "op",
-              ],
-              "type": "object",
-            },
-            Object {
-              "properties": Object {
-                "op": Object {
-                  "enum": Array [
-                    "replace",
-                  ],
-                  "type": "string",
-                },
-                "path": Object {
-                  "type": "string",
-                },
-                "value": Object {
-                  "oneOf": Array [
-                    Object {
-                      "type": "string",
-                    },
-                    Object {
-                      "type": "number",
-                    },
-                    Object {
-                      "type": "object",
-                    },
-                  ],
-                },
-              },
-              "required": Array [
-                "path",
-                "op",
-                "value",
-              ],
-              "type": "object",
-            },
-            Object {
-              "properties": Object {
-                "from": Object {
-                  "type": "string",
-                },
-                "op": Object {
-                  "enum": Array [
-                    "move",
-                  ],
-                  "type": "string",
-                },
-                "path": Object {
-                  "type": "string",
-                },
-              },
-              "type": "object",
-            },
-            Object {
-              "properties": Object {
-                "from": Object {
-                  "type": "string",
-                },
-                "op": Object {
-                  "enum": Array [
-                    "copy",
-                  ],
-                  "type": "string",
-                },
-                "path": Object {
-                  "type": "string",
-                },
-              },
-              "type": "object",
-            },
-          ],
-          "type": "object",
-        },
-        "type": "array",
-      },
-      "patchMoveOperationSchema": Object {
-        "properties": Object {
-          "from": Object {
-            "type": "string",
-          },
-          "op": Object {
-            "enum": Array [
               "move",
             ],
             "type": "string",
@@ -784,406 +364,20 @@ Object {
           "path": Object {
             "type": "string",
           },
-        },
-        "type": "object",
-      },
-      "patchOperationSchema": Object {
-        "discriminator": Object {
-          "propertyName": "op",
-        },
-        "oneOf": Array [
-          Object {
-            "properties": Object {
-              "op": Object {
-                "enum": Array [
-                  "add",
-                ],
-                "type": "string",
-              },
-              "path": Object {
-                "type": "string",
-              },
-              "value": Object {
-                "oneOf": Array [
-                  Object {
-                    "type": "string",
-                  },
-                  Object {
-                    "type": "number",
-                  },
-                  Object {
-                    "type": "object",
-                  },
-                ],
-              },
-            },
-            "required": Array [
-              "path",
-              "op",
-              "value",
-            ],
-            "type": "object",
-          },
-          Object {
-            "properties": Object {
-              "op": Object {
-                "enum": Array [
-                  "remove",
-                ],
-                "type": "string",
-              },
-              "path": Object {
-                "type": "string",
-              },
-            },
-            "required": Array [
-              "path",
-              "op",
-            ],
-            "type": "object",
-          },
-          Object {
-            "properties": Object {
-              "op": Object {
-                "enum": Array [
-                  "replace",
-                ],
-                "type": "string",
-              },
-              "path": Object {
-                "type": "string",
-              },
-              "value": Object {
-                "oneOf": Array [
-                  Object {
-                    "type": "string",
-                  },
-                  Object {
-                    "type": "number",
-                  },
-                  Object {
-                    "type": "object",
-                  },
-                ],
-              },
-            },
-            "required": Array [
-              "path",
-              "op",
-              "value",
-            ],
-            "type": "object",
-          },
-          Object {
-            "properties": Object {
-              "from": Object {
-                "type": "string",
-              },
-              "op": Object {
-                "enum": Array [
-                  "move",
-                ],
-                "type": "string",
-              },
-              "path": Object {
-                "type": "string",
-              },
-            },
-            "type": "object",
-          },
-          Object {
-            "properties": Object {
-              "from": Object {
-                "type": "string",
-              },
-              "op": Object {
-                "enum": Array [
-                  "copy",
-                ],
-                "type": "string",
-              },
-              "path": Object {
-                "type": "string",
-              },
-            },
-            "type": "object",
-          },
-        ],
-        "type": "object",
-      },
-      "patchRemoveOperationSchema": Object {
-        "properties": Object {
-          "op": Object {
-            "enum": Array [
-              "remove",
-            ],
-            "type": "string",
-          },
-          "path": Object {
-            "type": "string",
-          },
+          "value": Object {},
         },
         "required": Array [
           "path",
           "op",
         ],
         "type": "object",
-      },
-      "patchReplaceOperationSchema": Object {
-        "properties": Object {
-          "op": Object {
-            "enum": Array [
-              "replace",
-            ],
-            "type": "string",
-          },
-          "path": Object {
-            "type": "string",
-          },
-          "value": Object {
-            "oneOf": Array [
-              Object {
-                "type": "string",
-              },
-              Object {
-                "type": "number",
-              },
-              Object {
-                "type": "object",
-              },
-            ],
-          },
-        },
-        "required": Array [
-          "path",
-          "op",
-          "value",
-        ],
-        "type": "object",
-      },
-      "patchStrategySchema": Object {
-        "items": Object {
-          "discriminator": Object {
-            "propertyName": "op",
-          },
-          "oneOf": Array [
-            Object {
-              "properties": Object {
-                "op": Object {
-                  "enum": Array [
-                    "add",
-                  ],
-                  "type": "string",
-                },
-                "path": Object {
-                  "type": "string",
-                },
-                "value": Object {
-                  "oneOf": Array [
-                    Object {
-                      "type": "string",
-                    },
-                    Object {
-                      "type": "number",
-                    },
-                    Object {
-                      "type": "object",
-                    },
-                  ],
-                },
-              },
-              "required": Array [
-                "path",
-                "op",
-                "value",
-              ],
-              "type": "object",
-            },
-            Object {
-              "properties": Object {
-                "op": Object {
-                  "enum": Array [
-                    "remove",
-                  ],
-                  "type": "string",
-                },
-                "path": Object {
-                  "type": "string",
-                },
-              },
-              "required": Array [
-                "path",
-                "op",
-              ],
-              "type": "object",
-            },
-            Object {
-              "properties": Object {
-                "op": Object {
-                  "enum": Array [
-                    "replace",
-                  ],
-                  "type": "string",
-                },
-                "path": Object {
-                  "type": "string",
-                },
-                "value": Object {
-                  "oneOf": Array [
-                    Object {
-                      "type": "string",
-                    },
-                    Object {
-                      "type": "number",
-                    },
-                    Object {
-                      "type": "object",
-                    },
-                  ],
-                },
-              },
-              "required": Array [
-                "path",
-                "op",
-                "value",
-              ],
-              "type": "object",
-            },
-            Object {
-              "properties": Object {
-                "from": Object {
-                  "type": "string",
-                },
-                "op": Object {
-                  "enum": Array [
-                    "move",
-                  ],
-                  "type": "string",
-                },
-                "path": Object {
-                  "type": "string",
-                },
-              },
-              "type": "object",
-            },
-            Object {
-              "properties": Object {
-                "from": Object {
-                  "type": "string",
-                },
-                "op": Object {
-                  "enum": Array [
-                    "copy",
-                  ],
-                  "type": "string",
-                },
-                "path": Object {
-                  "type": "string",
-                },
-              },
-              "type": "object",
-            },
-          ],
-          "type": "object",
-        },
-        "type": "array",
-      },
-      "strategiesSchema": Object {
-        "items": Object {
-          "additionalProperties": false,
-          "properties": Object {
-            "constraints": Object {
-              "items": Object {
-                "additionalProperties": false,
-                "properties": Object {
-                  "caseInsensitive": Object {
-                    "type": "boolean",
-                  },
-                  "contextName": Object {
-                    "type": "string",
-                  },
-                  "inverted": Object {
-                    "type": "boolean",
-                  },
-                  "operator": Object {
-                    "type": "string",
-                  },
-                  "value": Object {
-                    "type": "string",
-                  },
-                  "values": Object {
-                    "items": Object {
-                      "type": "string",
-                    },
-                    "type": "array",
-                  },
-                },
-                "required": Array [
-                  "contextName",
-                  "operator",
-                ],
-                "type": "object",
-              },
-              "type": "array",
-            },
-            "id": Object {
-              "type": "string",
-            },
-            "name": Object {
-              "type": "string",
-            },
-            "parameters": Object {
-              "additionalProperties": Object {
-                "maxLength": 100,
-                "type": "string",
-              },
-              "type": "object",
-            },
-          },
-          "required": Array [
-            "id",
-            "name",
-            "constraints",
-            "parameters",
-          ],
-          "type": "object",
-        },
-        "type": "array",
       },
       "strategySchema": Object {
         "additionalProperties": false,
         "properties": Object {
           "constraints": Object {
             "items": Object {
-              "additionalProperties": false,
-              "properties": Object {
-                "caseInsensitive": Object {
-                  "type": "boolean",
-                },
-                "contextName": Object {
-                  "type": "string",
-                },
-                "inverted": Object {
-                  "type": "boolean",
-                },
-                "operator": Object {
-                  "type": "string",
-                },
-                "value": Object {
-                  "type": "string",
-                },
-                "values": Object {
-                  "items": Object {
-                    "type": "string",
-                  },
-                  "type": "array",
-                },
-              },
-              "required": Array [
-                "contextName",
-                "operator",
-              ],
-              "type": "object",
+              "$ref": "#/components/schemas/constraintSchema",
             },
             "type": "array",
           },
@@ -1194,15 +388,13 @@ Object {
             "type": "string",
           },
           "parameters": Object {
-            "additionalProperties": Object {
-              "maxLength": 100,
-              "type": "string",
-            },
-            "type": "object",
+            "$ref": "#/components/schemas/parametersSchema",
+          },
+          "sortOrder": Object {
+            "type": "number",
           },
         },
         "required": Array [
-          "id",
           "name",
           "constraints",
           "parameters",
@@ -1225,25 +417,12 @@ Object {
         ],
         "type": "object",
       },
-      "tagsSchema": Object {
+      "tagsResponseSchema": Object {
         "additionalProperties": false,
         "properties": Object {
           "tags": Object {
             "items": Object {
-              "additionalProperties": false,
-              "properties": Object {
-                "type": Object {
-                  "type": "string",
-                },
-                "value": Object {
-                  "type": "string",
-                },
-              },
-              "required": Array [
-                "value",
-                "type",
-              ],
-              "type": "object",
+              "$ref": "#/components/schemas/tagSchema",
             },
             "type": "array",
           },
@@ -1260,9 +439,16 @@ Object {
       "updateFeatureSchema": Object {
         "properties": Object {
           "archived": Object {
-            "type": "string",
+            "type": "boolean",
+          },
+          "constraints": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/constraintSchema",
+            },
+            "type": "array",
           },
           "createdAt": Object {
+            "format": "date",
             "type": "string",
           },
           "description": Object {
@@ -1275,7 +461,7 @@ Object {
             "type": "string",
           },
           "stale": Object {
-            "type": "string",
+            "type": "boolean",
           },
           "type": Object {
             "type": "string",
@@ -1291,35 +477,7 @@ Object {
         "properties": Object {
           "constraints": Object {
             "items": Object {
-              "additionalProperties": false,
-              "properties": Object {
-                "caseInsensitive": Object {
-                  "type": "boolean",
-                },
-                "contextName": Object {
-                  "type": "string",
-                },
-                "inverted": Object {
-                  "type": "boolean",
-                },
-                "operator": Object {
-                  "type": "string",
-                },
-                "value": Object {
-                  "type": "string",
-                },
-                "values": Object {
-                  "items": Object {
-                    "type": "string",
-                  },
-                  "type": "array",
-                },
-              },
-              "required": Array [
-                "contextName",
-                "operator",
-              ],
-              "type": "object",
+              "$ref": "#/components/schemas/constraintSchema",
             },
             "type": "array",
           },
@@ -1330,11 +488,10 @@ Object {
             "type": "string",
           },
           "parameters": Object {
-            "additionalProperties": Object {
-              "maxLength": 100,
-              "type": "string",
-            },
-            "type": "object",
+            "$ref": "#/components/schemas/parametersSchema",
+          },
+          "sortOrder": Object {
+            "type": "number",
           },
         },
         "required": Array [],
@@ -1348,27 +505,23 @@ Object {
           },
           "overrides": Object {
             "items": Object {
-              "additionalProperties": false,
-              "properties": Object {
-                "contextName": Object {
-                  "type": "string",
-                },
-                "values": Object {
-                  "items": Object {
-                    "type": "string",
-                  },
-                  "type": "array",
-                },
-              },
-              "required": Array [
-                "contextName",
-                "values",
-              ],
-              "type": "object",
+              "$ref": "#/components/schemas/overrideSchema",
             },
             "type": "array",
           },
           "payload": Object {
+            "properties": Object {
+              "type": Object {
+                "type": "string",
+              },
+              "value": Object {
+                "type": "string",
+              },
+            },
+            "required": Array [
+              "type",
+              "value",
+            ],
             "type": "object",
           },
           "stickiness": Object {
@@ -1453,9 +606,10 @@ Object {
         ],
       },
     },
-    "/api/admin/features/": Object {
+    "/api/admin/features": Object {
       "get": Object {
         "deprecated": true,
+        "operationId": "getAllToggles",
         "responses": Object {
           "200": Object {
             "content": Object {
@@ -1475,6 +629,7 @@ Object {
     },
     "/api/admin/features/validate": Object {
       "post": Object {
+        "operationId": "validateFeature",
         "responses": Object {
           "200": Object {
             "content": Object {
@@ -1494,6 +649,7 @@ Object {
     },
     "/api/admin/features/{featureName}/tags": Object {
       "get": Object {
+        "operationId": "listTags",
         "parameters": Array [
           Object {
             "in": "path",
@@ -1509,36 +665,7 @@ Object {
             "content": Object {
               "application/json": Object {
                 "schema": Object {
-                  "additionalProperties": false,
-                  "properties": Object {
-                    "tags": Object {
-                      "items": Object {
-                        "additionalProperties": false,
-                        "properties": Object {
-                          "type": Object {
-                            "type": "string",
-                          },
-                          "value": Object {
-                            "type": "string",
-                          },
-                        },
-                        "required": Array [
-                          "value",
-                          "type",
-                        ],
-                        "type": "object",
-                      },
-                      "type": "array",
-                    },
-                    "version": Object {
-                      "type": "integer",
-                    },
-                  },
-                  "required": Array [
-                    "version",
-                    "tags",
-                  ],
-                  "type": "object",
+                  "$ref": "#/components/schemas/tagsResponseSchema",
                 },
               },
             },
@@ -1550,6 +677,7 @@ Object {
         ],
       },
       "post": Object {
+        "operationId": "addTag",
         "parameters": Array [
           Object {
             "in": "path",
@@ -1571,24 +699,11 @@ Object {
           "required": true,
         },
         "responses": Object {
-          "200": Object {
+          "201": Object {
             "content": Object {
               "application/json": Object {
                 "schema": Object {
-                  "additionalProperties": false,
-                  "properties": Object {
-                    "type": Object {
-                      "type": "string",
-                    },
-                    "value": Object {
-                      "type": "string",
-                    },
-                  },
-                  "required": Array [
-                    "value",
-                    "type",
-                  ],
-                  "type": "object",
+                  "$ref": "#/components/schemas/tagSchema",
                 },
               },
             },
@@ -1602,6 +717,7 @@ Object {
     },
     "/api/admin/features/{featureName}/tags/{type}/{value}": Object {
       "delete": Object {
+        "operationId": "removeTag",
         "parameters": Array [
           Object {
             "in": "path",
@@ -1647,6 +763,7 @@ Object {
     },
     "/api/admin/projects/{projectId}/features": Object {
       "get": Object {
+        "operationId": "getFeatures",
         "parameters": Array [
           Object {
             "in": "path",
@@ -1674,6 +791,7 @@ Object {
         ],
       },
       "post": Object {
+        "operationId": "createFeature",
         "parameters": Array [
           Object {
             "in": "path",
@@ -1713,6 +831,7 @@ Object {
     },
     "/api/admin/projects/{projectId}/features/{featureName}": Object {
       "delete": Object {
+        "operationId": "archiveFeature",
         "parameters": Array [
           Object {
             "in": "path",
@@ -1748,6 +867,7 @@ Object {
         ],
       },
       "get": Object {
+        "operationId": "getFeature",
         "parameters": Array [
           Object {
             "in": "path",
@@ -1783,6 +903,7 @@ Object {
         ],
       },
       "patch": Object {
+        "operationId": "patchFeature",
         "parameters": Array [
           Object {
             "in": "path",
@@ -1805,7 +926,10 @@ Object {
           "content": Object {
             "application/json": Object {
               "schema": Object {
-                "$ref": "#/components/schemas/patchFeatureSchema",
+                "items": Object {
+                  "$ref": "#/components/schemas/patchOperationSchema",
+                },
+                "type": "array",
               },
             },
           },
@@ -1828,6 +952,7 @@ Object {
         ],
       },
       "put": Object {
+        "operationId": "updateFeature",
         "parameters": Array [
           Object {
             "in": "path",
@@ -1850,33 +975,7 @@ Object {
           "content": Object {
             "application/json": Object {
               "schema": Object {
-                "properties": Object {
-                  "archived": Object {
-                    "type": "string",
-                  },
-                  "createdAt": Object {
-                    "type": "string",
-                  },
-                  "description": Object {
-                    "type": "string",
-                  },
-                  "impressionData": Object {
-                    "type": "boolean",
-                  },
-                  "name": Object {
-                    "type": "string",
-                  },
-                  "stale": Object {
-                    "type": "string",
-                  },
-                  "type": Object {
-                    "type": "string",
-                  },
-                },
-                "required": Array [
-                  "name",
-                ],
-                "type": "object",
+                "$ref": "#/components/schemas/updateFeatureSchema",
               },
             },
           },
@@ -1901,6 +1000,7 @@ Object {
     },
     "/api/admin/projects/{projectId}/features/{featureName}/clone": Object {
       "post": Object {
+        "operationId": "cloneFeature",
         "parameters": Array [
           Object {
             "in": "path",
@@ -1919,6 +1019,16 @@ Object {
             },
           },
         ],
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/cloneFeatureSchema",
+              },
+            },
+          },
+          "required": true,
+        },
         "responses": Object {
           "200": Object {
             "content": Object {
@@ -1938,6 +1048,7 @@ Object {
     },
     "/api/admin/projects/{projectId}/features/{featureName}/environments/{environment}": Object {
       "get": Object {
+        "operationId": "getEnvironment",
         "parameters": Array [
           Object {
             "in": "path",
@@ -1983,6 +1094,7 @@ Object {
     },
     "/api/admin/projects/{projectId}/features/{featureName}/environments/{environment}/off": Object {
       "post": Object {
+        "operationId": "toggleEnvironmentOff",
         "parameters": Array [
           Object {
             "in": "path",
@@ -2028,6 +1140,7 @@ Object {
     },
     "/api/admin/projects/{projectId}/features/{featureName}/environments/{environment}/on": Object {
       "post": Object {
+        "operationId": "toggleEnvironmentOn",
         "parameters": Array [
           Object {
             "in": "path",
@@ -2073,6 +1186,7 @@ Object {
     },
     "/api/admin/projects/{projectId}/features/{featureName}/environments/{environment}/strategies": Object {
       "get": Object {
+        "operationId": "getStrategies",
         "parameters": Array [
           Object {
             "in": "path",
@@ -2104,7 +1218,10 @@ Object {
             "content": Object {
               "application/json": Object {
                 "schema": Object {
-                  "$ref": "#/components/schemas/strategiesSchema",
+                  "items": Object {
+                    "$ref": "#/components/schemas/strategySchema",
+                  },
+                  "type": "array",
                 },
               },
             },
@@ -2116,6 +1233,7 @@ Object {
         ],
       },
       "post": Object {
+        "operationId": "addStrategy",
         "parameters": Array [
           Object {
             "in": "path",
@@ -2157,63 +1275,7 @@ Object {
             "content": Object {
               "application/json": Object {
                 "schema": Object {
-                  "additionalProperties": false,
-                  "properties": Object {
-                    "constraints": Object {
-                      "items": Object {
-                        "additionalProperties": false,
-                        "properties": Object {
-                          "caseInsensitive": Object {
-                            "type": "boolean",
-                          },
-                          "contextName": Object {
-                            "type": "string",
-                          },
-                          "inverted": Object {
-                            "type": "boolean",
-                          },
-                          "operator": Object {
-                            "type": "string",
-                          },
-                          "value": Object {
-                            "type": "string",
-                          },
-                          "values": Object {
-                            "items": Object {
-                              "type": "string",
-                            },
-                            "type": "array",
-                          },
-                        },
-                        "required": Array [
-                          "contextName",
-                          "operator",
-                        ],
-                        "type": "object",
-                      },
-                      "type": "array",
-                    },
-                    "id": Object {
-                      "type": "string",
-                    },
-                    "name": Object {
-                      "type": "string",
-                    },
-                    "parameters": Object {
-                      "additionalProperties": Object {
-                        "maxLength": 100,
-                        "type": "string",
-                      },
-                      "type": "object",
-                    },
-                  },
-                  "required": Array [
-                    "id",
-                    "name",
-                    "constraints",
-                    "parameters",
-                  ],
-                  "type": "object",
+                  "$ref": "#/components/schemas/featureStrategySchema",
                 },
               },
             },
@@ -2227,6 +1289,7 @@ Object {
     },
     "/api/admin/projects/{projectId}/features/{featureName}/environments/{environment}/strategies/{strategyId}": Object {
       "delete": Object {
+        "operationId": "deleteStrategy",
         "parameters": Array [
           Object {
             "in": "path",
@@ -2278,6 +1341,7 @@ Object {
         ],
       },
       "get": Object {
+        "operationId": "getStrategy",
         "parameters": Array [
           Object {
             "in": "path",
@@ -2317,63 +1381,7 @@ Object {
             "content": Object {
               "application/json": Object {
                 "schema": Object {
-                  "additionalProperties": false,
-                  "properties": Object {
-                    "constraints": Object {
-                      "items": Object {
-                        "additionalProperties": false,
-                        "properties": Object {
-                          "caseInsensitive": Object {
-                            "type": "boolean",
-                          },
-                          "contextName": Object {
-                            "type": "string",
-                          },
-                          "inverted": Object {
-                            "type": "boolean",
-                          },
-                          "operator": Object {
-                            "type": "string",
-                          },
-                          "value": Object {
-                            "type": "string",
-                          },
-                          "values": Object {
-                            "items": Object {
-                              "type": "string",
-                            },
-                            "type": "array",
-                          },
-                        },
-                        "required": Array [
-                          "contextName",
-                          "operator",
-                        ],
-                        "type": "object",
-                      },
-                      "type": "array",
-                    },
-                    "id": Object {
-                      "type": "string",
-                    },
-                    "name": Object {
-                      "type": "string",
-                    },
-                    "parameters": Object {
-                      "additionalProperties": Object {
-                        "maxLength": 100,
-                        "type": "string",
-                      },
-                      "type": "object",
-                    },
-                  },
-                  "required": Array [
-                    "id",
-                    "name",
-                    "constraints",
-                    "parameters",
-                  ],
-                  "type": "object",
+                  "$ref": "#/components/schemas/featureStrategySchema",
                 },
               },
             },
@@ -2385,6 +1393,7 @@ Object {
         ],
       },
       "patch": Object {
+        "operationId": "patchStrategy",
         "parameters": Array [
           Object {
             "in": "path",
@@ -2423,7 +1432,10 @@ Object {
           "content": Object {
             "application/json": Object {
               "schema": Object {
-                "$ref": "#/components/schemas/patchStrategySchema",
+                "items": Object {
+                  "$ref": "#/components/schemas/patchOperationSchema",
+                },
+                "type": "array",
               },
             },
           },
@@ -2434,63 +1446,7 @@ Object {
             "content": Object {
               "application/json": Object {
                 "schema": Object {
-                  "additionalProperties": false,
-                  "properties": Object {
-                    "constraints": Object {
-                      "items": Object {
-                        "additionalProperties": false,
-                        "properties": Object {
-                          "caseInsensitive": Object {
-                            "type": "boolean",
-                          },
-                          "contextName": Object {
-                            "type": "string",
-                          },
-                          "inverted": Object {
-                            "type": "boolean",
-                          },
-                          "operator": Object {
-                            "type": "string",
-                          },
-                          "value": Object {
-                            "type": "string",
-                          },
-                          "values": Object {
-                            "items": Object {
-                              "type": "string",
-                            },
-                            "type": "array",
-                          },
-                        },
-                        "required": Array [
-                          "contextName",
-                          "operator",
-                        ],
-                        "type": "object",
-                      },
-                      "type": "array",
-                    },
-                    "id": Object {
-                      "type": "string",
-                    },
-                    "name": Object {
-                      "type": "string",
-                    },
-                    "parameters": Object {
-                      "additionalProperties": Object {
-                        "maxLength": 100,
-                        "type": "string",
-                      },
-                      "type": "object",
-                    },
-                  },
-                  "required": Array [
-                    "id",
-                    "name",
-                    "constraints",
-                    "parameters",
-                  ],
-                  "type": "object",
+                  "$ref": "#/components/schemas/featureStrategySchema",
                 },
               },
             },
@@ -2502,6 +1458,7 @@ Object {
         ],
       },
       "put": Object {
+        "operationId": "updateStrategy",
         "parameters": Array [
           Object {
             "in": "path",
@@ -2540,58 +1497,7 @@ Object {
           "content": Object {
             "application/json": Object {
               "schema": Object {
-                "additionalProperties": false,
-                "properties": Object {
-                  "constraints": Object {
-                    "items": Object {
-                      "additionalProperties": false,
-                      "properties": Object {
-                        "caseInsensitive": Object {
-                          "type": "boolean",
-                        },
-                        "contextName": Object {
-                          "type": "string",
-                        },
-                        "inverted": Object {
-                          "type": "boolean",
-                        },
-                        "operator": Object {
-                          "type": "string",
-                        },
-                        "value": Object {
-                          "type": "string",
-                        },
-                        "values": Object {
-                          "items": Object {
-                            "type": "string",
-                          },
-                          "type": "array",
-                        },
-                      },
-                      "required": Array [
-                        "contextName",
-                        "operator",
-                      ],
-                      "type": "object",
-                    },
-                    "type": "array",
-                  },
-                  "id": Object {
-                    "type": "string",
-                  },
-                  "name": Object {
-                    "type": "string",
-                  },
-                  "parameters": Object {
-                    "additionalProperties": Object {
-                      "maxLength": 100,
-                      "type": "string",
-                    },
-                    "type": "object",
-                  },
-                },
-                "required": Array [],
-                "type": "object",
+                "$ref": "#/components/schemas/updateStrategySchema",
               },
             },
           },
@@ -2602,63 +1508,7 @@ Object {
             "content": Object {
               "application/json": Object {
                 "schema": Object {
-                  "additionalProperties": false,
-                  "properties": Object {
-                    "constraints": Object {
-                      "items": Object {
-                        "additionalProperties": false,
-                        "properties": Object {
-                          "caseInsensitive": Object {
-                            "type": "boolean",
-                          },
-                          "contextName": Object {
-                            "type": "string",
-                          },
-                          "inverted": Object {
-                            "type": "boolean",
-                          },
-                          "operator": Object {
-                            "type": "string",
-                          },
-                          "value": Object {
-                            "type": "string",
-                          },
-                          "values": Object {
-                            "items": Object {
-                              "type": "string",
-                            },
-                            "type": "array",
-                          },
-                        },
-                        "required": Array [
-                          "contextName",
-                          "operator",
-                        ],
-                        "type": "object",
-                      },
-                      "type": "array",
-                    },
-                    "id": Object {
-                      "type": "string",
-                    },
-                    "name": Object {
-                      "type": "string",
-                    },
-                    "parameters": Object {
-                      "additionalProperties": Object {
-                        "maxLength": 100,
-                        "type": "string",
-                      },
-                      "type": "object",
-                    },
-                  },
-                  "required": Array [
-                    "id",
-                    "name",
-                    "constraints",
-                    "parameters",
-                  ],
-                  "type": "object",
+                  "$ref": "#/components/schemas/featureStrategySchema",
                 },
               },
             },

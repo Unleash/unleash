@@ -2,23 +2,12 @@ import { ITagType } from './stores/tag-type-store';
 import { LogProvider } from '../logger';
 import { IRole } from './stores/access-store';
 import { IUser } from './user';
+import { ALL_OPERATORS } from '../util/constants';
 
-export type Operator =
-    | 'NOT_IN'
-    | 'IN'
-    | 'STR_ENDS_WITH'
-    | 'STR_STARTS_WITH'
-    | 'STR_CONTAINS'
-    | 'NUM_EQ'
-    | 'NUM_GT'
-    | 'NUM_GTE'
-    | 'NUM_LT'
-    | 'NUM_LTE'
-    | 'DATE_AFTER'
-    | 'DATE_BEFORE'
-    | 'SEMVER_EQ'
-    | 'SEMVER_GT'
-    | 'SEMVER_LT';
+export type FromArray<T extends ReadonlyArray<unknown>> =
+    T extends ReadonlyArray<infer Type> ? Type : never;
+
+export type Operator = FromArray<typeof ALL_OPERATORS>;
 
 export interface IConstraint {
     contextName: string;
@@ -41,7 +30,6 @@ export interface IStrategyConfig {
 }
 export interface IFeatureStrategy {
     id: string;
-    name: string;
     featureName: string;
     projectId: string;
     environment: string;

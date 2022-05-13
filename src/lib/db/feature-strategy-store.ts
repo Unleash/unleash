@@ -7,11 +7,11 @@ import { Logger, LogProvider } from '../logger';
 import NotFoundError from '../error/notfound-error';
 import {
     FeatureToggleWithEnvironment,
+    IConstraint,
     IEnvironmentOverview,
     IFeatureOverview,
-    IStrategyConfig,
-    IConstraint,
     IFeatureStrategy,
+    IStrategyConfig,
 } from '../types/model';
 import { IFeatureStrategiesStore } from '../types/stores/feature-strategies-store';
 import { PartialSome } from '../types/partial';
@@ -65,7 +65,6 @@ function ensureStringValues(data: object): { [key: string]: string } {
 function mapRow(row: IFeatureStrategiesTable): IFeatureStrategy {
     return {
         id: row.id,
-        name: 'Some-Name',
         featureName: row.feature_name,
         projectId: row.project_name,
         environment: row.environment,

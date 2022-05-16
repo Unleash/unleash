@@ -27,7 +27,9 @@ Fork with [GitHub Codespaces](https://github.com/features/codespaces):
 
 - [Fork, edit, and preview](https://docs.github.com/en/free-pro-team@latest/github/developing-online-with-codespaces/creating-a-codespace) using [GitHub Codespaces](https://github.com/features/codespaces) without having to install and run the project locally.
 
+### Build and run the project
 
+Follow the steps in [the "how to run the project" section](#how-to-run-the-project) to get the project running locally.
 
 ### Make your update:
 

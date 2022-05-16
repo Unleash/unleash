@@ -54,3 +54,4 @@ package-lock.json
 /website/i18n/*
 .env
 
+report.json

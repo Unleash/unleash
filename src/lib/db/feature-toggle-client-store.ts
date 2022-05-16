@@ -2,12 +2,15 @@ import { Knex } from 'knex';
 import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
 import { Logger, LogProvider } from '../logger';
-import { IFeatureToggleClient, IFeatureToggleQuery } from '../types/model';
+import {
+    IFeatureToggleClient,
+    IFeatureToggleQuery,
+    IStrategyConfig,
+} from '../types/model';
 import { IFeatureToggleClientStore } from '../types/stores/feature-toggle-client-store';
 import { DEFAULT_ENV } from '../util/constants';
 import { PartialDeep } from '../types/partial';
 import { IExperimentalOptions } from '../experimental';
-import { StrategySchema } from '../openapi/spec/strategy-schema';
 import EventEmitter from 'events';
 
 export interface FeaturesTable {
@@ -181,7 +184,7 @@ export default class FeatureToggleClientStore
         return features;
     }
 
-    private static rowToStrategy(row: Record<string, any>): StrategySchema {
+    private static rowToStrategy(row: Record<string, any>): IStrategyConfig {
         return {
             id: row.strategy_id,
             name: row.strategy_name,

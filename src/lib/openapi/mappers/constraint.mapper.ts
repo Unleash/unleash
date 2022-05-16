@@ -14,7 +14,6 @@ export class ConstraintMapper
     toPublic(input: IConstraint): ConstraintSchema {
         return {
             ...input,
-            operator: input.operator,
         };
     }
 }

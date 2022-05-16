@@ -1,5 +1,7 @@
-export interface Mapper<PUBLIC, INTERNAL, I = Partial<PUBLIC>> {
-    fromPublic(input: PUBLIC): INTERNAL;
-    toPublic(input: INTERNAL): PUBLIC;
-    mapInput?(input: I): INTERNAL;
+// Convert between public schema types and internal data types.
+// Avoids coupling public schemas to internal implementation details.
+export interface SchemaMapper<SCHEMA, INTERNAL, INPUT = Partial<SCHEMA>> {
+    fromPublic(input: SCHEMA): INTERNAL;
+    toPublic(input: INTERNAL): SCHEMA;
+    mapInput?(input: INPUT): INTERNAL;
 }

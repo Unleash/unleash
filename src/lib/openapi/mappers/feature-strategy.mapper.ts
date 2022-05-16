@@ -1,4 +1,4 @@
-import { Mapper } from './mapper';
+import { SchemaMapper } from './mapper';
 import { IFeatureStrategy } from '../../types/model';
 import { CreateStrategySchema } from '../spec/create-strategy-schema';
 import { UpdateStrategySchema } from '../spec/update-strategy-schema';
@@ -6,7 +6,7 @@ import { FeatureStrategySchema } from '../spec/feature-strategy-schema';
 
 export class FeatureStrategyMapper
     implements
-        Mapper<
+        SchemaMapper<
             FeatureStrategySchema,
             IFeatureStrategy,
             CreateStrategySchema | UpdateStrategySchema

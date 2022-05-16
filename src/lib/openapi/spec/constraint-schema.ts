@@ -1,4 +1,5 @@
 import { createSchemaObject, CreateSchemaType } from '../types';
+import { ALL_OPERATORS } from '../../util/constants';
 
 const schema = {
     type: 'object',
@@ -10,23 +11,7 @@ const schema = {
         },
         operator: {
             type: 'string',
-            enum: [
-                'NOT_IN',
-                'IN',
-                'STR_ENDS_WITH',
-                'STR_STARTS_WITH',
-                'STR_CONTAINS',
-                'NUM_EQ',
-                'NUM_GT',
-                'NUM_GTE',
-                'NUM_LT',
-                'NUM_LTE',
-                'DATE_AFTER',
-                'DATE_BEFORE',
-                'SEMVER_EQ',
-                'SEMVER_GT',
-                'SEMVER_LT',
-            ],
+            enum: ALL_OPERATORS,
         },
         caseInsensitive: {
             type: 'boolean',

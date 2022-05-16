@@ -518,6 +518,44 @@ test('A newly created project only gets connected to enabled environments', asyn
     expect(connectedEnvs.some((e) => e === disabledEnv)).toBeFalsy();
 });
 
+test('should have environments sorted in order', async () => {
+    const project = {
+        id: 'environment-order-test',
+        name: 'Environment testing project',
+        description: '',
+    };
+    const first = 'test';
+    const second = 'abc';
+    const third = 'example';
+    const fourth = 'mock';
+    await db.stores.environmentStore.create({
+        name: first,
+        type: 'test',
+        sortOrder: 1,
+    });
+    await db.stores.environmentStore.create({
+        name: fourth,
+        type: 'test',
+        sortOrder: 4,
+    });
+    await db.stores.environmentStore.create({
+        name: third,
+        type: 'test',
+        sortOrder: 3,
+    });
+    await db.stores.environmentStore.create({
+        name: second,
+        type: 'test',
+        sortOrder: 2,
+    });
+
+    await projectService.createProject(project, user);
+    const connectedEnvs =
+        await db.stores.projectStore.getEnvironmentsForProject(project.id);
+
+    expect(connectedEnvs).toEqual(['default', first, second, third, fourth]);
+});
+
 test('should add a user to the project with a custom role', async () => {
     const project = {
         id: 'add-users-custom-role',

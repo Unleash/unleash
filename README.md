@@ -42,6 +42,8 @@ Then point your browser to `localhost:4242` and log in using:
   - username: `admin`
   - password: `unleash4all`
 
+If you'd rather run the source code in this repo directly via Node.js, see the [step-by-step instructions to get up and running in the contributing guide](./CONTRIBUTING.md#how-to-run-the-project).
+
 ### 2. Connect your SDK
 
 Find your preferred SDK in [our list of official SDKs](#unleash-sdks) and import it into your project. Follow the setup guides for your specific SDK.

@@ -26,7 +26,8 @@ const EnvironmentList = () => {
         enabled: true,
         protected: false,
     };
-    const { environments, refetchEnvironments } = useEnvironments();
+    const { environments, mutateEnvironments, refetchEnvironments } =
+        useEnvironments();
     const { uiConfig } = useUiConfig();
     const { refetch: refetchProjectRolePermissions } =
         useProjectRolePermissions();
@@ -52,7 +53,7 @@ const EnvironmentList = () => {
         const item = newEnvList.splice(dragIndex, 1)[0];
 
         newEnvList.splice(hoverIndex, 0, item);
-        refetchEnvironments({ environments: newEnvList }, false);
+        mutateEnvironments(newEnvList);
         return newEnvList;
     };
 

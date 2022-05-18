@@ -86,9 +86,12 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
         );
     }
 
-    async getAll(): Promise<IFeatureEnvironment[]> {
-        const rows = await this.db(T.featureEnvs);
-        return rows.map((r) => ({
+    async getAll(query?: Object): Promise<IFeatureEnvironment[]> {
+        let rows = this.db(T.featureEnvs);
+        if (query) {
+            rows = rows.where(query);
+        }
+        return (await rows).map((r) => ({
             enabled: r.enabled,
             featureName: r.feature_name,
             environment: r.environment,

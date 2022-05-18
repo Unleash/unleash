@@ -1,5 +1,5 @@
-import useSWR, { mutate, SWRConfiguration } from 'swr';
-import { useState, useEffect } from 'react';
+import useSWR, { SWRConfiguration } from 'swr';
+import { useCallback } from 'react';
 import { getProjectFetcher } from './getProjectFetcher';
 import { IProject } from 'interfaces/project';
 
@@ -15,22 +15,16 @@ const fallbackProject: IProject = {
 
 const useProject = (id: string, options: SWRConfiguration = {}) => {
     const { KEY, fetcher } = getProjectFetcher(id);
+    const { data, error, mutate } = useSWR<IProject>(KEY, fetcher, options);
 
-    const { data, error } = useSWR<IProject>(KEY, fetcher, options);
-    const [loading, setLoading] = useState(!error && !data);
-
-    const refetch = () => {
-        mutate(KEY);
-    };
-
-    useEffect(() => {
-        setLoading(!error && !data);
-    }, [data, error]);
+    const refetch = useCallback(() => {
+        mutate();
+    }, [mutate]);
 
     return {
         project: data || fallbackProject,
+        loading: !error && !data,
         error,
-        loading,
         refetch,
     };
 };

@@ -10,7 +10,7 @@ interface IFeatureProjectSelectProps
     extends Omit<IGeneralSelectProps, 'options'> {
     enabled: boolean;
     value: string;
-    filter: (project: string) => void;
+    filter: (projectId: string) => boolean;
 }
 
 const FeatureProjectSelect = ({

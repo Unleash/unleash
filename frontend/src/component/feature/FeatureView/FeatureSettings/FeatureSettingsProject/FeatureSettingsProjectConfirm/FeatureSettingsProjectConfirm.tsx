@@ -1,11 +1,11 @@
-import { List, ListItem } from '@mui/material';
-import { Check, Error, Cloud } from '@mui/icons-material';
-import { useState, useEffect } from 'react';
+import { useMemo } from 'react';
 import useProject from 'hooks/api/getters/useProject/useProject';
-import { IFeatureEnvironment, IFeatureToggle } from 'interfaces/featureToggle';
+import { IFeatureToggle } from 'interfaces/featureToggle';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { useStyles } from './FeatureSettingsProjectConfirm.styles';
+import { arraysHaveSameItems } from 'utils/arraysHaveSameItems';
+import { Alert } from '@mui/material';
 
 interface IFeatureSettingsProjectConfirm {
     projectId: string;
@@ -23,37 +23,18 @@ const FeatureSettingsProjectConfirm = ({
     feature,
 }: IFeatureSettingsProjectConfirm) => {
     const { project } = useProject(projectId);
-    const [incompatibleEnvs, setIncompatibleEnvs] = useState([]);
     const { classes: styles } = useStyles();
 
-    useEffect(() => {
-        calculateCompatability();
-        /* eslint-disable-next-line react-hooks/exhaustive-deps */
-    }, [projectId, project.name]);
-
-    const calculateCompatability = () => {
-        const featureEnvWithStrategies = feature.environments
-            .filter((env: IFeatureEnvironment) => {
-                return env.strategies.length > 0;
-            })
-            .map((env: IFeatureEnvironment) => env.name);
-
-        const destinationProjectActiveEnvironments = project.environments;
-
-        let incompatible: string[] = [];
-
-        featureEnvWithStrategies.forEach((env: string) => {
-            if (destinationProjectActiveEnvironments.indexOf(env) === -1) {
-                incompatible = [...incompatible, env];
-            }
-        });
-        // @ts-expect-error
-        setIncompatibleEnvs(incompatible);
-    };
+    const hasSameEnvironments: boolean = useMemo(() => {
+        return arraysHaveSameItems(
+            feature.environments.map(env => env.name),
+            project.environments
+        );
+    }, [feature, project]);
 
     return (
         <ConditionallyRender
-            condition={incompatibleEnvs?.length === 0}
+            condition={hasSameEnvironments}
             show={
                 <Dialogue
                     open={open}
@@ -63,14 +44,15 @@ const FeatureSettingsProjectConfirm = ({
                     primaryButtonText="Change project"
                     secondaryButtonText="Cancel"
                 >
-                    Are you sure you want to change the project for this feature
-                    toggle?
-                    <div className={styles.compatability}>
-                        This feature toggle is 100% compatible with the new
-                        project.
-                        <div className={styles.iconContainer}>
-                            <Check className={styles.check} />
-                        </div>
+                    <div className={styles.container}>
+                        <Alert severity="success">
+                            This feature toggle is compatible with the new
+                            project.
+                        </Alert>
+                        <p>
+                            Are you sure you want to change the project for this
+                            toggle?
+                        </p>
                     </div>
                 </Dialogue>
             }
@@ -81,44 +63,16 @@ const FeatureSettingsProjectConfirm = ({
                     title="Confirm change project"
                     secondaryButtonText="OK"
                 >
-                    <div className={styles.topContent}>
+                    <div className={styles.container}>
+                        <Alert severity="warning">
+                            Incompatible project environments
+                        </Alert>
                         <p>
-                            {' '}
-                            This feature toggle is not compatible with the new
-                            project destination.
+                            In order to move a feature toggle between two
+                            projects, both projects must have the exact same
+                            environments enabled.
                         </p>
-                        <div className={styles.iconContainer}>
-                            <div className={styles.errorIconContainer}>
-                                <Error
-                                    className={styles.check}
-                                    titleAccess="Error"
-                                />
-                            </div>
-                        </div>
                     </div>
-                    <div className={styles.compatability}>
-                        <div>
-                            <p className={styles.paragraph}>
-                                This feature toggle has strategy configuration
-                                in an environment that is not activated in the
-                                target project:
-                            </p>
-                            <List>
-                                {incompatibleEnvs.map(env => {
-                                    return (
-                                        <ListItem key={env}>
-                                            <Cloud className={styles.cloud} />
-                                            {env}
-                                        </ListItem>
-                                    );
-                                })}
-                            </List>
-                        </div>
-                    </div>
-                    <p className={styles.paragraph}>
-                        In order to move this feature toggle, make sure you
-                        enable the required environments in the target project.
-                    </p>
                 </Dialogue>
             }
         />

@@ -6,6 +6,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import FeatureSettingsProject from './FeatureSettingsProject/FeatureSettingsProject';
 import { FeatureSettingsInformation } from './FeatureSettingsInformation/FeatureSettingsInformation';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const METADATA = 'metadata';
 const PROJECT = 'project';
@@ -15,6 +16,7 @@ export const FeatureSettings = () => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const [settings, setSettings] = useState(METADATA);
+    const { uiConfig } = useUiConfig();
 
     return (
         <PageContent header="Settings" bodyClass={styles.bodyContainer}>
@@ -36,6 +38,7 @@ export const FeatureSettings = () => {
                             button
                             onClick={() => setSettings(PROJECT)}
                             selected={settings === PROJECT}
+                            hidden={!uiConfig.flags.P}
                         >
                             Project
                         </ListItem>
@@ -52,7 +55,7 @@ export const FeatureSettings = () => {
                         }
                     />
                     <ConditionallyRender
-                        condition={settings === PROJECT}
+                        condition={settings === PROJECT && uiConfig.flags.P}
                         show={<FeatureSettingsProject />}
                     />
                 </div>

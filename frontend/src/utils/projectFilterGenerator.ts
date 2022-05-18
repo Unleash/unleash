@@ -1,5 +1,5 @@
-import { ADMIN } from '../component/providers/AccessProvider/permissions';
-import { IPermission } from '../interfaces/user';
+import { ADMIN } from 'component/providers/AccessProvider/permissions';
+import { IPermission } from 'interfaces/user';
 
 type objectIdx = {
     [key: string]: string;
@@ -8,8 +8,9 @@ type objectIdx = {
 export const projectFilterGenerator = (
     permissions: IPermission[] = [],
     matcherPermission: string
-) => {
+): ((projectId: string) => boolean) => {
     let admin = false;
+
     const permissionMap: objectIdx = permissions.reduce(
         (acc: objectIdx, p: IPermission) => {
             if (p.permission === ADMIN) {
@@ -24,7 +25,8 @@ export const projectFilterGenerator = (
         },
         {}
     );
+
     return (projectId: string) => {
-        return admin || permissionMap[projectId];
+        return admin || Boolean(permissionMap[projectId]);
     };
 };

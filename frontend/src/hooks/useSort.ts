@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import {
     sortFeaturesByNameAscending,
     sortFeaturesByNameDescending,
@@ -63,25 +63,29 @@ const useSort = () => {
         return sortFeaturesByStatusDescending(features);
     };
 
-    const sort = (features: IFeatureToggleListItem[]) => {
-        switch (sortData.sortKey) {
-            case 'name':
-                return handleSortName(features);
-            case 'last-seen':
-                return handleSortLastSeen(features);
-            case 'created':
-                return handleSortCreatedAt(features);
-            case 'expired':
-            case 'report':
-                return handleSortExpiredAt(features);
-            case 'status':
-                return handleSortStatus(features);
-            default:
-                return features;
-        }
-    };
+    const sort = useCallback(
+        (features: IFeatureToggleListItem[]): IFeatureToggleListItem[] => {
+            switch (sortData.sortKey) {
+                case 'name':
+                    return handleSortName(features);
+                case 'last-seen':
+                    return handleSortLastSeen(features);
+                case 'created':
+                    return handleSortCreatedAt(features);
+                case 'expired':
+                case 'report':
+                    return handleSortExpiredAt(features);
+                case 'status':
+                    return handleSortStatus(features);
+                default:
+                    return features;
+            }
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [sortData]
+    );
 
-    return [sort, setSortData];
+    return [sort, setSortData] as const;
 };
 
 export default useSort;

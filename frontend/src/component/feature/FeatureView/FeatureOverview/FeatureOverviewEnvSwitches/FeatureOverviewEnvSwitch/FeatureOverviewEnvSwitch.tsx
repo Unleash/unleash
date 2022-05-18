@@ -37,7 +37,7 @@ const FeatureOverviewEnvSwitch = ({
             await toggleFeatureEnvironmentOn(projectId, featureId, env.name);
             setToastData({
                 type: 'success',
-                title: 'Available in production',
+                title: `Available in ${env.name}`,
                 text: `${featureId} is now available in ${env.name} based on its defined strategies.`,
             });
             refetchFeature();
@@ -61,7 +61,7 @@ const FeatureOverviewEnvSwitch = ({
             await toggleFeatureEnvironmentOff(projectId, featureId, env.name);
             setToastData({
                 type: 'success',
-                title: 'Unavailable in production',
+                title: `Unavailable in ${env.name}`,
                 text: `${featureId} is unavailable in ${env.name} and its strategies will no longer have any effect.`,
             });
             refetchFeature();

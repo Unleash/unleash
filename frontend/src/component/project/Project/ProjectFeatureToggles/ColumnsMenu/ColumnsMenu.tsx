@@ -17,12 +17,11 @@ import {
 import ViewColumnIcon from '@mui/icons-material/ViewColumn';
 import CloseIcon from '@mui/icons-material/Close';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { capitalize } from 'lodash';
 import { useStyles } from './ColumnsMenu.styles';
 
 interface IColumnsMenuProps {
     allColumns: {
-        Header: string | any;
+        Header?: string | any;
         id: string;
         isVisible: boolean;
         toggleHidden: (state: boolean) => void;
@@ -104,6 +103,7 @@ export const ColumnsMenu: VFC<IColumnsMenuProps> = ({
                     onClick={handleClick}
                     type="button"
                     className={classes.button}
+                    data-loading
                 >
                     <ViewColumnIcon />
                 </IconButton>
@@ -165,14 +165,12 @@ export const ColumnsMenu: VFC<IColumnsMenuProps> = ({
                                 primary={
                                     <Typography variant="body2">
                                         <ConditionallyRender
-                                            condition={
+                                            condition={Boolean(
                                                 typeof column.Header ===
-                                                'string'
-                                            }
+                                                    'string' && column.Header
+                                            )}
                                             show={() => <>{column.Header}</>}
-                                            elseShow={() =>
-                                                capitalize(column.id)
-                                            }
+                                            elseShow={() => column.id}
                                         />
                                     </Typography>
                                 }

@@ -77,5 +77,10 @@ declare module '@mui/system/createTheme/shape' {
         borderRadiusExtraLarge: string;
     }
 }
+declare module '@mui/material/styles/zIndex' {
+    interface ZIndex {
+        sticky: number;
+    }
+}
 
 export {};

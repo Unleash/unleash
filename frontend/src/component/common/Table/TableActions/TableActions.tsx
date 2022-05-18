@@ -15,7 +15,7 @@ interface ITableActionsProps {
 }
 
 /**
- * @deprecated
+ * @deprecated Use <PageHeader actions={} /> instead
  */
 export const TableActions: FC<ITableActionsProps> = ({
     initialSearchValue: search,

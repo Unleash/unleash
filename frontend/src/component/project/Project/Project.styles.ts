@@ -8,7 +8,10 @@ export const useStyles = makeStyles()(theme => ({
             flexDirection: 'column',
         },
     },
-    projectToggles: { width: '100%', minHeight: '100%' },
+    projectToggles: {
+        width: '100%',
+        minWidth: 0,
+    },
     header: {
         backgroundColor: '#fff',
         borderRadius: theme.shape.borderRadiusLarge,
@@ -36,13 +39,15 @@ export const useStyles = makeStyles()(theme => ({
         },
     },
     title: {
+        margin: 0,
+        width: '100%',
         fontSize: theme.fontSizes.mainHeader,
         fontWeight: 'bold',
         marginBottom: '0.5rem',
-        display: 'grid',
-        gridTemplateColumns: '1fr auto',
+        display: 'flex',
+        justifyContent: 'space-between',
         alignItems: 'center',
-        gridGap: '1rem',
+        gap: '1rem',
     },
     titleText: {
         overflow: 'hidden',

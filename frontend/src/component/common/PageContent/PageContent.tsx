@@ -38,11 +38,13 @@ export const PageContent: FC<IPageContentProps> = ({
         [styles.borderDisabled]: disableBorder,
     });
 
-    const bodyClasses = classnames(styles.bodyContainer, {
-        [styles.paddingDisabled]: disablePadding,
-        [styles.borderDisabled]: disableBorder,
-        [bodyClass]: bodyClass,
-    });
+    const bodyClasses = classnames(
+        bodyClass ? bodyClass : styles.bodyContainer,
+        {
+            [styles.paddingDisabled]: disablePadding,
+            [styles.borderDisabled]: disableBorder,
+        }
+    );
 
     const paperProps = disableBorder ? { elevation: 0 } : {};
 

@@ -10,7 +10,12 @@ export const useStyles = makeStyles()(theme => ({
         justifyContent: 'space-between',
         alignItems: 'center',
         position: 'relative',
-        flexWrap: 'wrap',
+    },
+    header: {
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+        marginRight: theme.spacing(2),
     },
     headerTitle: {
         fontSize: theme.fontSizes.mainHeader,
@@ -21,6 +26,7 @@ export const useStyles = makeStyles()(theme => ({
         flexGrow: 1,
         justifyContent: 'flex-end',
         alignItems: 'center',
+        gap: theme.spacing(1),
     },
     verticalSeparator: {
         height: '100%',

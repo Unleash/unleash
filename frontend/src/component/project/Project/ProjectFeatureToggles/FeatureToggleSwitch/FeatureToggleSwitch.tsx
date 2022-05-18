@@ -43,12 +43,13 @@ export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
             key={`${featureName}-${environmentName}`} // Prevent animation when archiving rows
         >
             <PermissionSwitch
-                checked={isChecked}
+                checked={value}
                 environmentId={environmentName}
                 projectId={projectId}
                 permission={UPDATE_FEATURE_ENVIRONMENT}
                 inputProps={{ 'aria-label': environmentName }}
                 onClick={onClick}
+                disabled={isChecked !== value}
             />
         </Box>
     );

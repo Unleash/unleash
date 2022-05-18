@@ -121,7 +121,7 @@ const ProjectInfo = ({
                         />
                     </div>
                     <div className={styles.idContainer}>
-                        <p data-loading>projectId: {id}</p>
+                        <p>projectId: {id}</p>
                     </div>
                 </div>
 

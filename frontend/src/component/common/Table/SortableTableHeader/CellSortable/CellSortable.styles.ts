@@ -19,10 +19,16 @@ export const useStyles = makeStyles()(theme => ({
         padding: theme.spacing(2),
         whiteSpace: 'nowrap',
         width: '100%',
+        '& .hover-only': {
+            visibility: 'hidden',
+        },
         ':hover, :focus, &:focus-visible, &:active': {
             outline: 'revert',
             '& svg': {
                 color: 'inherit',
+            },
+            '& .hover-only': {
+                visibility: 'visible',
             },
         },
         display: 'flex',

@@ -70,13 +70,15 @@ export const ProjectFeatureToggles = ({
     const projectId = useRequiredPathParam('projectId');
     const navigate = useNavigate();
     const { uiConfig } = useUiConfig();
-    const environments = useEnvironmentsRef(newEnvironments);
+    const environments = useEnvironmentsRef(
+        loading ? ['a', 'b', 'c'] : newEnvironments
+    );
     const { refetch } = useProject(projectId);
     const { setToastData, setToastApiError } = useToast();
 
     const data = useMemo<ListItemType[]>(() => {
         if (loading) {
-            return Array(12).fill({
+            return Array(6).fill({
                 type: '-',
                 name: 'Feature name',
                 createdAt: new Date(),
@@ -180,7 +182,8 @@ export const ProjectFeatureToggles = ({
                     />
                 ),
                 width: '99%',
-                minWdith: 100,
+                minWidth: 100,
+                maxWidth: 200,
                 sortType: 'alphanumeric',
             },
             {
@@ -191,9 +194,9 @@ export const ProjectFeatureToggles = ({
                 align: 'center',
             },
             ...environments.map(name => ({
-                Header: name,
-                maxWidth: 103,
-                minWidth: 103,
+                Header: loading ? () => '' : name,
+                maxWidth: 90,
+                minWidth: 90,
                 accessor: `environments.${name}`,
                 align: 'center',
                 Cell: ({
@@ -218,25 +221,16 @@ export const ProjectFeatureToggles = ({
                 },
             })),
             {
-                Header: ({ allColumns, setHiddenColumns }: any) => (
-                    <ColumnsMenu
-                        allColumns={allColumns}
-                        staticColumns={['actions', 'name']}
-                        dividerAfter={['createdAt']}
-                        dividerBefore={['actions']}
-                        setHiddenColumns={setHiddenColumns}
-                    />
-                ),
-                maxWidth: 60,
-                width: 60,
-                id: 'actions',
+                id: 'Actions',
+                maxWidth: 56,
+                width: 56,
                 Cell: (props: { row: { original: ListItemType } }) => (
                     <ActionsCell projectId={projectId} {...props} />
                 ),
                 disableSortBy: true,
             },
         ],
-        [projectId, environments, onToggle]
+        [projectId, environments, onToggle, loading]
     );
 
     const initialState = useMemo(
@@ -250,13 +244,15 @@ export const ProjectFeatureToggles = ({
     );
 
     const {
-        state: { filters },
-        getTableProps,
-        getTableBodyProps,
+        allColumns,
         headerGroups,
         rows,
+        state: { filters },
+        getTableBodyProps,
+        getTableProps,
         prepareRow,
         setFilter,
+        setHiddenColumns,
     } = useTable(
         {
             columns: columns as any[], // TODO: fix after `react-table` v8 update
@@ -275,7 +271,6 @@ export const ProjectFeatureToggles = ({
         () => filters?.find(filterRow => filterRow?.id === 'name')?.value || '',
         [filters]
     );
-
     return (
         <PageContent
             isLoading={loading}
@@ -290,6 +285,13 @@ export const ProjectFeatureToggles = ({
                             <TableSearch
                                 initialValue={filter}
                                 onChange={value => setFilter('name', value)}
+                            />
+                            <ColumnsMenu
+                                allColumns={allColumns}
+                                staticColumns={['Actions', 'name']}
+                                dividerAfter={['createdAt']}
+                                dividerBefore={['Actions']}
+                                setHiddenColumns={setHiddenColumns}
                             />
                             <PageHeader.Divider />
                             <ResponsiveButton

@@ -13,10 +13,10 @@ exports[`renders correctly 1`] = `
           className="tss-1ylehva-headerContainer"
         >
           <div
-            className="tss-1dw2af8-topContainer"
+            className="tss-1uxyh7x-topContainer"
           >
             <div
-              className=""
+              className="tss-sd6bs4-header"
               data-loading={true}
             >
               <h1
@@ -26,7 +26,7 @@ exports[`renders correctly 1`] = `
               </h1>
             </div>
             <div
-              className="tss-1u1bjy8-headerActions"
+              className="tss-u5t8ea-headerActions"
             >
               <span
                 id="useId-0"
@@ -66,7 +66,7 @@ exports[`renders correctly 1`] = `
         </div>
       </div>
       <div
-        className="tss-f35ha2-bodyContainer"
+        className="tss-54jt3w-bodyContainer"
       >
         <ul
           className="MuiList-root MuiList-padding mui-h4y409-MuiList-root"

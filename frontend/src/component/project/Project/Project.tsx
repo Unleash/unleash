@@ -90,7 +90,6 @@ const Project = () => {
         return tabData.map((tab, index) => {
             return (
                 <Tab
-                    data-loading
                     key={tab.title}
                     id={`tab-${index}`}
                     aria-controls={`tabpanel-${index}`}
@@ -116,12 +115,10 @@ const Project = () => {
         <div ref={ref}>
             <div className={styles.header}>
                 <div className={styles.innerContainer}>
-                    <h2
-                        data-loading
-                        className={styles.title}
-                        style={{ margin: 0, width: '100%' }}
-                    >
-                        <div className={styles.titleText}>{project?.name}</div>
+                    <h2 className={styles.title}>
+                        <div className={styles.titleText} data-loading>
+                            {project?.name || projectId}
+                        </div>
                         <PermissionIconButton
                             permission={UPDATE_PROJECT}
                             projectId={project?.id}

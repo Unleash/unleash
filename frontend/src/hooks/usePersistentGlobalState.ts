@@ -7,9 +7,13 @@ type UsePersistentGlobalState<T> = () => [
     setValue: React.Dispatch<React.SetStateAction<T>>
 ];
 
-// Create a hook that stores global state (shared across all hook instances).
-// The state is also persisted to localStorage and restored on page load.
-// The localStorage state is not synced between tabs.
+/**
+ * Create a hook that stores global state (shared across all hook instances).
+ * The state is also persisted to localStorage and restored on page load.
+ * The localStorage state is not synced between tabs.
+ *
+ * @deprecated
+ */
 export const createPersistentGlobalStateHook = <T extends object>(
     key: string,
     initialValue: T

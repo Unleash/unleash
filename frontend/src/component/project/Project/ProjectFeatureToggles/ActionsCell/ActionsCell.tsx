@@ -57,7 +57,7 @@ export const ActionsCell: VFC<IActionsCellProps> = ({ projectId, row }) => {
     const menuId = `${id}-menu`;
 
     return (
-        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+        <Box className={classes.cell}>
             <Tooltip
                 title="Feature toggle actions"
                 arrow

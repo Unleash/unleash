@@ -41,7 +41,7 @@ export const SortArrow: VFC<ISortArrowProps> = ({
             }
             elseShow={
                 <UnfoldMoreOutlined
-                    className={styles.icon}
+                    className={classnames(styles.icon, 'hover-only')}
                     fontSize="inherit"
                 />
             }

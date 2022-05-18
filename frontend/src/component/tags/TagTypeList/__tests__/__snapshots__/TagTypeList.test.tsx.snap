@@ -13,10 +13,10 @@ exports[`renders an empty list correctly 1`] = `
           className="tss-1ylehva-headerContainer"
         >
           <div
-            className="tss-1dw2af8-topContainer"
+            className="tss-1uxyh7x-topContainer"
           >
             <div
-              className=""
+              className="tss-sd6bs4-header"
               data-loading={true}
             >
               <h1
@@ -26,7 +26,7 @@ exports[`renders an empty list correctly 1`] = `
               </h1>
             </div>
             <div
-              className="tss-1u1bjy8-headerActions"
+              className="tss-u5t8ea-headerActions"
             >
               <button
                 className="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  mui-1aw3qf3-MuiButtonBase-root-MuiButton-root"
@@ -54,7 +54,7 @@ exports[`renders an empty list correctly 1`] = `
         </div>
       </div>
       <div
-        className="tss-f35ha2-bodyContainer"
+        className="tss-54jt3w-bodyContainer"
       >
         <ul
           className="MuiList-root MuiList-padding mui-h4y409-MuiList-root"

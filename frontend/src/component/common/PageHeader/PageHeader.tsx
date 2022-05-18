@@ -35,7 +35,10 @@ const PageHeaderComponent: FC<IPageHeaderProps> & { Divider: VFC } = ({
     return (
         <div className={styles.headerContainer}>
             <div className={styles.topContainer}>
-                <div className={headerClasses} data-loading>
+                <div
+                    className={classnames(styles.header, headerClasses)}
+                    data-loading
+                >
                     <Typography
                         variant={variant || 'h1'}
                         className={classnames(styles.headerTitle, className)}

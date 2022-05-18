@@ -41,7 +41,7 @@ export const useStyles = makeStyles()(theme => ({
         },
     },
     subtitle: {
-        marginBottom: '1.25rem',
+        marginBottom: '1rem',
     },
     emphazisedText: {
         fontSize: '1.5rem',

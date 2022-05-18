@@ -15,9 +15,9 @@ export const useStyles = makeStyles()(theme => ({
         },
     },
     bodyContainer: {
-        padding: '2rem',
+        padding: theme.spacing(4),
         [theme.breakpoints.down('md')]: {
-            padding: '1rem',
+            padding: theme.spacing(2),
         },
     },
     paddingDisabled: {

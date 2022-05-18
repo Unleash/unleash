@@ -234,5 +234,15 @@ export default createTheme({
                 },
             },
         },
+        MuiSwitch: {
+            styleOverrides: {
+                switchBase: {
+                    zIndex: 1,
+                    '&:not(.Mui-checked) .MuiTouchRipple-child': {
+                        color: colors.grey['500'],
+                    },
+                },
+            },
+        },
     },
 });

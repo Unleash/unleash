@@ -6,12 +6,16 @@ import { AccessService } from '../../../lib/services/access-service';
 import { MOVE_FEATURE_TOGGLE } from '../../../lib/types/permissions';
 import { createTestConfig } from '../../config/test-config';
 import { RoleName } from '../../../lib/types/model';
+import { randomId } from '../../../lib/util/random-id';
+import EnvironmentService from '../../../lib/services/environment-service';
+import IncompatibleProjectError from '../../../lib/error/incompatible-project-error';
 
 let stores;
 let db: ITestDb;
 
-let projectService;
-let accessService;
+let projectService: ProjectService;
+let accessService: AccessService;
+let environmentService: EnvironmentService;
 let featureToggleService: FeatureToggleService;
 let user;
 
@@ -29,6 +33,7 @@ beforeAll(async () => {
     });
     accessService = new AccessService(stores, config);
     featureToggleService = new FeatureToggleService(stores, config);
+    environmentService = new EnvironmentService(stores, config);
     projectService = new ProjectService(
         stores,
         config,
@@ -209,7 +214,7 @@ test('should get list of users with access to project', async () => {
         description: 'Blah',
     };
     await projectService.createProject(project, user);
-    const { users } = await projectService.getUsersWithAccess(project.id, user);
+    const { users } = await projectService.getUsersWithAccess(project.id);
 
     const member = await stores.roleStore.getRoleByName(RoleName.MEMBER);
     const owner = await stores.roleStore.getRoleByName(RoleName.OWNER);
@@ -243,7 +248,7 @@ test('should add a member user to the project', async () => {
     await projectService.addUser(project.id, memberRole.id, projectMember1.id);
     await projectService.addUser(project.id, memberRole.id, projectMember2.id);
 
-    const { users } = await projectService.getUsersWithAccess(project.id, user);
+    const { users } = await projectService.getUsersWithAccess(project.id);
     const memberUsers = users.filter((u) => u.roleId === memberRole.id);
 
     expect(memberUsers).toHaveLength(2);
@@ -275,7 +280,7 @@ test('should add admin users to the project', async () => {
     await projectService.addUser(project.id, ownerRole.id, projectAdmin1.id);
     await projectService.addUser(project.id, ownerRole.id, projectAdmin2.id);
 
-    const { users } = await projectService.getUsersWithAccess(project.id, user);
+    const { users } = await projectService.getUsersWithAccess(project.id);
 
     const adminUsers = users.filter((u) => u.roleId === ownerRole.id);
 
@@ -332,7 +337,7 @@ test('should remove user from the project', async () => {
         projectMember1.id,
     );
 
-    const { users } = await projectService.getUsersWithAccess(project.id, user);
+    const { users } = await projectService.getUsersWithAccess(project.id);
     const memberUsers = users.filter((u) => u.roleId === memberRole.id);
 
     expect(memberUsers).toHaveLength(0);
@@ -363,7 +368,7 @@ test('should not change project if feature toggle project does not match current
         description: 'Blah',
     };
 
-    const toggle = { name: 'test-toggle', project: project.name };
+    const toggle = { name: 'test-toggle' };
 
     await projectService.createProject(project, user);
     await featureToggleService.createFeatureToggle(project.id, toggle, user);
@@ -389,7 +394,7 @@ test('should return 404 if no project is found with the project id', async () =>
         description: 'Blah',
     };
 
-    const toggle = { name: 'test-toggle', project: project.name };
+    const toggle = { name: 'test-toggle-2' };
 
     await projectService.createProject(project, user);
     await featureToggleService.createFeatureToggle(project.id, toggle, user);
@@ -419,7 +424,7 @@ test('should fail if user is not authorized', async () => {
         description: 'Blah',
     };
 
-    const toggle = { name: 'test-toggle', project: project.name };
+    const toggle = { name: 'test-toggle-3' };
     const projectAdmin1 = await stores.userStore.insert({
         name: 'test-change-project-creator',
         email: 'admin-change-project@getunleash.io',
@@ -444,34 +449,47 @@ test('should fail if user is not authorized', async () => {
 });
 
 test('should change project when checks pass', async () => {
-    const project = {
-        id: 'test-change-project-4',
-        name: 'New project',
-        description: 'Blah',
-    };
+    const projectA = { id: randomId(), name: randomId() };
+    const projectB = { id: randomId(), name: randomId() };
+    const toggle = { name: randomId() };
 
-    const projectDestination = {
-        id: 'test-change-project-dest-2',
-        name: 'New project 2',
-        description: 'Blah',
-    };
-
-    const toggle = { name: 'test-toggle-4', project: project.name };
-
-    await projectService.createProject(project, user);
-    await projectService.createProject(projectDestination, user);
-    await featureToggleService.createFeatureToggle(project.id, toggle, user);
-
+    await projectService.createProject(projectA, user);
+    await projectService.createProject(projectB, user);
+    await featureToggleService.createFeatureToggle(projectA.id, toggle, user);
     await projectService.changeProject(
-        projectDestination.id,
+        projectB.id,
         toggle.name,
         user,
-        project.id,
+        projectA.id,
     );
 
     const updatedFeature = await featureToggleService.getFeature(toggle.name);
+    expect(updatedFeature.project).toBe(projectB.id);
+});
 
-    expect(updatedFeature.project).toBe(projectDestination.id);
+test('should require equal project environments to move features', async () => {
+    const projectA = { id: randomId(), name: randomId() };
+    const projectB = { id: randomId(), name: randomId() };
+    const environment = { name: randomId(), type: 'production' };
+    const toggle = { name: randomId() };
+
+    await projectService.createProject(projectA, user);
+    await projectService.createProject(projectB, user);
+    await featureToggleService.createFeatureToggle(projectA.id, toggle, user);
+    await stores.environmentStore.create(environment);
+    await environmentService.addEnvironmentToProject(
+        environment.name,
+        projectB.id,
+    );
+
+    await expect(() =>
+        projectService.changeProject(
+            projectB.id,
+            toggle.name,
+            user,
+            projectA.id,
+        ),
+    ).rejects.toThrowError(IncompatibleProjectError);
 });
 
 test('A newly created project only gets connected to enabled environments', async () => {
@@ -536,7 +554,7 @@ test('should add a user to the project with a custom role', async () => {
 
     await projectService.addUser(project.id, customRole.id, projectMember1.id);
 
-    const { users } = await projectService.getUsersWithAccess(project.id, user);
+    const { users } = await projectService.getUsersWithAccess(project.id);
 
     const customRoleMember = users.filter((u) => u.roleId === customRole.id);
 
@@ -633,7 +651,7 @@ test('should change a users role in the project', async () => {
     const member = await stores.roleStore.getRoleByName(RoleName.MEMBER);
 
     await projectService.addUser(project.id, member.id, projectUser.id);
-    const { users } = await projectService.getUsersWithAccess(project.id, user);
+    const { users } = await projectService.getUsersWithAccess(project.id);
     let memberUser = users.filter((u) => u.roleId === member.id);
 
     expect(memberUser).toHaveLength(1);
@@ -644,7 +662,6 @@ test('should change a users role in the project', async () => {
 
     let { users: updatedUsers } = await projectService.getUsersWithAccess(
         project.id,
-        user,
     );
     const customUser = updatedUsers.filter((u) => u.roleId === customRole.id);
 
@@ -677,7 +694,7 @@ test('should update role for user on project', async () => {
         'test',
     );
 
-    const { users } = await projectService.getUsersWithAccess(project.id, user);
+    const { users } = await projectService.getUsersWithAccess(project.id);
     const memberUsers = users.filter((u) => u.roleId === memberRole.id);
     const ownerUsers = users.filter((u) => u.roleId === ownerRole.id);
 
@@ -714,7 +731,7 @@ test('should able to assign role without existing members', async () => {
         'test',
     );
 
-    const { users } = await projectService.getUsersWithAccess(project.id, user);
+    const { users } = await projectService.getUsersWithAccess(project.id);
     const memberUsers = users.filter((u) => u.roleId === memberRole.id);
     const testUsers = users.filter((u) => u.roleId === testRole.id);
 

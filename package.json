@@ -1,7 +1,7 @@
 {
   "name": "unleash-server",
   "description": "Unleash is an enterprise ready feature toggles service. It provides different strategies for handling feature toggles.",
-  "version": "4.10.0",
+  "version": "4.11.0-beta.2",
   "keywords": [
     "unleash",
     "feature toggle",
@@ -47,7 +47,7 @@
     "seed:setup": "ts-node src/test/e2e/seed/segment.seed.ts",
     "seed:serve": "UNLEASH_DATABASE_NAME=unleash_test UNLEASH_DATABASE_SCHEMA=seed yarn run start:dev",
     "clean": "del-cli --force dist",
-    "preversion": "./scripts/check-release.sh $npm_package_version"
+    "preversion": "./scripts/check-release.sh $npm_new_version"
   },
   "jest": {
     "automock": false,
@@ -95,7 +95,7 @@
     "helmet": "^5.0.0",
     "joi": "^17.3.0",
     "js-yaml": "^4.1.0",
-    "knex": "1.0.4",
+    "knex": "^2.0.0",
     "json-schema-to-ts": "^2.0.0",
     "log4js": "^6.0.0",
     "make-fetch-happen": "^10.1.2",
@@ -116,17 +116,17 @@
     "stoppable": "^1.1.0",
     "type-is": "^1.6.18",
     "@unleash/express-openapi": "^0.2.0",
-    "unleash-frontend": "4.10.1",
+    "unleash-frontend": "4.11.0-beta.2",
     "uuid": "^8.3.2",
     "semver": "^7.3.5"
   },
   "devDependencies": {
-    "@babel/core": "7.17.10",
+    "@babel/core": "7.17.12",
     "@types/bcryptjs": "2.4.2",
     "@types/express": "4.17.13",
     "@types/express-session": "1.17.4",
     "@types/faker": "5.5.9",
-    "@types/jest": "27.5.0",
+    "@types/jest": "27.5.1",
     "@types/js-yaml": "4.0.5",
     "@types/make-fetch-happen": "^9.0.2",
     "@types/memoizee": "0.4.8",
@@ -138,8 +138,8 @@
     "@types/supertest": "2.0.12",
     "@types/type-is": "1.6.3",
     "@types/uuid": "8.3.4",
-    "@typescript-eslint/eslint-plugin": "5.22.0",
-    "@typescript-eslint/parser": "5.22.0",
+    "@typescript-eslint/eslint-plugin": "5.25.0",
+    "@typescript-eslint/parser": "5.25.0",
     "copyfiles": "2.4.1",
     "coveralls": "3.1.1",
     "del-cli": "4.0.1",
@@ -151,7 +151,7 @@
     "eslint-plugin-prettier": "4.0.0",
     "faker": "5.5.3",
     "fetch-mock": "9.11.0",
-    "husky": "7.0.4",
+    "husky": "8.0.1",
     "jest": "27.5.1",
     "lint-staged": "12.3.7",
     "nock": "^13.2.4",

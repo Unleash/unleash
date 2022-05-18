@@ -260,8 +260,8 @@ class ProjectStore implements IProjectStore {
 
     async count(): Promise<number> {
         return this.db
-            .count('*')
             .from(TABLE)
+            .count('*')
             .then((res) => Number(res[0].count));
     }
 

@@ -38,6 +38,7 @@ import { DEFAULT_PROJECT } from '../types/project';
 import { IFeatureTagStore } from 'lib/types/stores/feature-tag-store';
 import ProjectWithoutOwnerError from '../error/project-without-owner-error';
 import { IUserStore } from 'lib/types/stores/user-store';
+import { arraysHaveSameItems } from '../util/arraysHaveSameItems';
 
 const getCreatedBy = (user: User) => user.email || user.username;
 
@@ -115,7 +116,10 @@ export default class ProjectService {
         return this.store.get(id);
     }
 
-    async createProject(newProject: IProject, user: User): Promise<IProject> {
+    async createProject(
+        newProject: Pick<IProject, 'id'>,
+        user: User,
+    ): Promise<IProject> {
         const data = await projectSchema.validateAsync(newProject);
         await this.validateUniqueId(data.id);
 
@@ -172,8 +176,9 @@ export default class ProjectService {
         const newEnvs = await this.store.getEnvironmentsForProject(
             newProjectId,
         );
-        return featureEnvs.every(
-            (e) => !e.enabled || newEnvs.includes(e.environment),
+        return arraysHaveSameItems(
+            featureEnvs.map((env) => env.environment),
+            newEnvs,
         );
     }
 

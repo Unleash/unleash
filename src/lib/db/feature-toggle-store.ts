@@ -58,8 +58,8 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         } = { archived: false },
     ): Promise<number> {
         return this.db
-            .count('*')
             .from(TABLE)
+            .count('*')
             .where(query)
             .then((res) => Number(res[0].count));
     }

@@ -27,6 +27,10 @@ Fork with [GitHub Codespaces](https://github.com/features/codespaces):
 
 - [Fork, edit, and preview](https://docs.github.com/en/free-pro-team@latest/github/developing-online-with-codespaces/creating-a-codespace) using [GitHub Codespaces](https://github.com/features/codespaces) without having to install and run the project locally.
 
+### Build and run the project
+
+Follow the steps in [the "how to run the project" section](#how-to-run-the-project) to get the project running locally.
+
 ### Make your update:
 
 Make your changes to the file(s) you'd like to update. You'll need **Node.js v14** and PostgreSQL 10 to run Unleash locally. [See more details](https://github.com/Unleash/unleash/tree/master/website/docs/contributing/developer-guide.md)
@@ -47,6 +51,80 @@ When you're done making changes and you'd like to propose them for review by ope
 Congratulations! The whole Unleash community thanks you. :sparkles:
 
 Once your PR is merged, you will be proudly listed as a contributor in the [contributor chart](https://github.com/unleash/Unleash/graphs/contributors).
+
+
+## How to run the project
+
+Install the required prerequisites and then follow the steps below.
+
+### Prerequisites
+
+You'll need:
+   - [Docker](https://www.docker.com/) to run the database
+   - [Node.js](https://nodejs.org/en/) to run the project. You can install it directly, or use `nvm` (see the next point) to manage it for you.
+   - [nvm](https://github.com/nvm-sh/nvm) (optional) to manage your Node.js installation.
+   - [Yarn](https://yarnpkg.com/) (optional but recommended; the steps below assume that you have it installed) to install packages and run the project.
+
+### Steps
+
+1. Use `nvm` to **install the correct version of Node.js**. From anywhere in the repo, run the below command. Skip this step if you're managing your Node.js installations yourself.
+
+   ``` bash
+   nvm use
+   ```
+
+2. **Install packages**:
+
+   ``` bash
+   yarn
+   ```
+
+3. **Start a Postgres database** for Unleash via Docker.
+
+   - If this is the first time you're setting it up, run it using the below command. It will start the container with default connection details, call the container `postgres`, and expose it on port 5432.
+
+   ```bash
+   docker run \
+       -e POSTGRES_USER=unleash_user \
+       -e POSTGRES_PASSWORD=passord \
+       -e POSTGRES_DB=unleash \
+       --name postgres \
+       -p 5432:5432 \
+       -d \
+       postgres
+   ```
+
+     The **connection details** that Unleash will try to use are found in **`src/server-dev.ts`**. The above command works with the current defaults (at the time of writing).
+
+   - If you've set up the database previously, you can restart the container by running this (assuming `postgres` is the name you gave the container):
+
+   ```bash
+   docker start postgres
+   ```
+
+4. **Start the server.** Run the below command and the server will start up and try to connect to the database. On a successful connection it will also configure the database for Unleash.
+   ``` bash
+   yarn start:dev
+   ```
+
+5. **Log into the admin UI**. Use a browser and navigate to `localhost:4242`. Log in using:
+   - username: `admin`
+   - password: `unleash4all`
+
+### Troubleshooting
+
+Have any issues when getting set up?
+
+#### Can't connect to the database
+
+If you can't connect to the docker container, check its status by running `docker ps`.
+This command lists the currently running containers.
+Find the name of the container that you set up.
+If it's there, make sure that its port is mapped to your local machine:
+It should look this: `0.0.0.0:5432->5432/tcp` with the arrow (`->`) connector.
+If it just says `5432/tcp`, it is _not_ exposed to your local network.
+
+To fix this, start a new container and make sure you give it the `-p 5432:5432` option.
 
 ## Nice to know
 

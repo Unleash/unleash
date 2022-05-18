@@ -10,6 +10,7 @@ import {
     CREATE_FEATURE_STRATEGY,
     DELETE_FEATURE,
     DELETE_FEATURE_STRATEGY,
+    NONE,
     UPDATE_FEATURE,
     UPDATE_FEATURE_ENVIRONMENT,
     UPDATE_FEATURE_STRATEGY,
@@ -95,6 +96,7 @@ export default class ProjectFeaturesController extends Controller {
             method: 'get',
             path: PATH_ENV,
             acceptAnyContentType: true,
+            permission: NONE,
             handler: this.getEnvironment,
             middleware: [
                 openApiService.validPath({
@@ -138,6 +140,7 @@ export default class ProjectFeaturesController extends Controller {
             path: PATH_STRATEGIES,
             handler: this.getStrategies,
             acceptAnyContentType: true,
+            permission: NONE,
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
@@ -167,6 +170,7 @@ export default class ProjectFeaturesController extends Controller {
             path: PATH_STRATEGY,
             handler: this.getStrategy,
             acceptAnyContentType: true,
+            permission: NONE,
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
@@ -224,6 +228,7 @@ export default class ProjectFeaturesController extends Controller {
             path: PATH,
             acceptAnyContentType: true,
             handler: this.getFeatures,
+            permission: NONE,
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
@@ -269,6 +274,7 @@ export default class ProjectFeaturesController extends Controller {
             path: PATH_FEATURE,
             acceptAnyContentType: true,
             handler: this.getFeature,
+            permission: NONE,
             middleware: [
                 openApiService.validPath({
                     operationId: 'getFeature',

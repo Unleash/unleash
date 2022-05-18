@@ -21,7 +21,7 @@ interface IRequestHandler<
 interface IRouteOptions {
     method: 'get' | 'post' | 'put' | 'patch' | 'delete';
     path: string;
-    permission?: string;
+    permission: string;
     middleware?: RequestHandler[];
     handler: IRequestHandler;
     acceptAnyContentType?: boolean;

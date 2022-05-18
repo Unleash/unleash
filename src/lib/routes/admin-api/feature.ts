@@ -7,10 +7,11 @@ import { extractUsername } from '../../util/extract-user';
 import {
     CREATE_FEATURE,
     DELETE_FEATURE,
+    NONE,
     UPDATE_FEATURE,
 } from '../../types/permissions';
 import { IUnleashConfig } from '../../types/option';
-import { IUnleashServices } from '../../types/services';
+import { IUnleashServices } from '../../types';
 import FeatureToggleService from '../../services/feature-toggle-service';
 import { featureSchema, querySchema } from '../../schema/feature-schema';
 import { IFeatureToggleQuery } from '../../types/model';
@@ -70,6 +71,7 @@ class FeatureController extends Controller {
             path: '',
             acceptAnyContentType: true,
             handler: this.getAllToggles,
+            permission: NONE,
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
@@ -84,6 +86,7 @@ class FeatureController extends Controller {
             method: 'post',
             path: '/validate',
             handler: this.validate,
+            permission: NONE,
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
@@ -98,6 +101,7 @@ class FeatureController extends Controller {
             path: '/:featureName/tags',
             handler: this.listTags,
             acceptAnyContentType: true,
+            permission: NONE,
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],

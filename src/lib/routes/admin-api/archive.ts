@@ -6,7 +6,7 @@ import { Logger } from '../../logger';
 import Controller from '../controller';
 
 import { extractUsername } from '../../util/extract-user';
-import { DELETE_FEATURE, UPDATE_FEATURE } from '../../types/permissions';
+import { DELETE_FEATURE, NONE, UPDATE_FEATURE } from '../../types/permissions';
 import FeatureToggleService from '../../services/feature-toggle-service';
 import { IAuthRequest } from '../unleash-types';
 import { featuresResponse } from '../../openapi/spec/features-response';
@@ -33,6 +33,7 @@ export default class ArchiveController extends Controller {
             path: '/features',
             acceptAnyContentType: true,
             handler: this.getArchivedFeatures,
+            permission: NONE,
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
@@ -47,6 +48,7 @@ export default class ArchiveController extends Controller {
             path: '/features/:projectId',
             acceptAnyContentType: true,
             handler: this.getArchivedFeaturesByProjectId,
+            permission: NONE,
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],

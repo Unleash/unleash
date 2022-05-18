@@ -16,7 +16,7 @@ export class FeatureStrategyMapper
         return {
             ...input,
             id: input.id || '',
-            projectId: input.projectId || '',
+            projectId: input.projectId! || '',
         };
     }
 

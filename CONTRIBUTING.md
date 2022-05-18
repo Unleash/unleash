@@ -99,7 +99,7 @@ You'll need:
    - If you've set up the database previously, you can restart the container by running this (assuming `postgres` is the name you gave the container):
 
    ```bash
-   docker postgres
+   docker start postgres
    ```
 
 4. **Start the server.** Run the below command and the server will start up and try to connect to the database. On a successful connection it will also configure the database for Unleash.

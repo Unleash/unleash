@@ -1,5 +1,4 @@
 import faker from 'faker';
-import { FeatureToggleDTO, IStrategyConfig, IVariant } from 'lib/types/model';
 import dbInit, { ITestDb } from '../../helpers/database-init';
 import {
     IUnleashTest,
@@ -8,6 +7,9 @@ import {
 } from '../../helpers/test-helper';
 import getLogger from '../../../fixtures/no-logger';
 import { DEFAULT_ENV } from '../../../../lib/util/constants';
+import { StrategySchema } from '../../../../lib/openapi/spec/strategy-schema';
+import { FeatureSchema } from '../../../../lib/openapi/spec/feature-schema';
+import { VariantSchema } from '../../../../lib/openapi/spec/variant-schema';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -23,8 +25,8 @@ beforeAll(async () => {
     app = await setupApp(db.stores);
 
     const createToggle = async (
-        toggle: FeatureToggleDTO,
-        strategy: Omit<IStrategyConfig, 'id'> = defaultStrategy,
+        toggle: FeatureSchema,
+        strategy: Omit<StrategySchema, 'id'> = defaultStrategy,
         projectId: string = 'default',
         username: string = 'test',
     ) => {
@@ -41,7 +43,7 @@ beforeAll(async () => {
     };
     const createVariants = async (
         featureName: string,
-        variants: IVariant[],
+        variants: VariantSchema[],
         projectId: string = 'default',
         username: string = 'test',
     ) => {
@@ -56,12 +58,14 @@ beforeAll(async () => {
     await createToggle({
         name: 'featureX',
         description: 'the #1 feature',
+        project: 'some-project',
     });
 
     await createToggle(
         {
             name: 'featureY',
             description: 'soon to be the #1 feature',
+            project: 'some-project',
         },
         {
             name: 'baz',
@@ -76,6 +80,7 @@ beforeAll(async () => {
         {
             name: 'featureZ',
             description: 'terrible feature',
+            project: 'some-project',
         },
         {
             name: 'baz',
@@ -90,6 +95,7 @@ beforeAll(async () => {
         {
             name: 'featureArchivedX',
             description: 'the #1 feature',
+            project: 'some-project',
         },
         {
             name: 'default',
@@ -107,6 +113,7 @@ beforeAll(async () => {
         {
             name: 'featureArchivedY',
             description: 'soon to be the #1 feature',
+            project: 'some-project',
         },
         {
             name: 'baz',
@@ -126,13 +133,14 @@ beforeAll(async () => {
         {
             name: 'featureArchivedZ',
             description: 'terrible feature',
+            project: 'some-project',
         },
         {
             name: 'baz',
-            constraints: [],
             parameters: {
                 foo: 'rab',
             },
+            constraints: [],
         },
     );
 
@@ -144,6 +152,7 @@ beforeAll(async () => {
     await createToggle({
         name: 'feature.with.variants',
         description: 'A feature toggle with variants',
+        project: 'some-project',
     });
     await createVariants('feature.with.variants', [
         {

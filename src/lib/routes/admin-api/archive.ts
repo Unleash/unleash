@@ -1,17 +1,16 @@
 import { Request, Response } from 'express';
 import { IUnleashConfig } from '../../types/option';
-import { IUnleashServices } from '../../types/services';
+import { IUnleashServices } from '../../types';
 import { Logger } from '../../logger';
 
 import Controller from '../controller';
 
 import { extractUsername } from '../../util/extract-user';
-import { DELETE_FEATURE, UPDATE_FEATURE } from '../../types/permissions';
+import { DELETE_FEATURE, NONE, UPDATE_FEATURE } from '../../types/permissions';
 import FeatureToggleService from '../../services/feature-toggle-service';
 import { IAuthRequest } from '../unleash-types';
 import { featuresResponse } from '../../openapi/spec/features-response';
 import { FeaturesSchema } from '../../openapi/spec/features-schema';
-import { serializeDates } from '../../util/serialize-dates';
 
 export default class ArchiveController extends Controller {
     private readonly logger: Logger;
@@ -34,6 +33,7 @@ export default class ArchiveController extends Controller {
             path: '/features',
             acceptAnyContentType: true,
             handler: this.getArchivedFeatures,
+            permission: NONE,
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
@@ -48,6 +48,7 @@ export default class ArchiveController extends Controller {
             path: '/features/:projectId',
             acceptAnyContentType: true,
             handler: this.getArchivedFeaturesByProjectId,
+            permission: NONE,
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
@@ -75,7 +76,7 @@ export default class ArchiveController extends Controller {
 
         res.json({
             version: 2,
-            features: features.map(serializeDates),
+            features: features,
         });
     }
 
@@ -91,7 +92,7 @@ export default class ArchiveController extends Controller {
             );
         res.json({
             version: 2,
-            features: features.map(serializeDates),
+            features: features,
         });
     }
 

@@ -6,21 +6,21 @@ import { nameType } from '../routes/util';
 import { projectSchema } from './project-schema';
 import NotFoundError from '../error/notfound-error';
 import {
-    ProjectUserAddedEvent,
-    ProjectUserRemovedEvent,
-    ProjectUserUpdateRoleEvent,
     PROJECT_CREATED,
     PROJECT_DELETED,
     PROJECT_UPDATED,
+    ProjectUserAddedEvent,
+    ProjectUserRemovedEvent,
+    ProjectUserUpdateRoleEvent,
 } from '../types/events';
-import { IUnleashStores } from '../types/stores';
+import { IUnleashStores } from '../types';
 import { IUnleashConfig } from '../types/option';
 import {
+    FeatureToggle,
     IProject,
     IProjectOverview,
     IProjectWithCount,
     IUserWithRole,
-    FeatureToggle,
     RoleName,
 } from '../types/model';
 import { IEnvironmentStore } from '../types/stores/environment-store';

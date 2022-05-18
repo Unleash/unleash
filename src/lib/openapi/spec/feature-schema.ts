@@ -1,6 +1,7 @@
 import { createSchemaObject, CreateSchemaType } from '../types';
 import { strategySchema } from './strategy-schema';
 import { variantSchema } from './variant-schema';
+import { featureEnvironmentInfoSchema } from './feature-environment-info-schema';
 
 const schema = {
     type: 'object',
@@ -15,6 +16,9 @@ const schema = {
         },
         description: {
             type: 'string',
+        },
+        archived: {
+            type: 'boolean',
         },
         project: {
             type: 'string',
@@ -38,14 +42,27 @@ const schema = {
             format: 'date',
             nullable: true,
         },
+        environments: {
+            type: 'array',
+            items: {
+                $ref: '#/components/schemas/featureEnvironmentInfoSchema',
+            },
+        },
         strategies: {
             type: 'array',
-            items: strategySchema,
+            items: { $ref: '#/components/schemas/strategySchema' },
         },
         variants: {
-            items: variantSchema,
             type: 'array',
+            items: {
+                $ref: '#/components/schemas/variantSchema',
+            },
         },
+    },
+    'components/schemas': {
+        featureEnvironmentInfoSchema,
+        strategySchema,
+        variantSchema,
     },
 } as const;
 

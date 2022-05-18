@@ -2,10 +2,14 @@ import { ITagType } from './stores/tag-type-store';
 import { LogProvider } from '../logger';
 import { IRole } from './stores/access-store';
 import { IUser } from './user';
+import { ALL_OPERATORS } from '../util/constants';
+import { AllowedStrings } from './allowed-strings';
+
+export type Operator = AllowedStrings<typeof ALL_OPERATORS>;
 
 export interface IConstraint {
     contextName: string;
-    operator: string;
+    operator: Operator;
     values?: string[];
     value?: string;
     inverted?: boolean;

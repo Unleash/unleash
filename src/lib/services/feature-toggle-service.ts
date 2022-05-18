@@ -1,5 +1,5 @@
 import { IUnleashConfig } from '../types/option';
-import { IUnleashStores } from '../types/stores';
+import { IUnleashStores } from '../types';
 import { Logger } from '../logger';
 import BadDataError from '../error/bad-data-error';
 import NameExistsError from '../error/name-exists-error';
@@ -424,7 +424,7 @@ class FeatureToggleService {
      * }
      * @param id - strategy id
      * @param context - Which context does this strategy live in (projectId, featureName, environment)
-     * @param environment - Which environment does this strategy belong to
+     * @param createdBy - Which user does this strategy belong to
      */
     async deleteStrategy(
         id: string,
@@ -529,7 +529,6 @@ class FeatureToggleService {
      * Used to retrieve metadata of all feature toggles defined in Unleash.
      * @param query - Allow you to limit search based on criteria such as project, tags, namePrefix. See @IFeatureToggleQuery
      * @param archived - Return archived or active toggles
-     * @param includeStrategyId - Include id for strategies
      * @returns
      */
     async getFeatureToggles(
@@ -1054,7 +1053,7 @@ class FeatureToggleService {
                 createdBy,
                 tags,
                 oldVariants,
-                newVariants: featureToggle.variants,
+                newVariants: featureToggle.variants as IVariant[],
             }),
         );
         return featureToggle;

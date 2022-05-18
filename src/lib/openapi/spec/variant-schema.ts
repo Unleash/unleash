@@ -20,11 +20,23 @@ const schema = {
         },
         payload: {
             type: 'object',
+            required: ['type', 'value'],
+            properties: {
+                type: {
+                    type: 'string',
+                },
+                value: {
+                    type: 'string',
+                },
+            },
         },
         overrides: {
             type: 'array',
-            items: overrideSchema,
+            items: { $ref: '#/components/schemas/overrideSchema' },
         },
+    },
+    'components/schemas': {
+        overrideSchema,
     },
 } as const;
 

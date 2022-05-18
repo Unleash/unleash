@@ -69,7 +69,7 @@ export class SegmentService {
 
     async create(data: unknown, user: User): Promise<void> {
         const input = await segmentSchema.validateAsync(data);
-        this.validateSegmentValuesLimit(input);
+        SegmentService.validateSegmentValuesLimit(input);
         await this.validateName(input.name);
 
         const segment = await this.segmentStore.create(input, user);
@@ -83,7 +83,7 @@ export class SegmentService {
 
     async update(id: number, data: unknown, user: User): Promise<void> {
         const input = await segmentSchema.validateAsync(data);
-        this.validateSegmentValuesLimit(input);
+        SegmentService.validateSegmentValuesLimit(input);
         const preData = await this.segmentStore.get(id);
 
         if (preData.name !== input.name) {
@@ -147,7 +147,9 @@ export class SegmentService {
         }
     }
 
-    private validateSegmentValuesLimit(segment: Omit<ISegment, 'id'>): void {
+    private static validateSegmentValuesLimit(
+        segment: Omit<ISegment, 'id'>,
+    ): void {
         const limit = SEGMENT_VALUES_LIMIT;
 
         const valuesCount = segment.constraints

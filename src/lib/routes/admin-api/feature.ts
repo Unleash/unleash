@@ -5,13 +5,13 @@ import Controller from '../controller';
 
 import { extractUsername } from '../../util/extract-user';
 import {
-    UPDATE_FEATURE,
-    DELETE_FEATURE,
     CREATE_FEATURE,
+    DELETE_FEATURE,
     NONE,
+    UPDATE_FEATURE,
 } from '../../types/permissions';
 import { IUnleashConfig } from '../../types/option';
-import { IUnleashServices } from '../../types/services';
+import { IUnleashServices } from '../../types';
 import FeatureToggleService from '../../services/feature-toggle-service';
 import { featureSchema, querySchema } from '../../schema/feature-schema';
 import { IFeatureToggleQuery } from '../../types/model';
@@ -20,7 +20,12 @@ import { IAuthRequest } from '../unleash-types';
 import { DEFAULT_ENV } from '../../util/constants';
 import { featuresResponse } from '../../openapi/spec/features-response';
 import { FeaturesSchema } from '../../openapi/spec/features-schema';
-import { serializeDates } from '../../util/serialize-dates';
+import { tagsResponse } from '../../openapi/spec/tags-response';
+import { tagResponse } from '../../openapi/spec/tag-response';
+import { createTagRequest } from '../../openapi/spec/create-tag-request';
+import { emptyResponse } from '../../openapi/spec/empty-response';
+import { TagSchema } from '../../openapi/spec/tag-schema';
+import { TagsResponseSchema } from '../../openapi/spec/tags-response-schema';
 
 const version = 1;
 
@@ -66,23 +71,75 @@ class FeatureController extends Controller {
             path: '',
             acceptAnyContentType: true,
             handler: this.getAllToggles,
+            permission: NONE,
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
+                    operationId: 'getAllToggles',
                     responses: { 200: featuresResponse },
                     deprecated: true,
                 }),
             ],
         });
 
-        this.post('/validate', this.validate, NONE);
-        this.get('/:featureName/tags', this.listTags);
-        this.post('/:featureName/tags', this.addTag, UPDATE_FEATURE);
-        this.delete(
-            '/:featureName/tags/:type/:value',
-            this.removeTag,
-            UPDATE_FEATURE,
-        );
+        this.route({
+            method: 'post',
+            path: '/validate',
+            handler: this.validate,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'validateFeature',
+                    responses: { 200: emptyResponse },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'get',
+            path: '/:featureName/tags',
+            handler: this.listTags,
+            acceptAnyContentType: true,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'listTags',
+                    responses: { 200: tagsResponse },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'post',
+            path: '/:featureName/tags',
+            permission: UPDATE_FEATURE,
+            handler: this.addTag,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'addTag',
+                    requestBody: createTagRequest,
+                    responses: { 201: tagResponse },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'delete',
+            path: '/:featureName/tags/:type/:value',
+            permission: UPDATE_FEATURE,
+            acceptAnyContentType: true,
+            handler: this.removeTag,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'removeTag',
+                    responses: { 200: emptyResponse },
+                }),
+            ],
+        });
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -120,10 +177,9 @@ class FeatureController extends Controller {
     ): Promise<void> {
         const query = await this.prepQuery(req.query);
         const features = await this.service.getFeatureToggles(query);
-
         res.json({
             version,
-            features: features.map(serializeDates),
+            features: features,
         });
     }
 
@@ -136,12 +192,23 @@ class FeatureController extends Controller {
         res.json(feature).end();
     }
 
-    async listTags(req: Request, res: Response): Promise<void> {
+    async listTags(
+        req: Request<{ featureName: string }, any, any, any>,
+        res: Response<TagsResponseSchema>,
+    ): Promise<void> {
         const tags = await this.tagService.listTags(req.params.featureName);
         res.json({ version, tags });
     }
 
-    async addTag(req: IAuthRequest, res: Response): Promise<void> {
+    async addTag(
+        req: IAuthRequest<
+            { featureName: string },
+            Response<TagSchema>,
+            TagSchema,
+            any
+        >,
+        res: Response<TagSchema>,
+    ): Promise<void> {
         const { featureName } = req.params;
         const userName = extractUsername(req);
         const tag = await this.tagService.addTag(
@@ -153,14 +220,20 @@ class FeatureController extends Controller {
     }
 
     // TODO
-    async removeTag(req: IAuthRequest, res: Response): Promise<void> {
+    async removeTag(
+        req: IAuthRequest<{ featureName: string; type: string; value: string }>,
+        res: Response<void>,
+    ): Promise<void> {
         const { featureName, type, value } = req.params;
         const userName = extractUsername(req);
         await this.tagService.removeTag(featureName, { type, value }, userName);
         res.status(200).end();
     }
 
-    async validate(req: Request, res: Response): Promise<void> {
+    async validate(
+        req: Request<any, any, { name: string }, any>,
+        res: Response<void>,
+    ): Promise<void> {
         const { name } = req.body;
 
         await this.service.validateName(name);

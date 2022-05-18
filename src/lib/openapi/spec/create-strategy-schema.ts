@@ -14,9 +14,15 @@ const schema = {
         },
         constraints: {
             type: 'array',
-            items: constraintSchema,
+            items: { $ref: '#/components/schemas/constraintSchema' },
         },
-        parameters: parametersSchema,
+        parameters: {
+            $ref: '#/components/schemas/parametersSchema',
+        },
+    },
+    'components/schemas': {
+        constraintSchema,
+        parametersSchema,
     },
 } as const;
 

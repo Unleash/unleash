@@ -1,11 +1,11 @@
 import { randomUUID } from 'crypto';
 import {
-    FeatureToggle,
     FeatureToggleWithEnvironment,
     IFeatureOverview,
-    IFeatureStrategy,
     IFeatureToggleClient,
     IFeatureToggleQuery,
+    IFeatureStrategy,
+    FeatureToggle,
 } from '../../lib/types/model';
 import NotFoundError from '../../lib/error/notfound-error';
 import { IFeatureStrategiesStore } from '../../lib/types/stores/feature-strategies-store';

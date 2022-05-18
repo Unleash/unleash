@@ -40,7 +40,7 @@ export const ALL_OPERATORS = [
     SEMVER_EQ,
     SEMVER_GT,
     SEMVER_LT,
-];
+] as const;
 
 export const STRING_OPERATORS = [
     STR_ENDS_WITH,

@@ -5,7 +5,7 @@ export const strategyResponse: OpenAPIV3.ResponseObject = {
     content: {
         'application/json': {
             schema: {
-                $ref: '#/components/schemas/strategySchema',
+                $ref: '#/components/schemas/featureStrategySchema',
             },
         },
     },

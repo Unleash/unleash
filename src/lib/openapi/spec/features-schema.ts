@@ -11,8 +11,11 @@ const schema = {
         },
         features: {
             type: 'array',
-            items: featureSchema,
+            items: { $ref: '#/components/schemas/featureSchema' },
         },
+    },
+    'components/schemas': {
+        featureSchema: { schema: featureSchema },
     },
 } as const;
 

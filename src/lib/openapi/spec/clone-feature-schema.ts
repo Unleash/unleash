@@ -2,7 +2,7 @@ import { createSchemaObject, CreateSchemaType } from '../types';
 
 const schema = {
     type: 'object',
-    required: ['name', 'replaceGroupId'],
+    required: ['name'],
     properties: {
         name: {
             type: 'string',

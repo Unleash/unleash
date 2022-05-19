@@ -359,7 +359,7 @@ export default class ProjectFeaturesController extends Controller {
             featureName,
             projectId,
             name,
-            Boolean(replaceGroupId),
+            replaceGroupId,
             userName,
         );
         res.status(201).json(created);

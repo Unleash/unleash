@@ -62,7 +62,6 @@ Object {
         },
         "required": Array [
           "name",
-          "replaceGroupId",
         ],
         "type": "object",
       },

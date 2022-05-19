@@ -42,7 +42,7 @@ The configuration variables are:
 
 
 ```jsx
-import FlagProvider from '@unleash/proxy-client-react';
+import { FlagProvider } from '@unleash/proxy-client-react';
 
 const config = {
   url: 'https://HOSTNAME/api/proxy',

@@ -15,6 +15,7 @@ import {
     IListeningPipe,
     IListeningHost,
     IUIConfig,
+    CspDomains,
 } from './types/option';
 import { getDefaultLogProvider, LogLevel, validateLogProvider } from './logger';
 import { defaultCustomAuthDenyAll } from './default-custom-auth-deny-all';
@@ -230,6 +231,21 @@ const loadEnvironmentEnableOverrides = () => {
     return [];
 };
 
+const parseCspEnvironmentVariables = (): CspDomains => {
+    const defaultSrc = process.env.CSP_ALLOWED_DEFAULT?.split(',') || [];
+    const fontSrc = process.env.CSP_ALLOWED_FONT?.split(',') || [];
+    const styleSrc = process.env.CSP_ALLOWED_STYLE?.split(',') || [];
+    const scriptSrc = process.env.CSP_ALLOWED_SCRIPT?.split(',') || [];
+    const imgSrc = process.env.CSP_ALLOWED_IMG?.split(',') || [];
+    return {
+        defaultSrc,
+        fontSrc,
+        styleSrc,
+        scriptSrc,
+        imgSrc,
+    };
+};
+
 export function createConfig(options: IUnleashOptions): IUnleashConfig {
     let extraDbOptions = {};
 
@@ -318,6 +334,8 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         options.disableLegacyFeaturesApi ||
         safeBoolean(process.env.DISABLE_LEGACY_FEATURES_API, false);
 
+    const additionalCspAllowedDomains: CspDomains =
+        options.additionalCspAllowedDomains || parseCspEnvironmentVariables();
     return {
         db,
         session,
@@ -339,6 +357,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         enterpriseVersion: options.enterpriseVersion,
         eventBus: new EventEmitter(),
         environmentEnableOverrides,
+        additionalCspAllowedDomains,
     };
 }
 

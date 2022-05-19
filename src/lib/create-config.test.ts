@@ -1,5 +1,6 @@
 import { createConfig } from './create-config';
 import { ApiTokenType } from './types/models/api-token';
+import { add } from 'date-fns';
 
 test('should create default config', async () => {
     const config = createConfig({
@@ -267,4 +268,85 @@ test('should yield an empty list when no environment overrides are specified', a
     });
 
     expect(config.environmentEnableOverrides).toStrictEqual([]);
+});
+
+test('should yield all empty lists when no additionalCspAllowedDomains are set', async () => {
+    const config = createConfig({});
+    expect(config.additionalCspAllowedDomains).toBeDefined();
+    expect(config.additionalCspAllowedDomains.defaultSrc).toStrictEqual([]);
+    expect(config.additionalCspAllowedDomains.fontSrc).toStrictEqual([]);
+    expect(config.additionalCspAllowedDomains.styleSrc).toStrictEqual([]);
+    expect(config.additionalCspAllowedDomains.scriptSrc).toStrictEqual([]);
+    expect(config.additionalCspAllowedDomains.imgSrc).toStrictEqual([]);
+});
+
+test('If additionalCspAllowedDomains is set in config map, passes through', async () => {
+    const config = createConfig({
+        additionalCspAllowedDomains: {
+            defaultSrc: ['googlefonts.com'],
+            fontSrc: [],
+            styleSrc: [],
+            scriptSrc: [],
+            imgSrc: [],
+        },
+    });
+    expect(config.additionalCspAllowedDomains).toBeDefined();
+    expect(config.additionalCspAllowedDomains.defaultSrc).toStrictEqual([
+        'googlefonts.com',
+    ]);
+    expect(config.additionalCspAllowedDomains.fontSrc).toStrictEqual([]);
+    expect(config.additionalCspAllowedDomains.styleSrc).toStrictEqual([]);
+    expect(config.additionalCspAllowedDomains.scriptSrc).toStrictEqual([]);
+    expect(config.additionalCspAllowedDomains.imgSrc).toStrictEqual([]);
+});
+
+test.each([
+    ['CSP_ALLOWED_DEFAULT', 'googlefonts.com', 'defaultSrc'],
+    ['CSP_ALLOWED_FONT', 'googlefonts.com', 'fontSrc'],
+    ['CSP_ALLOWED_STYLE', 'googlefonts.com', 'styleSrc'],
+    ['CSP_ALLOWED_SCRIPT', 'googlefonts.com', 'scriptSrc'],
+    ['CSP_ALLOWED_IMG', 'googlefonts.com', 'imgSrc'],
+])(
+    'When %s is set to %s. %s should include passed in domain',
+    (env, domain, key) => {
+        process.env[env] = domain;
+        const config = createConfig({});
+        expect(config.additionalCspAllowedDomains[key][0]).toBe(domain);
+        Object.keys(config.additionalCspAllowedDomains)
+            .filter((objKey) => objKey !== key)
+            .forEach((otherKey) => {
+                expect(
+                    config.additionalCspAllowedDomains[otherKey],
+                ).toStrictEqual([]);
+            });
+        delete process.env[env];
+    },
+);
+
+test('When multiple CSP environment variables are set, respects them all', () => {
+    process.env.CSP_ALLOWED_DEFAULT = 'googlefonts.com';
+    process.env.CSP_ALLOWED_IMG = 'googlefonts.com';
+    process.env.CSP_ALLOWED_SCRIPT = 'plausible.getunleash.io';
+    const config = createConfig({});
+    expect(config.additionalCspAllowedDomains.imgSrc).toStrictEqual([
+        'googlefonts.com',
+    ]);
+    expect(config.additionalCspAllowedDomains.defaultSrc).toStrictEqual([
+        'googlefonts.com',
+    ]);
+    expect(config.additionalCspAllowedDomains.scriptSrc).toStrictEqual([
+        'plausible.getunleash.io',
+    ]);
+    delete process.env.CSP_ALLOWED_DEFAULT;
+    delete process.env.CSP_ALLOWED_IMG;
+    delete process.env.CSP_ALLOWED_SCRIPT;
+});
+
+test('Supports multiple domains comma separated in environment variables', () => {
+    process.env.CSP_ALLOWED_SCRIPT = 'plausible.getunleash.io,googlefonts.com';
+    const config = createConfig({});
+    expect(config.additionalCspAllowedDomains.scriptSrc).toStrictEqual([
+        'plausible.getunleash.io',
+        'googlefonts.com',
+    ]);
 });

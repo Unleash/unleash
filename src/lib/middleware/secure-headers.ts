@@ -13,12 +13,18 @@ const secureHeaders: (config: IUnleashConfig) => RequestHandler = (config) => {
             },
             contentSecurityPolicy: {
                 directives: {
-                    defaultSrc: ["'self'", 'cdn.getunleash.io', 'gravatar.com'],
+                    defaultSrc: [
+                        "'self'",
+                        'cdn.getunleash.io',
+                        'gravatar.com',
+                        ...config.additionalCspAllowedDomains?.defaultSrc,
+                    ],
                     fontSrc: [
                         "'self'",
                         'cdn.getunleash.io',
                         'fonts.googleapis.com',
                         'fonts.gstatic.com',
+                        ...config.additionalCspAllowedDomains?.fontSrc,
                     ],
                     styleSrc: [
                         "'self'",
@@ -27,13 +33,19 @@ const secureHeaders: (config: IUnleashConfig) => RequestHandler = (config) => {
                         'fonts.googleapis.com',
                         'fonts.gstatic.com',
                         'data:',
+                        ...config.additionalCspAllowedDomains?.styleSrc,
                     ],
-                    scriptSrc: ["'self'", 'cdn.getunleash.io'],
+                    scriptSrc: [
+                        "'self'",
+                        'cdn.getunleash.io',
+                        ...config.additionalCspAllowedDomains?.scriptSrc,
+                    ],
                     imgSrc: [
                         "'self'",
                         'data:',
                         'cdn.getunleash.io',
                         'gravatar.com',
+                        ...config.additionalCspAllowedDomains?.imgSrc,
                     ],
                 },
             },

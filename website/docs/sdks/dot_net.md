@@ -53,7 +53,7 @@ else
 }
 ```
 
-Pleas note the client SDK will synchronize with the Unleash-hosted API on initialization, and thus it can take a few milliseconds the first time before the client has the correct state. You can use the _SynchronousInitialization_ option to block the client until it has successfully synced with the server.
+Please note the client SDK will synchronize with the Unleash-hosted API on initialization, and thus it can take a few milliseconds the first time before the client has the correct state. You can use the _SynchronousInitialization_ option to block the client until it has successfully synced with the server.
 
 Read more about the [Unleash architecture](https://www.getunleash.io/blog/our-unique-architecture) to learn how it works in more details
 

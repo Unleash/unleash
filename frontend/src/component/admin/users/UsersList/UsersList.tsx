@@ -54,8 +54,20 @@ const UsersList = ({ search }: IUsersListProps) => {
     const ref = useLoading(loading);
     const { filtered, setFilter } = useUsersFilter(users);
     const { sorted, sort, setSort } = useUsersSort(filtered);
+
+    const filterUsersByQueryPage = (user: IUser) => {
+        const fieldsToSearch = [
+            user.name ?? '',
+            user.username ?? user.email ?? '',
+        ];
+
+        return fieldsToSearch.some(field => {
+            return field.toLowerCase().includes(search.toLowerCase());
+        });
+    };
+    // Filter users and reset pagination page when search is triggered
     const { page, pages, nextPage, prevPage, setPageIndex, pageIndex } =
-        usePagination(sorted, 50);
+        usePagination(sorted, 50, filterUsersByQueryPage);
 
     useEffect(() => {
         setFilter(filter => ({ ...filter, query: search }));

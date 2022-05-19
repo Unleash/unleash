@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { getBasePath } from 'utils/formatPath';
+import { basePath } from 'utils/formatPath';
 import { createPersistentGlobalStateHook } from './usePersistentGlobalState';
 import {
     expired,
@@ -38,7 +38,7 @@ export interface IFeaturesFilterSortOption {
 // Store the features sort state globally, and in localStorage.
 // When changing the format of IFeaturesSort, change the version as well.
 const useFeaturesSortState = createPersistentGlobalStateHook<IFeaturesSort>(
-    `${getBasePath()}:useFeaturesSort:v1`,
+    `${basePath}:useFeaturesSort:v1`,
     { type: 'name' }
 );
 

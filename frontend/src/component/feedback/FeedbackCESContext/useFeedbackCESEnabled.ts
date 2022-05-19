@@ -1,10 +1,9 @@
-export const useFeedbackCESEnabled = (): boolean => {
-    const { hostname } = window.location;
+import {
+    isLocalhostDomain,
+    isUnleashDomain,
+    isVercelBranchDomain,
+} from 'utils/env';
 
-    return (
-        hostname === 'localhost' ||
-        hostname.endsWith('.vercel.app') ||
-        hostname.endsWith('.getunleash.io') ||
-        hostname.endsWith('.unleash-hosted.com')
-    );
+export const useFeedbackCESEnabled = (): boolean => {
+    return isUnleashDomain() || isVercelBranchDomain() || isLocalhostDomain();
 };

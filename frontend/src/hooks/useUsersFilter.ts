@@ -1,6 +1,6 @@
 import { IUser } from 'interfaces/user';
 import React, { useMemo } from 'react';
-import { getBasePath } from 'utils/formatPath';
+import { basePath } from 'utils/formatPath';
 import { createGlobalStateHook } from 'hooks/useGlobalState';
 
 export interface IUsersFilter {
@@ -16,7 +16,7 @@ export interface IUsersFilterOutput {
 // Store the users filter state globally, and in localStorage.
 // When changing the format of IUsersFilter, change the version as well.
 const useUsersFilterState = createGlobalStateHook<IUsersFilter>(
-    `${getBasePath()}:useUsersFilter:v1`,
+    `${basePath}:useUsersFilter:v1`,
     { query: '' }
 );
 

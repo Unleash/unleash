@@ -256,7 +256,7 @@ exports[`renders correctly 1`] = `
   <div
     aria-atomic={true}
     aria-live="polite"
-    className="tss-1cl4o05-container"
+    className="tss-i8rqz1-container"
     data-testid="ANNOUNCER_ELEMENT_TEST_ID"
     role="status"
   >

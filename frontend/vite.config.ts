@@ -4,10 +4,20 @@ import react from '@vitejs/plugin-react';
 import svgr from 'vite-plugin-svgr';
 import envCompatible from 'vite-plugin-env-compatible';
 
-const API_URL = process.env.UNLEASH_API || 'http://localhost:4242';
+const UNLEASH_API = process.env.UNLEASH_API || 'http://localhost:4242';
+const UNLEASH_BASE_PATH = process.env.UNLEASH_BASE_PATH || '/';
 
-// https://vitejs.dev/config/
+if (!UNLEASH_BASE_PATH.startsWith('/') || !UNLEASH_BASE_PATH.endsWith('/')) {
+    console.error('UNLEASH_BASE_PATH must both start and end with /');
+    process.exit(1);
+}
+
 export default defineConfig({
+    base: UNLEASH_BASE_PATH,
+    build: {
+        outDir: 'build',
+        assetsDir: 'static',
+    },
     test: {
         globals: true,
         setupFiles: 'src/setupTests.ts',
@@ -17,23 +27,19 @@ export default defineConfig({
     server: {
         open: true,
         proxy: {
-            '/api': {
-                target: API_URL,
+            [`${UNLEASH_BASE_PATH}api`]: {
+                target: UNLEASH_API,
                 changeOrigin: true,
             },
-            '/auth': {
-                target: API_URL,
+            [`${UNLEASH_BASE_PATH}auth`]: {
+                target: UNLEASH_API,
                 changeOrigin: true,
             },
-            '/logout': {
-                target: API_URL,
+            [`${UNLEASH_BASE_PATH}logout`]: {
+                target: UNLEASH_API,
                 changeOrigin: true,
             },
         },
-    },
-    build: {
-        outDir: 'build',
-        assetsDir: 'static',
     },
     plugins: [react(), tsconfigPaths(), svgr(), envCompatible()],
 });

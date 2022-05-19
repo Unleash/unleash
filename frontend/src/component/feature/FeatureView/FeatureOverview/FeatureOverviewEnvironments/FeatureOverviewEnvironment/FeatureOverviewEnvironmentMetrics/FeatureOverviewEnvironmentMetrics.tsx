@@ -54,7 +54,6 @@ const FeatureOverviewEnvironmentMetrics = ({
                 </p>
             </div>
             <PercentageCircle
-                // @ts-expect-error
                 className={styles.percentageCircle}
                 percentage={percentage}
                 data-loading

@@ -7,7 +7,7 @@ import ExitToApp from '@mui/icons-material/ExitToApp';
 import { ReactComponent as LogoIcon } from 'assets/icons/logoBg.svg';
 import NavigationLink from '../NavigationLink/NavigationLink';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { getBasePath } from 'utils/formatPath';
+import { basePath } from 'utils/formatPath';
 import { IFlags } from 'interfaces/uiConfig';
 import { IRoute } from 'interfaces/route';
 import styles from './DrawerMenu.module.scss'; // FIXME: useStyle - theme
@@ -119,10 +119,7 @@ export const DrawerMenu: VFC<IDrawerMenuProps> = ({
                 <Divider />
                 <div className={styles.iconLinkList}>
                     {renderLinks()}
-                    <a
-                        className={styles.iconLink}
-                        href={`${getBasePath()}/logout`}
-                    >
+                    <a className={styles.iconLink} href={`${basePath}/logout`}>
                         <ExitToApp className={styles.navigationIcon} />
                         Sign out
                     </a>

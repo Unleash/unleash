@@ -1,10 +1,5 @@
-import useSWR, { SWRConfiguration, mutate } from 'swr';
+import useSWR, { SWRConfiguration, Key } from 'swr';
 import { useCallback } from 'react';
-
-type CacheKey =
-    | 'apiAdminFeaturesGet'
-    | 'apiAdminArchiveFeaturesGet'
-    | ['apiAdminArchiveFeaturesGet', string?];
 
 interface IUseApiGetterOutput<T> {
     data?: T;
@@ -14,15 +9,15 @@ interface IUseApiGetterOutput<T> {
 }
 
 export const useApiGetter = <T>(
-    cacheKey: CacheKey,
+    cacheKey: Key,
     fetcher: () => Promise<T>,
     options?: SWRConfiguration
 ): IUseApiGetterOutput<T> => {
-    const { data, error } = useSWR<T>(cacheKey, fetcher, options);
+    const { data, error, mutate } = useSWR<T>(cacheKey, fetcher, options);
 
     const refetch = useCallback(() => {
-        mutate(cacheKey).catch(console.warn);
-    }, [cacheKey]);
+        mutate().catch(console.warn);
+    }, [mutate]);
 
     return {
         data,

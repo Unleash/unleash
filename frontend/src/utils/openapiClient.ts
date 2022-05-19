@@ -1,10 +1,10 @@
 import { Configuration, AdminApi } from 'openapi';
-import { getBasePath } from 'utils/formatPath';
+import { basePath } from 'utils/formatPath';
 
 const createAdminApi = (): AdminApi => {
     return new AdminApi(
         new Configuration({
-            basePath: getBasePath(),
+            basePath,
         })
     );
 };

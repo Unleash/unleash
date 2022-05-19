@@ -2,7 +2,6 @@ import { makeStyles } from 'tss-react/mui';
 
 export const useStyles = makeStyles()(theme => ({
     footer: {
-        background: 'white',
         padding: '2rem 4rem',
         width: '100%',
         flexGrow: 1,

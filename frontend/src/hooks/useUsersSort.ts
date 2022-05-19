@@ -1,6 +1,6 @@
 import { IUser } from 'interfaces/user';
 import React, { useMemo } from 'react';
-import { getBasePath } from 'utils/formatPath';
+import { basePath } from 'utils/formatPath';
 import { createPersistentGlobalStateHook } from './usePersistentGlobalState';
 import useUsers from 'hooks/api/getters/useUsers/useUsers';
 import IRole from 'interfaces/role';
@@ -26,7 +26,7 @@ export interface IUsersFilterSortOption {
 // Store the users sort state globally, and in localStorage.
 // When changing the format of IUsersSort, change the version as well.
 const useUsersSortState = createPersistentGlobalStateHook<IUsersSort>(
-    `${getBasePath()}:useUsersSort:v1`,
+    `${basePath}:useUsersSort:v1`,
     { type: 'created', desc: false }
 );
 

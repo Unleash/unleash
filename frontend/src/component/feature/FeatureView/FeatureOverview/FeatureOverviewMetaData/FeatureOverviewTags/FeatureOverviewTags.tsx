@@ -97,8 +97,7 @@ const FeatureOverviewTags: React.FC<IFeatureOverviewTagsProps> = ({
         }
     };
 
-    // @ts-expect-error
-    const renderTag = t => (
+    const renderTag = (t: ITag) => (
         <Chip
             icon={tagIcon(t.type)}
             className={styles.tagChip}

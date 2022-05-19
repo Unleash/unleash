@@ -3,7 +3,7 @@
 exports[`should render DrawerMenu 1`] = `
 [
   <footer
-    className="tss-1bvpe5r-footer"
+    className="tss-wd65c0-footer"
   >
     <div
       className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-10 mui-16chest-MuiGrid-root"
@@ -438,7 +438,7 @@ exports[`should render DrawerMenu 1`] = `
   <div
     aria-atomic={true}
     aria-live="polite"
-    className="tss-1cl4o05-container"
+    className="tss-i8rqz1-container"
     data-testid="ANNOUNCER_ELEMENT_TEST_ID"
     role="status"
   />,
@@ -448,7 +448,7 @@ exports[`should render DrawerMenu 1`] = `
 exports[`should render DrawerMenu with "features" selected 1`] = `
 [
   <footer
-    className="tss-1bvpe5r-footer"
+    className="tss-wd65c0-footer"
   >
     <div
       className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-10 mui-16chest-MuiGrid-root"
@@ -883,7 +883,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
   <div
     aria-atomic={true}
     aria-live="polite"
-    className="tss-1cl4o05-container"
+    className="tss-i8rqz1-container"
     data-testid="ANNOUNCER_ELEMENT_TEST_ID"
     role="status"
   />,

@@ -1,4 +1,4 @@
-import { getBasePath } from 'utils/formatPath';
+import { basePath } from 'utils/formatPath';
 import { createPersistentGlobalStateHook } from './usePersistentGlobalState';
 import React from 'react';
 
@@ -22,6 +22,6 @@ const createInitialValue = (): IEventSettings => {
 };
 
 const useGlobalState = createPersistentGlobalStateHook<IEventSettings>(
-    `${getBasePath()}:useEventSettings:v1`,
+    `${basePath}:useEventSettings:v1`,
     createInitialValue()
 );

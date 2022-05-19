@@ -1,0 +1,83 @@
+// Vitest Snapshot v1
+
+exports[`InstanceStatusBar should warn when the trial has expired 1`] = `
+<aside
+  class="mui-1rw10cs"
+  data-testid="INSTANCE_STATUS_BAR_ID"
+>
+  <svg
+    aria-hidden="true"
+    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mui-cle2im-MuiSvgIcon-root"
+    data-testid="InfoIcon"
+    focusable="false"
+    viewBox="0 0 24 24"
+  >
+    <path
+      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+    />
+  </svg>
+  <span>
+    <strong>
+      Heads up!
+    </strong>
+     Your free trial of the
+     
+    PRO
+     version has expired.
+  </span>
+  <a
+    class="MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButtonBase-root mui-l66s6r-MuiButtonBase-root-MuiButton-root"
+    href="mailto:support@getunleash.zendesk.com"
+    tabindex="0"
+  >
+    Contact us
+    <span
+      class="MuiTouchRipple-root mui-8je8zh-MuiTouchRipple-root"
+    />
+  </a>
+</aside>
+`;
+
+exports[`InstanceStatusBar should warn when the trial is about to expire 1`] = `
+<aside
+  class="mui-1rw10cs"
+  data-testid="INSTANCE_STATUS_BAR_ID"
+>
+  <svg
+    aria-hidden="true"
+    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mui-cle2im-MuiSvgIcon-root"
+    data-testid="InfoIcon"
+    focusable="false"
+    viewBox="0 0 24 24"
+  >
+    <path
+      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+    />
+  </svg>
+  <span>
+    <strong>
+      Heads up!
+    </strong>
+     You have
+     
+    <strong>
+      4
+       days
+    </strong>
+     remaining of your free trial of the 
+    PRO
+     
+    version.
+  </span>
+  <a
+    class="MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButtonBase-root mui-l66s6r-MuiButtonBase-root-MuiButton-root"
+    href="mailto:support@getunleash.zendesk.com"
+    tabindex="0"
+  >
+    Contact us
+    <span
+      class="MuiTouchRipple-root mui-8je8zh-MuiTouchRipple-root"
+    />
+  </a>
+</aside>
+`;

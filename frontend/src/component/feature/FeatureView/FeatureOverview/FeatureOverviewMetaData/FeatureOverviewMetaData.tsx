@@ -36,8 +36,7 @@ const FeatureOverviewMetaData = () => {
                         Project: {project}
                     </span>
                     <ConditionallyRender
-                        // @ts-expect-error
-                        condition={description}
+                        condition={Boolean(description)}
                         show={
                             <span className={styles.bodyItem} data-loading>
                                 <div>Description:</div>

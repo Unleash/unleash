@@ -26,7 +26,7 @@ exports[`renders correctly with empty version 1`] = `
     <div
       aria-atomic="true"
       aria-live="polite"
-      class="tss-1cl4o05-container"
+      class="tss-i8rqz1-container"
       data-testid="ANNOUNCER_ELEMENT_TEST_ID"
       role="status"
     />
@@ -60,7 +60,7 @@ exports[`renders correctly with ui-config 1`] = `
     <div
       aria-atomic="true"
       aria-live="polite"
-      class="tss-1cl4o05-container"
+      class="tss-i8rqz1-container"
       data-testid="ANNOUNCER_ELEMENT_TEST_ID"
       role="status"
     />
@@ -94,7 +94,7 @@ exports[`renders correctly with versionInfo 1`] = `
     <div
       aria-atomic="true"
       aria-live="polite"
-      class="tss-1cl4o05-container"
+      class="tss-i8rqz1-container"
       data-testid="ANNOUNCER_ELEMENT_TEST_ID"
       role="status"
     />
@@ -121,7 +121,7 @@ exports[`renders correctly without uiConfig 1`] = `
     <div
       aria-atomic="true"
       aria-live="polite"
-      class="tss-1cl4o05-container"
+      class="tss-i8rqz1-container"
       data-testid="ANNOUNCER_ELEMENT_TEST_ID"
       role="status"
     />

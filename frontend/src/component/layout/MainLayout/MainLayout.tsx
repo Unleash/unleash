@@ -54,19 +54,20 @@ export const MainLayout = ({ children }: IMainLayoutProps) => {
                             {children}
                         </div>
                     </Grid>
-                    <div style={{ overflow: 'hidden' }}>
-                        <img
-                            src={formatAssetPath(textureImage)}
-                            alt=""
-                            style={{
-                                position: 'fixed',
-                                zIndex: 1,
-                                bottom: 0,
-                                right: 0,
-                                width: 400,
-                            }}
-                        />
-                    </div>
+                    <img
+                        src={formatAssetPath(textureImage)}
+                        alt=""
+                        style={{
+                            display: 'block',
+                            position: 'fixed',
+                            zIndex: 0,
+                            bottom: 0,
+                            right: 0,
+                            width: 400,
+                            pointerEvents: 'none',
+                            userSelect: 'none',
+                        }}
+                    />
                 </main>
                 <Footer />
             </Grid>

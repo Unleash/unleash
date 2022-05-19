@@ -9,14 +9,14 @@ import {
     Select,
     Typography,
     SelectChangeEvent,
+    Alert,
 } from '@mui/material';
 import classnames from 'classnames';
 import { useStyles } from 'component/user/UserProfile/UserProfileContent/UserProfileContent.styles';
 import { useThemeStyles } from 'themes/themeStyles';
-import { Alert } from '@mui/material';
 import EditProfile from '../EditProfile/EditProfile';
 import legacyStyles from '../../user.module.scss';
-import { getBasePath } from 'utils/formatPath';
+import { basePath } from 'utils/formatPath';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { IUser } from 'interfaces/user';
 import { ILocationSettings } from 'hooks/useLocationSettings';
@@ -163,7 +163,7 @@ const UserProfileContent = ({
                                 <Button
                                     variant="contained"
                                     color="primary"
-                                    href={`${getBasePath()}/logout`}
+                                    href={`${basePath}/logout`}
                                 >
                                     Logout
                                 </Button>

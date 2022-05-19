@@ -1,4 +1,4 @@
-import { getBasePath } from 'utils/formatPath';
+import { basePath } from 'utils/formatPath';
 import { createPersistentGlobalStateHook } from './usePersistentGlobalState';
 import React from 'react';
 
@@ -24,6 +24,6 @@ const createInitialValue = (): ILocationSettings => {
 };
 
 const useGlobalState = createPersistentGlobalStateHook<ILocationSettings>(
-    `${getBasePath()}:useLocationSettings:v1`,
+    `${basePath}:useLocationSettings:v1`,
     createInitialValue()
 );

@@ -4,6 +4,7 @@ interface IPercentageCircleProps {
     styles?: object;
     percentage: number;
     secondaryPieColor?: string;
+    className?: string;
 }
 
 const PercentageCircle = ({

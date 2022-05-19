@@ -4745,10 +4745,10 @@ ms@^2.1.1:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.3.tgz#574c8138ce1d2b5861f0b44579dbadd60c6615b2"
   integrity sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==
 
-msw@0.40.0:
-  version "0.40.0"
-  resolved "https://registry.yarnpkg.com/msw/-/msw-0.40.0.tgz#db66848f6218bb678e8bd8f711ea82883b6ca094"
-  integrity sha512-aJzrpaEdII0vhP/F8ROgSVpIfzUIE4SHD4/NXpKey1vr907enDtZNs1CU9BRSFfKZUfYCBEvZOYk4ZkP1o0FKA==
+msw@0.40.1:
+  version "0.40.1"
+  resolved "https://registry.yarnpkg.com/msw/-/msw-0.40.1.tgz#fc7dddbb21e9e742618120b951358c7bb561205a"
+  integrity sha512-8fL9whlIZR3rlhMIyDxIBUdT8Ru44TH2QbD46A64oaxqYb+GoZ9uk866rRKxJ8uBNentyaLqGM9VbNvftvwMjw==
   dependencies:
     "@mswjs/cookies" "^0.2.0"
     "@mswjs/interceptors" "^0.15.1"

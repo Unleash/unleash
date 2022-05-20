@@ -28,7 +28,7 @@ Import the provider like this in your entrypoint file (typically index.svelte):
 
 	onMount(async () => {
 		const proxyClientSvelte = await import('@unleash/proxy-client-svelte');
-		FlagProvider = proxyClientSvelte.default;
+		({ FlagProvider } = proxyClientSvelte);
 	});
 
 	const config = {
@@ -40,7 +40,7 @@ Import the provider like this in your entrypoint file (typically index.svelte):
 	};
 </script>
 
-<svelte:component this="{FlagProvider}" {config}>
+<svelte:component this={FlagProvider} {config}>
 	<App />
 </svelte:component>
 ```
@@ -55,7 +55,7 @@ Alternatively, you can pass your own client in to the FlagProvider:
 
 	onMount(async () => {
 		const proxyClientSvelte = await import('@unleash/proxy-client-svelte');
-		FlagProvider = proxyClientSvelte.default;
+		({ FlagProvider } = proxyClientSvelte);
 	});
 
 	const config = {
@@ -69,7 +69,7 @@ Alternatively, you can pass your own client in to the FlagProvider:
 	const client = new UnleashClient(config);
 </script>
 
-<svelte:component this="{FlagProvider}" unleashClient="{client}">
+<svelte:component this={FlagProvider} unleashClient={client}>
 	<App />
 </svelte:component>
 ```
@@ -82,7 +82,7 @@ By default, the Unleash client will start polling the Proxy for toggles immediat
 - passing a client instance to the `FlagProvider`
 
 ```html
-<svelte:component this="{FlagProvider}" unleashClient="{client}" startClient="{false}">
+<svelte:component this={FlagProvider} unleashClient={client} startClient={false}>
 	<App />
 </svelte:component>
 ```
@@ -106,7 +106,7 @@ To start the client, use the client's `start` method. The below snippet of pseud
 	});
 </script>
 
-<svelte:component this="{FlagProvider}" unleashClient="{client}" startClient="{false}">
+<svelte:component this={FlagProvider} unleashClient={client} startClient={false}>
 	<App />
 </svelte:component>
 ```
@@ -165,7 +165,7 @@ Follow the following steps in order to delay rendering until the flags have been
 {#if !$flagsReady}
 <Loading />
 {:else}
-<MyComponent error="{flagsError}" />
+<MyComponent error={flagsError} />
 {/if}
 ```
 

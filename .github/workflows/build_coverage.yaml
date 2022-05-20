@@ -44,6 +44,10 @@ jobs:
         TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
         DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
     - run: scripts/commit-coverage.sh
+      env:
+          GH_NAME: 'ivarconr'
+          GH_EMAIL: 'ivarconr@gmail.com'
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
     - name: Coveralls
       uses: coverallsapp/github-action@master
       with:

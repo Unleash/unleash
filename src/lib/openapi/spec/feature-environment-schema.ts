@@ -6,7 +6,7 @@ import { parametersSchema } from './parameters-schema';
 let schema = {
     type: 'object',
     additionalProperties: false,
-    required: ['name', 'environment', 'enabled', 'strategies'],
+    required: ['name', 'enabled'],
     properties: {
         name: {
             type: 'string',

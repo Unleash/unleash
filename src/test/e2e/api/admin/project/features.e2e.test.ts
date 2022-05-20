@@ -773,7 +773,7 @@ test('should coerce all strategy parameter values to strings', async () => {
     });
 });
 
-test('should limit the length of parameter values', async () => {
+test('should NOT limit the length of parameter values', async () => {
     const envName = 'default';
     const featureName = randomId();
     const projectPath = '/api/admin/projects/default';
@@ -787,7 +787,7 @@ test('should limit the length of parameter values', async () => {
     await app.request
         .post(`${featurePath}/environments/${envName}/strategies`)
         .send({ name: 'default', parameters: { foo: 'x'.repeat(101) } })
-        .expect(400);
+        .expect(200);
 });
 
 test('Can NOT delete strategy with wrong projectId', async () => {

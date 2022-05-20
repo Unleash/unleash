@@ -14,7 +14,7 @@ import {
     useMediaQuery,
     useTheme,
 } from '@mui/material';
-import ViewColumnIcon from '@mui/icons-material/ViewColumn';
+import ColumnIcon from '@mui/icons-material/ViewWeek';
 import CloseIcon from '@mui/icons-material/Close';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useStyles } from './ColumnsMenu.styles';
@@ -105,7 +105,7 @@ export const ColumnsMenu: VFC<IColumnsMenuProps> = ({
                     className={classes.button}
                     data-loading
                 >
-                    <ViewColumnIcon />
+                    <ColumnIcon />
                 </IconButton>
             </Tooltip>
 

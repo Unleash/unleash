@@ -116,7 +116,7 @@ export const useStyles = makeStyles()(theme => ({
         },
     },
     strategyIcon: {
-        fill: theme.palette.grey[600],
+        fill: theme.palette.inactiveIcon,
     },
     container: {
         display: 'flex',

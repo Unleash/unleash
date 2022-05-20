@@ -13,7 +13,7 @@ import {
 } from 'component/common/Table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { DateCell } from '../../../common/Table/cells/DateCell/DateCell';
-import { FeatureLinkCell } from 'component/common/Table/cells/FeatureLinkCell/FeatureLinkCell';
+import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { FeatureSeenCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureSeenCell';
 import { FeatureTypeCell } from 'component/common/Table/cells/FeatureTypeCell/FeatureTypeCell';
 import { FeatureStaleCell } from './FeatureStaleCell/FeatureStaleCell';
@@ -53,7 +53,7 @@ const columns = [
                 original: { name, description, project },
             },
         }) => (
-            <FeatureLinkCell
+            <LinkCell
                 title={name}
                 subtitle={description}
                 to={`/projects/${project}/features/${name}`}
@@ -71,7 +71,7 @@ const columns = [
         Header: 'Project ID',
         accessor: 'project',
         Cell: ({ value }: { value: string }) => (
-            <FeatureLinkCell title={value} to={`/projects/${value}`} />
+            <LinkCell title={value} to={`/projects/${value}`} />
         ),
         sortType: 'alphanumeric',
     },

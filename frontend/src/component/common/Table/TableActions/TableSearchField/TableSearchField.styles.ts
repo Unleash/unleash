@@ -25,7 +25,7 @@ export const useStyles = makeStyles()(theme => ({
     },
     searchIcon: {
         marginRight: 8,
-        color: theme.palette.grey[600],
+        color: theme.palette.inactiveIcon,
     },
     clearContainer: {
         width: '30px',
@@ -34,8 +34,6 @@ export const useStyles = makeStyles()(theme => ({
         },
     },
     clearIcon: {
-        // color: theme.palette.grey[700],
-        color: 'red',
         fontSize: '18px',
     },
     inputRoot: {

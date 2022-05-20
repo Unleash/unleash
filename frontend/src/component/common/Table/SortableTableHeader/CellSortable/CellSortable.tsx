@@ -58,18 +58,18 @@ export const CellSortable: FC<ICellSortableProps> = ({
         );
     };
 
-    const justifyContent = useMemo(() => {
+    const alignClass = useMemo(() => {
         switch (align) {
             case 'left':
-                return 'flex-start';
+                return styles.alignLeft;
             case 'center':
-                return 'center';
+                return styles.alignCenter;
             case 'right':
-                return 'flex-end';
+                return styles.alignRight;
             default:
                 return undefined;
         }
-    }, [align]);
+    }, [align, styles]);
 
     useEffect(() => {
         const updateTitle = () => {
@@ -102,10 +102,10 @@ export const CellSortable: FC<ICellSortableProps> = ({
                         <button
                             className={classnames(
                                 isSorted && styles.sortedButton,
-                                styles.sortButton
+                                styles.sortButton,
+                                alignClass
                             )}
                             onClick={onSortClick}
-                            style={{ justifyContent }}
                         >
                             <span
                                 className={styles.label}
@@ -122,7 +122,7 @@ export const CellSortable: FC<ICellSortableProps> = ({
                         </button>
                     </Tooltip>
                 }
-                elseShow={children}
+                elseShow={<div className={alignClass}>{children}</div>}
             />
         </TableCell>
     );

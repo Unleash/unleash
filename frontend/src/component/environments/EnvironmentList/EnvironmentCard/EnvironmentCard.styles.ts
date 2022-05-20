@@ -11,7 +11,7 @@ export const useStyles = makeStyles()(theme => ({
         minWidth: '450px',
     },
     icon: {
-        fill: theme.palette.grey[600],
+        fill: theme.palette.inactiveIcon,
         marginRight: '0.5rem',
     },
     header: {

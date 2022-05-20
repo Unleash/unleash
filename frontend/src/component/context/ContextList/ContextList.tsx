@@ -1,42 +1,133 @@
-import { useContext, useState, VFC } from 'react';
-import { Add, Album, Delete, Edit } from '@mui/icons-material';
-import { Link, useNavigate } from 'react-router-dom';
+import { useContext, useMemo, useState, VFC } from 'react';
+import { useGlobalFilter, useSortBy, useTable } from 'react-table';
 import {
-    Button,
-    IconButton,
-    List,
-    ListItem,
-    ListItemIcon,
-    ListItemText,
-    Tooltip,
-    useMediaQuery,
-} from '@mui/material';
+    Table,
+    SortableTableHeader,
+    TableBody,
+    TableCell,
+    TableRow,
+    TablePlaceholder,
+    TableSearch,
+} from 'component/common/Table';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import {
-    CREATE_CONTEXT_FIELD,
-    DELETE_CONTEXT_FIELD,
-    UPDATE_CONTEXT_FIELD,
-} from 'component/providers/AccessProvider/permissions';
+import { UPDATE_CONTEXT_FIELD } from 'component/providers/AccessProvider/permissions';
 import { Dialogue as ConfirmDialogue } from 'component/common/Dialogue/Dialogue';
 import AccessContext from 'contexts/AccessContext';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import useContextsApi from 'hooks/api/actions/useContextsApi/useContextsApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { useStyles } from './styles';
+import { AddContextButton } from './AddContextButton/AddContextButton';
+import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
+import { sortTypes } from 'utils/sortTypes';
+import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
+import { ContextActionsCell } from './ContextActionsCell/ContextActionsCell';
+import { Adjust } from '@mui/icons-material';
+import { Box } from '@mui/material';
 
 const ContextList: VFC = () => {
     const { hasAccess } = useContext(AccessContext);
     const [showDelDialogue, setShowDelDialogue] = useState(false);
-    const smallScreen = useMediaQuery('(max-width:700px)');
     const [name, setName] = useState<string>();
-    const { context, refetchUnleashContext } = useUnleashContext();
+    const { context, refetchUnleashContext, loading } = useUnleashContext();
     const { removeContext } = useContextsApi();
     const { setToastData, setToastApiError } = useToast();
-    const navigate = useNavigate();
-    const { classes: styles } = useStyles();
+    const data = useMemo(() => {
+        if (loading) {
+            return Array(5).fill({
+                name: 'Context name',
+                description: 'Context description when loading',
+            });
+        }
+
+        return context
+            .map(({ name, description, sortOrder }) => ({
+                name,
+                description,
+                sortOrder,
+            }))
+            .sort((a, b) => a.sortOrder - b.sortOrder);
+    }, [context, loading]);
+
+    const columns = useMemo(
+        () => [
+            {
+                id: 'Icon',
+                Cell: () => (
+                    <Box
+                        sx={{
+                            pl: 2,
+                            pr: 1,
+                            display: 'flex',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <Adjust color="disabled" />
+                    </Box>
+                ),
+            },
+            {
+                Header: 'Name',
+                accessor: 'name',
+                width: '90%',
+                Cell: ({
+                    row: {
+                        original: { name, description },
+                    },
+                }: any) => (
+                    <LinkCell
+                        title={name}
+                        to={
+                            hasAccess(UPDATE_CONTEXT_FIELD)
+                                ? `/context/edit/${name}`
+                                : undefined
+                        }
+                        subtitle={description}
+                    />
+                ),
+                sortType: 'alphanumeric',
+            },
+            {
+                Header: 'Actions',
+                id: 'Actions',
+                align: 'center',
+                Cell: ({
+                    row: {
+                        original: { name },
+                    },
+                }: any) => (
+                    <ContextActionsCell
+                        name={name}
+                        onDelete={() => {
+                            setName(name);
+                            setShowDelDialogue(true);
+                        }}
+                    />
+                ),
+                width: 150,
+                disableSortBy: true,
+            },
+            {
+                accessor: 'description',
+                disableSortBy: true,
+            },
+            {
+                accessor: 'sortOrder',
+                sortType: 'number',
+            },
+        ],
+        [hasAccess]
+    );
+
+    const initialState = useMemo(
+        () => ({
+            sortBy: [{ id: 'name', desc: false }],
+            hiddenColumns: ['description', 'sortOrder'],
+        }),
+        []
+    );
 
     const onDeleteContext = async () => {
         try {
@@ -57,103 +148,86 @@ const ContextList: VFC = () => {
         setShowDelDialogue(false);
     };
 
-    const contextList = () =>
-        context.map(field => (
-            <ListItem key={field.name} classes={{ root: styles.listItem }}>
-                <ListItemIcon>
-                    <Album />
-                </ListItemIcon>
-                <ListItemText
-                    primary={
-                        <ConditionallyRender
-                            condition={hasAccess(UPDATE_CONTEXT_FIELD)}
-                            show={
-                                <Link to={`/context/edit/${field.name}`}>
-                                    <strong>{field.name}</strong>
-                                </Link>
-                            }
-                            elseShow={<strong>{field.name}</strong>}
-                        />
-                    }
-                    secondary={field.description}
-                />
-                <ConditionallyRender
-                    condition={hasAccess(UPDATE_CONTEXT_FIELD)}
-                    show={
-                        <Tooltip title="Edit context field" arrow>
-                            <IconButton
-                                onClick={() =>
-                                    navigate(`/context/edit/${field.name}`)
-                                }
-                                size="large"
-                            >
-                                <Edit />
-                            </IconButton>
-                        </Tooltip>
-                    }
-                />
-                <ConditionallyRender
-                    condition={hasAccess(DELETE_CONTEXT_FIELD)}
-                    show={
-                        <Tooltip title="Delete context field" arrow>
-                            <IconButton
-                                aria-label="delete"
-                                onClick={() => {
-                                    setName(field.name);
-                                    setShowDelDialogue(true);
-                                }}
-                                size="large"
-                            >
-                                <Delete />
-                            </IconButton>
-                        </Tooltip>
-                    }
-                />
-            </ListItem>
-        ));
-    const headerButton = () => (
-        <ConditionallyRender
-            condition={hasAccess(CREATE_CONTEXT_FIELD)}
-            show={
-                <ConditionallyRender
-                    condition={smallScreen}
-                    show={
-                        <Tooltip title="Add context type" arrow>
-                            <IconButton
-                                onClick={() => navigate('/context/create')}
-                                size="large"
-                            >
-                                <Add />
-                            </IconButton>
-                        </Tooltip>
-                    }
-                    elseShow={
-                        <Button
-                            onClick={() => navigate('/context/create')}
-                            color="primary"
-                            variant="contained"
-                        >
-                            New context field
-                        </Button>
-                    }
-                />
-            }
-        />
+    const {
+        getTableProps,
+        getTableBodyProps,
+        headerGroups,
+        rows,
+        prepareRow,
+        state: { globalFilter },
+        setGlobalFilter,
+    } = useTable(
+        {
+            columns: columns as any[], // TODO: fix after `react-table` v8 update
+            data,
+            initialState,
+            sortTypes,
+            autoResetGlobalFilter: false,
+            autoResetSortBy: false,
+            disableSortRemove: true,
+        },
+        useGlobalFilter,
+        useSortBy
     );
 
     return (
         <PageContent
             header={
-                <PageHeader actions={headerButton()} title={'Context fields'} />
+                <PageHeader
+                    title="Context fields"
+                    actions={
+                        <>
+                            <TableSearch
+                                initialValue={globalFilter}
+                                onChange={setGlobalFilter}
+                            />
+                            <PageHeader.Divider />
+                            <AddContextButton />
+                        </>
+                    }
+                />
             }
         >
-            <List>
-                <ConditionallyRender
-                    condition={context.length > 0}
-                    show={contextList}
-                    elseShow={<ListItem>No context fields defined</ListItem>}
-                />
-            </List>
+            <SearchHighlightProvider value={globalFilter}>
+                <Table {...getTableProps()}>
+                    <SortableTableHeader headerGroups={headerGroups} />
+                    <TableBody {...getTableBodyProps()}>
+                        {rows.map(row => {
+                            prepareRow(row);
+                            return (
+                                <TableRow hover {...row.getRowProps()}>
+                                    {row.cells.map(cell => (
+                                        <TableCell {...cell.getCellProps()}>
+                                            {cell.render('Cell')}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            );
+                        })}
+                    </TableBody>
+                </Table>
+            </SearchHighlightProvider>
+            <ConditionallyRender
+                condition={rows.length === 0}
+                show={
+                    <ConditionallyRender
+                        condition={globalFilter?.length > 0}
+                        show={
+                            <TablePlaceholder>
+                                No contexts found matching &ldquo;
+                                {globalFilter}
+                                &rdquo;
+                            </TablePlaceholder>
+                        }
+                        elseShow={
+                            <TablePlaceholder>
+                                No contexts available. Get started by adding
+                                one.
+                            </TablePlaceholder>
+                        }
+                    />
+                }
+            />
             <ConfirmDialogue
                 open={showDelDialogue}
                 onClick={onDeleteContext}

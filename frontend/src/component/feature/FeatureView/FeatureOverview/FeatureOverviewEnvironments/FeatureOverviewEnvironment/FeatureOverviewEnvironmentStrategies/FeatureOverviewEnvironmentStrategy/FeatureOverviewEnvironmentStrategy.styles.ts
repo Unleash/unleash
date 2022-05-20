@@ -16,7 +16,7 @@ export const useStyles = makeStyles()(theme => ({
         borderBottom: `1px solid ${theme.palette.grey[300]}`,
     },
     icon: {
-        fill: theme.palette.grey[600],
+        fill: theme.palette.inactiveIcon,
     },
     actions: {
         marginLeft: 'auto',

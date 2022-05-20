@@ -11,7 +11,7 @@ import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
-import { FeatureLinkCell } from 'component/common/Table/cells/FeatureLinkCell/FeatureLinkCell';
+import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { FeatureSeenCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureSeenCell';
 import { FeatureTypeCell } from 'component/common/Table/cells/FeatureTypeCell/FeatureTypeCell';
 import { sortTypes } from 'utils/sortTypes';
@@ -176,7 +176,7 @@ export const ProjectFeatureToggles = ({
                 Header: 'Feature toggle name',
                 accessor: 'name',
                 Cell: ({ value }: { value: string }) => (
-                    <FeatureLinkCell
+                    <LinkCell
                         title={value}
                         to={`/projects/${projectId}/features/${value}`}
                     />
@@ -271,6 +271,7 @@ export const ProjectFeatureToggles = ({
         () => filters?.find(filterRow => filterRow?.id === 'name')?.value || '',
         [filters]
     );
+
     return (
         <PageContent
             isLoading={loading}

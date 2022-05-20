@@ -255,7 +255,7 @@ export const StrategiesList = () => {
         strategies.map(strategy => (
             <ListItem key={strategy.name} className={styles.listItem}>
                 <ListItemAvatar>
-                    <Extension style={{ color: '#0000008a' }} />
+                    <Extension color="disabled" />
                 </ListItemAvatar>
                 <ListItemText
                     primary={strategyLink(strategy?.name, strategy?.deprecated)}

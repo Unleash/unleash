@@ -55,4 +55,16 @@ export const useStyles = makeStyles()(theme => ({
             overflow: 'hidden',
         },
     },
+    alignLeft: {
+        justifyContent: 'flex-start',
+        textAlign: 'left',
+    },
+    alignRight: {
+        justifyContent: 'flex-end',
+        textAlign: 'right',
+    },
+    alignCenter: {
+        justifyContent: 'center',
+        textAlign: 'center',
+    },
 }));

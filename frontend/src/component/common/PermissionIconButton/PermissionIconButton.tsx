@@ -55,9 +55,11 @@ const PermissionIconButton = ({
             title={formatAccessText(access, tooltipProps?.title)}
             arrow
         >
-            <IconButton {...rest} disabled={!access} size="large">
-                {children}
-            </IconButton>
+            <div>
+                <IconButton {...rest} disabled={!access} size="large">
+                    {children}
+                </IconButton>
+            </div>
         </TooltipResolver>
     );
 };

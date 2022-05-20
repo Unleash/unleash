@@ -10,9 +10,6 @@ export const useStyles = makeStyles()(theme => ({
         textAlign: 'left',
         maxWidth: '300px',
     },
-    icon: {
-        color: theme.palette.grey[600],
-    },
     description: {
         textAlign: 'left',
         maxWidth: '300px',

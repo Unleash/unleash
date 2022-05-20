@@ -2,7 +2,7 @@ import { useStyles } from './ProjectRoleListItem.styles';
 import { TableCell, TableRow, Typography } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
-import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
+import { SupervisedUserCircle } from '@mui/icons-material';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { IProjectRole } from 'interfaces/role';
 import { useNavigate } from 'react-router-dom';
@@ -34,7 +34,7 @@ const RoleListItem = ({
         <>
             <TableRow className={styles.tableRow}>
                 <TableCell className={styles.hideXS}>
-                    <SupervisedUserCircleIcon className={styles.icon} />
+                    <SupervisedUserCircle color="disabled" />
                 </TableCell>
                 <TableCell className={styles.leftTableCell}>
                     <Typography variant="body2" data-loading>

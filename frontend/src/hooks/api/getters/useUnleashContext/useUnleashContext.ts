@@ -1,5 +1,4 @@
-import useSWR, { mutate, SWRConfiguration } from 'swr';
-import { useState, useEffect } from 'react';
+import useSWR, { SWRConfiguration } from 'swr';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { IUnleashContextDefinition } from 'interfaces/context';
@@ -9,7 +8,6 @@ interface IUnleashContextOutput {
     refetchUnleashContext: () => void;
     loading: boolean;
     error?: Error;
-    CONTEXT_CACHE_KEY: string;
 }
 
 const useUnleashContext = (
@@ -30,24 +28,17 @@ const useUnleashContext = (
 
     const CONTEXT_CACHE_KEY = 'api/admin/context';
 
-    const { data, error } = useSWR(CONTEXT_CACHE_KEY, fetcher, options);
-
-    const [loading, setLoading] = useState(!error && !data);
-
-    const refetchUnleashContext = () => {
-        mutate(CONTEXT_CACHE_KEY);
-    };
-
-    useEffect(() => {
-        setLoading(!error && !data);
-    }, [data, error]);
+    const { data, mutate, error, isValidating } = useSWR(
+        CONTEXT_CACHE_KEY,
+        fetcher,
+        options
+    );
 
     return {
         context: data || [],
         error,
-        loading,
-        refetchUnleashContext,
-        CONTEXT_CACHE_KEY,
+        loading: isValidating && !error && !data,
+        refetchUnleashContext: mutate,
     };
 };
 

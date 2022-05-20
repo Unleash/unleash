@@ -9,6 +9,8 @@ export const useStyles = makeStyles()(theme => ({
         display: 'flex',
         alignItems: 'center',
         minHeight: '62px',
+    },
+    link: {
         '&:hover, &:focus': {
             textDecoration: 'none',
             '& > div > span:first-of-type': {

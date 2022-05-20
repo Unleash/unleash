@@ -61,6 +61,14 @@ declare module '@mui/material/styles' {
          * For sidebar container background.
          */
         sidebarContainer: string;
+        /**
+         * Icon that doesn't have an action (visual only, no click handler).
+         *
+         * @deprecated use `<YourIcon color="disabled" />`.
+         * ⚠️ `color` only works with `import { YourIcon } from "@mui/icons"`
+         * and not with `import YourIcon from "@mui/icons/YourIcon"`.
+         */
+        inactiveIcon: string;
     }
 
     interface Theme extends CustomTheme {}

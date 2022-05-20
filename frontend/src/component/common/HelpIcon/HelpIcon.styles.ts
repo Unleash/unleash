@@ -17,6 +17,6 @@ export const useStyles = makeStyles()(theme => ({
     },
     icon: {
         fontSize: '1rem',
-        color: theme.palette.grey[600],
+        color: theme.palette.inactiveIcon,
     },
 }));

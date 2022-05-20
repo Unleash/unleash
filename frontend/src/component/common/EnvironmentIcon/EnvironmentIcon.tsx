@@ -14,7 +14,7 @@ const EnvironmentIcon = ({ enabled, className }: IEnvironmentIcon) => {
     const container = {
         backgroundColor: enabled
             ? theme.palette.primary.light
-            : theme.palette.grey[600],
+            : theme.palette.inactiveIcon,
         borderRadius: '50%',
         width: '28px',
         height: '28px',

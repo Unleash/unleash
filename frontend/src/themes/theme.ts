@@ -100,6 +100,7 @@ export default createTheme({
             inactive: colors.orange[200],
             abandoned: colors.red[200],
         },
+        inactiveIcon: colors.grey[600],
     },
     components: {
         MuiLink: {
@@ -241,6 +242,13 @@ export default createTheme({
                     '&:not(.Mui-checked) .MuiTouchRipple-child': {
                         color: colors.grey['500'],
                     },
+                },
+            },
+        },
+        MuiIcon: {
+            styleOverrides: {
+                colorDisabled: {
+                    color: colors.grey[600],
                 },
             },
         },

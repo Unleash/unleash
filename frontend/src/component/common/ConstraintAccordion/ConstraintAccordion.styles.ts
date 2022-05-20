@@ -154,7 +154,7 @@ export const useStyles = makeStyles()(theme => ({
         height: '32.5px',
         width: '32.5px',
         marginRight: '0.5rem',
-        fill: theme.palette.grey[600],
+        fill: theme.palette.inactiveIcon,
     },
     singleValueView: {
         display: 'flex',

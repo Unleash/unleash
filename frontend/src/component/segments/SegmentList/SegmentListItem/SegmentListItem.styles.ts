@@ -11,7 +11,7 @@ export const useStyles = makeStyles()(theme => ({
         maxWidth: '300px',
     },
     icon: {
-        color: theme.palette.grey[600],
+        color: theme.palette.inactiveIcon,
     },
     descriptionCell: {
         textAlign: 'left',

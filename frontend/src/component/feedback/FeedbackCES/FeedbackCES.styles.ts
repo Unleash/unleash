@@ -32,6 +32,6 @@ export const useStyles = makeStyles()(theme => ({
     },
     closeIcon: {
         fontSize: '1.5rem',
-        color: theme.palette.grey[600],
+        color: theme.palette.inactiveIcon,
     },
 }));

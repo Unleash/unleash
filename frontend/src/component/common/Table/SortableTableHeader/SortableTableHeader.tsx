@@ -28,7 +28,9 @@ export const SortableTableHeader: VFC<ISortableTableHeaderProps> = ({
                         return (
                             <CellSortable
                                 {...column.getHeaderProps(
-                                    column.getSortByToggleProps()
+                                    column.canSort
+                                        ? column.getSortByToggleProps()
+                                        : undefined
                                 )}
                                 ariaTitle={
                                     typeof content === 'string'

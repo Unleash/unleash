@@ -11,7 +11,9 @@ const schema = {
         },
         features: {
             type: 'array',
-            items: { $ref: '#/components/schemas/featureSchema' },
+            items: {
+                $ref: '#/components/schemas/featureSchema',
+            },
         },
     },
     'components/schemas': {

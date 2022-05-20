@@ -43,9 +43,13 @@ export const schema = {
         },
         constraints: {
             type: 'array',
-            items: { $ref: '#/components/schemas/constraintSchema' },
+            items: {
+                $ref: '#/components/schemas/constraintSchema',
+            },
         },
-        parameters: { $ref: '#/components/schemas/parametersSchema' },
+        parameters: {
+            $ref: '#/components/schemas/parametersSchema',
+        },
     },
     'components/schemas': {
         constraintSchema,

@@ -50,7 +50,9 @@ const schema = {
         },
         strategies: {
             type: 'array',
-            items: { $ref: '#/components/schemas/strategySchema' },
+            items: {
+                $ref: '#/components/schemas/strategySchema',
+            },
         },
         variants: {
             type: 'array',

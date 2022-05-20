@@ -9,12 +9,12 @@ on:
       - coverage/**
 
 jobs:
-  build:
+  coverage:
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        node-version: [14.x]
+        node-version: [16.x]
     services:
       # Label used to access the service container
       postgres:
@@ -39,11 +39,11 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: yarn
     - run: yarn run test:coverage
-    - run: scripts/commit-coverage.sh
       env:
         CI: true
         TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
         DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
+    - run: scripts/commit-coverage.sh
     - name: Coveralls
       uses: coverallsapp/github-action@master
       with:

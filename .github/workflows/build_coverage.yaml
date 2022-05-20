@@ -43,19 +43,19 @@ jobs:
         CI: true
         TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
         DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
-    - run: |
-        git config --global user.name "${GH_NAME}"
-        git config --global user.email "${GH_EMAIL}"
-        GIT_USER="${GH_NAME}"
-        echo "machine github.com login ${GH_NAME} password ${GITHUB_TOKEN}" > ~/.netrc
-
-        git add coverage
-        git diff-index --quiet HEAD || git commit -m 'chore: update coverage reports'
-        git push origin main
-      env:
-          GH_NAME: 'ivarconr'
-          GH_EMAIL: 'ivarconr@gmail.com'
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #- run: |
+    ##    git config --global user.name "${GH_NAME}"
+    #    git config --global user.email "${GH_EMAIL}"
+    #    GIT_USER="${GH_NAME}"
+    #    echo "machine github.com login ${GH_NAME} password ${GITHUB_TOKEN}" > ~/.netrc
+    #
+    #    git add coverage
+    #    git diff-index --quiet HEAD || git commit -m 'chore: update coverage reports'
+    #    git push origin main
+    #  env:
+    #      GH_NAME: 'ivarconr'
+    #      GH_EMAIL: 'ivarconr@gmail.com'
+    #      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Coveralls
       uses: coverallsapp/github-action@master
       with:

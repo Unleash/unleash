@@ -18,6 +18,7 @@ lib-cov
 
 # Coverage directory used by tools like istanbul
 # coverage
+coverage/lcov-report
 
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 build/Release
@@ -55,3 +56,4 @@ package-lock.json
 .env
 
 #report.json
+

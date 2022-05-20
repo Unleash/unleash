@@ -502,7 +502,6 @@ Object {
       },
       "parametersSchema": Object {
         "additionalProperties": Object {
-          "maxLength": 100,
           "type": "string",
         },
         "type": "object",

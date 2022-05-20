@@ -24,7 +24,7 @@ import { FeatureSchema } from '../../../openapi/spec/feature-schema';
 import { createStrategyRequest } from '../../../openapi/spec/create-strategy-request';
 import { StrategySchema } from '../../../openapi/spec/strategy-schema';
 import { featuresResponse } from '../../../openapi/spec/features-response';
-import { featureEnvironmentInfoResponse } from '../../../openapi/spec/feature-environment-info-response';
+import { featureEnvironmentResponse } from '../../../openapi/spec/feature-environment-response';
 import { strategiesResponse } from '../../../openapi/spec/strategies-response';
 import { strategyResponse } from '../../../openapi/spec/strategy-response';
 import { emptyResponse } from '../../../openapi/spec/empty-response';
@@ -32,7 +32,7 @@ import { updateFeatureRequest } from '../../../openapi/spec/update-feature-reque
 import { patchRequest } from '../../../openapi/spec/patch-request';
 import { updateStrategyRequest } from '../../../openapi/spec/update-strategy-request';
 import { cloneFeatureRequest } from '../../../openapi/spec/clone-feature-request';
-import { FeatureEnvironmentInfoSchema } from '../../../openapi/spec/feature-environment-info-schema';
+import { FeatureEnvironmentSchema } from '../../../openapi/spec/feature-environment-schema';
 import { ParametersSchema } from '../../../openapi/spec/parameters-schema';
 import { FeaturesSchema } from '../../../openapi/spec/features-schema';
 import { UpdateFeatureSchema } from '../../../openapi/spec/updateFeatureSchema';
@@ -102,7 +102,7 @@ export default class ProjectFeaturesController extends Controller {
                 openApiService.validPath({
                     tags: ['admin'],
                     operationId: 'getEnvironment',
-                    responses: { 200: featureEnvironmentInfoResponse },
+                    responses: { 200: featureEnvironmentResponse },
                 }),
             ],
         });
@@ -448,7 +448,7 @@ export default class ProjectFeaturesController extends Controller {
 
     async getEnvironment(
         req: Request<FeatureStrategyParams, any, any, any>,
-        res: Response<FeatureEnvironmentInfoSchema>,
+        res: Response<FeatureEnvironmentSchema>,
     ): Promise<void> {
         const { environment, featureName, projectId } = req.params;
         const environmentInfo = await this.featureService.getEnvironmentInfo(

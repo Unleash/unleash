@@ -158,7 +158,7 @@ Object {
         "description": "OK",
         "type": "object",
       },
-      "featureEnvironmentInfoSchema": Object {
+      "featureEnvironmentSchema": Object {
         "additionalProperties": false,
         "properties": Object {
           "enabled": Object {
@@ -207,7 +207,7 @@ Object {
           },
           "environments": Object {
             "items": Object {
-              "$ref": "#/components/schemas/featureEnvironmentInfoSchema",
+              "$ref": "#/components/schemas/featureEnvironmentSchema",
             },
             "type": "array",
           },
@@ -1078,11 +1078,11 @@ Object {
             "content": Object {
               "application/json": Object {
                 "schema": Object {
-                  "$ref": "#/components/schemas/featureEnvironmentInfoSchema",
+                  "$ref": "#/components/schemas/featureEnvironmentSchema",
                 },
               },
             },
-            "description": "featureEnvironmentInfoResponse",
+            "description": "featureEnvironmentResponse",
           },
         },
         "tags": Array [

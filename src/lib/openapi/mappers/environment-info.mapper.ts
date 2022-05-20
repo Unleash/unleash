@@ -1,26 +1,26 @@
 import { SchemaMapper } from './mapper';
 import { IFeatureEnvironmentInfo } from '../../types/model';
-import { FeatureEnvironmentInfoSchema } from '../spec/feature-environment-info-schema';
+import { FeatureEnvironmentSchema } from '../spec/feature-environment-schema';
 import { FeatureStrategyMapper } from './feature-strategy.mapper';
 
 export class EnvironmentInfoMapper
     implements
         SchemaMapper<
-            FeatureEnvironmentInfoSchema,
+            FeatureEnvironmentSchema,
             IFeatureEnvironmentInfo,
-            Partial<FeatureEnvironmentInfoSchema>
+            Partial<FeatureEnvironmentSchema>
         >
 {
     private mapper = new FeatureStrategyMapper();
 
-    fromPublic(input: FeatureEnvironmentInfoSchema): IFeatureEnvironmentInfo {
+    fromPublic(input: FeatureEnvironmentSchema): IFeatureEnvironmentInfo {
         return {
             ...input,
             strategies: input.strategies.map(this.mapper.fromPublic),
         };
     }
 
-    toPublic(input: IFeatureEnvironmentInfo): FeatureEnvironmentInfoSchema {
+    toPublic(input: IFeatureEnvironmentInfo): FeatureEnvironmentSchema {
         return {
             ...input,
             strategies: input.strategies.map(this.mapper.toPublic),

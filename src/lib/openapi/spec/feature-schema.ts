@@ -1,7 +1,7 @@
 import { createSchemaObject, CreateSchemaType } from '../types';
 import { strategySchema } from './strategy-schema';
 import { variantSchema } from './variant-schema';
-import { featureEnvironmentInfoSchema } from './feature-environment-info-schema';
+import { featureEnvironmentSchema } from './feature-environment-schema';
 
 const schema = {
     type: 'object',
@@ -45,7 +45,7 @@ const schema = {
         environments: {
             type: 'array',
             items: {
-                $ref: '#/components/schemas/featureEnvironmentInfoSchema',
+                $ref: '#/components/schemas/featureEnvironmentSchema',
             },
         },
         strategies: {
@@ -60,7 +60,7 @@ const schema = {
         },
     },
     'components/schemas': {
-        featureEnvironmentInfoSchema,
+        featureEnvironmentSchema,
         strategySchema,
         variantSchema,
     },

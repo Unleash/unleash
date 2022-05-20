@@ -30,6 +30,6 @@ let schema = {
     },
 } as const;
 
-export type FeatureEnvironmentInfoSchema = CreateSchemaType<typeof schema>;
+export type FeatureEnvironmentSchema = CreateSchemaType<typeof schema>;
 
-export const featureEnvironmentInfoSchema = createSchemaObject(schema);
+export const featureEnvironmentSchema = createSchemaObject(schema);

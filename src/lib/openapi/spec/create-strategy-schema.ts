@@ -5,6 +5,7 @@ import { constraintSchema } from './constraint-schema';
 const schema = {
     type: 'object',
     additionalProperties: false,
+    required: ['name'],
     properties: {
         name: {
             type: 'string',

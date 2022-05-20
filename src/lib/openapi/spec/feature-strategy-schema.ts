@@ -7,7 +7,6 @@ export const schema = {
     additionalProperties: false,
     required: [
         'id',
-        'name',
         'featureName',
         'strategyName',
         'constraints',

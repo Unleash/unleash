@@ -85,7 +85,7 @@ module.exports = {
                         },
                         {
                             label: 'Slack',
-                            href: 'https://join.slack.com/t/unleash-community/shared_invite/zt-8b6l1uut-LL67kLpIXm9bcN3~6RVaRQ',
+                            href: 'https://slack.unleash.run/',
                         },
                         {
                             label: 'Twitter',

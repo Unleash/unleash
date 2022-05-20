@@ -45,7 +45,7 @@ The below table shows what features the various server-side SDKs support. Note t
 - **N/A**: Not applicable to this SDK
 
 :::note
-If you see an item marked with a ❌ that you would find useful, feel free to reach out to us ([on Slack](https://join.slack.com/t/unleash-community/shared_invite/zt-8b6l1uut-LL67kLpIXm9bcN3~6RVaRQ), for instance) with your use case. It may not be something we can prioritize right now, but if you'd like to contribute it back to the community, we'd love to help you build it.
+If you see an item marked with a ❌ that you would find useful, feel free to reach out to us ([on Slack](https://slack.unleash.run/), for instance) with your use case. It may not be something we can prioritize right now, but if you'd like to contribute it back to the community, we'd love to help you build it.
 :::
 
 

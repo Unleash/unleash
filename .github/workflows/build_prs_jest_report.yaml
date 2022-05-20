@@ -40,6 +40,8 @@ jobs:
           package-manager: yarn
           github-token: ${{ secrets.GITHUB_TOKEN }}
           test-script: yarn run test:coverage:jest
+          base-coverage-file: ./coverage/report.json
+          coverage-file: ./report.json
         env:
           CI: true
           TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres

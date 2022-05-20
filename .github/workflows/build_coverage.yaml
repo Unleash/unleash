@@ -47,7 +47,7 @@ jobs:
       env:
           GH_NAME: 'ivarconr'
           GH_EMAIL: 'ivarconr@gmail.com'
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_PUSH_TOKEN }}
     - name: Coveralls
       uses: coverallsapp/github-action@master
       with:

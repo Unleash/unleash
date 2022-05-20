@@ -20,13 +20,7 @@ export type CreateSchemaType<T> = FromSchema<
     {
         definitionsPath: 'components/schemas';
         deserialize: [
-            {
-                pattern: {
-                    type: 'string';
-                    format: 'date';
-                };
-                output: Date;
-            },
+            { pattern: { type: 'string'; format: 'date' }; output: Date },
         ];
     }
 >;

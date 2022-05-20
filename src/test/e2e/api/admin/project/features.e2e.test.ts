@@ -2199,3 +2199,27 @@ test('should add default constraint values for single-valued constraints', async
         .expect(200)
         .expect((res) => expectValues(res, constraintValues.values));
 });
+
+test('should allow long parameter values', async () => {
+    const project = await db.stores.projectStore.create({
+        id: uuidv4(),
+        name: uuidv4(),
+        description: uuidv4(),
+    });
+
+    const toggle = await db.stores.featureToggleStore.create(project.id, {
+        name: uuidv4(),
+    });
+
+    const strategy = {
+        name: uuidv4(),
+        parameters: { a: 'b'.repeat(500) },
+    };
+
+    await app.request
+        .post(
+            `/api/admin/projects/${project.id}/features/${toggle.name}/environments/default/strategies`,
+        )
+        .send(strategy)
+        .expect(200);
+});

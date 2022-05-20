@@ -116,7 +116,7 @@
     "stoppable": "^1.1.0",
     "type-is": "^1.6.18",
     "@unleash/express-openapi": "^0.2.0",
-    "unleash-frontend": "4.11.0-beta.2",
+    "unleash-frontend": "4.11.0",
     "uuid": "^8.3.2",
     "semver": "^7.3.5"
   },

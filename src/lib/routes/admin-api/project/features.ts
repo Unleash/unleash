@@ -38,10 +38,8 @@ import { FeaturesSchema } from '../../../openapi/spec/features-schema';
 import { UpdateFeatureSchema } from '../../../openapi/spec/updateFeatureSchema';
 import { UpdateStrategySchema } from '../../../openapi/spec/update-strategy-schema';
 import { CreateStrategySchema } from '../../../openapi/spec/create-strategy-schema';
-import {
-    EnvironmentInfoMapper,
-    StrategyMapper,
-} from '../../../openapi/mappers';
+import { StrategyMapper } from '../../../openapi/spec/strategy-mapper';
+import { FeatureEnvironmentMapper } from '../../../openapi/spec/feature-environment-mapper';
 
 interface FeatureStrategyParams {
     projectId: string;
@@ -79,8 +77,8 @@ export default class ProjectFeaturesController extends Controller {
 
     private strategyMapper: StrategyMapper = new StrategyMapper();
 
-    private environmentMapper: EnvironmentInfoMapper =
-        new EnvironmentInfoMapper();
+    private featureEnvironmentMapper: FeatureEnvironmentMapper =
+        new FeatureEnvironmentMapper();
 
     private readonly logger: Logger;
 
@@ -456,7 +454,9 @@ export default class ProjectFeaturesController extends Controller {
             environment,
             featureName,
         );
-        res.status(200).json(this.environmentMapper.toPublic(environmentInfo));
+        res.status(200).json(
+            this.featureEnvironmentMapper.toPublic(environmentInfo),
+        );
     }
 
     async toggleEnvironmentOn(

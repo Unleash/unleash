@@ -1,9 +1,9 @@
-import { SchemaMapper } from './mapper';
 import { IFeatureEnvironmentInfo } from '../../types/model';
-import { FeatureEnvironmentSchema } from '../spec/feature-environment-schema';
-import { FeatureStrategyMapper } from './feature-strategy.mapper';
+import { FeatureEnvironmentSchema } from './feature-environment-schema';
+import { FeatureStrategyMapper } from './feature-strategy-mapper';
+import { SchemaMapper } from '../types';
 
-export class EnvironmentInfoMapper
+export class FeatureEnvironmentMapper
     implements
         SchemaMapper<
             FeatureEnvironmentSchema,

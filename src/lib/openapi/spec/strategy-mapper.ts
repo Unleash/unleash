@@ -1,8 +1,8 @@
-import { SchemaMapper } from './mapper';
+import { SchemaMapper } from './index';
 import { IStrategyConfig } from '../../types/model';
-import { StrategySchema } from '../spec/strategy-schema';
-import { CreateStrategySchema } from '../spec/create-strategy-schema';
-import { UpdateStrategySchema } from '../spec/update-strategy-schema';
+import { StrategySchema } from './strategy-schema';
+import { CreateStrategySchema } from './create-strategy-schema';
+import { UpdateStrategySchema } from './update-strategy-schema';
 
 export class StrategyMapper
     implements

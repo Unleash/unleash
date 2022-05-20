@@ -111,6 +111,7 @@ export const CellSortable: FC<ICellSortableProps> = ({
                                 className={styles.label}
                                 ref={ref}
                                 tabIndex={-1}
+                                data-text={children}
                             >
                                 {children}
                             </span>

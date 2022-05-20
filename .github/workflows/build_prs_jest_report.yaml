@@ -33,6 +33,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+      - run: cat ./coverage/report.json
       - name: Tests on ${{ matrix.node-version }}
         uses: ArtiomTr/jest-coverage-report-action@v2
         with:

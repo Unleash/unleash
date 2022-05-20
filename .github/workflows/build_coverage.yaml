@@ -1,4 +1,4 @@
-name: Build & Tests
+name: Coverage
 
 on:
   push:
@@ -14,7 +14,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [14.x, 16.x]
+        node-version: [14.x]
     services:
       # Label used to access the service container
       postgres:
@@ -38,9 +38,13 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: yarn
-    - run: yarn lint
-    - run: yarn run test
+    - run: yarn run test:coverage
+    - run: scripts/commit-coverage.sh
       env:
         CI: true
         TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
         DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
+    - name: Coveralls
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}

@@ -4,7 +4,6 @@ const schema = {
     type: 'object',
     additionalProperties: {
         type: 'string',
-        maxLength: 100,
     },
     'components/schemas': {},
 } as const;

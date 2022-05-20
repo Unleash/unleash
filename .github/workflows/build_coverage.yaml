@@ -51,7 +51,7 @@ jobs:
 
         git add coverage
         git diff-index --quiet HEAD || git commit -m 'chore: update coverage reports'
-        git push origin
+        git push origin main
       env:
           GH_NAME: 'ivarconr'
           GH_EMAIL: 'ivarconr@gmail.com'

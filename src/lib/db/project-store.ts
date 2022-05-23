@@ -238,7 +238,14 @@ class ProjectStore implements IProjectStore {
             .where({
                 project_id: id,
             })
-            .pluck('environment_name');
+            .innerJoin(
+                'environments',
+                'project_environments.environment_name',
+                'environments.name',
+            )
+            .orderBy('environments.sort_order', 'asc')
+            .orderBy('project_environments.environment_name', 'asc')
+            .pluck('project_environments.environment_name');
     }
 
     async getMembers(projectId: string): Promise<number> {

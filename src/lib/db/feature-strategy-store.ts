@@ -311,7 +311,6 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         );
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     private static getEnvironment(r: any): IEnvironmentOverview {
         return {
             name: r.environment,

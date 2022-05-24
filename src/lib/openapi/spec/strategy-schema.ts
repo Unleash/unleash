@@ -5,7 +5,7 @@ import { parametersSchema } from './parameters-schema';
 export const strategySchemaDefinition = {
     type: 'object',
     additionalProperties: false,
-    required: ['name', 'constraints', 'parameters'],
+    required: ['name'],
     properties: {
         id: {
             type: 'string',
@@ -18,9 +18,13 @@ export const strategySchemaDefinition = {
         },
         constraints: {
             type: 'array',
-            items: { $ref: '#/components/schemas/constraintSchema' },
+            items: {
+                $ref: '#/components/schemas/constraintSchema',
+            },
         },
-        parameters: { $ref: '#/components/schemas/parametersSchema' },
+        parameters: {
+            $ref: '#/components/schemas/parametersSchema',
+        },
     },
     'components/schemas': {
         constraintSchema,

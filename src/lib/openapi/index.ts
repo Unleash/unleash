@@ -10,7 +10,7 @@ import { tagsResponseSchema } from './spec/tags-response-schema';
 import { createStrategySchema } from './spec/create-strategy-schema';
 import { featureSchema } from './spec/feature-schema';
 import { parametersSchema } from './spec/parameters-schema';
-import { featureEnvironmentInfoSchema } from './spec/feature-environment-info-schema';
+import { featureEnvironmentSchema } from './spec/feature-environment-schema';
 import { emptyResponseSchema } from './spec/empty-response-schema';
 import { patchOperationSchema } from './spec/patch-operation-schema';
 import { updateFeatureSchema } from './spec/updateFeatureSchema';
@@ -48,7 +48,7 @@ export const createOpenApiSchema = (
                 createStrategySchema,
                 featureSchema,
                 featuresSchema,
-                featureEnvironmentInfoSchema,
+                featureEnvironmentSchema,
                 featureStrategySchema,
                 emptyResponseSchema,
                 overrideSchema,

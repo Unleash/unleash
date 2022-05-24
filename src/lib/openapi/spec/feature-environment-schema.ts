@@ -1,10 +1,12 @@
 import { createSchemaObject, CreateSchemaType } from '../types';
 import { featureStrategySchema } from './feature-strategy-schema';
+import { constraintSchema } from './constraint-schema';
+import { parametersSchema } from './parameters-schema';
 
 let schema = {
     type: 'object',
     additionalProperties: false,
-    required: ['name', 'environment', 'enabled', 'strategies'],
+    required: ['name', 'enabled'],
     properties: {
         name: {
             type: 'string',
@@ -27,9 +29,11 @@ let schema = {
     },
     'components/schemas': {
         featureStrategySchema,
+        constraintSchema,
+        parametersSchema,
     },
 } as const;
 
-export type FeatureEnvironmentInfoSchema = CreateSchemaType<typeof schema>;
+export type FeatureEnvironmentSchema = CreateSchemaType<typeof schema>;
 
-export const featureEnvironmentInfoSchema = createSchemaObject(schema);
+export const featureEnvironmentSchema = createSchemaObject(schema);

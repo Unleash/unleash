@@ -29,7 +29,9 @@ const schema = {
         },
         constraints: {
             type: 'array',
-            items: { $ref: '#/components/schemas/constraintSchema' },
+            items: {
+                $ref: '#/components/schemas/constraintSchema',
+            },
         },
     },
     'components/schemas': {

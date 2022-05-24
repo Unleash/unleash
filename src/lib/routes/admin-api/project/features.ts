@@ -24,7 +24,7 @@ import { FeatureSchema } from '../../../openapi/spec/feature-schema';
 import { createStrategyRequest } from '../../../openapi/spec/create-strategy-request';
 import { StrategySchema } from '../../../openapi/spec/strategy-schema';
 import { featuresResponse } from '../../../openapi/spec/features-response';
-import { featureEnvironmentInfoResponse } from '../../../openapi/spec/feature-environment-info-response';
+import { featureEnvironmentResponse } from '../../../openapi/spec/feature-environment-response';
 import { strategiesResponse } from '../../../openapi/spec/strategies-response';
 import { strategyResponse } from '../../../openapi/spec/strategy-response';
 import { emptyResponse } from '../../../openapi/spec/empty-response';
@@ -32,16 +32,12 @@ import { updateFeatureRequest } from '../../../openapi/spec/update-feature-reque
 import { patchRequest } from '../../../openapi/spec/patch-request';
 import { updateStrategyRequest } from '../../../openapi/spec/update-strategy-request';
 import { cloneFeatureRequest } from '../../../openapi/spec/clone-feature-request';
-import { FeatureEnvironmentInfoSchema } from '../../../openapi/spec/feature-environment-info-schema';
+import { FeatureEnvironmentSchema } from '../../../openapi/spec/feature-environment-schema';
 import { ParametersSchema } from '../../../openapi/spec/parameters-schema';
 import { FeaturesSchema } from '../../../openapi/spec/features-schema';
 import { UpdateFeatureSchema } from '../../../openapi/spec/updateFeatureSchema';
 import { UpdateStrategySchema } from '../../../openapi/spec/update-strategy-schema';
 import { CreateStrategySchema } from '../../../openapi/spec/create-strategy-schema';
-import {
-    EnvironmentInfoMapper,
-    StrategyMapper,
-} from '../../../openapi/mappers';
 
 interface FeatureStrategyParams {
     projectId: string;
@@ -77,11 +73,6 @@ type ProjectFeaturesServices = Pick<
 export default class ProjectFeaturesController extends Controller {
     private featureService: FeatureToggleService;
 
-    private strategyMapper: StrategyMapper = new StrategyMapper();
-
-    private environmentMapper: EnvironmentInfoMapper =
-        new EnvironmentInfoMapper();
-
     private readonly logger: Logger;
 
     constructor(
@@ -102,7 +93,7 @@ export default class ProjectFeaturesController extends Controller {
                 openApiService.validPath({
                     tags: ['admin'],
                     operationId: 'getEnvironment',
-                    responses: { 200: featureEnvironmentInfoResponse },
+                    responses: { 200: featureEnvironmentResponse },
                 }),
             ],
         });
@@ -448,7 +439,7 @@ export default class ProjectFeaturesController extends Controller {
 
     async getEnvironment(
         req: Request<FeatureStrategyParams, any, any, any>,
-        res: Response<FeatureEnvironmentInfoSchema>,
+        res: Response<FeatureEnvironmentSchema>,
     ): Promise<void> {
         const { environment, featureName, projectId } = req.params;
         const environmentInfo = await this.featureService.getEnvironmentInfo(
@@ -456,7 +447,7 @@ export default class ProjectFeaturesController extends Controller {
             environment,
             featureName,
         );
-        res.status(200).json(this.environmentMapper.toPublic(environmentInfo));
+        res.status(200).json(environmentInfo);
     }
 
     async toggleEnvironmentOn(
@@ -496,11 +487,11 @@ export default class ProjectFeaturesController extends Controller {
         const { projectId, featureName, environment } = req.params;
         const userName = extractUsername(req);
         const strategy = await this.featureService.createStrategy(
-            this.strategyMapper.mapInput(req.body),
+            req.body,
             { environment, projectId, featureName },
             userName,
         );
-        res.status(200).json(this.strategyMapper.toPublic(strategy));
+        res.status(200).json(strategy);
     }
 
     async getStrategies(
@@ -514,9 +505,7 @@ export default class ProjectFeaturesController extends Controller {
                 featureName,
                 environment,
             );
-        res.status(200).json(
-            featureStrategies.map(this.strategyMapper.toPublic),
-        );
+        res.status(200).json(featureStrategies);
     }
 
     async updateStrategy(
@@ -531,7 +520,7 @@ export default class ProjectFeaturesController extends Controller {
             { environment, projectId, featureName },
             userName,
         );
-        res.status(200).json(this.strategyMapper.fromPublic(updatedStrategy));
+        res.status(200).json(updatedStrategy);
     }
 
     async patchStrategy(
@@ -549,7 +538,7 @@ export default class ProjectFeaturesController extends Controller {
             { environment, projectId, featureName },
             userName,
         );
-        res.status(200).json(this.strategyMapper.toPublic(updatedStrategy));
+        res.status(200).json(updatedStrategy);
     }
 
     async getStrategy(
@@ -560,7 +549,7 @@ export default class ProjectFeaturesController extends Controller {
         const { strategyId } = req.params;
         this.logger.info(strategyId);
         const strategy = await this.featureService.getStrategy(strategyId);
-        res.status(200).json(this.strategyMapper.toPublic(strategy));
+        res.status(200).json(strategy);
     }
 
     async deleteStrategy(
@@ -601,7 +590,7 @@ export default class ProjectFeaturesController extends Controller {
                 { environment, projectId, featureName },
                 userName,
             );
-        res.status(200).json(this.strategyMapper.toPublic(updatedStrategy));
+        res.status(200).json(updatedStrategy);
     }
 
     async getStrategyParameters(

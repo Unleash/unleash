@@ -22,8 +22,8 @@ export enum WeightType {
 export interface IStrategyConfig {
     id?: string;
     name: string;
-    constraints: IConstraint[];
-    parameters: { [key: string]: string };
+    constraints?: IConstraint[];
+    parameters?: { [key: string]: string };
     sortOrder?: number;
 }
 export interface IFeatureStrategy {

@@ -1,5 +1,12 @@
 import { createSchemaObject, CreateSchemaType } from '../types';
 import { featureSchema } from './feature-schema';
+import { parametersSchema } from './parameters-schema';
+import { variantSchema } from './variant-schema';
+import { overrideSchema } from './override-schema';
+import { featureEnvironmentSchema } from './feature-environment-schema';
+import { featureStrategySchema } from './feature-strategy-schema';
+import { constraintSchema } from './constraint-schema';
+import { strategySchema } from './strategy-schema';
 
 const schema = {
     type: 'object',
@@ -11,11 +18,20 @@ const schema = {
         },
         features: {
             type: 'array',
-            items: { $ref: '#/components/schemas/featureSchema' },
+            items: {
+                $ref: '#/components/schemas/featureSchema',
+            },
         },
     },
     'components/schemas': {
-        featureSchema: { schema: featureSchema },
+        featureSchema,
+        constraintSchema,
+        featureEnvironmentSchema,
+        featureStrategySchema,
+        overrideSchema,
+        parametersSchema,
+        strategySchema,
+        variantSchema,
     },
 } as const;
 

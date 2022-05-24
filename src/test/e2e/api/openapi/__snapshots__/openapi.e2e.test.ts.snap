@@ -152,13 +152,16 @@ Object {
             "type": "number",
           },
         },
+        "required": Array [
+          "name",
+        ],
         "type": "object",
       },
       "emptyResponseSchema": Object {
         "description": "OK",
         "type": "object",
       },
-      "featureEnvironmentInfoSchema": Object {
+      "featureEnvironmentSchema": Object {
         "additionalProperties": false,
         "properties": Object {
           "enabled": Object {
@@ -182,9 +185,7 @@ Object {
         },
         "required": Array [
           "name",
-          "environment",
           "enabled",
-          "strategies",
         ],
         "type": "object",
       },
@@ -207,7 +208,7 @@ Object {
           },
           "environments": Object {
             "items": Object {
-              "$ref": "#/components/schemas/featureEnvironmentInfoSchema",
+              "$ref": "#/components/schemas/featureEnvironmentSchema",
             },
             "type": "array",
           },
@@ -246,7 +247,6 @@ Object {
         },
         "required": Array [
           "name",
-          "project",
         ],
         "type": "object",
       },
@@ -291,7 +291,6 @@ Object {
         },
         "required": Array [
           "id",
-          "name",
           "featureName",
           "strategyName",
           "constraints",
@@ -394,8 +393,6 @@ Object {
         },
         "required": Array [
           "name",
-          "constraints",
-          "parameters",
         ],
         "type": "object",
       },
@@ -1078,11 +1075,11 @@ Object {
             "content": Object {
               "application/json": Object {
                 "schema": Object {
-                  "$ref": "#/components/schemas/featureEnvironmentInfoSchema",
+                  "$ref": "#/components/schemas/featureEnvironmentSchema",
                 },
               },
             },
-            "description": "featureEnvironmentInfoResponse",
+            "description": "featureEnvironmentResponse",
           },
         },
         "tags": Array [

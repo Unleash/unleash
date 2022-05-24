@@ -32,7 +32,9 @@ const schema = {
         },
         overrides: {
             type: 'array',
-            items: { $ref: '#/components/schemas/overrideSchema' },
+            items: {
+                $ref: '#/components/schemas/overrideSchema',
+            },
         },
     },
     'components/schemas': {

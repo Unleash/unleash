@@ -5,6 +5,7 @@ import { constraintSchema } from './constraint-schema';
 const schema = {
     type: 'object',
     additionalProperties: false,
+    required: ['name'],
     properties: {
         name: {
             type: 'string',
@@ -14,7 +15,9 @@ const schema = {
         },
         constraints: {
             type: 'array',
-            items: { $ref: '#/components/schemas/constraintSchema' },
+            items: {
+                $ref: '#/components/schemas/constraintSchema',
+            },
         },
         parameters: {
             $ref: '#/components/schemas/parametersSchema',

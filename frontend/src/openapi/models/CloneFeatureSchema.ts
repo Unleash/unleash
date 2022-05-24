@@ -16,32 +16,39 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface ChangeProjectSchema
+ * @interface CloneFeatureSchema
  */
-export interface ChangeProjectSchema {
+export interface CloneFeatureSchema {
     /**
      * 
      * @type {string}
-     * @memberof ChangeProjectSchema
+     * @memberof CloneFeatureSchema
      */
-    newProjectId: string;
+    name: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof CloneFeatureSchema
+     */
+    replaceGroupId?: boolean;
 }
 
-export function ChangeProjectSchemaFromJSON(json: any): ChangeProjectSchema {
-    return ChangeProjectSchemaFromJSONTyped(json, false);
+export function CloneFeatureSchemaFromJSON(json: any): CloneFeatureSchema {
+    return CloneFeatureSchemaFromJSONTyped(json, false);
 }
 
-export function ChangeProjectSchemaFromJSONTyped(json: any, ignoreDiscriminator: boolean): ChangeProjectSchema {
+export function CloneFeatureSchemaFromJSONTyped(json: any, ignoreDiscriminator: boolean): CloneFeatureSchema {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
-        'newProjectId': json['newProjectId'],
+        'name': json['name'],
+        'replaceGroupId': !exists(json, 'replaceGroupId') ? undefined : json['replaceGroupId'],
     };
 }
 
-export function ChangeProjectSchemaToJSON(value?: ChangeProjectSchema | null): any {
+export function CloneFeatureSchemaToJSON(value?: CloneFeatureSchema | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -50,7 +57,8 @@ export function ChangeProjectSchemaToJSON(value?: ChangeProjectSchema | null): a
     }
     return {
         
-        'newProjectId': value.newProjectId,
+        'name': value.name,
+        'replaceGroupId': value.replaceGroupId,
     };
 }
 

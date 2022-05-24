@@ -14,48 +14,48 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    FeatureSchema,
-    FeatureSchemaFromJSON,
-    FeatureSchemaFromJSONTyped,
-    FeatureSchemaToJSON,
-} from './FeatureSchema';
+    TagSchema,
+    TagSchemaFromJSON,
+    TagSchemaFromJSONTyped,
+    TagSchemaToJSON,
+} from './TagSchema';
 
 /**
  * 
  * @export
- * @interface FeaturesSchema
+ * @interface TagsResponseSchema
  */
-export interface FeaturesSchema {
+export interface TagsResponseSchema {
     /**
      * 
      * @type {number}
-     * @memberof FeaturesSchema
+     * @memberof TagsResponseSchema
      */
     version: number;
     /**
      * 
-     * @type {Array<FeatureSchema>}
-     * @memberof FeaturesSchema
+     * @type {Array<TagSchema>}
+     * @memberof TagsResponseSchema
      */
-    features: Array<FeatureSchema>;
+    tags: Array<TagSchema>;
 }
 
-export function FeaturesSchemaFromJSON(json: any): FeaturesSchema {
-    return FeaturesSchemaFromJSONTyped(json, false);
+export function TagsResponseSchemaFromJSON(json: any): TagsResponseSchema {
+    return TagsResponseSchemaFromJSONTyped(json, false);
 }
 
-export function FeaturesSchemaFromJSONTyped(json: any, ignoreDiscriminator: boolean): FeaturesSchema {
+export function TagsResponseSchemaFromJSONTyped(json: any, ignoreDiscriminator: boolean): TagsResponseSchema {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
         'version': json['version'],
-        'features': ((json['features'] as Array<any>).map(FeatureSchemaFromJSON)),
+        'tags': ((json['tags'] as Array<any>).map(TagSchemaFromJSON)),
     };
 }
 
-export function FeaturesSchemaToJSON(value?: FeaturesSchema | null): any {
+export function TagsResponseSchemaToJSON(value?: TagsResponseSchema | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -65,7 +65,7 @@ export function FeaturesSchemaToJSON(value?: FeaturesSchema | null): any {
     return {
         
         'version': value.version,
-        'features': ((value.features as Array<any>).map(FeatureSchemaToJSON)),
+        'tags': ((value.tags as Array<any>).map(TagSchemaToJSON)),
     };
 }
 

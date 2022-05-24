@@ -16,32 +16,39 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface ChangeProjectSchema
+ * @interface TagSchema
  */
-export interface ChangeProjectSchema {
+export interface TagSchema {
     /**
      * 
      * @type {string}
-     * @memberof ChangeProjectSchema
+     * @memberof TagSchema
      */
-    newProjectId: string;
+    value: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TagSchema
+     */
+    type: string;
 }
 
-export function ChangeProjectSchemaFromJSON(json: any): ChangeProjectSchema {
-    return ChangeProjectSchemaFromJSONTyped(json, false);
+export function TagSchemaFromJSON(json: any): TagSchema {
+    return TagSchemaFromJSONTyped(json, false);
 }
 
-export function ChangeProjectSchemaFromJSONTyped(json: any, ignoreDiscriminator: boolean): ChangeProjectSchema {
+export function TagSchemaFromJSONTyped(json: any, ignoreDiscriminator: boolean): TagSchema {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
-        'newProjectId': json['newProjectId'],
+        'value': json['value'],
+        'type': json['type'],
     };
 }
 
-export function ChangeProjectSchemaToJSON(value?: ChangeProjectSchema | null): any {
+export function TagSchemaToJSON(value?: TagSchema | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -50,7 +57,8 @@ export function ChangeProjectSchemaToJSON(value?: ChangeProjectSchema | null): a
     }
     return {
         
-        'newProjectId': value.newProjectId,
+        'value': value.value,
+        'type': value.type,
     };
 }
 

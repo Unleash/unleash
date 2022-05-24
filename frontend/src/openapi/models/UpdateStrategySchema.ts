@@ -23,60 +23,60 @@ import {
 /**
  * 
  * @export
- * @interface StrategySchema
+ * @interface UpdateStrategySchema
  */
-export interface StrategySchema {
+export interface UpdateStrategySchema {
     /**
      * 
      * @type {string}
-     * @memberof StrategySchema
+     * @memberof UpdateStrategySchema
      */
     id?: string;
     /**
      * 
      * @type {string}
-     * @memberof StrategySchema
+     * @memberof UpdateStrategySchema
      */
-    name: string;
+    name?: string;
     /**
      * 
      * @type {number}
-     * @memberof StrategySchema
+     * @memberof UpdateStrategySchema
      */
     sortOrder?: number;
     /**
      * 
      * @type {Array<ConstraintSchema>}
-     * @memberof StrategySchema
+     * @memberof UpdateStrategySchema
      */
     constraints?: Array<ConstraintSchema>;
     /**
      * 
      * @type {{ [key: string]: string; }}
-     * @memberof StrategySchema
+     * @memberof UpdateStrategySchema
      */
     parameters?: { [key: string]: string; };
 }
 
-export function StrategySchemaFromJSON(json: any): StrategySchema {
-    return StrategySchemaFromJSONTyped(json, false);
+export function UpdateStrategySchemaFromJSON(json: any): UpdateStrategySchema {
+    return UpdateStrategySchemaFromJSONTyped(json, false);
 }
 
-export function StrategySchemaFromJSONTyped(json: any, ignoreDiscriminator: boolean): StrategySchema {
+export function UpdateStrategySchemaFromJSONTyped(json: any, ignoreDiscriminator: boolean): UpdateStrategySchema {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
         'id': !exists(json, 'id') ? undefined : json['id'],
-        'name': json['name'],
+        'name': !exists(json, 'name') ? undefined : json['name'],
         'sortOrder': !exists(json, 'sortOrder') ? undefined : json['sortOrder'],
         'constraints': !exists(json, 'constraints') ? undefined : ((json['constraints'] as Array<any>).map(ConstraintSchemaFromJSON)),
         'parameters': !exists(json, 'parameters') ? undefined : json['parameters'],
     };
 }
 
-export function StrategySchemaToJSON(value?: StrategySchema | null): any {
+export function UpdateStrategySchemaToJSON(value?: UpdateStrategySchema | null): any {
     if (value === undefined) {
         return undefined;
     }

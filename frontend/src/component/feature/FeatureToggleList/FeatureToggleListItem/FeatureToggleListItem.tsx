@@ -93,7 +93,7 @@ export const FeatureToggleListItem = memo<IFeatureToggleListItemProps>(
                         condition={!isArchive}
                         show={
                             <Link
-                                to={getTogglePath(feature.project, name)}
+                                to={getTogglePath(feature.project!, name)}
                                 className={classnames(
                                     themeStyles.listLink,
                                     themeStyles.truncate

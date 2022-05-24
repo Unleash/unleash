@@ -41,7 +41,7 @@ const useFeatureApi = () => {
         projectId: string,
         createFeatureSchema: CreateFeatureSchema
     ) => {
-        return openApiAdmin.apiAdminProjectsProjectIdFeaturesPost({
+        return openApiAdmin.createFeature({
             projectId,
             createFeatureSchema,
         });

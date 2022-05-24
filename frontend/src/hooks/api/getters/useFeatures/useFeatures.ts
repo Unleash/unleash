@@ -12,7 +12,7 @@ export interface IUseFeaturesOutput {
 export const useFeatures = (): IUseFeaturesOutput => {
     const { data, refetch, loading, error } = useApiGetter(
         'apiAdminFeaturesGet',
-        () => openApiAdmin.apiAdminFeaturesGet()
+        () => openApiAdmin.getAllToggles()
     );
 
     return {

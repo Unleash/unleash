@@ -1,8 +1,12 @@
 import { renderHook, act } from '@testing-library/react-hooks';
 import { useFeaturesFilter } from 'hooks/useFeaturesFilter';
-import { FeatureSchema, FeatureSchemaStrategies } from 'openapi';
+import {
+    FeatureSchema,
+    StrategySchema,
+    ConstraintSchema,
+    ConstraintSchemaOperatorEnum,
+} from 'openapi';
 import parseISO from 'date-fns/parseISO';
-import { IConstraint } from 'interfaces/strategy';
 
 test('useFeaturesFilter empty', () => {
     const { result } = renderHook(() => useFeaturesFilter([]));
@@ -108,8 +112,8 @@ const mockFeatureToggle = (
 };
 
 const mockFeatureStrategy = (
-    overrides?: Partial<FeatureSchemaStrategies>
-): FeatureSchemaStrategies => {
+    overrides?: Partial<StrategySchema>
+): StrategySchema => {
     return {
         id: '1',
         name: '1',
@@ -119,10 +123,12 @@ const mockFeatureStrategy = (
     };
 };
 
-const mockConstraint = (overrides?: Partial<IConstraint>): IConstraint => {
+const mockConstraint = (
+    overrides?: Partial<ConstraintSchema>
+): ConstraintSchema => {
     return {
         contextName: '',
-        operator: 'IN',
+        operator: ConstraintSchemaOperatorEnum.In,
         ...overrides,
     };
 };

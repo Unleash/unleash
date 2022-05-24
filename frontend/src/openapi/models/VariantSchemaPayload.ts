@@ -16,32 +16,39 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface ChangeProjectSchema
+ * @interface VariantSchemaPayload
  */
-export interface ChangeProjectSchema {
+export interface VariantSchemaPayload {
     /**
      * 
      * @type {string}
-     * @memberof ChangeProjectSchema
+     * @memberof VariantSchemaPayload
      */
-    newProjectId: string;
+    type: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof VariantSchemaPayload
+     */
+    value: string;
 }
 
-export function ChangeProjectSchemaFromJSON(json: any): ChangeProjectSchema {
-    return ChangeProjectSchemaFromJSONTyped(json, false);
+export function VariantSchemaPayloadFromJSON(json: any): VariantSchemaPayload {
+    return VariantSchemaPayloadFromJSONTyped(json, false);
 }
 
-export function ChangeProjectSchemaFromJSONTyped(json: any, ignoreDiscriminator: boolean): ChangeProjectSchema {
+export function VariantSchemaPayloadFromJSONTyped(json: any, ignoreDiscriminator: boolean): VariantSchemaPayload {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
-        'newProjectId': json['newProjectId'],
+        'type': json['type'],
+        'value': json['value'],
     };
 }
 
-export function ChangeProjectSchemaToJSON(value?: ChangeProjectSchema | null): any {
+export function VariantSchemaPayloadToJSON(value?: VariantSchemaPayload | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -50,7 +57,8 @@ export function ChangeProjectSchemaToJSON(value?: ChangeProjectSchema | null): a
     }
     return {
         
-        'newProjectId': value.newProjectId,
+        'type': value.type,
+        'value': value.value,
     };
 }
 

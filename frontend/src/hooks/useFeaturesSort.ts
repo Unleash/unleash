@@ -156,7 +156,15 @@ const sortByName = (features: Readonly<FeatureSchema[]>): FeatureSchema[] => {
 const sortByProject = (
     features: Readonly<FeatureSchema[]>
 ): FeatureSchema[] => {
-    return [...features].sort((a, b) => a.project.localeCompare(b.project));
+    return [...features].sort((a, b) =>
+        a.project && b.project
+            ? a.project.localeCompare(b.project)
+            : a.project
+            ? 1
+            : b.project
+            ? -1
+            : 0
+    );
 };
 
 const sortByType = (features: Readonly<FeatureSchema[]>): FeatureSchema[] => {

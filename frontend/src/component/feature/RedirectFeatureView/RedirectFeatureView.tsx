@@ -18,13 +18,13 @@ const RedirectFeatureView = () => {
         setFeatureToggle(toggle);
     }, [features, featureId]);
 
-    if (!featureToggle) {
+    if (!featureToggle?.project) {
         return null;
     }
 
     return (
         <Navigate
-            to={getTogglePath(featureToggle?.project, featureToggle?.name)}
+            to={getTogglePath(featureToggle.project, featureToggle.name)}
             replace
         />
     );

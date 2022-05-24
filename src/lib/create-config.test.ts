@@ -1,6 +1,5 @@
 import { createConfig } from './create-config';
 import { ApiTokenType } from './types/models/api-token';
-import { add } from 'date-fns';
 
 test('should create default config', async () => {
     const config = createConfig({

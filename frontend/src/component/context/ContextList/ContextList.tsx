@@ -1,4 +1,4 @@
-import { useContext, useMemo, useState, VFC } from 'react';
+import { useMemo, useState, VFC } from 'react';
 import { useGlobalFilter, useSortBy, useTable } from 'react-table';
 import {
     Table,
@@ -12,9 +12,7 @@ import {
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { UPDATE_CONTEXT_FIELD } from 'component/providers/AccessProvider/permissions';
 import { Dialogue as ConfirmDialogue } from 'component/common/Dialogue/Dialogue';
-import AccessContext from 'contexts/AccessContext';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import useContextsApi from 'hooks/api/actions/useContextsApi/useContextsApi';
 import useToast from 'hooks/useToast';
@@ -28,12 +26,12 @@ import { Adjust } from '@mui/icons-material';
 import { Box } from '@mui/material';
 
 const ContextList: VFC = () => {
-    const { hasAccess } = useContext(AccessContext);
     const [showDelDialogue, setShowDelDialogue] = useState(false);
     const [name, setName] = useState<string>();
     const { context, refetchUnleashContext, loading } = useUnleashContext();
     const { removeContext } = useContextsApi();
     const { setToastData, setToastApiError } = useToast();
+
     const data = useMemo(() => {
         if (loading) {
             return Array(5).fill({
@@ -57,6 +55,7 @@ const ContextList: VFC = () => {
                 id: 'Icon',
                 Cell: () => (
                     <Box
+                        data-loading
                         sx={{
                             pl: 2,
                             pr: 1,
@@ -79,12 +78,8 @@ const ContextList: VFC = () => {
                 }: any) => (
                     <LinkCell
                         title={name}
-                        to={
-                            hasAccess(UPDATE_CONTEXT_FIELD)
-                                ? `/context/edit/${name}`
-                                : undefined
-                        }
                         subtitle={description}
+                        data-loading
                     />
                 ),
                 sortType: 'alphanumeric',
@@ -118,7 +113,7 @@ const ContextList: VFC = () => {
                 sortType: 'number',
             },
         ],
-        [hasAccess]
+        []
     );
 
     const initialState = useMemo(
@@ -172,6 +167,7 @@ const ContextList: VFC = () => {
 
     return (
         <PageContent
+            isLoading={loading}
             header={
                 <PageHeader
                     title="Context fields"

@@ -72,6 +72,7 @@ const calculateTrialDaysRemaining = (
         : undefined;
 };
 
+// TODO - Cleanup to use theme instead of colors
 const StyledBar = styled('aside')(({ theme }) => ({
     position: 'relative',
     zIndex: 1,
@@ -92,6 +93,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
     marginLeft: theme.spacing(2),
 }));
 
+// TODO - Cleanup to use theme instead of colors
 const StyledInfoIcon = styled(Info)(({ theme }) => ({
     color: colors.blue[500],
 }));

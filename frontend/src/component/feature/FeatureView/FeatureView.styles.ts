@@ -17,6 +17,7 @@ export const useStyles = makeStyles()(theme => ({
     },
     toolbarContainer: {
         flexShrink: 0,
+        display: 'flex',
     },
     innerContainer: {
         padding: '1rem 2rem',

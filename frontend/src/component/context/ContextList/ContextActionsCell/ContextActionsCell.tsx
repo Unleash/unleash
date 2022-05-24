@@ -21,6 +21,7 @@ export const ContextActionsCell: VFC<IContextActionsCellProps> = ({
 
     return (
         <Box
+            data-loading
             sx={{
                 display: 'flex',
                 px: 2,

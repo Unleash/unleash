@@ -28,7 +28,6 @@ export const useStyles = makeStyles()(theme => ({
         overflow: 'hidden',
         textOverflow: 'ellipsis',
         display: '-webkit-box',
-        WebkitBoxOrient: 'vertical',
     },
     description: {
         color: theme.palette.text.secondary,

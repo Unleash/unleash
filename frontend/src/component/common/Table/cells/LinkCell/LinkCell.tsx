@@ -13,7 +13,12 @@ interface ILinkCellProps {
     subtitle?: string;
 }
 
-export const LinkCell: FC<ILinkCellProps> = ({ title, to, subtitle }) => {
+export const LinkCell: FC<ILinkCellProps> = ({
+    title,
+    to,
+    subtitle,
+    children,
+}) => {
     const { classes: styles } = useStyles();
     const search = useSearchHighlightContext();
 
@@ -28,6 +33,7 @@ export const LinkCell: FC<ILinkCellProps> = ({ title, to, subtitle }) => {
                 }}
             >
                 <Highlighter search={search}>{title}</Highlighter>
+                {children}
             </span>
             <ConditionallyRender
                 condition={Boolean(subtitle)}

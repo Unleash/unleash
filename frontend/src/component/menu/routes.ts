@@ -1,6 +1,7 @@
 import { FeatureToggleListContainer } from 'component/feature/FeatureToggleList/FeatureToggleListContainer';
 import { StrategyView } from 'component/strategies/StrategyView/StrategyView';
 import { StrategiesList } from 'component/strategies/StrategiesList/StrategiesList';
+
 import { ArchiveListContainer } from 'component/archive/ArchiveListContainer';
 import { TagTypeList } from 'component/tags/TagTypeList/TagTypeList';
 import { AddonList } from 'component/addons/AddonList/AddonList';

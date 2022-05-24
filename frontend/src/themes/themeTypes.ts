@@ -49,6 +49,11 @@ declare module '@mui/material/styles' {
             abandoned: string;
         };
         dividerAlternative: string;
+
+        /**
+         * Color for predefined badge
+         */
+        predefinedBadgeColor: string;
         /**
          * For table header hover effect.
          */

@@ -1,16 +1,7 @@
-import { useContext, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import useMediaQuery from '@mui/material/useMediaQuery';
+import { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { IconButton, Tooltip, Box } from '@mui/material';
 import {
-    IconButton,
-    List,
-    ListItem,
-    ListItemAvatar,
-    ListItemText,
-    Tooltip,
-} from '@mui/material';
-import {
-    Add,
     Delete,
     Edit,
     Extension,
@@ -18,26 +9,35 @@ import {
     VisibilityOff,
 } from '@mui/icons-material';
 import {
-    CREATE_STRATEGY,
     DELETE_STRATEGY,
     UPDATE_STRATEGY,
 } from 'component/providers/AccessProvider/permissions';
+import {
+    Table,
+    SortableTableHeader,
+    TableBody,
+    TableCell,
+    TableRow,
+    TablePlaceholder,
+    TableSearch,
+} from 'component/common/Table';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
-import { useStyles } from './StrategiesList.styles';
-import AccessContext from 'contexts/AccessContext';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import { ADD_NEW_STRATEGY_ID } from 'utils/testIds';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
-import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { formatStrategyName } from 'utils/strategyNames';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import useStrategiesApi from 'hooks/api/actions/useStrategiesApi/useStrategiesApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { IStrategy } from 'interfaces/strategy';
-
+import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
+import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
+import { sortTypes } from 'utils/sortTypes';
+import { useTable, useGlobalFilter, useSortBy } from 'react-table';
+import { AddStrategyButton } from './AddStrategyButton/AddStrategyButton';
+import { PredefinedBadge } from './PredefinedBadge/PredefinedBadge';
 interface IDialogueMetaData {
     show: boolean;
     title: string;
@@ -46,9 +46,6 @@ interface IDialogueMetaData {
 
 export const StrategiesList = () => {
     const navigate = useNavigate();
-    const { classes: styles } = useStyles();
-    const smallScreen = useMediaQuery('(max-width:700px)');
-    const { hasAccess } = useContext(AccessContext);
     const [dialogueMetaData, setDialogueMetaData] = useState<IDialogueMetaData>(
         {
             show: false,
@@ -56,50 +53,137 @@ export const StrategiesList = () => {
             onConfirm: () => {},
         }
     );
-    const { strategies, refetchStrategies } = useStrategies();
+
+    const { strategies, refetchStrategies, loading } = useStrategies();
     const { removeStrategy, deprecateStrategy, reactivateStrategy } =
         useStrategiesApi();
     const { setToastData, setToastApiError } = useToast();
 
-    const headerButton = () => (
-        <ConditionallyRender
-            condition={hasAccess(CREATE_STRATEGY)}
-            show={
-                <ConditionallyRender
-                    condition={smallScreen}
-                    show={
-                        <PermissionIconButton
-                            data-testid={ADD_NEW_STRATEGY_ID}
-                            onClick={() => navigate('/strategies/create')}
-                            permission={CREATE_STRATEGY}
-                            tooltipProps={{ title: 'New strategy' }}
+    const data = useMemo(() => {
+        if (loading) {
+            return Array(5).fill({
+                name: 'Context name',
+                description: 'Context description when loading',
+            });
+        }
+
+        return strategies.map(
+            ({ name, description, editable, deprecated }) => ({
+                name,
+                description,
+                editable,
+                deprecated,
+            })
+        );
+    }, [strategies, loading]);
+
+    const columns = useMemo(
+        () => [
+            {
+                id: 'Icon',
+                Cell: () => (
+                    <Box
+                        data-loading
+                        sx={{
+                            pl: 2,
+                            pr: 1,
+                            display: 'flex',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <Extension color="disabled" />
+                    </Box>
+                ),
+            },
+            {
+                Header: 'Name',
+                accessor: 'name',
+                width: '90%',
+                Cell: ({
+                    row: {
+                        original: { name, description, deprecated, editable },
+                    },
+                }: any) => {
+                    const subTitleText = deprecated
+                        ? `${description} (deprecated)`
+                        : description;
+                    return (
+                        <LinkCell
+                            data-loading
+                            title={formatStrategyName(name)}
+                            subtitle={subTitleText}
+                            to={`/strategies/${name}`}
                         >
-                            <Add />
-                        </PermissionIconButton>
-                    }
-                    elseShow={
-                        <PermissionButton
-                            onClick={() => navigate('/strategies/create')}
-                            color="primary"
-                            permission={CREATE_STRATEGY}
-                            data-testid={ADD_NEW_STRATEGY_ID}
-                        >
-                            New strategy
-                        </PermissionButton>
-                    }
-                />
-            }
-        />
+                            <ConditionallyRender
+                                condition={!editable}
+                                show={() => <PredefinedBadge />}
+                            />
+                        </LinkCell>
+                    );
+                },
+                sortType: 'alphanumeric',
+            },
+            {
+                Header: 'Actions',
+                id: 'Actions',
+                align: 'center',
+                Cell: ({ row: { original } }: any) => (
+                    <Box
+                        sx={{ display: 'flex', justifyContent: 'flex-end' }}
+                        data-loading
+                    >
+                        <ConditionallyRender
+                            condition={original.deprecated}
+                            show={reactivateButton(original)}
+                            elseShow={deprecateButton(original)}
+                        />
+                        {editButton(original)}
+                        {deleteButton(original)}
+                    </Box>
+                ),
+                width: 150,
+                disableSortBy: true,
+            },
+            {
+                accessor: 'description',
+                disableSortBy: true,
+            },
+            {
+                accessor: 'sortOrder',
+                sortType: 'number',
+            },
+        ],
+        []
     );
 
-    const strategyLink = (name: string, deprecated: boolean) => (
-        <Link to={`/strategies/${name}`}>
-            <strong>{formatStrategyName(name)}</strong>
-            <ConditionallyRender
-                condition={deprecated}
-                show={<small> (Deprecated)</small>}
-            />
-        </Link>
+    const initialState = useMemo(
+        () => ({
+            sortBy: [{ id: 'name', desc: false }],
+            hiddenColumns: ['description', 'sortOrder'],
+        }),
+        []
+    );
+
+    const {
+        getTableProps,
+        getTableBodyProps,
+        headerGroups,
+        rows,
+        prepareRow,
+        state: { globalFilter },
+        setGlobalFilter,
+    } = useTable(
+        {
+            columns: columns as any[], // TODO: fix after `react-table` v8 update
+            data,
+            initialState,
+            sortTypes,
+            autoResetGlobalFilter: false,
+            autoResetSortBy: false,
+            disableSortRemove: true,
+        },
+        useGlobalFilter,
+        useSortBy
     );
 
     const onReactivateStrategy = (strategy: IStrategy) => {
@@ -176,10 +260,7 @@ export const StrategiesList = () => {
         <ConditionallyRender
             condition={strategy.name === 'default'}
             show={
-                <Tooltip
-                    title="You cannot deprecate the default strategy"
-                    arrow
-                >
+                <Tooltip title="You cannot deprecate the default strategy">
                     <div>
                         <IconButton disabled size="large">
                             <Visibility titleAccess="Deprecate strategy" />
@@ -216,7 +297,7 @@ export const StrategiesList = () => {
                 </PermissionIconButton>
             }
             elseShow={
-                <Tooltip title="You cannot delete a built-in strategy" arrow>
+                <Tooltip title="You cannot edit a built-in strategy" arrow>
                     <div>
                         <IconButton disabled size="large">
                             <Edit titleAccess="Edit strategy" />
@@ -251,56 +332,85 @@ export const StrategiesList = () => {
         />
     );
 
-    const strategyList = () =>
-        strategies.map(strategy => (
-            <ListItem key={strategy.name} className={styles.listItem}>
-                <ListItemAvatar>
-                    <Extension color="disabled" />
-                </ListItemAvatar>
-                <ListItemText
-                    primary={strategyLink(strategy?.name, strategy?.deprecated)}
-                    secondary={strategy.description}
-                />
-                <ConditionallyRender
-                    condition={strategy.deprecated}
-                    show={reactivateButton(strategy)}
-                    elseShow={deprecateButton(strategy)}
-                />
-                <ConditionallyRender
-                    condition={hasAccess(UPDATE_STRATEGY)}
-                    show={editButton(strategy)}
-                />
-                <ConditionallyRender
-                    condition={hasAccess(DELETE_STRATEGY)}
-                    show={deleteButton(strategy)}
-                />
-            </ListItem>
-        ));
-
     const onDialogConfirm = () => {
         dialogueMetaData?.onConfirm();
-        setDialogueMetaData(prev => ({ ...prev, show: false }));
+        setDialogueMetaData((prev: IDialogueMetaData) => ({
+            ...prev,
+            show: false,
+        }));
     };
 
     return (
         <PageContent
-            header={<PageHeader title="Strategies" actions={headerButton()} />}
+            isLoading={loading}
+            header={
+                <PageHeader
+                    title="Strategies"
+                    actions={
+                        <>
+                            <TableSearch
+                                initialValue={globalFilter}
+                                onChange={setGlobalFilter}
+                            />
+                            <PageHeader.Divider />
+                            <AddStrategyButton />
+                        </>
+                    }
+                />
+            }
         >
+            <SearchHighlightProvider value={globalFilter}>
+                <Table {...getTableProps()}>
+                    <SortableTableHeader headerGroups={headerGroups} />
+                    <TableBody {...getTableBodyProps()}>
+                        {rows.map(row => {
+                            prepareRow(row);
+                            return (
+                                <TableRow hover {...row.getRowProps()}>
+                                    {row.cells.map(cell => (
+                                        <TableCell {...cell.getCellProps()}>
+                                            {cell.render('Cell')}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            );
+                        })}
+                    </TableBody>
+                </Table>
+            </SearchHighlightProvider>
+            <ConditionallyRender
+                condition={rows.length === 0}
+                show={
+                    <ConditionallyRender
+                        condition={globalFilter?.length > 0}
+                        show={
+                            <TablePlaceholder>
+                                No strategies found matching &ldquo;
+                                {globalFilter}
+                                &rdquo;
+                            </TablePlaceholder>
+                        }
+                        elseShow={
+                            <TablePlaceholder>
+                                No strategies available. Get started by adding
+                                one.
+                            </TablePlaceholder>
+                        }
+                    />
+                }
+            />
+
             <Dialogue
                 open={dialogueMetaData.show}
                 onClick={onDialogConfirm}
                 title={dialogueMetaData?.title}
                 onClose={() =>
-                    setDialogueMetaData(prev => ({ ...prev, show: false }))
+                    setDialogueMetaData((prev: IDialogueMetaData) => ({
+                        ...prev,
+                        show: false,
+                    }))
                 }
             />
-            <List>
-                <ConditionallyRender
-                    condition={strategies.length > 0}
-                    show={<>{strategyList()}</>}
-                    elseShow={<ListItem>No strategies found</ListItem>}
-                />
-            </List>
         </PageContent>
     );
 };

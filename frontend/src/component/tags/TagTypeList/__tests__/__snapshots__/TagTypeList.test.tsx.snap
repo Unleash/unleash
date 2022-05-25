@@ -150,7 +150,7 @@ exports[`renders an empty list correctly 1`] = `
                 <button
                   aria-label=""
                   aria-labelledby={null}
-                  className="tss-14l86a5-sortedButton tss-h39o0j-sortButton"
+                  className="tss-14l86a5-sortedButton tss-1inbba3-sortButton"
                   data-mui-internal-clone-element={true}
                   onBlur={[Function]}
                   onClick={[Function]}

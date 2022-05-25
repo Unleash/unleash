@@ -1,9 +1,9 @@
 import { useHealthReport } from 'hooks/api/getters/useHealthReport/useHealthReport';
 import ApiError from 'component/common/ApiError/ApiError';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { ReportToggleList } from 'component/Reporting/ReportToggleList/ReportToggleList';
 import { ReportCard } from 'component/Reporting/ReportCard/ReportCard';
 import { usePageTitle } from 'hooks/usePageTitle';
+import { ReportTable } from 'component/Reporting/ReportTable/ReportTable';
 
 interface IProjectHealthProps {
     projectId: string;
@@ -33,8 +33,8 @@ const ProjectHealth = ({ projectId }: IProjectHealthProps) => {
                 }
             />
             <ReportCard healthReport={healthReport} />
-            <ReportToggleList
-                selectedProject={projectId}
+            <ReportTable
+                projectId={projectId}
                 features={healthReport.features}
             />
         </div>

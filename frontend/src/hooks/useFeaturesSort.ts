@@ -185,6 +185,7 @@ const compareNullableDates = (
 ): number => {
     return a && b ? a?.getTime?.() - b?.getTime?.() : a ? 1 : b ? -1 : 0;
 };
+
 const sortByExpired = (
     features: Readonly<FeatureSchema[]>
 ): FeatureSchema[] => {

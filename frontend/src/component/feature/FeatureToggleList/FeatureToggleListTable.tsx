@@ -25,6 +25,7 @@ import { useLocalStorage } from 'hooks/useLocalStorage';
 import { FeatureSchema } from 'openapi';
 import { CreateFeatureButton } from '../CreateFeatureButton/CreateFeatureButton';
 import { FeatureStaleCell } from './FeatureStaleCell/FeatureStaleCell';
+import { FeatureNameCell } from 'component/common/Table/cells/FeatureNameCell/FeatureNameCell';
 
 const featuresPlaceholder: FeatureSchema[] = Array(15).fill({
     name: 'Name of the feature',
@@ -55,18 +56,7 @@ const columns = [
         accessor: 'name',
         maxWidth: 300,
         width: '67%',
-        Cell: ({
-            row: {
-                // @ts-expect-error -- props type
-                original: { name, description, project },
-            },
-        }) => (
-            <LinkCell
-                title={name}
-                subtitle={description}
-                to={`/projects/${project}/features/${name}`}
-            />
-        ),
+        Cell: FeatureNameCell,
         sortType: 'alphanumeric',
     },
     {
@@ -139,6 +129,7 @@ export const FeatureToggleListTable: VFC = () => {
         {
             // @ts-expect-error -- fix in react-table v8
             columns,
+            // @ts-expect-error -- fix in react-table v8
             data,
             initialState,
             sortTypes,

@@ -1,5 +1,5 @@
 export interface IInvoice {
-    amountFomratted: string;
+    amountFormatted: string;
     invoicePDF: string;
     invoiceURL: string;
     paid: boolean;

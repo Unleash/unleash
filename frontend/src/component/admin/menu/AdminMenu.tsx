@@ -2,6 +2,7 @@ import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { Paper, Tab, Tabs } from '@mui/material';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
 
 const navLinkStyle = {
     display: 'flex',
@@ -30,6 +31,7 @@ const createNavLinkStyle = (props: {
 function AdminMenu() {
     const { uiConfig } = useUiConfig();
     const { pathname } = useLocation();
+    const { isBilling } = useInstanceStatus();
     const { flags } = uiConfig;
 
     return (
@@ -79,6 +81,19 @@ function AdminMenu() {
                         </NavLink>
                     }
                 />
+                {isBilling && (
+                    <Tab
+                        value="/admin/billing"
+                        label={
+                            <NavLink
+                                to="/admin/billing"
+                                style={createNavLinkStyle}
+                            >
+                                Billing
+                            </NavLink>
+                        }
+                    />
+                )}
             </Tabs>
         </Paper>
     );

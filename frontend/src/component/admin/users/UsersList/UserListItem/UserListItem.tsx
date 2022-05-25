@@ -7,7 +7,7 @@ import {
     Typography,
 } from '@mui/material';
 import classnames from 'classnames';
-import { Delete, Edit, Lock } from '@mui/icons-material';
+import { Delete, Edit, Lock, MonetizationOn } from '@mui/icons-material';
 import { SyntheticEvent, useContext } from 'react';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -27,6 +27,7 @@ interface IUserListItemProps {
     openDelDialog: (user: IUser) => (e: SyntheticEvent) => void;
     locationSettings: ILocationSettings;
     search: string;
+    isBillingUsers?: boolean;
 }
 
 const UserListItem = ({
@@ -36,6 +37,7 @@ const UserListItem = ({
     openPwDialog,
     locationSettings,
     search,
+    isBillingUsers,
 }: IUserListItemProps) => {
     const { hasAccess } = useContext(AccessContext);
     const navigate = useNavigate();
@@ -43,7 +45,7 @@ const UserListItem = ({
 
     const renderTimeAgo = (date: string) => (
         <Tooltip
-            title={`Last seen on: ${formatDateYMD(
+            title={`Last login: ${formatDateYMD(
                 date,
                 locationSettings.locale
             )}`}
@@ -57,6 +59,27 @@ const UserListItem = ({
 
     return (
         <TableRow key={user.id} className={styles.tableRow}>
+            <ConditionallyRender
+                condition={Boolean(isBillingUsers)}
+                show={
+                    <TableCell align="center" className={styles.hideSM}>
+                        <ConditionallyRender
+                            condition={Boolean(user.paid)}
+                            show={
+                                <Tooltip title="Paid user" arrow>
+                                    <MonetizationOn
+                                        sx={theme => ({
+                                            color: theme.palette.primary.light,
+                                            fontSize: '1.75rem',
+                                        })}
+                                    />
+                                </Tooltip>
+                            }
+                            elseShow={<span data-loading>Free</span>}
+                        />
+                    </TableCell>
+                }
+            />
             <TableCell className={styles.hideSM}>
                 <span data-loading>
                     {formatDateYMD(user.createdAt, locationSettings.locale)}

@@ -1,0 +1,118 @@
+import {
+    Table,
+    SortableTableHeader,
+    TableBody,
+    TableCell,
+    TableRow,
+    TablePlaceholder,
+} from 'component/common/Table';
+import { PageContent } from 'component/common/PageContent/PageContent';
+import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
+import { useMemo, VFC } from 'react';
+import { useGlobalFilter, useSortBy, useTable } from 'react-table';
+import { sortTypes } from 'utils/sortTypes';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { Box, IconButton, styled, Typography } from '@mui/material';
+import FileDownload from '@mui/icons-material/FileDownload';
+import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
+
+interface IBillingHistoryProps {
+    data: Record<string, any>[];
+    isLoading?: boolean;
+}
+
+const columns = [
+    {
+        Header: 'Amount',
+        accessor: 'amountFormatted',
+    },
+    {
+        Header: 'Status',
+        accessor: 'status',
+    },
+    {
+        Header: 'Due date',
+        accessor: 'dueDate',
+        Cell: DateCell,
+        sortType: 'date',
+    },
+    {
+        Header: 'Download',
+        accessor: 'invoicePDF',
+        align: 'center',
+        disableSortBy: true,
+        Cell: ({ value }: { value: string }) => (
+            <Box
+                sx={{ display: 'flex', justifyContent: 'center' }}
+                data-loading
+            >
+                <IconButton href={value}>
+                    <FileDownload />
+                </IconButton>
+            </Box>
+        ),
+        width: 100,
+    },
+];
+
+export const BillingHistory: VFC<IBillingHistoryProps> = ({
+    data,
+    isLoading = false,
+}) => {
+    const initialState = useMemo(
+        () => ({
+            sortBy: [{ id: 'createdAt', desc: false }],
+        }),
+        []
+    );
+
+    const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
+        useTable(
+            {
+                columns,
+                data,
+                initialState,
+                sortTypes,
+                autoResetGlobalFilter: false,
+                disableSortRemove: true,
+                defaultColumn: {
+                    Cell: TextCell,
+                },
+            },
+            useGlobalFilter,
+            useSortBy
+        );
+
+    return (
+        <PageContent isLoading={isLoading} disablePadding>
+            <StyledTitle>Payment history</StyledTitle>
+            <Table {...getTableProps()}>
+                <SortableTableHeader headerGroups={headerGroups} />
+                <TableBody {...getTableBodyProps()}>
+                    {rows.map(row => {
+                        prepareRow(row);
+                        return (
+                            <TableRow hover {...row.getRowProps()}>
+                                {row.cells.map(cell => (
+                                    <TableCell {...cell.getCellProps()}>
+                                        {cell.render('Cell')}
+                                    </TableCell>
+                                ))}
+                            </TableRow>
+                        );
+                    })}
+                </TableBody>
+            </Table>
+            <ConditionallyRender
+                condition={rows.length === 0}
+                show={<TablePlaceholder>No invoices to show.</TablePlaceholder>}
+            />
+        </PageContent>
+    );
+};
+
+const StyledTitle = styled(Typography)(({ theme }) => ({
+    marginTop: theme.spacing(6),
+    marginBottom: theme.spacing(2.5),
+    fontSize: theme.fontSizes.mainHeader,
+}));

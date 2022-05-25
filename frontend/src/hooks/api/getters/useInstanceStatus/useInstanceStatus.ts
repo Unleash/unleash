@@ -1,31 +1,51 @@
-import { IInstanceStatus } from 'interfaces/instance';
+import { IInstanceStatus, InstancePlan } from 'interfaces/instance';
 import { useApiGetter } from 'hooks/api/getters/useApiGetter/useApiGetter';
 import { formatApiPath } from 'utils/formatPath';
-import { isLocalhostDomain } from 'utils/env';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { useEffect } from 'react';
 
 export interface IUseInstanceStatusOutput {
     instanceStatus?: IInstanceStatus;
     refetchInstanceStatus: () => void;
+    isBilling: boolean;
     loading: boolean;
     error?: Error;
 }
 
 export const useInstanceStatus = (): IUseInstanceStatusOutput => {
+    const { uiConfig } = useUiConfig();
+    const {
+        flags: { UNLEASH_CLOUD },
+    } = uiConfig;
+
     const { data, refetch, loading, error } = useApiGetter(
         'useInstanceStatus',
-        fetchInstanceStatus
+        () => fetchInstanceStatus(UNLEASH_CLOUD)
     );
+
+    useEffect(() => {
+        refetch();
+    }, [refetch, UNLEASH_CLOUD]);
+
+    const billingPlans = [
+        InstancePlan.PRO,
+        InstancePlan.COMPANY,
+        InstancePlan.TEAM,
+    ];
 
     return {
         instanceStatus: data,
         refetchInstanceStatus: refetch,
+        isBilling: billingPlans.includes(data?.plan ?? InstancePlan.UNKNOWN),
         loading,
         error,
     };
 };
 
-const fetchInstanceStatus = async (): Promise<IInstanceStatus> => {
-    if (!enableInstanceStatusBarFeature()) {
+const fetchInstanceStatus = async (
+    UNLEASH_CLOUD?: boolean
+): Promise<IInstanceStatus> => {
+    if (!UNLEASH_CLOUD) {
         return UNKNOWN_INSTANCE_STATUS;
     }
 
@@ -38,11 +58,6 @@ const fetchInstanceStatus = async (): Promise<IInstanceStatus> => {
     return res.json();
 };
 
-// TODO(olav): Enable instance status bar feature outside of localhost.
-const enableInstanceStatusBarFeature = () => {
-    return isLocalhostDomain();
-};
-
 export const UNKNOWN_INSTANCE_STATUS: IInstanceStatus = {
-    plan: 'unknown',
+    plan: InstancePlan.UNKNOWN,
 };

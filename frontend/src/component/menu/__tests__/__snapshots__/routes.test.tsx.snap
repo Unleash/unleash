@@ -409,6 +409,25 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
+    "menu": {
+      "adminSettings": true,
+      "isBilling": true,
+    },
+    "parent": "/admin",
+    "path": "/admin/billing",
+    "title": "Billing",
+    "type": "protected",
+  },
+  {
+    "component": [Function],
+    "menu": {},
+    "parent": "/admin",
+    "path": "/admin-invoices",
+    "title": "Invoices",
+    "type": "protected",
+  },
+  {
+    "component": [Function],
     "hidden": false,
     "menu": {},
     "path": "/admin",

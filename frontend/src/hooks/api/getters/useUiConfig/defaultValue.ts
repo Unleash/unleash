@@ -14,6 +14,7 @@ export const defaultValue = {
         CO: false,
         SE: false,
         T: false,
+        UNLEASH_CLOUD: false,
     },
     links: [
         {

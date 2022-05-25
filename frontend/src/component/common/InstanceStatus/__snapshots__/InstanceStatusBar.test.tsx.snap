@@ -2,59 +2,63 @@
 
 exports[`InstanceStatusBar should warn when the trial has expired 1`] = `
 <aside
-  class="mui-1rw10cs"
+  class="mui-jmsogz"
   data-testid="INSTANCE_STATUS_BAR_ID"
 >
   <svg
     aria-hidden="true"
-    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mui-cle2im-MuiSvgIcon-root"
-    data-testid="InfoIcon"
+    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mui-prk1jy-MuiSvgIcon-root"
+    data-testid="WarningAmberIcon"
     focusable="false"
     viewBox="0 0 24 24"
   >
     <path
-      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+      d="M12 5.99 19.53 19H4.47L12 5.99M12 2 1 21h22L12 2z"
+    />
+    <path
+      d="M13 16h-2v2h2zm0-6h-2v5h2z"
     />
   </svg>
-  <span>
-    <strong>
-      Heads up!
-    </strong>
-     Your free trial of the
-     
-    PRO
-     version has expired.
-  </span>
-  <a
-    class="MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButtonBase-root mui-l66s6r-MuiButtonBase-root-MuiButton-root"
-    href="mailto:support@getunleash.zendesk.com"
-    tabindex="0"
+  <p
+    class="MuiTypography-root MuiTypography-body1 mui-rviqjc-MuiTypography-root"
   >
-    Contact us
-    <span
-      class="MuiTouchRipple-root mui-8je8zh-MuiTouchRipple-root"
-    />
-  </a>
+    <strong>
+      Warning!
+    </strong>
+     Your free 
+    Pro
+     
+    trial has expired. 
+    <strong>
+      Upgrade trial
+    </strong>
+     otherwise your 
+    <strong>
+      account will be deleted.
+    </strong>
+  </p>
 </aside>
 `;
 
 exports[`InstanceStatusBar should warn when the trial is about to expire 1`] = `
 <aside
-  class="mui-1rw10cs"
+  class="mui-yx2rkt"
   data-testid="INSTANCE_STATUS_BAR_ID"
 >
   <svg
     aria-hidden="true"
     class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mui-cle2im-MuiSvgIcon-root"
-    data-testid="InfoIcon"
+    data-testid="InfoOutlinedIcon"
     focusable="false"
     viewBox="0 0 24 24"
   >
     <path
-      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+      d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
     />
   </svg>
-  <span>
+  <p
+    class="MuiTypography-root MuiTypography-body1 mui-rviqjc-MuiTypography-root"
+  >
     <strong>
       Heads up!
     </strong>
@@ -64,20 +68,10 @@ exports[`InstanceStatusBar should warn when the trial is about to expire 1`] = `
       4
        days
     </strong>
-     remaining of your free trial of the 
-    PRO
+     left of your free
      
-    version.
-  </span>
-  <a
-    class="MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButtonBase-root mui-l66s6r-MuiButtonBase-root-MuiButton-root"
-    href="mailto:support@getunleash.zendesk.com"
-    tabindex="0"
-  >
-    Contact us
-    <span
-      class="MuiTouchRipple-root mui-8je8zh-MuiTouchRipple-root"
-    />
-  </a>
+    Pro
+     trial.
+  </p>
 </aside>
 `;

@@ -30,6 +30,7 @@ import { useUsersFilter } from 'hooks/useUsersFilter';
 import { useUsersSort } from 'hooks/useUsersSort';
 import { TableCellSortable } from 'component/common/Table/TableCellSortable/TableCellSortable';
 import { useStyles } from './UserListItem/UserListItem.styles';
+import { useUsersPlan } from 'hooks/useUsersPlan';
 
 interface IUsersListProps {
     search: string;
@@ -52,7 +53,8 @@ const UsersList = ({ search }: IUsersListProps) => {
     const [inviteLink, setInviteLink] = useState('');
     const [delUser, setDelUser] = useState<IUser>();
     const ref = useLoading(loading);
-    const { filtered, setFilter } = useUsersFilter(users);
+    const { planUsers, isBillingUsers } = useUsersPlan(users);
+    const { filtered, setFilter } = useUsersFilter(planUsers);
     const { sorted, sort, setSort } = useUsersSort(filtered);
 
     const filterUsersByQueryPage = (user: IUser) => {
@@ -144,6 +146,7 @@ const UsersList = ({ search }: IUsersListProps) => {
                     locationSettings={locationSettings}
                     renderRole={renderRole}
                     search={search}
+                    isBillingUsers={isBillingUsers}
                 />
             );
         });
@@ -156,6 +159,17 @@ const UsersList = ({ search }: IUsersListProps) => {
             <Table>
                 <TableHead>
                     <TableRow className={styles.tableCellHeader}>
+                        <ConditionallyRender
+                            condition={isBillingUsers}
+                            show={
+                                <TableCell
+                                    align="center"
+                                    className={classnames(styles.hideSM)}
+                                >
+                                    Type
+                                </TableCell>
+                            }
+                        />
                         <TableCellSortable
                             className={classnames(
                                 styles.hideSM,

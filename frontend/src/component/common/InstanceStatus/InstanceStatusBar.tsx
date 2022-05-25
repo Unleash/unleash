@@ -1,9 +1,13 @@
-import { styled, Button } from '@mui/material';
-import { colors } from 'themes/colors';
+import { styled, Button, Typography } from '@mui/material';
 import { IInstanceStatus, InstanceState } from 'interfaces/instance';
-import { differenceInDays, parseISO } from 'date-fns';
 import { INSTANCE_STATUS_BAR_ID } from 'utils/testIds';
-import { Info } from '@mui/icons-material';
+import { InfoOutlined, WarningAmber } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+import AccessContext from 'contexts/AccessContext';
+import { ADMIN } from 'component/providers/AccessProvider/permissions';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { calculateTrialDaysRemaining } from 'utils/billing';
 
 interface IInstanceStatusBarProps {
     instanceStatus: IInstanceStatus;
@@ -12,6 +16,8 @@ interface IInstanceStatusBarProps {
 export const InstanceStatusBar = ({
     instanceStatus,
 }: IInstanceStatusBarProps) => {
+    const { hasAccess } = useContext(AccessContext);
+
     const trialDaysRemaining = calculateTrialDaysRemaining(instanceStatus);
 
     if (
@@ -20,14 +26,22 @@ export const InstanceStatusBar = ({
         trialDaysRemaining <= 0
     ) {
         return (
-            <StyledBar data-testid={INSTANCE_STATUS_BAR_ID}>
-                <StyledInfoIcon />
-                <span>
-                    <strong>Heads up!</strong> Your free trial of the{' '}
-                    {instanceStatus.plan.toUpperCase()} version has expired.
-                </span>
-                <ContactButton />
-            </StyledBar>
+            <StyledWarningBar data-testid={INSTANCE_STATUS_BAR_ID}>
+                <StyledWarningIcon />
+                <Typography
+                    sx={theme => ({
+                        fontSize: theme.fontSizes.smallBody,
+                    })}
+                >
+                    <strong>Warning!</strong> Your free {instanceStatus.plan}{' '}
+                    trial has expired. <strong>Upgrade trial</strong> otherwise
+                    your <strong>account will be deleted.</strong>
+                </Typography>
+                <ConditionallyRender
+                    condition={hasAccess(ADMIN)}
+                    show={<UpgradeButton />}
+                />
+            </StyledWarningBar>
         );
     }
 
@@ -37,54 +51,67 @@ export const InstanceStatusBar = ({
         trialDaysRemaining <= 10
     ) {
         return (
-            <StyledBar data-testid={INSTANCE_STATUS_BAR_ID}>
+            <StyledInfoBar data-testid={INSTANCE_STATUS_BAR_ID}>
                 <StyledInfoIcon />
-                <span>
+                <Typography
+                    sx={theme => ({
+                        fontSize: theme.fontSizes.smallBody,
+                    })}
+                >
                     <strong>Heads up!</strong> You have{' '}
-                    <strong>{trialDaysRemaining} days</strong> remaining of your
-                    free trial of the {instanceStatus.plan.toUpperCase()}{' '}
-                    version.
-                </span>
-                <ContactButton />
-            </StyledBar>
+                    <strong>{trialDaysRemaining} days</strong> left of your free{' '}
+                    {instanceStatus.plan} trial.
+                </Typography>
+                <ConditionallyRender
+                    condition={hasAccess(ADMIN)}
+                    show={<UpgradeButton />}
+                />
+            </StyledInfoBar>
         );
     }
 
     return null;
 };
 
-const ContactButton = () => {
+const UpgradeButton = () => {
+    const navigate = useNavigate();
+
     return (
         <StyledButton
-            href="mailto:support@getunleash.zendesk.com"
+            onClick={() => navigate('/admin/billing')}
             variant="outlined"
         >
-            Contact us
+            Upgrade trial
         </StyledButton>
     );
 };
 
-const calculateTrialDaysRemaining = (
-    instanceStatus: IInstanceStatus
-): number | undefined => {
-    return instanceStatus.trialExpiry
-        ? differenceInDays(parseISO(instanceStatus.trialExpiry), new Date())
-        : undefined;
-};
-
-// TODO - Cleanup to use theme instead of colors
-const StyledBar = styled('aside')(({ theme }) => ({
+const StyledWarningBar = styled('aside')(({ theme }) => ({
     position: 'relative',
     zIndex: 1,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: theme.spacing(2),
+    padding: theme.spacing(1),
     gap: theme.spacing(1),
     borderBottom: '1px solid',
-    borderColor: colors.blue[200],
-    background: colors.blue[50],
-    color: colors.blue[700],
+    borderColor: theme.palette.warning.border,
+    background: theme.palette.warning.light,
+    color: theme.palette.warning.dark,
+}));
+
+const StyledInfoBar = styled('aside')(({ theme }) => ({
+    position: 'relative',
+    zIndex: 1,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: theme.spacing(1),
+    gap: theme.spacing(1),
+    borderBottom: '1px solid',
+    borderColor: theme.palette.info.border,
+    background: theme.palette.info.light,
+    color: theme.palette.info.dark,
 }));
 
 const StyledButton = styled(Button)(({ theme }) => ({
@@ -93,7 +120,10 @@ const StyledButton = styled(Button)(({ theme }) => ({
     marginLeft: theme.spacing(2),
 }));
 
-// TODO - Cleanup to use theme instead of colors
-const StyledInfoIcon = styled(Info)(({ theme }) => ({
-    color: colors.blue[500],
+const StyledWarningIcon = styled(WarningAmber)(({ theme }) => ({
+    color: theme.palette.warning.main,
+}));
+
+const StyledInfoIcon = styled(InfoOutlined)(({ theme }) => ({
+    color: theme.palette.info.main,
 }));

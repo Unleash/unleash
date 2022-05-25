@@ -135,6 +135,7 @@ p {
 }
 
 a {
+    cursor: pointer;
     color: #615bc2;
 }
 

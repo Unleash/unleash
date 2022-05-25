@@ -11,6 +11,7 @@ export interface IUser {
     seenAt: string | null;
     username?: string;
     isAPI: boolean;
+    paid?: boolean;
 }
 
 export interface IPermission {

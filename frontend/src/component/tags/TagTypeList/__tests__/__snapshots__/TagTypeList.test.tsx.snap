@@ -67,7 +67,7 @@ exports[`renders an empty list correctly 1`] = `
                 />
               </button>
               <hr
-                className="MuiDivider-root MuiDivider-middle MuiDivider-vertical tss-1suzbix-verticalSeparator mui-oezrwv-MuiDivider-root"
+                className="MuiDivider-root MuiDivider-middle MuiDivider-vertical tss-a0frlx-verticalSeparator mui-oezrwv-MuiDivider-root"
               />
               <span
                 id="useId-0"

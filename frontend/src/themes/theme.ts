@@ -13,6 +13,7 @@ export default createTheme({
     },
     boxShadows: {
         main: '0px 2px 4px rgba(129, 122, 254, 0.2)',
+        elevated: '0px 1px 20px rgba(45, 42, 89, 0.1)',
     },
     typography: {
         fontFamily: 'Sen, Roboto, sans-serif',
@@ -61,26 +62,31 @@ export default createTheme({
             light: colors.blue[50],
             main: colors.blue[500],
             dark: colors.blue[700],
+            border: colors.blue[200],
         },
         success: {
             light: colors.green[50],
             main: colors.green[500],
             dark: colors.green[800],
+            border: colors.green[300],
         },
         warning: {
             light: colors.orange[100],
             main: colors.orange[800],
             dark: colors.orange[900],
+            border: colors.orange[500],
         },
         error: {
             light: colors.red[50],
             main: colors.red[700],
             dark: colors.red[800],
+            border: colors.red[300],
         },
         divider: colors.grey[300],
-        dividerAlternative: colors.grey[500],
+        dividerAlternative: colors.grey[400],
         tableHeaderHover: colors.grey[400],
         highlight: '#FFEACC',
+        secondaryContainer: colors.grey[200],
         sidebarContainer: 'rgba(32,32,33, 0.2)',
         grey: colors.grey,
         text: {

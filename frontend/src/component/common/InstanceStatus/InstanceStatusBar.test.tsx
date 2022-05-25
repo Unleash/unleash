@@ -1,5 +1,5 @@
 import { InstanceStatusBar } from 'component/common/InstanceStatus/InstanceStatusBar';
-import { InstanceState } from 'interfaces/instance';
+import { InstancePlan, InstanceState } from 'interfaces/instance';
 import { render } from 'utils/testRenderer';
 import { screen } from '@testing-library/react';
 import { addDays } from 'date-fns';
@@ -18,7 +18,7 @@ test('InstanceStatusBar should be hidden when the trial is far from expired', as
     render(
         <InstanceStatusBar
             instanceStatus={{
-                plan: 'pro',
+                plan: InstancePlan.PRO,
                 state: InstanceState.TRIAL,
                 trialExpiry: addDays(new Date(), 15).toISOString(),
             }}
@@ -34,7 +34,7 @@ test('InstanceStatusBar should warn when the trial is about to expire', async ()
     render(
         <InstanceStatusBar
             instanceStatus={{
-                plan: 'pro',
+                plan: InstancePlan.PRO,
                 state: InstanceState.TRIAL,
                 trialExpiry: addDays(new Date(), 5).toISOString(),
             }}
@@ -49,7 +49,7 @@ test('InstanceStatusBar should warn when the trial has expired', async () => {
     render(
         <InstanceStatusBar
             instanceStatus={{
-                plan: 'pro',
+                plan: InstancePlan.PRO,
                 state: InstanceState.TRIAL,
                 trialExpiry: new Date().toISOString(),
             }}

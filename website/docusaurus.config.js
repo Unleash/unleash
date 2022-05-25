@@ -119,6 +119,7 @@ module.exports = {
                             { sync: true },
                         ],
                     ],
+                    // docItemComponent: '@theme/ApiItem',
                 },
                 theme: {
                     customCss: require.resolve('./src/css/custom.css'),
@@ -176,6 +177,21 @@ module.exports = {
                     ) {
                         return `/docs/${toPath}`;
                     }
+                },
+            },
+        ],
+        [
+            'docusaurus-plugin-openapi-docs',
+            {
+                id: 'apiDocs',
+                config: {
+                    Proxy: {
+                        specPath: 'http://localhost:3000/docs/openapi.json',
+                        outputDir: 'api/proxy',
+                        sidebarOptions: {
+                            groupPathsBy: 'tags',
+                        },
+                    },
                 },
             },
         ],

@@ -1,7 +1,7 @@
-import { useEffect, useMemo, VFC } from 'react';
+import { useEffect, useMemo, useState, VFC } from 'react';
 import { Link, useMediaQuery, useTheme } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
-import { useGlobalFilter, useSortBy, useTable } from 'react-table';
+import { Link as RouterLink, useSearchParams } from 'react-router-dom';
+import { SortingRule, useGlobalFilter, useSortBy, useTable } from 'react-table';
 import {
     Table,
     SortableTableHeader,
@@ -11,22 +11,30 @@ import {
     TablePlaceholder,
     TableSearch,
 } from 'component/common/Table';
+import { useFeatures } from 'hooks/api/getters/useFeatures/useFeatures';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { DateCell } from '../../../common/Table/cells/DateCell/DateCell';
+import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { FeatureSeenCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureSeenCell';
 import { FeatureTypeCell } from 'component/common/Table/cells/FeatureTypeCell/FeatureTypeCell';
-import { FeatureStaleCell } from './FeatureStaleCell/FeatureStaleCell';
-import { CreateFeatureButton } from '../../CreateFeatureButton/CreateFeatureButton';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { sortTypes } from 'utils/sortTypes';
+import { useLocalStorage } from 'hooks/useLocalStorage';
+import { FeatureSchema } from 'openapi';
+import { CreateFeatureButton } from '../CreateFeatureButton/CreateFeatureButton';
+import { FeatureStaleCell } from './FeatureStaleCell/FeatureStaleCell';
 
-interface IExperimentProps {
-    data: Record<string, any>[];
-    isLoading?: boolean;
-}
+const featuresPlaceholder: FeatureSchema[] = Array(15).fill({
+    name: 'Name of the feature',
+    description: 'Short description of the feature',
+    type: '-',
+    createdAt: new Date(2022, 1, 1),
+    project: 'projectID',
+});
+
+type PageQueryType = Partial<Record<'sort' | 'order' | 'search', string>>;
 
 const columns = [
     {
@@ -87,21 +95,36 @@ const columns = [
     },
 ];
 
-export const FeatureToggleListTable: VFC<IExperimentProps> = ({
-    data,
-    isLoading = false,
-}) => {
+const defaultSort: SortingRule<string> = { id: 'createdAt', desc: false };
+
+export const FeatureToggleListTable: VFC = () => {
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const isMediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
-
-    const initialState = useMemo(
-        () => ({
-            sortBy: [{ id: 'createdAt', desc: false }],
-            hiddenColumns: ['description'],
-        }),
-        []
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [storedParams, setStoredParams] = useLocalStorage(
+        'FeatureToggleListTable:v1',
+        defaultSort
     );
+    const { features = [], loading } = useFeatures();
+    const data = useMemo(
+        () =>
+            features?.length === 0 && loading ? featuresPlaceholder : features,
+        [features, loading]
+    );
+
+    const [initialState] = useState(() => ({
+        sortBy: [
+            {
+                id: searchParams.get('sort') || storedParams.id,
+                desc: searchParams.has('order')
+                    ? searchParams.get('order') === 'desc'
+                    : storedParams.desc,
+            },
+        ],
+        hiddenColumns: ['description'],
+        globalFilter: searchParams.get('search') || '',
+    }));
 
     const {
         getTableProps,
@@ -109,17 +132,20 @@ export const FeatureToggleListTable: VFC<IExperimentProps> = ({
         headerGroups,
         rows,
         prepareRow,
-        state: { globalFilter },
+        state: { globalFilter, sortBy },
         setGlobalFilter,
         setHiddenColumns,
     } = useTable(
         {
+            // @ts-expect-error -- fix in react-table v8
             columns,
             data,
             initialState,
             sortTypes,
             autoResetGlobalFilter: false,
+            autoResetSortBy: false,
             disableSortRemove: true,
+            disableMultiSort: true,
         },
         useGlobalFilter,
         useSortBy
@@ -141,9 +167,25 @@ export const FeatureToggleListTable: VFC<IExperimentProps> = ({
         }
     }, [setHiddenColumns, isSmallScreen, isMediumScreen]);
 
+    useEffect(() => {
+        const tableState: PageQueryType = {};
+        tableState.sort = sortBy[0].id;
+        if (sortBy[0].desc) {
+            tableState.order = 'desc';
+        }
+        if (globalFilter) {
+            tableState.search = globalFilter;
+        }
+
+        setSearchParams(tableState, {
+            replace: true,
+        });
+        setStoredParams({ id: sortBy[0].id, desc: sortBy[0].desc || false });
+    }, [sortBy, globalFilter, setSearchParams, setStoredParams]);
+
     return (
         <PageContent
-            isLoading={isLoading}
+            isLoading={loading}
             header={
                 <PageHeader
                     title={`Feature toggles (${data.length})`}
@@ -173,6 +215,7 @@ export const FeatureToggleListTable: VFC<IExperimentProps> = ({
         >
             <SearchHighlightProvider value={globalFilter}>
                 <Table {...getTableProps()}>
+                    {/* @ts-expect-error -- fix in react-table v8 */}
                     <SortableTableHeader headerGroups={headerGroups} />
                     <TableBody {...getTableBodyProps()}>
                         {rows.map(row => {

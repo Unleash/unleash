@@ -4,6 +4,7 @@ import { Operation } from 'fast-json-patch';
 import { CreateFeatureSchema } from 'openapi';
 import { openApiAdmin } from 'utils/openapiClient';
 import { IConstraint } from 'interfaces/strategy';
+import { useCallback } from 'react';
 
 const useFeatureApi = () => {
     const { makeRequest, createRequest, errors, loading } = useAPI({
@@ -47,47 +48,45 @@ const useFeatureApi = () => {
         });
     };
 
-    const toggleFeatureEnvironmentOn = async (
-        projectId: string,
-        featureId: string,
-        environmentId: string
-    ) => {
-        const path = `api/admin/projects/${projectId}/features/${featureId}/environments/${environmentId}/on`;
-        const req = createRequest(
-            path,
-            { method: 'POST' },
-            'toggleFeatureEnvironmentOn'
-        );
+    const toggleFeatureEnvironmentOn = useCallback(
+        async (projectId: string, featureId: string, environmentId: string) => {
+            const path = `api/admin/projects/${projectId}/features/${featureId}/environments/${environmentId}/on`;
+            const req = createRequest(
+                path,
+                { method: 'POST' },
+                'toggleFeatureEnvironmentOn'
+            );
 
-        try {
-            const res = await makeRequest(req.caller, req.id);
+            try {
+                const res = await makeRequest(req.caller, req.id);
 
-            return res;
-        } catch (e) {
-            throw e;
-        }
-    };
+                return res;
+            } catch (e) {
+                throw e;
+            }
+        },
+        [createRequest, makeRequest]
+    );
 
-    const toggleFeatureEnvironmentOff = async (
-        projectId: string,
-        featureId: string,
-        environmentId: string
-    ) => {
-        const path = `api/admin/projects/${projectId}/features/${featureId}/environments/${environmentId}/off`;
-        const req = createRequest(
-            path,
-            { method: 'POST' },
-            'toggleFeatureEnvironmentOff'
-        );
+    const toggleFeatureEnvironmentOff = useCallback(
+        async (projectId: string, featureId: string, environmentId: string) => {
+            const path = `api/admin/projects/${projectId}/features/${featureId}/environments/${environmentId}/off`;
+            const req = createRequest(
+                path,
+                { method: 'POST' },
+                'toggleFeatureEnvironmentOff'
+            );
 
-        try {
-            const res = await makeRequest(req.caller, req.id);
+            try {
+                const res = await makeRequest(req.caller, req.id);
 
-            return res;
-        } catch (e) {
-            throw e;
-        }
-    };
+                return res;
+            } catch (e) {
+                throw e;
+            }
+        },
+        [createRequest, makeRequest]
+    );
 
     const changeFeatureProject = async (
         projectId: string,

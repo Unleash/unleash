@@ -1,15 +1,8 @@
 /// <reference types="cypress" />
 
 export {};
-
-const AUTH_USER = Cypress.env('AUTH_USER');
-const AUTH_PASSWORD = Cypress.env('AUTH_PASSWORD');
 const randomId = String(Math.random()).split('.')[1];
 const segmentName = `unleash-e2e-${randomId}`;
-
-Cypress.config({
-    experimentalSessionSupport: true,
-});
 
 // Disable all active splash pages by visiting them.
 const disableActiveSplashScreens = () => {
@@ -22,20 +15,7 @@ describe('segments', () => {
     });
 
     beforeEach(() => {
-        cy.session(AUTH_USER, () => {
-            cy.visit('/');
-            cy.wait(1000);
-            cy.get("[data-testid='LOGIN_EMAIL_ID']").type(AUTH_USER);
-
-            if (AUTH_PASSWORD) {
-                cy.get("[data-testid='LOGIN_PASSWORD_ID']").type(AUTH_PASSWORD);
-            }
-
-            cy.get("[data-testid='LOGIN_BUTTON']").click();
-            // Wait for the login redirect to complete.
-            cy.get("[data-testid='HEADER_USER_AVATAR']");
-        });
-
+        cy.login();
         cy.visit('/segments');
     });
 

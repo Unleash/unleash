@@ -29,6 +29,8 @@ interface IColumnsMenuProps {
     staticColumns?: string[];
     dividerBefore?: string[];
     dividerAfter?: string[];
+    isCustomized?: boolean;
+    onCustomize?: (columns: string[]) => void;
     setHiddenColumns: (
         hiddenColumns:
             | string[]
@@ -41,6 +43,8 @@ export const ColumnsMenu: VFC<IColumnsMenuProps> = ({
     staticColumns = [],
     dividerBefore = [],
     dividerAfter = [],
+    isCustomized = false,
+    onCustomize = () => {},
     setHiddenColumns,
 }) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -51,6 +55,10 @@ export const ColumnsMenu: VFC<IColumnsMenuProps> = ({
     const isMediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
 
     useEffect(() => {
+        if (isCustomized) {
+            return;
+        }
+
         const setVisibleColumns = (
             columns: string[],
             environmentsToShow: number = 0
@@ -86,6 +94,17 @@ export const ColumnsMenu: VFC<IColumnsMenuProps> = ({
 
     const handleClose = () => {
         setAnchorEl(null);
+    };
+
+    const onItemClick = (column: typeof allColumns[number]) => {
+        onCustomize([
+            ...allColumns
+                .filter(({ isVisible }) => isVisible)
+                .map(({ id }) => id)
+                .filter(id => !staticColumns.includes(id) && id !== column.id),
+            ...(!column.isVisible ? [column.id] : []),
+        ]);
+        column.toggleHidden(column.isVisible);
     };
 
     const isOpen = Boolean(anchorEl);
@@ -142,9 +161,7 @@ export const ColumnsMenu: VFC<IColumnsMenuProps> = ({
                             show={<Divider className={classes.divider} />}
                         />,
                         <MenuItem
-                            onClick={() => {
-                                column.toggleHidden(column.isVisible);
-                            }}
+                            onClick={() => onItemClick(column)}
                             disabled={staticColumns.includes(column.id)}
                             className={classes.menuItem}
                         >

@@ -102,23 +102,44 @@ export const CellSortable: FC<ICellSortableProps> = ({
                         <button
                             className={classnames(
                                 isSorted && styles.sortedButton,
-                                styles.sortButton,
-                                alignClass
+                                styles.sortButton
                             )}
                             onClick={onSortClick}
                         >
                             <span
-                                className={styles.label}
-                                ref={ref}
-                                tabIndex={-1}
-                                data-text={children}
+                                className={classnames(
+                                    styles.hiddenMeasurementLayer,
+                                    alignClass
+                                )}
+                                aria-hidden
                             >
-                                {children}
+                                <span
+                                    className={styles.label}
+                                    tabIndex={-1}
+                                    data-text={children}
+                                >
+                                    {children}
+                                </span>
+                                <SortArrow
+                                    isSorted={isSorted}
+                                    isDesc={isDescending}
+                                />
                             </span>
-                            <SortArrow
-                                isSorted={isSorted}
-                                isDesc={isDescending}
-                            />
+                            <span
+                                className={classnames(
+                                    styles.visibleAbsoluteLayer,
+                                    alignClass
+                                )}
+                            >
+                                <span ref={ref} tabIndex={-1}>
+                                    <span>{children}</span>
+                                </span>
+                                <SortArrow
+                                    isSorted={isSorted}
+                                    isDesc={isDescending}
+                                    className="sort-arrow"
+                                />
+                            </span>
                         </button>
                     </Tooltip>
                 }

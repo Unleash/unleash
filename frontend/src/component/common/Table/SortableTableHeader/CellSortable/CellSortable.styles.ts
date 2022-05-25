@@ -16,23 +16,16 @@ export const useStyles = makeStyles()(theme => ({
     },
     sortButton: {
         all: 'unset',
-        padding: theme.spacing(2),
         whiteSpace: 'nowrap',
         width: '100%',
-        '& .hover-only': {
-            visibility: 'hidden',
-        },
+        position: 'relative',
         ':hover, :focus, &:focus-visible, &:active': {
             outline: 'revert',
-            '& svg': {
-                color: 'inherit',
-            },
-            '& .hover-only': {
-                visibility: 'visible',
+            '.hover-only': {
+                display: 'inline-block',
             },
         },
         display: 'flex',
-        alignItems: 'center',
         boxSizing: 'inherit',
         cursor: 'pointer',
     },
@@ -42,10 +35,8 @@ export const useStyles = makeStyles()(theme => ({
     label: {
         display: 'flex',
         flexDirection: 'column',
-        whiteSpace: 'nowrap',
-        textOverflow: 'ellipsis',
-        overflowX: 'hidden',
-        overflowY: 'visible',
+        flexShrink: 1,
+        minWidth: 0,
         '::after': {
             fontWeight: 'bold',
             display: 'inline-block',
@@ -66,5 +57,30 @@ export const useStyles = makeStyles()(theme => ({
     alignCenter: {
         justifyContent: 'center',
         textAlign: 'center',
+    },
+    hiddenMeasurementLayer: {
+        padding: theme.spacing(2),
+        visibility: 'hidden',
+        display: 'flex',
+        alignItems: 'center',
+        width: '100%',
+    },
+    visibleAbsoluteLayer: {
+        padding: theme.spacing(2),
+        position: 'absolute',
+        display: 'flex',
+        alignItems: 'center',
+        width: '100%',
+        height: '100%',
+        '.hover-only': {
+            display: 'none',
+        },
+        '& > span': {
+            minWidth: 0,
+            whiteSpace: 'nowrap',
+            textOverflow: 'ellipsis',
+            overflowX: 'hidden',
+            overflowY: 'visible',
+        },
     },
 }));

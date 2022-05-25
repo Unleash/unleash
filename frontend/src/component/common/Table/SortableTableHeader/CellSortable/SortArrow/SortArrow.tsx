@@ -11,11 +11,13 @@ import classnames from 'classnames';
 interface ISortArrowProps {
     isSorted?: boolean;
     isDesc?: boolean;
+    className?: string;
 }
 
 export const SortArrow: VFC<ISortArrowProps> = ({
     isSorted: sorted,
     isDesc: desc = false,
+    className,
 }) => {
     const { classes: styles } = useStyles();
 
@@ -27,13 +29,21 @@ export const SortArrow: VFC<ISortArrowProps> = ({
                     condition={Boolean(desc)}
                     show={
                         <KeyboardArrowDown
-                            className={classnames(styles.icon, styles.sorted)}
+                            className={classnames(
+                                styles.icon,
+                                styles.sorted,
+                                className
+                            )}
                             fontSize="inherit"
                         />
                     }
                     elseShow={
                         <KeyboardArrowUp
-                            className={classnames(styles.icon, styles.sorted)}
+                            className={classnames(
+                                styles.icon,
+                                styles.sorted,
+                                className
+                            )}
                             fontSize="inherit"
                         />
                     }
@@ -41,7 +51,7 @@ export const SortArrow: VFC<ISortArrowProps> = ({
             }
             elseShow={
                 <UnfoldMoreOutlined
-                    className={classnames(styles.icon, 'hover-only')}
+                    className={classnames(styles.icon, className, 'hover-only')}
                     fontSize="inherit"
                 />
             }

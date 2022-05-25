@@ -1,5 +1,5 @@
 import { useStyles } from './SegmentListItem.styles';
-import { TableCell, TableRow, Typography } from '@mui/material';
+import { Box, TableCell, TableRow, Typography } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
 import {
     UPDATE_SEGMENT,
@@ -60,35 +60,37 @@ export const SegmentListItem = ({
             </TableCell>
 
             <TableCell align="right">
-                <PermissionIconButton
-                    data-loading
-                    onClick={() => {
-                        navigate(`/segments/edit/${id}`);
-                    }}
-                    permission={UPDATE_SEGMENT}
-                    tooltipProps={{ title: 'Edit segment' }}
-                >
-                    <Edit />
-                </PermissionIconButton>
-                <PermissionIconButton
-                    data-loading
-                    onClick={() => {
-                        setCurrentSegment({
-                            id,
-                            name,
-                            description,
-                            createdAt,
-                            createdBy,
-                            constraints: [],
-                        });
-                        setDelDialog(true);
-                    }}
-                    permission={DELETE_SEGMENT}
-                    tooltipProps={{ title: 'Remove segment' }}
-                    data-testid={`${SEGMENT_DELETE_BTN_ID}_${name}`}
-                >
-                    <Delete />
-                </PermissionIconButton>
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <PermissionIconButton
+                        data-loading
+                        onClick={() => {
+                            navigate(`/segments/edit/${id}`);
+                        }}
+                        permission={UPDATE_SEGMENT}
+                        tooltipProps={{ title: 'Edit segment' }}
+                    >
+                        <Edit />
+                    </PermissionIconButton>
+                    <PermissionIconButton
+                        data-loading
+                        onClick={() => {
+                            setCurrentSegment({
+                                id,
+                                name,
+                                description,
+                                createdAt,
+                                createdBy,
+                                constraints: [],
+                            });
+                            setDelDialog(true);
+                        }}
+                        permission={DELETE_SEGMENT}
+                        tooltipProps={{ title: 'Remove segment' }}
+                        data-testid={`${SEGMENT_DELETE_BTN_ID}_${name}`}
+                    >
+                        <Delete />
+                    </PermissionIconButton>
+                </Box>
             </TableCell>
         </TableRow>
     );

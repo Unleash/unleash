@@ -2,8 +2,6 @@
 
 export {};
 
-const AUTH_USER = Cypress.env('AUTH_USER');
-const AUTH_PASSWORD = Cypress.env('AUTH_PASSWORD');
 const ENTERPRISE = Boolean(Cypress.env('ENTERPRISE'));
 const randomId = String(Math.random()).split('.')[1];
 const featureToggleName = `unleash-e2e-${randomId}`;
@@ -41,16 +39,8 @@ describe('feature', () => {
     });
 
     beforeEach(() => {
+        cy.login();
         cy.visit('/');
-        cy.get('[data-testid="LOGIN_EMAIL_ID"]').type(AUTH_USER);
-
-        if (AUTH_PASSWORD) {
-            cy.get('[data-testid="LOGIN_PASSWORD_ID"]').type(AUTH_PASSWORD);
-        }
-
-        cy.get("[data-testid='LOGIN_BUTTON']").click();
-        // Wait for the login redirect to complete.
-        cy.get('[data-testid=HEADER_USER_AVATAR');
     });
 
     it('can create a feature toggle', () => {

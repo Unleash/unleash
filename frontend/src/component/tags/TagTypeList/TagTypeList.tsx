@@ -1,15 +1,16 @@
-import { useContext, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Box } from '@mui/material';
 import {
-    Button,
-    IconButton,
-    List,
-    ListItem,
-    ListItemIcon,
-    ListItemText,
-    Tooltip,
-} from '@mui/material';
-import { Add, Delete, Edit, Label } from '@mui/icons-material';
+    Table,
+    SortableTableHeader,
+    TableBody,
+    TableCell,
+    TableRow,
+    TablePlaceholder,
+    TableSearch,
+} from 'component/common/Table';
+import { Delete, Edit, Label } from '@mui/icons-material';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -18,27 +19,151 @@ import {
     UPDATE_TAG_TYPE,
 } from 'component/providers/AccessProvider/permissions';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import styles from './TagTypeList.module.scss';
-import AccessContext from 'contexts/AccessContext';
 import useTagTypesApi from 'hooks/api/actions/useTagTypesApi/useTagTypesApi';
 import useTagTypes from 'hooks/api/getters/useTagTypes/useTagTypes';
 import useToast from 'hooks/useToast';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { ITagType } from 'interfaces/tags';
+import { useTable, useGlobalFilter, useSortBy } from 'react-table';
+import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
+import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
+import { sortTypes } from 'utils/sortTypes';
+import { AddTagTypeButton } from './AddTagTypeButton/AddTagTypeButton';
 
 export const TagTypeList = () => {
-    const { hasAccess } = useContext(AccessContext);
     const [deletion, setDeletion] = useState<{
         open: boolean;
         name?: string;
     }>({ open: false });
     const navigate = useNavigate();
-    const smallScreen = useMediaQuery('(max-width:700px)');
     const { deleteTagType } = useTagTypesApi();
-    const { tagTypes, refetch } = useTagTypes();
+    const { tagTypes, refetch, loading } = useTagTypes();
     const { setToastData, setToastApiError } = useToast();
+
+    const data = useMemo(() => {
+        if (loading) {
+            return Array(5).fill({
+                name: 'Tag type name',
+                description: 'Tag type description when loading',
+            });
+        }
+
+        return tagTypes.map(({ name, description }) => ({
+            name,
+            description,
+        }));
+    }, [tagTypes, loading]);
+
+    const columns = useMemo(
+        () => [
+            {
+                id: 'Icon',
+                Cell: () => (
+                    <Box
+                        data-loading
+                        sx={{
+                            pl: 2,
+                            pr: 1,
+                            display: 'flex',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <Label color="disabled" />
+                    </Box>
+                ),
+            },
+            {
+                Header: 'Name',
+                accessor: 'name',
+                width: '90%',
+                Cell: ({
+                    row: {
+                        original: { name, description },
+                    },
+                }: any) => {
+                    return (
+                        <LinkCell
+                            data-loading
+                            title={name}
+                            subtitle={description}
+                        />
+                    );
+                },
+                sortType: 'alphanumeric',
+            },
+            {
+                Header: 'Actions',
+                id: 'Actions',
+                align: 'center',
+                Cell: ({ row: { original } }: any) => (
+                    <Box
+                        sx={{ display: 'flex', justifyContent: 'flex-end' }}
+                        data-loading
+                    >
+                        <PermissionIconButton
+                            onClick={() =>
+                                navigate(`/tag-types/edit/${original.name}`)
+                            }
+                            permission={UPDATE_TAG_TYPE}
+                            tooltipProps={{ title: 'Edit tag type' }}
+                        >
+                            <Edit />
+                        </PermissionIconButton>
+
+                        <PermissionIconButton
+                            permission={DELETE_TAG_TYPE}
+                            tooltipProps={{ title: 'Delete tag type' }}
+                            onClick={() =>
+                                setDeletion({
+                                    open: true,
+                                    name: original.name,
+                                })
+                            }
+                        >
+                            <Delete />
+                        </PermissionIconButton>
+                    </Box>
+                ),
+                width: 150,
+                disableSortBy: true,
+            },
+            {
+                accessor: 'description',
+                disableSortBy: true,
+            },
+        ],
+        []
+    );
+
+    const initialState = useMemo(
+        () => ({
+            sortBy: [{ id: 'name', desc: false }],
+            hiddenColumns: ['description'],
+        }),
+        []
+    );
+
+    const {
+        getTableProps,
+        getTableBodyProps,
+        headerGroups,
+        rows,
+        prepareRow,
+        state: { globalFilter },
+        setGlobalFilter,
+    } = useTable(
+        {
+            columns: columns as any[], // TODO: fix after `react-table` v8 update
+            data,
+            initialState,
+            sortTypes,
+            autoResetGlobalFilter: false,
+            autoResetSortBy: false,
+            disableSortRemove: true,
+        },
+        useGlobalFilter,
+        useSortBy
+    );
 
     const deleteTag = async () => {
         try {
@@ -57,100 +182,64 @@ export const TagTypeList = () => {
         }
     };
 
-    let header = (
-        <PageHeader
-            title="Tag Types"
-            actions={
-                <ConditionallyRender
-                    condition={hasAccess(UPDATE_TAG_TYPE)}
-                    show={
-                        <ConditionallyRender
-                            condition={smallScreen}
-                            show={
-                                <Tooltip title="Add tag type" arrow>
-                                    <IconButton
-                                        onClick={() =>
-                                            navigate('/tag-types/create')
-                                        }
-                                        size="large"
-                                    >
-                                        <Add />
-                                    </IconButton>
-                                </Tooltip>
-                            }
-                            elseShow={
-                                <Button
-                                    variant="contained"
-                                    color="primary"
-                                    onClick={() =>
-                                        navigate('/tag-types/create')
-                                    }
-                                >
-                                    New tag type
-                                </Button>
-                            }
-                        />
+    return (
+        <PageContent
+            isLoading={loading}
+            header={
+                <PageHeader
+                    title="Tag types"
+                    actions={
+                        <>
+                            <TableSearch
+                                initialValue={globalFilter}
+                                onChange={setGlobalFilter}
+                            />
+                            <PageHeader.Divider />
+                            <AddTagTypeButton />
+                        </>
                     }
                 />
             }
-        />
-    );
-
-    const renderTagType = (tagType: ITagType) => {
-        let link = (
-            <Link to={`/tag-types/edit/${tagType.name}`}>
-                <strong>{tagType.name}</strong>
-            </Link>
-        );
-        let deleteButton = (
-            <Tooltip title={`Delete ${tagType.name}`} arrow>
-                <IconButton
-                    onClick={() =>
-                        setDeletion({
-                            open: true,
-                            name: tagType.name,
-                        })
-                    }
-                    size="large"
-                >
-                    <Delete />
-                </IconButton>
-            </Tooltip>
-        );
-
-        return (
-            <ListItem
-                key={`${tagType.name}`}
-                classes={{ root: styles.tagListItem }}
-            >
-                <ListItemIcon>
-                    <Label />
-                </ListItemIcon>
-                <ListItemText primary={link} secondary={tagType.description} />
-                <PermissionIconButton
-                    permission={UPDATE_TAG_TYPE}
-                    component={Link}
-                    tooltipProps={{ title: 'Edit tag type' }}
-                    to={`/tag-types/edit/${tagType.name}`}
-                >
-                    <Edit className={styles.icon} />
-                </PermissionIconButton>
-                <ConditionallyRender
-                    condition={hasAccess(DELETE_TAG_TYPE)}
-                    show={deleteButton}
-                />
-            </ListItem>
-        );
-    };
-    return (
-        <PageContent header={header}>
-            <List>
-                <ConditionallyRender
-                    condition={tagTypes.length > 0}
-                    show={tagTypes.map(tagType => renderTagType(tagType))}
-                    elseShow={<ListItem>No entries</ListItem>}
-                />
-            </List>
+        >
+            <SearchHighlightProvider value={globalFilter}>
+                <Table {...getTableProps()}>
+                    <SortableTableHeader headerGroups={headerGroups} />
+                    <TableBody {...getTableBodyProps()}>
+                        {rows.map(row => {
+                            prepareRow(row);
+                            return (
+                                <TableRow hover {...row.getRowProps()}>
+                                    {row.cells.map(cell => (
+                                        <TableCell {...cell.getCellProps()}>
+                                            {cell.render('Cell')}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            );
+                        })}
+                    </TableBody>
+                </Table>
+            </SearchHighlightProvider>
+            <ConditionallyRender
+                condition={rows.length === 0}
+                show={
+                    <ConditionallyRender
+                        condition={globalFilter?.length > 0}
+                        show={
+                            <TablePlaceholder>
+                                No tags found matching &ldquo;
+                                {globalFilter}
+                                &rdquo;
+                            </TablePlaceholder>
+                        }
+                        elseShow={
+                            <TablePlaceholder>
+                                No tags available. Get started by adding one.
+                            </TablePlaceholder>
+                        }
+                    />
+                }
+            />
             <Dialogue
                 title="Really delete Tag type?"
                 open={deletion.open}

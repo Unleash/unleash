@@ -37,7 +37,8 @@ import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightC
 import { sortTypes } from 'utils/sortTypes';
 import { useTable, useGlobalFilter, useSortBy } from 'react-table';
 import { AddStrategyButton } from './AddStrategyButton/AddStrategyButton';
-import { PredefinedBadge } from './PredefinedBadge/PredefinedBadge';
+import { StatusBadge } from 'component/common/StatusBadge/StatusBadge';
+
 interface IDialogueMetaData {
     show: boolean;
     title: string;
@@ -116,7 +117,11 @@ export const StrategiesList = () => {
                         >
                             <ConditionallyRender
                                 condition={!editable}
-                                show={() => <PredefinedBadge />}
+                                show={() => (
+                                    <StatusBadge severity="success">
+                                        Predefined
+                                    </StatusBadge>
+                                )}
                             />
                         </LinkCell>
                     );

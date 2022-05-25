@@ -15,7 +15,6 @@ import {
     formatStrategyName,
 } from 'utils/strategyNames';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import DisabledIndicator from 'component/common/DisabledIndicator/DisabledIndicator';
 import EnvironmentIcon from 'component/common/EnvironmentIcon/EnvironmentIcon';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { useStyles } from './FeatureOverviewEnvironment.styles';
@@ -25,6 +24,7 @@ import FeatureOverviewEnvironmentMetrics from './FeatureOverviewEnvironmentMetri
 import { FeatureStrategyMenu } from 'component/feature/FeatureStrategy/FeatureStrategyMenu/FeatureStrategyMenu';
 import { FEATURE_ENVIRONMENT_ACCORDION } from 'utils/testIds';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import { StatusBadge } from 'component/common/StatusBadge/StatusBadge';
 
 interface IStrategyIconObject {
     count: number;
@@ -164,9 +164,12 @@ const FeatureOverviewEnvironment = ({
                         <ConditionallyRender
                             condition={!env.enabled}
                             show={
-                                <DisabledIndicator
+                                <StatusBadge
+                                    severity="warning"
                                     className={styles.disabledIndicatorPos}
-                                />
+                                >
+                                    Disabled
+                                </StatusBadge>
                             }
                         />
                     </div>

@@ -81,7 +81,6 @@ export default createTheme({
         highlight: '#FFEACC',
         sidebarContainer: 'rgba(32,32,33, 0.2)',
         grey: colors.grey,
-        predefinedBadgeColor: colors.green[100],
         text: {
             primary: colors.grey[900],
             secondary: colors.grey[800],
@@ -100,6 +99,10 @@ export default createTheme({
             recent: colors.green[100],
             inactive: colors.orange[200],
             abandoned: colors.red[200],
+        },
+        statusBadge: {
+            success: colors.green[100],
+            warning: colors.orange[200],
         },
         inactiveIcon: colors.grey[600],
     },

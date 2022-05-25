@@ -23,9 +23,9 @@ import {
 } from 'component/providers/AccessProvider/permissions';
 import { useDrag, useDrop, DropTargetMonitor } from 'react-dnd';
 import { XYCoord, Identifier } from 'dnd-core';
-import DisabledIndicator from 'component/common/DisabledIndicator/DisabledIndicator';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { useNavigate } from 'react-router-dom';
+import { StatusBadge } from 'component/common/StatusBadge/StatusBadge';
 
 interface IEnvironmentListItemProps {
     env: IEnvironment;
@@ -146,7 +146,11 @@ const EnvironmentListItem = ({
                         </strong>
                         <ConditionallyRender
                             condition={!env.enabled}
-                            show={<DisabledIndicator />}
+                            show={
+                                <StatusBadge severity="warning">
+                                    Disabled
+                                </StatusBadge>
+                            }
                         />
                     </>
                 }

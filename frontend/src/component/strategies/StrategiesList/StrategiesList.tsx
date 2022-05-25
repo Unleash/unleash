@@ -158,6 +158,7 @@ export const StrategiesList = () => {
                 sortType: 'number',
             },
         ],
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         []
     );
 

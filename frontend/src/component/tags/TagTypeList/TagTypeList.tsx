@@ -132,7 +132,7 @@ export const TagTypeList = () => {
                 disableSortBy: true,
             },
         ],
-        []
+        [navigate]
     );
 
     const initialState = useMemo(

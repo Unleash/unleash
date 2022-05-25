@@ -1,9 +1,8 @@
-import { useContext, VFC } from 'react';
+import { VFC } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, IconButton, Tooltip, useMediaQuery } from '@mui/material';
+import { useMediaQuery } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import AccessContext from 'contexts/AccessContext';
 import { CREATE_CONTEXT_FIELD } from 'component/providers/AccessProvider/permissions';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';

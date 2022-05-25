@@ -6,7 +6,6 @@ import {
 import {
     Edit,
     Delete,
-    OfflineBolt,
     DragIndicator,
     PowerSettingsNew,
 } from '@mui/icons-material';

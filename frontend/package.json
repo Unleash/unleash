@@ -25,7 +25,7 @@
   "license": "Apache-2.0",
   "scripts": {
     "build": "tsc && vite build",
-    "lint": "eslint src",
+    "lint": "eslint src --max-warnings 0",
     "start": "vite",
     "start:heroku": "UNLEASH_API=https://unleash.herokuapp.com yarn run start",
     "start:enterprise": "UNLEASH_API=https://unleash4.herokuapp.com yarn run start",
@@ -125,6 +125,9 @@
       "react-app",
       "react-app/jest"
     ],
+    "parserOptions": {
+      "warnOnUnsupportedTypeScriptVersion": false
+    },
     "rules": {
       "no-restricted-globals": "off",
       "no-useless-computed-key": "off",

@@ -1,7 +1,13 @@
 import { useEffect, useMemo, useState, VFC } from 'react';
 import { Link, useMediaQuery, useTheme } from '@mui/material';
 import { Link as RouterLink, useSearchParams } from 'react-router-dom';
-import { SortingRule, useGlobalFilter, useSortBy, useTable } from 'react-table';
+import {
+    SortingRule,
+    useFlexLayout,
+    useGlobalFilter,
+    useSortBy,
+    useTable,
+} from 'react-table';
 import {
     Table,
     SortableTableHeader,
@@ -26,6 +32,7 @@ import { FeatureSchema } from 'openapi';
 import { CreateFeatureButton } from '../CreateFeatureButton/CreateFeatureButton';
 import { FeatureStaleCell } from './FeatureStaleCell/FeatureStaleCell';
 import { FeatureNameCell } from 'component/common/Table/cells/FeatureNameCell/FeatureNameCell';
+import { useStyles } from './styles';
 
 const featuresPlaceholder: FeatureSchema[] = Array(15).fill({
     name: 'Name of the feature',
@@ -44,18 +51,19 @@ const columns = [
         Cell: FeatureSeenCell,
         sortType: 'date',
         align: 'center',
+        maxWidth: 85,
     },
     {
         Header: 'Type',
         accessor: 'type',
         Cell: FeatureTypeCell,
         align: 'center',
+        maxWidth: 85,
     },
     {
         Header: 'Feature toggle name',
         accessor: 'name',
-        maxWidth: 300,
-        width: '67%',
+        minWidth: 150,
         Cell: FeatureNameCell,
         sortType: 'alphanumeric',
     },
@@ -64,6 +72,7 @@ const columns = [
         accessor: 'createdAt',
         Cell: DateCell,
         sortType: 'date',
+        maxWidth: 150,
     },
     {
         Header: 'Project ID',
@@ -72,12 +81,14 @@ const columns = [
             <LinkCell title={value} to={`/projects/${value}`} />
         ),
         sortType: 'alphanumeric',
+        maxWidth: 150,
     },
     {
         Header: 'State',
         accessor: 'stale',
         Cell: FeatureStaleCell,
         sortType: 'boolean',
+        maxWidth: 120,
     },
     // Always hidden -- for search
     {
@@ -85,10 +96,14 @@ const columns = [
     },
 ];
 
+const scrollOffset = 50;
+
 const defaultSort: SortingRule<string> = { id: 'createdAt', desc: false };
 
 export const FeatureToggleListTable: VFC = () => {
     const theme = useTheme();
+    const rowHeight = theme.shape.tableRowHeight;
+    const { classes } = useStyles();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const isMediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
     const [searchParams, setSearchParams] = useSearchParams();
@@ -139,7 +154,8 @@ export const FeatureToggleListTable: VFC = () => {
             disableMultiSort: true,
         },
         useGlobalFilter,
-        useSortBy
+        useSortBy,
+        useFlexLayout
     );
 
     useEffect(() => {
@@ -174,6 +190,21 @@ export const FeatureToggleListTable: VFC = () => {
         setStoredParams({ id: sortBy[0].id, desc: sortBy[0].desc || false });
     }, [sortBy, globalFilter, setSearchParams, setStoredParams]);
 
+    const [scrollIndex, setScrollIndex] = useState(0);
+    useEffect(() => {
+        const handleScroll = () => {
+            requestAnimationFrame(() => {
+                const position = window.pageYOffset;
+                setScrollIndex(Math.floor(position / (rowHeight * 5)) * 5);
+            });
+        };
+        window.addEventListener('scroll', handleScroll, { passive: true });
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, [rowHeight]);
+
     return (
         <PageContent
             isLoading={loading}
@@ -207,14 +238,46 @@ export const FeatureToggleListTable: VFC = () => {
             <SearchHighlightProvider value={globalFilter}>
                 <Table {...getTableProps()}>
                     {/* @ts-expect-error -- fix in react-table v8 */}
-                    <SortableTableHeader headerGroups={headerGroups} />
-                    <TableBody {...getTableBodyProps()}>
-                        {rows.map(row => {
+                    <SortableTableHeader headerGroups={headerGroups} flex />
+                    <TableBody
+                        {...getTableBodyProps()}
+                        style={{
+                            height: `${rowHeight * rows.length}px`,
+                            position: 'relative',
+                        }}
+                    >
+                        {rows.map((row, index) => {
+                            const isVirtual =
+                                index > scrollOffset + scrollIndex ||
+                                index + scrollOffset < scrollIndex;
+
+                            if (isVirtual) {
+                                return null;
+                            }
+
                             prepareRow(row);
                             return (
-                                <TableRow hover {...row.getRowProps()}>
+                                <TableRow
+                                    hover
+                                    {...row.getRowProps()}
+                                    key={row.id}
+                                    className={classes.row}
+                                    style={{
+                                        top: `${index * rowHeight}px`,
+                                        display: 'flex',
+                                    }}
+                                >
                                     {row.cells.map(cell => (
-                                        <TableCell {...cell.getCellProps()}>
+                                        <TableCell
+                                            {...cell.getCellProps({
+                                                style: {
+                                                    flex: cell.column.minWidth
+                                                        ? '1 0 auto'
+                                                        : undefined,
+                                                },
+                                            })}
+                                            className={classes.cell}
+                                        >
                                             {cell.render('Cell')}
                                         </TableCell>
                                     ))}

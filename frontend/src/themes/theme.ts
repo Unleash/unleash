@@ -43,6 +43,8 @@ export default createTheme({
         borderRadiusMedium: '8px',
         borderRadiusLarge: '12px',
         borderRadiusExtraLarge: '20px',
+        tableRowHeight: 64,
+        tableRowHeightDense: 48,
     },
     palette: {
         primary: {

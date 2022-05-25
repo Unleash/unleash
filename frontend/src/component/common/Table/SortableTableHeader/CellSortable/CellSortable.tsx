@@ -23,6 +23,8 @@ interface ICellSortableProps {
     minWidth?: number | string;
     maxWidth?: number | string;
     align?: 'left' | 'center' | 'right';
+    isFlex?: boolean;
+    isFlexGrow?: boolean;
     onClick?: MouseEventHandler<HTMLButtonElement>;
 }
 
@@ -36,6 +38,8 @@ export const CellSortable: FC<ICellSortableProps> = ({
     maxWidth,
     align,
     ariaTitle,
+    isFlex,
+    isFlexGrow,
     onClick = () => {},
 }) => {
     const { setAnnouncement } = useContext(AnnouncerContext);
@@ -92,7 +96,12 @@ export const CellSortable: FC<ICellSortableProps> = ({
         <TableCell
             component="th"
             aria-sort={ariaSort}
-            className={classnames(styles.header, isSortable && styles.sortable)}
+            className={classnames(
+                styles.header,
+                isSortable && styles.sortable,
+                isFlex && styles.flex,
+                isFlexGrow && styles.flexGrow
+            )}
             style={{ width, minWidth, maxWidth }}
         >
             <ConditionallyRender

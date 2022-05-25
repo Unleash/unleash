@@ -58,6 +58,8 @@ type ListItemType = Pick<
 };
 
 const staticColumns = ['Actions', 'name'];
+const limit = 300; // if above limit, render only `pageSize` of items
+const pageSize = 100;
 
 export const ProjectFeatureToggles = ({
     features,
@@ -91,34 +93,36 @@ export const ProjectFeatureToggles = ({
             }) as ListItemType[];
         }
 
-        return features.map(
-            ({
-                name,
-                lastSeenAt,
-                createdAt,
-                type,
-                stale,
-                environments: featureEnvironments,
-            }) => ({
-                name,
-                lastSeenAt,
-                createdAt,
-                type,
-                stale,
-                environments: Object.fromEntries(
-                    environments.map(env => [
-                        env,
-                        {
-                            name: env,
-                            enabled:
-                                featureEnvironments?.find(
-                                    feature => feature?.name === env
-                                )?.enabled || false,
-                        },
-                    ])
-                ),
-            })
-        );
+        return features
+            .slice(0, features.length > limit ? pageSize : limit)
+            .map(
+                ({
+                    name,
+                    lastSeenAt,
+                    createdAt,
+                    type,
+                    stale,
+                    environments: featureEnvironments,
+                }) => ({
+                    name,
+                    lastSeenAt,
+                    createdAt,
+                    type,
+                    stale,
+                    environments: Object.fromEntries(
+                        environments.map(env => [
+                            env,
+                            {
+                                name: env,
+                                enabled:
+                                    featureEnvironments?.find(
+                                        feature => feature?.name === env
+                                    )?.enabled || false,
+                            },
+                        ])
+                    ),
+                })
+            );
     }, [features, loading]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const { toggleFeatureEnvironmentOn, toggleFeatureEnvironmentOff } =
@@ -366,7 +370,11 @@ export const ProjectFeatureToggles = ({
             header={
                 <PageHeader
                     className={styles.title}
-                    title={`Project feature toggles (${rows.length})`}
+                    title={`Project feature toggles (${
+                        features?.length > limit
+                            ? `first ${rows.length} of ${features.length}`
+                            : data.length
+                    })`}
                     actions={
                         <>
                             <TableSearch

@@ -5,6 +5,18 @@ export const useStyles = makeStyles()(theme => ({
         position: 'relative',
         fontWeight: theme.fontWeight.medium,
     },
+    flex: {
+        justifyContent: 'stretch',
+        alignItems: 'center',
+        display: 'flex',
+        flexShrink: 0,
+        '& > *': {
+            flexGrow: 1,
+        },
+    },
+    flexGrow: {
+        flexGrow: 1,
+    },
     sortable: {
         padding: 0,
         '&:hover, &:focus': {

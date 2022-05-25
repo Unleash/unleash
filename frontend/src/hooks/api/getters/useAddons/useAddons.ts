@@ -1,5 +1,5 @@
 import useSWR, { mutate, SWRConfiguration } from 'swr';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { IAddon, IAddonProvider } from 'interfaces/addons';
@@ -23,9 +23,9 @@ const useAddons = (options: SWRConfiguration = {}) => {
     const { data, error } = useSWR<IAddonsResponse>(KEY, fetcher, options);
     const [loading, setLoading] = useState(!error && !data);
 
-    const refetchAddons = () => {
+    const refetchAddons = useCallback(() => {
         mutate(KEY);
-    };
+    }, [KEY]);
 
     useEffect(() => {
         setLoading(!error && !data);

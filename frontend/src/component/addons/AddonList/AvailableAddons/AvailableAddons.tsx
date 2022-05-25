@@ -1,15 +1,24 @@
-import { ReactElement } from 'react';
+import { useMemo } from 'react';
 import { PageContent } from 'component/common/PageContent/PageContent';
+
 import {
-    List,
-    ListItem,
-    ListItemAvatar,
-    ListItemSecondaryAction,
-    ListItemText,
-} from '@mui/material';
-import { CREATE_ADDON } from 'component/providers/AccessProvider/permissions';
-import { useNavigate } from 'react-router-dom';
-import PermissionButton from 'component/common/PermissionButton/PermissionButton';
+    Table,
+    SortableTableHeader,
+    TableBody,
+    TableCell,
+    TableRow,
+    TablePlaceholder,
+} from 'component/common/Table';
+
+import { useTable, useSortBy } from 'react-table';
+import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { PageHeader } from 'component/common/PageHeader/PageHeader';
+import { sortTypes } from 'utils/sortTypes';
+import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
+import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
+import { ConfigureAddonButton } from './ConfigureAddonButton/ConfigureAddonButton';
+import { AddonIcon } from '../AddonIcon/AddonIcon';
 
 interface IProvider {
     name: string;
@@ -21,40 +30,153 @@ interface IProvider {
 }
 
 interface IAvailableAddonsProps {
-    getAddonIcon: (name: string) => ReactElement;
     providers: IProvider[];
+    loading: boolean;
 }
 
 export const AvailableAddons = ({
     providers,
-    getAddonIcon,
+    loading,
 }: IAvailableAddonsProps) => {
-    const navigate = useNavigate();
+    const data = useMemo(() => {
+        if (loading) {
+            return Array(5).fill({
+                name: 'Provider name',
+                description: 'Provider description when loading',
+            });
+        }
 
-    const renderProvider = (provider: IProvider) => (
-        <ListItem key={provider.name}>
-            <ListItemAvatar>{getAddonIcon(provider.name)}</ListItemAvatar>
-            <ListItemText
-                primary={provider.displayName}
-                secondary={provider.description}
-            />
-            <ListItemSecondaryAction>
-                <PermissionButton
-                    permission={CREATE_ADDON}
-                    onClick={() => navigate(`/addons/create/${provider.name}`)}
-                >
-                    Configure
-                </PermissionButton>
-            </ListItemSecondaryAction>
-        </ListItem>
+        return providers.map(({ name, displayName, description }) => ({
+            name,
+            displayName,
+            description,
+        }));
+    }, [providers, loading]);
+
+    const columns = useMemo(
+        () => [
+            {
+                id: 'Icon',
+                Cell: ({
+                    row: {
+                        original: { name },
+                    },
+                }: any) => {
+                    return (
+                        <IconCell icon={<AddonIcon name={name as string} />} />
+                    );
+                },
+            },
+            {
+                Header: 'Name',
+                accessor: 'name',
+                width: '90%',
+                Cell: ({
+                    row: {
+                        original: { name, description },
+                    },
+                }: any) => {
+                    return (
+                        <LinkCell
+                            data-loading
+                            title={name}
+                            subtitle={description}
+                        />
+                    );
+                },
+                sortType: 'alphanumeric',
+            },
+            {
+                Header: 'Actions',
+                id: 'Actions',
+                align: 'center',
+                Cell: ({ row: { original } }: any) => (
+                    <ActionCell>
+                        <ConfigureAddonButton name={original.name} />
+                    </ActionCell>
+                ),
+                width: 150,
+                disableSortBy: true,
+            },
+            {
+                accessor: 'description',
+                disableSortBy: true,
+            },
+        ],
+        []
     );
+
+    const initialState = useMemo(
+        () => ({
+            sortBy: [{ id: 'name', desc: false }],
+            hiddenColumns: ['description'],
+        }),
+        []
+    );
+
+    const {
+        getTableProps,
+        getTableBodyProps,
+        headerGroups,
+        rows,
+        prepareRow,
+        state: { globalFilter },
+    } = useTable(
+        {
+            columns: columns as any[], // TODO: fix after `react-table` v8 update
+            data,
+            initialState,
+            sortTypes,
+            autoResetGlobalFilter: false,
+            autoResetSortBy: false,
+            disableSortRemove: true,
+        },
+        useSortBy
+    );
+
     return (
-        <PageContent header="Available addons">
-            <List>
-                {providers.map((provider: IProvider) =>
-                    renderProvider(provider)
-                )}
-            </List>
+        <PageContent
+            isLoading={loading}
+            header={<PageHeader title="Available addons" />}
+        >
+            <Table {...getTableProps()}>
+                <SortableTableHeader headerGroups={headerGroups} />
+                <TableBody {...getTableBodyProps()}>
+                    {rows.map(row => {
+                        prepareRow(row);
+                        return (
+                            <TableRow hover {...row.getRowProps()}>
+                                {row.cells.map(cell => (
+                                    <TableCell {...cell.getCellProps()}>
+                                        {cell.render('Cell')}
+                                    </TableCell>
+                                ))}
+                            </TableRow>
+                        );
+                    })}
+                </TableBody>
+            </Table>
+
+            <ConditionallyRender
+                condition={rows.length === 0}
+                show={
+                    <ConditionallyRender
+                        condition={globalFilter?.length > 0}
+                        show={
+                            <TablePlaceholder>
+                                No providers found matching &ldquo;
+                                {globalFilter}
+                                &rdquo;
+                            </TablePlaceholder>
+                        }
+                        elseShow={
+                            <TablePlaceholder>
+                                No providers available.
+                            </TablePlaceholder>
+                        }
+                    />
+                }
+            />
         </PageContent>
     );
 };

@@ -1,16 +1,12 @@
-import React, { ReactElement } from 'react';
-import { ConfiguredAddons } from './ConfiguredAddons/ConfiguredAddons';
-import { AvailableAddons } from './AvailableAddons/AvailableAddons';
 import { Avatar } from '@mui/material';
 import { DeviceHub } from '@mui/icons-material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { formatAssetPath } from 'utils/formatPath';
+
 import slackIcon from 'assets/icons/slack.svg';
 import jiraIcon from 'assets/icons/jira.svg';
 import webhooksIcon from 'assets/icons/webhooks.svg';
 import teamsIcon from 'assets/icons/teams.svg';
 import dataDogIcon from 'assets/icons/datadog.svg';
-import { formatAssetPath } from 'utils/formatPath';
-import useAddons from 'hooks/api/getters/useAddons/useAddons';
 
 const style: React.CSSProperties = {
     width: '32.5px',
@@ -19,7 +15,11 @@ const style: React.CSSProperties = {
     borderRadius: '50%',
 };
 
-export const getAddonIcon = (name: string): ReactElement => {
+interface IAddonIconProps {
+    name: string;
+}
+
+export const AddonIcon = ({ name }: IAddonIconProps) => {
     switch (name) {
         case 'slack':
             return (
@@ -68,20 +68,4 @@ export const getAddonIcon = (name: string): ReactElement => {
                 </Avatar>
             );
     }
-};
-
-export const AddonList = () => {
-    const { providers, addons, loading } = useAddons();
-
-    return (
-        <>
-            <ConditionallyRender
-                condition={addons.length > 0}
-                show={<ConfiguredAddons />}
-            />
-
-            <br />
-            <AvailableAddons loading={loading} providers={providers} />
-        </>
-    );
 };

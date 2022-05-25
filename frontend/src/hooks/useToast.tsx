@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useCallback, useContext } from 'react';
 import UIContext from '../contexts/UIContext';
 import { IToast } from '../interfaces/toast';
 
@@ -11,24 +11,30 @@ const useToast = () => {
             show: false,
         }));
 
-    const setToastApiError = (errorText: string, overrides?: IToast) => {
-        setToast({
-            title: 'Something went wrong',
-            text: `We had trouble talking to our API. Here's why: ${errorText}`,
-            type: 'error',
-            show: true,
-            autoHideDuration: 12000,
-            ...overrides,
-        });
-    };
+    const setToastApiError = useCallback(
+        (errorText: string, overrides?: IToast) => {
+            setToast({
+                title: 'Something went wrong',
+                text: `We had trouble talking to our API. Here's why: ${errorText}`,
+                type: 'error',
+                show: true,
+                autoHideDuration: 12000,
+                ...overrides,
+            });
+        },
+        [setToast]
+    );
 
-    const setToastData = (toast: IToast) => {
-        if (toast.persist) {
-            setToast({ ...toast, show: true });
-        } else {
-            setToast({ ...toast, show: true, autoHideDuration: 6000 });
-        }
-    };
+    const setToastData = useCallback(
+        (toast: IToast) => {
+            if (toast.persist) {
+                setToast({ ...toast, show: true });
+            } else {
+                setToast({ ...toast, show: true, autoHideDuration: 6000 });
+            }
+        },
+        [setToast]
+    );
 
     return { setToastData, setToastApiError, hideToast };
 };

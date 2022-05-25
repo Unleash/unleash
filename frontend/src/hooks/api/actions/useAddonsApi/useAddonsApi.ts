@@ -1,4 +1,5 @@
 import { IAddon } from 'interfaces/addons';
+import { useCallback } from 'react';
 import useAPI from '../useApi/useApi';
 
 const useAddonsApi = () => {
@@ -15,13 +16,7 @@ const useAddonsApi = () => {
             body: JSON.stringify(addonConfig),
         });
 
-        try {
-            const res = await makeRequest(req.caller, req.id);
-
-            return res;
-        } catch (e) {
-            throw e;
-        }
+        return makeRequest(req.caller, req.id);
     };
 
     const removeAddon = async (id: number) => {
@@ -29,29 +24,22 @@ const useAddonsApi = () => {
         const req = createRequest(path, {
             method: 'DELETE',
         });
-        try {
-            const res = await makeRequest(req.caller, req.id);
 
-            return res;
-        } catch (e) {
-            throw e;
-        }
+        return await makeRequest(req.caller, req.id);
     };
 
-    const updateAddon = async (addonConfig: IAddon) => {
-        const path = `${URI}/${addonConfig.id}`;
-        const req = createRequest(path, {
-            method: 'PUT',
-            body: JSON.stringify(addonConfig),
-        });
-        try {
-            const res = await makeRequest(req.caller, req.id);
+    const updateAddon = useCallback(
+        async (addonConfig: IAddon) => {
+            const path = `${URI}/${addonConfig.id}`;
+            const req = createRequest(path, {
+                method: 'PUT',
+                body: JSON.stringify(addonConfig),
+            });
 
-            return res;
-        } catch (e) {
-            throw e;
-        }
-    };
+            return makeRequest(req.caller, req.id);
+        },
+        [createRequest, makeRequest]
+    );
 
     return {
         createAddon,

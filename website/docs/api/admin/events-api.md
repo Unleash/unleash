@@ -8,13 +8,15 @@ import ApiRequest from '@site/src/components/ApiRequest'
 In order to access the admin API endpoints you need to identify yourself. Unless you're using the `none` authentication method, you'll need to [create an ADMIN token](/user_guide/api-token) and add an Authorization header using the token.
 :::
 
-## The Events API
+The Events API lets you retrieve events from your Unleash instance.
 
-## Get all events
+## Event endpoints
+
+### Get all events
 
 <ApiRequest verb="get" url="api/admin/events" title="Retrieve all events from the Unleash instance."/>
 
-### Query parameters
+#### Query parameters
 
 | Query parameter | Description                                                                | Required |
 |-----------------|----------------------------------------------------------------------------|----------|
@@ -23,13 +25,13 @@ In order to access the admin API endpoints you need to identify yourself. Unless
 The `api/admin/events` endpoint returns all the events on the Unleash instance from the last X days. It accepts an optional query parameter `project`. When provided, the returned list of events all belong to the given project.
 
 
-### Get events by project
+#### Get events by project
 
 <ApiRequest verb="get" url="api/admin/events?project=<project-name>" title="Retrieve all events belonging to the given project."/>
 
 Use the `project` query parameter to make the API only return events pertaining to the given project.
 
-### Responses
+#### Responses
 
 <details>
 <summary>Responses</summary>
@@ -72,19 +74,19 @@ The list of events matching the provided query, or all events if no query params
 
 </details>
 
-## Get events for a specific toggle
+### Get events for a specific toggle
 
 <ApiRequest verb="get" url="api/admin/events/<toggle-name>" title="Retrieve all events related to the given toggle."/>
 
 Fetch all events related to a specified toggle.
 
 
-### Responses
+#### Responses
 
 <details>
 <summary>Responses</summary>
 
-##### 200 OK
+###### 200 OK
 
 The list of events related to the given toggle.
 
@@ -122,14 +124,11 @@ The list of events related to the given toggle.
 
 </details>
 
+## Event types
 
-The Events API lets you fetch all
+Unleash emits a large number of different events. They are described below.
 
-Used to fetch all changes in the unleash system.
-
-Defined event types:
-
-## Feature Toggle events:
+### Feature Toggle events:
 
 - feature-created
 - feature-deleted
@@ -152,7 +151,7 @@ Defined event types:
 - feature-environment-enabled
 - feature-environment-disabled
 
-## Strategy Events
+### Strategy Events
 
 - strategy-created
 - strategy-deleted
@@ -162,13 +161,13 @@ Defined event types:
 - strategy-import
 - drop-strategies
 
-## Context field events
+### Context field events
 
 - context-field-created
 - context-field-updated
 - context-field-deleted
 
-## Project events
+### Project events
 
 - project-created
 - project-updated
@@ -176,7 +175,7 @@ Defined event types:
 - project-import
 - drop-projects
 
-## Tag events
+### Tag events
 
 - tag-created
 - tag-deleted
@@ -184,7 +183,7 @@ Defined event types:
 - drop-tags
 
 
-## Tag type events
+### Tag type events
 
 - tag-type-created
 - tag-type-deleted
@@ -193,21 +192,21 @@ Defined event types:
 - drop-tag-types
 
 
-## Addon events
+### Addon events
 
 - addon-config-created
 - addon-config-updated
 - addon-config-deleted
 
 
-## User events
+### User events
 
 - user-created
 - user-updated
 - user-deleted
 
 
-## Environment events (Enterprise)
+### Environment events (Enterprise)
 
 - drop-environments
 - environment-import

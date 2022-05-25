@@ -23,7 +23,7 @@ import { sortTypes } from 'utils/sortTypes';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { ContextActionsCell } from './ContextActionsCell/ContextActionsCell';
 import { Adjust } from '@mui/icons-material';
-import { Box } from '@mui/material';
+import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
 
 const ContextList: VFC = () => {
     const [showDelDialogue, setShowDelDialogue] = useState(false);
@@ -53,19 +53,7 @@ const ContextList: VFC = () => {
         () => [
             {
                 id: 'Icon',
-                Cell: () => (
-                    <Box
-                        data-loading
-                        sx={{
-                            pl: 2,
-                            pr: 1,
-                            display: 'flex',
-                            alignItems: 'center',
-                        }}
-                    >
-                        <Adjust color="disabled" />
-                    </Box>
-                ),
+                Cell: () => <IconCell icon={<Adjust color="disabled" />} />,
             },
             {
                 Header: 'Name',

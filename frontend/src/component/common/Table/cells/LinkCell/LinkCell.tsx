@@ -20,7 +20,7 @@ export const LinkCell: FC<ILinkCellProps> = ({
     children,
 }) => {
     const { classes: styles } = useStyles();
-    const search = useSearchHighlightContext();
+    const { searchQuery } = useSearchHighlightContext();
 
     const content = (
         <div className={styles.container}>
@@ -32,7 +32,7 @@ export const LinkCell: FC<ILinkCellProps> = ({
                     lineClamp: Boolean(subtitle) ? 1 : 2,
                 }}
             >
-                <Highlighter search={search}>{title}</Highlighter>
+                <Highlighter search={searchQuery}>{title}</Highlighter>
                 {children}
             </span>
             <ConditionallyRender
@@ -44,7 +44,7 @@ export const LinkCell: FC<ILinkCellProps> = ({
                             component="span"
                             data-loading
                         >
-                            <Highlighter search={search}>
+                            <Highlighter search={searchQuery}>
                                 {subtitle}
                             </Highlighter>
                         </Typography>

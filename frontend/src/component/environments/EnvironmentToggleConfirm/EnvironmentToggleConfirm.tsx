@@ -4,7 +4,7 @@ import React from 'react';
 import { IEnvironment } from 'interfaces/environments';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import EnvironmentCard from '../EnvironmentCard/EnvironmentCard';
+import EnvironmentCard from 'component/environments/EnvironmentCard/EnvironmentCard';
 
 interface IEnvironmentToggleConfirmProps {
     env: IEnvironment;

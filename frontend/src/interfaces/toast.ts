@@ -1,5 +1,5 @@
 export interface IToast {
-    type: string;
+    type: 'success' | 'error';
     title: string;
     text?: string;
     components?: JSX.Element[];

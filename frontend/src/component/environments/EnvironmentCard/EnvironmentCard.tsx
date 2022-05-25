@@ -1,6 +1,6 @@
 import { CloudCircle } from '@mui/icons-material';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
-import { useStyles } from './EnvironmentCard.styles';
+import { useStyles } from 'component/environments/EnvironmentCard/EnvironmentCard.styles';
 
 interface IEnvironmentProps {
     name: string;

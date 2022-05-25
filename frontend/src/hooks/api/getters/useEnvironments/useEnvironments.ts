@@ -13,13 +13,13 @@ interface IUseEnvironmentsOutput {
 }
 
 export const useEnvironments = (): IUseEnvironmentsOutput => {
-    const { data, error, mutate } = useSWR<IEnvironmentResponse>(
+    const { data, error, mutate } = useSWR<IEnvironment[]>(
         formatApiPath(`api/admin/environments`),
         fetcher
     );
 
     const environments = useMemo(() => {
-        return data?.environments || [];
+        return data || [];
     }, [data]);
 
     const refetchEnvironments = useCallback(async () => {
@@ -28,7 +28,7 @@ export const useEnvironments = (): IUseEnvironmentsOutput => {
 
     const mutateEnvironments = useCallback(
         async (environments: IEnvironment[]) => {
-            await mutate({ environments }, false);
+            await mutate(environments, false);
         },
         [mutate]
     );
@@ -42,8 +42,12 @@ export const useEnvironments = (): IUseEnvironmentsOutput => {
     };
 };
 
-const fetcher = (path: string): Promise<IEnvironmentResponse> => {
-    return fetch(path)
+const fetcher = async (path: string): Promise<IEnvironment[]> => {
+    const res: IEnvironmentResponse = await fetch(path)
         .then(handleErrorResponses('Environments'))
         .then(res => res.json());
+
+    return res.environments.sort((a, b) => {
+        return a.sortOrder - b.sortOrder;
+    });
 };

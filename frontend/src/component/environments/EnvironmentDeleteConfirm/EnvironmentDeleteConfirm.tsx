@@ -3,13 +3,12 @@ import React from 'react';
 import { IEnvironment } from 'interfaces/environments';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import Input from 'component/common/Input/Input';
-import EnvironmentCard from '../EnvironmentCard/EnvironmentCard';
-import { useStyles } from './EnvironmentDeleteConfirm.styles';
+import EnvironmentCard from 'component/environments/EnvironmentCard/EnvironmentCard';
+import { useStyles } from 'component/environments/EnvironmentDeleteConfirm/EnvironmentDeleteConfirm.styles';
 
 interface IEnviromentDeleteConfirmProps {
     env: IEnvironment;
     open: boolean;
-    setSelectedEnv: React.Dispatch<React.SetStateAction<IEnvironment>>;
     setDeldialogue: React.Dispatch<React.SetStateAction<boolean>>;
     handleDeleteEnvironment: () => Promise<void>;
     confirmName: string;

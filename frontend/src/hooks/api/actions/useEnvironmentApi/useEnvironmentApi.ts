@@ -2,6 +2,7 @@ import {
     IEnvironmentPayload,
     ISortOrderPayload,
     IEnvironmentEditPayload,
+    IEnvironment,
 } from 'interfaces/environments';
 import useAPI from '../useApi/useApi';
 
@@ -143,6 +144,15 @@ const useEnvironmentApi = () => {
         toggleEnvironmentOff,
         toggleEnvironmentOn,
     };
+};
+
+export const createSortOrderPayload = (
+    environments: Readonly<IEnvironment[]>
+): ISortOrderPayload => {
+    return environments.reduce((payload, env, index) => {
+        payload[env.name] = index + 1;
+        return payload;
+    }, {} as ISortOrderPayload);
 };
 
 export default useEnvironmentApi;

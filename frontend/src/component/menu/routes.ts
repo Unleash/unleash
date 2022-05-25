@@ -18,7 +18,6 @@ import ForgottenPassword from 'component/user/ForgottenPassword/ForgottenPasswor
 import { ProjectListNew } from 'component/project/ProjectList/ProjectList';
 import Project from 'component/project/Project/Project';
 import RedirectArchive from 'component/archive/RedirectArchive';
-import EnvironmentList from 'component/environments/EnvironmentList/EnvironmentList';
 import { FeatureView } from 'component/feature/FeatureView/FeatureView';
 import ProjectRoles from 'component/admin/projectRoles/ProjectRoles/ProjectRoles';
 import CreateProjectRole from 'component/admin/projectRoles/CreateProjectRole/CreateProjectRole';
@@ -52,6 +51,7 @@ import { CreateSegment } from 'component/segments/CreateSegment/CreateSegment';
 import { EditSegment } from 'component/segments/EditSegment/EditSegment';
 import { SegmentsList } from 'component/segments/SegmentList/SegmentList';
 import { IRoute } from 'interfaces/route';
+import { EnvironmentTable } from 'component/environments/EnvironmentTable/EnvironmentTable';
 
 export const routes: IRoute[] = [
     // Splash
@@ -266,7 +266,7 @@ export const routes: IRoute[] = [
     {
         path: '/environments',
         title: 'Environments',
-        component: EnvironmentList,
+        component: EnvironmentTable,
         type: 'protected',
         flag: EEA,
         menu: { mobile: true, advanced: true },

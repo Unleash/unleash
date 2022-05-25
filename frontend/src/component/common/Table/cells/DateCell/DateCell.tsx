@@ -1,8 +1,8 @@
 import { VFC } from 'react';
 import { useLocationSettings } from 'hooks/useLocationSettings';
-import { formatDateYMD, formatDateYMDHMS } from 'utils/formatDate';
-import { Box, Tooltip } from '@mui/material';
+import { formatDateYMD } from 'utils/formatDate';
 import { parseISO } from 'date-fns';
+import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 
 interface IDateCellProps {
     value?: Date | string | null;
@@ -11,22 +11,11 @@ interface IDateCellProps {
 export const DateCell: VFC<IDateCellProps> = ({ value }) => {
     const { locationSettings } = useLocationSettings();
 
-    if (!value) {
-        return <Box sx={{ py: 1.5, px: 2 }} />;
-    }
+    const date = value
+        ? value instanceof Date
+            ? formatDateYMD(value, locationSettings.locale)
+            : formatDateYMD(parseISO(value), locationSettings.locale)
+        : undefined;
 
-    const date = value instanceof Date ? value : parseISO(value);
-
-    return (
-        <Box sx={{ py: 1.5, px: 2 }}>
-            <Tooltip
-                title={formatDateYMDHMS(date, locationSettings.locale)}
-                arrow
-            >
-                <span data-loading role="tooltip">
-                    {formatDateYMD(date, locationSettings.locale)}
-                </span>
-            </Tooltip>
-        </Box>
-    );
+    return <TextCell>{date}</TextCell>;
 };

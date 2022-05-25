@@ -1538,21 +1538,6 @@
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.11.5.tgz#db5a11bf66bdab39569719555b0f76e138d7bd64"
   integrity sha512-9X2obfABZuDVLCgPK9aX0a/x4jaOEweTTWE2+9sr0Qqqevj2Uv5XorvusThmc9XGYpS9yI+fhh8RTafBtGposw==
 
-"@react-dnd/asap@4.0.1":
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/@react-dnd/asap/-/asap-4.0.1.tgz#5291850a6b58ce6f2da25352a64f1b0674871aab"
-  integrity sha512-kLy0PJDDwvwwTXxqTFNAAllPHD73AycE9ypWeln/IguoGBEbvFcPDbCV03G52bEcC5E+YgupBE0VzHGdC8SIXg==
-
-"@react-dnd/invariant@3.0.1":
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/@react-dnd/invariant/-/invariant-3.0.1.tgz#7e70be19ea21b539e8bf1da28466f4f05df2a4cc"
-  integrity sha512-blqduwV86oiKw2Gr44wbe3pj3Z/OsXirc7ybCv9F/pLAR+Aih8F3rjeJzK0ANgtYKv5lCpkGVoZAeKitKDaD/g==
-
-"@react-dnd/shallowequal@3.0.1":
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/@react-dnd/shallowequal/-/shallowequal-3.0.1.tgz#8056fe046a8d10a275e321ec0557ae652d7a4d06"
-  integrity sha512-XjDVbs3ZU16CO1h5Q3Ew2RPJqmZBDE/EVf1LYp6ePEffs3V/MX9ZbL5bJr8qiK5SbGmUMuDoaFgyKacYz8prRA==
-
 "@rollup/pluginutils@^4.2.1":
   version "4.2.1"
   resolved "https://registry.yarnpkg.com/@rollup/pluginutils/-/pluginutils-4.2.1.tgz#e6c6c3aba0744edce3fb2074922d3776c0af2a6d"
@@ -3039,15 +3024,6 @@ dir-glob@^3.0.1:
   integrity sha512-WkrWp9GR4KXfKGYzOLmTuGVi1UWFfws377n9cc55/tb6DuqyF6pcQ5AbiHEshaDpY9v6oaSr2XCDidGmMwdzIA==
   dependencies:
     path-type "^4.0.0"
-
-dnd-core@15.1.2:
-  version "15.1.2"
-  resolved "https://registry.yarnpkg.com/dnd-core/-/dnd-core-15.1.2.tgz#0983bce555c4985f58b731ffe1faed31e1ea7f6f"
-  integrity sha512-EOec1LyJUuGRFg0LDa55rSRAUe97uNVKVkUo8iyvzQlcECYTuPblVQfRWXWj1OyPseFIeebWpNmKFy0h6BcF1A==
-  dependencies:
-    "@react-dnd/asap" "4.0.1"
-    "@react-dnd/invariant" "3.0.1"
-    redux "^4.1.2"
 
 doctrine@^2.1.0:
   version "2.1.0"
@@ -5149,24 +5125,6 @@ react-chartjs-2@4.1.0:
   resolved "https://registry.yarnpkg.com/react-chartjs-2/-/react-chartjs-2-4.1.0.tgz#2a123df16d3a987c54eb4e810ed766d3c03adf8d"
   integrity sha512-AsUihxEp8Jm1oBhbEovE+w50m9PVNhz1sfwEIT4hZduRC0m14gHWHd0cUaxkFDb8HNkdMIGzsNlmVqKiOpU74g==
 
-react-dnd-html5-backend@15.1.3:
-  version "15.1.3"
-  resolved "https://registry.yarnpkg.com/react-dnd-html5-backend/-/react-dnd-html5-backend-15.1.3.tgz#57b4f47e0f23923e7c243d2d0eefe490069115a9"
-  integrity sha512-HH/8nOEmrrcRGHMqJR91FOwhnLlx5SRLXmsQwZT3IPcBjx88WT+0pWC5A4tDOYDdoooh9k+KMPvWfxooR5TcOA==
-  dependencies:
-    dnd-core "15.1.2"
-
-react-dnd@15.1.2:
-  version "15.1.2"
-  resolved "https://registry.yarnpkg.com/react-dnd/-/react-dnd-15.1.2.tgz#211b30fd842326209c63f26f1bdf1bc52eef4f64"
-  integrity sha512-EaSbMD9iFJDY/o48T3c8wn3uWU+2uxfFojhesZN3LhigJoAIvH2iOjxofSA9KbqhAKP6V9P853G6XG8JngKVtA==
-  dependencies:
-    "@react-dnd/invariant" "3.0.1"
-    "@react-dnd/shallowequal" "3.0.1"
-    dnd-core "15.1.2"
-    fast-deep-equal "^3.1.3"
-    hoist-non-react-statics "^3.3.2"
-
 react-dom@17.0.2:
   version "17.0.2"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-17.0.2.tgz#ecffb6845e3ad8dbfcdc498f0d0a939736502c23"
@@ -5302,13 +5260,6 @@ redent@^3.0.0:
   dependencies:
     indent-string "^4.0.0"
     strip-indent "^3.0.0"
-
-redux@^4.1.2:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/redux/-/redux-4.2.0.tgz#46f10d6e29b6666df758780437651eeb2b969f13"
-  integrity sha512-oSBmcKKIuIR4ME29/AeNUnl5L+hvBq7OaJWzaptTQJAntaPvxIJqfnjbaEiCzzaIz+XmVILfqAM3Ob0aXLPfjA==
-  dependencies:
-    "@babel/runtime" "^7.9.2"
 
 reflect-metadata@0.1.13:
   version "0.1.13"

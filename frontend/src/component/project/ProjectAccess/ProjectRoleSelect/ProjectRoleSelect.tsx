@@ -9,10 +9,11 @@ import React from 'react';
 import { IProjectRole } from 'interfaces/role';
 
 import { useStyles } from '../ProjectAccess.styles';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface IProjectRoleSelect {
     roles: IProjectRole[];
-    labelId: string;
+    labelId?: string;
     id: string;
     placeholder?: string;
     onChange: (evt: SelectChangeEvent) => void;
@@ -31,12 +32,18 @@ export const ProjectRoleSelect: React.FC<IProjectRoleSelect> = ({
     const { classes: styles } = useStyles();
     return (
         <FormControl variant="outlined" size="small">
-            <InputLabel
-                style={{ backgroundColor: '#fff' }}
-                id="add-user-select-role-label"
-            >
-                Role
-            </InputLabel>
+            <ConditionallyRender
+                condition={Boolean(labelId)}
+                show={() => (
+                    <InputLabel
+                        style={{ backgroundColor: '#fff' }}
+                        id={labelId}
+                    >
+                        Role
+                    </InputLabel>
+                )}
+            />
+
             <Select
                 labelId={labelId}
                 id={id}

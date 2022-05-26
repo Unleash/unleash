@@ -111,7 +111,8 @@ export const CellSortable: FC<ICellSortableProps> = ({
                         <button
                             className={classnames(
                                 isSorted && styles.sortedButton,
-                                styles.sortButton
+                                styles.sortButton,
+                                alignClass
                             )}
                             onClick={onSortClick}
                         >

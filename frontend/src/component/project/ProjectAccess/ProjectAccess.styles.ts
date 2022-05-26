@@ -6,10 +6,11 @@ export const useStyles = makeStyles()(theme => ({
     },
     divider: {
         height: '1px',
-        width: '106.65%',
-        marginLeft: '-2rem',
-        backgroundColor: '#efefef',
-        marginTop: '2rem',
+        position: 'relative',
+        left: 0,
+        right: 0,
+        backgroundColor: theme.palette.divider,
+        margin: theme.spacing(4, -4, 3),
     },
     inputLabel: { backgroundColor: '#fff' },
     roleName: {

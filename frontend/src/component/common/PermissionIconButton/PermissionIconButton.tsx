@@ -37,6 +37,7 @@ const PermissionIconButton = ({
     children,
     environmentId,
     tooltipProps,
+    disabled,
     ...rest
 }: IButtonProps | ILinkProps) => {
     const { hasAccess } = useContext(AccessContext);
@@ -57,7 +58,11 @@ const PermissionIconButton = ({
             arrow
         >
             <div>
-                <IconButton {...rest} disabled={!access} size="large">
+                <IconButton
+                    {...rest}
+                    disabled={!access || disabled}
+                    size="large"
+                >
                     {children}
                 </IconButton>
             </div>

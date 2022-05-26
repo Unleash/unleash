@@ -1,12 +1,10 @@
 /* eslint-disable react/jsx-no-target-blank */
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Alert, SelectChangeEvent } from '@mui/material';
 import { ProjectAccessAddUser } from './ProjectAccessAddUser/ProjectAccessAddUser';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useStyles } from './ProjectAccess.styles';
-import usePagination from 'hooks/usePagination';
-import PaginateUI from 'component/common/PaginateUI/PaginateUI';
 import useToast from 'hooks/useToast';
 import { Dialogue as ConfirmDialogue } from 'component/common/Dialogue/Dialogue';
 import useProjectAccess, {
@@ -14,8 +12,8 @@ import useProjectAccess, {
 } from 'hooks/api/getters/useProjectAccess/useProjectAccess';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
-import { ProjectAccessList } from './ProjectAccessList/ProjectAccessList';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import { ProjectAccessTable } from './ProjectAccessTable/ProjectAccessTable';
 
 export const ProjectAccess = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -23,28 +21,11 @@ export const ProjectAccess = () => {
     const { access, refetchProjectAccess } = useProjectAccess(projectId);
     const { setToastData } = useToast();
     const { isOss } = useUiConfig();
-    const { page, pages, nextPage, prevPage, setPageIndex, pageIndex } =
-        usePagination(access.users, 10);
     const { removeUserFromRole, changeUserRole } = useProjectApi();
     const [showDelDialogue, setShowDelDialogue] = useState(false);
     const [user, setUser] = useState<IProjectAccessUser | undefined>();
 
-    if (isOss()) {
-        return (
-            <PageContent header={<PageHeader title="Project Access" />}>
-                <Alert severity="error">
-                    Controlling access to projects requires a paid version of
-                    Unleash. Check out{' '}
-                    <a href="https://www.getunleash.io" target="_blank">
-                        getunleash.io
-                    </a>{' '}
-                    to find out more.
-                </Alert>
-            </PageContent>
-        );
-    }
-
-    const handleRoleChange =
+    const handleRoleChange = useCallback(
         (userId: number) => async (evt: SelectChangeEvent) => {
             const roleId = Number(evt.target.value);
             try {
@@ -61,7 +42,24 @@ export const ProjectAccess = () => {
                     title: err.message || 'Server problems when adding users.',
                 });
             }
-        };
+        },
+        [changeUserRole, projectId, refetchProjectAccess, setToastData]
+    );
+
+    if (isOss()) {
+        return (
+            <PageContent header={<PageHeader title="Project Access" />}>
+                <Alert severity="error">
+                    Controlling access to projects requires a paid version of
+                    Unleash. Check out{' '}
+                    <a href="https://www.getunleash.io" target="_blank">
+                        getunleash.io
+                    </a>{' '}
+                    to find out more.
+                </Alert>
+            </PageContent>
+        );
+    }
 
     const handleRemoveAccess = (user: IProjectAccessUser) => {
         setUser(user);
@@ -96,21 +94,13 @@ export const ProjectAccess = () => {
             <ProjectAccessAddUser roles={access?.roles} />
 
             <div className={styles.divider}></div>
-            <ProjectAccessList
+
+            <ProjectAccessTable
+                access={access}
                 handleRoleChange={handleRoleChange}
                 handleRemoveAccess={handleRemoveAccess}
-                page={page}
-                access={access}
-            >
-                <PaginateUI
-                    pages={pages}
-                    pageIndex={pageIndex}
-                    setPageIndex={setPageIndex}
-                    nextPage={nextPage}
-                    prevPage={prevPage}
-                    style={{ bottom: '-21px' }}
-                />
-            </ProjectAccessList>
+                projectId={projectId}
+            />
 
             <ConfirmDialogue
                 open={showDelDialogue}

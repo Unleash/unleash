@@ -257,6 +257,10 @@ export class AccessStore implements IAccessStore {
                 user_id: userId,
                 project: projectId,
             })
+            .whereNotIn(
+                'role_id',
+                this.db(T.ROLES).select('id as role_id').where('type', 'root'),
+            )
             .update('role_id', roleId);
     }
 

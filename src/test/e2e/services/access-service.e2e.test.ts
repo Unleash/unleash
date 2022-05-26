@@ -13,6 +13,7 @@ import { IUnleashStores } from '../../../lib/types';
 import FeatureToggleService from '../../../lib/services/feature-toggle-service';
 import ProjectService from '../../../lib/services/project-service';
 import { createTestConfig } from '../../config/test-config';
+import { DEFAULT_PROJECT } from '../../../lib/types/project';
 
 let db: ITestDb;
 let stores: IUnleashStores;
@@ -508,6 +509,36 @@ test('should switch root role for user', async () => {
 
     expect(roles.length).toBe(1);
     expect(roles[0].name).toBe(RoleName.VIEWER);
+});
+
+test('should switch project roles on when multiple roles are present for same user', async () => {
+    const { userStore, roleStore, accessStore } = stores;
+
+    const userOne = await userStore.insert({
+        name: 'Some User With Expected Roles',
+        email: 'random42Read@getunleash.io',
+    });
+
+    const customRole = await roleStore.create({
+        name: 'Some Arbitrary Role',
+        roleType: 'custom',
+        description: 'This does nothing',
+    });
+
+    const targetRole = await roleStore.create({
+        name: 'Another Arbitrary Role',
+        roleType: 'custom',
+        description: 'This does nothing',
+    });
+
+    await accessService.setUserRootRole(userOne.id, editorRole.id);
+    await accessStore.addUserToRole(userOne.id, customRole.id, DEFAULT_PROJECT);
+
+    await accessService.updateUserProjectRole(
+        userOne.id,
+        targetRole.id,
+        DEFAULT_PROJECT,
+    );
 });
 
 test('should not crash if user does not have permission', async () => {

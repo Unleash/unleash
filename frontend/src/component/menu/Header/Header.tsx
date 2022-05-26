@@ -63,9 +63,9 @@ const Header: VFC = () => {
     const filteredMainRoutes = {
         mainNavRoutes: routes.mainNavRoutes.filter(filterByFlags(flags)),
         mobileRoutes: routes.mobileRoutes.filter(filterByFlags(flags)),
-        adminRoutes: routes.adminRoutes.filter(
-            filterByFlags(flags) && filterByBilling(isBilling)
-        ),
+        adminRoutes: routes.adminRoutes
+            .filter(filterByFlags(flags))
+            .filter(filterByBilling(isBilling)),
     };
 
     if (smallScreen) {

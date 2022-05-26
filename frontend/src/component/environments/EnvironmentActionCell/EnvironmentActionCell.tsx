@@ -138,7 +138,14 @@ export const EnvironmentActionCell = ({
             <ConditionallyRender
                 condition={updatePermission}
                 show={
-                    <Tooltip title="Edit environment" arrow>
+                    <Tooltip
+                        title={
+                            environment.protected
+                                ? 'You cannot edit environment'
+                                : 'Edit environment'
+                        }
+                        arrow
+                    >
                         <span id={editId}>
                             <IconButton
                                 aria-describedby={editId}
@@ -159,7 +166,14 @@ export const EnvironmentActionCell = ({
             <ConditionallyRender
                 condition={hasAccess(DELETE_ENVIRONMENT)}
                 show={
-                    <Tooltip title="Delete environment" arrow>
+                    <Tooltip
+                        title={
+                            environment.protected
+                                ? 'You cannot delete environment'
+                                : 'Delete environment'
+                        }
+                        arrow
+                    >
                         <span id={deleteId}>
                             <IconButton
                                 aria-describedby={deleteId}

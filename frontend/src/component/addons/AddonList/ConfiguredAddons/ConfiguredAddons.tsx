@@ -1,19 +1,12 @@
 import { useMemo } from 'react';
-import { Box, Table, TableBody, TableCell, TableRow } from '@mui/material';
-import { Delete, Edit, Visibility, VisibilityOff } from '@mui/icons-material';
+import { Table, TableBody, TableCell, TableRow } from 'component/common/Table';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import {
-    DELETE_ADDON,
-    UPDATE_ADDON,
-} from 'component/providers/AccessProvider/permissions';
-import { useNavigate } from 'react-router-dom';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import useAddons from 'hooks/api/getters/useAddons/useAddons';
 import useToast from 'hooks/useToast';
 import useAddonsApi from 'hooks/api/actions/useAddonsApi/useAddonsApi';
 import { useState, useCallback } from 'react';
 import { IAddon } from 'interfaces/addons';
-import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
@@ -169,6 +162,7 @@ export const ConfiguredAddons = () => {
         <PageContent
             isLoading={loading}
             header={<PageHeader title="Configured addons" />}
+            sx={theme => ({ marginBottom: theme.spacing(2) })}
         >
             <Table {...getTableProps()}>
                 <SortableTableHeader headerGroups={headerGroups} />

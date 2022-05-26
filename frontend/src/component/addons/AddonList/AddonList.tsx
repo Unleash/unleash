@@ -79,8 +79,6 @@ export const AddonList = () => {
                 condition={addons.length > 0}
                 show={<ConfiguredAddons />}
             />
-
-            <br />
             <AvailableAddons loading={loading} providers={providers} />
         </>
     );

@@ -59,7 +59,7 @@ function AdminMenu() {
                                 to="/admin/roles"
                                 style={createNavLinkStyle}
                             >
-                                <span>Project Roles</span>
+                                <span>Project roles</span>
                             </NavLink>
                         }
                     />
@@ -69,7 +69,7 @@ function AdminMenu() {
                     value="/admin/api"
                     label={
                         <NavLink to="/admin/api" style={createNavLinkStyle}>
-                            API Access
+                            API access
                         </NavLink>
                     }
                 />
@@ -77,7 +77,7 @@ function AdminMenu() {
                     value="/admin/auth"
                     label={
                         <NavLink to="/admin/auth" style={createNavLinkStyle}>
-                            Single Sign-On
+                            Single sign-on
                         </NavLink>
                     }
                 />

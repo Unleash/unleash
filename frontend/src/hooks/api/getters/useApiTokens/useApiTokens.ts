@@ -1,36 +1,40 @@
-import useSWR, { mutate, SWRConfiguration } from 'swr';
-import { useState, useEffect } from 'react';
+import useSWR, { SWRConfiguration } from 'swr';
+import { useCallback, useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 
-const useApiTokens = (options: SWRConfiguration = {}) => {
-    const fetcher = async () => {
-        const path = formatApiPath(`api/admin/api-tokens`);
-        const res = await fetch(path, {
-            method: 'GET',
-        }).then(handleErrorResponses('Api tokens'));
-        return res.json();
-    };
+export interface IApiToken {
+    createdAt: Date;
+    username: string;
+    secret: string;
+    type: string;
+    project?: string;
+    projects?: string | string[];
+    environment: string;
+}
 
-    const KEY = `api/admin/api-tokens`;
+export const useApiTokens = (options: SWRConfiguration = {}) => {
+    const path = formatApiPath(`api/admin/api-tokens`);
+    const { data, error, mutate } = useSWR<IApiToken[]>(path, fetcher, options);
 
-    const { data, error } = useSWR(KEY, fetcher, options);
-    const [loading, setLoading] = useState(!error && !data);
+    const tokens = useMemo(() => {
+        return data ?? [];
+    }, [data]);
 
-    const refetch = () => {
-        mutate(KEY);
-    };
-
-    useEffect(() => {
-        setLoading(!error && !data);
-    }, [data, error]);
+    const refetch = useCallback(() => {
+        mutate().catch(console.warn);
+    }, [mutate]);
 
     return {
-        tokens: data?.tokens || [],
+        tokens,
         error,
-        loading,
+        loading: !error && !data,
         refetch,
     };
 };
 
-export default useApiTokens;
+const fetcher = async (path: string): Promise<IApiToken[]> => {
+    const res = await fetch(path).then(handleErrorResponses('Api tokens'));
+    const data = await res.json();
+    return data.tokens;
+};

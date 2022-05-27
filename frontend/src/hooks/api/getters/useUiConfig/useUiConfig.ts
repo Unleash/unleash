@@ -3,6 +3,7 @@ import { formatApiPath } from 'utils/formatPath';
 import { defaultValue } from './defaultValue';
 import { IUiConfig } from 'interfaces/uiConfig';
 import handleErrorResponses from '../httpErrorResponseHandler';
+import { useMemo } from 'react';
 
 const REQUEST_KEY = 'api/admin/ui-config';
 
@@ -33,8 +34,12 @@ const useUiConfig = (options: SWRConfiguration = {}) => {
         return true;
     };
 
+    const uiConfig = useMemo(() => {
+        return { ...defaultValue, ...data };
+    }, [data]);
+
     return {
-        uiConfig: { ...defaultValue, ...data },
+        uiConfig,
         loading: !error && !data,
         error,
         refetch,

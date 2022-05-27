@@ -305,14 +305,17 @@ exports[`renders an empty list correctly 1`] = `
                     aria-labelledby={null}
                     className=""
                     data-mui-internal-clone-element={true}
+                    id="useId-1"
                     onBlur={[Function]}
                     onFocus={[Function]}
                     onMouseLeave={[Function]}
                     onMouseOver={[Function]}
                     onTouchEnd={[Function]}
                     onTouchStart={[Function]}
+                    role="tooltip"
                   >
                     <button
+                      aria-labelledby="useId-1"
                       className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
                       disabled={false}
                       onBlur={[Function]}
@@ -352,14 +355,17 @@ exports[`renders an empty list correctly 1`] = `
                     aria-labelledby={null}
                     className=""
                     data-mui-internal-clone-element={true}
+                    id="useId-2"
                     onBlur={[Function]}
                     onFocus={[Function]}
                     onMouseLeave={[Function]}
                     onMouseOver={[Function]}
                     onTouchEnd={[Function]}
                     onTouchStart={[Function]}
+                    role="tooltip"
                   >
                     <button
+                      aria-labelledby="useId-2"
                       className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
                       disabled={false}
                       onBlur={[Function]}
@@ -469,14 +475,17 @@ exports[`renders an empty list correctly 1`] = `
                     aria-labelledby={null}
                     className=""
                     data-mui-internal-clone-element={true}
+                    id="useId-3"
                     onBlur={[Function]}
                     onFocus={[Function]}
                     onMouseLeave={[Function]}
                     onMouseOver={[Function]}
                     onTouchEnd={[Function]}
                     onTouchStart={[Function]}
+                    role="tooltip"
                   >
                     <button
+                      aria-labelledby="useId-3"
                       className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
                       disabled={false}
                       onBlur={[Function]}
@@ -516,14 +525,17 @@ exports[`renders an empty list correctly 1`] = `
                     aria-labelledby={null}
                     className=""
                     data-mui-internal-clone-element={true}
+                    id="useId-4"
                     onBlur={[Function]}
                     onFocus={[Function]}
                     onMouseLeave={[Function]}
                     onMouseOver={[Function]}
                     onTouchEnd={[Function]}
                     onTouchStart={[Function]}
+                    role="tooltip"
                   >
                     <button
+                      aria-labelledby="useId-4"
                       className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
                       disabled={false}
                       onBlur={[Function]}
@@ -633,14 +645,17 @@ exports[`renders an empty list correctly 1`] = `
                     aria-labelledby={null}
                     className=""
                     data-mui-internal-clone-element={true}
+                    id="useId-5"
                     onBlur={[Function]}
                     onFocus={[Function]}
                     onMouseLeave={[Function]}
                     onMouseOver={[Function]}
                     onTouchEnd={[Function]}
                     onTouchStart={[Function]}
+                    role="tooltip"
                   >
                     <button
+                      aria-labelledby="useId-5"
                       className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
                       disabled={false}
                       onBlur={[Function]}
@@ -680,14 +695,17 @@ exports[`renders an empty list correctly 1`] = `
                     aria-labelledby={null}
                     className=""
                     data-mui-internal-clone-element={true}
+                    id="useId-6"
                     onBlur={[Function]}
                     onFocus={[Function]}
                     onMouseLeave={[Function]}
                     onMouseOver={[Function]}
                     onTouchEnd={[Function]}
                     onTouchStart={[Function]}
+                    role="tooltip"
                   >
                     <button
+                      aria-labelledby="useId-6"
                       className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
                       disabled={false}
                       onBlur={[Function]}
@@ -797,14 +815,17 @@ exports[`renders an empty list correctly 1`] = `
                     aria-labelledby={null}
                     className=""
                     data-mui-internal-clone-element={true}
+                    id="useId-7"
                     onBlur={[Function]}
                     onFocus={[Function]}
                     onMouseLeave={[Function]}
                     onMouseOver={[Function]}
                     onTouchEnd={[Function]}
                     onTouchStart={[Function]}
+                    role="tooltip"
                   >
                     <button
+                      aria-labelledby="useId-7"
                       className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
                       disabled={false}
                       onBlur={[Function]}
@@ -844,14 +865,17 @@ exports[`renders an empty list correctly 1`] = `
                     aria-labelledby={null}
                     className=""
                     data-mui-internal-clone-element={true}
+                    id="useId-8"
                     onBlur={[Function]}
                     onFocus={[Function]}
                     onMouseLeave={[Function]}
                     onMouseOver={[Function]}
                     onTouchEnd={[Function]}
                     onTouchStart={[Function]}
+                    role="tooltip"
                   >
                     <button
+                      aria-labelledby="useId-8"
                       className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
                       disabled={false}
                       onBlur={[Function]}
@@ -961,14 +985,17 @@ exports[`renders an empty list correctly 1`] = `
                     aria-labelledby={null}
                     className=""
                     data-mui-internal-clone-element={true}
+                    id="useId-9"
                     onBlur={[Function]}
                     onFocus={[Function]}
                     onMouseLeave={[Function]}
                     onMouseOver={[Function]}
                     onTouchEnd={[Function]}
                     onTouchStart={[Function]}
+                    role="tooltip"
                   >
                     <button
+                      aria-labelledby="useId-9"
                       className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
                       disabled={false}
                       onBlur={[Function]}
@@ -1008,14 +1035,17 @@ exports[`renders an empty list correctly 1`] = `
                     aria-labelledby={null}
                     className=""
                     data-mui-internal-clone-element={true}
+                    id="useId-10"
                     onBlur={[Function]}
                     onFocus={[Function]}
                     onMouseLeave={[Function]}
                     onMouseOver={[Function]}
                     onTouchEnd={[Function]}
                     onTouchStart={[Function]}
+                    role="tooltip"
                   >
                     <button
+                      aria-labelledby="useId-10"
                       className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
                       disabled={false}
                       onBlur={[Function]}

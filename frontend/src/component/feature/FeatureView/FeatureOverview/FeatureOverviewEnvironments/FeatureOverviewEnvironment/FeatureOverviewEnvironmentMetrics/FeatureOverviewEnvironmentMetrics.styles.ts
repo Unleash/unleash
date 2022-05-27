@@ -28,7 +28,7 @@ export const useStyles = makeStyles()(theme => ({
         },
     },
     percentage: {
-        color: theme.palette.primary.light,
+        color: theme.palette.primary.main,
         textAlign: 'right',
         fontSize: theme.fontSizes.subHeader,
     },

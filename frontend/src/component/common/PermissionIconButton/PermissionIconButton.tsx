@@ -7,6 +7,7 @@ import {
     ITooltipResolverProps,
 } from 'component/common/TooltipResolver/TooltipResolver';
 import { formatAccessText } from 'utils/formatAccessText';
+import { useId } from 'hooks/useId';
 
 interface IPermissionIconButtonProps {
     permission: string;
@@ -41,6 +42,7 @@ const PermissionIconButton = ({
     ...rest
 }: IButtonProps | ILinkProps) => {
     const { hasAccess } = useContext(AccessContext);
+    const id = useId();
     let access;
 
     if (projectId && environmentId) {
@@ -57,10 +59,11 @@ const PermissionIconButton = ({
             title={formatAccessText(access, tooltipProps?.title)}
             arrow
         >
-            <div>
+            <div id={id} role="tooltip">
                 <IconButton
                     {...rest}
                     disabled={!access || disabled}
+                    aria-labelledby={id}
                     size="large"
                 >
                     {children}

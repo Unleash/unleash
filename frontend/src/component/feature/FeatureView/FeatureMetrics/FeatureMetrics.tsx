@@ -136,5 +136,3 @@ const useFeatureMetricsApplications = (featureId: string): Set<string> => {
 
     return new Set(applications);
 };
-
-export default FeatureMetrics;

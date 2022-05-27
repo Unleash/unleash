@@ -3,24 +3,6 @@ import { formatDateYMDHMS } from 'utils/formatDate';
 import { ILocationSettings } from 'hooks/useLocationSettings';
 import { CURRENT_TIME_CONTEXT_FIELD } from 'utils/operatorsForContext';
 
-export const formatConstraintValuesOrValue = (
-    constraint: IConstraint,
-    locationSettings: ILocationSettings
-): string | undefined => {
-    return (
-        formatConstraintValues(constraint) ??
-        formatConstraintValue(constraint, locationSettings)
-    );
-};
-
-export const formatConstraintValues = (
-    constraint: IConstraint
-): string | undefined => {
-    if (constraint.values && constraint.values.length > 0) {
-        return constraint.values.join(', ');
-    }
-};
-
 export const formatConstraintValue = (
     constraint: IConstraint,
     locationSettings: ILocationSettings

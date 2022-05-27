@@ -1,4 +1,4 @@
-import { useContext, useMemo, useState, VFC } from 'react';
+import { useMemo, useState, VFC } from 'react';
 import { useGlobalFilter, useSortBy, useTable } from 'react-table';
 import {
     Table,
@@ -12,7 +12,6 @@ import {
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { UPDATE_CONTEXT_FIELD } from 'component/providers/AccessProvider/permissions';
 import { Dialogue as ConfirmDialogue } from 'component/common/Dialogue/Dialogue';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import useContextsApi from 'hooks/api/actions/useContextsApi/useContextsApi';
@@ -25,7 +24,6 @@ import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { ContextActionsCell } from './ContextActionsCell/ContextActionsCell';
 import { Adjust } from '@mui/icons-material';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
-import AccessContext from 'contexts/AccessContext';
 
 const ContextList: VFC = () => {
     const [showDelDialogue, setShowDelDialogue] = useState(false);
@@ -33,7 +31,6 @@ const ContextList: VFC = () => {
     const { context, refetchUnleashContext, loading } = useUnleashContext();
     const { removeContext } = useContextsApi();
     const { setToastData, setToastApiError } = useToast();
-    const { hasAccess } = useContext(AccessContext);
 
     const data = useMemo(() => {
         if (loading) {

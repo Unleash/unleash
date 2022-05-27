@@ -18,11 +18,6 @@ export interface IUsersSortOutput {
     setSort: React.Dispatch<React.SetStateAction<IUsersSort>>;
 }
 
-export interface IUsersFilterSortOption {
-    type: UsersSortType;
-    name: string;
-}
-
 // Store the users sort state globally, and in localStorage.
 // When changing the format of IUsersSort, change the version as well.
 const useUsersSortState = createPersistentGlobalStateHook<IUsersSort>(
@@ -43,15 +38,6 @@ export const useUsersSort = (users: IUser[]): IUsersSortOutput => {
         sort,
         sorted,
     };
-};
-
-export const createUsersFilterSortOptions = (): IUsersFilterSortOption[] => {
-    return [
-        { type: 'created', name: 'Created' },
-        { type: 'name', name: 'Name' },
-        { type: 'role', name: 'Role' },
-        { type: 'last-seen', name: 'Last seen' },
-    ];
 };
 
 const sortAscendingUsers = (

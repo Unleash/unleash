@@ -14,14 +14,6 @@ export interface IEnvironments {
     enabled: boolean;
 }
 
-export interface IFeatureTogglePayload {
-    description: string;
-    name: string;
-    projectId: string;
-    type: string;
-    impressionData: boolean;
-}
-
 export interface IFeatureToggle {
     stale: boolean;
     archived: boolean;

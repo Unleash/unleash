@@ -7,10 +7,7 @@ interface IContextActionsCellProps {
 
 export const ActionCell = ({ children }: IContextActionsCellProps) => {
     return (
-        <Box
-            data-loading
-            sx={{ display: 'flex', justifyContent: 'flex-end', px: 2 }}
-        >
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', px: 2 }}>
             {children}
         </Box>
     );

@@ -109,6 +109,7 @@ declare module '@mui/system/createTheme/shape' {
         borderRadiusLarge: string;
         borderRadiusExtraLarge: string;
         tableRowHeight: number;
+        tableRowHeightCompact: number;
         tableRowHeightDense: number;
     }
 }

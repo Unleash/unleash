@@ -142,7 +142,7 @@ export const ProjectAccessTable: VFC<IProjectAccessTableProps> = ({
         );
 
     return (
-        <Table {...getTableProps()}>
+        <Table {...getTableProps()} rowHeight="compact">
             {/* @ts-expect-error -- react-table  */}
             <SortableTableHeader headerGroups={headerGroups} />
             <TableBody {...getTableBodyProps()}>

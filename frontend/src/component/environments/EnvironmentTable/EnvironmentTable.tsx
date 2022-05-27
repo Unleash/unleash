@@ -112,8 +112,8 @@ const COLUMNS = [
         accessor: 'name',
         width: '100%',
         canSort: false,
-        Cell: (props: any) => (
-            <EnvironmentNameCell environment={props.row.original} />
+        Cell: ({ row: { original } }: any) => (
+            <EnvironmentNameCell environment={original} />
         ),
     },
     {
@@ -121,8 +121,8 @@ const COLUMNS = [
         id: 'Actions',
         align: 'center',
         canSort: false,
-        Cell: (props: any) => (
-            <EnvironmentActionCell environment={props.row.original} />
+        Cell: ({ row: { original } }: any) => (
+            <EnvironmentActionCell environment={original} />
         ),
     },
 ];

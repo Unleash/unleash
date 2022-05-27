@@ -49,7 +49,7 @@ export const PageContent: FC<IPageContentProps> = ({
     const paperProps = disableBorder ? { elevation: 0 } : {};
 
     return (
-        <div ref={ref}>
+        <div ref={ref} aria-busy={isLoading} aria-live="polite">
             <Paper
                 {...rest}
                 {...paperProps}

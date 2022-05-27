@@ -36,7 +36,6 @@ export const useStyles = makeStyles()(theme => ({
         alignItems: 'center',
     },
     row: {
-        height: theme.shape.tableRowHeight,
         position: 'absolute',
         width: '100%',
     },

@@ -8,15 +8,15 @@ import { SEGMENT_DIALOG_NAME_ID } from 'utils/testIds';
 interface ISegmentDeleteConfirmProps {
     segment: ISegment;
     open: boolean;
-    setDeldialogue: React.Dispatch<React.SetStateAction<boolean>>;
-    handleDeleteSegment: (id: number) => Promise<void>;
+    onClose: () => void;
+    onRemove: () => void;
 }
 
 export const SegmentDeleteConfirm = ({
     segment,
     open,
-    setDeldialogue,
-    handleDeleteSegment,
+    onClose,
+    onRemove,
 }: ISegmentDeleteConfirmProps) => {
     const { classes: styles } = useStyles();
     const [confirmName, setConfirmName] = useState('');
@@ -25,7 +25,7 @@ export const SegmentDeleteConfirm = ({
         setConfirmName(e.currentTarget.value);
 
     const handleCancel = () => {
-        setDeldialogue(false);
+        onClose();
         setConfirmName('');
     };
     const formId = 'delete-segment-confirmation-form';
@@ -36,7 +36,7 @@ export const SegmentDeleteConfirm = ({
             primaryButtonText="Delete segment"
             secondaryButtonText="Cancel"
             onClick={() => {
-                handleDeleteSegment(segment.id);
+                onRemove();
                 setConfirmName('');
             }}
             disabledPrimaryButton={segment?.name !== confirmName}
@@ -45,7 +45,7 @@ export const SegmentDeleteConfirm = ({
         >
             <p className={styles.deleteParagraph}>
                 In order to delete this segment, please enter the name of the
-                segment in the textfield below: <strong>{segment?.name}</strong>
+                segment in the field below: <strong>{segment?.name}</strong>
             </p>
 
             <form id={formId}>

@@ -17,5 +17,5 @@ export const DateCell: VFC<IDateCellProps> = ({ value }) => {
             : formatDateYMD(parseISO(value), locationSettings.locale)
         : undefined;
 
-    return <TextCell>{date}</TextCell>;
+    return <TextCell lineClamp={1}>{date}</TextCell>;
 };

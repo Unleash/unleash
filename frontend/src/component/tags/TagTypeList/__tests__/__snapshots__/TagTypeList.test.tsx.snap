@@ -2,7 +2,10 @@
 
 exports[`renders an empty list correctly 1`] = `
 [
-  <div>
+  <div
+    aria-busy={true}
+    aria-live="polite"
+  >
     <div
       className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 tss-15wj2kz-container mui-177gdp-MuiPaper-root"
     >
@@ -109,7 +112,7 @@ exports[`renders an empty list correctly 1`] = `
         className="tss-54jt3w-bodyContainer"
       >
         <table
-          className="MuiTable-root mui-133vm37-MuiTable-root"
+          className="MuiTable-root tss-z7cn64-table mui-133vm37-MuiTable-root"
           role="table"
         >
           <thead
@@ -268,7 +271,7 @@ exports[`renders an empty list correctly 1`] = `
                     className="tss-1sfnvgj-container"
                   >
                     <span
-                      className="tss-7fbt0h-title"
+                      className="tss-lcjmxf-title"
                       data-loading={true}
                       style={
                         {
@@ -432,7 +435,7 @@ exports[`renders an empty list correctly 1`] = `
                     className="tss-1sfnvgj-container"
                   >
                     <span
-                      className="tss-7fbt0h-title"
+                      className="tss-lcjmxf-title"
                       data-loading={true}
                       style={
                         {
@@ -596,7 +599,7 @@ exports[`renders an empty list correctly 1`] = `
                     className="tss-1sfnvgj-container"
                   >
                     <span
-                      className="tss-7fbt0h-title"
+                      className="tss-lcjmxf-title"
                       data-loading={true}
                       style={
                         {
@@ -760,7 +763,7 @@ exports[`renders an empty list correctly 1`] = `
                     className="tss-1sfnvgj-container"
                   >
                     <span
-                      className="tss-7fbt0h-title"
+                      className="tss-lcjmxf-title"
                       data-loading={true}
                       style={
                         {
@@ -924,7 +927,7 @@ exports[`renders an empty list correctly 1`] = `
                     className="tss-1sfnvgj-container"
                   >
                     <span
-                      className="tss-7fbt0h-title"
+                      className="tss-lcjmxf-title"
                       data-loading={true}
                       style={
                         {

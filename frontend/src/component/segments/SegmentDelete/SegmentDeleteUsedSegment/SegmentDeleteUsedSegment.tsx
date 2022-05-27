@@ -10,28 +10,24 @@ import { formatStrategyName } from 'utils/strategyNames';
 interface ISegmentDeleteUsedSegmentProps {
     segment: ISegment;
     open: boolean;
-    setDeldialogue: React.Dispatch<React.SetStateAction<boolean>>;
+    onClose: () => void;
     strategies: IFeatureStrategy[] | undefined;
 }
 
 export const SegmentDeleteUsedSegment = ({
     segment,
     open,
-    setDeldialogue,
+    onClose,
     strategies,
 }: ISegmentDeleteUsedSegmentProps) => {
     const { classes: styles } = useStyles();
-
-    const handleCancel = () => {
-        setDeldialogue(false);
-    };
 
     return (
         <Dialogue
             title="You can't delete a segment that's currently in use"
             open={open}
             primaryButtonText="OK"
-            onClick={handleCancel}
+            onClick={onClose}
         >
             <p>
                 The following feature toggles are using the{' '}

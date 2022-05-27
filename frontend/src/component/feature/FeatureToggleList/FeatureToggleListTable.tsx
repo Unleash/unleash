@@ -68,7 +68,7 @@ const columns = [
         sortType: 'alphanumeric',
     },
     {
-        Header: 'Created on',
+        Header: 'Created',
         accessor: 'createdAt',
         Cell: DateCell,
         sortType: 'date',
@@ -236,7 +236,7 @@ export const FeatureToggleListTable: VFC = () => {
             }
         >
             <SearchHighlightProvider value={globalFilter}>
-                <Table {...getTableProps()}>
+                <Table {...getTableProps()} rowHeight={rowHeight}>
                     {/* @ts-expect-error -- fix in react-table v8 */}
                     <SortableTableHeader headerGroups={headerGroups} flex />
                     <TableBody

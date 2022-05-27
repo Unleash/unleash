@@ -18,7 +18,10 @@ export const useSegments = (strategyId?: string): IUseSegmentsOutput => {
 
     const { data, error, mutate } = useSWR(
         [strategyId, uiConfig.flags],
-        fetchSegments
+        fetchSegments,
+        {
+            refreshInterval: 15 * 1000,
+        }
     );
 
     const refetchSegments = useCallback(() => {

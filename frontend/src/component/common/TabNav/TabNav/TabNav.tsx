@@ -45,7 +45,10 @@ export const TabNav = ({
 
     return (
         <>
-            <Paper className={classnames(styles.tabNav, navClass)}>
+            <Paper
+                className={classnames(styles.tabNav, navClass)}
+                elevation={0}
+            >
                 <Tabs
                     value={activeTab}
                     onChange={(_, tabId) => {

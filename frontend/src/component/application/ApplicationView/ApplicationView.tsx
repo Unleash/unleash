@@ -7,6 +7,7 @@ import {
     ListItemAvatar,
     ListItemText,
     Typography,
+    Divider,
 } from '@mui/material';
 import {
     Extension,
@@ -107,7 +108,7 @@ export const ApplicationView = () => {
                 <Typography variant="subtitle1" style={{ padding: '1rem 0' }}>
                     Toggles
                 </Typography>
-                <hr />
+                <Divider />
                 <List>
                     {seenToggles.map(
                         ({ name, description, notFound, project }, i) => (
@@ -135,7 +136,7 @@ export const ApplicationView = () => {
                 <Typography variant="subtitle1" style={{ padding: '1rem 0' }}>
                     Implemented strategies
                 </Typography>
-                <hr />
+                <Divider />
                 <List>
                     {strategies.map(
                         ({ name, description, notFound }, i: number) => (
@@ -163,7 +164,7 @@ export const ApplicationView = () => {
                 <Typography variant="subtitle1" style={{ padding: '1rem 0' }}>
                     {instances.length} Instances registered
                 </Typography>
-                <hr />
+                <Divider />
                 <List>
                     {instances.map(
                         ({

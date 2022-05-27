@@ -52,6 +52,7 @@ const columns = [
         sortType: 'date',
         align: 'center',
         maxWidth: 85,
+        disableGlobalFilter: true,
     },
     {
         Header: 'Type',
@@ -59,6 +60,7 @@ const columns = [
         Cell: FeatureTypeCell,
         align: 'center',
         maxWidth: 85,
+        disableGlobalFilter: true,
     },
     {
         Header: 'Feature toggle name',
@@ -73,6 +75,7 @@ const columns = [
         Cell: DateCell,
         sortType: 'date',
         maxWidth: 150,
+        disableGlobalFilter: true,
     },
     {
         Header: 'Project ID',
@@ -89,6 +92,7 @@ const columns = [
         Cell: FeatureStaleCell,
         sortType: 'boolean',
         maxWidth: 120,
+        disableGlobalFilter: true,
     },
     // Always hidden -- for search
     {
@@ -210,7 +214,11 @@ export const FeatureToggleListTable: VFC = () => {
             isLoading={loading}
             header={
                 <PageHeader
-                    title={`Feature toggles (${data.length})`}
+                    title={`Feature toggles (${
+                        rows.length < data.length
+                            ? `${rows.length} of ${data.length}`
+                            : data.length
+                    })`}
                     actions={
                         <>
                             <TableSearch

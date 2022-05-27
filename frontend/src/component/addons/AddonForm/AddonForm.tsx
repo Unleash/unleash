@@ -108,14 +108,19 @@ export const AddonForm: VFC<IAddonFormProps> = ({
 
     const setEventValue =
         (name: string) => (event: ChangeEvent<HTMLInputElement>) => {
-            const newConfig = { ...formValues };
-            if (event.target.checked) {
-                newConfig.events.push(name);
-            } else {
-                newConfig.events = newConfig.events.filter(e => e !== name);
-            }
-            setFormValues(newConfig);
-            setErrors({ ...errors, events: undefined });
+            setFormValues(
+                produce(draft => {
+                    if (event.target.checked) {
+                        draft.events.push(name);
+                    } else {
+                        draft.events = draft.events.filter(e => e !== name);
+                    }
+                })
+            );
+            setErrors(prev => ({
+                ...prev,
+                events: undefined,
+            }));
         };
 
     const onCancel = () => {

@@ -6022,7 +6022,7 @@ vite-tsconfig-paths@3.5.0:
     recrawl-sync "^2.0.3"
     tsconfig-paths "^4.0.0"
 
-vite@2.9.9:
+vite@2.9.9, vite@^2.9.9:
   version "2.9.9"
   resolved "https://registry.yarnpkg.com/vite/-/vite-2.9.9.tgz#8b558987db5e60fedec2f4b003b73164cb081c5e"
   integrity sha512-ffaam+NgHfbEmfw/Vuh6BHKKlI/XIAhxE5QSS7gFLIngxg171mg1P3a4LSRME0z2ZU1ScxoKzphkipcYwSD5Ew==
@@ -6034,22 +6034,10 @@ vite@2.9.9:
   optionalDependencies:
     fsevents "~2.3.2"
 
-vite@^2.9.8:
-  version "2.9.8"
-  resolved "https://registry.yarnpkg.com/vite/-/vite-2.9.8.tgz#2c2cb0790beb0fbe4b8c0995b80fe691a91c2545"
-  integrity sha512-zsBGwn5UT3YS0NLSJ7hnR54+vUKfgzMUh/Z9CxF1YKEBVIe213+63jrFLmZphgGI5zXwQCSmqIdbPuE8NJywPw==
-  dependencies:
-    esbuild "^0.14.27"
-    postcss "^8.4.13"
-    resolve "^1.22.0"
-    rollup "^2.59.0"
-  optionalDependencies:
-    fsevents "~2.3.2"
-
-vitest@0.12.9:
-  version "0.12.9"
-  resolved "https://registry.yarnpkg.com/vitest/-/vitest-0.12.9.tgz#f184694da00476be1a1ead117892001292da08c6"
-  integrity sha512-1NtyUANS72Qw5PwYvoztk067NX4fSiis2xQxhByOWS33eL2er/yupHyLxlBCOkF2ANe0dLFRvT1GVb+nczL5aw==
+vitest@0.13.0:
+  version "0.13.0"
+  resolved "https://registry.yarnpkg.com/vitest/-/vitest-0.13.0.tgz#8c2e8a555bb6d7ac016408ffdc41d270bf69f37c"
+  integrity sha512-vuYt3+G25MMnANgyMHHG3VK86C9K/VFi/8uH5myQ2v660W4WArv99ElakPlVFxxSXXM1jqQPiPj2ht35Bod9LQ==
   dependencies:
     "@types/chai" "^4.3.1"
     "@types/chai-subset" "^1.3.3"
@@ -6058,7 +6046,7 @@ vitest@0.12.9:
     local-pkg "^0.4.1"
     tinypool "^0.1.3"
     tinyspy "^0.3.2"
-    vite "^2.9.8"
+    vite "^2.9.9"
 
 w3c-hr-time@^1.0.2:
   version "1.0.2"

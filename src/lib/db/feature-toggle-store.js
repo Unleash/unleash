@@ -178,7 +178,7 @@ class FeatureToggleStore {
             archived: data.archived ? 1 : 0,
             strategies: JSON.stringify(data.strategies),
             variants: data.variants ? JSON.stringify(data.variants) : null,
-            created_at: data.createdAt, // eslint-disable-line
+            created_at: new Date(data.createdAt), // eslint-disable-line
         };
     }
 

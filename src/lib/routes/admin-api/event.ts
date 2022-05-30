@@ -5,11 +5,13 @@ import EventService from '../../services/event-service';
 import { ADMIN } from '../../types/permissions';
 import { IEvent } from '../../types/events';
 import Controller from '../controller';
+import { anonymise } from '../../util/anonymise';
 
 const version = 1;
-
 export default class EventController extends Controller {
     private eventService: EventService;
+
+    private anonymise: boolean = false;
 
     constructor(
         config: IUnleashConfig,
@@ -17,8 +19,19 @@ export default class EventController extends Controller {
     ) {
         super(config);
         this.eventService = eventService;
+        this.anonymise = config.experimental?.anonymiseEventLog;
         this.get('/', this.getEvents, ADMIN);
         this.get('/:name', this.getEventsForToggle);
+    }
+
+    fixEvents(events: IEvent[]): IEvent[] {
+        if (this.anonymise) {
+            return events.map((e: IEvent) => ({
+                ...e,
+                createdBy: anonymise(e.createdBy),
+            }));
+        }
+        return events;
     }
 
     async getEvents(
@@ -32,7 +45,10 @@ export default class EventController extends Controller {
         } else {
             events = await this.eventService.getEvents();
         }
-        res.json({ version, events });
+        res.json({
+            version,
+            events: this.fixEvents(events),
+        });
     }
 
     async getEventsForToggle(
@@ -42,10 +58,10 @@ export default class EventController extends Controller {
         const toggleName = req.params.name;
         const events = await this.eventService.getEventsForToggle(toggleName);
 
-        if (events) {
-            res.json({ toggleName, events });
-        } else {
-            res.status(404).json({ error: 'Could not find events' });
-        }
+        res.json({
+            version,
+            toggleName,
+            events: this.fixEvents(events),
+        });
     }
 }

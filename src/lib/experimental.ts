@@ -2,6 +2,7 @@ export interface IExperimentalOptions {
     metricsV2?: IExperimentalToggle;
     clientFeatureMemoize?: IExperimentalToggle;
     segments?: IExperimentalSegments;
+    anonymiseEventLog?: boolean;
 }
 
 export interface IExperimentalToggle {

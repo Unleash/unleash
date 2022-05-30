@@ -37,7 +37,7 @@ Used to fetch list of archived feature toggles
 
 Response: **200 OK** - When feature toggle was successfully revived. 
 
-### Delete an archivied feature toggle
+### Delete an archived feature toggle
 
 `DELETE http://unleash.host.com/api/admin/archive/:featureName`
 

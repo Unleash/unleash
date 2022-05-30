@@ -137,3 +137,19 @@ test('should only send segments that are in use', async () => {
     //3 segments were created in createTestSegments, only 2 are in use
     expect(clientFeatures.segments.length).toEqual(2);
 });
+
+test('should send all segments that are in use by feature', async () => {
+    await createTestSegments();
+
+    const clientFeatures = await fetchClientResponse();
+    const globalSegments = clientFeatures.segments;
+    const globalSegmentIds = globalSegments.map((segment) => segment.id);
+    const allSegmentIds = clientFeatures.features
+        .map((feat) => feat.strategies.map((strategy) => strategy.segments))
+        .flat()
+        .flat()
+        .filter((x) => !!x);
+    const toggleSegmentIds = [...new Set(allSegmentIds)];
+
+    expect(globalSegmentIds).toEqual(toggleSegmentIds);
+});

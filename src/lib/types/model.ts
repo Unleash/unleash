@@ -23,7 +23,7 @@ export interface IStrategyConfig {
     id?: string;
     name: string;
     constraints?: IConstraint[];
-    segments?: string[];
+    segments?: number[];
     parameters?: { [key: string]: string };
     sortOrder?: number;
 }

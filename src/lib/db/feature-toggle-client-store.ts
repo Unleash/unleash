@@ -78,15 +78,9 @@ export default class FeatureToggleClientStore
             'fs.strategy_name as strategy_name',
             'fs.parameters as parameters',
             'fs.constraints as constraints',
+            'segments.id as segment_id',
+            'segments.constraints as segment_constraints',
         ];
-
-        if (inlineSegmentConstraints) {
-            selectColumns = [
-                ...selectColumns,
-                'segments.id as segment_id',
-                'segments.constraints as segment_constraints',
-            ];
-        }
 
         let query = this.db('features')
             .select(selectColumns)
@@ -105,17 +99,13 @@ export default class FeatureToggleClientStore
                     .as('fe'),
                 'fe.feature_name',
                 'features.name',
-            );
-
-        if (inlineSegmentConstraints) {
-            query = query
-                .fullOuterJoin(
-                    'feature_strategy_segment as fss',
-                    `fss.feature_strategy_id`,
-                    `fs.id`,
-                )
-                .fullOuterJoin('segments', `segments.id`, `fss.segment_id`);
-        }
+            )
+            .fullOuterJoin(
+                'feature_strategy_segment as fss',
+                `fss.feature_strategy_id`,
+                `fs.id`,
+            )
+            .fullOuterJoin('segments', `segments.id`, `fss.segment_id`);
 
         query = query.where({
             archived,
@@ -155,6 +145,8 @@ export default class FeatureToggleClientStore
             }
             if (inlineSegmentConstraints && r.segment_id) {
                 this.addSegmentToStrategy(feature, r);
+            } else if (!inlineSegmentConstraints && r.segment_id) {
+                this.addSegmentIdsToStrategy(feature, r);
             }
             feature.impressionData = r.impression_data;
             feature.enabled = !!r.enabled;
@@ -218,6 +210,22 @@ export default class FeatureToggleClientStore
         feature.strategies
             .find((s) => s.id === row.strategy_id)
             ?.constraints.push(...row.segment_constraints);
+    }
+
+    private addSegmentIdsToStrategy(
+        feature: PartialDeep<IFeatureToggleClient>,
+        row: Record<string, any>,
+    ) {
+        const strategy = feature.strategies.find(
+            (s) => s.id === row.strategy_id,
+        );
+        if (!strategy) {
+            return;
+        }
+        if (!strategy.segments) {
+            strategy.segments = [];
+        }
+        strategy.segments.push(row.segment_id);
     }
 
     async getClient(

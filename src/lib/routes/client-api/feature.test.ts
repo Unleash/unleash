@@ -60,13 +60,19 @@ test('should get empty getFeatures via client', () => {
 
 test('if caching is enabled should memoize', async () => {
     const getClientFeatures = jest.fn().mockReturnValue([]);
+    const getActive = jest.fn().mockReturnValue([]);
 
     const featureToggleServiceV2 = {
         getClientFeatures,
     };
+
+    const segmentService = {
+        getActive,
+    };
+
     const controller = new FeatureController(
         // @ts-ignore
-        { featureToggleServiceV2 },
+        { featureToggleServiceV2, segmentService },
         {
             getLogger,
             experimental: {
@@ -87,12 +93,19 @@ test('if caching is enabled should memoize', async () => {
 test('if caching is not enabled all calls goes to service', async () => {
     const getClientFeatures = jest.fn().mockReturnValue([]);
 
+    const getActive = jest.fn().mockReturnValue([]);
+
     const featureToggleServiceV2 = {
         getClientFeatures,
     };
+
+    const segmentService = {
+        getActive,
+    };
+
     const controller = new FeatureController(
         // @ts-ignore
-        { featureToggleServiceV2 },
+        { featureToggleServiceV2, segmentService },
         {
             getLogger,
             experimental: {

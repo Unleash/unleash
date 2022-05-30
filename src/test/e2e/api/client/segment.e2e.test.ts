@@ -38,6 +38,13 @@ const fetchClientFeatures = (): Promise<IFeatureToggleClient[]> => {
         .then((res) => res.body.features);
 };
 
+const fetchGlobalSegments = (): Promise<ISegment[] | undefined> => {
+    return app.request
+        .get(FEATURES_CLIENT_BASE_PATH)
+        .expect(200)
+        .then((res) => res.body.segments);
+};
+
 const fetchClientSegmentsActive = (): Promise<ISegment[]> => {
     return app.request
         .get('/api/client/segments/active')
@@ -215,4 +222,23 @@ test('should validate feature strategy segment limit', async () => {
     await expect(
         addSegmentToStrategy(segments[5].id, feature1.strategies[0].id),
     ).rejects.toThrow(`Strategies may not have more than ${limit} segments`);
+});
+
+test('should not return segments in base of toggle response if inline is enabled', async () => {
+    const constraints = mockConstraints();
+    await createSegment({ name: 'S1', constraints });
+    await createSegment({ name: 'S2', constraints });
+    await createSegment({ name: 'S3', constraints });
+    await createFeatureToggle(mockFeatureToggle());
+    await createFeatureToggle(mockFeatureToggle());
+    await createFeatureToggle(mockFeatureToggle());
+    const [feature1, feature2] = await fetchFeatures();
+    const [segment1, segment2] = await fetchSegments();
+
+    await addSegmentToStrategy(segment1.id, feature1.strategies[0].id);
+    await addSegmentToStrategy(segment2.id, feature1.strategies[0].id);
+    await addSegmentToStrategy(segment2.id, feature2.strategies[0].id);
+
+    const globalSegments = await fetchGlobalSegments();
+    expect(globalSegments).toBe(undefined);
 });

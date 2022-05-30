@@ -79,6 +79,7 @@ export interface ITestDb {
 export default async function init(
     databaseSchema: string = 'test',
     getLogger: LogProvider = noLoggerProvider,
+    configOverride: any = {},
 ): Promise<ITestDb> {
     const config = createTestConfig({
         db: {
@@ -87,6 +88,7 @@ export default async function init(
             schema: databaseSchema,
             ssl: false,
         },
+        ...configOverride,
         getLogger,
     });
 

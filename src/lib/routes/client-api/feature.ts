@@ -11,6 +11,7 @@ import NotFoundError from '../../error/notfound-error';
 import { IAuthRequest } from '../unleash-types';
 import ApiUser from '../../types/api-user';
 import { ALL, isAllProjects } from '../../types/models/api-token';
+import { SegmentService } from 'lib/services/segment-service';
 
 const version = 2;
 
@@ -24,22 +25,31 @@ export default class FeatureController extends Controller {
 
     private featureToggleServiceV2: FeatureToggleService;
 
+    private segmentService: SegmentService;
+
     private readonly cache: boolean;
 
     private cachedFeatures: any;
 
+    private useGlobalSegments: boolean;
+
     constructor(
         {
             featureToggleServiceV2,
-        }: Pick<IUnleashServices, 'featureToggleServiceV2'>,
+            segmentService,
+        }: Pick<IUnleashServices, 'featureToggleServiceV2' | 'segmentService'>,
         config: IUnleashConfig,
     ) {
         super(config);
         const { experimental } = config;
         this.featureToggleServiceV2 = featureToggleServiceV2;
+        this.segmentService = segmentService;
         this.logger = config.getLogger('client-api/feature.js');
         this.get('/', this.getAll);
         this.get('/:featureName', this.getFeatureToggle);
+        this.useGlobalSegments =
+            experimental && !experimental?.segments?.inlineSegmentConstraints;
+
         if (experimental && experimental.clientFeatureMemoize) {
             // @ts-ignore
             this.cache = experimental.clientFeatureMemoize.enabled;
@@ -118,7 +128,22 @@ export default class FeatureController extends Controller {
                 featureQuery,
             );
         }
-        res.json({ version, features, query: featureQuery });
+
+        const response = {
+            version,
+            features,
+            query: featureQuery,
+        };
+
+        if (this.useGlobalSegments) {
+            const segments = await this.segmentService.getActive();
+            res.json({
+                ...response,
+                segments,
+            });
+        } else {
+            res.json(response);
+        }
     }
 
     async getFeatureToggle(req: IAuthRequest, res: Response): Promise<void> {

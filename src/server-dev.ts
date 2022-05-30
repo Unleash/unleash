@@ -34,6 +34,7 @@ process.nextTick(async () => {
                 experimental: {
                     metricsV2: { enabled: true },
                     segments: experimentalSegmentsConfig(),
+                    anonymiseEventLog: false,
                 },
                 authentication: {
                     initApiTokens: [

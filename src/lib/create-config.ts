@@ -231,6 +231,20 @@ const loadEnvironmentEnableOverrides = () => {
     return [];
 };
 
+const parseCspConfig = (cspConfig: CspDomains): CspDomains | undefined => {
+    if (!cspConfig) {
+        return undefined;
+    }
+
+    return {
+        defaultSrc: cspConfig.defaultSrc || [],
+        fontSrc: cspConfig.fontSrc || [],
+        scriptSrc: cspConfig.scriptSrc || [],
+        imgSrc: cspConfig.imgSrc || [],
+        styleSrc: cspConfig.styleSrc || [],
+    };
+};
+
 const parseCspEnvironmentVariables = (): CspDomains => {
     const defaultSrc = process.env.CSP_ALLOWED_DEFAULT?.split(',') || [];
     const fontSrc = process.env.CSP_ALLOWED_FONT?.split(',') || [];
@@ -335,7 +349,9 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         safeBoolean(process.env.DISABLE_LEGACY_FEATURES_API, false);
 
     const additionalCspAllowedDomains: CspDomains =
-        options.additionalCspAllowedDomains || parseCspEnvironmentVariables();
+        parseCspConfig(options.additionalCspAllowedDomains) ||
+        parseCspEnvironmentVariables();
+
     return {
         db,
         session,

@@ -299,6 +299,22 @@ test('If additionalCspAllowedDomains is set in config map, passes through', asyn
     expect(config.additionalCspAllowedDomains.imgSrc).toStrictEqual([]);
 });
 
+test('Can set partial additionalCspDomains', () => {
+    const config = createConfig({
+        additionalCspAllowedDomains: {
+            defaultSrc: ['googlefonts.com'],
+        },
+    });
+    expect(config.additionalCspAllowedDomains).toBeDefined();
+    expect(config.additionalCspAllowedDomains.defaultSrc).toStrictEqual([
+        'googlefonts.com',
+    ]);
+    expect(config.additionalCspAllowedDomains.fontSrc).toStrictEqual([]);
+    expect(config.additionalCspAllowedDomains.styleSrc).toStrictEqual([]);
+    expect(config.additionalCspAllowedDomains.scriptSrc).toStrictEqual([]);
+    expect(config.additionalCspAllowedDomains.imgSrc).toStrictEqual([]);
+});
+
 test.each([
     ['CSP_ALLOWED_DEFAULT', 'googlefonts.com', 'defaultSrc'],
     ['CSP_ALLOWED_FONT', 'googlefonts.com', 'fontSrc'],

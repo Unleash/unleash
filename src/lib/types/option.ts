@@ -139,11 +139,11 @@ export interface IUIConfig {
     ];
 }
 export interface CspDomains {
-    defaultSrc: string[];
-    fontSrc: string[];
-    styleSrc: string[];
-    scriptSrc: string[];
-    imgSrc: string[];
+    defaultSrc?: string[];
+    fontSrc?: string[];
+    styleSrc?: string[];
+    scriptSrc?: string[];
+    imgSrc?: string[];
 }
 export interface IUnleashConfig {
     db: IDBOption;

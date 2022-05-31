@@ -149,15 +149,15 @@ The event properties are described in short in the table below. For more info re
 
 | Property      | Description                                                                                           |
 |---------------|-------------------------------------------------------------------------------------------------------|
-| `id`          | The ID of the event. An increasing natural number.                                                    |
 | `createdAt`   | The time the event happened as a RFC 3339-conformant timestamp.                                       |
-| `type`        | The event type, as described in the rest of this section.                                             |
-| `project`     | The project the event relates to, if applicable.                                                      |
+| `data`        | Any extra associated data related to the event, such as feature toggle state, if applicable.          |
 | `environment` | The feature toggle environment the event relates to, if applicable.                                   |
 | `featureName` | The name of the feature toggle the event relates to, if applicable.                                   |
-| `data`        | Any extra associated data related to the event, such as feature toggle state, if applicable.          |
+| `id`          | The ID of the event. An increasing natural number.                                                    |
 | `preData`     | For events with new state in the `data` property, the `preData` property contains the previous state. |
+| `project`     | The project the event relates to, if applicable.                                                      |
 | `tags`        | Any tags related to the event, if applicable.                                                         |
+| `type`        | The event type, as described in the rest of this section.                                             |
 
 
 ### Feature Toggle events:

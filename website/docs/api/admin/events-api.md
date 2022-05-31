@@ -348,21 +348,3 @@ The event properties are described in short in the table below. For more info re
 	}]
 }
 ```
-
-All events will implement the following interface:
-
-```js
-
-interface IEvent {
-    id: number;
-    createdAt: Date;
-    type: string;
-    createdBy: string;
-    project?: string;
-    environment?: string;
-    featureName?: string;
-    data?: any;
-    preData?: any;
-    tags?: ITag[];
-}
-```

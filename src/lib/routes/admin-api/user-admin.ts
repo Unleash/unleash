@@ -11,8 +11,9 @@ import { IUnleashServices } from '../../types/services';
 import SessionService from '../../services/session-service';
 import { IAuthRequest } from '../unleash-types';
 import SettingService from '../../services/setting-service';
-import { SimpleAuthSettings } from '../../server-impl';
+import { IUser, SimpleAuthSettings } from '../../server-impl';
 import { simpleAuthKey } from '../../types/settings/simple-auth-settings';
+import { anonymise } from '../../util/anonymise';
 
 interface ICreateUserBody {
     username: string;
@@ -23,6 +24,8 @@ interface ICreateUserBody {
 }
 
 export default class UserAdminController extends Controller {
+    private anonymise: boolean = false;
+
     private userService: UserService;
 
     private accessService: AccessService;
@@ -67,6 +70,7 @@ export default class UserAdminController extends Controller {
         this.settingService = settingService;
         this.logger = config.getLogger('routes/user-controller.ts');
         this.unleashUrl = config.server.unleashUrl;
+        this.anonymise = config.experimental?.anonymiseEventLog;
 
         this.get('/', this.getUsers, ADMIN);
         this.get('/search', this.search);
@@ -106,11 +110,24 @@ export default class UserAdminController extends Controller {
         res.json(sessions);
     }
 
+    anonymiseUsers(users: IUser[]): IUser[] {
+        return users.map((u) => ({
+            ...u,
+            email: anonymise(u.email || 'random'),
+            imageUrl:
+                'https://gravatar.com/avatar/21232f297a57a5a743894a0e4a801fc3?size=42&default=retro',
+        }));
+    }
+
     async search(req: Request, res: Response): Promise<void> {
         const { q } = req.query as any;
         try {
-            const users =
+            let users =
                 q && q.length > 1 ? await this.userService.search(q) : [];
+
+            if (this.anonymise) {
+                users = this.anonymiseUsers(users);
+            }
             res.json(users);
         } catch (error) {
             this.logger.error(error);

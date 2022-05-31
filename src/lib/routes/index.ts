@@ -5,13 +5,12 @@ import SimplePasswordProvider from './auth/simple-password-provider';
 import { IUnleashConfig } from '../types/option';
 import { IUnleashServices } from '../types/services';
 import { api } from './api-def';
+import LogoutController from './logout';
 
 const AdminApi = require('./admin-api');
 const ClientApi = require('./client-api');
 const Controller = require('./controller');
 const HealthCheckController = require('./health-check');
-const LogoutController = require('./logout');
-
 class IndexRouter extends Controller {
     constructor(config: IUnleashConfig, services: IUnleashServices) {
         super(config);

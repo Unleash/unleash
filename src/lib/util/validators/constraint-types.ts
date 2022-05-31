@@ -17,14 +17,18 @@ export const validateString = async (value: unknown): Promise<void> => {
 };
 
 export const validateSemver = (value: unknown): void => {
-    const cleanValue = semver.clean(value) === value;
+    if (typeof value !== 'string') {
+        throw new BadDataError(`the provided value is not a string.`);
+    }
 
+    const cleanValue = semver.clean(value) === value;
     const result = semver.valid(value);
 
-    if (result && cleanValue) return;
-    throw new BadDataError(
-        `the provided value is not a valid semver format. The value provided was: ${value}`,
-    );
+    if (!result || !cleanValue) {
+        throw new BadDataError(
+            `the provided value is not a valid semver format. The value provided was: ${value}`,
+        );
+    }
 };
 
 export const validateDate = async (value: unknown): Promise<void> => {

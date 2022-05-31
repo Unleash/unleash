@@ -9,8 +9,8 @@ import {
 import { randomId } from '../../../../lib/util/random-id';
 import User from '../../../../lib/types/user';
 import {
-    SEGMENT_VALUES_LIMIT,
-    STRATEGY_SEGMENTS_LIMIT,
+    DEFAULT_SEGMENT_VALUES_LIMIT,
+    DEFAULT_STRATEGY_SEGMENTS_LIMIT,
 } from '../../../../lib/util/segments';
 
 let db: ITestDb;
@@ -134,29 +134,27 @@ test('should add segments to features as constraints', async () => {
 });
 
 test('should validate segment constraint values limit', async () => {
-    const limit = SEGMENT_VALUES_LIMIT;
-
     const constraints: IConstraint[] = [
         {
             contextName: randomId(),
             operator: 'IN',
-            values: mockConstraintValues(limit + 1),
+            values: mockConstraintValues(DEFAULT_SEGMENT_VALUES_LIMIT + 1),
         },
     ];
 
     await expect(
         createSegment({ name: randomId(), constraints }),
-    ).rejects.toThrow(`Segments may not have more than ${limit} values`);
+    ).rejects.toThrow(
+        `Segments may not have more than ${DEFAULT_SEGMENT_VALUES_LIMIT} values`,
+    );
 });
 
 test('should validate segment constraint values limit with multiple constraints', async () => {
-    const limit = SEGMENT_VALUES_LIMIT;
-
     const constraints: IConstraint[] = [
         {
             contextName: randomId(),
             operator: 'IN',
-            values: mockConstraintValues(limit),
+            values: mockConstraintValues(DEFAULT_SEGMENT_VALUES_LIMIT),
         },
         {
             contextName: randomId(),
@@ -167,12 +165,12 @@ test('should validate segment constraint values limit with multiple constraints'
 
     await expect(
         createSegment({ name: randomId(), constraints }),
-    ).rejects.toThrow(`Segments may not have more than ${limit} values`);
+    ).rejects.toThrow(
+        `Segments may not have more than ${DEFAULT_SEGMENT_VALUES_LIMIT} values`,
+    );
 });
 
 test('should validate feature strategy segment limit', async () => {
-    const limit = STRATEGY_SEGMENTS_LIMIT;
-
     await createSegment({ name: 'S1', constraints: [] });
     await createSegment({ name: 'S2', constraints: [] });
     await createSegment({ name: 'S3', constraints: [] });
@@ -191,7 +189,9 @@ test('should validate feature strategy segment limit', async () => {
 
     await expect(
         addSegmentToStrategy(segments[5].id, feature1.strategies[0].id),
-    ).rejects.toThrow(`Strategies may not have more than ${limit} segments`);
+    ).rejects.toThrow(
+        `Strategies may not have more than ${DEFAULT_STRATEGY_SEGMENTS_LIMIT} segments`,
+    );
 });
 
 test('should not return segments in base of toggle response if inline is enabled', async () => {

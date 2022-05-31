@@ -72,6 +72,7 @@ Object {
   "preHook": undefined,
   "preRouterHook": undefined,
   "secureHeaders": false,
+  "segmentValuesLimit": 100,
   "server": Object {
     "baseUriPath": "",
     "cdnPrefix": undefined,
@@ -91,6 +92,7 @@ Object {
     "db": true,
     "ttlHours": 48,
   },
+  "strategySegmentsLimit": 5,
   "ui": Object {
     "flags": Object {
       "E": true,

@@ -178,4 +178,6 @@ export interface IUnleashConfig {
     disableLegacyFeaturesApi?: boolean;
     environmentEnableOverrides?: string[];
     inlineSegmentConstraints: boolean;
+    segmentValuesLimit: number;
+    strategySegmentsLimit: number;
 }

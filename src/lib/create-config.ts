@@ -30,6 +30,10 @@ import {
 } from './types/models/api-token';
 import { parseEnvVarBoolean, parseEnvVarNumber } from './util/env';
 import { IExperimentalOptions } from './experimental';
+import {
+    DEFAULT_SEGMENT_VALUES_LIMIT,
+    DEFAULT_STRATEGY_SEGMENTS_LIMIT,
+} from './util/segments';
 
 const safeToUpper = (s: string) => (s ? s.toUpperCase() : s);
 
@@ -345,6 +349,16 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
             ? options.inlineSegmentConstraints
             : true;
 
+    const segmentValuesLimit = parseEnvVarNumber(
+        process.env.UNLEASH_SEGMENT_VALUES_LIMIT,
+        DEFAULT_SEGMENT_VALUES_LIMIT,
+    );
+
+    const strategySegmentsLimit = parseEnvVarNumber(
+        process.env.UNLEASH_STRATEGY_SEGMENTS_LIMIT,
+        DEFAULT_STRATEGY_SEGMENTS_LIMIT,
+    );
+
     return {
         db,
         session,
@@ -368,6 +382,8 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         environmentEnableOverrides,
         additionalCspAllowedDomains,
         inlineSegmentConstraints,
+        segmentValuesLimit,
+        strategySegmentsLimit,
     };
 }
 

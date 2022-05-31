@@ -6,6 +6,8 @@ const ENTERPRISE = Boolean(Cypress.env('ENTERPRISE'));
 const randomId = String(Math.random()).split('.')[1];
 const featureToggleName = `unleash-e2e-${randomId}`;
 const baseUrl = Cypress.config().baseUrl;
+const variant1 = 'variant1';
+const variant2 = 'variant2';
 let strategyId = '';
 
 // Disable the prod guard modal by marking it as seen.
@@ -233,9 +235,6 @@ describe('feature', () => {
     });
 
     it('can add two variant to the feature', () => {
-        const variantName = 'my-new-variant';
-        const secondVariantName = 'my-second-variant';
-
         cy.visit(`/projects/default/features/${featureToggleName}/variants`);
 
         cy.intercept(
@@ -245,26 +244,26 @@ describe('feature', () => {
                 if (req.body.length === 1) {
                     expect(req.body[0].op).to.equal('add');
                     expect(req.body[0].path).to.match(/\//);
-                    expect(req.body[0].value.name).to.equal(variantName);
+                    expect(req.body[0].value.name).to.equal(variant1);
                 } else if (req.body.length === 2) {
                     expect(req.body[0].op).to.equal('replace');
                     expect(req.body[0].path).to.match(/weight/);
                     expect(req.body[0].value).to.equal(500);
                     expect(req.body[1].op).to.equal('add');
                     expect(req.body[1].path).to.match(/\//);
-                    expect(req.body[1].value.name).to.equal(secondVariantName);
+                    expect(req.body[1].value.name).to.equal(variant2);
                 }
             }
         ).as('variantCreation');
 
         cy.get('[data-testid=ADD_VARIANT_BUTTON]').click();
         cy.wait(1000);
-        cy.get('[data-testid=VARIANT_NAME_INPUT]').type(variantName);
+        cy.get('[data-testid=VARIANT_NAME_INPUT]').type(variant1);
         cy.get('[data-testid=DIALOGUE_CONFIRM_ID]').click();
         cy.wait('@variantCreation');
         cy.get('[data-testid=ADD_VARIANT_BUTTON]').click();
         cy.wait(1000);
-        cy.get('[data-testid=VARIANT_NAME_INPUT]').type(secondVariantName);
+        cy.get('[data-testid=VARIANT_NAME_INPUT]').type(variant2);
         cy.get('[data-testid=DIALOGUE_CONFIRM_ID]').click();
         cy.wait('@variantCreation');
     });
@@ -272,7 +271,7 @@ describe('feature', () => {
     it('can set weight to fixed value for one of the variants', () => {
         cy.visit(`/projects/default/features/${featureToggleName}/variants`);
 
-        cy.get('[data-testid=VARIANT_EDIT_BUTTON]').first().click();
+        cy.get(`[data-testid=VARIANT_EDIT_BUTTON_${variant1}]`).click();
         cy.wait(1000);
         cy.get('[data-testid=VARIANT_NAME_INPUT]')
             .children()
@@ -299,9 +298,10 @@ describe('feature', () => {
 
         cy.get('[data-testid=DIALOGUE_CONFIRM_ID]').click();
         cy.wait('@variantUpdate');
-        cy.get('[data-testid=VARIANT_WEIGHT]')
-            .first()
-            .should('have.text', '15 %');
+        cy.get(`[data-testid=VARIANT_WEIGHT_${variant1}]`).should(
+            'have.text',
+            '15 %'
+        );
     });
 
     it('can delete variant', () => {

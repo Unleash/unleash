@@ -89,6 +89,8 @@ Object {
     "unleashUrl": "http://localhost:4242",
   },
   "session": Object {
+    "clearSiteDataOnLogout": true,
+    "cookieName": "unleash-session",
     "db": true,
     "ttlHours": 48,
   },

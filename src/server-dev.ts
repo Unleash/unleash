@@ -2,7 +2,6 @@ import { start } from './lib/server-impl';
 import { createConfig } from './lib/create-config';
 import { LogLevel } from './lib/logger';
 import { ApiTokenType } from './lib/types/models/api-token';
-import { experimentalSegmentsConfig } from './lib/experimental';
 
 process.nextTick(async () => {
     try {
@@ -33,7 +32,6 @@ process.nextTick(async () => {
                 },
                 experimental: {
                     metricsV2: { enabled: true },
-                    segments: experimentalSegmentsConfig(),
                     anonymiseEventLog: false,
                 },
                 authentication: {

@@ -340,6 +340,11 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         parseCspConfig(options.additionalCspAllowedDomains) ||
         parseCspEnvironmentVariables();
 
+    const inlineSegmentConstraints =
+        typeof options.inlineSegmentConstraints === 'boolean'
+            ? options.inlineSegmentConstraints
+            : true;
+
     return {
         db,
         session,
@@ -362,6 +367,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         eventBus: new EventEmitter(),
         environmentEnableOverrides,
         additionalCspAllowedDomains,
+        inlineSegmentConstraints,
     };
 }
 

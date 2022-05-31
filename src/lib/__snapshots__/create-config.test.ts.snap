@@ -64,6 +64,7 @@ Object {
     "file": undefined,
     "keepExisting": false,
   },
+  "inlineSegmentConstraints": true,
   "listen": Object {
     "host": undefined,
     "port": 4242,

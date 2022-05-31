@@ -104,6 +104,7 @@ export interface IUnleashOptions {
     eventHook?: EventHook;
     enterpriseVersion?: string;
     disableLegacyFeaturesApi?: boolean;
+    inlineSegmentConstraints?: boolean;
 }
 
 export interface IEmailOption {
@@ -176,4 +177,5 @@ export interface IUnleashConfig {
     eventBus: EventEmitter;
     disableLegacyFeaturesApi?: boolean;
     environmentEnableOverrides?: string[];
+    inlineSegmentConstraints: boolean;
 }

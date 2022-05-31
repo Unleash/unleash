@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Add } from '@mui/icons-material';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useFilters, useSortBy, useTable } from 'react-table';
+import { useGlobalFilter, useSortBy, useTable } from 'react-table';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { PageContent } from 'component/common/PageContent/PageContent';
@@ -181,14 +181,12 @@ export const ProjectFeatureToggles = ({
                 Cell: FeatureSeenCell,
                 sortType: 'date',
                 align: 'center',
-                disableGlobalFilter: true,
             },
             {
                 Header: 'Type',
                 accessor: 'type',
                 Cell: FeatureTypeCell,
                 align: 'center',
-                disableGlobalFilter: true,
             },
             {
                 Header: 'Feature toggle name',
@@ -203,14 +201,14 @@ export const ProjectFeatureToggles = ({
                 minWidth: 100,
                 maxWidth: 200,
                 sortType: 'alphanumeric',
+                disableGlobalFilter: false,
             },
             {
                 Header: 'Created',
                 accessor: 'createdAt',
                 Cell: DateCell,
                 sortType: 'date',
-                align: 'center',
-                disableGlobalFilter: true,
+                minWidth: 120,
             },
             ...environments.map(name => ({
                 Header: loading ? () => '' : name,
@@ -218,7 +216,6 @@ export const ProjectFeatureToggles = ({
                 minWidth: 90,
                 accessor: `environments.${name}`,
                 align: 'center',
-                disableGlobalFilter: true,
                 Cell: ({
                     value,
                     row: { original: feature },
@@ -248,7 +245,6 @@ export const ProjectFeatureToggles = ({
                     <ActionsCell projectId={projectId} {...props} />
                 ),
                 disableSortBy: true,
-                disableGlobalFilter: true,
             },
         ],
         [projectId, environments, onToggle, loading]
@@ -294,9 +290,7 @@ export const ProjectFeatureToggles = ({
                     },
                 ],
                 hiddenColumns,
-                filters: [
-                    { id: 'name', value: searchParams.get('search') || '' },
-                ],
+                globalFilter: searchParams.get('search') || '',
             };
         },
         [environments] // eslint-disable-line react-hooks/exhaustive-deps
@@ -306,11 +300,11 @@ export const ProjectFeatureToggles = ({
         allColumns,
         headerGroups,
         rows,
-        state: { filters, sortBy, hiddenColumns },
+        state: { globalFilter, sortBy, hiddenColumns },
         getTableBodyProps,
         getTableProps,
         prepareRow,
-        setFilter,
+        setGlobalFilter,
         setHiddenColumns,
     } = useTable(
         {
@@ -321,16 +315,12 @@ export const ProjectFeatureToggles = ({
             autoResetGlobalFilter: false,
             disableSortRemove: true,
             autoResetSortBy: false,
+            defaultColumn: {
+                disableGlobalFilter: true,
+            },
         },
-        useFilters,
+        useGlobalFilter,
         useSortBy
-    );
-
-    const filter = useMemo(
-        () =>
-            filters?.find(filterRow => filterRow?.id === 'name')?.value ||
-            initialState.filters[0].value,
-        [filters, initialState]
     );
 
     useEffect(() => {
@@ -342,8 +332,8 @@ export const ProjectFeatureToggles = ({
         if (sortBy[0].desc) {
             tableState.order = 'desc';
         }
-        if (filter) {
-            tableState.search = filter;
+        if (globalFilter) {
+            tableState.search = globalFilter;
         }
         tableState.columns = allColumns
             .map(({ id }) => id)
@@ -356,7 +346,8 @@ export const ProjectFeatureToggles = ({
         setSearchParams(tableState, {
             replace: true,
         });
-    }, [loading, sortBy, hiddenColumns, filter, setSearchParams, allColumns]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [loading, sortBy, hiddenColumns, globalFilter, setSearchParams]);
 
     const onCustomizeColumns = useCallback(
         visibleColumns => {
@@ -383,8 +374,8 @@ export const ProjectFeatureToggles = ({
                     actions={
                         <>
                             <TableSearch
-                                initialValue={filter}
-                                onChange={value => setFilter('name', value)}
+                                initialValue={globalFilter}
+                                onChange={value => setGlobalFilter(value)}
                             />
                             <ColumnsMenu
                                 allColumns={allColumns}
@@ -418,7 +409,7 @@ export const ProjectFeatureToggles = ({
                 />
             }
         >
-            <SearchHighlightProvider value={filter}>
+            <SearchHighlightProvider value={globalFilter}>
                 <Table {...getTableProps()}>
                     <SortableTableHeader
                         // @ts-expect-error -- verify after `react-table` v8
@@ -445,11 +436,11 @@ export const ProjectFeatureToggles = ({
                 condition={rows.length === 0}
                 show={
                     <ConditionallyRender
-                        condition={filter?.length > 0}
+                        condition={globalFilter?.length > 0}
                         show={
                             <TablePlaceholder>
                                 No features found matching &ldquo;
-                                {filter}
+                                {globalFilter}
                                 &rdquo;
                             </TablePlaceholder>
                         }

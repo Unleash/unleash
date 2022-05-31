@@ -1,15 +1,18 @@
 import { IFeatureMetricsRaw } from 'interfaces/featureToggle';
 import { useMemo } from 'react';
-import { FeatureMetricsStats } from './FeatureMetricsStats';
+import {
+    FeatureMetricsStats,
+    IFeatureMetricsStatsProps,
+} from './FeatureMetricsStats';
 
-interface IFeatureMetricsStatsRawProps {
+interface IFeatureMetricsStatsRawProps
+    extends Omit<IFeatureMetricsStatsProps, 'totalYes' | 'totalNo'> {
     metrics: IFeatureMetricsRaw[];
-    hoursBack: number;
 }
 
 export const FeatureMetricsStatsRaw = ({
     metrics,
-    hoursBack,
+    ...rest
 }: IFeatureMetricsStatsRawProps) => {
     const totalYes = useMemo(() => {
         return metrics.reduce((acc, m) => acc + m.yes, 0);
@@ -20,10 +23,6 @@ export const FeatureMetricsStatsRaw = ({
     }, [metrics]);
 
     return (
-        <FeatureMetricsStats
-            totalYes={totalYes}
-            totalNo={totalNo}
-            hoursBack={hoursBack}
-        />
+        <FeatureMetricsStats {...rest} totalYes={totalYes} totalNo={totalNo} />
     );
 };

@@ -27,6 +27,6 @@ export const useStyles = makeStyles()(theme => ({
         borderTopStyle: 'solid',
         borderTopColor: theme.palette.grey[300],
         fontSize: theme.fontSizes.smallerBody,
-        color: theme.palette.grey[700],
+        color: theme.palette.grey[800],
     },
 }));

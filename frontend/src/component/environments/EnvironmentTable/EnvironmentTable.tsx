@@ -61,7 +61,7 @@ export const EnvironmentTable = () => {
         {
             columns: COLUMNS as any,
             data: environments,
-            autoResetGlobalFilter: false,
+            disableSortBy: true,
         },
         useGlobalFilter
     );
@@ -127,15 +127,13 @@ export const EnvironmentTable = () => {
 const COLUMNS = [
     {
         id: 'Icon',
-        canSort: false,
+        width: '1%',
         Cell: () => <IconCell icon={<CloudCircle color="disabled" />} />,
         disableGlobalFilter: true,
     },
     {
         Header: 'Name',
         accessor: 'name',
-        width: '100%',
-        canSort: false,
         Cell: ({ row: { original } }: any) => (
             <EnvironmentNameCell environment={original} />
         ),
@@ -144,7 +142,7 @@ const COLUMNS = [
         Header: 'Actions',
         id: 'Actions',
         align: 'center',
-        canSort: false,
+        width: '1%',
         Cell: ({ row: { original } }: any) => (
             <EnvironmentActionCell environment={original} />
         ),

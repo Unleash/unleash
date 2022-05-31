@@ -16,16 +16,17 @@ import { useLocationSettings } from 'hooks/useLocationSettings';
 import 'chartjs-adapter-date-fns';
 import { createChartData } from './createChartData';
 import { createChartOptions } from './createChartOptions';
-import { FEATURE_METRICS_STATS_ID } from '../FeatureMetricsStats/FeatureMetricsStats';
 
 interface IFeatureMetricsChartProps {
     metrics: IFeatureMetricsRaw[];
     hoursBack: number;
+    statsSectionId: string;
 }
 
 export const FeatureMetricsChart = ({
     metrics,
     hoursBack,
+    statsSectionId,
 }: IFeatureMetricsChartProps) => {
     const { locationSettings } = useLocationSettings();
 
@@ -49,7 +50,7 @@ export const FeatureMetricsChart = ({
                 options={options}
                 data={data}
                 aria-label="A feature metrics line chart, with three lines: all requests, positive requests, and negative requests."
-                aria-describedby={FEATURE_METRICS_STATS_ID}
+                aria-describedby={statsSectionId}
             />
         </div>
     );

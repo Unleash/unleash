@@ -159,9 +159,9 @@ const COLUMNS = [
     {
         id: 'Icon',
         width: '1%',
-        canSort: false,
-        Cell: () => <IconCell icon={<DonutLarge color="disabled" />} />,
         disableGlobalFilter: true,
+        disableSortBy: true,
+        Cell: () => <IconCell icon={<DonutLarge color="disabled" />} />,
     },
     {
         Header: 'Name',
@@ -187,7 +187,7 @@ const COLUMNS = [
         id: 'Actions',
         align: 'center',
         width: '1%',
-        canSort: false,
+        disableSortBy: true,
         disableGlobalFilter: true,
         Cell: ({ row: { original } }: any) => (
             <SegmentActionCell segment={original} />

@@ -6,7 +6,7 @@ export const useStyles = makeStyles()(theme => ({
         marginBottom: '.5rem',
         fontSize: theme.fontSizes.smallerBody,
         fontWeight: theme.fontWeight.thin,
-        color: theme.palette.grey[600],
+        color: theme.palette.grey[800],
     },
     list: {
         display: 'flex',

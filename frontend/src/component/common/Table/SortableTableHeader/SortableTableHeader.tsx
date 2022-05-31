@@ -39,7 +39,7 @@ export const SortableTableHeader: VFC<ISortableTableHeaderProps> = ({
                                         ? content
                                         : undefined
                                 }
-                                isSortable={column.canSort}
+                                isSortable={Boolean(column.canSort)}
                                 isSorted={column.isSorted}
                                 isDescending={column.isSortedDesc}
                                 maxWidth={column.maxWidth}

@@ -1,71 +1,108 @@
 import { IFeatureMetricsRaw } from 'interfaces/featureToggle';
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableRow,
-    useMediaQuery,
-    useTheme,
-} from '@mui/material';
-import { useLocationSettings } from 'hooks/useLocationSettings';
-import { useMemo } from 'react';
-import { formatDateYMDHMS } from 'utils/formatDate';
-
-export const FEATURE_METRICS_TABLE_ID = 'feature-metrics-table-id';
+import { TableBody, TableRow, useMediaQuery } from '@mui/material';
+import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
+import { useTable, useGlobalFilter, useSortBy } from 'react-table';
+import { SortableTableHeader, TableCell, Table } from 'component/common/Table';
+import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
+import { Assessment } from '@mui/icons-material';
+import { useMemo, useEffect } from 'react';
+import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
+import theme from 'themes/theme';
 
 interface IFeatureMetricsTableProps {
     metrics: IFeatureMetricsRaw[];
+    tableSectionId?: string;
 }
 
-export const FeatureMetricsTable = ({ metrics }: IFeatureMetricsTableProps) => {
-    const theme = useTheme();
-    const smallScreen = useMediaQuery(theme.breakpoints.down('md'));
-    const { locationSettings } = useLocationSettings();
+export const FeatureMetricsTable = ({
+    metrics,
+    tableSectionId,
+}: IFeatureMetricsTableProps) => {
+    const isMediumScreen = useMediaQuery(theme.breakpoints.down('md'));
 
-    const sortedMetrics = useMemo(() => {
-        return [...metrics].sort((metricA, metricB) => {
-            return metricB.timestamp.localeCompare(metricA.timestamp);
-        });
-    }, [metrics]);
+    const initialState = useMemo(
+        () => ({ sortBy: [{ id: 'timestamp', desc: true }] }),
+        []
+    );
 
-    if (sortedMetrics.length === 0) {
+    const {
+        getTableProps,
+        getTableBodyProps,
+        headerGroups,
+        rows,
+        prepareRow,
+        setHiddenColumns,
+    } = useTable(
+        {
+            initialState,
+            columns: COLUMNS as any,
+            data: metrics as any,
+            disableSortRemove: true,
+            defaultColumn: { Cell: TextCell },
+        },
+        useGlobalFilter,
+        useSortBy
+    );
+
+    useEffect(() => {
+        if (isMediumScreen) {
+            setHiddenColumns(['appName', 'environment']);
+        } else {
+            setHiddenColumns([]);
+        }
+    }, [setHiddenColumns, isMediumScreen]);
+
+    if (metrics.length === 0) {
         return null;
     }
 
     return (
-        <Table id={FEATURE_METRICS_TABLE_ID} aria-label="Feature metrics table">
-            <TableHead>
-                <TableRow>
-                    <TableCell>Time</TableCell>
-                    <TableCell hidden={smallScreen}>Application</TableCell>
-                    <TableCell hidden={smallScreen}>Environment</TableCell>
-                    <TableCell align="right">Requested</TableCell>
-                    <TableCell align="right">Exposed</TableCell>
-                </TableRow>
-            </TableHead>
-            <TableBody>
-                {sortedMetrics.map(metric => (
-                    <TableRow key={metric.timestamp}>
-                        <TableCell>
-                            {formatDateYMDHMS(
-                                metric.timestamp,
-                                locationSettings.locale
-                            )}
-                        </TableCell>
-                        <TableCell hidden={smallScreen}>
-                            {metric.appName}
-                        </TableCell>
-                        <TableCell hidden={smallScreen}>
-                            {metric.environment}
-                        </TableCell>
-                        <TableCell align="right">
-                            {metric.yes + metric.no}
-                        </TableCell>
-                        <TableCell align="right">{metric.yes}</TableCell>
-                    </TableRow>
-                ))}
+        <Table {...getTableProps()} rowHeight="standard" id={tableSectionId}>
+            <SortableTableHeader headerGroups={headerGroups} />
+            <TableBody {...getTableBodyProps()}>
+                {rows.map(row => {
+                    prepareRow(row);
+                    return (
+                        <TableRow hover {...row.getRowProps()}>
+                            {row.cells.map(cell => (
+                                <TableCell {...cell.getCellProps()}>
+                                    {cell.render('Cell')}
+                                </TableCell>
+                            ))}
+                        </TableRow>
+                    );
+                })}
             </TableBody>
         </Table>
     );
 };
+
+const COLUMNS = [
+    {
+        id: 'Icon',
+        width: '1%',
+        disableSortBy: true,
+        Cell: () => <IconCell icon={<Assessment color="disabled" />} />,
+    },
+    {
+        Header: 'Time',
+        accessor: 'timestamp',
+        Cell: (props: any) => <DateCell value={props.row.original.timestamp} />,
+    },
+    {
+        Header: 'Application',
+        accessor: 'appName',
+    },
+    {
+        Header: 'Environment',
+        accessor: 'environment',
+    },
+    {
+        Header: 'Requested',
+        accessor: (original: any) => original.yes + original.no,
+    },
+    {
+        Header: 'Exposed',
+        accessor: 'yes',
+    },
+];

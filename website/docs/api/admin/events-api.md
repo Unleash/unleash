@@ -22,14 +22,14 @@ The Events API lets you retrieve events from your Unleash instance.
 |-----------------|----------------------------------------------------------------------------|----------|
 | `project`       | When applied, the endpoint will only return events from the given project. | No       |
 
-The `api/admin/events` endpoint returns all the events on the Unleash instance from the last X days. It accepts an optional query parameter `project`. When provided, the returned list of events all belong to the given project.
+When called without any query parameters, the endpoint will return the **last 100 events** from the Unleash instance.  When called with a `project` query parameter, it will return only events related to that project, but it will return **all the events**, and not just the last 100.
 
 
 #### Get events by project
 
 <ApiRequest verb="get" url="api/admin/events?project=<project-name>" title="Retrieve all events belonging to the given project."/>
 
-Use the `project` query parameter to make the API only return events pertaining to the given project.
+Use the `project` query parameter to make the API return *all* events pertaining to the given project.
 
 #### Responses
 
@@ -38,7 +38,9 @@ Use the `project` query parameter to make the API only return events pertaining 
 
 ##### 200 OK
 
-The list of events matching the provided query, or all events if no query params were provided.
+The last 100 events from the Unleash server when called without a `project` query parameter.
+
+When called with a `project` query parameter: all events related to that project.
 
 ``` json
 {

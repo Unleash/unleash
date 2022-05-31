@@ -2,6 +2,13 @@
 
 exports[`should create default config 1`] = `
 Object {
+  "additionalCspAllowedDomains": Object {
+    "defaultSrc": Array [],
+    "fontSrc": Array [],
+    "imgSrc": Array [],
+    "scriptSrc": Array [],
+    "styleSrc": Array [],
+  },
   "authentication": Object {
     "createAdminUser": true,
     "customAuthHandler": [Function],

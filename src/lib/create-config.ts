@@ -15,6 +15,8 @@ import {
     IListeningPipe,
     IListeningHost,
     IUIConfig,
+    ICspDomainConfig,
+    ICspDomainOptions,
 } from './types/option';
 import { getDefaultLogProvider, LogLevel, validateLogProvider } from './logger';
 import { defaultCustomAuthDenyAll } from './default-custom-auth-deny-all';
@@ -230,6 +232,37 @@ const loadEnvironmentEnableOverrides = () => {
     return [];
 };
 
+const parseCspConfig = (
+    cspConfig: ICspDomainOptions,
+): ICspDomainConfig | undefined => {
+    if (!cspConfig) {
+        return undefined;
+    }
+
+    return {
+        defaultSrc: cspConfig.defaultSrc || [],
+        fontSrc: cspConfig.fontSrc || [],
+        scriptSrc: cspConfig.scriptSrc || [],
+        imgSrc: cspConfig.imgSrc || [],
+        styleSrc: cspConfig.styleSrc || [],
+    };
+};
+
+const parseCspEnvironmentVariables = (): ICspDomainConfig => {
+    const defaultSrc = process.env.CSP_ALLOWED_DEFAULT?.split(',') || [];
+    const fontSrc = process.env.CSP_ALLOWED_FONT?.split(',') || [];
+    const styleSrc = process.env.CSP_ALLOWED_STYLE?.split(',') || [];
+    const scriptSrc = process.env.CSP_ALLOWED_SCRIPT?.split(',') || [];
+    const imgSrc = process.env.CSP_ALLOWED_IMG?.split(',') || [];
+    return {
+        defaultSrc,
+        fontSrc,
+        styleSrc,
+        scriptSrc,
+        imgSrc,
+    };
+};
+
 export function createConfig(options: IUnleashOptions): IUnleashConfig {
     let extraDbOptions = {};
 
@@ -318,6 +351,10 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         options.disableLegacyFeaturesApi ||
         safeBoolean(process.env.DISABLE_LEGACY_FEATURES_API, false);
 
+    const additionalCspAllowedDomains: ICspDomainConfig =
+        parseCspConfig(options.additionalCspAllowedDomains) ||
+        parseCspEnvironmentVariables();
+
     return {
         db,
         session,
@@ -339,6 +376,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         enterpriseVersion: options.enterpriseVersion,
         eventBus: new EventEmitter(),
         environmentEnableOverrides,
+        additionalCspAllowedDomains,
     };
 }
 

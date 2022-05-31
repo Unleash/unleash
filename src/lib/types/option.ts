@@ -97,6 +97,7 @@ export interface IUnleashOptions {
     experimental?: IExperimentalOptions;
     email?: Partial<IEmailOption>;
     secureHeaders?: boolean;
+    additionalCspAllowedDomains?: ICspDomainOptions;
     enableOAS?: boolean;
     preHook?: Function;
     preRouterHook?: Function;
@@ -137,6 +138,21 @@ export interface IUIConfig {
         },
     ];
 }
+export interface ICspDomainOptions {
+    defaultSrc?: string[];
+    fontSrc?: string[];
+    styleSrc?: string[];
+    scriptSrc?: string[];
+    imgSrc?: string[];
+}
+
+export interface ICspDomainConfig {
+    defaultSrc: string[];
+    fontSrc: string[];
+    styleSrc: string[];
+    scriptSrc: string[];
+    imgSrc: string[];
+}
 
 export interface IUnleashConfig {
     db: IDBOption;
@@ -151,6 +167,7 @@ export interface IUnleashConfig {
     experimental?: IExperimentalOptions;
     email: IEmailOption;
     secureHeaders: boolean;
+    additionalCspAllowedDomains: ICspDomainConfig;
     enableOAS: boolean;
     preHook?: Function;
     preRouterHook?: Function;

@@ -20,6 +20,7 @@ export const useStyles = makeStyles()(theme => ({
     },
     actions: {
         marginLeft: 'auto',
+        display: 'flex',
     },
     body: {
         padding: '1rem',

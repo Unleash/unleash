@@ -94,29 +94,10 @@ export const useStyles = makeStyles()(theme => ({
         justifyContent: 'flex-end',
         marginBottom: '1rem',
     },
-    strategyIconContainer: {
-        minWidth: '40px',
-        marginRight: '5px',
-        display: 'flex',
-        justifyContent: 'center',
-    },
-    strategiesIconsContainer: {
-        transform: 'scale(0.8)',
-        display: 'flex',
-        alignItems: 'center',
-        position: 'relative',
-        [theme.breakpoints.down(560)]: {
-            marginLeft: '0px',
-            top: '5px',
-        },
-    },
     truncator: {
         [theme.breakpoints.down(560)]: {
             textAlign: 'center',
         },
-    },
-    strategyIcon: {
-        fill: theme.palette.inactiveIcon,
     },
     container: {
         display: 'flex',
@@ -126,8 +107,5 @@ export const useStyles = makeStyles()(theme => ({
             flexDirection: 'column',
             marginLeft: '0',
         },
-    },
-    strategyMenu: {
-        marginRight: '-.5rem',
     },
 }));

@@ -160,28 +160,91 @@ The event properties are described in short in the table below. For more info re
 | `type`        | The event type, as described in the rest of this section.                                             |
 
 
-### Feature Toggle events:
+### Feature Toggle events
 
-- feature-created
-- feature-deleted
-- feature-updated
-- feature-metadata-updated
-- feature-project-change
-- feature-archived
-- feature-revived
-- feature-import
-- feature-tagged
-- feature-tag-import
-- feature-strategy-update
-- feature-strategy-add
-- feature-strategy-remove
-- drop-feature-tags
-- feature-untagged
-- feature-stale-on
-- feature-stale-off
-- drop-features
-- feature-environment-enabled
-- feature-environment-disabled
+These events pertain to feature toggles and their life cycle.
+
+#### `feature-created`
+
+This event fires when you create a feature. The `data` property contains the details for the new feature.
+
+``` json title="example event: feature-created"
+{
+  "id": 899,
+  "type": "feature-created",
+  "createdBy": "thomas@getunleash.ai",
+  "createdAt": "2022-05-31T13:32:20.560Z",
+  "data": {
+    "name": "new-toggle",
+    "description": "Toggle description",
+    "type": "release",
+    "project": "heartman-for-test",
+    "stale": false,
+    "variants": [],
+    "createdAt": "2022-05-31T13:32:20.547Z",
+    "lastSeenAt": null,
+    "impressionData": true
+  },
+  "preData": null,
+  "tags": [],
+  "featureName": "new-toggle",
+  "project": "heartman-for-test",
+  "environment": null
+}
+```
+
+#### `feature-deleted`
+
+#### `feature-updated`
+:::caution Deprecation notice
+This event type was replaced by more granular event types in Unleash 4.3. From Unleash 4.3 onwards, you'll need to use the events listed later in this section instead.
+:::
+
+This event fires when a feature gets updated in some way. The `data` property contains the new state of the toggle. This is a legacy event, so it does not populate `preData` property.
+
+
+``` json title="example event: feature-updated"
+{
+  "id": 899,
+  "type": "feature-updated",
+  "createdBy": "thomas@getunleash.ai",
+  "createdAt": "2022-05-31T13:32:20.560Z",
+  "data": {
+    "name": "new-toggle",
+    "description": "Toggle description",
+    "type": "release",
+    "project": "heartman-for-test",
+    "stale": false,
+    "variants": [],
+    "createdAt": "2022-05-31T13:32:20.547Z",
+    "lastSeenAt": null,
+    "impressionData": true
+  },
+  "preData": null,
+  "tags": [],
+  "featureName": "new-toggle",
+  "project": "heartman-for-test",
+  "environment": null
+}
+```
+
+#### `feature-metadata-updated`
+#### `feature-project-change`
+#### `feature-archived`
+#### `feature-revived`
+#### `feature-import`
+#### `feature-tagged`
+#### `feature-tag-import`
+#### `feature-strategy-update`
+#### `feature-strategy-add`
+#### `feature-strategy-remove`
+#### `drop-feature-tags`
+#### `feature-untagged`
+#### `feature-stale-on`
+#### `feature-stale-off`
+#### `drop-features`
+#### `feature-environment-enabled`
+#### `feature-environment-disabled`
 
 ### Strategy Events
 

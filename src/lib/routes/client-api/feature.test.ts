@@ -6,6 +6,7 @@ import { createServices } from '../../services';
 import FeatureController from './feature';
 import { createTestConfig } from '../../../test/config/test-config';
 import { secondsToMilliseconds } from 'date-fns';
+import { CapabilityService } from '../../services/capability-service';
 
 async function getSetup() {
     const base = `/random${Math.round(Math.random() * 1000)}`;
@@ -29,6 +30,14 @@ async function getSetup() {
         },
     };
 }
+
+const callGetAll = async (controller: FeatureController) => {
+    await controller.getAll(
+        // @ts-expect-error
+        { query: {}, header: () => undefined },
+        { json: () => {} },
+    );
+};
 
 let base;
 let request;
@@ -61,18 +70,18 @@ test('should get empty getFeatures via client', () => {
 test('if caching is enabled should memoize', async () => {
     const getClientFeatures = jest.fn().mockReturnValue([]);
     const getActive = jest.fn().mockReturnValue([]);
-
-    const featureToggleServiceV2 = {
-        getClientFeatures,
-    };
-
-    const segmentService = {
-        getActive,
-    };
+    const capabilityService = new CapabilityService({ getLogger });
+    const featureToggleServiceV2 = { getClientFeatures };
+    const segmentService = { getActive };
 
     const controller = new FeatureController(
-        // @ts-ignore
-        { featureToggleServiceV2, segmentService },
+        {
+            capabilityService,
+            // @ts-expect-error
+            featureToggleServiceV2,
+            // @ts-expect-error
+            segmentService,
+        },
         {
             getLogger,
             experimental: {
@@ -83,29 +92,27 @@ test('if caching is enabled should memoize', async () => {
             },
         },
     );
-    // @ts-ignore
-    await controller.getAll({ query: {} }, { json: () => {} });
-    // @ts-ignore
-    await controller.getAll({ query: {} }, { json: () => {} });
+
+    await callGetAll(controller);
+    await callGetAll(controller);
     expect(getClientFeatures).toHaveBeenCalledTimes(1);
 });
 
 test('if caching is not enabled all calls goes to service', async () => {
     const getClientFeatures = jest.fn().mockReturnValue([]);
-
     const getActive = jest.fn().mockReturnValue([]);
-
-    const featureToggleServiceV2 = {
-        getClientFeatures,
-    };
-
-    const segmentService = {
-        getActive,
-    };
+    const capabilityService = new CapabilityService({ getLogger });
+    const featureToggleServiceV2 = { getClientFeatures };
+    const segmentService = { getActive };
 
     const controller = new FeatureController(
-        // @ts-ignore
-        { featureToggleServiceV2, segmentService },
+        {
+            capabilityService,
+            // @ts-expect-error
+            featureToggleServiceV2,
+            // @ts-expect-error
+            segmentService,
+        },
         {
             getLogger,
             experimental: {
@@ -116,10 +123,9 @@ test('if caching is not enabled all calls goes to service', async () => {
             },
         },
     );
-    // @ts-ignore
-    await controller.getAll({ query: {} }, { json: () => {} });
-    // @ts-ignore
-    await controller.getAll({ query: {} }, { json: () => {} });
+
+    await callGetAll(controller);
+    await callGetAll(controller);
     expect(getClientFeatures).toHaveBeenCalledTimes(2);
 });
 

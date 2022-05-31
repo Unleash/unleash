@@ -15,7 +15,7 @@ export class CapabilityService {
 
     private static CLIENT_VERSION_HEADER = 'Unleash-Client-Version';
 
-    constructor(config: IUnleashConfig) {
+    constructor(config: Pick<IUnleashConfig, 'getLogger'>) {
         this.logger = config.getLogger('services/capability-service.ts');
     }
 

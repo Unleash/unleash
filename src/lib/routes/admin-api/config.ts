@@ -1,22 +1,35 @@
 import { Request, Response } from 'express';
 import { IUnleashServices } from '../../types/services';
-import { IAuthType, IUnleashConfig } from '../../types/option';
+import { IAuthType, IUIConfig, IUnleashConfig } from '../../types/option';
 import version from '../../util/version';
-
 import Controller from '../controller';
-import VersionService from '../../services/version-service';
+import VersionService, { IVersionHolder } from '../../services/version-service';
 import SettingService from '../../services/setting-service';
 import {
     simpleAuthKey,
     SimpleAuthSettings,
 } from '../../types/settings/simple-auth-settings';
 
+interface IUiConfigResponse extends IUIConfig {
+    version: string;
+    unleashUrl: string;
+    baseUriPath: string;
+    authenticationType?: IAuthType;
+    versionInfo: IVersionHolder;
+    disablePasswordAuth: boolean;
+    segmentValuesLimit: number;
+    strategySegmentsLimit: number;
+}
+
 class ConfigController extends Controller {
     private versionService: VersionService;
 
     private settingService: SettingService;
 
-    private uiConfig: any;
+    private uiConfig: Omit<
+        IUiConfigResponse,
+        'versionInfo' | 'disablePasswordAuth'
+    >;
 
     constructor(
         config: IUnleashConfig,
@@ -32,15 +45,20 @@ class ConfigController extends Controller {
             config.authentication && config.authentication.type;
         this.uiConfig = {
             ...config.ui,
-            authenticationType,
+            version,
             unleashUrl: config.server.unleashUrl,
             baseUriPath: config.server.baseUriPath,
-            version,
+            authenticationType,
+            segmentValuesLimit: config.segmentValuesLimit,
+            strategySegmentsLimit: config.strategySegmentsLimit,
         };
         this.get('/', this.getUIConfig);
     }
 
-    async getUIConfig(req: Request, res: Response): Promise<void> {
+    async getUIConfig(
+        req: Request,
+        res: Response<IUiConfigResponse>,
+    ): Promise<void> {
         const config = this.uiConfig;
         const simpleAuthSettings =
             await this.settingService.get<SimpleAuthSettings>(simpleAuthKey);

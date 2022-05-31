@@ -1,7 +1,6 @@
 import dbInit, { ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import { IUnleashTest, setupApp } from '../../helpers/test-helper';
-import { collectIds } from '../../../../lib/util/collect-ids';
 import {
     IConstraint,
     IFeatureToggleClient,
@@ -41,13 +40,6 @@ const fetchClientFeatures = (): Promise<IFeatureToggleClient[]> => {
 const fetchGlobalSegments = (): Promise<ISegment[] | undefined> => {
     return app.request
         .get(FEATURES_CLIENT_BASE_PATH)
-        .expect(200)
-        .then((res) => res.body.segments);
-};
-
-const fetchClientSegmentsActive = (): Promise<ISegment[]> => {
-    return app.request
-        .get('/api/client/segments/active')
         .expect(200)
         .then((res) => res.body.segments);
 };
@@ -139,28 +131,6 @@ test('should add segments to features as constraints', async () => {
     expect(clientConstraints.length).toEqual(5 * 6);
     expect(clientValues.length).toEqual(5 * 6 * 3);
     expect(uniqueValues.length).toEqual(3);
-});
-
-test('should list active segments', async () => {
-    const constraints = mockConstraints();
-    await createSegment({ name: 'S1', constraints });
-    await createSegment({ name: 'S2', constraints });
-    await createSegment({ name: 'S3', constraints });
-    await createFeatureToggle(mockFeatureToggle());
-    await createFeatureToggle(mockFeatureToggle());
-    await createFeatureToggle(mockFeatureToggle());
-    const [feature1, feature2] = await fetchFeatures();
-    const [segment1, segment2] = await fetchSegments();
-
-    await addSegmentToStrategy(segment1.id, feature1.strategies[0].id);
-    await addSegmentToStrategy(segment2.id, feature1.strategies[0].id);
-    await addSegmentToStrategy(segment2.id, feature2.strategies[0].id);
-
-    const clientSegments = await fetchClientSegmentsActive();
-
-    expect(collectIds(clientSegments)).toEqual(
-        collectIds([segment1, segment2]),
-    );
 });
 
 test('should validate segment constraint values limit', async () => {

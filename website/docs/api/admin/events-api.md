@@ -82,7 +82,6 @@ When called with a `project` query parameter: all events related to that project
 
 Fetch all events related to a specified toggle.
 
-
 #### Responses
 
 <details>
@@ -128,7 +127,38 @@ The list of events related to the given toggle.
 
 ## Event types
 
-Unleash emits a large number of different events. They are described below.
+Unleash emits a large number of different events (described in more detail in the following sections). The exact fields an event contains varies from event to event, but they all conform to the following TypeScript interface before being transformed to JSON:
+
+```ts
+
+interface IEvent {
+    id: number;
+    createdAt: Date;
+    type: string;
+    createdBy: string;
+    project?: string;
+    environment?: string;
+    featureName?: string;
+    data?: any;
+    preData?: any;
+    tags?: ITag[];
+}
+```
+
+The event properties are described in short in the table below. For more info regarding specific event types, refer to the corresponding, following sections.
+
+| Property      | Description                                                                                           |
+|---------------|-------------------------------------------------------------------------------------------------------|
+| `id`          | The ID of the event. An increasing natural number.                                                    |
+| `createdAt`   | The time the event happened as a RFC 3339-conformant timestamp.                                       |
+| `type`        | The event type, as described in the rest of this section.                                             |
+| `project`     | The project the event relates to, if applicable.                                                      |
+| `environment` | The feature toggle environment the event relates to, if applicable.                                   |
+| `featureName` | The name of the feature toggle the event relates to, if applicable.                                   |
+| `data`        | Any extra associated data related to the event, such as feature toggle state, if applicable.          |
+| `preData`     | For events with new state in the `data` property, the `preData` property contains the previous state. |
+| `tags`        | Any tags related to the event, if applicable.                                                         |
+
 
 ### Feature Toggle events:
 

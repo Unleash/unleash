@@ -7,6 +7,7 @@ import {
     TableSearch,
     SortableTableHeader,
     Table,
+    TablePlaceholder,
 } from 'component/common/Table';
 import { useCallback } from 'react';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
@@ -22,6 +23,7 @@ import useEnvironmentApi, {
     createSortOrderPayload,
 } from 'hooks/api/actions/useEnvironmentApi/useEnvironmentApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 export const EnvironmentTable = () => {
     const { changeSortOrder } = useEnvironmentApi();
@@ -97,6 +99,27 @@ export const EnvironmentTable = () => {
                     </TableBody>
                 </Table>
             </SearchHighlightProvider>
+            <ConditionallyRender
+                condition={rows.length === 0}
+                show={
+                    <ConditionallyRender
+                        condition={globalFilter?.length > 0}
+                        show={
+                            <TablePlaceholder>
+                                No environments found matching &ldquo;
+                                {globalFilter}
+                                &rdquo;
+                            </TablePlaceholder>
+                        }
+                        elseShow={
+                            <TablePlaceholder>
+                                No environments available. Get started by adding
+                                one.
+                            </TablePlaceholder>
+                        }
+                    />
+                }
+            />
         </PageContent>
     );
 };
@@ -106,6 +129,7 @@ const COLUMNS = [
         id: 'Icon',
         canSort: false,
         Cell: () => <IconCell icon={<CloudCircle color="disabled" />} />,
+        disableGlobalFilter: true,
     },
     {
         Header: 'Name',
@@ -124,5 +148,6 @@ const COLUMNS = [
         Cell: ({ row: { original } }: any) => (
             <EnvironmentActionCell environment={original} />
         ),
+        disableGlobalFilter: true,
     },
 ];

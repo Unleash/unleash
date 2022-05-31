@@ -54,6 +54,7 @@ const ContextList: VFC = () => {
             {
                 id: 'Icon',
                 Cell: () => <IconCell icon={<Adjust color="disabled" />} />,
+                disableGlobalFilter: true,
             },
             {
                 Header: 'Name',
@@ -90,6 +91,7 @@ const ContextList: VFC = () => {
                     />
                 ),
                 width: 150,
+                disableGlobalFilter: true,
                 disableSortBy: true,
             },
             {
@@ -98,6 +100,7 @@ const ContextList: VFC = () => {
             },
             {
                 accessor: 'sortOrder',
+                disableGlobalFilter: true,
                 sortType: 'number',
             },
         ],

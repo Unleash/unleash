@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { Alert, Divider, Grid, styled, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import CheckIcon from '@mui/icons-material/Check';
-import useUsers from 'hooks/api/getters/useUsers/useUsers';
+import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
     IInstanceStatus,
@@ -14,6 +14,66 @@ import { GridRow } from 'component/common/GridRow/GridRow';
 import { GridCol } from 'component/common/GridCol/GridCol';
 import { GridColLink } from './GridColLink/GridColLink';
 import { STRIPE } from 'component/admin/billing/flags';
+
+const StyledPlanBox = styled('aside')(({ theme }) => ({
+    padding: theme.spacing(2.5),
+    height: '100%',
+    borderRadius: theme.shape.borderRadiusLarge,
+    boxShadow: theme.boxShadows.elevated,
+    [theme.breakpoints.up('md')]: {
+        padding: theme.spacing(6.5),
+    },
+}));
+
+const StyledInfoLabel = styled(Typography)(({ theme }) => ({
+    fontSize: theme.fontSizes.smallBody,
+    color: theme.palette.text.secondary,
+}));
+
+const StyledPlanBadge = styled('span')(({ theme }) => ({
+    padding: `${theme.spacing(0.5)} ${theme.spacing(1)}`,
+    borderRadius: theme.shape.borderRadiusLarge,
+    fontSize: theme.fontSizes.smallerBody,
+    backgroundColor: theme.palette.statusBadge.success,
+    color: theme.palette.success.dark,
+    fontWeight: theme.fontWeight.bold,
+}));
+
+const StyledPlanSpan = styled('span')(({ theme }) => ({
+    fontSize: '3.25rem',
+    lineHeight: 1,
+    color: theme.palette.primary.main,
+    fontWeight: 800,
+}));
+
+const StyledTrialSpan = styled('span')(({ theme }) => ({
+    marginLeft: theme.spacing(1.5),
+    fontWeight: theme.fontWeight.bold,
+}));
+
+const StyledPriceSpan = styled('span')(({ theme }) => ({
+    color: theme.palette.primary.main,
+    fontSize: theme.fontSizes.mainHeader,
+    fontWeight: theme.fontWeight.bold,
+}));
+
+const StyledAlert = styled(Alert)(({ theme }) => ({
+    fontSize: theme.fontSizes.smallerBody,
+    marginBottom: theme.spacing(3),
+    marginTop: theme.spacing(-1.5),
+    [theme.breakpoints.up('md')]: {
+        marginTop: theme.spacing(-4.5),
+    },
+}));
+
+const StyledCheckIcon = styled(CheckIcon)(({ theme }) => ({
+    fontSize: '1rem',
+    marginRight: theme.spacing(1),
+}));
+
+const StyledDivider = styled(Divider)(({ theme }) => ({
+    margin: `${theme.spacing(3)} 0`,
+}));
 
 interface IBillingPlanProps {
     instanceStatus: IInstanceStatus;
@@ -194,63 +254,3 @@ export const BillingPlan: FC<IBillingPlanProps> = ({ instanceStatus }) => {
         </Grid>
     );
 };
-
-const StyledPlanBox = styled('aside')(({ theme }) => ({
-    padding: theme.spacing(2.5),
-    height: '100%',
-    borderRadius: theme.shape.borderRadiusLarge,
-    boxShadow: theme.boxShadows.elevated,
-    [theme.breakpoints.up('md')]: {
-        padding: theme.spacing(6.5),
-    },
-}));
-
-const StyledInfoLabel = styled(Typography)(({ theme }) => ({
-    fontSize: theme.fontSizes.smallBody,
-    color: theme.palette.text.secondary,
-}));
-
-const StyledPlanBadge = styled('span')(({ theme }) => ({
-    padding: `${theme.spacing(0.5)} ${theme.spacing(1)}`,
-    borderRadius: theme.shape.borderRadiusLarge,
-    fontSize: theme.fontSizes.smallerBody,
-    backgroundColor: theme.palette.statusBadge.success,
-    color: theme.palette.success.dark,
-    fontWeight: theme.fontWeight.bold,
-}));
-
-const StyledPlanSpan = styled('span')(({ theme }) => ({
-    fontSize: '3.25rem',
-    lineHeight: 1,
-    color: theme.palette.primary.main,
-    fontWeight: 800,
-}));
-
-const StyledTrialSpan = styled('span')(({ theme }) => ({
-    marginLeft: theme.spacing(1.5),
-    fontWeight: theme.fontWeight.bold,
-}));
-
-const StyledPriceSpan = styled('span')(({ theme }) => ({
-    color: theme.palette.primary.main,
-    fontSize: theme.fontSizes.mainHeader,
-    fontWeight: theme.fontWeight.bold,
-}));
-
-const StyledAlert = styled(Alert)(({ theme }) => ({
-    fontSize: theme.fontSizes.smallerBody,
-    marginBottom: theme.spacing(3),
-    marginTop: theme.spacing(-1.5),
-    [theme.breakpoints.up('md')]: {
-        marginTop: theme.spacing(-4.5),
-    },
-}));
-
-const StyledCheckIcon = styled(CheckIcon)(({ theme }) => ({
-    fontSize: '1rem',
-    marginRight: theme.spacing(1),
-}));
-
-const StyledDivider = styled(Divider)(({ theme }) => ({
-    margin: `${theme.spacing(3)} 0`,
-}));

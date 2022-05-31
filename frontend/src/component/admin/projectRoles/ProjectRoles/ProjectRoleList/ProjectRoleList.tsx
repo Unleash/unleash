@@ -73,6 +73,7 @@ const ProjectRoleList = () => {
                         icon={<SupervisedUserCircle color="disabled" />}
                     />
                 ),
+                disableGlobalFilter: true,
             },
             {
                 Header: 'Project role',
@@ -133,6 +134,7 @@ const ProjectRoleList = () => {
                     </Box>
                 ),
                 width: 100,
+                disableGlobalFilter: true,
                 disableSortBy: true,
             },
         ],

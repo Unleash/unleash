@@ -16,6 +16,11 @@ Billing information:%0D%0A%0D%0A
 
 -- Thank you for signing up. We will upgrade your trial as quick as possible and we will grant you access to the application again. --`;
 
+const StyledButton = styled(Button)(({ theme }) => ({
+    width: '100%',
+    marginBottom: theme.spacing(1.5),
+}));
+
 interface IBillingInformationButtonProps {
     update?: boolean;
 }
@@ -29,8 +34,3 @@ export const BillingInformationButton: VFC<IBillingInformationButtonProps> = ({
         </StyledButton>
     );
 };
-
-const StyledButton = styled(Button)(({ theme }) => ({
-    width: '100%',
-    marginBottom: theme.spacing(1.5),
-}));

@@ -1,6 +1,17 @@
 import { styled, useTheme } from '@mui/material';
 import { ReactNode } from 'react';
 
+const StyledStatusBadge = styled('div')(({ theme }) => ({
+    padding: theme.spacing(0.5, 1),
+    textDecoration: 'none',
+    color: theme.palette.text.primary,
+    display: 'inline-block',
+    borderRadius: theme.shape.borderRadius,
+    marginLeft: theme.spacing(1.5),
+    fontSize: theme.fontSizes.smallerBody,
+    lineHeight: 1,
+}));
+
 interface IStatusBadgeProps {
     severity: 'success' | 'warning';
     className?: string;
@@ -21,14 +32,3 @@ export const StatusBadge = ({
         </StyledStatusBadge>
     );
 };
-
-const StyledStatusBadge = styled('div')(({ theme }) => ({
-    padding: theme.spacing(0.5, 1),
-    textDecoration: 'none',
-    color: theme.palette.text.primary,
-    display: 'inline-block',
-    borderRadius: theme.shape.borderRadius,
-    marginLeft: theme.spacing(1.5),
-    fontSize: theme.fontSizes.smallerBody,
-    lineHeight: 1,
-}));

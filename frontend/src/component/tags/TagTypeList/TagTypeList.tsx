@@ -71,6 +71,7 @@ export const TagTypeList = () => {
                         <Label color="disabled" />
                     </Box>
                 ),
+                disableGlobalFilter: true,
             },
             {
                 Header: 'Name',
@@ -125,6 +126,7 @@ export const TagTypeList = () => {
                     </Box>
                 ),
                 width: 150,
+                disableGlobalFilter: true,
                 disableSortBy: true,
             },
             {

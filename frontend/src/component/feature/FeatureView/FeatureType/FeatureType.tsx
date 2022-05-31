@@ -16,7 +16,7 @@ const FeatureStatus = ({ type }: IFeatureTypeProps) => {
     const title = `"${typeName || type}" toggle`;
 
     return (
-        <Tooltip arrow placement="right" title={title}>
+        <Tooltip arrow title={title}>
             <IconComponent data-loading className={styles.icon} />
         </Tooltip>
     );

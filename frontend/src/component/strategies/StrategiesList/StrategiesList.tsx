@@ -95,6 +95,7 @@ export const StrategiesList = () => {
                         <Extension color="disabled" />
                     </Box>
                 ),
+                disableGlobalFilter: true,
             },
             {
                 Header: 'Name',
@@ -147,6 +148,7 @@ export const StrategiesList = () => {
                     </Box>
                 ),
                 width: 150,
+                disableGlobalFilter: true,
                 disableSortBy: true,
             },
             {
@@ -155,6 +157,7 @@ export const StrategiesList = () => {
             },
             {
                 accessor: 'sortOrder',
+                disableGlobalFilter: true,
                 sortType: 'number',
             },
         ],

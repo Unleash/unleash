@@ -9,6 +9,48 @@ import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { calculateTrialDaysRemaining } from 'utils/billing';
 
+const StyledWarningBar = styled('aside')(({ theme }) => ({
+    position: 'relative',
+    zIndex: 1,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: theme.spacing(1),
+    gap: theme.spacing(1),
+    borderBottom: '1px solid',
+    borderColor: theme.palette.warning.border,
+    background: theme.palette.warning.light,
+    color: theme.palette.warning.dark,
+}));
+
+const StyledInfoBar = styled('aside')(({ theme }) => ({
+    position: 'relative',
+    zIndex: 1,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: theme.spacing(1),
+    gap: theme.spacing(1),
+    borderBottom: '1px solid',
+    borderColor: theme.palette.info.border,
+    background: theme.palette.info.light,
+    color: theme.palette.info.dark,
+}));
+
+const StyledButton = styled(Button)(({ theme }) => ({
+    whiteSpace: 'nowrap',
+    minWidth: '8rem',
+    marginLeft: theme.spacing(2),
+}));
+
+const StyledWarningIcon = styled(WarningAmber)(({ theme }) => ({
+    color: theme.palette.warning.main,
+}));
+
+const StyledInfoIcon = styled(InfoOutlined)(({ theme }) => ({
+    color: theme.palette.info.main,
+}));
+
 interface IInstanceStatusBarProps {
     instanceStatus: IInstanceStatus;
 }
@@ -85,45 +127,3 @@ const UpgradeButton = () => {
         </StyledButton>
     );
 };
-
-const StyledWarningBar = styled('aside')(({ theme }) => ({
-    position: 'relative',
-    zIndex: 1,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: theme.spacing(1),
-    gap: theme.spacing(1),
-    borderBottom: '1px solid',
-    borderColor: theme.palette.warning.border,
-    background: theme.palette.warning.light,
-    color: theme.palette.warning.dark,
-}));
-
-const StyledInfoBar = styled('aside')(({ theme }) => ({
-    position: 'relative',
-    zIndex: 1,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: theme.spacing(1),
-    gap: theme.spacing(1),
-    borderBottom: '1px solid',
-    borderColor: theme.palette.info.border,
-    background: theme.palette.info.light,
-    color: theme.palette.info.dark,
-}));
-
-const StyledButton = styled(Button)(({ theme }) => ({
-    whiteSpace: 'nowrap',
-    minWidth: '8rem',
-    marginLeft: theme.spacing(2),
-}));
-
-const StyledWarningIcon = styled(WarningAmber)(({ theme }) => ({
-    color: theme.palette.warning.main,
-}));
-
-const StyledInfoIcon = styled(InfoOutlined)(({ theme }) => ({
-    color: theme.palette.info.main,
-}));

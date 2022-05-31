@@ -21,7 +21,7 @@ export const FeatureTypeCell: VFC<IFeatureTypeProps> = ({ value }) => {
 
     return (
         <div className={styles.container}>
-            <Tooltip arrow placement="right" title={title} describeChild>
+            <Tooltip arrow title={title} describeChild>
                 <IconComponent data-loading className={styles.icon} />
             </Tooltip>
         </div>

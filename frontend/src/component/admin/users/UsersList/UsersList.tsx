@@ -1,49 +1,52 @@
 /* eslint-disable no-alert */
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
     Table,
+    SortableTableHeader,
     TableBody,
     TableCell,
-    TableHead,
     TableRow,
-} from '@mui/material';
-import classnames from 'classnames';
+    TablePlaceholder,
+    TableSearch,
+} from 'component/common/Table';
 import ChangePassword from './ChangePassword/ChangePassword';
 import DeleteUser from './DeleteUser/DeleteUser';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import AccessContext from 'contexts/AccessContext';
-import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import ConfirmUserAdded from '../ConfirmUserAdded/ConfirmUserAdded';
-import useUsers from 'hooks/api/getters/useUsers/useUsers';
+import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
 import useAdminUsersApi from 'hooks/api/actions/useAdminUsersApi/useAdminUsersApi';
-import UserListItem from './UserListItem/UserListItem';
-import loadingData from './loadingData';
-import useLoading from 'hooks/useLoading';
-import usePagination from 'hooks/usePagination';
-import PaginateUI from 'component/common/PaginateUI/PaginateUI';
 import { IUser } from 'interfaces/user';
 import IRole from 'interfaces/role';
 import useToast from 'hooks/useToast';
-import { useLocationSettings } from 'hooks/useLocationSettings';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { useUsersFilter } from 'hooks/useUsersFilter';
-import { useUsersSort } from 'hooks/useUsersSort';
-import { TableCellSortable } from 'component/common/Table/TableCellSortable/TableCellSortable';
-import { useStyles } from './UserListItem/UserListItem.styles';
 import { useUsersPlan } from 'hooks/useUsersPlan';
+import { PageContent } from 'component/common/PageContent/PageContent';
+import { PageHeader } from 'component/common/PageHeader/PageHeader';
+import { Avatar, Button, styled, useMediaQuery } from '@mui/material';
+import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
+import { UserTypeCell } from './UserTypeCell/UserTypeCell';
+import { useGlobalFilter, useSortBy, useTable } from 'react-table';
+import { sortTypes } from 'utils/sortTypes';
+import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
+import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
+import { useNavigate } from 'react-router-dom';
+import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
+import theme from 'themes/theme';
+import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
+import { UsersActionsCell } from './UsersActionsCell/UsersActionsCell';
 
-interface IUsersListProps {
-    search: string;
-}
+const StyledAvatar = styled(Avatar)(({ theme }) => ({
+    width: theme.spacing(4),
+    height: theme.spacing(4),
+    margin: 'auto',
+}));
 
-const UsersList = ({ search }: IUsersListProps) => {
-    const { classes: styles } = useStyles();
+const UsersList = () => {
+    const navigate = useNavigate();
     const { users, roles, refetch, loading } = useUsers();
     const { setToastData, setToastApiError } = useToast();
     const { removeUser, changePassword, userLoading, userApiErrors } =
         useAdminUsersApi();
-    const { hasAccess } = useContext(AccessContext);
-    const { locationSettings } = useLocationSettings();
     const [pwDialog, setPwDialog] = useState<{ open: boolean; user?: IUser }>({
         open: false,
     });
@@ -52,28 +55,10 @@ const UsersList = ({ search }: IUsersListProps) => {
     const [emailSent, setEmailSent] = useState(false);
     const [inviteLink, setInviteLink] = useState('');
     const [delUser, setDelUser] = useState<IUser>();
-    const ref = useLoading(loading);
     const { planUsers, isBillingUsers } = useUsersPlan(users);
-    const { filtered, setFilter } = useUsersFilter(planUsers);
-    const { sorted, sort, setSort } = useUsersSort(filtered);
 
-    const filterUsersByQueryPage = (user: IUser) => {
-        const fieldsToSearch = [
-            user.name ?? '',
-            user.username ?? user.email ?? '',
-        ];
-
-        return fieldsToSearch.some(field => {
-            return field.toLowerCase().includes(search.toLowerCase());
-        });
-    };
-    // Filter users and reset pagination page when search is triggered
-    const { page, pages, nextPage, prevPage, setPageIndex, pageIndex } =
-        usePagination(sorted, 50, filterUsersByQueryPage);
-
-    useEffect(() => {
-        setFilter(filter => ({ ...filter, query: search }));
-    }, [search, setFilter]);
+    const isExtraSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
     const closeDelDialog = () => {
         setDelDialog(false);
@@ -116,136 +101,208 @@ const UsersList = ({ search }: IUsersListProps) => {
         setInviteLink('');
     };
 
-    const renderRole = (roleId: number) => {
-        const role = roles.find((r: IRole) => r.id === roleId);
-        return role ? role.name : '';
-    };
+    const columns = useMemo(
+        () => [
+            {
+                id: 'type',
+                Header: 'Type',
+                accessor: 'paid',
+                Cell: ({ row: { original: user } }: any) => (
+                    <UserTypeCell value={isBillingUsers && user.paid} />
+                ),
+                disableGlobalFilter: true,
+                sortType: 'boolean',
+            },
+            {
+                Header: 'Created',
+                accessor: 'createdAt',
+                Cell: DateCell,
+                disableGlobalFilter: true,
+                sortType: 'date',
+            },
+            {
+                Header: 'Avatar',
+                accessor: 'imageUrl',
+                Cell: ({ row: { original: user } }: any) => (
+                    <TextCell>
+                        <StyledAvatar
+                            data-loading
+                            alt="Gravatar"
+                            src={user.imageUrl}
+                            title={`${
+                                user.name || user.email || user.username
+                            } (id: ${user.id})`}
+                        />
+                    </TextCell>
+                ),
+                disableGlobalFilter: true,
+                disableSortBy: true,
+            },
+            {
+                Header: 'Name',
+                accessor: (row: any) => row.name || '',
+                width: '40%',
+                Cell: HighlightCell,
+            },
+            {
+                id: 'username',
+                Header: 'Username',
+                accessor: (row: any) => row.username || row.email,
+                width: '40%',
+                Cell: HighlightCell,
+            },
+            {
+                id: 'role',
+                Header: 'Role',
+                accessor: (row: any) =>
+                    roles.find((role: IRole) => role.id === row.rootRole)
+                        ?.name || '',
+                disableGlobalFilter: true,
+            },
+            {
+                id: 'last-login',
+                Header: 'Last login',
+                accessor: (row: any) => row.seenAt || '',
+                Cell: ({ row: { original: user } }: any) => (
+                    <TimeAgoCell value={user.seenAt} emptyText="Never logged" />
+                ),
+                disableGlobalFilter: true,
+                sortType: 'date',
+            },
+            {
+                Header: 'Actions',
+                id: 'Actions',
+                align: 'center',
+                Cell: ({ row: { original: user } }: any) => (
+                    <UsersActionsCell
+                        onEdit={() => {
+                            navigate(`/admin/users/${user.id}/edit`);
+                        }}
+                        onChangePassword={openPwDialog(user)}
+                        onDelete={openDelDialog(user)}
+                    />
+                ),
+                width: 100,
+                disableGlobalFilter: true,
+                disableSortBy: true,
+            },
+        ],
+        [roles, navigate, isBillingUsers]
+    );
 
-    const renderUsers = () => {
-        if (loading) {
-            return loadingData.map(user => (
-                <UserListItem
-                    key={user.id}
-                    user={user}
-                    openPwDialog={openPwDialog}
-                    openDelDialog={openDelDialog}
-                    locationSettings={locationSettings}
-                    renderRole={renderRole}
-                    search={search}
-                />
-            ));
+    const initialState = useMemo(() => {
+        return {
+            sortBy: [{ id: 'createdAt', desc: false }],
+            hiddenColumns: isBillingUsers ? [] : ['type'],
+        };
+    }, [isBillingUsers]);
+
+    const data = isBillingUsers ? planUsers : users;
+
+    const {
+        getTableProps,
+        getTableBodyProps,
+        headerGroups,
+        rows,
+        prepareRow,
+        state: { globalFilter },
+        setGlobalFilter,
+        setHiddenColumns,
+    } = useTable(
+        {
+            columns: columns as any[], // TODO: fix after `react-table` v8 update
+            data,
+            initialState,
+            sortTypes,
+            autoResetGlobalFilter: false,
+            autoResetSortBy: false,
+            disableSortRemove: true,
+            defaultColumn: {
+                Cell: TextCell,
+            },
+        },
+        useGlobalFilter,
+        useSortBy
+    );
+
+    useEffect(() => {
+        const hiddenColumns = [];
+        if (!isBillingUsers || isSmallScreen) {
+            hiddenColumns.push('type');
         }
-
-        return page.map(user => {
-            return (
-                <UserListItem
-                    key={user.id}
-                    user={user}
-                    openPwDialog={openPwDialog}
-                    openDelDialog={openDelDialog}
-                    locationSettings={locationSettings}
-                    renderRole={renderRole}
-                    search={search}
-                    isBillingUsers={isBillingUsers}
-                />
-            );
-        });
-    };
-
-    if (!users) return null;
+        if (isSmallScreen) {
+            hiddenColumns.push(...['createdAt', 'username']);
+        }
+        if (isExtraSmallScreen) {
+            hiddenColumns.push(...['imageUrl', 'role', 'last-login']);
+        }
+        setHiddenColumns(hiddenColumns);
+    }, [setHiddenColumns, isExtraSmallScreen, isSmallScreen, isBillingUsers]);
 
     return (
-        <div ref={ref}>
-            <Table>
-                <TableHead>
-                    <TableRow className={styles.tableCellHeader}>
-                        <ConditionallyRender
-                            condition={isBillingUsers}
-                            show={
-                                <TableCell
-                                    align="center"
-                                    className={classnames(styles.hideSM)}
-                                >
-                                    Type
-                                </TableCell>
-                            }
-                        />
-                        <TableCellSortable
-                            className={classnames(
-                                styles.hideSM,
-                                styles.shrinkTableCell
-                            )}
-                            name="created"
-                            sort={sort}
-                            setSort={setSort}
-                        >
-                            Created
-                        </TableCellSortable>
-                        <TableCell
-                            align="center"
-                            className={classnames(
-                                styles.hideXS,
-                                styles.firstColumnSM
-                            )}
-                        >
-                            Avatar
-                        </TableCell>
-                        <TableCellSortable
-                            name="name"
-                            sort={sort}
-                            className={classnames(styles.firstColumnXS)}
-                            setSort={setSort}
-                        >
-                            Name
-                        </TableCellSortable>
-                        <TableCell className={styles.hideSM}>
-                            Username
-                        </TableCell>
-                        <TableCellSortable
-                            className={classnames(
-                                styles.hideXS,
-                                styles.shrinkTableCell
-                            )}
-                            name="role"
-                            sort={sort}
-                            setSort={setSort}
-                        >
-                            Role
-                        </TableCellSortable>
-                        <TableCellSortable
-                            className={classnames(
-                                styles.hideXS,
-                                styles.shrinkTableCell
-                            )}
-                            name="last-seen"
-                            sort={sort}
-                            setSort={setSort}
-                        >
-                            Last login
-                        </TableCellSortable>
-                        <TableCell align="center">
-                            {hasAccess(ADMIN) ? 'Actions' : ''}
-                        </TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>{renderUsers()}</TableBody>
-                <PaginateUI
-                    pages={pages}
-                    pageIndex={pageIndex}
-                    setPageIndex={setPageIndex}
-                    nextPage={nextPage}
-                    prevPage={prevPage}
+        <PageContent
+            isLoading={loading}
+            header={
+                <PageHeader
+                    title="Users"
+                    actions={
+                        <>
+                            <TableSearch
+                                initialValue={globalFilter}
+                                onChange={setGlobalFilter}
+                            />
+                            <PageHeader.Divider />
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={() => navigate('/admin/create-user')}
+                            >
+                                New user
+                            </Button>
+                        </>
+                    }
                 />
-            </Table>
+            }
+        >
+            <SearchHighlightProvider value={globalFilter}>
+                <Table {...getTableProps()}>
+                    <SortableTableHeader headerGroups={headerGroups} />
+                    <TableBody {...getTableBodyProps()}>
+                        {rows.map(row => {
+                            prepareRow(row);
+                            return (
+                                <TableRow hover {...row.getRowProps()}>
+                                    {row.cells.map(cell => (
+                                        <TableCell {...cell.getCellProps()}>
+                                            {cell.render('Cell')}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            );
+                        })}
+                    </TableBody>
+                </Table>
+            </SearchHighlightProvider>
             <ConditionallyRender
-                condition={!pages.length && search.length > 0}
+                condition={rows.length === 0}
                 show={
-                    <p className={styles.errorMessage}>
-                        There are no results for "{search}"
-                    </p>
+                    <ConditionallyRender
+                        condition={globalFilter?.length > 0}
+                        show={
+                            <TablePlaceholder>
+                                No users found matching &ldquo;
+                                {globalFilter}
+                                &rdquo;
+                            </TablePlaceholder>
+                        }
+                        elseShow={
+                            <TablePlaceholder>
+                                No users available. Get started by adding one.
+                            </TablePlaceholder>
+                        }
+                    />
                 }
             />
-            <br />
 
             <ConfirmUserAdded
                 open={showConfirm}
@@ -278,7 +335,7 @@ const UsersList = ({ search }: IUsersListProps) => {
                     />
                 }
             />
-        </div>
+        </PageContent>
     );
 };
 

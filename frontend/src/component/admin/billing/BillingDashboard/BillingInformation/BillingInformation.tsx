@@ -4,6 +4,30 @@ import { BillingInformationButton } from './BillingInformationButton/BillingInfo
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { IInstanceStatus, InstanceState } from 'interfaces/instance';
 
+const StyledInfoBox = styled('aside')(({ theme }) => ({
+    padding: theme.spacing(4),
+    height: '100%',
+    borderRadius: theme.shape.borderRadiusLarge,
+    backgroundColor: theme.palette.secondaryContainer,
+}));
+
+const StyledTitle = styled(Typography)(({ theme }) => ({
+    marginBottom: theme.spacing(4),
+}));
+
+const StyledAlert = styled(Alert)(({ theme }) => ({
+    marginBottom: theme.spacing(4),
+}));
+
+const StyledInfoLabel = styled(Typography)(({ theme }) => ({
+    fontSize: theme.fontSizes.smallBody,
+    color: theme.palette.text.secondary,
+}));
+
+const StyledDivider = styled(Divider)(({ theme }) => ({
+    margin: `${theme.spacing(2.5)} 0`,
+    borderColor: theme.palette.dividerAlternative,
+}));
 interface IBillingInformationProps {
     instanceStatus: IInstanceStatus;
 }
@@ -43,28 +67,3 @@ export const BillingInformation: FC<IBillingInformationProps> = ({
         </Grid>
     );
 };
-
-const StyledInfoBox = styled('aside')(({ theme }) => ({
-    padding: theme.spacing(4),
-    height: '100%',
-    borderRadius: theme.shape.borderRadiusLarge,
-    backgroundColor: theme.palette.secondaryContainer,
-}));
-
-const StyledTitle = styled(Typography)(({ theme }) => ({
-    marginBottom: theme.spacing(4),
-}));
-
-const StyledAlert = styled(Alert)(({ theme }) => ({
-    marginBottom: theme.spacing(4),
-}));
-
-const StyledInfoLabel = styled(Typography)(({ theme }) => ({
-    fontSize: theme.fontSizes.smallBody,
-    color: theme.palette.text.secondary,
-}));
-
-const StyledDivider = styled(Divider)(({ theme }) => ({
-    margin: `${theme.spacing(2.5)} 0`,
-    borderColor: theme.palette.dividerAlternative,
-}));

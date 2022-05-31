@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import { useStyles } from './UserForm.styles';
 import React from 'react';
-import useUsers from 'hooks/api/getters/useUsers/useUsers';
+import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { EDIT } from 'constants/misc';
 import useUiBootstrap from 'hooks/api/getters/useUiBootstrap/useUiBootstrap';

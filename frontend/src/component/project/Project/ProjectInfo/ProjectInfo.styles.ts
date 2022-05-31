@@ -95,7 +95,7 @@ export const useStyles = makeStyles()(theme => ({
         boxShadow: 'none',
         textAlign: 'left',
     },
-    accordionBody: { padding: '0' },
+    accordionBody: { padding: '0', wordBreak: 'break-all' },
     accordionActions: {
         padding: '0',
         justifyContent: 'flex-start',

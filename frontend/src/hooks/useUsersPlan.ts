@@ -13,10 +13,11 @@ export const useUsersPlan = (users: IUser[]): IUsersPlanOutput => {
     const { instanceStatus } = useInstanceStatus();
 
     const isBillingUsers = STRIPE && instanceStatus?.plan === InstancePlan.PRO;
+    const seats = instanceStatus?.seats ?? 5;
 
     const planUsers = useMemo(
-        () => calculatePaidUsers(users, isBillingUsers, instanceStatus?.seats),
-        [users, isBillingUsers, instanceStatus?.seats]
+        () => calculatePaidUsers(users, isBillingUsers, seats),
+        [users, isBillingUsers, seats]
     );
 
     return {

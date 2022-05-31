@@ -4,6 +4,14 @@ import { ReportProblemOutlined, Check } from '@mui/icons-material';
 import { styled } from '@mui/material';
 import { IReportTableRow } from 'component/Reporting/ReportTable/ReportTable';
 
+const StyledText = styled('span')(({ theme }) => ({
+    display: 'flex',
+    gap: '1ch',
+    alignItems: 'center',
+    textAlign: 'right',
+    '& svg': { color: theme.palette.inactiveIcon },
+}));
+
 interface IReportStatusCellProps {
     row: {
         original: IReportTableRow;
@@ -33,11 +41,3 @@ export const ReportStatusCell: VFC<IReportStatusCellProps> = ({
         </TextCell>
     );
 };
-
-const StyledText = styled('span')(({ theme }) => ({
-    display: 'flex',
-    gap: '1ch',
-    alignItems: 'center',
-    textAlign: 'right',
-    '& svg': { color: theme.palette.inactiveIcon },
-}));

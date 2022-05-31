@@ -3,6 +3,7 @@ import {
     TableSearch,
     SortableTableHeader,
     TableCell,
+    TablePlaceholder,
 } from 'component/common/Table';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
@@ -24,6 +25,7 @@ import {
 import { formatExpiredAt } from 'component/Reporting/ReportExpiredCell/formatExpiredAt';
 import { FeatureStaleCell } from 'component/feature/FeatureToggleList/FeatureStaleCell/FeatureStaleCell';
 import theme from 'themes/theme';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface IReportTableProps {
     projectId: string;
@@ -52,7 +54,7 @@ export const ReportTable = ({ projectId, features }: IReportTableProps) => {
 
     const initialState = useMemo(
         () => ({
-            hiddenColumns: ['description'],
+            hiddenColumns: [],
             sortBy: [{ id: 'name' }],
         }),
         []
@@ -83,9 +85,7 @@ export const ReportTable = ({ projectId, features }: IReportTableProps) => {
 
     useEffect(() => {
         if (isSmallScreen) {
-            setHiddenColumns(['createdAt', 'expiredAt', 'description']);
-        } else {
-            setHiddenColumns(['description']);
+            setHiddenColumns(['createdAt', 'expiredAt']);
         }
     }, [setHiddenColumns, isSmallScreen]);
 
@@ -100,6 +100,8 @@ export const ReportTable = ({ projectId, features }: IReportTableProps) => {
             }
         />
     );
+
+    console.log(rows);
 
     return (
         <PageContent header={header}>
@@ -122,6 +124,27 @@ export const ReportTable = ({ projectId, features }: IReportTableProps) => {
                     </TableBody>
                 </Table>
             </SearchHighlightProvider>
+            <ConditionallyRender
+                condition={rows.length === 0}
+                show={
+                    <ConditionallyRender
+                        condition={globalFilter?.length > 0}
+                        show={
+                            <TablePlaceholder>
+                                No features found matching &ldquo;
+                                {globalFilter}
+                                &rdquo;
+                            </TablePlaceholder>
+                        }
+                        elseShow={
+                            <TablePlaceholder>
+                                No features available. Get started by adding a
+                                new feature toggle.
+                            </TablePlaceholder>
+                        }
+                    />
+                }
+            />
         </PageContent>
     );
 };
@@ -149,12 +172,14 @@ const COLUMNS = [
         sortType: 'date',
         align: 'center',
         Cell: FeatureSeenCell,
+        disableGlobalFilter: true,
     },
     {
         Header: 'Type',
         accessor: 'type',
         align: 'center',
         Cell: FeatureTypeCell,
+        disableGlobalFilter: true,
     },
     {
         Header: 'Feature toggle name',
@@ -168,11 +193,13 @@ const COLUMNS = [
         accessor: 'createdAt',
         sortType: 'date',
         Cell: DateCell,
+        disableGlobalFilter: true,
     },
     {
         Header: 'Expired',
         accessor: 'expiredAt',
         Cell: ReportExpiredCell,
+        disableGlobalFilter: true,
     },
     {
         Header: 'Status',
@@ -185,8 +212,6 @@ const COLUMNS = [
         accessor: 'stale',
         sortType: 'boolean',
         Cell: FeatureStaleCell,
-    },
-    {
-        accessor: 'description',
+        disableGlobalFilter: true,
     },
 ];

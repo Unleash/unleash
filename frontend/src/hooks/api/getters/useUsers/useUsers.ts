@@ -1,36 +1,28 @@
-import useSWR, { mutate, SWRConfiguration } from 'swr';
-import { useState, useEffect } from 'react';
+import useSWR from 'swr';
+import { useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 
-const useUsers = (options: SWRConfiguration = {}) => {
-    const fetcher = () => {
-        const path = formatApiPath(`api/admin/user-admin`);
-        return fetch(path, {
-            method: 'GET',
-        })
-            .then(handleErrorResponses('Users'))
-            .then(res => res.json());
-    };
+export const useUsers = () => {
+    const { data, error, mutate } = useSWR(
+        formatApiPath(`api/admin/user-admin`),
+        fetcher
+    );
 
-    const { data, error } = useSWR(`api/admin/user-admin`, fetcher, options);
-    const [loading, setLoading] = useState(!error && !data);
-
-    const refetch = () => {
-        mutate(`api/admin/user-admin`);
-    };
-
-    useEffect(() => {
-        setLoading(!error && !data);
-    }, [data, error]);
-
-    return {
-        users: data?.users || [],
-        roles: data?.rootRoles || [],
-        error,
-        loading,
-        refetch,
-    };
+    return useMemo(
+        () => ({
+            users: data?.users ?? [],
+            roles: data?.rootRoles ?? [],
+            loading: !error && !data,
+            refetch: () => mutate(),
+            error,
+        }),
+        [data, error, mutate]
+    );
 };
 
-export default useUsers;
+const fetcher = (path: string) => {
+    return fetch(path)
+        .then(handleErrorResponses('Users'))
+        .then(res => res.json());
+};

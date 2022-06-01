@@ -6040,10 +6040,10 @@ vite@2.9.9, vite@^2.9.9:
   optionalDependencies:
     fsevents "~2.3.2"
 
-vitest@0.13.0:
-  version "0.13.0"
-  resolved "https://registry.yarnpkg.com/vitest/-/vitest-0.13.0.tgz#8c2e8a555bb6d7ac016408ffdc41d270bf69f37c"
-  integrity sha512-vuYt3+G25MMnANgyMHHG3VK86C9K/VFi/8uH5myQ2v660W4WArv99ElakPlVFxxSXXM1jqQPiPj2ht35Bod9LQ==
+vitest@0.13.1:
+  version "0.13.1"
+  resolved "https://registry.yarnpkg.com/vitest/-/vitest-0.13.1.tgz#4b857c6ca0a9a1a2340dc8a1d9991b1f75934220"
+  integrity sha512-CfSBf7YFw/i8HumSUQRtZKs0aV91DC9WU8nAgIJAlawKHaFuPHQohDwOTPIFgrxySiuFYUa0Yohf9gDFfBwjxA==
   dependencies:
     "@types/chai" "^4.3.1"
     "@types/chai-subset" "^1.3.3"

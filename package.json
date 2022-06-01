@@ -36,7 +36,7 @@
     "build:watch": "tsc -w",
     "prebuild": "yarn run clean",
     "build": "yarn run copy-templates && tsc --pretty",
-    "prepare": "yarn run build",
+    "prepare": "node scripts/husky-install && yarn run build",
     "test": "NODE_ENV=test PORT=4243 jest",
     "test:unit": "NODE_ENV=test PORT=4243 jest --testPathIgnorePatterns=src/test/e2e/**",
     "test:docker": "./scripts/docker-postgres.sh",
@@ -179,17 +179,12 @@
     "json-schema": "^0.4.0"
   },
   "lint-staged": {
-    "*.js": [
+    "*.{js,ts}": [
       "eslint --fix"
     ],
-    "*.{json,css,md}": [
+    "*.{json,yaml,md}": [
       "prettier --write"
     ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   },
   "prettier": {
     "proseWrap": "never",

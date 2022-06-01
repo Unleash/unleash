@@ -3,10 +3,7 @@
         "node": true,
         "jest": true
     },
-    "extends": [
-        "airbnb-typescript/base",
-        "plugin:prettier/recommended"
-    ],
+    "extends": ["airbnb-typescript/base", "plugin:prettier/recommended"],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaVersion": 2019,
@@ -32,10 +29,7 @@
         "new-cap": [
             "error",
             {
-                "capIsNewExceptions": [
-                    "Router",
-                    "Mitm"
-                ]
+                "capIsNewExceptions": ["Router", "Mitm"]
             }
         ]
     },
@@ -56,5 +50,5 @@
             }
         }
     ],
-    "ignorePatterns": ["**/docs/api/oas/", "examples/**"]
+    "ignorePatterns": ["**/docs/api/oas/", "examples/**", "scripts/**"]
 }

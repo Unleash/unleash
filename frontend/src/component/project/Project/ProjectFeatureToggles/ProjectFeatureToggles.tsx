@@ -1,7 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useTheme } from '@mui/system';
 import { Add } from '@mui/icons-material';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useGlobalFilter, useSortBy, useTable } from 'react-table';
+import {
+    useGlobalFilter,
+    useFlexLayout,
+    useSortBy,
+    useTable,
+} from 'react-table';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { PageContent } from 'component/common/PageContent/PageContent';
@@ -29,6 +35,7 @@ import {
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import useProject from 'hooks/api/getters/useProject/useProject';
 import { useLocalStorage } from 'hooks/useLocalStorage';
+import { useVirtualizedRange } from 'hooks/useVirtualizedRange';
 import useToast from 'hooks/useToast';
 import { ENVIRONMENT_STRATEGY_ERROR } from 'constants/apiErrors';
 import EnvironmentStrategyDialog from 'component/common/EnvironmentStrategiesDialog/EnvironmentStrategyDialog';
@@ -38,6 +45,8 @@ import { FeatureToggleSwitch } from './FeatureToggleSwitch/FeatureToggleSwitch';
 import { ActionsCell } from './ActionsCell/ActionsCell';
 import { ColumnsMenu } from './ColumnsMenu/ColumnsMenu';
 import { useStyles } from './ProjectFeatureToggles.styles';
+import { FeatureStaleDialog } from 'component/common/FeatureStaleDialog/FeatureStaleDialog';
+import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 
 interface IProjectFeatureTogglesProps {
     features: IProject['features'];
@@ -58,8 +67,6 @@ type ListItemType = Pick<
 };
 
 const staticColumns = ['Actions', 'name'];
-const limit = 300; // if above limit, render only `pageSize` of items
-const pageSize = 100;
 
 export const ProjectFeatureToggles = ({
     features,
@@ -72,6 +79,13 @@ export const ProjectFeatureToggles = ({
         featureId: '',
         environmentName: '',
     });
+    const [featureStaleDialogState, setFeatureStaleDialogState] = useState<{
+        featureId?: string;
+        stale?: boolean;
+    }>({});
+    const [featureArchiveState, setFeatureArchiveState] = useState<
+        string | undefined
+    >();
     const projectId = useRequiredPathParam('projectId');
     const navigate = useNavigate();
     const { uiConfig } = useUiConfig();
@@ -80,6 +94,8 @@ export const ProjectFeatureToggles = ({
     );
     const { refetch } = useProject(projectId);
     const { setToastData, setToastApiError } = useToast();
+    const theme = useTheme();
+    const rowHeight = theme.shape.tableRowHeight;
 
     const data = useMemo<ListItemType[]>(() => {
         if (loading) {
@@ -93,36 +109,34 @@ export const ProjectFeatureToggles = ({
             }) as ListItemType[];
         }
 
-        return features
-            .slice(0, features.length > limit ? pageSize : limit)
-            .map(
-                ({
-                    name,
-                    lastSeenAt,
-                    createdAt,
-                    type,
-                    stale,
-                    environments: featureEnvironments,
-                }) => ({
-                    name,
-                    lastSeenAt,
-                    createdAt,
-                    type,
-                    stale,
-                    environments: Object.fromEntries(
-                        environments.map(env => [
-                            env,
-                            {
-                                name: env,
-                                enabled:
-                                    featureEnvironments?.find(
-                                        feature => feature?.name === env
-                                    )?.enabled || false,
-                            },
-                        ])
-                    ),
-                })
-            );
+        return features.map(
+            ({
+                name,
+                lastSeenAt,
+                createdAt,
+                type,
+                stale,
+                environments: featureEnvironments,
+            }) => ({
+                name,
+                lastSeenAt,
+                createdAt,
+                type,
+                stale,
+                environments: Object.fromEntries(
+                    environments.map(env => [
+                        env,
+                        {
+                            name: env,
+                            enabled:
+                                featureEnvironments?.find(
+                                    feature => feature?.name === env
+                                )?.enabled || false,
+                        },
+                    ])
+                ),
+            })
+        );
     }, [features, loading]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const { toggleFeatureEnvironmentOn, toggleFeatureEnvironmentOff } =
@@ -181,12 +195,14 @@ export const ProjectFeatureToggles = ({
                 Cell: FeatureSeenCell,
                 sortType: 'date',
                 align: 'center',
+                maxWidth: 80,
             },
             {
                 Header: 'Type',
                 accessor: 'type',
                 Cell: FeatureTypeCell,
                 align: 'center',
+                maxWidth: 80,
             },
             {
                 Header: 'Feature toggle name',
@@ -197,9 +213,7 @@ export const ProjectFeatureToggles = ({
                         to={`/projects/${projectId}/features/${value}`}
                     />
                 ),
-                width: '99%',
                 minWidth: 100,
-                maxWidth: 200,
                 sortType: 'alphanumeric',
                 disableGlobalFilter: false,
             },
@@ -213,7 +227,6 @@ export const ProjectFeatureToggles = ({
             ...environments.map(name => ({
                 Header: loading ? () => '' : name,
                 maxWidth: 90,
-                minWidth: 90,
                 accessor: `environments.${name}`,
                 align: 'center',
                 Cell: ({
@@ -242,7 +255,12 @@ export const ProjectFeatureToggles = ({
                 maxWidth: 56,
                 width: 56,
                 Cell: (props: { row: { original: ListItemType } }) => (
-                    <ActionsCell projectId={projectId} {...props} />
+                    <ActionsCell
+                        projectId={projectId}
+                        onOpenArchiveDialog={setFeatureArchiveState}
+                        onOpenStaleDialog={setFeatureStaleDialogState}
+                        {...props}
+                    />
                 ),
                 disableSortBy: true,
             },
@@ -319,6 +337,7 @@ export const ProjectFeatureToggles = ({
                 disableGlobalFilter: true,
             },
         },
+        useFlexLayout,
         useGlobalFilter,
         useSortBy
     );
@@ -357,6 +376,10 @@ export const ProjectFeatureToggles = ({
         },
         [setStoredParams]
     );
+    const [firstRenderedIndex, lastRenderedIndex] = useVirtualizedRange(
+        rowHeight,
+        20
+    );
 
     return (
         <PageContent
@@ -366,11 +389,7 @@ export const ProjectFeatureToggles = ({
             header={
                 <PageHeader
                     className={styles.title}
-                    title={`Project feature toggles (${
-                        features?.length > limit
-                            ? `first ${rows.length} of ${features.length}`
-                            : data.length
-                    })`}
+                    title={`Project feature toggles (${rows.length})`}
                     actions={
                         <>
                             <TableSearch
@@ -410,19 +429,51 @@ export const ProjectFeatureToggles = ({
             }
         >
             <SearchHighlightProvider value={globalFilter}>
-                <Table {...getTableProps()}>
+                <Table {...getTableProps()} rowHeight={rowHeight}>
                     <SortableTableHeader
                         // @ts-expect-error -- verify after `react-table` v8
                         headerGroups={headerGroups}
                         className={styles.headerClass}
+                        flex
                     />
-                    <TableBody {...getTableBodyProps()}>
-                        {rows.map(row => {
+                    <TableBody
+                        {...getTableBodyProps()}
+                        style={{
+                            height: `${rowHeight * rows.length}px`,
+                            position: 'relative',
+                        }}
+                    >
+                        {rows.map((row, index) => {
+                            const isVirtual =
+                                index < firstRenderedIndex ||
+                                index > lastRenderedIndex;
+
+                            if (isVirtual) {
+                                return null;
+                            }
+
                             prepareRow(row);
                             return (
-                                <TableRow hover {...row.getRowProps()}>
+                                <TableRow
+                                    hover
+                                    {...row.getRowProps()}
+                                    className={styles.row}
+                                    style={{
+                                        top: `${index * rowHeight}px`,
+                                        display: 'flex',
+                                    }}
+                                >
                                     {row.cells.map(cell => (
-                                        <TableCell {...cell.getCellProps()}>
+                                        <TableCell
+                                            {...cell.getCellProps({
+                                                style: {
+                                                    flex: cell.column.minWidth
+                                                        ? '1 0 auto'
+                                                        : undefined,
+                                                },
+                                            })}
+                                            className={styles.cell}
+                                        >
                                             {cell.render('Cell')}
                                         </TableCell>
                                     ))}
@@ -459,6 +510,27 @@ export const ProjectFeatureToggles = ({
                 }
                 projectId={projectId}
                 {...strategiesDialogState}
+            />
+            <FeatureStaleDialog
+                isStale={featureStaleDialogState.stale === true}
+                isOpen={Boolean(featureStaleDialogState.featureId)}
+                onClose={() => {
+                    setFeatureStaleDialogState({});
+                    refetch();
+                }}
+                featureId={featureStaleDialogState.featureId || ''}
+                projectId={projectId}
+            />
+            <FeatureArchiveDialog
+                isOpen={Boolean(featureArchiveState)}
+                onConfirm={() => {
+                    refetch();
+                }}
+                onClose={() => {
+                    setFeatureArchiveState(undefined);
+                }}
+                featureId={featureArchiveState || ''}
+                projectId={projectId}
             />
         </PageContent>
     );

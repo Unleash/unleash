@@ -23,15 +23,16 @@ import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { FeatureSeenCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureSeenCell';
 import { FeatureTypeCell } from 'component/common/Table/cells/FeatureTypeCell/FeatureTypeCell';
+import { FeatureNameCell } from 'component/common/Table/cells/FeatureNameCell/FeatureNameCell';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { sortTypes } from 'utils/sortTypes';
 import { useLocalStorage } from 'hooks/useLocalStorage';
+import { useVirtualizedRange } from 'hooks/useVirtualizedRange';
 import { FeatureSchema } from 'openapi';
 import { CreateFeatureButton } from '../CreateFeatureButton/CreateFeatureButton';
 import { FeatureStaleCell } from './FeatureStaleCell/FeatureStaleCell';
-import { FeatureNameCell } from 'component/common/Table/cells/FeatureNameCell/FeatureNameCell';
 import { useStyles } from './styles';
 
 const featuresPlaceholder: FeatureSchema[] = Array(15).fill({
@@ -99,8 +100,6 @@ const columns = [
         accessor: 'description',
     },
 ];
-
-const scrollOffset = 50;
 
 const defaultSort: SortingRule<string> = { id: 'createdAt', desc: false };
 
@@ -194,20 +193,8 @@ export const FeatureToggleListTable: VFC = () => {
         setStoredParams({ id: sortBy[0].id, desc: sortBy[0].desc || false });
     }, [sortBy, globalFilter, setSearchParams, setStoredParams]);
 
-    const [scrollIndex, setScrollIndex] = useState(0);
-    useEffect(() => {
-        const handleScroll = () => {
-            requestAnimationFrame(() => {
-                const position = window.pageYOffset;
-                setScrollIndex(Math.floor(position / (rowHeight * 5)) * 5);
-            });
-        };
-        window.addEventListener('scroll', handleScroll, { passive: true });
-
-        return () => {
-            window.removeEventListener('scroll', handleScroll);
-        };
-    }, [rowHeight]);
+    const [firstRenderedIndex, lastRenderedIndex] =
+        useVirtualizedRange(rowHeight);
 
     return (
         <PageContent
@@ -256,8 +243,8 @@ export const FeatureToggleListTable: VFC = () => {
                     >
                         {rows.map((row, index) => {
                             const isVirtual =
-                                index > scrollOffset + scrollIndex ||
-                                index + scrollOffset < scrollIndex;
+                                index < firstRenderedIndex ||
+                                index > lastRenderedIndex;
 
                             if (isVirtual) {
                                 return null;

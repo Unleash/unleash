@@ -137,7 +137,7 @@ const Project = () => {
                     show={
                         <ApiError
                             data-loading
-                            style={{ maxWidth: '400px', marginTop: '1rem' }}
+                            style={{ maxWidth: '400px', margin: '1rem' }}
                             onClick={refetch}
                             text="Could not fetch project"
                         />

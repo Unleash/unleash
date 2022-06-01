@@ -18,7 +18,6 @@ interface IFeatureToggleSwitchProps {
     ) => Promise<void>;
 }
 
-// TODO: check React.memo performance
 export const FeatureToggleSwitch: VFC<IFeatureToggleSwitchProps> = ({
     projectId,
     featureName,

@@ -22,9 +22,6 @@ import {
     DELETE_FEATURE,
     UPDATE_FEATURE,
 } from 'component/providers/AccessProvider/permissions';
-import { FeatureStaleDialog } from 'component/common/FeatureStaleDialog/FeatureStaleDialog';
-import useProject from 'hooks/api/getters/useProject/useProject';
-import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 
 interface IActionsCellProps {
     projectId: string;
@@ -34,13 +31,17 @@ interface IActionsCellProps {
             stale?: boolean;
         };
     };
+    onOpenArchiveDialog: (featureId: string) => void;
+    onOpenStaleDialog: (props: { featureId: string; stale: boolean }) => void;
 }
 
-export const ActionsCell: VFC<IActionsCellProps> = ({ projectId, row }) => {
+export const ActionsCell: VFC<IActionsCellProps> = ({
+    projectId,
+    row,
+    onOpenArchiveDialog,
+    onOpenStaleDialog,
+}) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const [openStaleDialog, setOpenStaleDialog] = useState(false);
-    const [openArchiveDialog, setOpenArchiveDialog] = useState(false);
-    const { refetch } = useProject(projectId);
     const { classes } = useStyles();
     const {
         original: { name: featureId, stale },
@@ -120,7 +121,7 @@ export const ActionsCell: VFC<IActionsCellProps> = ({ projectId, row }) => {
                             <MenuItem
                                 className={classes.item}
                                 onClick={() => {
-                                    setOpenArchiveDialog(true);
+                                    onOpenArchiveDialog(featureId);
                                     handleClose();
                                 }}
                                 disabled={!hasAccess}
@@ -145,7 +146,10 @@ export const ActionsCell: VFC<IActionsCellProps> = ({ projectId, row }) => {
                                 className={classes.item}
                                 onClick={() => {
                                     handleClose();
-                                    setOpenStaleDialog(true);
+                                    onOpenStaleDialog({
+                                        featureId,
+                                        stale: stale === true,
+                                    });
                                 }}
                                 disabled={!hasAccess}
                             >
@@ -162,25 +166,6 @@ export const ActionsCell: VFC<IActionsCellProps> = ({ projectId, row }) => {
                     </PermissionHOC>
                 </MenuList>
             </Popover>
-            <FeatureStaleDialog
-                isStale={stale === true}
-                isOpen={openStaleDialog}
-                onClose={() => {
-                    setOpenStaleDialog(false);
-                    refetch();
-                }}
-                featureId={featureId}
-                projectId={projectId}
-            />
-            <FeatureArchiveDialog
-                isOpen={openArchiveDialog}
-                onConfirm={() => {
-                    refetch();
-                }}
-                onClose={() => setOpenArchiveDialog(false)}
-                featureId={featureId}
-                projectId={projectId}
-            />
         </Box>
     );
 };

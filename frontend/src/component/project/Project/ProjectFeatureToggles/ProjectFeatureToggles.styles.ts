@@ -17,11 +17,6 @@ export const useStyles = makeStyles()(theme => ({
         '& th': {
             fontSize: theme.fontSizes.smallerBody,
             lineHeight: '1rem',
-            // fix for padding with different font size in hovered column header
-            'span[data-tooltip] span': {
-                padding: '4px 0',
-                display: 'block',
-            },
         },
     },
     bodyClass: {
@@ -64,5 +59,17 @@ export const useStyles = makeStyles()(theme => ({
     },
     button: {
         whiteSpace: 'nowrap',
+    },
+    row: {
+        position: 'absolute',
+        width: '100%',
+    },
+    cell: {
+        alignItems: 'center',
+        display: 'flex',
+        flexShrink: 0,
+        '& > *': {
+            flexGrow: 1,
+        },
     },
 }));

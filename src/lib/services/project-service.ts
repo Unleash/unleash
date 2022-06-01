@@ -217,7 +217,7 @@ export default class ProjectService {
         const updatedFeature = await this.featureToggleService.changeProject(
             featureName,
             newProjectId,
-            user.username,
+            getCreatedBy(user),
         );
         await this.featureToggleService.updateFeatureStrategyProject(
             featureName,

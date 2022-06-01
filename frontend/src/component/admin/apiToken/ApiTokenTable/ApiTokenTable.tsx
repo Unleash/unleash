@@ -28,7 +28,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 
 export const ApiTokenTable = () => {
-    const { tokens } = useApiTokens();
+    const { tokens, loading } = useApiTokens();
     const hiddenColumns = useHiddenColumns();
     const initialState = useMemo(() => ({ sortBy: [{ id: 'createdAt' }] }), []);
 
@@ -69,10 +69,6 @@ export const ApiTokenTable = () => {
         </>
     );
 
-    if (!tokens.length) {
-        return null;
-    }
-
     return (
         <PageContent
             header={
@@ -105,7 +101,7 @@ export const ApiTokenTable = () => {
                 </Table>
             </SearchHighlightProvider>
             <ConditionallyRender
-                condition={rows.length === 0}
+                condition={rows.length === 0 && !loading}
                 show={
                     <ConditionallyRender
                         condition={globalFilter?.length > 0}

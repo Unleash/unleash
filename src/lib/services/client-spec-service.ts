@@ -36,9 +36,16 @@ export class ClientSpecService {
         }
 
         const parsedVersion = parseStrictSemVer(version);
+
+        if (!parsedVersion && !/^\d/.test(version)) {
+            throw new BadDataError(
+                `Invalid prefix in the ${this.clientSpecHeader} header: "${version}".`,
+            );
+        }
+
         if (!parsedVersion) {
             throw new BadDataError(
-                `Invalid ${this.clientSpecHeader} header value: ${version}`,
+                `Invalid SemVer in the ${this.clientSpecHeader} header: "${version}".`,
             );
         }
 

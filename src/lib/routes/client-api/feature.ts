@@ -13,7 +13,7 @@ import ApiUser from '../../types/api-user';
 import { ALL, isAllProjects } from '../../types/models/api-token';
 import { SegmentService } from '../../services/segment-service';
 import { FeatureConfigurationClient } from '../../types/stores/feature-strategies-store';
-import { CapabilityService } from '../../services/capability-service';
+import { ClientSpecService } from '../../services/client-spec-service';
 
 const version = 2;
 
@@ -29,7 +29,7 @@ export default class FeatureController extends Controller {
 
     private segmentService: SegmentService;
 
-    private capabilityService: CapabilityService;
+    private clientSpecService: ClientSpecService;
 
     private readonly cache: boolean;
 
@@ -39,10 +39,10 @@ export default class FeatureController extends Controller {
         {
             featureToggleServiceV2,
             segmentService,
-            capabilityService,
+            clientSpecService,
         }: Pick<
             IUnleashServices,
-            'featureToggleServiceV2' | 'segmentService' | 'capabilityService'
+            'featureToggleServiceV2' | 'segmentService' | 'clientSpecService'
         >,
         config: IUnleashConfig,
     ) {
@@ -50,7 +50,7 @@ export default class FeatureController extends Controller {
         const { experimental } = config;
         this.featureToggleServiceV2 = featureToggleServiceV2;
         this.segmentService = segmentService;
-        this.capabilityService = capabilityService;
+        this.clientSpecService = clientSpecService;
         this.logger = config.getLogger('client-api/feature.js');
 
         this.get('/', this.getAll);
@@ -99,7 +99,7 @@ export default class FeatureController extends Controller {
         }
 
         const inlineSegmentConstraints =
-            !this.capabilityService.requestHasCapability(req, 'segments');
+            !this.clientSpecService.requestSupportsSpec(req, 'segments');
 
         return this.prepQuery({
             ...query,
@@ -160,7 +160,7 @@ export default class FeatureController extends Controller {
                   this.segmentService.getActive(),
               ]);
 
-        if (this.capabilityService.requestHasCapability(req, 'segments')) {
+        if (this.clientSpecService.requestSupportsSpec(req, 'segments')) {
             res.json({ version, features, query, segments });
         } else {
             res.json({ version, features, query });

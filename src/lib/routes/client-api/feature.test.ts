@@ -6,7 +6,7 @@ import { createServices } from '../../services';
 import FeatureController from './feature';
 import { createTestConfig } from '../../../test/config/test-config';
 import { secondsToMilliseconds } from 'date-fns';
-import { CapabilityService } from '../../services/capability-service';
+import { ClientSpecService } from '../../services/client-spec-service';
 
 async function getSetup() {
     const base = `/random${Math.round(Math.random() * 1000)}`;
@@ -70,13 +70,13 @@ test('should get empty getFeatures via client', () => {
 test('if caching is enabled should memoize', async () => {
     const getClientFeatures = jest.fn().mockReturnValue([]);
     const getActive = jest.fn().mockReturnValue([]);
-    const capabilityService = new CapabilityService({ getLogger });
+    const clientSpecService = new ClientSpecService({ getLogger });
     const featureToggleServiceV2 = { getClientFeatures };
     const segmentService = { getActive };
 
     const controller = new FeatureController(
         {
-            capabilityService,
+            clientSpecService,
             // @ts-expect-error
             featureToggleServiceV2,
             // @ts-expect-error
@@ -101,13 +101,13 @@ test('if caching is enabled should memoize', async () => {
 test('if caching is not enabled all calls goes to service', async () => {
     const getClientFeatures = jest.fn().mockReturnValue([]);
     const getActive = jest.fn().mockReturnValue([]);
-    const capabilityService = new CapabilityService({ getLogger });
+    const clientSpecService = new ClientSpecService({ getLogger });
     const featureToggleServiceV2 = { getClientFeatures };
     const segmentService = { getActive };
 
     const controller = new FeatureController(
         {
-            capabilityService,
+            clientSpecService,
             // @ts-expect-error
             featureToggleServiceV2,
             // @ts-expect-error

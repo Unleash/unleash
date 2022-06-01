@@ -216,8 +216,7 @@ test('should only return segments to clients with the segments capability', asyn
 
     const supportedClientResponse = await app.request
         .get(FEATURES_CLIENT_BASE_PATH)
-        .set('Unleash-Client-Name', 'unleash-client-node')
-        .set('Unleash-Client-Version', '3.14.0')
+        .set('Unleash-Client-Spec', '4.2.0')
         .expect(200)
         .then((res) => res.body);
     const supportedClientConstraints = supportedClientResponse.features

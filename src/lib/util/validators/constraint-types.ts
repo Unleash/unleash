@@ -1,5 +1,3 @@
-import semver from 'semver';
-
 import {
     constraintDateTypeSchema,
     constraintNumberTypeSchema,
@@ -7,6 +5,7 @@ import {
 } from '../../schema/constraint-value-types';
 import BadDataError from '../../error/bad-data-error';
 import { ILegalValue } from '../../types/stores/context-field-store';
+import { parseStrictSemVer } from '../semver';
 
 export const validateNumber = async (value: unknown): Promise<void> => {
     await constraintNumberTypeSchema.validateAsync(value);
@@ -21,10 +20,7 @@ export const validateSemver = (value: unknown): void => {
         throw new BadDataError(`the provided value is not a string.`);
     }
 
-    const cleanValue = semver.clean(value) === value;
-    const result = semver.valid(value);
-
-    if (!result || !cleanValue) {
+    if (!parseStrictSemVer(value)) {
         throw new BadDataError(
             `the provided value is not a valid semver format. The value provided was: ${value}`,
         );

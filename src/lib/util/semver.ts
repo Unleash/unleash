@@ -1,10 +1,22 @@
 import semver, { SemVer } from 'semver';
 
-export const mustParseSemVer = (version: string): SemVer => {
-    const parsedVersion = semver.parse(version);
+export const parseStrictSemVer = (version: string): SemVer | null => {
+    if (semver.clean(version) !== version) {
+        return null;
+    }
+
+    try {
+        return semver.parse(version, { loose: false });
+    } catch {
+        return null;
+    }
+};
+
+export const mustParseStrictSemVer = (version: string): SemVer => {
+    const parsedVersion = parseStrictSemVer(version);
 
     if (!parsedVersion) {
-        throw new Error('Could not parse semver string: ${version}');
+        throw new Error('Could not parse SemVer string: ${version}');
     }
 
     return parsedVersion;

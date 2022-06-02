@@ -1,9 +1,6 @@
 import { Alert } from '@mui/material';
 import { useStyles } from 'component/segments/SegmentDocs/SegmentDocs.styles';
-import {
-    STRATEGY_SEGMENTS_LIMIT,
-    SEGMENT_VALUES_LIMIT,
-} from 'utils/segmentLimits';
+import { useSegmentLimits } from 'hooks/api/getters/useSegmentLimits/useSegmentLimits';
 
 export const SegmentDocsWarning = () => {
     const { classes: styles } = useStyles();
@@ -25,19 +22,31 @@ export const SegmentDocsWarning = () => {
 };
 
 export const SegmentDocsValuesWarning = () => {
+    const { segmentValuesLimit } = useSegmentLimits();
+
+    if (typeof segmentValuesLimit === 'undefined') {
+        return null;
+    }
+
     return (
         <Alert severity="warning">
             Segments is an experimental feature available to select users.
-            Currently, segments are limited to at most {SEGMENT_VALUES_LIMIT}{' '}
+            Currently, segments are limited to at most {segmentValuesLimit}{' '}
             values. <SegmentLimitsLink />
         </Alert>
     );
 };
 
 export const SegmentDocsValuesError = (props: { values: number }) => {
+    const { segmentValuesLimit } = useSegmentLimits();
+
+    if (typeof segmentValuesLimit === 'undefined') {
+        return null;
+    }
+
     return (
         <Alert severity="error">
-            Segments are limited to at most {SEGMENT_VALUES_LIMIT} values. This
+            Segments are limited to at most {segmentValuesLimit} values. This
             segment currently has {props.values}{' '}
             {props.values === 1 ? 'value' : 'values'}.
         </Alert>
@@ -45,9 +54,15 @@ export const SegmentDocsValuesError = (props: { values: number }) => {
 };
 
 export const SegmentDocsStrategyWarning = () => {
+    const { strategySegmentsLimit } = useSegmentLimits();
+
+    if (typeof strategySegmentsLimit === 'undefined') {
+        return null;
+    }
+
     return (
         <Alert severity="warning">
-            Strategies are limited to {STRATEGY_SEGMENTS_LIMIT} segments.{' '}
+            Strategies are limited to {strategySegmentsLimit} segments.{' '}
             <SegmentLimitsLink />
         </Alert>
     );

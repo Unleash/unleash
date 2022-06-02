@@ -1,9 +1,9 @@
 import { LibraryBooks } from '@mui/icons-material';
+import { IUiConfig } from 'interfaces/uiConfig';
 
-export const defaultValue = {
+export const defaultValue: IUiConfig = {
     name: 'Unleash',
     version: '3.x',
-    environment: '',
     slogan: 'The enterprise ready feature toggle service.',
     flags: {
         P: false,

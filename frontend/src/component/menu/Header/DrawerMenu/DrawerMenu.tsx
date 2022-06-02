@@ -19,7 +19,7 @@ interface IDrawerMenuProps {
     admin?: boolean;
     links: Array<{
         value: string;
-        icon: string | ReactNode;
+        icon: ReactNode;
         href: string;
         title: string;
     }>;

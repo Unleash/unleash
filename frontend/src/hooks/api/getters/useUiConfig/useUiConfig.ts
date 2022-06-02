@@ -1,40 +1,27 @@
-import useSWR, { mutate, SWRConfiguration } from 'swr';
+import useSWR from 'swr';
 import { formatApiPath } from 'utils/formatPath';
 import { defaultValue } from './defaultValue';
 import { IUiConfig } from 'interfaces/uiConfig';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import { useMemo } from 'react';
+import { useMemo, useCallback } from 'react';
 
-const REQUEST_KEY = 'api/admin/ui-config';
+interface IUseUIConfigOutput {
+    uiConfig: IUiConfig;
+    loading: boolean;
+    error?: Error;
+    refetch: () => void;
+    isOss: () => boolean;
+}
 
-const useUiConfig = (options: SWRConfiguration = {}) => {
-    const fetcher = () => {
-        const path = formatApiPath(`api/admin/ui-config`);
+const useUiConfig = (): IUseUIConfigOutput => {
+    const path = formatApiPath(`api/admin/ui-config`);
+    const { data, error, mutate } = useSWR<IUiConfig>(path, fetcher);
 
-        return fetch(path, {
-            method: 'GET',
-            credentials: 'include',
-        })
-            .then(handleErrorResponses('configuration'))
-            .then(res => res.json());
-    };
+    const isOss = useCallback(() => {
+        return !data?.versionInfo?.current?.enterprise;
+    }, [data]);
 
-    const { data, error } = useSWR<IUiConfig>(REQUEST_KEY, fetcher, options);
-
-    const refetch = () => {
-        mutate(REQUEST_KEY);
-    };
-
-    const isOss = () => {
-        if (data?.versionInfo?.current?.enterprise) {
-            return false;
-        } else if (!data || !data.versionInfo) {
-            return false;
-        }
-        return true;
-    };
-
-    const uiConfig = useMemo(() => {
+    const uiConfig: IUiConfig = useMemo(() => {
         return { ...defaultValue, ...data };
     }, [data]);
 
@@ -42,9 +29,15 @@ const useUiConfig = (options: SWRConfiguration = {}) => {
         uiConfig,
         loading: !error && !data,
         error,
-        refetch,
+        refetch: mutate,
         isOss,
     };
+};
+
+const fetcher = (path: string) => {
+    return fetch(path)
+        .then(handleErrorResponses('configuration'))
+        .then(res => res.json());
 };
 
 export default useUiConfig;

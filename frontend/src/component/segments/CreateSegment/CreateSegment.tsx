@@ -14,8 +14,8 @@ import { SegmentForm } from '../SegmentForm/SegmentForm';
 import { feedbackCESContext } from 'component/feedback/FeedbackCESContext/FeedbackCESContext';
 import { segmentsDocsLink } from 'component/segments/SegmentDocs/SegmentDocs';
 import { useSegmentValuesCount } from 'component/segments/hooks/useSegmentValuesCount';
-import { SEGMENT_VALUES_LIMIT } from 'utils/segmentLimits';
 import { SEGMENT_CREATE_BTN_ID } from 'utils/testIds';
+import { useSegmentLimits } from 'hooks/api/getters/useSegmentLimits/useSegmentLimits';
 
 export const CreateSegment = () => {
     const { uiConfig } = useUiConfig();
@@ -38,8 +38,12 @@ export const CreateSegment = () => {
     } = useSegmentForm();
 
     const hasValidConstraints = useConstraintsValidation(constraints);
+    const { segmentValuesLimit } = useSegmentLimits();
     const segmentValuesCount = useSegmentValuesCount(constraints);
-    const atSegmentValuesLimit = segmentValuesCount >= SEGMENT_VALUES_LIMIT;
+
+    const overSegmentValuesLimit: boolean = Boolean(
+        segmentValuesLimit && segmentValuesCount > segmentValuesLimit
+    );
 
     const formatApiCode = () => {
         return `curl --location --request POST '${
@@ -96,7 +100,7 @@ export const CreateSegment = () => {
                 <CreateButton
                     name="segment"
                     permission={CREATE_SEGMENT}
-                    disabled={!hasValidConstraints || atSegmentValuesLimit}
+                    disabled={!hasValidConstraints || overSegmentValuesLimit}
                     data-testid={SEGMENT_CREATE_BTN_ID}
                 />
             </SegmentForm>

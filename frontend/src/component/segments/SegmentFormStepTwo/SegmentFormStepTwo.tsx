@@ -28,8 +28,8 @@ import {
     SegmentDocsValuesError,
 } from 'component/segments/SegmentDocs/SegmentDocs';
 import { useSegmentValuesCount } from 'component/segments/hooks/useSegmentValuesCount';
-import { SEGMENT_VALUES_LIMIT } from 'utils/segmentLimits';
 import AccessContext from 'contexts/AccessContext';
+import { useSegmentLimits } from 'hooks/api/getters/useSegmentLimits/useSegmentLimits';
 
 interface ISegmentFormPartTwoProps {
     constraints: IConstraint[];
@@ -52,8 +52,12 @@ export const SegmentFormStepTwo: React.FC<ISegmentFormPartTwoProps> = ({
     const { context = [] } = useUnleashContext();
     const [open, setOpen] = useState(false);
     const segmentValuesCount = useSegmentValuesCount(constraints);
-    const overSegmentValuesLimit = segmentValuesCount > SEGMENT_VALUES_LIMIT;
     const modePermission = mode === 'create' ? CREATE_SEGMENT : UPDATE_SEGMENT;
+    const { segmentValuesLimit } = useSegmentLimits();
+
+    const overSegmentValuesLimit: boolean = Boolean(
+        segmentValuesLimit && segmentValuesCount > segmentValuesLimit
+    );
 
     const autocompleteOptions = context.map(c => ({
         value: c.name,

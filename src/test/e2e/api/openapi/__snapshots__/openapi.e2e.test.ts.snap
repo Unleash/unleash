@@ -205,8 +205,8 @@ Object {
         ],
         "type": "object",
       },
-      "emptyResponseSchema": Object {
-        "description": "OK",
+      "emptySchema": Object {
+        "description": "emptySchema",
         "type": "object",
       },
       "featureEnvironmentSchema": Object {
@@ -1089,7 +1089,7 @@ Object {
         },
         "type": "object",
       },
-      "patchOperationSchema": Object {
+      "patchSchema": Object {
         "properties": Object {
           "from": Object {
             "type": "string",
@@ -1114,6 +1114,35 @@ Object {
           "op",
         ],
         "type": "object",
+      },
+      "patchesSchema": Object {
+        "items": Object {
+          "properties": Object {
+            "from": Object {
+              "type": "string",
+            },
+            "op": Object {
+              "enum": Array [
+                "add",
+                "remove",
+                "replace",
+                "copy",
+                "move",
+              ],
+              "type": "string",
+            },
+            "path": Object {
+              "type": "string",
+            },
+            "value": Object {},
+          },
+          "required": Array [
+            "path",
+            "op",
+          ],
+          "type": "object",
+        },
+        "type": "array",
       },
       "strategySchema": Object {
         "additionalProperties": false,
@@ -1206,7 +1235,7 @@ Object {
         ],
         "type": "object",
       },
-      "tagsResponseSchema": Object {
+      "tagsSchema": Object {
         "additionalProperties": false,
         "properties": Object {
           "tags": Object {
@@ -1479,7 +1508,7 @@ Object {
                 },
               },
             },
-            "description": "featuresResponse",
+            "description": "featuresSchema",
           },
         },
         "tags": Array [
@@ -1509,7 +1538,7 @@ Object {
                 },
               },
             },
-            "description": "featuresResponse",
+            "description": "featuresSchema",
           },
         },
         "tags": Array [
@@ -1530,7 +1559,7 @@ Object {
                 },
               },
             },
-            "description": "featuresResponse",
+            "description": "featuresSchema",
           },
         },
         "tags": Array [
@@ -1546,11 +1575,11 @@ Object {
             "content": Object {
               "application/json": Object {
                 "schema": Object {
-                  "$ref": "#/components/schemas/emptyResponseSchema",
+                  "$ref": "#/components/schemas/emptySchema",
                 },
               },
             },
-            "description": "emptyResponse",
+            "description": "emptySchema",
           },
         },
         "tags": Array [
@@ -1576,11 +1605,11 @@ Object {
             "content": Object {
               "application/json": Object {
                 "schema": Object {
-                  "$ref": "#/components/schemas/tagsResponseSchema",
+                  "$ref": "#/components/schemas/tagsSchema",
                 },
               },
             },
-            "description": "tagsResponse",
+            "description": "tagsSchema",
           },
         },
         "tags": Array [
@@ -1607,6 +1636,7 @@ Object {
               },
             },
           },
+          "description": "tagSchema",
           "required": true,
         },
         "responses": Object {
@@ -1618,7 +1648,7 @@ Object {
                 },
               },
             },
-            "description": "tagResponse",
+            "description": "tagSchema",
           },
         },
         "tags": Array [
@@ -1660,11 +1690,11 @@ Object {
             "content": Object {
               "application/json": Object {
                 "schema": Object {
-                  "$ref": "#/components/schemas/emptyResponseSchema",
+                  "$ref": "#/components/schemas/emptySchema",
                 },
               },
             },
-            "description": "emptyResponse",
+            "description": "emptySchema",
           },
         },
         "tags": Array [
@@ -1694,7 +1724,7 @@ Object {
                 },
               },
             },
-            "description": "featuresResponse",
+            "description": "featuresSchema",
           },
         },
         "tags": Array [
@@ -1721,6 +1751,7 @@ Object {
               },
             },
           },
+          "description": "createFeatureSchema",
           "required": true,
         },
         "responses": Object {
@@ -1732,7 +1763,7 @@ Object {
                 },
               },
             },
-            "description": "featureResponse",
+            "description": "featureSchema",
           },
         },
         "tags": Array [
@@ -1766,11 +1797,11 @@ Object {
             "content": Object {
               "application/json": Object {
                 "schema": Object {
-                  "$ref": "#/components/schemas/emptyResponseSchema",
+                  "$ref": "#/components/schemas/emptySchema",
                 },
               },
             },
-            "description": "emptyResponse",
+            "description": "emptySchema",
           },
         },
         "tags": Array [
@@ -1806,7 +1837,7 @@ Object {
                 },
               },
             },
-            "description": "featureResponse",
+            "description": "featureSchema",
           },
         },
         "tags": Array [
@@ -1837,13 +1868,11 @@ Object {
           "content": Object {
             "application/json": Object {
               "schema": Object {
-                "items": Object {
-                  "$ref": "#/components/schemas/patchOperationSchema",
-                },
-                "type": "array",
+                "$ref": "#/components/schemas/patchesSchema",
               },
             },
           },
+          "description": "patchesSchema",
           "required": true,
         },
         "responses": Object {
@@ -1855,7 +1884,7 @@ Object {
                 },
               },
             },
-            "description": "featureResponse",
+            "description": "featureSchema",
           },
         },
         "tags": Array [
@@ -1890,6 +1919,7 @@ Object {
               },
             },
           },
+          "description": "updateFeatureSchema",
           "required": true,
         },
         "responses": Object {
@@ -1901,7 +1931,7 @@ Object {
                 },
               },
             },
-            "description": "featureResponse",
+            "description": "featureSchema",
           },
         },
         "tags": Array [
@@ -1938,6 +1968,7 @@ Object {
               },
             },
           },
+          "description": "cloneFeatureSchema",
           "required": true,
         },
         "responses": Object {
@@ -1949,7 +1980,7 @@ Object {
                 },
               },
             },
-            "description": "featureResponse",
+            "description": "featureSchema",
           },
         },
         "tags": Array [
@@ -1995,7 +2026,7 @@ Object {
                 },
               },
             },
-            "description": "featureEnvironmentResponse",
+            "description": "featureEnvironmentSchema",
           },
         },
         "tags": Array [
@@ -2041,7 +2072,7 @@ Object {
                 },
               },
             },
-            "description": "featureResponse",
+            "description": "featureSchema",
           },
         },
         "tags": Array [
@@ -2087,7 +2118,7 @@ Object {
                 },
               },
             },
-            "description": "featureResponse",
+            "description": "featureSchema",
           },
         },
         "tags": Array [
@@ -2129,14 +2160,11 @@ Object {
             "content": Object {
               "application/json": Object {
                 "schema": Object {
-                  "items": Object {
-                    "$ref": "#/components/schemas/strategySchema",
-                  },
-                  "type": "array",
+                  "$ref": "#/components/schemas/strategySchema",
                 },
               },
             },
-            "description": "strategiesResponse",
+            "description": "strategySchema",
           },
         },
         "tags": Array [
@@ -2179,6 +2207,7 @@ Object {
               },
             },
           },
+          "description": "createStrategySchema",
           "required": true,
         },
         "responses": Object {
@@ -2190,7 +2219,7 @@ Object {
                 },
               },
             },
-            "description": "strategyResponse",
+            "description": "featureStrategySchema",
           },
         },
         "tags": Array [
@@ -2240,11 +2269,11 @@ Object {
             "content": Object {
               "application/json": Object {
                 "schema": Object {
-                  "$ref": "#/components/schemas/emptyResponseSchema",
+                  "$ref": "#/components/schemas/emptySchema",
                 },
               },
             },
-            "description": "emptyResponse",
+            "description": "emptySchema",
           },
         },
         "tags": Array [
@@ -2296,7 +2325,7 @@ Object {
                 },
               },
             },
-            "description": "strategyResponse",
+            "description": "featureStrategySchema",
           },
         },
         "tags": Array [
@@ -2343,13 +2372,11 @@ Object {
           "content": Object {
             "application/json": Object {
               "schema": Object {
-                "items": Object {
-                  "$ref": "#/components/schemas/patchOperationSchema",
-                },
-                "type": "array",
+                "$ref": "#/components/schemas/patchesSchema",
               },
             },
           },
+          "description": "patchesSchema",
           "required": true,
         },
         "responses": Object {
@@ -2361,7 +2388,7 @@ Object {
                 },
               },
             },
-            "description": "strategyResponse",
+            "description": "featureStrategySchema",
           },
         },
         "tags": Array [
@@ -2412,6 +2439,7 @@ Object {
               },
             },
           },
+          "description": "updateStrategySchema",
           "required": true,
         },
         "responses": Object {
@@ -2423,7 +2451,7 @@ Object {
                 },
               },
             },
-            "description": "strategyResponse",
+            "description": "featureStrategySchema",
           },
         },
         "tags": Array [

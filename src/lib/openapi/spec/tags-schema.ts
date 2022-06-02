@@ -16,6 +16,6 @@ const schema = {
     },
 } as const;
 
-export type TagsResponseSchema = CreateSchemaType<typeof schema>;
+export type TagsSchema = CreateSchemaType<typeof schema>;
 
-export const tagsResponseSchema = createSchemaObject(schema);
+export const tagsSchema = createSchemaObject(schema);

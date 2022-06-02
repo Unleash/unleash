@@ -17,27 +17,19 @@ import {
 } from '../../../types/permissions';
 import { extractUsername } from '../../../util/extract-user';
 import { IAuthRequest } from '../../unleash-types';
-import { createFeatureRequest } from '../../../openapi/spec/create-feature-request';
-import { featureResponse } from '../../../openapi/spec/feature-response';
 import { CreateFeatureSchema } from '../../../openapi/spec/create-feature-schema';
 import { FeatureSchema } from '../../../openapi/spec/feature-schema';
-import { createStrategyRequest } from '../../../openapi/spec/create-strategy-request';
 import { StrategySchema } from '../../../openapi/spec/strategy-schema';
-import { featuresResponse } from '../../../openapi/spec/features-response';
-import { featureEnvironmentResponse } from '../../../openapi/spec/feature-environment-response';
-import { strategiesResponse } from '../../../openapi/spec/strategies-response';
-import { strategyResponse } from '../../../openapi/spec/strategy-response';
-import { emptyResponse } from '../../../openapi/spec/empty-response';
-import { updateFeatureRequest } from '../../../openapi/spec/update-feature-request';
-import { patchRequest } from '../../../openapi/spec/patch-request';
-import { updateStrategyRequest } from '../../../openapi/spec/update-strategy-request';
-import { cloneFeatureRequest } from '../../../openapi/spec/clone-feature-request';
 import { FeatureEnvironmentSchema } from '../../../openapi/spec/feature-environment-schema';
 import { ParametersSchema } from '../../../openapi/spec/parameters-schema';
 import { FeaturesSchema } from '../../../openapi/spec/features-schema';
-import { UpdateFeatureSchema } from '../../../openapi/spec/updateFeatureSchema';
+import { UpdateFeatureSchema } from '../../../openapi/spec/update-feature-schema';
 import { UpdateStrategySchema } from '../../../openapi/spec/update-strategy-schema';
 import { CreateStrategySchema } from '../../../openapi/spec/create-strategy-schema';
+import {
+    createRequestSchema,
+    createResponseSchema,
+} from '../../../openapi/operation';
 
 interface FeatureStrategyParams {
     projectId: string;
@@ -92,7 +84,9 @@ export default class ProjectFeaturesController extends Controller {
                 openApiService.validPath({
                     tags: ['admin'],
                     operationId: 'getEnvironment',
-                    responses: { 200: featureEnvironmentResponse },
+                    responses: {
+                        200: createResponseSchema('featureEnvironmentSchema'),
+                    },
                 }),
             ],
         });
@@ -106,7 +100,7 @@ export default class ProjectFeaturesController extends Controller {
                 openApiService.validPath({
                     tags: ['admin'],
                     operationId: 'toggleEnvironmentOff',
-                    responses: { 200: featureResponse },
+                    responses: { 200: createResponseSchema('featureSchema') },
                 }),
             ],
         });
@@ -120,7 +114,7 @@ export default class ProjectFeaturesController extends Controller {
                 openApiService.validPath({
                     tags: ['admin'],
                     operationId: 'toggleEnvironmentOn',
-                    responses: { 200: featureResponse },
+                    responses: { 200: createResponseSchema('featureSchema') },
                 }),
             ],
         });
@@ -134,7 +128,7 @@ export default class ProjectFeaturesController extends Controller {
                 openApiService.validPath({
                     tags: ['admin'],
                     operationId: 'getStrategies',
-                    responses: { 200: strategiesResponse },
+                    responses: { 200: createResponseSchema('strategySchema') },
                 }),
             ],
         });
@@ -148,8 +142,10 @@ export default class ProjectFeaturesController extends Controller {
                 openApiService.validPath({
                     tags: ['admin'],
                     operationId: 'addStrategy',
-                    requestBody: createStrategyRequest,
-                    responses: { 200: strategyResponse },
+                    requestBody: createRequestSchema('createStrategySchema'),
+                    responses: {
+                        200: createResponseSchema('featureStrategySchema'),
+                    },
                 }),
             ],
         });
@@ -163,7 +159,9 @@ export default class ProjectFeaturesController extends Controller {
                 openApiService.validPath({
                     tags: ['admin'],
                     operationId: 'getStrategy',
-                    responses: { 200: strategyResponse },
+                    responses: {
+                        200: createResponseSchema('featureStrategySchema'),
+                    },
                 }),
             ],
         });
@@ -177,8 +175,10 @@ export default class ProjectFeaturesController extends Controller {
                 openApiService.validPath({
                     tags: ['admin'],
                     operationId: 'updateStrategy',
-                    requestBody: updateStrategyRequest,
-                    responses: { 200: strategyResponse },
+                    requestBody: createRequestSchema('updateStrategySchema'),
+                    responses: {
+                        200: createResponseSchema('featureStrategySchema'),
+                    },
                 }),
             ],
         });
@@ -191,8 +191,10 @@ export default class ProjectFeaturesController extends Controller {
                 openApiService.validPath({
                     tags: ['admin'],
                     operationId: 'patchStrategy',
-                    requestBody: patchRequest,
-                    responses: { 200: strategyResponse },
+                    requestBody: createRequestSchema('patchesSchema'),
+                    responses: {
+                        200: createResponseSchema('featureStrategySchema'),
+                    },
                 }),
             ],
         });
@@ -206,7 +208,7 @@ export default class ProjectFeaturesController extends Controller {
                 openApiService.validPath({
                     operationId: 'deleteStrategy',
                     tags: ['admin'],
-                    responses: { 200: emptyResponse },
+                    responses: { 200: createResponseSchema('emptySchema') },
                 }),
             ],
         });
@@ -220,7 +222,7 @@ export default class ProjectFeaturesController extends Controller {
                 openApiService.validPath({
                     tags: ['admin'],
                     operationId: 'getFeatures',
-                    responses: { 200: featuresResponse },
+                    responses: { 200: createResponseSchema('featuresSchema') },
                 }),
             ],
         });
@@ -234,8 +236,8 @@ export default class ProjectFeaturesController extends Controller {
                 openApiService.validPath({
                     tags: ['admin'],
                     operationId: 'createFeature',
-                    requestBody: createFeatureRequest,
-                    responses: { 200: featureResponse },
+                    requestBody: createRequestSchema('createFeatureSchema'),
+                    responses: { 200: createResponseSchema('featureSchema') },
                 }),
             ],
         });
@@ -250,8 +252,8 @@ export default class ProjectFeaturesController extends Controller {
                 openApiService.validPath({
                     tags: ['admin'],
                     operationId: 'cloneFeature',
-                    requestBody: cloneFeatureRequest,
-                    responses: { 200: featureResponse },
+                    requestBody: createRequestSchema('cloneFeatureSchema'),
+                    responses: { 200: createResponseSchema('featureSchema') },
                 }),
             ],
         });
@@ -265,7 +267,7 @@ export default class ProjectFeaturesController extends Controller {
                 openApiService.validPath({
                     operationId: 'getFeature',
                     tags: ['admin'],
-                    responses: { 200: featureResponse },
+                    responses: { 200: createResponseSchema('featureSchema') },
                 }),
             ],
         });
@@ -280,8 +282,8 @@ export default class ProjectFeaturesController extends Controller {
                 openApiService.validPath({
                     tags: ['admin'],
                     operationId: 'updateFeature',
-                    requestBody: updateFeatureRequest,
-                    responses: { 200: featureResponse },
+                    requestBody: createRequestSchema('updateFeatureSchema'),
+                    responses: { 200: createResponseSchema('featureSchema') },
                 }),
             ],
         });
@@ -296,8 +298,8 @@ export default class ProjectFeaturesController extends Controller {
                 openApiService.validPath({
                     tags: ['admin'],
                     operationId: 'patchFeature',
-                    requestBody: patchRequest,
-                    responses: { 200: featureResponse },
+                    requestBody: createRequestSchema('patchesSchema'),
+                    responses: { 200: createResponseSchema('featureSchema') },
                 }),
             ],
         });
@@ -312,7 +314,7 @@ export default class ProjectFeaturesController extends Controller {
                 openApiService.validPath({
                     tags: ['admin'],
                     operationId: 'archiveFeature',
-                    responses: { 200: emptyResponse },
+                    responses: { 200: createResponseSchema('emptySchema') },
                 }),
             ],
         });

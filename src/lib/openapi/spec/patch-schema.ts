@@ -18,6 +18,6 @@ const schema = {
     },
 } as const;
 
-export type PatchOperationSchema = CreateSchemaType<typeof schema>;
+export type PatchSchema = CreateSchemaType<typeof schema>;
 
-export const patchOperationSchema = createSchemaObject(schema);
+export const patchSchema = createSchemaObject(schema);

@@ -2,15 +2,13 @@ import { Request, Response } from 'express';
 import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types';
 import { Logger } from '../../logger';
-
 import Controller from '../controller';
-
 import { extractUsername } from '../../util/extract-user';
 import { DELETE_FEATURE, NONE, UPDATE_FEATURE } from '../../types/permissions';
 import FeatureToggleService from '../../services/feature-toggle-service';
 import { IAuthRequest } from '../unleash-types';
-import { featuresResponse } from '../../openapi/spec/features-response';
 import { FeaturesSchema } from '../../openapi/spec/features-schema';
+import { createResponseSchema } from '../../openapi/operation';
 
 export default class ArchiveController extends Controller {
     private readonly logger: Logger;
@@ -36,7 +34,7 @@ export default class ArchiveController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
-                    responses: { 200: featuresResponse },
+                    responses: { 200: createResponseSchema('featuresSchema') },
                     deprecated: true,
                 }),
             ],
@@ -50,7 +48,7 @@ export default class ArchiveController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
-                    responses: { 200: featuresResponse },
+                    responses: { 200: createResponseSchema('featuresSchema') },
                     deprecated: true,
                 }),
             ],

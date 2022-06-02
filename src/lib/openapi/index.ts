@@ -1,22 +1,5 @@
 import { OpenAPIV3 } from 'openapi-types';
-import { featuresSchema } from './spec/features-schema';
-import { overrideSchema } from './spec/override-schema';
-import { strategySchema } from './spec/strategy-schema';
-import { variantSchema } from './spec/variant-schema';
-import { createFeatureSchema } from './spec/create-feature-schema';
-import { constraintSchema } from './spec/constraint-schema';
-import { tagSchema } from './spec/tag-schema';
-import { tagsResponseSchema } from './spec/tags-response-schema';
-import { createStrategySchema } from './spec/create-strategy-schema';
-import { featureSchema } from './spec/feature-schema';
-import { parametersSchema } from './spec/parameters-schema';
-import { featureEnvironmentSchema } from './spec/feature-environment-schema';
-import { emptyResponseSchema } from './spec/empty-response-schema';
-import { patchOperationSchema } from './spec/patch-operation-schema';
-import { updateFeatureSchema } from './spec/updateFeatureSchema';
-import { updateStrategySchema } from './spec/update-strategy-schema';
-import { cloneFeatureSchema } from './spec/clone-feature-schema';
-import { featureStrategySchema } from './spec/feature-strategy-schema';
+import { schemas } from './spec';
 
 export const createOpenApiSchema = (
     serverUrl?: string,
@@ -41,26 +24,7 @@ export const createOpenApiSchema = (
                     name: 'Authorization',
                 },
             },
-            schemas: {
-                constraintSchema,
-                cloneFeatureSchema,
-                createFeatureSchema,
-                createStrategySchema,
-                featureSchema,
-                featuresSchema,
-                featureEnvironmentSchema,
-                featureStrategySchema,
-                emptyResponseSchema,
-                overrideSchema,
-                parametersSchema,
-                patchOperationSchema,
-                strategySchema,
-                updateStrategySchema,
-                updateFeatureSchema,
-                variantSchema,
-                tagSchema,
-                tagsResponseSchema,
-            },
+            schemas,
         },
     };
 };

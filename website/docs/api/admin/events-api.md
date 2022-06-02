@@ -160,7 +160,7 @@ The event properties are described in short in the table below. For more info re
 | `type`        | The event type, as described in the rest of this section.                                             |
 
 
-### Feature Toggle events
+### Feature toggle events
 
 These events pertain to feature toggles and their life cycle.
 
@@ -599,7 +599,7 @@ This event fires when you disable an environment for a feature. The `environment
 }
 ```
 
-### Strategy Events
+### Custom strategy events
 
 #### `strategy-created`
 

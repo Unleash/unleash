@@ -26,6 +26,7 @@ import ClientMetricsServiceV2 from '../services/client-metrics/metrics-service-v
 import UserSplashService from '../services/user-splash-service';
 import { SegmentService } from '../services/segment-service';
 import { OpenApiService } from '../services/openapi-service';
+import { ClientSpecService } from '../services/client-spec-service';
 
 export interface IUnleashServices {
     accessService: AccessService;
@@ -57,4 +58,5 @@ export interface IUnleashServices {
     userSplashService: UserSplashService;
     segmentService: SegmentService;
     openApiService: OpenApiService;
+    clientSpecService: ClientSpecService;
 }

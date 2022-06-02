@@ -180,6 +180,7 @@ export interface IFeatureToggleQuery {
     project?: string[];
     namePrefix?: string;
     environment?: string;
+    inlineSegmentConstraints?: boolean;
 }
 
 export interface ITag {

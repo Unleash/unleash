@@ -28,6 +28,12 @@ import {
     mapLegacyToken,
     validateApiToken,
 } from './types/models/api-token';
+import { parseEnvVarBoolean, parseEnvVarNumber } from './util/env';
+import { IExperimentalOptions } from './experimental';
+import {
+    DEFAULT_SEGMENT_VALUES_LIMIT,
+    DEFAULT_STRATEGY_SEGMENTS_LIMIT,
+} from './util/segments';
 
 const safeToUpper = (s: string) => (s ? s.toUpperCase() : s);
 
@@ -38,33 +44,12 @@ export function authTypeFromString(
     return IAuthType[safeToUpper(s)] || defaultType;
 }
 
-function safeNumber(envVar, defaultVal): number {
-    if (envVar) {
-        try {
-            return Number.parseInt(envVar, 10);
-        } catch (err) {
-            return defaultVal;
-        }
-    } else {
-        return defaultVal;
-    }
-}
-
-function safeBoolean(envVar: string, defaultVal: boolean): boolean {
-    if (envVar) {
-        return envVar === 'true' || envVar === '1' || envVar === 't';
-    }
-    return defaultVal;
-}
-
 function mergeAll<T>(objects: Partial<T>[]): T {
     return merge.all<T>(objects.filter((i) => i));
 }
 
-function loadExperimental(options: IUnleashOptions): any {
-    const experimental = options.experimental || {};
-
-    return experimental;
+function loadExperimental(options: IUnleashOptions): IExperimentalOptions {
+    return options.experimental || {};
 }
 
 function loadUI(options: IUnleashOptions): IUIConfig {
@@ -81,7 +66,7 @@ const defaultDbOptions: IDBOption = {
     user: process.env.DATABASE_USERNAME,
     password: process.env.DATABASE_PASSWORD,
     host: process.env.DATABASE_HOST,
-    port: safeNumber(process.env.DATABASE_PORT, 5432),
+    port: parseEnvVarNumber(process.env.DATABASE_PORT, 5432),
     database: process.env.DATABASE_NAME || 'unleash',
     ssl:
         process.env.DATABASE_SSL != null
@@ -91,9 +76,9 @@ const defaultDbOptions: IDBOption = {
     version: process.env.DATABASE_VERSION,
     acquireConnectionTimeout: secondsToMilliseconds(30),
     pool: {
-        min: safeNumber(process.env.DATABASE_POOL_MIN, 0),
-        max: safeNumber(process.env.DATABASE_POOL_MAX, 4),
-        idleTimeoutMillis: safeNumber(
+        min: parseEnvVarNumber(process.env.DATABASE_POOL_MIN, 0),
+        max: parseEnvVarNumber(process.env.DATABASE_POOL_MAX, 4),
+        idleTimeoutMillis: parseEnvVarNumber(
             process.env.DATABASE_POOL_IDLE_TIMEOUT_MS,
             secondsToMilliseconds(30),
         ),
@@ -105,14 +90,14 @@ const defaultDbOptions: IDBOption = {
 };
 
 const defaultSessionOption: ISessionOption = {
-    ttlHours: safeNumber(process.env.SESSION_TTL_HOURS, 48),
+    ttlHours: parseEnvVarNumber(process.env.SESSION_TTL_HOURS, 48),
     db: true,
 };
 
 const defaultServerOption: IServerOption = {
     pipe: undefined,
     host: process.env.HTTP_HOST,
-    port: safeNumber(process.env.HTTP_PORT || process.env.PORT, 4242),
+    port: parseEnvVarNumber(process.env.HTTP_PORT || process.env.PORT, 4242),
     baseUriPath: formatBaseUri(process.env.BASE_URI_PATH),
     cdnPrefix: process.env.CDN_PREFIX,
     unleashUrl: process.env.UNLEASH_URL || 'http://localhost:4242',
@@ -120,11 +105,11 @@ const defaultServerOption: IServerOption = {
     keepAliveTimeout: minutesToMilliseconds(1),
     headersTimeout: secondsToMilliseconds(61),
     enableRequestLogger: false,
-    gracefulShutdownEnable: safeBoolean(
+    gracefulShutdownEnable: parseEnvVarBoolean(
         process.env.GRACEFUL_SHUTDOWN_ENABLE,
         true,
     ),
-    gracefulShutdownTimeout: safeNumber(
+    gracefulShutdownTimeout: parseEnvVarNumber(
         process.env.GRACEFUL_SHUTDOWN_TIMEOUT,
         secondsToMilliseconds(1),
     ),
@@ -133,11 +118,11 @@ const defaultServerOption: IServerOption = {
 
 const defaultVersionOption: IVersionOption = {
     url: process.env.UNLEASH_VERSION_URL || 'https://version.unleash.run',
-    enable: safeBoolean(process.env.CHECK_VERSION, true),
+    enable: parseEnvVarBoolean(process.env.CHECK_VERSION, true),
 };
 
 const defaultAuthentication: IAuthOption = {
-    enableApiToken: safeBoolean(process.env.AUTH_ENABLE_API_TOKEN, true),
+    enableApiToken: parseEnvVarBoolean(process.env.AUTH_ENABLE_API_TOKEN, true),
     type: authTypeFromString(process.env.AUTH_TYPE),
     customAuthHandler: defaultCustomAuthDenyAll,
     createAdminUser: true,
@@ -146,14 +131,17 @@ const defaultAuthentication: IAuthOption = {
 
 const defaultImport: IImportOption = {
     file: process.env.IMPORT_FILE,
-    dropBeforeImport: safeBoolean(process.env.IMPORT_DROP_BEFORE_IMPORT, false),
-    keepExisting: safeBoolean(process.env.IMPORT_KEEP_EXISTING, false),
+    dropBeforeImport: parseEnvVarBoolean(
+        process.env.IMPORT_DROP_BEFORE_IMPORT,
+        false,
+    ),
+    keepExisting: parseEnvVarBoolean(process.env.IMPORT_KEEP_EXISTING, false),
 };
 
 const defaultEmail: IEmailOption = {
     host: process.env.EMAIL_HOST,
-    secure: safeBoolean(process.env.EMAIL_SECURE, false),
-    port: safeNumber(process.env.EMAIL_PORT, 587),
+    secure: parseEnvVarBoolean(process.env.EMAIL_SECURE, false),
+    port: parseEnvVarNumber(process.env.EMAIL_PORT, 587),
     sender: process.env.EMAIL_SENDER || 'noreply@unleash-hosted.com',
     smtpuser: process.env.EMAIL_USER,
     smtppass: process.env.EMAIL_PASSWORD,
@@ -342,18 +330,34 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
     }
 
     const secureHeaders =
-        options.secureHeaders || safeBoolean(process.env.SECURE_HEADERS, false);
+        options.secureHeaders ||
+        parseEnvVarBoolean(process.env.SECURE_HEADERS, false);
 
     const enableOAS =
-        options.enableOAS || safeBoolean(process.env.ENABLE_OAS, false);
+        options.enableOAS || parseEnvVarBoolean(process.env.ENABLE_OAS, false);
 
     const disableLegacyFeaturesApi =
         options.disableLegacyFeaturesApi ||
-        safeBoolean(process.env.DISABLE_LEGACY_FEATURES_API, false);
+        parseEnvVarBoolean(process.env.DISABLE_LEGACY_FEATURES_API, false);
 
     const additionalCspAllowedDomains: ICspDomainConfig =
         parseCspConfig(options.additionalCspAllowedDomains) ||
         parseCspEnvironmentVariables();
+
+    const inlineSegmentConstraints =
+        typeof options.inlineSegmentConstraints === 'boolean'
+            ? options.inlineSegmentConstraints
+            : true;
+
+    const segmentValuesLimit = parseEnvVarNumber(
+        process.env.UNLEASH_SEGMENT_VALUES_LIMIT,
+        DEFAULT_SEGMENT_VALUES_LIMIT,
+    );
+
+    const strategySegmentsLimit = parseEnvVarNumber(
+        process.env.UNLEASH_STRATEGY_SEGMENTS_LIMIT,
+        DEFAULT_STRATEGY_SEGMENTS_LIMIT,
+    );
 
     return {
         db,
@@ -377,6 +381,9 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         eventBus: new EventEmitter(),
         environmentEnableOverrides,
         additionalCspAllowedDomains,
+        inlineSegmentConstraints,
+        segmentValuesLimit,
+        strategySegmentsLimit,
     };
 }
 

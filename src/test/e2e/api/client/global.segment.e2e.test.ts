@@ -96,21 +96,9 @@ const createTestSegments = async (): Promise<void> => {
 };
 
 beforeAll(async () => {
-    const experimentalConfig = {
-        segments: {
-            enableSegmentsAdminApi: true,
-            enableSegmentsClientApi: true,
-            inlineSegmentConstraints: false,
-        },
-    };
-
-    db = await dbInit('global_segments', getLogger, {
-        experimental: experimentalConfig,
-    });
-
-    app = await setupAppWithCustomConfig(db.stores, {
-        experimental: experimentalConfig,
-    });
+    const config = { inlineSegmentConstraints: false };
+    db = await dbInit('global_segments', getLogger, config);
+    app = await setupAppWithCustomConfig(db.stores, config);
 });
 
 afterAll(async () => {
@@ -143,6 +131,8 @@ test('should send all segments that are in use by feature', async () => {
 
     const clientFeatures = await fetchClientResponse();
     const globalSegments = clientFeatures.segments;
+    expect(globalSegments).toHaveLength(2);
+
     const globalSegmentIds = globalSegments.map((segment) => segment.id);
     const allSegmentIds = clientFeatures.features
         .map((feat) => feat.strategies.map((strategy) => strategy.segments))
@@ -150,6 +140,5 @@ test('should send all segments that are in use by feature', async () => {
         .flat()
         .filter((x) => !!x);
     const toggleSegmentIds = [...new Set(allSegmentIds)];
-
     expect(globalSegmentIds).toEqual(toggleSegmentIds);
 });

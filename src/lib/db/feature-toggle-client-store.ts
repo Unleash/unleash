@@ -10,7 +10,6 @@ import {
 import { IFeatureToggleClientStore } from '../types/stores/feature-toggle-client-store';
 import { DEFAULT_ENV } from '../util/constants';
 import { PartialDeep } from '../types/partial';
-import { IExperimentalOptions } from '../experimental';
 import EventEmitter from 'events';
 
 export interface FeaturesTable {
@@ -31,7 +30,7 @@ export default class FeatureToggleClientStore
 
     private logger: Logger;
 
-    private experimental: IExperimentalOptions;
+    private inlineSegmentConstraints: boolean;
 
     private timer: Function;
 
@@ -39,11 +38,11 @@ export default class FeatureToggleClientStore
         db: Knex,
         eventBus: EventEmitter,
         getLogger: LogProvider,
-        experimental: IExperimentalOptions,
+        inlineSegmentConstraints: boolean,
     ) {
         this.db = db;
         this.logger = getLogger('feature-toggle-client-store.ts');
-        this.experimental = experimental;
+        this.inlineSegmentConstraints = inlineSegmentConstraints;
         this.timer = (action) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
                 store: 'feature-toggle',
@@ -58,9 +57,6 @@ export default class FeatureToggleClientStore
     ): Promise<IFeatureToggleClient[]> {
         const environment = featureQuery?.environment || DEFAULT_ENV;
         const stopTimer = this.timer('getFeatureAdmin');
-
-        const { inlineSegmentConstraints = false } =
-            this.experimental?.segments ?? {};
 
         let selectColumns = [
             'features.name as name',
@@ -143,9 +139,9 @@ export default class FeatureToggleClientStore
                     FeatureToggleClientStore.rowToStrategy(r),
                 );
             }
-            if (inlineSegmentConstraints && r.segment_id) {
+            if (this.inlineSegmentConstraints && r.segment_id) {
                 this.addSegmentToStrategy(feature, r);
-            } else if (!inlineSegmentConstraints && r.segment_id) {
+            } else if (!this.inlineSegmentConstraints && r.segment_id) {
                 this.addSegmentIdsToStrategy(feature, r);
             }
             feature.impressionData = r.impression_data;

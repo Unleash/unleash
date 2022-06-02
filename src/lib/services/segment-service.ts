@@ -14,10 +14,6 @@ import {
 import User from '../types/user';
 import { IFeatureStrategiesStore } from '../types/stores/feature-strategies-store';
 import BadDataError from '../error/bad-data-error';
-import {
-    SEGMENT_VALUES_LIMIT,
-    STRATEGY_SEGMENTS_LIMIT,
-} from '../util/segments';
 
 export class SegmentService {
     private logger: Logger;
@@ -28,6 +24,8 @@ export class SegmentService {
 
     private eventStore: IEventStore;
 
+    private config: IUnleashConfig;
+
     constructor(
         {
             segmentStore,
@@ -37,12 +35,13 @@ export class SegmentService {
             IUnleashStores,
             'segmentStore' | 'featureStrategiesStore' | 'eventStore'
         >,
-        { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
+        config: IUnleashConfig,
     ) {
         this.segmentStore = segmentStore;
         this.featureStrategiesStore = featureStrategiesStore;
         this.eventStore = eventStore;
-        this.logger = getLogger('services/segment-service.ts');
+        this.logger = config.getLogger('services/segment-service.ts');
+        this.config = config;
     }
 
     async get(id: number): Promise<ISegment> {
@@ -69,7 +68,7 @@ export class SegmentService {
 
     async create(data: unknown, user: User): Promise<void> {
         const input = await segmentSchema.validateAsync(data);
-        SegmentService.validateSegmentValuesLimit(input);
+        this.validateSegmentValuesLimit(input);
         await this.validateName(input.name);
 
         const segment = await this.segmentStore.create(input, user);
@@ -83,7 +82,7 @@ export class SegmentService {
 
     async update(id: number, data: unknown, user: User): Promise<void> {
         const input = await segmentSchema.validateAsync(data);
-        SegmentService.validateSegmentValuesLimit(input);
+        this.validateSegmentValuesLimit(input);
         const preData = await this.segmentStore.get(id);
 
         if (preData.name !== input.name) {
@@ -134,31 +133,28 @@ export class SegmentService {
     private async validateStrategySegmentLimit(
         strategyId: string,
     ): Promise<void> {
-        const limit = STRATEGY_SEGMENTS_LIMIT;
+        const { strategySegmentsLimit } = this.config;
 
-        if (typeof limit === 'undefined') {
-            return;
-        }
-
-        if ((await this.getByStrategy(strategyId)).length >= limit) {
+        if (
+            (await this.getByStrategy(strategyId)).length >=
+            strategySegmentsLimit
+        ) {
             throw new BadDataError(
-                `Strategies may not have more than ${limit} segments`,
+                `Strategies may not have more than ${strategySegmentsLimit} segments`,
             );
         }
     }
 
-    private static validateSegmentValuesLimit(
-        segment: Omit<ISegment, 'id'>,
-    ): void {
-        const limit = SEGMENT_VALUES_LIMIT;
+    private validateSegmentValuesLimit(segment: Omit<ISegment, 'id'>): void {
+        const { segmentValuesLimit } = this.config;
 
         const valuesCount = segment.constraints
             .flatMap((constraint) => constraint.values?.length ?? 0)
             .reduce((acc, length) => acc + length, 0);
 
-        if (valuesCount > limit) {
+        if (valuesCount > segmentValuesLimit) {
             throw new BadDataError(
-                `Segments may not have more than ${limit} values`,
+                `Segments may not have more than ${segmentValuesLimit} values`,
             );
         }
     }

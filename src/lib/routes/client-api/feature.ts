@@ -46,10 +46,10 @@ export default class FeatureController extends Controller {
         this.featureToggleServiceV2 = featureToggleServiceV2;
         this.segmentService = segmentService;
         this.logger = config.getLogger('client-api/feature.js');
+        this.useGlobalSegments = !this.config.inlineSegmentConstraints;
+
         this.get('/', this.getAll);
         this.get('/:featureName', this.getFeatureToggle);
-        this.useGlobalSegments =
-            experimental && !experimental?.segments?.inlineSegmentConstraints;
 
         if (experimental && experimental.clientFeatureMemoize) {
             // @ts-ignore

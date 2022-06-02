@@ -4,6 +4,10 @@ import { createTestConfig } from '../../../test/config/test-config';
 import createStores from '../../../test/fixtures/store';
 import getApp from '../../app';
 import { createServices } from '../../services';
+import {
+    DEFAULT_SEGMENT_VALUES_LIMIT,
+    DEFAULT_STRATEGY_SEGMENTS_LIMIT,
+} from '../../util/segments';
 
 const uiConfig = {
     headerBackground: 'red',
@@ -46,14 +50,15 @@ beforeEach(async () => {
 afterEach(() => {
     destroy();
 });
-test('should get ui config', () => {
-    expect.assertions(2);
-    return request
+
+test('should get ui config', async () => {
+    const { body } = await request
         .get(`${base}/api/admin/ui-config`)
         .expect('Content-Type', /json/)
-        .expect(200)
-        .expect((res) => {
-            expect(res.body.slogan === 'hello').toBe(true);
-            expect(res.body.headerBackground === 'red').toBe(true);
-        });
+        .expect(200);
+
+    expect(body.slogan).toEqual('hello');
+    expect(body.headerBackground).toEqual('red');
+    expect(body.segmentValuesLimit).toEqual(DEFAULT_SEGMENT_VALUES_LIMIT);
+    expect(body.strategySegmentsLimit).toEqual(DEFAULT_STRATEGY_SEGMENTS_LIMIT);
 });

@@ -70,7 +70,7 @@ export const createStores = (
             db,
             eventBus,
             getLogger,
-            config.experimental,
+            config.inlineSegmentConstraints,
         ),
         environmentStore: new EnvironmentStore(db, eventBus, getLogger),
         featureTagStore: new FeatureTagStore(db, eventBus, getLogger),

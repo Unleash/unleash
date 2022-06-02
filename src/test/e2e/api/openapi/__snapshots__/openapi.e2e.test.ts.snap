@@ -207,7 +207,6 @@ Object {
       },
       "emptySchema": Object {
         "description": "emptySchema",
-        "type": "object",
       },
       "featureEnvironmentSchema": Object {
         "additionalProperties": false,

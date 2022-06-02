@@ -70,10 +70,12 @@ export const ProjectCard = ({
                 <PermissionIconButton
                     permission={UPDATE_PROJECT}
                     projectId={id}
-                    className={classes.actionsBtn}
                     data-loading
                     onClick={handleClick}
-                    tooltipProps={{ title: 'Options' }}
+                    tooltipProps={{
+                        title: 'Options',
+                        className: classes.actionsBtn,
+                    }}
                 >
                     <MoreVertIcon />
                 </PermissionIconButton>

@@ -75,7 +75,7 @@ const CreateEnvironment = () => {
             show={
                 <FormTemplate
                     loading={loading}
-                    title="Create Environment"
+                    title="Create environment"
                     description="Environments allow you to manage your
                             product lifecycle from local development
                             through production. Your projects and

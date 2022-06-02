@@ -121,6 +121,7 @@ export const ColumnsMenu: VFC<IColumnsMenuProps> = ({
                     aria-expanded={isOpen ? 'true' : undefined}
                     onClick={handleClick}
                     type="button"
+                    size="large"
                     className={classes.button}
                     data-loading
                 >

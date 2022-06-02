@@ -175,10 +175,11 @@ const ProjectRoleList = () => {
     );
 
     useEffect(() => {
-        setHiddenColumns([]);
+        const hiddenColumns = [];
         if (isExtraSmallScreen) {
-            setHiddenColumns(['Icon']);
+            hiddenColumns.push('Icon');
         }
+        setHiddenColumns(hiddenColumns);
     }, [setHiddenColumns, isExtraSmallScreen]);
 
     return (

@@ -7,6 +7,7 @@ import {
     useFlexLayout,
     useSortBy,
     useTable,
+    SortingRule,
 } from 'react-table';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
@@ -67,6 +68,13 @@ type ListItemType = Pick<
 };
 
 const staticColumns = ['Actions', 'name'];
+
+const defaultSort: SortingRule<string> & {
+    columns?: string[];
+} = {
+    id: 'createdAt',
+    desc: true,
+};
 
 export const ProjectFeatureToggles = ({
     features,
@@ -205,7 +213,7 @@ export const ProjectFeatureToggles = ({
                 maxWidth: 80,
             },
             {
-                Header: 'Feature toggle name',
+                Header: 'Name',
                 accessor: 'name',
                 Cell: ({ value }: { value: string }) => (
                     <LinkCell
@@ -268,9 +276,10 @@ export const ProjectFeatureToggles = ({
         [projectId, environments, onToggle, loading]
     );
     const [searchParams, setSearchParams] = useSearchParams();
-    const [storedParams, setStoredParams] = useLocalStorage<{
-        columns?: string[];
-    }>(`${projectId}:ProjectFeatureToggles`, {});
+    const [storedParams, setStoredParams] = useLocalStorage(
+        `${projectId}:ProjectFeatureToggles`,
+        defaultSort
+    );
 
     const initialState = useMemo(
         () => {
@@ -304,7 +313,7 @@ export const ProjectFeatureToggles = ({
                         id: searchParams.get('sort') || 'createdAt',
                         desc: searchParams.has('order')
                             ? searchParams.get('order') === 'desc'
-                            : false,
+                            : storedParams.desc,
                     },
                 ],
                 hiddenColumns,
@@ -365,14 +374,20 @@ export const ProjectFeatureToggles = ({
         setSearchParams(tableState, {
             replace: true,
         });
+        setStoredParams({
+            id: sortBy[0].id,
+            desc: sortBy[0].desc || false,
+            columns: tableState.columns.split(','),
+        });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [loading, sortBy, hiddenColumns, globalFilter, setSearchParams]);
 
     const onCustomizeColumns = useCallback(
         visibleColumns => {
-            setStoredParams({
+            setStoredParams(storedParams => ({
+                ...storedParams,
                 columns: visibleColumns,
-            });
+            }));
         },
         [setStoredParams]
     );
@@ -490,15 +505,15 @@ export const ProjectFeatureToggles = ({
                         condition={globalFilter?.length > 0}
                         show={
                             <TablePlaceholder>
-                                No features found matching &ldquo;
+                                No feature toggles found matching &ldquo;
                                 {globalFilter}
                                 &rdquo;
                             </TablePlaceholder>
                         }
                         elseShow={
                             <TablePlaceholder>
-                                No features available. Get started by adding a
-                                new feature toggle.
+                                No feature toggles available. Get started by
+                                adding a new feature toggle.
                             </TablePlaceholder>
                         }
                     />

@@ -1,7 +1,16 @@
+import { styled } from '@mui/material';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
+import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { Fragment, VFC } from 'react';
 import { Link } from 'react-router-dom';
+
+const StyledLink = styled(Link)(() => ({
+    textDecoration: 'none',
+    '&:hover, &:focus': {
+        textDecoration: 'underline',
+    },
+}));
 
 interface IProjectsListProps {
     project?: string;
@@ -22,25 +31,29 @@ export const ProjectsList: VFC<IProjectsListProps> = ({
             : [];
 
     if (fields.length === 0) {
-        return <Highlighter search={searchQuery}>*</Highlighter>;
+        return (
+            <TextCell>
+                <Highlighter search={searchQuery}>*</Highlighter>
+            </TextCell>
+        );
     }
 
     return (
-        <>
+        <TextCell>
             {fields.map((item, index) => (
                 <Fragment key={item}>
                     {index > 0 && ', '}
                     {!item || item === '*' ? (
                         <Highlighter search={searchQuery}>*</Highlighter>
                     ) : (
-                        <Link to={`/projects/${item}`}>
+                        <StyledLink to={`/projects/${item}`}>
                             <Highlighter search={searchQuery}>
                                 {item}
                             </Highlighter>
-                        </Link>
+                        </StyledLink>
                     )}
                 </Fragment>
             ))}
-        </>
+        </TextCell>
     );
 };

@@ -4,12 +4,20 @@ import { ReportProblemOutlined, Check } from '@mui/icons-material';
 import { styled } from '@mui/material';
 import { IReportTableRow } from 'component/Reporting/ReportTable/ReportTable';
 
-const StyledText = styled('span')(({ theme }) => ({
+const StyledTextPotentiallyStale = styled('span')(({ theme }) => ({
     display: 'flex',
     gap: '1ch',
     alignItems: 'center',
-    textAlign: 'right',
-    '& svg': { color: theme.palette.inactiveIcon },
+    color: theme.palette.warning.dark,
+    '& svg': { color: theme.palette.warning.main },
+}));
+
+const StyledTextHealthy = styled('span')(({ theme }) => ({
+    display: 'flex',
+    gap: '1ch',
+    alignItems: 'center',
+    color: theme.palette.success.dark,
+    '& svg': { color: theme.palette.success.main },
 }));
 
 interface IReportStatusCellProps {
@@ -24,20 +32,20 @@ export const ReportStatusCell: VFC<IReportStatusCellProps> = ({
     if (row.original.status === 'potentially-stale') {
         return (
             <TextCell>
-                <StyledText>
+                <StyledTextPotentiallyStale>
                     <ReportProblemOutlined />
                     <span>Potentially stale</span>
-                </StyledText>
+                </StyledTextPotentiallyStale>
             </TextCell>
         );
     }
 
     return (
         <TextCell>
-            <StyledText>
+            <StyledTextHealthy>
                 <Check />
                 <span>Healthy</span>
-            </StyledText>
+            </StyledTextHealthy>
         </TextCell>
     );
 };

@@ -55,7 +55,7 @@ export const ReportTable = ({ projectId, features }: IReportTableProps) => {
     const initialState = useMemo(
         () => ({
             hiddenColumns: [],
-            sortBy: [{ id: 'name' }],
+            sortBy: [{ id: 'createdAt', desc: true }],
         }),
         []
     );
@@ -84,9 +84,11 @@ export const ReportTable = ({ projectId, features }: IReportTableProps) => {
     );
 
     useEffect(() => {
+        const hiddenColumns = [];
         if (isSmallScreen) {
-            setHiddenColumns(['createdAt', 'expiredAt']);
+            hiddenColumns.push('createdAt', 'expiredAt');
         }
+        setHiddenColumns(hiddenColumns);
     }, [setHiddenColumns, isSmallScreen]);
 
     const header = (
@@ -100,8 +102,6 @@ export const ReportTable = ({ projectId, features }: IReportTableProps) => {
             }
         />
     );
-
-    console.log(rows);
 
     return (
         <PageContent header={header}>
@@ -131,15 +131,15 @@ export const ReportTable = ({ projectId, features }: IReportTableProps) => {
                         condition={globalFilter?.length > 0}
                         show={
                             <TablePlaceholder>
-                                No features found matching &ldquo;
+                                No feature toggles found matching &ldquo;
                                 {globalFilter}
                                 &rdquo;
                             </TablePlaceholder>
                         }
                         elseShow={
                             <TablePlaceholder>
-                                No features available. Get started by adding a
-                                new feature toggle.
+                                No feature toggles available. Get started by
+                                adding a new feature toggle.
                             </TablePlaceholder>
                         }
                     />
@@ -182,7 +182,7 @@ const COLUMNS = [
         disableGlobalFilter: true,
     },
     {
-        Header: 'Feature toggle name',
+        Header: 'Name',
         accessor: 'name',
         width: '60%',
         sortType: 'alphanumeric',
@@ -204,8 +204,8 @@ const COLUMNS = [
     {
         Header: 'Status',
         accessor: 'status',
-        align: 'right',
         Cell: ReportStatusCell,
+        disableGlobalFilter: true,
     },
     {
         Header: 'State',

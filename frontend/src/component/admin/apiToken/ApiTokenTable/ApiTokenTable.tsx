@@ -13,7 +13,6 @@ import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightC
 import { ApiTokenDocs } from 'component/admin/apiToken/ApiTokenDocs/ApiTokenDocs';
 import { CreateApiTokenButton } from 'component/admin/apiToken/CreateApiTokenButton/CreateApiTokenButton';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
-import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { Key } from '@mui/icons-material';
 import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 import { CopyApiTokenButton } from 'component/admin/apiToken/CopyApiTokenButton/CopyApiTokenButton';
@@ -176,12 +175,10 @@ const COLUMNS = [
         Header: 'Project',
         accessor: 'project',
         Cell: (props: any) => (
-            <TextCell>
-                <ProjectsList
-                    project={props.row.original.project}
-                    projects={props.row.original.projects}
-                />
-            </TextCell>
+            <ProjectsList
+                project={props.row.original.project}
+                projects={props.row.original.projects}
+            />
         ),
         minWidth: 120,
     },

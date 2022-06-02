@@ -69,7 +69,7 @@ export const BillingHistory: VFC<IBillingHistoryProps> = ({
 }) => {
     const initialState = useMemo(
         () => ({
-            sortBy: [{ id: 'createdAt', desc: false }],
+            sortBy: [{ id: 'dueDate' }],
         }),
         []
     );

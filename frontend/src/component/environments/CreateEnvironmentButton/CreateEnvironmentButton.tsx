@@ -16,7 +16,7 @@ export const CreateEnvironmentButton = () => {
             permission={ADMIN}
             disabled={!Boolean(uiConfig.flags.EEA)}
         >
-            New Environment
+            New environment
         </ResponsiveButton>
     );
 };

@@ -139,6 +139,7 @@ const UsersList = () => {
                 disableSortBy: true,
             },
             {
+                id: 'name',
                 Header: 'Name',
                 accessor: (row: any) => row.name || '',
                 width: '40%',
@@ -231,10 +232,10 @@ const UsersList = () => {
             hiddenColumns.push('type');
         }
         if (isSmallScreen) {
-            hiddenColumns.push(...['createdAt', 'username']);
+            hiddenColumns.push('createdAt', 'username');
         }
         if (isExtraSmallScreen) {
-            hiddenColumns.push(...['imageUrl', 'role', 'last-login']);
+            hiddenColumns.push('imageUrl', 'role', 'last-login');
         }
         setHiddenColumns(hiddenColumns);
     }, [setHiddenColumns, isExtraSmallScreen, isSmallScreen, isBillingUsers]);

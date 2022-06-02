@@ -2,7 +2,6 @@ import * as jsonpatch from 'fast-json-patch';
 
 import {
     Alert,
-    Box,
     Table,
     TableBody,
     TableCell,
@@ -27,7 +26,6 @@ import useDeleteVariantMarkup from './useDeleteVariantMarkup';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { Edit, Delete } from '@mui/icons-material';
 import { useTable, useSortBy, useGlobalFilter } from 'react-table';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
@@ -35,7 +33,6 @@ import { SortableTableHeader, TablePlaceholder } from 'component/common/Table';
 import { sortTypes } from 'utils/sortTypes';
 import { PayloadOverridesCell } from './PayloadOverridesCell/PayloadOverridesCell';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
-import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import theme from 'themes/theme';
 import { VariantsActionCell } from './VariantsActionsCell/VariantsActionsCell';
 
@@ -211,11 +208,14 @@ export const FeatureVariantsList = () => {
     );
 
     useEffect(() => {
-        if (isMediumScreen) {
-            setHiddenColumns(['weightType', 'data']);
-        } else if (isLargeScreen) {
-            setHiddenColumns(['weightType']);
+        const hiddenColumns = [];
+        if (isLargeScreen) {
+            hiddenColumns.push('weightType');
         }
+        if (isMediumScreen) {
+            hiddenColumns.push('data');
+        }
+        setHiddenColumns(hiddenColumns);
     }, [setHiddenColumns, isMediumScreen, isLargeScreen]);
 
     // @ts-expect-error

@@ -1,132 +1,180 @@
-import classnames from 'classnames';
-import { Paper } from '@mui/material';
+import { Box, Paper, styled } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
 import ReportProblemOutlinedIcon from '@mui/icons-material/ReportProblemOutlined';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import styles from './ReportCard.module.scss';
 import ReactTimeAgo from 'react-timeago';
 import { IProjectHealthReport } from 'interfaces/project';
+
+const StyledBoxActive = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    color: theme.palette.success.dark,
+    '& svg': {
+        color: theme.palette.success.main,
+    },
+}));
+
+const StyledBoxStale = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    color: theme.palette.warning.dark,
+    '& svg': {
+        color: theme.palette.warning.main,
+    },
+}));
+
+const StyledPaper = styled(Paper)(({ theme }) => ({
+    padding: theme.spacing(4),
+    marginBottom: theme.spacing(2),
+    borderRadius: theme.shape.borderRadiusLarge,
+    boxShadow: 'none',
+    display: 'flex',
+    justifyContent: 'space-between',
+    [theme.breakpoints.down('md')]: {
+        flexDirection: 'column',
+        gap: theme.spacing(2),
+    },
+}));
+
+const StyledHeader = styled('h2')(({ theme }) => ({
+    fontSize: theme.fontSizes.mainHeader,
+    marginBottom: theme.spacing(1),
+}));
+
+const StyledHealthRating = styled('p')(({ theme }) => ({
+    fontSize: '2rem',
+    fontWeight: theme.fontWeight.bold,
+}));
+
+const StyledLastUpdated = styled('p')(({ theme }) => ({
+    color: theme.palette.text.secondary,
+}));
+
+const StyledList = styled('ul')(({ theme }) => ({
+    listStyleType: 'none',
+    margin: 0,
+    padding: 0,
+    '& svg': {
+        marginRight: theme.spacing(1),
+    },
+}));
+
+const StyledAlignedItem = styled('p')(({ theme }) => ({
+    marginLeft: theme.spacing(4),
+}));
 
 interface IReportCardProps {
     healthReport: IProjectHealthReport;
 }
 
 export const ReportCard = ({ healthReport }: IReportCardProps) => {
-    const healthLessThan50 = healthReport.health < 50;
-    const healthLessThan75 = healthReport.health < 75;
-
-    const healthClasses = classnames(styles.reportCardHealthRating, {
-        [styles.healthWarning]: healthLessThan75,
-        [styles.healthDanger]: healthLessThan50,
-    });
+    const healthRatingColor =
+        healthReport.health < 50
+            ? 'error.main'
+            : healthReport.health < 75
+            ? 'warning.main'
+            : 'success.main';
 
     const renderActiveToggles = () => (
-        <>
-            <CheckIcon className={styles.check} />
+        <StyledBoxActive>
+            <CheckIcon />
             <span>{healthReport.activeCount} active toggles</span>
-        </>
+        </StyledBoxActive>
     );
 
     const renderStaleToggles = () => (
-        <>
-            <ReportProblemOutlinedIcon className={styles.danger} />
+        <StyledBoxStale>
+            <ReportProblemOutlinedIcon />
             <span>{healthReport.staleCount} stale toggles</span>
-        </>
+        </StyledBoxStale>
     );
 
     const renderPotentiallyStaleToggles = () => (
-        <>
-            <ReportProblemOutlinedIcon className={styles.danger} />
+        <StyledBoxStale>
+            <ReportProblemOutlinedIcon />
             <span>
                 {healthReport.potentiallyStaleCount} potentially stale toggles
             </span>
-        </>
+        </StyledBoxStale>
     );
 
     return (
-        <Paper className={styles.card}>
-            <div className={styles.reportCardContainer}>
-                <div className={styles.reportCardHealth}>
-                    <h2 className={styles.header}>Health rating</h2>
-                    <div className={styles.reportCardHealthInnerContainer}>
-                        <ConditionallyRender
-                            condition={healthReport.health > -1}
-                            show={
-                                <div>
-                                    <p className={healthClasses}>
-                                        {healthReport.health}%
-                                    </p>
-                                    <p className={styles.lastUpdate}>
-                                        Last updated:{' '}
-                                        <ReactTimeAgo
-                                            date={healthReport.updatedAt}
-                                            live={false}
-                                        />
-                                    </p>
-                                </div>
-                            }
-                        />
-                    </div>
-                </div>
-                <div className={styles.reportCardToggle}>
-                    <h2 className={styles.header}>Toggle report</h2>
-                    <ul className={styles.reportCardList}>
-                        <li>
-                            <ConditionallyRender
-                                condition={Boolean(healthReport.activeCount)}
-                                show={renderActiveToggles}
-                            />
-                        </li>
+        <StyledPaper>
+            <Box>
+                <StyledHeader>Health rating</StyledHeader>
+                <ConditionallyRender
+                    condition={healthReport.health > -1}
+                    show={
+                        <>
+                            <StyledHealthRating
+                                sx={{ color: healthRatingColor }}
+                            >
+                                {healthReport.health}%
+                            </StyledHealthRating>
+                            <StyledLastUpdated>
+                                Last updated:{' '}
+                                <ReactTimeAgo
+                                    date={healthReport.updatedAt}
+                                    live={false}
+                                />
+                            </StyledLastUpdated>
+                        </>
+                    }
+                />
+            </Box>
+            <Box>
+                <StyledHeader>Toggle report</StyledHeader>
+                <StyledList>
+                    <li>
                         <ConditionallyRender
                             condition={Boolean(healthReport.activeCount)}
-                            show={
-                                <p className={styles.reportCardActionText}>
-                                    Also includes potentially stale toggles.
-                                </p>
-                            }
+                            show={renderActiveToggles}
                         />
+                    </li>
+                    <ConditionallyRender
+                        condition={Boolean(healthReport.activeCount)}
+                        show={
+                            <StyledAlignedItem>
+                                Also includes potentially stale toggles.
+                            </StyledAlignedItem>
+                        }
+                    />
 
-                        <li>
-                            <ConditionallyRender
-                                condition={Boolean(healthReport.staleCount)}
-                                show={renderStaleToggles}
-                            />
-                        </li>
-                    </ul>
-                </div>
-
-                <div className={styles.reportCardAction}>
-                    <h2 className={styles.header}>Potential actions</h2>
-                    <div className={styles.reportCardActionContainer}>
-                        <ul className={styles.reportCardList}>
-                            <li>
-                                <ConditionallyRender
-                                    condition={Boolean(
-                                        healthReport.potentiallyStaleCount
-                                    )}
-                                    show={renderPotentiallyStaleToggles}
-                                />
-                            </li>
-                        </ul>
+                    <li>
+                        <ConditionallyRender
+                            condition={Boolean(healthReport.staleCount)}
+                            show={renderStaleToggles}
+                        />
+                    </li>
+                </StyledList>
+            </Box>
+            <Box>
+                <StyledHeader>Potential actions</StyledHeader>
+                <StyledList>
+                    <li>
                         <ConditionallyRender
                             condition={Boolean(
                                 healthReport.potentiallyStaleCount
                             )}
-                            show={
-                                <p className={styles.reportCardActionText}>
-                                    Review your feature toggles and delete
-                                    unused toggles.
-                                </p>
-                            }
-                            elseShow={
-                                <p className={styles.reportCardNoActionText}>
-                                    No action is required
-                                </p>
-                            }
+                            show={renderPotentiallyStaleToggles}
                         />
-                    </div>
-                </div>
-            </div>
-        </Paper>
+                    </li>
+                </StyledList>
+                <ConditionallyRender
+                    condition={Boolean(healthReport.potentiallyStaleCount)}
+                    show={
+                        <StyledAlignedItem>
+                            Review your feature toggles and delete unused
+                            toggles.
+                        </StyledAlignedItem>
+                    }
+                    elseShow={
+                        <StyledAlignedItem>
+                            No action is required
+                        </StyledAlignedItem>
+                    }
+                />
+            </Box>
+        </StyledPaper>
     );
 };

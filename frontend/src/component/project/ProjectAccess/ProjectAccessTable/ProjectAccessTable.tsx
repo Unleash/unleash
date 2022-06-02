@@ -1,4 +1,4 @@
-import { useMemo, useState, VFC } from 'react';
+import { useMemo, VFC } from 'react';
 import { useSortBy, useTable } from 'react-table';
 import {
     Table,
@@ -19,6 +19,10 @@ import PermissionIconButton from 'component/common/PermissionIconButton/Permissi
 import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 
+const initialState = {
+    sortBy: [{ id: 'name' }],
+};
+
 interface IProjectAccessTableProps {
     access: IProjectAccessOutput;
     projectId: string;
@@ -34,7 +38,6 @@ export const ProjectAccessTable: VFC<IProjectAccessTableProps> = ({
     handleRoleChange,
     handleRemoveAccess,
 }) => {
-    const [initialState] = useState({});
     const data = access.users;
 
     const columns = useMemo(
@@ -54,12 +57,13 @@ export const ProjectAccessTable: VFC<IProjectAccessTableProps> = ({
                 align: 'center',
             },
             {
+                id: 'name',
                 Header: 'Name',
-                accessor: 'name',
+                accessor: (row: any) => row.name || '',
             },
             {
-                Header: 'Username',
                 id: 'username',
+                Header: 'Username',
                 accessor: 'email',
                 Cell: ({ row: { original: user } }: any) => (
                     <TextCell>{user.email || user.username}</TextCell>
@@ -84,8 +88,8 @@ export const ProjectAccessTable: VFC<IProjectAccessTableProps> = ({
                 ),
             },
             {
-                Header: 'Actions',
                 id: 'actions',
+                Header: 'Actions',
                 disableSortBy: true,
                 align: 'center',
                 width: 80,

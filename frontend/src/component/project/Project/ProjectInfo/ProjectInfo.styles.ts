@@ -68,10 +68,10 @@ export const useStyles = makeStyles()(theme => ({
             fontSize: '0.8rem',
             position: 'relative',
             padding: '0.8rem',
-            ['&:first-of-type']: {
+            '&:first-of-type': {
                 marginLeft: '0',
             },
-            ['&:last-of-type']: {
+            '&:last-of-type': {
                 marginRight: '0',
             },
         },

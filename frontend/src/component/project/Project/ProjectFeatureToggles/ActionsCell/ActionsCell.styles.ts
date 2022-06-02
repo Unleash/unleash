@@ -8,8 +8,7 @@ export const useStyles = makeStyles()(theme => ({
     },
     menuContainer: {
         borderRadius: theme.shape.borderRadiusLarge,
-        padding: theme.spacing(1),
-        paddingRight: theme.spacing(3),
+        padding: theme.spacing(1, 1.5),
     },
     item: {
         borderRadius: theme.shape.borderRadius,

@@ -11,7 +11,7 @@ import {
 } from 'component/common/Table';
 import { useCallback } from 'react';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { TableBody } from '@mui/material';
+import { Alert, styled, TableBody } from '@mui/material';
 import { CloudCircle } from '@mui/icons-material';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
 import { EnvironmentActionCell } from 'component/environments/EnvironmentActionCell/EnvironmentActionCell';
@@ -24,6 +24,10 @@ import useEnvironmentApi, {
 } from 'hooks/api/actions/useEnvironmentApi/useEnvironmentApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+
+const StyledAlert = styled(Alert)(({ theme }) => ({
+    marginBottom: theme.spacing(4),
+}));
 
 export const EnvironmentTable = () => {
     const { changeSortOrder } = useEnvironmentApi();
@@ -82,6 +86,11 @@ export const EnvironmentTable = () => {
 
     return (
         <PageContent header={header}>
+            <StyledAlert severity="info">
+                This is the order of environments that you have today in each
+                feature toggle. Rearranging them here will change also the order
+                inside each feature toggle.
+            </StyledAlert>
             <SearchHighlightProvider value={globalFilter}>
                 <Table {...getTableProps()}>
                     <SortableTableHeader headerGroups={headerGroups as any} />

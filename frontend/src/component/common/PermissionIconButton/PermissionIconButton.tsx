@@ -58,6 +58,7 @@ const PermissionIconButton = ({
             {...tooltipProps}
             title={formatAccessText(access, tooltipProps?.title)}
             arrow
+            onClick={e => e.preventDefault()}
         >
             <div id={id} role="tooltip">
                 <IconButton

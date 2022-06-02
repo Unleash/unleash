@@ -67,7 +67,7 @@ export default createTheme({
         },
         success: {
             light: colors.green[50],
-            main: colors.green[500],
+            main: colors.green[600],
             dark: colors.green[800],
             border: colors.green[300],
         },

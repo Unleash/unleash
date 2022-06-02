@@ -104,7 +104,7 @@ export const CopyFeatureToggle = () => {
                 </p>
                 <form onSubmit={onSubmit}>
                     <TextField
-                        label="Feature toggle name"
+                        label="Name"
                         name="name"
                         value={newToggleName || ''}
                         onBlur={onValidateName}

@@ -64,7 +64,7 @@ const columns = [
         disableGlobalFilter: true,
     },
     {
-        Header: 'Feature toggle name',
+        Header: 'Name',
         accessor: 'name',
         minWidth: 150,
         Cell: FeatureNameCell,
@@ -101,7 +101,7 @@ const columns = [
     },
 ];
 
-const defaultSort: SortingRule<string> = { id: 'createdAt', desc: false };
+const defaultSort: SortingRule<string> = { id: 'createdAt', desc: true };
 
 export const FeatureToggleListTable: VFC = () => {
     const theme = useTheme();
@@ -162,19 +162,14 @@ export const FeatureToggleListTable: VFC = () => {
     );
 
     useEffect(() => {
-        if (isSmallScreen) {
-            setHiddenColumns([
-                'lastSeenAt',
-                'type',
-                'stale',
-                'description',
-                'createdAt',
-            ]);
-        } else if (isMediumScreen) {
-            setHiddenColumns(['lastSeenAt', 'stale', 'description']);
-        } else {
-            setHiddenColumns(['description']);
+        const hiddenColumns = ['description'];
+        if (isMediumScreen) {
+            hiddenColumns.push('lastSeenAt', 'stale');
         }
+        if (isSmallScreen) {
+            hiddenColumns.push('type', 'createdAt');
+        }
+        setHiddenColumns(hiddenColumns);
     }, [setHiddenColumns, isSmallScreen, isMediumScreen]);
 
     useEffect(() => {
@@ -289,15 +284,15 @@ export const FeatureToggleListTable: VFC = () => {
                         condition={globalFilter?.length > 0}
                         show={
                             <TablePlaceholder>
-                                No features or projects found matching &ldquo;
+                                No feature toggles found matching &ldquo;
                                 {globalFilter}
                                 &rdquo;
                             </TablePlaceholder>
                         }
                         elseShow={
                             <TablePlaceholder>
-                                No features available. Get started by adding a
-                                new feature toggle.
+                                No feature toggles available. Get started by
+                                adding a new feature toggle.
                             </TablePlaceholder>
                         }
                     />

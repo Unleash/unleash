@@ -467,6 +467,24 @@ test('should change project when checks pass', async () => {
     expect(updatedFeature.project).toBe(projectB.id);
 });
 
+test('changing project should emit event even if user does not have a username set', async () => {
+    const projectA = { id: randomId(), name: randomId() };
+    const projectB = { id: randomId(), name: randomId() };
+    const toggle = { name: randomId() };
+    await projectService.createProject(projectA, user);
+    await projectService.createProject(projectB, user);
+    await featureToggleService.createFeatureToggle(projectA.id, toggle, user);
+    const eventsBeforeChange = await stores.eventStore.getEvents();
+    await projectService.changeProject(
+        projectB.id,
+        toggle.name,
+        user,
+        projectA.id,
+    );
+    const eventsAfterChange = await stores.eventStore.getEvents();
+    expect(eventsAfterChange.length).toBe(eventsBeforeChange.length + 1);
+}, 10000);
+
 test('should require equal project environments to move features', async () => {
     const projectA = { id: randomId(), name: randomId() };
     const projectB = { id: randomId(), name: randomId() };

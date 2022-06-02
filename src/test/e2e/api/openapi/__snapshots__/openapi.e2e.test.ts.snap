@@ -277,7 +277,7 @@ Object {
                   "type": "array",
                 },
                 "createdAt": Object {
-                  "format": "date",
+                  "format": "date-time",
                   "nullable": true,
                   "type": "string",
                 },
@@ -338,7 +338,7 @@ Object {
             "type": "boolean",
           },
           "createdAt": Object {
-            "format": "date",
+            "format": "date-time",
             "nullable": true,
             "type": "string",
           },
@@ -417,7 +417,7 @@ Object {
                         "type": "array",
                       },
                       "createdAt": Object {
-                        "format": "date",
+                        "format": "date-time",
                         "nullable": true,
                         "type": "string",
                       },
@@ -477,7 +477,7 @@ Object {
             "type": "boolean",
           },
           "lastSeenAt": Object {
-            "format": "date",
+            "format": "date-time",
             "nullable": true,
             "type": "string",
           },
@@ -696,7 +696,7 @@ Object {
             "type": "array",
           },
           "createdAt": Object {
-            "format": "date",
+            "format": "date-time",
             "nullable": true,
             "type": "string",
           },
@@ -749,7 +749,7 @@ Object {
                   "type": "boolean",
                 },
                 "createdAt": Object {
-                  "format": "date",
+                  "format": "date-time",
                   "nullable": true,
                   "type": "string",
                 },
@@ -828,7 +828,7 @@ Object {
                               "type": "array",
                             },
                             "createdAt": Object {
-                              "format": "date",
+                              "format": "date-time",
                               "nullable": true,
                               "type": "string",
                             },
@@ -888,7 +888,7 @@ Object {
                   "type": "boolean",
                 },
                 "lastSeenAt": Object {
-                  "format": "date",
+                  "format": "date-time",
                   "nullable": true,
                   "type": "string",
                 },
@@ -1324,7 +1324,7 @@ Object {
             "type": "array",
           },
           "createdAt": Object {
-            "format": "date",
+            "format": "date-time",
             "type": "string",
           },
           "description": Object {

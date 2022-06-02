@@ -1,11 +1,12 @@
-import { createSchemaObject, CreateSchemaType } from '../schema';
-import { strategySchemaDefinition } from './strategy-schema';
+import { FromSchema } from 'json-schema-to-ts';
+import { DeepMutable } from '../../types/mutable';
+import { schema as strategySchema } from './strategy-schema';
 
 const schema = {
-    ...strategySchemaDefinition,
+    ...strategySchema,
     required: [],
 } as const;
 
-export type UpdateStrategySchema = CreateSchemaType<typeof schema>;
+export type UpdateStrategySchema = FromSchema<typeof schema>;
 
-export const updateStrategySchema = createSchemaObject(schema);
+export const updateStrategySchema = schema as DeepMutable<typeof schema>;

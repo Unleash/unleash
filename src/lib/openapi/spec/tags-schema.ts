@@ -1,4 +1,5 @@
-import { createSchemaObject, CreateSchemaType } from '../schema';
+import { FromSchema } from 'json-schema-to-ts';
+import { DeepMutable } from '../../types/mutable';
 import { tagSchema } from './tag-schema';
 
 const schema = {
@@ -16,6 +17,6 @@ const schema = {
     },
 } as const;
 
-export type TagsSchema = CreateSchemaType<typeof schema>;
+export type TagsSchema = FromSchema<typeof schema>;
 
-export const tagsSchema = createSchemaObject(schema);
+export const tagsSchema = schema as DeepMutable<typeof schema>;

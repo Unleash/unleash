@@ -1,4 +1,5 @@
-import { createSchemaObject, CreateSchemaType } from '../schema';
+import { FromSchema } from 'json-schema-to-ts';
+import { DeepMutable } from '../../types/mutable';
 import { constraintSchema } from './constraint-schema';
 
 const schema = {
@@ -22,7 +23,7 @@ const schema = {
         },
         createdAt: {
             type: 'string',
-            format: 'date',
+            format: 'date-time',
         },
         impressionData: {
             type: 'boolean',
@@ -34,6 +35,6 @@ const schema = {
     },
 } as const;
 
-export type UpdateFeatureSchema = CreateSchemaType<typeof schema>;
+export type UpdateFeatureSchema = FromSchema<typeof schema>;
 
-export const updateFeatureSchema = createSchemaObject(schema);
+export const updateFeatureSchema = schema as DeepMutable<typeof schema>;

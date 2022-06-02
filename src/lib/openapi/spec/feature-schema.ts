@@ -1,4 +1,5 @@
-import { createSchemaObject, CreateSchemaType } from '../schema';
+import { FromSchema } from 'json-schema-to-ts';
+import { DeepMutable } from '../../types/mutable';
 import { strategySchema } from './strategy-schema';
 import { variantSchema } from './variant-schema';
 import { featureEnvironmentSchema } from './feature-environment-schema';
@@ -34,12 +35,12 @@ const schema = {
         },
         createdAt: {
             type: 'string',
-            format: 'date',
+            format: 'date-time',
             nullable: true,
         },
         lastSeenAt: {
             type: 'string',
-            format: 'date',
+            format: 'date-time',
             nullable: true,
         },
         environments: {
@@ -57,6 +58,6 @@ const schema = {
     },
 } as const;
 
-export type FeatureSchema = CreateSchemaType<typeof schema>;
+export type FeatureSchema = FromSchema<typeof schema>;
 
-export const featureSchema = createSchemaObject(schema);
+export const featureSchema = schema as DeepMutable<typeof schema>;

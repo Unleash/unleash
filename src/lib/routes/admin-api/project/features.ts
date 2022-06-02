@@ -30,6 +30,7 @@ import {
     createRequestSchema,
     createResponseSchema,
 } from '../../../openapi/operation';
+import { serializeDates } from '../../../types/serialize-dates';
 
 interface FeatureStrategyParams {
     projectId: string;
@@ -328,7 +329,7 @@ export default class ProjectFeaturesController extends Controller {
         const features = await this.featureService.getFeatureOverview(
             projectId,
         );
-        res.json({ version: 1, features });
+        res.json({ version: 1, features: serializeDates(features) });
     }
 
     async cloneFeature(
@@ -350,7 +351,7 @@ export default class ProjectFeaturesController extends Controller {
             replaceGroupId,
             userName,
         );
-        res.status(201).json(created);
+        res.status(201).json(serializeDates(created));
     }
 
     async createFeature(
@@ -366,7 +367,7 @@ export default class ProjectFeaturesController extends Controller {
             userName,
         );
 
-        res.status(201).json(created);
+        res.status(201).json(serializeDates(created));
     }
 
     async getFeature(
@@ -382,13 +383,12 @@ export default class ProjectFeaturesController extends Controller {
         req: IAuthRequest<
             { projectId: string; featureName: string },
             any,
-            UpdateFeatureSchema,
-            any
+            UpdateFeatureSchema
         >,
         res: Response<FeatureSchema>,
     ): Promise<void> {
         const { projectId, featureName } = req.params;
-        const data = req.body;
+        const { createdAt, ...data } = req.body;
         const userName = extractUsername(req);
         const created = await this.featureService.updateFeatureToggle(
             projectId,
@@ -396,7 +396,7 @@ export default class ProjectFeaturesController extends Controller {
             userName,
             featureName,
         );
-        res.status(200).json(created);
+        res.status(200).json(serializeDates(created));
     }
 
     async patchFeature(
@@ -415,7 +415,7 @@ export default class ProjectFeaturesController extends Controller {
             extractUsername(req),
             req.body,
         );
-        res.status(200).json(updated);
+        res.status(200).json(serializeDates(updated));
     }
 
     // TODO: validate projectId
@@ -444,7 +444,7 @@ export default class ProjectFeaturesController extends Controller {
             environment,
             featureName,
         );
-        res.status(200).json(environmentInfo);
+        res.status(200).json(serializeDates(environmentInfo));
     }
 
     async toggleEnvironmentOn(

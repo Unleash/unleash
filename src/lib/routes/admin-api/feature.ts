@@ -23,6 +23,7 @@ import {
     createRequestSchema,
     createResponseSchema,
 } from '../../openapi/operation';
+import { serializeDates } from '../../types/serialize-dates';
 
 const version = 1;
 
@@ -174,7 +175,7 @@ class FeatureController extends Controller {
         const features = await this.service.getFeatureToggles(query);
         res.json({
             version,
-            features: features,
+            features: serializeDates(features),
         });
     }
 

@@ -16,7 +16,10 @@ import { IFeatureToggleQuery } from '../../types/model';
 import FeatureTagService from '../../services/feature-tag-service';
 import { IAuthRequest } from '../unleash-types';
 import { DEFAULT_ENV } from '../../util/constants';
-import { FeaturesSchema } from '../../openapi/spec/features-schema';
+import {
+    featuresSchema,
+    FeaturesSchema,
+} from '../../openapi/spec/features-schema';
 import { TagSchema } from '../../openapi/spec/tag-schema';
 import { TagsSchema } from '../../openapi/spec/tags-schema';
 import {
@@ -24,11 +27,14 @@ import {
     createResponseSchema,
 } from '../../openapi/operation';
 import { serializeDates } from '../../types/serialize-dates';
+import { OpenApiService } from '../../services/openapi-service';
 
 const version = 1;
 
 class FeatureController extends Controller {
     private tagService: FeatureTagService;
+
+    private openApiService: OpenApiService;
 
     private service: FeatureToggleService;
 
@@ -45,6 +51,7 @@ class FeatureController extends Controller {
     ) {
         super(config);
         this.tagService = featureTagService;
+        this.openApiService = openApiService;
         this.service = featureToggleServiceV2;
 
         if (!config.disableLegacyFeaturesApi) {
@@ -173,7 +180,8 @@ class FeatureController extends Controller {
     ): Promise<void> {
         const query = await this.prepQuery(req.query);
         const features = await this.service.getFeatureToggles(query);
-        res.json({
+
+        this.openApiService.respondWithValidation(200, res, featuresSchema, {
             version,
             features: serializeDates(features),
         });

@@ -7,14 +7,20 @@ import { extractUsername } from '../../util/extract-user';
 import { DELETE_FEATURE, NONE, UPDATE_FEATURE } from '../../types/permissions';
 import FeatureToggleService from '../../services/feature-toggle-service';
 import { IAuthRequest } from '../unleash-types';
-import { FeaturesSchema } from '../../openapi/spec/features-schema';
+import {
+    featuresSchema,
+    FeaturesSchema,
+} from '../../openapi/spec/features-schema';
 import { createResponseSchema } from '../../openapi/operation';
 import { serializeDates } from '../../types/serialize-dates';
+import { OpenApiService } from '../../services/openapi-service';
 
 export default class ArchiveController extends Controller {
     private readonly logger: Logger;
 
     private featureService: FeatureToggleService;
+
+    private openApiService: OpenApiService;
 
     constructor(
         config: IUnleashConfig,
@@ -26,6 +32,7 @@ export default class ArchiveController extends Controller {
         super(config);
         this.logger = config.getLogger('/admin-api/archive.js');
         this.featureService = featureToggleServiceV2;
+        this.openApiService = openApiService;
 
         this.route({
             method: 'get',
@@ -70,8 +77,7 @@ export default class ArchiveController extends Controller {
         const features = await this.featureService.getMetadataForAllFeatures(
             true,
         );
-
-        res.json({
+        this.openApiService.respondWithValidation(200, res, featuresSchema, {
             version: 2,
             features: serializeDates(features),
         });
@@ -87,7 +93,7 @@ export default class ArchiveController extends Controller {
                 true,
                 projectId,
             );
-        res.json({
+        this.openApiService.respondWithValidation(200, res, featuresSchema, {
             version: 2,
             features: serializeDates(features),
         });

@@ -18,11 +18,17 @@ import {
 import { extractUsername } from '../../../util/extract-user';
 import { IAuthRequest } from '../../unleash-types';
 import { CreateFeatureSchema } from '../../../openapi/spec/create-feature-schema';
-import { FeatureSchema } from '../../../openapi/spec/feature-schema';
+import {
+    featureSchema,
+    FeatureSchema,
+} from '../../../openapi/spec/feature-schema';
 import { StrategySchema } from '../../../openapi/spec/strategy-schema';
 import { FeatureEnvironmentSchema } from '../../../openapi/spec/feature-environment-schema';
 import { ParametersSchema } from '../../../openapi/spec/parameters-schema';
-import { FeaturesSchema } from '../../../openapi/spec/features-schema';
+import {
+    featuresSchema,
+    FeaturesSchema,
+} from '../../../openapi/spec/features-schema';
 import { UpdateFeatureSchema } from '../../../openapi/spec/update-feature-schema';
 import { UpdateStrategySchema } from '../../../openapi/spec/update-strategy-schema';
 import { CreateStrategySchema } from '../../../openapi/spec/create-strategy-schema';
@@ -31,6 +37,7 @@ import {
     createResponseSchema,
 } from '../../../openapi/operation';
 import { serializeDates } from '../../../types/serialize-dates';
+import { OpenApiService } from '../../../services/openapi-service';
 
 interface FeatureStrategyParams {
     projectId: string;
@@ -66,6 +73,8 @@ type ProjectFeaturesServices = Pick<
 export default class ProjectFeaturesController extends Controller {
     private featureService: FeatureToggleService;
 
+    private openApiService: OpenApiService;
+
     private readonly logger: Logger;
 
     constructor(
@@ -74,6 +83,7 @@ export default class ProjectFeaturesController extends Controller {
     ) {
         super(config);
         this.featureService = featureToggleServiceV2;
+        this.openApiService = openApiService;
         this.logger = config.getLogger('/admin-api/project/features.ts');
 
         this.route({
@@ -329,15 +339,17 @@ export default class ProjectFeaturesController extends Controller {
         const features = await this.featureService.getFeatureOverview(
             projectId,
         );
-        res.json({ version: 1, features: serializeDates(features) });
+        this.openApiService.respondWithValidation(200, res, featuresSchema, {
+            version: 2,
+            features: serializeDates(features),
+        });
     }
 
     async cloneFeature(
         req: IAuthRequest<
             FeatureParams,
             any,
-            { name: string; replaceGroupId?: boolean },
-            any
+            { name: string; replaceGroupId?: boolean }
         >,
         res: Response<FeatureSchema>,
     ): Promise<void> {
@@ -351,7 +363,13 @@ export default class ProjectFeaturesController extends Controller {
             replaceGroupId,
             userName,
         );
-        res.status(201).json(serializeDates(created));
+
+        this.openApiService.respondWithValidation(
+            201,
+            res,
+            featureSchema,
+            serializeDates(created),
+        );
     }
 
     async createFeature(
@@ -367,7 +385,12 @@ export default class ProjectFeaturesController extends Controller {
             userName,
         );
 
-        res.status(201).json(serializeDates(created));
+        this.openApiService.respondWithValidation(
+            201,
+            res,
+            featureSchema,
+            serializeDates(created),
+        );
     }
 
     async getFeature(
@@ -396,7 +419,13 @@ export default class ProjectFeaturesController extends Controller {
             userName,
             featureName,
         );
-        res.status(200).json(serializeDates(created));
+
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            featureSchema,
+            serializeDates(created),
+        );
     }
 
     async patchFeature(
@@ -415,7 +444,12 @@ export default class ProjectFeaturesController extends Controller {
             extractUsername(req),
             req.body,
         );
-        res.status(200).json(serializeDates(updated));
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            featureSchema,
+            serializeDates(updated),
+        );
     }
 
     // TODO: validate projectId
@@ -444,7 +478,12 @@ export default class ProjectFeaturesController extends Controller {
             environment,
             featureName,
         );
-        res.status(200).json(serializeDates(environmentInfo));
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            featureSchema,
+            serializeDates(environmentInfo),
+        );
     }
 
     async toggleEnvironmentOn(

@@ -601,166 +601,310 @@ This event fires when you disable an environment for a feature. The `environment
 
 ### Strategy Events
 
-- strategy-created
-- strategy-deleted
-- strategy-deprecated
-- strategy-reactivated
-- strategy-updated
-- strategy-import
-- drop-strategies
+#### `strategy-created`
+
+This event fires when
+
+``` json
+
+```
+
+#### `strategy-deleted`
+
+This event fires when
+
+``` json
+
+```
+
+#### `strategy-deprecated`
+
+This event fires when
+
+``` json
+
+```
+
+#### `strategy-reactivated`
+
+This event fires when
+
+``` json
+
+```
+
+#### `strategy-updated`
+
+This event fires when
+
+``` json
+
+```
+
+#### `strategy-import`
+
+This event fires when
+
+``` json
+
+```
+
+#### `drop-strategies`
+
+This event fires when
+
+``` json
+
+```
+
 
 ### Context field events
 
-- context-field-created
-- context-field-updated
-- context-field-deleted
+#### `context-field-created`
+
+This event fires when
+
+``` json
+
+```
+
+#### `context-field-updated`
+
+This event fires when
+
+``` json
+
+```
+
+#### `context-field-deleted`
+
+This event fires when
+
+``` json
+
+```
+
 
 ### Project events
 
-- project-created
-- project-updated
-- project-deleted
-- project-import
-- drop-projects
+#### `project-created`
+
+This event fires when
+
+``` json
+
+```
+
+#### `project-updated`
+
+This event fires when
+
+``` json
+
+```
+
+#### `project-deleted`
+
+This event fires when
+
+``` json
+
+```
+
+#### `project-import`
+
+This event fires when
+
+``` json
+
+```
+
+#### `drop-projects`
+
+This event fires when
+
+``` json
+
+```
+
 
 ### Tag events
 
-- tag-created
-- tag-deleted
-- tag-import
-- drop-tags
+#### `tag-created`
+
+This event fires when
+
+``` json
+
+```
+
+#### `tag-deleted`
+
+This event fires when
+
+``` json
+
+```
+
+#### `tag-import`
+
+This event fires when
+
+``` json
+
+```
+
+#### `drop-tags`
+
+This event fires when
+
+``` json
+
+```
+
 
 
 ### Tag type events
 
-- tag-type-created
-- tag-type-deleted
-- tag-type-updated
-- tag-type-import
-- drop-tag-types
+#### `tag-type-created`
+
+This event fires when
+
+``` json
+
+```
+
+#### `tag-type-deleted`
+
+This event fires when
+
+``` json
+
+```
+
+#### `tag-type-updated`
+
+This event fires when
+
+``` json
+
+```
+
+#### `tag-type-import`
+
+This event fires when
+
+``` json
+
+```
+
+#### `drop-tag-types`
+
+This event fires when
+
+``` json
+
+```
+
 
 
 ### Addon events
 
-- addon-config-created
-- addon-config-updated
-- addon-config-deleted
+#### `addon-config-created`
+
+This event fires when
+
+``` json
+
+```
+
+#### `addon-config-updated`
+
+This event fires when
+
+``` json
+
+```
+
+#### `addon-config-deleted`
+
+This event fires when
+
+``` json
+
+```
+
 
 
 ### User events
 
-- user-created
-- user-updated
-- user-deleted
+#### `user-created`
+
+This event fires when
+
+``` json
+
+```
+
+#### `user-updated`
+
+This event fires when
+
+``` json
+
+```
+
+#### `user-deleted`
+
+This event fires when
+
+``` json
+
+```
+
 
 
 ### Environment events (Enterprise)
 
-- drop-environments
-- environment-import
+#### `drop-environments`
 
-**Response**
+This event fires when
 
-```json
-{
-	"version": 2,
-	"events": [{
-		"id": 187,
-		"type": "feature-metadata-updated",
-		"createdBy": "admin",
-		"createdAt": "2021-11-11T09:42:14.271Z",
-		"data": {
-			"name": "HelloEvents!",
-			"description": "Hello Events update!",
-			"type": "release",
-			"project": "default",
-			"stale": false,
-			"variants": [],
-			"createdAt": "2021-11-11T09:40:51.077Z",
-			"lastSeenAt": null
-		},
-		"preData": {
-			"name": "HelloEvents!",
-			"description": "Hello Events!",
-			"type": "release",
-			"project": "default",
-			"stale": false,
-			"variants": [],
-			"createdAt": "2021-11-11T09:40:51.077Z",
-			"lastSeenAt": null
-		},
-		"tags": [{
-			"value": "team-x",
-			"type": "simple"
-		}],
-		"featureName": "HelloEvents!",
-		"project": "default",
-		"environment": null
-	}, {
-		"id": 186,
-		"type": "feature-tagged",
-		"createdBy": "admin",
-		"createdAt": "2021-11-11T09:41:20.464Z",
-		"data": {
-			"type": "simple",
-			"value": "team-x"
-		},
-		"preData": null,
-		"tags": [],
-		"featureName": "HelloEvents!",
-		"project": null,
-		"environment": null
-	}, {
-		"id": 184,
-		"type": "feature-environment-enabled",
-		"createdBy": "admin",
-		"createdAt": "2021-11-11T09:41:03.782Z",
-		"data": null,
-		"preData": null,
-		"tags": [],
-		"featureName": "HelloEvents!",
-		"project": "default",
-		"environment": "default"
-	}, {
-		"id": 183,
-		"type": "feature-strategy-add",
-		"createdBy": "admin",
-		"createdAt": "2021-11-11T09:41:00.740Z",
-		"data": {
-			"id": "88e1df00-1951-452f-a063-6f5e18476f87",
-			"name": "flexibleRollout",
-			"constraints": [],
-			"parameters": {
-				"groupId": "HelloEvents!",
-				"rollout": 51,
-				"stickiness": "default"
-			}
-		},
-		"preData": null,
-		"tags": [],
-		"featureName": "HelloEvents!",
-		"project": "default",
-		"environment": "default"
-	}, {
-		"id": 182,
-		"type": "feature-created",
-		"createdBy": "admin",
-		"createdAt": "2021-11-11T09:40:51.083Z",
-		"data": {
-			"name": "HelloEvents!",
-			"description": "Hello Events!",
-			"type": "release",
-			"project": "default",
-			"stale": false,
-			"variants": [],
-			"createdAt": "2021-11-11T09:40:51.077Z",
-			"lastSeenAt": null
-		},
-		"preData": null,
-		"tags": [],
-		"featureName": "HelloEvents!",
-		"project": "default",
-		"environment": null
-	}]
-}
+``` json
+
+```
+
+#### `environment-import`
+
+This event fires when
+
+``` json
+
+```
+
+
+### Segment events
+
+#### `segment-created`
+
+This event fires when
+
+``` json
+
+```
+
+#### `segment-updated`
+
+This event fires when
+
+``` json
+
+```
+
+#### `segment-deleted`
+
+This event fires when
+
+``` json
+
 ```

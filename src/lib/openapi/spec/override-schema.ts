@@ -1,4 +1,4 @@
-import { createSchemaObject, CreateSchemaType } from '../types';
+import { createSchemaObject, CreateSchemaType } from '../schema';
 
 const schema = {
     type: 'object',
@@ -15,7 +15,6 @@ const schema = {
             },
         },
     },
-    'components/schemas': {},
 } as const;
 
 export type OverrideSchema = CreateSchemaType<typeof schema>;

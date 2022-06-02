@@ -1,4 +1,4 @@
-import { createSchemaObject, CreateSchemaType } from '../types';
+import { createSchemaObject, CreateSchemaType } from '../schema';
 import { parametersSchema } from './parameters-schema';
 import { constraintSchema } from './constraint-schema';
 
@@ -15,17 +15,9 @@ const schema = {
         },
         constraints: {
             type: 'array',
-            items: {
-                $ref: '#/components/schemas/constraintSchema',
-            },
+            items: constraintSchema,
         },
-        parameters: {
-            $ref: '#/components/schemas/parametersSchema',
-        },
-    },
-    'components/schemas': {
-        constraintSchema,
-        parametersSchema,
+        parameters: parametersSchema,
     },
 } as const;
 

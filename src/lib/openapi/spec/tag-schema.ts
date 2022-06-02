@@ -1,4 +1,4 @@
-import { createSchemaObject, CreateSchemaType } from '../types';
+import { createSchemaObject, CreateSchemaType } from '../schema';
 
 const schema = {
     type: 'object',
@@ -12,7 +12,6 @@ const schema = {
             type: 'string',
         },
     },
-    'components/schemas': {},
 } as const;
 
 export type TagSchema = CreateSchemaType<typeof schema>;

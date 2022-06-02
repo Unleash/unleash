@@ -1,4 +1,4 @@
-import { createSchemaObject, CreateSchemaType } from '../types';
+import { createSchemaObject, CreateSchemaType } from '../schema';
 import { overrideSchema } from './override-schema';
 
 const schema = {
@@ -32,13 +32,8 @@ const schema = {
         },
         overrides: {
             type: 'array',
-            items: {
-                $ref: '#/components/schemas/overrideSchema',
-            },
+            items: overrideSchema,
         },
-    },
-    'components/schemas': {
-        overrideSchema,
     },
 } as const;
 

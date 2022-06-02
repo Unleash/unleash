@@ -1,4 +1,4 @@
-import { createSchemaObject, CreateSchemaType } from '../types';
+import { createSchemaObject, CreateSchemaType } from '../schema';
 import { ALL_OPERATORS } from '../../util/constants';
 
 const schema = {
@@ -29,7 +29,6 @@ const schema = {
             type: 'string',
         },
     },
-    'components/schemas': {},
 } as const;
 
 export type ConstraintSchema = CreateSchemaType<typeof schema>;

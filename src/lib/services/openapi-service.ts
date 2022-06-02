@@ -3,7 +3,7 @@ import { Express, RequestHandler } from 'express';
 import { OpenAPIV3 } from 'openapi-types';
 import { IUnleashConfig } from '../types/option';
 import { createOpenApiSchema } from '../openapi';
-import { AdminApiOperation, ClientApiOperation } from '../openapi/types';
+import { AdminApiOperation, ClientApiOperation } from '../openapi/operation';
 
 export class OpenApiService {
     private readonly config: IUnleashConfig;

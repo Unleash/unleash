@@ -1,4 +1,4 @@
-import { createSchemaObject, CreateSchemaType } from '../types';
+import { createSchemaObject, CreateSchemaType } from '../schema';
 import { tagSchema } from './tag-schema';
 
 const schema = {
@@ -11,13 +11,8 @@ const schema = {
         },
         tags: {
             type: 'array',
-            items: {
-                $ref: '#/components/schemas/tagSchema',
-            },
+            items: tagSchema,
         },
-    },
-    'components/schemas': {
-        tagSchema,
     },
 } as const;
 

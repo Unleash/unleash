@@ -1,4 +1,4 @@
-import { createSchemaObject, CreateSchemaType } from '../types';
+import { createSchemaObject, CreateSchemaType } from '../schema';
 
 const schema = {
     type: 'object',
@@ -11,7 +11,6 @@ const schema = {
             type: 'boolean',
         },
     },
-    'components/schemas': {},
 } as const;
 
 export type CloneFeatureSchema = CreateSchemaType<typeof schema>;

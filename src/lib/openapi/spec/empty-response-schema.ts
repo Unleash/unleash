@@ -1,9 +1,8 @@
-import { createSchemaObject, CreateSchemaType } from '../types';
+import { createSchemaObject, CreateSchemaType } from '../schema';
 
 const schema = {
     type: 'object',
     description: 'OK',
-    'components/schemas': {},
 } as const;
 
 export type EmptyResponseSchema = CreateSchemaType<typeof schema>;

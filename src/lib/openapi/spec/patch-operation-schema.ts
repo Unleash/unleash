@@ -1,4 +1,4 @@
-import { createSchemaObject, CreateSchemaType } from '../types';
+import { createSchemaObject, CreateSchemaType } from '../schema';
 
 const schema = {
     type: 'object',
@@ -16,7 +16,6 @@ const schema = {
         },
         value: {},
     },
-    'components/schemas': {},
 } as const;
 
 export type PatchOperationSchema = CreateSchemaType<typeof schema>;

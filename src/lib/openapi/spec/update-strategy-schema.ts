@@ -1,4 +1,4 @@
-import { createSchemaObject, CreateSchemaType } from '../types';
+import { createSchemaObject, CreateSchemaType } from '../schema';
 import { strategySchemaDefinition } from './strategy-schema';
 
 const schema = {

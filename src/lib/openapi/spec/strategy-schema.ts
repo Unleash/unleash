@@ -1,4 +1,4 @@
-import { createSchemaObject, CreateSchemaType } from '../types';
+import { createSchemaObject, CreateSchemaType } from '../schema';
 import { constraintSchema } from './constraint-schema';
 import { parametersSchema } from './parameters-schema';
 
@@ -18,17 +18,9 @@ export const strategySchemaDefinition = {
         },
         constraints: {
             type: 'array',
-            items: {
-                $ref: '#/components/schemas/constraintSchema',
-            },
+            items: constraintSchema,
         },
-        parameters: {
-            $ref: '#/components/schemas/parametersSchema',
-        },
-    },
-    'components/schemas': {
-        constraintSchema,
-        parametersSchema,
+        parameters: parametersSchema,
     },
 } as const;
 

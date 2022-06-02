@@ -1,7 +1,5 @@
-import { createSchemaObject, CreateSchemaType } from '../types';
+import { createSchemaObject, CreateSchemaType } from '../schema';
 import { featureStrategySchema } from './feature-strategy-schema';
-import { constraintSchema } from './constraint-schema';
-import { parametersSchema } from './parameters-schema';
 
 let schema = {
     type: 'object',
@@ -22,15 +20,8 @@ let schema = {
         },
         strategies: {
             type: 'array',
-            items: {
-                $ref: '#/components/schemas/featureStrategySchema',
-            },
+            items: featureStrategySchema,
         },
-    },
-    'components/schemas': {
-        featureStrategySchema,
-        constraintSchema,
-        parametersSchema,
     },
 } as const;
 

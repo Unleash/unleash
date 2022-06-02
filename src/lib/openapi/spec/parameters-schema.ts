@@ -1,11 +1,10 @@
-import { createSchemaObject, CreateSchemaType } from '../types';
+import { createSchemaObject, CreateSchemaType } from '../schema';
 
 const schema = {
     type: 'object',
     additionalProperties: {
         type: 'string',
     },
-    'components/schemas': {},
 } as const;
 
 export type ParametersSchema = CreateSchemaType<typeof schema>;

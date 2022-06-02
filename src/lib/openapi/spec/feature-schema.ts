@@ -1,11 +1,7 @@
-import { createSchemaObject, CreateSchemaType } from '../types';
+import { createSchemaObject, CreateSchemaType } from '../schema';
 import { strategySchema } from './strategy-schema';
 import { variantSchema } from './variant-schema';
 import { featureEnvironmentSchema } from './feature-environment-schema';
-import { featureStrategySchema } from './feature-strategy-schema';
-import { constraintSchema } from './constraint-schema';
-import { parametersSchema } from './parameters-schema';
-import { overrideSchema } from './override-schema';
 
 const schema = {
     type: 'object',
@@ -48,31 +44,16 @@ const schema = {
         },
         environments: {
             type: 'array',
-            items: {
-                $ref: '#/components/schemas/featureEnvironmentSchema',
-            },
+            items: featureEnvironmentSchema,
         },
         strategies: {
             type: 'array',
-            items: {
-                $ref: '#/components/schemas/strategySchema',
-            },
+            items: strategySchema,
         },
         variants: {
             type: 'array',
-            items: {
-                $ref: '#/components/schemas/variantSchema',
-            },
+            items: variantSchema,
         },
-    },
-    'components/schemas': {
-        constraintSchema,
-        featureEnvironmentSchema,
-        featureStrategySchema,
-        overrideSchema,
-        parametersSchema,
-        strategySchema,
-        variantSchema,
     },
 } as const;
 

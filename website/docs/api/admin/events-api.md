@@ -195,6 +195,31 @@ This event fires when you create a feature. The `data` property contains the det
 
 #### `feature-deleted`
 
+``` json title="example event: feature-deleted"
+{
+  "id": 903,
+  "type": "feature-deleted",
+  "createdBy": "admin-account",
+  "createdAt": "2022-05-31T14:06:14.574Z",
+  "data": null,
+  "preData": {
+    "name": "new-toggle",
+    "type": "experiment",
+    "stale": false,
+    "project": "heartman-for-test",
+    "variants": [],
+    "createdAt": "2022-05-31T13:32:20.547Z",
+    "lastSeenAt": null,
+    "description": "Toggle description",
+    "impressionData": true
+  },
+  "tags": [],
+  "featureName": "new-toggle",
+  "project": "heartman-for-test",
+  "environment": null
+}
+```
+
 #### `feature-updated`
 :::caution Deprecation notice
 This event type was replaced by more granular event types in Unleash 4.3. From Unleash 4.3 onwards, you'll need to use the events listed later in this section instead.
@@ -229,22 +254,350 @@ This event fires when a feature gets updated in some way. The `data` property co
 ```
 
 #### `feature-metadata-updated`
+
+This event fires when a feature's metadata (its description, toggle type, or impression data settings) are changed. The `data` property contains the new toggle data. The `preData` property contains the toggle's previous data.
+
+The below example changes the toggle's type from *release* to *experiment*.
+
+``` json title="example event: feature-metadata-updated"
+{
+  "id": 901,
+  "type": "feature-metadata-updated",
+  "createdBy": "thomas@getunleash.ai",
+  "createdAt": "2022-05-31T13:35:25.244Z",
+  "data": {
+    "name": "new-toggle",
+    "description": "Toggle description",
+    "type": "experiment",
+    "project": "heartman-for-test",
+    "stale": false,
+    "variants": [],
+    "createdAt": "2022-05-31T13:32:20.547Z",
+    "lastSeenAt": null,
+    "impressionData": true
+  },
+  "preData": {
+    "name": "new-toggle",
+    "type": "release",
+    "stale": false,
+    "project": "heartman-for-test",
+    "variants": [],
+    "createdAt": "2022-05-31T13:32:20.547Z",
+    "lastSeenAt": null,
+    "description": "Toggle description",
+    "impressionData": true
+  },
+  "tags": [],
+  "featureName": "new-toggle",
+  "project": "heartman-for-test",
+  "environment": null
+}
+```
+
 #### `feature-project-change`
+
+This event fires when you move a feature from one project to another.
+
+[... explain more in depth]
+
 #### `feature-archived`
+
+This event fires when you archive a toggle.
+
+``` json title="example event: feature-archived"
+{
+  "id": 902,
+  "type": "feature-archived",
+  "createdBy": "thomas@getunleash.ai",
+  "createdAt": "2022-05-31T14:04:38.661Z",
+  "data": null,
+  "preData": null,
+  "tags": [],
+  "featureName": "new-toggle",
+  "project": "heartman-for-test",
+  "environment": null
+}
+```
+
 #### `feature-revived`
+
+This event fires when you revive an archived feature toggle (when you take a toggle out from the archive).
+
+``` json title="example-event: feature-revived"
+{
+  "id": 914,
+  "type": "feature-revived",
+  "createdBy": "thomas@getunleash.ai",
+  "createdAt": "2022-06-01T09:57:10.719Z",
+  "data": null,
+  "preData": null,
+  "tags": [],
+  "featureName": "new-toggle",
+  "project": "heartmans-other-project",
+  "environment": null
+}
+```
+
 #### `feature-import`
+
+This event fires when you import a feature ...
+
 #### `feature-tagged`
+
+This event fires when you add a tag to a feature. The `data` property contains the new tag.
+
+``` json title="example event: feature-tagged"
+{
+  "id": 897,
+  "type": "feature-tagged",
+  "createdBy": "thomas@getunleash.ai",
+  "createdAt": "2022-05-31T13:06:31.047Z",
+  "data": {
+    "type": "simple",
+    "value": "tag2"
+  },
+  "preData": null,
+  "tags": [],
+  "featureName": "heartmans-constrained-toggle",
+  "project": null,
+  "environment": null
+}
+```
+
 #### `feature-tag-import`
+
+This event fires when you import a tag. ...
+
 #### `feature-strategy-update`
+
+This event fires when you update a feature strategy. The `data` property contains the new strategy configuration. The `preData` property contains the previous strategy configuration.
+
+``` json title="example event: feature-strategy-update"
+{
+  "id": 920,
+  "type": "feature-strategy-update",
+  "createdBy": "thomas@getunleash.ai",
+  "createdAt": "2022-06-01T10:03:11.549Z",
+  "data": {
+    "id": "3f4bf713-696c-43a4-8ce7-d6c607108858",
+    "name": "flexibleRollout",
+    "constraints": [],
+    "parameters": {
+      "groupId": "new-toggle",
+      "rollout": "32",
+      "stickiness": "default"
+    }
+  },
+  "preData": {
+    "id": "3f4bf713-696c-43a4-8ce7-d6c607108858",
+    "name": "flexibleRollout",
+    "parameters": {
+      "groupId": "new-toggle",
+      "rollout": "67",
+      "stickiness": "default"
+    },
+    "constraints": []
+  },
+  "tags": [],
+  "featureName": "new-toggle",
+  "project": "heartmans-other-project",
+  "environment": "default"
+}
+```
+
 #### `feature-strategy-add`
+
+This event fires when you add a strategy to a feature. The `data` property contains the configuration for the new strategy.
+
+``` json title="example event: feature-strategy-add"
+{
+  "id": 919,
+  "type": "feature-strategy-add",
+  "createdBy": "thomas@getunleash.ai",
+  "createdAt": "2022-06-01T10:03:08.290Z",
+  "data": {
+    "id": "3f4bf713-696c-43a4-8ce7-d6c607108858",
+    "name": "flexibleRollout",
+    "constraints": [],
+    "parameters": {
+      "groupId": "new-toggle",
+      "rollout": "67",
+      "stickiness": "default"
+    }
+  },
+  "preData": null,
+  "tags": [],
+  "featureName": "new-toggle",
+  "project": "heartmans-other-project",
+  "environment": "default"
+}
+```
+
 #### `feature-strategy-remove`
+
+This event fires when you remove a strategy from a feature. The `preData` contains the configuration of the strategy that was removed.
+
+``` json title="example event: feature-strategy-remove"
+{
+  "id": 918,
+  "type": "feature-strategy-remove",
+  "createdBy": "thomas@getunleash.ai",
+  "createdAt": "2022-06-01T10:03:00.229Z",
+  "data": null,
+  "preData": {
+    "id": "9591090e-acb0-4088-8958-21faaeb7147d",
+    "name": "default",
+    "parameters": {},
+    "constraints": []
+  },
+  "tags": [],
+  "featureName": "new-toggle",
+  "project": "heartmans-other-project",
+  "environment": "default"
+}
+```
+
 #### `drop-feature-tags`
+
+This event fires when you drop all existing tags as part of a configuration import.
+
+...
+
 #### `feature-untagged`
+
+This event fires when you remove a tag from a toggle. The `data` property contains the tag that was removed.
+
+``` json title="example event: feature-untagged"
+{
+  "id": 893,
+  "type": "feature-untagged",
+  "createdBy": "thomas@getunleash.ai",
+  "createdAt": "2022-05-31T12:58:10.241Z",
+  "data": {
+    "type": "simple",
+    "value": "thisisatag"
+  },
+  "preData": null,
+  "tags": [],
+  "featureName": "heartmans-constrained-toggle",
+  "project": null,
+  "environment": null
+}
+```
+
 #### `feature-stale-on`
+
+This event fires when you mark a feature as stale.
+
+``` json title="example event: feature-stale-on"
+{
+  "id": 926,
+  "type": "feature-stale-on",
+  "createdBy": "thomas@getunleash.ai",
+  "createdAt": "2022-06-01T10:10:46.737Z",
+  "data": null,
+  "preData": null,
+  "tags": [
+    {
+      "value": "tag",
+      "type": "simple"
+    },
+    {
+      "value": "tog",
+      "type": "simple"
+    }
+  ],
+  "featureName": "new-toggle",
+  "project": "heartmans-other-project",
+  "environment": null
+}
+```
+
 #### `feature-stale-off`
+
+This event fires when you mark a stale feature as no longer being stale.
+
+``` json title="example event: feature-stale-off"
+{
+  "id": 928,
+  "type": "feature-stale-off",
+  "createdBy": "thomas@getunleash.ai",
+  "createdAt": "2022-06-01T10:10:52.790Z",
+  "data": null,
+  "preData": null,
+  "tags": [
+    {
+      "value": "tag",
+      "type": "simple"
+    },
+    {
+      "value": "tog",
+      "type": "simple"
+    }
+  ],
+  "featureName": "new-toggle",
+  "project": "heartmans-other-project",
+  "environment": null
+}
+```
+
 #### `drop-features`
+
 #### `feature-environment-enabled`
+
+This event fires when you enable an environment for a feature. The `environment` property contains the name of the environment.
+
+``` json title="example event: feature-environment-enabled"
+{
+  "id": 930,
+  "type": "feature-environment-enabled",
+  "createdBy": "thomas@getunleash.ai",
+  "createdAt": "2022-06-02T12:09:03.045Z",
+  "data": null,
+  "preData": null,
+  "tags": [
+    {
+      "value": "tag",
+      "type": "simple"
+    },
+    {
+      "value": "tog",
+      "type": "simple"
+    }
+  ],
+  "featureName": "new-toggle",
+  "project": "heartmans-other-project",
+  "environment": "development"
+}
+```
+
 #### `feature-environment-disabled`
+
+This event fires when you disable an environment for a feature. The `environment` property contains the name of the environment.
+
+``` json title="example event: feature-environment-disabled"
+{
+  "id": 931,
+  "type": "feature-environment-disabled",
+  "createdBy": "thomas@getunleash.ai",
+  "createdAt": "2022-06-02T12:09:04.469Z",
+  "data": null,
+  "preData": null,
+  "tags": [
+    {
+      "value": "tag",
+      "type": "simple"
+    },
+    {
+      "value": "tog",
+      "type": "simple"
+    }
+  ],
+  "featureName": "new-toggle",
+  "project": "heartmans-other-project",
+  "environment": "development"
+}
+```
 
 ### Strategy Events
 

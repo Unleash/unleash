@@ -195,6 +195,8 @@ This event fires when you create a feature. The `data` property contains the det
 
 #### `feature-deleted`
 
+This event fires when you delete a feature toggle. The `preData` property contains the deleted toggle data.
+
 ``` json title="example event: feature-deleted"
 {
   "id": 903,
@@ -599,11 +601,11 @@ This event fires when you disable an environment for a feature. The `environment
 }
 ```
 
-### Custom strategy events
+### Strategy events
 
 #### `strategy-created`
 
-This event fires when
+This event fires when you create a strategy. The `data` property contains the strategy configuration.
 
 ``` json
 
@@ -611,7 +613,7 @@ This event fires when
 
 #### `strategy-deleted`
 
-This event fires when
+This event fires when you delete a strategy. The `data` property contains the name of the deleted strategy.
 
 ``` json
 
@@ -619,7 +621,7 @@ This event fires when
 
 #### `strategy-deprecated`
 
-This event fires when
+This event fires when you deprecate a strategy. The `data` property contains the name of the deprecated strategy.
 
 ``` json
 
@@ -627,7 +629,8 @@ This event fires when
 
 #### `strategy-reactivated`
 
-This event fires when
+This event fires when you bring reactivate a deprecated strategy.
+The `data` property contains the name of the reactivated strategy.
 
 ``` json
 
@@ -635,7 +638,8 @@ This event fires when
 
 #### `strategy-updated`
 
-This event fires when
+This event fires when you change a strategy's configuration.
+The `data` property contains the new strategy configuration.
 
 ``` json
 
@@ -643,7 +647,7 @@ This event fires when
 
 #### `strategy-import`
 
-This event fires when
+This event fires when you import a strategy ...
 
 ``` json
 
@@ -662,7 +666,8 @@ This event fires when
 
 #### `context-field-created`
 
-This event fires when
+This event fires when you create a context field.
+The `data` property contains the context field configuration.
 
 ``` json
 
@@ -670,7 +675,8 @@ This event fires when
 
 #### `context-field-updated`
 
-This event fires when
+This event fires when you update a context field.
+The `data` property contains the new context field configuration.
 
 ``` json
 
@@ -678,7 +684,8 @@ This event fires when
 
 #### `context-field-deleted`
 
-This event fires when
+This event fires when you delete a context field.
+The `data` property contains the name of the deleted context field.
 
 ``` json
 

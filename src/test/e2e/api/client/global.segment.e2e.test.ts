@@ -38,6 +38,7 @@ const fetchFeatures = (): Promise<IFeatureToggleClient[]> => {
 const fetchClientResponse = (): Promise<ApiResponse> => {
     return app.request
         .get(FEATURES_CLIENT_BASE_PATH)
+        .set('Unleash-Client-Spec', '4.2.0')
         .expect(200)
         .then((res) => res.body);
 };

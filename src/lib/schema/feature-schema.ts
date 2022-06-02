@@ -116,6 +116,7 @@ export const querySchema = joi
         project: joi.array().allow(null).items(nameType).optional(),
         namePrefix: joi.string().allow(null).optional(),
         environment: joi.string().allow(null).optional(),
+        inlineSegmentConstraints: joi.boolean().optional(),
     })
     .options({ allowUnknown: false, stripUnknown: true, abortEarly: false });
 

@@ -139,9 +139,12 @@ export default class FeatureToggleClientStore
                     FeatureToggleClientStore.rowToStrategy(r),
                 );
             }
-            if (this.inlineSegmentConstraints && r.segment_id) {
+            if (featureQuery?.inlineSegmentConstraints && r.segment_id) {
                 this.addSegmentToStrategy(feature, r);
-            } else if (!this.inlineSegmentConstraints && r.segment_id) {
+            } else if (
+                !featureQuery?.inlineSegmentConstraints &&
+                r.segment_id
+            ) {
                 this.addSegmentIdsToStrategy(feature, r);
             }
             feature.impressionData = r.impression_data;

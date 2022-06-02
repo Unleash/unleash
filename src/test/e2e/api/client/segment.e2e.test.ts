@@ -12,6 +12,7 @@ import {
     DEFAULT_SEGMENT_VALUES_LIMIT,
     DEFAULT_STRATEGY_SEGMENTS_LIMIT,
 } from '../../../../lib/util/segments';
+import { collectIds } from '../../../../lib/util/collect-ids';
 
 let db: ITestDb;
 let app: IUnleashTest;
@@ -35,13 +36,6 @@ const fetchClientFeatures = (): Promise<IFeatureToggleClient[]> => {
         .get(FEATURES_CLIENT_BASE_PATH)
         .expect(200)
         .then((res) => res.body.features);
-};
-
-const fetchGlobalSegments = (): Promise<ISegment[] | undefined> => {
-    return app.request
-        .get(FEATURES_CLIENT_BASE_PATH)
-        .expect(200)
-        .then((res) => res.body.segments);
 };
 
 const createSegment = (postData: object): Promise<unknown> => {
@@ -102,7 +96,7 @@ afterEach(async () => {
     await db.stores.featureToggleStore.deleteAll();
 });
 
-test('should add segments to features as constraints', async () => {
+test('should inline segment constraints into features by default', async () => {
     const constraints = mockConstraints();
     await createSegment({ name: 'S1', constraints });
     await createSegment({ name: 'S2', constraints });
@@ -194,7 +188,7 @@ test('should validate feature strategy segment limit', async () => {
     );
 });
 
-test('should not return segments in base of toggle response if inline is enabled', async () => {
+test('should only return segments to clients with the segments capability', async () => {
     const constraints = mockConstraints();
     await createSegment({ name: 'S1', constraints });
     await createSegment({ name: 'S2', constraints });
@@ -204,11 +198,30 @@ test('should not return segments in base of toggle response if inline is enabled
     await createFeatureToggle(mockFeatureToggle());
     const [feature1, feature2] = await fetchFeatures();
     const [segment1, segment2] = await fetchSegments();
+    const segmentIds = collectIds([segment1, segment2]);
 
     await addSegmentToStrategy(segment1.id, feature1.strategies[0].id);
     await addSegmentToStrategy(segment2.id, feature1.strategies[0].id);
     await addSegmentToStrategy(segment2.id, feature2.strategies[0].id);
 
-    const globalSegments = await fetchGlobalSegments();
-    expect(globalSegments).toBe(undefined);
+    const unknownClientResponse = await app.request
+        .get(FEATURES_CLIENT_BASE_PATH)
+        .expect(200)
+        .then((res) => res.body);
+    const unknownClientConstraints = unknownClientResponse.features
+        .flatMap((f) => f.strategies)
+        .flatMap((s) => s.constraints);
+    expect(unknownClientResponse.segments).toEqual(undefined);
+    expect(unknownClientConstraints.length).toEqual(15);
+
+    const supportedClientResponse = await app.request
+        .get(FEATURES_CLIENT_BASE_PATH)
+        .set('Unleash-Client-Spec', '4.2.0')
+        .expect(200)
+        .then((res) => res.body);
+    const supportedClientConstraints = supportedClientResponse.features
+        .flatMap((f) => f.strategies)
+        .flatMap((s) => s.constraints);
+    expect(collectIds(supportedClientResponse.segments)).toEqual(segmentIds);
+    expect(supportedClientConstraints.length).toEqual(0);
 });

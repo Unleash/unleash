@@ -13,6 +13,7 @@ import ApiUser from '../../types/api-user';
 import { ALL, isAllProjects } from '../../types/models/api-token';
 import { SegmentService } from '../../services/segment-service';
 import { FeatureConfigurationClient } from '../../types/stores/feature-strategies-store';
+import { ClientSpecService } from '../../services/client-spec-service';
 
 const version = 2;
 
@@ -28,25 +29,29 @@ export default class FeatureController extends Controller {
 
     private segmentService: SegmentService;
 
+    private clientSpecService: ClientSpecService;
+
     private readonly cache: boolean;
 
     private cachedFeatures: any;
-
-    private useGlobalSegments: boolean;
 
     constructor(
         {
             featureToggleServiceV2,
             segmentService,
-        }: Pick<IUnleashServices, 'featureToggleServiceV2' | 'segmentService'>,
+            clientSpecService,
+        }: Pick<
+            IUnleashServices,
+            'featureToggleServiceV2' | 'segmentService' | 'clientSpecService'
+        >,
         config: IUnleashConfig,
     ) {
         super(config);
         const { experimental } = config;
         this.featureToggleServiceV2 = featureToggleServiceV2;
         this.segmentService = segmentService;
+        this.clientSpecService = clientSpecService;
         this.logger = config.getLogger('client-api/feature.js');
-        this.useGlobalSegments = !this.config.inlineSegmentConstraints;
 
         this.get('/', this.getAll);
         this.get('/:featureName', this.getFeatureToggle);
@@ -69,20 +74,12 @@ export default class FeatureController extends Controller {
         }
     }
 
-    private async resolveSegments() {
-        if (this.useGlobalSegments) {
-            return this.segmentService.getActive();
-        }
-        return Promise.resolve([]);
-    }
-
     private async resolveFeaturesAndSegments(
         query?: IFeatureToggleQuery,
     ): Promise<[FeatureConfigurationClient[], ISegment[]]> {
-        let segments = this.resolveSegments();
         return Promise.all([
             this.featureToggleServiceV2.getClientFeatures(query),
-            segments,
+            this.segmentService.getActive(),
         ]);
     }
 
@@ -101,8 +98,14 @@ export default class FeatureController extends Controller {
             }
         }
 
-        const q = { ...query, ...override };
-        return this.prepQuery(q);
+        const inlineSegmentConstraints =
+            !this.clientSpecService.requestSupportsSpec(req, 'segments');
+
+        return this.prepQuery({
+            ...query,
+            ...override,
+            inlineSegmentConstraints,
+        });
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -118,10 +121,18 @@ export default class FeatureController extends Controller {
         project,
         namePrefix,
         environment,
+        inlineSegmentConstraints,
     }: IFeatureToggleQuery): Promise<IFeatureToggleQuery> {
-        if (!tag && !project && !namePrefix && !environment) {
+        if (
+            !tag &&
+            !project &&
+            !namePrefix &&
+            !environment &&
+            !inlineSegmentConstraints
+        ) {
             return null;
         }
+
         const tagQuery = this.paramToArray(tag);
         const projectQuery = this.paramToArray(project);
         const query = await querySchema.validateAsync({
@@ -129,38 +140,30 @@ export default class FeatureController extends Controller {
             project: projectQuery,
             namePrefix,
             environment,
+            inlineSegmentConstraints,
         });
+
         if (query.tag) {
             query.tag = query.tag.map((q) => q.split(':'));
         }
+
         return query;
     }
 
     async getAll(req: IAuthRequest, res: Response): Promise<void> {
-        const featureQuery = await this.resolveQuery(req);
-        let features, segments;
-        if (this.cache) {
-            [features, segments] = await this.cachedFeatures(featureQuery);
-        } else {
-            features = await this.featureToggleServiceV2.getClientFeatures(
-                featureQuery,
-            );
-            segments = await this.resolveSegments();
-        }
+        const query = await this.resolveQuery(req);
 
-        const response = {
-            version,
-            features,
-            query: featureQuery,
-        };
+        const [features, segments] = this.cache
+            ? await this.cachedFeatures(query)
+            : await Promise.all([
+                  this.featureToggleServiceV2.getClientFeatures(query),
+                  this.segmentService.getActive(),
+              ]);
 
-        if (this.useGlobalSegments) {
-            res.json({
-                ...response,
-                segments,
-            });
+        if (this.clientSpecService.requestSupportsSpec(req, 'segments')) {
+            res.json({ version, features, query, segments });
         } else {
-            res.json(response);
+            res.json({ version, features, query });
         }
     }
 

@@ -10,7 +10,7 @@ import {
     SimpleAuthSettings,
 } from '../../types/settings/simple-auth-settings';
 
-interface IUiConfigResponse extends IUIConfig {
+interface IUIConfigResponse extends IUIConfig {
     version: string;
     unleashUrl: string;
     baseUriPath: string;
@@ -27,7 +27,7 @@ class ConfigController extends Controller {
     private settingService: SettingService;
 
     private uiConfig: Omit<
-        IUiConfigResponse,
+        IUIConfigResponse,
         'versionInfo' | 'disablePasswordAuth'
     >;
 
@@ -57,7 +57,7 @@ class ConfigController extends Controller {
 
     async getUIConfig(
         req: Request,
-        res: Response<IUiConfigResponse>,
+        res: Response<IUIConfigResponse>,
     ): Promise<void> {
         const config = this.uiConfig;
         const simpleAuthSettings =

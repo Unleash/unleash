@@ -46,12 +46,11 @@ import { IFeatureStrategiesStore } from '../types/stores/feature-strategies-stor
 import { IEnvironmentStore } from '../types/stores/environment-store';
 import { IFeatureEnvironmentStore } from '../types/stores/feature-environment-store';
 import { IUnleashStores } from '../types/stores';
-import { DEFAULT_ENV } from '../util/constants';
+import { DEFAULT_ENV, ALL_ENVS } from '../util/constants';
 import { GLOBAL_ENV } from '../types/environment';
 import { ISegmentStore } from '../types/stores/segment-store';
 import { PartialSome } from '../types/partial';
 import { IApiTokenStore } from 'lib/types/stores/api-token-store';
-import { ALL_ENVS } from './access-service';
 
 export interface IBackupOption {
     includeFeatureToggles: boolean;
@@ -444,7 +443,9 @@ export default class StateService {
             apiTokens
                 .filter((apiToken) => !(apiToken.environment === ALL_ENVS))
                 .filter((apiToken) => !envNames.includes(apiToken.environment))
-                .forEach((apiToken) => this.apiTokenStore.delete(apiToken.secret));           
+                .forEach((apiToken) =>
+                    this.apiTokenStore.delete(apiToken.secret),
+                );
         }
     }
 

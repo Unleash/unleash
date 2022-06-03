@@ -2,10 +2,7 @@ import dbInit, { ITestDb } from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
 
 // eslint-disable-next-line import/no-unresolved
-import {
-    AccessService,
-    ALL_PROJECTS,
-} from '../../../lib/services/access-service';
+import { AccessService } from '../../../lib/services/access-service';
 
 import * as permissions from '../../../lib/types/permissions';
 import { RoleName } from '../../../lib/types/model';
@@ -14,6 +11,7 @@ import FeatureToggleService from '../../../lib/services/feature-toggle-service';
 import ProjectService from '../../../lib/services/project-service';
 import { createTestConfig } from '../../config/test-config';
 import { DEFAULT_PROJECT } from '../../../lib/types/project';
+import { ALL_PROJECTS } from '../../../lib/util/constants';
 
 let db: ITestDb;
 let stores: IUnleashStores;

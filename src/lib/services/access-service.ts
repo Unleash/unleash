@@ -24,12 +24,9 @@ import NameExistsError from '../error/name-exists-error';
 import { IEnvironmentStore } from 'lib/types/stores/environment-store';
 import RoleInUseError from '../error/role-in-use-error';
 import { roleSchema } from '../schema/role-schema';
-import { CUSTOM_ROLE_TYPE } from '../util/constants';
+import { CUSTOM_ROLE_TYPE, ALL_PROJECTS, ALL_ENVS } from '../util/constants';
 import { DEFAULT_PROJECT } from '../types/project';
 import InvalidOperationError from '../error/invalid-operation-error';
-
-export const ALL_PROJECTS = '*';
-export const ALL_ENVS = '*';
 
 const { ADMIN } = permissions;
 

@@ -41,7 +41,6 @@ export default class VariantsController extends Controller {
         this.route({
             method: 'get',
             path: PREFIX,
-            acceptAnyContentType: true,
             permission: NONE,
             handler: this.getVariants,
             middleware: [
@@ -55,7 +54,6 @@ export default class VariantsController extends Controller {
         this.route({
             method: 'patch',
             path: PREFIX,
-            acceptAnyContentType: true,
             permission: UPDATE_FEATURE_VARIANTS,
             handler: this.patchVariants,
             middleware: [
@@ -70,7 +68,6 @@ export default class VariantsController extends Controller {
         this.route({
             method: 'put',
             path: PREFIX,
-            acceptAnyContentType: true,
             permission: UPDATE_FEATURE_VARIANTS,
             handler: this.overwriteVariants,
             middleware: [

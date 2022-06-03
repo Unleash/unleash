@@ -660,6 +660,7 @@ This event fires when you disable an environment for a feature. The `environment
 ### `drop-features`
 
 This event fires when you delete existing features as part of an import job.
+The `data.name` property will always be `"all-features"`.
 
 ``` json title="example event: drop-features"
 {
@@ -682,6 +683,7 @@ This event fires when you delete existing features as part of an import job.
 ### `drop-feature-tags`
 
 This event fires when you drop all existing tags as part of a configuration import.
+The `data.name` property will always be `"all-feature-tags"`.
 
 ``` json title="example event: drop-feature-tags"
 {
@@ -858,6 +860,8 @@ This event fires when you import a strategy as part of an import job. The `data`
 ### `drop-strategies`
 
 This event fires when you delete existing strategies as part of an important job.
+The `data.name` property will always be `"all-strategies"`.
+
 
 ``` json title="example event: drop-strategies"
 {
@@ -1071,6 +1075,8 @@ This event fires when you import a project. The `data` property contains the pro
 ### `drop-projects`
 
 This event fires when you delete existing projects as part of an import job.
+The `data.name` property will always be `"all-projects"`.
+
 
 ``` json title="example event: drop-projects"
 {
@@ -1163,6 +1169,8 @@ This event fires when you import a tag as part of an import job. The `data` prop
 ### `drop-tags`
 
 This event fires when you delete existing tags as part of an import job.
+The `data.name` property will always be `"all-tags"`.
+
 
 ``` json title="example event: drop-tags"
 {
@@ -1280,6 +1288,8 @@ This event fires when you import a tag type as part of an import job. The `data`
 ### `drop-tag-types`
 
 This event fires when you drop all existing tag types as part of a configuration import.
+The `data.name` property will always be `"all-tag-types"`.
+
 
 ``` json title="example event: drop-tag-types"
 {
@@ -1478,6 +1488,7 @@ This event fires when you import an environment (custom or otherwise) as part of
 ### `drop-environments`
 
 This event fires when you delete existing environments as part of an import job.
+The `data.name` property will always be `"all-environments"`.
 
 ``` json title="example event: drop-environments"
 {

@@ -99,7 +99,7 @@ test('returns three archived toggles', async () => {
 });
 
 test('returns three archived toggles with archivedAt', async () => {
-    expect.assertions(1);
+    expect.assertions(2);
     return app.request
         .get('/api/admin/archive/features')
         .expect('Content-Type', /json/)

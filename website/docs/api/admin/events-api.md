@@ -1303,7 +1303,7 @@ This event fires when you drop all existing tag types as part of a configuration
 ### `addon-config-created`
 
 This event fires when you create an addon configuration.
-The `data` property contains the addon's ID and provider type.
+The `data` property contains the provider type.
 
 ``` json title="example event: addon-config-created"
 {

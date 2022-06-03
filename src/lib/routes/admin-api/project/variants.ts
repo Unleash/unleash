@@ -42,6 +42,7 @@ export default class VariantsController extends Controller {
             method: 'get',
             path: PREFIX,
             permission: NONE,
+            acceptAnyContentType: true,
             handler: this.getVariants,
             middleware: [
                 openApiService.validPath({

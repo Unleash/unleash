@@ -533,7 +533,6 @@ Object {
           "name",
           "weight",
           "weightType",
-          "stickiness",
         ],
         "type": "object",
       },
@@ -1508,6 +1507,142 @@ Object {
               },
             },
             "description": "strategyResponse",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/projects/{projectId}/features/{featureName}/variants": Object {
+      "get": Object {
+        "operationId": "getFeatureVariants",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+          Object {
+            "in": "path",
+            "name": "featureName",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/featureVariantsSchema",
+                },
+              },
+            },
+            "description": "featureVariantResponse",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+      "patch": Object {
+        "operationId": "patchFeatureVariants",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+          Object {
+            "in": "path",
+            "name": "featureName",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "items": Object {
+                  "$ref": "#/components/schemas/patchOperationSchema",
+                },
+                "type": "array",
+              },
+            },
+          },
+          "required": true,
+        },
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/featureVariantsSchema",
+                },
+              },
+            },
+            "description": "featureVariantResponse",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+      "put": Object {
+        "operationId": "overwriteFeatureVariants",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+          Object {
+            "in": "path",
+            "name": "featureName",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "items": Object {
+                  "$ref": "#/components/schemas/variantSchema",
+                },
+                "type": "array",
+              },
+            },
+          },
+          "required": true,
+        },
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/featureVariantsSchema",
+                },
+              },
+            },
+            "description": "featureVariantResponse",
           },
         },
         "tags": Array [

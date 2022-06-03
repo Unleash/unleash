@@ -4,7 +4,7 @@ import { overrideSchema } from './override-schema';
 const schema = {
     type: 'object',
     additionalProperties: false,
-    required: ['name', 'weight', 'weightType', 'stickiness'],
+    required: ['name', 'weight', 'weightType'],
     properties: {
         name: {
             type: 'string',

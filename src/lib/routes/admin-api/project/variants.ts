@@ -5,10 +5,14 @@ import { IUnleashConfig } from '../../../types/option';
 import { IUnleashServices } from '../../../types';
 import { Request, Response } from 'express';
 import { Operation } from 'fast-json-patch';
-import { UPDATE_FEATURE_VARIANTS } from '../../../types/permissions';
+import { NONE, UPDATE_FEATURE_VARIANTS } from '../../../types/permissions';
 import { IVariant } from '../../../types/model';
 import { extractUsername } from '../../../util/extract-user';
 import { IAuthRequest } from '../../unleash-types';
+import { featureVariantsResponse } from '../../../openapi/spec/feature-variants-response';
+import { patchRequest } from '../../../openapi/spec/patch-request';
+import { updateFeatureVariantsRequest } from '../../../openapi/spec/update-feature-variants-request';
+import { FeatureVariantsSchema } from '../../../openapi/spec/feature-variants-schema';
 
 const PREFIX = '/:projectId/features/:featureName/variants';
 
@@ -19,7 +23,6 @@ interface FeatureParams extends ProjectParam {
 interface ProjectParam {
     projectId: string;
 }
-
 export default class VariantsController extends Controller {
     private logger: Logger;
 
@@ -29,19 +32,61 @@ export default class VariantsController extends Controller {
         config: IUnleashConfig,
         {
             featureToggleService,
-        }: Pick<IUnleashServices, 'featureToggleService'>,
+            openApiService,
+        }: Pick<IUnleashServices, 'featureToggleService' | 'openApiService'>,
     ) {
         super(config);
         this.logger = config.getLogger('admin-api/project/variants.ts');
         this.featureService = featureToggleService;
-        this.get(PREFIX, this.getVariants);
-        this.patch(PREFIX, this.patchVariants, UPDATE_FEATURE_VARIANTS);
-        this.put(PREFIX, this.overwriteVariants, UPDATE_FEATURE_VARIANTS);
+        this.route({
+            method: 'get',
+            path: PREFIX,
+            acceptAnyContentType: true,
+            permission: NONE,
+            handler: this.getVariants,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'getFeatureVariants',
+                    responses: { 200: featureVariantsResponse },
+                }),
+            ],
+        });
+        this.route({
+            method: 'patch',
+            path: PREFIX,
+            acceptAnyContentType: true,
+            permission: UPDATE_FEATURE_VARIANTS,
+            handler: this.patchVariants,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'patchFeatureVariants',
+                    requestBody: patchRequest,
+                    responses: { 200: featureVariantsResponse },
+                }),
+            ],
+        });
+        this.route({
+            method: 'put',
+            path: PREFIX,
+            acceptAnyContentType: true,
+            permission: UPDATE_FEATURE_VARIANTS,
+            handler: this.overwriteVariants,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'overwriteFeatureVariants',
+                    requestBody: updateFeatureVariantsRequest,
+                    responses: { 200: featureVariantsResponse },
+                }),
+            ],
+        });
     }
 
     async getVariants(
         req: Request<FeatureParams, any, any, any>,
-        res: Response,
+        res: Response<FeatureVariantsSchema>,
     ): Promise<void> {
         const { featureName } = req.params;
         const variants = await this.featureService.getVariants(featureName);
@@ -50,7 +95,7 @@ export default class VariantsController extends Controller {
 
     async patchVariants(
         req: IAuthRequest<FeatureParams, any, Operation[]>,
-        res: Response,
+        res: Response<FeatureVariantsSchema>,
     ): Promise<void> {
         const { projectId, featureName } = req.params;
         const userName = extractUsername(req);
@@ -69,7 +114,7 @@ export default class VariantsController extends Controller {
 
     async overwriteVariants(
         req: IAuthRequest<FeatureParams, any, IVariant[], any>,
-        res: Response,
+        res: Response<FeatureVariantsSchema>,
     ): Promise<void> {
         const { projectId, featureName } = req.params;
         const userName = extractUsername(req);

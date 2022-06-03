@@ -316,3 +316,19 @@ Unleash builds directly on the [node-postgres library](https://node-postgres.com
 - Check the default values of connection pool about idle session handling.
 
 - If you have a network component which closes idle sessions on the TCP layer, make sure that the connection pool's `idleTimeoutMillis` setting is lower than the `timespan` setting. If it isn't, then the network component will close the connection.
+
+### Proxying requests from Unleash
+
+You can configure proxy services that intercept all outgoing requests from Unleash. This lets you use the Microsoft Teams or the Webhook addon for external Services, even if the internet can only be reached via a proxy on your machine or container (for example if restricted by a firewall or similiar).
+
+As an example, here's how you could do it using the [node-global-proxy](https://www.npmjs.com/package/node-global-proxy) package:
+```
+const proxy = require("node-global-proxy").default;
+
+proxy.setConfig({
+    http: `http://user:password@url:8080`,
+  });
+proxy.start();
+```
+
+Using above code-snippet, every outgoing request from unleash or its addons will be subsequently routed through set proxy.

@@ -125,9 +125,9 @@ The list of events related to the given toggle.
 
 </details>
 
-# Event types
+## Event type description
 
-Unleash emits a large number of different events (described in more detail in the following sections). The exact fields an event contains varies from event to event, but they all conform to the following TypeScript interface before being transformed to JSON:
+Unleash emits a large number of different events (described in more detail in the next sections). The exact fields an event contains varies from event to event, but they all conform to the following TypeScript interface before being transformed to JSON:
 
 ```ts
 

@@ -172,13 +172,13 @@ This event fires when you create a feature. The `data` property contains the det
 {
   "id": 899,
   "type": "feature-created",
-  "createdBy": "thomas@getunleash.ai",
+  "createdBy": "user@company.com",
   "createdAt": "2022-05-31T13:32:20.560Z",
   "data": {
     "name": "new-toggle",
     "description": "Toggle description",
     "type": "release",
-    "project": "heartman-for-test",
+    "project": "my-project",
     "stale": false,
     "variants": [],
     "createdAt": "2022-05-31T13:32:20.547Z",
@@ -188,7 +188,7 @@ This event fires when you create a feature. The `data` property contains the det
   "preData": null,
   "tags": [],
   "featureName": "new-toggle",
-  "project": "heartman-for-test",
+  "project": "my-project",
   "environment": null
 }
 ```
@@ -208,7 +208,7 @@ This event fires when you delete a feature toggle. The `preData` property contai
     "name": "new-toggle",
     "type": "experiment",
     "stale": false,
-    "project": "heartman-for-test",
+    "project": "my-project",
     "variants": [],
     "createdAt": "2022-05-31T13:32:20.547Z",
     "lastSeenAt": null,
@@ -217,7 +217,7 @@ This event fires when you delete a feature toggle. The `preData` property contai
   },
   "tags": [],
   "featureName": "new-toggle",
-  "project": "heartman-for-test",
+  "project": "my-project",
   "environment": null
 }
 ```
@@ -234,13 +234,13 @@ This event fires when a feature gets updated in some way. The `data` property co
 {
   "id": 899,
   "type": "feature-updated",
-  "createdBy": "thomas@getunleash.ai",
+  "createdBy": "user@company.com",
   "createdAt": "2022-05-31T13:32:20.560Z",
   "data": {
     "name": "new-toggle",
     "description": "Toggle description",
     "type": "release",
-    "project": "heartman-for-test",
+    "project": "my-project",
     "stale": false,
     "variants": [],
     "createdAt": "2022-05-31T13:32:20.547Z",
@@ -250,7 +250,7 @@ This event fires when a feature gets updated in some way. The `data` property co
   "preData": null,
   "tags": [],
   "featureName": "new-toggle",
-  "project": "heartman-for-test",
+  "project": "my-project",
   "environment": null
 }
 ```
@@ -265,13 +265,13 @@ The below example changes the toggle's type from *release* to *experiment*.
 {
   "id": 901,
   "type": "feature-metadata-updated",
-  "createdBy": "thomas@getunleash.ai",
+  "createdBy": "user@company.com",
   "createdAt": "2022-05-31T13:35:25.244Z",
   "data": {
     "name": "new-toggle",
     "description": "Toggle description",
     "type": "experiment",
-    "project": "heartman-for-test",
+    "project": "my-project",
     "stale": false,
     "variants": [],
     "createdAt": "2022-05-31T13:32:20.547Z",
@@ -282,7 +282,7 @@ The below example changes the toggle's type from *release* to *experiment*.
     "name": "new-toggle",
     "type": "release",
     "stale": false,
-    "project": "heartman-for-test",
+    "project": "my-project",
     "variants": [],
     "createdAt": "2022-05-31T13:32:20.547Z",
     "lastSeenAt": null,
@@ -291,7 +291,7 @@ The below example changes the toggle's type from *release* to *experiment*.
   },
   "tags": [],
   "featureName": "new-toggle",
-  "project": "heartman-for-test",
+  "project": "my-project",
   "environment": null
 }
 ```
@@ -310,13 +310,13 @@ This event fires when you archive a toggle.
 {
   "id": 902,
   "type": "feature-archived",
-  "createdBy": "thomas@getunleash.ai",
+  "createdBy": "user@company.com",
   "createdAt": "2022-05-31T14:04:38.661Z",
   "data": null,
   "preData": null,
   "tags": [],
   "featureName": "new-toggle",
-  "project": "heartman-for-test",
+  "project": "my-project",
   "environment": null
 }
 ```
@@ -329,13 +329,13 @@ This event fires when you revive an archived feature toggle (when you take a tog
 {
   "id": 914,
   "type": "feature-revived",
-  "createdBy": "thomas@getunleash.ai",
+  "createdBy": "user@company.com",
   "createdAt": "2022-06-01T09:57:10.719Z",
   "data": null,
   "preData": null,
   "tags": [],
   "featureName": "new-toggle",
-  "project": "heartmans-other-project",
+  "project": "my-other-project",
   "environment": null
 }
 ```
@@ -352,7 +352,7 @@ This event fires when you add a tag to a feature. The `data` property contains t
 {
   "id": 897,
   "type": "feature-tagged",
-  "createdBy": "thomas@getunleash.ai",
+  "createdBy": "user@company.com",
   "createdAt": "2022-05-31T13:06:31.047Z",
   "data": {
     "type": "simple",
@@ -360,7 +360,7 @@ This event fires when you add a tag to a feature. The `data` property contains t
   },
   "preData": null,
   "tags": [],
-  "featureName": "heartmans-constrained-toggle",
+  "featureName": "example-feature-name",
   "project": null,
   "environment": null
 }
@@ -378,7 +378,7 @@ This event fires when you update a feature strategy. The `data` property contain
 {
   "id": 920,
   "type": "feature-strategy-update",
-  "createdBy": "thomas@getunleash.ai",
+  "createdBy": "user@company.com",
   "createdAt": "2022-06-01T10:03:11.549Z",
   "data": {
     "id": "3f4bf713-696c-43a4-8ce7-d6c607108858",
@@ -402,7 +402,7 @@ This event fires when you update a feature strategy. The `data` property contain
   },
   "tags": [],
   "featureName": "new-toggle",
-  "project": "heartmans-other-project",
+  "project": "my-other-project",
   "environment": "default"
 }
 ```
@@ -415,7 +415,7 @@ This event fires when you add a strategy to a feature. The `data` property conta
 {
   "id": 919,
   "type": "feature-strategy-add",
-  "createdBy": "thomas@getunleash.ai",
+  "createdBy": "user@company.com",
   "createdAt": "2022-06-01T10:03:08.290Z",
   "data": {
     "id": "3f4bf713-696c-43a4-8ce7-d6c607108858",
@@ -430,7 +430,7 @@ This event fires when you add a strategy to a feature. The `data` property conta
   "preData": null,
   "tags": [],
   "featureName": "new-toggle",
-  "project": "heartmans-other-project",
+  "project": "my-other-project",
   "environment": "default"
 }
 ```
@@ -443,7 +443,7 @@ This event fires when you remove a strategy from a feature. The `preData` contai
 {
   "id": 918,
   "type": "feature-strategy-remove",
-  "createdBy": "thomas@getunleash.ai",
+  "createdBy": "user@company.com",
   "createdAt": "2022-06-01T10:03:00.229Z",
   "data": null,
   "preData": {
@@ -454,7 +454,7 @@ This event fires when you remove a strategy from a feature. The `preData` contai
   },
   "tags": [],
   "featureName": "new-toggle",
-  "project": "heartmans-other-project",
+  "project": "my-other-project",
   "environment": "default"
 }
 ```
@@ -473,7 +473,7 @@ This event fires when you remove a tag from a toggle. The `data` property contai
 {
   "id": 893,
   "type": "feature-untagged",
-  "createdBy": "thomas@getunleash.ai",
+  "createdBy": "user@company.com",
   "createdAt": "2022-05-31T12:58:10.241Z",
   "data": {
     "type": "simple",
@@ -481,7 +481,7 @@ This event fires when you remove a tag from a toggle. The `data` property contai
   },
   "preData": null,
   "tags": [],
-  "featureName": "heartmans-constrained-toggle",
+  "featureName": "example-feature-name",
   "project": null,
   "environment": null
 }
@@ -495,7 +495,7 @@ This event fires when you mark a feature as stale.
 {
   "id": 926,
   "type": "feature-stale-on",
-  "createdBy": "thomas@getunleash.ai",
+  "createdBy": "user@company.com",
   "createdAt": "2022-06-01T10:10:46.737Z",
   "data": null,
   "preData": null,
@@ -510,7 +510,7 @@ This event fires when you mark a feature as stale.
     }
   ],
   "featureName": "new-toggle",
-  "project": "heartmans-other-project",
+  "project": "my-other-project",
   "environment": null
 }
 ```
@@ -523,7 +523,7 @@ This event fires when you mark a stale feature as no longer being stale.
 {
   "id": 928,
   "type": "feature-stale-off",
-  "createdBy": "thomas@getunleash.ai",
+  "createdBy": "user@company.com",
   "createdAt": "2022-06-01T10:10:52.790Z",
   "data": null,
   "preData": null,
@@ -538,7 +538,7 @@ This event fires when you mark a stale feature as no longer being stale.
     }
   ],
   "featureName": "new-toggle",
-  "project": "heartmans-other-project",
+  "project": "my-other-project",
   "environment": null
 }
 ```
@@ -553,7 +553,7 @@ This event fires when you enable an environment for a feature. The `environment`
 {
   "id": 930,
   "type": "feature-environment-enabled",
-  "createdBy": "thomas@getunleash.ai",
+  "createdBy": "user@company.com",
   "createdAt": "2022-06-02T12:09:03.045Z",
   "data": null,
   "preData": null,
@@ -568,7 +568,7 @@ This event fires when you enable an environment for a feature. The `environment`
     }
   ],
   "featureName": "new-toggle",
-  "project": "heartmans-other-project",
+  "project": "my-other-project",
   "environment": "development"
 }
 ```
@@ -581,7 +581,7 @@ This event fires when you disable an environment for a feature. The `environment
 {
   "id": 931,
   "type": "feature-environment-disabled",
-  "createdBy": "thomas@getunleash.ai",
+  "createdBy": "user@company.com",
   "createdAt": "2022-06-02T12:09:04.469Z",
   "data": null,
   "preData": null,
@@ -596,7 +596,7 @@ This event fires when you disable an environment for a feature. The `environment
     }
   ],
   "featureName": "new-toggle",
-  "project": "heartmans-other-project",
+  "project": "my-other-project",
   "environment": "development"
 }
 ```
@@ -611,7 +611,7 @@ This event fires when you create a strategy. The `data` property contains the st
 {
   "id": 932,
   "type": "strategy-created",
-  "createdBy": "thomas@getunleash.ai",
+  "createdBy": "user@company.com",
   "createdAt": "2022-06-02T12:20:52.111Z",
   "data": {
     "name": "new-strategy",
@@ -636,7 +636,7 @@ This event fires when you delete a strategy. The `data` property contains the na
 {
   "id": 936,
   "type": "strategy-deleted",
-  "createdBy": "thomas@getunleash.ai",
+  "createdBy": "user@company.com",
   "createdAt": "2022-06-02T12:22:01.302Z",
   "data": {
     "name": "new-strategy"
@@ -657,7 +657,7 @@ This event fires when you deprecate a strategy. The `data` property contains the
 {
   "id": 934,
   "type": "strategy-deprecated",
-  "createdBy": "thomas@getunleash.ai",
+  "createdBy": "user@company.com",
   "createdAt": "2022-06-02T12:21:45.041Z",
   "data": {
     "name": "new-strategy"
@@ -679,7 +679,7 @@ The `data` property contains the name of the reactivated strategy.
 {
   "id": 935,
   "type": "strategy-reactivated",
-  "createdBy": "thomas@getunleash.ai",
+  "createdBy": "user@company.com",
   "createdAt": "2022-06-02T12:21:49.010Z",
   "data": {
     "name": "new-strategy"
@@ -701,7 +701,7 @@ The `data` property contains the new strategy configuration.
 {
   "id": 933,
   "type": "strategy-updated",
-  "createdBy": "thomas@getunleash.ai",
+  "createdBy": "user@company.com",
   "createdAt": "2022-06-02T12:21:23.741Z",
   "data": {
     "name": "new-strategy",
@@ -746,7 +746,7 @@ The `data` property contains the context field configuration.
 {
   "id": 937,
   "type": "context-field-created",
-  "createdBy": "thomas@getunleash.ai",
+  "createdBy": "user@company.com",
   "createdAt": "2022-06-02T13:17:17.499Z",
   "data": {
     "name": "new-context-field",
@@ -771,7 +771,7 @@ The `data` property contains the new context field configuration.
 {
   "id": 939,
   "type": "context-field-updated",
-  "createdBy": "thomas@getunleash.ai",
+  "createdBy": "user@company.com",
   "createdAt": "2022-06-02T13:19:19.422Z",
   "data": {
     "name": "new-context-field",
@@ -805,7 +805,7 @@ The `data` property contains the name of the deleted context field.
 {
   "id": 940,
   "type": "context-field-deleted",
-  "createdBy": "thomas@getunleash.ai",
+  "createdBy": "user@company.com",
   "createdAt": "2022-06-02T13:20:41.386Z",
   "data": {
     "name": "new-context-field"
@@ -831,17 +831,17 @@ The `data` property contains the project configuration.
 {
   "id": 905,
   "type": "project-created",
-  "createdBy": "thomas@getunleash.ai",
+  "createdBy": "user@company.com",
   "createdAt": "2022-05-31T14:16:14.498Z",
   "data": {
-    "id": "heartmans-other-project",
-    "name": "heartman's other project",
-    "description": "a project for heartman's testing and doc work"
+    "id": "my-other-project",
+    "name": "my other project",
+    "description": "a project for important work"
   },
   "preData": null,
   "tags": [],
   "featureName": null,
-  "project": "heartmans-other-project",
+  "project": "my-other-project",
   "environment": null
 }
 ```
@@ -856,24 +856,24 @@ The `preData` property contains the previous project configuration.
 {
   "id": 941,
   "type": "project-updated",
-  "createdBy": "thomas@getunleash.ai",
+  "createdBy": "user@company.com",
   "createdAt": "2022-06-02T13:23:55.025Z",
   "data": {
-    "id": "heartmans-other-project",
-    "name": "heartman's other project",
-    "description": "a project for heartman's testing and doc work!"
+    "id": "my-other-project",
+    "name": "my other project",
+    "description": "a project for important work!"
   },
   "preData": {
-    "id": "heartmans-other-project",
-    "name": "heartman's other project",
+    "id": "my-other-project",
+    "name": "my other project",
     "health": 50,
     "createdAt": "2022-05-31T14:16:14.483Z",
     "updatedAt": "2022-06-02T12:30:48.095Z",
-    "description": "a project for heartman's testing and doc work"
+    "description": "a project for important work"
   },
   "tags": [],
   "featureName": null,
-  "project": "heartmans-other-project",
+  "project": "my-other-project",
   "environment": null
 }
 ```
@@ -887,13 +887,13 @@ The `project` property contains the name of the deleted project.
 {
   "id": 944,
   "type": "project-deleted",
-  "createdBy": "thomas@getunleash.ai",
+  "createdBy": "user@company.com",
   "createdAt": "2022-06-02T13:25:53.820Z",
   "data": null,
   "preData": null,
   "tags": [],
   "featureName": null,
-  "project": "heartmans-other-project",
+  "project": "my-other-project",
   "environment": null
 }
 ```
@@ -925,7 +925,7 @@ This event fires when you create a new tag. The `data` property contains the tag
 {
   "id": 959,
   "type": "feature-tagged",
-  "createdBy": "thomas@getunleash.ai",
+  "createdBy": "user@company.com",
   "createdAt": "2022-06-03T10:13:39.401Z",
   "data": {
     "type": "heartag",
@@ -947,7 +947,7 @@ This event fires when you delete a tag. The `data` property contains the tag tha
 {
   "id": 957,
   "type": "tag-deleted",
-  "createdBy": "heartman-admin-testing",
+  "createdBy": "user@company.com",
   "createdAt": "2022-06-03T10:12:17.310Z",
   "data": {
     "type": "heartag",
@@ -990,7 +990,7 @@ The `data` property contains the tag type configuration.
 {
   "id": 945,
   "type": "tag-type-created",
-  "createdBy": "thomas@getunleash.ai",
+  "createdBy": "user@company.com",
   "createdAt": "2022-06-02T13:27:01.235Z",
   "data": {
     "name": "new-tag-type",
@@ -1014,7 +1014,7 @@ The `data` property contains the name of the deleted tag type.
 {
   "id": 947,
   "type": "tag-type-deleted",
-  "createdBy": "thomas@getunleash.ai",
+  "createdBy": "user@company.com",
   "createdAt": "2022-06-02T13:27:37.277Z",
   "data": {
     "name": "new-tag-type"
@@ -1036,7 +1036,7 @@ The `data` property contains the new tag type configuration.
 {
   "id": 946,
   "type": "tag-type-updated",
-  "createdBy": "thomas@getunleash.ai",
+  "createdBy": "user@company.com",
   "createdAt": "2022-06-02T13:27:31.126Z",
   "data": {
     "name": "new-tag-type",
@@ -1079,7 +1079,7 @@ The `data` property contains the addon's ID and provider type.
 {
   "id": 960,
   "type": "addon-config-created",
-  "createdBy": "thomas@getunleash.ai",
+  "createdBy": "user@company.com",
   "createdAt": "2022-06-03T10:15:45.040Z",
   "data": {
     "provider": "webhook"
@@ -1101,7 +1101,7 @@ The `data` property contains the addon's ID and provider type.
 {
   "id": 961,
   "type": "addon-config-updated",
-  "createdBy": "thomas@getunleash.ai",
+  "createdBy": "user@company.com",
   "createdAt": "2022-06-03T10:16:11.732Z",
   "data": {
     "id": "2",
@@ -1124,7 +1124,7 @@ The `data` property contains the addon's ID.
 {
   "id": 964,
   "type": "addon-config-deleted",
-  "createdBy": "thomas@getunleash.ai",
+  "createdBy": "user@company.com",
   "createdAt": "2022-06-03T10:16:59.723Z",
   "data": {
     "id": "2"
@@ -1149,7 +1149,7 @@ This event fires when you create a new user. The `data` property contains the us
 {
   "id": 965,
   "type": "user-created",
-  "createdBy": "thomas@getunleash.ai",
+  "createdBy": "user@company.com",
   "createdAt": "2022-06-03T10:23:47.713Z",
   "data": {
     "id": 44,
@@ -1172,7 +1172,7 @@ This event fires when you update a user. The `data` property contains the update
 {
   "id": 967,
   "type": "user-updated",
-  "createdBy": "thomas@getunleash.ai",
+  "createdBy": "user@company.com",
   "createdAt": "2022-06-03T10:24:26.301Z",
   "data": {
     "id": 44,
@@ -1199,7 +1199,7 @@ This event fires when you delete a user. The `preData` property contains the del
 {
   "id": 968,
   "type": "user-deleted",
-  "createdBy": "thomas@getunleash.ai",
+  "createdBy": "user@company.com",
   "createdAt": "2022-06-03T10:24:49.153Z",
   "data": null,
   "preData": {
@@ -1245,7 +1245,7 @@ This event fires when you create a segment. The `data` property contains the new
 {
   "id": 969,
   "type": "segment-created",
-  "createdBy": "thomas@getunleash.ai",
+  "createdBy": "user@company.com",
   "createdAt": "2022-06-03T10:29:43.977Z",
   "data": {
     "id": 5,
@@ -1264,7 +1264,7 @@ This event fires when you create a segment. The `data` property contains the new
         "caseInsensitive": false
       }
     ],
-    "createdBy": "thomas@getunleash.ai",
+    "createdBy": "user@company.com",
     "createdAt": "2022-06-03T10:29:43.974Z"
   },
   "preData": null,
@@ -1283,21 +1283,21 @@ This event fires when you update a segment's configuration. The `data` property 
 {
   "id": 970,
   "type": "segment-updated",
-  "createdBy": "thomas@getunleash.ai",
+  "createdBy": "user@company.com",
   "createdAt": "2022-06-03T10:29:59.892Z",
   "data": {
     "id": 5,
     "name": "new segment",
     "description": "this segment is for events",
     "constraints": [],
-    "createdBy": "thomas@getunleash.ai",
+    "createdBy": "user@company.com",
     "createdAt": "2022-06-03T10:29:43.974Z"
   },
   "preData": {
     "id": 5,
     "name": "new segment",
     "createdAt": "2022-06-03T10:29:43.974Z",
-    "createdBy": "thomas@getunleash.ai",
+    "createdBy": "user@company.com",
     "constraints": [
       {
         "values": [
@@ -1328,7 +1328,7 @@ This event fires when you delete a segment.
 {
   "id": 971,
   "type": "segment-deleted",
-  "createdBy": "thomas@getunleash.ai",
+  "createdBy": "user@company.com",
   "createdAt": "2022-06-03T10:30:08.128Z",
   "data": {},
   "preData": null,

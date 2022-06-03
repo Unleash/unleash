@@ -45,6 +45,7 @@ export interface FeatureToggleDTO {
     type?: string;
     stale?: boolean;
     archived?: boolean;
+    archivedAt?: Date;
     createdAt?: Date;
     impressionData?: boolean;
 }
@@ -52,7 +53,6 @@ export interface FeatureToggleDTO {
 export interface FeatureToggle extends FeatureToggleDTO {
     project: string;
     lastSeenAt?: Date;
-    createdAt?: Date;
     variants?: IVariant[];
 }
 

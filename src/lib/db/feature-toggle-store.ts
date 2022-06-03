@@ -17,6 +17,8 @@ const FEATURE_COLUMNS = [
     'created_at',
     'impression_data',
     'last_seen_at',
+    'archived',
+    'archived_at',
 ];
 
 export interface FeaturesTable {
@@ -29,6 +31,8 @@ export interface FeaturesTable {
     last_seen_at?: Date;
     created_at?: Date;
     impression_data: boolean;
+    archived?: boolean;
+    archived_at?: Date;
 }
 
 const TABLE = 'features';
@@ -227,9 +231,10 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
     }
 
     async archive(name: string): Promise<FeatureToggle> {
+        const now = new Date();
         const row = await this.db(TABLE)
             .where({ name })
-            .update({ archived: true })
+            .update({ archived: true, archived_at: now })
             .returning(FEATURE_COLUMNS);
         return this.rowToFeature(row[0]);
     }
@@ -243,7 +248,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
     async revive(name: string): Promise<FeatureToggle> {
         const row = await this.db(TABLE)
             .where({ name })
-            .update({ archived: false })
+            .update({ archived: false, archived_at: null })
             .returning(FEATURE_COLUMNS);
         return this.rowToFeature(row[0]);
     }

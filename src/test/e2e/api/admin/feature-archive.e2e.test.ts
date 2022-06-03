@@ -98,6 +98,18 @@ test('returns three archived toggles', async () => {
         });
 });
 
+test('returns three archived toggles with archivedAt', async () => {
+    expect.assertions(1);
+    return app.request
+        .get('/api/admin/archive/features')
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.features.length === 3).toBe(true);
+            expect(res.body.features[0].archivedAt).toBeTruthy();
+        });
+});
+
 test('revives a feature by name', async () => {
     return app.request
         .post('/api/admin/archive/revive/featureArchivedX')

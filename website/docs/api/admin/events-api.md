@@ -608,7 +608,24 @@ This event fires when you disable an environment for a feature. The `environment
 This event fires when you create a strategy. The `data` property contains the strategy configuration.
 
 ``` json
-
+{
+  "id": 932,
+  "type": "strategy-created",
+  "createdBy": "thomas@getunleash.ai",
+  "createdAt": "2022-06-02T12:20:52.111Z",
+  "data": {
+    "name": "new-strategy",
+    "description": "this strategy does ...",
+    "parameters": [],
+    "editable": true,
+    "deprecated": false
+  },
+  "preData": null,
+  "tags": [],
+  "featureName": null,
+  "project": null,
+  "environment": null
+}
 ```
 
 #### `strategy-deleted`
@@ -616,7 +633,20 @@ This event fires when you create a strategy. The `data` property contains the st
 This event fires when you delete a strategy. The `data` property contains the name of the deleted strategy.
 
 ``` json
-
+{
+  "id": 936,
+  "type": "strategy-deleted",
+  "createdBy": "thomas@getunleash.ai",
+  "createdAt": "2022-06-02T12:22:01.302Z",
+  "data": {
+    "name": "new-strategy"
+  },
+  "preData": null,
+  "tags": [],
+  "featureName": null,
+  "project": null,
+  "environment": null
+}
 ```
 
 #### `strategy-deprecated`
@@ -624,7 +654,20 @@ This event fires when you delete a strategy. The `data` property contains the na
 This event fires when you deprecate a strategy. The `data` property contains the name of the deprecated strategy.
 
 ``` json
-
+{
+  "id": 934,
+  "type": "strategy-deprecated",
+  "createdBy": "thomas@getunleash.ai",
+  "createdAt": "2022-06-02T12:21:45.041Z",
+  "data": {
+    "name": "new-strategy"
+  },
+  "preData": null,
+  "tags": [],
+  "featureName": null,
+  "project": null,
+  "environment": null
+}
 ```
 
 #### `strategy-reactivated`
@@ -633,7 +676,20 @@ This event fires when you bring reactivate a deprecated strategy.
 The `data` property contains the name of the reactivated strategy.
 
 ``` json
-
+{
+  "id": 935,
+  "type": "strategy-reactivated",
+  "createdBy": "thomas@getunleash.ai",
+  "createdAt": "2022-06-02T12:21:49.010Z",
+  "data": {
+    "name": "new-strategy"
+  },
+  "preData": null,
+  "tags": [],
+  "featureName": null,
+  "project": null,
+  "environment": null
+}
 ```
 
 #### `strategy-updated`
@@ -642,7 +698,24 @@ This event fires when you change a strategy's configuration.
 The `data` property contains the new strategy configuration.
 
 ``` json
-
+{
+  "id": 933,
+  "type": "strategy-updated",
+  "createdBy": "thomas@getunleash.ai",
+  "createdAt": "2022-06-02T12:21:23.741Z",
+  "data": {
+    "name": "new-strategy",
+    "description": "this strategy does something else!",
+    "parameters": [],
+    "editable": true,
+    "deprecated": false
+  },
+  "preData": null,
+  "tags": [],
+  "featureName": null,
+  "project": null,
+  "environment": null
+}
 ```
 
 #### `strategy-import`
@@ -670,7 +743,23 @@ This event fires when you create a context field.
 The `data` property contains the context field configuration.
 
 ``` json
-
+{
+  "id": 937,
+  "type": "context-field-created",
+  "createdBy": "thomas@getunleash.ai",
+  "createdAt": "2022-06-02T13:17:17.499Z",
+  "data": {
+    "name": "new-context-field",
+    "description": "this context field is for describing events",
+    "legalValues": [],
+    "stickiness": false
+  },
+  "preData": null,
+  "tags": [],
+  "featureName": null,
+  "project": null,
+  "environment": null
+}
 ```
 
 #### `context-field-updated`
@@ -679,7 +768,32 @@ This event fires when you update a context field.
 The `data` property contains the new context field configuration.
 
 ``` json
-
+{
+  "id": 939,
+  "type": "context-field-updated",
+  "createdBy": "thomas@getunleash.ai",
+  "createdAt": "2022-06-02T13:19:19.422Z",
+  "data": {
+    "name": "new-context-field",
+    "description": "this context field is for describing events",
+    "legalValues": [
+      {
+        "value": "0fcf7d07-276c-41e1-a207-e62876d9c949",
+        "description": "Red team"
+      },
+      {
+        "value": "176ab647-4d50-41bf-afe0-f8b856d9bbb9",
+        "description": "Blue team"
+      }
+    ],
+    "stickiness": false
+  },
+  "preData": null,
+  "tags": [],
+  "featureName": null,
+  "project": null,
+  "environment": null
+}
 ```
 
 #### `context-field-deleted`
@@ -688,7 +802,20 @@ This event fires when you delete a context field.
 The `data` property contains the name of the deleted context field.
 
 ``` json
-
+{
+  "id": 940,
+  "type": "context-field-deleted",
+  "createdBy": "thomas@getunleash.ai",
+  "createdAt": "2022-06-02T13:20:41.386Z",
+  "data": {
+    "name": "new-context-field"
+  },
+  "preData": null,
+  "tags": [],
+  "featureName": null,
+  "project": null,
+  "environment": null
+}
 ```
 
 
@@ -696,26 +823,79 @@ The `data` property contains the name of the deleted context field.
 
 #### `project-created`
 
-This event fires when
+This event fires when you create a project.
+The `data` property contains the project configuration.
+
 
 ``` json
-
+{
+  "id": 905,
+  "type": "project-created",
+  "createdBy": "thomas@getunleash.ai",
+  "createdAt": "2022-05-31T14:16:14.498Z",
+  "data": {
+    "id": "heartmans-other-project",
+    "name": "heartman's other project",
+    "description": "a project for heartman's testing and doc work"
+  },
+  "preData": null,
+  "tags": [],
+  "featureName": null,
+  "project": "heartmans-other-project",
+  "environment": null
+}
 ```
 
 #### `project-updated`
 
-This event fires when
+This event fires when you update a project's configuration.
+The `data` property contains the new project configuration.
+The `preData` property contains the previous project configuration.
 
 ``` json
-
+{
+  "id": 941,
+  "type": "project-updated",
+  "createdBy": "thomas@getunleash.ai",
+  "createdAt": "2022-06-02T13:23:55.025Z",
+  "data": {
+    "id": "heartmans-other-project",
+    "name": "heartman's other project",
+    "description": "a project for heartman's testing and doc work!"
+  },
+  "preData": {
+    "id": "heartmans-other-project",
+    "name": "heartman's other project",
+    "health": 50,
+    "createdAt": "2022-05-31T14:16:14.483Z",
+    "updatedAt": "2022-06-02T12:30:48.095Z",
+    "description": "a project for heartman's testing and doc work"
+  },
+  "tags": [],
+  "featureName": null,
+  "project": "heartmans-other-project",
+  "environment": null
+}
 ```
 
 #### `project-deleted`
 
-This event fires when
+This event fires when you delete a project.
+The `project` property contains the name of the deleted project.
 
 ``` json
-
+{
+  "id": 944,
+  "type": "project-deleted",
+  "createdBy": "thomas@getunleash.ai",
+  "createdAt": "2022-06-02T13:25:53.820Z",
+  "data": null,
+  "preData": null,
+  "tags": [],
+  "featureName": null,
+  "project": "heartmans-other-project",
+  "environment": null
+}
 ```
 
 #### `project-import`
@@ -739,18 +919,46 @@ This event fires when
 
 #### `tag-created`
 
-This event fires when
+This event fires when you create a new tag. The `data` property contains the tag that was created.
 
 ``` json
-
+{
+  "id": 959,
+  "type": "feature-tagged",
+  "createdBy": "thomas@getunleash.ai",
+  "createdAt": "2022-06-03T10:13:39.401Z",
+  "data": {
+    "type": "heartag",
+    "value": "tag-value"
+  },
+  "preData": null,
+  "tags": [],
+  "featureName": "newer-toggle",
+  "project": null,
+  "environment": null
+}
 ```
 
 #### `tag-deleted`
 
-This event fires when
+This event fires when you delete a tag. The `data` property contains the tag that was deleted.
 
 ``` json
-
+{
+  "id": 957,
+  "type": "tag-deleted",
+  "createdBy": "heartman-admin-testing",
+  "createdAt": "2022-06-03T10:12:17.310Z",
+  "data": {
+    "type": "heartag",
+    "value": "tag-value"
+  },
+  "preData": null,
+  "tags": [],
+  "featureName": null,
+  "project": null,
+  "environment": null
+}
 ```
 
 #### `tag-import`
@@ -775,26 +983,71 @@ This event fires when
 
 #### `tag-type-created`
 
-This event fires when
+This event fires when you create a new tag type.
+The `data` property contains the tag type configuration.
 
 ``` json
-
+{
+  "id": 945,
+  "type": "tag-type-created",
+  "createdBy": "thomas@getunleash.ai",
+  "createdAt": "2022-06-02T13:27:01.235Z",
+  "data": {
+    "name": "new-tag-type",
+    "description": "event testing"
+  },
+  "preData": null,
+  "tags": [],
+  "featureName": null,
+  "project": null,
+  "environment": null
+}
 ```
 
 #### `tag-type-deleted`
 
-This event fires when
+This event fires when you delete a tag type.
+The `data` property contains the name of the deleted tag type.
+
 
 ``` json
-
+{
+  "id": 947,
+  "type": "tag-type-deleted",
+  "createdBy": "thomas@getunleash.ai",
+  "createdAt": "2022-06-02T13:27:37.277Z",
+  "data": {
+    "name": "new-tag-type"
+  },
+  "preData": null,
+  "tags": [],
+  "featureName": null,
+  "project": null,
+  "environment": null
+}
 ```
 
 #### `tag-type-updated`
 
-This event fires when
+This event fires when you update a tag type.
+The `data` property contains the new tag type configuration.
 
 ``` json
-
+{
+  "id": 946,
+  "type": "tag-type-updated",
+  "createdBy": "thomas@getunleash.ai",
+  "createdAt": "2022-06-02T13:27:31.126Z",
+  "data": {
+    "name": "new-tag-type",
+    "description": "This tag is for testing events."
+  },
+  "preData": null,
+  "tags": [],
+  "featureName": null,
+  "project": null,
+  "environment": null
+}
 ```
 
 #### `tag-type-import`
@@ -819,26 +1072,69 @@ This event fires when
 
 #### `addon-config-created`
 
-This event fires when
+This event fires when you create an addon configuration.
+The `data` property contains the addon's ID and provider type.
 
 ``` json
-
+{
+  "id": 960,
+  "type": "addon-config-created",
+  "createdBy": "thomas@getunleash.ai",
+  "createdAt": "2022-06-03T10:15:45.040Z",
+  "data": {
+    "provider": "webhook"
+  },
+  "preData": null,
+  "tags": [],
+  "featureName": null,
+  "project": null,
+  "environment": null
+}
 ```
 
 #### `addon-config-updated`
 
-This event fires when
+This event fires when you update an addon configuration.
+The `data` property contains the addon's ID and provider type.
 
 ``` json
-
+{
+  "id": 961,
+  "type": "addon-config-updated",
+  "createdBy": "thomas@getunleash.ai",
+  "createdAt": "2022-06-03T10:16:11.732Z",
+  "data": {
+    "id": "2",
+    "provider": "webhook"
+  },
+  "preData": null,
+  "tags": [],
+  "featureName": null,
+  "project": null,
+  "environment": null
+}
 ```
 
 #### `addon-config-deleted`
 
-This event fires when
+This event fires when you update an addon configuration.
+The `data` property contains the addon's ID.
 
 ``` json
-
+{
+  "id": 964,
+  "type": "addon-config-deleted",
+  "createdBy": "thomas@getunleash.ai",
+  "createdAt": "2022-06-03T10:16:59.723Z",
+  "data": {
+    "id": "2"
+  },
+  "preData": null,
+  "tags": [],
+  "featureName": null,
+  "project": null,
+  "environment": null
+}
 ```
 
 
@@ -847,26 +1143,75 @@ This event fires when
 
 #### `user-created`
 
-This event fires when
+This event fires when you create a new user. The `data` property contains the user's information.
 
 ``` json
-
+{
+  "id": 965,
+  "type": "user-created",
+  "createdBy": "thomas@getunleash.ai",
+  "createdAt": "2022-06-03T10:23:47.713Z",
+  "data": {
+    "id": 44,
+    "name": "New User Name",
+    "email": "newuser@company.com"
+  },
+  "preData": null,
+  "tags": [],
+  "featureName": null,
+  "project": null,
+  "environment": null
+}
 ```
 
 #### `user-updated`
 
-This event fires when
+This event fires when you update a user. The `data` property contains the updated user information; the `preData` property contains the previous state of the user's information.
 
 ``` json
-
+{
+  "id": 967,
+  "type": "user-updated",
+  "createdBy": "thomas@getunleash.ai",
+  "createdAt": "2022-06-03T10:24:26.301Z",
+  "data": {
+    "id": 44,
+    "name": "New User's Name",
+    "email": "newuser@company.com"
+  },
+  "preData": {
+    "id": 44,
+    "name": "New User Name",
+    "email": "newuser@company.com"
+  },
+  "tags": [],
+  "featureName": null,
+  "project": null,
+  "environment": null
+}
 ```
 
 #### `user-deleted`
 
-This event fires when
+This event fires when you delete a user. The `preData` property contains the deleted users information.
 
 ``` json
-
+{
+  "id": 968,
+  "type": "user-deleted",
+  "createdBy": "thomas@getunleash.ai",
+  "createdAt": "2022-06-03T10:24:49.153Z",
+  "data": null,
+  "preData": {
+    "id": 44,
+    "name": "New User's Name",
+    "email": "newuser@company.com"
+  },
+  "tags": [],
+  "featureName": null,
+  "project": null,
+  "environment": null
+}
 ```
 
 
@@ -894,24 +1239,102 @@ This event fires when
 
 #### `segment-created`
 
-This event fires when
+This event fires when you create a segment. The `data` property contains the newly created segment.
 
 ``` json
-
+{
+  "id": 969,
+  "type": "segment-created",
+  "createdBy": "thomas@getunleash.ai",
+  "createdAt": "2022-06-03T10:29:43.977Z",
+  "data": {
+    "id": 5,
+    "name": "new segment",
+    "description": "this segment is for events",
+    "constraints": [
+      {
+        "values": [
+          "appA",
+          "appB",
+          "appC"
+        ],
+        "inverted": false,
+        "operator": "IN",
+        "contextName": "appName",
+        "caseInsensitive": false
+      }
+    ],
+    "createdBy": "thomas@getunleash.ai",
+    "createdAt": "2022-06-03T10:29:43.974Z"
+  },
+  "preData": null,
+  "tags": [],
+  "featureName": null,
+  "project": null,
+  "environment": null
+}
 ```
 
 #### `segment-updated`
 
-This event fires when
+This event fires when you update a segment's configuration. The `data` property contains the new segment configuration; the `preData` property contains the previous segment configuration.
 
 ``` json
-
+{
+  "id": 970,
+  "type": "segment-updated",
+  "createdBy": "thomas@getunleash.ai",
+  "createdAt": "2022-06-03T10:29:59.892Z",
+  "data": {
+    "id": 5,
+    "name": "new segment",
+    "description": "this segment is for events",
+    "constraints": [],
+    "createdBy": "thomas@getunleash.ai",
+    "createdAt": "2022-06-03T10:29:43.974Z"
+  },
+  "preData": {
+    "id": 5,
+    "name": "new segment",
+    "createdAt": "2022-06-03T10:29:43.974Z",
+    "createdBy": "thomas@getunleash.ai",
+    "constraints": [
+      {
+        "values": [
+          "appA",
+          "appB",
+          "appC"
+        ],
+        "inverted": false,
+        "operator": "IN",
+        "contextName": "appName",
+        "caseInsensitive": false
+      }
+    ],
+    "description": "this segment is for events"
+  },
+  "tags": [],
+  "featureName": null,
+  "project": null,
+  "environment": null
+}
 ```
 
 #### `segment-deleted`
 
-This event fires when
+This event fires when you delete a segment.
 
 ``` json
-
+{
+  "id": 971,
+  "type": "segment-deleted",
+  "createdBy": "thomas@getunleash.ai",
+  "createdAt": "2022-06-03T10:30:08.128Z",
+  "data": {},
+  "preData": null,
+  "tags": [],
+  "featureName": null,
+  "project": null,
+  "environment": null
+}
 ```

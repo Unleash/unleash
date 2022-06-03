@@ -417,7 +417,7 @@ export default class StateService {
             await this.eventStore.store({
                 type: DROP_ENVIRONMENTS,
                 createdBy: userName,
-                data: { name: 'all-projects' },
+                data: { name: 'all-environments' },
             });
         }
         const envsImport = environments.filter((env) =>

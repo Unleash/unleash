@@ -80,9 +80,6 @@ const Project = () => {
             });
         }
 
-        // @ts-expect-error
-        tabData.filter(tab => !tab.disabled);
-
         /* eslint-disable-next-line */
     }, []);
 

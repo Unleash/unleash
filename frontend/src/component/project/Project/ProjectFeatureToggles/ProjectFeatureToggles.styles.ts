@@ -28,9 +28,6 @@ export const useStyles = makeStyles()(theme => ({
     },
     title: {
         display: 'unset',
-        [theme.breakpoints.down(600)]: {
-            display: 'none',
-        },
     },
     iconButton: {
         marginRight: '1rem',

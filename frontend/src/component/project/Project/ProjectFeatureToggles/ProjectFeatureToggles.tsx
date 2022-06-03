@@ -2,13 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTheme } from '@mui/system';
 import { Add } from '@mui/icons-material';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import {
-    useGlobalFilter,
-    useFlexLayout,
-    useSortBy,
-    useTable,
-    SortingRule,
-} from 'react-table';
+import { useFlexLayout, useSortBy, useTable, SortingRule } from 'react-table';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { PageContent } from 'component/common/PageContent/PageContent';
@@ -48,6 +42,8 @@ import { ColumnsMenu } from './ColumnsMenu/ColumnsMenu';
 import { useStyles } from './ProjectFeatureToggles.styles';
 import { FeatureStaleDialog } from 'component/common/FeatureStaleDialog/FeatureStaleDialog';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
+import { useSearch } from 'hooks/useSearch';
+import { useMediaQuery } from '@mui/material';
 
 interface IProjectFeatureTogglesProps {
     features: IProject['features'];
@@ -82,6 +78,8 @@ export const ProjectFeatureToggles = ({
     environments: newEnvironments = [],
 }: IProjectFeatureTogglesProps) => {
     const { classes: styles } = useStyles();
+    const theme = useTheme();
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [strategiesDialogState, setStrategiesDialogState] = useState({
         open: false,
         featureId: '',
@@ -102,53 +100,11 @@ export const ProjectFeatureToggles = ({
     );
     const { refetch } = useProject(projectId);
     const { setToastData, setToastApiError } = useToast();
-    const theme = useTheme();
     const rowHeight = theme.shape.tableRowHeight;
-
-    const data = useMemo<ListItemType[]>(() => {
-        if (loading) {
-            return Array(6).fill({
-                type: '-',
-                name: 'Feature name',
-                createdAt: new Date(),
-                environments: {
-                    production: { name: 'production', enabled: false },
-                },
-            }) as ListItemType[];
-        }
-
-        return features.map(
-            ({
-                name,
-                lastSeenAt,
-                createdAt,
-                type,
-                stale,
-                environments: featureEnvironments,
-            }) => ({
-                name,
-                lastSeenAt,
-                createdAt,
-                type,
-                stale,
-                environments: Object.fromEntries(
-                    environments.map(env => [
-                        env,
-                        {
-                            name: env,
-                            enabled:
-                                featureEnvironments?.find(
-                                    feature => feature?.name === env
-                                )?.enabled || false,
-                        },
-                    ])
-                ),
-            })
-        );
-    }, [features, loading]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const { toggleFeatureEnvironmentOn, toggleFeatureEnvironmentOff } =
         useFeatureApi();
+
     const onToggle = useCallback(
         async (
             projectId: string,
@@ -223,7 +179,7 @@ export const ProjectFeatureToggles = ({
                 ),
                 minWidth: 100,
                 sortType: 'alphanumeric',
-                disableGlobalFilter: false,
+                searchable: true,
             },
             {
                 Header: 'Created',
@@ -257,6 +213,9 @@ export const ProjectFeatureToggles = ({
                     const b = v2?.values?.[id]?.enabled;
                     return a === b ? 0 : a ? -1 : 1;
                 },
+                filterName: name,
+                filterParsing: (value: any) =>
+                    value.enabled ? 'enabled' : 'disabled',
             })),
             {
                 id: 'Actions',
@@ -275,11 +234,69 @@ export const ProjectFeatureToggles = ({
         ],
         [projectId, environments, onToggle, loading]
     );
+
     const [searchParams, setSearchParams] = useSearchParams();
     const [storedParams, setStoredParams] = useLocalStorage(
         `${projectId}:ProjectFeatureToggles`,
         defaultSort
     );
+
+    const [searchValue, setSearchValue] = useState(
+        searchParams.get('search') || ''
+    );
+
+    const featuresData = useMemo(
+        () =>
+            features.map(
+                ({
+                    name,
+                    lastSeenAt,
+                    createdAt,
+                    type,
+                    stale,
+                    environments: featureEnvironments,
+                }) => ({
+                    name,
+                    lastSeenAt,
+                    createdAt,
+                    type,
+                    stale,
+                    environments: Object.fromEntries(
+                        environments.map(env => [
+                            env,
+                            {
+                                name: env,
+                                enabled:
+                                    featureEnvironments?.find(
+                                        feature => feature?.name === env
+                                    )?.enabled || false,
+                            },
+                        ])
+                    ),
+                })
+            ),
+        [features, environments]
+    );
+
+    const {
+        data: searchedData,
+        getSearchText,
+        getSearchContext,
+    } = useSearch(columns, searchValue, featuresData);
+
+    const data = useMemo<ListItemType[]>(() => {
+        if (loading) {
+            return Array(6).fill({
+                type: '-',
+                name: 'Feature name',
+                createdAt: new Date(),
+                environments: {
+                    production: { name: 'production', enabled: false },
+                },
+            }) as ListItemType[];
+        }
+        return searchedData;
+    }, [loading, searchedData]);
 
     const initialState = useMemo(
         () => {
@@ -317,7 +334,6 @@ export const ProjectFeatureToggles = ({
                     },
                 ],
                 hiddenColumns,
-                globalFilter: searchParams.get('search') || '',
             };
         },
         [environments] // eslint-disable-line react-hooks/exhaustive-deps
@@ -327,11 +343,10 @@ export const ProjectFeatureToggles = ({
         allColumns,
         headerGroups,
         rows,
-        state: { globalFilter, sortBy, hiddenColumns },
+        state: { sortBy, hiddenColumns },
         getTableBodyProps,
         getTableProps,
         prepareRow,
-        setGlobalFilter,
         setHiddenColumns,
     } = useTable(
         {
@@ -339,15 +354,10 @@ export const ProjectFeatureToggles = ({
             data,
             initialState,
             sortTypes,
-            autoResetGlobalFilter: false,
             disableSortRemove: true,
             autoResetSortBy: false,
-            defaultColumn: {
-                disableGlobalFilter: true,
-            },
         },
         useFlexLayout,
-        useGlobalFilter,
         useSortBy
     );
 
@@ -360,8 +370,8 @@ export const ProjectFeatureToggles = ({
         if (sortBy[0].desc) {
             tableState.order = 'desc';
         }
-        if (globalFilter) {
-            tableState.search = globalFilter;
+        if (searchValue) {
+            tableState.search = searchValue;
         }
         tableState.columns = allColumns
             .map(({ id }) => id)
@@ -380,7 +390,7 @@ export const ProjectFeatureToggles = ({
             columns: tableState.columns.split(','),
         });
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [loading, sortBy, hiddenColumns, globalFilter, setSearchParams]);
+    }, [loading, sortBy, hiddenColumns, searchValue, setSearchParams]);
 
     const onCustomizeColumns = useCallback(
         visibleColumns => {
@@ -404,12 +414,21 @@ export const ProjectFeatureToggles = ({
             header={
                 <PageHeader
                     className={styles.title}
-                    title={`Project feature toggles (${rows.length})`}
+                    title={`Feature toggles (${rows.length})`}
                     actions={
                         <>
-                            <TableSearch
-                                initialValue={globalFilter}
-                                onChange={value => setGlobalFilter(value)}
+                            <ConditionallyRender
+                                condition={!isSmallScreen}
+                                show={
+                                    <TableSearch
+                                        initialValue={searchValue}
+                                        onChange={value =>
+                                            setSearchValue(value)
+                                        }
+                                        hasFilters
+                                        getSearchContext={getSearchContext}
+                                    />
+                                }
                             />
                             <ColumnsMenu
                                 allColumns={allColumns}
@@ -420,7 +439,7 @@ export const ProjectFeatureToggles = ({
                                 onCustomize={onCustomizeColumns}
                                 setHiddenColumns={setHiddenColumns}
                             />
-                            <PageHeader.Divider />
+                            <PageHeader.Divider sx={{ marginLeft: 0 }} />
                             <ResponsiveButton
                                 onClick={() =>
                                     navigate(
@@ -430,7 +449,7 @@ export const ProjectFeatureToggles = ({
                                         )
                                     )
                                 }
-                                maxWidth="700px"
+                                maxWidth="960px"
                                 Icon={Add}
                                 projectId={projectId}
                                 permission={CREATE_FEATURE}
@@ -440,10 +459,22 @@ export const ProjectFeatureToggles = ({
                             </ResponsiveButton>
                         </>
                     }
-                />
+                >
+                    <ConditionallyRender
+                        condition={isSmallScreen}
+                        show={
+                            <TableSearch
+                                initialValue={searchValue}
+                                onChange={setSearchValue}
+                                hasFilters
+                                getSearchContext={getSearchContext}
+                            />
+                        }
+                    />
+                </PageHeader>
             }
         >
-            <SearchHighlightProvider value={globalFilter}>
+            <SearchHighlightProvider value={getSearchText(searchValue)}>
                 <Table {...getTableProps()} rowHeight={rowHeight}>
                     <SortableTableHeader
                         // @ts-expect-error -- verify after `react-table` v8
@@ -502,11 +533,11 @@ export const ProjectFeatureToggles = ({
                 condition={rows.length === 0}
                 show={
                     <ConditionallyRender
-                        condition={globalFilter?.length > 0}
+                        condition={searchValue?.length > 0}
                         show={
                             <TablePlaceholder>
                                 No feature toggles found matching &ldquo;
-                                {globalFilter}
+                                {searchValue}
                                 &rdquo;
                             </TablePlaceholder>
                         }

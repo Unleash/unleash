@@ -1,4 +1,3 @@
-import { Chip } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { IOverride, IPayload } from 'interfaces/featureToggle';

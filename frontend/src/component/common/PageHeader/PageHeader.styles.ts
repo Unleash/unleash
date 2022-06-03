@@ -28,14 +28,4 @@ export const useStyles = makeStyles()(theme => ({
         alignItems: 'center',
         gap: theme.spacing(1),
     },
-    verticalSeparator: {
-        height: '100%',
-        borderColor: theme.palette.dividerAlternative,
-        width: '1px',
-        display: 'inline-block',
-        marginLeft: theme.spacing(2),
-        marginRight: theme.spacing(4),
-        padding: '10px 0',
-        verticalAlign: 'middle',
-    },
 }));

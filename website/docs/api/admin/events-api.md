@@ -299,9 +299,26 @@ The below example changes the toggle's type from *release* to *experiment*.
 
 ### `feature-project-change`
 
-This event fires when you move a feature from one project to another.
+This event fires when you move a feature from one project to another. The `data` property contains the names of the old and the new project.
 
-[... explain more in depth]
+``` json title="example event: feature-project-change"
+{
+  "id": 11,
+  "type": "feature-project-change",
+  "createdBy": "admin",
+  "createdAt": "2022-06-03T11:09:41.444Z",
+  "data": {
+    "newProject": "default",
+    "oldProject": "2"
+  },
+  "preData": null,
+  "tags": [],
+  "featureName": "feature",
+  "project": "default",
+  "environment": null
+}
+```
+
 
 ### `feature-archived`
 

@@ -31,46 +31,46 @@ exports[`renders an empty list correctly 1`] = `
             <div
               className="tss-u5t8ea-headerActions"
             >
-              <button
-                aria-label="Search"
-                aria-labelledby={null}
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge tss-15hjuf9-searchButton mui-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
-                data-mui-internal-clone-element={true}
-                disabled={false}
-                onBlur={[Function]}
-                onClick={[Function]}
-                onContextMenu={[Function]}
-                onDragLeave={[Function]}
-                onFocus={[Function]}
-                onKeyDown={[Function]}
-                onKeyUp={[Function]}
-                onMouseDown={[Function]}
-                onMouseLeave={[Function]}
-                onMouseOver={[Function]}
-                onMouseUp={[Function]}
-                onTouchEnd={[Function]}
-                onTouchMove={[Function]}
-                onTouchStart={[Function]}
-                tabIndex={0}
-                type="button"
+              <div
+                className="tss-119iiqp-container"
               >
-                <svg
-                  aria-hidden={true}
-                  className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mui-i4bv87-MuiSvgIcon-root"
-                  data-testid="SearchIcon"
-                  focusable="false"
-                  viewBox="0 0 24 24"
+                <div
+                  className="tss-1mtd8gr-search search-container"
                 >
-                  <path
-                    d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                  <svg
+                    aria-hidden={true}
+                    className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium tss-1ehjh85-searchIcon search-icon mui-i4bv87-MuiSvgIcon-root"
+                    data-testid="SearchIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                    />
+                  </svg>
+                  <div
+                    className="tss-11gf6cf-inputRoot input-container MuiInputBase-root MuiInputBase-colorPrimary mui-1v3pvzz-MuiInputBase-root"
+                    onClick={[Function]}
+                  >
+                    <input
+                      aria-label="Search…"
+                      className="MuiInputBase-input mui-j79lc6-MuiInputBase-input"
+                      onAnimationStart={[Function]}
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      placeholder="Search…"
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                  <div
+                    className="tss-llttyo-clearContainer clear-container"
                   />
-                </svg>
-                <span
-                  className="MuiTouchRipple-root mui-8je8zh-MuiTouchRipple-root"
-                />
-              </button>
+                </div>
+              </div>
               <hr
-                className="MuiDivider-root MuiDivider-middle MuiDivider-vertical tss-a0frlx-verticalSeparator mui-oezrwv-MuiDivider-root"
+                className="MuiDivider-root MuiDivider-middle MuiDivider-vertical mui-1p1j01b-MuiDivider-root"
               />
               <span
                 id="useId-0"

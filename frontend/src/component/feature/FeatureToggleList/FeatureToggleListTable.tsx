@@ -1,13 +1,7 @@
 import { useEffect, useMemo, useState, VFC } from 'react';
 import { Link, useMediaQuery, useTheme } from '@mui/material';
 import { Link as RouterLink, useSearchParams } from 'react-router-dom';
-import {
-    SortingRule,
-    useFlexLayout,
-    useGlobalFilter,
-    useSortBy,
-    useTable,
-} from 'react-table';
+import { SortingRule, useFlexLayout, useSortBy, useTable } from 'react-table';
 import {
     Table,
     SortableTableHeader,
@@ -34,6 +28,7 @@ import { FeatureSchema } from 'openapi';
 import { CreateFeatureButton } from '../CreateFeatureButton/CreateFeatureButton';
 import { FeatureStaleCell } from './FeatureStaleCell/FeatureStaleCell';
 import { useStyles } from './styles';
+import { useSearch } from 'hooks/useSearch';
 
 const featuresPlaceholder: FeatureSchema[] = Array(15).fill({
     name: 'Name of the feature',
@@ -53,7 +48,6 @@ const columns = [
         sortType: 'date',
         align: 'center',
         maxWidth: 85,
-        disableGlobalFilter: true,
     },
     {
         Header: 'Type',
@@ -61,7 +55,6 @@ const columns = [
         Cell: FeatureTypeCell,
         align: 'center',
         maxWidth: 85,
-        disableGlobalFilter: true,
     },
     {
         Header: 'Name',
@@ -69,6 +62,7 @@ const columns = [
         minWidth: 150,
         Cell: FeatureNameCell,
         sortType: 'alphanumeric',
+        searchable: true,
     },
     {
         Header: 'Created',
@@ -76,7 +70,6 @@ const columns = [
         Cell: DateCell,
         sortType: 'date',
         maxWidth: 150,
-        disableGlobalFilter: true,
     },
     {
         Header: 'Project ID',
@@ -86,6 +79,8 @@ const columns = [
         ),
         sortType: 'alphanumeric',
         maxWidth: 150,
+        filterName: 'project',
+        searchable: true,
     },
     {
         Header: 'State',
@@ -93,7 +88,8 @@ const columns = [
         Cell: FeatureStaleCell,
         sortType: 'boolean',
         maxWidth: 120,
-        disableGlobalFilter: true,
+        filterName: 'state',
+        filterParsing: (value: any) => (value ? 'stale' : 'active'),
     },
     // Always hidden -- for search
     {
@@ -115,10 +111,22 @@ export const FeatureToggleListTable: VFC = () => {
         defaultSort
     );
     const { features = [], loading } = useFeatures();
+    const [searchValue, setSearchValue] = useState(
+        searchParams.get('search') || ''
+    );
+
+    const {
+        data: searchedData,
+        getSearchText,
+        getSearchContext,
+    } = useSearch(columns, searchValue, features);
+
     const data = useMemo(
         () =>
-            features?.length === 0 && loading ? featuresPlaceholder : features,
-        [features, loading]
+            searchedData?.length === 0 && loading
+                ? featuresPlaceholder
+                : searchedData,
+        [searchedData, loading]
     );
 
     const [initialState] = useState(() => ({
@@ -131,7 +139,6 @@ export const FeatureToggleListTable: VFC = () => {
             },
         ],
         hiddenColumns: ['description'],
-        globalFilter: searchParams.get('search') || '',
     }));
 
     const {
@@ -140,23 +147,18 @@ export const FeatureToggleListTable: VFC = () => {
         headerGroups,
         rows,
         prepareRow,
-        state: { globalFilter, sortBy },
-        setGlobalFilter,
+        state: { sortBy },
         setHiddenColumns,
     } = useTable(
         {
-            // @ts-expect-error -- fix in react-table v8
             columns,
-            // @ts-expect-error -- fix in react-table v8
             data,
             initialState,
             sortTypes,
-            autoResetGlobalFilter: false,
             autoResetSortBy: false,
             disableSortRemove: true,
             disableMultiSort: true,
         },
-        useGlobalFilter,
         useSortBy,
         useFlexLayout
     );
@@ -178,15 +180,15 @@ export const FeatureToggleListTable: VFC = () => {
         if (sortBy[0].desc) {
             tableState.order = 'desc';
         }
-        if (globalFilter) {
-            tableState.search = globalFilter;
+        if (searchValue) {
+            tableState.search = searchValue;
         }
 
         setSearchParams(tableState, {
             replace: true,
         });
         setStoredParams({ id: sortBy[0].id, desc: sortBy[0].desc || false });
-    }, [sortBy, globalFilter, setSearchParams, setStoredParams]);
+    }, [sortBy, searchValue, setSearchParams, setStoredParams]);
 
     const [firstRenderedIndex, lastRenderedIndex] =
         useVirtualizedRange(rowHeight);
@@ -203,16 +205,25 @@ export const FeatureToggleListTable: VFC = () => {
                     })`}
                     actions={
                         <>
-                            <TableSearch
-                                initialValue={globalFilter}
-                                onChange={setGlobalFilter}
+                            <ConditionallyRender
+                                condition={!isSmallScreen}
+                                show={
+                                    <>
+                                        <TableSearch
+                                            initialValue={searchValue}
+                                            onChange={setSearchValue}
+                                            hasFilters
+                                            getSearchContext={getSearchContext}
+                                        />
+                                        <PageHeader.Divider />
+                                    </>
+                                }
                             />
-                            <PageHeader.Divider />
                             <Link
                                 component={RouterLink}
                                 to="/archive"
                                 underline="always"
-                                sx={{ marginRight: 3 }}
+                                sx={{ marginRight: 2 }}
                             >
                                 View archive
                             </Link>
@@ -222,12 +233,23 @@ export const FeatureToggleListTable: VFC = () => {
                             />
                         </>
                     }
-                />
+                >
+                    <ConditionallyRender
+                        condition={isSmallScreen}
+                        show={
+                            <TableSearch
+                                initialValue={searchValue}
+                                onChange={setSearchValue}
+                                hasFilters
+                                getSearchContext={getSearchContext}
+                            />
+                        }
+                    />
+                </PageHeader>
             }
         >
-            <SearchHighlightProvider value={globalFilter}>
+            <SearchHighlightProvider value={getSearchText(searchValue)}>
                 <Table {...getTableProps()} rowHeight={rowHeight}>
-                    {/* @ts-expect-error -- fix in react-table v8 */}
                     <SortableTableHeader headerGroups={headerGroups} flex />
                     <TableBody
                         {...getTableBodyProps()}
@@ -281,11 +303,11 @@ export const FeatureToggleListTable: VFC = () => {
                 condition={rows.length === 0}
                 show={
                     <ConditionallyRender
-                        condition={globalFilter?.length > 0}
+                        condition={searchValue?.length > 0}
                         show={
                             <TablePlaceholder>
                                 No feature toggles found matching &ldquo;
-                                {globalFilter}
+                                {searchValue}
                                 &rdquo;
                             </TablePlaceholder>
                         }

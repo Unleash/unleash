@@ -3,13 +3,17 @@ import { Search, Close } from '@mui/icons-material';
 import classnames from 'classnames';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useStyles } from './TableSearchField.styles';
+import { TableSearchFieldSuggestions } from './TableSearchFieldSuggestions/TableSearchFieldSuggestions';
+import { useState } from 'react';
+import { IGetSearchContextOutput } from 'hooks/useSearch';
 
 interface ITableSearchFieldProps {
     value: string;
     onChange: (value: string) => void;
     className?: string;
     placeholder: string;
-    onBlur?: (clear?: boolean) => void;
+    hasFilters?: boolean;
+    getSearchContext?: () => IGetSearchContextOutput;
 }
 
 export const TableSearchField = ({
@@ -17,9 +21,11 @@ export const TableSearchField = ({
     onChange,
     className,
     placeholder,
-    onBlur,
+    hasFilters,
+    getSearchContext,
 }: ITableSearchFieldProps) => {
     const { classes: styles } = useStyles();
+    const [showSuggestions, setShowSuggestions] = useState(false);
 
     return (
         <div className={styles.container}>
@@ -34,7 +40,6 @@ export const TableSearchField = ({
                     className={classnames(styles.searchIcon, 'search-icon')}
                 />
                 <InputBase
-                    autoFocus
                     placeholder={placeholder}
                     classes={{
                         root: classnames(styles.inputRoot, 'input-container'),
@@ -42,7 +47,8 @@ export const TableSearchField = ({
                     inputProps={{ 'aria-label': placeholder }}
                     value={value}
                     onChange={e => onChange(e.target.value)}
-                    onBlur={() => onBlur?.()}
+                    onFocus={() => setShowSuggestions(true)}
+                    onBlur={() => setShowSuggestions(false)}
                 />
                 <div
                     className={classnames(
@@ -58,7 +64,6 @@ export const TableSearchField = ({
                                     size="small"
                                     onClick={() => {
                                         onChange('');
-                                        onBlur?.(true);
                                     }}
                                 >
                                     <Close className={styles.clearIcon} />
@@ -68,6 +73,14 @@ export const TableSearchField = ({
                     />
                 </div>
             </div>
+            <ConditionallyRender
+                condition={Boolean(hasFilters) && showSuggestions}
+                show={
+                    <TableSearchFieldSuggestions
+                        getSearchContext={getSearchContext!}
+                    />
+                }
+            />
         </div>
     );
 };

@@ -1,11 +1,29 @@
 import { ReactNode, FC, VFC } from 'react';
 import classnames from 'classnames';
 
-import { Divider, Typography, TypographyProps } from '@mui/material';
+import {
+    Divider,
+    styled,
+    SxProps,
+    Theme,
+    Typography,
+    TypographyProps,
+} from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 import { useStyles } from './PageHeader.styles';
 import { usePageTitle } from 'hooks/usePageTitle';
+
+const StyledDivider = styled(Divider)(({ theme }) => ({
+    height: '100%',
+    borderColor: theme.palette.dividerAlternative,
+    width: '1px',
+    display: 'inline-block',
+    marginLeft: theme.spacing(2),
+    marginRight: theme.spacing(2),
+    padding: '10px 0',
+    verticalAlign: 'middle',
+}));
 
 interface IPageHeaderProps {
     title: string;
@@ -17,7 +35,9 @@ interface IPageHeaderProps {
     className?: string;
 }
 
-const PageHeaderComponent: FC<IPageHeaderProps> & { Divider: VFC } = ({
+const PageHeaderComponent: FC<IPageHeaderProps> & {
+    Divider: typeof PageHeaderDivider;
+} = ({
     title,
     titleElement,
     actions,
@@ -57,16 +77,8 @@ const PageHeaderComponent: FC<IPageHeaderProps> & { Divider: VFC } = ({
     );
 };
 
-const PageHeaderDivider: VFC = () => {
-    const { classes: styles } = useStyles();
-
-    return (
-        <Divider
-            orientation="vertical"
-            variant="middle"
-            className={styles.verticalSeparator}
-        />
-    );
+const PageHeaderDivider: VFC<{ sx?: SxProps<Theme> }> = ({ sx }) => {
+    return <StyledDivider orientation="vertical" variant="middle" sx={sx} />;
 };
 
 PageHeaderComponent.Divider = PageHeaderDivider;

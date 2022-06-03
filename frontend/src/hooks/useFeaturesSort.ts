@@ -15,6 +15,7 @@ export type FeaturesSortType =
     | 'enabled'
     | 'stale'
     | 'created'
+    | 'archived'
     | 'last-seen'
     | 'status'
     | 'project';
@@ -65,7 +66,9 @@ export const createFeaturesFilterSortOptions =
             { type: 'type', name: 'Type' },
             { type: 'enabled', name: 'Enabled' },
             { type: 'stale', name: 'Stale' },
+            { type: 'status', name: 'Status' },
             { type: 'created', name: 'Created' },
+            { type: 'archived', name: 'Archived' },
             { type: 'last-seen', name: 'Last seen' },
             { type: 'project', name: 'Project' },
         ];
@@ -82,6 +85,8 @@ const sortAscendingFeatures = (
             return sortByStale(features);
         case 'created':
             return sortByCreated(features);
+        case 'archived':
+            return sortByArchived(features);
         case 'last-seen':
             return sortByLastSeen(features);
         case 'name':
@@ -146,6 +151,14 @@ const sortByCreated = (
 ): FeatureSchema[] => {
     return [...features].sort((a, b) =>
         compareNullableDates(b.createdAt, a.createdAt)
+    );
+};
+
+const sortByArchived = (
+    features: Readonly<FeatureSchema[]>
+): FeatureSchema[] => {
+    return [...features].sort((a, b) =>
+        compareNullableDates(b.archivedAt, a.archivedAt)
     );
 };
 

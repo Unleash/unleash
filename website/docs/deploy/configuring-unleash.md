@@ -117,6 +117,10 @@ unleash.start(unleashOptions);
   - _unleashUrl_ (string) - Used to specify the official URL this instance of Unleash can be accessed at for an end user. Can also be configured through the environment variable `UNLEASH_URL`.
   - _gracefulShutdownEnable_: (boolean) - Used to control if Unleash should shutdown gracefully (close connections, stop tasks,). Defaults to true. `GRACEFUL_SHUTDOWN_ENABLE`
   - _gracefulShutdownTimeout_: (number) - Used to control the timeout, in milliseconds, for shutdown Unleash gracefully. Will kill all connections regardless if this timeout is exceeded. Defaults to 1000ms `GRACEFUL_SHUTDOWN_TIMEOUT`
+- **session** - The session config object takes the following options:
+  - _ttlHours_ (`SESSION_TTL_HOURS`) Number of hours a user session is allowed to live before a new sign-in is required. Defaults to 48 hours.
+  - _clearSiteDataOnLogout_ (`SESSION_CLEAR_SITE_DATA_ON_LOGOUT`) If true a logout action will return a Clear Site Data response header instructing the browser to clear all cookies on the same domain Unleash is running on. If disabled unleash will only destroy and clear the session cookie. Defaults to _true_.
+  - _cookieName_ - Name of the cookies used to hold the session id. Defaults to 'unleash-session'.
 - **ui** (object) - Set of UI specific overrides. You may set the following keys: `environment`, `slogan`.
 - **versionCheck** - the object deciding where to check for latest version
   - `url` - The url to check version (Defaults to `https://version.unleash.run`) - Overridable with (`UNLEASH_VERSION_URL`)

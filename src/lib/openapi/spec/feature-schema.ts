@@ -41,6 +41,11 @@ const schema = {
             format: 'date',
             nullable: true,
         },
+        archivedAt: {
+            type: 'string',
+            format: 'date',
+            nullable: true,
+        },
         lastSeenAt: {
             type: 'string',
             format: 'date',

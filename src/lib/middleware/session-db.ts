@@ -10,7 +10,7 @@ function sessionDb(
     knex: Knex,
 ): RequestHandler {
     let store;
-    const { db } = config.session;
+    const { db, cookieName } = config.session;
     const age =
         hoursToMilliseconds(config.session.ttlHours) || hoursToMilliseconds(48);
     const KnexSessionStore = knexSessionStore(session);
@@ -25,7 +25,7 @@ function sessionDb(
         store = new session.MemoryStore();
     }
     return session({
-        name: 'unleash-session',
+        name: cookieName,
         rolling: false,
         resave: false,
         saveUninitialized: false,

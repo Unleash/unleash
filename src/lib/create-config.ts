@@ -91,6 +91,11 @@ const defaultDbOptions: IDBOption = {
 
 const defaultSessionOption: ISessionOption = {
     ttlHours: parseEnvVarNumber(process.env.SESSION_TTL_HOURS, 48),
+    clearSiteDataOnLogout: parseEnvVarBoolean(
+        process.env.SESSION_CLEAR_SITE_DATA_ON_LOGOUT,
+        true,
+    ),
+    cookieName: 'unleash-session',
     db: true,
 };
 

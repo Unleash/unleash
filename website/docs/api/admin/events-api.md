@@ -366,7 +366,7 @@ This event fires when you import a feature as part of an import process. The `da
 {
   "id": 26,
   "type": "feature-import",
-  "createdBy": "import/export",
+  "createdBy": "import-API-token",
   "createdAt": "2022-06-03T11:30:40.570Z",
   "data": {
     "name": "feature",
@@ -417,7 +417,7 @@ This event fires when you import a tagged feature as part of an import job. The 
 {
   "id": 43,
   "type": "feature-tag-import",
-  "createdBy": "import/export",
+  "createdBy": "import-API-token",
   "createdAt": "2022-06-03T11:30:40.606Z",
   "data": {
     "featureName": "new-feature",
@@ -531,7 +531,7 @@ This event fires when you drop all existing tags as part of a configuration impo
 {
   "id": 36,
   "type": "drop-feature-tags",
-  "createdBy": "import/export",
+  "createdBy": "import-API-token",
   "createdAt": "2022-06-03T11:30:40.596Z",
   "data": {
     "name": "all-feature-tags"
@@ -630,7 +630,7 @@ This event fires when you delete existing features as part of an import job.
 {
   "id": 25,
   "type": "drop-features",
-  "createdBy": "import/export",
+  "createdBy": "import-API-token",
   "createdAt": "2022-06-03T11:30:40.563Z",
   "data": {
     "name": "all-features"
@@ -824,7 +824,7 @@ This event fires when you import a strategy as part of an import job. The `data`
 {
   "id": 29,
   "type": "strategy-import",
-  "createdBy": "import/export",
+  "createdBy": "import-API-token",
   "createdAt": "2022-06-03T11:30:40.583Z",
   "data": {
     "name": "gradualRolloutSessionId",
@@ -861,7 +861,7 @@ This event fires when you delete existing strategies as part of an important job
 {
   "id": 28,
   "type": "drop-strategies",
-  "createdBy": "import/export",
+  "createdBy": "import-API-token",
   "createdAt": "2022-06-03T11:30:40.579Z",
   "data": {
     "name": "all-strategies"
@@ -1046,7 +1046,7 @@ This event fires when you import a project. The `data` property contains the pro
 {
   "id": 35,
   "type": "project-import",
-  "createdBy": "import/export",
+  "createdBy": "import-API-token",
   "createdAt": "2022-06-03T11:30:40.591Z",
   "data": {
     "id": "default",
@@ -1072,7 +1072,7 @@ This event fires when you delete existing projects as part of an import job.
 {
   "id": 33,
   "type": "drop-projects",
-  "createdBy": "import/export",
+  "createdBy": "import-API-token",
   "createdAt": "2022-06-03T11:30:40.586Z",
   "data": {
     "name": "all-projects"
@@ -1140,7 +1140,7 @@ This event fires when you import a tag as part of an import job. The `data` prop
 {
   "id": 41,
   "type": "tag-import",
-  "createdBy": "import/export",
+  "createdBy": "import-API-token",
   "createdAt": "2022-06-03T11:30:40.603Z",
   "data": {
     "type": "simple",
@@ -1162,7 +1162,7 @@ This event fires when you delete existing tags as part of an import job.
 {
   "id": 37,
   "type": "drop-tags",
-  "createdBy": "import/export",
+  "createdBy": "import-API-token",
   "createdAt": "2022-06-03T11:30:40.596Z",
   "data": {
     "name": "all-tags"
@@ -1256,7 +1256,7 @@ This event fires when you import a tag type as part of an import job. The `data`
 {
   "id": 40,
   "type": "tag-type-import",
-  "createdBy": "import/export",
+  "createdBy": "import-API-token",
   "createdAt": "2022-06-03T11:30:40.599Z",
   "data": {
     "name": "custom-tag-type",
@@ -1279,7 +1279,7 @@ This event fires when you drop all existing tag types as part of a configuration
 {
   "id": 38,
   "type": "drop-tag-types",
-  "createdBy": "import/export",
+  "createdBy": "import-API-token",
   "createdAt": "2022-06-03T11:30:40.596Z",
   "data": {
     "name": "all-tag-types"
@@ -1450,7 +1450,7 @@ This event fires when you delete existing environments as part of an import job.
 {
   "id": 21,
   "type": "drop-environments",
-  "createdBy": "import/export",
+  "createdBy": "import-API-token",
   "createdAt": "2022-06-03T11:30:40.549Z",
   "data": {
     "name": "all-projects"
@@ -1472,7 +1472,7 @@ This event fires when you import an environment (custom or otherwise) as part of
 {
   "id": 24,
   "type": "environment-import",
-  "createdBy": "import/export",
+  "createdBy": "import-API-token",
   "createdAt": "2022-06-03T11:30:40.557Z",
   "data": {
     "name": "custom-environment",

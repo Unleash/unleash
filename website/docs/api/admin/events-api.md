@@ -193,35 +193,6 @@ This event fires when you create a feature. The `data` property contains the det
 }
 ```
 
-### `feature-deleted`
-
-This event fires when you delete a feature toggle. The `preData` property contains the deleted toggle data.
-
-``` json title="example event: feature-deleted"
-{
-  "id": 903,
-  "type": "feature-deleted",
-  "createdBy": "admin-account",
-  "createdAt": "2022-05-31T14:06:14.574Z",
-  "data": null,
-  "preData": {
-    "name": "new-feature",
-    "type": "experiment",
-    "stale": false,
-    "project": "my-project",
-    "variants": [],
-    "createdAt": "2022-05-31T13:32:20.547Z",
-    "lastSeenAt": null,
-    "description": "Toggle description",
-    "impressionData": true
-  },
-  "tags": [],
-  "featureName": "new-feature",
-  "project": "my-project",
-  "environment": null
-}
-```
-
 ### `feature-updated`
 
 :::caution Deprecation notice
@@ -252,6 +223,73 @@ This event fires when a feature gets updated in some way. The `data` property co
   "tags": [],
   "featureName": "new-feature",
   "project": "my-project",
+  "environment": null
+}
+```
+
+### `feature-deleted`
+
+This event fires when you delete a feature toggle. The `preData` property contains the deleted toggle data.
+
+``` json title="example event: feature-deleted"
+{
+  "id": 903,
+  "type": "feature-deleted",
+  "createdBy": "admin-account",
+  "createdAt": "2022-05-31T14:06:14.574Z",
+  "data": null,
+  "preData": {
+    "name": "new-feature",
+    "type": "experiment",
+    "stale": false,
+    "project": "my-project",
+    "variants": [],
+    "createdAt": "2022-05-31T13:32:20.547Z",
+    "lastSeenAt": null,
+    "description": "Toggle description",
+    "impressionData": true
+  },
+  "tags": [],
+  "featureName": "new-feature",
+  "project": "my-project",
+  "environment": null
+}
+```
+
+### `feature-archived`
+
+This event fires when you archive a toggle.
+
+``` json title="example event: feature-archived"
+{
+  "id": 902,
+  "type": "feature-archived",
+  "createdBy": "user@company.com",
+  "createdAt": "2022-05-31T14:04:38.661Z",
+  "data": null,
+  "preData": null,
+  "tags": [],
+  "featureName": "new-feature",
+  "project": "my-project",
+  "environment": null
+}
+```
+
+### `feature-revived`
+
+This event fires when you revive an archived feature toggle (when you take a toggle out from the archive).
+
+``` json title="example-event: feature-revived"
+{
+  "id": 914,
+  "type": "feature-revived",
+  "createdBy": "user@company.com",
+  "createdAt": "2022-06-01T09:57:10.719Z",
+  "data": null,
+  "preData": null,
+  "tags": [],
+  "featureName": "new-feature",
+  "project": "my-other-project",
   "environment": null
 }
 ```
@@ -320,44 +358,6 @@ This event fires when you move a feature from one project to another. The `data`
 ```
 
 
-### `feature-archived`
-
-This event fires when you archive a toggle.
-
-``` json title="example event: feature-archived"
-{
-  "id": 902,
-  "type": "feature-archived",
-  "createdBy": "user@company.com",
-  "createdAt": "2022-05-31T14:04:38.661Z",
-  "data": null,
-  "preData": null,
-  "tags": [],
-  "featureName": "new-feature",
-  "project": "my-project",
-  "environment": null
-}
-```
-
-### `feature-revived`
-
-This event fires when you revive an archived feature toggle (when you take a toggle out from the archive).
-
-``` json title="example-event: feature-revived"
-{
-  "id": 914,
-  "type": "feature-revived",
-  "createdBy": "user@company.com",
-  "createdAt": "2022-06-01T09:57:10.719Z",
-  "data": null,
-  "preData": null,
-  "tags": [],
-  "featureName": "new-feature",
-  "project": "my-other-project",
-  "environment": null
-}
-```
-
 ### `feature-import`
 
 This event fires when you import a feature as part of an import process. The `data` property contains the feature data.
@@ -409,6 +409,28 @@ This event fires when you add a tag to a feature. The `data` property contains t
 }
 ```
 
+### `feature-untagged`
+
+This event fires when you remove a tag from a toggle. The `data` property contains the tag that was removed.
+
+``` json title="example event: feature-untagged"
+{
+  "id": 893,
+  "type": "feature-untagged",
+  "createdBy": "user@company.com",
+  "createdAt": "2022-05-31T12:58:10.241Z",
+  "data": {
+    "type": "simple",
+    "value": "thisisatag"
+  },
+  "preData": null,
+  "tags": [],
+  "featureName": "example-feature-name",
+  "project": null,
+  "environment": null
+}
+```
+
 ### `feature-tag-import`
 
 This event fires when you import a tagged feature as part of an import job. The `data` property contains the name of the feature and the tag.
@@ -431,6 +453,34 @@ This event fires when you import a tagged feature as part of an import job. The 
   "featureName": null,
   "project": null,
   "environment": null
+}
+```
+
+### `feature-strategy-add`
+
+This event fires when you add a strategy to a feature. The `data` property contains the configuration for the new strategy.
+
+``` json title="example event: feature-strategy-add"
+{
+  "id": 919,
+  "type": "feature-strategy-add",
+  "createdBy": "user@company.com",
+  "createdAt": "2022-06-01T10:03:08.290Z",
+  "data": {
+    "id": "3f4bf713-696c-43a4-8ce7-d6c607108858",
+    "name": "flexibleRollout",
+    "constraints": [],
+    "parameters": {
+      "groupId": "new-feature",
+      "rollout": "67",
+      "stickiness": "default"
+    }
+  },
+  "preData": null,
+  "tags": [],
+  "featureName": "new-feature",
+  "project": "my-other-project",
+  "environment": "default"
 }
 ```
 
@@ -471,34 +521,6 @@ This event fires when you update a feature strategy. The `data` property contain
 }
 ```
 
-### `feature-strategy-add`
-
-This event fires when you add a strategy to a feature. The `data` property contains the configuration for the new strategy.
-
-``` json title="example event: feature-strategy-add"
-{
-  "id": 919,
-  "type": "feature-strategy-add",
-  "createdBy": "user@company.com",
-  "createdAt": "2022-06-01T10:03:08.290Z",
-  "data": {
-    "id": "3f4bf713-696c-43a4-8ce7-d6c607108858",
-    "name": "flexibleRollout",
-    "constraints": [],
-    "parameters": {
-      "groupId": "new-feature",
-      "rollout": "67",
-      "stickiness": "default"
-    }
-  },
-  "preData": null,
-  "tags": [],
-  "featureName": "new-feature",
-  "project": "my-other-project",
-  "environment": "default"
-}
-```
-
 ### `feature-strategy-remove`
 
 This event fires when you remove a strategy from a feature. The `preData` contains the configuration of the strategy that was removed.
@@ -520,49 +542,6 @@ This event fires when you remove a strategy from a feature. The `preData` contai
   "featureName": "new-feature",
   "project": "my-other-project",
   "environment": "default"
-}
-```
-
-### `drop-feature-tags`
-
-This event fires when you drop all existing tags as part of a configuration import.
-
-``` json title="example event: drop-feature-tags"
-{
-  "id": 36,
-  "type": "drop-feature-tags",
-  "createdBy": "import-API-token",
-  "createdAt": "2022-06-03T11:30:40.596Z",
-  "data": {
-    "name": "all-feature-tags"
-  },
-  "preData": null,
-  "tags": [],
-  "featureName": null,
-  "project": null,
-  "environment": null
-}
-```
-
-### `feature-untagged`
-
-This event fires when you remove a tag from a toggle. The `data` property contains the tag that was removed.
-
-``` json title="example event: feature-untagged"
-{
-  "id": 893,
-  "type": "feature-untagged",
-  "createdBy": "user@company.com",
-  "createdAt": "2022-05-31T12:58:10.241Z",
-  "data": {
-    "type": "simple",
-    "value": "thisisatag"
-  },
-  "preData": null,
-  "tags": [],
-  "featureName": "example-feature-name",
-  "project": null,
-  "environment": null
 }
 ```
 
@@ -618,27 +597,6 @@ This event fires when you mark a stale feature as no longer being stale.
   ],
   "featureName": "new-feature",
   "project": "my-other-project",
-  "environment": null
-}
-```
-
-### `drop-features`
-
-This event fires when you delete existing features as part of an import job.
-
-``` json title="example event: drop-features"
-{
-  "id": 25,
-  "type": "drop-features",
-  "createdBy": "import-API-token",
-  "createdAt": "2022-06-03T11:30:40.563Z",
-  "data": {
-    "name": "all-features"
-  },
-  "preData": null,
-  "tags": [],
-  "featureName": null,
-  "project": null,
   "environment": null
 }
 ```
@@ -699,6 +657,50 @@ This event fires when you disable an environment for a feature. The `environment
 }
 ```
 
+### `drop-features`
+
+This event fires when you delete existing features as part of an import job.
+
+``` json title="example event: drop-features"
+{
+  "id": 25,
+  "type": "drop-features",
+  "createdBy": "import-API-token",
+  "createdAt": "2022-06-03T11:30:40.563Z",
+  "data": {
+    "name": "all-features"
+  },
+  "preData": null,
+  "tags": [],
+  "featureName": null,
+  "project": null,
+  "environment": null
+}
+```
+
+
+### `drop-feature-tags`
+
+This event fires when you drop all existing tags as part of a configuration import.
+
+``` json title="example event: drop-feature-tags"
+{
+  "id": 36,
+  "type": "drop-feature-tags",
+  "createdBy": "import-API-token",
+  "createdAt": "2022-06-03T11:30:40.596Z",
+  "data": {
+    "name": "all-feature-tags"
+  },
+  "preData": null,
+  "tags": [],
+  "featureName": null,
+  "project": null,
+  "environment": null
+}
+```
+
+
 ## Strategy events
 
 ### `strategy-created`
@@ -714,6 +716,32 @@ This event fires when you create a strategy. The `data` property contains the st
   "data": {
     "name": "new-strategy",
     "description": "this strategy does ...",
+    "parameters": [],
+    "editable": true,
+    "deprecated": false
+  },
+  "preData": null,
+  "tags": [],
+  "featureName": null,
+  "project": null,
+  "environment": null
+}
+```
+
+### `strategy-updated`
+
+This event fires when you change a strategy's configuration.
+The `data` property contains the new strategy configuration.
+
+``` json title="example event: strategy-updated"
+{
+  "id": 933,
+  "type": "strategy-updated",
+  "createdBy": "user@company.com",
+  "createdAt": "2022-06-02T12:21:23.741Z",
+  "data": {
+    "name": "new-strategy",
+    "description": "this strategy does something else!",
     "parameters": [],
     "editable": true,
     "deprecated": false
@@ -790,32 +818,6 @@ The `data` property contains the name of the reactivated strategy.
 }
 ```
 
-### `strategy-updated`
-
-This event fires when you change a strategy's configuration.
-The `data` property contains the new strategy configuration.
-
-``` json title="example event: strategy-updated"
-{
-  "id": 933,
-  "type": "strategy-updated",
-  "createdBy": "user@company.com",
-  "createdAt": "2022-06-02T12:21:23.741Z",
-  "data": {
-    "name": "new-strategy",
-    "description": "this strategy does something else!",
-    "parameters": [],
-    "editable": true,
-    "deprecated": false
-  },
-  "preData": null,
-  "tags": [],
-  "featureName": null,
-  "project": null,
-  "environment": null
-}
-```
-
 ### `strategy-import`
 
 This event fires when you import a strategy as part of an import job. The `data` property contains the strategy's configuration.
@@ -873,6 +875,7 @@ This event fires when you delete existing strategies as part of an important job
   "environment": null
 }
 ```
+
 
 
 ## Context field events
@@ -957,6 +960,7 @@ The `data` property contains the name of the deleted context field.
   "environment": null
 }
 ```
+
 
 
 ## Project events
@@ -1086,6 +1090,8 @@ This event fires when you delete existing projects as part of an import job.
 ```
 
 
+
+
 ## Tag events
 
 ### `tag-created`
@@ -1202,29 +1208,6 @@ The `data` property contains the tag type configuration.
 }
 ```
 
-### `tag-type-deleted`
-
-This event fires when you delete a tag type.
-The `data` property contains the name of the deleted tag type.
-
-
-``` json title="example event: tag-type-deleted"
-{
-  "id": 947,
-  "type": "tag-type-deleted",
-  "createdBy": "user@company.com",
-  "createdAt": "2022-06-02T13:27:37.277Z",
-  "data": {
-    "name": "new-tag-type"
-  },
-  "preData": null,
-  "tags": [],
-  "featureName": null,
-  "project": null,
-  "environment": null
-}
-```
-
 ### `tag-type-updated`
 
 This event fires when you update a tag type.
@@ -1239,6 +1222,29 @@ The `data` property contains the new tag type configuration.
   "data": {
     "name": "new-tag-type",
     "description": "This tag is for testing events."
+  },
+  "preData": null,
+  "tags": [],
+  "featureName": null,
+  "project": null,
+  "environment": null
+}
+```
+
+### `tag-type-deleted`
+
+This event fires when you delete a tag type.
+The `data` property contains the name of the deleted tag type.
+
+
+``` json title="example event: tag-type-deleted"
+{
+  "id": 947,
+  "type": "tag-type-deleted",
+  "createdBy": "user@company.com",
+  "createdAt": "2022-06-02T13:27:37.277Z",
+  "data": {
+    "name": "new-tag-type"
   },
   "preData": null,
   "tags": [],
@@ -1442,28 +1448,6 @@ This event fires when you delete a user. The `preData` property contains the del
 
 ## Environment events
 
-### `drop-environments`
-
-This event fires when you delete existing environments as part of an import job.
-
-``` json title="example event: drop-environments"
-{
-  "id": 21,
-  "type": "drop-environments",
-  "createdBy": "import-API-token",
-  "createdAt": "2022-06-03T11:30:40.549Z",
-  "data": {
-    "name": "all-projects"
-  },
-  "preData": null,
-  "tags": [],
-  "featureName": null,
-  "project": null,
-  "environment": null
-}
-```
-
-
 ### `environment-import`
 
 This event fires when you import an environment (custom or otherwise) as part of an import job. The `data` property contains the configuration of the imported environment.
@@ -1489,6 +1473,28 @@ This event fires when you import an environment (custom or otherwise) as part of
 }
 ```
 
+
+
+### `drop-environments`
+
+This event fires when you delete existing environments as part of an import job.
+
+``` json title="example event: drop-environments"
+{
+  "id": 21,
+  "type": "drop-environments",
+  "createdBy": "import-API-token",
+  "createdAt": "2022-06-03T11:30:40.549Z",
+  "data": {
+    "name": "all-projects"
+  },
+  "preData": null,
+  "tags": [],
+  "featureName": null,
+  "project": null,
+  "environment": null
+}
+```
 
 
 ## Segment events

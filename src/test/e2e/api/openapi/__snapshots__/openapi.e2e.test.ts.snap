@@ -533,6 +533,7 @@ Object {
           "name",
           "weight",
           "weightType",
+          "stickiness",
         ],
         "type": "object",
       },

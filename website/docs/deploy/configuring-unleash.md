@@ -319,7 +319,7 @@ Unleash builds directly on the [node-postgres library](https://node-postgres.com
 
 ### Proxying requests from Unleash
 
-You can configure proxy services that intercept all outgoing requests from Unleash. This lets you use the Microsoft Teams or the Webhook addon for external Services, even if the internet can only be reached via a proxy on your machine or container (for example if restricted by a firewall or similiar).
+You can configure proxy services that intercept all outgoing requests from Unleash. This lets you use the Microsoft Teams or the Webhook addon for external services, even if the internet can only be reached via a proxy on your machine or container (for example if restricted by a firewall or similiar).
 
 As an example, here's how you could do it using the [node-global-proxy](https://www.npmjs.com/package/node-global-proxy) package:
 ```

@@ -125,7 +125,7 @@ The list of events related to the given toggle.
 
 </details>
 
-## Event types
+# Event types
 
 Unleash emits a large number of different events (described in more detail in the following sections). The exact fields an event contains varies from event to event, but they all conform to the following TypeScript interface before being transformed to JSON:
 
@@ -160,11 +160,11 @@ The event properties are described in short in the table below. For more info re
 | `type`        | The event type, as described in the rest of this section.                                             |
 
 
-### Feature toggle events
+## Feature toggle events
 
 These events pertain to feature toggles and their life cycle.
 
-#### `feature-created`
+### `feature-created`
 
 This event fires when you create a feature. The `data` property contains the details for the new feature.
 
@@ -175,7 +175,7 @@ This event fires when you create a feature. The `data` property contains the det
   "createdBy": "user@company.com",
   "createdAt": "2022-05-31T13:32:20.560Z",
   "data": {
-    "name": "new-toggle",
+    "name": "new-feature",
     "description": "Toggle description",
     "type": "release",
     "project": "my-project",
@@ -187,13 +187,13 @@ This event fires when you create a feature. The `data` property contains the det
   },
   "preData": null,
   "tags": [],
-  "featureName": "new-toggle",
+  "featureName": "new-feature",
   "project": "my-project",
   "environment": null
 }
 ```
 
-#### `feature-deleted`
+### `feature-deleted`
 
 This event fires when you delete a feature toggle. The `preData` property contains the deleted toggle data.
 
@@ -205,7 +205,7 @@ This event fires when you delete a feature toggle. The `preData` property contai
   "createdAt": "2022-05-31T14:06:14.574Z",
   "data": null,
   "preData": {
-    "name": "new-toggle",
+    "name": "new-feature",
     "type": "experiment",
     "stale": false,
     "project": "my-project",
@@ -216,13 +216,14 @@ This event fires when you delete a feature toggle. The `preData` property contai
     "impressionData": true
   },
   "tags": [],
-  "featureName": "new-toggle",
+  "featureName": "new-feature",
   "project": "my-project",
   "environment": null
 }
 ```
 
-#### `feature-updated`
+### `feature-updated`
+
 :::caution Deprecation notice
 This event type was replaced by more granular event types in Unleash 4.3. From Unleash 4.3 onwards, you'll need to use the events listed later in this section instead.
 :::
@@ -237,7 +238,7 @@ This event fires when a feature gets updated in some way. The `data` property co
   "createdBy": "user@company.com",
   "createdAt": "2022-05-31T13:32:20.560Z",
   "data": {
-    "name": "new-toggle",
+    "name": "new-feature",
     "description": "Toggle description",
     "type": "release",
     "project": "my-project",
@@ -249,13 +250,13 @@ This event fires when a feature gets updated in some way. The `data` property co
   },
   "preData": null,
   "tags": [],
-  "featureName": "new-toggle",
+  "featureName": "new-feature",
   "project": "my-project",
   "environment": null
 }
 ```
 
-#### `feature-metadata-updated`
+### `feature-metadata-updated`
 
 This event fires when a feature's metadata (its description, toggle type, or impression data settings) are changed. The `data` property contains the new toggle data. The `preData` property contains the toggle's previous data.
 
@@ -268,7 +269,7 @@ The below example changes the toggle's type from *release* to *experiment*.
   "createdBy": "user@company.com",
   "createdAt": "2022-05-31T13:35:25.244Z",
   "data": {
-    "name": "new-toggle",
+    "name": "new-feature",
     "description": "Toggle description",
     "type": "experiment",
     "project": "my-project",
@@ -279,7 +280,7 @@ The below example changes the toggle's type from *release* to *experiment*.
     "impressionData": true
   },
   "preData": {
-    "name": "new-toggle",
+    "name": "new-feature",
     "type": "release",
     "stale": false,
     "project": "my-project",
@@ -290,19 +291,19 @@ The below example changes the toggle's type from *release* to *experiment*.
     "impressionData": true
   },
   "tags": [],
-  "featureName": "new-toggle",
+  "featureName": "new-feature",
   "project": "my-project",
   "environment": null
 }
 ```
 
-#### `feature-project-change`
+### `feature-project-change`
 
 This event fires when you move a feature from one project to another.
 
 [... explain more in depth]
 
-#### `feature-archived`
+### `feature-archived`
 
 This event fires when you archive a toggle.
 
@@ -315,13 +316,13 @@ This event fires when you archive a toggle.
   "data": null,
   "preData": null,
   "tags": [],
-  "featureName": "new-toggle",
+  "featureName": "new-feature",
   "project": "my-project",
   "environment": null
 }
 ```
 
-#### `feature-revived`
+### `feature-revived`
 
 This event fires when you revive an archived feature toggle (when you take a toggle out from the archive).
 
@@ -334,17 +335,17 @@ This event fires when you revive an archived feature toggle (when you take a tog
   "data": null,
   "preData": null,
   "tags": [],
-  "featureName": "new-toggle",
+  "featureName": "new-feature",
   "project": "my-other-project",
   "environment": null
 }
 ```
 
-#### `feature-import`
+### `feature-import`
 
 This event fires when you import a feature ...
 
-#### `feature-tagged`
+### `feature-tagged`
 
 This event fires when you add a tag to a feature. The `data` property contains the new tag.
 
@@ -366,11 +367,11 @@ This event fires when you add a tag to a feature. The `data` property contains t
 }
 ```
 
-#### `feature-tag-import`
+### `feature-tag-import`
 
 This event fires when you import a tag. ...
 
-#### `feature-strategy-update`
+### `feature-strategy-update`
 
 This event fires when you update a feature strategy. The `data` property contains the new strategy configuration. The `preData` property contains the previous strategy configuration.
 
@@ -385,7 +386,7 @@ This event fires when you update a feature strategy. The `data` property contain
     "name": "flexibleRollout",
     "constraints": [],
     "parameters": {
-      "groupId": "new-toggle",
+      "groupId": "new-feature",
       "rollout": "32",
       "stickiness": "default"
     }
@@ -394,20 +395,20 @@ This event fires when you update a feature strategy. The `data` property contain
     "id": "3f4bf713-696c-43a4-8ce7-d6c607108858",
     "name": "flexibleRollout",
     "parameters": {
-      "groupId": "new-toggle",
+      "groupId": "new-feature",
       "rollout": "67",
       "stickiness": "default"
     },
     "constraints": []
   },
   "tags": [],
-  "featureName": "new-toggle",
+  "featureName": "new-feature",
   "project": "my-other-project",
   "environment": "default"
 }
 ```
 
-#### `feature-strategy-add`
+### `feature-strategy-add`
 
 This event fires when you add a strategy to a feature. The `data` property contains the configuration for the new strategy.
 
@@ -422,20 +423,20 @@ This event fires when you add a strategy to a feature. The `data` property conta
     "name": "flexibleRollout",
     "constraints": [],
     "parameters": {
-      "groupId": "new-toggle",
+      "groupId": "new-feature",
       "rollout": "67",
       "stickiness": "default"
     }
   },
   "preData": null,
   "tags": [],
-  "featureName": "new-toggle",
+  "featureName": "new-feature",
   "project": "my-other-project",
   "environment": "default"
 }
 ```
 
-#### `feature-strategy-remove`
+### `feature-strategy-remove`
 
 This event fires when you remove a strategy from a feature. The `preData` contains the configuration of the strategy that was removed.
 
@@ -453,19 +454,19 @@ This event fires when you remove a strategy from a feature. The `preData` contai
     "constraints": []
   },
   "tags": [],
-  "featureName": "new-toggle",
+  "featureName": "new-feature",
   "project": "my-other-project",
   "environment": "default"
 }
 ```
 
-#### `drop-feature-tags`
+### `drop-feature-tags`
 
 This event fires when you drop all existing tags as part of a configuration import.
 
 ...
 
-#### `feature-untagged`
+### `feature-untagged`
 
 This event fires when you remove a tag from a toggle. The `data` property contains the tag that was removed.
 
@@ -487,7 +488,7 @@ This event fires when you remove a tag from a toggle. The `data` property contai
 }
 ```
 
-#### `feature-stale-on`
+### `feature-stale-on`
 
 This event fires when you mark a feature as stale.
 
@@ -509,13 +510,13 @@ This event fires when you mark a feature as stale.
       "type": "simple"
     }
   ],
-  "featureName": "new-toggle",
+  "featureName": "new-feature",
   "project": "my-other-project",
   "environment": null
 }
 ```
 
-#### `feature-stale-off`
+### `feature-stale-off`
 
 This event fires when you mark a stale feature as no longer being stale.
 
@@ -537,15 +538,15 @@ This event fires when you mark a stale feature as no longer being stale.
       "type": "simple"
     }
   ],
-  "featureName": "new-toggle",
+  "featureName": "new-feature",
   "project": "my-other-project",
   "environment": null
 }
 ```
 
-#### `drop-features`
+### `drop-features`
 
-#### `feature-environment-enabled`
+### `feature-environment-enabled`
 
 This event fires when you enable an environment for a feature. The `environment` property contains the name of the environment.
 
@@ -567,13 +568,13 @@ This event fires when you enable an environment for a feature. The `environment`
       "type": "simple"
     }
   ],
-  "featureName": "new-toggle",
+  "featureName": "new-feature",
   "project": "my-other-project",
   "environment": "development"
 }
 ```
 
-#### `feature-environment-disabled`
+### `feature-environment-disabled`
 
 This event fires when you disable an environment for a feature. The `environment` property contains the name of the environment.
 
@@ -595,15 +596,15 @@ This event fires when you disable an environment for a feature. The `environment
       "type": "simple"
     }
   ],
-  "featureName": "new-toggle",
+  "featureName": "new-feature",
   "project": "my-other-project",
   "environment": "development"
 }
 ```
 
-### Strategy events
+## Strategy events
 
-#### `strategy-created`
+### `strategy-created`
 
 This event fires when you create a strategy. The `data` property contains the strategy configuration.
 
@@ -628,7 +629,7 @@ This event fires when you create a strategy. The `data` property contains the st
 }
 ```
 
-#### `strategy-deleted`
+### `strategy-deleted`
 
 This event fires when you delete a strategy. The `data` property contains the name of the deleted strategy.
 
@@ -649,7 +650,7 @@ This event fires when you delete a strategy. The `data` property contains the na
 }
 ```
 
-#### `strategy-deprecated`
+### `strategy-deprecated`
 
 This event fires when you deprecate a strategy. The `data` property contains the name of the deprecated strategy.
 
@@ -670,7 +671,7 @@ This event fires when you deprecate a strategy. The `data` property contains the
 }
 ```
 
-#### `strategy-reactivated`
+### `strategy-reactivated`
 
 This event fires when you bring reactivate a deprecated strategy.
 The `data` property contains the name of the reactivated strategy.
@@ -692,7 +693,7 @@ The `data` property contains the name of the reactivated strategy.
 }
 ```
 
-#### `strategy-updated`
+### `strategy-updated`
 
 This event fires when you change a strategy's configuration.
 The `data` property contains the new strategy configuration.
@@ -718,7 +719,7 @@ The `data` property contains the new strategy configuration.
 }
 ```
 
-#### `strategy-import`
+### `strategy-import`
 
 This event fires when you import a strategy ...
 
@@ -726,7 +727,7 @@ This event fires when you import a strategy ...
 
 ```
 
-#### `drop-strategies`
+### `drop-strategies`
 
 This event fires when
 
@@ -735,9 +736,9 @@ This event fires when
 ```
 
 
-### Context field events
+## Context field events
 
-#### `context-field-created`
+### `context-field-created`
 
 This event fires when you create a context field.
 The `data` property contains the context field configuration.
@@ -762,7 +763,7 @@ The `data` property contains the context field configuration.
 }
 ```
 
-#### `context-field-updated`
+### `context-field-updated`
 
 This event fires when you update a context field.
 The `data` property contains the new context field configuration.
@@ -796,7 +797,7 @@ The `data` property contains the new context field configuration.
 }
 ```
 
-#### `context-field-deleted`
+### `context-field-deleted`
 
 This event fires when you delete a context field.
 The `data` property contains the name of the deleted context field.
@@ -819,9 +820,9 @@ The `data` property contains the name of the deleted context field.
 ```
 
 
-### Project events
+## Project events
 
-#### `project-created`
+### `project-created`
 
 This event fires when you create a project.
 The `data` property contains the project configuration.
@@ -846,7 +847,7 @@ The `data` property contains the project configuration.
 }
 ```
 
-#### `project-updated`
+### `project-updated`
 
 This event fires when you update a project's configuration.
 The `data` property contains the new project configuration.
@@ -878,7 +879,7 @@ The `preData` property contains the previous project configuration.
 }
 ```
 
-#### `project-deleted`
+### `project-deleted`
 
 This event fires when you delete a project.
 The `project` property contains the name of the deleted project.
@@ -898,7 +899,7 @@ The `project` property contains the name of the deleted project.
 }
 ```
 
-#### `project-import`
+### `project-import`
 
 This event fires when
 
@@ -906,7 +907,7 @@ This event fires when
 
 ```
 
-#### `drop-projects`
+### `drop-projects`
 
 This event fires when
 
@@ -915,9 +916,9 @@ This event fires when
 ```
 
 
-### Tag events
+## Tag events
 
-#### `tag-created`
+### `tag-created`
 
 This event fires when you create a new tag. The `data` property contains the tag that was created.
 
@@ -933,13 +934,13 @@ This event fires when you create a new tag. The `data` property contains the tag
   },
   "preData": null,
   "tags": [],
-  "featureName": "newer-toggle",
+  "featureName": "new-feature",
   "project": null,
   "environment": null
 }
 ```
 
-#### `tag-deleted`
+### `tag-deleted`
 
 This event fires when you delete a tag. The `data` property contains the tag that was deleted.
 
@@ -961,7 +962,7 @@ This event fires when you delete a tag. The `data` property contains the tag tha
 }
 ```
 
-#### `tag-import`
+### `tag-import`
 
 This event fires when
 
@@ -969,7 +970,7 @@ This event fires when
 
 ```
 
-#### `drop-tags`
+### `drop-tags`
 
 This event fires when
 
@@ -979,9 +980,9 @@ This event fires when
 
 
 
-### Tag type events
+## Tag type events
 
-#### `tag-type-created`
+### `tag-type-created`
 
 This event fires when you create a new tag type.
 The `data` property contains the tag type configuration.
@@ -1004,7 +1005,7 @@ The `data` property contains the tag type configuration.
 }
 ```
 
-#### `tag-type-deleted`
+### `tag-type-deleted`
 
 This event fires when you delete a tag type.
 The `data` property contains the name of the deleted tag type.
@@ -1027,7 +1028,7 @@ The `data` property contains the name of the deleted tag type.
 }
 ```
 
-#### `tag-type-updated`
+### `tag-type-updated`
 
 This event fires when you update a tag type.
 The `data` property contains the new tag type configuration.
@@ -1050,7 +1051,7 @@ The `data` property contains the new tag type configuration.
 }
 ```
 
-#### `tag-type-import`
+### `tag-type-import`
 
 This event fires when
 
@@ -1058,7 +1059,7 @@ This event fires when
 
 ```
 
-#### `drop-tag-types`
+### `drop-tag-types`
 
 This event fires when
 
@@ -1068,9 +1069,9 @@ This event fires when
 
 
 
-### Addon events
+## Addon events
 
-#### `addon-config-created`
+### `addon-config-created`
 
 This event fires when you create an addon configuration.
 The `data` property contains the addon's ID and provider type.
@@ -1092,7 +1093,7 @@ The `data` property contains the addon's ID and provider type.
 }
 ```
 
-#### `addon-config-updated`
+### `addon-config-updated`
 
 This event fires when you update an addon configuration.
 The `data` property contains the addon's ID and provider type.
@@ -1115,7 +1116,7 @@ The `data` property contains the addon's ID and provider type.
 }
 ```
 
-#### `addon-config-deleted`
+### `addon-config-deleted`
 
 This event fires when you update an addon configuration.
 The `data` property contains the addon's ID.
@@ -1139,9 +1140,9 @@ The `data` property contains the addon's ID.
 
 
 
-### User events
+## User events
 
-#### `user-created`
+### `user-created`
 
 This event fires when you create a new user. The `data` property contains the user's information.
 
@@ -1164,7 +1165,7 @@ This event fires when you create a new user. The `data` property contains the us
 }
 ```
 
-#### `user-updated`
+### `user-updated`
 
 This event fires when you update a user. The `data` property contains the updated user information; the `preData` property contains the previous state of the user's information.
 
@@ -1191,7 +1192,7 @@ This event fires when you update a user. The `data` property contains the update
 }
 ```
 
-#### `user-deleted`
+### `user-deleted`
 
 This event fires when you delete a user. The `preData` property contains the deleted users information.
 
@@ -1216,9 +1217,9 @@ This event fires when you delete a user. The `preData` property contains the del
 
 
 
-### Environment events (Enterprise)
+## Environment events (Enterprise)
 
-#### `drop-environments`
+### `drop-environments`
 
 This event fires when
 
@@ -1226,7 +1227,7 @@ This event fires when
 
 ```
 
-#### `environment-import`
+### `environment-import`
 
 This event fires when
 
@@ -1235,9 +1236,9 @@ This event fires when
 ```
 
 
-### Segment events
+## Segment events
 
-#### `segment-created`
+### `segment-created`
 
 This event fires when you create a segment. The `data` property contains the newly created segment.
 
@@ -1275,7 +1276,7 @@ This event fires when you create a segment. The `data` property contains the new
 }
 ```
 
-#### `segment-updated`
+### `segment-updated`
 
 This event fires when you update a segment's configuration. The `data` property contains the new segment configuration; the `preData` property contains the previous segment configuration.
 
@@ -1320,7 +1321,7 @@ This event fires when you update a segment's configuration. The `data` property 
 }
 ```
 
-#### `segment-deleted`
+### `segment-deleted`
 
 This event fires when you delete a segment.
 

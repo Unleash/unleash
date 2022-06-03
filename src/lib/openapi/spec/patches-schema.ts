@@ -1,12 +1,17 @@
 import { FromSchema } from 'json-schema-to-ts';
-import { DeepMutable } from '../../types/mutable';
 import { patchSchema } from './patch-schema';
 
-const schema = {
+export const patchesSchema = {
+    $id: '#/components/schemas/patchesSchema',
     type: 'array',
-    items: patchSchema,
+    items: {
+        $ref: '#/components/schemas/patchSchema',
+    },
+    components: {
+        schemas: {
+            patchSchema,
+        },
+    },
 } as const;
 
-export type PatchesSchema = FromSchema<typeof schema>;
-
-export const patchesSchema = schema as DeepMutable<typeof schema>;
+export type PatchesSchema = FromSchema<typeof patchesSchema>;

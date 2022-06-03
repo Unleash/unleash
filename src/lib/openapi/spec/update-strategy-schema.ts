@@ -1,12 +1,11 @@
 import { FromSchema } from 'json-schema-to-ts';
-import { DeepMutable } from '../../types/mutable';
-import { schema as strategySchema } from './strategy-schema';
+import { strategySchema } from './strategy-schema';
 
-const schema = {
+export const updateStrategySchema = {
     ...strategySchema,
+    $id: '#/components/schemas/updateStrategySchema',
     required: [],
+    components: {},
 } as const;
 
-export type UpdateStrategySchema = FromSchema<typeof schema>;
-
-export const updateStrategySchema = schema as DeepMutable<typeof schema>;
+export type UpdateStrategySchema = FromSchema<typeof updateStrategySchema>;

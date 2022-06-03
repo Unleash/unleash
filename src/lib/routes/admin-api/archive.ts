@@ -11,9 +11,9 @@ import {
     featuresSchema,
     FeaturesSchema,
 } from '../../openapi/spec/features-schema';
-import { createResponseSchema } from '../../openapi/operation';
 import { serializeDates } from '../../types/serialize-dates';
 import { OpenApiService } from '../../services/openapi-service';
+import { createResponseSchema } from '../../openapi';
 
 export default class ArchiveController extends Controller {
     private readonly logger: Logger;
@@ -77,10 +77,12 @@ export default class ArchiveController extends Controller {
         const features = await this.featureService.getMetadataForAllFeatures(
             true,
         );
-        this.openApiService.respondWithValidation(200, res, featuresSchema, {
-            version: 2,
-            features: serializeDates(features),
-        });
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            featuresSchema.$id,
+            { version: 2, features: serializeDates(features) },
+        );
     }
 
     async getArchivedFeaturesByProjectId(
@@ -93,10 +95,12 @@ export default class ArchiveController extends Controller {
                 true,
                 projectId,
             );
-        this.openApiService.respondWithValidation(200, res, featuresSchema, {
-            version: 2,
-            features: serializeDates(features),
-        });
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            featuresSchema.$id,
+            { version: 2, features: serializeDates(features) },
+        );
     }
 
     async deleteFeature(

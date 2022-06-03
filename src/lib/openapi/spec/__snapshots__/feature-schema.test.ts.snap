@@ -1,0 +1,69 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`featureSchema constraints 1`] = `
+Object {
+  "data": Object {
+    "name": "a",
+    "strategies": Array [
+      Object {
+        "constraints": Array [
+          Object {
+            "contextName": "a",
+          },
+        ],
+        "name": "a",
+      },
+    ],
+  },
+  "errors": Array [
+    Object {
+      "instancePath": "/strategies/0/constraints/0",
+      "keyword": "required",
+      "message": "must have required property 'operator'",
+      "params": Object {
+        "missingProperty": "operator",
+      },
+      "schemaPath": "#/components/schemas/constraintSchema/required",
+    },
+  ],
+  "schema": "#/components/schemas/featureSchema",
+}
+`;
+
+exports[`featureSchema overrides 1`] = `
+Object {
+  "data": Object {
+    "name": "a",
+    "variants": Array [
+      Object {
+        "name": "a",
+        "overrides": Array [
+          Object {
+            "contextName": "a",
+            "values": "b",
+          },
+        ],
+        "payload": Object {
+          "type": "a",
+          "value": "b",
+        },
+        "stickiness": "a",
+        "weight": 1,
+        "weightType": "a",
+      },
+    ],
+  },
+  "errors": Array [
+    Object {
+      "instancePath": "/variants/0/overrides/0/values",
+      "keyword": "type",
+      "message": "must be array",
+      "params": Object {
+        "type": "array",
+      },
+      "schemaPath": "#/components/schemas/overrideSchema/properties/values/type",
+    },
+  ],
+  "schema": "#/components/schemas/featureSchema",
+}
+`;

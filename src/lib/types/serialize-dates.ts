@@ -1,7 +1,7 @@
-type SerializedDates<T> = T extends object
-    ? { [P in keyof T]: T[P] extends Date ? string : SerializedDates<T[P]> }
-    : T extends Date
+type SerializedDates<T> = T extends Date
     ? string
+    : T extends object
+    ? { [P in keyof T]: SerializedDates<T[P]> }
     : T;
 
 // Convert Date objects to strings recursively.

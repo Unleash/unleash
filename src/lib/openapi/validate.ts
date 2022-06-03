@@ -1,33 +1,31 @@
-import Ajv, { ErrorObject, ValidateFunction } from 'ajv';
+import Ajv, { ErrorObject } from 'ajv';
 import addFormats from 'ajv-formats';
-import { OpenAPIV3 } from 'openapi-types';
+import { SchemaId, schemas } from './index';
+import { omitKeys } from '../util/omit-keys';
 
-interface ISchemaValidationErrors {
-    schema: OpenAPIV3.SchemaObject;
-    data: unknown;
+interface ISchemaValidationErrors<T> {
+    schema: SchemaId;
+    data: T;
     errors: ErrorObject[];
 }
 
-const cache = new WeakMap<OpenAPIV3.SchemaObject, ValidateFunction>();
-const ajv = new Ajv();
+const ajv = new Ajv({
+    schemas: Object.values(schemas).map((schema) =>
+        omitKeys(schema, 'components'),
+    ),
+});
 
 addFormats(ajv, ['date-time']);
 
-export const validateJsonSchema = (
-    schema: OpenAPIV3.SchemaObject,
-    data: unknown,
-): ISchemaValidationErrors | undefined => {
-    if (!cache.has(schema)) {
-        cache.set(schema, ajv.compile(schema));
-    }
-
-    const validate = cache.get(schema);
-
-    if (!validate(data)) {
+export const validateSchema = <T>(
+    schema: SchemaId,
+    data: T,
+): ISchemaValidationErrors<T> | undefined => {
+    if (!ajv.validate(schema, data)) {
         return {
             schema,
             data: data,
-            errors: validate.errors,
+            errors: ajv.errors ?? [],
         };
     }
 };

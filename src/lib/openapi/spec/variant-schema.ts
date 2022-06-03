@@ -1,8 +1,8 @@
 import { FromSchema } from 'json-schema-to-ts';
 import { overrideSchema } from './override-schema';
-import { DeepMutable } from '../../types/mutable';
 
-const schema = {
+export const variantSchema = {
+    $id: '#/components/schemas/variantSchema',
     type: 'object',
     additionalProperties: false,
     required: ['name', 'weight', 'weightType', 'stickiness'],
@@ -33,11 +33,16 @@ const schema = {
         },
         overrides: {
             type: 'array',
-            items: overrideSchema,
+            items: {
+                $ref: '#/components/schemas/overrideSchema',
+            },
+        },
+    },
+    components: {
+        schemas: {
+            overrideSchema,
         },
     },
 } as const;
 
-export type VariantSchema = FromSchema<typeof schema>;
-
-export const variantSchema = schema as DeepMutable<typeof schema>;
+export type VariantSchema = FromSchema<typeof variantSchema>;

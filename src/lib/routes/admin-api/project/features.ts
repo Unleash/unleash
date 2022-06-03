@@ -23,7 +23,6 @@ import {
     FeatureSchema,
 } from '../../../openapi/spec/feature-schema';
 import { StrategySchema } from '../../../openapi/spec/strategy-schema';
-import { FeatureEnvironmentSchema } from '../../../openapi/spec/feature-environment-schema';
 import { ParametersSchema } from '../../../openapi/spec/parameters-schema';
 import {
     featuresSchema,
@@ -32,12 +31,10 @@ import {
 import { UpdateFeatureSchema } from '../../../openapi/spec/update-feature-schema';
 import { UpdateStrategySchema } from '../../../openapi/spec/update-strategy-schema';
 import { CreateStrategySchema } from '../../../openapi/spec/create-strategy-schema';
-import {
-    createRequestSchema,
-    createResponseSchema,
-} from '../../../openapi/operation';
 import { serializeDates } from '../../../types/serialize-dates';
 import { OpenApiService } from '../../../services/openapi-service';
+import { createRequestSchema, createResponseSchema } from '../../../openapi';
+import { FeatureEnvironmentSchema } from '../../../openapi/spec/feature-environment-schema';
 
 interface FeatureStrategyParams {
     projectId: string;
@@ -339,10 +336,12 @@ export default class ProjectFeaturesController extends Controller {
         const features = await this.featureService.getFeatureOverview(
             projectId,
         );
-        this.openApiService.respondWithValidation(200, res, featuresSchema, {
-            version: 2,
-            features: serializeDates(features),
-        });
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            featuresSchema.$id,
+            { version: 2, features: serializeDates(features) },
+        );
     }
 
     async cloneFeature(
@@ -367,7 +366,7 @@ export default class ProjectFeaturesController extends Controller {
         this.openApiService.respondWithValidation(
             201,
             res,
-            featureSchema,
+            featureSchema.$id,
             serializeDates(created),
         );
     }
@@ -388,7 +387,7 @@ export default class ProjectFeaturesController extends Controller {
         this.openApiService.respondWithValidation(
             201,
             res,
-            featureSchema,
+            featureSchema.$id,
             serializeDates(created),
         );
     }
@@ -423,7 +422,7 @@ export default class ProjectFeaturesController extends Controller {
         this.openApiService.respondWithValidation(
             200,
             res,
-            featureSchema,
+            featureSchema.$id,
             serializeDates(created),
         );
     }
@@ -447,7 +446,7 @@ export default class ProjectFeaturesController extends Controller {
         this.openApiService.respondWithValidation(
             200,
             res,
-            featureSchema,
+            featureSchema.$id,
             serializeDates(updated),
         );
     }
@@ -481,7 +480,7 @@ export default class ProjectFeaturesController extends Controller {
         this.openApiService.respondWithValidation(
             200,
             res,
-            featureSchema,
+            featureSchema.$id,
             serializeDates(environmentInfo),
         );
     }

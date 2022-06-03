@@ -138,52 +138,7 @@ Object {
         "properties": Object {
           "constraints": Object {
             "items": Object {
-              "additionalProperties": false,
-              "properties": Object {
-                "caseInsensitive": Object {
-                  "type": "boolean",
-                },
-                "contextName": Object {
-                  "type": "string",
-                },
-                "inverted": Object {
-                  "type": "boolean",
-                },
-                "operator": Object {
-                  "enum": Array [
-                    "NOT_IN",
-                    "IN",
-                    "STR_ENDS_WITH",
-                    "STR_STARTS_WITH",
-                    "STR_CONTAINS",
-                    "NUM_EQ",
-                    "NUM_GT",
-                    "NUM_GTE",
-                    "NUM_LT",
-                    "NUM_LTE",
-                    "DATE_AFTER",
-                    "DATE_BEFORE",
-                    "SEMVER_EQ",
-                    "SEMVER_GT",
-                    "SEMVER_LT",
-                  ],
-                  "type": "string",
-                },
-                "value": Object {
-                  "type": "string",
-                },
-                "values": Object {
-                  "items": Object {
-                    "type": "string",
-                  },
-                  "type": "array",
-                },
-              },
-              "required": Array [
-                "contextName",
-                "operator",
-              ],
-              "type": "object",
+              "$ref": "#/components/schemas/constraintSchema",
             },
             "type": "array",
           },
@@ -191,10 +146,7 @@ Object {
             "type": "string",
           },
           "parameters": Object {
-            "additionalProperties": Object {
-              "type": "string",
-            },
-            "type": "object",
+            "$ref": "#/components/schemas/parametersSchema",
           },
           "sortOrder": Object {
             "type": "number",
@@ -222,101 +174,7 @@ Object {
           },
           "strategies": Object {
             "items": Object {
-              "additionalProperties": false,
-              "properties": Object {
-                "constraints": Object {
-                  "items": Object {
-                    "additionalProperties": false,
-                    "properties": Object {
-                      "caseInsensitive": Object {
-                        "type": "boolean",
-                      },
-                      "contextName": Object {
-                        "type": "string",
-                      },
-                      "inverted": Object {
-                        "type": "boolean",
-                      },
-                      "operator": Object {
-                        "enum": Array [
-                          "NOT_IN",
-                          "IN",
-                          "STR_ENDS_WITH",
-                          "STR_STARTS_WITH",
-                          "STR_CONTAINS",
-                          "NUM_EQ",
-                          "NUM_GT",
-                          "NUM_GTE",
-                          "NUM_LT",
-                          "NUM_LTE",
-                          "DATE_AFTER",
-                          "DATE_BEFORE",
-                          "SEMVER_EQ",
-                          "SEMVER_GT",
-                          "SEMVER_LT",
-                        ],
-                        "type": "string",
-                      },
-                      "value": Object {
-                        "type": "string",
-                      },
-                      "values": Object {
-                        "items": Object {
-                          "type": "string",
-                        },
-                        "type": "array",
-                      },
-                    },
-                    "required": Array [
-                      "contextName",
-                      "operator",
-                    ],
-                    "type": "object",
-                  },
-                  "type": "array",
-                },
-                "createdAt": Object {
-                  "format": "date-time",
-                  "nullable": true,
-                  "type": "string",
-                },
-                "environment": Object {
-                  "type": "string",
-                },
-                "featureName": Object {
-                  "type": "string",
-                },
-                "id": Object {
-                  "type": "string",
-                },
-                "name": Object {
-                  "type": "string",
-                },
-                "parameters": Object {
-                  "additionalProperties": Object {
-                    "type": "string",
-                  },
-                  "type": "object",
-                },
-                "projectId": Object {
-                  "type": "string",
-                },
-                "sortOrder": Object {
-                  "type": "number",
-                },
-                "strategyName": Object {
-                  "type": "string",
-                },
-              },
-              "required": Array [
-                "id",
-                "featureName",
-                "strategyName",
-                "constraints",
-                "parameters",
-                "environment",
-              ],
-              "type": "object",
+              "$ref": "#/components/schemas/featureStrategySchema",
             },
             "type": "array",
           },
@@ -349,125 +207,6 @@ Object {
           },
           "environments": Object {
             "items": Object {
-              "additionalProperties": false,
-              "properties": Object {
-                "enabled": Object {
-                  "type": "boolean",
-                },
-                "environment": Object {
-                  "type": "string",
-                },
-                "name": Object {
-                  "type": "string",
-                },
-                "strategies": Object {
-                  "items": Object {
-                    "additionalProperties": false,
-                    "properties": Object {
-                      "constraints": Object {
-                        "items": Object {
-                          "additionalProperties": false,
-                          "properties": Object {
-                            "caseInsensitive": Object {
-                              "type": "boolean",
-                            },
-                            "contextName": Object {
-                              "type": "string",
-                            },
-                            "inverted": Object {
-                              "type": "boolean",
-                            },
-                            "operator": Object {
-                              "enum": Array [
-                                "NOT_IN",
-                                "IN",
-                                "STR_ENDS_WITH",
-                                "STR_STARTS_WITH",
-                                "STR_CONTAINS",
-                                "NUM_EQ",
-                                "NUM_GT",
-                                "NUM_GTE",
-                                "NUM_LT",
-                                "NUM_LTE",
-                                "DATE_AFTER",
-                                "DATE_BEFORE",
-                                "SEMVER_EQ",
-                                "SEMVER_GT",
-                                "SEMVER_LT",
-                              ],
-                              "type": "string",
-                            },
-                            "value": Object {
-                              "type": "string",
-                            },
-                            "values": Object {
-                              "items": Object {
-                                "type": "string",
-                              },
-                              "type": "array",
-                            },
-                          },
-                          "required": Array [
-                            "contextName",
-                            "operator",
-                          ],
-                          "type": "object",
-                        },
-                        "type": "array",
-                      },
-                      "createdAt": Object {
-                        "format": "date-time",
-                        "nullable": true,
-                        "type": "string",
-                      },
-                      "environment": Object {
-                        "type": "string",
-                      },
-                      "featureName": Object {
-                        "type": "string",
-                      },
-                      "id": Object {
-                        "type": "string",
-                      },
-                      "name": Object {
-                        "type": "string",
-                      },
-                      "parameters": Object {
-                        "additionalProperties": Object {
-                          "type": "string",
-                        },
-                        "type": "object",
-                      },
-                      "projectId": Object {
-                        "type": "string",
-                      },
-                      "sortOrder": Object {
-                        "type": "number",
-                      },
-                      "strategyName": Object {
-                        "type": "string",
-                      },
-                    },
-                    "required": Array [
-                      "id",
-                      "featureName",
-                      "strategyName",
-                      "constraints",
-                      "parameters",
-                      "environment",
-                    ],
-                    "type": "object",
-                  },
-                  "type": "array",
-                },
-                "type": Object {
-                  "type": "string",
-                },
-              },
-              "required": Array [
-                "name",
-                "enabled",
-              ],
               "type": "object",
             },
             "type": "array",
@@ -491,79 +230,7 @@ Object {
           },
           "strategies": Object {
             "items": Object {
-              "additionalProperties": false,
-              "properties": Object {
-                "constraints": Object {
-                  "items": Object {
-                    "additionalProperties": false,
-                    "properties": Object {
-                      "caseInsensitive": Object {
-                        "type": "boolean",
-                      },
-                      "contextName": Object {
-                        "type": "string",
-                      },
-                      "inverted": Object {
-                        "type": "boolean",
-                      },
-                      "operator": Object {
-                        "enum": Array [
-                          "NOT_IN",
-                          "IN",
-                          "STR_ENDS_WITH",
-                          "STR_STARTS_WITH",
-                          "STR_CONTAINS",
-                          "NUM_EQ",
-                          "NUM_GT",
-                          "NUM_GTE",
-                          "NUM_LT",
-                          "NUM_LTE",
-                          "DATE_AFTER",
-                          "DATE_BEFORE",
-                          "SEMVER_EQ",
-                          "SEMVER_GT",
-                          "SEMVER_LT",
-                        ],
-                        "type": "string",
-                      },
-                      "value": Object {
-                        "type": "string",
-                      },
-                      "values": Object {
-                        "items": Object {
-                          "type": "string",
-                        },
-                        "type": "array",
-                      },
-                    },
-                    "required": Array [
-                      "contextName",
-                      "operator",
-                    ],
-                    "type": "object",
-                  },
-                  "type": "array",
-                },
-                "id": Object {
-                  "type": "string",
-                },
-                "name": Object {
-                  "type": "string",
-                },
-                "parameters": Object {
-                  "additionalProperties": Object {
-                    "type": "string",
-                  },
-                  "type": "object",
-                },
-                "sortOrder": Object {
-                  "type": "number",
-                },
-              },
-              "required": Array [
-                "name",
-              ],
-              "type": "object",
+              "$ref": "#/components/schemas/strategySchema",
             },
             "type": "array",
           },
@@ -572,65 +239,7 @@ Object {
           },
           "variants": Object {
             "items": Object {
-              "additionalProperties": false,
-              "properties": Object {
-                "name": Object {
-                  "type": "string",
-                },
-                "overrides": Object {
-                  "items": Object {
-                    "additionalProperties": false,
-                    "properties": Object {
-                      "contextName": Object {
-                        "type": "string",
-                      },
-                      "values": Object {
-                        "items": Object {
-                          "type": "string",
-                        },
-                        "type": "array",
-                      },
-                    },
-                    "required": Array [
-                      "contextName",
-                      "values",
-                    ],
-                    "type": "object",
-                  },
-                  "type": "array",
-                },
-                "payload": Object {
-                  "properties": Object {
-                    "type": Object {
-                      "type": "string",
-                    },
-                    "value": Object {
-                      "type": "string",
-                    },
-                  },
-                  "required": Array [
-                    "type",
-                    "value",
-                  ],
-                  "type": "object",
-                },
-                "stickiness": Object {
-                  "type": "string",
-                },
-                "weight": Object {
-                  "type": "number",
-                },
-                "weightType": Object {
-                  "type": "string",
-                },
-              },
-              "required": Array [
-                "name",
-                "weight",
-                "weightType",
-                "stickiness",
-              ],
-              "type": "object",
+              "$ref": "#/components/schemas/variantSchema",
             },
             "type": "array",
           },
@@ -645,52 +254,7 @@ Object {
         "properties": Object {
           "constraints": Object {
             "items": Object {
-              "additionalProperties": false,
-              "properties": Object {
-                "caseInsensitive": Object {
-                  "type": "boolean",
-                },
-                "contextName": Object {
-                  "type": "string",
-                },
-                "inverted": Object {
-                  "type": "boolean",
-                },
-                "operator": Object {
-                  "enum": Array [
-                    "NOT_IN",
-                    "IN",
-                    "STR_ENDS_WITH",
-                    "STR_STARTS_WITH",
-                    "STR_CONTAINS",
-                    "NUM_EQ",
-                    "NUM_GT",
-                    "NUM_GTE",
-                    "NUM_LT",
-                    "NUM_LTE",
-                    "DATE_AFTER",
-                    "DATE_BEFORE",
-                    "SEMVER_EQ",
-                    "SEMVER_GT",
-                    "SEMVER_LT",
-                  ],
-                  "type": "string",
-                },
-                "value": Object {
-                  "type": "string",
-                },
-                "values": Object {
-                  "items": Object {
-                    "type": "string",
-                  },
-                  "type": "array",
-                },
-              },
-              "required": Array [
-                "contextName",
-                "operator",
-              ],
-              "type": "object",
+              "$ref": "#/components/schemas/constraintSchema",
             },
             "type": "array",
           },
@@ -712,10 +276,7 @@ Object {
             "type": "string",
           },
           "parameters": Object {
-            "additionalProperties": Object {
-              "type": "string",
-            },
-            "type": "object",
+            "$ref": "#/components/schemas/parametersSchema",
           },
           "projectId": Object {
             "type": "string",
@@ -737,319 +298,31 @@ Object {
         ],
         "type": "object",
       },
+      "featureVariantsSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "variants": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/variantSchema",
+            },
+            "type": "array",
+          },
+          "version": Object {
+            "type": "integer",
+          },
+        },
+        "required": Array [
+          "version",
+          "variants",
+        ],
+        "type": "object",
+      },
       "featuresSchema": Object {
         "additionalProperties": false,
         "properties": Object {
           "features": Object {
             "items": Object {
-              "additionalProperties": false,
-              "properties": Object {
-                "archived": Object {
-                  "type": "boolean",
-                },
-                "createdAt": Object {
-                  "format": "date-time",
-                  "nullable": true,
-                  "type": "string",
-                },
-                "description": Object {
-                  "type": "string",
-                },
-                "enabled": Object {
-                  "type": "boolean",
-                },
-                "environments": Object {
-                  "items": Object {
-                    "additionalProperties": false,
-                    "properties": Object {
-                      "enabled": Object {
-                        "type": "boolean",
-                      },
-                      "environment": Object {
-                        "type": "string",
-                      },
-                      "name": Object {
-                        "type": "string",
-                      },
-                      "strategies": Object {
-                        "items": Object {
-                          "additionalProperties": false,
-                          "properties": Object {
-                            "constraints": Object {
-                              "items": Object {
-                                "additionalProperties": false,
-                                "properties": Object {
-                                  "caseInsensitive": Object {
-                                    "type": "boolean",
-                                  },
-                                  "contextName": Object {
-                                    "type": "string",
-                                  },
-                                  "inverted": Object {
-                                    "type": "boolean",
-                                  },
-                                  "operator": Object {
-                                    "enum": Array [
-                                      "NOT_IN",
-                                      "IN",
-                                      "STR_ENDS_WITH",
-                                      "STR_STARTS_WITH",
-                                      "STR_CONTAINS",
-                                      "NUM_EQ",
-                                      "NUM_GT",
-                                      "NUM_GTE",
-                                      "NUM_LT",
-                                      "NUM_LTE",
-                                      "DATE_AFTER",
-                                      "DATE_BEFORE",
-                                      "SEMVER_EQ",
-                                      "SEMVER_GT",
-                                      "SEMVER_LT",
-                                    ],
-                                    "type": "string",
-                                  },
-                                  "value": Object {
-                                    "type": "string",
-                                  },
-                                  "values": Object {
-                                    "items": Object {
-                                      "type": "string",
-                                    },
-                                    "type": "array",
-                                  },
-                                },
-                                "required": Array [
-                                  "contextName",
-                                  "operator",
-                                ],
-                                "type": "object",
-                              },
-                              "type": "array",
-                            },
-                            "createdAt": Object {
-                              "format": "date-time",
-                              "nullable": true,
-                              "type": "string",
-                            },
-                            "environment": Object {
-                              "type": "string",
-                            },
-                            "featureName": Object {
-                              "type": "string",
-                            },
-                            "id": Object {
-                              "type": "string",
-                            },
-                            "name": Object {
-                              "type": "string",
-                            },
-                            "parameters": Object {
-                              "additionalProperties": Object {
-                                "type": "string",
-                              },
-                              "type": "object",
-                            },
-                            "projectId": Object {
-                              "type": "string",
-                            },
-                            "sortOrder": Object {
-                              "type": "number",
-                            },
-                            "strategyName": Object {
-                              "type": "string",
-                            },
-                          },
-                          "required": Array [
-                            "id",
-                            "featureName",
-                            "strategyName",
-                            "constraints",
-                            "parameters",
-                            "environment",
-                          ],
-                          "type": "object",
-                        },
-                        "type": "array",
-                      },
-                      "type": Object {
-                        "type": "string",
-                      },
-                    },
-                    "required": Array [
-                      "name",
-                      "enabled",
-                    ],
-                    "type": "object",
-                  },
-                  "type": "array",
-                },
-                "impressionData": Object {
-                  "type": "boolean",
-                },
-                "lastSeenAt": Object {
-                  "format": "date-time",
-                  "nullable": true,
-                  "type": "string",
-                },
-                "name": Object {
-                  "type": "string",
-                },
-                "project": Object {
-                  "type": "string",
-                },
-                "stale": Object {
-                  "type": "boolean",
-                },
-                "strategies": Object {
-                  "items": Object {
-                    "additionalProperties": false,
-                    "properties": Object {
-                      "constraints": Object {
-                        "items": Object {
-                          "additionalProperties": false,
-                          "properties": Object {
-                            "caseInsensitive": Object {
-                              "type": "boolean",
-                            },
-                            "contextName": Object {
-                              "type": "string",
-                            },
-                            "inverted": Object {
-                              "type": "boolean",
-                            },
-                            "operator": Object {
-                              "enum": Array [
-                                "NOT_IN",
-                                "IN",
-                                "STR_ENDS_WITH",
-                                "STR_STARTS_WITH",
-                                "STR_CONTAINS",
-                                "NUM_EQ",
-                                "NUM_GT",
-                                "NUM_GTE",
-                                "NUM_LT",
-                                "NUM_LTE",
-                                "DATE_AFTER",
-                                "DATE_BEFORE",
-                                "SEMVER_EQ",
-                                "SEMVER_GT",
-                                "SEMVER_LT",
-                              ],
-                              "type": "string",
-                            },
-                            "value": Object {
-                              "type": "string",
-                            },
-                            "values": Object {
-                              "items": Object {
-                                "type": "string",
-                              },
-                              "type": "array",
-                            },
-                          },
-                          "required": Array [
-                            "contextName",
-                            "operator",
-                          ],
-                          "type": "object",
-                        },
-                        "type": "array",
-                      },
-                      "id": Object {
-                        "type": "string",
-                      },
-                      "name": Object {
-                        "type": "string",
-                      },
-                      "parameters": Object {
-                        "additionalProperties": Object {
-                          "type": "string",
-                        },
-                        "type": "object",
-                      },
-                      "sortOrder": Object {
-                        "type": "number",
-                      },
-                    },
-                    "required": Array [
-                      "name",
-                    ],
-                    "type": "object",
-                  },
-                  "type": "array",
-                },
-                "type": Object {
-                  "type": "string",
-                },
-                "variants": Object {
-                  "items": Object {
-                    "additionalProperties": false,
-                    "properties": Object {
-                      "name": Object {
-                        "type": "string",
-                      },
-                      "overrides": Object {
-                        "items": Object {
-                          "additionalProperties": false,
-                          "properties": Object {
-                            "contextName": Object {
-                              "type": "string",
-                            },
-                            "values": Object {
-                              "items": Object {
-                                "type": "string",
-                              },
-                              "type": "array",
-                            },
-                          },
-                          "required": Array [
-                            "contextName",
-                            "values",
-                          ],
-                          "type": "object",
-                        },
-                        "type": "array",
-                      },
-                      "payload": Object {
-                        "properties": Object {
-                          "type": Object {
-                            "type": "string",
-                          },
-                          "value": Object {
-                            "type": "string",
-                          },
-                        },
-                        "required": Array [
-                          "type",
-                          "value",
-                        ],
-                        "type": "object",
-                      },
-                      "stickiness": Object {
-                        "type": "string",
-                      },
-                      "weight": Object {
-                        "type": "number",
-                      },
-                      "weightType": Object {
-                        "type": "string",
-                      },
-                    },
-                    "required": Array [
-                      "name",
-                      "weight",
-                      "weightType",
-                      "stickiness",
-                    ],
-                    "type": "object",
-                  },
-                  "type": "array",
-                },
-              },
-              "required": Array [
-                "name",
-              ],
-              "type": "object",
+              "$ref": "#/components/schemas/featureSchema",
             },
             "type": "array",
           },
@@ -1116,30 +389,7 @@ Object {
       },
       "patchesSchema": Object {
         "items": Object {
-          "properties": Object {
-            "from": Object {
-              "type": "string",
-            },
-            "op": Object {
-              "enum": Array [
-                "add",
-                "remove",
-                "replace",
-                "copy",
-                "move",
-              ],
-              "type": "string",
-            },
-            "path": Object {
-              "type": "string",
-            },
-            "value": Object {},
-          },
-          "required": Array [
-            "path",
-            "op",
-          ],
-          "type": "object",
+          "$ref": "#/components/schemas/patchSchema",
         },
         "type": "array",
       },
@@ -1148,52 +398,7 @@ Object {
         "properties": Object {
           "constraints": Object {
             "items": Object {
-              "additionalProperties": false,
-              "properties": Object {
-                "caseInsensitive": Object {
-                  "type": "boolean",
-                },
-                "contextName": Object {
-                  "type": "string",
-                },
-                "inverted": Object {
-                  "type": "boolean",
-                },
-                "operator": Object {
-                  "enum": Array [
-                    "NOT_IN",
-                    "IN",
-                    "STR_ENDS_WITH",
-                    "STR_STARTS_WITH",
-                    "STR_CONTAINS",
-                    "NUM_EQ",
-                    "NUM_GT",
-                    "NUM_GTE",
-                    "NUM_LT",
-                    "NUM_LTE",
-                    "DATE_AFTER",
-                    "DATE_BEFORE",
-                    "SEMVER_EQ",
-                    "SEMVER_GT",
-                    "SEMVER_LT",
-                  ],
-                  "type": "string",
-                },
-                "value": Object {
-                  "type": "string",
-                },
-                "values": Object {
-                  "items": Object {
-                    "type": "string",
-                  },
-                  "type": "array",
-                },
-              },
-              "required": Array [
-                "contextName",
-                "operator",
-              ],
-              "type": "object",
+              "$ref": "#/components/schemas/constraintSchema",
             },
             "type": "array",
           },
@@ -1204,10 +409,7 @@ Object {
             "type": "string",
           },
           "parameters": Object {
-            "additionalProperties": Object {
-              "type": "string",
-            },
-            "type": "object",
+            "$ref": "#/components/schemas/parametersSchema",
           },
           "sortOrder": Object {
             "type": "number",
@@ -1239,20 +441,7 @@ Object {
         "properties": Object {
           "tags": Object {
             "items": Object {
-              "additionalProperties": false,
-              "properties": Object {
-                "type": Object {
-                  "type": "string",
-                },
-                "value": Object {
-                  "type": "string",
-                },
-              },
-              "required": Array [
-                "value",
-                "type",
-              ],
-              "type": "object",
+              "$ref": "#/components/schemas/tagSchema",
             },
             "type": "array",
           },
@@ -1273,52 +462,7 @@ Object {
           },
           "constraints": Object {
             "items": Object {
-              "additionalProperties": false,
-              "properties": Object {
-                "caseInsensitive": Object {
-                  "type": "boolean",
-                },
-                "contextName": Object {
-                  "type": "string",
-                },
-                "inverted": Object {
-                  "type": "boolean",
-                },
-                "operator": Object {
-                  "enum": Array [
-                    "NOT_IN",
-                    "IN",
-                    "STR_ENDS_WITH",
-                    "STR_STARTS_WITH",
-                    "STR_CONTAINS",
-                    "NUM_EQ",
-                    "NUM_GT",
-                    "NUM_GTE",
-                    "NUM_LT",
-                    "NUM_LTE",
-                    "DATE_AFTER",
-                    "DATE_BEFORE",
-                    "SEMVER_EQ",
-                    "SEMVER_GT",
-                    "SEMVER_LT",
-                  ],
-                  "type": "string",
-                },
-                "value": Object {
-                  "type": "string",
-                },
-                "values": Object {
-                  "items": Object {
-                    "type": "string",
-                  },
-                  "type": "array",
-                },
-              },
-              "required": Array [
-                "contextName",
-                "operator",
-              ],
-              "type": "object",
+              "$ref": "#/components/schemas/constraintSchema",
             },
             "type": "array",
           },
@@ -1352,52 +496,7 @@ Object {
         "properties": Object {
           "constraints": Object {
             "items": Object {
-              "additionalProperties": false,
-              "properties": Object {
-                "caseInsensitive": Object {
-                  "type": "boolean",
-                },
-                "contextName": Object {
-                  "type": "string",
-                },
-                "inverted": Object {
-                  "type": "boolean",
-                },
-                "operator": Object {
-                  "enum": Array [
-                    "NOT_IN",
-                    "IN",
-                    "STR_ENDS_WITH",
-                    "STR_STARTS_WITH",
-                    "STR_CONTAINS",
-                    "NUM_EQ",
-                    "NUM_GT",
-                    "NUM_GTE",
-                    "NUM_LT",
-                    "NUM_LTE",
-                    "DATE_AFTER",
-                    "DATE_BEFORE",
-                    "SEMVER_EQ",
-                    "SEMVER_GT",
-                    "SEMVER_LT",
-                  ],
-                  "type": "string",
-                },
-                "value": Object {
-                  "type": "string",
-                },
-                "values": Object {
-                  "items": Object {
-                    "type": "string",
-                  },
-                  "type": "array",
-                },
-              },
-              "required": Array [
-                "contextName",
-                "operator",
-              ],
-              "type": "object",
+              "$ref": "#/components/schemas/constraintSchema",
             },
             "type": "array",
           },
@@ -1408,10 +507,7 @@ Object {
             "type": "string",
           },
           "parameters": Object {
-            "additionalProperties": Object {
-              "type": "string",
-            },
-            "type": "object",
+            "$ref": "#/components/schemas/parametersSchema",
           },
           "sortOrder": Object {
             "type": "number",
@@ -1428,23 +524,7 @@ Object {
           },
           "overrides": Object {
             "items": Object {
-              "additionalProperties": false,
-              "properties": Object {
-                "contextName": Object {
-                  "type": "string",
-                },
-                "values": Object {
-                  "items": Object {
-                    "type": "string",
-                  },
-                  "type": "array",
-                },
-              },
-              "required": Array [
-                "contextName",
-                "values",
-              ],
-              "type": "object",
+              "$ref": "#/components/schemas/overrideSchema",
             },
             "type": "array",
           },
@@ -1480,6 +560,12 @@ Object {
           "stickiness",
         ],
         "type": "object",
+      },
+      "variantsSchema": Object {
+        "items": Object {
+          "$ref": "#/components/schemas/variantSchema",
+        },
+        "type": "array",
       },
     },
     "securitySchemes": Object {
@@ -2488,7 +1574,7 @@ Object {
                 },
               },
             },
-            "description": "featureVariantResponse",
+            "description": "featureVariantsSchema",
           },
         },
         "tags": Array [
@@ -2519,13 +1605,11 @@ Object {
           "content": Object {
             "application/json": Object {
               "schema": Object {
-                "items": Object {
-                  "$ref": "#/components/schemas/patchOperationSchema",
-                },
-                "type": "array",
+                "$ref": "#/components/schemas/patchesSchema",
               },
             },
           },
+          "description": "patchesSchema",
           "required": true,
         },
         "responses": Object {
@@ -2537,7 +1621,7 @@ Object {
                 },
               },
             },
-            "description": "featureVariantResponse",
+            "description": "featureVariantsSchema",
           },
         },
         "tags": Array [
@@ -2568,13 +1652,11 @@ Object {
           "content": Object {
             "application/json": Object {
               "schema": Object {
-                "items": Object {
-                  "$ref": "#/components/schemas/variantSchema",
-                },
-                "type": "array",
+                "$ref": "#/components/schemas/variantsSchema",
               },
             },
           },
+          "description": "variantsSchema",
           "required": true,
         },
         "responses": Object {
@@ -2586,7 +1668,7 @@ Object {
                 },
               },
             },
-            "description": "featureVariantResponse",
+            "description": "featureVariantsSchema",
           },
         },
         "tags": Array [

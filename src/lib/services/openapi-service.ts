@@ -1,11 +1,15 @@
 import openapi, { IExpressOpenApi } from '@unleash/express-openapi';
 import { Express, RequestHandler, Response } from 'express';
-import { OpenAPIV3 } from 'openapi-types';
 import { IUnleashConfig } from '../types/option';
-import { createOpenApiSchema } from '../openapi';
-import { AdminApiOperation, ClientApiOperation } from '../openapi/operation';
-import { validateJsonSchema } from '../openapi/validate';
+import {
+    AdminApiOperation,
+    ClientApiOperation,
+    createOpenApiSchema,
+    SchemaId,
+} from '../openapi';
 import { Logger } from '../logger';
+import { validateSchema } from '../openapi/validate';
+import { omitKeys } from '../util/omit-keys';
 
 export class OpenApiService {
     private readonly config: IUnleashConfig;
@@ -39,11 +43,11 @@ export class OpenApiService {
         return `${baseUriPath}/docs/openapi`;
     }
 
-    registerCustomSchemas(schemas: {
-        [name: string]: OpenAPIV3.SchemaObject;
+    registerCustomSchemas<T extends object>(schemas: {
+        [name: string]: { $id: string; components: T };
     }): void {
         Object.entries(schemas).forEach(([name, schema]) => {
-            this.api.schema(name, schema);
+            this.api.schema(name, omitKeys(schema, '$id', 'components'));
         });
     }
 
@@ -63,10 +67,10 @@ export class OpenApiService {
     respondWithValidation<T>(
         status: number,
         res: Response<T>,
-        schema: OpenAPIV3.SchemaObject,
+        schema: SchemaId,
         data: T,
     ): void {
-        const errors = validateJsonSchema(schema, data);
+        const errors = validateSchema(schema, data);
 
         if (errors) {
             this.logger.warn('Invalid response:', errors);

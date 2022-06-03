@@ -1,13 +1,12 @@
 import { FromSchema } from 'json-schema-to-ts';
-import { DeepMutable } from '../../types/mutable';
 
-const schema = {
+export const parametersSchema = {
+    $id: '#/components/schemas/parametersSchema',
     type: 'object',
     additionalProperties: {
         type: 'string',
     },
+    components: {},
 } as const;
 
-export type ParametersSchema = FromSchema<typeof schema>;
-
-export const parametersSchema = schema as DeepMutable<typeof schema>;
+export type ParametersSchema = FromSchema<typeof parametersSchema>;

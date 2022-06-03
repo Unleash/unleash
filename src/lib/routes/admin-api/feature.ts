@@ -22,12 +22,9 @@ import {
 } from '../../openapi/spec/features-schema';
 import { TagSchema } from '../../openapi/spec/tag-schema';
 import { TagsSchema } from '../../openapi/spec/tags-schema';
-import {
-    createRequestSchema,
-    createResponseSchema,
-} from '../../openapi/operation';
 import { serializeDates } from '../../types/serialize-dates';
 import { OpenApiService } from '../../services/openapi-service';
+import { createRequestSchema, createResponseSchema } from '../../openapi';
 
 const version = 1;
 
@@ -181,10 +178,12 @@ class FeatureController extends Controller {
         const query = await this.prepQuery(req.query);
         const features = await this.service.getFeatureToggles(query);
 
-        this.openApiService.respondWithValidation(200, res, featuresSchema, {
-            version,
-            features: serializeDates(features),
-        });
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            featuresSchema.$id,
+            { version, features: serializeDates(features) },
+        );
     }
 
     async getToggle(

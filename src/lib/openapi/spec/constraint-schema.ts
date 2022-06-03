@@ -1,8 +1,8 @@
 import { FromSchema } from 'json-schema-to-ts';
-import { DeepMutable } from '../../types/mutable';
 import { ALL_OPERATORS } from '../../util/constants';
 
-const schema = {
+export const constraintSchema = {
+    $id: '#/components/schemas/constraintSchema',
     type: 'object',
     additionalProperties: false,
     required: ['contextName', 'operator'],
@@ -30,8 +30,7 @@ const schema = {
             type: 'string',
         },
     },
+    components: {},
 } as const;
 
-export type ConstraintSchema = FromSchema<typeof schema>;
-
-export const constraintSchema = schema as DeepMutable<typeof schema>;
+export type ConstraintSchema = FromSchema<typeof constraintSchema>;

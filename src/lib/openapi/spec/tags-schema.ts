@@ -1,8 +1,8 @@
 import { FromSchema } from 'json-schema-to-ts';
-import { DeepMutable } from '../../types/mutable';
 import { tagSchema } from './tag-schema';
 
-const schema = {
+export const tagsSchema = {
+    $id: '#/components/schemas/tagsSchema',
     type: 'object',
     additionalProperties: false,
     required: ['version', 'tags'],
@@ -12,11 +12,16 @@ const schema = {
         },
         tags: {
             type: 'array',
-            items: tagSchema,
+            items: {
+                $ref: '#/components/schemas/tagSchema',
+            },
+        },
+    },
+    components: {
+        schemas: {
+            tagSchema,
         },
     },
 } as const;
 
-export type TagsSchema = FromSchema<typeof schema>;
-
-export const tagsSchema = schema as DeepMutable<typeof schema>;
+export type TagsSchema = FromSchema<typeof tagsSchema>;

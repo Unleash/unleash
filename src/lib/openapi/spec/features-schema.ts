@@ -1,8 +1,13 @@
 import { FromSchema } from 'json-schema-to-ts';
-import { DeepMutable } from '../../types/mutable';
 import { featureSchema } from './feature-schema';
+import { parametersSchema } from './parameters-schema';
+import { variantSchema } from './variant-schema';
+import { overrideSchema } from './override-schema';
+import { constraintSchema } from './constraint-schema';
+import { strategySchema } from './strategy-schema';
 
-const schema = {
+export const featuresSchema = {
+    $id: '#/components/schemas/featuresSchema',
     type: 'object',
     additionalProperties: false,
     required: ['version', 'features'],
@@ -12,11 +17,21 @@ const schema = {
         },
         features: {
             type: 'array',
-            items: featureSchema,
+            items: {
+                $ref: '#/components/schemas/featureSchema',
+            },
+        },
+    },
+    components: {
+        schemas: {
+            constraintSchema,
+            featureSchema,
+            overrideSchema,
+            parametersSchema,
+            strategySchema,
+            variantSchema,
         },
     },
 } as const;
 
-export type FeaturesSchema = FromSchema<typeof schema>;
-
-export const featuresSchema = schema as DeepMutable<typeof schema>;
+export type FeaturesSchema = FromSchema<typeof featuresSchema>;

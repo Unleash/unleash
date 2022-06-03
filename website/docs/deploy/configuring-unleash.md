@@ -326,9 +326,14 @@ As an example, here's how you could do it using the [node-global-proxy](https://
 const proxy = require("node-global-proxy").default;
 
 proxy.setConfig({
-    http: `http://user:password@url:8080`,
+    http: "http://user:password@url:8080",      //proxy adress, replace values as needed
+    //https: "https://user:password@url:1080",  //if a https proxy is needed
   });
-proxy.start();
+  
+proxy.start();      //this starts the proxy, after this call all requests will be proxied
 ```
 
 Using above code-snippet, every outgoing request from unleash or its addons will be subsequently routed through set proxy.
+If the proxy routing needs to be bypassed or stopped, its possible to stop it by using
+
+`proxy.stop();`

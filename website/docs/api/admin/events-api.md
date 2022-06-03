@@ -360,7 +360,32 @@ This event fires when you revive an archived feature toggle (when you take a tog
 
 ### `feature-import`
 
-This event fires when you import a feature ...
+This event fires when you import a feature as part of an import process. The `data` property contains the feature data.
+
+``` json title="example event: feature-import"
+{
+  "id": 26,
+  "type": "feature-import",
+  "createdBy": "import/export",
+  "createdAt": "2022-06-03T11:30:40.570Z",
+  "data": {
+    "name": "feature",
+    "description": "",
+    "type": "release",
+    "project": "default",
+    "stale": false,
+    "variants": [],
+    "impressionData": false,
+    "enabled": false,
+    "archived": false
+  },
+  "preData": null,
+  "tags": [],
+  "featureName": null,
+  "project": null,
+  "environment": null
+}
+```
 
 ### `feature-tagged`
 
@@ -386,7 +411,28 @@ This event fires when you add a tag to a feature. The `data` property contains t
 
 ### `feature-tag-import`
 
-This event fires when you import a tag. ...
+This event fires when you import a tagged feature as part of an import job. The `data` property contains the name of the feature and the tag.
+
+``` json title="example event: feature-tag-import"
+{
+  "id": 43,
+  "type": "feature-tag-import",
+  "createdBy": "import/export",
+  "createdAt": "2022-06-03T11:30:40.606Z",
+  "data": {
+    "featureName": "new-feature",
+    "tag": {
+      "type": "simple",
+      "value": "tag1"
+    }
+  },
+  "preData": null,
+  "tags": [],
+  "featureName": null,
+  "project": null,
+  "environment": null
+}
+```
 
 ### `feature-strategy-update`
 
@@ -481,7 +527,22 @@ This event fires when you remove a strategy from a feature. The `preData` contai
 
 This event fires when you drop all existing tags as part of a configuration import.
 
-...
+``` json title="example event: drop-feature-tags"
+{
+  "id": 36,
+  "type": "drop-feature-tags",
+  "createdBy": "import/export",
+  "createdAt": "2022-06-03T11:30:40.596Z",
+  "data": {
+    "name": "all-feature-tags"
+  },
+  "preData": null,
+  "tags": [],
+  "featureName": null,
+  "project": null,
+  "environment": null
+}
+```
 
 ### `feature-untagged`
 
@@ -562,6 +623,25 @@ This event fires when you mark a stale feature as no longer being stale.
 ```
 
 ### `drop-features`
+
+This event fires when you delete existing features as part of an import job.
+
+``` json title="example event: drop-features"
+{
+  "id": 25,
+  "type": "drop-features",
+  "createdBy": "import/export",
+  "createdAt": "2022-06-03T11:30:40.563Z",
+  "data": {
+    "name": "all-features"
+  },
+  "preData": null,
+  "tags": [],
+  "featureName": null,
+  "project": null,
+  "environment": null
+}
+```
 
 ### `feature-environment-enabled`
 
@@ -738,18 +818,60 @@ The `data` property contains the new strategy configuration.
 
 ### `strategy-import`
 
-This event fires when you import a strategy ...
+This event fires when you import a strategy as part of an import job. The `data` property contains the strategy's configuration.
 
 ``` json title="example event: strategy-import"
-
+{
+  "id": 29,
+  "type": "strategy-import",
+  "createdBy": "import/export",
+  "createdAt": "2022-06-03T11:30:40.583Z",
+  "data": {
+    "name": "gradualRolloutSessionId",
+    "description": "Gradually activate feature toggle. Stickiness based on session id.",
+    "parameters": [
+      {
+        "name": "percentage",
+        "type": "percentage",
+        "description": "",
+        "required": false
+      },
+      {
+        "name": "groupId",
+        "type": "string",
+        "description": "Used to define a activation groups, which allows you to correlate across feature toggles.",
+        "required": true
+      }
+    ],
+    "deprecated": true
+  },
+  "preData": null,
+  "tags": [],
+  "featureName": null,
+  "project": null,
+  "environment": null
+}
 ```
 
 ### `drop-strategies`
 
-This event fires when
+This event fires when you delete existing strategies as part of an important job.
 
 ``` json title="example event: drop-strategies"
-
+{
+  "id": 28,
+  "type": "drop-strategies",
+  "createdBy": "import/export",
+  "createdAt": "2022-06-03T11:30:40.579Z",
+  "data": {
+    "name": "all-strategies"
+  },
+  "preData": null,
+  "tags": [],
+  "featureName": null,
+  "project": null,
+  "environment": null
+}
 ```
 
 
@@ -918,18 +1040,49 @@ The `project` property contains the name of the deleted project.
 
 ### `project-import`
 
-This event fires when
+This event fires when you import a project. The `data` property contains the project's configuration details.
 
 ``` json title="example event: project-import"
-
+{
+  "id": 35,
+  "type": "project-import",
+  "createdBy": "import/export",
+  "createdAt": "2022-06-03T11:30:40.591Z",
+  "data": {
+    "id": "default",
+    "name": "Default",
+    "description": "Default project",
+    "createdAt": "2022-06-03T09:30:40.587Z",
+    "health": 100,
+    "updatedAt": "2022-06-03T11:30:40.587Z"
+  },
+  "preData": null,
+  "tags": [],
+  "featureName": null,
+  "project": null,
+  "environment": null
+}
 ```
 
 ### `drop-projects`
 
-This event fires when
+This event fires when you delete existing projects as part of an import job.
 
 ``` json title="example event: drop-projects"
-
+{
+  "id": 33,
+  "type": "drop-projects",
+  "createdBy": "import/export",
+  "createdAt": "2022-06-03T11:30:40.586Z",
+  "data": {
+    "name": "all-projects"
+  },
+  "preData": null,
+  "tags": [],
+  "featureName": null,
+  "project": null,
+  "environment": null
+}
 ```
 
 
@@ -981,18 +1134,45 @@ This event fires when you delete a tag. The `data` property contains the tag tha
 
 ### `tag-import`
 
-This event fires when
+This event fires when you import a tag as part of an import job. The `data` property contains the imported tag.
 
 ``` json title="example event: tag-import"
-
+{
+  "id": 41,
+  "type": "tag-import",
+  "createdBy": "import/export",
+  "createdAt": "2022-06-03T11:30:40.603Z",
+  "data": {
+    "type": "simple",
+    "value": "tag1"
+  },
+  "preData": null,
+  "tags": [],
+  "featureName": null,
+  "project": null,
+  "environment": null
+}
 ```
 
 ### `drop-tags`
 
-This event fires when
+This event fires when you delete existing tags as part of an import job.
 
 ``` json title="example event: drop-tags"
-
+{
+  "id": 37,
+  "type": "drop-tags",
+  "createdBy": "import/export",
+  "createdAt": "2022-06-03T11:30:40.596Z",
+  "data": {
+    "name": "all-tags"
+  },
+  "preData": null,
+  "tags": [],
+  "featureName": null,
+  "project": null,
+  "environment": null
+}
 ```
 
 
@@ -1070,21 +1250,47 @@ The `data` property contains the new tag type configuration.
 
 ### `tag-type-import`
 
-This event fires when
+This event fires when you import a tag type as part of an import job. The `data` property contains the imported tag.
 
 ``` json title="example event: tag-type-import"
-
+{
+  "id": 40,
+  "type": "tag-type-import",
+  "createdBy": "import/export",
+  "createdAt": "2022-06-03T11:30:40.599Z",
+  "data": {
+    "name": "custom-tag-type",
+    "description": "custom tag type",
+    "icon": null
+  },
+  "preData": null,
+  "tags": [],
+  "featureName": null,
+  "project": null,
+  "environment": null
+}
 ```
 
 ### `drop-tag-types`
 
-This event fires when
+This event fires when you drop all existing tag types as part of a configuration import.
 
 ``` json title="example event: drop-tag-types"
-
+{
+  "id": 38,
+  "type": "drop-tag-types",
+  "createdBy": "import/export",
+  "createdAt": "2022-06-03T11:30:40.596Z",
+  "data": {
+    "name": "all-tag-types"
+  },
+  "preData": null,
+  "tags": [],
+  "featureName": null,
+  "project": null,
+  "environment": null
+}
 ```
-
-
 
 ## Addon events
 
@@ -1234,23 +1440,55 @@ This event fires when you delete a user. The `preData` property contains the del
 
 
 
-## Environment events (Enterprise)
+## Environment events
 
 ### `drop-environments`
 
-This event fires when
+This event fires when you delete existing environments as part of an import job.
 
 ``` json title="example event: drop-environments"
-
+{
+  "id": 21,
+  "type": "drop-environments",
+  "createdBy": "import/export",
+  "createdAt": "2022-06-03T11:30:40.549Z",
+  "data": {
+    "name": "all-projects"
+  },
+  "preData": null,
+  "tags": [],
+  "featureName": null,
+  "project": null,
+  "environment": null
+}
 ```
+
 
 ### `environment-import`
 
-This event fires when
+This event fires when you import an environment (custom or otherwise) as part of an import job. The `data` property contains the configuration of the imported environment.
 
 ``` json title="example event: environment-import"
-
+{
+  "id": 24,
+  "type": "environment-import",
+  "createdBy": "import/export",
+  "createdAt": "2022-06-03T11:30:40.557Z",
+  "data": {
+    "name": "custom-environment",
+    "type": "test",
+    "sortOrder": 9999,
+    "enabled": true,
+    "protected": false
+  },
+  "preData": null,
+  "tags": [],
+  "featureName": null,
+  "project": null,
+  "environment": null
+}
 ```
+
 
 
 ## Segment events

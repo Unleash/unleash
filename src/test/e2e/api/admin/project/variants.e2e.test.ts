@@ -266,6 +266,7 @@ test('PUTing an invalid variant throws 400 exception', async () => {
             name: 'variant',
             weight: 500,
             weightType: 'party',
+            stickiness: 'userId',
         },
     ];
     await app.request

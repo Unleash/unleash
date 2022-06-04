@@ -44,6 +44,59 @@ test('should set "Clear-Site-Data" header', async () => {
         .expect('Clear-Site-Data', '"cookies", "storage"');
 });
 
+test('should not set "Clear-Site-Data" header', async () => {
+    const baseUriPath = '';
+    const app = express();
+    const config = createTestConfig({
+        server: { baseUriPath },
+        session: { clearSiteDataOnLogout: false },
+    });
+    app.use('/logout', new LogoutController(config).router);
+    const request = supertest(app);
+    expect.assertions(1);
+    await request
+        .get(`${baseUriPath}/logout`)
+        .expect(302)
+        .expect((res) =>
+            expect(res.headers['Clear-Site-Data']).toBeUndefined(),
+        );
+});
+
+test('should clear "unleash-session" cookies', async () => {
+    const baseUriPath = '';
+    const app = express();
+    const config = createTestConfig({ server: { baseUriPath } });
+    app.use('/logout', new LogoutController(config).router);
+    const request = supertest(app);
+    expect.assertions(0);
+    await request
+        .get(`${baseUriPath}/logout`)
+        .expect(302)
+        .expect(
+            'Set-Cookie',
+            'unleash-session=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT',
+        );
+});
+
+test('should clear "unleash-session" cookie even when disabled clear site data', async () => {
+    const baseUriPath = '';
+    const app = express();
+    const config = createTestConfig({
+        server: { baseUriPath },
+        session: { clearSiteDataOnLogout: false },
+    });
+    app.use('/logout', new LogoutController(config).router);
+    const request = supertest(app);
+    expect.assertions(0);
+    await request
+        .get(`${baseUriPath}/logout`)
+        .expect(302)
+        .expect(
+            'Set-Cookie',
+            'unleash-session=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT',
+        );
+});
+
 test('should call destroy on session', async () => {
     const baseUriPath = '';
     const fakeSession = {

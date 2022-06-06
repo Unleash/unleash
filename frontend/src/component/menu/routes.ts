@@ -51,7 +51,7 @@ import { IRoute } from 'interfaces/route';
 import { EnvironmentTable } from 'component/environments/EnvironmentTable/EnvironmentTable';
 import { SegmentTable } from 'component/segments/SegmentTable/SegmentTable';
 import RedirectAdminInvoices from 'component/admin/billing/RedirectAdminInvoices/RedirectAdminInvoices';
-import { ArchiveTable } from '../archive/ArchiveTable/ArchiveTable';
+import { ArchiveTable } from '../archive/Table/ArchiveTable';
 
 export const routes: IRoute[] = [
     // Splash

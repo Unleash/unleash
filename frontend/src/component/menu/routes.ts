@@ -51,7 +51,7 @@ import { IRoute } from 'interfaces/route';
 import { EnvironmentTable } from 'component/environments/EnvironmentTable/EnvironmentTable';
 import { SegmentTable } from 'component/segments/SegmentTable/SegmentTable';
 import RedirectAdminInvoices from 'component/admin/billing/RedirectAdminInvoices/RedirectAdminInvoices';
-import { ArchiveTable } from '../archive/ArchiveTable/ArchiveTable';
+import { FeaturesArchiveTable } from '../archive/FeaturesArchiveTable';
 
 export const routes: IRoute[] = [
     // Splash
@@ -375,7 +375,7 @@ export const routes: IRoute[] = [
     {
         path: '/archive',
         title: 'Archived toggles',
-        component: ArchiveTable,
+        component: FeaturesArchiveTable,
         type: 'protected',
         menu: {},
     },

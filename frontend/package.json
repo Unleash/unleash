@@ -78,7 +78,7 @@
     "lodash.clonedeep": "4.5.0",
     "msw": "0.42.0",
     "pkginfo": "^0.4.1",
-    "plausible-tracker": "^0.3.5",
+    "plausible-tracker": "0.3.7",
     "prettier": "2.6.2",
     "prop-types": "15.8.1",
     "react": "17.0.2",

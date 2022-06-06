@@ -97,6 +97,12 @@ export interface FeatureSchema {
      * @type {Date}
      * @memberof FeatureSchema
      */
+    archivedAt?: Date | null;
+    /**
+     * 
+     * @type {Date}
+     * @memberof FeatureSchema
+     */
     lastSeenAt?: Date | null;
     /**
      * 
@@ -137,6 +143,7 @@ export function FeatureSchemaFromJSONTyped(json: any, ignoreDiscriminator: boole
         'stale': !exists(json, 'stale') ? undefined : json['stale'],
         'impressionData': !exists(json, 'impressionData') ? undefined : json['impressionData'],
         'createdAt': !exists(json, 'createdAt') ? undefined : (json['createdAt'] === null ? null : new Date(json['createdAt'])),
+        'archivedAt': !exists(json, 'archivedAt') ? undefined : (json['archivedAt'] === null ? null : new Date(json['archivedAt'])),
         'lastSeenAt': !exists(json, 'lastSeenAt') ? undefined : (json['lastSeenAt'] === null ? null : new Date(json['lastSeenAt'])),
         'environments': !exists(json, 'environments') ? undefined : ((json['environments'] as Array<any>).map(FeatureEnvironmentSchemaFromJSON)),
         'strategies': !exists(json, 'strategies') ? undefined : ((json['strategies'] as Array<any>).map(StrategySchemaFromJSON)),
@@ -162,6 +169,7 @@ export function FeatureSchemaToJSON(value?: FeatureSchema | null): any {
         'stale': value.stale,
         'impressionData': value.impressionData,
         'createdAt': value.createdAt === undefined ? undefined : (value.createdAt === null ? null : value.createdAt.toISOString().substr(0,10)),
+        'archivedAt': value.archivedAt === undefined ? undefined : (value.archivedAt === null ? null : value.archivedAt.toISOString().substr(0,10)),
         'lastSeenAt': value.lastSeenAt === undefined ? undefined : (value.lastSeenAt === null ? null : value.lastSeenAt.toISOString().substr(0,10)),
         'environments': value.environments === undefined ? undefined : ((value.environments as Array<any>).map(FeatureEnvironmentSchemaToJSON)),
         'strategies': value.strategies === undefined ? undefined : ((value.strategies as Array<any>).map(StrategySchemaToJSON)),

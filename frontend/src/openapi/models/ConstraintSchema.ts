@@ -57,27 +57,29 @@ export interface ConstraintSchema {
     value?: string;
 }
 
+
 /**
-* @export
-* @enum {string}
-*/
-export enum ConstraintSchemaOperatorEnum {
-    NotIn = 'NOT_IN',
-    In = 'IN',
-    StrEndsWith = 'STR_ENDS_WITH',
-    StrStartsWith = 'STR_STARTS_WITH',
-    StrContains = 'STR_CONTAINS',
-    NumEq = 'NUM_EQ',
-    NumGt = 'NUM_GT',
-    NumGte = 'NUM_GTE',
-    NumLt = 'NUM_LT',
-    NumLte = 'NUM_LTE',
-    DateAfter = 'DATE_AFTER',
-    DateBefore = 'DATE_BEFORE',
-    SemverEq = 'SEMVER_EQ',
-    SemverGt = 'SEMVER_GT',
-    SemverLt = 'SEMVER_LT'
-}
+ * @export
+ */
+export const ConstraintSchemaOperatorEnum = {
+    NotIn: 'NOT_IN',
+    In: 'IN',
+    StrEndsWith: 'STR_ENDS_WITH',
+    StrStartsWith: 'STR_STARTS_WITH',
+    StrContains: 'STR_CONTAINS',
+    NumEq: 'NUM_EQ',
+    NumGt: 'NUM_GT',
+    NumGte: 'NUM_GTE',
+    NumLt: 'NUM_LT',
+    NumLte: 'NUM_LTE',
+    DateAfter: 'DATE_AFTER',
+    DateBefore: 'DATE_BEFORE',
+    SemverEq: 'SEMVER_EQ',
+    SemverGt: 'SEMVER_GT',
+    SemverLt: 'SEMVER_LT'
+} as const;
+export type ConstraintSchemaOperatorEnum = typeof ConstraintSchemaOperatorEnum[keyof typeof ConstraintSchemaOperatorEnum];
+
 
 export function ConstraintSchemaFromJSON(json: any): ConstraintSchema {
     return ConstraintSchemaFromJSONTyped(json, false);

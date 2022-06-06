@@ -4,11 +4,17 @@ import Controller from './controller';
 import { IAuthRequest } from './unleash-types';
 
 class LogoutController extends Controller {
+    private clearSiteDataOnLogout: boolean;
+
+    private cookieName: string;
+
     private baseUri: string;
 
     constructor(config: IUnleashConfig) {
         super(config);
         this.baseUri = config.server.baseUriPath;
+        this.clearSiteDataOnLogout = config.session.clearSiteDataOnLogout;
+        this.cookieName = config.session.cookieName;
         this.get('/', this.logout);
     }
 
@@ -27,10 +33,14 @@ class LogoutController extends Controller {
             req.logout();
         }
 
-        res.set('Clear-Site-Data', '"cookies", "storage"');
+        res.clearCookie(this.cookieName);
+
+        if (this.clearSiteDataOnLogout) {
+            res.set('Clear-Site-Data', '"cookies", "storage"');
+        }
+
         res.redirect(`${this.baseUri}/`);
     }
 }
 
-module.exports = LogoutController;
 export default LogoutController;

@@ -17,7 +17,6 @@ const FEATURE_COLUMNS = [
     'created_at',
     'impression_data',
     'last_seen_at',
-    'archived',
     'archived_at',
 ];
 
@@ -134,7 +133,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         const rows = await this.db
             .select(FEATURE_COLUMNS)
             .from(TABLE)
-            .where({ archived: true })
+            .whereNotNull('archived_at')
             .orderBy('name', 'asc');
         return rows.map(this.rowToFeature);
     }
@@ -235,7 +234,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         const now = new Date();
         const row = await this.db(TABLE)
             .where({ name })
-            .update({ archived: true, archived_at: now })
+            .update({ archived_at: now })
             .returning(FEATURE_COLUMNS);
         return this.rowToFeature(row[0]);
     }

@@ -21,9 +21,6 @@ const schema = {
         description: {
             type: 'string',
         },
-        archived: {
-            type: 'boolean',
-        },
         project: {
             type: 'string',
         },

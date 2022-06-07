@@ -192,9 +192,6 @@ Object {
       "featureSchema": Object {
         "additionalProperties": false,
         "properties": Object {
-          "archived": Object {
-            "type": "boolean",
-          },
           "archivedAt": Object {
             "format": "date",
             "nullable": true,

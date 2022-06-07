@@ -149,11 +149,11 @@ export default class MetricsMonitor {
             for (const entry of Object.entries(m.bucket.toggles)) {
                 featureToggleUsageTotal
                     .labels(entry[0], 'true', m.appName)
-                    // @ts-ignore
+                    // @ts-expect-error
                     .inc(entry[1].yes);
                 featureToggleUsageTotal
                     .labels(entry[0], 'false', m.appName)
-                    // @ts-ignore
+                    // @ts-expect-error
                     .inc(entry[1].no);
             }
         });

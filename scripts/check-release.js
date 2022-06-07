@@ -1,5 +1,5 @@
 const semver = require('semver');
-//@ts-ignore
+// @ts-expect-error
 const pck = require('../package.json');
 
 const newUnleashVersion = process.argv[2];

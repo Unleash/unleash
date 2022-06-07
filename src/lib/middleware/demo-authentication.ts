@@ -18,7 +18,7 @@ function demoAuthentication(
                 email,
                 true,
             );
-            //@ts-ignore
+            // @ts-expect-error
             req.session.user = user;
             return res.status(200).json(user);
         } catch (e) {
@@ -29,18 +29,18 @@ function demoAuthentication(
     });
 
     app.use(`${basePath}/api/admin/`, (req, res, next) => {
-        // @ts-ignore
+        // @ts-expect-error
         if (req.session.user && req.session.user.email) {
-            // @ts-ignore
+            // @ts-expect-error
             req.user = req.session.user;
         }
         next();
     });
 
     app.use(`${basePath}/api/client`, (req, res, next) => {
-        // @ts-ignore
+        // @ts-expect-error
         if (!authentication.enableApiToken && !req.user) {
-            // @ts-ignore
+            // @ts-expect-error
             req.user = new ApiUser({
                 username: 'unauthed-default-client',
                 permissions: [],
@@ -53,7 +53,7 @@ function demoAuthentication(
     });
 
     app.use(`${basePath}/api`, (req, res, next) => {
-        // @ts-ignore
+        // @ts-expect-error
         if (req.user) {
             return next();
         }

@@ -31,7 +31,6 @@ export default class ArchiveController extends Controller {
         this.route({
             method: 'get',
             path: '/features',
-            acceptAnyContentType: true,
             handler: this.getArchivedFeatures,
             permission: NONE,
             middleware: [
@@ -46,7 +45,6 @@ export default class ArchiveController extends Controller {
         this.route({
             method: 'get',
             path: '/features/:projectId',
-            acceptAnyContentType: true,
             handler: this.getArchivedFeaturesByProjectId,
             permission: NONE,
             middleware: [

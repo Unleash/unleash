@@ -11,7 +11,7 @@ export default class FakeClientApplicationsStore
     apps: IClientApplication[] = [];
 
     async bulkUpsert(details: Partial<IClientApplication>[]): Promise<void> {
-        // @ts-ignore
+        // @ts-expect-error
         details.forEach((d) => this.apps.push(d));
     }
 

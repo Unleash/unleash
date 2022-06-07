@@ -292,7 +292,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             featureToggle.environments = Object.values(
                 featureToggle.environments,
             ).sort((a, b) => {
-                // @ts-ignore
+                // @ts-expect-error
                 return a.sortOrder - b.sortOrder;
             });
             featureToggle.environments = featureToggle.environments.map((e) => {

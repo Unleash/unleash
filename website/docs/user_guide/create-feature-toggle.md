@@ -3,6 +3,16 @@ id: create_feature_toggle
 title: How to create a feature toggle
 ---
 
+Steps revisited:
+
+1. Pick a project.
+2. Create a feature. (including impression data)
+3. Pick an environment.
+4. Add (and configure) a strategy.
+5. Enable the toggle.
+6. Add strategy constraints and segmentation
+7. Add feature variants.
+
 In this guide you will learn how to create your first feature toggle using Unleash.
 
 ## Step 1: Click the “create feature toggle” button {#step-1-click-the-create-feature-toggle-button}

@@ -86,7 +86,6 @@ export default class ProjectFeaturesController extends Controller {
         this.route({
             method: 'get',
             path: PATH_ENV,
-            acceptAnyContentType: true,
             permission: NONE,
             handler: this.getEnvironment,
             middleware: [
@@ -130,7 +129,6 @@ export default class ProjectFeaturesController extends Controller {
             method: 'get',
             path: PATH_STRATEGIES,
             handler: this.getStrategies,
-            acceptAnyContentType: true,
             permission: NONE,
             middleware: [
                 openApiService.validPath({
@@ -160,7 +158,6 @@ export default class ProjectFeaturesController extends Controller {
             method: 'get',
             path: PATH_STRATEGY,
             handler: this.getStrategy,
-            acceptAnyContentType: true,
             permission: NONE,
             middleware: [
                 openApiService.validPath({
@@ -217,7 +214,6 @@ export default class ProjectFeaturesController extends Controller {
         this.route({
             method: 'get',
             path: PATH,
-            acceptAnyContentType: true,
             handler: this.getFeatures,
             permission: NONE,
             middleware: [
@@ -263,7 +259,6 @@ export default class ProjectFeaturesController extends Controller {
         this.route({
             method: 'get',
             path: PATH_FEATURE,
-            acceptAnyContentType: true,
             handler: this.getFeature,
             permission: NONE,
             middleware: [

@@ -69,7 +69,6 @@ class FeatureController extends Controller {
         this.route({
             method: 'get',
             path: '',
-            acceptAnyContentType: true,
             handler: this.getAllToggles,
             permission: NONE,
             middleware: [
@@ -100,7 +99,6 @@ class FeatureController extends Controller {
             method: 'get',
             path: '/:featureName/tags',
             handler: this.listTags,
-            acceptAnyContentType: true,
             permission: NONE,
             middleware: [
                 openApiService.validPath({

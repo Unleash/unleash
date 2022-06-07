@@ -18,15 +18,24 @@ interface IRequestHandler<
     ): Promise<void> | void;
 }
 
-interface IRouteOptions {
-    method: 'get' | 'post' | 'put' | 'patch' | 'delete';
+interface IRouteOptionsBase {
     path: string;
     permission: string;
     middleware?: RequestHandler[];
     handler: IRequestHandler;
-    acceptAnyContentType?: boolean;
     acceptedContentTypes?: string[];
 }
+
+interface IRouteOptionsGet extends IRouteOptionsBase {
+    method: 'get';
+}
+
+interface IRouteOptionsNonGet extends IRouteOptionsBase {
+    method: 'post' | 'put' | 'patch' | 'delete';
+    acceptAnyContentType?: boolean;
+}
+
+type IRouteOptions = IRouteOptionsNonGet | IRouteOptionsGet;
 
 const checkPermission = (permission) => async (req, res, next) => {
     if (!permission || permission === NONE) {
@@ -74,7 +83,7 @@ export default class Controller {
     private useContentTypeMiddleware(options: IRouteOptions): RequestHandler[] {
         const { middleware = [], acceptedContentTypes = [] } = options;
 
-        return options.acceptAnyContentType
+        return options.method === 'get' || options.acceptAnyContentType
             ? middleware
             : [requireContentType(...acceptedContentTypes), ...middleware];
     }
@@ -94,7 +103,6 @@ export default class Controller {
             path,
             handler,
             permission,
-            acceptAnyContentType: true,
         });
     }
 

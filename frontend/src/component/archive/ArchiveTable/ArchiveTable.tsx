@@ -38,6 +38,7 @@ import theme from 'themes/theme';
 import { FeatureSchema } from '../../../openapi';
 import { useFeatureArchiveApi } from '../../../hooks/api/actions/useFeatureArchiveApi/useReviveFeatureApi';
 import useToast from '../../../hooks/useToast';
+import {formatUnknownError} from "../../../utils/formatUnknownError";
 
 export interface IFeaturesArchiveTableProps {
     archivedFeatures: FeatureSchema[];
@@ -78,8 +79,8 @@ export const ArchiveTable = ({
                 text: 'The feature toggle has been revived.',
                 confetti: true,
             });
-        } catch (e: any) {
-            setToastApiError(e.toString());
+        } catch (e: unknown) {
+            setToastApiError(formatUnknownError(e));
         }
     };
 

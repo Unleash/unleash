@@ -3,10 +3,12 @@ import { ArchiveTable } from './ArchiveTable/ArchiveTable';
 import { useSearchParams } from 'react-router-dom';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { SortingRule } from 'react-table';
+import { usePageTitle } from '../../hooks/usePageTitle';
 
 const defaultSort: SortingRule<string> = { id: 'createdAt', desc: true };
 
 export const FeaturesArchiveTable = () => {
+    usePageTitle('Archived');
     const {
         archivedFeatures = [],
         loading,

@@ -27,7 +27,7 @@ import { FeatureSeenCell } from '../../common/Table/cells/FeatureSeenCell/Featur
 import { LinkCell } from '../../common/Table/cells/LinkCell/LinkCell';
 import { FeatureStaleCell } from '../../feature/FeatureToggleList/FeatureStaleCell/FeatureStaleCell';
 import { TimeAgoCell } from '../../common/Table/cells/TimeAgoCell/TimeAgoCell';
-import { ReviveArchivedFeatureCell } from 'component/common/Table/cells/ReviveArchivedFeatureCell/ReviveArchivedFeatureCell';
+import { ReviveArchivedFeatureCell } from 'component/archive/ArchiveTable/ReviveArchivedFeatureCell/ReviveArchivedFeatureCell';
 import { useStyles } from '../../feature/FeatureToggleList/styles';
 import { useVirtualizedRange } from '../../../hooks/useVirtualizedRange';
 import {
@@ -68,21 +68,22 @@ export const ArchiveTable = ({
 
     const { reviveFeature } = useFeatureArchiveApi();
 
-    const onRevive = (feature: string) => {
-        reviveFeature(feature)
-            .then(refetch)
-            .then(() =>
-                setToastData({
-                    type: 'success',
-                    title: "And we're back!",
-                    text: 'The feature toggle has been revived.',
-                    confetti: true,
-                })
-            )
-            .catch(e => setToastApiError(e.toString()));
+    const onRevive = async (feature: string) => {
+        try {
+            await reviveFeature(feature);
+            await refetch();
+            setToastData({
+                type: 'success',
+                title: "And we're back!",
+                text: 'The feature toggle has been revived.',
+                confetti: true,
+            });
+        } catch (e: any) {
+            setToastApiError(e.toString());
+        }
     };
 
-    const columns = useColumns(onRevive);
+    const columns = getColumns(onRevive);
 
     const data = useMemo(
         () =>
@@ -160,6 +161,41 @@ export const ArchiveTable = ({
     const [firstRenderedIndex, lastRenderedIndex] =
         useVirtualizedRange(rowHeight);
 
+    const renderRows = () => {
+        return (
+            <>
+                {rows.map((row, index) => {
+                    const isVirtual =
+                        index < firstRenderedIndex || index > lastRenderedIndex;
+
+                    if (isVirtual) {
+                        return null;
+                    }
+
+                    prepareRow(row);
+                    return (
+                        <TableRow hover {...row.getRowProps()}>
+                            {row.cells.map(cell => (
+                                <TableCell
+                                    {...cell.getCellProps({
+                                        style: {
+                                            flex: cell.column.minWidth
+                                                ? '1 0 auto'
+                                                : undefined,
+                                        },
+                                    })}
+                                    className={classes.cell}
+                                >
+                                    {cell.render('Cell')}
+                                </TableCell>
+                            ))}
+                        </TableRow>
+                    );
+                })}
+            </>
+        );
+    };
+
     return (
         <PageContent
             isLoading={loading}
@@ -194,40 +230,7 @@ export const ArchiveTable = ({
                                     headerGroups={headerGroups as any}
                                 />
                                 <TableBody {...getTableBodyProps()}>
-                                    {rows.map((row, index) => {
-                                        const isVirtual =
-                                            index < firstRenderedIndex ||
-                                            index > lastRenderedIndex;
-
-                                        if (isVirtual) {
-                                            return null;
-                                        }
-
-                                        prepareRow(row);
-                                        return (
-                                            <TableRow
-                                                hover
-                                                {...row.getRowProps()}
-                                            >
-                                                {row.cells.map(cell => (
-                                                    <TableCell
-                                                        {...cell.getCellProps({
-                                                            style: {
-                                                                flex: cell
-                                                                    .column
-                                                                    .minWidth
-                                                                    ? '1 0 auto'
-                                                                    : undefined,
-                                                            },
-                                                        })}
-                                                        className={classes.cell}
-                                                    >
-                                                        {cell.render('Cell')}
-                                                    </TableCell>
-                                                ))}
-                                            </TableRow>
-                                        );
-                                    })}
+                                    {renderRows()}
                                 </TableBody>
                             </Table>
                         </SearchHighlightProvider>
@@ -249,7 +252,7 @@ export const ArchiveTable = ({
     );
 };
 
-const useColumns = (onRevive: any) => {
+function getColumns(onRevive: (feature: string) => Promise<void>) {
     return [
         {
             id: 'Seen',
@@ -323,4 +326,4 @@ const useColumns = (onRevive: any) => {
             ),
         },
     ];
-};
+}

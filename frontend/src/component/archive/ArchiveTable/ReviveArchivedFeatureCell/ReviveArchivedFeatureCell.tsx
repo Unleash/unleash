@@ -1,5 +1,5 @@
 import { VFC } from 'react';
-import { ActionCell } from '../ActionCell/ActionCell';
+import { ActionCell } from '../../../common/Table/cells/ActionCell/ActionCell';
 import { Undo } from '@mui/icons-material';
 import { IconButton } from '@mui/material';
 

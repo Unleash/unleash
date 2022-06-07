@@ -57,7 +57,6 @@ export default class FeatureController extends Controller {
         this.get('/:featureName', this.getFeatureToggle);
 
         if (experimental && experimental.clientFeatureMemoize) {
-            // @ts-expect-error
             this.cache = experimental.clientFeatureMemoize.enabled;
             this.cachedFeatures = memoizee(
                 (query) => this.resolveFeaturesAndSegments(query),

@@ -1,0 +1,19 @@
+version: '3.1'
+
+services:
+  postgres:
+    image: postgres:alpine3.15
+    environment:
+      POSTGRES_USER: unleash_user
+      POSTGRES_PASSWORD: passord
+      POSTGRES_DB: unleash
+    ports:
+      - 5432:5432
+
+  pgadmin:
+    image: dpage/pgadmin4:6.8
+    environment:
+      PGADMIN_DEFAULT_EMAIL: 'admin@admin.com'
+      PGADMIN_DEFAULT_PASSWORD: 'admin'
+    ports:
+      - 8080:80

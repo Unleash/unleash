@@ -2,7 +2,7 @@ import { SyntheticEvent, VFC } from 'react';
 import { ActionCell } from '../../../common/Table/cells/ActionCell/ActionCell';
 import { Undo } from '@mui/icons-material';
 import PermissionIconButton from '../../../common/PermissionIconButton/PermissionIconButton';
-import { ADMIN } from '../../../providers/AccessProvider/permissions';
+import { UPDATE_FEATURE } from '../../../providers/AccessProvider/permissions';
 
 interface IReviveArchivedFeatureCell {
     onRevive: (event: SyntheticEvent<Element, Event>) => void;
@@ -18,7 +18,7 @@ export const ReviveArchivedFeatureCell: VFC<IReviveArchivedFeatureCell> = ({
             <PermissionIconButton
                 onClick={onRevive}
                 projectId={project}
-                permission={ADMIN}
+                permission={UPDATE_FEATURE}
                 tooltipProps={{ title: 'Revive feature' }}
             >
                 <Undo />

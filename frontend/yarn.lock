@@ -5041,10 +5041,10 @@ pkginfo@^0.4.1:
   resolved "https://registry.yarnpkg.com/pkginfo/-/pkginfo-0.4.1.tgz#b5418ef0439de5425fc4995042dced14fb2a84ff"
   integrity sha1-tUGO8EOd5UJfxJlQQtztFPsqhP8=
 
-plausible-tracker@0.3.7:
-  version "0.3.7"
-  resolved "https://registry.yarnpkg.com/plausible-tracker/-/plausible-tracker-0.3.7.tgz#e93d241a1c46bf70f05317a6f177feff6c4865d5"
-  integrity sha512-yhM3VJekqMIEDbvx/PqratMyHpF4T/skTO4owzxSo3YMB/ZVmAYwh9c2iKRuJnkE3b4NwsMMW9b0Vw5VD5Gpyw==
+plausible-tracker@0.3.8:
+  version "0.3.8"
+  resolved "https://registry.yarnpkg.com/plausible-tracker/-/plausible-tracker-0.3.8.tgz#9b8b322cc41e0e1d6473869ef234deea365a5a40"
+  integrity sha512-lmOWYQ7s9KOUJ1R+YTOR3HrjdbxIS2Z4de0P/Jx2dQPteznJl2eX3tXxKClpvbfyGP59B5bbhW8ftN59HbbFSg==
 
 postcss@^8.4.13:
   version "8.4.13"

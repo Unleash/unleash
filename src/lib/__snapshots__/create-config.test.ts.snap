@@ -18,7 +18,7 @@ Object {
   },
   "clientFeatureCaching": Object {
     "enabled": true,
-    "maxAge": 30000,
+    "maxAge": 600,
   },
   "db": Object {
     "acquireConnectionTimeout": 30000,

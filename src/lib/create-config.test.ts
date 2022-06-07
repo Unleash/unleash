@@ -366,10 +366,10 @@ test('Supports multiple domains comma separated in environment variables', () =>
     ]);
 });
 
-test('Should enable client feature caching with 30 seconds max age by default', () => {
+test('Should enable client feature caching with .6 seconds max age by default', () => {
     const config = createConfig({});
     expect(config.clientFeatureCaching.enabled).toBe(true);
-    expect(config.clientFeatureCaching.maxAge).toBe(30000);
+    expect(config.clientFeatureCaching.maxAge).toBe(600);
 });
 
 test('Should use overrides from options for client feature caching', () => {

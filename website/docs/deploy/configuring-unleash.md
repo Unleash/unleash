@@ -124,7 +124,7 @@ unleash.start(unleashOptions);
 - **environmentEnableOverrides** - A list of environment names to force enable at startup. This is feature should be used with caution. When passed a list, this will enable each environment in that list and disable all other environments. You can't use this to disable all environments, passing an empty list will do nothing. If one of the given environments is not already enabled on startup then it will also enable projects and toggles for that environment. Note that if one of the passed environments doesn't already exist this will do nothing aside from log a warning.
 - **clientFeatureCaching** - configuring memoization of the /api/client/features endpoint
   - `enabled` - set to true by default - Overridable with (`CLIENT_FEATURE_CACHING_ENABLED`)
-  - `maxAge` - the time to cache features, set to 30000 milliseconds by default - Overridable with (`CLIENT_FEATURE_CACHING_MAXAGE`) ) (accepts milliseconds)
+  - `maxAge` - the time to cache features, set to 600 milliseconds by default - Overridable with (`CLIENT_FEATURE_CACHING_MAXAGE`) ) (accepts milliseconds)
 
 You can also set the environment variable `ENABLED_ENVIRONMENTS` to a comma delimited string of environment names to override environments.
 

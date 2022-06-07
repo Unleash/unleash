@@ -188,6 +188,34 @@ test('should validate feature strategy segment limit', async () => {
     );
 });
 
+test('should clone feature strategy segments', async () => {
+    const constraints = mockConstraints();
+    await createSegment({ name: 'S1', constraints });
+    await createFeatureToggle(mockFeatureToggle());
+    await createFeatureToggle(mockFeatureToggle());
+
+    const [feature1, feature2] = await fetchFeatures();
+    const strategy1 = feature1.strategies[0].id;
+    const strategy2 = feature2.strategies[0].id;
+    const [segment1] = await fetchSegments();
+    await addSegmentToStrategy(segment1.id, feature1.strategies[0].id);
+
+    let segments1 = await app.services.segmentService.getByStrategy(strategy1);
+    let segments2 = await app.services.segmentService.getByStrategy(strategy2);
+    expect(collectIds(segments1)).toEqual([segment1.id]);
+    expect(collectIds(segments2)).toEqual([]);
+
+    await app.services.segmentService.cloneStrategySegments(
+        strategy1,
+        strategy2,
+    );
+
+    segments1 = await app.services.segmentService.getByStrategy(strategy1);
+    segments2 = await app.services.segmentService.getByStrategy(strategy2);
+    expect(collectIds(segments1)).toEqual([segment1.id]);
+    expect(collectIds(segments2)).toEqual([segment1.id]);
+});
+
 test('should store segment-created and segment-deleted events', async () => {
     const constraints = mockConstraints();
     const user = new User({ id: 1, email: 'test@example.com' });

@@ -62,7 +62,12 @@ export const createServices = (
     const versionService = new VersionService(stores, config);
     const healthService = new HealthService(stores, config);
     const userFeedbackService = new UserFeedbackService(stores, config);
-    const featureToggleServiceV2 = new FeatureToggleService(stores, config);
+    const segmentService = new SegmentService(stores, config);
+    const featureToggleServiceV2 = new FeatureToggleService(
+        stores,
+        config,
+        segmentService,
+    );
     const environmentService = new EnvironmentService(stores, config);
     const featureTagService = new FeatureTagService(stores, config);
     const projectHealthService = new ProjectHealthService(
@@ -77,7 +82,6 @@ export const createServices = (
         featureToggleServiceV2,
     );
     const userSplashService = new UserSplashService(stores, config);
-    const segmentService = new SegmentService(stores, config);
     const openApiService = new OpenApiService(config);
     const clientSpecService = new ClientSpecService(config);
 

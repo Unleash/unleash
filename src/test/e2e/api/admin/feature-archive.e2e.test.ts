@@ -105,7 +105,7 @@ test('returns three archived toggles with archivedAt', async () => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect((res) => {
-            expect(res.body.features.length === 3).toBe(true);
+            expect(res.body.features.length).toEqual(3);
             expect(res.body.features[0].archivedAt).toBeTruthy();
         });
 });

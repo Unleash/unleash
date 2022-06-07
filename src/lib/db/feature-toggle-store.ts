@@ -173,6 +173,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             createdAt: row.created_at,
             lastSeenAt: row.last_seen_at,
             impressionData: row.impression_data,
+            archivedAt: row.archived_at,
         };
     }
 

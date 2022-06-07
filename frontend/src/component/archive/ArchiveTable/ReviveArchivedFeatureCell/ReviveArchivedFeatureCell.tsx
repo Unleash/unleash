@@ -5,7 +5,7 @@ import PermissionIconButton from '../../../common/PermissionIconButton/Permissio
 import { ADMIN } from '../../../providers/AccessProvider/permissions';
 
 interface IReviveArchivedFeatureCell {
-    onRevive: any;
+    onRevive: (featureName: string) => Promise<void>;
     project: string;
 }
 

@@ -38,7 +38,7 @@ import theme from 'themes/theme';
 import { FeatureSchema } from '../../../openapi';
 import { useFeatureArchiveApi } from '../../../hooks/api/actions/useFeatureArchiveApi/useReviveFeatureApi';
 import useToast from '../../../hooks/useToast';
-import {formatUnknownError} from "../../../utils/formatUnknownError";
+import { formatUnknownError } from '../../../utils/formatUnknownError';
 
 export interface IFeaturesArchiveTableProps {
     archivedFeatures: FeatureSchema[];
@@ -326,4 +326,4 @@ const getColumns = (onRevive: (feature: string) => Promise<void>) => {
             ),
         },
     ];
-}
+};

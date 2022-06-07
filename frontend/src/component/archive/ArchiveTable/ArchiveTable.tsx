@@ -251,7 +251,7 @@ export const ArchiveTable = ({
     );
 };
 
-function getColumns(onRevive: (feature: string) => Promise<void>) {
+const getColumns = (onRevive: (feature: string) => Promise<void>) => {
     return [
         {
             id: 'Seen',

@@ -57,13 +57,12 @@ export default class FeatureController extends Controller {
         this.get('/:featureName', this.getFeatureToggle);
 
         if (experimental && experimental.clientFeatureMemoize) {
-            // @ts-ignore
             this.cache = experimental.clientFeatureMemoize.enabled;
             this.cachedFeatures = memoizee(
                 (query) => this.resolveFeaturesAndSegments(query),
                 {
                     promise: true,
-                    // @ts-ignore
+                    // @ts-expect-error
                     maxAge: experimental.clientFeatureMemoize.maxAge,
                     normalizer(args) {
                         // args is arguments object as accessible in memoized function

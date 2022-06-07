@@ -45,14 +45,14 @@ class StateController extends Controller {
         const { drop, keep } = req.query;
         // TODO: Should override request type so file is a type on request
         let data;
-        // @ts-ignore
+        // @ts-expect-error
         if (req.file) {
-            // @ts-ignore
+            // @ts-expect-error
             if (mime.getType(req.file.originalname) === 'text/yaml') {
-                // @ts-ignore
+                // @ts-expect-error
                 data = YAML.load(req.file.buffer);
             } else {
-                // @ts-ignore
+                // @ts-expect-error
                 data = JSON.parse(req.file.buffer);
             }
         } else {

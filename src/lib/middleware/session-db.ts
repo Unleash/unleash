@@ -18,7 +18,7 @@ function sessionDb(
         store = new KnexSessionStore({
             tablename: 'unleash_session',
             createtable: false,
-            // @ts-ignore
+            // @ts-expect-error
             knex,
         });
     } else {

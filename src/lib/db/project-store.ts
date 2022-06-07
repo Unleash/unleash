@@ -84,7 +84,6 @@ class ProjectStore implements IProjectStore {
         }
         const projectAndFeatureCount = await projects;
 
-        // @ts-ignore
         const projectsWithFeatureCount = projectAndFeatureCount.map(
             this.mapProjectWithCountRow,
         );

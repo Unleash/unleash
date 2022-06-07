@@ -630,7 +630,6 @@ class FeatureToggleService {
         newToggle.environments.forEach((e: IEnvironmentDetail) =>
             e.strategies.forEach((s: IStrategyConfig) => {
                 if (replaceGroupId && s.parameters.hasOwnProperty('groupId')) {
-                    //@ts-ignore
                     s.parameters.groupId = newFeatureName;
                 }
                 delete s.id;

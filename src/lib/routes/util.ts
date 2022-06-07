@@ -27,7 +27,7 @@ export const handleErrors: (
     error: Error,
 ) => void = (res, logger, error) => {
     logger.warn(error.message);
-    // @ts-ignore
+    // @ts-expect-error
     // eslint-disable-next-line no-param-reassign
     error.isJoi = true;
 

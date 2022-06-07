@@ -23,6 +23,7 @@ export const FeaturesArchiveTable = () => {
 
     return (
         <ArchiveTable
+            title={'Archived'}
             archivedFeatures={archivedFeatures}
             loading={loading}
             searchParams={searchParams}
@@ -30,7 +31,6 @@ export const FeaturesArchiveTable = () => {
             storedParams={storedParams}
             setStoredParams={setStoredParams}
             refetch={refetchArchived}
-            inProject={false}
         />
     );
 };

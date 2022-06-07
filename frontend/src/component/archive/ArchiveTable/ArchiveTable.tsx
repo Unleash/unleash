@@ -43,22 +43,22 @@ export interface IFeaturesArchiveTableProps {
     archivedFeatures: FeatureSchema[];
     refetch: any;
     loading: boolean;
-    inProject: boolean;
     storedParams: any;
     setStoredParams: any;
     searchParams: any;
     setSearchParams: any;
+    title: string;
 }
 
 export const ArchiveTable = ({
     archivedFeatures = [],
     loading,
-    inProject,
     refetch,
     storedParams,
     setStoredParams,
     searchParams,
     setSearchParams,
+    title,
 }: IFeaturesArchiveTableProps) => {
     const rowHeight = theme.shape.tableRowHeight;
     const { classes } = useStyles();
@@ -201,9 +201,7 @@ export const ArchiveTable = ({
             isLoading={loading}
             header={
                 <PageHeader
-                    title={`${
-                        inProject ? 'Project Features Archive' : 'Archived'
-                    } (${
+                    title={`${title} (${
                         rows.length < data.length
                             ? `${rows.length} of ${data.length}`
                             : data.length
@@ -321,6 +319,7 @@ function getColumns(onRevive: (feature: string) => Promise<void>) {
             disableGlobalFilter: true,
             Cell: ({ row: { original } }: any) => (
                 <ReviveArchivedFeatureCell
+                    project={original.project}
                     onRevive={() => onRevive(original.name)}
                 />
             ),

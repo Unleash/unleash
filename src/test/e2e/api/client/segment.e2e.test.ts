@@ -94,6 +94,7 @@ afterAll(async () => {
 afterEach(async () => {
     await db.stores.segmentStore.deleteAll();
     await db.stores.featureToggleStore.deleteAll();
+    await db.stores.eventStore.deleteAll();
 });
 
 test('should inline segment constraints into features by default', async () => {
@@ -224,4 +225,19 @@ test('should only return segments to clients with the segments capability', asyn
         .flatMap((s) => s.constraints);
     expect(collectIds(supportedClientResponse.segments)).toEqual(segmentIds);
     expect(supportedClientConstraints.length).toEqual(0);
+});
+
+test('should store segment-created and segment-deleted events', async () => {
+    const constraints = mockConstraints();
+    const user = new User({ id: 1, email: 'test@example.com' });
+
+    await createSegment({ name: 'S1', constraints });
+    const [segment1] = await fetchSegments();
+    await app.services.segmentService.delete(segment1.id, user);
+    const events = await db.stores.eventStore.getEvents();
+
+    expect(events[0].type).toEqual('segment-deleted');
+    expect(events[0].data.id).toEqual(segment1.id);
+    expect(events[1].type).toEqual('segment-created');
+    expect(events[1].data.id).toEqual(segment1.id);
 });

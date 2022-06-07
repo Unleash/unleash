@@ -16,6 +16,10 @@ Object {
     "initApiTokens": Array [],
     "type": "open-source",
   },
+  "clientFeatureCaching": Object {
+    "enabled": true,
+    "maxAge": 30000,
+  },
   "db": Object {
     "acquireConnectionTimeout": 30000,
     "applicationName": "unleash",

@@ -47,7 +47,7 @@ export default class FeatureController extends Controller {
         config: IUnleashConfig,
     ) {
         super(config);
-        const { experimental } = config;
+        const { clientFeatureCaching } = config;
         this.featureToggleServiceV2 = featureToggleServiceV2;
         this.segmentService = segmentService;
         this.clientSpecService = clientSpecService;
@@ -56,14 +56,13 @@ export default class FeatureController extends Controller {
         this.get('/', this.getAll);
         this.get('/:featureName', this.getFeatureToggle);
 
-        if (experimental && experimental.clientFeatureMemoize) {
-            this.cache = experimental.clientFeatureMemoize.enabled;
+        if (clientFeatureCaching?.enabled) {
+            this.cache = true;
             this.cachedFeatures = memoizee(
                 (query) => this.resolveFeaturesAndSegments(query),
                 {
                     promise: true,
-                    // @ts-expect-error
-                    maxAge: experimental.clientFeatureMemoize.maxAge,
+                    maxAge: clientFeatureCaching.maxAge,
                     normalizer(args) {
                         // args is arguments object as accessible in memoized function
                         return JSON.stringify(args[0]);
@@ -154,10 +153,7 @@ export default class FeatureController extends Controller {
 
         const [features, segments] = this.cache
             ? await this.cachedFeatures(query)
-            : await Promise.all([
-                  this.featureToggleServiceV2.getClientFeatures(query),
-                  this.segmentService.getActive(),
-              ]);
+            : await this.resolveFeaturesAndSegments(query);
 
         if (this.clientSpecService.requestSupportsSpec(req, 'segments')) {
             res.json({ version, features, query, segments });

@@ -17,6 +17,7 @@ import {
     IUIConfig,
     ICspDomainConfig,
     ICspDomainOptions,
+    IClientCachingOption,
 } from './types/option';
 import { getDefaultLogProvider, LogLevel, validateLogProvider } from './logger';
 import { defaultCustomAuthDenyAll } from './default-custom-auth-deny-all';
@@ -50,6 +51,34 @@ function mergeAll<T>(objects: Partial<T>[]): T {
 
 function loadExperimental(options: IUnleashOptions): IExperimentalOptions {
     return options.experimental || {};
+}
+const defaultClientCachingOptions: IClientCachingOption = {
+    enabled: true,
+    maxAge: secondsToMilliseconds(30),
+};
+
+function loadClientCachingOptions(
+    options: IUnleashOptions,
+): IClientCachingOption {
+    let envs: Partial<IClientCachingOption> = {};
+    if (process.env.CLIENT_FEATURE_CACHING_MAXAGE) {
+        envs.maxAge = parseEnvVarNumber(
+            process.env.CLIENT_FEATURE_CACHING_MAXAGE,
+            secondsToMilliseconds(30),
+        );
+    }
+    if (process.env.CLIENT_FEATURE_CACHING_ENABLED) {
+        envs.enabled = parseEnvVarBoolean(
+            process.env.CLIENT_FEATURE_CACHING_ENABLED,
+            true,
+        );
+    }
+
+    return mergeAll([
+        defaultClientCachingOptions,
+        options.clientFeatureCaching,
+        envs,
+    ]);
 }
 
 function loadUI(options: IUnleashOptions): IUIConfig {
@@ -364,6 +393,8 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         DEFAULT_STRATEGY_SEGMENTS_LIMIT,
     );
 
+    const clientFeatureCaching = loadClientCachingOptions(options);
+
     return {
         db,
         session,
@@ -389,6 +420,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         inlineSegmentConstraints,
         segmentValuesLimit,
         strategySegmentsLimit,
+        clientFeatureCaching,
     };
 }
 

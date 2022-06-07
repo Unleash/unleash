@@ -5041,10 +5041,10 @@ pkginfo@^0.4.1:
   resolved "https://registry.yarnpkg.com/pkginfo/-/pkginfo-0.4.1.tgz#b5418ef0439de5425fc4995042dced14fb2a84ff"
   integrity sha1-tUGO8EOd5UJfxJlQQtztFPsqhP8=
 
-plausible-tracker@^0.3.5:
-  version "0.3.5"
-  resolved "https://registry.yarnpkg.com/plausible-tracker/-/plausible-tracker-0.3.5.tgz#49c09a7eb727f1d5c859c3fc8072837b13ee9b85"
-  integrity sha512-6c6VPdPtI9KmIsfr8zLBViIDMt369eeaNA1J8JrAmAtrpSkeJWvjwcJ+cLn7gVJn5AtQWC8NgSEee2d/5RNytA==
+plausible-tracker@0.3.7:
+  version "0.3.7"
+  resolved "https://registry.yarnpkg.com/plausible-tracker/-/plausible-tracker-0.3.7.tgz#e93d241a1c46bf70f05317a6f177feff6c4865d5"
+  integrity sha512-yhM3VJekqMIEDbvx/PqratMyHpF4T/skTO4owzxSo3YMB/ZVmAYwh9c2iKRuJnkE3b4NwsMMW9b0Vw5VD5Gpyw==
 
 postcss@^8.4.13:
   version "8.4.13"
@@ -6028,7 +6028,19 @@ vite-tsconfig-paths@3.5.0:
     recrawl-sync "^2.0.3"
     tsconfig-paths "^4.0.0"
 
-vite@2.9.9, vite@^2.9.9:
+vite@2.9.10:
+  version "2.9.10"
+  resolved "https://registry.yarnpkg.com/vite/-/vite-2.9.10.tgz#f574d96655622c2e0fbc662edd0ed199c60fe91a"
+  integrity sha512-TwZRuSMYjpTurLqXspct+HZE7ONiW9d+wSWgvADGxhDPPyoIcNywY+RX4ng+QpK30DCa1l/oZgi2PLZDibhzbQ==
+  dependencies:
+    esbuild "^0.14.27"
+    postcss "^8.4.13"
+    resolve "^1.22.0"
+    rollup "^2.59.0"
+  optionalDependencies:
+    fsevents "~2.3.2"
+
+vite@^2.9.9:
   version "2.9.9"
   resolved "https://registry.yarnpkg.com/vite/-/vite-2.9.9.tgz#8b558987db5e60fedec2f4b003b73164cb081c5e"
   integrity sha512-ffaam+NgHfbEmfw/Vuh6BHKKlI/XIAhxE5QSS7gFLIngxg171mg1P3a4LSRME0z2ZU1ScxoKzphkipcYwSD5Ew==
@@ -6040,10 +6052,10 @@ vite@2.9.9, vite@^2.9.9:
   optionalDependencies:
     fsevents "~2.3.2"
 
-vitest@0.14.0:
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/vitest/-/vitest-0.14.0.tgz#8fe92608d5379972b8f5a2424187fc4a3e453cd5"
-  integrity sha512-3Ns7c6TindS6OmweY4dU7sWT7g/YJBenwsMdUMEO/oS81bzoCEaA58vlg/9U1WRjrNFwQYsuyISehAvCKwoMZQ==
+vitest@0.14.1:
+  version "0.14.1"
+  resolved "https://registry.yarnpkg.com/vitest/-/vitest-0.14.1.tgz#f2fd8b31abdbbadb9ee895f8fde35a068ea2a5f5"
+  integrity sha512-2UUm6jYgkwh7Y3VKSRR8OuaNCm+iA5LPDnal7jyITN39maZK9L+JVxqjtQ39PSFo5Fl3/BgaJvER6GGHX9JLxg==
   dependencies:
     "@types/chai" "^4.3.1"
     "@types/chai-subset" "^1.3.3"

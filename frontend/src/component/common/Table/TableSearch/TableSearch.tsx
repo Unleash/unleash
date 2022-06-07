@@ -14,7 +14,7 @@ interface ITableSearchProps {
 export const TableSearch: FC<ITableSearchProps> = ({
     initialValue,
     onChange = () => {},
-    placeholder = 'Search',
+    placeholder,
     hasFilters,
     getSearchContext,
 }) => {
@@ -30,7 +30,7 @@ export const TableSearch: FC<ITableSearchProps> = ({
         <TableSearchField
             value={searchInputState!}
             onChange={onSearchChange}
-            placeholder={`${placeholder}…`}
+            placeholder={placeholder}
             hasFilters={hasFilters}
             getSearchContext={getSearchContext}
         />

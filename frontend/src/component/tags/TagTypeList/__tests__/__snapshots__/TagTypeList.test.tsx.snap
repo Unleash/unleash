@@ -53,13 +53,13 @@ exports[`renders an empty list correctly 1`] = `
                     onClick={[Function]}
                   >
                     <input
-                      aria-label="Search…"
+                      aria-label="Search (Ctrl+K)"
                       className="MuiInputBase-input mui-j79lc6-MuiInputBase-input"
                       onAnimationStart={[Function]}
                       onBlur={[Function]}
                       onChange={[Function]}
                       onFocus={[Function]}
-                      placeholder="Search…"
+                      placeholder="Search (Ctrl+K)"
                       type="text"
                       value=""
                     />

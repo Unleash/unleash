@@ -91,7 +91,7 @@ afterAll(async () => {
     await db.destroy();
 });
 
-beforeEach(async () => {
+afterEach(async () => {
     await db.stores.segmentStore.deleteAll();
     await db.stores.featureToggleStore.deleteAll();
 });

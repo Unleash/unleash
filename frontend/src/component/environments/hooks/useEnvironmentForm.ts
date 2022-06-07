@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import useEnvironmentApi from 'hooks/api/actions/useEnvironmentApi/useEnvironmentApi';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 const useEnvironmentForm = (initialName = '', initialType = 'development') => {
-    const NAME_EXISTS_ERROR = 'Error: Environment';
     const [name, setName] = useState(initialName);
     const [type, setType] = useState(initialType);
     const [errors, setErrors] = useState({});
@@ -35,16 +35,11 @@ const useEnvironmentForm = (initialName = '', initialType = 'development') => {
 
         try {
             await validateEnvName(name);
-        } catch (e: any) {
-            if (e.toString().includes(NAME_EXISTS_ERROR)) {
-                setErrors(prev => ({
-                    ...prev,
-                    name: 'Name already exists',
-                }));
-            }
+            return true;
+        } catch (error: unknown) {
+            setErrors(prev => ({ ...prev, name: formatUnknownError(error) }));
             return false;
         }
-        return true;
     };
 
     const clearErrors = () => {

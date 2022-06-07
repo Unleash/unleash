@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import useContextsApi from 'hooks/api/actions/useContextsApi/useContextsApi';
 import { ILegalValue } from 'interfaces/context';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 export const useContextForm = (
     initialContextName = '',
@@ -41,8 +42,6 @@ export const useContextForm = (
         };
     };
 
-    const NAME_EXISTS_ERROR = 'A context field with that name already exist';
-
     const validateContext = async () => {
         if (contextName.length === 0) {
             setErrors(prev => ({ ...prev, name: 'Name can not be empty.' }));
@@ -51,18 +50,8 @@ export const useContextForm = (
         try {
             await validateContextName(contextName);
             return true;
-        } catch (e: any) {
-            if (e.toString().includes(NAME_EXISTS_ERROR)) {
-                setErrors(prev => ({
-                    ...prev,
-                    name: 'A context field with that name already exist',
-                }));
-            } else {
-                setErrors(prev => ({
-                    ...prev,
-                    name: e.toString(),
-                }));
-            }
+        } catch (error: unknown) {
+            setErrors(prev => ({ ...prev, name: formatUnknownError(error) }));
             return false;
         }
     };

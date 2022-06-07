@@ -3,6 +3,7 @@ import { IPermission } from 'interfaces/project';
 import cloneDeep from 'lodash.clonedeep';
 import useProjectRolePermissions from 'hooks/api/getters/useProjectRolePermissions/useProjectRolePermissions';
 import useProjectRolesApi from 'hooks/api/actions/useProjectRolesApi/useProjectRolesApi';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 export interface ICheckedPermission {
     [key: string]: IPermission;
@@ -203,21 +204,14 @@ const useProjectRoleForm = (
             permissions,
         };
     };
-    const NAME_EXISTS_ERROR =
-        'BadRequestError: There already exists a role with the name';
+
     const validateNameUniqueness = async () => {
         const payload = getProjectRolePayload();
 
         try {
             await validateRole(payload);
-        } catch (e) {
-            // @ts-expect-error
-            if (e.toString().includes(NAME_EXISTS_ERROR)) {
-                setErrors(prev => ({
-                    ...prev,
-                    name: 'There already exists a role with this role name',
-                }));
-            }
+        } catch (error: unknown) {
+            setErrors(prev => ({ ...prev, name: formatUnknownError(error) }));
         }
     };
 

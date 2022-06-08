@@ -6,9 +6,13 @@ import { IConstraint } from '../../types/model';
 import { NONE } from '../../types/permissions';
 import Controller from '../controller';
 import { Logger } from '../../logger';
+import { OpenApiService } from '../../services/openapi-service';
+import { createRequestSchema } from '../../openapi';
 
 export default class ConstraintController extends Controller {
     private featureService: FeatureToggleService;
+
+    private openApiService: OpenApiService;
 
     private readonly logger: Logger;
 
@@ -16,17 +20,35 @@ export default class ConstraintController extends Controller {
         config: IUnleashConfig,
         {
             featureToggleServiceV2,
-        }: Pick<IUnleashServices, 'featureToggleServiceV2'>,
+            openApiService,
+        }: Pick<IUnleashServices, 'featureToggleServiceV2' | 'openApiService'>,
     ) {
         super(config);
         this.featureService = featureToggleServiceV2;
+        this.openApiService = openApiService;
         this.logger = config.getLogger('/admin-api/validation.ts');
 
-        this.post('/validate', this.validateConstraint, NONE);
+        this.route({
+            method: 'post',
+            path: '/validate',
+            handler: this.validateConstraint,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'validateConstraint',
+                    requestBody: createRequestSchema('constraintSchema'),
+                    responses: {
+                        204: { description: 'validConstraint' },
+                        400: { description: 'invalidConstraint' },
+                    },
+                }),
+            ],
+        });
     }
 
     async validateConstraint(
-        req: Request<{}, undefined, IConstraint>,
+        req: Request<void, void, IConstraint>,
         res: Response,
     ): Promise<void> {
         await this.featureService.validateConstraint(req.body);

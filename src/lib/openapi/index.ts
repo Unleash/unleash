@@ -41,6 +41,12 @@ export type SchemaId = typeof schemas[keyof typeof schemas]['$id'];
 // Schemas must list all $ref schemas in "components", including nested schemas.
 export type SchemaRef = typeof schemas[keyof typeof schemas]['components'];
 
+// JSON schema properties that should not be included in the OpenAPI spec.
+export interface JsonSchemaProps {
+    $id: string;
+    components: object;
+}
+
 export interface AdminApiOperation
     extends Omit<OpenAPIV3.OperationObject, 'tags'> {
     operationId: string;
@@ -120,6 +126,13 @@ export const createResponseSchema = (
     };
 };
 
+// Remove JSONSchema keys that would result in an invalid OpenAPI spec.
+export const removeJsonSchemaProps = <T extends JsonSchemaProps>(
+    schema: T,
+): OpenAPIV3.SchemaObject => {
+    return omitKeys(schema, '$id', 'components');
+};
+
 export const createOpenApiSchema = (
     serverUrl?: string,
 ): Omit<OpenAPIV3.Document, 'paths'> => {
@@ -139,9 +152,7 @@ export const createOpenApiSchema = (
                     name: 'Authorization',
                 },
             },
-            schemas: mapValues(schemas, (schema) =>
-                omitKeys(schema, '$id', 'components'),
-            ),
+            schemas: mapValues(schemas, removeJsonSchemaProps),
         },
     };
 };

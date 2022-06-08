@@ -5,11 +5,12 @@ import {
     AdminApiOperation,
     ClientApiOperation,
     createOpenApiSchema,
+    JsonSchemaProps,
+    removeJsonSchemaProps,
     SchemaId,
 } from '../openapi';
 import { Logger } from '../logger';
 import { validateSchema } from '../openapi/validate';
-import { omitKeys } from '../util/omit-keys';
 
 export class OpenApiService {
     private readonly config: IUnleashConfig;
@@ -43,11 +44,11 @@ export class OpenApiService {
         return `${baseUriPath}/docs/openapi`;
     }
 
-    registerCustomSchemas<T extends object>(schemas: {
-        [name: string]: { $id: string; components: T };
-    }): void {
+    registerCustomSchemas<T extends JsonSchemaProps>(
+        schemas: Record<string, T>,
+    ): void {
         Object.entries(schemas).forEach(([name, schema]) => {
-            this.api.schema(name, omitKeys(schema, '$id', 'components'));
+            this.api.schema(name, removeJsonSchemaProps(schema));
         });
     }
 

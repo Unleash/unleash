@@ -21,7 +21,7 @@ export const ProjectFeaturesArchiveTable = ({
 
     const [searchParams, setSearchParams] = useSearchParams();
     const [storedParams, setStoredParams] = useLocalStorage(
-        'ProjectFeaturesArchiveTable:v1',
+        `${projectId}:ProjectFeaturesArchiveTable`,
         defaultSort
     );
 

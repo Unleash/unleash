@@ -5,7 +5,7 @@ import PermissionIconButton from '../../../common/PermissionIconButton/Permissio
 import { UPDATE_FEATURE } from '../../../providers/AccessProvider/permissions';
 
 interface IReviveArchivedFeatureCell {
-    onRevive: (event: SyntheticEvent<Element, Event>) => void;
+    onRevive: () => void;
     project: string;
 }
 
@@ -13,10 +13,15 @@ export const ReviveArchivedFeatureCell: VFC<IReviveArchivedFeatureCell> = ({
     onRevive,
     project,
 }) => {
+    const handleClick = (e: SyntheticEvent<Element, Event>) => {
+        e.preventDefault();
+        onRevive();
+    };
+
     return (
         <ActionCell>
             <PermissionIconButton
-                onClick={onRevive}
+                onClick={handleClick}
                 projectId={project}
                 permission={UPDATE_FEATURE}
                 tooltipProps={{ title: 'Revive feature' }}

@@ -9,16 +9,11 @@ import {
     TableRow,
     TableSearch,
 } from 'component/common/Table';
-import {
-    useFlexLayout,
-    useGlobalFilter,
-    useSortBy,
-    useTable,
-} from 'react-table';
+import { useFlexLayout, useSortBy, useTable } from 'react-table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { useMediaQuery } from '@mui/material';
 import { sortTypes } from 'utils/sortTypes';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -26,29 +21,26 @@ import { FeatureTypeCell } from '../../common/Table/cells/FeatureTypeCell/Featur
 import { FeatureSeenCell } from '../../common/Table/cells/FeatureSeenCell/FeatureSeenCell';
 import { LinkCell } from '../../common/Table/cells/LinkCell/LinkCell';
 import { FeatureStaleCell } from '../../feature/FeatureToggleList/FeatureStaleCell/FeatureStaleCell';
-import { TimeAgoCell } from '../../common/Table/cells/TimeAgoCell/TimeAgoCell';
 import { ReviveArchivedFeatureCell } from 'component/archive/ArchiveTable/ReviveArchivedFeatureCell/ReviveArchivedFeatureCell';
 import { useStyles } from '../../feature/FeatureToggleList/styles';
-import { useVirtualizedRange } from '../../../hooks/useVirtualizedRange';
-import {
-    featuresPlaceholder,
-    PageQueryType,
-} from '../../feature/FeatureToggleList/FeatureToggleListTable';
+import { featuresPlaceholder } from '../../feature/FeatureToggleList/FeatureToggleListTable';
 import theme from 'themes/theme';
 import { FeatureSchema } from '../../../openapi';
 import { useFeatureArchiveApi } from '../../../hooks/api/actions/useFeatureArchiveApi/useReviveFeatureApi';
 import useToast from '../../../hooks/useToast';
 import { formatUnknownError } from '../../../utils/formatUnknownError';
+import { useSearch } from '../../../hooks/useSearch';
+import { FeatureArchivedCell } from '../../common/Table/cells/FeatureArchivedCell/FeatureArchivedCell';
 
 export interface IFeaturesArchiveTableProps {
     archivedFeatures: FeatureSchema[];
+    title: string;
     refetch: any;
     loading: boolean;
     storedParams: any;
     setStoredParams: any;
     searchParams: any;
     setSearchParams: any;
-    title: string;
 }
 
 export const ArchiveTable = ({
@@ -69,7 +61,11 @@ export const ArchiveTable = ({
 
     const { reviveFeature } = useFeatureArchiveApi();
 
-    const onRevive = async (feature: string) => {
+    const [searchValue, setSearchValue] = useState(
+        searchParams.get('search') || ''
+    );
+
+    const onRevive = useCallback(async (feature: string) => {
         try {
             await reviveFeature(feature);
             await refetch();
@@ -82,16 +78,95 @@ export const ArchiveTable = ({
         } catch (e: unknown) {
             setToastApiError(formatUnknownError(e));
         }
-    };
+    }, []);
 
-    const columns = getColumns(onRevive);
+    const columns = useMemo(
+        () => [
+            {
+                id: 'Seen',
+                Header: 'Seen',
+                maxWidth: 85,
+                canSort: true,
+                Cell: FeatureSeenCell,
+                accessor: 'lastSeenAt',
+            },
+            {
+                id: 'Type',
+                Header: 'Type',
+                maxWidth: 80,
+                canSort: true,
+                Cell: FeatureTypeCell,
+            },
+            {
+                Header: 'Feature toggle Name',
+                accessor: 'name',
+                minWidth: 100,
+                Cell: ({ value, row: { original } }: any) => (
+                    <HighlightCell
+                        value={value}
+                        subtitle={original.description}
+                    />
+                ),
+                sortType: 'alphanumeric',
+            },
+            {
+                Header: 'Created',
+                accessor: 'createdAt',
+                minWidth: 120,
+                Cell: DateCell,
+                sortType: 'date',
+            },
+            {
+                Header: 'Archived',
+                accessor: 'archivedAt',
+                minWidth: 120,
+                Cell: FeatureArchivedCell,
+                sortType: 'date',
+            },
+            {
+                Header: 'Project ID',
+                accessor: 'project',
+                sortType: 'alphanumeric',
+                maxWidth: 150,
+                Cell: ({ value }: any) => (
+                    <LinkCell title={value} to={`/projects/${value}}`} />
+                ),
+            },
+            {
+                Header: 'Status',
+                accessor: 'stale',
+                Cell: FeatureStaleCell,
+                sortType: 'boolean',
+                maxWidth: 120,
+                disableGlobalFilter: true,
+            },
+            {
+                Header: 'Actions',
+                id: 'Actions',
+                align: 'center',
+                maxWidth: 85,
+                canSort: false,
+                disableGlobalFilter: true,
+                Cell: ({ row: { original } }: any) => (
+                    <ReviveArchivedFeatureCell
+                        project={original.project}
+                        onRevive={() => onRevive(original.name)}
+                    />
+                ),
+            },
+        ],
+        []
+    );
+
+    const {
+        data: searchedData,
+        getSearchText,
+        getSearchContext,
+    } = useSearch(columns, searchValue, archivedFeatures);
 
     const data = useMemo(
-        () =>
-            archivedFeatures?.length === 0 && loading
-                ? featuresPlaceholder
-                : archivedFeatures,
-        [archivedFeatures, loading]
+        () => (loading ? featuresPlaceholder : searchedData),
+        [searchedData, loading]
     );
 
     const [initialState] = useState(() => ({
@@ -104,32 +179,27 @@ export const ArchiveTable = ({
             },
         ],
         hiddenColumns: ['description'],
-        globalFilter: searchParams.get('search') || '',
     }));
 
     const {
-        getTableProps,
-        getTableBodyProps,
         headerGroups,
         rows,
+        state: { sortBy },
+        getTableBodyProps,
+        getTableProps,
         prepareRow,
-        state: { globalFilter, sortBy },
-        setGlobalFilter,
         setHiddenColumns,
     } = useTable(
         {
-            columns: columns as any,
-            data: data as any,
+            columns: columns as any[], // TODO: fix after `react-table` v8 update
+            data,
             initialState,
             sortTypes,
-            autoResetGlobalFilter: false,
-            autoResetSortBy: false,
             disableSortRemove: true,
-            disableMultiSort: true,
+            autoResetSortBy: false,
         },
-        useGlobalFilter,
-        useSortBy,
-        useFlexLayout
+        useFlexLayout,
+        useSortBy
     );
 
     useEffect(() => {
@@ -144,35 +214,28 @@ export const ArchiveTable = ({
     }, [setHiddenColumns, isSmallScreen, isMediumScreen]);
 
     useEffect(() => {
-        const tableState: PageQueryType = {};
+        if (loading) {
+            return;
+        }
+        const tableState: Record<string, string> = {};
         tableState.sort = sortBy[0].id;
         if (sortBy[0].desc) {
             tableState.order = 'desc';
         }
-        if (globalFilter) {
-            tableState.search = globalFilter;
+        if (searchValue) {
+            tableState.search = searchValue;
         }
 
         setSearchParams(tableState, {
             replace: true,
         });
         setStoredParams({ id: sortBy[0].id, desc: sortBy[0].desc || false });
-    }, [sortBy, globalFilter, setSearchParams, setStoredParams]);
-
-    const [firstRenderedIndex, lastRenderedIndex] =
-        useVirtualizedRange(rowHeight);
+    }, [loading, sortBy, searchValue, setSearchParams, setStoredParams]);
 
     const renderRows = () => {
         return (
             <>
-                {rows.map((row, index) => {
-                    const isVirtual =
-                        index < firstRenderedIndex || index > lastRenderedIndex;
-
-                    if (isVirtual) {
-                        return null;
-                    }
-
+                {rows.map((row) => {
                     prepareRow(row);
                     return (
                         <TableRow hover {...row.getRowProps()}>
@@ -210,8 +273,10 @@ export const ArchiveTable = ({
                     actions={
                         <>
                             <TableSearch
-                                initialValue={globalFilter}
-                                onChange={setGlobalFilter}
+                                initialValue={searchValue}
+                                onChange={setSearchValue}
+                                hasFilters
+                                getSearchContext={getSearchContext}
                             />
                         </>
                     }
@@ -223,8 +288,10 @@ export const ArchiveTable = ({
                 show={<TablePlaceholder />}
                 elseShow={() => (
                     <>
-                        <SearchHighlightProvider value={globalFilter}>
-                            <Table {...getTableProps()} rowHeight="standard">
+                        <SearchHighlightProvider
+                            value={getSearchText(searchValue)}
+                        >
+                            <Table {...getTableProps()} rowHeight={rowHeight}>
                                 <SortableTableHeader
                                     headerGroups={headerGroups as any}
                                 />
@@ -235,12 +302,12 @@ export const ArchiveTable = ({
                         </SearchHighlightProvider>
                         <ConditionallyRender
                             condition={
-                                rows.length === 0 && globalFilter?.length > 0
+                                rows.length === 0 && searchValue?.length > 0
                             }
                             show={
                                 <TablePlaceholder>
-                                    No features found matching &ldquo;
-                                    {globalFilter}&rdquo;
+                                    No feature toggles found matching &ldquo;
+                                    {searchValue}&rdquo;
                                 </TablePlaceholder>
                             }
                         />
@@ -249,81 +316,4 @@ export const ArchiveTable = ({
             />
         </PageContent>
     );
-};
-
-const getColumns = (onRevive: (feature: string) => Promise<void>) => {
-    return [
-        {
-            id: 'Seen',
-            Header: 'Seen',
-            maxWidth: 85,
-            canSort: true,
-            Cell: FeatureSeenCell,
-            disableGlobalFilter: true,
-        },
-        {
-            id: 'Type',
-            Header: 'Type',
-            maxWidth: 85,
-            canSort: true,
-            Cell: FeatureTypeCell,
-            disableGlobalFilter: true,
-        },
-        {
-            Header: 'Feature toggle Name',
-            accessor: 'name',
-            maxWidth: 150,
-            Cell: ({ value, row: { original } }: any) => (
-                <HighlightCell value={value} subtitle={original.description} />
-            ),
-            sortType: 'alphanumeric',
-        },
-        {
-            Header: 'Created',
-            accessor: 'createdAt',
-            maxWidth: 150,
-            Cell: DateCell,
-            sortType: 'date',
-            disableGlobalFilter: true,
-        },
-        {
-            Header: 'Archived',
-            accessor: 'archivedAt',
-            maxWidth: 150,
-            Cell: TimeAgoCell,
-            sortType: 'date',
-            disableGlobalFilter: true,
-        },
-        {
-            Header: 'Project ID',
-            accessor: 'project',
-            sortType: 'alphanumeric',
-            maxWidth: 150,
-            Cell: ({ value }: any) => (
-                <LinkCell title={value} to={`/projects/${value}}`} />
-            ),
-        },
-        {
-            Header: 'Status',
-            accessor: 'stale',
-            Cell: FeatureStaleCell,
-            sortType: 'boolean',
-            maxWidth: 120,
-            disableGlobalFilter: true,
-        },
-        {
-            Header: 'Actions',
-            id: 'Actions',
-            align: 'center',
-            maxWidth: 85,
-            canSort: false,
-            disableGlobalFilter: true,
-            Cell: ({ row: { original } }: any) => (
-                <ReviveArchivedFeatureCell
-                    project={original.project}
-                    onRevive={() => onRevive(original.name)}
-                />
-            ),
-        },
-    ];
 };

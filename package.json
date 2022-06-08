@@ -77,6 +77,8 @@
   },
   "dependencies": {
     "@unleash/express-openapi": "^0.2.0",
+    "ajv": "^8.11.0",
+    "ajv-formats": "^2.1.1",
     "async": "^3.2.3",
     "bcryptjs": "^2.4.3",
     "compression": "^1.7.4",
@@ -97,7 +99,7 @@
     "helmet": "^5.0.0",
     "joi": "^17.3.0",
     "js-yaml": "^4.1.0",
-    "json-schema-to-ts": "^2.0.0",
+    "json-schema-to-ts": "^2.5.3",
     "knex": "^2.0.0",
     "log4js": "^6.0.0",
     "make-fetch-happen": "^10.1.2",

@@ -2,20 +2,25 @@ import { Request, Response } from 'express';
 import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types';
 import { Logger } from '../../logger';
-
 import Controller from '../controller';
-
 import { extractUsername } from '../../util/extract-user';
 import { DELETE_FEATURE, NONE, UPDATE_FEATURE } from '../../types/permissions';
 import FeatureToggleService from '../../services/feature-toggle-service';
 import { IAuthRequest } from '../unleash-types';
-import { featuresResponse } from '../../openapi/spec/features-response';
-import { FeaturesSchema } from '../../openapi/spec/features-schema';
+import {
+    featuresSchema,
+    FeaturesSchema,
+} from '../../openapi/spec/features-schema';
+import { serializeDates } from '../../types/serialize-dates';
+import { OpenApiService } from '../../services/openapi-service';
+import { createResponseSchema } from '../../openapi';
 
 export default class ArchiveController extends Controller {
     private readonly logger: Logger;
 
     private featureService: FeatureToggleService;
+
+    private openApiService: OpenApiService;
 
     constructor(
         config: IUnleashConfig,
@@ -27,6 +32,7 @@ export default class ArchiveController extends Controller {
         super(config);
         this.logger = config.getLogger('/admin-api/archive.js');
         this.featureService = featureToggleServiceV2;
+        this.openApiService = openApiService;
 
         this.route({
             method: 'get',
@@ -36,7 +42,7 @@ export default class ArchiveController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
-                    responses: { 200: featuresResponse },
+                    responses: { 200: createResponseSchema('featuresSchema') },
                     deprecated: true,
                 }),
             ],
@@ -50,7 +56,7 @@ export default class ArchiveController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
-                    responses: { 200: featuresResponse },
+                    responses: { 200: createResponseSchema('featuresSchema') },
                     deprecated: true,
                 }),
             ],
@@ -71,11 +77,12 @@ export default class ArchiveController extends Controller {
         const features = await this.featureService.getMetadataForAllFeatures(
             true,
         );
-
-        res.json({
-            version: 2,
-            features: features,
-        });
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            featuresSchema.$id,
+            { version: 2, features: serializeDates(features) },
+        );
     }
 
     async getArchivedFeaturesByProjectId(
@@ -88,10 +95,12 @@ export default class ArchiveController extends Controller {
                 true,
                 projectId,
             );
-        res.json({
-            version: 2,
-            features: features,
-        });
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            featuresSchema.$id,
+            { version: 2, features: serializeDates(features) },
+        );
     }
 
     async deleteFeature(

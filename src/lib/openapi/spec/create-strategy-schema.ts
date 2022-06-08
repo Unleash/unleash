@@ -1,8 +1,9 @@
-import { createSchemaObject, CreateSchemaType } from '../types';
+import { FromSchema } from 'json-schema-to-ts';
 import { parametersSchema } from './parameters-schema';
 import { constraintSchema } from './constraint-schema';
 
-const schema = {
+export const createStrategySchema = {
+    $id: '#/components/schemas/createStrategySchema',
     type: 'object',
     additionalProperties: false,
     required: ['name'],
@@ -23,12 +24,12 @@ const schema = {
             $ref: '#/components/schemas/parametersSchema',
         },
     },
-    'components/schemas': {
-        constraintSchema,
-        parametersSchema,
+    components: {
+        schemas: {
+            constraintSchema,
+            parametersSchema,
+        },
     },
 } as const;
 
-export type CreateStrategySchema = CreateSchemaType<typeof schema>;
-
-export const createStrategySchema = createSchemaObject(schema);
+export type CreateStrategySchema = FromSchema<typeof createStrategySchema>;

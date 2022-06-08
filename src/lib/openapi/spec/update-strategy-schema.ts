@@ -1,11 +1,11 @@
-import { createSchemaObject, CreateSchemaType } from '../types';
-import { strategySchemaDefinition } from './strategy-schema';
+import { FromSchema } from 'json-schema-to-ts';
+import { strategySchema } from './strategy-schema';
 
-const schema = {
-    ...strategySchemaDefinition,
+export const updateStrategySchema = {
+    ...strategySchema,
+    $id: '#/components/schemas/updateStrategySchema',
     required: [],
+    components: {},
 } as const;
 
-export type UpdateStrategySchema = CreateSchemaType<typeof schema>;
-
-export const updateStrategySchema = createSchemaObject(schema);
+export type UpdateStrategySchema = FromSchema<typeof updateStrategySchema>;

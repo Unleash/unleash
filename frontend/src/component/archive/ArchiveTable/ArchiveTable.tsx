@@ -165,8 +165,6 @@ export const ArchiveTable = ({
         getSearchContext,
     } = useSearch(columns, searchValue, archivedFeatures);
 
-    debugger;
-
     const data = useMemo(
         () => (loading ? featuresPlaceholder : searchedData),
         [searchedData, loading]
@@ -238,7 +236,7 @@ export const ArchiveTable = ({
     const renderRows = () => {
         return (
             <>
-                {rows.map((row) => {
+                {rows.map(row => {
                     prepareRow(row);
                     return (
                         <TableRow hover {...row.getRowProps()}>
@@ -262,7 +260,6 @@ export const ArchiveTable = ({
             </>
         );
     };
-
 
     return (
         <PageContent

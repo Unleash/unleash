@@ -3,8 +3,7 @@ import { IUnleashServices } from '../../types/services';
 import FeatureTypeService from '../../services/feature-type-service';
 import { Logger } from '../../logger';
 import { IUnleashConfig } from '../../types/option';
-
-const Controller = require('../controller');
+import Controller from '../controller';
 
 const version = 1;
 

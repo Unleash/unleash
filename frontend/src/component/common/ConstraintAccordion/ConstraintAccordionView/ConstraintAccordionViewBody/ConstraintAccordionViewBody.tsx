@@ -72,9 +72,9 @@ const SingleValue = ({ value, operator }: ISingleValueProps) => {
             <Chip
                 label={
                     <StringTruncator
-                        maxWidth="200"
+                        maxWidth="400"
                         text={value}
-                        maxLength={25}
+                        maxLength={50}
                     />
                 }
                 className={styles.chip}
@@ -95,7 +95,15 @@ const MultipleValues = ({ values }: IMultipleValuesProps) => {
 
     return (
         <>
-            <ConstraintValueSearch filter={filter} setFilter={setFilter} />
+            <ConditionallyRender
+                condition={values.length > 20}
+                show={
+                    <ConstraintValueSearch
+                        filter={filter}
+                        setFilter={setFilter}
+                    />
+                }
+            />
             {values
                 .filter(value => value.includes(filter))
                 .map((value, index) => (
@@ -103,9 +111,9 @@ const MultipleValues = ({ values }: IMultipleValuesProps) => {
                         key={`${value}-${index}`}
                         label={
                             <StringTruncator
-                                maxWidth="200"
+                                maxWidth="400"
                                 text={value}
-                                maxLength={25}
+                                maxLength={50}
                                 className={styles.chipValue}
                             />
                         }

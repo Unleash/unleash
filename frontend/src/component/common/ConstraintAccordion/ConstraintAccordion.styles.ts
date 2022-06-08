@@ -3,13 +3,11 @@ import { makeStyles } from 'tss-react/mui';
 export const useStyles = makeStyles()(theme => ({
     constraintIconContainer: {
         backgroundColor: theme.palette.primary.main,
-        height: '28px',
-        width: '28px',
         borderRadius: '50%',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        marginRight: '2rem',
+        marginRight: theme.spacing(2),
         [theme.breakpoints.down(650)]: {
             marginBottom: '1rem',
             marginRight: 0,
@@ -17,8 +15,6 @@ export const useStyles = makeStyles()(theme => ({
     },
     constraintIcon: {
         fill: '#fff',
-        width: '26px',
-        height: '26px',
     },
     accordion: {
         border: `1px solid ${theme.palette.grey[300]}`,
@@ -44,7 +40,7 @@ export const useStyles = makeStyles()(theme => ({
         display: 'flex',
         alignItems: 'center',
         width: '100%',
-        [theme.breakpoints.down(650)]: {
+        [theme.breakpoints.down(710)]: {
             flexDirection: 'column',
             alignItems: 'center',
             position: 'relative',
@@ -56,10 +52,13 @@ export const useStyles = makeStyles()(theme => ({
     },
     headerValues: {
         fontSize: theme.fontSizes.smallBody,
-        color: theme.palette.primary.main,
     },
     headerValuesExpand: {
         fontSize: theme.fontSizes.smallBody,
+        color: theme.palette.primary.dark,
+        [theme.breakpoints.down(710)]: {
+            textAlign: 'center',
+        },
     },
     headerConstraintContainer: {
         minWidth: '220px',
@@ -67,11 +66,6 @@ export const useStyles = makeStyles()(theme => ({
         paddingRight: '1rem',
         [theme.breakpoints.down(650)]: {
             paddingRight: 0,
-        },
-    },
-    headerViewValuesContainer: {
-        [theme.breakpoints.down(990)]: {
-            display: 'none',
         },
     },
     editingBadge: {
@@ -122,9 +116,8 @@ export const useStyles = makeStyles()(theme => ({
     headerActions: {
         marginLeft: 'auto',
         whiteSpace: 'nowrap',
-        [theme.breakpoints.down(660)]: {
-            marginLeft: '0',
-            marginTop: '0.5rem',
+        [theme.breakpoints.down(710)]: {
+            display: 'none',
         },
     },
     accordionDetails: {
@@ -140,9 +133,8 @@ export const useStyles = makeStyles()(theme => ({
     summary: {
         border: 'none',
         padding: '0.25rem 1rem',
-        height: '85px',
-        [theme.breakpoints.down(770)]: {
-            height: '200px',
+        '&:hover .valuesExpandLabel': {
+            textDecoration: 'underline',
         },
     },
     settingsParagraph: {

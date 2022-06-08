@@ -74,7 +74,7 @@ describe('feature', () => {
         cy.get("[data-testid='CF_DESC_ID'").type('hello-world');
         cy.get("[data-testid='CF_CREATE_BTN_ID']").click();
         cy.get("[data-testid='INPUT_ERROR_TEXT']").contains(
-            'A feature with this name already exists'
+            'A toggle with that name already exists'
         );
     });
 

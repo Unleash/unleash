@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 const useProjectForm = (
     initialProjectId = '',
@@ -31,7 +32,6 @@ const useProjectForm = (
             description: projectDesc,
         };
     };
-    const NAME_EXISTS_ERROR = 'Error: A project with this id already exists.';
 
     const validateProjectId = async () => {
         if (projectId.length === 0) {
@@ -41,18 +41,8 @@ const useProjectForm = (
         try {
             await validateId(getProjectPayload());
             return true;
-        } catch (e: any) {
-            if (e.toString().includes(NAME_EXISTS_ERROR)) {
-                setErrors(prev => ({
-                    ...prev,
-                    id: 'A project with this id already exists',
-                }));
-            } else {
-                setErrors(prev => ({
-                    ...prev,
-                    id: e.toString(),
-                }));
-            }
+        } catch (error: unknown) {
+            setErrors(prev => ({ ...prev, id: formatUnknownError(error) }));
             return false;
         }
     };

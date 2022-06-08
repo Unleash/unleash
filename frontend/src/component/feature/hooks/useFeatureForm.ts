@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import useQueryParams from 'hooks/useQueryParams';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 const useFeatureForm = (
     initialName = '',
@@ -55,8 +56,6 @@ const useFeatureForm = (
         };
     };
 
-    const NAME_EXISTS_ERROR = 'Error: A toggle with that name already exists';
-
     const validateToggleName = async () => {
         if (name.length === 0) {
             setErrors(prev => ({ ...prev, name: 'Name can not be empty.' }));
@@ -65,18 +64,8 @@ const useFeatureForm = (
         try {
             await validateFeatureToggleName(name);
             return true;
-        } catch (e: any) {
-            if (e.toString().includes(NAME_EXISTS_ERROR)) {
-                setErrors(prev => ({
-                    ...prev,
-                    name: 'A feature with this name already exists',
-                }));
-            } else {
-                setErrors(prev => ({
-                    ...prev,
-                    name: e.toString(),
-                }));
-            }
+        } catch (error: unknown) {
+            setErrors(prev => ({ ...prev, name: formatUnknownError(error) }));
             return false;
         }
     };

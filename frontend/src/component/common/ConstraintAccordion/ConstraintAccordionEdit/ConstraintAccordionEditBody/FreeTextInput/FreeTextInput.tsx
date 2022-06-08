@@ -70,15 +70,20 @@ export const FreeTextInput = ({
     };
 
     const addValues = () => {
-        if (inputValues.length === 0) {
-            setError('values can not be empty');
-            return;
+        const newValues = uniqueValues([
+            ...values,
+            ...parseParameterStrings(inputValues),
+        ]);
+
+        if (newValues.length === 0) {
+            setError('values cannot be empty');
+        } else if (newValues.some(v => v.length > 100)) {
+            setError('values cannot be longer than 100 characters');
+        } else {
+            setError('');
+            setInputValues('');
+            setValues(newValues);
         }
-        setError('');
-        setValues(
-            uniqueValues([...values, ...parseParameterStrings(inputValues)])
-        );
-        setInputValues('');
     };
 
     return (

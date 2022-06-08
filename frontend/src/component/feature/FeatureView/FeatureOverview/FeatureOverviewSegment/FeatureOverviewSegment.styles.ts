@@ -13,6 +13,8 @@ export const useStyles = makeStyles()(theme => ({
     link: {
         textDecoration: 'none',
         fontWeight: theme.fontWeight.bold,
-        color: theme.palette.primary.main,
+        '&:hover': {
+            textDecoration: 'underline',
+        },
     },
 }));

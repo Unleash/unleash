@@ -642,6 +642,71 @@ Object {
         ],
         "type": "object",
       },
+      "uiConfigSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "authenticationType": Object {
+            "enum": Array [
+              "open-source",
+              "demo",
+              "enterprise",
+              "hosted",
+              "custom",
+              "none",
+            ],
+            "type": "string",
+          },
+          "baseUriPath": Object {
+            "type": "string",
+          },
+          "disablePasswordAuth": Object {
+            "type": "boolean",
+          },
+          "flags": Object {
+            "additionalProperties": Object {
+              "type": "boolean",
+            },
+            "type": "object",
+          },
+          "links": Object {
+            "items": Object {
+              "type": "object",
+            },
+            "type": "array",
+          },
+          "name": Object {
+            "type": "string",
+          },
+          "segmentValuesLimit": Object {
+            "type": "number",
+          },
+          "slogan": Object {
+            "type": "string",
+          },
+          "strategySegmentsLimit": Object {
+            "type": "number",
+          },
+          "unleashUrl": Object {
+            "type": "string",
+          },
+          "version": Object {
+            "type": "string",
+          },
+          "versionInfo": Object {
+            "$ref": "#/components/schemas/versionSchema",
+          },
+        },
+        "required": Array [
+          "version",
+          "unleashUrl",
+          "baseUriPath",
+          "versionInfo",
+          "disablePasswordAuth",
+          "segmentValuesLimit",
+          "strategySegmentsLimit",
+        ],
+        "type": "object",
+      },
       "updateFeatureSchema": Object {
         "properties": Object {
           "archived": Object {
@@ -753,6 +818,48 @@ Object {
           "$ref": "#/components/schemas/variantSchema",
         },
         "type": "array",
+      },
+      "versionSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "current": Object {
+            "additionalProperties": false,
+            "properties": Object {
+              "enterprise": Object {
+                "type": "string",
+              },
+              "oss": Object {
+                "type": "string",
+              },
+            },
+            "type": "object",
+          },
+          "instanceId": Object {
+            "type": "string",
+          },
+          "isLatest": Object {
+            "type": "boolean",
+          },
+          "latest": Object {
+            "additionalProperties": false,
+            "properties": Object {
+              "enterprise": Object {
+                "type": "string",
+              },
+              "oss": Object {
+                "type": "string",
+              },
+            },
+            "type": "object",
+          },
+        },
+        "required": Array [
+          "current",
+          "latest",
+          "isLatest",
+          "instanceId",
+        ],
+        "type": "object",
       },
     },
     "securitySchemes": Object {
@@ -2077,6 +2184,26 @@ Object {
               },
             },
             "description": "healthReportSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/ui-config": Object {
+      "get": Object {
+        "operationId": "getUIConfig",
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/uiConfigSchema",
+                },
+              },
+            },
+            "description": "uiConfigSchema",
           },
         },
         "tags": Array [

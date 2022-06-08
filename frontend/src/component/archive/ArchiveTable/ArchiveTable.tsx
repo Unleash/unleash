@@ -31,6 +31,7 @@ import useToast from '../../../hooks/useToast';
 import { formatUnknownError } from '../../../utils/formatUnknownError';
 import { useSearch } from '../../../hooks/useSearch';
 import { FeatureArchivedCell } from '../../common/Table/cells/FeatureArchivedCell/FeatureArchivedCell';
+import { useVirtualizedRange } from '../../../hooks/useVirtualizedRange';
 
 export interface IFeaturesArchiveTableProps {
     archivedFeatures: FeatureSchema[];
@@ -100,7 +101,7 @@ export const ArchiveTable = ({
             {
                 Header: 'Feature toggle Name',
                 accessor: 'name',
-                filterName: 'name',
+                searchable: true,
                 minWidth: 100,
                 Cell: ({ value, row: { original } }: any) => (
                     <HighlightCell
@@ -128,6 +129,8 @@ export const ArchiveTable = ({
                 Header: 'Project ID',
                 accessor: 'project',
                 sortType: 'alphanumeric',
+                filterName: 'project',
+                searchable: true,
                 maxWidth: 150,
                 Cell: ({ value }: any) => (
                     <LinkCell title={value} to={`/projects/${value}}`} />
@@ -139,7 +142,8 @@ export const ArchiveTable = ({
                 Cell: FeatureStaleCell,
                 sortType: 'boolean',
                 maxWidth: 120,
-                disableGlobalFilter: true,
+                filterName: 'state',
+                filterParsing: (value: any) => (value ? 'stale' : 'active'),
             },
             {
                 Header: 'Actions',
@@ -154,6 +158,10 @@ export const ArchiveTable = ({
                         onRevive={() => onRevive(original.name)}
                     />
                 ),
+            },
+            // Always hidden -- for search
+            {
+                accessor: 'description',
             },
         ],
         []
@@ -233,10 +241,20 @@ export const ArchiveTable = ({
         setStoredParams({ id: sortBy[0].id, desc: sortBy[0].desc || false });
     }, [loading, sortBy, searchValue, setSearchParams, setStoredParams]);
 
+    const [firstRenderedIndex, lastRenderedIndex] =
+        useVirtualizedRange(rowHeight);
+
     const renderRows = () => {
         return (
             <>
-                {rows.map(row => {
+                {rows.map((row, index) => {
+                    const isVirtual =
+                        index < firstRenderedIndex || index > lastRenderedIndex;
+
+                    if (isVirtual) {
+                        return null;
+                    }
+
                     prepareRow(row);
                     return (
                         <TableRow hover {...row.getRowProps()}>

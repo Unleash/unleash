@@ -39,9 +39,9 @@
   "devDependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
-    "@mui/icons-material": "5.8.2",
-    "@mui/lab": "5.0.0-alpha.84",
-    "@mui/material": "5.8.2",
+    "@mui/icons-material": "5.8.3",
+    "@mui/lab": "5.0.0-alpha.85",
+    "@mui/material": "5.8.3",
     "@openapitools/openapi-generator-cli": "2.5.1",
     "@testing-library/dom": "8.13.0",
     "@testing-library/jest-dom": "5.16.4",

@@ -28,8 +28,8 @@ test('should be possible to get by name', async () => {
 });
 
 test('should be possible to get by id', async () => {
-    const type = await featureTypeStore.exists(0);
-    expect(type).toBeDefined();
+    expect(await featureTypeStore.exists('unknown')).toEqual(false);
+    expect(await featureTypeStore.exists('operational')).toEqual(true);
 });
 
 test('should be possible to delete by id', async () => {

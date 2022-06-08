@@ -16,6 +16,7 @@ import {
     EnvironmentSchema,
 } from '../../openapi/spec/environment-schema';
 import { SortOrderSchema } from '../../openapi/spec/sort-order-schema';
+import { emptyResponse } from '../../openapi/spec/empty-response';
 
 interface EnvironmentParam {
     name: string;
@@ -49,9 +50,7 @@ export class EnvironmentsController extends Controller {
                 openApiService.validPath({
                     tags: ['admin'],
                     operationId: 'getAllEnvironments',
-                    responses: {
-                        200: createResponseSchema('environmentsSchema'),
-                    },
+                    responses: { 200: emptyResponse },
                 }),
             ],
         });
@@ -82,7 +81,7 @@ export class EnvironmentsController extends Controller {
                     tags: ['admin'],
                     operationId: 'updateSortOrder',
                     requestBody: createRequestSchema('sortOrderSchema'),
-                    responses: { 200: createResponseSchema('emptySchema') },
+                    responses: { 200: emptyResponse },
                 }),
             ],
         });
@@ -97,7 +96,7 @@ export class EnvironmentsController extends Controller {
                 openApiService.validPath({
                     tags: ['admin'],
                     operationId: 'toggleEnvironmentOn',
-                    responses: { 200: createResponseSchema('emptySchema') },
+                    responses: { 200: emptyResponse },
                 }),
             ],
         });
@@ -112,7 +111,7 @@ export class EnvironmentsController extends Controller {
                 openApiService.validPath({
                     tags: ['admin'],
                     operationId: 'toggleEnvironmentOff',
-                    responses: { 200: createResponseSchema('emptySchema') },
+                    responses: { 200: emptyResponse },
                 }),
             ],
         });

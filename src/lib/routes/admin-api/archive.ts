@@ -14,7 +14,7 @@ import {
 import { serializeDates } from '../../types/serialize-dates';
 import { OpenApiService } from '../../services/openapi-service';
 import { createResponseSchema } from '../../openapi';
-import { EmptySchema } from '../../openapi/spec/empty-schema';
+import { emptyResponse } from '../../openapi/spec/empty-response';
 
 export default class ArchiveController extends Controller {
     private readonly logger: Logger;
@@ -75,7 +75,7 @@ export default class ArchiveController extends Controller {
                 openApiService.validPath({
                     tags: ['admin'],
                     operationId: 'deleteFeature',
-                    responses: { 200: createResponseSchema('emptySchema') },
+                    responses: { 200: emptyResponse },
                 }),
             ],
         });
@@ -90,7 +90,7 @@ export default class ArchiveController extends Controller {
                 openApiService.validPath({
                     tags: ['admin'],
                     operationId: 'reviveFeature',
-                    responses: { 200: createResponseSchema('emptySchema') },
+                    responses: { 200: emptyResponse },
                 }),
             ],
         });
@@ -131,7 +131,7 @@ export default class ArchiveController extends Controller {
 
     async deleteFeature(
         req: IAuthRequest<{ featureName: string }>,
-        res: Response<EmptySchema>,
+        res: Response<void>,
     ): Promise<void> {
         const { featureName } = req.params;
         const user = extractUsername(req);
@@ -141,7 +141,7 @@ export default class ArchiveController extends Controller {
 
     async reviveFeature(
         req: IAuthRequest<{ featureName: string }>,
-        res: Response<EmptySchema>,
+        res: Response<void>,
     ): Promise<void> {
         const userName = extractUsername(req);
         const { featureName } = req.params;

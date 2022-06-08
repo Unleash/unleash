@@ -3,7 +3,6 @@ import { cloneFeatureSchema } from './spec/clone-feature-schema';
 import { constraintSchema } from './spec/constraint-schema';
 import { createFeatureSchema } from './spec/create-feature-schema';
 import { createStrategySchema } from './spec/create-strategy-schema';
-import { emptySchema } from './spec/empty-schema';
 import { environmentSchema } from './spec/environment-schema';
 import { featureEnvironmentSchema } from './spec/feature-environment-schema';
 import { featureSchema } from './spec/feature-schema';
@@ -64,7 +63,6 @@ export const schemas = {
     constraintSchema,
     createFeatureSchema,
     createStrategySchema,
-    emptySchema,
     environmentSchema,
     environmentsSchema,
     featureEnvironmentSchema,

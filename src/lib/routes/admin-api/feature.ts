@@ -25,6 +25,7 @@ import { TagsSchema } from '../../openapi/spec/tags-schema';
 import { serializeDates } from '../../types/serialize-dates';
 import { OpenApiService } from '../../services/openapi-service';
 import { createRequestSchema, createResponseSchema } from '../../openapi';
+import { emptyResponse } from '../../openapi/spec/empty-response';
 
 const version = 1;
 
@@ -92,7 +93,7 @@ class FeatureController extends Controller {
                 openApiService.validPath({
                     tags: ['admin'],
                     operationId: 'validateFeature',
-                    responses: { 200: createResponseSchema('emptySchema') },
+                    responses: { 200: emptyResponse },
                 }),
             ],
         });
@@ -136,7 +137,7 @@ class FeatureController extends Controller {
                 openApiService.validPath({
                     tags: ['admin'],
                     operationId: 'removeTag',
-                    responses: { 200: createResponseSchema('emptySchema') },
+                    responses: { 200: emptyResponse },
                 }),
             ],
         });

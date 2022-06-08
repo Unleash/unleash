@@ -157,9 +157,6 @@ Object {
         ],
         "type": "object",
       },
-      "emptySchema": Object {
-        "description": "emptySchema",
-      },
       "environmentSchema": Object {
         "additionalProperties": false,
         "properties": Object {
@@ -1014,14 +1011,7 @@ Object {
         ],
         "responses": Object {
           "200": Object {
-            "content": Object {
-              "application/json": Object {
-                "schema": Object {
-                  "$ref": "#/components/schemas/emptySchema",
-                },
-              },
-            },
-            "description": "emptySchema",
+            "description": "emptyResponse",
           },
         },
         "tags": Array [
@@ -1044,14 +1034,7 @@ Object {
         ],
         "responses": Object {
           "200": Object {
-            "content": Object {
-              "application/json": Object {
-                "schema": Object {
-                  "$ref": "#/components/schemas/emptySchema",
-                },
-              },
-            },
-            "description": "emptySchema",
+            "description": "emptyResponse",
           },
         },
         "tags": Array [
@@ -1091,14 +1074,7 @@ Object {
         "operationId": "getAllEnvironments",
         "responses": Object {
           "200": Object {
-            "content": Object {
-              "application/json": Object {
-                "schema": Object {
-                  "$ref": "#/components/schemas/environmentsSchema",
-                },
-              },
-            },
-            "description": "environmentsSchema",
+            "description": "emptyResponse",
           },
         },
         "tags": Array [
@@ -1122,14 +1098,7 @@ Object {
         },
         "responses": Object {
           "200": Object {
-            "content": Object {
-              "application/json": Object {
-                "schema": Object {
-                  "$ref": "#/components/schemas/emptySchema",
-                },
-              },
-            },
-            "description": "emptySchema",
+            "description": "emptyResponse",
           },
         },
         "tags": Array [
@@ -1182,14 +1151,7 @@ Object {
         ],
         "responses": Object {
           "200": Object {
-            "content": Object {
-              "application/json": Object {
-                "schema": Object {
-                  "$ref": "#/components/schemas/emptySchema",
-                },
-              },
-            },
-            "description": "emptySchema",
+            "description": "emptyResponse",
           },
         },
         "tags": Array [
@@ -1212,14 +1174,7 @@ Object {
         ],
         "responses": Object {
           "200": Object {
-            "content": Object {
-              "application/json": Object {
-                "schema": Object {
-                  "$ref": "#/components/schemas/emptySchema",
-                },
-              },
-            },
-            "description": "emptySchema",
+            "description": "emptyResponse",
           },
         },
         "tags": Array [
@@ -1273,14 +1228,7 @@ Object {
         "operationId": "validateFeature",
         "responses": Object {
           "200": Object {
-            "content": Object {
-              "application/json": Object {
-                "schema": Object {
-                  "$ref": "#/components/schemas/emptySchema",
-                },
-              },
-            },
-            "description": "emptySchema",
+            "description": "emptyResponse",
           },
         },
         "tags": Array [
@@ -1388,14 +1336,7 @@ Object {
         ],
         "responses": Object {
           "200": Object {
-            "content": Object {
-              "application/json": Object {
-                "schema": Object {
-                  "$ref": "#/components/schemas/emptySchema",
-                },
-              },
-            },
-            "description": "emptySchema",
+            "description": "emptyResponse",
           },
         },
         "tags": Array [
@@ -1479,14 +1420,7 @@ Object {
         },
         "responses": Object {
           "200": Object {
-            "content": Object {
-              "application/json": Object {
-                "schema": Object {
-                  "$ref": "#/components/schemas/emptySchema",
-                },
-              },
-            },
-            "description": "emptySchema",
+            "description": "emptyResponse",
           },
         },
         "tags": Array [
@@ -1517,14 +1451,7 @@ Object {
         ],
         "responses": Object {
           "200": Object {
-            "content": Object {
-              "application/json": Object {
-                "schema": Object {
-                  "$ref": "#/components/schemas/emptySchema",
-                },
-              },
-            },
-            "description": "emptySchema",
+            "description": "emptyResponse",
           },
         },
         "tags": Array [
@@ -1624,14 +1551,7 @@ Object {
         ],
         "responses": Object {
           "200": Object {
-            "content": Object {
-              "application/json": Object {
-                "schema": Object {
-                  "$ref": "#/components/schemas/emptySchema",
-                },
-              },
-            },
-            "description": "emptySchema",
+            "description": "emptyResponse",
           },
         },
         "tags": Array [
@@ -2096,14 +2016,7 @@ Object {
         ],
         "responses": Object {
           "200": Object {
-            "content": Object {
-              "application/json": Object {
-                "schema": Object {
-                  "$ref": "#/components/schemas/emptySchema",
-                },
-              },
-            },
-            "description": "emptySchema",
+            "description": "emptyResponse",
           },
         },
         "tags": Array [

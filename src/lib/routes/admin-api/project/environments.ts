@@ -5,8 +5,9 @@ import { IUnleashServices } from '../../../types/services';
 import { Logger } from '../../../logger';
 import EnvironmentService from '../../../services/environment-service';
 import { UPDATE_PROJECT } from '../../../types/permissions';
-import { createRequestSchema, createResponseSchema } from '../../../openapi';
+import { createRequestSchema } from '../../../openapi';
 import { ProjectEnvironmentSchema } from '../../../openapi/spec/project-environment-schema';
+import { emptyResponse } from '../../../openapi/spec/empty-response';
 
 const PREFIX = '/:projectId/environments';
 
@@ -44,7 +45,7 @@ export default class EnvironmentsController extends Controller {
                     requestBody: createRequestSchema(
                         'projectEnvironmentSchema',
                     ),
-                    responses: { 200: createResponseSchema('emptySchema') },
+                    responses: { 200: emptyResponse },
                 }),
             ],
         });
@@ -59,7 +60,7 @@ export default class EnvironmentsController extends Controller {
                 openApiService.validPath({
                     tags: ['admin'],
                     operationId: 'removeEnvironmentFromProject',
-                    responses: { 200: createResponseSchema('emptySchema') },
+                    responses: { 200: emptyResponse },
                 }),
             ],
         });

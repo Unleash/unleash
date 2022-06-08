@@ -35,6 +35,7 @@ import { serializeDates } from '../../../types/serialize-dates';
 import { OpenApiService } from '../../../services/openapi-service';
 import { createRequestSchema, createResponseSchema } from '../../../openapi';
 import { FeatureEnvironmentSchema } from '../../../openapi/spec/feature-environment-schema';
+import { emptyResponse } from '../../../openapi/spec/empty-response';
 
 interface FeatureStrategyParams {
     projectId: string;
@@ -216,7 +217,7 @@ export default class ProjectFeaturesController extends Controller {
                 openApiService.validPath({
                     operationId: 'deleteStrategy',
                     tags: ['admin'],
-                    responses: { 200: createResponseSchema('emptySchema') },
+                    responses: { 200: emptyResponse },
                 }),
             ],
         });
@@ -322,7 +323,7 @@ export default class ProjectFeaturesController extends Controller {
                 openApiService.validPath({
                     tags: ['admin'],
                     operationId: 'archiveFeature',
-                    responses: { 200: createResponseSchema('emptySchema') },
+                    responses: { 200: emptyResponse },
                 }),
             ],
         });

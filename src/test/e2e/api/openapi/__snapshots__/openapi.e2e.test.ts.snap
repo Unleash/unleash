@@ -169,6 +169,9 @@ Object {
           "name": Object {
             "type": "string",
           },
+          "protected": Object {
+            "type": "boolean",
+          },
           "sortOrder": Object {
             "type": "number",
           },
@@ -180,6 +183,25 @@ Object {
           "name",
           "type",
           "enabled",
+        ],
+        "type": "object",
+      },
+      "environmentsSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "environments": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/environmentSchema",
+            },
+            "type": "array",
+          },
+          "version": Object {
+            "type": "integer",
+          },
+        },
+        "required": Array [
+          "version",
+          "environments",
         ],
         "type": "object",
       },
@@ -624,6 +646,12 @@ Object {
         ],
         "type": "object",
       },
+      "sortOrderSchema": Object {
+        "additionalProperties": Object {
+          "type": "number",
+        },
+        "type": "object",
+      },
       "strategySchema": Object {
         "additionalProperties": false,
         "properties": Object {
@@ -1051,6 +1079,147 @@ Object {
           },
           "400": Object {
             "description": "invalidConstraint",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/environments": Object {
+      "get": Object {
+        "operationId": "getAllEnvironments",
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/environmentsSchema",
+                },
+              },
+            },
+            "description": "environmentsSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/environments/sort-order": Object {
+      "put": Object {
+        "operationId": "updateSortOrder",
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/sortOrderSchema",
+              },
+            },
+          },
+          "description": "sortOrderSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/emptySchema",
+                },
+              },
+            },
+            "description": "emptySchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/environments/{name}": Object {
+      "get": Object {
+        "operationId": "getEnvironment",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/environmentSchema",
+                },
+              },
+            },
+            "description": "environmentSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/environments/{name}/off": Object {
+      "post": Object {
+        "operationId": "toggleEnvironmentOff",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/emptySchema",
+                },
+              },
+            },
+            "description": "emptySchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/environments/{name}/on": Object {
+      "post": Object {
+        "operationId": "toggleEnvironmentOn",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/emptySchema",
+                },
+              },
+            },
+            "description": "emptySchema",
           },
         },
         "tags": Array [

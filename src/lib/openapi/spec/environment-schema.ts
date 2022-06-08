@@ -15,6 +15,9 @@ export const environmentSchema = {
         enabled: {
             type: 'boolean',
         },
+        protected: {
+            type: 'boolean',
+        },
         sortOrder: {
             type: 'number',
         },

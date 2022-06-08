@@ -2,10 +2,20 @@ import { Request, Response } from 'express';
 import Controller from '../controller';
 import { IUnleashServices } from '../../types/services';
 import { IUnleashConfig } from '../../types/option';
-import { ISortOrder } from '../../types/model';
 import EnvironmentService from '../../services/environment-service';
 import { Logger } from '../../logger';
-import { ADMIN } from '../../types/permissions';
+import { ADMIN, NONE } from '../../types/permissions';
+import { OpenApiService } from '../../services/openapi-service';
+import { createRequestSchema, createResponseSchema } from '../../openapi';
+import {
+    environmentsSchema,
+    EnvironmentsSchema,
+} from '../../openapi/spec/environments-schema';
+import {
+    environmentSchema,
+    EnvironmentSchema,
+} from '../../openapi/spec/environment-schema';
+import { SortOrderSchema } from '../../openapi/spec/sort-order-schema';
 
 interface EnvironmentParam {
     name: string;
@@ -14,29 +24,114 @@ interface EnvironmentParam {
 export class EnvironmentsController extends Controller {
     private logger: Logger;
 
+    private openApiService: OpenApiService;
+
     private service: EnvironmentService;
 
     constructor(
         config: IUnleashConfig,
-        { environmentService }: Pick<IUnleashServices, 'environmentService'>,
+        {
+            environmentService,
+            openApiService,
+        }: Pick<IUnleashServices, 'environmentService' | 'openApiService'>,
     ) {
         super(config);
         this.logger = config.getLogger('admin-api/environments-controller.ts');
+        this.openApiService = openApiService;
         this.service = environmentService;
-        this.get('/', this.getAll);
-        this.put('/sort-order', this.updateSortOrder, ADMIN);
-        this.get('/:name', this.getEnv);
-        this.post('/:name/on', this.toggleEnvironmentOn, ADMIN);
-        this.post('/:name/off', this.toggleEnvironmentOff, ADMIN);
+
+        this.route({
+            method: 'get',
+            path: '',
+            handler: this.getAllEnvironments,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'getAllEnvironments',
+                    responses: {
+                        200: createResponseSchema('environmentsSchema'),
+                    },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'get',
+            path: '/:name',
+            handler: this.getEnvironment,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'getEnvironment',
+                    responses: {
+                        200: createResponseSchema('environmentSchema'),
+                    },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'put',
+            path: '/sort-order',
+            handler: this.updateSortOrder,
+            permission: ADMIN,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'updateSortOrder',
+                    requestBody: createRequestSchema('sortOrderSchema'),
+                    responses: { 200: createResponseSchema('emptySchema') },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'post',
+            path: '/:name/on',
+            acceptAnyContentType: true,
+            handler: this.toggleEnvironmentOn,
+            permission: ADMIN,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'toggleEnvironmentOn',
+                    responses: { 200: createResponseSchema('emptySchema') },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'post',
+            path: '/:name/off',
+            acceptAnyContentType: true,
+            handler: this.toggleEnvironmentOff,
+            permission: ADMIN,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'toggleEnvironmentOff',
+                    responses: { 200: createResponseSchema('emptySchema') },
+                }),
+            ],
+        });
     }
 
-    async getAll(req: Request, res: Response): Promise<void> {
-        const environments = await this.service.getAll();
-        res.status(200).json({ version: 1, environments });
+    async getAllEnvironments(
+        req: Request,
+        res: Response<EnvironmentsSchema>,
+    ): Promise<void> {
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            environmentsSchema.$id,
+            { version: 1, environments: await this.service.getAll() },
+        );
     }
 
     async updateSortOrder(
-        req: Request<any, any, ISortOrder, any>,
+        req: Request<unknown, unknown, SortOrderSchema>,
         res: Response,
     ): Promise<void> {
         await this.service.updateSortOrder(req.body);
@@ -44,7 +139,7 @@ export class EnvironmentsController extends Controller {
     }
 
     async toggleEnvironmentOn(
-        req: Request<EnvironmentParam, any, any, any>,
+        req: Request<EnvironmentParam>,
         res: Response,
     ): Promise<void> {
         const { name } = req.params;
@@ -53,7 +148,7 @@ export class EnvironmentsController extends Controller {
     }
 
     async toggleEnvironmentOff(
-        req: Request<EnvironmentParam, any, any, any>,
+        req: Request<EnvironmentParam>,
         res: Response,
     ): Promise<void> {
         const { name } = req.params;
@@ -61,13 +156,15 @@ export class EnvironmentsController extends Controller {
         res.status(204).end();
     }
 
-    async getEnv(
-        req: Request<EnvironmentParam, any, any, any>,
-        res: Response,
+    async getEnvironment(
+        req: Request<EnvironmentParam>,
+        res: Response<EnvironmentSchema>,
     ): Promise<void> {
-        const { name } = req.params;
-
-        const env = await this.service.get(name);
-        res.status(200).json(env);
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            environmentSchema.$id,
+            await this.service.get(req.params.name),
+        );
     }
 }

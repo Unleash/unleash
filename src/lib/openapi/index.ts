@@ -32,6 +32,8 @@ import { updateStrategySchema } from './spec/update-strategy-schema';
 import { variantSchema } from './spec/variant-schema';
 import { variantsSchema } from './spec/variants-schema';
 import { versionSchema } from './spec/version-schema';
+import { environmentsSchema } from './spec/environments-schema';
+import { sortOrderSchema } from './spec/sort-order-schema';
 
 // Schemas must have $id property on the form "#/components/schemas/mySchema".
 export type SchemaId = typeof schemas[keyof typeof schemas]['$id'];
@@ -58,6 +60,7 @@ export const schemas = {
     createStrategySchema,
     emptySchema,
     environmentSchema,
+    environmentsSchema,
     featureEnvironmentSchema,
     featureSchema,
     featureStrategySchema,
@@ -74,6 +77,7 @@ export const schemas = {
     projectEnvironmentSchema,
     projectSchema,
     projectsSchema,
+    sortOrderSchema,
     strategySchema,
     tagSchema,
     tagsSchema,

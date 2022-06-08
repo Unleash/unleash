@@ -3,7 +3,7 @@ import Controller from '../controller';
 import { IUnleashServices } from '../../types/services';
 import { IUnleashConfig } from '../../types/option';
 import FeatureController from './feature';
-import FeatureTypeController from './feature-type';
+import { FeatureTypeController } from './feature-type';
 import ArchiveController from './archive';
 import StrategyController from './strategy';
 import EventController from './event';

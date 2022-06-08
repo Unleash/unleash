@@ -321,6 +321,50 @@ Object {
         ],
         "type": "object",
       },
+      "featureTypeSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "description": Object {
+            "type": "string",
+          },
+          "id": Object {
+            "type": "string",
+          },
+          "lifetimeDays": Object {
+            "nullable": true,
+            "type": "number",
+          },
+          "name": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "id",
+          "name",
+          "description",
+          "lifetimeDays",
+        ],
+        "type": "object",
+      },
+      "featureTypesSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "types": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/featureTypeSchema",
+            },
+            "type": "array",
+          },
+          "version": Object {
+            "type": "integer",
+          },
+        },
+        "required": Array [
+          "version",
+          "types",
+        ],
+        "type": "object",
+      },
       "featureVariantsSchema": Object {
         "additionalProperties": false,
         "properties": Object {
@@ -1007,6 +1051,26 @@ Object {
           },
           "400": Object {
             "description": "invalidConstraint",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/feature-types": Object {
+      "get": Object {
+        "operationId": "getAllFeatureTypes",
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/featureTypesSchema",
+                },
+              },
+            },
+            "description": "featureTypesSchema",
           },
         },
         "tags": Array [

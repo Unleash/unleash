@@ -8,6 +8,8 @@ import { environmentSchema } from './spec/environment-schema';
 import { featureEnvironmentSchema } from './spec/feature-environment-schema';
 import { featureSchema } from './spec/feature-schema';
 import { featureStrategySchema } from './spec/feature-strategy-schema';
+import { featureTypeSchema } from './spec/feature-type-schema';
+import { featureTypesSchema } from './spec/feature-types-schema';
 import { featureVariantsSchema } from './spec/feature-variants-schema';
 import { featuresSchema } from './spec/features-schema';
 import { healthOverviewSchema } from './spec/health-overview-schema';
@@ -59,6 +61,8 @@ export const schemas = {
     featureEnvironmentSchema,
     featureSchema,
     featureStrategySchema,
+    featureTypeSchema,
+    featureTypesSchema,
     featureVariantsSchema,
     featuresSchema,
     healthOverviewSchema,

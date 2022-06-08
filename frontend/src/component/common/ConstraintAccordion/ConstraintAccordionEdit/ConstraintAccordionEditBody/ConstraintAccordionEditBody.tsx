@@ -35,12 +35,11 @@ export const ConstraintAccordionEditBody: React.FC<
 
     return (
         <>
-            <ConditionallyRender
-                condition={oneOf(newOperators, localConstraint.operator)}
-                show={<OperatorUpgradeAlert />}
-            />
-
             <div className={styles.inputContainer}>
+                <ConditionallyRender
+                    condition={oneOf(newOperators, localConstraint.operator)}
+                    show={<OperatorUpgradeAlert />}
+                />
                 <InvertedOperator
                     inverted={Boolean(localConstraint.inverted)}
                     setInvertedOperator={setInvertedOperator}

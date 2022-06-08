@@ -147,6 +147,7 @@ export interface IUIConfig {
         },
     ];
 }
+
 export interface ICspDomainOptions {
     defaultSrc?: string[];
     fontSrc?: string[];

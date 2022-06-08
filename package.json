@@ -157,7 +157,7 @@
     "fetch-mock": "9.11.0",
     "husky": "8.0.1",
     "jest": "27.5.1",
-    "lint-staged": "13.0.0",
+    "lint-staged": "13.0.1",
     "nock": "13.2.6",
     "prettier": "2.6.2",
     "proxyquire": "2.1.3",

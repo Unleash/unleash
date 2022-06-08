@@ -100,6 +100,7 @@ export const ArchiveTable = ({
             {
                 Header: 'Feature toggle Name',
                 accessor: 'name',
+                filterName: 'name',
                 minWidth: 100,
                 Cell: ({ value, row: { original } }: any) => (
                     <HighlightCell
@@ -163,6 +164,8 @@ export const ArchiveTable = ({
         getSearchText,
         getSearchContext,
     } = useSearch(columns, searchValue, archivedFeatures);
+
+    debugger;
 
     const data = useMemo(
         () => (loading ? featuresPlaceholder : searchedData),
@@ -259,6 +262,7 @@ export const ArchiveTable = ({
             </>
         );
     };
+
 
     return (
         <PageContent

@@ -1,5 +1,4 @@
-import StringTruncator from 'component/common/StringTruncator/StringTruncator';
-import { Chip, useMediaQuery, IconButton, Tooltip } from '@mui/material';
+import { Chip, IconButton, Tooltip, styled } from '@mui/material';
 import { ConstraintIcon } from 'component/common/ConstraintAccordion/ConstraintIcon';
 import { Delete, Edit } from '@mui/icons-material';
 import { IConstraint } from 'interfaces/strategy';
@@ -10,6 +9,44 @@ import React from 'react';
 import { formatConstraintValue } from 'utils/formatConstraintValue';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { ConstraintOperator } from 'component/common/ConstraintAccordion/ConstraintOperator/ConstraintOperator';
+import classnames from 'classnames';
+
+const StyledHeaderText = styled('span')(({ theme }) => ({
+    display: '-webkit-box',
+    WebkitLineClamp: 3,
+    WebkitBoxOrient: 'vertical',
+    overflow: 'hidden',
+    maxWidth: '100px',
+    minWidth: '100px',
+    marginRight: '10px',
+    wordBreak: 'break-word',
+    fontSize: theme.fontSizes.smallBody,
+    [theme.breakpoints.down(710)]: {
+        textAlign: 'center',
+        padding: theme.spacing(1, 0),
+        marginRight: 'inherit',
+        maxWidth: 'inherit',
+    },
+}));
+
+const StyledValuesSpan = styled('span')(({ theme }) => ({
+    display: '-webkit-box',
+    WebkitLineClamp: 2,
+    WebkitBoxOrient: 'vertical',
+    overflow: 'hidden',
+    wordBreak: 'break-word',
+    fontSize: theme.fontSizes.smallBody,
+    [theme.breakpoints.down(710)]: {
+        margin: theme.spacing(1, 0),
+        textAlign: 'center',
+    },
+}));
+
+const StyledSingleValueChip = styled(Chip)(({ theme }) => ({
+    [theme.breakpoints.down(710)]: {
+        margin: theme.spacing(1, 0),
+    },
+}));
 
 interface IConstraintAccordionViewHeaderProps {
     compact: boolean;
@@ -28,9 +65,6 @@ export const ConstraintAccordionViewHeader = ({
 }: IConstraintAccordionViewHeaderProps) => {
     const { classes: styles } = useStyles();
     const { locationSettings } = useLocationSettings();
-    const smallScreen = useMediaQuery(`(max-width:${790}px)`);
-
-    const minWidthHeader = compact || smallScreen ? '100px' : '175px';
 
     const onEditClick =
         onEdit &&
@@ -50,42 +84,43 @@ export const ConstraintAccordionViewHeader = ({
         <div className={styles.headerContainer}>
             <ConstraintIcon />
             <div className={styles.headerMetaInfo}>
-                <div style={{ minWidth: minWidthHeader }}>
-                    <StringTruncator
-                        text={constraint.contextName}
-                        maxWidth="175px"
-                        maxLength={25}
-                    />
-                </div>
+                <Tooltip title={constraint.contextName} arrow>
+                    <StyledHeaderText>
+                        {constraint.contextName}
+                    </StyledHeaderText>
+                </Tooltip>
                 <div className={styles.headerConstraintContainer}>
                     <ConstraintOperator constraint={constraint} />
                 </div>
-                <div className={styles.headerViewValuesContainer}>
-                    <ConditionallyRender
-                        condition={singleValue}
-                        show={
-                            <Chip
-                                label={formatConstraintValue(
-                                    constraint,
-                                    locationSettings
+                <ConditionallyRender
+                    condition={singleValue}
+                    show={
+                        <StyledSingleValueChip
+                            label={formatConstraintValue(
+                                constraint,
+                                locationSettings
+                            )}
+                        />
+                    }
+                    elseShow={
+                        <div className={styles.headerValuesContainer}>
+                            <StyledValuesSpan>
+                                {constraint?.values
+                                    ?.map(value => value)
+                                    .join(', ')}
+                            </StyledValuesSpan>
+                            <p
+                                className={classnames(
+                                    styles.headerValuesExpand,
+                                    'valuesExpandLabel'
                                 )}
-                            />
-                        }
-                        elseShow={
-                            <div className={styles.headerValuesContainer}>
-                                <p className={styles.headerValues}>
-                                    {constraint?.values?.length}{' '}
-                                    {constraint?.values?.length === 1
-                                        ? 'value'
-                                        : 'values'}
-                                </p>
-                                <p className={styles.headerValuesExpand}>
-                                    Expand to view
-                                </p>
-                            </div>
-                        }
-                    />
-                </div>
+                            >
+                                Expand to view all ({constraint?.values?.length}
+                                )
+                            </p>
+                        </div>
+                    }
+                />
             </div>
             <div className={styles.headerActions}>
                 <ConditionallyRender

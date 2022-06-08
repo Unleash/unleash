@@ -6,6 +6,7 @@ export const useStyles = makeStyles()(theme => ({
         margin: '0.25rem',
     },
     paragraph: {
+        display: 'inline',
         margin: '0.25rem 0',
         maxWidth: '95%',
         textAlign: 'center',

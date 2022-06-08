@@ -14,6 +14,10 @@ export const useStyles = makeStyles()(theme => ({
         [theme.breakpoints.down('sm')]: {
             justifyContent: 'center',
         },
+        '&:hover': {
+            transition: 'background-color 0.2s ease-in-out',
+            backgroundColor: theme.palette.grey[100],
+        },
     },
     header: {
         display: 'flex',

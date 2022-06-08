@@ -18,10 +18,12 @@ import { patchesSchema } from './spec/patches-schema';
 import { strategySchema } from './spec/strategy-schema';
 import { tagSchema } from './spec/tag-schema';
 import { tagsSchema } from './spec/tags-schema';
+import { uiConfigSchema } from './spec/ui-config-schema';
 import { updateFeatureSchema } from './spec/update-feature-schema';
 import { updateStrategySchema } from './spec/update-strategy-schema';
 import { variantSchema } from './spec/variant-schema';
 import { variantsSchema } from './spec/variants-schema';
+import { versionSchema } from './spec/version-schema';
 
 // Schemas must have $id property on the form "#/components/schemas/mySchema".
 export type SchemaId = typeof schemas[keyof typeof schemas]['$id'];
@@ -57,10 +59,12 @@ export const schemas = {
     strategySchema,
     tagSchema,
     tagsSchema,
+    uiConfigSchema,
     updateFeatureSchema,
     updateStrategySchema,
     variantSchema,
     variantsSchema,
+    versionSchema,
 };
 
 export const createRequestSchema = (

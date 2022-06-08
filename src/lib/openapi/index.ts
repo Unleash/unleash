@@ -4,17 +4,23 @@ import { constraintSchema } from './spec/constraint-schema';
 import { createFeatureSchema } from './spec/create-feature-schema';
 import { createStrategySchema } from './spec/create-strategy-schema';
 import { emptySchema } from './spec/empty-schema';
+import { environmentSchema } from './spec/environment-schema';
 import { featureEnvironmentSchema } from './spec/feature-environment-schema';
 import { featureSchema } from './spec/feature-schema';
 import { featureStrategySchema } from './spec/feature-strategy-schema';
 import { featureVariantsSchema } from './spec/feature-variants-schema';
 import { featuresSchema } from './spec/features-schema';
+import { healthOverviewSchema } from './spec/health-overview-schema';
+import { healthReportSchema } from './spec/health-report-schema';
 import { mapValues } from '../util/map-values';
 import { omitKeys } from '../util/omit-keys';
 import { overrideSchema } from './spec/override-schema';
 import { parametersSchema } from './spec/parameters-schema';
 import { patchSchema } from './spec/patch-schema';
 import { patchesSchema } from './spec/patches-schema';
+import { projectEnvironmentSchema } from './spec/project-environment-schema';
+import { projectSchema } from './spec/project-schema';
+import { projectsSchema } from './spec/projects-schema';
 import { strategySchema } from './spec/strategy-schema';
 import { tagSchema } from './spec/tag-schema';
 import { tagsSchema } from './spec/tags-schema';
@@ -31,11 +37,13 @@ export type SchemaRef = typeof schemas[keyof typeof schemas]['components'];
 
 export interface AdminApiOperation
     extends Omit<OpenAPIV3.OperationObject, 'tags'> {
+    operationId: string;
     tags: ['admin'];
 }
 
 export interface ClientApiOperation
     extends Omit<OpenAPIV3.OperationObject, 'tags'> {
+    operationId: string;
     tags: ['client'];
 }
 
@@ -45,15 +53,21 @@ export const schemas = {
     createFeatureSchema,
     createStrategySchema,
     emptySchema,
+    environmentSchema,
     featureEnvironmentSchema,
     featureSchema,
     featureStrategySchema,
     featureVariantsSchema,
     featuresSchema,
+    healthOverviewSchema,
+    healthReportSchema,
     overrideSchema,
     parametersSchema,
     patchSchema,
     patchesSchema,
+    projectEnvironmentSchema,
+    projectSchema,
+    projectsSchema,
     strategySchema,
     tagSchema,
     tagsSchema,

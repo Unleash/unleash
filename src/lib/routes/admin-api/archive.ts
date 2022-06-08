@@ -14,6 +14,7 @@ import {
 import { serializeDates } from '../../types/serialize-dates';
 import { OpenApiService } from '../../services/openapi-service';
 import { createResponseSchema } from '../../openapi';
+import { EmptySchema } from '../../openapi/spec/empty-schema';
 
 export default class ArchiveController extends Controller {
     private readonly logger: Logger;
@@ -42,6 +43,7 @@ export default class ArchiveController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
+                    operationId: 'getArchivedFeatures',
                     responses: { 200: createResponseSchema('featuresSchema') },
                     deprecated: true,
                 }),
@@ -56,18 +58,42 @@ export default class ArchiveController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
+                    operationId: 'getArchivedFeaturesByProjectId',
                     responses: { 200: createResponseSchema('featuresSchema') },
                     deprecated: true,
                 }),
             ],
         });
 
-        this.delete('/:featureName', this.deleteFeature, DELETE_FEATURE);
-        this.post(
-            '/revive/:featureName',
-            this.reviveFeatureToggle,
-            UPDATE_FEATURE,
-        );
+        this.route({
+            method: 'delete',
+            path: '/:featureName',
+            acceptAnyContentType: true,
+            handler: this.deleteFeature,
+            permission: DELETE_FEATURE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'deleteFeature',
+                    responses: { 200: createResponseSchema('emptySchema') },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'post',
+            path: '/revive/:featureName',
+            acceptAnyContentType: true,
+            handler: this.reviveFeature,
+            permission: UPDATE_FEATURE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'reviveFeature',
+                    responses: { 200: createResponseSchema('emptySchema') },
+                }),
+            ],
+        });
     }
 
     async getArchivedFeatures(
@@ -104,8 +130,8 @@ export default class ArchiveController extends Controller {
     }
 
     async deleteFeature(
-        req: IAuthRequest<any, { featureName: string }, any, any>,
-        res: Response,
+        req: IAuthRequest<{ featureName: string }>,
+        res: Response<EmptySchema>,
     ): Promise<void> {
         const { featureName } = req.params;
         const user = extractUsername(req);
@@ -113,7 +139,10 @@ export default class ArchiveController extends Controller {
         res.status(200).end();
     }
 
-    async reviveFeatureToggle(req: IAuthRequest, res: Response): Promise<void> {
+    async reviveFeature(
+        req: IAuthRequest<{ featureName: string }>,
+        res: Response<EmptySchema>,
+    ): Promise<void> {
         const userName = extractUsername(req);
         const { featureName } = req.params;
         await this.featureService.reviveToggle(featureName, userName);

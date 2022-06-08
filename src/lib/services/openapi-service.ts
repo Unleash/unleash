@@ -73,7 +73,12 @@ export class OpenApiService {
         const errors = validateSchema(schema, data);
 
         if (errors) {
-            this.logger.warn('Invalid response:', errors);
+            this.logger.warn(
+                'Invalid response:',
+                process.env.NODE_ENV === 'development'
+                    ? JSON.stringify(errors, null, 2)
+                    : errors,
+            );
         }
 
         res.status(status).json(data);

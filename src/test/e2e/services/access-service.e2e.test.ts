@@ -14,6 +14,7 @@ import FeatureToggleService from '../../../lib/services/feature-toggle-service';
 import ProjectService from '../../../lib/services/project-service';
 import { createTestConfig } from '../../config/test-config';
 import { DEFAULT_PROJECT } from '../../../lib/types/project';
+import { SegmentService } from '../../../lib/services/segment-service';
 
 let db: ITestDb;
 let stores: IUnleashStores;
@@ -212,7 +213,11 @@ beforeAll(async () => {
     editorRole = roles.find((r) => r.name === RoleName.EDITOR);
     adminRole = roles.find((r) => r.name === RoleName.ADMIN);
     readRole = roles.find((r) => r.name === RoleName.VIEWER);
-    featureToggleService = new FeatureToggleService(stores, config);
+    featureToggleService = new FeatureToggleService(
+        stores,
+        config,
+        new SegmentService(stores, config),
+    );
     projectService = new ProjectService(
         stores,
         config,

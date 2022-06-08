@@ -7,6 +7,7 @@ import ProjectHealthService from '../../../lib/services/project-health-service';
 import { createTestConfig } from '../../config/test-config';
 import { IUnleashStores } from '../../../lib/types';
 import { IUser } from '../../../lib/server-impl';
+import { SegmentService } from '../../../lib/services/segment-service';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -25,7 +26,11 @@ beforeAll(async () => {
         email: 'test@getunleash.io',
     });
     accessService = new AccessService(stores, config);
-    featureToggleService = new FeatureToggleService(stores, config);
+    featureToggleService = new FeatureToggleService(
+        stores,
+        config,
+        new SegmentService(stores, config),
+    );
     projectService = new ProjectService(
         stores,
         config,

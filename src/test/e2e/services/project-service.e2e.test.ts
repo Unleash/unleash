@@ -9,6 +9,7 @@ import { RoleName } from '../../../lib/types/model';
 import { randomId } from '../../../lib/util/random-id';
 import EnvironmentService from '../../../lib/services/environment-service';
 import IncompatibleProjectError from '../../../lib/error/incompatible-project-error';
+import { SegmentService } from '../../../lib/services/segment-service';
 
 let stores;
 let db: ITestDb;
@@ -32,7 +33,11 @@ beforeAll(async () => {
         experimental: { environments: { enabled: true } },
     });
     accessService = new AccessService(stores, config);
-    featureToggleService = new FeatureToggleService(stores, config);
+    featureToggleService = new FeatureToggleService(
+        stores,
+        config,
+        new SegmentService(stores, config),
+    );
     environmentService = new EnvironmentService(stores, config);
     projectService = new ProjectService(
         stores,

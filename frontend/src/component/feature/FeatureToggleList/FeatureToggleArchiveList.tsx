@@ -112,8 +112,8 @@ export const FeatureToggleList: VFC<IFeatureToggleListProps> = ({
 
     const headerTitle = isArchive
         ? inProject
-            ? `Project Archived Features ${searchResultsHeader}`
-            : `Archived Features ${searchResultsHeader}`
+            ? `Archived project features ${searchResultsHeader}`
+            : `Archived features ${searchResultsHeader}`
         : `Features ${searchResultsHeader}`;
 
     return (

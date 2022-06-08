@@ -1,26 +1,49 @@
 import { FromSchema } from 'json-schema-to-ts';
-import { featureSchema } from './feature-schema';
 import { parametersSchema } from './parameters-schema';
 import { variantSchema } from './variant-schema';
 import { overrideSchema } from './override-schema';
-import { constraintSchema } from './constraint-schema';
 import { strategySchema } from './strategy-schema';
+import { featureSchema } from './feature-schema';
+import { constraintSchema } from './constraint-schema';
 import { environmentSchema } from './environment-schema';
 
-export const featuresSchema = {
-    $id: '#/components/schemas/featuresSchema',
+export const healthOverviewSchema = {
+    $id: '#/components/schemas/healthOverviewSchema',
     type: 'object',
     additionalProperties: false,
-    required: ['version', 'features'],
+    required: ['version', 'name'],
     properties: {
         version: {
-            type: 'integer',
+            type: 'number',
+        },
+        name: {
+            type: 'string',
+        },
+        description: {
+            type: 'string',
+        },
+        members: {
+            type: 'number',
+        },
+        health: {
+            type: 'number',
+        },
+        environments: {
+            type: 'array',
+            items: {
+                type: 'string',
+            },
         },
         features: {
             type: 'array',
             items: {
                 $ref: '#/components/schemas/featureSchema',
             },
+        },
+        updatedAt: {
+            type: 'string',
+            format: 'date-time',
+            nullable: true,
         },
     },
     components: {
@@ -36,4 +59,4 @@ export const featuresSchema = {
     },
 } as const;
 
-export type FeaturesSchema = FromSchema<typeof featuresSchema>;
+export type HealthOverviewSchema = FromSchema<typeof healthOverviewSchema>;

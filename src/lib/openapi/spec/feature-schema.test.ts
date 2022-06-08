@@ -25,6 +25,13 @@ test('featureSchema', () => {
                 payload: { type: 'a', value: 'b' },
             },
         ],
+        environments: [
+            {
+                name: 'a',
+                type: 'b',
+                enabled: true,
+            },
+        ],
     };
 
     expect(

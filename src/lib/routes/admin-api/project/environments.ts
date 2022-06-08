@@ -5,16 +5,13 @@ import { IUnleashServices } from '../../../types/services';
 import { Logger } from '../../../logger';
 import EnvironmentService from '../../../services/environment-service';
 import { UPDATE_PROJECT } from '../../../types/permissions';
-import { addEnvironment } from '../../../schema/project-schema';
+import { createRequestSchema, createResponseSchema } from '../../../openapi';
+import { ProjectEnvironmentSchema } from '../../../openapi/spec/project-environment-schema';
 
 const PREFIX = '/:projectId/environments';
 
 interface IProjectEnvironmentParams {
     projectId: string;
-    environment: string;
-}
-
-interface EnvironmentBody {
     environment: string;
 }
 
@@ -25,49 +22,79 @@ export default class EnvironmentsController extends Controller {
 
     constructor(
         config: IUnleashConfig,
-        { environmentService }: Pick<IUnleashServices, 'environmentService'>,
+        {
+            environmentService,
+            openApiService,
+        }: Pick<IUnleashServices, 'environmentService' | 'openApiService'>,
     ) {
         super(config);
 
         this.logger = config.getLogger('admin-api/project/environments.ts');
         this.environmentService = environmentService;
-        this.post(PREFIX, this.addEnvironmentToProject, UPDATE_PROJECT);
-        this.delete(
-            `${PREFIX}/:environment`,
-            this.removeEnvironmentFromProject,
-            UPDATE_PROJECT,
-        );
+
+        this.route({
+            method: 'post',
+            path: PREFIX,
+            handler: this.addEnvironmentToProject,
+            permission: UPDATE_PROJECT,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'addEnvironmentToProject',
+                    requestBody: createRequestSchema(
+                        'projectEnvironmentSchema',
+                    ),
+                    responses: { 200: createResponseSchema('emptySchema') },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'delete',
+            path: `${PREFIX}/:environment`,
+            acceptAnyContentType: true,
+            handler: this.removeEnvironmentFromProject,
+            permission: UPDATE_PROJECT,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'removeEnvironmentFromProject',
+                    responses: { 200: createResponseSchema('emptySchema') },
+                }),
+            ],
+        });
     }
 
     async addEnvironmentToProject(
         req: Request<
             Omit<IProjectEnvironmentParams, 'environment'>,
-            any,
-            EnvironmentBody,
-            any
+            void,
+            ProjectEnvironmentSchema
         >,
         res: Response,
     ): Promise<void> {
         const { projectId } = req.params;
-
-        const { environment } = await addEnvironment.validateAsync(req.body);
+        const { environment } = req.body;
 
         await this.environmentService.addEnvironmentToProject(
             environment,
             projectId,
         );
+
         res.status(200).end();
     }
 
     async removeEnvironmentFromProject(
-        req: Request<IProjectEnvironmentParams, any, any, any>,
-        res: Response,
+        req: Request<IProjectEnvironmentParams>,
+        res: Response<void>,
     ): Promise<void> {
         const { projectId, environment } = req.params;
+
         await this.environmentService.removeEnvironmentFromProject(
             environment,
             projectId,
         );
+
         res.status(200).end();
     }
 }

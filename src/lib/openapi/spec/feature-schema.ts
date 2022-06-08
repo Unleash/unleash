@@ -4,6 +4,7 @@ import { strategySchema } from './strategy-schema';
 import { constraintSchema } from './constraint-schema';
 import { overrideSchema } from './override-schema';
 import { parametersSchema } from './parameters-schema';
+import { environmentSchema } from './environment-schema';
 
 export const featureSchema = {
     $id: '#/components/schemas/featureSchema',
@@ -48,7 +49,7 @@ export const featureSchema = {
         environments: {
             type: 'array',
             items: {
-                type: 'object',
+                $ref: '#/components/schemas/environmentSchema',
             },
         },
         strategies: {
@@ -67,6 +68,7 @@ export const featureSchema = {
     components: {
         schemas: {
             constraintSchema,
+            environmentSchema,
             overrideSchema,
             parametersSchema,
             strategySchema,

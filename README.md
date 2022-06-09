@@ -87,7 +87,7 @@ The above sections show you how to get up and running quickly and easily. When y
 
 Try out [the Unleash online demo](https://www.getunleash.io/interactive-demo).
 
-![The Unleash UI. It shows a project and its users, feature toggles and tabs for health, access, and environments.](./.github/github_online_demo.svg)
+[![The Unleash online demo](./.github/github_online_demo.svg)](https://www.getunleash.io/interactive-demo)
 
 <br/>
 

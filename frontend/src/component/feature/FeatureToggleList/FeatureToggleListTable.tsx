@@ -22,7 +22,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { sortTypes } from 'utils/sortTypes';
-import { useLocalStorage } from 'hooks/useLocalStorage';
+import { createLocalStorage } from 'utils/createLocalStorage';
 import { useVirtualizedRange } from 'hooks/useVirtualizedRange';
 import { FeatureSchema } from 'openapi';
 import { CreateFeatureButton } from '../CreateFeatureButton/CreateFeatureButton';
@@ -101,21 +101,32 @@ const columns = [
 
 const defaultSort: SortingRule<string> = { id: 'createdAt', desc: true };
 
+const { value: storedParams, setValue: setStoredParams } = createLocalStorage(
+    'FeatureToggleListTable:v1',
+    defaultSort
+);
+
 export const FeatureToggleListTable: VFC = () => {
     const theme = useTheme();
     const rowHeight = theme.shape.tableRowHeight;
     const { classes } = useStyles();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const isMediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
-    const [searchParams, setSearchParams] = useSearchParams();
-    const [storedParams, setStoredParams] = useLocalStorage(
-        'FeatureToggleListTable:v1',
-        defaultSort
-    );
     const { features = [], loading } = useFeatures();
-    const [searchValue, setSearchValue] = useState(
-        searchParams.get('search') || ''
-    );
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [initialState] = useState(() => ({
+        sortBy: [
+            {
+                id: searchParams.get('sort') || storedParams.id,
+                desc: searchParams.has('order')
+                    ? searchParams.get('order') === 'desc'
+                    : storedParams.desc,
+            },
+        ],
+        hiddenColumns: ['description'],
+        globalFilter: searchParams.get('search') || '',
+    }));
+    const [searchValue, setSearchValue] = useState(initialState.globalFilter);
 
     const {
         data: searchedData,
@@ -130,18 +141,6 @@ export const FeatureToggleListTable: VFC = () => {
                 : searchedData,
         [searchedData, loading]
     );
-
-    const [initialState] = useState(() => ({
-        sortBy: [
-            {
-                id: searchParams.get('sort') || storedParams.id,
-                desc: searchParams.has('order')
-                    ? searchParams.get('order') === 'desc'
-                    : storedParams.desc,
-            },
-        ],
-        hiddenColumns: ['description'],
-    }));
 
     const {
         getTableProps,
@@ -190,7 +189,7 @@ export const FeatureToggleListTable: VFC = () => {
             replace: true,
         });
         setStoredParams({ id: sortBy[0].id, desc: sortBy[0].desc || false });
-    }, [sortBy, searchValue, setSearchParams, setStoredParams]);
+    }, [sortBy, searchValue, setSearchParams]);
 
     const [firstRenderedIndex, lastRenderedIndex] =
         useVirtualizedRange(rowHeight);

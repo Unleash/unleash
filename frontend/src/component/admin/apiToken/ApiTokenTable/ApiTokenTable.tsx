@@ -80,25 +80,29 @@ export const ApiTokenTable = () => {
             <Box sx={{ mb: 4 }}>
                 <ApiTokenDocs />
             </Box>
-            <SearchHighlightProvider value={globalFilter}>
-                <Table {...getTableProps()}>
-                    <SortableTableHeader headerGroups={headerGroups as any} />
-                    <TableBody {...getTableBodyProps()}>
-                        {rows.map(row => {
-                            prepareRow(row);
-                            return (
-                                <TableRow hover {...row.getRowProps()}>
-                                    {row.cells.map(cell => (
-                                        <TableCell {...cell.getCellProps()}>
-                                            {cell.render('Cell')}
-                                        </TableCell>
-                                    ))}
-                                </TableRow>
-                            );
-                        })}
-                    </TableBody>
-                </Table>
-            </SearchHighlightProvider>
+            <Box sx={{ overflowX: 'auto' }}>
+                <SearchHighlightProvider value={globalFilter}>
+                    <Table {...getTableProps()}>
+                        <SortableTableHeader
+                            headerGroups={headerGroups as any}
+                        />
+                        <TableBody {...getTableBodyProps()}>
+                            {rows.map(row => {
+                                prepareRow(row);
+                                return (
+                                    <TableRow hover {...row.getRowProps()}>
+                                        {row.cells.map(cell => (
+                                            <TableCell {...cell.getCellProps()}>
+                                                {cell.render('Cell')}
+                                            </TableCell>
+                                        ))}
+                                    </TableRow>
+                                );
+                            })}
+                        </TableBody>
+                    </Table>
+                </SearchHighlightProvider>
+            </Box>
             <ConditionallyRender
                 condition={rows.length === 0 && !loading}
                 show={
@@ -125,7 +129,6 @@ export const ApiTokenTable = () => {
 
 const useHiddenColumns = (): string[] => {
     const { uiConfig } = useUiConfig();
-    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const isMediumScreen = useMediaQuery(theme.breakpoints.down('md'));
 
     return useMemo(() => {
@@ -141,12 +144,8 @@ const useHiddenColumns = (): string[] => {
             hidden.push('createdAt');
         }
 
-        if (isSmallScreen) {
-            hidden.push('username');
-        }
-
         return hidden;
-    }, [uiConfig, isSmallScreen, isMediumScreen]);
+    }, [uiConfig, isMediumScreen]);
 };
 
 const COLUMNS = [
@@ -161,7 +160,6 @@ const COLUMNS = [
         Header: 'Username',
         accessor: 'username',
         Cell: HighlightCell,
-        width: '60%',
     },
     {
         Header: 'Type',

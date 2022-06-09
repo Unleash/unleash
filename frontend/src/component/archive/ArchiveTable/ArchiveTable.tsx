@@ -17,20 +17,20 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { FeatureTypeCell } from 'common/Table/cells/FeatureTypeCell/FeatureTypeCell';
-import { FeatureSeenCell } from 'common/Table/cells/FeatureSeenCell/FeatureSeenCell';
-import { LinkCell } from 'common/Table/cells/LinkCell/LinkCell';
-import { FeatureStaleCell } from 'feature/FeatureToggleList/FeatureStaleCell/FeatureStaleCell';
+import { FeatureTypeCell } from '../../common/Table/cells/FeatureTypeCell/FeatureTypeCell';
+import { FeatureSeenCell } from '../../common/Table/cells/FeatureSeenCell/FeatureSeenCell';
+import { LinkCell } from '../../common/Table/cells/LinkCell/LinkCell';
+import { FeatureStaleCell } from '../../feature/FeatureToggleList/FeatureStaleCell/FeatureStaleCell';
 import { ReviveArchivedFeatureCell } from 'component/archive/ArchiveTable/ReviveArchivedFeatureCell/ReviveArchivedFeatureCell';
-import { useStyles } from 'feature/FeatureToggleList/styles';
-import { featuresPlaceholder } from 'feature/FeatureToggleList/FeatureToggleListTable';
+import { useStyles } from '../../feature/FeatureToggleList/styles';
+import { featuresPlaceholder } from '../../feature/FeatureToggleList/FeatureToggleListTable';
 import theme from 'themes/theme';
 import { FeatureSchema } from '../../../openapi';
 import { useFeatureArchiveApi } from 'hooks/api/actions/useFeatureArchiveApi/useReviveFeatureApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useSearch } from 'hooks/useSearch';
-import { FeatureArchivedCell } from 'common/Table/cells/FeatureArchivedCell/FeatureArchivedCell';
+import { FeatureArchivedCell } from '../../common/Table/cells/FeatureArchivedCell/FeatureArchivedCell';
 import { useVirtualizedRange } from 'hooks/useVirtualizedRange';
 
 export interface IFeaturesArchiveTableProps {

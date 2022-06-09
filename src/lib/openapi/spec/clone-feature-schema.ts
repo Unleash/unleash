@@ -1,6 +1,7 @@
-import { createSchemaObject, CreateSchemaType } from '../types';
+import { FromSchema } from 'json-schema-to-ts';
 
-const schema = {
+export const cloneFeatureSchema = {
+    $id: '#/components/schemas/cloneFeatureSchema',
     type: 'object',
     required: ['name'],
     properties: {
@@ -11,9 +12,7 @@ const schema = {
             type: 'boolean',
         },
     },
-    'components/schemas': {},
+    components: {},
 } as const;
 
-export type CloneFeatureSchema = CreateSchemaType<typeof schema>;
-
-export const cloneFeatureSchema = createSchemaObject(schema);
+export type CloneFeatureSchema = FromSchema<typeof cloneFeatureSchema>;

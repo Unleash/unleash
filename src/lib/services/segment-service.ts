@@ -109,6 +109,24 @@ export class SegmentService {
         });
     }
 
+    async cloneStrategySegments(
+        sourceStrategyId: string,
+        targetStrategyId: string,
+    ): Promise<void> {
+        const sourceStrategySegments = await this.getByStrategy(
+            sourceStrategyId,
+        );
+
+        await Promise.all(
+            sourceStrategySegments.map((sourceStrategySegment) => {
+                return this.addToStrategy(
+                    sourceStrategySegment.id,
+                    targetStrategyId,
+                );
+            }),
+        );
+    }
+
     // Used by unleash-enterprise.
     async addToStrategy(id: number, strategyId: string): Promise<void> {
         await this.validateStrategySegmentLimit(strategyId);

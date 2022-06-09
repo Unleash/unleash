@@ -1,8 +1,9 @@
-import { createSchemaObject, CreateSchemaType } from '../types';
+import { FromSchema } from 'json-schema-to-ts';
 import { constraintSchema } from './constraint-schema';
 import { parametersSchema } from './parameters-schema';
 
-export const schema = {
+export const featureStrategySchema = {
+    $id: '#/components/schemas/featureStrategySchema',
     type: 'object',
     additionalProperties: false,
     required: [
@@ -22,7 +23,7 @@ export const schema = {
         },
         createdAt: {
             type: 'string',
-            format: 'date',
+            format: 'date-time',
             nullable: true,
         },
         featureName: {
@@ -50,12 +51,12 @@ export const schema = {
             $ref: '#/components/schemas/parametersSchema',
         },
     },
-    'components/schemas': {
-        constraintSchema,
-        parametersSchema,
+    components: {
+        schemas: {
+            constraintSchema,
+            parametersSchema,
+        },
     },
 } as const;
 
-export type FeatureStrategySchema = CreateSchemaType<typeof schema>;
-
-export const featureStrategySchema = createSchemaObject(schema);
+export type FeatureStrategySchema = FromSchema<typeof featureStrategySchema>;

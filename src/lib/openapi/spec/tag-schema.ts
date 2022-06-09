@@ -1,6 +1,7 @@
-import { createSchemaObject, CreateSchemaType } from '../types';
+import { FromSchema } from 'json-schema-to-ts';
 
-const schema = {
+export const tagSchema = {
+    $id: '#/components/schemas/tagSchema',
     type: 'object',
     additionalProperties: false,
     required: ['value', 'type'],
@@ -12,9 +13,7 @@ const schema = {
             type: 'string',
         },
     },
-    'components/schemas': {},
+    components: {},
 } as const;
 
-export type TagSchema = CreateSchemaType<typeof schema>;
-
-export const tagSchema = createSchemaObject(schema);
+export type TagSchema = FromSchema<typeof tagSchema>;

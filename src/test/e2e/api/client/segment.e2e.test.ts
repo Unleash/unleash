@@ -81,6 +81,36 @@ const mockConstraintValues = (length: number): string[] => {
     });
 };
 
+const fetchClientResponse = (): Promise<{
+    features: IFeatureToggleClient[];
+    version: number;
+    segments: ISegment[];
+}> => {
+    return app.request
+        .get(FEATURES_CLIENT_BASE_PATH)
+        .set('Unleash-Client-Spec', '4.2.0')
+        .expect(200)
+        .then((res) => res.body);
+};
+
+const createTestSegments = async () => {
+    const constraints = mockConstraints();
+
+    await createSegment({ name: 'S1', constraints });
+    await createSegment({ name: 'S2', constraints });
+    await createSegment({ name: 'S3', constraints });
+
+    await createFeatureToggle(mockFeatureToggle());
+    await createFeatureToggle(mockFeatureToggle());
+    await createFeatureToggle(mockFeatureToggle());
+
+    const [feature1, feature2] = await fetchFeatures();
+    const [segment1, segment2] = await fetchSegments();
+    await addSegmentToStrategy(segment1.id, feature1.strategies[0].id);
+    await addSegmentToStrategy(segment2.id, feature1.strategies[0].id);
+    await addSegmentToStrategy(segment2.id, feature2.strategies[0].id);
+};
+
 beforeAll(async () => {
     db = await dbInit('segments', getLogger);
     app = await setupApp(db.stores);
@@ -95,37 +125,6 @@ afterEach(async () => {
     await db.stores.segmentStore.deleteAll();
     await db.stores.featureToggleStore.deleteAll();
     await db.stores.eventStore.deleteAll();
-});
-
-test('should inline segment constraints into features by default', async () => {
-    const constraints = mockConstraints();
-    await createSegment({ name: 'S1', constraints });
-    await createSegment({ name: 'S2', constraints });
-    await createSegment({ name: 'S3', constraints });
-    await createFeatureToggle(mockFeatureToggle());
-    await createFeatureToggle(mockFeatureToggle());
-    await createFeatureToggle(mockFeatureToggle());
-    const [feature1, feature2, feature3] = await fetchFeatures();
-    const [segment1, segment2, segment3] = await fetchSegments();
-
-    await addSegmentToStrategy(segment1.id, feature1.strategies[0].id);
-    await addSegmentToStrategy(segment2.id, feature1.strategies[0].id);
-    await addSegmentToStrategy(segment2.id, feature2.strategies[0].id);
-    await addSegmentToStrategy(segment3.id, feature1.strategies[0].id);
-    await addSegmentToStrategy(segment3.id, feature2.strategies[0].id);
-    await addSegmentToStrategy(segment3.id, feature3.strategies[0].id);
-
-    const clientFeatures = await fetchClientFeatures();
-    const clientStrategies = clientFeatures.flatMap((f) => f.strategies);
-    const clientConstraints = clientStrategies.flatMap((s) => s.constraints);
-    const clientValues = clientConstraints.flatMap((c) => c.values);
-    const uniqueValues = [...new Set(clientValues)];
-
-    expect(clientFeatures.length).toEqual(3);
-    expect(clientStrategies.length).toEqual(3);
-    expect(clientConstraints.length).toEqual(5 * 6);
-    expect(clientValues.length).toEqual(5 * 6 * 3);
-    expect(uniqueValues.length).toEqual(3);
 });
 
 test('should validate segment constraint values limit', async () => {
@@ -189,21 +188,76 @@ test('should validate feature strategy segment limit', async () => {
     );
 });
 
-test('should only return segments to clients with the segments capability', async () => {
+test('should clone feature strategy segments', async () => {
     const constraints = mockConstraints();
     await createSegment({ name: 'S1', constraints });
-    await createSegment({ name: 'S2', constraints });
-    await createSegment({ name: 'S3', constraints });
     await createFeatureToggle(mockFeatureToggle());
     await createFeatureToggle(mockFeatureToggle());
-    await createFeatureToggle(mockFeatureToggle());
+
     const [feature1, feature2] = await fetchFeatures();
+    const strategy1 = feature1.strategies[0].id;
+    const strategy2 = feature2.strategies[0].id;
+    const [segment1] = await fetchSegments();
+    await addSegmentToStrategy(segment1.id, feature1.strategies[0].id);
+
+    let segments1 = await app.services.segmentService.getByStrategy(strategy1);
+    let segments2 = await app.services.segmentService.getByStrategy(strategy2);
+    expect(collectIds(segments1)).toEqual([segment1.id]);
+    expect(collectIds(segments2)).toEqual([]);
+
+    await app.services.segmentService.cloneStrategySegments(
+        strategy1,
+        strategy2,
+    );
+
+    segments1 = await app.services.segmentService.getByStrategy(strategy1);
+    segments2 = await app.services.segmentService.getByStrategy(strategy2);
+    expect(collectIds(segments1)).toEqual([segment1.id]);
+    expect(collectIds(segments2)).toEqual([segment1.id]);
+});
+
+test('should store segment-created and segment-deleted events', async () => {
+    const constraints = mockConstraints();
+    const user = new User({ id: 1, email: 'test@example.com' });
+
+    await createSegment({ name: 'S1', constraints });
+    const [segment1] = await fetchSegments();
+    await app.services.segmentService.delete(segment1.id, user);
+    const events = await db.stores.eventStore.getEvents();
+
+    expect(events[0].type).toEqual('segment-deleted');
+    expect(events[0].data.id).toEqual(segment1.id);
+    expect(events[1].type).toEqual('segment-created');
+    expect(events[1].data.id).toEqual(segment1.id);
+});
+
+test('should inline segment constraints into features by default', async () => {
+    await createTestSegments();
+
+    const [feature1, feature2, feature3] = await fetchFeatures();
+    const [, , segment3] = await fetchSegments();
+    await addSegmentToStrategy(segment3.id, feature1.strategies[0].id);
+    await addSegmentToStrategy(segment3.id, feature2.strategies[0].id);
+    await addSegmentToStrategy(segment3.id, feature3.strategies[0].id);
+
+    const clientFeatures = await fetchClientFeatures();
+    const clientStrategies = clientFeatures.flatMap((f) => f.strategies);
+    const clientConstraints = clientStrategies.flatMap((s) => s.constraints);
+    const clientValues = clientConstraints.flatMap((c) => c.values);
+    const uniqueValues = [...new Set(clientValues)];
+
+    expect(clientFeatures.length).toEqual(3);
+    expect(clientStrategies.length).toEqual(3);
+    expect(clientConstraints.length).toEqual(5 * 6);
+    expect(clientValues.length).toEqual(5 * 6 * 3);
+    expect(uniqueValues.length).toEqual(3);
+});
+
+test('should only return segments to clients that support the spec', async () => {
+    await createTestSegments();
+
     const [segment1, segment2] = await fetchSegments();
     const segmentIds = collectIds([segment1, segment2]);
-
-    await addSegmentToStrategy(segment1.id, feature1.strategies[0].id);
-    await addSegmentToStrategy(segment2.id, feature1.strategies[0].id);
-    await addSegmentToStrategy(segment2.id, feature2.strategies[0].id);
 
     const unknownClientResponse = await app.request
         .get(FEATURES_CLIENT_BASE_PATH)
@@ -227,17 +281,33 @@ test('should only return segments to clients with the segments capability', asyn
     expect(supportedClientConstraints.length).toEqual(0);
 });
 
-test('should store segment-created and segment-deleted events', async () => {
-    const constraints = mockConstraints();
-    const user = new User({ id: 1, email: 'test@example.com' });
+test('should return segments in base of toggle response if inline is disabled', async () => {
+    await createTestSegments();
 
-    await createSegment({ name: 'S1', constraints });
-    const [segment1] = await fetchSegments();
-    await app.services.segmentService.delete(segment1.id, user);
-    const events = await db.stores.eventStore.getEvents();
+    const clientFeatures = await fetchClientResponse();
+    expect(clientFeatures.segments.length).toBeDefined();
+});
 
-    expect(events[0].type).toEqual('segment-deleted');
-    expect(events[0].data.id).toEqual(segment1.id);
-    expect(events[1].type).toEqual('segment-created');
-    expect(events[1].data.id).toEqual(segment1.id);
+test('should only send segments that are in use', async () => {
+    await createTestSegments();
+
+    const clientFeatures = await fetchClientResponse();
+    expect(clientFeatures.segments.length).toEqual(2);
+});
+
+test('should send all segments that are in use by feature', async () => {
+    await createTestSegments();
+
+    const clientFeatures = await fetchClientResponse();
+    const globalSegments = clientFeatures.segments;
+    expect(globalSegments).toHaveLength(2);
+
+    const globalSegmentIds = globalSegments.map((segment) => segment.id);
+    const allSegmentIds = clientFeatures.features
+        .map((feat) => feat.strategies.map((strategy) => strategy.segments))
+        .flat()
+        .flat()
+        .filter((x) => !!x);
+    const toggleSegmentIds = [...new Set(allSegmentIds)];
+    expect(globalSegmentIds).toEqual(toggleSegmentIds);
 });

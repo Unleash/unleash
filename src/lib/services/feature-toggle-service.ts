@@ -41,7 +41,6 @@ import {
     FeatureToggleLegacy,
     FeatureToggleWithEnvironment,
     IConstraint,
-    IEnvironmentDetail,
     IFeatureEnvironmentInfo,
     IFeatureOverview,
     IFeatureStrategy,
@@ -70,6 +69,7 @@ import {
 } from '../util/validators/constraint-types';
 import { IContextFieldStore } from 'lib/types/stores/context-field-store';
 import { Saved, Unsaved } from '../types/saved';
+import { SegmentService } from './segment-service';
 
 interface IFeatureContext {
     featureName: string;
@@ -103,6 +103,8 @@ class FeatureToggleService {
 
     private contextFieldStore: IContextFieldStore;
 
+    private segmentService: SegmentService;
+
     constructor(
         {
             featureStrategiesStore,
@@ -125,6 +127,7 @@ class FeatureToggleService {
             | 'contextFieldStore'
         >,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
+        segmentService: SegmentService,
     ) {
         this.logger = getLogger('services/feature-toggle-service.ts');
         this.featureStrategiesStore = featureStrategiesStore;
@@ -135,6 +138,7 @@ class FeatureToggleService {
         this.eventStore = eventStore;
         this.featureEnvironmentStore = featureEnvironmentStore;
         this.contextFieldStore = contextFieldStore;
+        this.segmentService = segmentService;
     }
 
     async validateFeatureContext({
@@ -618,37 +622,29 @@ class FeatureToggleService {
             );
 
         const newToggle = { ...cToggle, name: newFeatureName };
-
-        // Create feature toggle
         const created = await this.createFeatureToggle(
             projectId,
             newToggle,
             userName,
         );
 
-        const createStrategies = [];
-        newToggle.environments.forEach((e: IEnvironmentDetail) =>
-            e.strategies.forEach((s: IStrategyConfig) => {
+        const tasks = newToggle.environments.flatMap((e) =>
+            e.strategies.map((s) => {
                 if (replaceGroupId && s.parameters.hasOwnProperty('groupId')) {
                     s.parameters.groupId = newFeatureName;
                 }
-                delete s.id;
-                createStrategies.push(
-                    this.createStrategy(
-                        s,
-                        {
-                            projectId,
-                            featureName: newFeatureName,
-                            environment: e.name,
-                        },
-                        userName,
-                    ),
+                const context = {
+                    projectId,
+                    featureName: newFeatureName,
+                    environment: e.name,
+                };
+                return this.createStrategy(s, context, userName).then((s2) =>
+                    this.segmentService.cloneStrategySegments(s.id, s2.id),
                 );
             }),
         );
 
-        // Create strategies
-        await Promise.allSettled(createStrategies);
+        await Promise.allSettled(tasks);
         return created;
     }
 

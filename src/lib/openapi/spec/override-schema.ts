@@ -1,6 +1,7 @@
-import { createSchemaObject, CreateSchemaType } from '../types';
+import { FromSchema } from 'json-schema-to-ts';
 
-const schema = {
+export const overrideSchema = {
+    $id: '#/components/schemas/overrideSchema',
     type: 'object',
     additionalProperties: false,
     required: ['contextName', 'values'],
@@ -15,9 +16,7 @@ const schema = {
             },
         },
     },
-    'components/schemas': {},
+    components: {},
 } as const;
 
-export type OverrideSchema = CreateSchemaType<typeof schema>;
-
-export const overrideSchema = createSchemaObject(schema);
+export type OverrideSchema = FromSchema<typeof overrideSchema>;

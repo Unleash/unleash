@@ -8,11 +8,13 @@ import UserService from '../../services/user-service';
 import UserFeedbackService from '../../services/user-feedback-service';
 import UserSplashService from '../../services/user-splash-service';
 import { ADMIN, NONE } from '../../types/permissions';
-
-interface IChangeUserRequest {
-    password: string;
-    confirmPassword: string;
-}
+import { OpenApiService } from '../../services/openapi-service';
+import { createRequestSchema, createResponseSchema } from '../../openapi';
+import { emptyResponse } from '../../openapi/spec/empty-response';
+import { meSchema, MeSchema } from '../../openapi/spec/me-schema';
+import { serializeDates } from '../../types/serialize-dates';
+import { IUserPermission } from '../../types/stores/access-store';
+import { PasswordSchema } from '../../openapi/spec/password-schema';
 
 class UserController extends Controller {
     private accessService: AccessService;
@@ -23,6 +25,8 @@ class UserController extends Controller {
 
     private userSplashService: UserSplashService;
 
+    private openApiService: OpenApiService;
+
     constructor(
         config: IUnleashConfig,
         {
@@ -30,12 +34,14 @@ class UserController extends Controller {
             userService,
             userFeedbackService,
             userSplashService,
+            openApiService,
         }: Pick<
             IUnleashServices,
             | 'accessService'
             | 'userService'
             | 'userFeedbackService'
             | 'userSplashService'
+            | 'openApiService'
         >,
     ) {
         super(config);
@@ -43,15 +49,45 @@ class UserController extends Controller {
         this.userService = userService;
         this.userFeedbackService = userFeedbackService;
         this.userSplashService = userSplashService;
+        this.openApiService = openApiService;
 
-        this.get('/', this.getUser);
-        this.post('/change-password', this.updateUserPass, NONE);
+        this.route({
+            method: 'get',
+            path: '',
+            handler: this.getMe,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'getMe',
+                    responses: { 200: createResponseSchema('meSchema') },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'post',
+            path: '/change-password',
+            handler: this.changeMyPassword,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'changeMyPassword',
+                    requestBody: createRequestSchema('passwordSchema'),
+                    responses: {
+                        200: emptyResponse,
+                        400: { description: 'passwordMismatch' },
+                    },
+                }),
+            ],
+        });
     }
 
-    async getUser(req: IAuthRequest, res: Response): Promise<void> {
+    async getMe(req: IAuthRequest, res: Response<MeSchema>): Promise<void> {
         res.setHeader('cache-control', 'no-store');
         const { user } = req;
-        let permissions;
+        let permissions: IUserPermission[];
         if (this.config.authentication.type === IAuthType.NONE) {
             permissions = [{ permission: ADMIN }];
         } else {
@@ -62,14 +98,23 @@ class UserController extends Controller {
         );
         const splash = await this.userSplashService.getAllUserSplashs(user);
 
-        return res
-            .status(200)
-            .json({ user, permissions, feedback, splash })
-            .end();
+        const responseData: MeSchema = {
+            user: serializeDates(user),
+            permissions,
+            feedback: serializeDates(feedback),
+            splash,
+        };
+
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            meSchema.$id,
+            responseData,
+        );
     }
 
-    async updateUserPass(
-        req: IAuthRequest<any, any, IChangeUserRequest, any>,
+    async changeMyPassword(
+        req: IAuthRequest<unknown, unknown, PasswordSchema>,
         res: Response,
     ): Promise<void> {
         const { user } = req;

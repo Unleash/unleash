@@ -41,6 +41,9 @@ import { updateUserSchema } from './spec/update-user-schema';
 import { passwordSchema } from './spec/password-schema';
 import { idSchema } from './spec/id-schema';
 import { resetPasswordSchema } from './spec/reset-password-schema';
+import { meSchema } from './spec/me-schema';
+import { permissionSchema } from './spec/permission-schema';
+import { feedbackSchema } from './spec/feedback-schema';
 
 // Schemas must have $id property on the form "#/components/schemas/mySchema".
 export type SchemaId = typeof schemas[keyof typeof schemas]['$id'];
@@ -65,24 +68,27 @@ export const schemas = {
     constraintSchema,
     createFeatureSchema,
     createStrategySchema,
+    createUserSchema,
     emptySchema,
     environmentSchema,
     featureEnvironmentSchema,
     featureSchema,
     featureStrategySchema,
-    createUserSchema,
     featureTypeSchema,
     featureTypesSchema,
     featureVariantsSchema,
     featuresSchema,
+    feedbackSchema,
     healthOverviewSchema,
     healthReportSchema,
     idSchema,
+    meSchema,
     overrideSchema,
     parametersSchema,
     passwordSchema,
     patchSchema,
     patchesSchema,
+    permissionSchema,
     projectEnvironmentSchema,
     projectSchema,
     projectsSchema,

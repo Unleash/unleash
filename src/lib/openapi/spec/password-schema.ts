@@ -9,6 +9,9 @@ export const passwordSchema = {
         password: {
             type: 'string',
         },
+        confirmPassword: {
+            type: 'string',
+        },
     },
     components: {},
 } as const;

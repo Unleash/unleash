@@ -20,12 +20,12 @@ export default class UserSplashService {
         this.logger = getLogger('services/user-splash-service.js');
     }
 
-    async getAllUserSplashs(user: User): Promise<Object> {
+    async getAllUserSplashs(user: User): Promise<Record<string, boolean>> {
         if (user.isAPI) {
-            return [];
+            return {};
         }
         try {
-            const splashs = (
+            return (
                 await this.userSplashStore.getAllUserSplashs(user.id)
             ).reduce(
                 (splashObject, splash) => ({
@@ -34,10 +34,8 @@ export default class UserSplashService {
                 }),
                 {},
             );
-            return splashs;
         } catch (err) {
             this.logger.error(err);
-
             return {};
         }
     }

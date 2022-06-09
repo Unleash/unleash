@@ -32,6 +32,15 @@ import { updateStrategySchema } from './spec/update-strategy-schema';
 import { variantSchema } from './spec/variant-schema';
 import { variantsSchema } from './spec/variants-schema';
 import { versionSchema } from './spec/version-schema';
+import { userSchema } from './spec/user-schema';
+import { usersSchema } from './spec/users-schema';
+import { roleSchema } from './spec/role-schema';
+import { usersSearchSchema } from './spec/users-search-schema';
+import { createUserSchema } from './spec/create-user-schema';
+import { updateUserSchema } from './spec/update-user-schema';
+import { passwordSchema } from './spec/password-schema';
+import { idSchema } from './spec/id-schema';
+import { resetPasswordSchema } from './spec/reset-password-schema';
 
 // Schemas must have $id property on the form "#/components/schemas/mySchema".
 export type SchemaId = typeof schemas[keyof typeof schemas]['$id'];
@@ -61,25 +70,34 @@ export const schemas = {
     featureEnvironmentSchema,
     featureSchema,
     featureStrategySchema,
+    createUserSchema,
     featureTypeSchema,
     featureTypesSchema,
     featureVariantsSchema,
     featuresSchema,
     healthOverviewSchema,
     healthReportSchema,
+    idSchema,
     overrideSchema,
     parametersSchema,
+    passwordSchema,
     patchSchema,
     patchesSchema,
     projectEnvironmentSchema,
     projectSchema,
     projectsSchema,
+    resetPasswordSchema,
+    roleSchema,
     strategySchema,
     tagSchema,
     tagsSchema,
     uiConfigSchema,
     updateFeatureSchema,
     updateStrategySchema,
+    updateUserSchema,
+    userSchema,
+    usersSchema,
+    usersSearchSchema,
     variantSchema,
     variantsSchema,
     versionSchema,

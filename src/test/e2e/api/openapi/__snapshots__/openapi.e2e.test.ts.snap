@@ -157,6 +157,35 @@ Object {
         ],
         "type": "object",
       },
+      "createUserSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "email": Object {
+            "type": "string",
+          },
+          "name": Object {
+            "type": "string",
+          },
+          "password": Object {
+            "type": "string",
+          },
+          "rootRole": Object {
+            "type": "number",
+          },
+          "sendEmail": Object {
+            "type": "boolean",
+          },
+          "username": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "name",
+          "email",
+          "rootRole",
+        ],
+        "type": "object",
+      },
       "emptySchema": Object {
         "description": "emptySchema",
       },
@@ -499,6 +528,18 @@ Object {
         ],
         "type": "object",
       },
+      "idSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "id": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "id",
+        ],
+        "type": "object",
+      },
       "overrideSchema": Object {
         "additionalProperties": false,
         "properties": Object {
@@ -522,6 +563,18 @@ Object {
         "additionalProperties": Object {
           "type": "string",
         },
+        "type": "object",
+      },
+      "passwordSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "password": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "password",
+        ],
         "type": "object",
       },
       "patchSchema": Object {
@@ -621,6 +674,41 @@ Object {
         "required": Array [
           "version",
           "projects",
+        ],
+        "type": "object",
+      },
+      "resetPasswordSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "resetPasswordUrl": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "resetPasswordUrl",
+        ],
+        "type": "object",
+      },
+      "roleSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "description": Object {
+            "type": "string",
+          },
+          "id": Object {
+            "type": "number",
+          },
+          "name": Object {
+            "type": "string",
+          },
+          "type": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "id",
+          "type",
+          "name",
         ],
         "type": "object",
       },
@@ -811,6 +899,108 @@ Object {
         },
         "required": Array [],
         "type": "object",
+      },
+      "updateUserSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "email": Object {
+            "type": "string",
+          },
+          "id": Object {
+            "type": "string",
+          },
+          "name": Object {
+            "type": "string",
+          },
+          "password": Object {
+            "type": "string",
+          },
+          "rootRole": Object {
+            "type": "number",
+          },
+          "sendEmail": Object {
+            "type": "boolean",
+          },
+          "username": Object {
+            "type": "string",
+          },
+        },
+        "type": "object",
+      },
+      "userSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "createdAt": Object {
+            "format": "date-time",
+            "type": "string",
+          },
+          "email": Object {
+            "type": "string",
+          },
+          "emailSent": Object {
+            "type": "boolean",
+          },
+          "id": Object {
+            "type": "number",
+          },
+          "imageUrl": Object {
+            "type": "string",
+          },
+          "inviteLink": Object {
+            "type": "string",
+          },
+          "isAPI": Object {
+            "type": "boolean",
+          },
+          "loginAttempts": Object {
+            "type": "number",
+          },
+          "name": Object {
+            "type": "string",
+          },
+          "rootRole": Object {
+            "type": "number",
+          },
+          "seenAt": Object {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string",
+          },
+          "username": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "id",
+        ],
+        "type": "object",
+      },
+      "usersSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "rootRoles": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/roleSchema",
+            },
+            "type": "array",
+          },
+          "users": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/userSchema",
+            },
+            "type": "array",
+          },
+        },
+        "required": Array [
+          "users",
+        ],
+        "type": "object",
+      },
+      "usersSearchSchema": Object {
+        "items": Object {
+          "$ref": "#/components/schemas/userSchema",
+        },
+        "type": "array",
       },
       "variantSchema": Object {
         "additionalProperties": false,
@@ -2295,6 +2485,254 @@ Object {
               },
             },
             "description": "uiConfigSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/user-admin": Object {
+      "get": Object {
+        "operationId": "getUsers",
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/usersSchema",
+                },
+              },
+            },
+            "description": "usersSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+      "post": Object {
+        "operationId": "createUser",
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/createUserSchema",
+              },
+            },
+          },
+          "description": "createUserSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/userSchema",
+                },
+              },
+            },
+            "description": "userSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/user-admin/reset-password": Object {
+      "post": Object {
+        "operationId": "resetPassword",
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/idSchema",
+              },
+            },
+          },
+          "description": "idSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/resetPasswordSchema",
+                },
+              },
+            },
+            "description": "resetPasswordSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/user-admin/search": Object {
+      "get": Object {
+        "operationId": "searchUsers",
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/usersSchema",
+                },
+              },
+            },
+            "description": "usersSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/user-admin/validate-password": Object {
+      "post": Object {
+        "operationId": "validatePassword",
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/passwordSchema",
+              },
+            },
+          },
+          "description": "passwordSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "200": Object {
+            "description": "emptyResponse",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/user-admin/{id}": Object {
+      "delete": Object {
+        "operationId": "deleteUser",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "description": "emptyResponse",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+      "get": Object {
+        "operationId": "getUser",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/userSchema",
+                },
+              },
+            },
+            "description": "userSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+      "put": Object {
+        "operationId": "updateUser",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/updateUserSchema",
+              },
+            },
+          },
+          "description": "updateUserSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/userSchema",
+                },
+              },
+            },
+            "description": "userSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/user-admin/{id}/change-password": Object {
+      "post": Object {
+        "operationId": "changePassword",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/passwordSchema",
+              },
+            },
+          },
+          "description": "passwordSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "200": Object {
+            "description": "emptyResponse",
           },
         },
         "tags": Array [

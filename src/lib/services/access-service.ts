@@ -27,6 +27,7 @@ import { roleSchema } from '../schema/role-schema';
 import { CUSTOM_ROLE_TYPE } from '../util/constants';
 import { DEFAULT_PROJECT } from '../types/project';
 import InvalidOperationError from '../error/invalid-operation-error';
+import BadDataError from '../error/bad-data-error';
 
 export const ALL_PROJECTS = '*';
 export const ALL_ENVS = '*';
@@ -203,7 +204,7 @@ export class AccessService {
                 );
             }
         } else {
-            throw new Error(`Could not find rootRole=${role}`);
+            throw new BadDataError(`Could not find rootRole=${role}`);
         }
     }
 

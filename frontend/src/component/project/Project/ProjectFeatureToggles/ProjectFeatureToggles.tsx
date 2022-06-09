@@ -29,7 +29,7 @@ import {
 } from 'component/common/Table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import useProject from 'hooks/api/getters/useProject/useProject';
-import { useLocalStorage } from 'hooks/useLocalStorage';
+import { createLocalStorage } from 'utils/createLocalStorage';
 import { useVirtualizedRange } from 'hooks/useVirtualizedRange';
 import useToast from 'hooks/useToast';
 import { ENVIRONMENT_STRATEGY_ERROR } from 'constants/apiErrors';
@@ -93,7 +93,14 @@ export const ProjectFeatureToggles = ({
         string | undefined
     >();
     const projectId = useRequiredPathParam('projectId');
+
+    const { value: storedParams, setValue: setStoredParams } =
+        createLocalStorage(
+            `${projectId}:FeatureToggleListTable:v1`,
+            defaultSort
+        );
     const navigate = useNavigate();
+    const [searchParams, setSearchParams] = useSearchParams();
     const { uiConfig } = useUiConfig();
     const environments = useEnvironmentsRef(
         loading ? ['a', 'b', 'c'] : newEnvironments
@@ -235,12 +242,6 @@ export const ProjectFeatureToggles = ({
         [projectId, environments, onToggle, loading]
     );
 
-    const [searchParams, setSearchParams] = useSearchParams();
-    const [storedParams, setStoredParams] = useLocalStorage(
-        `${projectId}:ProjectFeatureToggles`,
-        defaultSort
-    );
-
     const [searchValue, setSearchValue] = useState(
         searchParams.get('search') || ''
     );
@@ -300,6 +301,7 @@ export const ProjectFeatureToggles = ({
 
     const initialState = useMemo(
         () => {
+            const searchParams = new URLSearchParams();
             const allColumnIds = columns.map(
                 (column: any) => column?.accessor || column?.id
             );
@@ -384,27 +386,17 @@ export const ProjectFeatureToggles = ({
         setSearchParams(tableState, {
             replace: true,
         });
-        setStoredParams({
+        setStoredParams(params => ({
+            ...params,
             id: sortBy[0].id,
             desc: sortBy[0].desc || false,
             columns: tableState.columns.split(','),
-        });
+        }));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [loading, sortBy, hiddenColumns, searchValue, setSearchParams]);
 
-    const onCustomizeColumns = useCallback(
-        visibleColumns => {
-            setStoredParams(storedParams => ({
-                ...storedParams,
-                columns: visibleColumns,
-            }));
-        },
-        [setStoredParams]
-    );
-    const [firstRenderedIndex, lastRenderedIndex] = useVirtualizedRange(
-        rowHeight,
-        20
-    );
+    const [firstRenderedIndex, lastRenderedIndex] =
+        useVirtualizedRange(rowHeight);
 
     return (
         <PageContent
@@ -436,7 +428,6 @@ export const ProjectFeatureToggles = ({
                                 dividerAfter={['createdAt']}
                                 dividerBefore={['Actions']}
                                 isCustomized={Boolean(storedParams.columns)}
-                                onCustomize={onCustomizeColumns}
                                 setHiddenColumns={setHiddenColumns}
                             />
                             <PageHeader.Divider sx={{ marginLeft: 0 }} />

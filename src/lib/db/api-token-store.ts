@@ -11,7 +11,7 @@ import {
     IApiTokenCreate,
     isAllProjects,
 } from '../types/models/api-token';
-import { ALL_PROJECTS } from '../../lib/services/access-service';
+import { ALL_PROJECTS } from '../util/constants';
 
 const TABLE = 'api_tokens';
 const API_LINK_TABLE = 'api_token_project';

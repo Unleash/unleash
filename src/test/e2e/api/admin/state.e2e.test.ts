@@ -3,6 +3,7 @@ import { IUnleashTest, setupApp } from '../../helpers/test-helper';
 import getLogger from '../../../fixtures/no-logger';
 import { DEFAULT_ENV } from '../../../../lib/util/constants';
 import { collectIds } from '../../../../lib/util/collect-ids';
+import { ApiTokenType } from '../../../../lib/types/models/api-token';
 
 const importData = require('../../../examples/import.json');
 
@@ -336,4 +337,106 @@ test(`should import segments and connect them to feature strategies`, async () =
     expect(collectIds(allSegments)).toEqual([1, 2]);
     expect(activeSegments.length).toEqual(1);
     expect(collectIds(activeSegments)).toEqual([1]);
+});
+
+test(`should not delete api_tokens on import when drop-flag is set`, async () => {
+    const projectId = 'reimported-project';
+    const environment = 'reimported-environment';
+    const apiTokenName = 'not-dropped-token';
+    const featureName = 'reimportedFeature';
+    const userName = 'apiTokens-user';
+
+    await db.stores.environmentStore.create({
+        name: environment,
+        type: 'test',
+    });
+    await db.stores.projectStore.create({
+        name: projectId,
+        id: projectId,
+        description: 'Project for export',
+    });
+    await app.services.environmentService.addEnvironmentToProject(
+        environment,
+        projectId,
+    );
+    await app.services.featureToggleServiceV2.createFeatureToggle(
+        projectId,
+        {
+            type: 'Release',
+            name: featureName,
+            description: 'Feature for export',
+        },
+        userName,
+    );
+    await app.services.featureToggleServiceV2.createStrategy(
+        {
+            name: 'default',
+            constraints: [
+                { contextName: 'userId', operator: 'IN', values: ['123'] },
+            ],
+            parameters: {},
+        },
+        {
+            projectId,
+            featureName,
+            environment,
+        },
+        userName,
+    );
+    await app.services.apiTokenService.createApiTokenWithProjects({
+        username: apiTokenName,
+        type: ApiTokenType.CLIENT,
+        environment: environment,
+        projects: [projectId],
+    });
+
+    const data = await app.services.stateService.export({});
+    await app.services.stateService.import({
+        data,
+        dropBeforeImport: true,
+        keepExisting: false,
+        userName: userName,
+    });
+
+    const apiTokens = await app.services.apiTokenService.getAllTokens();
+
+    expect(apiTokens.length).toEqual(1);
+    expect(apiTokens[0].username).toBe(apiTokenName);
+});
+
+test(`should clean apitokens for not existing environment after import with drop`, async () => {
+    const projectId = 'not-reimported-project';
+    const environment = 'not-reimported-environment';
+    const apiTokenName = 'dropped-token';
+
+    await db.stores.environmentStore.create({
+        name: environment,
+        type: 'test',
+    });
+    await db.stores.projectStore.create({
+        name: projectId,
+        id: projectId,
+        description: 'Project for export',
+    });
+    await app.services.environmentService.addEnvironmentToProject(
+        environment,
+        projectId,
+    );
+    await app.services.apiTokenService.createApiTokenWithProjects({
+        username: apiTokenName,
+        type: ApiTokenType.CLIENT,
+        environment: environment,
+        projects: [projectId],
+    });
+
+    await app.request
+        .post('/api/admin/state/import?drop=true')
+        .attach('file', 'src/test/examples/v3-minimal.json')
+        .expect(202);
+
+    const apiTokens = await app.services.apiTokenService.getAllTokens();
+
+    console.log(apiTokens);
+
+    expect(apiTokens.length).toEqual(0);
 });

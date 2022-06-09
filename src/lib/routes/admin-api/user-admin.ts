@@ -81,7 +81,6 @@ export default class UserAdminController extends Controller {
         this.post('/:id/change-password', this.changePassword, ADMIN);
         this.delete('/:id', this.deleteUser, ADMIN);
         this.post('/reset-password', this.resetPassword, ADMIN);
-        this.get('/active-sessions', this.getActiveSessions, ADMIN);
     }
 
     async resetPassword(req: IAuthRequest, res: Response): Promise<void> {
@@ -103,11 +102,6 @@ export default class UserAdminController extends Controller {
         });
 
         res.json({ users: usersWithInviteLinks, rootRoles });
-    }
-
-    async getActiveSessions(req: Request, res: Response): Promise<void> {
-        const sessions = await this.sessionService.getActiveSessions();
-        res.json(sessions);
     }
 
     anonymiseUsers(users: IUser[]): IUser[] {

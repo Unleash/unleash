@@ -5,7 +5,6 @@ import { AccessService } from '../../services/access-service';
 import { IAuthType, IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
 import UserService from '../../services/user-service';
-import SessionService from '../../services/session-service';
 import UserFeedbackService from '../../services/user-feedback-service';
 import UserSplashService from '../../services/user-splash-service';
 import { ADMIN, NONE } from '../../types/permissions';
@@ -22,8 +21,6 @@ class UserController extends Controller {
 
     private userFeedbackService: UserFeedbackService;
 
-    private sessionService: SessionService;
-
     private userSplashService: UserSplashService;
 
     constructor(
@@ -31,14 +28,12 @@ class UserController extends Controller {
         {
             accessService,
             userService,
-            sessionService,
             userFeedbackService,
             userSplashService,
         }: Pick<
             IUnleashServices,
             | 'accessService'
             | 'userService'
-            | 'sessionService'
             | 'userFeedbackService'
             | 'userSplashService'
         >,
@@ -46,13 +41,11 @@ class UserController extends Controller {
         super(config);
         this.accessService = accessService;
         this.userService = userService;
-        this.sessionService = sessionService;
         this.userFeedbackService = userFeedbackService;
         this.userSplashService = userSplashService;
 
         this.get('/', this.getUser);
         this.post('/change-password', this.updateUserPass, NONE);
-        this.get('/my-sessions', this.mySessions);
     }
 
     async getUser(req: IAuthRequest, res: Response): Promise<void> {
@@ -88,12 +81,6 @@ class UserController extends Controller {
         } else {
             res.status(400).end();
         }
-    }
-
-    async mySessions(req: IAuthRequest, res: Response): Promise<void> {
-        const { user } = req;
-        const sessions = await this.sessionService.getSessionsForUser(user.id);
-        res.json(sessions);
     }
 }
 

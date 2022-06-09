@@ -61,25 +61,6 @@ test('should allow user to change password', async () => {
     expect(updated.passwordHash).toBeTruthy();
 });
 
-test('should get my sessions', async () => {
-    const { request, base, sessionStore } = await getSetup();
-
-    sessionStore.insertSession({
-        sid: '123',
-        sess: { user: currentUser },
-    });
-
-    await request
-        .get(`${base}/api/admin/user/my-sessions`)
-        .expect(200)
-        .expect((res) => {
-            expect(res.body.length).toBe(1);
-            expect(res.body[0].sid).toBe('123');
-            expect(res.body[0].sess.user.id).toBe(currentUser.id);
-            expect(res.body[0].sess.user.email).toBe(currentUser.email);
-        });
-});
-
 test('should deny if password and confirmPassword are not equal', async () => {
     expect.assertions(0);
     const { request, base } = await getSetup();

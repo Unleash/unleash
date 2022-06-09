@@ -1,0 +1,39 @@
+---
+title: Feature Toggles
+---
+
+Feature toggles are the central concept that we built Unleash around. In Unleash, feature toggles are organized within [projects](../user_guide/projects.md). Feature toggles can have different [activation strategies](../user_guide/activation-strategies.md) for each of their project's [environments](../user_guide/environments.md), and can also be given [variants](../advanced/feature-toggle-variants.md) to facilitate A/B testing.
+
+## Configuration options
+
+Each feature toggle has the following configuration options
+
+| Option | Required? | Default value | Description |
+| --- | --- | --- | --- |
+| name | Yes | N/A | The feature toggle's name. Must be URL-friendly according to [section 2.3 of RFC 3986](https://www.rfc-editor.org/rfc/rfc3986#section-2.3). |
+| feature toggle type | Yes | Release | The [feature toggle's type](../advanced/feature-toggle-types.md). |
+| project | Yes | Your current project | The [project](../user_guide/projects.md) that should contain the feature toggle. |
+| description | No | N/A | A short text to describe the feature toggle's purpose. |
+| enable impression data | Yes | No | Whether to enable [impression data](../advanced/impression-data.md) for this toggle or not. |
+
+## Environments
+
+You will probably not want to use the same configuration to enable a toggle in development as you do in production. That's why feature toggles have different activation strategy configurations for each environment.
+
+You can enable and disable a toggles environments independently. You can only choose environments that are active for the current project. When you disable a toggle's environment, it will always evaluate to false in that environment. When you enable an environment, the toggle will evaluate to true or false depending on its activation strategies.
+
+Refer to the [documentation on environments](../user_guide/environments.md) for more details.
+
+## Activation strategies
+
+To enable feature in an environment, you must assign it at least one activation strategy. A feature toggle's activation strategies determine whether it gets enabled for a particular user or instance of an application. When using multiple strategies in a single environment, it is enough that a single strategy evaluates to true for the toggle to get enabled for a user. Whenever a toggle is checked, Unleash will evaluate all the strategies in the current environment.
+
+[activation strategies documentation](../user_guide/activation-strategies.md)
+
+## Variants
+
+Variants adds another dimension of flexibility to feature toggles. Each feature toggle can be assigned any number of variants which will then get distributed amongst your users based on your choice of context field. You can find out more about variants in the [variants docs](../advanced/feature-toggle-variants.md).
+
+### Toggles with payload
+
+While variants are most often used for A/B testing and the like, you can also use variants to assign a constant payload to a toggle. If you give a toggle only a single variant, then all the enabled variants will have that payload.

@@ -153,12 +153,12 @@ function googleAdminAuth(app, config, services) {
 }
 ```
 
-Implement a preRouter hook for `/api/admin`.
+Implement a preRouter hook for `/api/`.
 
 ```js
 function googleAdminAuth(app, config, services) {
   // ...
-  app.use('/api/admin/', (req, res, next) => {
+  app.use('/api/', (req, res, next) => {
     if (req.user) {
       next();
     } else {
@@ -234,7 +234,7 @@ function googleAdminAuth(app, config, services) {
     },
   );
 
-  app.use('/api/admin/', (req, res, next) => {
+  app.use('/api/', (req, res, next) => {
     if (req.user) {
       next();
     } else {

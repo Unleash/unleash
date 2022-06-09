@@ -91,6 +91,12 @@ function loadUI(options: IUnleashOptions): IUIConfig {
     return mergeAll([uiO, ui]);
 }
 
+const dateHandlingCallback = (connection, callback) => {
+    connection.query("set datestyle to 'ISO, DMY';", (err: any) => {
+        callback(err, connection);
+    });
+};
+
 const defaultDbOptions: IDBOption = {
     user: process.env.DATABASE_USERNAME,
     password: process.env.DATABASE_PASSWORD,
@@ -111,6 +117,12 @@ const defaultDbOptions: IDBOption = {
             process.env.DATABASE_POOL_IDLE_TIMEOUT_MS,
             secondsToMilliseconds(30),
         ),
+        ...(parseEnvVarBoolean(
+            process.env.ALLOW_NON_STANDARD_DB_DATES,
+            false,
+        ) && {
+            afterCreate: dateHandlingCallback,
+        }),
         propagateCreateError: false,
     },
     schema: process.env.DATABASE_SCHEMA || 'public',

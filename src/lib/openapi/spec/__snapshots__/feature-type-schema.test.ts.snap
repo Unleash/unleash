@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`featureTypeSchema empty 1`] = `
+Object {
+  "data": Object {},
+  "errors": Array [
+    Object {
+      "instancePath": "",
+      "keyword": "required",
+      "message": "must have required property 'id'",
+      "params": Object {
+        "missingProperty": "id",
+      },
+      "schemaPath": "#/required",
+    },
+  ],
+  "schema": "#/components/schemas/featureTypeSchema",
+}
+`;

@@ -189,10 +189,10 @@ export class EmailService {
         return this.mailer !== undefined;
     }
 
-    private async compileTemplate(
+    async compileTemplate(
         templateName: string,
         format: TemplateFormat,
-        context: any,
+        context: unknown,
     ): Promise<string> {
         try {
             const template = this.resolveTemplate(templateName, format);

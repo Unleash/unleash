@@ -9,7 +9,7 @@ const COLUMNS = ['id', 'name', 'description', 'lifetime_days'];
 const TABLE = 'feature_types';
 
 interface IFeatureTypeRow {
-    id: number;
+    id: string;
     name: string;
     description: string;
     lifetime_days: number;
@@ -39,7 +39,7 @@ class FeatureTypeStore implements IFeatureTypeStore {
         };
     }
 
-    async get(id: number): Promise<IFeatureType | undefined> {
+    async get(id: string): Promise<IFeatureType | undefined> {
         const row = await this.db(TABLE).where({ id }).first();
         return this.rowToFeatureType(row);
     }
@@ -49,7 +49,7 @@ class FeatureTypeStore implements IFeatureTypeStore {
         return this.rowToFeatureType(row);
     }
 
-    async delete(key: number): Promise<void> {
+    async delete(key: string): Promise<void> {
         await this.db(TABLE).where({ id: key }).del();
     }
 
@@ -59,7 +59,7 @@ class FeatureTypeStore implements IFeatureTypeStore {
 
     destroy(): void {}
 
-    async exists(key: number): Promise<boolean> {
+    async exists(key: string): Promise<boolean> {
         const result = await this.db.raw(
             `SELECT EXISTS (SELECT 1 FROM ${TABLE} WHERE id = ?) AS present`,
             [key],

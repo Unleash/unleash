@@ -3,13 +3,17 @@ id: projects
 title: Projects
 ---
 
-<div class="alert alert--info" role="alert">
-  Projects are part of Unleash Pro and Unleash Enterprise.
-</div>
+:::info feature availability
 
-## Overview {#overview}
+All users get access to Unleash's projects, but only pro and enterprise users can create, update, or delete them.
 
-This topic explains how projects are supported in Unleash, how to create and maintain them.
+:::
+
+This document explains how Unleash uses projects, including how to create and maintain them.
+
+## The default project
+
+All users get access to the default project. You cannot delete this project. You can, however, rename it if you're using the pro or enterprise version of Unleash.
 
 ## Understanding purpose of projects {#understanding-purpose-of-projects}
 

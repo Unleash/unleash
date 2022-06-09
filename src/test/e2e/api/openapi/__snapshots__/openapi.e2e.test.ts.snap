@@ -987,6 +987,33 @@ Object {
         ],
       },
     },
+    "/api/admin/constraints/validate": Object {
+      "post": Object {
+        "operationId": "validateConstraint",
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/constraintSchema",
+              },
+            },
+          },
+          "description": "constraintSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "204": Object {
+            "description": "validConstraint",
+          },
+          "400": Object {
+            "description": "invalidConstraint",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
     "/api/admin/features": Object {
       "get": Object {
         "deprecated": true,

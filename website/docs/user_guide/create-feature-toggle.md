@@ -3,15 +3,48 @@ id: create_feature_toggle
 title: How to create a feature toggle
 ---
 
-Steps revisited:
+import ApiRequest from '@site/src/components/ApiRequest'
 
-1. Pick a project.
-2. Create a feature. (including impression data)
-3. Pick an environment.
-4. Add (and configure) a strategy.
-5. Enable the toggle.
+Feature toggles are the foundation of Unleash. They are at the core of everything we do and is a fundamental building block in any feature management system. This guide shows you how to create feature toggles in Unleash including how to add any optional constraints, segments, variants, and more. Links to learn more about the concepts will be scattered throughout the text.
+
+The guide below is split into three sections:
+1. [Prerequisites](#prerequisites): you need this before you can create a toggle.
+2. [Required steps](#required-steps): all the required steps to create a toggle and activate it in production.
+3. [Optional steps](#optional-steps): optional steps you can take to further target and configure your feature toggle and its audience.
+
+## Prerequisites
+
+To be able to create a feature toggle in an Unleash system you will need:
+- A running Unleash instance
+- A project to hold the toggle
+- A user with an **editor** or **admin** role OR a user with the following permissions inside the target project:
+  - create feature toggles
+  - create/edit variants
+  - create activation strategies (for the right environment)
+  - update activation strategies (for the right environment)
+  - enable/disable toggles (for the right environment)
+
+:::info roles
+
+Refer to [the docs on role-based access control](./rbac.md) for more information about the available roles and their permissions.
+
+:::
+
+## Required steps
+### Step 2:  Create a feature. (including impression data)
+### Step 3:  Pick an environment.
+### Step 4:  Add (and configure) a strategy.
+### Step 5:  Enable the toggle.
+
+## Optional steps
+
+### Add constraints and segmentation
+
+### Add variants
+
 6. Add strategy constraints and segmentation
 7. Add feature variants.
+
 
 In this guide you will learn how to create your first feature toggle using Unleash.
 

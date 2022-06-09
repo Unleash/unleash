@@ -8,7 +8,6 @@ import { IUnleashConfig } from '../../types/option';
 import { EmailService } from '../../services/email-service';
 import ResetTokenService from '../../services/reset-token-service';
 import { IUnleashServices } from '../../types/services';
-import SessionService from '../../services/session-service';
 import { IAuthRequest } from '../unleash-types';
 import SettingService from '../../services/setting-service';
 import { IUser, SimpleAuthSettings } from '../../server-impl';
@@ -46,8 +45,6 @@ export default class UserAdminController extends Controller {
 
     private resetTokenService: ResetTokenService;
 
-    private sessionService: SessionService;
-
     private settingService: SettingService;
 
     private openApiService: OpenApiService;
@@ -61,7 +58,6 @@ export default class UserAdminController extends Controller {
             accessService,
             emailService,
             resetTokenService,
-            sessionService,
             settingService,
             openApiService,
         }: Pick<
@@ -70,7 +66,6 @@ export default class UserAdminController extends Controller {
             | 'accessService'
             | 'emailService'
             | 'resetTokenService'
-            | 'sessionService'
             | 'settingService'
             | 'openApiService'
         >,
@@ -80,7 +75,6 @@ export default class UserAdminController extends Controller {
         this.accessService = accessService;
         this.emailService = emailService;
         this.resetTokenService = resetTokenService;
-        this.sessionService = sessionService;
         this.settingService = settingService;
         this.openApiService = openApiService;
         this.logger = config.getLogger('routes/user-controller.ts');

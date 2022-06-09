@@ -262,8 +262,11 @@ export default class UserAdminController extends Controller {
         req: Request,
         res: Response<UsersSearchSchema>,
     ): Promise<void> {
-        const { q } = req.query as any;
-        let users = q && q.length > 1 ? await this.userService.search(q) : [];
+        const { q } = req.query;
+        let users =
+            typeof q === 'string' && q.length > 1
+                ? await this.userService.search(q)
+                : [];
         if (this.anonymise) {
             users = this.anonymiseUsers(users);
         }

@@ -19,7 +19,7 @@ import { IUnleashStores } from '../types/stores';
 import PasswordUndefinedError from '../error/password-undefined';
 import { USER_UPDATED, USER_CREATED, USER_DELETED } from '../types/events';
 import { IEventStore } from '../types/stores/event-store';
-import { IUserSearch, IUserStore } from '../types/stores/user-store';
+import { IUserStore } from '../types/stores/user-store';
 import { RoleName } from '../types/model';
 import SettingService from './setting-service';
 import { SimpleAuthSettings } from '../server-impl';
@@ -171,7 +171,7 @@ class UserService {
         return { ...user, rootRole: roleId };
     }
 
-    async search(query: IUserSearch): Promise<IUser[]> {
+    async search(query: string): Promise<IUser[]> {
         return this.store.search(query);
     }
 

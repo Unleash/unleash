@@ -1,7 +1,8 @@
-import { createSchemaObject, CreateSchemaType } from '../types';
+import { FromSchema } from 'json-schema-to-ts';
 import { constraintSchema } from './constraint-schema';
 
-const schema = {
+export const updateFeatureSchema = {
+    $id: '#/components/schemas/updateFeatureSchema',
     type: 'object',
     required: ['name'],
     properties: {
@@ -22,7 +23,7 @@ const schema = {
         },
         createdAt: {
             type: 'string',
-            format: 'date',
+            format: 'date-time',
         },
         impressionData: {
             type: 'boolean',
@@ -34,11 +35,11 @@ const schema = {
             },
         },
     },
-    'components/schemas': {
-        constraintSchema,
+    components: {
+        schemas: {
+            constraintSchema,
+        },
     },
 } as const;
 
-export type UpdateFeatureSchema = CreateSchemaType<typeof schema>;
-
-export const updateFeatureSchema = createSchemaObject(schema);
+export type UpdateFeatureSchema = FromSchema<typeof updateFeatureSchema>;

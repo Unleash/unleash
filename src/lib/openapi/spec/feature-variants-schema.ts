@@ -1,7 +1,9 @@
-import { createSchemaObject, CreateSchemaType } from '../types';
 import { variantSchema } from './variant-schema';
+import { FromSchema } from 'json-schema-to-ts';
+import { overrideSchema } from './override-schema';
 
-const schema = {
+export const featureVariantsSchema = {
+    $id: '#/components/schemas/featureVariantsSchema',
     type: 'object',
     additionalProperties: false,
     required: ['version', 'variants'],
@@ -16,11 +18,12 @@ const schema = {
             },
         },
     },
-    'components/schemas': {
-        variantSchema,
+    components: {
+        schemas: {
+            variantSchema,
+            overrideSchema,
+        },
     },
-};
+} as const;
 
-export type FeatureVariantsSchema = CreateSchemaType<typeof schema>;
-
-export const featureVariantsSchema = createSchemaObject(schema);
+export type FeatureVariantsSchema = FromSchema<typeof featureVariantsSchema>;

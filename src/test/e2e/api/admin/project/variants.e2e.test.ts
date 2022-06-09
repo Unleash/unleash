@@ -33,7 +33,7 @@ test('Can get variants for a feature', async () => {
         .get(`/api/admin/projects/default/features/${featureName}/variants`)
         .expect(200)
         .expect((res) => {
-            expect(res.body.version).toBe('1');
+            expect(res.body.version).toBe(1);
             expect(res.body.variants).toHaveLength(1);
             expect(res.body.variants[0].name).toBe(variantName);
         });
@@ -104,7 +104,7 @@ test('Can patch variants for a feature and get a response of new variant', async
         .send(patch)
         .expect(200)
         .expect((res) => {
-            expect(res.body.version).toBe('1');
+            expect(res.body.version).toBe(1);
             expect(res.body.variants).toHaveLength(1);
             expect(res.body.variants[0].name).toBe(expectedVariantName);
         });
@@ -148,7 +148,7 @@ test('Can add variant for a feature', async () => {
     await app.request
         .get(`/api/admin/projects/default/features/${featureName}/variants`)
         .expect((res) => {
-            expect(res.body.version).toBe('1');
+            expect(res.body.version).toBe(1);
             expect(res.body.variants).toHaveLength(2);
             expect(
                 res.body.variants.find((x) => x.name === expectedVariantName),
@@ -192,7 +192,7 @@ test('Can remove variant for a feature', async () => {
     await app.request
         .get(`/api/admin/projects/default/features/${featureName}/variants`)
         .expect((res) => {
-            expect(res.body.version).toBe('1');
+            expect(res.body.version).toBe(1);
             expect(res.body.variants).toHaveLength(0);
         });
 });

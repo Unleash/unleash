@@ -1,7 +1,8 @@
-import { createSchemaObject, CreateSchemaType } from '../types';
+import { FromSchema } from 'json-schema-to-ts';
 import { ALL_OPERATORS } from '../../util/constants';
 
-const schema = {
+export const constraintSchema = {
+    $id: '#/components/schemas/constraintSchema',
     type: 'object',
     additionalProperties: false,
     required: ['contextName', 'operator'],
@@ -29,9 +30,7 @@ const schema = {
             type: 'string',
         },
     },
-    'components/schemas': {},
+    components: {},
 } as const;
 
-export type ConstraintSchema = CreateSchemaType<typeof schema>;
-
-export const constraintSchema = createSchemaObject(schema);
+export type ConstraintSchema = FromSchema<typeof constraintSchema>;

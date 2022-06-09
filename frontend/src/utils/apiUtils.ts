@@ -51,9 +51,7 @@ export class NotFoundError extends Error {
     statusCode: number;
 
     constructor(statusCode: number = NOT_FOUND) {
-        super(
-            'The requested resource could not be found but may be available in the future'
-        );
+        super('The requested resource could not be found.');
         this.name = 'NotFoundError';
         this.statusCode = statusCode;
     }

@@ -9,7 +9,7 @@ import {
     TableRow,
     TableSearch,
 } from 'component/common/Table';
-import {SortingRule, useFlexLayout, useSortBy, useTable} from 'react-table';
+import { SortingRule, useFlexLayout, useSortBy, useTable } from 'react-table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { useMediaQuery } from '@mui/material';
 import { sortTypes } from 'utils/sortTypes';
@@ -40,9 +40,18 @@ export interface IFeaturesArchiveTableProps {
     refetch: () => void;
     loading: boolean;
     storedParams: SortingRule<string>;
-    setStoredParams:  (newValue: (SortingRule<string> | ((prev: SortingRule<string>) => SortingRule<string>))) => SortingRule<string>;
+    setStoredParams: (
+        newValue:
+            | SortingRule<string>
+            | ((prev: SortingRule<string>) => SortingRule<string>)
+    ) => SortingRule<string>;
     searchParams: URLSearchParams;
-    setSearchParams:  (nextInit: URLSearchParamsInit, navigateOptions?: ({replace?: boolean | undefined, state?: any} | undefined)) => void;
+    setSearchParams: (
+        nextInit: URLSearchParamsInit,
+        navigateOptions?:
+            | { replace?: boolean | undefined; state?: any }
+            | undefined
+    ) => void;
 }
 
 export const ArchiveTable = ({
@@ -283,7 +292,8 @@ export const ArchiveTable = ({
                                 <TableBody {...getTableBodyProps()}>
                                     {rows.map((row, index) => {
                                         const isVirtual =
-                                            index < firstRenderedIndex || index > lastRenderedIndex;
+                                            index < firstRenderedIndex ||
+                                            index > lastRenderedIndex;
 
                                         if (isVirtual) {
                                             return null;
@@ -291,12 +301,17 @@ export const ArchiveTable = ({
 
                                         prepareRow(row);
                                         return (
-                                            <TableRow hover {...row.getRowProps()}>
+                                            <TableRow
+                                                hover
+                                                {...row.getRowProps()}
+                                            >
                                                 {row.cells.map(cell => (
                                                     <TableCell
                                                         {...cell.getCellProps({
                                                             style: {
-                                                                flex: cell.column.minWidth
+                                                                flex: cell
+                                                                    .column
+                                                                    .minWidth
                                                                     ? '1 0 auto'
                                                                     : undefined,
                                                             },

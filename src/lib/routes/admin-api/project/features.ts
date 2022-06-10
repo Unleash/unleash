@@ -88,11 +88,11 @@ export default class ProjectFeaturesController extends Controller {
             method: 'get',
             path: PATH_ENV,
             permission: NONE,
-            handler: this.getEnvironment,
+            handler: this.getFeatureEnvironment,
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
-                    operationId: 'getEnvironment',
+                    operationId: 'getFeatureEnvironment',
                     responses: {
                         200: createResponseSchema('featureEnvironmentSchema'),
                     },
@@ -103,12 +103,12 @@ export default class ProjectFeaturesController extends Controller {
         this.route({
             method: 'post',
             path: `${PATH_ENV}/off`,
-            handler: this.toggleEnvironmentOff,
+            handler: this.toggleFeatureEnvironmentOff,
             permission: UPDATE_FEATURE_ENVIRONMENT,
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
-                    operationId: 'toggleEnvironmentOff',
+                    operationId: 'toggleFeatureEnvironmentOff',
                     responses: { 200: createResponseSchema('featureSchema') },
                 }),
             ],
@@ -117,12 +117,12 @@ export default class ProjectFeaturesController extends Controller {
         this.route({
             method: 'post',
             path: `${PATH_ENV}/on`,
-            handler: this.toggleEnvironmentOn,
+            handler: this.toggleFeatureEnvironmentOn,
             permission: UPDATE_FEATURE_ENVIRONMENT,
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
-                    operationId: 'toggleEnvironmentOn',
+                    operationId: 'toggleFeatureEnvironmentOn',
                     responses: { 200: createResponseSchema('featureSchema') },
                 }),
             ],
@@ -468,7 +468,7 @@ export default class ProjectFeaturesController extends Controller {
         res.status(202).send();
     }
 
-    async getEnvironment(
+    async getFeatureEnvironment(
         req: Request<FeatureStrategyParams, any, any, any>,
         res: Response<FeatureEnvironmentSchema>,
     ): Promise<void> {
@@ -486,7 +486,7 @@ export default class ProjectFeaturesController extends Controller {
         );
     }
 
-    async toggleEnvironmentOn(
+    async toggleFeatureEnvironmentOn(
         req: IAuthRequest<FeatureStrategyParams, any, any, any>,
         res: Response<void>,
     ): Promise<void> {
@@ -501,7 +501,7 @@ export default class ProjectFeaturesController extends Controller {
         res.status(200).end();
     }
 
-    async toggleEnvironmentOff(
+    async toggleFeatureEnvironmentOff(
         req: IAuthRequest<FeatureStrategyParams, any, any, any>,
         res: Response<void>,
     ): Promise<void> {

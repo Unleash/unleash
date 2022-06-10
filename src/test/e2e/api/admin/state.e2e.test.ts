@@ -435,8 +435,5 @@ test(`should clean apitokens for not existing environment after import with drop
         .expect(202);
 
     const apiTokens = await app.services.apiTokenService.getAllTokens();
-
-    console.log(apiTokens);
-
     expect(apiTokens.length).toEqual(0);
 });

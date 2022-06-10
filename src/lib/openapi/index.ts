@@ -12,6 +12,7 @@ import { featureTypeSchema } from './spec/feature-type-schema';
 import { featureTypesSchema } from './spec/feature-types-schema';
 import { featureVariantsSchema } from './spec/feature-variants-schema';
 import { featuresSchema } from './spec/features-schema';
+import { feedbackSchema } from './spec/feedback-schema';
 import { healthOverviewSchema } from './spec/health-overview-schema';
 import { healthReportSchema } from './spec/health-report-schema';
 import { mapValues } from '../util/map-values';
@@ -50,6 +51,7 @@ export const schemas = {
     featureTypesSchema,
     featureVariantsSchema,
     featuresSchema,
+    feedbackSchema,
     healthOverviewSchema,
     healthReportSchema,
     overrideSchema,

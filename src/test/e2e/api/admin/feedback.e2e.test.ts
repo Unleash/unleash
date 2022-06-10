@@ -65,7 +65,7 @@ test('it gives 400 when feedback is not present', async () => {
         .expect('Content-Type', /json/)
         .expect(400)
         .expect((res) => {
-            expect(res.body.error).toBeTruthy();
+            expect(res.body.name).toEqual('BadDataError');
         });
 });
 

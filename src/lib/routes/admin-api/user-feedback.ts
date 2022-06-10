@@ -1,5 +1,4 @@
 import { Response } from 'express';
-
 import Controller from '../controller';
 import { Logger } from '../../logger';
 import { IUnleashConfig } from '../../types/option';
@@ -7,73 +6,106 @@ import { IUnleashServices } from '../../types/services';
 import UserFeedbackService from '../../services/user-feedback-service';
 import { IAuthRequest } from '../unleash-types';
 import { NONE } from '../../types/permissions';
-
-interface IFeedbackBody {
-    neverShow?: boolean;
-    feedbackId: string;
-    given?: Date;
-}
+import { OpenApiService } from '../../services/openapi-service';
+import {
+    feedbackSchema,
+    FeedbackSchema,
+} from '../../openapi/spec/feedback-schema';
+import { serializeDates } from '../../types/serialize-dates';
+import { parseISO } from 'date-fns';
+import { createRequestSchema, createResponseSchema } from '../../openapi';
+import BadDataError from '../../error/bad-data-error';
 
 class UserFeedbackController extends Controller {
     private logger: Logger;
 
     private userFeedbackService: UserFeedbackService;
 
+    private openApiService: OpenApiService;
+
     constructor(
         config: IUnleashConfig,
-        { userFeedbackService }: Pick<IUnleashServices, 'userFeedbackService'>,
+        {
+            userFeedbackService,
+            openApiService,
+        }: Pick<IUnleashServices, 'userFeedbackService' | 'openApiService'>,
     ) {
         super(config);
         this.logger = config.getLogger('feedback-controller.ts');
         this.userFeedbackService = userFeedbackService;
+        this.openApiService = openApiService;
 
-        this.post('/', this.recordFeedback, NONE);
-        this.put('/:id', this.updateFeedbackSettings, NONE);
+        this.route({
+            method: 'post',
+            path: '',
+            handler: this.createFeedback,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'createFeedback',
+                    requestBody: createRequestSchema('feedbackSchema'),
+                    responses: { 200: createResponseSchema('feedbackSchema') },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'put',
+            path: '/:id',
+            handler: this.updateFeedback,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'updateFeedback',
+                    requestBody: createRequestSchema('feedbackSchema'),
+                    responses: { 200: createResponseSchema('feedbackSchema') },
+                }),
+            ],
+        });
     }
 
-    private async recordFeedback(
-        req: IAuthRequest<any, any, IFeedbackBody, any>,
-        res: Response,
+    private async createFeedback(
+        req: IAuthRequest<unknown, unknown, FeedbackSchema>,
+        res: Response<FeedbackSchema>,
     ): Promise<void> {
-        const BAD_REQUEST = 400;
-        const { user } = req;
-
-        const { feedbackId } = req.body;
-
-        if (!feedbackId) {
-            res.status(BAD_REQUEST).json({
-                error: 'feedbackId must be present.',
-            });
-            return;
+        if (!req.body.feedbackId) {
+            throw new BadDataError('Missing feedbackId');
         }
 
-        const feedback = {
-            ...req.body,
-            userId: user.id,
+        const updated = await this.userFeedbackService.updateFeedback({
+            feedbackId: req.body.feedbackId,
+            userId: req.user.id,
             given: new Date(),
             neverShow: req.body.neverShow || false,
-        };
+        });
 
-        const updated = await this.userFeedbackService.updateFeedback(feedback);
-        res.json(updated);
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            feedbackSchema.$id,
+            serializeDates(updated),
+        );
     }
 
-    private async updateFeedbackSettings(
-        req: IAuthRequest<any, any, IFeedbackBody, any>,
-        res: Response,
+    private async updateFeedback(
+        req: IAuthRequest<{ id: string }, unknown, FeedbackSchema>,
+        res: Response<FeedbackSchema>,
     ): Promise<void> {
-        const { user } = req;
-        const { id } = req.params;
-
-        const feedback = {
-            ...req.body,
-            feedbackId: id,
-            userId: user.id,
+        const updated = await this.userFeedbackService.updateFeedback({
+            feedbackId: req.params.id,
+            userId: req.user.id,
             neverShow: req.body.neverShow || false,
-        };
+            given: req.body.given && parseISO(req.body.given),
+        });
 
-        const updated = await this.userFeedbackService.updateFeedback(feedback);
-        res.json(updated);
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            feedbackSchema.$id,
+            serializeDates(updated),
+        );
     }
 }
 

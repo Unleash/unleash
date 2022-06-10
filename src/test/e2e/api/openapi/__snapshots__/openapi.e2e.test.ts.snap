@@ -422,6 +422,27 @@ Object {
         ],
         "type": "object",
       },
+      "feedbackSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "feedbackId": Object {
+            "type": "string",
+          },
+          "given": Object {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string",
+          },
+          "neverShow": Object {
+            "type": "boolean",
+          },
+          "userId": Object {
+            "type": "number",
+          },
+        },
+        "required": Array [],
+        "type": "object",
+      },
       "healthOverviewSchema": Object {
         "additionalProperties": false,
         "properties": Object {
@@ -1357,6 +1378,78 @@ Object {
         "responses": Object {
           "200": Object {
             "description": "emptyResponse",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/feedback": Object {
+      "post": Object {
+        "operationId": "createFeedback",
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/feedbackSchema",
+              },
+            },
+          },
+          "description": "feedbackSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/feedbackSchema",
+                },
+              },
+            },
+            "description": "feedbackSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/feedback/{id}": Object {
+      "put": Object {
+        "operationId": "updateFeedback",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/feedbackSchema",
+              },
+            },
+          },
+          "description": "feedbackSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/feedbackSchema",
+                },
+              },
+            },
+            "description": "feedbackSchema",
           },
         },
         "tags": Array [

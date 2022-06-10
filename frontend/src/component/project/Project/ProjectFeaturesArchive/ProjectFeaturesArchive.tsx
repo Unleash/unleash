@@ -1,5 +1,5 @@
-import { ProjectFeaturesArchiveTable } from '../../../archive/ProjectFeaturesArchiveTable';
-import { usePageTitle } from '../../../../hooks/usePageTitle';
+import { ProjectFeaturesArchiveTable } from 'component/archive/ProjectFeaturesArchiveTable';
+import { usePageTitle } from 'hooks/usePageTitle';
 
 interface IProjectFeaturesArchiveProps {
     projectId: string;

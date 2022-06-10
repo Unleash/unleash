@@ -649,6 +649,26 @@ Object {
         },
         "type": "object",
       },
+      "splashSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "seen": Object {
+            "type": "boolean",
+          },
+          "splashId": Object {
+            "type": "string",
+          },
+          "userId": Object {
+            "type": "number",
+          },
+        },
+        "required": Array [
+          "userId",
+          "splashId",
+          "seen",
+        ],
+        "type": "object",
+      },
       "strategySchema": Object {
         "additionalProperties": false,
         "properties": Object {
@@ -2357,6 +2377,36 @@ Object {
               },
             },
             "description": "healthReportSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/splash/{id}": Object {
+      "post": Object {
+        "operationId": "updateSplashSettings",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/splashSchema",
+                },
+              },
+            },
+            "description": "splashSchema",
           },
         },
         "tags": Array [

@@ -1,9 +1,9 @@
 import { useFeaturesArchive } from '../../hooks/api/getters/useFeaturesArchive/useFeaturesArchive';
 import { ArchiveTable } from './ArchiveTable/ArchiveTable';
 import { useSearchParams } from 'react-router-dom';
-import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { SortingRule } from 'react-table';
-import { usePageTitle } from '../../hooks/usePageTitle';
+import { usePageTitle } from 'hooks/usePageTitle';
+import { createLocalStorage } from 'utils/createLocalStorage';
 
 const defaultSort: SortingRule<string> = { id: 'createdAt', desc: true };
 
@@ -16,7 +16,7 @@ export const FeaturesArchiveTable = () => {
     } = useFeaturesArchive();
 
     const [searchParams, setSearchParams] = useSearchParams();
-    const [storedParams, setStoredParams] = useLocalStorage(
+    const { value, setValue } = createLocalStorage(
         'FeaturesArchiveTable:v1',
         defaultSort
     );
@@ -28,8 +28,8 @@ export const FeaturesArchiveTable = () => {
             loading={loading}
             searchParams={searchParams}
             setSearchParams={setSearchParams}
-            storedParams={storedParams}
-            setStoredParams={setStoredParams}
+            storedParams={value}
+            setStoredParams={setValue}
             refetch={refetchArchived}
         />
     );

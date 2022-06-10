@@ -1,8 +1,8 @@
 import { ArchiveTable } from './ArchiveTable/ArchiveTable';
 import { useSearchParams } from 'react-router-dom';
-import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { SortingRule } from 'react-table';
 import { useProjectFeaturesArchive } from '../../hooks/api/getters/useProjectFeaturesArchive/useProjectFeaturesArchive';
+import { createLocalStorage } from 'utils/createLocalStorage';
 
 const defaultSort: SortingRule<string> = { id: 'archivedAt', desc: true };
 
@@ -20,7 +20,7 @@ export const ProjectFeaturesArchiveTable = ({
     } = useProjectFeaturesArchive(projectId);
 
     const [searchParams, setSearchParams] = useSearchParams();
-    const [storedParams, setStoredParams] = useLocalStorage(
+    const { value, setValue } = createLocalStorage(
         `${projectId}:ProjectFeaturesArchiveTable`,
         defaultSort
     );
@@ -32,8 +32,8 @@ export const ProjectFeaturesArchiveTable = ({
             loading={loading}
             searchParams={searchParams}
             setSearchParams={setSearchParams}
-            storedParams={storedParams}
-            setStoredParams={setStoredParams}
+            storedParams={value}
+            setStoredParams={setValue}
             refetch={refetchArchived}
         />
     );

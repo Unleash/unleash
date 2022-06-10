@@ -38,7 +38,7 @@ export default class UserSplashStore implements IUserSplashStore {
         this.logger = getLogger('user-splash-store.ts');
     }
 
-    async getAllUserSplashs(userId: number): Promise<IUserSplash[]> {
+    async getAllUserSplashes(userId: number): Promise<IUserSplash[]> {
         const userSplash = await this.db
             .table<IUserSplashTable>(TABLE)
             .select()

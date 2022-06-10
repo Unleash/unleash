@@ -31,7 +31,9 @@ test('should create userSplash', async () => {
         userId: currentUser.id,
         seen: false,
     });
-    const userSplashs = await userSplashStore.getAllUserSplashs(currentUser.id);
+    const userSplashs = await userSplashStore.getAllUserSplashes(
+        currentUser.id,
+    );
     expect(userSplashs).toHaveLength(1);
     expect(userSplashs[0].splashId).toBe('some-id');
 });

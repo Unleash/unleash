@@ -199,6 +199,8 @@ exports.down = function (db, cb) {
         ALTER TABLE role_permission
             ADD COLUMN project TEXT,
             ADD COLUMN permission TEXT;
+
+        DROP TABLE permissions;
   `,
         cb,
     );

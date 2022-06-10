@@ -28,6 +28,7 @@ export interface IDBOption {
         max?: number;
         idleTimeoutMillis?: number;
         propagateCreateError?: boolean;
+        afterCreate?: (connection: any, callback: any) => void;
     };
     schema: string;
     disableMigration: boolean;

@@ -1,15 +1,16 @@
 import { useRef, useState } from 'react';
 import { IconButton, InputBase, Tooltip } from '@mui/material';
-import { Search, Close } from '@mui/icons-material';
+import { Search as SearchIcon, Close } from '@mui/icons-material';
 import classnames from 'classnames';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useStyles } from './TableSearchField.styles';
-import { TableSearchFieldSuggestions } from './TableSearchFieldSuggestions/TableSearchFieldSuggestions';
+import { useStyles } from './Search.styles';
+import { SearchSuggestions } from './SearchSuggestions/SearchSuggestions';
 import { IGetSearchContextOutput } from 'hooks/useSearch';
 import { useKeyboardShortcut } from 'hooks/useKeyboardShortcut';
+import { useAsyncDebounce } from 'react-table';
 
-interface ITableSearchFieldProps {
-    value: string;
+interface ISearchProps {
+    initialValue?: string;
     onChange: (value: string) => void;
     className?: string;
     placeholder?: string;
@@ -17,20 +18,26 @@ interface ITableSearchFieldProps {
     getSearchContext?: () => IGetSearchContextOutput;
 }
 
-/**
- * @deprecated use `Search` instead.
- */
-export const TableSearchField = ({
-    value = '',
+export const Search = ({
+    initialValue = '',
     onChange,
     className,
     placeholder: customPlaceholder,
     hasFilters,
     getSearchContext,
-}: ITableSearchFieldProps) => {
+}: ISearchProps) => {
     const ref = useRef<HTMLInputElement>();
     const { classes: styles } = useStyles();
     const [showSuggestions, setShowSuggestions] = useState(false);
+
+    const [value, setValue] = useState(initialValue);
+
+    const debouncedOnChange = useAsyncDebounce(onChange, 200);
+
+    const onSearchChange = (value: string) => {
+        debouncedOnChange(value);
+        setValue(value);
+    };
 
     const hotkey = useKeyboardShortcut(
         { modifiers: ['ctrl'], key: 'k', preventDefault: true },
@@ -58,7 +65,7 @@ export const TableSearchField = ({
                     'search-container'
                 )}
             >
-                <Search
+                <SearchIcon
                     className={classnames(styles.searchIcon, 'search-icon')}
                 />
                 <InputBase
@@ -69,7 +76,7 @@ export const TableSearchField = ({
                     }}
                     inputProps={{ 'aria-label': placeholder }}
                     value={value}
-                    onChange={e => onChange(e.target.value)}
+                    onChange={e => onSearchChange(e.target.value)}
                     onFocus={() => setShowSuggestions(true)}
                     onBlur={() => setShowSuggestions(false)}
                 />
@@ -100,9 +107,7 @@ export const TableSearchField = ({
             <ConditionallyRender
                 condition={Boolean(hasFilters) && showSuggestions}
                 show={
-                    <TableSearchFieldSuggestions
-                        getSearchContext={getSearchContext!}
-                    />
+                    <SearchSuggestions getSearchContext={getSearchContext!} />
                 }
             />
         </div>

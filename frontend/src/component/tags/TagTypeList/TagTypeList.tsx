@@ -8,7 +8,6 @@ import {
     TableCell,
     TableRow,
     TablePlaceholder,
-    TableSearch,
 } from 'component/common/Table';
 import { Delete, Edit, Label } from '@mui/icons-material';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
@@ -29,6 +28,7 @@ import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightC
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { sortTypes } from 'utils/sortTypes';
 import { AddTagTypeButton } from './AddTagTypeButton/AddTagTypeButton';
+import { Search } from 'component/common/Search/Search';
 
 export const TagTypeList = () => {
     const [deletion, setDeletion] = useState<{
@@ -192,7 +192,7 @@ export const TagTypeList = () => {
                     title="Tag types"
                     actions={
                         <>
-                            <TableSearch
+                            <Search
                                 initialValue={globalFilter}
                                 onChange={setGlobalFilter}
                             />

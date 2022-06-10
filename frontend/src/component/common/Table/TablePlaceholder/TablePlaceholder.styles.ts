@@ -9,5 +9,6 @@ export const useStyles = makeStyles()(theme => ({
         justifyContent: 'center',
         alignItems: 'center',
         marginTop: theme.spacing(2),
+        width: '100%',
     },
 }));

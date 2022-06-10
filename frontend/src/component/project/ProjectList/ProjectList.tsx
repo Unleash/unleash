@@ -1,5 +1,5 @@
-import { useContext, useMemo, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useContext, useEffect, useMemo, useState } from 'react';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { mutate } from 'swr';
 import { getProjectFetcher } from 'hooks/api/getters/useProject/getProjectFetcher';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
@@ -17,8 +17,12 @@ import { CREATE_PROJECT } from 'component/providers/AccessProvider/permissions';
 import { Add } from '@mui/icons-material';
 import ApiError from 'component/common/ApiError/ApiError';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { SearchField } from 'component/common/SearchField/SearchField';
-import classnames from 'classnames';
+import { TablePlaceholder } from 'component/common/Table';
+import { useMediaQuery } from '@mui/material';
+import theme from 'themes/theme';
+import { Search } from 'component/common/Search/Search';
+
+type PageQueryType = Partial<Record<'search', string>>;
 
 type projectMap = {
     [index: string]: boolean;
@@ -51,14 +55,30 @@ export const ProjectListNew = () => {
     const [fetchedProjects, setFetchedProjects] = useState<projectMap>({});
     const ref = useLoading(loading);
     const { isOss } = useUiConfig();
-    const [filter, setFilter] = useState('');
+
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [searchValue, setSearchValue] = useState(
+        searchParams.get('search') || ''
+    );
+
+    useEffect(() => {
+        const tableState: PageQueryType = {};
+        if (searchValue) {
+            tableState.search = searchValue;
+        }
+
+        setSearchParams(tableState, {
+            replace: true,
+        });
+    }, [searchValue, setSearchParams]);
 
     const filteredProjects = useMemo(() => {
-        const regExp = new RegExp(filter, 'i');
-        return filter
+        const regExp = new RegExp(searchValue, 'i');
+        return searchValue
             ? projects.filter(project => regExp.test(project.name))
             : projects;
-    }, [projects, filter]);
+    }, [projects, searchValue]);
 
     const handleHover = (projectId: string) => {
         if (fetchedProjects[projectId]) {
@@ -129,39 +149,69 @@ export const ProjectListNew = () => {
 
     return (
         <div ref={ref}>
-            <div className={styles.searchBarContainer}>
-                <SearchField
-                    initialValue={filter}
-                    updateValue={setFilter}
-                    showValueChip
-                    className={classnames(styles.searchBar, {
-                        skeleton: loading,
-                    })}
-                />
-            </div>
             <PageContent
                 header={
                     <PageHeader
                         title="Projects"
                         actions={
-                            <ResponsiveButton
-                                Icon={Add}
-                                onClick={() => navigate('/projects/create')}
-                                maxWidth="700px"
-                                permission={CREATE_PROJECT}
-                                disabled={createButtonData.disabled}
-                            >
-                                New project
-                            </ResponsiveButton>
+                            <>
+                                <ConditionallyRender
+                                    condition={!isSmallScreen}
+                                    show={
+                                        <>
+                                            <Search
+                                                initialValue={searchValue}
+                                                onChange={setSearchValue}
+                                            />
+                                            <PageHeader.Divider />
+                                        </>
+                                    }
+                                />
+                                <ResponsiveButton
+                                    Icon={Add}
+                                    onClick={() => navigate('/projects/create')}
+                                    maxWidth="700px"
+                                    permission={CREATE_PROJECT}
+                                    disabled={createButtonData.disabled}
+                                >
+                                    New project
+                                </ResponsiveButton>
+                            </>
                         }
-                    />
+                    >
+                        <ConditionallyRender
+                            condition={isSmallScreen}
+                            show={
+                                <Search
+                                    initialValue={searchValue}
+                                    onChange={setSearchValue}
+                                />
+                            }
+                        />
+                    </PageHeader>
                 }
             >
                 <ConditionallyRender condition={error} show={renderError()} />
                 <div className={styles.container}>
                     <ConditionallyRender
                         condition={filteredProjects.length < 1 && !loading}
-                        show={<div>No projects available.</div>}
+                        show={
+                            <ConditionallyRender
+                                condition={searchValue?.length > 0}
+                                show={
+                                    <TablePlaceholder>
+                                        No projects found matching &ldquo;
+                                        {searchValue}
+                                        &rdquo;
+                                    </TablePlaceholder>
+                                }
+                                elseShow={
+                                    <TablePlaceholder>
+                                        No projects available.
+                                    </TablePlaceholder>
+                                }
+                            />
+                        }
                         elseShow={renderProjects()}
                     />
                 </div>

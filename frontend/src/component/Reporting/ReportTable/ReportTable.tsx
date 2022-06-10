@@ -1,6 +1,5 @@
 import { IFeatureToggleListItem } from 'interfaces/featureToggle';
 import {
-    TableSearch,
     SortableTableHeader,
     TableCell,
     TablePlaceholder,
@@ -26,6 +25,7 @@ import { formatExpiredAt } from 'component/Reporting/ReportExpiredCell/formatExp
 import { FeatureStaleCell } from 'component/feature/FeatureToggleList/FeatureStaleCell/FeatureStaleCell';
 import theme from 'themes/theme';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { Search } from 'component/common/Search/Search';
 
 interface IReportTableProps {
     projectId: string;
@@ -95,7 +95,7 @@ export const ReportTable = ({ projectId, features }: IReportTableProps) => {
         <PageHeader
             title="Overview"
             actions={
-                <TableSearch
+                <Search
                     initialValue={globalFilter}
                     onChange={setGlobalFilter}
                 />

@@ -9,7 +9,6 @@ import {
     TableCell,
     TableRow,
     TablePlaceholder,
-    TableSearch,
 } from 'component/common/Table';
 import { useFeatures } from 'hooks/api/getters/useFeatures/useFeatures';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
@@ -29,6 +28,7 @@ import { CreateFeatureButton } from '../CreateFeatureButton/CreateFeatureButton'
 import { FeatureStaleCell } from './FeatureStaleCell/FeatureStaleCell';
 import { useStyles } from './styles';
 import { useSearch } from 'hooks/useSearch';
+import { Search } from 'component/common/Search/Search';
 
 export const featuresPlaceholder: FeatureSchema[] = Array(15).fill({
     name: 'Name of the feature',
@@ -210,7 +210,7 @@ export const FeatureToggleListTable: VFC = () => {
                                 condition={!isSmallScreen}
                                 show={
                                     <>
-                                        <TableSearch
+                                        <Search
                                             initialValue={searchValue}
                                             onChange={setSearchValue}
                                             hasFilters
@@ -238,7 +238,7 @@ export const FeatureToggleListTable: VFC = () => {
                     <ConditionallyRender
                         condition={isSmallScreen}
                         show={
-                            <TableSearch
+                            <Search
                                 initialValue={searchValue}
                                 onChange={setSearchValue}
                                 hasFilters

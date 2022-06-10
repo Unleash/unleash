@@ -3,7 +3,6 @@ import { cloneFeatureSchema } from './spec/clone-feature-schema';
 import { constraintSchema } from './spec/constraint-schema';
 import { createFeatureSchema } from './spec/create-feature-schema';
 import { createStrategySchema } from './spec/create-strategy-schema';
-import { emptySchema } from './spec/empty-schema';
 import { environmentSchema } from './spec/environment-schema';
 import { featureEnvironmentSchema } from './spec/feature-environment-schema';
 import { featureSchema } from './spec/feature-schema';
@@ -32,12 +31,20 @@ import { updateStrategySchema } from './spec/update-strategy-schema';
 import { variantSchema } from './spec/variant-schema';
 import { variantsSchema } from './spec/variants-schema';
 import { versionSchema } from './spec/version-schema';
+import { environmentsSchema } from './spec/environments-schema';
+import { sortOrderSchema } from './spec/sort-order-schema';
 
 // Schemas must have $id property on the form "#/components/schemas/mySchema".
 export type SchemaId = typeof schemas[keyof typeof schemas]['$id'];
 
 // Schemas must list all $ref schemas in "components", including nested schemas.
 export type SchemaRef = typeof schemas[keyof typeof schemas]['components'];
+
+// JSON schema properties that should not be included in the OpenAPI spec.
+export interface JsonSchemaProps {
+    $id: string;
+    components: object;
+}
 
 export interface AdminApiOperation
     extends Omit<OpenAPIV3.OperationObject, 'tags'> {
@@ -56,8 +63,8 @@ export const schemas = {
     constraintSchema,
     createFeatureSchema,
     createStrategySchema,
-    emptySchema,
     environmentSchema,
+    environmentsSchema,
     featureEnvironmentSchema,
     featureSchema,
     featureStrategySchema,
@@ -74,6 +81,7 @@ export const schemas = {
     projectEnvironmentSchema,
     projectSchema,
     projectsSchema,
+    sortOrderSchema,
     strategySchema,
     tagSchema,
     tagsSchema,
@@ -116,6 +124,13 @@ export const createResponseSchema = (
     };
 };
 
+// Remove JSONSchema keys that would result in an invalid OpenAPI spec.
+export const removeJsonSchemaProps = <T extends JsonSchemaProps>(
+    schema: T,
+): OpenAPIV3.SchemaObject => {
+    return omitKeys(schema, '$id', 'components');
+};
+
 export const createOpenApiSchema = (
     serverUrl?: string,
 ): Omit<OpenAPIV3.Document, 'paths'> => {
@@ -135,9 +150,7 @@ export const createOpenApiSchema = (
                     name: 'Authorization',
                 },
             },
-            schemas: mapValues(schemas, (schema) =>
-                omitKeys(schema, '$id', 'components'),
-            ),
+            schemas: mapValues(schemas, removeJsonSchemaProps),
         },
     };
 };

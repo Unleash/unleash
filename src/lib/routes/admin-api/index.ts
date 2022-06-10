@@ -12,18 +12,18 @@ import UserController from './user';
 import ConfigController from './config';
 import ContextController from './context';
 import ClientMetricsController from './client-metrics';
-import BootstrapController from './bootstrap-controller';
+import BootstrapController from './bootstrap';
 import StateController from './state';
 import TagController from './tag';
 import TagTypeController from './tag-type';
 import AddonController from './addon';
-import ApiTokenController from './api-token-controller';
+import ApiTokenController from './api-token';
 import UserAdminController from './user-admin';
 import EmailController from './email';
-import UserFeedbackController from './user-feedback-controller';
-import UserSplashController from './user-splash-controller';
+import UserFeedbackController from './user-feedback';
+import UserSplashController from './user-splash';
 import ProjectApi from './project';
-import { EnvironmentsController } from './environments-controller';
+import { EnvironmentsController } from './environments';
 import ConstraintsController from './constraints';
 
 class AdminApi extends Controller {

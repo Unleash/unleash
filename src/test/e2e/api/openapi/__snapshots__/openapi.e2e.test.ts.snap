@@ -633,6 +633,39 @@ Object {
         ],
         "type": "object",
       },
+      "meSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "feedback": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/feedbackSchema",
+            },
+            "type": "array",
+          },
+          "permissions": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/permissionSchema",
+            },
+            "type": "array",
+          },
+          "splash": Object {
+            "additionalProperties": Object {
+              "type": "boolean",
+            },
+            "type": "object",
+          },
+          "user": Object {
+            "$ref": "#/components/schemas/userSchema",
+          },
+        },
+        "required": Array [
+          "user",
+          "permissions",
+          "feedback",
+          "splash",
+        ],
+        "type": "object",
+      },
       "nameSchema": Object {
         "additionalProperties": false,
         "properties": Object {
@@ -673,6 +706,9 @@ Object {
       "passwordSchema": Object {
         "additionalProperties": false,
         "properties": Object {
+          "confirmPassword": Object {
+            "type": "string",
+          },
           "password": Object {
             "type": "string",
           },
@@ -713,6 +749,24 @@ Object {
           "$ref": "#/components/schemas/patchSchema",
         },
         "type": "array",
+      },
+      "permissionSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "environment": Object {
+            "type": "string",
+          },
+          "permission": Object {
+            "type": "string",
+          },
+          "project": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "permission",
+        ],
+        "type": "object",
       },
       "projectEnvironmentSchema": Object {
         "additionalProperties": false,
@@ -3186,6 +3240,26 @@ Object {
         ],
       },
     },
+    "/api/admin/user": Object {
+      "get": Object {
+        "operationId": "getMe",
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/meSchema",
+                },
+              },
+            },
+            "description": "meSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
     "/api/admin/user-admin": Object {
       "get": Object {
         "operationId": "getUsers",
@@ -3427,6 +3501,33 @@ Object {
         "responses": Object {
           "200": Object {
             "description": "emptyResponse",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/user/change-password": Object {
+      "post": Object {
+        "operationId": "changeMyPassword",
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/passwordSchema",
+              },
+            },
+          },
+          "description": "passwordSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "200": Object {
+            "description": "emptyResponse",
+          },
+          "400": Object {
+            "description": "passwordMismatch",
           },
         },
         "tags": Array [

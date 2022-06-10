@@ -22,12 +22,14 @@ import { legalValueSchema } from './spec/legal-value-schema';
 import { idSchema } from './spec/id-schema';
 import { mapValues } from '../util/map-values';
 import { nameSchema } from './spec/name-schema';
+import { meSchema } from './spec/me-schema';
 import { omitKeys } from '../util/omit-keys';
 import { overrideSchema } from './spec/override-schema';
 import { parametersSchema } from './spec/parameters-schema';
 import { passwordSchema } from './spec/password-schema';
 import { patchSchema } from './spec/patch-schema';
 import { patchesSchema } from './spec/patches-schema';
+import { permissionSchema } from './spec/permission-schema';
 import { projectEnvironmentSchema } from './spec/project-environment-schema';
 import { projectSchema } from './spec/project-schema';
 import { projectsSchema } from './spec/projects-schema';
@@ -78,11 +80,13 @@ export const schemas = {
     legalValueSchema,
     nameSchema,
     idSchema,
+    meSchema,
     overrideSchema,
     parametersSchema,
     passwordSchema,
     patchSchema,
     patchesSchema,
+    permissionSchema,
     projectEnvironmentSchema,
     projectSchema,
     projectsSchema,

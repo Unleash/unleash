@@ -12,10 +12,10 @@ const useToast = () => {
         }));
 
     const setToastApiError = useCallback(
-        (errorText: string, overrides?: IToast) => {
+        (text: string, overrides?: IToast) => {
             setToast({
                 title: 'Something went wrong',
-                text: `We had trouble talking to our API. Here's why: ${errorText}`,
+                text,
                 type: 'error',
                 show: true,
                 autoHideDuration: 12000,

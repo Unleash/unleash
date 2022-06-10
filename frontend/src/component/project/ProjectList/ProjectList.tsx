@@ -118,12 +118,12 @@ export const ProjectListNew = () => {
                     className={styles.cardLink}
                 >
                     <ProjectCard
-                        onHover={() => handleHover(project?.id)}
-                        name={project?.name}
-                        memberCount={project?.memberCount ?? 0}
-                        health={project?.health}
-                        id={project?.id}
-                        featureCount={project?.featureCount}
+                        onHover={() => handleHover(project.id)}
+                        name={project.name}
+                        memberCount={project.memberCount ?? 0}
+                        health={project.health}
+                        id={project.id}
+                        featureCount={project.featureCount}
                     />
                 </Link>
             );

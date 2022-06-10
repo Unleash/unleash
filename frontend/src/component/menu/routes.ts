@@ -71,6 +71,7 @@ export const routes: IRoute[] = [
         title: 'Create',
         component: CreateProject,
         type: 'protected',
+        enterprise: true,
         menu: {},
     },
     {
@@ -79,6 +80,7 @@ export const routes: IRoute[] = [
         title: ':projectId',
         component: EditProject,
         type: 'protected',
+        enterprise: true,
         menu: {},
     },
     {

@@ -33,7 +33,7 @@ const ProjectInfo = ({
 }: IProjectInfoProps) => {
     const { classes: themeStyles } = useThemeStyles();
     const { classes: styles } = useStyles();
-    const { uiConfig } = useUiConfig();
+    const { uiConfig, isOss } = useUiConfig();
 
     let link = `/admin/users`;
 
@@ -52,6 +52,7 @@ const ProjectInfo = ({
         <div>
             <PermissionIconButton
                 permission={UPDATE_PROJECT}
+                hidden={isOss()}
                 projectId={id}
                 component={Link}
                 className={permissionButtonClass}

@@ -2,7 +2,7 @@ import { Card, Menu, MenuItem } from '@mui/material';
 import { useStyles } from './ProjectCard.styles';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { ReactComponent as ProjectIcon } from 'assets/icons/projectIcon.svg';
-import { useState, SyntheticEvent } from 'react';
+import React, { useState, SyntheticEvent, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
@@ -11,8 +11,14 @@ import { Delete, Edit } from '@mui/icons-material';
 import { getProjectEditPath } from 'utils/routePathHelpers';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import useToast from 'hooks/useToast';
-import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
+import {
+    UPDATE_PROJECT,
+    DELETE_PROJECT,
+} from 'component/providers/AccessProvider/permissions';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import AccessContext from 'contexts/AccessContext';
+import { DEFAULT_PROJECT_ID } from 'hooks/api/getters/useDefaultProject/useDefaultProjectId';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IProjectCardProps {
     name: string;
@@ -32,6 +38,8 @@ export const ProjectCard = ({
     id,
 }: IProjectCardProps) => {
     const { classes } = useStyles();
+    const { hasAccess } = useContext(AccessContext);
+    const { isOss } = useUiConfig();
     const { refetch: refetchProjectOverview } = useProjects();
     const [anchorEl, setAnchorEl] = useState(null);
     const [showDelDialog, setShowDelDialog] = useState(false);
@@ -45,7 +53,7 @@ export const ProjectCard = ({
         setAnchorEl(e.currentTarget);
     };
 
-    const onRemoveProject = async (e: Event) => {
+    const onRemoveProject = async (e: React.SyntheticEvent) => {
         e.preventDefault();
         try {
             await deleteProject(id);
@@ -62,6 +70,9 @@ export const ProjectCard = ({
         setAnchorEl(null);
     };
 
+    const canDeleteProject =
+        hasAccess(DELETE_PROJECT, id) && id !== DEFAULT_PROJECT_ID;
+
     return (
         <Card className={classes.projectCard} onMouseEnter={onHover}>
             <div className={classes.header} data-loading>
@@ -69,6 +80,7 @@ export const ProjectCard = ({
 
                 <PermissionIconButton
                     permission={UPDATE_PROJECT}
+                    hidden={isOss()}
                     projectId={id}
                     data-loading
                     onClick={handleClick}
@@ -85,6 +97,9 @@ export const ProjectCard = ({
                     open={Boolean(anchorEl)}
                     anchorEl={anchorEl}
                     style={{ top: 0, left: -100 }}
+                    onClick={event => {
+                        event.preventDefault();
+                    }}
                     onClose={(event: SyntheticEvent) => {
                         event.preventDefault();
                         setAnchorEl(null);
@@ -104,9 +119,12 @@ export const ProjectCard = ({
                             e.preventDefault();
                             setShowDelDialog(true);
                         }}
+                        disabled={!canDeleteProject}
                     >
                         <Delete className={classes.icon} />
-                        Delete project
+                        {id === DEFAULT_PROJECT_ID && !canDeleteProject
+                            ? "You can't delete the default project"
+                            : 'Delete project'}
                     </MenuItem>
                 </Menu>
             </div>
@@ -136,9 +154,9 @@ export const ProjectCard = ({
             </div>
             <Dialogue
                 open={showDelDialog}
-                // @ts-expect-error
                 onClick={onRemoveProject}
-                onClose={() => {
+                onClose={event => {
+                    event.preventDefault();
                     setAnchorEl(null);
                     setShowDelDialog(false);
                 }}

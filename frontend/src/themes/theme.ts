@@ -265,5 +265,14 @@ export default createTheme({
                 },
             },
         },
+        MuiMenuItem: {
+            styleOverrides: {
+                root: {
+                    '&.Mui-disabled': {
+                        opacity: 0.66,
+                    },
+                },
+            },
+        },
     },
 });

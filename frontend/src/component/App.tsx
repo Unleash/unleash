@@ -13,14 +13,20 @@ import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import { SplashPageRedirect } from 'component/splash/SplashPageRedirect/SplashPageRedirect';
 import { useStyles } from './App.styles';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 export const App = () => {
     const { classes: styles } = useStyles();
     const { authDetails } = useAuthDetails();
     const { user } = useAuthUser();
+    const { isOss } = useUiConfig();
     const isLoggedIn = Boolean(user?.id);
     const hasFetchedAuth = Boolean(authDetails || user);
     usePlausibleTracker();
+
+    const availableRoutes = isOss()
+        ? routes.filter(route => !route.enterprise)
+        : routes;
 
     return (
         <SWRProvider isUnauthorized={!isLoggedIn}>
@@ -32,7 +38,7 @@ export const App = () => {
                         <ToastRenderer />
                         <LayoutPicker>
                             <Routes>
-                                {routes.map(route => (
+                                {availableRoutes.map(route => (
                                     <Route
                                         key={route.path}
                                         path={route.path}

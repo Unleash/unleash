@@ -8,6 +8,7 @@ export interface IRoute {
     parent?: string;
     flag?: string;
     hidden?: boolean;
+    enterprise?: boolean;
     component: VoidFunctionComponent;
     menu: IRouteMenu;
 }

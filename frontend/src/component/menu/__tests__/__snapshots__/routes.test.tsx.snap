@@ -11,6 +11,7 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
+    "enterprise": true,
     "menu": {},
     "parent": "/projects",
     "path": "/projects/create",
@@ -19,6 +20,7 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
+    "enterprise": true,
     "menu": {},
     "parent": "/projects",
     "path": "/projects/:projectId/edit",

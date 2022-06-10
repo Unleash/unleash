@@ -1,7 +1,8 @@
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 
-const DEFAULT_PROJECT_ID = 'default';
+export const DEFAULT_PROJECT_ID = 'default';
 
+// Get the default project ID, or the first ID if there is no default project.
 export const useDefaultProjectId = (): string | undefined => {
     const { projects = [] } = useProjects();
 

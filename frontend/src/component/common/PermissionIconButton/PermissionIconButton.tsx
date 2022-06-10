@@ -20,6 +20,7 @@ interface IPermissionIconButtonProps {
     type?: 'button';
     edge?: IconButtonProps['edge'];
     tooltipProps?: Omit<ITooltipResolverProps, 'children'>;
+    sx?: IconButtonProps['sx'];
     size?: string;
 }
 

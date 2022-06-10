@@ -19,6 +19,7 @@ import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
 import { TabPanel } from 'component/common/TabNav/TabPanel/TabPanel';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const Project = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -29,6 +30,7 @@ const Project = () => {
     const { setToastData } = useToast();
     const { classes: styles } = useStyles();
     const navigate = useNavigate();
+    const { isOss } = useUiConfig();
 
     const basePath = `/projects/${projectId}`;
     const tabData = [
@@ -118,7 +120,8 @@ const Project = () => {
                         </div>
                         <PermissionIconButton
                             permission={UPDATE_PROJECT}
-                            projectId={project?.id}
+                            projectId={projectId}
+                            sx={{ visibility: isOss() ? 'hidden' : 'visible' }}
                             onClick={() =>
                                 navigate(`/projects/${projectId}/edit`)
                             }

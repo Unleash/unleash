@@ -1,5 +1,4 @@
 import { Response } from 'express';
-
 import Controller from '../controller';
 import { Logger } from '../../logger';
 import { IUnleashConfig } from '../../types/option';
@@ -7,31 +6,47 @@ import { IUnleashServices } from '../../types/services';
 import UserSplashService from '../../services/user-splash-service';
 import { IAuthRequest } from '../unleash-types';
 import { NONE } from '../../types/permissions';
-
-interface ISplashBody {
-    seen: boolean;
-    splashId: string;
-}
+import { OpenApiService } from '../../services/openapi-service';
+import { createResponseSchema } from '../../openapi';
+import { splashSchema, SplashSchema } from '../../openapi/spec/splash-schema';
 
 class UserSplashController extends Controller {
     private logger: Logger;
 
     private userSplashService: UserSplashService;
 
+    private openApiService: OpenApiService;
+
     constructor(
         config: IUnleashConfig,
-        { userSplashService }: Pick<IUnleashServices, 'userSplashService'>,
+        {
+            userSplashService,
+            openApiService,
+        }: Pick<IUnleashServices, 'userSplashService' | 'openApiService'>,
     ) {
         super(config);
         this.logger = config.getLogger('splash-controller.ts');
         this.userSplashService = userSplashService;
+        this.openApiService = openApiService;
 
-        this.post('/:id', this.updateSplashSettings, NONE);
+        this.route({
+            method: 'post',
+            path: '/:id',
+            handler: this.updateSplashSettings,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'updateSplashSettings',
+                    responses: { 200: createResponseSchema('splashSchema') },
+                }),
+            ],
+        });
     }
 
     private async updateSplashSettings(
-        req: IAuthRequest<any, any, ISplashBody, any>,
-        res: Response,
+        req: IAuthRequest<{ id: string }>,
+        res: Response<SplashSchema>,
     ): Promise<void> {
         const { user } = req;
         const { id } = req.params;
@@ -41,8 +56,13 @@ class UserSplashController extends Controller {
             userId: user.id,
             seen: true,
         };
-        const updated = await this.userSplashService.updateSplash(splash);
-        res.json(updated);
+
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            splashSchema.$id,
+            await this.userSplashService.updateSplash(splash),
+        );
     }
 }
 

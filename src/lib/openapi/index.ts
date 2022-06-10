@@ -33,6 +33,7 @@ import { variantsSchema } from './spec/variants-schema';
 import { versionSchema } from './spec/version-schema';
 import { environmentsSchema } from './spec/environments-schema';
 import { sortOrderSchema } from './spec/sort-order-schema';
+import { splashSchema } from './spec/splash-schema';
 
 // Schemas must have $id property on the form "#/components/schemas/mySchema".
 export type SchemaId = typeof schemas[keyof typeof schemas]['$id'];
@@ -82,6 +83,7 @@ export const schemas = {
     projectSchema,
     projectsSchema,
     sortOrderSchema,
+    splashSchema,
     strategySchema,
     tagSchema,
     tagsSchema,

@@ -27,7 +27,7 @@ export const FeatureArchivedCell: VFC<IFeatureArchivedCellProps> = ({
                     arrow
                 >
                     <Typography noWrap variant="body2" data-loading>
-                        <TimeAgo date={new Date(archivedAt)} title={''} />
+                        <TimeAgo date={new Date(archivedAt)} />
                     </Typography>
                 </Tooltip>
             )}

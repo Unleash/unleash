@@ -1,8 +1,8 @@
 import { SyntheticEvent, VFC } from 'react';
-import { ActionCell } from '../../../common/Table/cells/ActionCell/ActionCell';
+import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 import { Undo } from '@mui/icons-material';
-import PermissionIconButton from '../../../common/PermissionIconButton/PermissionIconButton';
-import { UPDATE_FEATURE } from '../../../providers/AccessProvider/permissions';
+import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
+import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 
 interface IReviveArchivedFeatureCell {
     onRevive: () => void;

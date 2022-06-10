@@ -23,7 +23,7 @@ export const FeaturesArchiveTable = () => {
 
     return (
         <ArchiveTable
-            title={'Archived'}
+            title='Archived'
             archivedFeatures={archivedFeatures}
             loading={loading}
             searchParams={searchParams}

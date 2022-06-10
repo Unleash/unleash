@@ -9,7 +9,7 @@ import {
     TableRow,
     TableSearch,
 } from 'component/common/Table';
-import { useFlexLayout, useSortBy, useTable } from 'react-table';
+import {SortingRule, useFlexLayout, useSortBy, useTable} from 'react-table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { useMediaQuery } from '@mui/material';
 import { sortTypes } from 'utils/sortTypes';
@@ -32,16 +32,17 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { useSearch } from 'hooks/useSearch';
 import { FeatureArchivedCell } from '../../common/Table/cells/FeatureArchivedCell/FeatureArchivedCell';
 import { useVirtualizedRange } from 'hooks/useVirtualizedRange';
+import { URLSearchParamsInit } from 'react-router-dom';
 
 export interface IFeaturesArchiveTableProps {
     archivedFeatures: FeatureSchema[];
     title: string;
-    refetch: any;
+    refetch: () => void;
     loading: boolean;
-    storedParams: any;
-    setStoredParams: any;
-    searchParams: any;
-    setSearchParams: any;
+    storedParams: SortingRule<string>;
+    setStoredParams:  (newValue: (SortingRule<string> | ((prev: SortingRule<string>) => SortingRule<string>))) => SortingRule<string>;
+    searchParams: URLSearchParams;
+    setSearchParams:  (nextInit: URLSearchParamsInit, navigateOptions?: ({replace?: boolean | undefined, state?: any} | undefined)) => void;
 }
 
 export const ArchiveTable = ({
@@ -74,7 +75,6 @@ export const ArchiveTable = ({
                 type: 'success',
                 title: "And we're back!",
                 text: 'The feature toggle has been revived.',
-                confetti: true,
             });
         } catch (e: unknown) {
             setToastApiError(formatUnknownError(e));
@@ -164,6 +164,7 @@ export const ArchiveTable = ({
                 accessor: 'description',
             },
         ],
+        //eslint-disable-next-line
         []
     );
 
@@ -244,41 +245,6 @@ export const ArchiveTable = ({
     const [firstRenderedIndex, lastRenderedIndex] =
         useVirtualizedRange(rowHeight);
 
-    const renderRows = () => {
-        return (
-            <>
-                {rows.map((row, index) => {
-                    const isVirtual =
-                        index < firstRenderedIndex || index > lastRenderedIndex;
-
-                    if (isVirtual) {
-                        return null;
-                    }
-
-                    prepareRow(row);
-                    return (
-                        <TableRow hover {...row.getRowProps()}>
-                            {row.cells.map(cell => (
-                                <TableCell
-                                    {...cell.getCellProps({
-                                        style: {
-                                            flex: cell.column.minWidth
-                                                ? '1 0 auto'
-                                                : undefined,
-                                        },
-                                    })}
-                                    className={classes.cell}
-                                >
-                                    {cell.render('Cell')}
-                                </TableCell>
-                            ))}
-                        </TableRow>
-                    );
-                })}
-            </>
-        );
-    };
-
     return (
         <PageContent
             isLoading={loading}
@@ -315,7 +281,34 @@ export const ArchiveTable = ({
                                     headerGroups={headerGroups as any}
                                 />
                                 <TableBody {...getTableBodyProps()}>
-                                    {renderRows()}
+                                    {rows.map((row, index) => {
+                                        const isVirtual =
+                                            index < firstRenderedIndex || index > lastRenderedIndex;
+
+                                        if (isVirtual) {
+                                            return null;
+                                        }
+
+                                        prepareRow(row);
+                                        return (
+                                            <TableRow hover {...row.getRowProps()}>
+                                                {row.cells.map(cell => (
+                                                    <TableCell
+                                                        {...cell.getCellProps({
+                                                            style: {
+                                                                flex: cell.column.minWidth
+                                                                    ? '1 0 auto'
+                                                                    : undefined,
+                                                            },
+                                                        })}
+                                                        className={classes.cell}
+                                                    >
+                                                        {cell.render('Cell')}
+                                                    </TableCell>
+                                                ))}
+                                            </TableRow>
+                                        );
+                                    })}
                                 </TableBody>
                             </Table>
                         </SearchHighlightProvider>

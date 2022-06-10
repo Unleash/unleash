@@ -46,12 +46,15 @@ test('querying a tag-type that does not exist yields 404', async () => {
 });
 
 test('Can create a new tag type', async () => {
-    await app.request.post('/api/admin/tag-types').send({
-        name: 'slack',
-        description:
-            'Tag your feature toggles with slack channel to post updates for toggle to',
-        icon: 'http://icons.iconarchive.com/icons/papirus-team/papirus-apps/32/slack-icon.png',
-    });
+    await app.request
+        .post('/api/admin/tag-types')
+        .send({
+            name: 'slack',
+            description:
+                'Tag your feature toggles with slack channel to post updates for toggle to',
+            icon: 'http://icons.iconarchive.com/icons/papirus-team/papirus-apps/32/slack-icon.png',
+        })
+        .expect(201);
     return app.request
         .get('/api/admin/tag-types/slack')
         .expect('Content-Type', /json/)

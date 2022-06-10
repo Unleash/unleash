@@ -1740,7 +1740,7 @@ Object {
     },
     "/api/admin/projects/{projectId}/features/{featureName}/environments/{environment}": Object {
       "get": Object {
-        "operationId": "getEnvironment",
+        "operationId": "getFeatureEnvironment",
         "parameters": Array [
           Object {
             "in": "path",
@@ -1786,7 +1786,7 @@ Object {
     },
     "/api/admin/projects/{projectId}/features/{featureName}/environments/{environment}/off": Object {
       "post": Object {
-        "operationId": "toggleEnvironmentOff",
+        "operationId": "toggleFeatureEnvironmentOff",
         "parameters": Array [
           Object {
             "in": "path",
@@ -1832,7 +1832,7 @@ Object {
     },
     "/api/admin/projects/{projectId}/features/{featureName}/environments/{environment}/on": Object {
       "post": Object {
-        "operationId": "toggleEnvironmentOn",
+        "operationId": "toggleFeatureEnvironmentOn",
         "parameters": Array [
           Object {
             "in": "path",

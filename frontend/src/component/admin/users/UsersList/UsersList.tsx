@@ -7,7 +7,6 @@ import {
     TableCell,
     TableRow,
     TablePlaceholder,
-    TableSearch,
 } from 'component/common/Table';
 import ChangePassword from './ChangePassword/ChangePassword';
 import DeleteUser from './DeleteUser/DeleteUser';
@@ -34,6 +33,7 @@ import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import theme from 'themes/theme';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
 import { UsersActionsCell } from './UsersActionsCell/UsersActionsCell';
+import { Search } from 'component/common/Search/Search';
 
 const StyledAvatar = styled(Avatar)(({ theme }) => ({
     width: theme.spacing(4),
@@ -248,7 +248,7 @@ const UsersList = () => {
                     title="Users"
                     actions={
                         <>
-                            <TableSearch
+                            <Search
                                 initialValue={globalFilter}
                                 onChange={setGlobalFilter}
                             />

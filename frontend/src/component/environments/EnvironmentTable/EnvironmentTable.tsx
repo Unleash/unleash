@@ -4,7 +4,6 @@ import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironmen
 import { CreateEnvironmentButton } from 'component/environments/CreateEnvironmentButton/CreateEnvironmentButton';
 import { useTable, useGlobalFilter } from 'react-table';
 import {
-    TableSearch,
     SortableTableHeader,
     Table,
     TablePlaceholder,
@@ -24,6 +23,7 @@ import useEnvironmentApi, {
 } from 'hooks/api/actions/useEnvironmentApi/useEnvironmentApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { Search } from 'component/common/Search/Search';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(4),
@@ -71,7 +71,7 @@ export const EnvironmentTable = () => {
     );
 
     const headerSearch = (
-        <TableSearch initialValue={globalFilter} onChange={setGlobalFilter} />
+        <Search initialValue={globalFilter} onChange={setGlobalFilter} />
     );
 
     const headerActions = (

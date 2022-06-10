@@ -1,7 +1,6 @@
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import {
-    TableSearch,
     SortableTableHeader,
     TableCell,
     TablePlaceholder,
@@ -25,6 +24,7 @@ import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import theme from 'themes/theme';
 import { SegmentDocsWarning } from 'component/segments/SegmentDocs/SegmentDocs';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { Search } from 'component/common/Search/Search';
 
 export const SegmentTable = () => {
     const { segments, loading } = useSegments();
@@ -87,7 +87,7 @@ export const SegmentTable = () => {
                     title="Segments"
                     actions={
                         <>
-                            <TableSearch
+                            <Search
                                 initialValue={globalFilter}
                                 onChange={setGlobalFilter}
                             />

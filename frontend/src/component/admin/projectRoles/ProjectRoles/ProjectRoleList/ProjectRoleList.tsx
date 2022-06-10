@@ -6,7 +6,6 @@ import {
     TableCell,
     TableRow,
     TablePlaceholder,
-    TableSearch,
 } from 'component/common/Table';
 import { useTable, useGlobalFilter, useSortBy } from 'react-table';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
@@ -28,6 +27,7 @@ import { sortTypes } from 'utils/sortTypes';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import theme from 'themes/theme';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
+import { Search } from 'component/common/Search/Search';
 
 const ROOTROLE = 'root';
 const BUILTIN_ROLE_TYPE = 'project';
@@ -190,7 +190,7 @@ const ProjectRoleList = () => {
                     title="Project roles"
                     actions={
                         <>
-                            <TableSearch
+                            <Search
                                 initialValue={globalFilter}
                                 onChange={setGlobalFilter}
                             />

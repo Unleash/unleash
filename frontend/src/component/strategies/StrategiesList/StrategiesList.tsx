@@ -19,7 +19,6 @@ import {
     TableCell,
     TableRow,
     TablePlaceholder,
-    TableSearch,
 } from 'component/common/Table';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageContent } from 'component/common/PageContent/PageContent';
@@ -38,6 +37,7 @@ import { sortTypes } from 'utils/sortTypes';
 import { useTable, useGlobalFilter, useSortBy } from 'react-table';
 import { AddStrategyButton } from './AddStrategyButton/AddStrategyButton';
 import { StatusBadge } from 'component/common/StatusBadge/StatusBadge';
+import { Search } from 'component/common/Search/Search';
 
 interface IDialogueMetaData {
     show: boolean;
@@ -357,7 +357,7 @@ export const StrategiesList = () => {
                     title="Strategies"
                     actions={
                         <>
-                            <TableSearch
+                            <Search
                                 initialValue={globalFilter}
                                 onChange={setGlobalFilter}
                             />

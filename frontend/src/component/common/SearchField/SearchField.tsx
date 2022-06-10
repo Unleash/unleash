@@ -13,6 +13,9 @@ interface ISearchFieldProps {
     showValueChip?: boolean;
 }
 
+/**
+ * @deprecated use `Search` instead.
+ */
 export const SearchField: VFC<ISearchFieldProps> = ({
     updateValue,
     initialValue = '',

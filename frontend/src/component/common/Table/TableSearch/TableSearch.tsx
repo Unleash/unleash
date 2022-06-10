@@ -11,6 +11,9 @@ interface ITableSearchProps {
     getSearchContext?: () => IGetSearchContextOutput;
 }
 
+/**
+ * @deprecated use `Search` instead.
+ */
 export const TableSearch: FC<ITableSearchProps> = ({
     initialValue,
     onChange = () => {},

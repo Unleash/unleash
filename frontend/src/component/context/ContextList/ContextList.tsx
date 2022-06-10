@@ -7,7 +7,6 @@ import {
     TableCell,
     TableRow,
     TablePlaceholder,
-    TableSearch,
 } from 'component/common/Table';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
@@ -24,6 +23,7 @@ import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { ContextActionsCell } from './ContextActionsCell/ContextActionsCell';
 import { Adjust } from '@mui/icons-material';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
+import { Search } from 'component/common/Search/Search';
 
 const ContextList: VFC = () => {
     const [showDelDialogue, setShowDelDialogue] = useState(false);
@@ -164,7 +164,7 @@ const ContextList: VFC = () => {
                     title="Context fields"
                     actions={
                         <>
-                            <TableSearch
+                            <Search
                                 initialValue={globalFilter}
                                 onChange={setGlobalFilter}
                             />

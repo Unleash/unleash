@@ -25,7 +25,6 @@ import {
     TableCell,
     TableRow,
     TablePlaceholder,
-    TableSearch,
 } from 'component/common/Table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import useProject from 'hooks/api/getters/useProject/useProject';
@@ -44,6 +43,7 @@ import { FeatureStaleDialog } from 'component/common/FeatureStaleDialog/FeatureS
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { useSearch } from 'hooks/useSearch';
 import { useMediaQuery } from '@mui/material';
+import { Search } from 'component/common/Search/Search';
 
 interface IProjectFeatureTogglesProps {
     features: IProject['features'];
@@ -412,11 +412,9 @@ export const ProjectFeatureToggles = ({
                             <ConditionallyRender
                                 condition={!isSmallScreen}
                                 show={
-                                    <TableSearch
+                                    <Search
                                         initialValue={searchValue}
-                                        onChange={value =>
-                                            setSearchValue(value)
-                                        }
+                                        onChange={setSearchValue}
                                         hasFilters
                                         getSearchContext={getSearchContext}
                                     />
@@ -454,7 +452,7 @@ export const ProjectFeatureToggles = ({
                     <ConditionallyRender
                         condition={isSmallScreen}
                         show={
-                            <TableSearch
+                            <Search
                                 initialValue={searchValue}
                                 onChange={setSearchValue}
                                 hasFilters

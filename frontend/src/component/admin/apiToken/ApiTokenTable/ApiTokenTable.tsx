@@ -3,7 +3,6 @@ import { useTable, useGlobalFilter, useSortBy } from 'react-table';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import {
     SortableTableHeader,
-    TableSearch,
     TableCell,
     TablePlaceholder,
 } from 'component/common/Table';
@@ -25,6 +24,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ProjectsList } from 'component/admin/apiToken/ProjectsList/ProjectsList';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
+import { Search } from 'component/common/Search/Search';
 
 export const ApiTokenTable = () => {
     const { tokens, loading } = useApiTokens();
@@ -57,7 +57,7 @@ export const ApiTokenTable = () => {
     }, [setHiddenColumns, hiddenColumns]);
 
     const headerSearch = (
-        <TableSearch initialValue={globalFilter} onChange={setGlobalFilter} />
+        <Search initialValue={globalFilter} onChange={setGlobalFilter} />
     );
 
     const headerActions = (

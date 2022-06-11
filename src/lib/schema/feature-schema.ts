@@ -1,6 +1,7 @@
 import joi from 'joi';
 import { ALL_OPERATORS } from '../util/constants';
 import { nameType } from '../routes/util';
+import { validateJsonString } from '../util/validateJsonString';
 
 export const nameSchema = joi
     .object()
@@ -35,7 +36,25 @@ export const variantsSchema = joi.object().keys({
         .object()
         .keys({
             type: joi.string().required(),
-            value: joi.string().required(),
+            value: joi
+                .string()
+                .required()
+                // perform additional validation
+                // when provided 'type' is 'json'
+                .when('type', {
+                    is: 'json',
+                    then: joi.custom((val, helper) => {
+                        const isValidJsonString = validateJsonString(val);
+                        if (isValidJsonString === false) {
+                            return helper.error('invalidJsonString');
+                        }
+                        return val;
+                    }),
+                })
+                .messages({
+                    invalidJsonString:
+                        "'value' must be a valid json string when 'type' is json",
+                }),
         })
         .optional(),
     stickiness: joi.string().default('default'),

@@ -103,6 +103,7 @@ export default class ProjectFeaturesController extends Controller {
         this.route({
             method: 'post',
             path: `${PATH_ENV}/off`,
+            acceptAnyContentType: true,
             handler: this.toggleFeatureEnvironmentOff,
             permission: UPDATE_FEATURE_ENVIRONMENT,
             middleware: [
@@ -117,6 +118,7 @@ export default class ProjectFeaturesController extends Controller {
         this.route({
             method: 'post',
             path: `${PATH_ENV}/on`,
+            acceptAnyContentType: true,
             handler: this.toggleFeatureEnvironmentOn,
             permission: UPDATE_FEATURE_ENVIRONMENT,
             middleware: [

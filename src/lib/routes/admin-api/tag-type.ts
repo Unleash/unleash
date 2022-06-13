@@ -144,7 +144,7 @@ class TagTypeController extends Controller {
     }
 
     async validateTagType(
-        req: Request<any, any, TagTypeSchema>,
+        req: Request<unknown, unknown, TagTypeSchema>,
         res: Response<ValidateTagTypeSchema>,
     ): Promise<void> {
         await this.tagTypeService.validate(req.body);
@@ -155,7 +155,7 @@ class TagTypeController extends Controller {
     }
 
     async createTagType(
-        req: IAuthRequest<any, any, TagTypeSchema>,
+        req: IAuthRequest<unknown, unknown, TagTypeSchema>,
         res: Response,
     ): Promise<void> {
         const userName = extractUsername(req);
@@ -167,7 +167,7 @@ class TagTypeController extends Controller {
     }
 
     async updateTagType(
-        req: IAuthRequest<any, any, UpdateTagTypeSchema>,
+        req: IAuthRequest<{ name: string }, unknown, UpdateTagTypeSchema>,
         res: Response,
     ): Promise<void> {
         const { description, icon } = req.body;

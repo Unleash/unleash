@@ -1380,7 +1380,7 @@ Object {
           },
           "strategies": Object {
             "items": Object {
-              "$ref": "#/components/schemas/featureStrategySchema",
+              "$ref": "#/components/schemas/strategySchema",
             },
             "type": "array",
           },
@@ -1402,6 +1402,76 @@ Object {
         },
         "required": Array [
           "version",
+        ],
+        "type": "object",
+      },
+      "strategiesSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "strategies": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/strategySchema",
+            },
+            "type": "array",
+          },
+          "version": Object {
+            "type": "integer",
+          },
+        },
+        "required": Array [
+          "version",
+          "strategies",
+        ],
+        "type": "object",
+      },
+      "strategySchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "deprecated": Object {
+            "type": "boolean",
+          },
+          "description": Object {
+            "type": "string",
+          },
+          "displayName": Object {
+            "nullable": true,
+            "type": "string",
+          },
+          "editable": Object {
+            "type": "boolean",
+          },
+          "name": Object {
+            "type": "string",
+          },
+          "parameters": Object {
+            "items": Object {
+              "additionalProperties": false,
+              "properties": Object {
+                "description": Object {
+                  "type": "string",
+                },
+                "name": Object {
+                  "type": "string",
+                },
+                "required": Object {
+                  "type": "boolean",
+                },
+                "type": Object {
+                  "type": "string",
+                },
+              },
+              "type": "object",
+            },
+            "type": "array",
+          },
+        },
+        "required": Array [
+          "name",
+          "displayName",
+          "description",
+          "editable",
+          "deprecated",
+          "parameters",
         ],
         "type": "object",
       },
@@ -1707,6 +1777,43 @@ Object {
           },
           "stickiness": Object {
             "type": "boolean",
+          },
+        },
+        "required": Array [
+          "name",
+        ],
+        "type": "object",
+      },
+      "upsertStrategySchema": Object {
+        "properties": Object {
+          "description": Object {
+            "type": "string",
+          },
+          "editable": Object {
+            "type": "boolean",
+          },
+          "name": Object {
+            "type": "string",
+          },
+          "parameters": Object {
+            "items": Object {
+              "properties": Object {
+                "description": Object {
+                  "type": "string",
+                },
+                "name": Object {
+                  "type": "string",
+                },
+                "required": Object {
+                  "type": "boolean",
+                },
+                "type": Object {
+                  "type": "string",
+                },
+              },
+              "type": "object",
+            },
+            "type": "array",
           },
         },
         "required": Array [
@@ -3981,6 +4088,179 @@ Object {
         },
         "responses": Object {
           "202": Object {
+            "description": "emptyResponse",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/strategies": Object {
+      "get": Object {
+        "operationId": "getAllStrategies",
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/strategiesSchema",
+                },
+              },
+            },
+            "description": "strategiesSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+      "post": Object {
+        "operationId": "createStrategy",
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/upsertStrategySchema",
+              },
+            },
+          },
+          "description": "upsertStrategySchema",
+          "required": true,
+        },
+        "responses": Object {
+          "201": Object {
+            "description": "emptyResponse",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/strategies/{name}": Object {
+      "delete": Object {
+        "operationId": "removeStrategy",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "description": "emptyResponse",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+      "get": Object {
+        "operationId": "getStrategy",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/strategySchema",
+                },
+              },
+            },
+            "description": "strategySchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/strategies/{strategyName}": Object {
+      "put": Object {
+        "operationId": "updateStrategy",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "strategyName",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/upsertStrategySchema",
+              },
+            },
+          },
+          "description": "upsertStrategySchema",
+          "required": true,
+        },
+        "responses": Object {
+          "200": Object {
+            "description": "emptyResponse",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/strategies/{strategyName}/deprecate": Object {
+      "post": Object {
+        "operationId": "deprecateStrategy",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "strategyName",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "description": "emptyResponse",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/strategies/{strategyName}/reactivate": Object {
+      "post": Object {
+        "operationId": "reactivateStrategy",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "strategyName",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": Object {
+          "200": Object {
             "description": "emptyResponse",
           },
         },

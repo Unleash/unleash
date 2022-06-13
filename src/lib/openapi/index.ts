@@ -75,6 +75,9 @@ import { stateSchema } from './spec/state-schema';
 import { featureTagSchema } from './spec/feature-tag-schema';
 import { exportParametersSchema } from './spec/export-parameters-schema';
 import { emailSchema } from './spec/email-schema';
+import { strategySchema } from './spec/strategy-schema';
+import { strategiesSchema } from './spec/strategies-schema';
+import { upsertStrategySchema } from './spec/upsert-strategy-schema';
 
 // All schemas in `openapi/spec` should be listed here.
 export const schemas = {
@@ -131,6 +134,8 @@ export const schemas = {
     sortOrderSchema,
     splashSchema,
     stateSchema,
+    strategiesSchema,
+    strategySchema,
     tagSchema,
     tagWithVersionSchema,
     tagsSchema,
@@ -143,6 +148,7 @@ export const schemas = {
     updateApiTokenSchema,
     updateTagTypeSchema,
     upsertContextFieldSchema,
+    upsertStrategySchema,
     validatePasswordSchema,
     validateTagTypeSchema,
     updateUserSchema,

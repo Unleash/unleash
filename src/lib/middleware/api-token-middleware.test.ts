@@ -1,9 +1,11 @@
-import apiTokenMiddleware from './api-token-middleware';
 import getLogger from '../../test/fixtures/no-logger';
 import { CLIENT } from '../types/permissions';
 import { createTestConfig } from '../../test/config/test-config';
 import ApiUser from '../types/api-user';
 import { ALL, ApiTokenType } from '../types/models/api-token';
+import apiTokenMiddleware, {
+    TOKEN_TYPE_ERROR_MESSAGE,
+} from './api-token-middleware';
 
 let config: any;
 
@@ -86,6 +88,8 @@ test('should add user if known token', async () => {
 });
 
 test('should not add user if not /api/client', async () => {
+    expect.assertions(5);
+
     const apiUser = new ApiUser({
         username: 'default',
         permissions: [CLIENT],
@@ -93,16 +97,21 @@ test('should not add user if not /api/client', async () => {
         environment: ALL,
         type: ApiTokenType.CLIENT,
     });
+
     const apiTokenService = {
         getUserForToken: jest.fn().mockReturnValue(apiUser),
     };
 
     const func = apiTokenMiddleware(config, { apiTokenService });
-
     const cb = jest.fn();
 
     const res = {
-        sendStatus: jest.fn(),
+        status: (code: unknown) => ({
+            send: (data: unknown) => {
+                expect(code).toEqual(403);
+                expect(data).toEqual({ message: TOKEN_TYPE_ERROR_MESSAGE });
+            },
+        }),
     };
 
     const req = {
@@ -116,7 +125,6 @@ test('should not add user if not /api/client', async () => {
     expect(cb).not.toHaveBeenCalled();
     expect(req.header).toHaveBeenCalled();
     expect(req.user).toBeUndefined();
-    expect(res.sendStatus).toHaveBeenCalledWith(403);
 });
 
 test('should not add user if disabled', async () => {

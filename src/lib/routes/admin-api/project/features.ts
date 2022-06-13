@@ -286,7 +286,6 @@ export default class ProjectFeaturesController extends Controller {
         this.route({
             method: 'put',
             path: PATH_FEATURE,
-            acceptAnyContentType: true,
             handler: this.updateFeature,
             permission: UPDATE_FEATURE,
             middleware: [
@@ -302,7 +301,6 @@ export default class ProjectFeaturesController extends Controller {
         this.route({
             method: 'patch',
             path: PATH_FEATURE,
-            acceptAnyContentType: true,
             handler: this.patchFeature,
             permission: UPDATE_FEATURE,
             middleware: [

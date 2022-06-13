@@ -26,6 +26,7 @@ export default defineConfig({
     },
     server: {
         open: true,
+        host: true,
         proxy: {
             [`${UNLEASH_BASE_PATH}api`]: {
                 target: UNLEASH_API,

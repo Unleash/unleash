@@ -112,7 +112,7 @@ exports[`renders an empty list correctly 1`] = `
         className="tss-54jt3w-bodyContainer"
       >
         <table
-          className="MuiTable-root tss-z7cn64-table mui-133vm37-MuiTable-root"
+          className="MuiTable-root tss-rjdss1-table mui-133vm37-MuiTable-root"
           role="table"
         >
           <thead
@@ -120,7 +120,7 @@ exports[`renders an empty list correctly 1`] = `
             role={null}
           >
             <tr
-              className="MuiTableRow-root MuiTableRow-head tss-1an32mz-tableHeader mui-cn4v9y-MuiTableRow-root"
+              className="MuiTableRow-root MuiTableRow-head tss-1sk7xq7-tableHeader mui-cn4v9y-MuiTableRow-root"
               role="row"
             >
               <th

@@ -1,6 +1,7 @@
 import { OpenAPIV3 } from 'openapi-types';
 import { cloneFeatureSchema } from './spec/clone-feature-schema';
 import { constraintSchema } from './spec/constraint-schema';
+import { contextSchema } from './spec/context-schema';
 import { createFeatureSchema } from './spec/create-feature-schema';
 import { createStrategySchema } from './spec/create-strategy-schema';
 import { environmentSchema } from './spec/environment-schema';
@@ -17,6 +18,7 @@ import { healthOverviewSchema } from './spec/health-overview-schema';
 import { healthReportSchema } from './spec/health-report-schema';
 import { mapValues } from '../util/map-values';
 import { omitKeys } from '../util/omit-keys';
+import { legalValueSchema } from './spec/legal-value-schema';
 import { overrideSchema } from './spec/override-schema';
 import { parametersSchema } from './spec/parameters-schema';
 import { patchSchema } from './spec/patch-schema';
@@ -44,6 +46,7 @@ import { validateTagTypeSchema } from './spec/validate-tag-type-schema';
 export const schemas = {
     cloneFeatureSchema,
     constraintSchema,
+    contextSchema,
     createFeatureSchema,
     createStrategySchema,
     environmentSchema,
@@ -58,6 +61,7 @@ export const schemas = {
     feedbackSchema,
     healthOverviewSchema,
     healthReportSchema,
+    legalValueSchema,
     overrideSchema,
     parametersSchema,
     patchSchema,

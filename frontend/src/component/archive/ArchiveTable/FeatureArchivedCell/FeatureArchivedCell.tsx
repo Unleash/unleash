@@ -1,9 +1,9 @@
-import React, { VFC } from 'react';
+import { VFC } from 'react';
 import TimeAgo from 'react-timeago';
 import { Tooltip, Typography } from '@mui/material';
-import { formatDateYMD } from '../../../../../utils/formatDate';
-import { TextCell } from '../TextCell/TextCell';
-import { useLocationSettings } from '../../../../../hooks/useLocationSettings';
+import { formatDateYMD } from 'utils/formatDate';
+import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
+import { useLocationSettings } from 'hooks/useLocationSettings';
 
 interface IFeatureArchivedCellProps {
     value?: string | Date | null;

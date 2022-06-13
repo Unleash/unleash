@@ -25,14 +25,15 @@ import { ReviveArchivedFeatureCell } from 'component/archive/ArchiveTable/Revive
 import { useStyles } from '../../feature/FeatureToggleList/styles';
 import { featuresPlaceholder } from '../../feature/FeatureToggleList/FeatureToggleListTable';
 import theme from 'themes/theme';
-import { FeatureSchema } from '../../../openapi';
+import { FeatureSchema } from 'openapi';
 import { useFeatureArchiveApi } from 'hooks/api/actions/useFeatureArchiveApi/useReviveFeatureApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useSearch } from 'hooks/useSearch';
-import { FeatureArchivedCell } from '../../common/Table/cells/FeatureArchivedCell/FeatureArchivedCell';
+import { FeatureArchivedCell } from './FeatureArchivedCell/FeatureArchivedCell';
 import { useVirtualizedRange } from 'hooks/useVirtualizedRange';
-import { URLSearchParamsInit } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
+import { useWindowVirtualizer } from '@tanstack/react-virtual';
 
 export interface IFeaturesArchiveTableProps {
     archivedFeatures: FeatureSchema[];
@@ -45,13 +46,6 @@ export interface IFeaturesArchiveTableProps {
             | SortingRule<string>
             | ((prev: SortingRule<string>) => SortingRule<string>)
     ) => SortingRule<string>;
-    searchParams: URLSearchParams;
-    setSearchParams: (
-        nextInit: URLSearchParamsInit,
-        navigateOptions?:
-            | { replace?: boolean | undefined; state?: any }
-            | undefined
-    ) => void;
 }
 
 export const ArchiveTable = ({
@@ -60,8 +54,6 @@ export const ArchiveTable = ({
     refetch,
     storedParams,
     setStoredParams,
-    searchParams,
-    setSearchParams,
     title,
 }: IFeaturesArchiveTableProps) => {
     const rowHeight = theme.shape.tableRowHeight;
@@ -70,6 +62,7 @@ export const ArchiveTable = ({
     const isMediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
     const { setToastData, setToastApiError } = useToast();
 
+    const [searchParams, setSearchParams] = useSearchParams();
     const { reviveFeature } = useFeatureArchiveApi();
 
     const [searchValue, setSearchValue] = useState(
@@ -108,7 +101,7 @@ export const ArchiveTable = ({
                 Cell: FeatureTypeCell,
             },
             {
-                Header: 'Feature toggle Name',
+                Header: 'Feature toggle name',
                 accessor: 'name',
                 searchable: true,
                 minWidth: 100,
@@ -249,7 +242,7 @@ export const ArchiveTable = ({
             replace: true,
         });
         setStoredParams({ id: sortBy[0].id, desc: sortBy[0].desc || false });
-    }, [loading, sortBy, searchValue, setSearchParams, setStoredParams]);
+    }, [loading, sortBy, searchValue]);
 
     const [firstRenderedIndex, lastRenderedIndex] =
         useVirtualizedRange(rowHeight);

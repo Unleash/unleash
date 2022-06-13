@@ -100,7 +100,7 @@ test('Can update a tag types description and icon', async () => {
             expect(res.body.tagType.icon).toBe('$');
         });
 });
-test('Invalid updates gets rejected', async () => {
+test('Numbers are coerced to strings for icons and descriptions', async () => {
     await app.request.get('/api/admin/tag-types/simple').expect(200);
     await app.request
         .put('/api/admin/tag-types/simple')
@@ -108,13 +108,7 @@ test('Invalid updates gets rejected', async () => {
             description: 15125,
             icon: 125,
         })
-        .expect(400)
-        .expect((res) => {
-            expect(res.body.details[0].message).toBe(
-                '"description" must be a string',
-            );
-            expect(res.body.details[1].message).toBe('"icon" must be a string');
-        });
+        .expect(200);
 });
 
 test('Validation of tag-types returns 200 for valid tag-types', async () => {
@@ -124,6 +118,21 @@ test('Validation of tag-types returns 200 for valid tag-types', async () => {
             name: 'something',
             description: 'A fancy description',
             icon: 'NoIcon',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.valid).toBe(true);
+        });
+});
+
+test('Validation of tag types allows numbers for description and icons because of coercion', async () => {
+    await app.request
+        .post('/api/admin/tag-types/validate')
+        .send({
+            name: 'something',
+            description: 1234,
+            icon: 56789,
         })
         .set('Content-Type', 'application/json')
         .expect(200)

@@ -44,7 +44,7 @@ class TagTypeController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
-                    operationId: 'getAllTagTypes',
+                    operationId: 'getTagTypes',
                     responses: { 200: createResponseSchema('tagTypesSchema') },
                 }),
             ],
@@ -66,7 +66,7 @@ class TagTypeController extends Controller {
         this.route({
             method: 'post',
             path: '/validate',
-            handler: this.validate,
+            handler: this.validateTagType,
             permission: UPDATE_TAG_TYPE,
             middleware: [
                 openApiService.validPath({
@@ -135,7 +135,7 @@ class TagTypeController extends Controller {
         res.json({ version, tagTypes });
     }
 
-    async validate(
+    async validateTagType(
         req: Request<any, any, TagTypeSchema>,
         res: Response<ValidateTagTypeSchema>,
     ): Promise<void> {

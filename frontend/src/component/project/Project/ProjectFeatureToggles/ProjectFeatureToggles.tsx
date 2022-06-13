@@ -398,6 +398,9 @@ export const ProjectFeatureToggles = ({
     const [firstRenderedIndex, lastRenderedIndex] =
         useVirtualizedRange(rowHeight);
 
+    const tableHeight =
+        rowHeight * rows.length + theme.shape.tableRowHeightCompact;
+
     return (
         <PageContent
             isLoading={loading}
@@ -464,21 +467,23 @@ export const ProjectFeatureToggles = ({
             }
         >
             <SearchHighlightProvider value={getSearchText(searchValue)}>
-                <Table {...getTableProps()} rowHeight={rowHeight}>
+                <Table
+                    {...getTableProps()}
+                    rowHeight={rowHeight}
+                    style={{ height: tableHeight }}
+                >
                     <SortableTableHeader
                         // @ts-expect-error -- verify after `react-table` v8
                         headerGroups={headerGroups}
                         className={styles.headerClass}
                         flex
                     />
-                    <TableBody
-                        {...getTableBodyProps()}
-                        style={{
-                            height: `${rowHeight * rows.length}px`,
-                            position: 'relative',
-                        }}
-                    >
+                    <TableBody {...getTableBodyProps()}>
                         {rows.map((row, index) => {
+                            const top =
+                                index * rowHeight +
+                                theme.shape.tableRowHeightCompact;
+
                             const isVirtual =
                                 index < firstRenderedIndex ||
                                 index > lastRenderedIndex;
@@ -493,10 +498,7 @@ export const ProjectFeatureToggles = ({
                                     hover
                                     {...row.getRowProps()}
                                     className={styles.row}
-                                    style={{
-                                        top: `${index * rowHeight}px`,
-                                        display: 'flex',
-                                    }}
+                                    style={{ display: 'flex', top }}
                                 >
                                     {row.cells.map(cell => (
                                         <TableCell

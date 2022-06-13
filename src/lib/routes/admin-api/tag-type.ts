@@ -114,6 +114,7 @@ class TagTypeController extends Controller {
             method: 'delete',
             path: '/:name',
             handler: this.deleteTagType,
+            acceptAnyContentType: true,
             permission: DELETE_TAG_TYPE,
             middleware: [
                 openApiService.validPath({

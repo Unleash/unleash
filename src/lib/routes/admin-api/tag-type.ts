@@ -16,8 +16,12 @@ import { createRequestSchema, createResponseSchema } from '../../openapi';
 import { TagTypesSchema } from '../../openapi/spec/tag-types-schema';
 import { emptyResponse } from '../../openapi/spec/empty-response';
 import { ValidateTagTypeSchema } from '../../openapi/spec/validate-tag-type-schema';
-import { TagTypeSchema } from '../../openapi/spec/tag-type-schema';
+import {
+    tagTypeSchema,
+    TagTypeSchema,
+} from '../../openapi/spec/tag-type-schema';
 import { UpdateTagTypeSchema } from '../../openapi/spec/update-tag-type-schema';
+import { OpenApiService } from '../../services/openapi-service';
 
 const version = 1;
 
@@ -25,6 +29,8 @@ class TagTypeController extends Controller {
     private logger: Logger;
 
     private tagTypeService: TagTypeService;
+
+    private openApiService: OpenApiService;
 
     constructor(
         config: IUnleashConfig,
@@ -36,6 +42,7 @@ class TagTypeController extends Controller {
         super(config);
         this.logger = config.getLogger('/admin-api/tag-type.js');
         this.tagTypeService = tagTypeService;
+        this.openApiService = openApiService;
         this.route({
             method: 'get',
             path: '',
@@ -141,7 +148,10 @@ class TagTypeController extends Controller {
         res: Response<ValidateTagTypeSchema>,
     ): Promise<void> {
         await this.tagTypeService.validate(req.body);
-        res.status(200).json({ valid: true, tagType: req.body });
+        this.openApiService.respondWithValidation(200, res, tagTypeSchema.$id, {
+            valid: true,
+            tagType: req.body,
+        });
     }
 
     async createTagType(

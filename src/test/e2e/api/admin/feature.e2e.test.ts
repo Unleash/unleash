@@ -261,6 +261,27 @@ test('creates new feature toggle with createdBy unknown', async () => {
     });
 });
 
+test('create new feature toggle with variant type json', async () => {
+    return app.request
+        .post('/api/admin/features')
+        .send({
+            name: 'com.test.featureWithJson',
+            variants: [
+                {
+                    name: 'variantTestJson',
+                    weight: 1,
+                    payload: {
+                        type: 'json',
+                        value: '{"test": true, "user": [{"jsonValid": 1}]}',
+                    },
+                    weightType: 'variable',
+                },
+            ],
+        })
+        .set('Content-Type', 'application/json')
+        .expect(201);
+});
+
 test('refuses to create a new feature toggle with variant when type is json but value provided is not a valid json', async () => {
     return app.request
         .post('/api/admin/features')

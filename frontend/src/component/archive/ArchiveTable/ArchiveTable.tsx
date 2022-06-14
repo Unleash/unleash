@@ -7,7 +7,6 @@ import {
     TableCell,
     TablePlaceholder,
     TableRow,
-    TableSearch,
 } from 'component/common/Table';
 import { SortingRule, useFlexLayout, useSortBy, useTable } from 'react-table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
@@ -17,6 +16,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { Search } from 'component/common/Search/Search';
 import { FeatureTypeCell } from '../../common/Table/cells/FeatureTypeCell/FeatureTypeCell';
 import { FeatureSeenCell } from '../../common/Table/cells/FeatureSeenCell/FeatureSeenCell';
 import { LinkCell } from '../../common/Table/cells/LinkCell/LinkCell';
@@ -92,17 +92,19 @@ export const ArchiveTable = ({
             {
                 id: 'Seen',
                 Header: 'Seen',
-                maxWidth: 85,
+                width: 85,
                 canSort: true,
                 Cell: FeatureSeenCell,
                 accessor: 'lastSeenAt',
+                align: 'center',
             },
             {
                 id: 'Type',
                 Header: 'Type',
-                maxWidth: 80,
+                width: 80,
                 canSort: true,
                 Cell: FeatureTypeCell,
+                align: 'center',
             },
             {
                 Header: 'Feature toggle name',
@@ -120,14 +122,14 @@ export const ArchiveTable = ({
             {
                 Header: 'Created',
                 accessor: 'createdAt',
-                minWidth: 120,
+                width: 150,
                 Cell: DateCell,
                 sortType: 'date',
             },
             {
                 Header: 'Archived',
                 accessor: 'archivedAt',
-                minWidth: 120,
+                width: 150,
                 Cell: FeatureArchivedCell,
                 sortType: 'date',
             },
@@ -139,7 +141,7 @@ export const ArchiveTable = ({
                           sortType: 'alphanumeric',
                           filterName: 'project',
                           searchable: true,
-                          maxWidth: 150,
+                          maxWidth: 170,
                           Cell: ({ value }: any) => (
                               <LinkCell
                                   title={value}
@@ -253,7 +255,7 @@ export const ArchiveTable = ({
             replace: true,
         });
         setStoredParams({ id: sortBy[0].id, desc: sortBy[0].desc || false });
-    }, [loading, sortBy, searchValue]);
+    }, [loading, sortBy, searchValue]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const [firstRenderedIndex, lastRenderedIndex] =
         useVirtualizedRange(rowHeight);
@@ -270,7 +272,7 @@ export const ArchiveTable = ({
                     })`}
                     actions={
                         <>
-                            <TableSearch
+                            <Search
                                 initialValue={searchValue}
                                 onChange={setSearchValue}
                                 hasFilters
@@ -300,6 +302,7 @@ export const ArchiveTable = ({
                             >
                                 <SortableTableHeader
                                     headerGroups={headerGroups as any}
+                                    flex
                                 />
                                 <TableBody {...getTableBodyProps()}>
                                     {rows.map((row, index) => {

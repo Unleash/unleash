@@ -30,7 +30,7 @@ export const SegmentTable = () => {
     const { segments, loading } = useSegments();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [initialState] = useState({
-        sortBy: [{ id: 'createdAt', desc: false }],
+        sortBy: [{ id: 'createdAt' }],
         hiddenColumns: ['description'],
     });
 

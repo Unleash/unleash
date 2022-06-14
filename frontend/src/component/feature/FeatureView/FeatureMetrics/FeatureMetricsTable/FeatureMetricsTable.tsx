@@ -20,10 +20,7 @@ export const FeatureMetricsTable = ({
 }: IFeatureMetricsTableProps) => {
     const isMediumScreen = useMediaQuery(theme.breakpoints.down('md'));
 
-    const initialState = useMemo(
-        () => ({ sortBy: [{ id: 'timestamp', desc: true }] }),
-        []
-    );
+    const initialState = useMemo(() => ({ sortBy: [{ id: 'timestamp' }] }), []);
 
     const {
         getTableProps,

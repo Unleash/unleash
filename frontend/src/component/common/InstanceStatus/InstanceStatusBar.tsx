@@ -1,5 +1,5 @@
 import { styled, Button, Typography } from '@mui/material';
-import { IInstanceStatus, InstanceState } from 'interfaces/instance';
+import { IInstanceStatus } from 'interfaces/instance';
 import { INSTANCE_STATUS_BAR_ID } from 'utils/testIds';
 import { InfoOutlined, WarningAmber } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
@@ -7,7 +7,10 @@ import { useContext } from 'react';
 import AccessContext from 'contexts/AccessContext';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { calculateTrialDaysRemaining } from 'utils/billing';
+import {
+    hasTrialExpired,
+    formatTrialExpirationWarning,
+} from 'utils/instanceTrial';
 
 const StyledWarningBar = styled('aside')(({ theme }) => ({
     position: 'relative',
@@ -59,14 +62,10 @@ export const InstanceStatusBar = ({
     instanceStatus,
 }: IInstanceStatusBarProps) => {
     const { hasAccess } = useContext(AccessContext);
+    const trialHasExpired = hasTrialExpired(instanceStatus);
+    const trialExpirationWarning = formatTrialExpirationWarning(instanceStatus);
 
-    const trialDaysRemaining = calculateTrialDaysRemaining(instanceStatus);
-
-    if (
-        instanceStatus.state === InstanceState.TRIAL &&
-        typeof trialDaysRemaining === 'number' &&
-        trialDaysRemaining <= 0
-    ) {
+    if (trialHasExpired) {
         return (
             <StyledWarningBar data-testid={INSTANCE_STATUS_BAR_ID}>
                 <StyledWarningIcon />
@@ -87,11 +86,7 @@ export const InstanceStatusBar = ({
         );
     }
 
-    if (
-        instanceStatus.state === InstanceState.TRIAL &&
-        typeof trialDaysRemaining === 'number' &&
-        trialDaysRemaining <= 10
-    ) {
+    if (trialExpirationWarning) {
         return (
             <StyledInfoBar data-testid={INSTANCE_STATUS_BAR_ID}>
                 <StyledInfoIcon />
@@ -101,7 +96,7 @@ export const InstanceStatusBar = ({
                     })}
                 >
                     <strong>Heads up!</strong> You have{' '}
-                    <strong>{trialDaysRemaining} days</strong> left of your free{' '}
+                    <strong>{trialExpirationWarning}</strong> left of your free{' '}
                     {instanceStatus.plan} trial.
                 </Typography>
                 <ConditionallyRender

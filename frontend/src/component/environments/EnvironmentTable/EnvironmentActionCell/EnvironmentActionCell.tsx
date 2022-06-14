@@ -3,12 +3,7 @@ import {
     DELETE_ENVIRONMENT,
     UPDATE_ENVIRONMENT,
 } from 'component/providers/AccessProvider/permissions';
-import {
-    Edit,
-    Delete,
-    DragIndicator,
-    PowerSettingsNew,
-} from '@mui/icons-material';
+import { Edit, Delete } from '@mui/icons-material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { IconButton, Tooltip } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
@@ -16,14 +11,14 @@ import AccessContext from 'contexts/AccessContext';
 import { useContext, useState } from 'react';
 import { IEnvironment } from 'interfaces/environments';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import EnvironmentToggleConfirm from '../EnvironmentToggleConfirm/EnvironmentToggleConfirm';
-import EnvironmentDeleteConfirm from '../EnvironmentDeleteConfirm/EnvironmentDeleteConfirm';
+import EnvironmentToggleConfirm from '../../EnvironmentToggleConfirm/EnvironmentToggleConfirm';
+import EnvironmentDeleteConfirm from '../../EnvironmentDeleteConfirm/EnvironmentDeleteConfirm';
 import useEnvironmentApi from 'hooks/api/actions/useEnvironmentApi/useEnvironmentApi';
 import useProjectRolePermissions from 'hooks/api/getters/useProjectRolePermissions/useProjectRolePermissions';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import useToast from 'hooks/useToast';
 import { useId } from 'hooks/useId';
-import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
+import PermissionSwitch from 'component/common/PermissionSwitch/PermissionSwitch';
 
 interface IEnvironmentTableActionsProps {
     environment: IEnvironment;
@@ -35,7 +30,6 @@ export const EnvironmentActionCell = ({
     const navigate = useNavigate();
     const { hasAccess } = useContext(AccessContext);
     const updatePermission = hasAccess(UPDATE_ENVIRONMENT);
-    const { searchQuery } = useSearchHighlightContext();
 
     const { setToastApiError, setToastData } = useToast();
     const { refetchEnvironments } = useEnvironments();
@@ -73,8 +67,8 @@ export const EnvironmentActionCell = ({
 
     const handleToggleEnvironmentOn = async () => {
         try {
-            await toggleEnvironmentOn(environment.name);
             setToggleModal(false);
+            await toggleEnvironmentOn(environment.name);
             setToastData({
                 type: 'success',
                 title: 'Project environment enabled',
@@ -88,8 +82,8 @@ export const EnvironmentActionCell = ({
 
     const handleToggleEnvironmentOff = async () => {
         try {
-            await toggleEnvironmentOff(environment.name);
             setToggleModal(false);
+            await toggleEnvironmentOff(environment.name);
             setToastData({
                 type: 'success',
                 title: 'Project environment disabled',
@@ -102,37 +96,28 @@ export const EnvironmentActionCell = ({
     };
 
     const toggleIconTooltip = environment.enabled
-        ? 'Disable environment'
-        : 'Enable environment';
+        ? `Disable environment ${environment.name}`
+        : `Enable environment ${environment.name}`;
 
     const editId = useId();
     const deleteId = useId();
 
-    // Allow drag and drop if the user is permitted to reorder environments.
-    // Disable drag and drop while searching since some rows may be hidden.
-    const enableDragAndDrop = updatePermission && !searchQuery;
-
     return (
         <ActionCell>
             <ConditionallyRender
-                condition={enableDragAndDrop}
-                show={
-                    <IconButton size="large">
-                        <DragIndicator titleAccess="Drag" cursor="grab" />
-                    </IconButton>
-                }
-            />
-            <ConditionallyRender
                 condition={updatePermission}
                 show={
-                    <Tooltip title={toggleIconTooltip} arrow>
-                        <IconButton
-                            onClick={() => setToggleModal(true)}
-                            size="large"
-                        >
-                            <PowerSettingsNew />
-                        </IconButton>
-                    </Tooltip>
+                    <>
+                        <Tooltip title={toggleIconTooltip} arrow describeChild>
+                            <PermissionSwitch
+                                permission={UPDATE_ENVIRONMENT}
+                                checked={environment.enabled}
+                                onClick={() => setToggleModal(true)}
+                                disabled={environment.protected}
+                            />
+                        </Tooltip>
+                        <ActionCell.Divider />
+                    </>
                 }
             />
             <ConditionallyRender
@@ -141,7 +126,7 @@ export const EnvironmentActionCell = ({
                     <Tooltip
                         title={
                             environment.protected
-                                ? 'You cannot edit environment'
+                                ? 'You cannot edit protected environment'
                                 : 'Edit environment'
                         }
                         arrow
@@ -169,9 +154,10 @@ export const EnvironmentActionCell = ({
                     <Tooltip
                         title={
                             environment.protected
-                                ? 'You cannot delete environment'
+                                ? 'You cannot delete protected environment'
                                 : 'Delete environment'
                         }
+                        describeChild
                         arrow
                     >
                         <span id={deleteId}>

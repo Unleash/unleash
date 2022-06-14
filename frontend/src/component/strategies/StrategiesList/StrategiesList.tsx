@@ -1,17 +1,7 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { IconButton, Tooltip, Box } from '@mui/material';
-import {
-    Delete,
-    Edit,
-    Extension,
-    Visibility,
-    VisibilityOff,
-} from '@mui/icons-material';
-import {
-    DELETE_STRATEGY,
-    UPDATE_STRATEGY,
-} from 'component/providers/AccessProvider/permissions';
+import { Box } from '@mui/material';
+import { Extension } from '@mui/icons-material';
 import {
     Table,
     SortableTableHeader,
@@ -20,11 +10,11 @@ import {
     TableRow,
     TablePlaceholder,
 } from 'component/common/Table';
+import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { formatStrategyName } from 'utils/strategyNames';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import useStrategiesApi from 'hooks/api/actions/useStrategiesApi/useStrategiesApi';
@@ -37,6 +27,9 @@ import { sortTypes } from 'utils/sortTypes';
 import { useTable, useGlobalFilter, useSortBy } from 'react-table';
 import { AddStrategyButton } from './AddStrategyButton/AddStrategyButton';
 import { StatusBadge } from 'component/common/StatusBadge/StatusBadge';
+import { StrategySwitch } from './StrategySwitch/StrategySwitch';
+import { StrategyEditButton } from './StrategyEditButton/StrategyEditButton';
+import { StrategyDeleteButton } from './StrategyDeleteButton/StrategyDeleteButton';
 import { Search } from 'component/common/Search/Search';
 
 interface IDialogueMetaData {
@@ -78,6 +71,85 @@ export const StrategiesList = () => {
         );
     }, [strategies, loading]);
 
+    const onToggle = useCallback(
+        (strategy: IStrategy) => (deprecated: boolean) => {
+            if (deprecated) {
+                setDialogueMetaData({
+                    show: true,
+                    title: 'Really reactivate strategy?',
+                    onConfirm: async () => {
+                        try {
+                            await reactivateStrategy(strategy);
+                            refetchStrategies();
+                            setToastData({
+                                type: 'success',
+                                title: 'Success',
+                                text: 'Strategy reactivated successfully',
+                            });
+                        } catch (error: unknown) {
+                            setToastApiError(formatUnknownError(error));
+                        }
+                    },
+                });
+            } else {
+                setDialogueMetaData({
+                    show: true,
+                    title: 'Really deprecate strategy?',
+                    onConfirm: async () => {
+                        try {
+                            await deprecateStrategy(strategy);
+                            refetchStrategies();
+                            setToastData({
+                                type: 'success',
+                                title: 'Success',
+                                text: 'Strategy deprecated successfully',
+                            });
+                        } catch (error: unknown) {
+                            setToastApiError(formatUnknownError(error));
+                        }
+                    },
+                });
+            }
+        },
+        [
+            deprecateStrategy,
+            reactivateStrategy,
+            refetchStrategies,
+            setToastApiError,
+            setToastData,
+        ]
+    );
+
+    const onDeleteStrategy = useCallback(
+        (strategy: IStrategy) => {
+            setDialogueMetaData({
+                show: true,
+                title: 'Really delete strategy?',
+                onConfirm: async () => {
+                    try {
+                        await removeStrategy(strategy);
+                        refetchStrategies();
+                        setToastData({
+                            type: 'success',
+                            title: 'Success',
+                            text: 'Strategy deleted successfully',
+                        });
+                    } catch (error: unknown) {
+                        setToastApiError(formatUnknownError(error));
+                    }
+                },
+            });
+        },
+        [removeStrategy, refetchStrategies, setToastApiError, setToastData]
+    );
+
+    const onEditStrategy = useCallback(
+        (strategy: IStrategy) => {
+            navigate(`/strategies/${strategy.name}/edit`);
+        },
+        [navigate]
+    );
+
     const columns = useMemo(
         () => [
             {
@@ -86,7 +158,7 @@ export const StrategiesList = () => {
                     <Box
                         data-loading
                         sx={{
-                            pl: 2,
+                            pl: 3,
                             pr: 1,
                             display: 'flex',
                             alignItems: 'center',
@@ -134,18 +206,22 @@ export const StrategiesList = () => {
                 id: 'Actions',
                 align: 'center',
                 Cell: ({ row: { original } }: any) => (
-                    <Box
-                        sx={{ display: 'flex', justifyContent: 'flex-end' }}
-                        data-loading
-                    >
-                        <ConditionallyRender
-                            condition={original.deprecated}
-                            show={reactivateButton(original)}
-                            elseShow={deprecateButton(original)}
+                    <ActionCell>
+                        <StrategySwitch
+                            deprecated={original.deprecated}
+                            onToggle={onToggle(original)}
+                            disabled={original.name === 'default'}
                         />
-                        {editButton(original)}
-                        {deleteButton(original)}
-                    </Box>
+                        <ActionCell.Divider />
+                        <StrategyEditButton
+                            strategy={original}
+                            onClick={() => onEditStrategy(original)}
+                        />
+                        <StrategyDeleteButton
+                            strategy={original}
+                            onClick={() => onDeleteStrategy(original)}
+                        />
+                    </ActionCell>
                 ),
                 width: 150,
                 disableGlobalFilter: true,
@@ -161,8 +237,7 @@ export const StrategiesList = () => {
                 sortType: 'number',
             },
         ],
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        []
+        [onToggle, onEditStrategy, onDeleteStrategy]
     );
 
     const initialState = useMemo(
@@ -193,152 +268,6 @@ export const StrategiesList = () => {
         },
         useGlobalFilter,
         useSortBy
-    );
-
-    const onReactivateStrategy = (strategy: IStrategy) => {
-        setDialogueMetaData({
-            show: true,
-            title: 'Really reactivate strategy?',
-            onConfirm: async () => {
-                try {
-                    await reactivateStrategy(strategy);
-                    refetchStrategies();
-                    setToastData({
-                        type: 'success',
-                        title: 'Success',
-                        text: 'Strategy reactivated successfully',
-                    });
-                } catch (error: unknown) {
-                    setToastApiError(formatUnknownError(error));
-                }
-            },
-        });
-    };
-
-    const onDeprecateStrategy = (strategy: IStrategy) => {
-        setDialogueMetaData({
-            show: true,
-            title: 'Really deprecate strategy?',
-            onConfirm: async () => {
-                try {
-                    await deprecateStrategy(strategy);
-                    refetchStrategies();
-                    setToastData({
-                        type: 'success',
-                        title: 'Success',
-                        text: 'Strategy deprecated successfully',
-                    });
-                } catch (error: unknown) {
-                    setToastApiError(formatUnknownError(error));
-                }
-            },
-        });
-    };
-
-    const onDeleteStrategy = (strategy: IStrategy) => {
-        setDialogueMetaData({
-            show: true,
-            title: 'Really delete strategy?',
-            onConfirm: async () => {
-                try {
-                    await removeStrategy(strategy);
-                    refetchStrategies();
-                    setToastData({
-                        type: 'success',
-                        title: 'Success',
-                        text: 'Strategy deleted successfully',
-                    });
-                } catch (error: unknown) {
-                    setToastApiError(formatUnknownError(error));
-                }
-            },
-        });
-    };
-
-    const reactivateButton = (strategy: IStrategy) => (
-        <PermissionIconButton
-            onClick={() => onReactivateStrategy(strategy)}
-            permission={UPDATE_STRATEGY}
-            tooltipProps={{ title: 'Reactivate activation strategy' }}
-        >
-            <VisibilityOff />
-        </PermissionIconButton>
-    );
-
-    const deprecateButton = (strategy: IStrategy) => (
-        <ConditionallyRender
-            condition={strategy.name === 'default'}
-            show={
-                <Tooltip title="You cannot deprecate the default strategy">
-                    <div>
-                        <IconButton disabled size="large">
-                            <Visibility titleAccess="Deprecate strategy" />
-                        </IconButton>
-                    </div>
-                </Tooltip>
-            }
-            elseShow={
-                <div>
-                    <PermissionIconButton
-                        onClick={() => onDeprecateStrategy(strategy)}
-                        permission={UPDATE_STRATEGY}
-                        tooltipProps={{ title: 'Deprecate strategy' }}
-                    >
-                        <Visibility />
-                    </PermissionIconButton>
-                </div>
-            }
-        />
-    );
-
-    const editButton = (strategy: IStrategy) => (
-        <ConditionallyRender
-            condition={strategy?.editable}
-            show={
-                <PermissionIconButton
-                    onClick={() =>
-                        navigate(`/strategies/${strategy?.name}/edit`)
-                    }
-                    permission={UPDATE_STRATEGY}
-                    tooltipProps={{ title: 'Edit strategy' }}
-                >
-                    <Edit />
-                </PermissionIconButton>
-            }
-            elseShow={
-                <Tooltip title="You cannot edit a built-in strategy" arrow>
-                    <div>
-                        <IconButton disabled size="large">
-                            <Edit titleAccess="Edit strategy" />
-                        </IconButton>
-                    </div>
-                </Tooltip>
-            }
-        />
-    );
-
-    const deleteButton = (strategy: IStrategy) => (
-        <ConditionallyRender
-            condition={strategy?.editable}
-            show={
-                <PermissionIconButton
-                    onClick={() => onDeleteStrategy(strategy)}
-                    permission={DELETE_STRATEGY}
-                    tooltipProps={{ title: 'Delete strategy' }}
-                >
-                    <Delete />
-                </PermissionIconButton>
-            }
-            elseShow={
-                <Tooltip title="You cannot delete a built-in strategy" arrow>
-                    <div>
-                        <IconButton disabled size="large">
-                            <Delete titleAccess="Delete strategy" />
-                        </IconButton>
-                    </div>
-                </Tooltip>
-            }
-        />
     );
 
     const onDialogConfirm = () => {

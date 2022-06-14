@@ -22,7 +22,7 @@ export const useStyles = makeStyles()(theme => ({
     infoContainer: {
         marginTop: '1rem',
         display: 'flex',
-        justifyContent: 'space-between',
+        justifyContent: 'space-around',
     },
     infoInnerContainer: {
         textAlign: 'center',

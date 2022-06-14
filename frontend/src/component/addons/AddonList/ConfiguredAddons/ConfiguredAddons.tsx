@@ -52,10 +52,13 @@ export const ConfiguredAddons = () => {
                 setToastData({
                     type: 'success',
                     title: 'Success',
-                    text: 'Addon state switched successfully',
+                    text: !addon.enabled
+                        ? 'Addon is now active'
+                        : 'Addon is now disabled',
                 });
             } catch (error: unknown) {
                 setToastApiError(formatUnknownError(error));
+                throw error; // caught by optimistic update
             }
         },
         [setToastApiError, refetchAddons, setToastData, updateAddon]
@@ -96,12 +99,16 @@ export const ConfiguredAddons = () => {
                 Header: 'Actions',
                 id: 'Actions',
                 align: 'center',
-                Cell: ({ row: { original } }: any) => (
+                Cell: ({
+                    row: { original },
+                }: {
+                    row: { original: IAddon };
+                }) => (
                     <ConfiguredAddonsActionsCell
                         setShowDelete={setShowDelete}
                         toggleAddon={toggleAddon}
                         setDeletedAddon={setDeletedAddon}
-                        original={original as IAddon}
+                        original={original}
                     />
                 ),
                 width: 150,

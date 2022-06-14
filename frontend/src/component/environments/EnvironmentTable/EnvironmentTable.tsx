@@ -11,11 +11,6 @@ import {
 import { useCallback } from 'react';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { Alert, styled, TableBody } from '@mui/material';
-import { CloudCircle } from '@mui/icons-material';
-import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
-import { EnvironmentActionCell } from 'component/environments/EnvironmentActionCell/EnvironmentActionCell';
-import { EnvironmentNameCell } from 'component/environments/EnvironmentNameCell/EnvironmentNameCell';
-import { EnvironmentRow } from 'component/environments/EnvironmentRow/EnvironmentRow';
 import { MoveListItem } from 'hooks/useDragItem';
 import useToast from 'hooks/useToast';
 import useEnvironmentApi, {
@@ -23,6 +18,10 @@ import useEnvironmentApi, {
 } from 'hooks/api/actions/useEnvironmentApi/useEnvironmentApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { EnvironmentRow } from './EnvironmentRow/EnvironmentRow';
+import { EnvironmentNameCell } from './EnvironmentNameCell/EnvironmentNameCell';
+import { EnvironmentActionCell } from './EnvironmentActionCell/EnvironmentActionCell';
+import { EnvironmentIconCell } from './EnvironmentIconCell/EnvironmentIconCell';
 import { Search } from 'component/common/Search/Search';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
@@ -137,7 +136,7 @@ const COLUMNS = [
     {
         id: 'Icon',
         width: '1%',
-        Cell: () => <IconCell icon={<CloudCircle color="disabled" />} />,
+        Cell: () => <EnvironmentIconCell />,
         disableGlobalFilter: true,
     },
     {

@@ -87,7 +87,6 @@ export const AvailableAddons = ({
                 sortType: 'alphanumeric',
             },
             {
-                Header: 'Actions',
                 id: 'Actions',
                 align: 'center',
                 Cell: ({ row: { original } }: any) => (

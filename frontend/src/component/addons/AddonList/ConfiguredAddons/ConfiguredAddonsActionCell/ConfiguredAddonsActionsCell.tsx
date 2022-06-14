@@ -1,7 +1,9 @@
-import { Visibility, VisibilityOff, Edit, Delete } from '@mui/icons-material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { Edit, Delete } from '@mui/icons-material';
+import { Tooltip } from '@mui/material';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
+import PermissionSwitch from 'component/common/PermissionSwitch/PermissionSwitch';
 import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
+import { useOptimisticUpdate } from 'component/project/Project/ProjectFeatureToggles/FeatureToggleSwitch/hooks/useOptimisticUpdate';
 import {
     UPDATE_ADDON,
     DELETE_ADDON,
@@ -23,19 +25,32 @@ export const ConfiguredAddonsActionsCell = ({
     original,
 }: IConfiguredAddonsActionsCellProps) => {
     const navigate = useNavigate();
+    const [isEnabled, setIsEnabled, rollbackIsChecked] =
+        useOptimisticUpdate<boolean>(original.enabled);
+
+    const onClick = () => {
+        setIsEnabled(!isEnabled);
+        toggleAddon(original).catch(rollbackIsChecked);
+    };
+
     return (
         <ActionCell>
-            <PermissionIconButton
-                permission={UPDATE_ADDON}
-                onClick={() => toggleAddon(original)}
-                tooltipProps={{ title: 'Toggle addon' }}
+            <Tooltip
+                title={
+                    isEnabled
+                        ? `Disable addon ${original.provider}`
+                        : `Enable addon ${original.provider}`
+                }
+                arrow
+                describeChild
             >
-                <ConditionallyRender
-                    condition={original.enabled}
-                    show={<Visibility />}
-                    elseShow={<VisibilityOff />}
+                <PermissionSwitch
+                    permission={UPDATE_ADDON}
+                    checked={isEnabled}
+                    onClick={onClick}
                 />
-            </PermissionIconButton>
+            </Tooltip>
+            <ActionCell.Divider />
             <PermissionIconButton
                 permission={UPDATE_ADDON}
                 tooltipProps={{ title: 'Edit Addon' }}

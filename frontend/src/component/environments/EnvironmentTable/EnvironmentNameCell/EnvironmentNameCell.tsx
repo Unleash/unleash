@@ -21,6 +21,10 @@ export const EnvironmentNameCell = ({
                 condition={!environment.enabled}
                 show={<StatusBadge severity="warning">Disabled</StatusBadge>}
             />
+            <ConditionallyRender
+                condition={environment.protected}
+                show={<StatusBadge severity="success">Predefined</StatusBadge>}
+            />
         </TextCell>
     );
 };

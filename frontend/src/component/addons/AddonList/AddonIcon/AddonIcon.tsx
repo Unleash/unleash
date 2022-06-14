@@ -12,7 +12,6 @@ const style: React.CSSProperties = {
     width: '32.5px',
     height: '32.5px',
     marginRight: '16px',
-    borderRadius: '50%',
 };
 
 interface IAddonIconProps {

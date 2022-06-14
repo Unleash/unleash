@@ -1,14 +1,26 @@
-import { Box } from '@mui/material';
-import { ReactNode } from 'react';
+import { Box, Divider } from '@mui/material';
+import { FC, VFC } from 'react';
+import { useStyles } from './ActionCell.styles';
 
-interface IContextActionsCellProps {
-    children: ReactNode;
-}
-
-export const ActionCell = ({ children }: IContextActionsCellProps) => {
+const ActionCellDivider: VFC = () => {
+    const { classes } = useStyles();
     return (
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', px: 2 }}>
-            {children}
-        </Box>
+        <Divider
+            className={classes.divider}
+            orientation="vertical"
+            variant="middle"
+        />
     );
 };
+
+const ActionCellComponent: FC & {
+    Divider: typeof ActionCellDivider;
+} = ({ children }) => {
+    const { classes } = useStyles();
+
+    return <Box className={classes.container}>{children}</Box>;
+};
+
+ActionCellComponent.Divider = ActionCellDivider;
+
+export const ActionCell = ActionCellComponent;

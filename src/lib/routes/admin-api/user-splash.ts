@@ -32,6 +32,7 @@ class UserSplashController extends Controller {
         this.route({
             method: 'post',
             path: '/:id',
+            acceptAnyContentType: true,
             handler: this.updateSplashSettings,
             permission: NONE,
             middleware: [

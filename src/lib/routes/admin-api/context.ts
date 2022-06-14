@@ -17,9 +17,14 @@ import { Logger } from '../../logger';
 import { IAuthRequest } from '../unleash-types';
 
 import { OpenApiService } from '../../services/openapi-service';
-import { ContextSchema } from '../../openapi/spec/context-schema';
-import { createResponseSchema } from '../../openapi';
-import { serializeDates } from 'lib/types/serialize-dates';
+import {
+    contextSchema,
+    ContextSchema,
+} from '../../openapi/spec/context-schema';
+import { createRequestSchema, createResponseSchema } from '../../openapi';
+import { serializeDates } from '../../types/serialize-dates';
+import NotFoundError from '../../error/notfound-error';
+import { CreateUpdateContextSchema } from '../../openapi/spec/create-update-context-schema';
 
 interface ContextParam {
     contextField: string;
@@ -61,22 +66,6 @@ export class ContextController extends Controller {
         });
 
         this.route({
-            method: 'post',
-            path: '',
-            handler: this.createContextField,
-            permission: CREATE_CONTEXT_FIELD,
-            middleware: [
-                openApiService.validPath({
-                    tags: ['admin'],
-                    operationId: 'createContextField',
-                    responses: {
-                        200: createResponseSchema('contextSchema'),
-                    },
-                }),
-            ],
-        });
-
-        this.route({
             method: 'get',
             path: '/:contextField',
             handler: this.getContextField,
@@ -93,6 +82,25 @@ export class ContextController extends Controller {
         });
 
         this.route({
+            method: 'post',
+            path: '',
+            handler: this.createContextField,
+            permission: CREATE_CONTEXT_FIELD,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'createContextField',
+                    requestBody: createRequestSchema(
+                        'createUpdateContextSchema',
+                    ),
+                    responses: {
+                        200: createResponseSchema('contextSchema'),
+                    },
+                }),
+            ],
+        });
+
+        this.route({
             method: 'put',
             path: '/:contextField',
             handler: this.updateContextField,
@@ -101,6 +109,9 @@ export class ContextController extends Controller {
                 openApiService.validPath({
                     tags: ['admin'],
                     operationId: 'updateContextField',
+                    requestBody: createRequestSchema(
+                        'createUpdateContextSchema',
+                    ),
                     responses: {
                         200: createResponseSchema('contextSchema'),
                     },
@@ -112,6 +123,7 @@ export class ContextController extends Controller {
             method: 'delete',
             path: '/:contextField',
             handler: this.deleteContextField,
+            acceptAnyContentType: true,
             permission: DELETE_CONTEXT_FIELD,
             middleware: [
                 openApiService.validPath({
@@ -159,13 +171,21 @@ export class ContextController extends Controller {
             const contextField = await this.contextService.getContextField(
                 name,
             );
-            res.json(serializeDates(contextField)).end();
+            this.openApiService.respondWithValidation(
+                200,
+                res,
+                contextSchema.$id,
+                serializeDates(contextField),
+            );
         } catch (err) {
-            res.status(404).json({ error: 'Could not find context field' });
+            throw new NotFoundError('Could not find context field');
         }
     }
 
-    async createContextField(req: IAuthRequest, res: Response): Promise<void> {
+    async createContextField(
+        req: IAuthRequest<void, void, CreateUpdateContextSchema>,
+        res: Response,
+    ): Promise<void> {
         const value = req.body;
         const userName = extractUsername(req);
 
@@ -174,7 +194,7 @@ export class ContextController extends Controller {
     }
 
     async updateContextField(
-        req: IAuthRequest<ContextParam>,
+        req: IAuthRequest<ContextParam, void, CreateUpdateContextSchema>,
         res: Response,
     ): Promise<void> {
         const name = req.params.contextField;
@@ -198,7 +218,10 @@ export class ContextController extends Controller {
         res.status(200).end();
     }
 
-    async validate(req: Request, res: Response): Promise<void> {
+    async validate(
+        req: Request<void, void, { name: string }>,
+        res: Response,
+    ): Promise<void> {
         const { name } = req.body;
 
         await this.contextService.validateName(name);

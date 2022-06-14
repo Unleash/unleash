@@ -4,6 +4,7 @@ import { constraintSchema } from './spec/constraint-schema';
 import { contextSchema } from './spec/context-schema';
 import { createFeatureSchema } from './spec/create-feature-schema';
 import { createStrategySchema } from './spec/create-strategy-schema';
+import { createUpdateContextSchema } from './spec/create-update-context-schema';
 import { environmentSchema } from './spec/environment-schema';
 import { environmentsSchema } from './spec/environments-schema';
 import { featureEnvironmentSchema } from './spec/feature-environment-schema';
@@ -49,6 +50,7 @@ export const schemas = {
     contextSchema,
     createFeatureSchema,
     createStrategySchema,
+    createUpdateContextSchema,
     environmentSchema,
     environmentsSchema,
     featureEnvironmentSchema,

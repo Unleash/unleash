@@ -7,7 +7,7 @@ title: How to create a feature toggle
 
 You can perform every action both via the UI and the admin API. This guide includes screenshots to highlight the relevant UI controls and links to the relevant API methods for each step.
 
-The guide is split into three sections:
+This guide is split into three sections:
 1. [Prerequisites](#prerequisites): you need these before you can create a toggle.
 2. [Required steps](#required-steps): all the required steps to create a toggle and activate it in production.
 3. [Optional steps](#optional-steps): optional steps you can take to further target and configure your feature toggle and its audience.

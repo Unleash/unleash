@@ -22,17 +22,17 @@ You will probably not want to use the same configuration to enable a toggle in d
 
 You can enable and disable a toggles environments independently. You can only choose environments that are active for the current project. When you disable a toggle's environment, it will always evaluate to false in that environment. When you enable an environment, the toggle will evaluate to true or false depending on its activation strategies.
 
-Refer to the [documentation on environments](../user_guide/environments.md) for more details.
+Refer to the [documentation on environments](../user_guide/environments.md) for more details on how environments work.
 
 ## Activation strategies
 
 To enable feature in an environment, you must assign it at least one activation strategy. A feature toggle's activation strategies determine whether it gets enabled for a particular user or instance of an application. When using multiple strategies in a single environment, it is enough that a single strategy evaluates to true for the toggle to get enabled for a user. Whenever a toggle is checked, Unleash will evaluate all the strategies in the current environment.
 
-[activation strategies documentation](../user_guide/activation-strategies.md)
+Refer to the [activation strategies documentation](../user_guide/activation-strategies.md) for a detailed description of all the built-in strategies.
 
 ## Variants
 
-Variants adds another dimension of flexibility to feature toggles. Each feature toggle can be assigned any number of variants which will then get distributed amongst your users based on your choice of context field. You can find out more about variants in the [variants docs](../advanced/feature-toggle-variants.md).
+Variants adds another dimension of flexibility to feature toggles. Each feature toggle can be assigned any number of variants which will then get distributed amongst your users based on your choice of [context field](../user_guide/unleash-context.md#structure). You can find out more about variants in the [variants docs](../advanced/feature-toggle-variants.md).
 
 ### Creating toggles with payloads
 

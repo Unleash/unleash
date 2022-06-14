@@ -7,7 +7,7 @@ export const sortTypes = {
     date: (v1: any, v2: any, id: string) => {
         const a = new Date(v1?.values?.[id] || 0);
         const b = new Date(v2?.values?.[id] || 0);
-        return a?.getTime() - b?.getTime();
+        return b?.getTime() - a?.getTime(); // newest first by default
     },
     boolean: (v1: any, v2: any, id: string) => {
         const a = v1?.values?.[id];

@@ -119,6 +119,7 @@ const UsersList = () => {
                 Cell: DateCell,
                 disableGlobalFilter: true,
                 sortType: 'date',
+                minWidth: 120,
             },
             {
                 Header: 'Avatar',
@@ -169,6 +170,7 @@ const UsersList = () => {
                 ),
                 disableGlobalFilter: true,
                 sortType: 'date',
+                minWidth: 150,
             },
             {
                 Header: 'Actions',
@@ -193,7 +195,7 @@ const UsersList = () => {
 
     const initialState = useMemo(() => {
         return {
-            sortBy: [{ id: 'createdAt', desc: false }],
+            sortBy: [{ id: 'createdAt' }],
             hiddenColumns: isBillingUsers ? [] : ['type'],
         };
     }, [isBillingUsers]);

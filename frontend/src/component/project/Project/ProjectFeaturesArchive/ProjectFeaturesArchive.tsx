@@ -1,4 +1,4 @@
-import { ProjectFeaturesArchiveList } from 'component/archive/ProjectFeaturesArchiveList';
+import { ProjectFeaturesArchiveTable } from 'component/archive/ProjectFeaturesArchiveTable';
 import { usePageTitle } from 'hooks/usePageTitle';
 
 interface IProjectFeaturesArchiveProps {
@@ -10,5 +10,5 @@ export const ProjectFeaturesArchive = ({
 }: IProjectFeaturesArchiveProps) => {
     usePageTitle('Project Archived Features');
 
-    return <ProjectFeaturesArchiveList projectId={projectId} />;
+    return <ProjectFeaturesArchiveTable projectId={projectId} />;
 };

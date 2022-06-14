@@ -1,6 +1,5 @@
 /* tslint:disable */
 /* eslint-disable */
-export * from './ChangeProjectSchema';
 export * from './CloneFeatureSchema';
 export * from './ConstraintSchema';
 export * from './CreateFeatureSchema';

@@ -15,9 +15,6 @@
 
 import * as runtime from '../runtime';
 import {
-    ChangeProjectSchema,
-    ChangeProjectSchemaFromJSON,
-    ChangeProjectSchemaToJSON,
     CloneFeatureSchema,
     CloneFeatureSchemaFromJSON,
     CloneFeatureSchemaToJSON,
@@ -73,12 +70,6 @@ export interface AddTagRequest {
 
 export interface ApiAdminArchiveFeaturesProjectIdGetRequest {
     projectId: string;
-}
-
-export interface ApiAdminProjectsProjectIdFeaturesFeatureNameChangeProjectPostRequest {
-    projectId: string;
-    featureName: string;
-    changeProjectSchema: ChangeProjectSchema;
 }
 
 export interface ArchiveFeatureRequest {
@@ -189,7 +180,7 @@ export class AdminApi extends runtime.BaseAPI {
 
     /**
      */
-    async addStrategyRaw(requestParameters: AddStrategyRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<FeatureStrategySchema>> {
+    async addStrategyRaw(requestParameters: AddStrategyRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<FeatureStrategySchema>> {
         if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
             throw new runtime.RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling addStrategy.');
         }
@@ -229,14 +220,14 @@ export class AdminApi extends runtime.BaseAPI {
 
     /**
      */
-    async addStrategy(requestParameters: AddStrategyRequest, initOverrides?: RequestInit): Promise<FeatureStrategySchema> {
+    async addStrategy(requestParameters: AddStrategyRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<FeatureStrategySchema> {
         const response = await this.addStrategyRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async addTagRaw(requestParameters: AddTagRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<TagSchema>> {
+    async addTagRaw(requestParameters: AddTagRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<TagSchema>> {
         if (requestParameters.featureName === null || requestParameters.featureName === undefined) {
             throw new runtime.RequiredError('featureName','Required parameter requestParameters.featureName was null or undefined when calling addTag.');
         }
@@ -268,14 +259,14 @@ export class AdminApi extends runtime.BaseAPI {
 
     /**
      */
-    async addTag(requestParameters: AddTagRequest, initOverrides?: RequestInit): Promise<TagSchema> {
+    async addTag(requestParameters: AddTagRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<TagSchema> {
         const response = await this.addTagRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async apiAdminArchiveFeaturesGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<FeaturesSchema>> {
+    async apiAdminArchiveFeaturesGetRaw(initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<FeaturesSchema>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -296,14 +287,14 @@ export class AdminApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiAdminArchiveFeaturesGet(initOverrides?: RequestInit): Promise<FeaturesSchema> {
+    async apiAdminArchiveFeaturesGet(initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<FeaturesSchema> {
         const response = await this.apiAdminArchiveFeaturesGetRaw(initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async apiAdminArchiveFeaturesProjectIdGetRaw(requestParameters: ApiAdminArchiveFeaturesProjectIdGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<FeaturesSchema>> {
+    async apiAdminArchiveFeaturesProjectIdGetRaw(requestParameters: ApiAdminArchiveFeaturesProjectIdGetRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<FeaturesSchema>> {
         if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
             throw new runtime.RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling apiAdminArchiveFeaturesProjectIdGet.');
         }
@@ -328,56 +319,14 @@ export class AdminApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiAdminArchiveFeaturesProjectIdGet(requestParameters: ApiAdminArchiveFeaturesProjectIdGetRequest, initOverrides?: RequestInit): Promise<FeaturesSchema> {
+    async apiAdminArchiveFeaturesProjectIdGet(requestParameters: ApiAdminArchiveFeaturesProjectIdGetRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<FeaturesSchema> {
         const response = await this.apiAdminArchiveFeaturesProjectIdGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async apiAdminProjectsProjectIdFeaturesFeatureNameChangeProjectPostRaw(requestParameters: ApiAdminProjectsProjectIdFeaturesFeatureNameChangeProjectPostRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
-        if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
-            throw new runtime.RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling apiAdminProjectsProjectIdFeaturesFeatureNameChangeProjectPost.');
-        }
-
-        if (requestParameters.featureName === null || requestParameters.featureName === undefined) {
-            throw new runtime.RequiredError('featureName','Required parameter requestParameters.featureName was null or undefined when calling apiAdminProjectsProjectIdFeaturesFeatureNameChangeProjectPost.');
-        }
-
-        if (requestParameters.changeProjectSchema === null || requestParameters.changeProjectSchema === undefined) {
-            throw new runtime.RequiredError('changeProjectSchema','Required parameter requestParameters.changeProjectSchema was null or undefined when calling apiAdminProjectsProjectIdFeaturesFeatureNameChangeProjectPost.');
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // apiKey authentication
-        }
-
-        const response = await this.request({
-            path: `/api/admin/projects/{projectId}/features/{featureName}/changeProject`.replace(`{${"projectId"}}`, encodeURIComponent(String(requestParameters.projectId))).replace(`{${"featureName"}}`, encodeURIComponent(String(requestParameters.featureName))),
-            method: 'POST',
-            headers: headerParameters,
-            query: queryParameters,
-            body: ChangeProjectSchemaToJSON(requestParameters.changeProjectSchema),
-        }, initOverrides);
-
-        return new runtime.VoidApiResponse(response);
-    }
-
-    /**
-     */
-    async apiAdminProjectsProjectIdFeaturesFeatureNameChangeProjectPost(requestParameters: ApiAdminProjectsProjectIdFeaturesFeatureNameChangeProjectPostRequest, initOverrides?: RequestInit): Promise<void> {
-        await this.apiAdminProjectsProjectIdFeaturesFeatureNameChangeProjectPostRaw(requestParameters, initOverrides);
-    }
-
-    /**
-     */
-    async archiveFeatureRaw(requestParameters: ArchiveFeatureRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<object>> {
+    async archiveFeatureRaw(requestParameters: ArchiveFeatureRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<object>> {
         if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
             throw new runtime.RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling archiveFeature.');
         }
@@ -406,14 +355,14 @@ export class AdminApi extends runtime.BaseAPI {
 
     /**
      */
-    async archiveFeature(requestParameters: ArchiveFeatureRequest, initOverrides?: RequestInit): Promise<object> {
+    async archiveFeature(requestParameters: ArchiveFeatureRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<object> {
         const response = await this.archiveFeatureRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async cloneFeatureRaw(requestParameters: CloneFeatureRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<FeatureSchema>> {
+    async cloneFeatureRaw(requestParameters: CloneFeatureRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<FeatureSchema>> {
         if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
             throw new runtime.RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling cloneFeature.');
         }
@@ -449,14 +398,14 @@ export class AdminApi extends runtime.BaseAPI {
 
     /**
      */
-    async cloneFeature(requestParameters: CloneFeatureRequest, initOverrides?: RequestInit): Promise<FeatureSchema> {
+    async cloneFeature(requestParameters: CloneFeatureRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<FeatureSchema> {
         const response = await this.cloneFeatureRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async createFeatureRaw(requestParameters: CreateFeatureRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<FeatureSchema>> {
+    async createFeatureRaw(requestParameters: CreateFeatureRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<FeatureSchema>> {
         if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
             throw new runtime.RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling createFeature.');
         }
@@ -488,14 +437,14 @@ export class AdminApi extends runtime.BaseAPI {
 
     /**
      */
-    async createFeature(requestParameters: CreateFeatureRequest, initOverrides?: RequestInit): Promise<FeatureSchema> {
+    async createFeature(requestParameters: CreateFeatureRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<FeatureSchema> {
         const response = await this.createFeatureRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async deleteStrategyRaw(requestParameters: DeleteStrategyRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<object>> {
+    async deleteStrategyRaw(requestParameters: DeleteStrategyRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<object>> {
         if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
             throw new runtime.RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling deleteStrategy.');
         }
@@ -532,14 +481,14 @@ export class AdminApi extends runtime.BaseAPI {
 
     /**
      */
-    async deleteStrategy(requestParameters: DeleteStrategyRequest, initOverrides?: RequestInit): Promise<object> {
+    async deleteStrategy(requestParameters: DeleteStrategyRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<object> {
         const response = await this.deleteStrategyRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async getAllTogglesRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<FeaturesSchema>> {
+    async getAllTogglesRaw(initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<FeaturesSchema>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -560,14 +509,14 @@ export class AdminApi extends runtime.BaseAPI {
 
     /**
      */
-    async getAllToggles(initOverrides?: RequestInit): Promise<FeaturesSchema> {
+    async getAllToggles(initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<FeaturesSchema> {
         const response = await this.getAllTogglesRaw(initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async getEnvironmentRaw(requestParameters: GetEnvironmentRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<FeatureEnvironmentSchema>> {
+    async getEnvironmentRaw(requestParameters: GetEnvironmentRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<FeatureEnvironmentSchema>> {
         if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
             throw new runtime.RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling getEnvironment.');
         }
@@ -600,14 +549,14 @@ export class AdminApi extends runtime.BaseAPI {
 
     /**
      */
-    async getEnvironment(requestParameters: GetEnvironmentRequest, initOverrides?: RequestInit): Promise<FeatureEnvironmentSchema> {
+    async getEnvironment(requestParameters: GetEnvironmentRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<FeatureEnvironmentSchema> {
         const response = await this.getEnvironmentRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async getFeatureRaw(requestParameters: GetFeatureRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<FeatureSchema>> {
+    async getFeatureRaw(requestParameters: GetFeatureRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<FeatureSchema>> {
         if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
             throw new runtime.RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling getFeature.');
         }
@@ -636,14 +585,14 @@ export class AdminApi extends runtime.BaseAPI {
 
     /**
      */
-    async getFeature(requestParameters: GetFeatureRequest, initOverrides?: RequestInit): Promise<FeatureSchema> {
+    async getFeature(requestParameters: GetFeatureRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<FeatureSchema> {
         const response = await this.getFeatureRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async getFeaturesRaw(requestParameters: GetFeaturesRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<FeaturesSchema>> {
+    async getFeaturesRaw(requestParameters: GetFeaturesRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<FeaturesSchema>> {
         if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
             throw new runtime.RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling getFeatures.');
         }
@@ -668,14 +617,14 @@ export class AdminApi extends runtime.BaseAPI {
 
     /**
      */
-    async getFeatures(requestParameters: GetFeaturesRequest, initOverrides?: RequestInit): Promise<FeaturesSchema> {
+    async getFeatures(requestParameters: GetFeaturesRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<FeaturesSchema> {
         const response = await this.getFeaturesRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async getStrategiesRaw(requestParameters: GetStrategiesRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<StrategySchema>>> {
+    async getStrategiesRaw(requestParameters: GetStrategiesRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<Array<StrategySchema>>> {
         if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
             throw new runtime.RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling getStrategies.');
         }
@@ -708,14 +657,14 @@ export class AdminApi extends runtime.BaseAPI {
 
     /**
      */
-    async getStrategies(requestParameters: GetStrategiesRequest, initOverrides?: RequestInit): Promise<Array<StrategySchema>> {
+    async getStrategies(requestParameters: GetStrategiesRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<Array<StrategySchema>> {
         const response = await this.getStrategiesRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async getStrategyRaw(requestParameters: GetStrategyRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<FeatureStrategySchema>> {
+    async getStrategyRaw(requestParameters: GetStrategyRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<FeatureStrategySchema>> {
         if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
             throw new runtime.RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling getStrategy.');
         }
@@ -752,14 +701,14 @@ export class AdminApi extends runtime.BaseAPI {
 
     /**
      */
-    async getStrategy(requestParameters: GetStrategyRequest, initOverrides?: RequestInit): Promise<FeatureStrategySchema> {
+    async getStrategy(requestParameters: GetStrategyRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<FeatureStrategySchema> {
         const response = await this.getStrategyRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async listTagsRaw(requestParameters: ListTagsRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<TagsResponseSchema>> {
+    async listTagsRaw(requestParameters: ListTagsRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<TagsResponseSchema>> {
         if (requestParameters.featureName === null || requestParameters.featureName === undefined) {
             throw new runtime.RequiredError('featureName','Required parameter requestParameters.featureName was null or undefined when calling listTags.');
         }
@@ -784,14 +733,14 @@ export class AdminApi extends runtime.BaseAPI {
 
     /**
      */
-    async listTags(requestParameters: ListTagsRequest, initOverrides?: RequestInit): Promise<TagsResponseSchema> {
+    async listTags(requestParameters: ListTagsRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<TagsResponseSchema> {
         const response = await this.listTagsRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async patchFeatureRaw(requestParameters: PatchFeatureRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<FeatureSchema>> {
+    async patchFeatureRaw(requestParameters: PatchFeatureRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<FeatureSchema>> {
         if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
             throw new runtime.RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling patchFeature.');
         }
@@ -827,14 +776,14 @@ export class AdminApi extends runtime.BaseAPI {
 
     /**
      */
-    async patchFeature(requestParameters: PatchFeatureRequest, initOverrides?: RequestInit): Promise<FeatureSchema> {
+    async patchFeature(requestParameters: PatchFeatureRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<FeatureSchema> {
         const response = await this.patchFeatureRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async patchStrategyRaw(requestParameters: PatchStrategyRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<FeatureStrategySchema>> {
+    async patchStrategyRaw(requestParameters: PatchStrategyRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<FeatureStrategySchema>> {
         if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
             throw new runtime.RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling patchStrategy.');
         }
@@ -878,14 +827,14 @@ export class AdminApi extends runtime.BaseAPI {
 
     /**
      */
-    async patchStrategy(requestParameters: PatchStrategyRequest, initOverrides?: RequestInit): Promise<FeatureStrategySchema> {
+    async patchStrategy(requestParameters: PatchStrategyRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<FeatureStrategySchema> {
         const response = await this.patchStrategyRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async removeTagRaw(requestParameters: RemoveTagRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<object>> {
+    async removeTagRaw(requestParameters: RemoveTagRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<object>> {
         if (requestParameters.featureName === null || requestParameters.featureName === undefined) {
             throw new runtime.RequiredError('featureName','Required parameter requestParameters.featureName was null or undefined when calling removeTag.');
         }
@@ -918,14 +867,14 @@ export class AdminApi extends runtime.BaseAPI {
 
     /**
      */
-    async removeTag(requestParameters: RemoveTagRequest, initOverrides?: RequestInit): Promise<object> {
+    async removeTag(requestParameters: RemoveTagRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<object> {
         const response = await this.removeTagRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async toggleEnvironmentOffRaw(requestParameters: ToggleEnvironmentOffRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<FeatureSchema>> {
+    async toggleEnvironmentOffRaw(requestParameters: ToggleEnvironmentOffRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<FeatureSchema>> {
         if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
             throw new runtime.RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling toggleEnvironmentOff.');
         }
@@ -958,14 +907,14 @@ export class AdminApi extends runtime.BaseAPI {
 
     /**
      */
-    async toggleEnvironmentOff(requestParameters: ToggleEnvironmentOffRequest, initOverrides?: RequestInit): Promise<FeatureSchema> {
+    async toggleEnvironmentOff(requestParameters: ToggleEnvironmentOffRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<FeatureSchema> {
         const response = await this.toggleEnvironmentOffRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async toggleEnvironmentOnRaw(requestParameters: ToggleEnvironmentOnRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<FeatureSchema>> {
+    async toggleEnvironmentOnRaw(requestParameters: ToggleEnvironmentOnRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<FeatureSchema>> {
         if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
             throw new runtime.RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling toggleEnvironmentOn.');
         }
@@ -998,14 +947,14 @@ export class AdminApi extends runtime.BaseAPI {
 
     /**
      */
-    async toggleEnvironmentOn(requestParameters: ToggleEnvironmentOnRequest, initOverrides?: RequestInit): Promise<FeatureSchema> {
+    async toggleEnvironmentOn(requestParameters: ToggleEnvironmentOnRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<FeatureSchema> {
         const response = await this.toggleEnvironmentOnRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async updateFeatureRaw(requestParameters: UpdateFeatureRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<FeatureSchema>> {
+    async updateFeatureRaw(requestParameters: UpdateFeatureRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<FeatureSchema>> {
         if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
             throw new runtime.RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling updateFeature.');
         }
@@ -1041,14 +990,14 @@ export class AdminApi extends runtime.BaseAPI {
 
     /**
      */
-    async updateFeature(requestParameters: UpdateFeatureRequest, initOverrides?: RequestInit): Promise<FeatureSchema> {
+    async updateFeature(requestParameters: UpdateFeatureRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<FeatureSchema> {
         const response = await this.updateFeatureRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async updateStrategyRaw(requestParameters: UpdateStrategyRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<FeatureStrategySchema>> {
+    async updateStrategyRaw(requestParameters: UpdateStrategyRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<FeatureStrategySchema>> {
         if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
             throw new runtime.RequiredError('projectId','Required parameter requestParameters.projectId was null or undefined when calling updateStrategy.');
         }
@@ -1092,14 +1041,14 @@ export class AdminApi extends runtime.BaseAPI {
 
     /**
      */
-    async updateStrategy(requestParameters: UpdateStrategyRequest, initOverrides?: RequestInit): Promise<FeatureStrategySchema> {
+    async updateStrategy(requestParameters: UpdateStrategyRequest, initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<FeatureStrategySchema> {
         const response = await this.updateStrategyRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async validateFeatureRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<object>> {
+    async validateFeatureRaw(initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<runtime.ApiResponse<object>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -1120,7 +1069,7 @@ export class AdminApi extends runtime.BaseAPI {
 
     /**
      */
-    async validateFeature(initOverrides?: RequestInit): Promise<object> {
+    async validateFeature(initOverrides?: RequestInit | runtime.InitOverideFunction): Promise<object> {
         const response = await this.validateFeatureRaw(initOverrides);
         return await response.value();
     }

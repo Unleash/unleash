@@ -55,7 +55,7 @@ export const ReportTable = ({ projectId, features }: IReportTableProps) => {
     const initialState = useMemo(
         () => ({
             hiddenColumns: [],
-            sortBy: [{ id: 'createdAt', desc: true }],
+            sortBy: [{ id: 'createdAt' }],
         }),
         []
     );

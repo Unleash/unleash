@@ -93,7 +93,7 @@ export const Search = ({
                                 <IconButton
                                     size="small"
                                     onClick={() => {
-                                        onChange('');
+                                        onSearchChange('');
                                         ref.current?.focus();
                                     }}
                                 >

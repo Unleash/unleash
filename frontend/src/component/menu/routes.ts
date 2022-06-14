@@ -1,8 +1,6 @@
 import { FeatureToggleListTable } from 'component/feature/FeatureToggleList/FeatureToggleListTable';
 import { StrategyView } from 'component/strategies/StrategyView/StrategyView';
 import { StrategiesList } from 'component/strategies/StrategiesList/StrategiesList';
-
-import { ArchiveListContainer } from 'component/archive/ArchiveListContainer';
 import { TagTypeList } from 'component/tags/TagTypeList/TagTypeList';
 import { AddonList } from 'component/addons/AddonList/AddonList';
 import Admin from 'component/admin';
@@ -53,6 +51,7 @@ import { IRoute } from 'interfaces/route';
 import { EnvironmentTable } from 'component/environments/EnvironmentTable/EnvironmentTable';
 import { SegmentTable } from 'component/segments/SegmentTable/SegmentTable';
 import RedirectAdminInvoices from 'component/admin/billing/RedirectAdminInvoices/RedirectAdminInvoices';
+import { FeaturesArchiveTable } from '../archive/FeaturesArchiveTable';
 
 export const routes: IRoute[] = [
     // Splash
@@ -378,7 +377,7 @@ export const routes: IRoute[] = [
     {
         path: '/archive',
         title: 'Archived toggles',
-        component: ArchiveListContainer,
+        component: FeaturesArchiveTable,
         type: 'protected',
         menu: {},
     },

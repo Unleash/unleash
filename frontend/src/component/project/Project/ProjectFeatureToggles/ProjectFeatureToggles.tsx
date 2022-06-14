@@ -67,10 +67,7 @@ const staticColumns = ['Actions', 'name'];
 
 const defaultSort: SortingRule<string> & {
     columns?: string[];
-} = {
-    id: 'createdAt',
-    desc: true,
-};
+} = { id: 'createdAt' };
 
 export const ProjectFeatureToggles = ({
     features,

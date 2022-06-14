@@ -9,7 +9,7 @@ import {
     InstanceState,
     InstancePlan,
 } from 'interfaces/instance';
-import { calculateTrialDaysRemaining } from 'utils/billing';
+import { hasTrialExpired } from 'utils/instanceTrial';
 import { GridRow } from 'component/common/GridRow/GridRow';
 import { GridCol } from 'component/common/GridCol/GridCol';
 import { GridColLink } from './GridColLink/GridColLink';
@@ -81,7 +81,7 @@ interface IBillingPlanProps {
 
 export const BillingPlan: FC<IBillingPlanProps> = ({ instanceStatus }) => {
     const { users } = useUsers();
-    const trialDaysRemaining = calculateTrialDaysRemaining(instanceStatus);
+    const trialHasExpired = hasTrialExpired(instanceStatus);
 
     const price = {
         [InstancePlan.PRO]: 80,
@@ -90,11 +90,6 @@ export const BillingPlan: FC<IBillingPlanProps> = ({ instanceStatus }) => {
         [InstancePlan.UNKNOWN]: 0,
         user: 15,
     };
-
-    const statusExpired =
-        instanceStatus.state === InstanceState.TRIAL &&
-        typeof trialDaysRemaining === 'number' &&
-        trialDaysRemaining <= 0;
 
     const planPrice = price[instanceStatus.plan];
     const seats = instanceStatus.seats ?? 5;
@@ -135,12 +130,12 @@ export const BillingPlan: FC<IBillingPlanProps> = ({ instanceStatus }) => {
                                 show={
                                     <StyledTrialSpan
                                         sx={theme => ({
-                                            color: statusExpired
+                                            color: trialHasExpired
                                                 ? theme.palette.error.dark
                                                 : theme.palette.warning.dark,
                                         })}
                                     >
-                                        {statusExpired
+                                        {trialHasExpired
                                             ? 'Trial expired'
                                             : instanceStatus.trialExtended
                                             ? 'Extended Trial'

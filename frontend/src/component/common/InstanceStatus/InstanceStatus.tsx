@@ -9,7 +9,7 @@ import { IInstanceStatus, InstanceState } from 'interfaces/instance';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import AccessContext from 'contexts/AccessContext';
 import useInstanceStatusApi from 'hooks/api/actions/useInstanceStatusApi/useInstanceStatusApi';
-import { calculateTrialDaysRemaining } from 'utils/billing';
+import { hasTrialExpired } from 'utils/instanceTrial';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 
@@ -24,22 +24,16 @@ const TrialDialog: VFC<ITrialDialogProps> = ({
 }) => {
     const { hasAccess } = useContext(AccessContext);
     const navigate = useNavigate();
-    const trialDaysRemaining = calculateTrialDaysRemaining(instanceStatus);
-
-    const statusExpired =
-        instanceStatus.state === InstanceState.TRIAL &&
-        typeof trialDaysRemaining === 'number' &&
-        trialDaysRemaining <= 0;
-
-    const [dialogOpen, setDialogOpen] = useState(statusExpired);
+    const trialHasExpired = hasTrialExpired(instanceStatus);
+    const [dialogOpen, setDialogOpen] = useState(trialHasExpired);
 
     useEffect(() => {
-        setDialogOpen(statusExpired);
+        setDialogOpen(trialHasExpired);
         const interval = setInterval(() => {
-            setDialogOpen(statusExpired);
+            setDialogOpen(trialHasExpired);
         }, 60000);
         return () => clearInterval(interval);
-    }, [statusExpired]);
+    }, [trialHasExpired]);
 
     if (hasAccess(ADMIN)) {
         return (

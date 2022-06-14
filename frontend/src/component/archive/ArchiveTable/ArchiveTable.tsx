@@ -99,9 +99,9 @@ export const ArchiveTable = ({
                 align: 'center',
             },
             {
-                id: 'Type',
                 Header: 'Type',
-                width: 80,
+                accessor: 'type',
+                width: 85,
                 canSort: true,
                 Cell: FeatureTypeCell,
                 align: 'center',

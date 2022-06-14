@@ -89,7 +89,7 @@ To add constraints and segmentation, use the "edit strategy" button for the desi
 
 :::info
 
-This can either be done when you add a strategy to a toggle or at any point thereafter.
+Constraints aren't fixed and can be changed later to further narrow your audience. You can add them either when you add a strategy to a toggle or at any point thereafter.
 
 :::
 

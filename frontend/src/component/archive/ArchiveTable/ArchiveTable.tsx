@@ -283,86 +283,79 @@ export const ArchiveTable = ({
                 />
             }
         >
+            <SearchHighlightProvider value={getSearchText(searchValue)}>
+                <Table
+                    {...getTableProps()}
+                    rowHeight={rowHeight}
+                    style={{
+                        height:
+                            rowHeight * rows.length +
+                            theme.shape.tableRowHeightCompact,
+                    }}
+                >
+                    <SortableTableHeader
+                        headerGroups={headerGroups as any}
+                        flex
+                    />
+                    <TableBody {...getTableBodyProps()}>
+                        {rows.map((row, index) => {
+                            const isVirtual =
+                                index < firstRenderedIndex ||
+                                index > lastRenderedIndex;
+
+                            if (isVirtual) {
+                                return null;
+                            }
+
+                            prepareRow(row);
+                            return (
+                                <TableRow
+                                    hover
+                                    {...row.getRowProps()}
+                                    style={{
+                                        display: 'flex',
+                                        top:
+                                            index * rowHeight +
+                                            theme.shape.tableRowHeightCompact,
+                                    }}
+                                    className={classes.row}
+                                >
+                                    {row.cells.map(cell => (
+                                        <TableCell
+                                            {...cell.getCellProps({
+                                                style: {
+                                                    flex: cell.column.minWidth
+                                                        ? '1 0 auto'
+                                                        : undefined,
+                                                },
+                                            })}
+                                            className={classes.cell}
+                                        >
+                                            {cell.render('Cell')}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            );
+                        })}
+                    </TableBody>
+                </Table>
+            </SearchHighlightProvider>
             <ConditionallyRender
-                condition={!loading && data.length === 0}
-                show={<TablePlaceholder />}
-                elseShow={() => (
-                    <>
-                        <SearchHighlightProvider
-                            value={getSearchText(searchValue)}
-                        >
-                            <Table
-                                {...getTableProps()}
-                                rowHeight={rowHeight}
-                                style={{
-                                    height:
-                                        rowHeight * rows.length +
-                                        theme.shape.tableRowHeightCompact,
-                                }}
-                            >
-                                <SortableTableHeader
-                                    headerGroups={headerGroups as any}
-                                    flex
-                                />
-                                <TableBody {...getTableBodyProps()}>
-                                    {rows.map((row, index) => {
-                                        const isVirtual =
-                                            index < firstRenderedIndex ||
-                                            index > lastRenderedIndex;
-
-                                        if (isVirtual) {
-                                            return null;
-                                        }
-
-                                        prepareRow(row);
-                                        return (
-                                            <TableRow
-                                                hover
-                                                {...row.getRowProps()}
-                                                style={{
-                                                    display: 'flex',
-                                                    top:
-                                                        index * rowHeight +
-                                                        theme.shape
-                                                            .tableRowHeightCompact,
-                                                }}
-                                                className={classes.row}
-                                            >
-                                                {row.cells.map(cell => (
-                                                    <TableCell
-                                                        {...cell.getCellProps({
-                                                            style: {
-                                                                flex: cell
-                                                                    .column
-                                                                    .minWidth
-                                                                    ? '1 0 auto'
-                                                                    : undefined,
-                                                            },
-                                                        })}
-                                                        className={classes.cell}
-                                                    >
-                                                        {cell.render('Cell')}
-                                                    </TableCell>
-                                                ))}
-                                            </TableRow>
-                                        );
-                                    })}
-                                </TableBody>
-                            </Table>
-                        </SearchHighlightProvider>
-                        <ConditionallyRender
-                            condition={
-                                rows.length === 0 && searchValue?.length > 0
-                            }
-                            show={
-                                <TablePlaceholder>
-                                    No feature toggles found matching &ldquo;
-                                    {searchValue}&rdquo;
-                                </TablePlaceholder>
-                            }
-                        />
-                    </>
-                )}
+                condition={rows.length === 0 && searchValue?.length > 0}
+                show={
+                    <TablePlaceholder>
+                        No feature toggles found matching &ldquo;
+                        {searchValue}&rdquo;
+                    </TablePlaceholder>
+                }
+            />
+            <ConditionallyRender
+                condition={rows.length === 0 && searchValue?.length === 0}
+                show={
+                    <TablePlaceholder>
+                        None of the feature toggles where archived yet.
+                    </TablePlaceholder>
+                }
             />
         </PageContent>
     );

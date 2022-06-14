@@ -38,7 +38,7 @@ This section takes you through the required steps to create and activate a featu
 
 :::tip API: create a toggle
 
-Use the [Admin API endpoint for creating a feature toggle](../api/admin/feature-toggles-api-v2.md#create-toggle). The payload accepts all the same fields as the Admin UI form.
+Use the [Admin API endpoint for creating a feature toggle](../api/admin/feature-toggles-api-v2.md#create-toggle). The payload accepts all the same fields as the Admin UI form. The Admin UI also displays the corresponding cURL command when you use the form.
 
 :::
 

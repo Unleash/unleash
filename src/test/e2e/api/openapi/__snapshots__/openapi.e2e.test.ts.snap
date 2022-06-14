@@ -712,6 +712,43 @@ Object {
         ],
         "type": "object",
       },
+      "tagTypeSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "description": Object {
+            "type": "string",
+          },
+          "icon": Object {
+            "type": "string",
+          },
+          "name": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "name",
+        ],
+        "type": "object",
+      },
+      "tagTypesSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "tagTypes": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/tagTypeSchema",
+            },
+            "type": "array",
+          },
+          "version": Object {
+            "type": "integer",
+          },
+        },
+        "required": Array [
+          "version",
+          "tagTypes",
+        ],
+        "type": "object",
+      },
       "tagsSchema": Object {
         "additionalProperties": false,
         "properties": Object {
@@ -855,6 +892,34 @@ Object {
           },
         },
         "required": Array [],
+        "type": "object",
+      },
+      "updateTagTypeSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "description": Object {
+            "type": "string",
+          },
+          "icon": Object {
+            "type": "string",
+          },
+        },
+        "type": "object",
+      },
+      "validateTagTypeSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "tagType": Object {
+            "$ref": "#/components/schemas/tagTypeSchema",
+          },
+          "valid": Object {
+            "type": "boolean",
+          },
+        },
+        "required": Array [
+          "valid",
+          "tagType",
+        ],
         "type": "object",
       },
       "variantSchema": Object {
@@ -2407,6 +2472,169 @@ Object {
               },
             },
             "description": "splashSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/tag-types": Object {
+      "get": Object {
+        "operationId": "getTagTypes",
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/tagTypesSchema",
+                },
+              },
+            },
+            "description": "tagTypesSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+      "post": Object {
+        "operationId": "createTagType",
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/tagTypeSchema",
+              },
+            },
+          },
+          "description": "tagTypeSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "201": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/tagTypeSchema",
+                },
+              },
+            },
+            "description": "tagTypeSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/tag-types/validate": Object {
+      "post": Object {
+        "operationId": "validateTagType",
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/tagTypeSchema",
+              },
+            },
+          },
+          "description": "tagTypeSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/validateTagTypeSchema",
+                },
+              },
+            },
+            "description": "validateTagTypeSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/tag-types/{name}": Object {
+      "delete": Object {
+        "operationId": "deleteTagType",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "description": "emptyResponse",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+      "get": Object {
+        "operationId": "getTagType",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/tagTypeSchema",
+                },
+              },
+            },
+            "description": "tagTypeSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+      "put": Object {
+        "operationId": "updateTagType",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/updateTagTypeSchema",
+              },
+            },
+          },
+          "description": "updateTagTypeSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "200": Object {
+            "description": "emptyResponse",
           },
         },
         "tags": Array [

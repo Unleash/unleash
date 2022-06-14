@@ -1,8 +1,11 @@
 import { OpenAPIV3 } from 'openapi-types';
+import { apiTokenSchema } from './spec/api-token-schema';
+import { apiTokensSchema } from './spec/api-tokens-schema';
 import { cloneFeatureSchema } from './spec/clone-feature-schema';
 import { constraintSchema } from './spec/constraint-schema';
 import { contextFieldSchema } from './spec/context-field-schema';
 import { contextFieldsSchema } from './spec/context-fields-schema';
+import { createApiTokenSchema } from './spec/create-api-token-schema';
 import { createFeatureSchema } from './spec/create-feature-schema';
 import { createStrategySchema } from './spec/create-strategy-schema';
 import { environmentSchema } from './spec/environment-schema';
@@ -47,10 +50,13 @@ import { validateTagTypeSchema } from './spec/validate-tag-type-schema';
 
 // All schemas in `openapi/spec` should be listed here.
 export const schemas = {
+    apiTokenSchema,
+    apiTokensSchema,
     cloneFeatureSchema,
     constraintSchema,
     contextFieldSchema,
     contextFieldsSchema,
+    createApiTokenSchema,
     createFeatureSchema,
     createStrategySchema,
     environmentSchema,

@@ -51,6 +51,70 @@ exports[`should serve the OpenAPI spec 1`] = `
 Object {
   "components": Object {
     "schemas": Object {
+      "apiTokenSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "createdAt": Object {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string",
+          },
+          "environment": Object {
+            "type": "string",
+          },
+          "expiresAt": Object {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string",
+          },
+          "project": Object {
+            "type": "string",
+          },
+          "projects": Object {
+            "items": Object {
+              "type": "string",
+            },
+            "type": "array",
+          },
+          "secret": Object {
+            "type": "string",
+          },
+          "seenAt": Object {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string",
+          },
+          "type": Object {
+            "enum": Array [
+              "client",
+              "admin",
+            ],
+          },
+          "username": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "username",
+          "type",
+        ],
+        "type": "object",
+      },
+      "apiTokensSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "tokens": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/apiTokenSchema",
+            },
+            "type": "array",
+          },
+        },
+        "required": Array [
+          "tokens",
+        ],
+        "type": "object",
+      },
       "cloneFeatureSchema": Object {
         "properties": Object {
           "name": Object {
@@ -150,6 +214,47 @@ Object {
           "$ref": "#/components/schemas/contextFieldSchema",
         },
         "type": "array",
+      },
+      "createApiTokenSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "environment": Object {
+            "type": "string",
+          },
+          "expiresAt": Object {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string",
+          },
+          "project": Object {
+            "type": "string",
+          },
+          "projects": Object {
+            "items": Object {
+              "type": "string",
+            },
+            "type": "array",
+          },
+          "secret": Object {
+            "type": "string",
+          },
+          "type": Object {
+            "enum": Array [
+              "client",
+              "admin",
+              "CLIENT",
+              "ADMIN",
+            ],
+          },
+          "username": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "username",
+          "type",
+        ],
+        "type": "object",
       },
       "createFeatureSchema": Object {
         "properties": Object {
@@ -1142,6 +1247,113 @@ Object {
   },
   "openapi": "3.0.3",
   "paths": Object {
+    "/api/admin/api-tokens": Object {
+      "get": Object {
+        "operationId": "getAllApiTokens",
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/apiTokenSchema",
+                },
+              },
+            },
+            "description": "apiTokenSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+      "post": Object {
+        "operationId": "createApiToken",
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/createApiTokenSchema",
+              },
+            },
+          },
+          "description": "createApiTokenSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/apiTokenSchema",
+                },
+              },
+            },
+            "description": "apiTokenSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/api-tokens/{token}": Object {
+      "delete": Object {
+        "operationId": "deleteApiToken",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "token",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/apiTokenSchema",
+                },
+              },
+            },
+            "description": "apiTokenSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+      "put": Object {
+        "operationId": "updateApiToken",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "token",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/apiTokenSchema",
+                },
+              },
+            },
+            "description": "apiTokenSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
     "/api/admin/archive/features": Object {
       "get": Object {
         "deprecated": true,

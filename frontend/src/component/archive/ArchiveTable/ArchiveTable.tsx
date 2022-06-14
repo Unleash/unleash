@@ -271,14 +271,12 @@ export const ArchiveTable = ({
                             : data.length
                     })`}
                     actions={
-                        <>
-                            <Search
-                                initialValue={searchValue}
-                                onChange={setSearchValue}
-                                hasFilters
-                                getSearchContext={getSearchContext}
-                            />
-                        </>
+                        <Search
+                            initialValue={searchValue}
+                            onChange={setSearchValue}
+                            hasFilters
+                            getSearchContext={getSearchContext}
+                        />
                     }
                 />
             }

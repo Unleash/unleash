@@ -7,7 +7,6 @@ import Admin from 'component/admin';
 import AdminApi from 'component/admin/api';
 import AdminUsers from 'component/admin/users/UsersAdmin';
 import { AuthSettings } from 'component/admin/auth/AuthSettings';
-import { Billing } from 'component/admin/billing/Billing';
 import Login from 'component/user/Login/Login';
 import { C, EEA, P, RE, SE } from 'component/common/flags';
 import { NewUser } from 'component/user/NewUser/NewUser';
@@ -50,8 +49,9 @@ import { EditSegment } from 'component/segments/EditSegment/EditSegment';
 import { IRoute } from 'interfaces/route';
 import { EnvironmentTable } from 'component/environments/EnvironmentTable/EnvironmentTable';
 import { SegmentTable } from 'component/segments/SegmentTable/SegmentTable';
-import RedirectAdminInvoices from 'component/admin/billing/RedirectAdminInvoices/RedirectAdminInvoices';
+import FlaggedBillingRedirect from 'component/admin/billing/FlaggedBillingRedirect/FlaggedBillingRedirect';
 import { FeaturesArchiveTable } from '../archive/FeaturesArchiveTable';
+import { Billing } from 'component/admin/billing/Billing';
 
 export const routes: IRoute[] = [
     // Splash
@@ -462,15 +462,15 @@ export const routes: IRoute[] = [
         title: 'Billing',
         component: Billing,
         type: 'protected',
-        menu: { adminSettings: true, isBilling: true },
+        menu: {},
     },
     {
         path: '/admin-invoices',
         parent: '/admin',
         title: 'Invoices',
-        component: RedirectAdminInvoices,
+        component: FlaggedBillingRedirect,
         type: 'protected',
-        menu: {},
+        menu: { adminSettings: true, isEnterprise: true },
     },
     {
         path: '/admin',

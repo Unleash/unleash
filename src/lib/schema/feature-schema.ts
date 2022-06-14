@@ -28,6 +28,26 @@ export const strategiesSchema = joi.object().keys({
     parameters: joi.object(),
 });
 
+const variantValueSchema = joi
+    .string()
+    .required()
+    // perform additional validation
+    // when provided 'type' is 'json'
+    .when('type', {
+        is: 'json',
+        then: joi.custom((val, helper) => {
+            const isValidJsonString = validateJsonString(val);
+            if (isValidJsonString === false) {
+                return helper.error('invalidJsonString');
+            }
+            return val;
+        }),
+    })
+    .messages({
+        invalidJsonString:
+            "'value' must be a valid json string when 'type' is json",
+    });
+
 export const variantsSchema = joi.object().keys({
     name: nameType,
     weight: joi.number().min(0).max(1000).required(),
@@ -36,25 +56,7 @@ export const variantsSchema = joi.object().keys({
         .object()
         .keys({
             type: joi.string().required(),
-            value: joi
-                .string()
-                .required()
-                // perform additional validation
-                // when provided 'type' is 'json'
-                .when('type', {
-                    is: 'json',
-                    then: joi.custom((val, helper) => {
-                        const isValidJsonString = validateJsonString(val);
-                        if (isValidJsonString === false) {
-                            return helper.error('invalidJsonString');
-                        }
-                        return val;
-                    }),
-                })
-                .messages({
-                    invalidJsonString:
-                        "'value' must be a valid json string when 'type' is json",
-                }),
+            value: variantValueSchema,
         })
         .optional(),
     stickiness: joi.string().default('default'),

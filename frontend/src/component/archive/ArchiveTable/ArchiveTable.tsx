@@ -33,7 +33,6 @@ import { useSearch } from 'hooks/useSearch';
 import { FeatureArchivedCell } from './FeatureArchivedCell/FeatureArchivedCell';
 import { useVirtualizedRange } from 'hooks/useVirtualizedRange';
 import { useSearchParams } from 'react-router-dom';
-import { useWindowVirtualizer } from '@tanstack/react-virtual';
 
 export interface IFeaturesArchiveTableProps {
     archivedFeatures: FeatureSchema[];
@@ -69,19 +68,22 @@ export const ArchiveTable = ({
         searchParams.get('search') || ''
     );
 
-    const onRevive = useCallback(async (feature: string) => {
-        try {
-            await reviveFeature(feature);
-            await refetch();
-            setToastData({
-                type: 'success',
-                title: "And we're back!",
-                text: 'The feature toggle has been revived.',
-            });
-        } catch (e: unknown) {
-            setToastApiError(formatUnknownError(e));
-        }
-    }, []);
+    const onRevive = useCallback(
+        async (feature: string) => {
+            try {
+                await reviveFeature(feature);
+                await refetch();
+                setToastData({
+                    type: 'success',
+                    title: "And we're back!",
+                    text: 'The feature toggle has been revived.',
+                });
+            } catch (e: unknown) {
+                setToastApiError(formatUnknownError(e));
+            }
+        },
+        [refetch, reviveFeature, setToastApiError, setToastData]
+    );
 
     const columns = useMemo(
         () => [
@@ -135,7 +137,7 @@ export const ArchiveTable = ({
                 searchable: true,
                 maxWidth: 150,
                 Cell: ({ value }: any) => (
-                    <LinkCell title={value} to={`/projects/${value}}`} />
+                    <LinkCell title={value} to={`/projects/${value}`} />
                 ),
             },
             {
@@ -278,7 +280,15 @@ export const ArchiveTable = ({
                         <SearchHighlightProvider
                             value={getSearchText(searchValue)}
                         >
-                            <Table {...getTableProps()} rowHeight={rowHeight}>
+                            <Table
+                                {...getTableProps()}
+                                rowHeight={rowHeight}
+                                style={{
+                                    height:
+                                        rowHeight * rows.length +
+                                        theme.shape.tableRowHeightCompact,
+                                }}
+                            >
                                 <SortableTableHeader
                                     headerGroups={headerGroups as any}
                                 />
@@ -297,6 +307,14 @@ export const ArchiveTable = ({
                                             <TableRow
                                                 hover
                                                 {...row.getRowProps()}
+                                                style={{
+                                                    display: 'flex',
+                                                    top:
+                                                        index * rowHeight +
+                                                        theme.shape
+                                                            .tableRowHeightCompact,
+                                                }}
+                                                className={classes.row}
                                             >
                                                 {row.cells.map(cell => (
                                                     <TableCell

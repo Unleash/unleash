@@ -3,12 +3,12 @@ id: create_feature_toggle
 title: How to create a feature toggle
 ---
 
-[Feature toggles](../reference/feature-toggles.mdx) are the foundation of Unleash. They are at the core of everything we do and is a fundamental building block in any feature management system. This guide shows you how to create feature toggles in Unleash and how to add any optional constraints, segments, variants, and more. Links to learn more about the concepts will be scattered throughout the text.
+[Feature toggles](../reference/feature-toggles.mdx) are the foundation of Unleash. They are at the core of everything we do and are a fundamental building block in any feature management system. This guide shows you how to create feature toggles in Unleash and how to add any optional constraints, segments, variants, and more. Links to learn more about these concepts will be scattered throughout the text.
 
 You can perform every action both via the UI and the admin API. This guide includes screenshots to highlight the relevant UI controls and links to the relevant API methods for each step.
 
 The guide is split into three sections:
-1. [Prerequisites](#prerequisites): you need this before you can create a toggle.
+1. [Prerequisites](#prerequisites): you need these before you can create a toggle.
 2. [Required steps](#required-steps): all the required steps to create a toggle and activate it in production.
 3. [Optional steps](#optional-steps): optional steps you can take to further target and configure your feature toggle and its audience.
 
@@ -63,7 +63,7 @@ Decide which environment you want to enable the toggle in. Select that environme
 
 :::tip API: Enable a toggle
 
-Use the [use the API for enabling an environment for a toggle](../api/admin/feature-toggles-api-v2.md#enable-env) and specify the environment you'd like to enable.
+Use the [API for enabling an environment for a toggle](../api/admin/feature-toggles-api-v2.md#enable-env) and specify the environment you'd like to enable.
 
 :::
 

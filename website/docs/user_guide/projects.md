@@ -5,7 +5,7 @@ title: Projects
 
 :::info feature availability
 
-All users get access to Unleash's projects, but only pro and enterprise users can create, update, or delete them.
+All users get access to projects, but only pro and enterprise users can create, update, or delete them.
 
 :::
 

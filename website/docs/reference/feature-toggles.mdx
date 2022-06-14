@@ -13,14 +13,14 @@ Each feature toggle has the following configuration options
 | name | Yes | N/A | The feature toggle's name. Must be URL-friendly according to [section 2.3 of RFC 3986](https://www.rfc-editor.org/rfc/rfc3986#section-2.3) and must be unique within your Unleash instance. |
 | feature toggle type | Yes | Release | The [feature toggle's type](../advanced/feature-toggle-types.md). |
 | project | Yes | The [default project](../user_guide/projects.md#the-default-project). When created from a project page in the admin UI, that project will be the default value instead. | The [project](../user_guide/projects.md) that should contain the feature toggle. |
-| description | No | N/A | A short text to describe the feature toggle's purpose. |
+| description | No | N/A | A description of the feature toggle's purpose. |
 | enable impression data | Yes | No | Whether to enable [impression data](../advanced/impression-data.md) for this toggle or not. |
 
 ## Environments
 
-You will probably not want to use the same configuration to enable a toggle in development as you do in production. That's why feature toggles have different activation strategy configurations for each environment.
+You probably won't want to use the same configuration to enable a toggle in development as you do in production. That's why feature toggles have different activation strategy configurations for each environment.
 
-You can enable and disable a toggles environments independently. You can only choose environments that are active for the current project. When you disable a toggle's environment, it will always evaluate to false in that environment. When you enable an environment, the toggle will evaluate to true or false depending on its activation strategies.
+You can enable and disable a toggle's environments independently. You can only choose environments that are active for the current project. When you disable a toggle's environment, it will always evaluate to false in that environment. When you enable an environment, the toggle will evaluate to true or false depending on its activation strategies.
 
 Refer to the [documentation on environments](../user_guide/environments.md) for more details on how environments work.
 

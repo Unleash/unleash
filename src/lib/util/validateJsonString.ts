@@ -1,7 +1,3 @@
-/**
- * returns if the provided string is
- * a valid json
- */
 export const validateJsonString = (value: string): boolean => {
     // from https://stackoverflow.com/a/20392392
     try {

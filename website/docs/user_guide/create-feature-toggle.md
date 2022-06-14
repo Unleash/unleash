@@ -67,7 +67,7 @@ Use the [use the API for enabling an environment for a toggle](../api/admin/feat
 
 :::
 
-Use the environments toggles to switch on the environment that you chose above. Depending on the activation strategy you added in the previous step, the toggle should now evaluate to true or false depending on the Unleash context you provide it. To try
+Use the environments toggles to switch on the environment that you chose above. Depending on the activation strategy you added in the previous step, the toggle should now evaluate to true or false depending on the Unleash context you provide it.
 
 ![](/img/create-toggle-enable-env.png)
 

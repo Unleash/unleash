@@ -45,6 +45,7 @@ export interface IFeaturesArchiveTableProps {
             | SortingRule<string>
             | ((prev: SortingRule<string>) => SortingRule<string>)
     ) => SortingRule<string>;
+    projectId?: string;
 }
 
 export const ArchiveTable = ({
@@ -54,6 +55,7 @@ export const ArchiveTable = ({
     storedParams,
     setStoredParams,
     title,
+    projectId,
 }: IFeaturesArchiveTableProps) => {
     const rowHeight = theme.shape.tableRowHeight;
     const { classes } = useStyles();
@@ -129,17 +131,24 @@ export const ArchiveTable = ({
                 Cell: FeatureArchivedCell,
                 sortType: 'date',
             },
-            {
-                Header: 'Project ID',
-                accessor: 'project',
-                sortType: 'alphanumeric',
-                filterName: 'project',
-                searchable: true,
-                maxWidth: 150,
-                Cell: ({ value }: any) => (
-                    <LinkCell title={value} to={`/projects/${value}`} />
-                ),
-            },
+            ...(!projectId
+                ? [
+                      {
+                          Header: 'Project ID',
+                          accessor: 'project',
+                          sortType: 'alphanumeric',
+                          filterName: 'project',
+                          searchable: true,
+                          maxWidth: 150,
+                          Cell: ({ value }: any) => (
+                              <LinkCell
+                                  title={value}
+                                  to={`/projects/${value}`}
+                              />
+                          ),
+                      },
+                  ]
+                : []),
             {
                 Header: 'Status',
                 accessor: 'stale',
@@ -169,7 +178,7 @@ export const ArchiveTable = ({
             },
         ],
         //eslint-disable-next-line
-        []
+        [projectId]
     );
 
     const {

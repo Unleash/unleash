@@ -31,6 +31,7 @@ export const ProjectFeaturesArchiveTable = ({
             storedParams={value}
             setStoredParams={setValue}
             refetch={refetchArchived}
+            projectId={projectId}
         />
     );
 };

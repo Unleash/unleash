@@ -34,6 +34,6 @@ To enable feature in an environment, you must assign it at least one activation 
 
 Variants adds another dimension of flexibility to feature toggles. Each feature toggle can be assigned any number of variants which will then get distributed amongst your users based on your choice of context field. You can find out more about variants in the [variants docs](../advanced/feature-toggle-variants.md).
 
-### Toggles with payload
+### Creating toggles with payloads
 
-While variants are most often used for A/B testing and the like, you can also use variants to assign a constant payload to a toggle. If you give a toggle only a single variant, then all the enabled variants will have that payload.
+While variants are most often used for A/B testing and the like, you can also use variants to assign a constant payload to a toggle. If you give a toggle only a single variant and that variant has a payload, then all users variants will receive that payload.

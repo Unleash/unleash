@@ -282,6 +282,27 @@ test('create new feature toggle with variant type json', async () => {
         .expect(201);
 });
 
+test('create new feature toggle with variant type string', async () => {
+    return app.request
+        .post('/api/admin/features')
+        .send({
+            name: 'com.test.featureWithString',
+            variants: [
+                {
+                    name: 'variantTestString',
+                    weight: 1,
+                    payload: {
+                        type: 'string',
+                        value: 'my string # here',
+                    },
+                    weightType: 'variable',
+                },
+            ],
+        })
+        .set('Content-Type', 'application/json')
+        .expect(201);
+});
+
 test('refuses to create a new feature toggle with variant when type is json but value provided is not a valid json', async () => {
     return app.request
         .post('/api/admin/features')

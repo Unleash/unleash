@@ -126,7 +126,7 @@ export class ContextController extends Controller {
 
         this.route({
             method: 'post',
-            path: 'validate',
+            path: '/validate',
             handler: this.validate,
             permission: UPDATE_CONTEXT_FIELD,
             middleware: [

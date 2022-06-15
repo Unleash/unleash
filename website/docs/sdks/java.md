@@ -3,6 +3,8 @@ id: java_sdk
 title: Java SDK
 ---
 
+import Tabs from '@theme/Tabs'; import TabItem from '@theme/TabItem';
+
 In this guide we explain how to use feature toggles in a Java application using Unleash-hosted. We will be using the open source Unleash [Java Client SDK](https://github.com/Unleash/unleash-client-java).
 
 > You will need your `API URL` and your `API token` in order to connect the Client SDK to you Unleash instance. You can find this information in the “Admin” section Unleash management UI. [Read more](../user_guide/api-token)
@@ -29,6 +31,9 @@ The client SDK will synchronize with the Unleash API on initialization, so it ca
 
 :::
 
+<Tabs>
+  <TabItem value="async" label="Asynchronous initialization" default>
+
 ```java
 UnleashConfig config = UnleashConfig.builder()
         .appName("my.java-app")
@@ -40,6 +45,25 @@ UnleashConfig config = UnleashConfig.builder()
 
 Unleash unleash = new DefaultUnleash(config);
 ```
+
+  </TabItem>
+  <TabItem value="sync" label="Synchronous initializiation">
+
+```java
+UnleashConfig config = UnleashConfig.builder()
+        .appName("my.java-app")
+        .instanceId("your-instance-1")
+        .environment(System.getenv("APP_ENV"))
+        .unleashAPI("API URL")
+        .customHttpHeader("Authorization", "API token")
+        .synchronousFetchOnInitialization(true)
+        .build();
+
+Unleash unleash = new DefaultUnleash(config);
+```
+
+  </TabItem>
+</Tabs>
 
 In your app you typically just want one instance of Unleash, and inject that where you need it. You will typically use a dependency injection frameworks such as Spring or Guice to manage this.
 

@@ -38,9 +38,13 @@ import { tagTypeSchema } from './spec/tag-type-schema';
 import { tagTypesSchema } from './spec/tag-types-schema';
 import { updateTagTypeSchema } from './spec/update-tag-type-schema';
 import { validateTagTypeSchema } from './spec/validate-tag-type-schema';
+import { addonSchema } from './spec/addon-schema';
+import { getAddonsSchema } from './spec/get-addons-schema';
+import { parameterDefinitionSchema } from './spec/parameter-definition-schema';
 
 // All schemas in `openapi/spec` should be listed here.
 export const schemas = {
+    addonSchema,
     cloneFeatureSchema,
     constraintSchema,
     createFeatureSchema,
@@ -54,10 +58,12 @@ export const schemas = {
     featureTypesSchema,
     featureVariantsSchema,
     featuresSchema,
+    getAddonsSchema,
     healthOverviewSchema,
     healthReportSchema,
     overrideSchema,
     parametersSchema,
+    parameterDefinitionSchema,
     patchSchema,
     patchesSchema,
     projectEnvironmentSchema,

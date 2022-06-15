@@ -23,6 +23,12 @@ First we must add Unleash Client SDK as a dependency to your project. Below is a
 
 Next we must initialize a new instance of the Unleash Client.
 
+:::tip Synchronous initialization
+
+The client SDK will synchronize with the Unleash API on initialization, so it can take a few hundred milliseconds for the client to reach the correct state. You can use the `synchronousFetchOnInitialisation` option to block the client until it has successfully synced with the server.
+
+:::
+
 ```java
 UnleashConfig config = UnleashConfig.builder()
         .appName("my.java-app")
@@ -50,8 +56,6 @@ if(unleash.isEnabled("AwesomeFeature")) {
   //do old boring stuff
 }
 ```
-
-Please note the client SDK will synchronize with the Unleash-hosted API on initialization, and thus it can take a few milliseconds the first time before the client has the correct state. You can use the _synchronousFetchOnInitialisation_ option to block the client until it has successfully synced with the server.
 
 Read more about the [Unleash architecture](https://www.unleash-hosted.com/articles/our-unique-architecture) to learn how it works in more details
 

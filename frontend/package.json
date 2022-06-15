@@ -59,7 +59,7 @@
     "@types/react-table": "7.7.12",
     "@types/react-test-renderer": "17.0.2",
     "@types/react-timeago": "4.1.3",
-    "@types/semver": "^7.3.9",
+    "@types/semver": "7.3.10",
     "@vitejs/plugin-react": "1.3.2",
     "chart.js": "3.8.0",
     "chartjs-adapter-date-fns": "2.0.0",

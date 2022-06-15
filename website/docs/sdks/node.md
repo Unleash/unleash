@@ -3,6 +3,8 @@ id: node_sdk
 title: Node SDK
 ---
 
+import Tabs from '@theme/Tabs'; import TabItem from '@theme/TabItem';
+
 In this guide we explain how to use feature toggles in a Node application using Unleash-hosted. We will be using the open source Unleash [Node.js Client SDK](https://github.com/Unleash/unleash-client-node).
 
 > You will need your `API URL` and your `API token` in order to connect the Client SDK to you Unleash instance. You can find this information in the “Admin” section Unleash management UI. [Read more](../user_guide/api-token)
@@ -19,6 +21,17 @@ npm install unleash-client
 
 Next we must initialize the client SDK in the application:
 
+:::tip Synchronous initialization
+
+The client SDK will synchronize with the Unleash API on initialization, so it can take a few hundred milliseconds for the client to reach the correct state.
+
+See the following code sample or the [_block until Unleash is synchronized_ section of the readme](https://github.com/Unleash/unleash-client-node#block-until-unleash-sdk-has-synchronized) for the steps to do this.
+
+:::
+
+<Tabs>
+  <TabItem value="async" label="Asynchronous initialization" default>
+
 ```js
 const unleash = require('unleash-client');
 
@@ -30,9 +43,24 @@ unleash.initialize({
 });
 ```
 
-The example code above will initialize the client SDK, and connect to the Unleash-hosted demo instance. It also uses the API token for the demo instance. You should change the URL and the Authorization header (API token) with the correct values for your instance, which you may locate under “Instance admin” in the menu.
+  </TabItem>
+  <TabItem value="sync" label="Synchronous initializiation">
 
-Please also pay attention to the “environment” option. Setting this will allow you to use [strategy constraints](/advanced/strategy_constraints) which enables different roll-out strategies per environment.
+```js
+const { startUnleash } = require('unleash-client');
+
+const unleash = await startUnleash({
+  url: 'https://YOUR-API-URL',
+  appName: 'my-node-name',
+  environment: process.env.APP_ENV,
+  customHeaders: { Authorization: 'SOME-SECRET' },
+});
+```
+
+  </TabItem>
+</Tabs>
+
+The example code above will initialize the client SDK, and connect to the Unleash-hosted demo instance. It also uses the API token for the demo instance. You should change the URL and the Authorization header (API token) with the correct values for your instance, which you may locate under “Instance admin” in the menu.
 
 ## Step 3: Use the feature toggle {#step-3-use-the-feature-toggle}
 
@@ -52,7 +80,7 @@ Please note that in the above example we put the isEnabled-evaluation inside the
 
 It can also be nice to notice that if you use an undefined feature toggle the Unleash SDK will return false instead of crashing your application. The SDK will also report metrics back to Unleash-hosted on feature toggle usage, which makes it \_possible to spot toggles not yet defined. And this is a very neat way to help you debug if something does not work as expected.
 
-_Note that you can also wait until the Unleash SDK has fully syncrhonized similar to familiar "on-ready" hooks in other APIs. See [block until Unleashed is synchronized](https://github.com/Unleash/unleash-client-node#block-until-unleash-sdk-has-synchronized) for how to do this._
+_Note that you can also wait until the Unleash SDK has fully synchronized similar to familiar "on-ready" hooks in other APIs. See [block until Unleashed is synchronized](https://github.com/Unleash/unleash-client-node#block-until-unleash-sdk-has-synchronized) for how to do this._
 
 ## Step 4: Provide the Unleash-context {#step-4-provide-the-unleash-context}
 

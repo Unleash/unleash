@@ -173,6 +173,7 @@ const COLUMNS = [
         align: 'center',
         Cell: FeatureSeenCell,
         disableGlobalFilter: true,
+        minWidth: 85,
     },
     {
         Header: 'Type',
@@ -180,6 +181,7 @@ const COLUMNS = [
         align: 'center',
         Cell: FeatureTypeCell,
         disableGlobalFilter: true,
+        minWidth: 85,
     },
     {
         Header: 'Name',
@@ -194,18 +196,21 @@ const COLUMNS = [
         sortType: 'date',
         Cell: DateCell,
         disableGlobalFilter: true,
+        minWidth: 150,
     },
     {
         Header: 'Expired',
         accessor: 'expiredAt',
         Cell: ReportExpiredCell,
         disableGlobalFilter: true,
+        minWidth: 150,
     },
     {
         Header: 'Status',
-        accessor: 'status',
+        id: 'status',
         Cell: ReportStatusCell,
         disableGlobalFilter: true,
+        minWidth: 200,
     },
     {
         Header: 'State',
@@ -213,5 +218,6 @@ const COLUMNS = [
         sortType: 'boolean',
         Cell: FeatureStaleCell,
         disableGlobalFilter: true,
+        minWidth: 120,
     },
 ];

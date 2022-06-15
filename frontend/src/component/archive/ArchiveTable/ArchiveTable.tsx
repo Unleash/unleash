@@ -17,13 +17,13 @@ import { HighlightCell } from 'component/common/Table/cells/HighlightCell/Highli
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Search } from 'component/common/Search/Search';
-import { FeatureTypeCell } from '../../common/Table/cells/FeatureTypeCell/FeatureTypeCell';
-import { FeatureSeenCell } from '../../common/Table/cells/FeatureSeenCell/FeatureSeenCell';
-import { LinkCell } from '../../common/Table/cells/LinkCell/LinkCell';
-import { FeatureStaleCell } from '../../feature/FeatureToggleList/FeatureStaleCell/FeatureStaleCell';
+import { FeatureTypeCell } from 'component/common/Table/cells/FeatureTypeCell/FeatureTypeCell';
+import { FeatureSeenCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureSeenCell';
+import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
+import { FeatureStaleCell } from 'component/feature/FeatureToggleList/FeatureStaleCell/FeatureStaleCell';
 import { ReviveArchivedFeatureCell } from 'component/archive/ArchiveTable/ReviveArchivedFeatureCell/ReviveArchivedFeatureCell';
-import { useStyles } from '../../feature/FeatureToggleList/styles';
-import { featuresPlaceholder } from '../../feature/FeatureToggleList/FeatureToggleListTable';
+import { useStyles } from 'component/feature/FeatureToggleList/styles';
+import { featuresPlaceholder } from 'component/feature/FeatureToggleList/FeatureToggleListTable';
 import theme from 'themes/theme';
 import { FeatureSchema } from 'openapi';
 import { useFeatureArchiveApi } from 'hooks/api/actions/useFeatureArchiveApi/useReviveFeatureApi';
@@ -152,7 +152,7 @@ export const ArchiveTable = ({
                   ]
                 : []),
             {
-                Header: 'Status',
+                Header: 'State',
                 accessor: 'stale',
                 Cell: FeatureStaleCell,
                 sortType: 'boolean',
@@ -166,7 +166,6 @@ export const ArchiveTable = ({
                 align: 'center',
                 maxWidth: 85,
                 canSort: false,
-                disableGlobalFilter: true,
                 Cell: ({ row: { original } }: any) => (
                     <ReviveArchivedFeatureCell
                         project={original.project}
@@ -339,21 +338,23 @@ export const ArchiveTable = ({
                 </Table>
             </SearchHighlightProvider>
             <ConditionallyRender
-                condition={rows.length === 0 && searchValue?.length > 0}
-                show={
-                    <TablePlaceholder>
-                        No feature toggles found matching &ldquo;
-                        {searchValue}&rdquo;
-                    </TablePlaceholder>
-                }
-            />
-            <ConditionallyRender
-                condition={rows.length === 0 && searchValue?.length === 0}
-                show={
-                    <TablePlaceholder>
-                        None of the feature toggles where archived yet.
-                    </TablePlaceholder>
-                }
+                condition={rows.length === 0}
+                show={() => (
+                    <ConditionallyRender
+                        condition={searchValue?.length > 0}
+                        show={
+                            <TablePlaceholder>
+                                No feature toggles found matching &ldquo;
+                                {searchValue}&rdquo;
+                            </TablePlaceholder>
+                        }
+                        elseShow={
+                            <TablePlaceholder>
+                                None of the feature toggles were archived yet.
+                            </TablePlaceholder>
+                        }
+                    />
+                )}
             />
         </PageContent>
     );

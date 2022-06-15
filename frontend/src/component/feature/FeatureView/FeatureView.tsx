@@ -144,7 +144,7 @@ export const FeatureView = () => {
                                     permission={UPDATE_FEATURE}
                                     projectId={projectId}
                                     tooltipProps={{
-                                        title: 'Toggle stale status',
+                                        title: 'Toggle stale state',
                                     }}
                                     data-loading
                                 >

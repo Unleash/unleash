@@ -68,17 +68,15 @@ export const FeatureStaleDialog = ({
             open={isOpen}
             secondaryButtonText={'Cancel'}
             primaryButtonText={`Flip to ${toggleActionText}`}
-            title={`Set feature status to ${toggleActionText}`}
+            title={`Set feature state to ${toggleActionText}`}
             onClick={onSubmit}
             onClose={onClose}
         >
-            <>
-                <ConditionallyRender
-                    condition={isStale}
-                    show={toggleToActiveContent}
-                    elseShow={toggleToStaleContent}
-                />
-            </>
+            <ConditionallyRender
+                condition={isStale}
+                show={toggleToActiveContent}
+                elseShow={toggleToStaleContent}
+            />
         </Dialogue>
     );
 };

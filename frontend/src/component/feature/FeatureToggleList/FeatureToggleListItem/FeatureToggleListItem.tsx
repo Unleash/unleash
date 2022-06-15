@@ -196,7 +196,7 @@ export const FeatureToggleListItem = memo<IFeatureToggleListItemProps>(
                                 !projectExists()
                             }
                             onClick={reviveFeature}
-                            tooltipProps={{ title: 'Revive feature' }}
+                            tooltipProps={{ title: 'Revive feature toggle' }}
                         >
                             <Undo />
                         </PermissionIconButton>

@@ -62,8 +62,6 @@ const unleash = await startUnleash({
 
 The example code above will initialize the client SDK, and connect to the Unleash-hosted demo instance. It also uses the API token for the demo instance. You should change the URL and the Authorization header (API token) with the correct values for your instance, which you may locate under “Instance admin” in the menu.
 
-Please also pay attention to the “environment” option. Setting this will allow you to use [strategy constraints](/advanced/strategy_constraints) which enables different roll-out strategies per environment.
-
 ## Step 3: Use the feature toggle {#step-3-use-the-feature-toggle}
 
 Now that we have initialized the client SDK in our application we can start using feature toggles defined in Unleash in our application. To achieve this we have the “isEnabled” method available, which will allow us to check the value of a feature toggle. This method will return **true** or **false** based on whether the feature should be enabled or disabled for the current request.

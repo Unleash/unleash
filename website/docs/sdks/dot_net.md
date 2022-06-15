@@ -3,6 +3,8 @@ id: dot_net_sdk
 title: .NET SDK
 ---
 
+import Tabs from '@theme/Tabs'; import TabItem from '@theme/TabItem';
+
 In this guide we explain how to use feature toggles in a .NET application using Unleash-hosted. We will be using the open source Unleash [.net Client SDK](https://github.com/Unleash/unleash-client-dotnet).
 
 > You will need your `API URL` and your `API token` in order to connect the Client SDK to you Unleash instance. You can find this information in the “Admin” section Unleash management UI. [Read more](../user_guide/api-token)
@@ -19,6 +21,19 @@ dotnet add package unleash.client
 
 Next we must initialize a new instance of the Unleash Client.
 
+:::tip Synchronous initialization
+
+By default, the client SDK asynchronously fetches toggles from the Unleash API on initialization. This means it can take a few hundred milliseconds for the client to reach the correct state.
+
+You can use the `synchronousInitialization` option of the `UnleashClientFactory` class's `CreateClientAsync` method to block the client until it has successfully synced with the server. See the following "synchronous initialization" code sample.
+
+Read more about the [Unleash architecture](https://www.getunleash.io/blog/our-unique-architecture) to learn how it works.
+
+:::
+
+<Tabs>
+  <TabItem value="async" label="Asynchronous initialization" default>
+
 ```csharp
 var settings = new UnleashSettings()
 {
@@ -33,6 +48,31 @@ var settings = new UnleashSettings()
 
 IUnleash unleash = new DefaultUnleash(settings);
 ```
+
+  </TabItem>
+  <TabItem value="sync" label="Synchronous initializiation">
+
+```csharp
+var settings = new UnleashSettings()
+{
+  AppName = "dot-net-client",
+  Environment = "local",
+  UnleashApi = new Uri("API URL"),
+  CustomHttpHeaders = new Dictionary()
+  {
+    {"Authorization","API token" }
+  }
+};
+
+var unleashFactory = new UnleashClientFactory();
+
+// this `unleash` will fetch feature toggles and write them to its cache before returning from the await call.
+// if network errors or disk permissions prevent this from happening, the await will throw an exception.
+IUnleash unleash = await unleashFactory.CreateClientAsync(settings, synchronousInitialization: true);
+```
+
+  </TabItem>
+</Tabs>
 
 In your app you typically just want one instance of Unleash, and inject that where you need it.
 
@@ -52,10 +92,6 @@ else
   //do old boring stuff
 }
 ```
-
-Please note the client SDK will synchronize with the Unleash-hosted API on initialization, and thus it can take a few milliseconds the first time before the client has the correct state. You can use the _SynchronousInitialization_ option to block the client until it has successfully synced with the server.
-
-Read more about the [Unleash architecture](https://www.getunleash.io/blog/our-unique-architecture) to learn how it works in more details
 
 ## Step 4: Provide Unleash Context {#step-4-provide-unleash-context}
 

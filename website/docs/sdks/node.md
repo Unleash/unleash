@@ -3,6 +3,8 @@ id: node_sdk
 title: Node SDK
 ---
 
+import Tabs from '@theme/Tabs'; import TabItem from '@theme/TabItem';
+
 In this guide we explain how to use feature toggles in a Node application using Unleash-hosted. We will be using the open source Unleash [Node.js Client SDK](https://github.com/Unleash/unleash-client-node).
 
 > You will need your `API URL` and your `API token` in order to connect the Client SDK to you Unleash instance. You can find this information in the “Admin” section Unleash management UI. [Read more](../user_guide/api-token)
@@ -23,9 +25,12 @@ Next we must initialize the client SDK in the application:
 
 The client SDK will synchronize with the Unleash API on initialization, so it can take a few hundred milliseconds for the client to reach the correct state.
 
-See [block until Unleash is synchronized](https://github.com/Unleash/unleash-client-node#block-until-unleash-sdk-has-synchronized) for how to do this.
+See the following code sample or the [_block until Unleash is synchronized_ section of the readme](https://github.com/Unleash/unleash-client-node#block-until-unleash-sdk-has-synchronized) for the steps to do this.
 
 :::
+
+<Tabs>
+  <TabItem value="async" label="Asynchronous initialization" default>
 
 ```js
 const unleash = require('unleash-client');
@@ -37,6 +42,23 @@ unleash.initialize({
   customHeaders: { Authorization: 'SOME-SECRET' },
 });
 ```
+
+  </TabItem>
+  <TabItem value="sync" label="Synchronous initializiation">
+
+```js
+const { startUnleash } = require('unleash-client');
+
+const unleash = await startUnleash({
+  url: 'https://YOUR-API-URL',
+  appName: 'my-node-name',
+  environment: process.env.APP_ENV,
+  customHeaders: { Authorization: 'SOME-SECRET' },
+});
+```
+
+  </TabItem>
+</Tabs>
 
 The example code above will initialize the client SDK, and connect to the Unleash-hosted demo instance. It also uses the API token for the demo instance. You should change the URL and the Authorization header (API token) with the correct values for your instance, which you may locate under “Instance admin” in the menu.
 

@@ -3208,6 +3208,145 @@ Object {
         ],
       },
     },
+    "/api/admin/tags": Object {
+      "get": Object {
+        "operationId": "getTags",
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/tagsSchema",
+                },
+              },
+            },
+            "description": "tagsSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+      "post": Object {
+        "operationId": "createTag",
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/tagSchema",
+              },
+            },
+          },
+          "description": "tagSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "201": Object {
+            "description": "emptyResponse",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/tags/{type}": Object {
+      "get": Object {
+        "operationId": "getTagsByType",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "type",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/tagsSchema",
+                },
+              },
+            },
+            "description": "tagsSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/tags/{type}/{value}": Object {
+      "delete": Object {
+        "operationId": "deleteTag",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "type",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+          Object {
+            "in": "path",
+            "name": "value",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "description": "emptyResponse",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+      "get": Object {
+        "operationId": "getTag",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "type",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+          Object {
+            "in": "path",
+            "name": "value",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/tagSchema",
+                },
+              },
+            },
+            "description": "tagSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
     "/api/admin/ui-config": Object {
       "get": Object {
         "operationId": "getUIConfig",

@@ -46,7 +46,7 @@ test('gets a tag by type and value', async () => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect((res) => {
-            expect(res.body.tag.value).toBe('Tester');
+            expect(res.body.value).toBe('Tester');
         });
 });
 
@@ -62,13 +62,13 @@ test('Can create a tag', async () =>
     app.request
         .post('/api/admin/tags')
         .send({
-            id: 1,
             value: 'TeamRed',
             type: 'simple',
         })
         .expect((res) => {
             expect(res.status).toBe(201);
         }));
+
 test('Can validate a tag', async () =>
     app.request
         .post('/api/admin/tags')
@@ -79,11 +79,8 @@ test('Can validate a tag', async () =>
         .expect('Content-Type', /json/)
         .expect(400)
         .expect((res) => {
-            expect(res.body.details.length).toBe(2);
+            expect(res.body.details.length).toBe(1);
             expect(res.body.details[0].message).toBe(
-                '"value" must be a string',
-            );
-            expect(res.body.details[1].message).toBe(
                 '"type" must be URL friendly',
             );
         }));

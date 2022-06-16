@@ -72,15 +72,15 @@ test('should get all tags added', () => {
         });
 });
 
-test('should be able to get single tag by type and value', () => {
+test('should be able to get single tag by type and value', async () => {
     expect.assertions(1);
-    tagStore.createTag({ value: 'TeamRed', type: 'simple' });
+    await tagStore.createTag({ value: 'TeamRed', type: 'simple' });
     return request
         .get(`${base}/api/admin/tags/simple/TeamRed`)
         .expect('Content-Type', /json/)
         .expect(200)
         .expect((res) => {
-            expect(res.body.tag.value).toBe('TeamRed');
+            expect(res.body.value).toBe('TeamRed');
         });
 });
 

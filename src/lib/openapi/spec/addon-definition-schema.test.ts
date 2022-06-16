@@ -6,7 +6,7 @@ test('addonDefinitionSchema', () => {
         name: 'some-name',
         displayName: 'some-name',
         description: 'some-description',
-        documentationUrl: 'some-url',
+        documentationUrl: 'some- url',
         type: 'some-type',
         placeholder: 'some-placeholder',
         required: true,

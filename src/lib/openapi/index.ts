@@ -41,10 +41,12 @@ import { validateTagTypeSchema } from './spec/validate-tag-type-schema';
 import { addonSchema } from './spec/addon-schema';
 import { getAddonsSchema } from './spec/get-addons-schema';
 import { parameterDefinitionSchema } from './spec/parameter-definition-schema';
+import { addonDefinitionSchema } from './spec/addon-definition-schema';
 
 // All schemas in `openapi/spec` should be listed here.
 export const schemas = {
     addonSchema,
+    addonDefinitionSchema,
     cloneFeatureSchema,
     constraintSchema,
     createFeatureSchema,

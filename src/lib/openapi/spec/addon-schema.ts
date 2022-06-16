@@ -10,7 +10,7 @@ export const addonSchema = {
         },
         createdAt: {
             type: 'string',
-            format: 'date',
+            format: 'date-time',
             nullable: true,
         },
         provider: {

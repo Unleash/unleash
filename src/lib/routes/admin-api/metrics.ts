@@ -1,10 +1,12 @@
 import { Request, Response } from 'express';
 import Controller from '../controller';
-import { UPDATE_APPLICATION } from '../../types/permissions';
+import { NONE, UPDATE_APPLICATION } from '../../types/permissions';
 import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
 import { Logger } from '../../logger';
 import ClientInstanceService from '../../services/client-metrics/instance-service';
+import { emptyResponse } from '../../openapi/spec/empty-response';
+import { createRequestSchema, createResponseSchema } from '../../openapi';
 
 class MetricsController extends Controller {
     private logger: Logger;
@@ -15,7 +17,8 @@ class MetricsController extends Controller {
         config: IUnleashConfig,
         {
             clientInstanceService,
-        }: Pick<IUnleashServices, 'clientInstanceService'>,
+            openApiService,
+        }: Pick<IUnleashServices, 'clientInstanceService' | 'openApiService'>,
     ) {
         super(config);
         this.logger = config.getLogger('/admin-api/metrics.ts');
@@ -28,19 +31,68 @@ class MetricsController extends Controller {
         this.get('/feature-toggles', this.deprecated);
         this.get('/feature-toggles/:name', this.deprecated);
 
-        // in use
-        this.post(
-            '/applications/:appName',
-            this.createApplication,
-            UPDATE_APPLICATION,
-        );
-        this.delete(
-            '/applications/:appName',
-            this.deleteApplication,
-            UPDATE_APPLICATION,
-        );
-        this.get('/applications/', this.getApplications);
-        this.get('/applications/:appName', this.getApplication);
+        this.route({
+            method: 'post',
+            path: '/applications/:appName',
+            handler: this.createApplication,
+            permission: UPDATE_APPLICATION,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'metricsCreateApplication',
+                    responses: {
+                        202: emptyResponse,
+                    },
+                    requestBody: createRequestSchema('applicationSchema'),
+                }),
+            ],
+        });
+        this.route({
+            method: 'delete',
+            path: '/applications/:appName',
+            handler: this.deleteApplication,
+            permission: UPDATE_APPLICATION,
+            acceptAnyContentType: true,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'metricsDeleteApplication',
+                    responses: {
+                        200: emptyResponse,
+                    },
+                }),
+            ],
+        });
+        this.route({
+            method: 'get',
+            path: '/applications',
+            handler: this.getApplications,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'metricsGetApplications',
+                    responses: {
+                        200: createResponseSchema('applicationsSchema'),
+                    },
+                }),
+            ],
+        });
+        this.route({
+            method: 'get',
+            path: '/applications/:appName',
+            handler: this.getApplication,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'metricsGetApplication',
+                    responses: {
+                        200: createResponseSchema('applicationSchema'),
+                    },
+                }),
+            ],
+        });
     }
 
     async deprecated(req: Request, res: Response): Promise<void> {

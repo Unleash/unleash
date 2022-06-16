@@ -49,12 +49,20 @@ import { validateTagTypeSchema } from './spec/validate-tag-type-schema';
 import { variantSchema } from './spec/variant-schema';
 import { variantsSchema } from './spec/variants-schema';
 import { versionSchema } from './spec/version-schema';
+import { tagTypeSchema } from './spec/tag-type-schema';
+import { tagTypesSchema } from './spec/tag-types-schema';
+import { updateTagTypeSchema } from './spec/update-tag-type-schema';
+import { validateTagTypeSchema } from './spec/validate-tag-type-schema';
+import { applicationSchema } from './spec/application-schema';
+import { applicationsSchema } from './spec/applications-schema';
 import { tagWithVersionSchema } from './spec/tag-with-version-schema';
 
 // All schemas in `openapi/spec` should be listed here.
 export const schemas = {
     apiTokenSchema,
     apiTokensSchema,
+    applicationSchema,
+    applicationsSchema,
     cloneFeatureSchema,
     constraintSchema,
     contextFieldSchema,

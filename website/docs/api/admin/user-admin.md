@@ -118,7 +118,11 @@ Creates a new user with the given root role.
 
 **Payload properties**
 
-:::info Requirements The payload **must** contain **at least one of** the `name` and `email` properties, though which one is up to you. For the user to be able to log in to the system, the user **must** have an email. :::
+:::info Requirements
+
+The payload **must** contain **at least one of** the `name` and `email` properties, though which one is up to you. For the user to be able to log in to the system, the user **must** have an email.
+
+:::
 
 | Property name | Required | Description | Example value(s) |
 | --- | --- | --- | --- |

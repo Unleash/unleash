@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`contextSchema empty 1`] = `
+exports[`contextFieldSchema empty 1`] = `
 Object {
   "data": Object {},
   "errors": Array [
@@ -14,6 +14,6 @@ Object {
       "schemaPath": "#/required",
     },
   ],
-  "schema": "#/components/schemas/contextSchema",
+  "schema": "#/components/schemas/contextFieldSchema",
 }
 `;

@@ -18,13 +18,15 @@ import { IAuthRequest } from '../unleash-types';
 
 import { OpenApiService } from '../../services/openapi-service';
 import {
-    contextSchema,
-    ContextSchema,
-} from '../../openapi/spec/context-schema';
+    contextFieldSchema,
+    ContextFieldSchema,
+} from '../../openapi/spec/context-field-schema';
+import { ContextFieldsSchema } from '../../openapi/spec/context-fields-schema';
 import { createRequestSchema, createResponseSchema } from '../../openapi';
 import { serializeDates } from '../../types/serialize-dates';
 import NotFoundError from '../../error/notfound-error';
-import { CreateUpdateContextSchema } from '../../openapi/spec/create-update-context-schema';
+import { emptyResponse } from '../../openapi/spec/empty-response';
+import { NameSchema } from '../../openapi/spec/name-schema';
 
 interface ContextParam {
     contextField: string;
@@ -59,7 +61,7 @@ export class ContextController extends Controller {
                     tags: ['admin'],
                     operationId: 'getContextFields',
                     responses: {
-                        200: createResponseSchema('contextSchema'),
+                        200: createResponseSchema('contextFieldsSchema'),
                     },
                 }),
             ],
@@ -75,7 +77,7 @@ export class ContextController extends Controller {
                     tags: ['admin'],
                     operationId: 'getContextField',
                     responses: {
-                        200: createResponseSchema('contextSchema'),
+                        200: createResponseSchema('contextFieldSchema'),
                     },
                 }),
             ],
@@ -90,11 +92,9 @@ export class ContextController extends Controller {
                 openApiService.validPath({
                     tags: ['admin'],
                     operationId: 'createContextField',
-                    requestBody: createRequestSchema(
-                        'createUpdateContextSchema',
-                    ),
+                    requestBody: createRequestSchema('contextFieldSchema'),
                     responses: {
-                        200: createResponseSchema('contextSchema'),
+                        201: emptyResponse,
                     },
                 }),
             ],
@@ -109,11 +109,9 @@ export class ContextController extends Controller {
                 openApiService.validPath({
                     tags: ['admin'],
                     operationId: 'updateContextField',
-                    requestBody: createRequestSchema(
-                        'createUpdateContextSchema',
-                    ),
+                    requestBody: createRequestSchema('contextFieldSchema'),
                     responses: {
-                        200: createResponseSchema('contextSchema'),
+                        200: emptyResponse,
                     },
                 }),
             ],
@@ -130,7 +128,7 @@ export class ContextController extends Controller {
                     tags: ['admin'],
                     operationId: 'deleteContextField',
                     responses: {
-                        200: createResponseSchema('contextSchema'),
+                        200: emptyResponse,
                     },
                 }),
             ],
@@ -145,8 +143,9 @@ export class ContextController extends Controller {
                 openApiService.validPath({
                     tags: ['admin'],
                     operationId: 'validate',
+                    requestBody: createRequestSchema('nameSchema'),
                     responses: {
-                        200: createResponseSchema('contextSchema'),
+                        200: emptyResponse,
                     },
                 }),
             ],
@@ -155,7 +154,7 @@ export class ContextController extends Controller {
 
     async getContextFields(
         req: Request,
-        res: Response<ContextSchema[]>,
+        res: Response<ContextFieldsSchema>,
     ): Promise<void> {
         res.status(200)
             .json(serializeDates(await this.contextService.getAll()))
@@ -164,7 +163,7 @@ export class ContextController extends Controller {
 
     async getContextField(
         req: Request<ContextParam>,
-        res: Response<ContextSchema>,
+        res: Response<ContextFieldSchema>,
     ): Promise<void> {
         try {
             const name = req.params.contextField;
@@ -174,7 +173,7 @@ export class ContextController extends Controller {
             this.openApiService.respondWithValidation(
                 200,
                 res,
-                contextSchema.$id,
+                contextFieldSchema.$id,
                 serializeDates(contextField),
             );
         } catch (err) {
@@ -183,7 +182,7 @@ export class ContextController extends Controller {
     }
 
     async createContextField(
-        req: IAuthRequest<void, void, CreateUpdateContextSchema>,
+        req: IAuthRequest<void, void, ContextFieldSchema>,
         res: Response,
     ): Promise<void> {
         const value = req.body;
@@ -194,7 +193,7 @@ export class ContextController extends Controller {
     }
 
     async updateContextField(
-        req: IAuthRequest<ContextParam, void, CreateUpdateContextSchema>,
+        req: IAuthRequest<ContextParam, void, ContextFieldSchema>,
         res: Response,
     ): Promise<void> {
         const name = req.params.contextField;
@@ -219,7 +218,7 @@ export class ContextController extends Controller {
     }
 
     async validate(
-        req: Request<void, void, { name: string }>,
+        req: Request<void, void, NameSchema>,
         res: Response,
     ): Promise<void> {
         const { name } = req.body;

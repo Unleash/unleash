@@ -1,10 +1,10 @@
 import { OpenAPIV3 } from 'openapi-types';
 import { cloneFeatureSchema } from './spec/clone-feature-schema';
 import { constraintSchema } from './spec/constraint-schema';
-import { contextSchema } from './spec/context-schema';
+import { contextFieldSchema } from './spec/context-field-schema';
+import { contextFieldsSchema } from './spec/context-fields-schema';
 import { createFeatureSchema } from './spec/create-feature-schema';
 import { createStrategySchema } from './spec/create-strategy-schema';
-import { createUpdateContextSchema } from './spec/create-update-context-schema';
 import { environmentSchema } from './spec/environment-schema';
 import { environmentsSchema } from './spec/environments-schema';
 import { featureEnvironmentSchema } from './spec/feature-environment-schema';
@@ -17,9 +17,10 @@ import { featuresSchema } from './spec/features-schema';
 import { feedbackSchema } from './spec/feedback-schema';
 import { healthOverviewSchema } from './spec/health-overview-schema';
 import { healthReportSchema } from './spec/health-report-schema';
-import { mapValues } from '../util/map-values';
-import { omitKeys } from '../util/omit-keys';
 import { legalValueSchema } from './spec/legal-value-schema';
+import { mapValues } from '../util/map-values';
+import { nameSchema } from './spec/name-schema';
+import { omitKeys } from '../util/omit-keys';
 import { overrideSchema } from './spec/override-schema';
 import { parametersSchema } from './spec/parameters-schema';
 import { patchSchema } from './spec/patch-schema';
@@ -47,10 +48,10 @@ import { validateTagTypeSchema } from './spec/validate-tag-type-schema';
 export const schemas = {
     cloneFeatureSchema,
     constraintSchema,
-    contextSchema,
+    contextFieldSchema,
+    contextFieldsSchema,
     createFeatureSchema,
     createStrategySchema,
-    createUpdateContextSchema,
     environmentSchema,
     environmentsSchema,
     featureEnvironmentSchema,
@@ -64,6 +65,7 @@ export const schemas = {
     healthOverviewSchema,
     healthReportSchema,
     legalValueSchema,
+    nameSchema,
     overrideSchema,
     parametersSchema,
     patchSchema,

@@ -1,8 +1,8 @@
 import { FromSchema } from 'json-schema-to-ts';
 import { legalValueSchema } from './legal-value-schema';
 
-export const createUpdateContextSchema = {
-    $id: '#/components/schemas/createUpdateContextSchema',
+export const contextFieldSchema = {
+    $id: '#/components/schemas/contextFieldSchema',
     type: 'object',
     additionalProperties: false,
     required: ['name'],
@@ -19,6 +19,11 @@ export const createUpdateContextSchema = {
         sortOrder: {
             type: 'number',
         },
+        createdAt: {
+            type: 'string',
+            format: 'date-time',
+            nullable: true,
+        },
         legalValues: {
             type: 'array',
             items: {
@@ -33,6 +38,4 @@ export const createUpdateContextSchema = {
     },
 } as const;
 
-export type CreateUpdateContextSchema = FromSchema<
-    typeof createUpdateContextSchema
->;
+export type ContextFieldSchema = FromSchema<typeof contextFieldSchema>;

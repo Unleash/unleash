@@ -113,7 +113,7 @@ Object {
         ],
         "type": "object",
       },
-      "contextSchema": Object {
+      "contextFieldSchema": Object {
         "additionalProperties": false,
         "properties": Object {
           "createdAt": Object {
@@ -144,6 +144,12 @@ Object {
           "name",
         ],
         "type": "object",
+      },
+      "contextFieldsSchema": Object {
+        "items": Object {
+          "$ref": "#/components/schemas/contextFieldSchema",
+        },
+        "type": "array",
       },
       "createFeatureSchema": Object {
         "properties": Object {
@@ -182,33 +188,6 @@ Object {
           },
           "sortOrder": Object {
             "type": "number",
-          },
-        },
-        "required": Array [
-          "name",
-        ],
-        "type": "object",
-      },
-      "createUpdateContextSchema": Object {
-        "additionalProperties": false,
-        "properties": Object {
-          "description": Object {
-            "type": "string",
-          },
-          "legalValues": Object {
-            "items": Object {
-              "$ref": "#/components/schemas/legalValueSchema",
-            },
-            "type": "array",
-          },
-          "name": Object {
-            "type": "string",
-          },
-          "sortOrder": Object {
-            "type": "number",
-          },
-          "stickiness": Object {
-            "type": "boolean",
           },
         },
         "required": Array [
@@ -610,6 +589,18 @@ Object {
         },
         "required": Array [
           "value",
+        ],
+        "type": "object",
+      },
+      "nameSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "name": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "name",
         ],
         "type": "object",
       },
@@ -1257,11 +1248,11 @@ Object {
             "content": Object {
               "application/json": Object {
                 "schema": Object {
-                  "$ref": "#/components/schemas/contextSchema",
+                  "$ref": "#/components/schemas/contextFieldsSchema",
                 },
               },
             },
-            "description": "contextSchema",
+            "description": "contextFieldsSchema",
           },
         },
         "tags": Array [
@@ -1274,23 +1265,16 @@ Object {
           "content": Object {
             "application/json": Object {
               "schema": Object {
-                "$ref": "#/components/schemas/createUpdateContextSchema",
+                "$ref": "#/components/schemas/contextFieldSchema",
               },
             },
           },
-          "description": "createUpdateContextSchema",
+          "description": "contextFieldSchema",
           "required": true,
         },
         "responses": Object {
-          "200": Object {
-            "content": Object {
-              "application/json": Object {
-                "schema": Object {
-                  "$ref": "#/components/schemas/contextSchema",
-                },
-              },
-            },
-            "description": "contextSchema",
+          "201": Object {
+            "description": "emptyResponse",
           },
         },
         "tags": Array [
@@ -1301,16 +1285,20 @@ Object {
     "/api/admin/context/validate": Object {
       "post": Object {
         "operationId": "validate",
-        "responses": Object {
-          "200": Object {
-            "content": Object {
-              "application/json": Object {
-                "schema": Object {
-                  "$ref": "#/components/schemas/contextSchema",
-                },
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/nameSchema",
               },
             },
-            "description": "contextSchema",
+          },
+          "description": "nameSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "200": Object {
+            "description": "emptyResponse",
           },
         },
         "tags": Array [
@@ -1333,14 +1321,7 @@ Object {
         ],
         "responses": Object {
           "200": Object {
-            "content": Object {
-              "application/json": Object {
-                "schema": Object {
-                  "$ref": "#/components/schemas/contextSchema",
-                },
-              },
-            },
-            "description": "contextSchema",
+            "description": "emptyResponse",
           },
         },
         "tags": Array [
@@ -1364,11 +1345,11 @@ Object {
             "content": Object {
               "application/json": Object {
                 "schema": Object {
-                  "$ref": "#/components/schemas/contextSchema",
+                  "$ref": "#/components/schemas/contextFieldSchema",
                 },
               },
             },
-            "description": "contextSchema",
+            "description": "contextFieldSchema",
           },
         },
         "tags": Array [
@@ -1391,23 +1372,16 @@ Object {
           "content": Object {
             "application/json": Object {
               "schema": Object {
-                "$ref": "#/components/schemas/createUpdateContextSchema",
+                "$ref": "#/components/schemas/contextFieldSchema",
               },
             },
           },
-          "description": "createUpdateContextSchema",
+          "description": "contextFieldSchema",
           "required": true,
         },
         "responses": Object {
           "200": Object {
-            "content": Object {
-              "application/json": Object {
-                "schema": Object {
-                  "$ref": "#/components/schemas/contextSchema",
-                },
-              },
-            },
-            "description": "contextSchema",
+            "description": "emptyResponse",
           },
         },
         "tags": Array [

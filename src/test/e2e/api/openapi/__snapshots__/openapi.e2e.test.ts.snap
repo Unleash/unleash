@@ -339,19 +339,6 @@ Object {
         ],
         "type": "object",
       },
-      "expiresAtSchema": Object {
-        "additionalProperties": false,
-        "properties": Object {
-          "expiresAt": Object {
-            "format": "date-time",
-            "type": "string",
-          },
-        },
-        "required": Array [
-          "expiresAt",
-        ],
-        "type": "object",
-      },
       "featureEnvironmentSchema": Object {
         "additionalProperties": false,
         "properties": Object {
@@ -1031,6 +1018,19 @@ Object {
         ],
         "type": "object",
       },
+      "updateApiTokenSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "expiresAt": Object {
+            "format": "date-time",
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "expiresAt",
+        ],
+        "type": "object",
+      },
       "updateFeatureSchema": Object {
         "properties": Object {
           "archived": Object {
@@ -1341,11 +1341,11 @@ Object {
           "content": Object {
             "application/json": Object {
               "schema": Object {
-                "$ref": "#/components/schemas/expiresAtSchema",
+                "$ref": "#/components/schemas/updateApiTokenSchema",
               },
             },
           },
-          "description": "expiresAtSchema",
+          "description": "updateApiTokenSchema",
           "required": true,
         },
         "responses": Object {

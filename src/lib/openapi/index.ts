@@ -10,7 +10,6 @@ import { createFeatureSchema } from './spec/create-feature-schema';
 import { createStrategySchema } from './spec/create-strategy-schema';
 import { environmentSchema } from './spec/environment-schema';
 import { environmentsSchema } from './spec/environments-schema';
-import { expiresAtSchema } from './spec/expires-at-schema';
 import { featureEnvironmentSchema } from './spec/feature-environment-schema';
 import { featureSchema } from './spec/feature-schema';
 import { featureStrategySchema } from './spec/feature-strategy-schema';
@@ -37,17 +36,18 @@ import { splashSchema } from './spec/splash-schema';
 import { strategySchema } from './spec/strategy-schema';
 import { tagSchema } from './spec/tag-schema';
 import { tagsSchema } from './spec/tags-schema';
+import { tagTypeSchema } from './spec/tag-type-schema';
+import { tagTypesSchema } from './spec/tag-types-schema';
 import { uiConfigSchema } from './spec/ui-config-schema';
 import { updateFeatureSchema } from './spec/update-feature-schema';
 import { updateStrategySchema } from './spec/update-strategy-schema';
+import { updateApiTokenSchema } from './spec/update-api-token-schema';
+import { updateTagTypeSchema } from './spec/update-tag-type-schema';
 import { upsertContextFieldSchema } from './spec/upsert-context-field-schema';
+import { validateTagTypeSchema } from './spec/validate-tag-type-schema';
 import { variantSchema } from './spec/variant-schema';
 import { variantsSchema } from './spec/variants-schema';
 import { versionSchema } from './spec/version-schema';
-import { tagTypeSchema } from './spec/tag-type-schema';
-import { tagTypesSchema } from './spec/tag-types-schema';
-import { updateTagTypeSchema } from './spec/update-tag-type-schema';
-import { validateTagTypeSchema } from './spec/validate-tag-type-schema';
 
 // All schemas in `openapi/spec` should be listed here.
 export const schemas = {
@@ -62,7 +62,6 @@ export const schemas = {
     createStrategySchema,
     environmentSchema,
     environmentsSchema,
-    expiresAtSchema,
     featureEnvironmentSchema,
     featureSchema,
     featureStrategySchema,
@@ -92,6 +91,7 @@ export const schemas = {
     uiConfigSchema,
     updateFeatureSchema,
     updateStrategySchema,
+    updateApiTokenSchema,
     updateTagTypeSchema,
     upsertContextFieldSchema,
     validateTagTypeSchema,

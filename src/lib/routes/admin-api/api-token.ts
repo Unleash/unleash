@@ -29,7 +29,7 @@ import {
     ApiTokenSchema,
 } from '../../openapi/spec/api-token-schema';
 import { emptyResponse } from '../../openapi/spec/empty-response';
-import { ExpiresAtSchema } from '../../openapi/spec/expires-at-schema';
+import { UpdateApiTokenSchema } from '../../openapi/spec/update-api-token-schema';
 
 interface TokenParam {
     token: string;
@@ -102,7 +102,7 @@ export class ApiTokenController extends Controller {
                 openApiService.validPath({
                     tags: ['admin'],
                     operationId: 'updateApiToken',
-                    requestBody: createRequestSchema('expiresAtSchema'),
+                    requestBody: createRequestSchema('updateApiTokenSchema'),
                     responses: {
                         200: emptyResponse,
                     },
@@ -157,7 +157,7 @@ export class ApiTokenController extends Controller {
     }
 
     async updateApiToken(
-        req: IAuthRequest<TokenParam, void, ExpiresAtSchema>,
+        req: IAuthRequest<TokenParam, void, UpdateApiTokenSchema>,
         res: Response,
     ): Promise<any> {
         const { token } = req.params;

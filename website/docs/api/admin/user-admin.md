@@ -202,7 +202,7 @@ Updates use with new fields
 **Notes**
 
 - `userId` is required as a url path parameter.
-- You must provide _at least_ either `name` or `email`. All other fields are entirely optional. Only provided fields are updated.
+- All fields are optional. Only provided fields are updated.
 
 ### Delete a user {#delete-a-user}
 

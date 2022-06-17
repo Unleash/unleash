@@ -26,6 +26,7 @@ import { simpleAuthKey } from '../types/settings/simple-auth-settings';
 import DisabledError from '../error/disabled-error';
 import PasswordMismatch from '../error/password-mismatch';
 import BadDataError from '../error/bad-data-error';
+import { isDefined } from '../util/isDefined';
 
 const systemUser = new User({ id: -1, username: 'system' });
 
@@ -238,15 +239,25 @@ class UserService {
         { id, name, email, rootRole }: IUpdateUser,
         updatedBy?: User,
     ): Promise<IUser> {
-        Joi.assert(email, Joi.string().email(), 'Email');
-
         const preUser = await this.store.get(id);
+
+        if (email) {
+            Joi.assert(email, Joi.string().email(), 'Email');
+        }
 
         if (rootRole) {
             await this.accessService.setUserRootRole(id, rootRole);
         }
 
-        const user = await this.store.update(id, { name, email });
+        const payload: Partial<IUser> = {
+            name: name || preUser.name,
+            email: email || preUser.email,
+        };
+
+        // Empty updates will throw, so make sure we have something to update.
+        const user = Object.values(payload).some(isDefined)
+            ? await this.store.update(id, payload)
+            : preUser;
 
         await this.eventStore.store({
             type: USER_UPDATED,

@@ -51,82 +51,6 @@ exports[`should serve the OpenAPI spec 1`] = `
 Object {
   "components": Object {
     "schemas": Object {
-      "addonDefinitionSchema": Object {
-        "properties": Object {
-          "description": Object {
-            "type": "string",
-          },
-          "displayName": Object {
-            "type": "string",
-          },
-          "documentationUrl": Object {
-            "type": "string",
-          },
-          "events": Object {
-            "items": Object {
-              "type": "string",
-            },
-            "type": "array",
-          },
-          "name": Object {
-            "type": "string",
-          },
-          "parameters": Object {
-            "$ref": "#/components/schemas/parameterDefinitionSchema",
-          },
-          "tagTypes": Object {
-            "items": Object {
-              "$ref": "#/components/schemas/tagTypeSchema",
-            },
-            "type": "array",
-          },
-        },
-        "required": Array [
-          "name",
-          "displayName",
-          "documentationUrl",
-          "description",
-        ],
-        "type": "object",
-      },
-      "addonSchema": Object {
-        "properties": Object {
-          "createdAt": Object {
-            "format": "date-time",
-            "nullable": true,
-            "type": "string",
-          },
-          "description": Object {
-            "type": "string",
-          },
-          "enabled": Object {
-            "type": "boolean",
-          },
-          "events": Object {
-            "items": Object {
-              "type": "string",
-            },
-            "type": "array",
-          },
-          "id": Object {
-            "type": "number",
-          },
-          "parameters": Object {
-            "additionalProperties": true,
-            "type": "object",
-          },
-          "provider": Object {
-            "type": "string",
-          },
-        },
-        "required": Array [
-          "provider",
-          "enabled",
-          "parameters",
-          "events",
-        ],
-        "type": "object",
-      },
       "cloneFeatureSchema": Object {
         "properties": Object {
           "name": Object {
@@ -498,25 +422,25 @@ Object {
         ],
         "type": "object",
       },
-      "getAddonsSchema": Object {
+      "feedbackSchema": Object {
+        "additionalProperties": false,
         "properties": Object {
-          "addons": Object {
-            "items": Object {
-              "$ref": "#/components/schemas/addonSchema",
-            },
-            "type": "array",
+          "feedbackId": Object {
+            "type": "string",
           },
-          "providers": Object {
-            "items": Object {
-              "$ref": "#/components/schemas/addonDefinitionSchema",
-            },
-            "type": "array",
+          "given": Object {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string",
+          },
+          "neverShow": Object {
+            "type": "boolean",
+          },
+          "userId": Object {
+            "type": "number",
           },
         },
-        "required": Array [
-          "addons",
-          "providers",
-        ],
+        "required": Array [],
         "type": "object",
       },
       "healthOverviewSchema": Object {
@@ -631,39 +555,6 @@ Object {
         "required": Array [
           "contextName",
           "values",
-        ],
-        "type": "object",
-      },
-      "parameterDefinitionSchema": Object {
-        "properties": Object {
-          "description": Object {
-            "type": "string",
-          },
-          "displayName": Object {
-            "type": "string",
-          },
-          "name": Object {
-            "type": "string",
-          },
-          "placeholder": Object {
-            "type": "string",
-          },
-          "required": Object {
-            "type": "boolean",
-          },
-          "sensitive": Object {
-            "type": "boolean",
-          },
-          "type": Object {
-            "type": "string",
-          },
-        },
-        "required": Array [
-          "provider",
-          "description",
-          "enabled",
-          "parameters",
-          "events",
         ],
         "type": "object",
       },
@@ -1159,145 +1050,6 @@ Object {
   },
   "openapi": "3.0.3",
   "paths": Object {
-    "/api/admin/addons/": Object {
-      "get": Object {
-        "operationId": "getAddons",
-        "responses": Object {
-          "200": Object {
-            "content": Object {
-              "application/json": Object {
-                "schema": Object {
-                  "$ref": "#/components/schemas/addonSchema",
-                },
-              },
-            },
-            "description": "addonSchema",
-          },
-        },
-        "tags": Array [
-          "admin",
-        ],
-      },
-      "post": Object {
-        "operationId": "createAddon",
-        "requestBody": Object {
-          "content": Object {
-            "application/json": Object {
-              "schema": Object {
-                "$ref": "#/components/schemas/addonSchema",
-              },
-            },
-          },
-          "description": "addonSchema",
-          "required": true,
-        },
-        "responses": Object {
-          "200": Object {
-            "content": Object {
-              "application/json": Object {
-                "schema": Object {
-                  "$ref": "#/components/schemas/addonSchema",
-                },
-              },
-            },
-            "description": "addonSchema",
-          },
-        },
-        "tags": Array [
-          "admin",
-        ],
-      },
-    },
-    "/api/admin/addons//{id}": Object {
-      "delete": Object {
-        "operationId": "deleteAddon",
-        "parameters": Array [
-          Object {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": Object {
-              "type": "string",
-            },
-          },
-        ],
-        "responses": Object {
-          "200": Object {
-            "description": "emptyResponse",
-          },
-        },
-        "tags": Array [
-          "admin",
-        ],
-      },
-      "get": Object {
-        "operationId": "getAddon",
-        "parameters": Array [
-          Object {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": Object {
-              "type": "string",
-            },
-          },
-        ],
-        "responses": Object {
-          "200": Object {
-            "content": Object {
-              "application/json": Object {
-                "schema": Object {
-                  "$ref": "#/components/schemas/addonSchema",
-                },
-              },
-            },
-            "description": "addonSchema",
-          },
-        },
-        "tags": Array [
-          "admin",
-        ],
-      },
-      "put": Object {
-        "operationId": "updateAddon",
-        "parameters": Array [
-          Object {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": Object {
-              "type": "string",
-            },
-          },
-        ],
-        "requestBody": Object {
-          "content": Object {
-            "application/json": Object {
-              "schema": Object {
-                "$ref": "#/components/schemas/addonSchema",
-              },
-            },
-          },
-          "description": "addonSchema",
-          "required": true,
-        },
-        "responses": Object {
-          "200": Object {
-            "content": Object {
-              "application/json": Object {
-                "schema": Object {
-                  "$ref": "#/components/schemas/addonSchema",
-                },
-              },
-            },
-            "description": "addonSchema",
-          },
-        },
-        "tags": Array [
-          "admin",
-        ],
-      },
-    },
     "/api/admin/archive/features": Object {
       "get": Object {
         "deprecated": true,
@@ -1691,6 +1443,78 @@ Object {
         "responses": Object {
           "200": Object {
             "description": "emptyResponse",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/feedback": Object {
+      "post": Object {
+        "operationId": "createFeedback",
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/feedbackSchema",
+              },
+            },
+          },
+          "description": "feedbackSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/feedbackSchema",
+                },
+              },
+            },
+            "description": "feedbackSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/feedback/{id}": Object {
+      "put": Object {
+        "operationId": "updateFeedback",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/feedbackSchema",
+              },
+            },
+          },
+          "description": "feedbackSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/feedbackSchema",
+                },
+              },
+            },
+            "description": "feedbackSchema",
           },
         },
         "tags": Array [

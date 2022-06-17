@@ -10,6 +10,7 @@ import { createFeatureSchema } from './spec/create-feature-schema';
 import { createStrategySchema } from './spec/create-strategy-schema';
 import { environmentSchema } from './spec/environment-schema';
 import { environmentsSchema } from './spec/environments-schema';
+import { expiresAtSchema } from './spec/expires-at-schema';
 import { featureEnvironmentSchema } from './spec/feature-environment-schema';
 import { featureSchema } from './spec/feature-schema';
 import { featureStrategySchema } from './spec/feature-strategy-schema';
@@ -61,6 +62,7 @@ export const schemas = {
     createStrategySchema,
     environmentSchema,
     environmentsSchema,
+    expiresAtSchema,
     featureEnvironmentSchema,
     featureSchema,
     featureStrategySchema,

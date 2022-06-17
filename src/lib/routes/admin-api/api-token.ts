@@ -19,14 +19,21 @@ import { createApiToken } from '../../schema/api-token-schema';
 import { OpenApiService } from '../../services/openapi-service';
 import { IUnleashServices } from '../../types';
 import { createRequestSchema, createResponseSchema } from '../../openapi';
-import { ApiTokensSchema } from '../../openapi/spec/api-tokens-schema';
+import {
+    apiTokensSchema,
+    ApiTokensSchema,
+} from '../../openapi/spec/api-tokens-schema';
 import { serializeDates } from '../../types/serialize-dates';
 import {
     apiTokenSchema,
     ApiTokenSchema,
 } from '../../openapi/spec/api-token-schema';
 import { emptyResponse } from '../../openapi/spec/empty-response';
+import { ExpiresAtSchema } from '../../openapi/spec/expires-at-schema';
 
+interface TokenParam {
+    token: string;
+}
 export class ApiTokenController extends Controller {
     private apiTokenService: ApiTokenService;
 
@@ -95,9 +102,9 @@ export class ApiTokenController extends Controller {
                 openApiService.validPath({
                     tags: ['admin'],
                     operationId: 'updateApiToken',
+                    requestBody: createRequestSchema('expiresAtSchema'),
                     responses: {
                         200: emptyResponse,
-                        400: emptyResponse,
                     },
                 }),
             ],
@@ -127,7 +134,12 @@ export class ApiTokenController extends Controller {
     ): Promise<void> {
         const { user } = req;
         const tokens = await this.accessibleTokens(user);
-        res.json({ tokens: serializeDates(tokens) });
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            apiTokensSchema.$id,
+            { tokens: serializeDates(tokens) },
+        );
     }
 
     async createApiToken(
@@ -144,7 +156,10 @@ export class ApiTokenController extends Controller {
         );
     }
 
-    async updateApiToken(req: IAuthRequest, res: Response): Promise<any> {
+    async updateApiToken(
+        req: IAuthRequest<TokenParam, void, ExpiresAtSchema>,
+        res: Response,
+    ): Promise<any> {
         const { token } = req.params;
         const { expiresAt } = req.body;
 
@@ -153,11 +168,14 @@ export class ApiTokenController extends Controller {
             return res.status(400).send();
         }
 
-        await this.apiTokenService.updateExpiry(token, expiresAt);
+        await this.apiTokenService.updateExpiry(token, new Date(expiresAt));
         return res.status(200).end();
     }
 
-    async deleteApiToken(req: IAuthRequest, res: Response): Promise<void> {
+    async deleteApiToken(
+        req: IAuthRequest<TokenParam>,
+        res: Response,
+    ): Promise<void> {
         const { token } = req.params;
 
         await this.apiTokenService.delete(token);

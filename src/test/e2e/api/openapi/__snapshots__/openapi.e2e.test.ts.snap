@@ -339,6 +339,19 @@ Object {
         ],
         "type": "object",
       },
+      "expiresAtSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "expiresAt": Object {
+            "format": "date-time",
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "expiresAt",
+        ],
+        "type": "object",
+      },
       "featureEnvironmentSchema": Object {
         "additionalProperties": false,
         "properties": Object {
@@ -1324,11 +1337,19 @@ Object {
             },
           },
         ],
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/expiresAtSchema",
+              },
+            },
+          },
+          "description": "expiresAtSchema",
+          "required": true,
+        },
         "responses": Object {
           "200": Object {
-            "description": "emptyResponse",
-          },
-          "400": Object {
             "description": "emptyResponse",
           },
         },

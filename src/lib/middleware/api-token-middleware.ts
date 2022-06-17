@@ -6,6 +6,9 @@ const isClientApi = ({ path }) => {
     return path && path.startsWith('/api/client');
 };
 
+export const TOKEN_TYPE_ERROR_MESSAGE =
+    'invalid token: expected an admin token but got a client token instead';
+
 const apiAccessMiddleware = (
     {
         getLogger,
@@ -28,9 +31,11 @@ const apiAccessMiddleware = (
         try {
             const apiToken = req.header('authorization');
             const apiUser = apiTokenService.getUserForToken(apiToken);
+
             if (apiUser) {
                 if (apiUser.type === ApiTokenType.CLIENT && !isClientApi(req)) {
-                    return res.sendStatus(403);
+                    res.status(403).send({ message: TOKEN_TYPE_ERROR_MESSAGE });
+                    return;
                 }
                 req.user = apiUser;
             }
@@ -38,9 +43,8 @@ const apiAccessMiddleware = (
             logger.error(error);
         }
 
-        return next();
+        next();
     };
 };
 
-module.exports = apiAccessMiddleware;
 export default apiAccessMiddleware;

@@ -133,6 +133,19 @@ test('requires known root role', async () => {
         .expect(400);
 });
 
+test('should require username or email on create', async () => {
+    await app.request
+        .post('/api/admin/user-admin')
+        .send({ rootRole: adminRole.id })
+        .set('Content-Type', 'application/json')
+        .expect(400)
+        .expect((res) => {
+            expect(res.body.details[0].message).toEqual(
+                'You must specify username or email',
+            );
+        });
+});
+
 test('update user name', async () => {
     const { body } = await app.request
         .post('/api/admin/user-admin')

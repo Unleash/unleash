@@ -1,4 +1,3 @@
-import assert from 'assert';
 import bcrypt from 'bcryptjs';
 import owasp from 'owasp-password-strength-test';
 import Joi from 'joi';
@@ -26,6 +25,7 @@ import { SimpleAuthSettings } from '../server-impl';
 import { simpleAuthKey } from '../types/settings/simple-auth-settings';
 import DisabledError from '../error/disabled-error';
 import PasswordMismatch from '../error/password-mismatch';
+import BadDataError from '../error/bad-data-error';
 
 const systemUser = new User({ id: -1, username: 'system' });
 
@@ -183,7 +183,9 @@ class UserService {
         { username, email, name, password, rootRole }: ICreateUser,
         updatedBy?: User,
     ): Promise<IUser> {
-        assert.ok(username || email, 'You must specify username or email');
+        if (!username && !email) {
+            throw new BadDataError('You must specify username or email');
+        }
 
         if (email) {
             Joi.assert(email, Joi.string().email(), 'Email');

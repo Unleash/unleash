@@ -26,8 +26,6 @@ export default class ProjectApi extends Controller {
         this.projectService = services.projectService;
         this.openApiService = services.openApiService;
 
-        this.get('/', this.getProjects);
-
         this.route({
             path: '',
             method: 'get',

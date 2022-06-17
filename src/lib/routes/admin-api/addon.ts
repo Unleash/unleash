@@ -128,7 +128,7 @@ class AddonController extends Controller {
 
     async getAddon(
         req: Request<{ id: number }, any, any, any>,
-        res: Response,
+        res: Response<AddonSchema>,
     ): Promise<void> {
         const { id } = req.params;
         const addon = await this.addonService.getAddon(id);

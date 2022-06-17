@@ -18,6 +18,7 @@ import { featureTypesSchema } from './spec/feature-types-schema';
 import { featureVariantsSchema } from './spec/feature-variants-schema';
 import { featuresSchema } from './spec/features-schema';
 import { feedbackSchema } from './spec/feedback-schema';
+import { healthCheckSchema } from './spec/health-check-schema';
 import { healthOverviewSchema } from './spec/health-overview-schema';
 import { healthReportSchema } from './spec/health-report-schema';
 import { legalValueSchema } from './spec/legal-value-schema';
@@ -70,6 +71,7 @@ export const schemas = {
     featureVariantsSchema,
     featuresSchema,
     feedbackSchema,
+    healthCheckSchema,
     healthOverviewSchema,
     healthReportSchema,
     legalValueSchema,
@@ -122,6 +124,12 @@ export interface ClientApiOperation
     extends Omit<OpenAPIV3.OperationObject, 'tags'> {
     operationId: string;
     tags: ['client'];
+}
+
+export interface OtherApiOperation
+    extends Omit<OpenAPIV3.OperationObject, 'tags'> {
+    operationId: string;
+    tags: ['other'];
 }
 
 export const createRequestSchema = (

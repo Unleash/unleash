@@ -3,33 +3,68 @@ import { IUnleashConfig } from '../types/option';
 import { IUnleashServices } from '../types/services';
 import { Logger } from '../logger';
 import HealthService from '../services/health-service';
+import { OpenApiService } from '../services/openapi-service';
 
-const Controller = require('./controller');
+import Controller from './controller';
+import { NONE } from '../types/permissions';
+import { createResponseSchema } from '../openapi';
+import {
+    healthCheckSchema,
+    HealthCheckSchema,
+} from '../openapi/spec/health-check-schema';
 
-class HealthCheckController extends Controller {
+export class HealthCheckController extends Controller {
     private logger: Logger;
+
+    private openApiService: OpenApiService;
 
     private healthService: HealthService;
 
     constructor(
         config: IUnleashConfig,
-        { healthService }: Pick<IUnleashServices, 'healthService'>,
+        {
+            healthService,
+            openApiService,
+        }: Pick<IUnleashServices, 'healthService' | 'openApiService'>,
     ) {
         super(config);
         this.logger = config.getLogger('health-check.js');
+        this.openApiService = openApiService;
         this.healthService = healthService;
-        this.get('/', (req, res) => this.index(req, res));
+
+        this.route({
+            method: 'get',
+            path: '',
+            handler: this.getHealth,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['other'],
+                    operationId: 'getHealth',
+                    responses: {
+                        200: createResponseSchema('healthCheckSchema'),
+                        500: createResponseSchema('healthCheckSchema'),
+                    },
+                }),
+            ],
+        });
     }
 
-    async index(req: Request, res: Response): Promise<void> {
+    async getHealth(
+        _: Request,
+        res: Response<HealthCheckSchema>,
+    ): Promise<void> {
         try {
             await this.healthService.dbIsUp();
-            res.json({ health: 'GOOD' });
+            this.openApiService.respondWithValidation(
+                200,
+                res,
+                healthCheckSchema.$id,
+                { health: 'GOOD' },
+            );
         } catch (e) {
             this.logger.error('Could not select from features, error was: ', e);
             res.status(500).json({ health: 'BAD' });
         }
     }
 }
-export default HealthCheckController;
-module.exports = HealthCheckController;

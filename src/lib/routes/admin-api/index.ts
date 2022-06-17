@@ -17,7 +17,7 @@ import StateController from './state';
 import TagController from './tag';
 import TagTypeController from './tag-type';
 import AddonController from './addon';
-import ApiTokenController from './api-token';
+import { ApiTokenController } from './api-token';
 import UserAdminController from './user-admin';
 import EmailController from './email';
 import UserFeedbackController from './user-feedback';

@@ -72,7 +72,7 @@ class AddonController extends Controller {
 
         this.route({
             method: 'get',
-            path: `${PATH}/:id`,
+            path: `${PATH}:id`,
             handler: this.getAddon,
             permission: NONE,
             middleware: [
@@ -86,7 +86,7 @@ class AddonController extends Controller {
 
         this.route({
             method: 'put',
-            path: `${PATH}/:id`,
+            path: `${PATH}:id`,
             handler: this.updateAddon,
             permission: UPDATE_ADDON,
             middleware: [
@@ -101,7 +101,7 @@ class AddonController extends Controller {
 
         this.route({
             method: 'delete',
-            path: `${PATH}/:id`,
+            path: `${PATH}:id`,
             handler: this.deleteAddon,
             permission: DELETE_ADDON,
             middleware: [

@@ -103,6 +103,7 @@ class AddonController extends Controller {
             method: 'delete',
             path: `${PATH}:id`,
             handler: this.deleteAddon,
+            acceptAnyContentType: true,
             permission: DELETE_ADDON,
             middleware: [
                 openApiService.validPath({

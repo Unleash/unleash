@@ -1229,7 +1229,7 @@ Object {
         ],
       },
     },
-    "/api/admin/addons//{id}": Object {
+    "/api/admin/addons/{id}": Object {
       "delete": Object {
         "operationId": "deleteAddon",
         "parameters": Array [

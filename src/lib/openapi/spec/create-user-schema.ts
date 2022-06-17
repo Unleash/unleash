@@ -4,7 +4,7 @@ export const createUserSchema = {
     $id: '#/components/schemas/createUserSchema',
     type: 'object',
     additionalProperties: false,
-    required: ['name', 'email', 'rootRole'],
+    required: ['rootRole'],
     properties: {
         username: {
             type: 'string',

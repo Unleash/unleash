@@ -218,8 +218,6 @@ Object {
           },
         },
         "required": Array [
-          "name",
-          "email",
           "rootRole",
         ],
         "type": "object",

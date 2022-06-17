@@ -203,6 +203,7 @@ Updates use with new fields
 
 - `userId` is required as a url path parameter.
 - All fields are optional. Only provided fields are updated.
+- Note that earlier versions of Unleash required either `name` or `email` to be set.
 
 ### Delete a user {#delete-a-user}
 

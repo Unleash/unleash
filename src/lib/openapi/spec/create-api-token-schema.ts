@@ -14,12 +14,8 @@ export const createApiTokenSchema = {
             type: 'string',
         },
         type: {
-            enum: [
-                ...Object.values(ApiTokenType),
-                ...Object.values(ApiTokenType).map((token) =>
-                    token.toUpperCase(),
-                ),
-            ],
+            type: 'string',
+            description: `${Object.values(ApiTokenType).join(', ')}.`,
         },
         environment: {
             type: 'string',

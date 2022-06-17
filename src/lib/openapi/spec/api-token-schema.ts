@@ -14,7 +14,8 @@ export const apiTokenSchema = {
             type: 'string',
         },
         type: {
-            enum: Object.values(ApiTokenType),
+            type: 'string',
+            description: `${Object.values(ApiTokenType).join(', ')}.`,
         },
         environment: {
             type: 'string',

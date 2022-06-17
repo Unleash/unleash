@@ -25,6 +25,7 @@ import {
     apiTokenSchema,
     ApiTokenSchema,
 } from '../../openapi/spec/api-token-schema';
+import { emptyResponse } from 'lib/openapi/spec/empty-response';
 
 export class ApiTokenController extends Controller {
     private apiTokenService: ApiTokenService;
@@ -62,7 +63,7 @@ export class ApiTokenController extends Controller {
                     tags: ['admin'],
                     operationId: 'getAllApiTokens',
                     responses: {
-                        200: createResponseSchema('apiTokenSchema'),
+                        200: createResponseSchema('apiTokensSchema'),
                     },
                 }),
             ],
@@ -79,7 +80,7 @@ export class ApiTokenController extends Controller {
                     operationId: 'createApiToken',
                     requestBody: createRequestSchema('createApiTokenSchema'),
                     responses: {
-                        200: createResponseSchema('apiTokenSchema'),
+                        201: createResponseSchema('apiTokenSchema'),
                     },
                 }),
             ],
@@ -95,7 +96,8 @@ export class ApiTokenController extends Controller {
                     tags: ['admin'],
                     operationId: 'updateApiToken',
                     responses: {
-                        200: createResponseSchema('apiTokenSchema'),
+                        200: emptyResponse,
+                        400: emptyResponse,
                     },
                 }),
             ],
@@ -105,13 +107,14 @@ export class ApiTokenController extends Controller {
             method: 'delete',
             path: '/:token',
             handler: this.deleteApiToken,
+            acceptAnyContentType: true,
             permission: DELETE_API_TOKEN,
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
                     operationId: 'deleteApiToken',
                     responses: {
-                        200: createResponseSchema('apiTokenSchema'),
+                        200: emptyResponse,
                     },
                 }),
             ],

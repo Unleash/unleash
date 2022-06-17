@@ -3,6 +3,7 @@ import { Express, RequestHandler, Response } from 'express';
 import { IUnleashConfig } from '../types/option';
 import {
     AdminApiOperation,
+    AuthApiOperation,
     ClientApiOperation,
     OtherApiOperation,
     createOpenApiSchema,
@@ -32,7 +33,11 @@ export class OpenApiService {
     }
 
     validPath(
-        op: AdminApiOperation | ClientApiOperation | OtherApiOperation,
+        op:
+            | AdminApiOperation
+            | ClientApiOperation
+            | AuthApiOperation
+            | OtherApiOperation,
     ): RequestHandler {
         return this.api.validPath(op);
     }

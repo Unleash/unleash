@@ -178,6 +178,12 @@ export type AdminApiOperation = ApiOperation<'admin'>;
 export type ClientApiOperation = ApiOperation<'client'>;
 export type OtherApiOperation = ApiOperation<'other'>;
 
+export interface AuthApiOperation
+    extends Omit<OpenAPIV3.OperationObject, 'tags'> {
+    operationId: string;
+    tags: ['auth'];
+}
+
 export const createRequestSchema = (
     schemaName: string,
 ): OpenAPIV3.RequestBodyObject => {

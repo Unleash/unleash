@@ -10,7 +10,7 @@ import EventController from './event';
 import MetricsController from './metrics';
 import UserController from './user';
 import ConfigController from './config';
-import ContextController from './context';
+import { ContextController } from './context';
 import ClientMetricsController from './client-metrics';
 import BootstrapController from './bootstrap';
 import StateController from './state';

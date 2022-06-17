@@ -1,6 +1,8 @@
 import { OpenAPIV3 } from 'openapi-types';
 import { cloneFeatureSchema } from './spec/clone-feature-schema';
 import { constraintSchema } from './spec/constraint-schema';
+import { contextFieldSchema } from './spec/context-field-schema';
+import { contextFieldsSchema } from './spec/context-fields-schema';
 import { createFeatureSchema } from './spec/create-feature-schema';
 import { createStrategySchema } from './spec/create-strategy-schema';
 import { environmentSchema } from './spec/environment-schema';
@@ -15,7 +17,9 @@ import { featuresSchema } from './spec/features-schema';
 import { feedbackSchema } from './spec/feedback-schema';
 import { healthOverviewSchema } from './spec/health-overview-schema';
 import { healthReportSchema } from './spec/health-report-schema';
+import { legalValueSchema } from './spec/legal-value-schema';
 import { mapValues } from '../util/map-values';
+import { nameSchema } from './spec/name-schema';
 import { omitKeys } from '../util/omit-keys';
 import { overrideSchema } from './spec/override-schema';
 import { parametersSchema } from './spec/parameters-schema';
@@ -32,6 +36,7 @@ import { tagsSchema } from './spec/tags-schema';
 import { uiConfigSchema } from './spec/ui-config-schema';
 import { updateFeatureSchema } from './spec/update-feature-schema';
 import { updateStrategySchema } from './spec/update-strategy-schema';
+import { upsertContextFieldSchema } from './spec/upsert-context-field-schema';
 import { variantSchema } from './spec/variant-schema';
 import { variantsSchema } from './spec/variants-schema';
 import { versionSchema } from './spec/version-schema';
@@ -44,6 +49,8 @@ import { validateTagTypeSchema } from './spec/validate-tag-type-schema';
 export const schemas = {
     cloneFeatureSchema,
     constraintSchema,
+    contextFieldSchema,
+    contextFieldsSchema,
     createFeatureSchema,
     createStrategySchema,
     environmentSchema,
@@ -58,6 +65,8 @@ export const schemas = {
     feedbackSchema,
     healthOverviewSchema,
     healthReportSchema,
+    legalValueSchema,
+    nameSchema,
     overrideSchema,
     parametersSchema,
     patchSchema,
@@ -76,6 +85,7 @@ export const schemas = {
     updateFeatureSchema,
     updateStrategySchema,
     updateTagTypeSchema,
+    upsertContextFieldSchema,
     validateTagTypeSchema,
     variantSchema,
     variantsSchema,

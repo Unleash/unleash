@@ -113,6 +113,44 @@ Object {
         ],
         "type": "object",
       },
+      "contextFieldSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "createdAt": Object {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string",
+          },
+          "description": Object {
+            "type": "string",
+          },
+          "legalValues": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/legalValueSchema",
+            },
+            "type": "array",
+          },
+          "name": Object {
+            "type": "string",
+          },
+          "sortOrder": Object {
+            "type": "number",
+          },
+          "stickiness": Object {
+            "type": "boolean",
+          },
+        },
+        "required": Array [
+          "name",
+        ],
+        "type": "object",
+      },
+      "contextFieldsSchema": Object {
+        "items": Object {
+          "$ref": "#/components/schemas/contextFieldSchema",
+        },
+        "type": "array",
+      },
       "createFeatureSchema": Object {
         "properties": Object {
           "description": Object {
@@ -539,6 +577,33 @@ Object {
         ],
         "type": "object",
       },
+      "legalValueSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "description": Object {
+            "type": "string",
+          },
+          "value": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "value",
+        ],
+        "type": "object",
+      },
+      "nameSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "name": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "name",
+        ],
+        "type": "object",
+      },
       "overrideSchema": Object {
         "additionalProperties": false,
         "properties": Object {
@@ -927,6 +992,33 @@ Object {
         },
         "type": "object",
       },
+      "upsertContextFieldSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "description": Object {
+            "type": "string",
+          },
+          "legalValues": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/legalValueSchema",
+            },
+            "type": "array",
+          },
+          "name": Object {
+            "type": "string",
+          },
+          "sortOrder": Object {
+            "type": "number",
+          },
+          "stickiness": Object {
+            "type": "boolean",
+          },
+        },
+        "required": Array [
+          "name",
+        ],
+        "type": "object",
+      },
       "validateTagTypeSchema": Object {
         "additionalProperties": false,
         "properties": Object {
@@ -1168,6 +1260,155 @@ Object {
           },
           "400": Object {
             "description": "invalidConstraint",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/context": Object {
+      "get": Object {
+        "operationId": "getContextFields",
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/contextFieldsSchema",
+                },
+              },
+            },
+            "description": "contextFieldsSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+      "post": Object {
+        "operationId": "createContextField",
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/upsertContextFieldSchema",
+              },
+            },
+          },
+          "description": "upsertContextFieldSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "201": Object {
+            "description": "emptyResponse",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/context/validate": Object {
+      "post": Object {
+        "operationId": "validate",
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/nameSchema",
+              },
+            },
+          },
+          "description": "nameSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "200": Object {
+            "description": "emptyResponse",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/context/{contextField}": Object {
+      "delete": Object {
+        "operationId": "deleteContextField",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "contextField",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "description": "emptyResponse",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+      "get": Object {
+        "operationId": "getContextField",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "contextField",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/contextFieldSchema",
+                },
+              },
+            },
+            "description": "contextFieldSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+      "put": Object {
+        "operationId": "updateContextField",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "contextField",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/upsertContextFieldSchema",
+              },
+            },
+          },
+          "description": "upsertContextFieldSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "200": Object {
+            "description": "emptyResponse",
           },
         },
         "tags": Array [

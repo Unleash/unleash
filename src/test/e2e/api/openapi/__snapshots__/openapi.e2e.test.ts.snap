@@ -85,10 +85,8 @@ Object {
             "type": "string",
           },
           "type": Object {
-            "enum": Array [
-              "client",
-              "admin",
-            ],
+            "description": "client, admin.",
+            "type": "string",
           },
           "username": Object {
             "type": "string",
@@ -239,12 +237,8 @@ Object {
             "type": "string",
           },
           "type": Object {
-            "enum": Array [
-              "client",
-              "admin",
-              "CLIENT",
-              "ADMIN",
-            ],
+            "description": "client, admin.",
+            "type": "string",
           },
           "username": Object {
             "type": "string",
@@ -1255,11 +1249,11 @@ Object {
             "content": Object {
               "application/json": Object {
                 "schema": Object {
-                  "$ref": "#/components/schemas/apiTokenSchema",
+                  "$ref": "#/components/schemas/apiTokensSchema",
                 },
               },
             },
-            "description": "apiTokenSchema",
+            "description": "apiTokensSchema",
           },
         },
         "tags": Array [
@@ -1280,7 +1274,7 @@ Object {
           "required": true,
         },
         "responses": Object {
-          "200": Object {
+          "201": Object {
             "content": Object {
               "application/json": Object {
                 "schema": Object {
@@ -1311,14 +1305,7 @@ Object {
         ],
         "responses": Object {
           "200": Object {
-            "content": Object {
-              "application/json": Object {
-                "schema": Object {
-                  "$ref": "#/components/schemas/apiTokenSchema",
-                },
-              },
-            },
-            "description": "apiTokenSchema",
+            "description": "emptyResponse",
           },
         },
         "tags": Array [
@@ -1339,14 +1326,10 @@ Object {
         ],
         "responses": Object {
           "200": Object {
-            "content": Object {
-              "application/json": Object {
-                "schema": Object {
-                  "$ref": "#/components/schemas/apiTokenSchema",
-                },
-              },
-            },
-            "description": "apiTokenSchema",
+            "description": "emptyResponse",
+          },
+          "400": Object {
+            "description": "emptyResponse",
           },
         },
         "tags": Array [
@@ -1709,7 +1692,7 @@ Object {
           },
         ],
         "responses": Object {
-          "200": Object {
+          "204": Object {
             "description": "emptyResponse",
           },
         },
@@ -1732,7 +1715,7 @@ Object {
           },
         ],
         "responses": Object {
-          "200": Object {
+          "204": Object {
             "description": "emptyResponse",
           },
         },

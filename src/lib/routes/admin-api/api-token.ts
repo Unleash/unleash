@@ -25,7 +25,7 @@ import {
     apiTokenSchema,
     ApiTokenSchema,
 } from '../../openapi/spec/api-token-schema';
-import { emptyResponse } from 'lib/openapi/spec/empty-response';
+import { emptyResponse } from '../../openapi/spec/empty-response';
 
 export class ApiTokenController extends Controller {
     private apiTokenService: ApiTokenService;

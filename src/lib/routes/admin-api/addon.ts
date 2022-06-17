@@ -21,6 +21,8 @@ import { getAddonsSchema } from '../../openapi/spec/get-addons-schema';
 
 type AddonServices = Pick<IUnleashServices, 'addonService' | 'openApiService'>;
 
+const PATH = '/';
+
 class AddonController extends Controller {
     private logger: Logger;
 
@@ -39,7 +41,7 @@ class AddonController extends Controller {
 
         this.route({
             method: 'get',
-            path: '/',
+            path: PATH,
             permission: NONE,
             handler: this.getAddons,
             middleware: [
@@ -55,14 +57,14 @@ class AddonController extends Controller {
 
         this.route({
             method: 'post',
-            path: '/',
+            path: PATH,
             handler: this.createAddon,
             permission: CREATE_ADDON,
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
                     operationId: 'createAddon',
-                    requestBody: createRequestSchema('createAddonSchema'),
+                    requestBody: createRequestSchema('addonSchema'),
                     responses: { 200: createResponseSchema('addonSchema') },
                 }),
             ],
@@ -70,7 +72,7 @@ class AddonController extends Controller {
 
         this.route({
             method: 'get',
-            path: '/:id',
+            path: `${PATH}/:id`,
             handler: this.getAddon,
             permission: NONE,
             middleware: [
@@ -84,7 +86,7 @@ class AddonController extends Controller {
 
         this.route({
             method: 'put',
-            path: '/:id',
+            path: `${PATH}/:id`,
             handler: this.updateAddon,
             permission: UPDATE_ADDON,
             middleware: [
@@ -99,7 +101,7 @@ class AddonController extends Controller {
 
         this.route({
             method: 'delete',
-            path: '/:id',
+            path: `${PATH}/:id`,
             handler: this.deleteAddon,
             permission: DELETE_ADDON,
             middleware: [
@@ -157,7 +159,7 @@ class AddonController extends Controller {
     }
 
     async createAddon(
-        req: IAuthRequest,
+        req: IAuthRequest<AddonSchema, any, any, any>,
         res: Response<AddonSchema>,
     ): Promise<void> {
         const createdBy = extractUsername(req);

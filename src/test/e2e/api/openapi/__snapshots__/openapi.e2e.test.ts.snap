@@ -121,7 +121,6 @@ Object {
         },
         "required": Array [
           "provider",
-          "description",
           "enabled",
           "parameters",
           "events",
@@ -1185,11 +1184,11 @@ Object {
           "content": Object {
             "application/json": Object {
               "schema": Object {
-                "$ref": "#/components/schemas/createAddonSchema",
+                "$ref": "#/components/schemas/addonSchema",
               },
             },
           },
-          "description": "createAddonSchema",
+          "description": "addonSchema",
           "required": true,
         },
         "responses": Object {
@@ -1209,7 +1208,7 @@ Object {
         ],
       },
     },
-    "/api/admin/addons/{id}": Object {
+    "/api/admin/addons//{id}": Object {
       "delete": Object {
         "operationId": "deleteAddon",
         "parameters": Array [

@@ -3,7 +3,7 @@ import { FromSchema } from 'json-schema-to-ts';
 export const addonSchema = {
     $id: '#/components/schemas/addonSchema',
     type: 'object',
-    required: ['provider', 'description', 'enabled', 'parameters', 'events'],
+    required: ['provider', 'enabled', 'parameters', 'events'],
     properties: {
         id: {
             type: 'number',

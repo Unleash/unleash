@@ -5,6 +5,7 @@ import { Delete } from '@mui/icons-material';
 import { IconButton, Tooltip } from '@mui/material';
 import { IStrategy } from 'interfaces/strategy';
 import { DELETE_STRATEGY } from 'component/providers/AccessProvider/permissions';
+import { useId } from 'hooks/useId';
 
 interface IStrategyDeleteButtonProps {
     strategy: IStrategy;
@@ -15,6 +16,8 @@ export const StrategyDeleteButton: VFC<IStrategyDeleteButtonProps> = ({
     strategy,
     onClick,
 }) => {
+    const id = useId();
+
     return (
         <ConditionallyRender
             condition={strategy?.editable}
@@ -29,9 +32,9 @@ export const StrategyDeleteButton: VFC<IStrategyDeleteButtonProps> = ({
             }
             elseShow={
                 <Tooltip title="You cannot delete a built-in strategy" arrow>
-                    <div>
+                    <div id={id}>
                         <IconButton disabled size="large">
-                            <Delete titleAccess="Delete strategy" />
+                            <Delete aria-labelledby={id} />
                         </IconButton>
                     </div>
                 </Tooltip>

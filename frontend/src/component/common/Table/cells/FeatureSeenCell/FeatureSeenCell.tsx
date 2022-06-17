@@ -66,7 +66,6 @@ const Wrapper: FC<{ unit?: string; tooltip: string }> = ({
         <div className={styles.container}>
             <Tooltip title={tooltip} arrow describeChild>
                 <div
-                    role="tooltip"
                     className={styles.box}
                     style={{ background: getColor(unit) }}
                     data-loading

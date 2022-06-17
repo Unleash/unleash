@@ -72,7 +72,7 @@ const PermissionButton: React.FC<IPermissionButtonProps> = ({
                 <Button
                     onClick={onClick}
                     disabled={disabled || !access}
-                    aria-describedby={id}
+                    aria-labelledby={id}
                     variant={variant}
                     color={color}
                     {...rest}

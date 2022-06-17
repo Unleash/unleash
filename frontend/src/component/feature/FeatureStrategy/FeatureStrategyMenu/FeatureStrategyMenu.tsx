@@ -40,7 +40,7 @@ export const FeatureStrategyMenu = ({
                 projectId={projectId}
                 environmentId={environmentId}
                 onClick={onClick}
-                aria-describedby={popoverId}
+                aria-labelledby={popoverId}
                 variant={variant}
             >
                 {label}

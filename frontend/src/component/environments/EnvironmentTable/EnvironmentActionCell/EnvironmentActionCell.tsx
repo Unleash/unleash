@@ -99,6 +99,7 @@ export const EnvironmentActionCell = ({
         ? `Disable environment ${environment.name}`
         : `Enable environment ${environment.name}`;
 
+    const toggleId = useId();
     const editId = useId();
     const deleteId = useId();
 
@@ -108,13 +109,16 @@ export const EnvironmentActionCell = ({
                 condition={updatePermission}
                 show={
                     <>
-                        <Tooltip title={toggleIconTooltip} arrow describeChild>
-                            <PermissionSwitch
-                                permission={UPDATE_ENVIRONMENT}
-                                checked={environment.enabled}
-                                onClick={() => setToggleModal(true)}
-                                disabled={environment.protected}
-                            />
+                        <Tooltip title={toggleIconTooltip} arrow>
+                            <div id={toggleId}>
+                                <PermissionSwitch
+                                    permission={UPDATE_ENVIRONMENT}
+                                    checked={environment.enabled}
+                                    onClick={() => setToggleModal(true)}
+                                    disabled={environment.protected}
+                                    inputProps={{ 'aria-labelledby': toggleId }}
+                                />
+                            </div>
                         </Tooltip>
                         <ActionCell.Divider />
                     </>
@@ -133,7 +137,7 @@ export const EnvironmentActionCell = ({
                     >
                         <span id={editId}>
                             <IconButton
-                                aria-describedby={editId}
+                                aria-labelledby={editId}
                                 disabled={environment.protected}
                                 onClick={() => {
                                     navigate(
@@ -162,7 +166,7 @@ export const EnvironmentActionCell = ({
                     >
                         <span id={deleteId}>
                             <IconButton
-                                aria-describedby={deleteId}
+                                aria-labelledby={deleteId}
                                 disabled={environment.protected}
                                 onClick={() => setDeleteModal(true)}
                                 size="large"

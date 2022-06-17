@@ -36,6 +36,7 @@ import { tagsSchema } from './spec/tags-schema';
 import { uiConfigSchema } from './spec/ui-config-schema';
 import { updateFeatureSchema } from './spec/update-feature-schema';
 import { updateStrategySchema } from './spec/update-strategy-schema';
+import { upsertContextFieldSchema } from './spec/upsert-context-field-schema';
 import { variantSchema } from './spec/variant-schema';
 import { variantsSchema } from './spec/variants-schema';
 import { versionSchema } from './spec/version-schema';
@@ -84,6 +85,7 @@ export const schemas = {
     updateFeatureSchema,
     updateStrategySchema,
     updateTagTypeSchema,
+    upsertContextFieldSchema,
     validateTagTypeSchema,
     variantSchema,
     variantsSchema,

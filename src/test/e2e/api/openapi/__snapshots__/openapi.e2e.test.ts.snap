@@ -992,6 +992,33 @@ Object {
         },
         "type": "object",
       },
+      "upsertContextFieldSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "description": Object {
+            "type": "string",
+          },
+          "legalValues": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/legalValueSchema",
+            },
+            "type": "array",
+          },
+          "name": Object {
+            "type": "string",
+          },
+          "sortOrder": Object {
+            "type": "number",
+          },
+          "stickiness": Object {
+            "type": "boolean",
+          },
+        },
+        "required": Array [
+          "name",
+        ],
+        "type": "object",
+      },
       "validateTagTypeSchema": Object {
         "additionalProperties": false,
         "properties": Object {
@@ -1265,11 +1292,11 @@ Object {
           "content": Object {
             "application/json": Object {
               "schema": Object {
-                "$ref": "#/components/schemas/contextFieldSchema",
+                "$ref": "#/components/schemas/upsertContextFieldSchema",
               },
             },
           },
-          "description": "contextFieldSchema",
+          "description": "upsertContextFieldSchema",
           "required": true,
         },
         "responses": Object {
@@ -1372,11 +1399,11 @@ Object {
           "content": Object {
             "application/json": Object {
               "schema": Object {
-                "$ref": "#/components/schemas/contextFieldSchema",
+                "$ref": "#/components/schemas/upsertContextFieldSchema",
               },
             },
           },
-          "description": "contextFieldSchema",
+          "description": "upsertContextFieldSchema",
           "required": true,
         },
         "responses": Object {

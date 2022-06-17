@@ -22,6 +22,7 @@ import {
     ContextFieldSchema,
 } from '../../openapi/spec/context-field-schema';
 import { ContextFieldsSchema } from '../../openapi/spec/context-fields-schema';
+import { UpsertContextFieldSchema } from '../../openapi/spec/upsert-context-field-schema';
 import { createRequestSchema, createResponseSchema } from '../../openapi';
 import { serializeDates } from '../../types/serialize-dates';
 import NotFoundError from '../../error/notfound-error';
@@ -92,7 +93,9 @@ export class ContextController extends Controller {
                 openApiService.validPath({
                     tags: ['admin'],
                     operationId: 'createContextField',
-                    requestBody: createRequestSchema('contextFieldSchema'),
+                    requestBody: createRequestSchema(
+                        'upsertContextFieldSchema',
+                    ),
                     responses: {
                         201: emptyResponse,
                     },
@@ -109,7 +112,9 @@ export class ContextController extends Controller {
                 openApiService.validPath({
                     tags: ['admin'],
                     operationId: 'updateContextField',
-                    requestBody: createRequestSchema('contextFieldSchema'),
+                    requestBody: createRequestSchema(
+                        'upsertContextFieldSchema',
+                    ),
                     responses: {
                         200: emptyResponse,
                     },
@@ -182,7 +187,7 @@ export class ContextController extends Controller {
     }
 
     async createContextField(
-        req: IAuthRequest<void, void, ContextFieldSchema>,
+        req: IAuthRequest<void, void, UpsertContextFieldSchema>,
         res: Response,
     ): Promise<void> {
         const value = req.body;
@@ -193,7 +198,7 @@ export class ContextController extends Controller {
     }
 
     async updateContextField(
-        req: IAuthRequest<ContextParam, void, ContextFieldSchema>,
+        req: IAuthRequest<ContextParam, void, UpsertContextFieldSchema>,
         res: Response,
     ): Promise<void> {
         const name = req.params.contextField;

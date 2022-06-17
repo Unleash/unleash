@@ -1138,23 +1138,11 @@ Object {
           "email": Object {
             "type": "string",
           },
-          "id": Object {
-            "type": "string",
-          },
           "name": Object {
-            "type": "string",
-          },
-          "password": Object {
             "type": "string",
           },
           "rootRole": Object {
             "type": "number",
-          },
-          "sendEmail": Object {
-            "type": "boolean",
-          },
-          "username": Object {
-            "type": "string",
           },
         },
         "type": "object",

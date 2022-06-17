@@ -5,26 +5,14 @@ export const updateUserSchema = {
     type: 'object',
     additionalProperties: false,
     properties: {
-        id: {
-            type: 'string',
-        },
-        username: {
-            type: 'string',
-        },
         email: {
             type: 'string',
         },
         name: {
             type: 'string',
         },
-        password: {
-            type: 'string',
-        },
         rootRole: {
             type: 'number',
-        },
-        sendEmail: {
-            type: 'boolean',
         },
     },
     components: {},

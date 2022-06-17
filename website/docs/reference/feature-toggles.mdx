@@ -20,7 +20,7 @@ Each feature toggle has the following configuration options
 
 You probably won't want to use the same configuration to enable a toggle in development as you do in production. That's why feature toggles have different activation strategy configurations for each environment.
 
-You can enable and disable a toggle's environments independently. You can only choose environments that are active for the current project. When you disable a toggle's environment, it will always evaluate to false in that environment. When you enable an environment, the toggle will evaluate to true or false depending on its activation strategies.
+You can enable and disable a toggle independently in each of the [project's environments](../user_guide/projects.md#projects-and-environments). When you disable a toggle in an environment, it will always evaluate to false in that environment. When you enable a toggle in an environment, the toggle will evaluate to true or false depending on its activation strategies.
 
 Refer to the [documentation on environments](../user_guide/environments.md) for more details on how environments work.
 

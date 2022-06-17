@@ -65,7 +65,6 @@ Will return all users and all available root roles for the Unleash instance.
 }
 ```
 
-
 ### Get a single users {#get-user}
 
 `GET https://unleash.host.com/api/admin/user-admin/:id`
@@ -76,16 +75,16 @@ Will return a single user by id.
 
 ```json
 {
-      "createdAt": "2021-05-14T08:58:07.891Z",
-      "email": "random-user2@getunleash.ai",
-      "id": 4,
-      "imageUrl": "https://gravatar.com/avatar/90047524992cd6ae8f66e249a7630d80?size=42&default=retro",
-      "inviteLink": "",
-      "isAPI": false,
-      "loginAttempts": 0,
-      "rootRole": 1,
-      "seenAt": null
-    }
+  "createdAt": "2021-05-14T08:58:07.891Z",
+  "email": "random-user2@getunleash.ai",
+  "id": 4,
+  "imageUrl": "https://gravatar.com/avatar/90047524992cd6ae8f66e249a7630d80?size=42&default=retro",
+  "inviteLink": "",
+  "isAPI": false,
+  "loginAttempts": 0,
+  "rootRole": 1,
+  "seenAt": null
+}
 ```
 
 ### Search for users {#search-for-users}
@@ -120,24 +119,26 @@ Creates a new user with the given root role.
 **Payload properties**
 
 :::info Requirements
+
 The payload **must** contain **at least one of** the `name` and `email` properties, though which one is up to you. For the user to be able to log in to the system, the user **must** have an email.
+
 :::
 
-| Property name | Required | Description                                                                               | Example value(s)       |
-|---------------|----------|-------------------------------------------------------------------------------------------|------------------------|
-| `email`       | No       | The user's email address. Must be provided if `name` is not provided.                     | `"user@getunleash.io"` |
-| `name`        | No       | The user's name. Must be provided if `email` is not provided.                             | `"Some Name"`          |
-| `rootRole`    | Yes      | The role to assign to the user. Can be either the role's ID or its unique name.           | `2`, `"Editor"`        |
-| `sendEmail`   | No       | Whether to send a welcome email with a login link to the user or not. Defaults to `true`. | `false`                |
-
+| Property name | Required | Description | Example value(s) |
+| --- | --- | --- | --- |
+| `email` | No | The user's email address. Must be provided if `username` is not provided. | `"user@getunleash.io"` |
+| `username` | No | The user's username. Must be provided if `email` is not provided. | `"Baz the Beholder"` |
+| `rootRole` | Yes | The role to assign to the user. Can be either the role's ID or its unique name. | `2`, `"Editor"` |
+| `sendEmail` | No | Whether to send a welcome email with a login link to the user or not. Defaults to `true`. | `false` |
+| `name` | No | The user's name (**not** the user's _username_). | `"Sam Seawright" ` |
 
 **Body**
 
 ```json
 {
   "email": "some-email@getunleash.io",
-  "name": "Some Name",
-  "rootRole": 2,
+  "username": "Baz the Beholder",
+  "rootRole": "Editor",
   "sendEmail": true
 }
 ```
@@ -184,7 +185,7 @@ The payload **must** contain **at least one of** the `name` and `email` properti
 
 ### Update a user {#update-a-user}
 
-`POST https://unleash.host.com/api/admin/user-admin/:userId`
+`PUT https://unleash.host.com/api/admin/user-admin/:userId`
 
 Updates use with new fields
 
@@ -201,7 +202,7 @@ Updates use with new fields
 **Notes**
 
 - `userId` is required as a url path parameter.
-- All fields are optional. Only provided fields are updated.
+- You must provide _at least_ either `name` or `email`. All other fields are entirely optional. Only provided fields are updated.
 
 ### Delete a user {#delete-a-user}
 

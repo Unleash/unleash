@@ -8,10 +8,7 @@ import { OpenApiService } from '../services/openapi-service';
 import Controller from './controller';
 import { NONE } from '../types/permissions';
 import { createResponseSchema } from '../openapi';
-import {
-    healthCheckSchema,
-    HealthCheckSchema,
-} from '../openapi/spec/health-check-schema';
+import { HealthCheckSchema } from '../openapi/spec/health-check-schema';
 
 export class HealthCheckController extends Controller {
     private logger: Logger;
@@ -56,12 +53,7 @@ export class HealthCheckController extends Controller {
     ): Promise<void> {
         try {
             await this.healthService.dbIsUp();
-            this.openApiService.respondWithValidation(
-                200,
-                res,
-                healthCheckSchema.$id,
-                { health: 'GOOD' },
-            );
+            res.status(200).json({ health: 'GOOD' });
         } catch (e) {
             this.logger.error('Could not select from features, error was: ', e);
             res.status(500).json({ health: 'BAD' });

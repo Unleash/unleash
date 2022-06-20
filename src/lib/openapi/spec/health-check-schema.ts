@@ -7,6 +7,7 @@ export const healthCheckSchema = {
     required: ['health'],
     properties: {
         health: {
+            type: 'string',
             enum: ['GOOD', 'BAD'],
         },
     },

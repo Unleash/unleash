@@ -122,9 +122,6 @@ class MetricsController extends Controller {
         const input = {
             ...req.body,
             appName: req.params.appName,
-            createdAt: new Date(),
-            seenToggles: [],
-            links: {},
         };
         await this.clientInstanceService.createApplication(input);
         res.status(202).end();

@@ -113,6 +113,53 @@ Object {
         ],
         "type": "object",
       },
+      "applicationSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "announced": Object {
+            "type": "boolean",
+          },
+          "appName": Object {
+            "type": "string",
+          },
+          "color": Object {
+            "type": "string",
+          },
+          "description": Object {
+            "type": "string",
+          },
+          "icon": Object {
+            "type": "string",
+          },
+          "sdkVersion": Object {
+            "type": "string",
+          },
+          "strategies": Object {
+            "items": Object {
+              "type": "string",
+            },
+            "type": "array",
+          },
+          "url": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "appName",
+        ],
+        "type": "object",
+      },
+      "applicationsSchema": Object {
+        "properties": Object {
+          "applications": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/applicationSchema",
+            },
+            "type": "array",
+          },
+        },
+        "type": "object",
+      },
       "cloneFeatureSchema": Object {
         "properties": Object {
           "name": Object {
@@ -2004,6 +2051,109 @@ Object {
               },
             },
             "description": "feedbackSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/metrics/applications": Object {
+      "get": Object {
+        "operationId": "metricsGetApplications",
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/applicationsSchema",
+                },
+              },
+            },
+            "description": "applicationsSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/metrics/applications/{appName}": Object {
+      "delete": Object {
+        "operationId": "metricsDeleteApplication",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "appName",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "description": "emptyResponse",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+      "get": Object {
+        "operationId": "metricsGetApplication",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "appName",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/applicationSchema",
+                },
+              },
+            },
+            "description": "applicationSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+      "post": Object {
+        "operationId": "createApplication",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "appName",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/applicationSchema",
+              },
+            },
+          },
+          "description": "applicationSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "202": Object {
+            "description": "emptyResponse",
           },
         },
         "tags": Array [

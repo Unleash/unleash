@@ -1071,9 +1071,9 @@
   resolved "https://registry.npmjs.org/@types/json5/-/json5-0.0.29.tgz"
   integrity sha1-7ihweulOEdK4J7y+UnC86n8+ce4=
 
-"@types/make-fetch-happen@^9.0.2":
+"@types/make-fetch-happen@9.0.2":
   version "9.0.2"
-  resolved "https://registry.npmjs.org/@types/make-fetch-happen/-/make-fetch-happen-9.0.2.tgz"
+  resolved "https://registry.yarnpkg.com/@types/make-fetch-happen/-/make-fetch-happen-9.0.2.tgz#999f0869c17e7ef2b8e4c8e5204ad5730b56bcf1"
   integrity sha512-T67G7rguwzJT1wAxNwim+d3shYcQsPnAKVLfXVMm2O0LHgdsR/xmG95LavgELe2OTaimTQKPsovjK4wFftg01g==
   dependencies:
     "@types/node-fetch" "*"

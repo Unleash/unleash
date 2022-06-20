@@ -7,6 +7,8 @@ import { Logger } from '../../logger';
 import ClientInstanceService from '../../services/client-metrics/instance-service';
 import { emptyResponse } from '../../openapi/spec/empty-response';
 import { createRequestSchema, createResponseSchema } from '../../openapi';
+import { ApplicationSchema } from '../../openapi/spec/application-schema';
+import { ApplicationsSchema } from '../../openapi/spec/applications-schema';
 
 class MetricsController extends Controller {
     private logger: Logger;
@@ -39,7 +41,7 @@ class MetricsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
-                    operationId: 'metricsCreateApplication',
+                    operationId: 'createApplication',
                     responses: {
                         202: emptyResponse,
                     },
@@ -103,20 +105,35 @@ class MetricsController extends Controller {
         });
     }
 
-    async deleteApplication(req: Request, res: Response): Promise<void> {
+    async deleteApplication(
+        req: Request<{ appName: string }>,
+        res: Response,
+    ): Promise<void> {
         const { appName } = req.params;
 
         await this.clientInstanceService.deleteApplication(appName);
         res.status(200).end();
     }
 
-    async createApplication(req: Request, res: Response): Promise<void> {
-        const input = { ...req.body, appName: req.params.appName };
+    async createApplication(
+        req: Request<{ appName: string }, unknown, ApplicationSchema>,
+        res: Response,
+    ): Promise<void> {
+        const input = {
+            ...req.body,
+            appName: req.params.appName,
+            createdAt: new Date(),
+            seenToggles: [],
+            links: {},
+        };
         await this.clientInstanceService.createApplication(input);
         res.status(202).end();
     }
 
-    async getApplications(req: Request, res: Response): Promise<void> {
+    async getApplications(
+        req: Request,
+        res: Response<ApplicationsSchema>,
+    ): Promise<void> {
         const query = req.query.strategyName
             ? { strategyName: req.query.strategyName as string }
             : {};
@@ -126,7 +143,10 @@ class MetricsController extends Controller {
         res.json({ applications });
     }
 
-    async getApplication(req: Request, res: Response): Promise<void> {
+    async getApplication(
+        req: Request,
+        res: Response<ApplicationSchema>,
+    ): Promise<void> {
         const { appName } = req.params;
 
         const appDetails = await this.clientInstanceService.getApplication(

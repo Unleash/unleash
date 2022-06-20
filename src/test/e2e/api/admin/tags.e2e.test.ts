@@ -46,7 +46,7 @@ test('gets a tag by type and value', async () => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect((res) => {
-            expect(res.body.value).toBe('Tester');
+            expect(res.body.tag.value).toBe('Tester');
         });
 });
 

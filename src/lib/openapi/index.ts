@@ -35,7 +35,7 @@ import { projectsSchema } from './spec/projects-schema';
 import { sortOrderSchema } from './spec/sort-order-schema';
 import { splashSchema } from './spec/splash-schema';
 import { strategySchema } from './spec/strategy-schema';
-import { tagSchema } from './spec/tag-schema';
+import { tagSchema, tagWithVersionSchema } from './spec/tag-schema';
 import { tagsSchema } from './spec/tags-schema';
 import { tagTypeSchema } from './spec/tag-type-schema';
 import { tagTypesSchema } from './spec/tag-types-schema';
@@ -87,6 +87,7 @@ export const schemas = {
     splashSchema,
     strategySchema,
     tagSchema,
+    tagWithVersionSchema,
     tagsSchema,
     tagTypeSchema,
     tagTypesSchema,

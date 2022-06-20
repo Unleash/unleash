@@ -80,7 +80,7 @@ test('should be able to get single tag by type and value', async () => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect((res) => {
-            expect(res.body.value).toBe('TeamRed');
+            expect(res.body.tag.value).toBe('TeamRed');
         });
 });
 

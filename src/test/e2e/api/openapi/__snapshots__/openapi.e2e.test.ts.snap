@@ -950,6 +950,22 @@ Object {
         ],
         "type": "object",
       },
+      "tagWithVersionSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "tag": Object {
+            "$ref": "#/components/schemas/tagSchema",
+          },
+          "version": Object {
+            "type": "integer",
+          },
+        },
+        "required": Array [
+          "version",
+          "tag",
+        ],
+        "type": "object",
+      },
       "tagsSchema": Object {
         "additionalProperties": false,
         "properties": Object {
@@ -3335,11 +3351,11 @@ Object {
             "content": Object {
               "application/json": Object {
                 "schema": Object {
-                  "$ref": "#/components/schemas/tagSchema",
+                  "$ref": "#/components/schemas/tagWithVersionSchema",
                 },
               },
             },
-            "description": "tagSchema",
+            "description": "tagWithVersionSchema",
           },
         },
         "tags": Array [

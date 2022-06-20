@@ -11,8 +11,13 @@ import { extractUsername } from '../../util/extract-user';
 import { IAuthRequest } from '../unleash-types';
 import { createRequestSchema, createResponseSchema } from '../../openapi';
 import { emptyResponse } from '../../openapi/spec/empty-response';
-import { TagsSchema } from '../../openapi/spec/tags-schema';
+import { tagsSchema, TagsSchema } from '../../openapi/spec/tags-schema';
 import { TagSchema } from '../../openapi/spec/tag-schema';
+import { OpenApiService } from '../../services/openapi-service';
+import {
+    tagWithVersionSchema,
+    TagWithVersionSchema,
+} from '../../openapi/spec/tag-with-version-schema';
 
 const version = 1;
 
@@ -20,6 +25,8 @@ class TagController extends Controller {
     private logger: Logger;
 
     private tagService: TagService;
+
+    private openApiService: OpenApiService;
 
     constructor(
         config: IUnleashConfig,
@@ -30,6 +37,7 @@ class TagController extends Controller {
     ) {
         super(config);
         this.tagService = tagService;
+        this.openApiService = openApiService;
         this.logger = config.getLogger('/admin-api/tag.js');
 
         this.route({
@@ -86,7 +94,7 @@ class TagController extends Controller {
                     tags: ['admin'],
                     operationId: 'getTag',
                     responses: {
-                        200: createResponseSchema('tagSchema'),
+                        200: createResponseSchema('tagWithVersionSchema'),
                     },
                 }),
             ],
@@ -111,7 +119,12 @@ class TagController extends Controller {
 
     async getTags(req: Request, res: Response<TagsSchema>): Promise<void> {
         const tags = await this.tagService.getTags();
-        res.json({ version, tags });
+        this.openApiService.respondWithValidation<TagsSchema>(
+            200,
+            res,
+            tagsSchema.$id,
+            { version, tags },
+        );
     }
 
     async getTagsByType(
@@ -119,16 +132,26 @@ class TagController extends Controller {
         res: Response<TagsSchema>,
     ): Promise<void> {
         const tags = await this.tagService.getTagsByType(req.params.type);
-        res.json({ version, tags });
+        this.openApiService.respondWithValidation<TagsSchema>(
+            200,
+            res,
+            tagsSchema.$id,
+            { version, tags },
+        );
     }
 
     async getTag(
         req: Request<TagSchema>,
-        res: Response<TagSchema>,
+        res: Response<TagWithVersionSchema>,
     ): Promise<void> {
         const { type, value } = req.params;
         const tag = await this.tagService.getTag({ type, value });
-        res.json(tag);
+        this.openApiService.respondWithValidation<TagWithVersionSchema>(
+            200,
+            res,
+            tagWithVersionSchema.$id,
+            { version, tag },
+        );
     }
 
     async createTag(

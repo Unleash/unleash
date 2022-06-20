@@ -588,6 +588,7 @@ Object {
               "GOOD",
               "BAD",
             ],
+            "type": "string",
           },
         },
         "required": Array [

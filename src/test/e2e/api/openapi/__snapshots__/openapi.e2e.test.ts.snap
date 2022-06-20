@@ -580,6 +580,22 @@ Object {
         "required": Array [],
         "type": "object",
       },
+      "healthCheckSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "health": Object {
+            "enum": Array [
+              "GOOD",
+              "BAD",
+            ],
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "health",
+        ],
+        "type": "object",
+      },
       "healthOverviewSchema": Object {
         "additionalProperties": false,
         "properties": Object {
@@ -3209,6 +3225,36 @@ Object {
         },
         "tags": Array [
           "admin",
+        ],
+      },
+    },
+    "/health": Object {
+      "get": Object {
+        "operationId": "getHealth",
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/healthCheckSchema",
+                },
+              },
+            },
+            "description": "healthCheckSchema",
+          },
+          "500": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/healthCheckSchema",
+                },
+              },
+            },
+            "description": "healthCheckSchema",
+          },
+        },
+        "tags": Array [
+          "other",
         ],
       },
     },

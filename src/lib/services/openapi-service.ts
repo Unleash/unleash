@@ -4,6 +4,7 @@ import { IUnleashConfig } from '../types/option';
 import {
     AdminApiOperation,
     ClientApiOperation,
+    OtherApiOperation,
     createOpenApiSchema,
     JsonSchemaProps,
     removeJsonSchemaProps,
@@ -30,7 +31,9 @@ export class OpenApiService {
         );
     }
 
-    validPath(op: AdminApiOperation | ClientApiOperation): RequestHandler {
+    validPath(
+        op: AdminApiOperation | ClientApiOperation | OtherApiOperation,
+    ): RequestHandler {
         return this.api.validPath(op);
     }
 

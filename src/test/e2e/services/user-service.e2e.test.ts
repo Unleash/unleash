@@ -188,16 +188,13 @@ test('updating a user without an email should not strip the email', async () => 
         rootRole: adminRole.id,
     });
 
-    try {
-        await userService.updateUser({
-            id: user.id,
-            email: null,
-            name: 'some',
-        });
-    } catch (e) {}
+    await userService.updateUser({
+        id: user.id,
+        email: null,
+        name: 'some',
+    });
 
     const updatedUser = await userService.getUser(user.id);
-
     expect(updatedUser.email).toBe(email);
 });
 

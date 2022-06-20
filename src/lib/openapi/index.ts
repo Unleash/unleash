@@ -35,7 +35,7 @@ import { projectsSchema } from './spec/projects-schema';
 import { sortOrderSchema } from './spec/sort-order-schema';
 import { splashSchema } from './spec/splash-schema';
 import { strategySchema } from './spec/strategy-schema';
-import { tagSchema, tagWithVersionSchema } from './spec/tag-schema';
+import { tagSchema } from './spec/tag-schema';
 import { tagsSchema } from './spec/tags-schema';
 import { tagTypeSchema } from './spec/tag-type-schema';
 import { tagTypesSchema } from './spec/tag-types-schema';
@@ -49,6 +49,7 @@ import { validateTagTypeSchema } from './spec/validate-tag-type-schema';
 import { variantSchema } from './spec/variant-schema';
 import { variantsSchema } from './spec/variants-schema';
 import { versionSchema } from './spec/version-schema';
+import { tagWithVersionSchema } from './spec/tag-with-version-schema';
 
 // All schemas in `openapi/spec` should be listed here.
 export const schemas = {

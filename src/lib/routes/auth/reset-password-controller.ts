@@ -5,6 +5,8 @@ import { Logger } from '../../logger';
 import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
 import { NONE } from '../../types/permissions';
+import { createRequestSchema, createResponseSchema } from '../../openapi';
+import { emptyResponse } from '../../openapi/spec/empty-response';
 
 interface IValidateQuery {
     token: string;
@@ -25,16 +27,73 @@ class ResetPasswordController extends Controller {
 
     private logger: Logger;
 
-    constructor(config: IUnleashConfig, { userService }: IUnleashServices) {
+    constructor(
+        config: IUnleashConfig,
+        {
+            userService,
+            openApiService,
+        }: Pick<IUnleashServices, 'userService' | 'openApiService'>,
+    ) {
         super(config);
         this.logger = config.getLogger(
             'lib/routes/auth/reset-password-controller.ts',
         );
         this.userService = userService;
-        this.get('/validate', this.validateToken);
-        this.post('/password', this.changePassword, NONE);
-        this.post('/validate-password', this.validatePassword, NONE);
-        this.post('/password-email', this.sendResetPasswordEmail, NONE);
+        this.route({
+            method: 'get',
+            path: '/validate',
+            handler: this.validateToken,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'validateToken',
+                    responses: { 200: createResponseSchema('tokenUserSchema') },
+                }),
+            ],
+        });
+        this.route({
+            method: 'post',
+            path: '/password',
+            handler: this.changePassword,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'changePassword',
+                    requestBody: createRequestSchema('changePasswordSchema'),
+                    responses: { 200: emptyResponse },
+                }),
+            ],
+        });
+        this.route({
+            method: 'post',
+            path: '/validate-password',
+            handler: this.validatePassword,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'validatePassword',
+                    requestBody: createRequestSchema('validatePasswordSchema'),
+                    responses: { 200: emptyResponse },
+                }),
+            ],
+        });
+        this.route({
+            method: 'post',
+            path: '/password-email',
+            handler: this.sendResetPasswordEmail,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'sendResetPasswordEmail',
+                    requestBody: createRequestSchema('resetPasswordSchema'),
+                    responses: { 200: emptyResponse },
+                }),
+            ],
+        });
     }
 
     async sendResetPasswordEmail(req: Request, res: Response): Promise<void> {

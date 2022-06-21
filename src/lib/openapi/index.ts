@@ -52,6 +52,11 @@ import { versionSchema } from './spec/version-schema';
 import { applicationSchema } from './spec/application-schema';
 import { applicationsSchema } from './spec/applications-schema';
 import { tagWithVersionSchema } from './spec/tag-with-version-schema';
+import { tokenUserSchema } from './spec/toker-user-schema';
+import { roleDescriptionSchema } from './spec/role-description-schema';
+import { changePasswordSchema } from './spec/change-password-schema';
+import { validatePasswordSchema } from './spec/validate-password-schema';
+import { resetPasswordSchema } from './spec/reset-password-schema';
 
 // All schemas in `openapi/spec` should be listed here.
 export const schemas = {
@@ -60,6 +65,7 @@ export const schemas = {
     applicationSchema,
     applicationsSchema,
     cloneFeatureSchema,
+    changePasswordSchema,
     constraintSchema,
     contextFieldSchema,
     contextFieldsSchema,
@@ -88,6 +94,8 @@ export const schemas = {
     projectEnvironmentSchema,
     projectSchema,
     projectsSchema,
+    resetPasswordSchema,
+    roleDescriptionSchema,
     sortOrderSchema,
     splashSchema,
     strategySchema,
@@ -96,12 +104,14 @@ export const schemas = {
     tagsSchema,
     tagTypeSchema,
     tagTypesSchema,
+    tokenUserSchema,
     uiConfigSchema,
     updateFeatureSchema,
     updateStrategySchema,
     updateApiTokenSchema,
     updateTagTypeSchema,
     upsertContextFieldSchema,
+    validatePasswordSchema,
     validateTagTypeSchema,
     variantSchema,
     variantsSchema,

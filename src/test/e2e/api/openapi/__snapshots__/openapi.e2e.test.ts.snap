@@ -2060,7 +2060,7 @@ Object {
     },
     "/api/admin/metrics/applications": Object {
       "get": Object {
-        "operationId": "metricsGetApplications",
+        "operationId": "getApplications",
         "responses": Object {
           "200": Object {
             "content": Object {
@@ -2080,7 +2080,7 @@ Object {
     },
     "/api/admin/metrics/applications/{appName}": Object {
       "delete": Object {
-        "operationId": "metricsDeleteApplication",
+        "operationId": "deleteApplication",
         "parameters": Array [
           Object {
             "in": "path",

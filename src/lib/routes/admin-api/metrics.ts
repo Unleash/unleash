@@ -58,7 +58,7 @@ class MetricsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
-                    operationId: 'metricsDeleteApplication',
+                    operationId: 'deleteApplication',
                     responses: {
                         200: emptyResponse,
                     },
@@ -73,7 +73,7 @@ class MetricsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
-                    operationId: 'metricsGetApplications',
+                    operationId: 'getApplications',
                     responses: {
                         200: createResponseSchema('applicationsSchema'),
                     },

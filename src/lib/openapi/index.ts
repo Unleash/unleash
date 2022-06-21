@@ -56,6 +56,7 @@ import { featureStrategySegmentSchema } from './spec/feature-strategy-segment-sc
 import { segmentSchema } from './spec/segment-schema';
 import { stateSchema } from './spec/state-schema';
 import { featureTagSchema } from './spec/feature-tag-schema';
+import { exportParametersSchema } from './spec/export-parameters-schema';
 
 // All schemas in `openapi/spec` should be listed here.
 export const schemas = {
@@ -72,6 +73,7 @@ export const schemas = {
     createStrategySchema,
     environmentSchema,
     environmentsSchema,
+    exportParametersSchema,
     featureEnvironmentSchema,
     featureSchema,
     featureStrategySchema,

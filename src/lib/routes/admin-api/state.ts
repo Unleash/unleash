@@ -14,6 +14,7 @@ import { IAuthRequest } from '../unleash-types';
 import { OpenApiService } from '../../services/openapi-service';
 import { createRequestSchema, createResponseSchema } from '../../openapi';
 import { emptyResponse } from '../../openapi/spec/empty-response';
+import { ExportParametersSchema } from '../../openapi/spec/export-parameters-schema';
 
 const upload = multer({ limits: { fileSize: 5242880 } });
 const paramToBool = (param, def) => {
@@ -73,6 +74,11 @@ class StateController extends Controller {
                     responses: {
                         200: createResponseSchema('stateSchema'),
                     },
+                    parameters: [
+                        {
+                            $ref: '#/components/schema/exportParametersSchema',
+                        },
+                    ],
                 }),
             ],
         });
@@ -106,7 +112,10 @@ class StateController extends Controller {
         res.sendStatus(202);
     }
 
-    async export(req: Request, res: Response): Promise<void> {
+    async export(
+        req: Request<unknown, unknown, unknown, ExportParametersSchema>,
+        res: Response,
+    ): Promise<void> {
         const { format } = req.query;
 
         const downloadFile = paramToBool(req.query.download, false);

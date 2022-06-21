@@ -384,6 +384,32 @@ Object {
         ],
         "type": "object",
       },
+      "exportParametersSchema": Object {
+        "properties": Object {
+          "download": Object {
+            "type": "boolean",
+          },
+          "environments": Object {
+            "type": "boolean",
+          },
+          "featureToggles": Object {
+            "type": "boolean",
+          },
+          "format": Object {
+            "type": "string",
+          },
+          "projects": Object {
+            "type": "boolean",
+          },
+          "strategies": Object {
+            "type": "boolean",
+          },
+          "tags": Object {
+            "type": "boolean",
+          },
+        },
+        "type": "object",
+      },
       "featureEnvironmentSchema": Object {
         "additionalProperties": false,
         "properties": Object {
@@ -3352,6 +3378,11 @@ Object {
     "/api/admin/state/export": Object {
       "get": Object {
         "operationId": "export",
+        "parameters": Array [
+          Object {
+            "$ref": "#/components/schema/exportParametersSchema",
+          },
+        ],
         "responses": Object {
           "200": Object {
             "content": Object {

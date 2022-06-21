@@ -261,7 +261,6 @@ Object {
         "type": "array",
       },
       "createApiTokenSchema": Object {
-        "additionalProperties": false,
         "properties": Object {
           "environment": Object {
             "type": "string",
@@ -318,7 +317,6 @@ Object {
         "type": "object",
       },
       "createStrategySchema": Object {
-        "additionalProperties": false,
         "properties": Object {
           "constraints": Object {
             "items": Object {
@@ -1101,7 +1099,6 @@ Object {
         "type": "object",
       },
       "updateApiTokenSchema": Object {
-        "additionalProperties": false,
         "properties": Object {
           "expiresAt": Object {
             "format": "date-time",
@@ -1175,7 +1172,6 @@ Object {
         "type": "object",
       },
       "updateTagTypeSchema": Object {
-        "additionalProperties": false,
         "properties": Object {
           "description": Object {
             "type": "string",
@@ -1187,7 +1183,6 @@ Object {
         "type": "object",
       },
       "upsertContextFieldSchema": Object {
-        "additionalProperties": false,
         "properties": Object {
           "description": Object {
             "type": "string",
@@ -1214,7 +1209,6 @@ Object {
         "type": "object",
       },
       "validateTagTypeSchema": Object {
-        "additionalProperties": false,
         "properties": Object {
           "tagType": Object {
             "$ref": "#/components/schemas/tagTypeSchema",

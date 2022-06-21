@@ -4,7 +4,6 @@ import { ApiTokenType } from '../../types/models/api-token';
 export const createApiTokenSchema = {
     $id: '#/components/schemas/createApiTokenSchema',
     type: 'object',
-    additionalProperties: false,
     required: ['username', 'type'],
     properties: {
         secret: {

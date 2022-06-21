@@ -24,6 +24,9 @@ export const uiConfigSchema = {
         version: {
             type: 'string',
         },
+        environment: {
+            type: 'string',
+        },
         unleashUrl: {
             type: 'string',
         },

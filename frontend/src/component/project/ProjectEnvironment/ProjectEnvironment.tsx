@@ -18,14 +18,18 @@ import { IProjectEnvironment } from 'interfaces/environments';
 import { getEnabledEnvs } from './helpers';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { useThemeStyles } from 'themes/themeStyles';
+import { usePageTitle } from 'hooks/usePageTitle';
 
 interface IProjectEnvironmentListProps {
     projectId: string;
+    projectName: string;
 }
 
 const ProjectEnvironmentList = ({
     projectId,
+    projectName,
 }: IProjectEnvironmentListProps) => {
+    usePageTitle(`Project environments – ${projectName}`);
     // api state
     const [envs, setEnvs] = useState<IProjectEnvironment[]>([]);
     const { setToastData, setToastApiError } = useToast();
@@ -176,7 +180,7 @@ const ProjectEnvironmentList = ({
         <PageContent
             header={
                 <PageHeader
-                    title={`Configure environments for "${project?.name}" project`}
+                    titleElement={`Configure environments for "${project?.name}" project`}
                 />
             }
             isLoading={loading}

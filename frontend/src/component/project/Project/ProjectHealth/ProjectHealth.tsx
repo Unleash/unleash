@@ -1,19 +1,22 @@
 import { useHealthReport } from 'hooks/api/getters/useHealthReport/useHealthReport';
 import ApiError from 'component/common/ApiError/ApiError';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { ReportCard } from 'component/Reporting/ReportCard/ReportCard';
 import { usePageTitle } from 'hooks/usePageTitle';
-import { ReportTable } from 'component/Reporting/ReportTable/ReportTable';
+import { ReportCard } from './ReportTable/ReportCard/ReportCard';
+import { ReportTable } from './ReportTable/ReportTable';
 
 interface IProjectHealthProps {
     projectId: string;
+    projectName: string;
 }
 
-const ProjectHealth = ({ projectId }: IProjectHealthProps) => {
-    usePageTitle('Project health');
+const ProjectHealth = ({ projectId, projectName }: IProjectHealthProps) => {
+    usePageTitle(`Project health – ${projectName}`);
 
-    const { healthReport, refetchHealthReport, error } =
-        useHealthReport(projectId);
+    const { healthReport, refetchHealthReport, error } = useHealthReport(
+        projectId,
+        { refreshInterval: 15 * 1000 }
+    );
 
     if (!healthReport) {
         return null;

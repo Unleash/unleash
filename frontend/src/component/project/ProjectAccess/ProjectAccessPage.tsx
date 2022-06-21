@@ -70,7 +70,7 @@ export const ProjectAccessPage = () => {
 
     return (
         <PageContent
-            header={<PageHeader title="Project roles" />}
+            header={<PageHeader titleElement="Project roles" />}
             className={styles.pageContent}
         >
             <ProjectAccessAddUser roles={access?.roles} />

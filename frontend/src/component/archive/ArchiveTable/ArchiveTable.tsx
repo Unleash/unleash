@@ -1,13 +1,6 @@
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
-import {
-    SortableTableHeader,
-    Table,
-    TableBody,
-    TableCell,
-    TablePlaceholder,
-    TableRow,
-} from 'component/common/Table';
+import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
 import { SortingRule, useFlexLayout, useSortBy, useTable } from 'react-table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { useMediaQuery } from '@mui/material';
@@ -22,7 +15,6 @@ import { FeatureSeenCell } from 'component/common/Table/cells/FeatureSeenCell/Fe
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { FeatureStaleCell } from 'component/feature/FeatureToggleList/FeatureStaleCell/FeatureStaleCell';
 import { ReviveArchivedFeatureCell } from 'component/archive/ArchiveTable/ReviveArchivedFeatureCell/ReviveArchivedFeatureCell';
-import { useStyles } from 'component/feature/FeatureToggleList/styles';
 import { featuresPlaceholder } from 'component/feature/FeatureToggleList/FeatureToggleListTable';
 import theme from 'themes/theme';
 import { FeatureSchema } from 'openapi';
@@ -31,7 +23,6 @@ import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useSearch } from 'hooks/useSearch';
 import { FeatureArchivedCell } from './FeatureArchivedCell/FeatureArchivedCell';
-import { useVirtualizedRange } from 'hooks/useVirtualizedRange';
 import { useSearchParams } from 'react-router-dom';
 
 export interface IFeaturesArchiveTableProps {
@@ -57,8 +48,6 @@ export const ArchiveTable = ({
     title,
     projectId,
 }: IFeaturesArchiveTableProps) => {
-    const rowHeight = theme.shape.tableRowHeight;
-    const { classes } = useStyles();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const isMediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
     const { setToastData, setToastApiError } = useToast();
@@ -107,7 +96,7 @@ export const ArchiveTable = ({
                 align: 'center',
             },
             {
-                Header: 'Feature toggle name',
+                Header: 'Name',
                 accessor: 'name',
                 searchable: true,
                 minWidth: 100,
@@ -209,8 +198,6 @@ export const ArchiveTable = ({
         headerGroups,
         rows,
         state: { sortBy },
-        getTableBodyProps,
-        getTableProps,
         prepareRow,
         setHiddenColumns,
     } = useTable(
@@ -256,15 +243,12 @@ export const ArchiveTable = ({
         setStoredParams({ id: sortBy[0].id, desc: sortBy[0].desc || false });
     }, [loading, sortBy, searchValue]); // eslint-disable-line react-hooks/exhaustive-deps
 
-    const [firstRenderedIndex, lastRenderedIndex] =
-        useVirtualizedRange(rowHeight);
-
     return (
         <PageContent
             isLoading={loading}
             header={
                 <PageHeader
-                    title={`${title} (${
+                    titleElement={`${title} (${
                         rows.length < data.length
                             ? `${rows.length} of ${data.length}`
                             : data.length
@@ -281,61 +265,11 @@ export const ArchiveTable = ({
             }
         >
             <SearchHighlightProvider value={getSearchText(searchValue)}>
-                <Table
-                    {...getTableProps()}
-                    rowHeight={rowHeight}
-                    style={{
-                        height:
-                            rowHeight * rows.length +
-                            theme.shape.tableRowHeightCompact,
-                    }}
-                >
-                    <SortableTableHeader
-                        headerGroups={headerGroups as any}
-                        flex
-                    />
-                    <TableBody {...getTableBodyProps()}>
-                        {rows.map((row, index) => {
-                            const isVirtual =
-                                index < firstRenderedIndex ||
-                                index > lastRenderedIndex;
-
-                            if (isVirtual) {
-                                return null;
-                            }
-
-                            prepareRow(row);
-                            return (
-                                <TableRow
-                                    hover
-                                    {...row.getRowProps()}
-                                    style={{
-                                        display: 'flex',
-                                        top:
-                                            index * rowHeight +
-                                            theme.shape.tableRowHeightCompact,
-                                    }}
-                                    className={classes.row}
-                                >
-                                    {row.cells.map(cell => (
-                                        <TableCell
-                                            {...cell.getCellProps({
-                                                style: {
-                                                    flex: cell.column.minWidth
-                                                        ? '1 0 auto'
-                                                        : undefined,
-                                                },
-                                            })}
-                                            className={classes.cell}
-                                        >
-                                            {cell.render('Cell')}
-                                        </TableCell>
-                                    ))}
-                                </TableRow>
-                            );
-                        })}
-                    </TableBody>
-                </Table>
+                <VirtualizedTable
+                    rows={rows}
+                    headerGroups={headerGroups}
+                    prepareRow={prepareRow}
+                />
             </SearchHighlightProvider>
             <ConditionallyRender
                 condition={rows.length === 0}

@@ -18,18 +18,10 @@ import { FeatureTypeCell } from 'component/common/Table/cells/FeatureTypeCell/Fe
 import { sortTypes } from 'utils/sortTypes';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { IProject } from 'interfaces/project';
-import {
-    Table,
-    SortableTableHeader,
-    TableBody,
-    TableCell,
-    TableRow,
-    TablePlaceholder,
-} from 'component/common/Table';
+import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import useProject from 'hooks/api/getters/useProject/useProject';
 import { createLocalStorage } from 'utils/createLocalStorage';
-import { useVirtualizedRange } from 'hooks/useVirtualizedRange';
 import useToast from 'hooks/useToast';
 import { ENVIRONMENT_STRATEGY_ERROR } from 'constants/apiErrors';
 import EnvironmentStrategyDialog from 'component/common/EnvironmentStrategiesDialog/EnvironmentStrategyDialog';
@@ -104,7 +96,6 @@ export const ProjectFeatureToggles = ({
     );
     const { refetch } = useProject(projectId);
     const { setToastData, setToastApiError } = useToast();
-    const rowHeight = theme.shape.tableRowHeight;
 
     const { toggleFeatureEnvironmentOn, toggleFeatureEnvironmentOff } =
         useFeatureApi();
@@ -282,7 +273,7 @@ export const ProjectFeatureToggles = ({
         getSearchContext,
     } = useSearch(columns, searchValue, featuresData);
 
-    const data = useMemo<ListItemType[]>(() => {
+    const data = useMemo<object[]>(() => {
         if (loading) {
             return Array(6).fill({
                 type: '-',
@@ -291,7 +282,7 @@ export const ProjectFeatureToggles = ({
                 environments: {
                     production: { name: 'production', enabled: false },
                 },
-            }) as ListItemType[];
+            }) as object[];
         }
         return searchedData;
     }, [loading, searchedData]);
@@ -343,8 +334,6 @@ export const ProjectFeatureToggles = ({
         headerGroups,
         rows,
         state: { sortBy, hiddenColumns },
-        getTableBodyProps,
-        getTableProps,
         prepareRow,
         setHiddenColumns,
     } = useTable(
@@ -392,12 +381,6 @@ export const ProjectFeatureToggles = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [loading, sortBy, hiddenColumns, searchValue, setSearchParams]);
 
-    const [firstRenderedIndex, lastRenderedIndex] =
-        useVirtualizedRange(rowHeight);
-
-    const tableHeight =
-        rowHeight * rows.length + theme.shape.tableRowHeightCompact;
-
     return (
         <PageContent
             isLoading={loading}
@@ -406,7 +389,7 @@ export const ProjectFeatureToggles = ({
             header={
                 <PageHeader
                     className={styles.title}
-                    title={`Feature toggles (${rows.length})`}
+                    titleElement={`Feature toggles (${rows.length})`}
                     actions={
                         <>
                             <ConditionallyRender
@@ -464,58 +447,11 @@ export const ProjectFeatureToggles = ({
             }
         >
             <SearchHighlightProvider value={getSearchText(searchValue)}>
-                <Table
-                    {...getTableProps()}
-                    rowHeight={rowHeight}
-                    style={{ height: tableHeight }}
-                >
-                    <SortableTableHeader
-                        // @ts-expect-error -- verify after `react-table` v8
-                        headerGroups={headerGroups}
-                        className={styles.headerClass}
-                        flex
-                    />
-                    <TableBody {...getTableBodyProps()}>
-                        {rows.map((row, index) => {
-                            const top =
-                                index * rowHeight +
-                                theme.shape.tableRowHeightCompact;
-
-                            const isVirtual =
-                                index < firstRenderedIndex ||
-                                index > lastRenderedIndex;
-
-                            if (isVirtual) {
-                                return null;
-                            }
-
-                            prepareRow(row);
-                            return (
-                                <TableRow
-                                    hover
-                                    {...row.getRowProps()}
-                                    className={styles.row}
-                                    style={{ display: 'flex', top }}
-                                >
-                                    {row.cells.map(cell => (
-                                        <TableCell
-                                            {...cell.getCellProps({
-                                                style: {
-                                                    flex: cell.column.minWidth
-                                                        ? '1 0 auto'
-                                                        : undefined,
-                                                },
-                                            })}
-                                            className={styles.cell}
-                                        >
-                                            {cell.render('Cell')}
-                                        </TableCell>
-                                    ))}
-                                </TableRow>
-                            );
-                        })}
-                    </TableBody>
-                </Table>
+                <VirtualizedTable
+                    rows={rows}
+                    headerGroups={headerGroups}
+                    prepareRow={prepareRow}
+                />
             </SearchHighlightProvider>
             <ConditionallyRender
                 condition={rows.length === 0}

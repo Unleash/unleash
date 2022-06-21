@@ -2,14 +2,7 @@ import { useEffect, useMemo, useState, VFC } from 'react';
 import { Link, useMediaQuery, useTheme } from '@mui/material';
 import { Link as RouterLink, useSearchParams } from 'react-router-dom';
 import { SortingRule, useFlexLayout, useSortBy, useTable } from 'react-table';
-import {
-    Table,
-    SortableTableHeader,
-    TableBody,
-    TableCell,
-    TableRow,
-    TablePlaceholder,
-} from 'component/common/Table';
+import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
 import { useFeatures } from 'hooks/api/getters/useFeatures/useFeatures';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
@@ -22,11 +15,9 @@ import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { sortTypes } from 'utils/sortTypes';
 import { createLocalStorage } from 'utils/createLocalStorage';
-import { useVirtualizedRange } from 'hooks/useVirtualizedRange';
 import { FeatureSchema } from 'openapi';
 import { CreateFeatureButton } from '../CreateFeatureButton/CreateFeatureButton';
 import { FeatureStaleCell } from './FeatureStaleCell/FeatureStaleCell';
-import { useStyles } from './styles';
 import { useSearch } from 'hooks/useSearch';
 import { Search } from 'component/common/Search/Search';
 
@@ -108,8 +99,6 @@ const { value: storedParams, setValue: setStoredParams } = createLocalStorage(
 
 export const FeatureToggleListTable: VFC = () => {
     const theme = useTheme();
-    const rowHeight = theme.shape.tableRowHeight;
-    const { classes } = useStyles();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const isMediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
     const { features = [], loading } = useFeatures();
@@ -143,8 +132,6 @@ export const FeatureToggleListTable: VFC = () => {
     );
 
     const {
-        getTableProps,
-        getTableBodyProps,
         headerGroups,
         rows,
         prepareRow,
@@ -190,12 +177,6 @@ export const FeatureToggleListTable: VFC = () => {
         });
         setStoredParams({ id: sortBy[0].id, desc: sortBy[0].desc || false });
     }, [sortBy, searchValue, setSearchParams]);
-
-    const [firstRenderedIndex, lastRenderedIndex] =
-        useVirtualizedRange(rowHeight);
-
-    const tableHeight =
-        rowHeight * rows.length + theme.shape.tableRowHeightCompact;
 
     return (
         <PageContent
@@ -253,54 +234,11 @@ export const FeatureToggleListTable: VFC = () => {
             }
         >
             <SearchHighlightProvider value={getSearchText(searchValue)}>
-                <Table
-                    {...getTableProps()}
-                    rowHeight={rowHeight}
-                    style={{ height: tableHeight }}
-                >
-                    <SortableTableHeader headerGroups={headerGroups} flex />
-                    <TableBody {...getTableBodyProps()}>
-                        {rows.map((row, index) => {
-                            const top =
-                                index * rowHeight +
-                                theme.shape.tableRowHeightCompact;
-
-                            const isVirtual =
-                                index < firstRenderedIndex ||
-                                index > lastRenderedIndex;
-
-                            if (isVirtual) {
-                                return null;
-                            }
-
-                            prepareRow(row);
-                            return (
-                                <TableRow
-                                    hover
-                                    {...row.getRowProps()}
-                                    key={row.id}
-                                    className={classes.row}
-                                    style={{ display: 'flex', top }}
-                                >
-                                    {row.cells.map(cell => (
-                                        <TableCell
-                                            {...cell.getCellProps({
-                                                style: {
-                                                    flex: cell.column.minWidth
-                                                        ? '1 0 auto'
-                                                        : undefined,
-                                                },
-                                            })}
-                                            className={classes.cell}
-                                        >
-                                            {cell.render('Cell')}
-                                        </TableCell>
-                                    ))}
-                                </TableRow>
-                            );
-                        })}
-                    </TableBody>
-                </Table>
+                <VirtualizedTable
+                    rows={rows}
+                    headerGroups={headerGroups}
+                    prepareRow={prepareRow}
+                />
             </SearchHighlightProvider>
             <ConditionallyRender
                 condition={rows.length === 0}

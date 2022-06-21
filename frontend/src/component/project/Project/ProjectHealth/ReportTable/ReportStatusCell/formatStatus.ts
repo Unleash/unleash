@@ -1,5 +1,5 @@
 import { IFeatureToggleListItem } from 'interfaces/featureToggle';
-import { getDiffInDays, expired } from 'component/Reporting/utils';
+import { getDiffInDays, expired } from '../utils';
 import { PERMISSION, KILLSWITCH } from 'constants/featureToggleTypes';
 import { parseISO } from 'date-fns';
 

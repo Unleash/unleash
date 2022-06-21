@@ -25,7 +25,7 @@ export const ProjectFeaturesArchiveTable = ({
 
     return (
         <ArchiveTable
-            title="Project Features Archive"
+            title="Project archive"
             archivedFeatures={archivedFeatures}
             loading={loading}
             storedParams={value}

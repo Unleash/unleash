@@ -88,7 +88,7 @@ class MetricsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
-                    operationId: 'metricsGetApplication',
+                    operationId: 'getApplication',
                     responses: {
                         200: createResponseSchema('applicationSchema'),
                     },

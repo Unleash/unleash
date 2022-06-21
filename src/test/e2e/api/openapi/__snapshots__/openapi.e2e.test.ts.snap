@@ -2101,7 +2101,7 @@ Object {
         ],
       },
       "get": Object {
-        "operationId": "metricsGetApplication",
+        "operationId": "getApplication",
         "parameters": Array [
           Object {
             "in": "path",

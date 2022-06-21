@@ -7,6 +7,7 @@ test('uiConfigSchema', () => {
         version: 'a',
         unleashUrl: 'a',
         baseUriPath: 'a',
+        environment: 'a',
         disablePasswordAuth: false,
         segmentValuesLimit: 0,
         strategySegmentsLimit: 0,

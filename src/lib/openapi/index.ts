@@ -49,6 +49,7 @@ import { validateTagTypeSchema } from './spec/validate-tag-type-schema';
 import { variantSchema } from './spec/variant-schema';
 import { variantsSchema } from './spec/variants-schema';
 import { versionSchema } from './spec/version-schema';
+import { tagWithVersionSchema } from './spec/tag-with-version-schema';
 
 // All schemas in `openapi/spec` should be listed here.
 export const schemas = {
@@ -87,6 +88,7 @@ export const schemas = {
     splashSchema,
     strategySchema,
     tagSchema,
+    tagWithVersionSchema,
     tagsSchema,
     tagTypeSchema,
     tagTypesSchema,

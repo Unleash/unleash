@@ -4,7 +4,6 @@ import { tagTypeSchema } from './tag-type-schema';
 export const validateTagTypeSchema = {
     $id: '#/components/schemas/validateTagTypeSchema',
     type: 'object',
-    additionalProperties: false,
     required: ['valid', 'tagType'],
     properties: {
         valid: {

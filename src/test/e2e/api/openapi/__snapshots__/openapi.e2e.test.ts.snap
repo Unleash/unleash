@@ -1052,6 +1052,9 @@ Object {
           "disablePasswordAuth": Object {
             "type": "boolean",
           },
+          "environment": Object {
+            "type": "string",
+          },
           "flags": Object {
             "additionalProperties": Object {
               "type": "boolean",

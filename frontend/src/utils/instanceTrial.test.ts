@@ -1,66 +1,81 @@
 import {
-    hasTrialExpired,
-    formatTrialExpirationWarning,
+    trialHasExpired,
+    canExtendTrial,
+    trialExpiresSoon,
 } from 'utils/instanceTrial';
 import { InstancePlan, InstanceState } from 'interfaces/instance';
-import { subHours, addHours, addMinutes, subMinutes } from 'date-fns';
+import { subHours, addHours, addDays } from 'date-fns';
 
-test.each([
-    undefined,
-    { plan: InstancePlan.UNKNOWN },
-    { plan: InstancePlan.UNKNOWN, state: InstanceState.ACTIVE },
-    { plan: InstancePlan.UNKNOWN, state: InstanceState.TRIAL },
-    { plan: InstancePlan.COMPANY, state: InstanceState.TRIAL },
-    { plan: InstancePlan.PRO, state: InstanceState.TRIAL },
-])('unknown trial states should not count as expired', input => {
-    expect(hasTrialExpired(input)).toEqual(false);
-    expect(formatTrialExpirationWarning(input)).toEqual(undefined);
-});
-
-test('hasTrialExpired', () => {
+test('trialHasExpired', () => {
     expect(
-        hasTrialExpired({
+        trialHasExpired({
+            plan: InstancePlan.UNKNOWN,
+            state: InstanceState.UNASSIGNED,
+        })
+    ).toEqual(false);
+    expect(
+        trialHasExpired({
+            plan: InstancePlan.UNKNOWN,
+            state: InstanceState.ACTIVE,
+        })
+    ).toEqual(false);
+    expect(
+        trialHasExpired({
+            plan: InstancePlan.UNKNOWN,
+            state: InstanceState.TRIAL,
+            trialExpiry: addHours(new Date(), 2).toISOString(),
+        })
+    ).toEqual(false);
+    expect(
+        trialHasExpired({
             plan: InstancePlan.UNKNOWN,
             state: InstanceState.TRIAL,
             trialExpiry: subHours(new Date(), 2).toISOString(),
         })
     ).toEqual(true);
     expect(
-        hasTrialExpired({
+        trialHasExpired({
             plan: InstancePlan.UNKNOWN,
-            state: InstanceState.TRIAL,
-            trialExpiry: addHours(new Date(), 2).toISOString(),
+            state: InstanceState.EXPIRED,
         })
-    ).toEqual(false);
+    ).toEqual(true);
+    expect(
+        trialHasExpired({
+            plan: InstancePlan.UNKNOWN,
+            state: InstanceState.CHURNED,
+        })
+    ).toEqual(true);
 });
 
-test('formatTrialExpirationWarning', () => {
+test('trialExpiresSoon', () => {
     expect(
-        formatTrialExpirationWarning({
+        trialExpiresSoon({
             plan: InstancePlan.UNKNOWN,
             state: InstanceState.TRIAL,
-            trialExpiry: subMinutes(new Date(), 1).toISOString(),
+            trialExpiry: addDays(new Date(), 12).toISOString(),
         })
-    ).toEqual(undefined);
+    ).toEqual(false);
     expect(
-        formatTrialExpirationWarning({
+        trialExpiresSoon({
             plan: InstancePlan.UNKNOWN,
             state: InstanceState.TRIAL,
-            trialExpiry: addMinutes(new Date(), 23 * 60 + 1).toISOString(),
+            trialExpiry: addDays(new Date(), 8).toISOString(),
         })
-    ).toEqual('23 hours');
+    ).toEqual(true);
+});
+
+test('canExtendTrial', () => {
     expect(
-        formatTrialExpirationWarning({
+        canExtendTrial({
             plan: InstancePlan.UNKNOWN,
-            state: InstanceState.TRIAL,
-            trialExpiry: addHours(new Date(), 25).toISOString(),
+            state: InstanceState.EXPIRED,
         })
-    ).toEqual('1 day');
+    ).toEqual(true);
     expect(
-        formatTrialExpirationWarning({
+        canExtendTrial({
             plan: InstancePlan.UNKNOWN,
-            state: InstanceState.TRIAL,
-            trialExpiry: addHours(new Date(), 24 * 11 - 1).toISOString(),
+            state: InstanceState.EXPIRED,
+            trialExtended: 1,
         })
-    ).toEqual('10 days');
+    ).toEqual(false);
 });

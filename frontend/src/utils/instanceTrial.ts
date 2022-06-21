@@ -1,48 +1,62 @@
-import { parseISO, formatDistanceToNowStrict, isPast } from 'date-fns';
+import { parseISO, isPast } from 'date-fns';
 import { IInstanceStatus, InstanceState } from 'interfaces/instance';
 import differenceInDays from 'date-fns/differenceInDays';
 
-const TRIAL_EXPIRATION_WARNING_DAYS_THRESHOLD = 10;
+const TRIAL_EXPIRES_SOON_DAYS_THRESHOLD = 10;
 
-export const hasTrialExpired = (
+export const isTrialInstance = (
     instanceStatus: IInstanceStatus | undefined
 ): boolean => {
-    const trialExpiry = parseTrialExpiryDate(instanceStatus);
+    return (
+        instanceStatus?.state === InstanceState.TRIAL ||
+        instanceStatus?.state === InstanceState.EXPIRED ||
+        instanceStatus?.state === InstanceState.CHURNED
+    );
+};
 
-    if (!trialExpiry) {
+export const trialHasExpired = (
+    instanceStatus: IInstanceStatus | undefined
+): boolean => {
+    if (
+        instanceStatus?.state === InstanceState.EXPIRED ||
+        instanceStatus?.state === InstanceState.CHURNED
+    ) {
+        return true;
+    }
+
+    if (
+        instanceStatus?.state === InstanceState.TRIAL &&
+        instanceStatus?.trialExpiry
+    ) {
+        return isPast(parseISO(instanceStatus.trialExpiry));
+    }
+
+    return false;
+};
+
+export const trialExpiresSoon = (
+    instanceStatus: IInstanceStatus | undefined
+) => {
+    if (
+        !instanceStatus ||
+        instanceStatus.state !== InstanceState.TRIAL ||
+        !instanceStatus.trialExpiry
+    ) {
         return false;
     }
 
-    return isPast(trialExpiry);
+    return (
+        differenceInDays(parseISO(instanceStatus.trialExpiry), new Date()) <=
+        TRIAL_EXPIRES_SOON_DAYS_THRESHOLD
+    );
 };
 
-export const formatTrialExpirationWarning = (
+export const canExtendTrial = (
     instanceStatus: IInstanceStatus | undefined
-): string | undefined => {
-    const trialExpiry = parseTrialExpiryDate(instanceStatus);
-
-    if (!trialExpiry || isPast(trialExpiry)) {
-        return;
-    }
-
-    if (
-        differenceInDays(trialExpiry, new Date()) <=
-        TRIAL_EXPIRATION_WARNING_DAYS_THRESHOLD
-    ) {
-        return formatDistanceToNowStrict(trialExpiry, {
-            roundingMethod: 'floor',
-        });
-    }
-};
-
-const parseTrialExpiryDate = (
-    instanceStatus: IInstanceStatus | undefined
-): Date | undefined => {
-    if (
+): boolean => {
+    return Boolean(
         instanceStatus &&
-        instanceStatus.state === InstanceState.TRIAL &&
-        instanceStatus.trialExpiry
-    ) {
-        return parseISO(instanceStatus.trialExpiry);
-    }
+            instanceStatus.state === InstanceState.EXPIRED &&
+            !instanceStatus.trialExtended
+    );
 };

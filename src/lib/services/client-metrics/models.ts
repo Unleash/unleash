@@ -22,8 +22,8 @@ export interface IApplication {
     url?: string;
     color?: string;
     icon?: string;
-    createdAt: Date;
+    createdAt?: Date;
     instances?: IClientInstance[];
-    seenToggles: Record<string, any>;
-    links: Record<string, string>;
+    seenToggles?: Record<string, any>;
+    links?: Record<string, string>;
 }

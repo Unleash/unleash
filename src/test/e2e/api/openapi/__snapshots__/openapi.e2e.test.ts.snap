@@ -384,6 +384,32 @@ Object {
         ],
         "type": "object",
       },
+      "exportParametersSchema": Object {
+        "properties": Object {
+          "download": Object {
+            "type": "boolean",
+          },
+          "environments": Object {
+            "type": "boolean",
+          },
+          "featureToggles": Object {
+            "type": "boolean",
+          },
+          "format": Object {
+            "type": "string",
+          },
+          "projects": Object {
+            "type": "boolean",
+          },
+          "strategies": Object {
+            "type": "boolean",
+          },
+          "tags": Object {
+            "type": "boolean",
+          },
+        },
+        "type": "object",
+      },
       "featureEnvironmentSchema": Object {
         "additionalProperties": false,
         "properties": Object {
@@ -519,6 +545,47 @@ Object {
           "constraints",
           "parameters",
           "environment",
+        ],
+        "type": "object",
+      },
+      "featureStrategySegmentSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "featureStrategyId": Object {
+            "type": "string",
+          },
+          "segmentId": Object {
+            "type": "integer",
+          },
+        },
+        "required": Array [
+          "segmentId",
+          "featureStrategyId",
+        ],
+        "type": "object",
+      },
+      "featureTagSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "featureName": Object {
+            "type": "string",
+          },
+          "tagType": Object {
+            "type": "string",
+          },
+          "tagValue": Object {
+            "type": "string",
+          },
+          "type": Object {
+            "type": "string",
+          },
+          "value": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "featureName",
+          "tagValue",
         ],
         "type": "object",
       },
@@ -889,6 +956,28 @@ Object {
         ],
         "type": "object",
       },
+      "segmentSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "constraints": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/constraintSchema",
+            },
+            "type": "array",
+          },
+          "description": Object {
+            "type": "string",
+          },
+          "name": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "name",
+          "constraints",
+        ],
+        "type": "object",
+      },
       "sortOrderSchema": Object {
         "additionalProperties": Object {
           "type": "number",
@@ -912,6 +1001,84 @@ Object {
           "userId",
           "splashId",
           "seen",
+        ],
+        "type": "object",
+      },
+      "stateSchema": Object {
+        "additionalProperties": true,
+        "properties": Object {
+          "environments": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/environmentSchema",
+            },
+            "type": "array",
+          },
+          "featureEnvironments": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/featureEnvironmentSchema",
+            },
+            "type": "array",
+          },
+          "featureStrategies": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/featureStrategySchema",
+            },
+            "type": "array",
+          },
+          "featureStrategySegments": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/featureStrategySegmentSchema",
+            },
+            "type": "array",
+          },
+          "featureTags": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/featureTagSchema",
+            },
+            "type": "array",
+          },
+          "features": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/featureSchema",
+            },
+            "type": "array",
+          },
+          "projects": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/projectSchema",
+            },
+            "type": "array",
+          },
+          "segments": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/segmentSchema",
+            },
+            "type": "array",
+          },
+          "strategies": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/strategySchema",
+            },
+            "type": "array",
+          },
+          "tagTypes": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/tagTypeSchema",
+            },
+            "type": "array",
+          },
+          "tags": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/tagSchema",
+            },
+            "type": "array",
+          },
+          "version": Object {
+            "type": "integer",
+          },
+        },
+        "required": Array [
+          "version",
         ],
         "type": "object",
       },
@@ -3201,6 +3368,55 @@ Object {
               },
             },
             "description": "splashSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/state/export": Object {
+      "get": Object {
+        "operationId": "export",
+        "parameters": Array [
+          Object {
+            "$ref": "#/components/schema/exportParametersSchema",
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/stateSchema",
+                },
+              },
+            },
+            "description": "stateSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/state/import": Object {
+      "post": Object {
+        "operationId": "import",
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/stateSchema",
+              },
+            },
+          },
+          "description": "stateSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "202": Object {
+            "description": "emptyResponse",
           },
         },
         "tags": Array [

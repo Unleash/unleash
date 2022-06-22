@@ -11,6 +11,10 @@ import { IUnleashServices } from '../../types/services';
 import { Logger } from '../../logger';
 import StateService from '../../services/state-service';
 import { IAuthRequest } from '../unleash-types';
+import { OpenApiService } from '../../services/openapi-service';
+import { createRequestSchema, createResponseSchema } from '../../openapi';
+import { emptyResponse } from '../../openapi/spec/empty-response';
+import { ExportParametersSchema } from '../../openapi/spec/export-parameters-schema';
 
 const upload = multer({ limits: { fileSize: 5242880 } });
 const paramToBool = (param, def) => {
@@ -28,16 +32,56 @@ class StateController extends Controller {
 
     private stateService: StateService;
 
+    private openApiService: OpenApiService;
+
     constructor(
         config: IUnleashConfig,
-        { stateService }: Pick<IUnleashServices, 'stateService'>,
+        {
+            stateService,
+            openApiService,
+        }: Pick<IUnleashServices, 'stateService' | 'openApiService'>,
     ) {
         super(config);
         this.logger = config.getLogger('/admin-api/state.ts');
         this.stateService = stateService;
+        this.openApiService = openApiService;
         this.fileupload('/import', upload.single('file'), this.import, ADMIN);
-        this.post('/import', this.import, ADMIN);
-        this.get('/export', this.export, ADMIN);
+        this.route({
+            method: 'post',
+            path: '/import',
+            permission: ADMIN,
+            handler: this.import,
+            middleware: [
+                this.openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'import',
+                    responses: {
+                        202: emptyResponse,
+                    },
+                    requestBody: createRequestSchema('stateSchema'),
+                }),
+            ],
+        });
+        this.route({
+            method: 'get',
+            path: '/export',
+            permission: ADMIN,
+            handler: this.export,
+            middleware: [
+                this.openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'export',
+                    responses: {
+                        200: createResponseSchema('stateSchema'),
+                    },
+                    parameters: [
+                        {
+                            $ref: '#/components/schema/exportParametersSchema',
+                        },
+                    ],
+                }),
+            ],
+        });
     }
 
     async import(req: IAuthRequest, res: Response): Promise<void> {
@@ -68,7 +112,10 @@ class StateController extends Controller {
         res.sendStatus(202);
     }
 
-    async export(req: Request, res: Response): Promise<void> {
+    async export(
+        req: Request<unknown, unknown, unknown, ExportParametersSchema>,
+        res: Response,
+    ): Promise<void> {
         const { format } = req.query;
 
         const downloadFile = paramToBool(req.query.download, false);

@@ -6,7 +6,9 @@ title: Unleash Proxy
 > The unleash-proxy is compatible with all Unleash Enterprise versions and Unleash Open-Source v4. You should reach out to **support@getunleash.io** if you want the Unleash Team to host the Unleash Proxy for you.
 
 :::tip
+
 Looking for how to run the Unleash proxy? Check out the [_How to run the Unleash Proxy_ guide](../how-to/how-to-run-the-unleash-proxy.mdx)!
+
 :::
 
 A lot of our users wanted to use feature toggles in their single-page and native applications. To solve this in a performant and privacy concerned way we built The Unleash Proxy
@@ -26,12 +28,15 @@ _The Unleash Proxy uses the Unleash SDK and exposes a simple API_. The Proxy wil
 ## Configuration
 
 :::info
+
 You **must configure** these three variables for the proxy to start successfully:
+
 - `unleashUrl` / `UNLEASH_URL`
 
 - `unleashApiToken` / `UNLEASH_API_TOKEN`
 
 - `clientKeys` / `UNLEASH_PROXY_CLIENT_KEYS`
+
 :::
 
 The Proxy has a large number of configuration options that you can use to adjust it to your specific use case. The table below lists all the available options.
@@ -80,12 +85,12 @@ Connection: keep-alive
 Keep-Alive: timeout=5
 ```
 
-
 ## Custom activation strategies
 
 The Unleash Proxy can load [custom activation strategies](../advanced/custom-activation-strategy.md) for front-end client SDKs ([Android](../sdks/android-proxy.md), [JavaScript](../sdks/proxy-javascript.md), [React](../sdks/proxy-react.md), [iOS](../sdks/proxy-ios.md)). For a step-by-step guide, refer to the [_how to use custom strategies_ guide](../how-to/how-to-use-custom-strategies.md#step-3-b).
 
 To load custom strategies, use either of these two options:
+
 - the **`customStrategies`** option: use this if you're running the Unleash Proxy via Node directly.
 - the **`UNLEASH_CUSTOM_STRATEGIES_FILE`** environment variable: use this if you're running the proxy as a container.
 
@@ -97,7 +102,7 @@ Each strategy file must export a list of instantiated strategies. A file can exp
 
 Here's an example file that exports two custom strategies:
 
-``` js
+```js
 const { Strategy } = require('unleash-client');
 
 class MyCustomStrategy extends Strategy {
@@ -125,8 +130,10 @@ The Unleash Proxy has a very simple API. It takes the [Unleash Context](../user_
 
 ### OpenAPI integration and API documentation {#openapi}
 
-:::info Availability
-The OpenAPI integration is available in versions 0.9 and later of the Unleash proxy.
+:::info
+
+Availability The OpenAPI integration is available in versions 0.9 and later of the Unleash proxy.
+
 :::
 
 The proxy can optionally expose a runtime-generated OpenAPI JSON spec and a corresponding OpenAPI UI for its API. The OpenAPI UI page is an interactive page where you can discover and test the API endpoints the proxy exposes. The JSON spec can be used to generate an OpenAPI client with OpenAPI tooling such as the [OpenAPI generator](https://openapi-generator.tech/).
@@ -138,7 +145,6 @@ The spec and UI can then be found at `<base url>/docs/openapi.json` and `<base u
 ### Payload
 
 The `proxy` endpoint returns information about toggles enabled for the current user. The payload is a JSON object with a `toggles` property, which contains a list of toggles.
-
 
 ```json
 {
@@ -167,7 +173,7 @@ The `proxy` endpoint returns information about toggles enabled for the current u
 
 The data for a toggle without [variants](../advanced/feature-toggle-variants.md) looks like this:
 
-``` json
+```json
 {
   "name": "basic-toggle",
   "enabled": true,
@@ -182,16 +188,17 @@ The data for a toggle without [variants](../advanced/feature-toggle-variants.md)
 - **`enabled`**: whether the toggle is enabled or not. Will always be `true`.
 - **`variant`**: describes whether the toggle has variants and, if it does, what variant is active for this user. If a toggle doesn't have any variants, it will always be `{"name": "disabled", "enabled": false}`.
 
-:::note
-Unleash uses a fallback variant called "disabled" to indicate that a toggle has no variants. However, you are free to create a variant called "disabled" yourself. In that case you can tell them apart by checking the variant's `enabled` property: if the toggle has no variants, `enabled` will be `false`. If the toggle is the "disabled" variant that you created, it will have `enabled` set to `true`.
-:::
+:::note The "disabled" variant
 
+Unleash uses a fallback variant called "disabled" to indicate that a toggle has no variants. However, you are free to create a variant called "disabled" yourself. In that case you can tell them apart by checking the variant's `enabled` property: if the toggle has no variants, `enabled` will be `false`. If the toggle is the "disabled" variant that you created, it will have `enabled` set to `true`.
+
+:::
 
 If a toggle has variants, then the variant object can also contain an optional `payload` property. The `payload` will contain data about the variant's payload: what type it is, and what the content is. To learn more about variants and their payloads, check [the feature toggle variants documentation](../advanced/feature-toggle-variants.md).
 
 Variant toggles without payloads look will have their name listed and the `enabled` property set to `true`:
 
-``` json
+```json
 {
   "name": "toggle-with-variants",
   "enabled": true,
@@ -200,12 +207,11 @@ Variant toggles without payloads look will have their name listed and the `enabl
     "enabled": true
   }
 }
-
 ```
 
 If the variant has a payload, the optional `payload` property will list the payload's type and it's content in a stringified form:
 
-``` json
+```json
 {
   "name": "toggle-with-variants",
   "enabled": true,
@@ -221,17 +227,19 @@ If the variant has a payload, the optional `payload` property will list the payl
 ```
 
 For the `variant` property:
+
 - **`name`**: is the name of the variant, as shown in the Admin UI.
 - **`enabled`**: indicates whether the variant is enabled or not. If the toggle has variants, this is always `true`.
 - **`payload`** (optional): Only present if the variant has a payload. Describes the payload's type and content.
 
 If the variant has a payload, the `payload` object contains:
+
 - **`type`**: the type of the variant's payload
 - **`value`**: the value of the variant's payload
 
 The `value` will always be the payload's content as a string, escaped as necessary. For instance, a variant with a JSON payload would look like this:
 
-``` json
+```json
 {
   "name": "toggle-with-variants",
   "enabled": true,

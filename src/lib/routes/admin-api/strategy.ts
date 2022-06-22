@@ -48,72 +48,49 @@ class StrategyController extends Controller {
     }
 
     async getAllStrategies(req: Request, res: Response): Promise<void> {
-        try {
-            const strategies = await this.strategyService.getStrategies();
-            res.json({ version, strategies });
-        } catch (err) {
-            handleErrors(res, this.logger, err);
-        }
+        const strategies = await this.strategyService.getStrategies();
+        res.json({ version, strategies });
     }
 
     async getStrategy(req: Request, res: Response): Promise<void> {
-        try {
-            const { name } = req.params;
-            const strategy = await this.strategyService.getStrategy(name);
-            res.json(strategy).end();
-        } catch (err) {
-            res.status(404).json({ error: 'Could not find strategy' });
-        }
+        const { name } = req.params;
+        const strategy = await this.strategyService.getStrategy(name);
+        res.json(strategy).end();
     }
 
     async removeStrategy(req: IAuthRequest, res: Response): Promise<void> {
         const strategyName = req.params.name;
         const userName = extractUsername(req);
 
-        try {
-            await this.strategyService.removeStrategy(strategyName, userName);
-            res.status(200).end();
-        } catch (error) {
-            handleErrors(res, this.logger, error);
-        }
+        await this.strategyService.removeStrategy(strategyName, userName);
+        res.status(200).end();
     }
 
     async createStrategy(req: IAuthRequest, res: Response): Promise<void> {
         const userName = extractUsername(req);
-        try {
-            await this.strategyService.createStrategy(req.body, userName);
-            res.status(201).end();
-        } catch (error) {
-            handleErrors(res, this.logger, error);
-        }
+
+        await this.strategyService.createStrategy(req.body, userName);
+        res.status(201).end();
     }
 
     async updateStrategy(req: IAuthRequest, res: Response): Promise<void> {
         const userName = extractUsername(req);
-        try {
-            await this.strategyService.updateStrategy(req.body, userName);
-            res.status(200).end();
-        } catch (error) {
-            handleErrors(res, this.logger, error);
-        }
+
+        await this.strategyService.updateStrategy(req.body, userName);
+        res.status(200).end();
     }
 
     async deprecateStrategy(req: IAuthRequest, res: Response): Promise<void> {
         const userName = extractUsername(req);
         const { strategyName } = req.params;
+
         if (strategyName === 'default') {
             res.status(403).end();
-        } else {
-            try {
-                await this.strategyService.deprecateStrategy(
-                    strategyName,
-                    userName,
-                );
-                res.status(200).end();
-            } catch (error) {
-                handleErrors(res, this.logger, error);
-            }
+            return;
         }
+
+        await this.strategyService.deprecateStrategy(strategyName, userName);
+        res.status(200).end();
     }
 
     async reactivateStrategy(req: IAuthRequest, res: Response): Promise<void> {

@@ -85,7 +85,7 @@ class ClientMetricsController extends Controller {
         );
         this.openApiService.respondWithValidation(
             200,
-            res.header('Content-Type', 'application/json'),
+            res,
             clientMetricsEnvSchema.$id,
             { version: 1, maturity: 'stable', data: serializeDates(data) },
         );
@@ -100,7 +100,7 @@ class ClientMetricsController extends Controller {
 
         this.openApiService.respondWithValidation(
             200,
-            res.header('Content-Type', 'application/json'),
+            res,
             toggleMetricsSummarySchema.$id,
             { version: 1, maturity: 'stable', ...serializeDates(data) },
         );

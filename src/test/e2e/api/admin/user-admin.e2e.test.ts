@@ -11,6 +11,8 @@ import { IEventStore } from '../../../../lib/types/stores/event-store';
 import { IUserStore } from '../../../../lib/types/stores/user-store';
 import { RoleName } from '../../../../lib/types/model';
 import { IRoleStore } from 'lib/types/stores/role-store';
+import { randomId } from '../../../../lib/util/random-id';
+import { omitKeys } from '../../../../lib/util/omit-keys';
 
 let stores;
 let db;
@@ -133,6 +135,19 @@ test('requires known root role', async () => {
         .expect(400);
 });
 
+test('should require username or email on create', async () => {
+    await app.request
+        .post('/api/admin/user-admin')
+        .send({ rootRole: adminRole.id })
+        .set('Content-Type', 'application/json')
+        .expect(400)
+        .expect((res) => {
+            expect(res.body.details[0].message).toEqual(
+                'You must specify username or email',
+            );
+        });
+});
+
 test('update user name', async () => {
     const { body } = await app.request
         .post('/api/admin/user-admin')
@@ -155,6 +170,24 @@ test('update user name', async () => {
             expect(res.body.name).toBe('New name');
             expect(res.body.id).toBe(body.id);
         });
+});
+
+test('should not require any fields on update', async () => {
+    const { body: created } = await app.request
+        .post('/api/admin/user-admin')
+        .send({ email: `${randomId()}@example.com`, rootRole: editorRole.id })
+        .set('Content-Type', 'application/json')
+        .expect(201);
+
+    const { body: updated } = await app.request
+        .put(`/api/admin/user-admin/${created.id}`)
+        .send({})
+        .set('Content-Type', 'application/json')
+        .expect(200);
+
+    expect(updated).toEqual(
+        omitKeys(created, 'emailSent', 'inviteLink', 'rootRole'),
+    );
 });
 
 test('get a single user', async () => {

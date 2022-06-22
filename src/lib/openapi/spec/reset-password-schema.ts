@@ -4,9 +4,9 @@ export const resetPasswordSchema = {
     $id: '#/components/schemas/resetPasswordSchema',
     type: 'object',
     additionalProperties: false,
-    required: ['email'],
+    required: ['resetPasswordUrl'],
     properties: {
-        email: {
+        resetPasswordUrl: {
             type: 'string',
         },
     },

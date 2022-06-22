@@ -12,6 +12,7 @@ import {
     tokenUserSchema,
     TokenUserSchema,
 } from '../../openapi/spec/token-user-schema';
+import { EmailSchema } from '../../openapi/spec/email-schema';
 
 interface IValidateQuery {
     token: string;
@@ -97,14 +98,17 @@ class ResetPasswordController extends Controller {
                 openApiService.validPath({
                     tags: ['other'],
                     operationId: 'sendResetPasswordEmail',
-                    requestBody: createRequestSchema('resetPasswordSchema'),
+                    requestBody: createRequestSchema('emailSchema'),
                     responses: { 200: emptyResponse },
                 }),
             ],
         });
     }
 
-    async sendResetPasswordEmail(req: Request, res: Response): Promise<void> {
+    async sendResetPasswordEmail(
+        req: Request<unknown, unknown, EmailSchema>,
+        res: Response,
+    ): Promise<void> {
         const { email } = req.body;
 
         await this.userService.createResetPasswordEmail(email);

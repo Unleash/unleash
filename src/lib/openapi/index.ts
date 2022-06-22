@@ -8,6 +8,7 @@ import { contextFieldsSchema } from './spec/context-fields-schema';
 import { createApiTokenSchema } from './spec/create-api-token-schema';
 import { createFeatureSchema } from './spec/create-feature-schema';
 import { createStrategySchema } from './spec/create-strategy-schema';
+import { createUserSchema } from './spec/create-user-schema';
 import { environmentSchema } from './spec/environment-schema';
 import { environmentsSchema } from './spec/environments-schema';
 import { featureEnvironmentSchema } from './spec/feature-environment-schema';
@@ -22,16 +23,21 @@ import { healthCheckSchema } from './spec/health-check-schema';
 import { healthOverviewSchema } from './spec/health-overview-schema';
 import { healthReportSchema } from './spec/health-report-schema';
 import { legalValueSchema } from './spec/legal-value-schema';
+import { idSchema } from './spec/id-schema';
 import { mapValues } from '../util/map-values';
 import { nameSchema } from './spec/name-schema';
+import { meSchema } from './spec/me-schema';
 import { omitKeys } from '../util/omit-keys';
 import { overrideSchema } from './spec/override-schema';
 import { parametersSchema } from './spec/parameters-schema';
+import { passwordSchema } from './spec/password-schema';
 import { patchSchema } from './spec/patch-schema';
 import { patchesSchema } from './spec/patches-schema';
+import { permissionSchema } from './spec/permission-schema';
 import { projectEnvironmentSchema } from './spec/project-environment-schema';
 import { projectSchema } from './spec/project-schema';
 import { projectsSchema } from './spec/projects-schema';
+import { roleSchema } from './spec/role-schema';
 import { sortOrderSchema } from './spec/sort-order-schema';
 import { splashSchema } from './spec/splash-schema';
 import { strategySchema } from './spec/strategy-schema';
@@ -45,6 +51,10 @@ import { updateStrategySchema } from './spec/update-strategy-schema';
 import { updateApiTokenSchema } from './spec/update-api-token-schema';
 import { updateTagTypeSchema } from './spec/update-tag-type-schema';
 import { upsertContextFieldSchema } from './spec/upsert-context-field-schema';
+import { updateUserSchema } from './spec/update-user-schema';
+import { userSchema } from './spec/user-schema';
+import { usersSchema } from './spec/users-schema';
+import { usersSearchSchema } from './spec/users-search-schema';
 import { validateTagTypeSchema } from './spec/validate-tag-type-schema';
 import { variantSchema } from './spec/variant-schema';
 import { variantsSchema } from './spec/variants-schema';
@@ -57,7 +67,6 @@ import { applicationSchema } from './spec/application-schema';
 import { applicationsSchema } from './spec/applications-schema';
 import { tagWithVersionSchema } from './spec/tag-with-version-schema';
 import { tokenUserSchema } from './spec/token-user-schema';
-import { roleDescriptionSchema } from './spec/role-description-schema';
 import { changePasswordSchema } from './spec/change-password-schema';
 import { validatePasswordSchema } from './spec/validate-password-schema';
 import { resetPasswordSchema } from './spec/reset-password-schema';
@@ -66,6 +75,7 @@ import { segmentSchema } from './spec/segment-schema';
 import { stateSchema } from './spec/state-schema';
 import { featureTagSchema } from './spec/feature-tag-schema';
 import { exportParametersSchema } from './spec/export-parameters-schema';
+import { emailSchema } from './spec/email-schema';
 
 // All schemas in `openapi/spec` should be listed here.
 export const schemas = {
@@ -85,6 +95,8 @@ export const schemas = {
     createApiTokenSchema,
     createFeatureSchema,
     createStrategySchema,
+    createUserSchema,
+    emailSchema,
     environmentSchema,
     environmentsSchema,
     exportParametersSchema,
@@ -103,15 +115,19 @@ export const schemas = {
     healthReportSchema,
     legalValueSchema,
     nameSchema,
+    idSchema,
+    meSchema,
     overrideSchema,
     parametersSchema,
+    passwordSchema,
     patchSchema,
     patchesSchema,
+    permissionSchema,
     projectEnvironmentSchema,
     projectSchema,
     projectsSchema,
     resetPasswordSchema,
-    roleDescriptionSchema,
+    roleSchema,
     segmentSchema,
     sortOrderSchema,
     splashSchema,
@@ -131,6 +147,10 @@ export const schemas = {
     upsertContextFieldSchema,
     validatePasswordSchema,
     validateTagTypeSchema,
+    updateUserSchema,
+    userSchema,
+    usersSchema,
+    usersSearchSchema,
     variantSchema,
     variantsSchema,
     versionSchema,

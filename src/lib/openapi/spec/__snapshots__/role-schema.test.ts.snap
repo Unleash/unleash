@@ -1,19 +1,19 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`roleDescriptionSchema empty 1`] = `
+exports[`roleSchema 1`] = `
 Object {
   "data": Object {},
   "errors": Array [
     Object {
       "instancePath": "",
       "keyword": "required",
-      "message": "must have required property 'description'",
+      "message": "must have required property 'id'",
       "params": Object {
-        "missingProperty": "description",
+        "missingProperty": "id",
       },
       "schemaPath": "#/required",
     },
   ],
-  "schema": "#/components/schemas/roleDescriptionSchema",
+  "schema": "#/components/schemas/roleSchema",
 }
 `;

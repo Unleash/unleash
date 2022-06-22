@@ -1,22 +1,25 @@
 import { FromSchema } from 'json-schema-to-ts';
 
-export const roleDescriptionSchema = {
-    $id: '#/components/schemas/roleDescriptionSchema',
+export const roleSchema = {
+    $id: '#/components/schemas/roleSchema',
     type: 'object',
     additionalProperties: false,
-    required: ['description', 'name', 'type'],
+    required: ['id', 'type', 'name'],
     properties: {
-        description: {
+        id: {
+            type: 'number',
+        },
+        type: {
             type: 'string',
         },
         name: {
             type: 'string',
         },
-        type: {
+        description: {
             type: 'string',
         },
     },
     components: {},
 } as const;
 
-export type RoleDescriptionSchema = FromSchema<typeof roleDescriptionSchema>;
+export type RoleSchema = FromSchema<typeof roleSchema>;

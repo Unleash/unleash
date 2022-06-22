@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`resetPasswordSchema empty 1`] = `
+exports[`emailSchema 1`] = `
 Object {
   "data": Object {},
   "errors": Array [
@@ -14,6 +14,6 @@ Object {
       "schemaPath": "#/required",
     },
   ],
-  "schema": "#/components/schemas/resetPasswordSchema",
+  "schema": "#/components/schemas/emailSchema",
 }
 `;

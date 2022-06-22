@@ -24,12 +24,12 @@ exports[`should serve the OpenAPI UI 1`] = `
         background: #fafafa;
       }
     </style>
-
+    
       <link rel=\\"stylesheet\\" type=\\"text/css\\" href=\\"./swagger-ui.css\\" >
-
+    
   </head>
   <body>
-
+    
       <div id=\\"swagger-ui\\"></div>
       <script src=\\"./swagger-ui-bundle.js\\"></script>
       <script src=\\"./swagger-ui-standalone-preset.js\\"></script>
@@ -41,7 +41,7 @@ exports[`should serve the OpenAPI UI 1`] = `
           })
         }
       </script>
-
+    
   </body>
 </html>
   "
@@ -306,6 +306,66 @@ Object {
         "required": Array [
           "token",
           "password",
+        ],
+        "type": "object",
+      },
+      "clientMetricsEnvSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "appName": Object {
+            "type": "string",
+          },
+          "environment": Object {
+            "type": "string",
+          },
+          "featureName": Object {
+            "type": "string",
+          },
+          "no": Object {
+            "type": "number",
+          },
+          "timestamp": Object {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string",
+          },
+          "yes": Object {
+            "type": "number",
+          },
+        },
+        "required": Array [
+          "featureName",
+          "appName",
+          "environment",
+          "timestamp",
+          "yes",
+          "no",
+        ],
+        "type": "object",
+      },
+      "clientMetricsResponseSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "data": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/clientMetricsEnvSchema",
+            },
+            "type": "array",
+          },
+          "maturity": Object {
+            "type": "string",
+          },
+          "version": Object {
+            "type": "number",
+          },
+        },
+        "required": Array [
+          "version",
+          "maturity",
+          "environment",
+          "timestamp",
+          "yes",
+          "no",
         ],
         "type": "object",
       },
@@ -878,6 +938,29 @@ Object {
           },
         },
         "required": Array [],
+        "type": "object",
+      },
+      "groupedClientMetricsSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "environment": Object {
+            "type": "string",
+          },
+          "no": Object {
+            "type": "number",
+          },
+          "timestamp": Object {
+            "format": "date-time",
+            "type": "string",
+          },
+          "yes": Object {
+            "type": "number",
+          },
+        },
+        "required": Array [
+          "featureName",
+          "appName",
+        ],
         "type": "object",
       },
       "healthCheckSchema": Object {
@@ -1495,6 +1578,40 @@ Object {
         "required": Array [
           "version",
           "tags",
+        ],
+        "type": "object",
+      },
+      "toggleMetricsSummarySchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "featureName": Object {
+            "type": "string",
+          },
+          "lastHourUsage": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/groupedClientMetricsSchema",
+            },
+            "type": "array",
+          },
+          "maturity": Object {
+            "type": "string",
+          },
+          "seenApplications": Object {
+            "items": Object {
+              "type": "string",
+            },
+            "type": "array",
+          },
+          "version": Object {
+            "type": "number",
+          },
+        },
+        "required": Array [
+          "version",
+          "maturity",
+          "featureName",
+          "lastHourUsage",
+          "seenApplications",
         ],
         "type": "object",
       },
@@ -2254,6 +2371,66 @@ Object {
         "responses": Object {
           "200": Object {
             "description": "emptyResponse",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/client-metrics/features/{name}": Object {
+      "get": Object {
+        "operationId": "getToggleMetricsSummary",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/toggleMetricsSummarySchema",
+                },
+              },
+            },
+            "description": "toggleMetricsSummarySchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/client-metrics/features/{name}/raw": Object {
+      "get": Object {
+        "operationId": "getRawToggleMetrics",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/clientMetricsResponseSchema",
+                },
+              },
+            },
+            "description": "clientMetricsResponseSchema",
           },
         },
         "tags": Array [

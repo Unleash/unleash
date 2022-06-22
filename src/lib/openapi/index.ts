@@ -49,6 +49,10 @@ import { validateTagTypeSchema } from './spec/validate-tag-type-schema';
 import { variantSchema } from './spec/variant-schema';
 import { variantsSchema } from './spec/variants-schema';
 import { versionSchema } from './spec/version-schema';
+import { addonSchema } from './spec/addon-schema';
+import { addonsSchema } from './spec/addons-schema';
+import { addonParameterSchema } from './spec/addon-parameter-schema';
+import { addonTypeSchema } from './spec/addon-type-schema';
 import { applicationSchema } from './spec/application-schema';
 import { applicationsSchema } from './spec/applications-schema';
 import { tagWithVersionSchema } from './spec/tag-with-version-schema';
@@ -60,6 +64,10 @@ import { exportParametersSchema } from './spec/export-parameters-schema';
 
 // All schemas in `openapi/spec` should be listed here.
 export const schemas = {
+    addonSchema,
+    addonsSchema,
+    addonTypeSchema,
+    addonParameterSchema,
     apiTokenSchema,
     apiTokensSchema,
     applicationSchema,

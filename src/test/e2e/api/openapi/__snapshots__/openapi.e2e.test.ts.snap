@@ -51,6 +51,139 @@ exports[`should serve the OpenAPI spec 1`] = `
 Object {
   "components": Object {
     "schemas": Object {
+      "addonParameterSchema": Object {
+        "properties": Object {
+          "description": Object {
+            "type": "string",
+          },
+          "displayName": Object {
+            "type": "string",
+          },
+          "name": Object {
+            "type": "string",
+          },
+          "placeholder": Object {
+            "type": "string",
+          },
+          "required": Object {
+            "type": "boolean",
+          },
+          "sensitive": Object {
+            "type": "boolean",
+          },
+          "type": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "name",
+          "displayName",
+          "type",
+          "required",
+          "sensitive",
+        ],
+        "type": "object",
+      },
+      "addonSchema": Object {
+        "properties": Object {
+          "createdAt": Object {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string",
+          },
+          "description": Object {
+            "type": "string",
+          },
+          "enabled": Object {
+            "type": "boolean",
+          },
+          "events": Object {
+            "items": Object {
+              "type": "string",
+            },
+            "type": "array",
+          },
+          "id": Object {
+            "type": "number",
+          },
+          "parameters": Object {
+            "additionalProperties": true,
+            "type": "object",
+          },
+          "provider": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "provider",
+          "enabled",
+          "parameters",
+          "events",
+        ],
+        "type": "object",
+      },
+      "addonTypeSchema": Object {
+        "properties": Object {
+          "description": Object {
+            "type": "string",
+          },
+          "displayName": Object {
+            "type": "string",
+          },
+          "documentationUrl": Object {
+            "type": "string",
+          },
+          "events": Object {
+            "items": Object {
+              "type": "string",
+            },
+            "type": "array",
+          },
+          "name": Object {
+            "type": "string",
+          },
+          "parameters": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/addonParameterSchema",
+            },
+            "type": "array",
+          },
+          "tagTypes": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/tagTypeSchema",
+            },
+            "type": "array",
+          },
+        },
+        "required": Array [
+          "name",
+          "displayName",
+          "documentationUrl",
+          "description",
+        ],
+        "type": "object",
+      },
+      "addonsSchema": Object {
+        "properties": Object {
+          "addons": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/addonSchema",
+            },
+            "type": "array",
+          },
+          "providers": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/addonTypeSchema",
+            },
+            "type": "array",
+          },
+        },
+        "required": Array [
+          "addons",
+          "providers",
+        ],
+        "type": "object",
+      },
       "apiTokenSchema": Object {
         "additionalProperties": false,
         "properties": Object {
@@ -1497,6 +1630,145 @@ Object {
   },
   "openapi": "3.0.3",
   "paths": Object {
+    "/api/admin/addons": Object {
+      "get": Object {
+        "operationId": "getAddons",
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/addonsSchema",
+                },
+              },
+            },
+            "description": "addonsSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+      "post": Object {
+        "operationId": "createAddon",
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/addonSchema",
+              },
+            },
+          },
+          "description": "addonSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/addonSchema",
+                },
+              },
+            },
+            "description": "addonSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/addons/{id}": Object {
+      "delete": Object {
+        "operationId": "deleteAddon",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "description": "emptyResponse",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+      "get": Object {
+        "operationId": "getAddon",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/addonSchema",
+                },
+              },
+            },
+            "description": "addonSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+      "put": Object {
+        "operationId": "updateAddon",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/addonSchema",
+              },
+            },
+          },
+          "description": "addonSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/addonSchema",
+                },
+              },
+            },
+            "description": "addonSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
     "/api/admin/api-tokens": Object {
       "get": Object {
         "operationId": "getAllApiTokens",

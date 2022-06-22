@@ -115,7 +115,7 @@ const EditProfile = ({
                     label="Password"
                     name="password"
                     value={password}
-                    autoComplete="on"
+                    autoComplete="new-password"
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                         setPassword(e.target.value)
                     }
@@ -125,7 +125,7 @@ const EditProfile = ({
                     label="Confirm password"
                     name="confirmPassword"
                     value={confirmPassword}
-                    autoComplete="on"
+                    autoComplete="new-password"
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                         setConfirmPassword(e.target.value)
                     }

@@ -113,7 +113,7 @@ const HostedAuth: VFC<IHostedAuthProps> = ({ authDetails, redirect }) => {
                                 label="Username or email"
                                 name="username"
                                 id="username"
-                                type="string"
+                                type="text"
                                 onChange={evt => setUsername(evt.target.value)}
                                 value={username}
                                 error={Boolean(usernameError)}
@@ -130,6 +130,7 @@ const HostedAuth: VFC<IHostedAuthProps> = ({ authDetails, redirect }) => {
                                 value={password}
                                 error={Boolean(passwordError)}
                                 helperText={passwordError}
+                                autoComplete="current-password"
                                 data-testid={LOGIN_PASSWORD_ID}
                             />
                             <Grid container>

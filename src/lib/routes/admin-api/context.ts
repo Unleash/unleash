@@ -8,6 +8,7 @@ import {
     CREATE_CONTEXT_FIELD,
     UPDATE_CONTEXT_FIELD,
     DELETE_CONTEXT_FIELD,
+    NONE,
 } from '../../types/permissions';
 import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
@@ -15,53 +16,180 @@ import ContextService from '../../services/context-service';
 import { Logger } from '../../logger';
 import { IAuthRequest } from '../unleash-types';
 
-class ContextController extends Controller {
-    private logger: Logger;
+import { OpenApiService } from '../../services/openapi-service';
+import {
+    contextFieldSchema,
+    ContextFieldSchema,
+} from '../../openapi/spec/context-field-schema';
+import { ContextFieldsSchema } from '../../openapi/spec/context-fields-schema';
+import { UpsertContextFieldSchema } from '../../openapi/spec/upsert-context-field-schema';
+import { createRequestSchema, createResponseSchema } from '../../openapi';
+import { serializeDates } from '../../types/serialize-dates';
+import NotFoundError from '../../error/notfound-error';
+import { emptyResponse } from '../../openapi/spec/empty-response';
+import { NameSchema } from '../../openapi/spec/name-schema';
 
+interface ContextParam {
+    contextField: string;
+}
+
+export class ContextController extends Controller {
     private contextService: ContextService;
+
+    private openApiService: OpenApiService;
+
+    private logger: Logger;
 
     constructor(
         config: IUnleashConfig,
-        { contextService }: Pick<IUnleashServices, 'contextService'>,
+        {
+            contextService,
+            openApiService,
+        }: Pick<IUnleashServices, 'contextService' | 'openApiService'>,
     ) {
         super(config);
+        this.openApiService = openApiService;
         this.logger = config.getLogger('/admin-api/context.ts');
         this.contextService = contextService;
 
-        this.get('/', this.getContextFields);
-        this.post('/', this.createContextField, CREATE_CONTEXT_FIELD);
-        this.get('/:contextField', this.getContextField);
-        this.put(
-            '/:contextField',
-            this.updateContextField,
-            UPDATE_CONTEXT_FIELD,
-        );
-        this.delete(
-            '/:contextField',
-            this.deleteContextField,
-            DELETE_CONTEXT_FIELD,
-        );
-        this.post('/validate', this.validate, UPDATE_CONTEXT_FIELD);
+        this.route({
+            method: 'get',
+            path: '',
+            handler: this.getContextFields,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'getContextFields',
+                    responses: {
+                        200: createResponseSchema('contextFieldsSchema'),
+                    },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'get',
+            path: '/:contextField',
+            handler: this.getContextField,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'getContextField',
+                    responses: {
+                        200: createResponseSchema('contextFieldSchema'),
+                    },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'post',
+            path: '',
+            handler: this.createContextField,
+            permission: CREATE_CONTEXT_FIELD,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'createContextField',
+                    requestBody: createRequestSchema(
+                        'upsertContextFieldSchema',
+                    ),
+                    responses: {
+                        201: emptyResponse,
+                    },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'put',
+            path: '/:contextField',
+            handler: this.updateContextField,
+            permission: UPDATE_CONTEXT_FIELD,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'updateContextField',
+                    requestBody: createRequestSchema(
+                        'upsertContextFieldSchema',
+                    ),
+                    responses: {
+                        200: emptyResponse,
+                    },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'delete',
+            path: '/:contextField',
+            handler: this.deleteContextField,
+            acceptAnyContentType: true,
+            permission: DELETE_CONTEXT_FIELD,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'deleteContextField',
+                    responses: {
+                        200: emptyResponse,
+                    },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'post',
+            path: '/validate',
+            handler: this.validate,
+            permission: UPDATE_CONTEXT_FIELD,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'validate',
+                    requestBody: createRequestSchema('nameSchema'),
+                    responses: {
+                        200: emptyResponse,
+                    },
+                }),
+            ],
+        });
     }
 
-    async getContextFields(req: Request, res: Response): Promise<void> {
-        const fields = await this.contextService.getAll();
-        res.status(200).json(fields).end();
+    async getContextFields(
+        req: Request,
+        res: Response<ContextFieldsSchema>,
+    ): Promise<void> {
+        res.status(200)
+            .json(serializeDates(await this.contextService.getAll()))
+            .end();
     }
 
-    async getContextField(req: Request, res: Response): Promise<void> {
+    async getContextField(
+        req: Request<ContextParam>,
+        res: Response<ContextFieldSchema>,
+    ): Promise<void> {
         try {
             const name = req.params.contextField;
             const contextField = await this.contextService.getContextField(
                 name,
             );
-            res.json(contextField).end();
+            this.openApiService.respondWithValidation(
+                200,
+                res,
+                contextFieldSchema.$id,
+                serializeDates(contextField),
+            );
         } catch (err) {
-            res.status(404).json({ error: 'Could not find context field' });
+            throw new NotFoundError('Could not find context field');
         }
     }
 
-    async createContextField(req: IAuthRequest, res: Response): Promise<void> {
+    async createContextField(
+        req: IAuthRequest<void, void, UpsertContextFieldSchema>,
+        res: Response,
+    ): Promise<void> {
         const value = req.body;
         const userName = extractUsername(req);
 
@@ -69,7 +197,10 @@ class ContextController extends Controller {
         res.status(201).end();
     }
 
-    async updateContextField(req: IAuthRequest, res: Response): Promise<void> {
+    async updateContextField(
+        req: IAuthRequest<ContextParam, void, UpsertContextFieldSchema>,
+        res: Response,
+    ): Promise<void> {
         const name = req.params.contextField;
         const userName = extractUsername(req);
         const contextField = req.body;
@@ -80,7 +211,10 @@ class ContextController extends Controller {
         res.status(200).end();
     }
 
-    async deleteContextField(req: IAuthRequest, res: Response): Promise<void> {
+    async deleteContextField(
+        req: IAuthRequest<ContextParam>,
+        res: Response,
+    ): Promise<void> {
         const name = req.params.contextField;
         const userName = extractUsername(req);
 
@@ -88,12 +222,13 @@ class ContextController extends Controller {
         res.status(200).end();
     }
 
-    async validate(req: Request, res: Response): Promise<void> {
+    async validate(
+        req: Request<void, void, NameSchema>,
+        res: Response,
+    ): Promise<void> {
         const { name } = req.body;
 
         await this.contextService.validateName(name);
         res.status(200).end();
     }
 }
-export default ContextController;
-module.exports = ContextController;

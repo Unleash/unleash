@@ -24,12 +24,12 @@ exports[`should serve the OpenAPI UI 1`] = `
         background: #fafafa;
       }
     </style>
-
+    
       <link rel=\\"stylesheet\\" type=\\"text/css\\" href=\\"./swagger-ui.css\\" >
-
+    
   </head>
   <body>
-
+    
       <div id=\\"swagger-ui\\"></div>
       <script src=\\"./swagger-ui-bundle.js\\"></script>
       <script src=\\"./swagger-ui-standalone-preset.js\\"></script>
@@ -41,7 +41,7 @@ exports[`should serve the OpenAPI UI 1`] = `
           })
         }
       </script>
-
+    
   </body>
 </html>
   "
@@ -51,7 +51,7 @@ exports[`should serve the OpenAPI spec 1`] = `
 Object {
   "components": Object {
     "schemas": Object {
-      "addonDefinitionSchema": Object {
+      "addonParameterSchema": Object {
         "properties": Object {
           "description": Object {
             "type": "string",
@@ -59,33 +59,28 @@ Object {
           "displayName": Object {
             "type": "string",
           },
-          "documentationUrl": Object {
-            "type": "string",
-          },
-          "events": Object {
-            "items": Object {
-              "type": "string",
-            },
-            "type": "array",
-          },
           "name": Object {
             "type": "string",
           },
-          "parameters": Object {
-            "$ref": "#/components/schemas/parameterDefinitionSchema",
+          "placeholder": Object {
+            "type": "string",
           },
-          "tagTypes": Object {
-            "items": Object {
-              "$ref": "#/components/schemas/tagTypeSchema",
-            },
-            "type": "array",
+          "required": Object {
+            "type": "boolean",
+          },
+          "sensitive": Object {
+            "type": "boolean",
+          },
+          "type": Object {
+            "type": "string",
           },
         },
         "required": Array [
           "name",
           "displayName",
-          "documentationUrl",
-          "description",
+          "type",
+          "required",
+          "sensitive",
         ],
         "type": "object",
       },
@@ -112,8 +107,7 @@ Object {
             "type": "number",
           },
           "parameters": Object {
-            "additionalProperties": true,
-            "type": "object",
+            "$ref": "#/components/schemas/parameterSchema",
           },
           "provider": Object {
             "type": "string",
@@ -125,6 +119,177 @@ Object {
           "parameters",
           "events",
         ],
+        "type": "object",
+      },
+      "addonTypeSchema": Object {
+        "properties": Object {
+          "description": Object {
+            "type": "string",
+          },
+          "displayName": Object {
+            "type": "string",
+          },
+          "documentationUrl": Object {
+            "type": "string",
+          },
+          "events": Object {
+            "items": Object {
+              "type": "string",
+            },
+            "type": "array",
+          },
+          "name": Object {
+            "type": "string",
+          },
+          "parameters": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/addonParameterSchema",
+            },
+            "type": "array",
+          },
+          "tagTypes": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/tagTypeSchema",
+            },
+            "type": "array",
+          },
+        },
+        "required": Array [
+          "name",
+          "displayName",
+          "documentationUrl",
+          "description",
+        ],
+        "type": "object",
+      },
+      "addonsSchema": Object {
+        "properties": Object {
+          "addons": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/addonSchema",
+            },
+            "type": "array",
+          },
+          "providers": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/addonTypeSchema",
+            },
+            "type": "array",
+          },
+        },
+        "required": Array [
+          "addons",
+          "providers",
+        ],
+        "type": "object",
+      },
+      "apiTokenSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "createdAt": Object {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string",
+          },
+          "environment": Object {
+            "type": "string",
+          },
+          "expiresAt": Object {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string",
+          },
+          "project": Object {
+            "type": "string",
+          },
+          "projects": Object {
+            "items": Object {
+              "type": "string",
+            },
+            "type": "array",
+          },
+          "secret": Object {
+            "type": "string",
+          },
+          "seenAt": Object {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string",
+          },
+          "type": Object {
+            "description": "client, admin.",
+            "type": "string",
+          },
+          "username": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "username",
+          "type",
+        ],
+        "type": "object",
+      },
+      "apiTokensSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "tokens": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/apiTokenSchema",
+            },
+            "type": "array",
+          },
+        },
+        "required": Array [
+          "tokens",
+        ],
+        "type": "object",
+      },
+      "applicationSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "announced": Object {
+            "type": "boolean",
+          },
+          "appName": Object {
+            "type": "string",
+          },
+          "color": Object {
+            "type": "string",
+          },
+          "description": Object {
+            "type": "string",
+          },
+          "icon": Object {
+            "type": "string",
+          },
+          "sdkVersion": Object {
+            "type": "string",
+          },
+          "strategies": Object {
+            "items": Object {
+              "type": "string",
+            },
+            "type": "array",
+          },
+          "url": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "appName",
+        ],
+        "type": "object",
+      },
+      "applicationsSchema": Object {
+        "properties": Object {
+          "applications": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/applicationSchema",
+            },
+            "type": "array",
+          },
+        },
         "type": "object",
       },
       "cloneFeatureSchema": Object {
@@ -189,6 +354,80 @@ Object {
         ],
         "type": "object",
       },
+      "contextFieldSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "createdAt": Object {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string",
+          },
+          "description": Object {
+            "type": "string",
+          },
+          "legalValues": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/legalValueSchema",
+            },
+            "type": "array",
+          },
+          "name": Object {
+            "type": "string",
+          },
+          "sortOrder": Object {
+            "type": "number",
+          },
+          "stickiness": Object {
+            "type": "boolean",
+          },
+        },
+        "required": Array [
+          "name",
+        ],
+        "type": "object",
+      },
+      "contextFieldsSchema": Object {
+        "items": Object {
+          "$ref": "#/components/schemas/contextFieldSchema",
+        },
+        "type": "array",
+      },
+      "createApiTokenSchema": Object {
+        "properties": Object {
+          "environment": Object {
+            "type": "string",
+          },
+          "expiresAt": Object {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string",
+          },
+          "project": Object {
+            "type": "string",
+          },
+          "projects": Object {
+            "items": Object {
+              "type": "string",
+            },
+            "type": "array",
+          },
+          "secret": Object {
+            "type": "string",
+          },
+          "type": Object {
+            "description": "client, admin.",
+            "type": "string",
+          },
+          "username": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "username",
+          "type",
+        ],
+        "type": "object",
+      },
       "createFeatureSchema": Object {
         "properties": Object {
           "description": Object {
@@ -210,7 +449,6 @@ Object {
         "type": "object",
       },
       "createStrategySchema": Object {
-        "additionalProperties": false,
         "properties": Object {
           "constraints": Object {
             "items": Object {
@@ -519,24 +757,19 @@ Object {
         "required": Array [],
         "type": "object",
       },
-      "addonsSchema": Object {
+      "healthCheckSchema": Object {
+        "additionalProperties": false,
         "properties": Object {
-          "addons": Object {
-            "items": Object {
-              "$ref": "#/components/schemas/addonSchema",
-            },
-            "type": "array",
-          },
-          "providers": Object {
-            "items": Object {
-              "$ref": "#/components/schemas/addonDefinitionSchema",
-            },
-            "type": "array",
+          "health": Object {
+            "enum": Array [
+              "GOOD",
+              "BAD",
+            ],
+            "type": "string",
           },
         },
         "required": Array [
-          "addons",
-          "providers",
+          "health",
         ],
         "type": "object",
       },
@@ -636,6 +869,33 @@ Object {
         ],
         "type": "object",
       },
+      "legalValueSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "description": Object {
+            "type": "string",
+          },
+          "value": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "value",
+        ],
+        "type": "object",
+      },
+      "nameSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "name": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "name",
+        ],
+        "type": "object",
+      },
       "overrideSchema": Object {
         "additionalProperties": false,
         "properties": Object {
@@ -652,39 +912,6 @@ Object {
         "required": Array [
           "contextName",
           "values",
-        ],
-        "type": "object",
-      },
-      "parameterDefinitionSchema": Object {
-        "properties": Object {
-          "description": Object {
-            "type": "string",
-          },
-          "displayName": Object {
-            "type": "string",
-          },
-          "name": Object {
-            "type": "string",
-          },
-          "placeholder": Object {
-            "type": "string",
-          },
-          "required": Object {
-            "type": "boolean",
-          },
-          "sensitive": Object {
-            "type": "boolean",
-          },
-          "type": Object {
-            "type": "string",
-          },
-        },
-        "required": Array [
-          "provider",
-          "description",
-          "enabled",
-          "parameters",
-          "events",
         ],
         "type": "object",
       },
@@ -900,6 +1127,22 @@ Object {
         ],
         "type": "object",
       },
+      "tagWithVersionSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "tag": Object {
+            "$ref": "#/components/schemas/tagSchema",
+          },
+          "version": Object {
+            "type": "integer",
+          },
+        },
+        "required": Array [
+          "version",
+          "tag",
+        ],
+        "type": "object",
+      },
       "tagsSchema": Object {
         "additionalProperties": false,
         "properties": Object {
@@ -938,6 +1181,9 @@ Object {
           },
           "disablePasswordAuth": Object {
             "type": "boolean",
+          },
+          "environment": Object {
+            "type": "string",
           },
           "flags": Object {
             "additionalProperties": Object {
@@ -981,6 +1227,18 @@ Object {
           "disablePasswordAuth",
           "segmentValuesLimit",
           "strategySegmentsLimit",
+        ],
+        "type": "object",
+      },
+      "updateApiTokenSchema": Object {
+        "properties": Object {
+          "expiresAt": Object {
+            "format": "date-time",
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "expiresAt",
         ],
         "type": "object",
       },
@@ -1046,7 +1304,6 @@ Object {
         "type": "object",
       },
       "updateTagTypeSchema": Object {
-        "additionalProperties": false,
         "properties": Object {
           "description": Object {
             "type": "string",
@@ -1057,8 +1314,33 @@ Object {
         },
         "type": "object",
       },
+      "upsertContextFieldSchema": Object {
+        "properties": Object {
+          "description": Object {
+            "type": "string",
+          },
+          "legalValues": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/legalValueSchema",
+            },
+            "type": "array",
+          },
+          "name": Object {
+            "type": "string",
+          },
+          "sortOrder": Object {
+            "type": "number",
+          },
+          "stickiness": Object {
+            "type": "boolean",
+          },
+        },
+        "required": Array [
+          "name",
+        ],
+        "type": "object",
+      },
       "validateTagTypeSchema": Object {
-        "additionalProperties": false,
         "properties": Object {
           "tagType": Object {
             "$ref": "#/components/schemas/tagTypeSchema",
@@ -1180,7 +1462,7 @@ Object {
   },
   "openapi": "3.0.3",
   "paths": Object {
-    "/api/admin/addons/": Object {
+    "/api/admin/addons": Object {
       "get": Object {
         "operationId": "getAddons",
         "responses": Object {
@@ -1188,17 +1470,19 @@ Object {
             "content": Object {
               "application/json": Object {
                 "schema": Object {
-                  "$ref": "#/components/schemas/addonSchema",
+                  "$ref": "#/components/schemas/addonsSchema",
                 },
               },
             },
-            "description": "addonSchema",
+            "description": "addonsSchema",
           },
         },
         "tags": Array [
           "admin",
         ],
       },
+    },
+    "/api/admin/addons/": Object {
       "post": Object {
         "operationId": "createAddon",
         "requestBody": Object {
@@ -1312,6 +1596,110 @@ Object {
               },
             },
             "description": "addonSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/api-tokens": Object {
+      "get": Object {
+        "operationId": "getAllApiTokens",
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/apiTokensSchema",
+                },
+              },
+            },
+            "description": "apiTokensSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+      "post": Object {
+        "operationId": "createApiToken",
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/createApiTokenSchema",
+              },
+            },
+          },
+          "description": "createApiTokenSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "201": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/apiTokenSchema",
+                },
+              },
+            },
+            "description": "apiTokenSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/api-tokens/{token}": Object {
+      "delete": Object {
+        "operationId": "deleteApiToken",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "token",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "description": "emptyResponse",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+      "put": Object {
+        "operationId": "updateApiToken",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "token",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/updateApiTokenSchema",
+              },
+            },
+          },
+          "description": "updateApiTokenSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "200": Object {
+            "description": "emptyResponse",
           },
         },
         "tags": Array [
@@ -1444,6 +1832,155 @@ Object {
         ],
       },
     },
+    "/api/admin/context": Object {
+      "get": Object {
+        "operationId": "getContextFields",
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/contextFieldsSchema",
+                },
+              },
+            },
+            "description": "contextFieldsSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+      "post": Object {
+        "operationId": "createContextField",
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/upsertContextFieldSchema",
+              },
+            },
+          },
+          "description": "upsertContextFieldSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "201": Object {
+            "description": "emptyResponse",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/context/validate": Object {
+      "post": Object {
+        "operationId": "validate",
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/nameSchema",
+              },
+            },
+          },
+          "description": "nameSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "200": Object {
+            "description": "emptyResponse",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/context/{contextField}": Object {
+      "delete": Object {
+        "operationId": "deleteContextField",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "contextField",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "description": "emptyResponse",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+      "get": Object {
+        "operationId": "getContextField",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "contextField",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/contextFieldSchema",
+                },
+              },
+            },
+            "description": "contextFieldSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+      "put": Object {
+        "operationId": "updateContextField",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "contextField",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/upsertContextFieldSchema",
+              },
+            },
+          },
+          "description": "upsertContextFieldSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "200": Object {
+            "description": "emptyResponse",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
     "/api/admin/environments": Object {
       "get": Object {
         "operationId": "getAllEnvironments",
@@ -1525,7 +2062,7 @@ Object {
           },
         ],
         "responses": Object {
-          "200": Object {
+          "204": Object {
             "description": "emptyResponse",
           },
         },
@@ -1548,7 +2085,7 @@ Object {
           },
         ],
         "responses": Object {
-          "200": Object {
+          "204": Object {
             "description": "emptyResponse",
           },
         },
@@ -1784,6 +2321,109 @@ Object {
               },
             },
             "description": "feedbackSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/metrics/applications": Object {
+      "get": Object {
+        "operationId": "getApplications",
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/applicationsSchema",
+                },
+              },
+            },
+            "description": "applicationsSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/metrics/applications/{appName}": Object {
+      "delete": Object {
+        "operationId": "deleteApplication",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "appName",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "description": "emptyResponse",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+      "get": Object {
+        "operationId": "getApplication",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "appName",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/applicationSchema",
+                },
+              },
+            },
+            "description": "applicationSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+      "post": Object {
+        "operationId": "createApplication",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "appName",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/applicationSchema",
+              },
+            },
+          },
+          "description": "applicationSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "202": Object {
+            "description": "emptyResponse",
           },
         },
         "tags": Array [
@@ -3004,6 +3644,145 @@ Object {
         ],
       },
     },
+    "/api/admin/tags": Object {
+      "get": Object {
+        "operationId": "getTags",
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/tagsSchema",
+                },
+              },
+            },
+            "description": "tagsSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+      "post": Object {
+        "operationId": "createTag",
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/tagSchema",
+              },
+            },
+          },
+          "description": "tagSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "201": Object {
+            "description": "emptyResponse",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/tags/{type}": Object {
+      "get": Object {
+        "operationId": "getTagsByType",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "type",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/tagsSchema",
+                },
+              },
+            },
+            "description": "tagsSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/tags/{type}/{value}": Object {
+      "delete": Object {
+        "operationId": "deleteTag",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "type",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+          Object {
+            "in": "path",
+            "name": "value",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "description": "emptyResponse",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+      "get": Object {
+        "operationId": "getTag",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "type",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+          Object {
+            "in": "path",
+            "name": "value",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/tagWithVersionSchema",
+                },
+              },
+            },
+            "description": "tagWithVersionSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
     "/api/admin/ui-config": Object {
       "get": Object {
         "operationId": "getUIConfig",
@@ -3021,6 +3800,36 @@ Object {
         },
         "tags": Array [
           "admin",
+        ],
+      },
+    },
+    "/health": Object {
+      "get": Object {
+        "operationId": "getHealth",
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/healthCheckSchema",
+                },
+              },
+            },
+            "description": "healthCheckSchema",
+          },
+          "500": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/healthCheckSchema",
+                },
+              },
+            },
+            "description": "healthCheckSchema",
+          },
+        },
+        "tags": Array [
+          "other",
         ],
       },
     },

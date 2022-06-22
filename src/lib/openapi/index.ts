@@ -1,6 +1,11 @@
 import { OpenAPIV3 } from 'openapi-types';
+import { apiTokenSchema } from './spec/api-token-schema';
+import { apiTokensSchema } from './spec/api-tokens-schema';
 import { cloneFeatureSchema } from './spec/clone-feature-schema';
 import { constraintSchema } from './spec/constraint-schema';
+import { contextFieldSchema } from './spec/context-field-schema';
+import { contextFieldsSchema } from './spec/context-fields-schema';
+import { createApiTokenSchema } from './spec/create-api-token-schema';
 import { createFeatureSchema } from './spec/create-feature-schema';
 import { createStrategySchema } from './spec/create-strategy-schema';
 import { environmentSchema } from './spec/environment-schema';
@@ -13,9 +18,12 @@ import { featureTypesSchema } from './spec/feature-types-schema';
 import { featureVariantsSchema } from './spec/feature-variants-schema';
 import { featuresSchema } from './spec/features-schema';
 import { feedbackSchema } from './spec/feedback-schema';
+import { healthCheckSchema } from './spec/health-check-schema';
 import { healthOverviewSchema } from './spec/health-overview-schema';
 import { healthReportSchema } from './spec/health-report-schema';
+import { legalValueSchema } from './spec/legal-value-schema';
 import { mapValues } from '../util/map-values';
+import { nameSchema } from './spec/name-schema';
 import { omitKeys } from '../util/omit-keys';
 import { overrideSchema } from './spec/override-schema';
 import { parametersSchema } from './spec/parameters-schema';
@@ -29,20 +37,25 @@ import { splashSchema } from './spec/splash-schema';
 import { strategySchema } from './spec/strategy-schema';
 import { tagSchema } from './spec/tag-schema';
 import { tagsSchema } from './spec/tags-schema';
+import { tagTypeSchema } from './spec/tag-type-schema';
+import { tagTypesSchema } from './spec/tag-types-schema';
 import { uiConfigSchema } from './spec/ui-config-schema';
 import { updateFeatureSchema } from './spec/update-feature-schema';
 import { updateStrategySchema } from './spec/update-strategy-schema';
+import { updateApiTokenSchema } from './spec/update-api-token-schema';
+import { updateTagTypeSchema } from './spec/update-tag-type-schema';
+import { upsertContextFieldSchema } from './spec/upsert-context-field-schema';
+import { validateTagTypeSchema } from './spec/validate-tag-type-schema';
 import { variantSchema } from './spec/variant-schema';
 import { variantsSchema } from './spec/variants-schema';
 import { versionSchema } from './spec/version-schema';
-import { tagTypeSchema } from './spec/tag-type-schema';
-import { tagTypesSchema } from './spec/tag-types-schema';
-import { updateTagTypeSchema } from './spec/update-tag-type-schema';
-import { validateTagTypeSchema } from './spec/validate-tag-type-schema';
 import { addonSchema } from './spec/addon-schema';
 import { addonsSchema } from './spec/addons-schema';
 import { addonParameterSchema } from './spec/addon-parameter-schema';
 import { addonTypeSchema } from './spec/addon-type-schema';
+import { applicationSchema } from './spec/application-schema';
+import { applicationsSchema } from './spec/applications-schema';
+import { tagWithVersionSchema } from './spec/tag-with-version-schema';
 
 // All schemas in `openapi/spec` should be listed here.
 export const schemas = {
@@ -50,8 +63,15 @@ export const schemas = {
     addonsSchema,
     addonTypeSchema,
     addonParameterSchema,
+    apiTokenSchema,
+    apiTokensSchema,
+    applicationSchema,
+    applicationsSchema,
     cloneFeatureSchema,
     constraintSchema,
+    contextFieldSchema,
+    contextFieldsSchema,
+    createApiTokenSchema,
     createFeatureSchema,
     createStrategySchema,
     environmentSchema,
@@ -64,8 +84,11 @@ export const schemas = {
     featureVariantsSchema,
     featuresSchema,
     feedbackSchema,
+    healthCheckSchema,
     healthOverviewSchema,
     healthReportSchema,
+    legalValueSchema,
+    nameSchema,
     overrideSchema,
     parametersSchema,
     patchSchema,
@@ -77,13 +100,16 @@ export const schemas = {
     splashSchema,
     strategySchema,
     tagSchema,
+    tagWithVersionSchema,
     tagsSchema,
     tagTypeSchema,
     tagTypesSchema,
     uiConfigSchema,
     updateFeatureSchema,
     updateStrategySchema,
+    updateApiTokenSchema,
     updateTagTypeSchema,
+    upsertContextFieldSchema,
     validateTagTypeSchema,
     variantSchema,
     variantsSchema,
@@ -102,17 +128,15 @@ export interface JsonSchemaProps {
     components: object;
 }
 
-export interface AdminApiOperation
+interface ApiOperation<Tag = 'client' | 'admin' | 'other'>
     extends Omit<OpenAPIV3.OperationObject, 'tags'> {
     operationId: string;
-    tags: ['admin'];
+    tags: [Tag];
 }
 
-export interface ClientApiOperation
-    extends Omit<OpenAPIV3.OperationObject, 'tags'> {
-    operationId: string;
-    tags: ['client'];
-}
+export type AdminApiOperation = ApiOperation<'admin'>;
+export type ClientApiOperation = ApiOperation<'client'>;
+export type OtherApiOperation = ApiOperation<'other'>;
 
 export const createRequestSchema = (
     schemaName: string,

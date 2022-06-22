@@ -56,6 +56,11 @@ import { addonTypeSchema } from './spec/addon-type-schema';
 import { applicationSchema } from './spec/application-schema';
 import { applicationsSchema } from './spec/applications-schema';
 import { tagWithVersionSchema } from './spec/tag-with-version-schema';
+import { featureStrategySegmentSchema } from './spec/feature-strategy-segment-schema';
+import { segmentSchema } from './spec/segment-schema';
+import { stateSchema } from './spec/state-schema';
+import { featureTagSchema } from './spec/feature-tag-schema';
+import { exportParametersSchema } from './spec/export-parameters-schema';
 
 // All schemas in `openapi/spec` should be listed here.
 export const schemas = {
@@ -76,9 +81,12 @@ export const schemas = {
     createStrategySchema,
     environmentSchema,
     environmentsSchema,
+    exportParametersSchema,
     featureEnvironmentSchema,
     featureSchema,
     featureStrategySchema,
+    featureStrategySegmentSchema,
+    featureTagSchema,
     featureTypeSchema,
     featureTypesSchema,
     featureVariantsSchema,
@@ -96,8 +104,10 @@ export const schemas = {
     projectEnvironmentSchema,
     projectSchema,
     projectsSchema,
+    segmentSchema,
     sortOrderSchema,
     splashSchema,
+    stateSchema,
     strategySchema,
     tagSchema,
     tagWithVersionSchema,

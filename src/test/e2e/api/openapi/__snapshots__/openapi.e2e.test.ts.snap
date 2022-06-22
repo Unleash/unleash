@@ -160,6 +160,22 @@ Object {
         },
         "type": "object",
       },
+      "changePasswordSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "password": Object {
+            "type": "string",
+          },
+          "token": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "token",
+          "password",
+        ],
+        "type": "object",
+      },
       "cloneFeatureSchema": Object {
         "properties": Object {
           "name": Object {
@@ -889,6 +905,38 @@ Object {
         ],
         "type": "object",
       },
+      "resetPasswordSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "email": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "email",
+        ],
+        "type": "object",
+      },
+      "roleDescriptionSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "description": Object {
+            "type": "string",
+          },
+          "name": Object {
+            "type": "string",
+          },
+          "type": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "description",
+          "name",
+          "type",
+        ],
+        "type": "object",
+      },
       "sortOrderSchema": Object {
         "additionalProperties": Object {
           "type": "number",
@@ -1027,6 +1075,26 @@ Object {
         "required": Array [
           "version",
           "tags",
+        ],
+        "type": "object",
+      },
+      "tokenUserSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "createdBy": Object {
+            "type": "string",
+          },
+          "role": Object {
+            "$ref": "#/components/schemas/roleDescriptionSchema",
+          },
+          "token": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "createdBy",
+          "token",
+          "role",
         ],
         "type": "object",
       },
@@ -1205,6 +1273,18 @@ Object {
         },
         "required": Array [
           "name",
+        ],
+        "type": "object",
+      },
+      "validatePasswordSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "password": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "password",
         ],
         "type": "object",
       },
@@ -3523,6 +3603,98 @@ Object {
               },
             },
             "description": "uiConfigSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/auth/reset/password": Object {
+      "post": Object {
+        "operationId": "changePassword",
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/changePasswordSchema",
+              },
+            },
+          },
+          "description": "changePasswordSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "200": Object {
+            "description": "emptyResponse",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/auth/reset/password-email": Object {
+      "post": Object {
+        "operationId": "sendResetPasswordEmail",
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/resetPasswordSchema",
+              },
+            },
+          },
+          "description": "resetPasswordSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "200": Object {
+            "description": "emptyResponse",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/auth/reset/validate": Object {
+      "get": Object {
+        "operationId": "validateToken",
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/tokenUserSchema",
+                },
+              },
+            },
+            "description": "tokenUserSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/auth/reset/validate-password": Object {
+      "post": Object {
+        "operationId": "validatePassword",
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/validatePasswordSchema",
+              },
+            },
+          },
+          "description": "validatePasswordSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "200": Object {
+            "description": "emptyResponse",
           },
         },
         "tags": Array [

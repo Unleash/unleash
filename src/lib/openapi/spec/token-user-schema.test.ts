@@ -1,5 +1,5 @@
 import { validateSchema } from '../validate';
-import { TokenUserSchema } from './toker-user-schema';
+import { TokenUserSchema } from './token-user-schema';
 
 test('tokenUserSchema', () => {
     const data: TokenUserSchema = {

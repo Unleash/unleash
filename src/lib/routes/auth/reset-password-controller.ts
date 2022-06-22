@@ -3,10 +3,15 @@ import Controller from '../controller';
 import UserService from '../../services/user-service';
 import { Logger } from '../../logger';
 import { IUnleashConfig } from '../../types/option';
-import { IUnleashServices } from '../../types/services';
+import { IUnleashServices } from '../../types';
 import { NONE } from '../../types/permissions';
 import { createRequestSchema, createResponseSchema } from '../../openapi';
 import { emptyResponse } from '../../openapi/spec/empty-response';
+import { OpenApiService } from '../../services/openapi-service';
+import {
+    tokenUserSchema,
+    TokenUserSchema,
+} from '../../openapi/spec/token-user-schema';
 
 interface IValidateQuery {
     token: string;
@@ -25,6 +30,8 @@ interface SessionRequest<PARAMS, QUERY, BODY, K>
 class ResetPasswordController extends Controller {
     private userService: UserService;
 
+    private openApiService: OpenApiService;
+
     private logger: Logger;
 
     constructor(
@@ -38,6 +45,7 @@ class ResetPasswordController extends Controller {
         this.logger = config.getLogger(
             'lib/routes/auth/reset-password-controller.ts',
         );
+        this.openApiService = openApiService;
         this.userService = userService;
         this.route({
             method: 'get',
@@ -52,6 +60,7 @@ class ResetPasswordController extends Controller {
                 }),
             ],
         });
+        // this.post('/password', this.changePassword, NONE);
         this.route({
             method: 'post',
             path: '/password',
@@ -112,12 +121,17 @@ class ResetPasswordController extends Controller {
 
     async validateToken(
         req: Request<unknown, unknown, unknown, IValidateQuery>,
-        res: Response,
+        res: Response<TokenUserSchema>,
     ): Promise<void> {
         const { token } = req.query;
         const user = await this.userService.getUserForToken(token);
         await this.logout(req);
-        res.status(200).json(user);
+        this.openApiService.respondWithValidation<TokenUserSchema>(
+            200,
+            res,
+            tokenUserSchema.$id,
+            user,
+        );
     }
 
     async changePassword(

@@ -1,14 +1,6 @@
 import { useMemo, useEffect } from 'react';
 import { IFeatureToggleListItem } from 'interfaces/featureToggle';
-import {
-    SortableTableHeader,
-    Table,
-    TableBody,
-    TableCell,
-    TablePlaceholder,
-    TableRow,
-    VirtualizedTable,
-} from 'component/common/Table';
+import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';

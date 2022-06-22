@@ -6,7 +6,6 @@ import {
     Button,
     InputAdornment,
     SelectChangeEvent,
-    Alert,
 } from '@mui/material';
 import { Search } from '@mui/icons-material';
 import Autocomplete from '@mui/material/Autocomplete';
@@ -152,10 +151,6 @@ export const ProjectAccessAddUser = ({ roles }: IProjectAccessAddUserProps) => {
 
     return (
         <>
-            <Alert severity="info" style={{ marginBottom: '20px' }}>
-                The user must have an Unleash root role before added to the
-                project.
-            </Alert>
             <Grid container spacing={3} alignItems="flex-end">
                 <Grid item>
                     <Autocomplete

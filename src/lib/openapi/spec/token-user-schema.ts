@@ -5,13 +5,23 @@ export const tokenUserSchema = {
     $id: '#/components/schemas/tokenUserSchema',
     type: 'object',
     additionalProperties: false,
-    required: ['createdBy', 'token', 'role'],
+    required: ['id', 'name', 'email', 'token', 'createdBy', 'role'],
     properties: {
-        createdBy: {
+        id: {
+            type: 'number',
+        },
+        name: {
+            type: 'string',
+        },
+        email: {
             type: 'string',
         },
         token: {
             type: 'string',
+        },
+        createdBy: {
+            type: 'string',
+            nullable: true,
         },
         role: {
             $ref: '#/components/schemas/roleSchema',

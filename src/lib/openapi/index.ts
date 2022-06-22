@@ -40,14 +40,16 @@ import { tagTypesSchema } from './spec/tag-types-schema';
 import { updateTagTypeSchema } from './spec/update-tag-type-schema';
 import { validateTagTypeSchema } from './spec/validate-tag-type-schema';
 import { addonSchema } from './spec/addon-schema';
-import { getAddonsSchema } from './spec/get-addons-schema';
-import { parameterDefinitionSchema } from './spec/parameter-definition-schema';
-import { addonDefinitionSchema } from './spec/addon-definition-schema';
+import { addonsSchema } from './spec/addons-schema';
+import { addonParameterSchema } from './spec/addon-parameter-schema';
+import { addonTypeSchema } from './spec/addon-type-schema';
 
 // All schemas in `openapi/spec` should be listed here.
 export const schemas = {
     addonSchema,
-    addonDefinitionSchema,
+    addonsSchema,
+    addonTypeSchema,
+    addonParameterSchema,
     cloneFeatureSchema,
     constraintSchema,
     createFeatureSchema,
@@ -62,12 +64,10 @@ export const schemas = {
     featureVariantsSchema,
     featuresSchema,
     feedbackSchema,
-    getAddonsSchema,
     healthOverviewSchema,
     healthReportSchema,
     overrideSchema,
     parametersSchema,
-    parameterDefinitionSchema,
     patchSchema,
     patchesSchema,
     projectEnvironmentSchema,

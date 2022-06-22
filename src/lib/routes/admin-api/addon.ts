@@ -17,7 +17,7 @@ import { OpenApiService } from '../../services/openapi-service';
 import { emptyResponse } from '../../openapi/spec/empty-response';
 import { AddonSchema, addonSchema } from '../../openapi/spec/addon-schema';
 import { serializeDates } from '../../types/serialize-dates';
-import { getAddonsSchema } from '../../openapi/spec/get-addons-schema';
+import { AddonsSchema, addonsSchema } from '../../openapi/spec/addons-schema';
 
 type AddonServices = Pick<IUnleashServices, 'addonService' | 'openApiService'>;
 
@@ -41,7 +41,7 @@ class AddonController extends Controller {
 
         this.route({
             method: 'get',
-            path: PATH,
+            path: '',
             permission: NONE,
             handler: this.getAddons,
             middleware: [
@@ -49,7 +49,7 @@ class AddonController extends Controller {
                     tags: ['admin'],
                     operationId: 'getAddons',
                     responses: {
-                        200: createResponseSchema('addonSchema'),
+                        200: createResponseSchema('addonsSchema'),
                     },
                 }),
             ],
@@ -115,16 +115,14 @@ class AddonController extends Controller {
         });
     }
 
-    async getAddons(req: Request, res: Response): Promise<void> {
+    async getAddons(req: Request, res: Response<AddonsSchema>): Promise<void> {
         const addons = await this.addonService.getAddons();
         const providers = this.addonService.getProviderDefinitions();
 
-        this.openApiService.respondWithValidation(
-            200,
-            res,
-            getAddonsSchema.$id,
-            { addons, providers },
-        );
+        this.openApiService.respondWithValidation(200, res, addonsSchema.$id, {
+            addons: serializeDates(addons),
+            providers,
+        });
     }
 
     async getAddon(

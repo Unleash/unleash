@@ -1,8 +1,8 @@
 import { validateSchema } from '../validate';
-import { AddonDefinitionSchema } from './addon-definition-schema';
+import { AddonTypeSchema } from './addon-type-schema';
 
 test('addonDefinitionSchema', () => {
-    const data: AddonDefinitionSchema = {
+    const data: AddonTypeSchema = {
         name: 'some-name',
         displayName: 'some-name',
         description: 'some-description',
@@ -14,6 +14,6 @@ test('addonDefinitionSchema', () => {
     };
 
     expect(
-        validateSchema('#/components/schemas/addonDefinitionSchema', data),
+        validateSchema('#/components/schemas/AddonTypeSchema', data),
     ).toBeUndefined();
 });

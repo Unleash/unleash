@@ -1,9 +1,9 @@
 import { FromSchema } from 'json-schema-to-ts';
-import { parameterDefinitionSchema } from './parameter-definition-schema';
+import { addonParameterSchema } from './addon-parameter-schema';
 import { tagTypeSchema } from './tag-type-schema';
 
-export const addonDefinitionSchema = {
-    $id: '#/components/schemas/addonDefinitionSchema',
+export const addonTypeSchema = {
+    $id: '#/components/schemas/addonTypeSchema',
     type: 'object',
     required: ['name', 'displayName', 'documentationUrl', 'description'],
     properties: {
@@ -26,7 +26,10 @@ export const addonDefinitionSchema = {
             },
         },
         parameters: {
-            $ref: '#/components/schemas/parameterDefinitionSchema',
+            type: 'array',
+            items: {
+                $ref: '#/components/schemas/addonParameterSchema',
+            },
         },
         events: {
             type: 'array',
@@ -37,9 +40,9 @@ export const addonDefinitionSchema = {
     },
     components: {
         schemas: {
-            parameterDefinitionSchema,
             tagTypeSchema,
+            addonParameterSchema,
         },
     },
 } as const;
-export type AddonDefinitionSchema = FromSchema<typeof addonDefinitionSchema>;
+export type AddonTypeSchema = FromSchema<typeof addonTypeSchema>;

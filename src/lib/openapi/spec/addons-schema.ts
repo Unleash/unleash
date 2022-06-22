@@ -1,9 +1,9 @@
 import { FromSchema } from 'json-schema-to-ts';
 import { addonSchema } from './addon-schema';
-import { addonDefinitionSchema } from '../../addons/addon-schema';
+import { addonTypeSchema } from './addon-type-schema';
 
-export const getAddonsSchema = {
-    $id: '#/components/schemas/getAddonsSchema',
+export const addonsSchema = {
+    $id: '#/components/schemas/addonsSchema',
     type: 'object',
     required: ['addons', 'providers'],
     properties: {
@@ -16,15 +16,16 @@ export const getAddonsSchema = {
         providers: {
             type: 'array',
             items: {
-                $ref: '#/components/schemas/addonDefinitionSchema',
+                $ref: '#/components/schemas/addonTypeSchema',
             },
         },
     },
     components: {
         schemas: {
             addonSchema,
-            addonDefinitionSchema,
+            addonTypeSchema,
         },
     },
 } as const;
-export type GetAddonsSchema = FromSchema<typeof getAddonsSchema>;
+
+export type AddonsSchema = FromSchema<typeof addonsSchema>;

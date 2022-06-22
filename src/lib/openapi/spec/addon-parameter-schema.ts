@@ -1,9 +1,9 @@
 import { FromSchema } from 'json-schema-to-ts';
 
-export const parameterDefinitionSchema = {
-    $id: '#/components/schemas/parameterDefinitionSchema',
+export const addonParameterSchema = {
+    $id: '#/components/schemas/addonParameterSchema',
     type: 'object',
-    required: ['provider', 'description', 'enabled', 'parameters', 'events'],
+    required: ['name', 'displayName', 'type', 'required', 'sensitive'],
     properties: {
         name: {
             type: 'string',
@@ -29,6 +29,5 @@ export const parameterDefinitionSchema = {
     },
     components: {},
 } as const;
-export type ParameterDefinitionSchema = FromSchema<
-    typeof parameterDefinitionSchema
->;
+
+export type AddonParameterSchema = FromSchema<typeof addonParameterSchema>;

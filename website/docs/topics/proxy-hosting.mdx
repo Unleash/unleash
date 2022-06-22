@@ -36,7 +36,7 @@ This setup is only available to Pro and Enterprise customers.
 :::
 
 
-![](/img/proxy-hosting-all-unleash.svg)
+![An architecture diagram of using the proxy in a setup where Unleash hosts both the API and the proxy.](/img/proxy-hosting-all-unleash.svg)
 
 When Unleash hosts the proxy, it'll run alongside the Unleash API and the admin UI within Unleash's Kubernetes setup in AWS. The API is backed by an Amazon RDS database. Your applications can connect to the proxy from your own cloud or other hosting solution. You'll need to configure your proxy SDKs with the following details:
 - One of the [proxy's client keys](../reference/api-tokens-and-client-keys.mdx#proxy-client-keys). Unleash will provide you with the actual keys.
@@ -54,7 +54,7 @@ This setup is only available to Pro and Enterprise customers.
 
 :::
 
-![](/img/proxy-hosting-unleash-api-customer-proxy.svg)
+![An architecture diagram of using the proxy in a setup where Unleash hosts the API and you host the proxy.](/img/proxy-hosting-unleash-api-customer-proxy.svg)
 
 You host the proxy yourself. It runs in a standalone container alongside your other applications in your cloud or hosting setup. Unleash manages the Unleash API, the admin UI, and the backing database in our AWS setup: the API and the UI run together in a Kubernetes deployment and connect to an Amazon RDS database.
 
@@ -80,7 +80,7 @@ This setup is only available open-source and Enterprise customers.
 
 :::
 
-![](/img/proxy-hosting-customer-single.svg)
+![An architecture diagram of using the proxy in a single-region, self-hosted setup.](/img/proxy-hosting-customer-single.svg)
 
 You host everything yourself. Everything runs where and how you configure it to.
 
@@ -102,6 +102,6 @@ As described in the [section on tradeoffs between self-hosted and Unleash-hosted
 
 ## Multi-region
 
-![](/img/proxy-hosting-customer-multi.svg)
+![An architecture diagram of using the proxy in a multi-region, self-hosted setup.](/img/proxy-hosting-customer-multi.svg)
 
 You can also use the proxy for a multi-region setup. You can run a proxy in a different region to the API and still connect to the API. Because the proxy runs closer to your applications it still provides you benefits in terms of quicker response times. Everything should be configured as described in the [you host everything section](#you-host-everything) or the [Unleash hosts the API, you host the proxy section](#unleash-hosts-the-api-you-host-the-proxy). You can add as many extra proxies in as many extra regions as you want.

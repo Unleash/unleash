@@ -45,4 +45,5 @@ export const addonTypeSchema = {
         },
     },
 } as const;
+
 export type AddonTypeSchema = FromSchema<typeof addonTypeSchema>;

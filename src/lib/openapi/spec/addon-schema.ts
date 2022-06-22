@@ -1,5 +1,4 @@
 import { FromSchema } from 'json-schema-to-ts';
-import { parametersSchema } from './parameters-schema';
 
 export const addonSchema = {
     $id: '#/components/schemas/addonSchema',
@@ -24,7 +23,8 @@ export const addonSchema = {
             type: 'boolean',
         },
         parameters: {
-            $ref: '#/components/schemas/parameterSchema',
+            type: 'object',
+            additionalProperties: true,
         },
         events: {
             type: 'array',
@@ -33,11 +33,7 @@ export const addonSchema = {
             },
         },
     },
-    components: {
-        schemas: {
-            parametersSchema,
-        },
-    },
+    components: {},
 } as const;
 
 export type AddonSchema = FromSchema<typeof addonSchema>;

@@ -121,7 +121,7 @@ class AddonController extends Controller {
 
         this.openApiService.respondWithValidation(200, res, addonsSchema.$id, {
             addons: serializeDates(addons),
-            providers,
+            providers: serializeDates(providers),
         });
     }
 

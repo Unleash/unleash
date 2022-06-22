@@ -465,7 +465,7 @@ Object {
         ],
         "type": "object",
       },
-      "createStrategySchema": Object {
+      "createFeatureStrategySchema": Object {
         "properties": Object {
           "constraints": Object {
             "items": Object {
@@ -612,7 +612,50 @@ Object {
           },
           "strategies": Object {
             "items": Object {
-              "$ref": "#/components/schemas/featureStrategySchema",
+              "additionalProperties": false,
+              "properties": Object {
+                "constraints": Object {
+                  "items": Object {
+                    "$ref": "#/components/schemas/constraintSchema",
+                  },
+                  "type": "array",
+                },
+                "createdAt": Object {
+                  "format": "date-time",
+                  "type": "string",
+                },
+                "environment": Object {
+                  "type": "string",
+                },
+                "featureName": Object {
+                  "type": "string",
+                },
+                "id": Object {
+                  "type": "string",
+                },
+                "parameters": Object {
+                  "$ref": "#/components/schemas/parametersSchema",
+                },
+                "projectId": Object {
+                  "type": "string",
+                },
+                "sortOrder": Object {
+                  "type": "number",
+                },
+                "strategyName": Object {
+                  "type": "string",
+                },
+              },
+              "required": Array [
+                "id",
+                "featureName",
+                "projectId",
+                "environment",
+                "strategyName",
+                "constraints",
+                "parameters",
+              ],
+              "type": "object",
             },
             "type": "array",
           },
@@ -668,7 +711,7 @@ Object {
           },
           "strategies": Object {
             "items": Object {
-              "$ref": "#/components/schemas/strategySchema",
+              "$ref": "#/components/schemas/featureStrategySchema",
             },
             "type": "array",
           },
@@ -696,17 +739,6 @@ Object {
             },
             "type": "array",
           },
-          "createdAt": Object {
-            "format": "date-time",
-            "nullable": true,
-            "type": "string",
-          },
-          "environment": Object {
-            "type": "string",
-          },
-          "featureName": Object {
-            "type": "string",
-          },
           "id": Object {
             "type": "string",
           },
@@ -716,23 +748,13 @@ Object {
           "parameters": Object {
             "$ref": "#/components/schemas/parametersSchema",
           },
-          "projectId": Object {
-            "type": "string",
-          },
           "sortOrder": Object {
             "type": "number",
           },
-          "strategyName": Object {
-            "type": "string",
-          },
         },
         "required": Array [
+          "name",
           "id",
-          "featureName",
-          "strategyName",
-          "constraints",
-          "parameters",
-          "environment",
         ],
         "type": "object",
       },
@@ -1358,7 +1380,7 @@ Object {
           },
           "strategies": Object {
             "items": Object {
-              "$ref": "#/components/schemas/strategySchema",
+              "$ref": "#/components/schemas/featureStrategySchema",
             },
             "type": "array",
           },
@@ -1380,33 +1402,6 @@ Object {
         },
         "required": Array [
           "version",
-        ],
-        "type": "object",
-      },
-      "strategySchema": Object {
-        "additionalProperties": false,
-        "properties": Object {
-          "constraints": Object {
-            "items": Object {
-              "$ref": "#/components/schemas/constraintSchema",
-            },
-            "type": "array",
-          },
-          "id": Object {
-            "type": "string",
-          },
-          "name": Object {
-            "type": "string",
-          },
-          "parameters": Object {
-            "$ref": "#/components/schemas/parametersSchema",
-          },
-          "sortOrder": Object {
-            "type": "number",
-          },
-        },
-        "required": Array [
-          "name",
         ],
         "type": "object",
       },
@@ -1647,17 +1642,13 @@ Object {
         ],
         "type": "object",
       },
-      "updateStrategySchema": Object {
-        "additionalProperties": false,
+      "updateFeatureStrategySchema": Object {
         "properties": Object {
           "constraints": Object {
             "items": Object {
               "$ref": "#/components/schemas/constraintSchema",
             },
             "type": "array",
-          },
-          "id": Object {
-            "type": "string",
           },
           "name": Object {
             "type": "string",
@@ -1669,7 +1660,6 @@ Object {
             "type": "number",
           },
         },
-        "required": Array [],
         "type": "object",
       },
       "updateTagTypeSchema": Object {
@@ -3466,11 +3456,11 @@ Object {
             "content": Object {
               "application/json": Object {
                 "schema": Object {
-                  "$ref": "#/components/schemas/strategySchema",
+                  "$ref": "#/components/schemas/featureStrategySchema",
                 },
               },
             },
-            "description": "strategySchema",
+            "description": "featureStrategySchema",
           },
         },
         "tags": Array [
@@ -3509,11 +3499,11 @@ Object {
           "content": Object {
             "application/json": Object {
               "schema": Object {
-                "$ref": "#/components/schemas/createStrategySchema",
+                "$ref": "#/components/schemas/createFeatureStrategySchema",
               },
             },
           },
-          "description": "createStrategySchema",
+          "description": "createFeatureStrategySchema",
           "required": true,
         },
         "responses": Object {
@@ -3734,11 +3724,11 @@ Object {
           "content": Object {
             "application/json": Object {
               "schema": Object {
-                "$ref": "#/components/schemas/updateStrategySchema",
+                "$ref": "#/components/schemas/updateFeatureStrategySchema",
               },
             },
           },
-          "description": "updateStrategySchema",
+          "description": "updateFeatureStrategySchema",
           "required": true,
         },
         "responses": Object {

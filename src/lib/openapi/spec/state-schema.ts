@@ -1,6 +1,5 @@
 import { FromSchema } from 'json-schema-to-ts';
 import { featureSchema } from './feature-schema';
-import { strategySchema } from './strategy-schema';
 import { tagSchema } from './tag-schema';
 import { tagTypeSchema } from './tag-type-schema';
 import { featureTagSchema } from './feature-tag-schema';
@@ -29,7 +28,7 @@ export const stateSchema = {
         strategies: {
             type: 'array',
             items: {
-                $ref: '#/components/schemas/strategySchema',
+                $ref: '#/components/schemas/featureStrategySchema',
             },
         },
         tags: {
@@ -90,7 +89,6 @@ export const stateSchema = {
     components: {
         schemas: {
             featureSchema,
-            strategySchema,
             tagSchema,
             tagTypeSchema,
             featureTagSchema,

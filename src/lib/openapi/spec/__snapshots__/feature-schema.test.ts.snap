@@ -17,13 +17,13 @@ Object {
   },
   "errors": Array [
     Object {
-      "instancePath": "/strategies/0/constraints/0",
+      "instancePath": "/strategies/0",
       "keyword": "required",
-      "message": "must have required property 'operator'",
+      "message": "must have required property 'id'",
       "params": Object {
-        "missingProperty": "operator",
+        "missingProperty": "id",
       },
-      "schemaPath": "#/components/schemas/constraintSchema/required",
+      "schemaPath": "#/required",
     },
   ],
   "schema": "#/components/schemas/featureSchema",

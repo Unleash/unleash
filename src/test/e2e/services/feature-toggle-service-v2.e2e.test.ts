@@ -2,8 +2,8 @@ import FeatureToggleService from '../../../lib/services/feature-toggle-service';
 import { createTestConfig } from '../../config/test-config';
 import dbInit from '../helpers/database-init';
 import { DEFAULT_ENV } from '../../../lib/util/constants';
-import { StrategySchema } from '../../../lib/openapi/spec/strategy-schema';
 import { SegmentService } from '../../../lib/services/segment-service';
+import { FeatureStrategySchema } from '../../../lib/openapi/spec/feature-strategy-schema';
 
 let stores;
 let db;
@@ -30,7 +30,7 @@ afterAll(async () => {
 test('Should create feature toggle strategy configuration', async () => {
     const projectId = 'default';
     const username = 'feature-toggle';
-    const config: Omit<StrategySchema, 'id'> = {
+    const config: Omit<FeatureStrategySchema, 'id'> = {
         name: 'default',
         constraints: [],
         parameters: {},
@@ -58,7 +58,7 @@ test('Should be able to update existing strategy configuration', async () => {
     const projectId = 'default';
     const username = 'existing-strategy';
     const featureName = 'update-existing-strategy';
-    const config: Omit<StrategySchema, 'id'> = {
+    const config: Omit<FeatureStrategySchema, 'id'> = {
         name: 'default',
         constraints: [],
         parameters: {},
@@ -93,7 +93,7 @@ test('Should be able to get strategy by id', async () => {
     const projectId = 'default';
 
     const userName = 'strategy';
-    const config: Omit<StrategySchema, 'id'> = {
+    const config: Omit<FeatureStrategySchema, 'id'> = {
         name: 'default',
         constraints: [],
         parameters: {},

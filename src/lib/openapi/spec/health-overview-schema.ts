@@ -2,7 +2,7 @@ import { FromSchema } from 'json-schema-to-ts';
 import { parametersSchema } from './parameters-schema';
 import { variantSchema } from './variant-schema';
 import { overrideSchema } from './override-schema';
-import { strategySchema } from './strategy-schema';
+import { featureStrategySchema } from './feature-strategy-schema';
 import { featureSchema } from './feature-schema';
 import { constraintSchema } from './constraint-schema';
 import { environmentSchema } from './environment-schema';
@@ -53,7 +53,7 @@ export const healthOverviewSchema = {
             featureSchema,
             overrideSchema,
             parametersSchema,
-            strategySchema,
+            featureStrategySchema,
             variantSchema,
         },
     },

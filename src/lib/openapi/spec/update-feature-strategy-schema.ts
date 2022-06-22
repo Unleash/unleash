@@ -1,16 +1,11 @@
 import { FromSchema } from 'json-schema-to-ts';
-import { constraintSchema } from './constraint-schema';
 import { parametersSchema } from './parameters-schema';
+import { constraintSchema } from './constraint-schema';
 
-export const strategySchema = {
-    $id: '#/components/schemas/strategySchema',
+export const updateFeatureStrategySchema = {
+    $id: '#/components/schemas/updateFeatureStrategySchema',
     type: 'object',
-    additionalProperties: false,
-    required: ['name'],
     properties: {
-        id: {
-            type: 'string',
-        },
         name: {
             type: 'string',
         },
@@ -35,4 +30,6 @@ export const strategySchema = {
     },
 } as const;
 
-export type StrategySchema = FromSchema<typeof strategySchema>;
+export type UpdateFeatureStrategySchema = FromSchema<
+    typeof updateFeatureStrategySchema
+>;

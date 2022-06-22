@@ -7,8 +7,8 @@ import { contextFieldSchema } from './spec/context-field-schema';
 import { contextFieldsSchema } from './spec/context-fields-schema';
 import { createApiTokenSchema } from './spec/create-api-token-schema';
 import { createFeatureSchema } from './spec/create-feature-schema';
-import { createStrategySchema } from './spec/create-strategy-schema';
 import { createUserSchema } from './spec/create-user-schema';
+import { createFeatureStrategySchema } from './spec/create-feature-strategy-schema';
 import { environmentSchema } from './spec/environment-schema';
 import { environmentsSchema } from './spec/environments-schema';
 import { featureEnvironmentSchema } from './spec/feature-environment-schema';
@@ -40,14 +40,13 @@ import { projectsSchema } from './spec/projects-schema';
 import { roleSchema } from './spec/role-schema';
 import { sortOrderSchema } from './spec/sort-order-schema';
 import { splashSchema } from './spec/splash-schema';
-import { strategySchema } from './spec/strategy-schema';
 import { tagSchema } from './spec/tag-schema';
 import { tagsSchema } from './spec/tags-schema';
 import { tagTypeSchema } from './spec/tag-type-schema';
 import { tagTypesSchema } from './spec/tag-types-schema';
 import { uiConfigSchema } from './spec/ui-config-schema';
 import { updateFeatureSchema } from './spec/update-feature-schema';
-import { updateStrategySchema } from './spec/update-strategy-schema';
+import { updateFeatureStrategySchema } from './spec/update-feature-strategy-schema';
 import { updateApiTokenSchema } from './spec/update-api-token-schema';
 import { updateTagTypeSchema } from './spec/update-tag-type-schema';
 import { upsertContextFieldSchema } from './spec/upsert-context-field-schema';
@@ -94,7 +93,7 @@ export const schemas = {
     contextFieldsSchema,
     createApiTokenSchema,
     createFeatureSchema,
-    createStrategySchema,
+    createFeatureStrategySchema,
     createUserSchema,
     emailSchema,
     environmentSchema,
@@ -132,7 +131,6 @@ export const schemas = {
     sortOrderSchema,
     splashSchema,
     stateSchema,
-    strategySchema,
     tagSchema,
     tagWithVersionSchema,
     tagsSchema,
@@ -141,7 +139,7 @@ export const schemas = {
     tokenUserSchema,
     uiConfigSchema,
     updateFeatureSchema,
-    updateStrategySchema,
+    updateFeatureStrategySchema,
     updateApiTokenSchema,
     updateTagTypeSchema,
     upsertContextFieldSchema,

@@ -6,6 +6,7 @@ test('featureSchema', () => {
         name: 'a',
         strategies: [
             {
+                id: 'a',
                 name: 'a',
                 constraints: [
                     {

@@ -7,9 +7,9 @@ import {
 } from '../../helpers/test-helper';
 import getLogger from '../../../fixtures/no-logger';
 import { DEFAULT_ENV } from '../../../../lib/util/constants';
-import { StrategySchema } from '../../../../lib/openapi/spec/strategy-schema';
 import { FeatureSchema } from '../../../../lib/openapi/spec/feature-schema';
 import { VariantSchema } from '../../../../lib/openapi/spec/variant-schema';
+import { FeatureStrategySchema } from '../../../../lib/openapi/spec/feature-strategy-schema';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -26,7 +26,7 @@ beforeAll(async () => {
 
     const createToggle = async (
         toggle: Omit<FeatureSchema, 'createdAt'>,
-        strategy: Omit<StrategySchema, 'id'> = defaultStrategy,
+        strategy: Omit<FeatureStrategySchema, 'id'> = defaultStrategy,
         projectId: string = 'default',
         username: string = 'test',
     ) => {

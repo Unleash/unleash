@@ -84,7 +84,7 @@ test('should store application', () => {
         .expect(202);
 });
 
-test('should store application details wihtout strategies', () => {
+test('should store application details without strategies', () => {
     expect.assertions(0);
     const appName = '123!23';
 

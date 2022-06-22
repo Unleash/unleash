@@ -4,6 +4,7 @@ import { IUnleashConfig } from '../types/option';
 import {
     AdminApiOperation,
     ClientApiOperation,
+    OtherApiOperation,
     createOpenApiSchema,
     JsonSchemaProps,
     removeJsonSchemaProps,
@@ -30,7 +31,9 @@ export class OpenApiService {
         );
     }
 
-    validPath(op: AdminApiOperation | ClientApiOperation): RequestHandler {
+    validPath(
+        op: AdminApiOperation | ClientApiOperation | OtherApiOperation,
+    ): RequestHandler {
         return this.api.validPath(op);
     }
 
@@ -74,11 +77,7 @@ export class OpenApiService {
         const errors = validateSchema(schema, data);
 
         if (errors) {
-            if (process.env.NODE_ENV === 'development') {
-                throw new Error(JSON.stringify(errors, null, 2));
-            } else {
-                this.logger.warn('Invalid response:', errors);
-            }
+            this.logger.warn('Invalid response:', errors);
         }
 
         res.status(status).json(data);

@@ -16,51 +16,150 @@ import User from '../../types/user';
 import { IUnleashConfig } from '../../types/option';
 import { ApiTokenType, IApiToken } from '../../types/models/api-token';
 import { createApiToken } from '../../schema/api-token-schema';
+import { OpenApiService } from '../../services/openapi-service';
+import { IUnleashServices } from '../../types';
+import { createRequestSchema, createResponseSchema } from '../../openapi';
+import {
+    apiTokensSchema,
+    ApiTokensSchema,
+} from '../../openapi/spec/api-tokens-schema';
+import { serializeDates } from '../../types/serialize-dates';
+import {
+    apiTokenSchema,
+    ApiTokenSchema,
+} from '../../openapi/spec/api-token-schema';
+import { emptyResponse } from '../../openapi/spec/empty-response';
+import { UpdateApiTokenSchema } from '../../openapi/spec/update-api-token-schema';
 
-interface IServices {
-    apiTokenService: ApiTokenService;
-    accessService: AccessService;
+interface TokenParam {
+    token: string;
 }
-
-class ApiTokenController extends Controller {
+export class ApiTokenController extends Controller {
     private apiTokenService: ApiTokenService;
 
     private accessService: AccessService;
 
+    private openApiService: OpenApiService;
+
     private logger: Logger;
 
-    constructor(config: IUnleashConfig, services: IServices) {
+    constructor(
+        config: IUnleashConfig,
+        {
+            apiTokenService,
+            accessService,
+            openApiService,
+        }: Pick<
+            IUnleashServices,
+            'apiTokenService' | 'accessService' | 'openApiService'
+        >,
+    ) {
         super(config);
-        this.apiTokenService = services.apiTokenService;
-        this.accessService = services.accessService;
+        this.apiTokenService = apiTokenService;
+        this.accessService = accessService;
+        this.openApiService = openApiService;
         this.logger = config.getLogger('api-token-controller.js');
 
-        this.get('/', this.getAllApiTokens, READ_API_TOKEN);
-        this.post('/', this.createApiToken, CREATE_API_TOKEN);
-        this.put('/:token', this.updateApiToken, UPDATE_API_TOKEN);
-        this.delete('/:token', this.deleteApiToken, DELETE_API_TOKEN);
+        this.route({
+            method: 'get',
+            path: '',
+            handler: this.getAllApiTokens,
+            permission: READ_API_TOKEN,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'getAllApiTokens',
+                    responses: {
+                        200: createResponseSchema('apiTokensSchema'),
+                    },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'post',
+            path: '',
+            handler: this.createApiToken,
+            permission: CREATE_API_TOKEN,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'createApiToken',
+                    requestBody: createRequestSchema('createApiTokenSchema'),
+                    responses: {
+                        201: createResponseSchema('apiTokenSchema'),
+                    },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'put',
+            path: '/:token',
+            handler: this.updateApiToken,
+            permission: UPDATE_API_TOKEN,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'updateApiToken',
+                    requestBody: createRequestSchema('updateApiTokenSchema'),
+                    responses: {
+                        200: emptyResponse,
+                    },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'delete',
+            path: '/:token',
+            handler: this.deleteApiToken,
+            acceptAnyContentType: true,
+            permission: DELETE_API_TOKEN,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'deleteApiToken',
+                    responses: {
+                        200: emptyResponse,
+                    },
+                }),
+            ],
+        });
     }
 
-    async getAllApiTokens(req: IAuthRequest, res: Response): Promise<void> {
+    async getAllApiTokens(
+        req: IAuthRequest,
+        res: Response<ApiTokensSchema>,
+    ): Promise<void> {
         const { user } = req;
         const tokens = await this.accessibleTokens(user);
-        res.json({ tokens });
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            apiTokensSchema.$id,
+            { tokens: serializeDates(tokens) },
+        );
     }
 
-    async createApiToken(req: IAuthRequest, res: Response): Promise<any> {
+    async createApiToken(
+        req: IAuthRequest,
+        res: Response<ApiTokenSchema>,
+    ): Promise<any> {
         const createToken = await createApiToken.validateAsync(req.body);
         const token = await this.apiTokenService.createApiToken(createToken);
-        return res.status(201).json(token);
+        this.openApiService.respondWithValidation(
+            201,
+            res,
+            apiTokenSchema.$id,
+            serializeDates(token),
+        );
     }
 
-    async deleteApiToken(req: IAuthRequest, res: Response): Promise<void> {
-        const { token } = req.params;
-
-        await this.apiTokenService.delete(token);
-        res.status(200).end();
-    }
-
-    async updateApiToken(req: IAuthRequest, res: Response): Promise<any> {
+    async updateApiToken(
+        req: IAuthRequest<TokenParam, void, UpdateApiTokenSchema>,
+        res: Response,
+    ): Promise<any> {
         const { token } = req.params;
         const { expiresAt } = req.body;
 
@@ -69,8 +168,18 @@ class ApiTokenController extends Controller {
             return res.status(400).send();
         }
 
-        await this.apiTokenService.updateExpiry(token, expiresAt);
+        await this.apiTokenService.updateExpiry(token, new Date(expiresAt));
         return res.status(200).end();
+    }
+
+    async deleteApiToken(
+        req: IAuthRequest<TokenParam>,
+        res: Response,
+    ): Promise<void> {
+        const { token } = req.params;
+
+        await this.apiTokenService.delete(token);
+        res.status(200).end();
     }
 
     private async accessibleTokens(user: User): Promise<IApiToken[]> {
@@ -84,9 +193,6 @@ class ApiTokenController extends Controller {
             return allTokens;
         }
 
-        return allTokens.filter((t) => t.type !== ApiTokenType.ADMIN);
+        return allTokens.filter((token) => token.type !== ApiTokenType.ADMIN);
     }
 }
-
-module.exports = ApiTokenController;
-export default ApiTokenController;

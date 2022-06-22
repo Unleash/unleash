@@ -5,7 +5,6 @@ import { constraintSchema } from './constraint-schema';
 export const createStrategySchema = {
     $id: '#/components/schemas/createStrategySchema',
     type: 'object',
-    additionalProperties: false,
     required: ['name'],
     properties: {
         name: {

@@ -96,7 +96,7 @@ export class EnvironmentsController extends Controller {
                 openApiService.validPath({
                     tags: ['admin'],
                     operationId: 'toggleEnvironmentOn',
-                    responses: { 200: emptyResponse },
+                    responses: { 204: emptyResponse },
                 }),
             ],
         });
@@ -111,7 +111,7 @@ export class EnvironmentsController extends Controller {
                 openApiService.validPath({
                     tags: ['admin'],
                     operationId: 'toggleEnvironmentOff',
-                    responses: { 200: emptyResponse },
+                    responses: { 204: emptyResponse },
                 }),
             ],
         });

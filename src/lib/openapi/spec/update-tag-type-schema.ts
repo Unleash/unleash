@@ -3,7 +3,6 @@ import { FromSchema } from 'json-schema-to-ts';
 export const updateTagTypeSchema = {
     $id: '#/components/schemas/updateTagTypeSchema',
     type: 'object',
-    additionalProperties: false,
     properties: {
         description: {
             type: 'string',

@@ -1,7 +1,7 @@
 import { FromSchema } from 'json-schema-to-ts';
 
 export const clientMetricsEnvSchema = {
-    $id: '#/components/schemas/clientMetricsEnvKeySchema',
+    $id: '#/components/schemas/clientMetricsEnvSchema',
     type: 'object',
     additionalProperties: false,
     required: [

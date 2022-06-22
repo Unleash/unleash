@@ -8,9 +8,11 @@ import { NONE } from '../../types/permissions';
 import { createResponseSchema } from '../../openapi';
 import { OpenApiService } from '../../services/openapi-service';
 import { clientMetricsEnvSchema } from '../../openapi/spec/client-metrics-env-schema';
-import { ToggleMetricsSummarySchema } from '../../../../dist/lib/openapi/spec/toggle-metrics-summary-schema';
 import { serializeDates } from '../../types/serialize-dates';
-import { toggleMetricsSummarySchema } from '../../openapi/spec/toggle-metrics-summary-schema';
+import {
+    ToggleMetricsSummarySchema,
+    toggleMetricsSummarySchema,
+} from '../../openapi/spec/toggle-metrics-summary-schema';
 import { ClientMetricsResponseSchema } from '../../openapi/spec/client-metrics-response-schema';
 
 class ClientMetricsController extends Controller {

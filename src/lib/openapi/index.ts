@@ -67,7 +67,6 @@ import { applicationSchema } from './spec/application-schema';
 import { applicationsSchema } from './spec/applications-schema';
 import { tagWithVersionSchema } from './spec/tag-with-version-schema';
 import { tokenUserSchema } from './spec/token-user-schema';
-import { roleDescriptionSchema } from './spec/role-description-schema';
 import { changePasswordSchema } from './spec/change-password-schema';
 import { validatePasswordSchema } from './spec/validate-password-schema';
 import { resetPasswordSchema } from './spec/reset-password-schema';
@@ -129,7 +128,6 @@ export const schemas = {
     projectsSchema,
     resetPasswordSchema,
     roleSchema,
-    roleDescriptionSchema,
     segmentSchema,
     sortOrderSchema,
     splashSchema,

@@ -6,6 +6,7 @@ test('tokenUserSchema', () => {
         createdBy: '',
         token: '',
         role: {
+            id: 1,
             description: '',
             name: '',
             type: '',

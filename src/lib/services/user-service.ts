@@ -55,11 +55,14 @@ export interface ILoginUserRequest {
 interface IUserWithRole extends IUser {
     rootRole: number;
 }
+
 interface IRoleDescription {
+    id: number;
     description: string;
     name: string;
     type: string;
 }
+
 interface ITokenUser extends IUpdateUser {
     createdBy: string;
     token: string;
@@ -372,6 +375,7 @@ class UserService {
             name: user.name,
             id: user.id,
             role: {
+                id: user.rootRole,
                 description: role.role.description,
                 type: role.role.type,
                 name: role.role.name,

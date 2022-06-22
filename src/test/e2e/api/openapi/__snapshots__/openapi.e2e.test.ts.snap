@@ -1234,26 +1234,6 @@ Object {
         ],
         "type": "object",
       },
-      "roleDescriptionSchema": Object {
-        "additionalProperties": false,
-        "properties": Object {
-          "description": Object {
-            "type": "string",
-          },
-          "name": Object {
-            "type": "string",
-          },
-          "type": Object {
-            "type": "string",
-          },
-        },
-        "required": Array [
-          "description",
-          "name",
-          "type",
-        ],
-        "type": "object",
-      },
       "roleSchema": Object {
         "additionalProperties": false,
         "properties": Object {
@@ -1525,7 +1505,7 @@ Object {
             "type": "string",
           },
           "role": Object {
-            "$ref": "#/components/schemas/roleDescriptionSchema",
+            "$ref": "#/components/schemas/roleSchema",
           },
           "token": Object {
             "type": "string",

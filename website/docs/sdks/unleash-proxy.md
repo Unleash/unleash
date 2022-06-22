@@ -123,10 +123,7 @@ class MyOtherCustomStrategy extends Strategy {
 }
 
 // export strategies
-module.exports = [
-    new MyCustomStrategy(),
-    new MyOtherCustomStrategy()
-];
+module.exports = [new MyCustomStrategy(), new MyOtherCustomStrategy()];
 ```
 
 Refer the [custom activation strategy documentation](../advanced/custom-activation-strategy.md#implementation) for more details on how to implement a custom activation strategy.

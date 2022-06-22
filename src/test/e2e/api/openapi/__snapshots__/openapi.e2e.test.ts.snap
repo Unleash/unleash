@@ -1019,6 +1019,22 @@ Object {
         ],
         "type": "object",
       },
+      "loginSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "password": Object {
+            "type": "string",
+          },
+          "username": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "username",
+          "password",
+        ],
+        "type": "object",
+      },
       "meSchema": Object {
         "additionalProperties": false,
         "properties": Object {
@@ -4680,7 +4696,7 @@ Object {
           },
         },
         "tags": Array [
-          "other",
+          "auth",
         ],
       },
     },
@@ -4705,6 +4721,37 @@ Object {
         },
         "tags": Array [
           "other",
+        ],
+      },
+    },
+    "/auth/simple/login": Object {
+      "post": Object {
+        "operationId": "login",
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/loginSchema",
+              },
+            },
+          },
+          "description": "loginSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/userSchema",
+                },
+              },
+            },
+            "description": "userSchema",
+          },
+        },
+        "tags": Array [
+          "auth",
         ],
       },
     },

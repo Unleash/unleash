@@ -23,6 +23,7 @@ import { healthCheckSchema } from './spec/health-check-schema';
 import { healthOverviewSchema } from './spec/health-overview-schema';
 import { healthReportSchema } from './spec/health-report-schema';
 import { legalValueSchema } from './spec/legal-value-schema';
+import { loginSchema } from './spec/login-schema';
 import { idSchema } from './spec/id-schema';
 import { mapValues } from '../util/map-values';
 import { nameSchema } from './spec/name-schema';
@@ -114,6 +115,7 @@ export const schemas = {
     healthOverviewSchema,
     healthReportSchema,
     legalValueSchema,
+    loginSchema,
     nameSchema,
     idSchema,
     meSchema,

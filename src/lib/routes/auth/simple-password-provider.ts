@@ -8,8 +8,9 @@ import { NONE } from '../../types/permissions';
 import Controller from '../controller';
 import { IAuthRequest } from '../unleash-types';
 import { createRequestSchema, createResponseSchema } from '../../openapi';
-// import { userSchema, UserSchema } from '../../openapi/spec/user-schema';
+import { userSchema, UserSchema } from '../../openapi/spec/user-schema';
 import { LoginSchema } from '../../openapi/spec/login-schema';
+import { serializeDates } from '../../types/serialize-dates';
 
 export class SimplePasswordProvider extends Controller {
     private logger: Logger;
@@ -50,25 +51,17 @@ export class SimplePasswordProvider extends Controller {
 
     async login(
         req: IAuthRequest<void, void, LoginSchema>,
-        res: Response, // Response<UserSchema>,
+        res: Response<UserSchema>,
     ): Promise<void> {
         const { username, password } = req.body;
-
-        // TODO: No longer need this?
-        // if (!username || !password) {
-        //     res.status(400).json({
-        //         message: 'You must provide username and password',
-        //     });
-        //     return;
-        // }
 
         const user = await this.userService.loginUser(username, password);
         req.session.user = user;
         this.openApiService.respondWithValidation(
             200,
             res,
-            null, // userSchema.$id,
-            user,
+            userSchema.$id,
+            serializeDates(user),
         );
     }
 }

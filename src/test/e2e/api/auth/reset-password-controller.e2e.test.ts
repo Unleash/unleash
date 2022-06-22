@@ -152,7 +152,6 @@ test('Trying to reset password with same token twice does not work', async () =>
     await app.request
         .post('/auth/reset/password')
         .send({
-            email: user.email,
             token,
             password,
         })
@@ -160,7 +159,6 @@ test('Trying to reset password with same token twice does not work', async () =>
     await app.request
         .post('/auth/reset/password')
         .send({
-            email: user.email,
             token,
             password,
         })
@@ -222,7 +220,6 @@ test('Calling reset endpoint with already existing session should logout/destroy
     await request
         .post('/auth/reset/password')
         .send({
-            email: user.email,
             token,
             password,
         })
@@ -259,7 +256,6 @@ test('Trying to change password to undefined should yield 400 without crashing t
     await app.request
         .post('/auth/reset/password')
         .send({
-            email: user.email,
             token,
             password: undefined,
         })

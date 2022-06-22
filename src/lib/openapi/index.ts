@@ -56,6 +56,11 @@ import { addonTypeSchema } from './spec/addon-type-schema';
 import { applicationSchema } from './spec/application-schema';
 import { applicationsSchema } from './spec/applications-schema';
 import { tagWithVersionSchema } from './spec/tag-with-version-schema';
+import { tokenUserSchema } from './spec/token-user-schema';
+import { roleDescriptionSchema } from './spec/role-description-schema';
+import { changePasswordSchema } from './spec/change-password-schema';
+import { validatePasswordSchema } from './spec/validate-password-schema';
+import { resetPasswordSchema } from './spec/reset-password-schema';
 import { featureStrategySegmentSchema } from './spec/feature-strategy-segment-schema';
 import { segmentSchema } from './spec/segment-schema';
 import { stateSchema } from './spec/state-schema';
@@ -73,6 +78,7 @@ export const schemas = {
     applicationSchema,
     applicationsSchema,
     cloneFeatureSchema,
+    changePasswordSchema,
     constraintSchema,
     contextFieldSchema,
     contextFieldsSchema,
@@ -104,6 +110,8 @@ export const schemas = {
     projectEnvironmentSchema,
     projectSchema,
     projectsSchema,
+    resetPasswordSchema,
+    roleDescriptionSchema,
     segmentSchema,
     sortOrderSchema,
     splashSchema,
@@ -114,12 +122,14 @@ export const schemas = {
     tagsSchema,
     tagTypeSchema,
     tagTypesSchema,
+    tokenUserSchema,
     uiConfigSchema,
     updateFeatureSchema,
     updateStrategySchema,
     updateApiTokenSchema,
     updateTagTypeSchema,
     upsertContextFieldSchema,
+    validatePasswordSchema,
     validateTagTypeSchema,
     variantSchema,
     variantsSchema,

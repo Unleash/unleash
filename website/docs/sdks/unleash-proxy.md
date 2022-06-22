@@ -63,7 +63,15 @@ The Proxy has a large number of configuration options that you can use to adjust
 | `unleashAppName`       | `UNLEASH_APP_NAME`               | `"unleash-proxy" ` | no       | The application name to use when registering with Unleash                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | `unleashInstanceId`    | `UNLEASH_INSTANCE_ID`            | auto-generated     | no       | A unique(-ish) identifier for your instance. Typically a hostname, pod id or something similar. Unleash uses this to separate metrics from the client SDKs with the same `unleashAppName`.                                                                                                                                                                                                                                                                                |
 | `unleashUrl`           | `UNLEASH_URL`                    | n/a                | yes      | The API URL of the Unleash instance you want to connect to.                                                                                                                                                                                                                                                                                                                                                                                                               |
+## Privacy and hosting options {#privacy-and-hosting}
 
+<div id="we-care-about-privacy"></div>
+
+The Unleash Proxy is important because you should not expose your entire set of toggle configurations to your end users. Single page apps work in the context of a specific user. The proxy allows you to only provide data that relates to that one user: _The proxy will only return the evaluated toggles (with variants) that should be enabled for that specific user in that specific context._
+
+Most of our customers prefer to run the Unleash proxy themselves. We actually prefer this as we don’t want to see your users. Running it is pretty simple, it is either a small Node.js process you start or a docker image you use. (We can of course host the proxy for you also.)
+
+For more information on the various hosting options and their tradeoffs, refer to the [proxy hosting strategies topic document](../topics/proxy-hosting.mdx).
 
 ## Health endpoint
 
@@ -253,14 +261,6 @@ The `value` will always be the payload's content as a string, escaped as necessa
   }
 }
 ```
-
-## We care about Privacy! {#we-care-about-privacy}
-
-The Unleash Proxy is important because you should not expose your entire set of toggle configurations to your end users. Single page apps work in the context of a specific user. The proxy allows you to only provide data that relates to that one user: _The proxy will only return the evaluated toggles (with variants) that should be enabled for that specific user in that specific context._
-
-Most of our customers prefer to run The Unleash Proxy themselves. PS! We actually prefer this as we don’t want to see your users. Running it is pretty simple, it is either a small Node.js process you start or a docker image you use. (We can of course host the proxy for you also.)
-
-
 
 ## How to connect to the Proxy? {#how-to-connect-to-the-proxy}
 

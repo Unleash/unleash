@@ -6,7 +6,28 @@ Because the [Unleash proxy](../sdks/unleash-proxy.md) is a separate piece of the
 
 Because of the hosting solutions we offer to our customers, there's three ways you can host the Unleash API and the proxy. Each is outlined below with some ...
 
-Which way is right for you will depend on your setup and your needs.
+Which way is right for you will depend on your setup and your needs. In general, we recommend that you host the proxy yourself, but we do recognize that self-hosting requires some extra work on your part and that not all our customers need it.
+
+## Unleash-hosted proxy vs self-hosted proxy
+
+Depending on your use cases
+
+While this is easy to get started with, it comes with some clear limitations:
+
+1. This is only available to Pro and Enterprise customers who have signed up for a managed Unleash instance.
+2. You'll get a total of two (2) proxies: One for the "development" environment and one for the "production" environment.
+3. The proxies _will not_ scale, regardless of how many requests you're getting.
+4. If you go above an average of 10 requests per second, then you'll be charged extra. (Is this pricing available anywhere?)
+5. There's no guarantee that it'll be close to your applications. This means you'll get higher response times.
+6. When we host the proxy, we will also receive whatever end user data you put in the [Unleash context](../user_guide/unleash-context.md). This may or may not be an issue depending on your business requirements.
+
+This setup requires a little more setup on your part than the Unleash-hosted proxy does, but it offers a number of benefits:
+- You can scale the proxy horizontally and automatically.
+- There's no request cap or extra charges.
+- You can host as many proxies as you want for as many different environments as you want.
+- You can arrange for the proxy to be close to your applications, minimizing response times.
+- You have full control of all your user data. None of the data that the proxy receives is ever sent to the Unleash API. This keeps *your* data in *your* hands.
+- You can easily add more proxies in different regions, as described in the [multi-region](#multi-region) section.
 
 ## Unleash hosts everything
 
@@ -59,10 +80,13 @@ For the proxy client SDK, configure:
 1. One of the proxy client keys that you configured for the proxy.
 2. The proxy's endpoint. This will depend on where and how you're hosting the proxy, but will typically end in "/proxy"
 
-
-The middle-of-the-road solution
-
-This setup is only available for Pro and Enterprise customers
+This setup requires a little more setup on your part than the Unleash-hosted proxy does, but it offers a number of benefits:
+- You can scale the proxy horizontally and automatically.
+- There's no request cap or extra charges.
+- You can host as many proxies as you want for as many different environments as you want.
+- You can arrange for the proxy to be close to your applications, minimizing response times.
+- You have full control of all your user data. None of the data that the proxy receives is ever sent to the Unleash API. This keeps *your* data in *your* hands.
+- You can easily add more proxies in different regions, as described in the [multi-region](#multi-region) section.
 
 ## Self-hosted everything
 
@@ -88,10 +112,12 @@ For the proxy client SDK, configure:
 1. One of the proxy client keys that you configured for the proxy.
 2. The proxy's endpoint. This will depend on where and how you're hosting the proxy, but will typically end in "/proxy"
 
-As you might expect, doing everything yourself _is_ going to give you the most flexibility, but it's also going to be the most work. If you're already hosting Unleash yourself, though, this shouldn't be any more difficult than the previous chapter.
+As you might expect, doing everything yourself _is_ going to give you the most flexibility, but it's also going to be the most work. If you're already hosting Unleash yourself, though, this shouldn't be any more difficult than the previous section.
 
-### Multi-region
+As described in the previous section, running the proxy yourself gives you a number of benefits.
+
+## Multi-region
 
 ![](/img/proxy-hosting-customer-multi.svg)
 
-You can also use the proxy for a multi-region setup. You can run a proxy in a different region to the API and still connect to the API. Because the proxy runs closer to your applications it still provides you benefits in terms of quicker response times. Everything should be configured as described in the previous section. You can add as many extra proxies in as many extra regions as you want.
+You can also use the proxy for a multi-region setup. You can run a proxy in a different region to the API and still connect to the API. Because the proxy runs closer to your applications it still provides you benefits in terms of quicker response times. Everything should be configured as described in the everything-by-you section or the unleash-hosts-api-you-host-proxy section. You can add as many extra proxies in as many extra regions as you want.

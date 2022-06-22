@@ -1502,6 +1502,16 @@ Object {
         "additionalProperties": false,
         "properties": Object {
           "createdBy": Object {
+            "nullable": true,
+            "type": "string",
+          },
+          "email": Object {
+            "type": "string",
+          },
+          "id": Object {
+            "type": "number",
+          },
+          "name": Object {
             "type": "string",
           },
           "role": Object {
@@ -1512,8 +1522,11 @@ Object {
           },
         },
         "required": Array [
-          "createdBy",
+          "id",
+          "name",
+          "email",
           "token",
+          "createdBy",
           "role",
         ],
         "type": "object",

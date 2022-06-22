@@ -24,12 +24,12 @@ exports[`should serve the OpenAPI UI 1`] = `
         background: #fafafa;
       }
     </style>
-    
+
       <link rel=\\"stylesheet\\" type=\\"text/css\\" href=\\"./swagger-ui.css\\" >
-    
+
   </head>
   <body>
-    
+
       <div id=\\"swagger-ui\\"></div>
       <script src=\\"./swagger-ui-bundle.js\\"></script>
       <script src=\\"./swagger-ui-standalone-preset.js\\"></script>
@@ -41,7 +41,7 @@ exports[`should serve the OpenAPI UI 1`] = `
           })
         }
       </script>
-    
+
   </body>
 </html>
   "
@@ -293,63 +293,19 @@ Object {
         },
         "type": "object",
       },
-      "clientMetricsEnvSchema": Object {
+      "changePasswordSchema": Object {
         "additionalProperties": false,
         "properties": Object {
-          "appName": Object {
+          "password": Object {
             "type": "string",
           },
-          "environment": Object {
+          "token": Object {
             "type": "string",
-          },
-          "featureName": Object {
-            "type": "string",
-          },
-          "no": Object {
-            "type": "number",
-          },
-          "timestamp": Object {
-            "format": "date-time",
-            "nullable": true,
-            "type": "string",
-          },
-          "yes": Object {
-            "type": "number",
           },
         },
         "required": Array [
-          "featureName",
-          "appName",
-          "environment",
-          "timestamp",
-          "yes",
-          "no",
-        ],
-        "type": "object",
-      },
-      "clientMetricsResponseSchema": Object {
-        "additionalProperties": false,
-        "properties": Object {
-          "data": Object {
-            "items": Object {
-              "$ref": "#/components/schemas/clientMetricsEnvSchema",
-            },
-            "type": "array",
-          },
-          "maturity": Object {
-            "type": "string",
-          },
-          "version": Object {
-            "type": "number",
-          },
-        },
-        "required": Array [
-          "version",
-          "maturity",
-          "environment",
-          "timestamp",
-          "yes",
-          "no",
+          "token",
+          "password",
         ],
         "type": "object",
       },
@@ -529,6 +485,45 @@ Object {
         },
         "required": Array [
           "name",
+        ],
+        "type": "object",
+      },
+      "createUserSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "email": Object {
+            "type": "string",
+          },
+          "name": Object {
+            "type": "string",
+          },
+          "password": Object {
+            "type": "string",
+          },
+          "rootRole": Object {
+            "type": "number",
+          },
+          "sendEmail": Object {
+            "type": "boolean",
+          },
+          "username": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "rootRole",
+        ],
+        "type": "object",
+      },
+      "emailSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "email": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "email",
         ],
         "type": "object",
       },
@@ -885,29 +880,6 @@ Object {
         "required": Array [],
         "type": "object",
       },
-      "groupedClientMetricsSchema": Object {
-        "additionalProperties": false,
-        "properties": Object {
-          "environment": Object {
-            "type": "string",
-          },
-          "no": Object {
-            "type": "number",
-          },
-          "timestamp": Object {
-            "format": "date-time",
-            "type": "string",
-          },
-          "yes": Object {
-            "type": "number",
-          },
-        },
-        "required": Array [
-          "featureName",
-          "appName",
-        ],
-        "type": "object",
-      },
       "healthCheckSchema": Object {
         "additionalProperties": false,
         "properties": Object {
@@ -1020,6 +992,18 @@ Object {
         ],
         "type": "object",
       },
+      "idSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "id": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "id",
+        ],
+        "type": "object",
+      },
       "legalValueSchema": Object {
         "additionalProperties": false,
         "properties": Object {
@@ -1032,6 +1016,39 @@ Object {
         },
         "required": Array [
           "value",
+        ],
+        "type": "object",
+      },
+      "meSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "feedback": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/feedbackSchema",
+            },
+            "type": "array",
+          },
+          "permissions": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/permissionSchema",
+            },
+            "type": "array",
+          },
+          "splash": Object {
+            "additionalProperties": Object {
+              "type": "boolean",
+            },
+            "type": "object",
+          },
+          "user": Object {
+            "$ref": "#/components/schemas/userSchema",
+          },
+        },
+        "required": Array [
+          "user",
+          "permissions",
+          "feedback",
+          "splash",
         ],
         "type": "object",
       },
@@ -1072,6 +1089,21 @@ Object {
         },
         "type": "object",
       },
+      "passwordSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "confirmPassword": Object {
+            "type": "string",
+          },
+          "password": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "password",
+        ],
+        "type": "object",
+      },
       "patchSchema": Object {
         "properties": Object {
           "from": Object {
@@ -1103,6 +1135,24 @@ Object {
           "$ref": "#/components/schemas/patchSchema",
         },
         "type": "array",
+      },
+      "permissionSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "environment": Object {
+            "type": "string",
+          },
+          "permission": Object {
+            "type": "string",
+          },
+          "project": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "permission",
+        ],
+        "type": "object",
       },
       "projectEnvironmentSchema": Object {
         "additionalProperties": false,
@@ -1169,6 +1219,41 @@ Object {
         "required": Array [
           "version",
           "projects",
+        ],
+        "type": "object",
+      },
+      "resetPasswordSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "resetPasswordUrl": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "resetPasswordUrl",
+        ],
+        "type": "object",
+      },
+      "roleSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "description": Object {
+            "type": "string",
+          },
+          "id": Object {
+            "type": "number",
+          },
+          "name": Object {
+            "type": "string",
+          },
+          "type": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "id",
+          "type",
+          "name",
         ],
         "type": "object",
       },
@@ -1413,37 +1498,23 @@ Object {
         ],
         "type": "object",
       },
-      "toggleMetricsSummarySchema": Object {
+      "tokenUserSchema": Object {
         "additionalProperties": false,
         "properties": Object {
-          "featureName": Object {
+          "createdBy": Object {
             "type": "string",
           },
-          "lastHourUsage": Object {
-            "items": Object {
-              "$ref": "#/components/schemas/groupedClientMetricsSchema",
-            },
-            "type": "array",
+          "role": Object {
+            "$ref": "#/components/schemas/roleSchema",
           },
-          "maturity": Object {
+          "token": Object {
             "type": "string",
-          },
-          "seenApplications": Object {
-            "items": Object {
-              "type": "string",
-            },
-            "type": "array",
-          },
-          "version": Object {
-            "type": "number",
           },
         },
         "required": Array [
-          "version",
-          "maturity",
-          "featureName",
-          "lastHourUsage",
-          "seenApplications",
+          "createdBy",
+          "token",
+          "role",
         ],
         "type": "object",
       },
@@ -1599,6 +1670,21 @@ Object {
         },
         "type": "object",
       },
+      "updateUserSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "email": Object {
+            "type": "string",
+          },
+          "name": Object {
+            "type": "string",
+          },
+          "rootRole": Object {
+            "type": "number",
+          },
+        },
+        "type": "object",
+      },
       "upsertContextFieldSchema": Object {
         "properties": Object {
           "description": Object {
@@ -1622,6 +1708,93 @@ Object {
         },
         "required": Array [
           "name",
+        ],
+        "type": "object",
+      },
+      "userSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "createdAt": Object {
+            "format": "date-time",
+            "type": "string",
+          },
+          "email": Object {
+            "type": "string",
+          },
+          "emailSent": Object {
+            "type": "boolean",
+          },
+          "id": Object {
+            "type": "number",
+          },
+          "imageUrl": Object {
+            "type": "string",
+          },
+          "inviteLink": Object {
+            "type": "string",
+          },
+          "isAPI": Object {
+            "type": "boolean",
+          },
+          "loginAttempts": Object {
+            "type": "number",
+          },
+          "name": Object {
+            "type": "string",
+          },
+          "rootRole": Object {
+            "type": "number",
+          },
+          "seenAt": Object {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string",
+          },
+          "username": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "id",
+        ],
+        "type": "object",
+      },
+      "usersSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "rootRoles": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/roleSchema",
+            },
+            "type": "array",
+          },
+          "users": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/userSchema",
+            },
+            "type": "array",
+          },
+        },
+        "required": Array [
+          "users",
+        ],
+        "type": "object",
+      },
+      "usersSearchSchema": Object {
+        "items": Object {
+          "$ref": "#/components/schemas/userSchema",
+        },
+        "type": "array",
+      },
+      "validatePasswordSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "password": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "password",
         ],
         "type": "object",
       },
@@ -2081,66 +2254,6 @@ Object {
         "responses": Object {
           "200": Object {
             "description": "emptyResponse",
-          },
-        },
-        "tags": Array [
-          "admin",
-        ],
-      },
-    },
-    "/api/admin/client-metrics/features/{name}": Object {
-      "get": Object {
-        "operationId": "getToggleMetricsSummary",
-        "parameters": Array [
-          Object {
-            "in": "path",
-            "name": "name",
-            "required": true,
-            "schema": Object {
-              "type": "string",
-            },
-          },
-        ],
-        "responses": Object {
-          "200": Object {
-            "content": Object {
-              "application/json": Object {
-                "schema": Object {
-                  "$ref": "#/components/schemas/toggleMetricsSummarySchema",
-                },
-              },
-            },
-            "description": "toggleMetricsSummarySchema",
-          },
-        },
-        "tags": Array [
-          "admin",
-        ],
-      },
-    },
-    "/api/admin/client-metrics/features/{name}/raw": Object {
-      "get": Object {
-        "operationId": "getRawToggleMetrics",
-        "parameters": Array [
-          Object {
-            "in": "path",
-            "name": "name",
-            "required": true,
-            "schema": Object {
-              "type": "string",
-            },
-          },
-        ],
-        "responses": Object {
-          "200": Object {
-            "content": Object {
-              "application/json": Object {
-                "schema": Object {
-                  "$ref": "#/components/schemas/clientMetricsResponseSchema",
-                },
-              },
-            },
-            "description": "clientMetricsResponseSchema",
           },
         },
         "tags": Array [
@@ -4192,6 +4305,393 @@ Object {
         },
         "tags": Array [
           "admin",
+        ],
+      },
+    },
+    "/api/admin/user": Object {
+      "get": Object {
+        "operationId": "getMe",
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/meSchema",
+                },
+              },
+            },
+            "description": "meSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/user-admin": Object {
+      "get": Object {
+        "operationId": "getUsers",
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/usersSchema",
+                },
+              },
+            },
+            "description": "usersSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+      "post": Object {
+        "operationId": "createUser",
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/createUserSchema",
+              },
+            },
+          },
+          "description": "createUserSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/userSchema",
+                },
+              },
+            },
+            "description": "userSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/user-admin/reset-password": Object {
+      "post": Object {
+        "operationId": "resetPassword",
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/idSchema",
+              },
+            },
+          },
+          "description": "idSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/resetPasswordSchema",
+                },
+              },
+            },
+            "description": "resetPasswordSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/user-admin/search": Object {
+      "get": Object {
+        "operationId": "searchUsers",
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/usersSchema",
+                },
+              },
+            },
+            "description": "usersSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/user-admin/validate-password": Object {
+      "post": Object {
+        "operationId": "validatePassword",
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/passwordSchema",
+              },
+            },
+          },
+          "description": "passwordSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "200": Object {
+            "description": "emptyResponse",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/user-admin/{id}": Object {
+      "delete": Object {
+        "operationId": "deleteUser",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "description": "emptyResponse",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+      "get": Object {
+        "operationId": "getUser",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/userSchema",
+                },
+              },
+            },
+            "description": "userSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+      "put": Object {
+        "operationId": "updateUser",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/updateUserSchema",
+              },
+            },
+          },
+          "description": "updateUserSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/userSchema",
+                },
+              },
+            },
+            "description": "userSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/user-admin/{id}/change-password": Object {
+      "post": Object {
+        "operationId": "changePassword",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/passwordSchema",
+              },
+            },
+          },
+          "description": "passwordSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "200": Object {
+            "description": "emptyResponse",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/user/change-password": Object {
+      "post": Object {
+        "operationId": "changeMyPassword",
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/passwordSchema",
+              },
+            },
+          },
+          "description": "passwordSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "200": Object {
+            "description": "emptyResponse",
+          },
+          "400": Object {
+            "description": "passwordMismatch",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/auth/reset/password": Object {
+      "post": Object {
+        "operationId": "changePassword",
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/changePasswordSchema",
+              },
+            },
+          },
+          "description": "changePasswordSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "200": Object {
+            "description": "emptyResponse",
+          },
+        },
+        "tags": Array [
+          "other",
+        ],
+      },
+    },
+    "/auth/reset/password-email": Object {
+      "post": Object {
+        "operationId": "sendResetPasswordEmail",
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/emailSchema",
+              },
+            },
+          },
+          "description": "emailSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "200": Object {
+            "description": "emptyResponse",
+          },
+        },
+        "tags": Array [
+          "other",
+        ],
+      },
+    },
+    "/auth/reset/validate": Object {
+      "get": Object {
+        "operationId": "validateToken",
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/tokenUserSchema",
+                },
+              },
+            },
+            "description": "tokenUserSchema",
+          },
+        },
+        "tags": Array [
+          "other",
+        ],
+      },
+    },
+    "/auth/reset/validate-password": Object {
+      "post": Object {
+        "operationId": "validatePassword",
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/validatePasswordSchema",
+              },
+            },
+          },
+          "description": "validatePasswordSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "200": Object {
+            "description": "emptyResponse",
+          },
+        },
+        "tags": Array [
+          "other",
         ],
       },
     },

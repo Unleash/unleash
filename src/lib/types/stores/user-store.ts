@@ -14,12 +14,6 @@ export interface IUserLookup {
     email?: string;
 }
 
-export interface IUserSearch {
-    name?: string;
-    username?: string;
-    email: string;
-}
-
 export interface IUserUpdateFields {
     name?: string;
     email?: string;
@@ -30,7 +24,7 @@ export interface IUserStore extends Store<IUser, number> {
     insert(user: ICreateUser): Promise<IUser>;
     upsert(user: ICreateUser): Promise<IUser>;
     hasUser(idQuery: IUserLookup): Promise<number | undefined>;
-    search(query: IUserSearch): Promise<IUser[]>;
+    search(query: string): Promise<IUser[]>;
     getAllWithId(userIdList: number[]): Promise<IUser[]>;
     getByQuery(idQuery: IUserLookup): Promise<IUser>;
     getPasswordHash(userId: number): Promise<string>;

@@ -8,7 +8,6 @@ import NotFoundError from '../error/notfound-error';
 import {
     ICreateUser,
     IUserLookup,
-    IUserSearch,
     IUserStore,
     IUserUpdateFields,
 } from '../types/stores/user-store';
@@ -116,7 +115,7 @@ class UserStore implements IUserStore {
         return users.map(rowToUser);
     }
 
-    async search(query: IUserSearch): Promise<User[]> {
+    async search(query: string): Promise<User[]> {
         const users = await this.db
             .select(USER_COLUMNS_PUBLIC)
             .from(TABLE)

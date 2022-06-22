@@ -27,6 +27,7 @@ import DisabledError from '../error/disabled-error';
 import PasswordMismatch from '../error/password-mismatch';
 import BadDataError from '../error/bad-data-error';
 import { isDefined } from '../util/isDefined';
+import { TokenUserSchema } from '../openapi/spec/token-user-schema';
 
 const systemUser = new User({ id: -1, username: 'system' });
 
@@ -54,19 +55,6 @@ export interface ILoginUserRequest {
 
 interface IUserWithRole extends IUser {
     rootRole: number;
-}
-
-interface IRoleDescription {
-    id: number;
-    description: string;
-    name: string;
-    type: string;
-}
-
-interface ITokenUser extends IUpdateUser {
-    createdBy: string;
-    token: string;
-    role: IRoleDescription;
 }
 
 const saltRounds = 10;
@@ -362,7 +350,7 @@ class UserService {
         return this.store.setPasswordHash(userId, passwordHash);
     }
 
-    async getUserForToken(token: string): Promise<ITokenUser> {
+    async getUserForToken(token: string): Promise<TokenUserSchema> {
         const { createdBy, userId } = await this.resetTokenService.isValid(
             token,
         );

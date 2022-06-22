@@ -3,10 +3,13 @@ import { TokenUserSchema } from './token-user-schema';
 
 test('tokenUserSchema', () => {
     const data: TokenUserSchema = {
+        id: 0,
+        name: '',
+        email: '',
         createdBy: '',
         token: '',
         role: {
-            id: 1,
+            id: 0,
             description: '',
             name: '',
             type: '',
@@ -16,9 +19,7 @@ test('tokenUserSchema', () => {
     expect(
         validateSchema('#/components/schemas/tokenUserSchema', data),
     ).toBeUndefined();
-});
 
-test('tokenUserSchema empty', () => {
     expect(
         validateSchema('#/components/schemas/tokenUserSchema', {}),
     ).toMatchSnapshot();

@@ -1,15 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`tokenUserSchema empty 1`] = `
+exports[`tokenUserSchema 1`] = `
 Object {
   "data": Object {},
   "errors": Array [
     Object {
       "instancePath": "",
       "keyword": "required",
-      "message": "must have required property 'createdBy'",
+      "message": "must have required property 'id'",
       "params": Object {
-        "missingProperty": "createdBy",
+        "missingProperty": "id",
       },
       "schemaPath": "#/required",
     },

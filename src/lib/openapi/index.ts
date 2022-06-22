@@ -49,6 +49,10 @@ import { validateTagTypeSchema } from './spec/validate-tag-type-schema';
 import { variantSchema } from './spec/variant-schema';
 import { variantsSchema } from './spec/variants-schema';
 import { versionSchema } from './spec/version-schema';
+import { clientMetricsEnvSchema } from './spec/client-metrics-env-schema';
+import { groupedClientMetricsSchema } from './spec/grouped-client-metrics-schema';
+import { toggleMetricsSummarySchema } from './spec/toggle-metrics-summary-schema';
+import { clientMetricsResponseSchema } from './spec/client-metrics-response-schema';
 import { applicationSchema } from './spec/application-schema';
 import { applicationsSchema } from './spec/applications-schema';
 import { tagWithVersionSchema } from './spec/tag-with-version-schema';
@@ -62,6 +66,8 @@ export const schemas = {
     cloneFeatureSchema,
     constraintSchema,
     contextFieldSchema,
+    clientMetricsEnvSchema,
+    clientMetricsResponseSchema,
     contextFieldsSchema,
     createApiTokenSchema,
     createFeatureSchema,
@@ -76,6 +82,7 @@ export const schemas = {
     featureVariantsSchema,
     featuresSchema,
     feedbackSchema,
+    groupedClientMetricsSchema,
     healthCheckSchema,
     healthOverviewSchema,
     healthReportSchema,
@@ -96,6 +103,7 @@ export const schemas = {
     tagsSchema,
     tagTypeSchema,
     tagTypesSchema,
+    toggleMetricsSummarySchema,
     uiConfigSchema,
     updateFeatureSchema,
     updateStrategySchema,

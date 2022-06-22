@@ -3434,7 +3434,7 @@ Object {
     },
     "/api/admin/projects/{projectId}/features/{featureName}/environments/{environment}/strategies": Object {
       "get": Object {
-        "operationId": "getStrategies",
+        "operationId": "getFeatureStrategies",
         "parameters": Array [
           Object {
             "in": "path",
@@ -3478,7 +3478,7 @@ Object {
         ],
       },
       "post": Object {
-        "operationId": "addStrategy",
+        "operationId": "addFeatureStrategy",
         "parameters": Array [
           Object {
             "in": "path",
@@ -3535,7 +3535,7 @@ Object {
     },
     "/api/admin/projects/{projectId}/features/{featureName}/environments/{environment}/strategies/{strategyId}": Object {
       "delete": Object {
-        "operationId": "deleteStrategy",
+        "operationId": "deleteFeatureStrategy",
         "parameters": Array [
           Object {
             "in": "path",
@@ -3580,7 +3580,7 @@ Object {
         ],
       },
       "get": Object {
-        "operationId": "getStrategy",
+        "operationId": "getFeatureStrategy",
         "parameters": Array [
           Object {
             "in": "path",
@@ -3632,7 +3632,7 @@ Object {
         ],
       },
       "patch": Object {
-        "operationId": "patchStrategy",
+        "operationId": "patchFeatureStrategy",
         "parameters": Array [
           Object {
             "in": "path",
@@ -3695,7 +3695,7 @@ Object {
         ],
       },
       "put": Object {
-        "operationId": "updateStrategy",
+        "operationId": "updateFeatureStrategy",
         "parameters": Array [
           Object {
             "in": "path",

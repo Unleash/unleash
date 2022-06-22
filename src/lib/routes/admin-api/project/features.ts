@@ -133,12 +133,12 @@ export default class ProjectFeaturesController extends Controller {
         this.route({
             method: 'get',
             path: PATH_STRATEGIES,
-            handler: this.getStrategies,
+            handler: this.getFeatureStrategies,
             permission: NONE,
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
-                    operationId: 'getStrategies',
+                    operationId: 'getFeatureStrategies',
                     responses: { 200: createResponseSchema('strategySchema') },
                 }),
             ],
@@ -147,12 +147,12 @@ export default class ProjectFeaturesController extends Controller {
         this.route({
             method: 'post',
             path: PATH_STRATEGIES,
-            handler: this.addStrategy,
+            handler: this.addFeatureStrategy,
             permission: CREATE_FEATURE_STRATEGY,
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
-                    operationId: 'addStrategy',
+                    operationId: 'addFeatureStrategy',
                     requestBody: createRequestSchema('createStrategySchema'),
                     responses: {
                         200: createResponseSchema('featureStrategySchema'),
@@ -164,12 +164,12 @@ export default class ProjectFeaturesController extends Controller {
         this.route({
             method: 'get',
             path: PATH_STRATEGY,
-            handler: this.getStrategy,
+            handler: this.getFeatureStrategy,
             permission: NONE,
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
-                    operationId: 'getStrategy',
+                    operationId: 'getFeatureStrategy',
                     responses: {
                         200: createResponseSchema('featureStrategySchema'),
                     },
@@ -180,12 +180,12 @@ export default class ProjectFeaturesController extends Controller {
         this.route({
             method: 'put',
             path: PATH_STRATEGY,
-            handler: this.updateStrategy,
+            handler: this.updateFeatureStrategy,
             permission: UPDATE_FEATURE_STRATEGY,
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
-                    operationId: 'updateStrategy',
+                    operationId: 'updateFeatureStrategy',
                     requestBody: createRequestSchema('updateStrategySchema'),
                     responses: {
                         200: createResponseSchema('featureStrategySchema'),
@@ -193,15 +193,16 @@ export default class ProjectFeaturesController extends Controller {
                 }),
             ],
         });
+
         this.route({
             method: 'patch',
             path: PATH_STRATEGY,
-            handler: this.patchStrategy,
+            handler: this.patchFeatureStrategy,
             permission: UPDATE_FEATURE_STRATEGY,
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
-                    operationId: 'patchStrategy',
+                    operationId: 'patchFeatureStrategy',
                     requestBody: createRequestSchema('patchesSchema'),
                     responses: {
                         200: createResponseSchema('featureStrategySchema'),
@@ -213,11 +214,11 @@ export default class ProjectFeaturesController extends Controller {
             method: 'delete',
             path: PATH_STRATEGY,
             acceptAnyContentType: true,
-            handler: this.deleteStrategy,
+            handler: this.deleteFeatureStrategy,
             permission: DELETE_FEATURE_STRATEGY,
             middleware: [
                 openApiService.validPath({
-                    operationId: 'deleteStrategy',
+                    operationId: 'deleteFeatureStrategy',
                     tags: ['admin'],
                     responses: { 200: emptyResponse },
                 }),
@@ -516,7 +517,7 @@ export default class ProjectFeaturesController extends Controller {
         res.status(200).end();
     }
 
-    async addStrategy(
+    async addFeatureStrategy(
         req: IAuthRequest<FeatureStrategyParams, any, CreateStrategySchema>,
         res: Response<StrategySchema>,
     ): Promise<void> {
@@ -530,7 +531,7 @@ export default class ProjectFeaturesController extends Controller {
         res.status(200).json(strategy);
     }
 
-    async getStrategies(
+    async getFeatureStrategies(
         req: Request<FeatureStrategyParams, any, any, any>,
         res: Response<StrategySchema[]>,
     ): Promise<void> {
@@ -544,7 +545,7 @@ export default class ProjectFeaturesController extends Controller {
         res.status(200).json(featureStrategies);
     }
 
-    async updateStrategy(
+    async updateFeatureStrategy(
         req: IAuthRequest<StrategyIdParams, any, UpdateStrategySchema>,
         res: Response<StrategySchema>,
     ): Promise<void> {
@@ -559,7 +560,7 @@ export default class ProjectFeaturesController extends Controller {
         res.status(200).json(updatedStrategy);
     }
 
-    async patchStrategy(
+    async patchFeatureStrategy(
         req: IAuthRequest<StrategyIdParams, any, Operation[], any>,
         res: Response<StrategySchema>,
     ): Promise<void> {
@@ -577,7 +578,7 @@ export default class ProjectFeaturesController extends Controller {
         res.status(200).json(updatedStrategy);
     }
 
-    async getStrategy(
+    async getFeatureStrategy(
         req: IAuthRequest<StrategyIdParams, any, any, any>,
         res: Response<StrategySchema>,
     ): Promise<void> {
@@ -588,7 +589,7 @@ export default class ProjectFeaturesController extends Controller {
         res.status(200).json(strategy);
     }
 
-    async deleteStrategy(
+    async deleteFeatureStrategy(
         req: IAuthRequest<StrategyIdParams, any, any, any>,
         res: Response<void>,
     ): Promise<void> {

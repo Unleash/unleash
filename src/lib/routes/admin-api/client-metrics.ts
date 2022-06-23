@@ -67,7 +67,7 @@ class ClientMetricsController extends Controller {
                     operationId: 'getToggleMetricsSummary',
                     tags: ['admin'],
                     responses: {
-                        200: createResponseSchema('toggleMetricsSummarySchema'),
+                        200: createResponseSchema('featureUsageSchema'),
                     },
                 }),
             ],

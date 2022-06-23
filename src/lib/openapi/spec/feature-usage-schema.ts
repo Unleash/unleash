@@ -1,8 +1,8 @@
 import { FromSchema } from 'json-schema-to-ts';
-import { groupedClientMetricsSchema } from './grouped-client-metrics-schema';
+import { featureEnvironmentMetricsSchema } from './feature-environment-metrics-schema';
 
-export const toggleMetricsSummarySchema = {
-    $id: '#/components/schemas/toggleMetricsSummarySchema',
+export const featureUsageSchema = {
+    $id: '#/components/schemas/featureUsageSchema',
     type: 'object',
     additionalProperties: false,
     required: [
@@ -25,7 +25,7 @@ export const toggleMetricsSummarySchema = {
         lastHourUsage: {
             type: 'array',
             items: {
-                $ref: '#/components/schemas/groupedClientMetricsSchema',
+                $ref: '#/components/schemas/featureEnvironmentMetricsSchema',
             },
         },
         seenApplications: {
@@ -37,11 +37,9 @@ export const toggleMetricsSummarySchema = {
     },
     components: {
         schemas: {
-            groupedClientMetricsSchema,
+            featureEnvironmentMetricsSchema,
         },
     },
 } as const;
 
-export type ToggleMetricsSummarySchema = FromSchema<
-    typeof toggleMetricsSummarySchema
->;
+export type FeatureUsageSchema = FromSchema<typeof featureUsageSchema>;

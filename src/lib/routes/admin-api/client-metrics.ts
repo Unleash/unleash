@@ -7,13 +7,15 @@ import ClientMetricsServiceV2 from '../../services/client-metrics/metrics-servic
 import { NONE } from '../../types/permissions';
 import { createResponseSchema } from '../../openapi';
 import { OpenApiService } from '../../services/openapi-service';
-import { clientMetricsEnvSchema } from '../../openapi/spec/client-metrics-env-schema';
 import { serializeDates } from '../../types/serialize-dates';
 import {
-    ToggleMetricsSummarySchema,
-    toggleMetricsSummarySchema,
-} from '../../openapi/spec/toggle-metrics-summary-schema';
-import { FeatureMetricsSchema } from '../../openapi/spec/feature-metrics-schema';
+    FeatureUsageSchema,
+    featureUsageSchema,
+} from '../../openapi/spec/feature-usage-schema';
+import {
+    featureMetricsSchema,
+    FeatureMetricsSchema,
+} from '../../openapi/spec/feature-metrics-schema';
 
 class ClientMetricsController extends Controller {
     private logger: Logger;
@@ -85,14 +87,14 @@ class ClientMetricsController extends Controller {
         this.openApiService.respondWithValidation(
             200,
             res,
-            clientMetricsEnvSchema.$id,
+            featureMetricsSchema.$id,
             { version: 1, maturity: 'stable', data: serializeDates(data) },
         );
     }
 
     async getToggleMetricsSummary(
-        req: Request<any, { name: string }>,
-        res: Response<ToggleMetricsSummarySchema>,
+        req: Request<{ name: string }>,
+        res: Response<FeatureUsageSchema>,
     ): Promise<void> {
         const { name } = req.params;
         const data = await this.metrics.getFeatureToggleMetricsSummary(name);
@@ -100,7 +102,7 @@ class ClientMetricsController extends Controller {
         this.openApiService.respondWithValidation(
             200,
             res,
-            toggleMetricsSummarySchema.$id,
+            featureUsageSchema.$id,
             { version: 1, maturity: 'stable', ...serializeDates(data) },
         );
     }

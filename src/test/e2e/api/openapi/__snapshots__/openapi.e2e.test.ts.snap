@@ -309,66 +309,6 @@ Object {
         ],
         "type": "object",
       },
-      "clientMetricsEnvSchema": Object {
-        "additionalProperties": false,
-        "properties": Object {
-          "appName": Object {
-            "type": "string",
-          },
-          "environment": Object {
-            "type": "string",
-          },
-          "featureName": Object {
-            "type": "string",
-          },
-          "no": Object {
-            "type": "number",
-          },
-          "timestamp": Object {
-            "format": "date-time",
-            "nullable": true,
-            "type": "string",
-          },
-          "yes": Object {
-            "type": "number",
-          },
-        },
-        "required": Array [
-          "featureName",
-          "appName",
-          "environment",
-          "timestamp",
-          "yes",
-          "no",
-        ],
-        "type": "object",
-      },
-      "clientMetricsResponseSchema": Object {
-        "additionalProperties": false,
-        "properties": Object {
-          "data": Object {
-            "items": Object {
-              "$ref": "#/components/schemas/clientMetricsEnvSchema",
-            },
-            "type": "array",
-          },
-          "maturity": Object {
-            "type": "string",
-          },
-          "version": Object {
-            "type": "number",
-          },
-        },
-        "required": Array [
-          "version",
-          "maturity",
-          "environment",
-          "timestamp",
-          "yes",
-          "no",
-        ],
-        "type": "object",
-      },
       "cloneFeatureSchema": Object {
         "properties": Object {
           "name": Object {
@@ -658,6 +598,37 @@ Object {
         },
         "type": "object",
       },
+      "featureEnvironmentMetricsSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "appName": Object {
+            "type": "string",
+          },
+          "environment": Object {
+            "type": "string",
+          },
+          "featureName": Object {
+            "type": "string",
+          },
+          "no": Object {
+            "type": "number",
+          },
+          "timestamp": Object {
+            "format": "date-time",
+            "type": "string",
+          },
+          "yes": Object {
+            "type": "number",
+          },
+        },
+        "required": Array [
+          "environment",
+          "timestamp",
+          "yes",
+          "no",
+        ],
+        "type": "object",
+      },
       "featureEnvironmentSchema": Object {
         "additionalProperties": false,
         "properties": Object {
@@ -683,6 +654,29 @@ Object {
         "required": Array [
           "name",
           "enabled",
+        ],
+        "type": "object",
+      },
+      "featureMetricsSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "data": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/featureEnvironmentMetricsSchema",
+            },
+            "type": "array",
+          },
+          "maturity": Object {
+            "type": "string",
+          },
+          "version": Object {
+            "type": "number",
+          },
+        },
+        "required": Array [
+          "version",
+          "maturity",
+          "data",
         ],
         "type": "object",
       },
@@ -878,6 +872,40 @@ Object {
         "required": Array [
           "version",
           "types",
+        ],
+        "type": "object",
+      },
+      "featureUsageSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "featureName": Object {
+            "type": "string",
+          },
+          "lastHourUsage": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/featureEnvironmentMetricsSchema",
+            },
+            "type": "array",
+          },
+          "maturity": Object {
+            "type": "string",
+          },
+          "seenApplications": Object {
+            "items": Object {
+              "type": "string",
+            },
+            "type": "array",
+          },
+          "version": Object {
+            "type": "number",
+          },
+        },
+        "required": Array [
+          "version",
+          "maturity",
+          "featureName",
+          "lastHourUsage",
+          "seenApplications",
         ],
         "type": "object",
       },
@@ -1580,40 +1608,6 @@ Object {
         "required": Array [
           "version",
           "tags",
-        ],
-        "type": "object",
-      },
-      "toggleMetricsSummarySchema": Object {
-        "additionalProperties": false,
-        "properties": Object {
-          "featureName": Object {
-            "type": "string",
-          },
-          "lastHourUsage": Object {
-            "items": Object {
-              "$ref": "#/components/schemas/groupedClientMetricsSchema",
-            },
-            "type": "array",
-          },
-          "maturity": Object {
-            "type": "string",
-          },
-          "seenApplications": Object {
-            "items": Object {
-              "type": "string",
-            },
-            "type": "array",
-          },
-          "version": Object {
-            "type": "number",
-          },
-        },
-        "required": Array [
-          "version",
-          "maturity",
-          "featureName",
-          "lastHourUsage",
-          "seenApplications",
         ],
         "type": "object",
       },
@@ -2441,11 +2435,11 @@ Object {
             "content": Object {
               "application/json": Object {
                 "schema": Object {
-                  "$ref": "#/components/schemas/clientMetricsResponseSchema",
+                  "$ref": "#/components/schemas/featureMetricsSchema",
                 },
               },
             },
-            "description": "clientMetricsResponseSchema",
+            "description": "featureMetricsSchema",
           },
         },
         "tags": Array [

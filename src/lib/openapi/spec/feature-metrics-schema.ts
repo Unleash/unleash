@@ -1,11 +1,11 @@
 import { FromSchema } from 'json-schema-to-ts';
-import { clientMetricsEnvSchema } from './client-metrics-env-schema';
+import { featureEnvironmentMetricsSchema } from './feature-environment-metrics-schema';
 
 export const featureMetricsSchema = {
-    $id: '#/components/schemas/clientMetricsResponseSchema',
+    $id: '#/components/schemas/featureMetricsSchema',
     type: 'object',
     additionalProperties: false,
-    required: ['version', 'maturity', 'environment', 'timestamp', 'yes', 'no'],
+    required: ['version', 'maturity', 'data'],
     properties: {
         version: {
             type: 'number',
@@ -16,13 +16,13 @@ export const featureMetricsSchema = {
         data: {
             type: 'array',
             items: {
-                $ref: '#/components/schemas/clientMetricsEnvSchema',
+                $ref: '#/components/schemas/featureEnvironmentMetricsSchema',
             },
         },
     },
     components: {
         schemas: {
-            clientMetricsEnvSchema,
+            featureEnvironmentMetricsSchema,
         },
     },
 } as const;

@@ -59,9 +59,9 @@ import { validateTagTypeSchema } from './spec/validate-tag-type-schema';
 import { variantSchema } from './spec/variant-schema';
 import { variantsSchema } from './spec/variants-schema';
 import { versionSchema } from './spec/version-schema';
-import { clientMetricsEnvSchema } from './spec/client-metrics-env-schema';
+import { featureEnvironmentMetricsSchema } from './spec/feature-environment-metrics-schema';
 import { groupedClientMetricsSchema } from './spec/grouped-client-metrics-schema';
-import { toggleMetricsSummarySchema } from './spec/toggle-metrics-summary-schema';
+import { featureUsageSchema } from './spec/feature-usage-schema';
 import { featureMetricsSchema } from './spec/feature-metrics-schema';
 import { addonSchema } from './spec/addon-schema';
 import { addonsSchema } from './spec/addons-schema';
@@ -95,7 +95,6 @@ export const schemas = {
     changePasswordSchema,
     constraintSchema,
     contextFieldSchema,
-    clientMetricsEnvSchema,
     contextFieldsSchema,
     createApiTokenSchema,
     createFeatureSchema,
@@ -106,8 +105,10 @@ export const schemas = {
     environmentsSchema,
     exportParametersSchema,
     featureEnvironmentSchema,
+    featureEnvironmentMetricsSchema,
     featureSchema,
     featureMetricsSchema,
+    featureUsageSchema,
     featureStrategySchema,
     featureStrategySegmentSchema,
     featureTagSchema,
@@ -145,7 +146,6 @@ export const schemas = {
     tagsSchema,
     tagTypeSchema,
     tagTypesSchema,
-    toggleMetricsSummarySchema,
     tokenUserSchema,
     uiConfigSchema,
     updateFeatureSchema,

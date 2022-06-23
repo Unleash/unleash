@@ -82,14 +82,14 @@ class UserStoreMock implements IUserStore {
 
     async setPasswordHash(userId: number, passwordHash: string): Promise<void> {
         const u = this.data.find((a) => a.id === userId);
-        // @ts-ignore
+        // @ts-expect-error
         u.passwordHash = passwordHash;
         return Promise.resolve();
     }
 
     async getPasswordHash(id: number): Promise<string> {
         const u = this.data.find((i) => i.id === id);
-        // @ts-ignore
+        // @ts-expect-error
         return Promise.resolve(u.passwordHash);
     }
 

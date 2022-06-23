@@ -1,9 +1,10 @@
-import { createSchemaObject, CreateSchemaType } from '../types';
+import { FromSchema } from 'json-schema-to-ts';
 import { featureStrategySchema } from './feature-strategy-schema';
 import { constraintSchema } from './constraint-schema';
 import { parametersSchema } from './parameters-schema';
 
-let schema = {
+export const featureEnvironmentSchema = {
+    $id: '#/components/schemas/featureEnvironmentSchema',
     type: 'object',
     additionalProperties: false,
     required: ['name', 'enabled'],
@@ -27,13 +28,15 @@ let schema = {
             },
         },
     },
-    'components/schemas': {
-        featureStrategySchema,
-        constraintSchema,
-        parametersSchema,
+    components: {
+        schemas: {
+            featureStrategySchema,
+            constraintSchema,
+            parametersSchema,
+        },
     },
 } as const;
 
-export type FeatureEnvironmentSchema = CreateSchemaType<typeof schema>;
-
-export const featureEnvironmentSchema = createSchemaObject(schema);
+export type FeatureEnvironmentSchema = FromSchema<
+    typeof featureEnvironmentSchema
+>;

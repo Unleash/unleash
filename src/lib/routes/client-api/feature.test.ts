@@ -84,11 +84,9 @@ test('if caching is enabled should memoize', async () => {
         },
         {
             getLogger,
-            experimental: {
-                clientFeatureMemoize: {
-                    enabled: true,
-                    maxAge: secondsToMilliseconds(10),
-                },
+            clientFeatureCaching: {
+                enabled: true,
+                maxAge: secondsToMilliseconds(10),
             },
         },
     );
@@ -115,11 +113,9 @@ test('if caching is not enabled all calls goes to service', async () => {
         },
         {
             getLogger,
-            experimental: {
-                clientFeatureMemoize: {
-                    enabled: false,
-                    maxAge: secondsToMilliseconds(10),
-                },
+            clientFeatureCaching: {
+                enabled: false,
+                maxAge: secondsToMilliseconds(10),
             },
         },
     );

@@ -84,7 +84,6 @@ class ProjectStore implements IProjectStore {
         }
         const projectAndFeatureCount = await projects;
 
-        // @ts-ignore
         const projectsWithFeatureCount = projectAndFeatureCount.map(
             this.mapProjectWithCountRow,
         );
@@ -109,8 +108,8 @@ class ProjectStore implements IProjectStore {
             id: row.id,
             description: row.description,
             health: row.health,
-            featureCount: row.number_of_features,
-            memberCount: row.number_of_users || 0,
+            featureCount: Number(row.number_of_features) || 0,
+            memberCount: Number(row.number_of_users) || 0,
             updatedAt: row.updated_at,
         };
     }

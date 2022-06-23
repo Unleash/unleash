@@ -100,13 +100,31 @@ export class SegmentService {
     }
 
     async delete(id: number, user: User): Promise<void> {
-        const segment = this.segmentStore.get(id);
+        const segment = await this.segmentStore.get(id);
         await this.segmentStore.delete(id);
         await this.eventStore.store({
             type: SEGMENT_DELETED,
             createdBy: user.email || user.username,
             data: segment,
         });
+    }
+
+    async cloneStrategySegments(
+        sourceStrategyId: string,
+        targetStrategyId: string,
+    ): Promise<void> {
+        const sourceStrategySegments = await this.getByStrategy(
+            sourceStrategyId,
+        );
+
+        await Promise.all(
+            sourceStrategySegments.map((sourceStrategySegment) => {
+                return this.addToStrategy(
+                    sourceStrategySegment.id,
+                    targetStrategyId,
+                );
+            }),
+        );
     }
 
     // Used by unleash-enterprise.

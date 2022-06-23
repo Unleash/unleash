@@ -185,7 +185,7 @@ class EventStore extends EventEmitter implements IEventStore {
             created_by: e.createdBy,
             data: e.data,
             pre_data: e.preData,
-            //@ts-ignore workaround for json-array
+            // @ts-expect-error workaround for json-array
             tags: JSON.stringify(e.tags),
             feature_name: e.featureName,
             project: e.project,

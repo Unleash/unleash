@@ -3,8 +3,16 @@ import Controller from '../controller';
 import UserService from '../../services/user-service';
 import { Logger } from '../../logger';
 import { IUnleashConfig } from '../../types/option';
-import { IUnleashServices } from '../../types/services';
+import { IUnleashServices } from '../../types';
 import { NONE } from '../../types/permissions';
+import { createRequestSchema, createResponseSchema } from '../../openapi';
+import { emptyResponse } from '../../openapi/spec/empty-response';
+import { OpenApiService } from '../../services/openapi-service';
+import {
+    tokenUserSchema,
+    TokenUserSchema,
+} from '../../openapi/spec/token-user-schema';
+import { EmailSchema } from '../../openapi/spec/email-schema';
 
 interface IValidateQuery {
     token: string;
@@ -23,21 +31,84 @@ interface SessionRequest<PARAMS, QUERY, BODY, K>
 class ResetPasswordController extends Controller {
     private userService: UserService;
 
+    private openApiService: OpenApiService;
+
     private logger: Logger;
 
-    constructor(config: IUnleashConfig, { userService }: IUnleashServices) {
+    constructor(
+        config: IUnleashConfig,
+        {
+            userService,
+            openApiService,
+        }: Pick<IUnleashServices, 'userService' | 'openApiService'>,
+    ) {
         super(config);
         this.logger = config.getLogger(
             'lib/routes/auth/reset-password-controller.ts',
         );
+        this.openApiService = openApiService;
         this.userService = userService;
-        this.get('/validate', this.validateToken);
-        this.post('/password', this.changePassword, NONE);
-        this.post('/validate-password', this.validatePassword, NONE);
-        this.post('/password-email', this.sendResetPasswordEmail, NONE);
+        this.route({
+            method: 'get',
+            path: '/validate',
+            handler: this.validateToken,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['other'],
+                    operationId: 'validateToken',
+                    responses: { 200: createResponseSchema('tokenUserSchema') },
+                }),
+            ],
+        });
+        this.route({
+            method: 'post',
+            path: '/password',
+            handler: this.changePassword,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['other'],
+                    operationId: 'changePassword',
+                    requestBody: createRequestSchema('changePasswordSchema'),
+                    responses: { 200: emptyResponse },
+                }),
+            ],
+        });
+        this.route({
+            method: 'post',
+            path: '/validate-password',
+            handler: this.validatePassword,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['other'],
+                    operationId: 'validatePassword',
+                    requestBody: createRequestSchema('validatePasswordSchema'),
+                    responses: { 200: emptyResponse },
+                }),
+            ],
+        });
+        this.route({
+            method: 'post',
+            path: '/password-email',
+            handler: this.sendResetPasswordEmail,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['other'],
+                    operationId: 'sendResetPasswordEmail',
+                    requestBody: createRequestSchema('emailSchema'),
+                    responses: { 200: emptyResponse },
+                }),
+            ],
+        });
     }
 
-    async sendResetPasswordEmail(req: Request, res: Response): Promise<void> {
+    async sendResetPasswordEmail(
+        req: Request<unknown, unknown, EmailSchema>,
+        res: Response,
+    ): Promise<void> {
         const { email } = req.body;
 
         await this.userService.createResetPasswordEmail(email);
@@ -53,12 +124,17 @@ class ResetPasswordController extends Controller {
 
     async validateToken(
         req: Request<unknown, unknown, unknown, IValidateQuery>,
-        res: Response,
+        res: Response<TokenUserSchema>,
     ): Promise<void> {
         const { token } = req.query;
         const user = await this.userService.getUserForToken(token);
         await this.logout(req);
-        res.status(200).json(user);
+        this.openApiService.respondWithValidation<TokenUserSchema>(
+            200,
+            res,
+            tokenUserSchema.$id,
+            user,
+        );
     }
 
     async changePassword(

@@ -1,12 +1,16 @@
 import { ADMIN } from '../../types/permissions';
-import { TemplateFormat } from '../../services/email-service';
+import { EmailService, TemplateFormat } from '../../services/email-service';
 import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
 import { Request, Response } from 'express';
-
-const Controller = require('../controller');
+import Controller from '../controller';
+import { Logger } from '../../logger';
 
 export default class EmailController extends Controller {
+    private emailService: EmailService;
+
+    private logger: Logger;
+
     constructor(
         config: IUnleashConfig,
         { emailService }: Pick<IUnleashServices, 'emailService'>,

@@ -1,5 +1,8 @@
 export const DEFAULT_ENV = 'default';
 
+export const ALL_PROJECTS = '*';
+export const ALL_ENVS = '*';
+
 export const ROOT_PERMISSION_TYPE = 'root';
 export const ENVIRONMENT_PERMISSION_TYPE = 'environment';
 export const PROJECT_PERMISSION_TYPE = 'project';

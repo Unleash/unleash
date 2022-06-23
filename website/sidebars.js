@@ -266,6 +266,7 @@ module.exports = {
                         'advanced/impression-data',
                         'advanced/custom_activation_strategy',
                         'user_guide/environments',
+                        'reference/feature-toggles',
                         'advanced/feature_toggle_types',
                         'advanced/toggle_variants',
                         'user_guide/projects',

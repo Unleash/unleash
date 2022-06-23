@@ -3,6 +3,7 @@ import { createTestConfig } from '../../config/test-config';
 import dbInit from '../helpers/database-init';
 import { DEFAULT_ENV } from '../../../lib/util/constants';
 import { StrategySchema } from '../../../lib/openapi/spec/strategy-schema';
+import { SegmentService } from '../../../lib/services/segment-service';
 
 let stores;
 let db;
@@ -15,7 +16,11 @@ beforeAll(async () => {
         config.getLogger,
     );
     stores = db.stores;
-    service = new FeatureToggleService(stores, config);
+    service = new FeatureToggleService(
+        stores,
+        config,
+        new SegmentService(stores, config),
+    );
 });
 
 afterAll(async () => {

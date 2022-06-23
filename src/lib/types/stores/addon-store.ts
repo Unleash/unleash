@@ -4,7 +4,7 @@ export interface IAddonDto {
     provider: string;
     description: string;
     enabled: boolean;
-    parameters: object;
+    parameters: Record<string, unknown>;
     events: string[];
 }
 

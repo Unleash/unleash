@@ -5,15 +5,16 @@ import { AccessService } from '../../services/access-service';
 import { IAuthType, IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
 import UserService from '../../services/user-service';
-import SessionService from '../../services/session-service';
 import UserFeedbackService from '../../services/user-feedback-service';
 import UserSplashService from '../../services/user-splash-service';
 import { ADMIN, NONE } from '../../types/permissions';
-
-interface IChangeUserRequest {
-    password: string;
-    confirmPassword: string;
-}
+import { OpenApiService } from '../../services/openapi-service';
+import { createRequestSchema, createResponseSchema } from '../../openapi';
+import { emptyResponse } from '../../openapi/spec/empty-response';
+import { meSchema, MeSchema } from '../../openapi/spec/me-schema';
+import { serializeDates } from '../../types/serialize-dates';
+import { IUserPermission } from '../../types/stores/access-store';
+import { PasswordSchema } from '../../openapi/spec/password-schema';
 
 class UserController extends Controller {
     private accessService: AccessService;
@@ -22,43 +23,71 @@ class UserController extends Controller {
 
     private userFeedbackService: UserFeedbackService;
 
-    private sessionService: SessionService;
-
     private userSplashService: UserSplashService;
+
+    private openApiService: OpenApiService;
 
     constructor(
         config: IUnleashConfig,
         {
             accessService,
             userService,
-            sessionService,
             userFeedbackService,
             userSplashService,
+            openApiService,
         }: Pick<
             IUnleashServices,
             | 'accessService'
             | 'userService'
-            | 'sessionService'
             | 'userFeedbackService'
             | 'userSplashService'
+            | 'openApiService'
         >,
     ) {
         super(config);
         this.accessService = accessService;
         this.userService = userService;
-        this.sessionService = sessionService;
         this.userFeedbackService = userFeedbackService;
         this.userSplashService = userSplashService;
+        this.openApiService = openApiService;
 
-        this.get('/', this.getUser);
-        this.post('/change-password', this.updateUserPass, NONE);
-        this.get('/my-sessions', this.mySessions);
+        this.route({
+            method: 'get',
+            path: '',
+            handler: this.getMe,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'getMe',
+                    responses: { 200: createResponseSchema('meSchema') },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'post',
+            path: '/change-password',
+            handler: this.changeMyPassword,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'changeMyPassword',
+                    requestBody: createRequestSchema('passwordSchema'),
+                    responses: {
+                        200: emptyResponse,
+                        400: { description: 'passwordMismatch' },
+                    },
+                }),
+            ],
+        });
     }
 
-    async getUser(req: IAuthRequest, res: Response): Promise<void> {
+    async getMe(req: IAuthRequest, res: Response<MeSchema>): Promise<void> {
         res.setHeader('cache-control', 'no-store');
         const { user } = req;
-        let permissions;
+        let permissions: IUserPermission[];
         if (this.config.authentication.type === IAuthType.NONE) {
             permissions = [{ permission: ADMIN }];
         } else {
@@ -67,16 +96,25 @@ class UserController extends Controller {
         const feedback = await this.userFeedbackService.getAllUserFeedback(
             user,
         );
-        const splash = await this.userSplashService.getAllUserSplashs(user);
+        const splash = await this.userSplashService.getAllUserSplashes(user);
 
-        return res
-            .status(200)
-            .json({ user, permissions, feedback, splash })
-            .end();
+        const responseData: MeSchema = {
+            user: serializeDates(user),
+            permissions,
+            feedback: serializeDates(feedback),
+            splash,
+        };
+
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            meSchema.$id,
+            responseData,
+        );
     }
 
-    async updateUserPass(
-        req: IAuthRequest<any, any, IChangeUserRequest, any>,
+    async changeMyPassword(
+        req: IAuthRequest<unknown, unknown, PasswordSchema>,
         res: Response,
     ): Promise<void> {
         const { user } = req;
@@ -88,12 +126,6 @@ class UserController extends Controller {
         } else {
             res.status(400).end();
         }
-    }
-
-    async mySessions(req: IAuthRequest, res: Response): Promise<void> {
-        const { user } = req;
-        const sessions = await this.sessionService.getSessionsForUser(user.id);
-        res.json(sessions);
     }
 }
 

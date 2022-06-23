@@ -2,9 +2,9 @@ import { Store } from './store';
 
 export interface IContextFieldDto {
     name: string;
-    description: string;
-    stickiness: boolean;
-    sortOrder: number;
+    description?: string;
+    stickiness?: boolean;
+    sortOrder?: number;
     legalValues?: ILegalValue[];
 }
 

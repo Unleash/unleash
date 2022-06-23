@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`sortOrderSchema invalid value type 1`] = `
+Object {
+  "data": Object {
+    "a": "1",
+  },
+  "errors": Array [
+    Object {
+      "instancePath": "/a",
+      "keyword": "type",
+      "message": "must be number",
+      "params": Object {
+        "type": "number",
+      },
+      "schemaPath": "#/additionalProperties/type",
+    },
+  ],
+  "schema": "#/components/schemas/sortOrderSchema",
+}
+`;

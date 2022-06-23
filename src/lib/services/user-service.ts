@@ -1,4 +1,3 @@
-import assert from 'assert';
 import bcrypt from 'bcryptjs';
 import owasp from 'owasp-password-strength-test';
 import Joi from 'joi';
@@ -19,13 +18,16 @@ import { IUnleashStores } from '../types/stores';
 import PasswordUndefinedError from '../error/password-undefined';
 import { USER_UPDATED, USER_CREATED, USER_DELETED } from '../types/events';
 import { IEventStore } from '../types/stores/event-store';
-import { IUserSearch, IUserStore } from '../types/stores/user-store';
+import { IUserStore } from '../types/stores/user-store';
 import { RoleName } from '../types/model';
 import SettingService from './setting-service';
 import { SimpleAuthSettings } from '../server-impl';
 import { simpleAuthKey } from '../types/settings/simple-auth-settings';
 import DisabledError from '../error/disabled-error';
 import PasswordMismatch from '../error/password-mismatch';
+import BadDataError from '../error/bad-data-error';
+import { isDefined } from '../util/isDefined';
+import { TokenUserSchema } from '../openapi/spec/token-user-schema';
 
 const systemUser = new User({ id: -1, username: 'system' });
 
@@ -53,16 +55,6 @@ export interface ILoginUserRequest {
 
 interface IUserWithRole extends IUser {
     rootRole: number;
-}
-interface IRoleDescription {
-    description: string;
-    name: string;
-    type: string;
-}
-interface ITokenUser extends IUpdateUser {
-    createdBy: string;
-    token: string;
-    role: IRoleDescription;
 }
 
 const saltRounds = 10;
@@ -171,7 +163,7 @@ class UserService {
         return { ...user, rootRole: roleId };
     }
 
-    async search(query: IUserSearch): Promise<IUser[]> {
+    async search(query: string): Promise<IUser[]> {
         return this.store.search(query);
     }
 
@@ -183,7 +175,9 @@ class UserService {
         { username, email, name, password, rootRole }: ICreateUser,
         updatedBy?: User,
     ): Promise<IUser> {
-        assert.ok(username || email, 'You must specify username or email');
+        if (!username && !email) {
+            throw new BadDataError('You must specify username or email');
+        }
 
         if (email) {
             Joi.assert(email, Joi.string().email(), 'Email');
@@ -236,15 +230,25 @@ class UserService {
         { id, name, email, rootRole }: IUpdateUser,
         updatedBy?: User,
     ): Promise<IUser> {
-        Joi.assert(email, Joi.string().email(), 'Email');
-
         const preUser = await this.store.get(id);
+
+        if (email) {
+            Joi.assert(email, Joi.string().email(), 'Email');
+        }
 
         if (rootRole) {
             await this.accessService.setUserRootRole(id, rootRole);
         }
 
-        const user = await this.store.update(id, { name, email });
+        const payload: Partial<IUser> = {
+            name: name || preUser.name,
+            email: email || preUser.email,
+        };
+
+        // Empty updates will throw, so make sure we have something to update.
+        const user = Object.values(payload).some(isDefined)
+            ? await this.store.update(id, payload)
+            : preUser;
 
         await this.eventStore.store({
             type: USER_UPDATED,
@@ -346,7 +350,7 @@ class UserService {
         return this.store.setPasswordHash(userId, passwordHash);
     }
 
-    async getUserForToken(token: string): Promise<ITokenUser> {
+    async getUserForToken(token: string): Promise<TokenUserSchema> {
         const { createdBy, userId } = await this.resetTokenService.isValid(
             token,
         );
@@ -359,6 +363,7 @@ class UserService {
             name: user.name,
             id: user.id,
             role: {
+                id: user.rootRole,
                 description: role.role.description,
                 type: role.role.type,
                 name: role.role.name,

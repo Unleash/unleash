@@ -17,6 +17,7 @@ import {
     IUIConfig,
     ICspDomainConfig,
     ICspDomainOptions,
+    IClientCachingOption,
 } from './types/option';
 import { getDefaultLogProvider, LogLevel, validateLogProvider } from './logger';
 import { defaultCustomAuthDenyAll } from './default-custom-auth-deny-all';
@@ -51,6 +52,34 @@ function mergeAll<T>(objects: Partial<T>[]): T {
 function loadExperimental(options: IUnleashOptions): IExperimentalOptions {
     return options.experimental || {};
 }
+const defaultClientCachingOptions: IClientCachingOption = {
+    enabled: true,
+    maxAge: 600,
+};
+
+function loadClientCachingOptions(
+    options: IUnleashOptions,
+): IClientCachingOption {
+    let envs: Partial<IClientCachingOption> = {};
+    if (process.env.CLIENT_FEATURE_CACHING_MAXAGE) {
+        envs.maxAge = parseEnvVarNumber(
+            process.env.CLIENT_FEATURE_CACHING_MAXAGE,
+            600,
+        );
+    }
+    if (process.env.CLIENT_FEATURE_CACHING_ENABLED) {
+        envs.enabled = parseEnvVarBoolean(
+            process.env.CLIENT_FEATURE_CACHING_ENABLED,
+            true,
+        );
+    }
+
+    return mergeAll([
+        defaultClientCachingOptions,
+        options.clientFeatureCaching,
+        envs,
+    ]);
+}
 
 function loadUI(options: IUnleashOptions): IUIConfig {
     const uiO = options.ui || {};
@@ -61,6 +90,12 @@ function loadUI(options: IUnleashOptions): IUIConfig {
     };
     return mergeAll([uiO, ui]);
 }
+
+const dateHandlingCallback = (connection, callback) => {
+    connection.query("set datestyle to 'ISO, DMY';", (err: any) => {
+        callback(err, connection);
+    });
+};
 
 const defaultDbOptions: IDBOption = {
     user: process.env.DATABASE_USERNAME,
@@ -82,6 +117,9 @@ const defaultDbOptions: IDBOption = {
             process.env.DATABASE_POOL_IDLE_TIMEOUT_MS,
             secondsToMilliseconds(30),
         ),
+        ...(parseEnvVarBoolean(process.env.ALLOW_NON_STANDARD_DB_DATES, false)
+            ? { afterCreate: dateHandlingCallback }
+            : {}),
         propagateCreateError: false,
     },
     schema: process.env.DATABASE_SCHEMA || 'public',
@@ -364,6 +402,8 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         DEFAULT_STRATEGY_SEGMENTS_LIMIT,
     );
 
+    const clientFeatureCaching = loadClientCachingOptions(options);
+
     return {
         db,
         session,
@@ -389,6 +429,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         inlineSegmentConstraints,
         segmentValuesLimit,
         strategySegmentsLimit,
+        clientFeatureCaching,
     };
 }
 

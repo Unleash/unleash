@@ -1,0 +1,36 @@
+{
+  "version": 3,
+  "projects": [
+    {
+      "id": "default",
+      "name": "Default",
+      "description": "Default project",
+      "createdAt": "2022-05-19T18:28:31.927Z",
+      "health": 100,
+      "updatedAt": "2022-05-19T20:28:32.736Z"
+    }
+  ],
+  "environments": [
+    {
+      "name": "default",
+      "type": "production",
+      "sortOrder": 1,
+      "enabled": false,
+      "protected": true
+    },
+    {
+      "name": "development",
+      "type": "development",
+      "sortOrder": 100,
+      "enabled": true,
+      "protected": false
+    },
+    {
+      "name": "production",
+      "type": "production",
+      "sortOrder": 200,
+      "enabled": true,
+      "protected": false
+    }
+  ]
+}

@@ -365,3 +365,41 @@ test('Supports multiple domains comma separated in environment variables', () =>
         'googlefonts.com',
     ]);
 });
+
+test('Should enable client feature caching with .6 seconds max age by default', () => {
+    const config = createConfig({});
+    expect(config.clientFeatureCaching.enabled).toBe(true);
+    expect(config.clientFeatureCaching.maxAge).toBe(600);
+});
+
+test('Should use overrides from options for client feature caching', () => {
+    const config = createConfig({
+        clientFeatureCaching: {
+            enabled: false,
+            maxAge: 120,
+        },
+    });
+    expect(config.clientFeatureCaching.enabled).toBe(false);
+    expect(config.clientFeatureCaching.maxAge).toBe(120);
+});
+
+test('Should be able to set client features caching using environment variables', () => {
+    process.env.CLIENT_FEATURE_CACHING_ENABLED = 'false';
+    process.env.CLIENT_FEATURE_CACHING_MAXAGE = '120';
+    const config = createConfig({});
+    expect(config.clientFeatureCaching.enabled).toBe(false);
+    expect(config.clientFeatureCaching.maxAge).toBe(120);
+    delete process.env.CLIENT_FEATURE_CACHING_ENABLED;
+    delete process.env.CLIENT_FEATURE_CACHING_MAXAGE;
+});
+
+test('Environment variables for client features caching takes priority over options', () => {
+    process.env.CLIENT_FEATURE_CACHING_MAXAGE = '120';
+    const config = createConfig({
+        clientFeatureCaching: {
+            maxAge: 180,
+        },
+    });
+    expect(config.clientFeatureCaching.enabled).toBe(true);
+    expect(config.clientFeatureCaching.maxAge).toBe(120);
+});

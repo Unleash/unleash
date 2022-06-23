@@ -25,7 +25,7 @@ beforeAll(async () => {
     app = await setupApp(db.stores);
 
     const createToggle = async (
-        toggle: FeatureSchema,
+        toggle: Omit<FeatureSchema, 'createdAt'>,
         strategy: Omit<StrategySchema, 'id'> = defaultStrategy,
         projectId: string = 'default',
         username: string = 'test',
@@ -259,6 +259,76 @@ test('creates new feature toggle with createdBy unknown', async () => {
     await app.request.get('/api/admin/events').expect((res) => {
         expect(res.body.events[0].createdBy).toBe('unknown');
     });
+});
+
+test('create new feature toggle with variant type json', async () => {
+    return app.request
+        .post('/api/admin/features')
+        .send({
+            name: 'com.test.featureWithJson',
+            variants: [
+                {
+                    name: 'variantTestJson',
+                    weight: 1,
+                    payload: {
+                        type: 'json',
+                        value: '{"test": true, "user": [{"jsonValid": 1}]}',
+                    },
+                    weightType: 'variable',
+                },
+            ],
+        })
+        .set('Content-Type', 'application/json')
+        .expect(201);
+});
+
+test('create new feature toggle with variant type string', async () => {
+    return app.request
+        .post('/api/admin/features')
+        .send({
+            name: 'com.test.featureWithString',
+            variants: [
+                {
+                    name: 'variantTestString',
+                    weight: 1,
+                    payload: {
+                        type: 'string',
+                        value: 'my string # here',
+                    },
+                    weightType: 'variable',
+                },
+            ],
+        })
+        .set('Content-Type', 'application/json')
+        .expect(201);
+});
+
+test('refuses to create a new feature toggle with variant when type is json but value provided is not a valid json', async () => {
+    return app.request
+        .post('/api/admin/features')
+        .send({
+            name: 'com.test.featureInvalidValue',
+            variants: [
+                {
+                    name: 'variantTest',
+                    weight: 1,
+                    payload: {
+                        type: 'json',
+                        value: 'this should be a # valid json', // <--- testing value
+                    },
+                    weightType: 'variable',
+                },
+            ],
+        })
+        .set('Content-Type', 'application/json')
+        .expect(400)
+        .expect((res) => {
+            expect(res.body.isJoi).toBe(true);
+            expect(res.body.details[0].type).toBe('invalidJsonString');
+            expect(res.body.details[0].message).toBe(
+                `'value' must be a valid json string when 'type' is json`,
+            );
+        });
 });
 
 test('require new feature toggle to have a name', async () => {

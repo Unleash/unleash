@@ -1,79 +1,186 @@
 import { Request, Response } from 'express';
 import Controller from '../controller';
-import { IUnleashConfig } from '../../types/option';
-import { IUnleashServices } from '../../types/services';
+import { IUnleashConfig, IUnleashServices } from '../../types';
 import { Logger } from '../../logger';
 import AddonService from '../../services/addon-service';
 
 import { extractUsername } from '../../util/extract-user';
 import {
     CREATE_ADDON,
-    UPDATE_ADDON,
     DELETE_ADDON,
+    NONE,
+    UPDATE_ADDON,
 } from '../../types/permissions';
 import { IAuthRequest } from '../unleash-types';
+import { createRequestSchema, createResponseSchema } from '../../openapi';
+import { OpenApiService } from '../../services/openapi-service';
+import { emptyResponse } from '../../openapi/spec/empty-response';
+import { AddonSchema, addonSchema } from '../../openapi/spec/addon-schema';
+import { serializeDates } from '../../types/serialize-dates';
+import { AddonsSchema, addonsSchema } from '../../openapi/spec/addons-schema';
+
+type AddonServices = Pick<IUnleashServices, 'addonService' | 'openApiService'>;
+
+const PATH = '/';
 
 class AddonController extends Controller {
     private logger: Logger;
 
     private addonService: AddonService;
 
+    private openApiService: OpenApiService;
+
     constructor(
         config: IUnleashConfig,
-        { addonService }: Pick<IUnleashServices, 'addonService'>,
+        { addonService, openApiService }: AddonServices,
     ) {
         super(config);
         this.logger = config.getLogger('/admin-api/addon.ts');
         this.addonService = addonService;
+        this.openApiService = openApiService;
 
-        this.get('/', this.getAddons);
-        this.post('/', this.createAddon, CREATE_ADDON);
-        this.get('/:id', this.getAddon);
-        this.put('/:id', this.updateAddon, UPDATE_ADDON);
-        this.delete('/:id', this.deleteAddon, DELETE_ADDON);
+        this.route({
+            method: 'get',
+            path: '',
+            permission: NONE,
+            handler: this.getAddons,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'getAddons',
+                    responses: {
+                        200: createResponseSchema('addonsSchema'),
+                    },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'post',
+            path: '',
+            handler: this.createAddon,
+            permission: CREATE_ADDON,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'createAddon',
+                    requestBody: createRequestSchema('addonSchema'),
+                    responses: { 200: createResponseSchema('addonSchema') },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'get',
+            path: `${PATH}:id`,
+            handler: this.getAddon,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'getAddon',
+                    responses: { 200: createResponseSchema('addonSchema') },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'put',
+            path: `${PATH}:id`,
+            handler: this.updateAddon,
+            permission: UPDATE_ADDON,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'updateAddon',
+                    requestBody: createRequestSchema('addonSchema'),
+                    responses: { 200: createResponseSchema('addonSchema') },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'delete',
+            path: `${PATH}:id`,
+            handler: this.deleteAddon,
+            acceptAnyContentType: true,
+            permission: DELETE_ADDON,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'deleteAddon',
+                    responses: { 200: emptyResponse },
+                }),
+            ],
+        });
     }
 
-    async getAddons(req: Request, res: Response): Promise<void> {
+    async getAddons(req: Request, res: Response<AddonsSchema>): Promise<void> {
         const addons = await this.addonService.getAddons();
         const providers = this.addonService.getProviderDefinitions();
-        res.json({ addons, providers });
+
+        this.openApiService.respondWithValidation(200, res, addonsSchema.$id, {
+            addons: serializeDates(addons),
+            providers: serializeDates(providers),
+        });
     }
 
     async getAddon(
         req: Request<{ id: number }, any, any, any>,
-        res: Response,
+        res: Response<AddonSchema>,
     ): Promise<void> {
         const { id } = req.params;
         const addon = await this.addonService.getAddon(id);
-        res.json(addon);
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            addonSchema.$id,
+            serializeDates(addon),
+        );
     }
 
     async updateAddon(
         req: IAuthRequest<{ id: number }, any, any, any>,
-        res: Response,
+        res: Response<AddonSchema>,
     ): Promise<void> {
         const { id } = req.params;
         const createdBy = extractUsername(req);
         const data = req.body;
 
         const addon = await this.addonService.updateAddon(id, data, createdBy);
-        res.status(200).json(addon);
+
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            addonSchema.$id,
+            serializeDates(addon),
+        );
     }
 
-    async createAddon(req: IAuthRequest, res: Response): Promise<void> {
+    async createAddon(
+        req: IAuthRequest<AddonSchema, any, any, any>,
+        res: Response<AddonSchema>,
+    ): Promise<void> {
         const createdBy = extractUsername(req);
         const data = req.body;
         const addon = await this.addonService.createAddon(data, createdBy);
-        res.status(201).json(addon);
+
+        this.openApiService.respondWithValidation(
+            201,
+            res,
+            addonSchema.$id,
+            serializeDates(addon),
+        );
     }
 
     async deleteAddon(
         req: IAuthRequest<{ id: number }, any, any, any>,
-        res: Response,
+        res: Response<void>,
     ): Promise<void> {
         const { id } = req.params;
         const username = extractUsername(req);
         await this.addonService.removeAddon(id, username);
+
         res.status(200).end();
     }
 }

@@ -10,7 +10,7 @@ import LogoutController from './logout';
 const AdminApi = require('./admin-api');
 const ClientApi = require('./client-api');
 const Controller = require('./controller');
-const HealthCheckController = require('./health-check');
+import { HealthCheckController } from './health-check';
 class IndexRouter extends Controller {
     constructor(config: IUnleashConfig, services: IUnleashServices) {
         super(config);

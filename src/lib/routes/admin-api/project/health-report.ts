@@ -5,9 +5,23 @@ import { IUnleashConfig } from '../../../types/option';
 import ProjectHealthService from '../../../services/project-health-service';
 import { Logger } from '../../../logger';
 import { IArchivedQuery, IProjectParam } from '../../../types/model';
+import { NONE } from '../../../types/permissions';
+import { OpenApiService } from '../../../services/openapi-service';
+import { createResponseSchema } from '../../../openapi';
+import {
+    healthOverviewSchema,
+    HealthOverviewSchema,
+} from '../../../openapi/spec/health-overview-schema';
+import { serializeDates } from '../../../types/serialize-dates';
+import {
+    healthReportSchema,
+    HealthReportSchema,
+} from '../../../openapi/spec/health-report-schema';
 
 export default class ProjectHealthReport extends Controller {
     private projectHealthService: ProjectHealthService;
+
+    private openApiService: OpenApiService;
 
     private logger: Logger;
 
@@ -15,18 +29,50 @@ export default class ProjectHealthReport extends Controller {
         config: IUnleashConfig,
         {
             projectHealthService,
-        }: Pick<IUnleashServices, 'projectHealthService'>,
+            openApiService,
+        }: Pick<IUnleashServices, 'projectHealthService' | 'openApiService'>,
     ) {
         super(config);
         this.logger = config.getLogger('/admin-api/project/health-report');
         this.projectHealthService = projectHealthService;
-        this.get('/:projectId', this.getProjectOverview);
-        this.get('/:projectId/health-report', this.getProjectHealthReport);
+        this.openApiService = openApiService;
+
+        this.route({
+            method: 'get',
+            path: '/:projectId',
+            handler: this.getProjectHealthOverview,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'getProjectHealthOverview',
+                    responses: {
+                        200: createResponseSchema('healthOverviewSchema'),
+                    },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'get',
+            path: '/:projectId/health-report',
+            handler: this.getProjectHealthReport,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'getProjectHealthReport',
+                    responses: {
+                        200: createResponseSchema('healthReportSchema'),
+                    },
+                }),
+            ],
+        });
     }
 
-    async getProjectOverview(
-        req: Request<IProjectParam, any, any, IArchivedQuery>,
-        res: Response,
+    async getProjectHealthOverview(
+        req: Request<IProjectParam, unknown, unknown, IArchivedQuery>,
+        res: Response<HealthOverviewSchema>,
     ): Promise<void> {
         const { projectId } = req.params;
         const { archived } = req.query;
@@ -34,20 +80,27 @@ export default class ProjectHealthReport extends Controller {
             projectId,
             archived,
         );
-        res.json(overview);
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            healthOverviewSchema.$id,
+            serializeDates(overview),
+        );
     }
 
     async getProjectHealthReport(
-        req: Request<IProjectParam, any, any, any>,
-        res: Response,
+        req: Request<IProjectParam>,
+        res: Response<HealthReportSchema>,
     ): Promise<void> {
         const { projectId } = req.params;
         const overview = await this.projectHealthService.getProjectHealthReport(
             projectId,
         );
-        res.json({
-            version: 2,
-            ...overview,
-        });
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            healthReportSchema.$id,
+            serializeDates(overview),
+        );
     }
 }

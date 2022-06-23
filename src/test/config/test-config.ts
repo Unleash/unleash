@@ -19,6 +19,9 @@ export function createTestConfig(config?: IUnleashOptions): IUnleashConfig {
         session: { db: false },
         versionCheck: { enable: false },
         enableOAS: true,
+        clientFeatureCaching: {
+            enabled: false,
+        },
     };
     const options = mergeAll<IUnleashOptions>([testConfig, config]);
     return createConfig(options);

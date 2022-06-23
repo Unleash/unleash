@@ -1,6 +1,8 @@
 import dbInit from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import { setupApp } from '../../helpers/test-helper';
+import { validateSchema } from '../../../../lib/openapi/validate';
+import { featureTypesSchema } from '../../../../lib/openapi/spec/feature-types-schema';
 
 let app;
 let db;
@@ -22,9 +24,11 @@ test('Should get all defined feature types', async () => {
         .expect('Content-Type', /json/)
         .expect((res) => {
             const { version, types } = res.body;
-
             expect(version).toBe(1);
             expect(types.length).toBe(5);
             expect(types[0].name).toBe('Release');
+            expect(
+                validateSchema(featureTypesSchema.$id, res.body),
+            ).toBeUndefined();
         });
 });

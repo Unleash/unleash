@@ -1,13 +1,13 @@
-import { createSchemaObject, CreateSchemaType } from '../types';
-import { strategySchema } from './strategy-schema';
+import { FromSchema } from 'json-schema-to-ts';
 import { variantSchema } from './variant-schema';
-import { featureEnvironmentSchema } from './feature-environment-schema';
-import { featureStrategySchema } from './feature-strategy-schema';
+import { strategySchema } from './strategy-schema';
 import { constraintSchema } from './constraint-schema';
-import { parametersSchema } from './parameters-schema';
 import { overrideSchema } from './override-schema';
+import { parametersSchema } from './parameters-schema';
+import { environmentSchema } from './environment-schema';
 
-const schema = {
+export const featureSchema = {
+    $id: '#/components/schemas/featureSchema',
     type: 'object',
     additionalProperties: false,
     required: ['name'],
@@ -38,7 +38,7 @@ const schema = {
         },
         createdAt: {
             type: 'string',
-            format: 'date',
+            format: 'date-time',
             nullable: true,
         },
         archivedAt: {
@@ -48,13 +48,13 @@ const schema = {
         },
         lastSeenAt: {
             type: 'string',
-            format: 'date',
+            format: 'date-time',
             nullable: true,
         },
         environments: {
             type: 'array',
             items: {
-                $ref: '#/components/schemas/featureEnvironmentSchema',
+                $ref: '#/components/schemas/environmentSchema',
             },
         },
         strategies: {
@@ -70,17 +70,16 @@ const schema = {
             },
         },
     },
-    'components/schemas': {
-        constraintSchema,
-        featureEnvironmentSchema,
-        featureStrategySchema,
-        overrideSchema,
-        parametersSchema,
-        strategySchema,
-        variantSchema,
+    components: {
+        schemas: {
+            constraintSchema,
+            environmentSchema,
+            overrideSchema,
+            parametersSchema,
+            strategySchema,
+            variantSchema,
+        },
     },
 } as const;
 
-export type FeatureSchema = CreateSchemaType<typeof schema>;
-
-export const featureSchema = createSchemaObject(schema);
+export type FeatureSchema = FromSchema<typeof featureSchema>;

@@ -28,6 +28,7 @@ export interface IDBOption {
         max?: number;
         idleTimeoutMillis?: number;
         propagateCreateError?: boolean;
+        afterCreate?: (connection: any, callback: any) => void;
     };
     schema: string;
     disableMigration: boolean;
@@ -84,6 +85,11 @@ export interface IServerOption {
     secret: string;
 }
 
+export interface IClientCachingOption {
+    enabled: boolean;
+    maxAge: number;
+}
+
 export interface IUnleashOptions {
     databaseUrl?: string;
     databaseUrlFile?: string;
@@ -107,6 +113,7 @@ export interface IUnleashOptions {
     enterpriseVersion?: string;
     disableLegacyFeaturesApi?: boolean;
     inlineSegmentConstraints?: boolean;
+    clientFeatureCaching?: Partial<IClientCachingOption>;
 }
 
 export interface IEmailOption {
@@ -141,6 +148,7 @@ export interface IUIConfig {
         },
     ];
 }
+
 export interface ICspDomainOptions {
     defaultSrc?: string[];
     fontSrc?: string[];
@@ -182,4 +190,5 @@ export interface IUnleashConfig {
     inlineSegmentConstraints: boolean;
     segmentValuesLimit: number;
     strategySegmentsLimit: number;
+    clientFeatureCaching: IClientCachingOption;
 }

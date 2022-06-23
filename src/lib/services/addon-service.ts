@@ -9,8 +9,7 @@ import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
 import { Logger } from '../logger';
 import TagTypeService from './tag-type-service';
 import { IAddon, IAddonDto, IAddonStore } from '../types/stores/addon-store';
-import { IUnleashStores } from '../types/stores';
-import { IUnleashConfig } from '../types/option';
+import { IUnleashStores, IUnleashConfig } from '../types';
 import { IAddonDefinition } from '../types/model';
 import { minutesToMilliseconds } from 'date-fns';
 
@@ -196,7 +195,7 @@ export default class AddonService {
         id: number,
         data: IAddonDto,
         userName: string,
-    ): Promise<void> {
+    ): Promise<IAddon> {
         const addonConfig = await addonSchema.validateAsync(data);
         await this.validateRequiredParameters(addonConfig);
         if (this.sensitiveParams[addonConfig.provider].length > 0) {
@@ -214,13 +213,14 @@ export default class AddonService {
                 {},
             );
         }
-        await this.addonStore.update(id, addonConfig);
+        const result = await this.addonStore.update(id, addonConfig);
         await this.eventStore.store({
             type: events.ADDON_CONFIG_UPDATED,
             createdBy: userName,
             data: { id, provider: addonConfig.provider },
         });
         this.logger.info(`User ${userName} updated addon ${id}`);
+        return result;
     }
 
     async removeAddon(id: number, userName: string): Promise<void> {

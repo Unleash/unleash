@@ -43,22 +43,6 @@ class ClientMetricsController extends Controller {
 
         this.route({
             method: 'get',
-            path: '/features/:name',
-            handler: this.getToggleMetricsSummary,
-            permission: NONE,
-            middleware: [
-                openApiService.validPath({
-                    operationId: 'getToggleMetricsSummary',
-                    tags: ['admin'],
-                    responses: {
-                        200: createResponseSchema('toggleMetricsSummarySchema'),
-                    },
-                }),
-            ],
-        });
-
-        this.route({
-            method: 'get',
             path: '/features/:name/raw',
             handler: this.getRawToggleMetrics,
             permission: NONE,
@@ -68,6 +52,22 @@ class ClientMetricsController extends Controller {
                     tags: ['admin'],
                     responses: {
                         200: createResponseSchema('featureMetricsSchema'),
+                    },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'get',
+            path: '/features/:name',
+            handler: this.getToggleMetricsSummary,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    operationId: 'getToggleMetricsSummary',
+                    tags: ['admin'],
+                    responses: {
+                        200: createResponseSchema('toggleMetricsSummarySchema'),
                     },
                 }),
             ],

@@ -24,12 +24,12 @@ exports[`should serve the OpenAPI UI 1`] = `
         background: #fafafa;
       }
     </style>
-
+    
       <link rel=\\"stylesheet\\" type=\\"text/css\\" href=\\"./swagger-ui.css\\" >
-
+    
   </head>
   <body>
-
+    
       <div id=\\"swagger-ui\\"></div>
       <script src=\\"./swagger-ui-bundle.js\\"></script>
       <script src=\\"./swagger-ui-standalone-preset.js\\"></script>
@@ -41,7 +41,7 @@ exports[`should serve the OpenAPI UI 1`] = `
           })
         }
       </script>
-
+    
   </body>
 </html>
   "
@@ -631,6 +631,11 @@ Object {
         "properties": Object {
           "archived": Object {
             "type": "boolean",
+          },
+          "archivedAt": Object {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string",
           },
           "createdAt": Object {
             "format": "date-time",

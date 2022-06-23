@@ -60,7 +60,6 @@ import { variantSchema } from './spec/variant-schema';
 import { variantsSchema } from './spec/variants-schema';
 import { versionSchema } from './spec/version-schema';
 import { featureEnvironmentMetricsSchema } from './spec/feature-environment-metrics-schema';
-import { groupedClientMetricsSchema } from './spec/grouped-client-metrics-schema';
 import { featureUsageSchema } from './spec/feature-usage-schema';
 import { featureMetricsSchema } from './spec/feature-metrics-schema';
 import { addonSchema } from './spec/addon-schema';
@@ -117,7 +116,6 @@ export const schemas = {
     featureVariantsSchema,
     featuresSchema,
     feedbackSchema,
-    groupedClientMetricsSchema,
     healthCheckSchema,
     healthOverviewSchema,
     healthReportSchema,

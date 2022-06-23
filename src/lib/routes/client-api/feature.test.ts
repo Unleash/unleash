@@ -7,7 +7,6 @@ import FeatureController from './feature';
 import { createTestConfig } from '../../../test/config/test-config';
 import { secondsToMilliseconds } from 'date-fns';
 import { ClientSpecService } from '../../services/client-spec-service';
-import { OpenApiService } from '../../services/openapi-service';
 
 async function getSetup() {
     const base = `/random${Math.round(Math.random() * 1000)}`;
@@ -71,18 +70,16 @@ test('should get empty getFeatures via client', () => {
 test('if caching is enabled should memoize', async () => {
     const getClientFeatures = jest.fn().mockReturnValue([]);
     const getActive = jest.fn().mockReturnValue([]);
+    const respondWithValidation = jest.fn().mockReturnValue({});
     const clientSpecService = new ClientSpecService({ getLogger });
-    const openApiService = new OpenApiService(
-        createTestConfig({
-            server: { baseUriPath: base },
-        }),
-    );
+    const openApiService = { respondWithValidation };
     const featureToggleServiceV2 = { getClientFeatures };
     const segmentService = { getActive };
 
     const controller = new FeatureController(
         {
             clientSpecService,
+            // @ts-expect-error
             openApiService,
             // @ts-expect-error
             featureToggleServiceV2,
@@ -106,18 +103,16 @@ test('if caching is enabled should memoize', async () => {
 test('if caching is not enabled all calls goes to service', async () => {
     const getClientFeatures = jest.fn().mockReturnValue([]);
     const getActive = jest.fn().mockReturnValue([]);
+    const respondWithValidation = jest.fn().mockReturnValue({});
     const clientSpecService = new ClientSpecService({ getLogger });
     const featureToggleServiceV2 = { getClientFeatures };
     const segmentService = { getActive };
-    const openApiService = new OpenApiService(
-        createTestConfig({
-            server: { baseUriPath: base },
-        }),
-    );
+    const openApiService = { respondWithValidation };
 
     const controller = new FeatureController(
         {
             clientSpecService,
+            // @ts-expect-error
             openApiService,
             // @ts-expect-error
             featureToggleServiceV2,

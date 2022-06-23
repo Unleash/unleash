@@ -16,7 +16,6 @@ import { ClientSpecService } from '../../services/client-spec-service';
 import { OpenApiService } from '../../services/openapi-service';
 import { NONE } from '../../types/permissions';
 import { createResponseSchema } from '../../openapi';
-import { ClientFeaturesSchema } from '../../openapi/spec/client-features-schema';
 import { ClientFeaturesQuerySchema } from '../../openapi/spec/client-features-query-schema';
 import {
     featureSchema,
@@ -75,7 +74,7 @@ export default class FeatureController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    operationId: 'getFeatures',
+                    operationId: 'getFeature',
                     tags: ['client'],
                     responses: {
                         200: createResponseSchema('featureSchema'),
@@ -192,10 +191,7 @@ export default class FeatureController extends Controller {
         return query;
     }
 
-    async getAll(
-        req: IAuthRequest,
-        res: Response<ClientFeaturesSchema>,
-    ): Promise<void> {
+    async getAll(req: IAuthRequest, res: Response): Promise<void> {
         const query = await this.resolveQuery(req);
 
         const [features, segments] = this.cache

@@ -4982,7 +4982,7 @@ Object {
     },
     "/api/client/features/{featureName}": Object {
       "get": Object {
-        "operationId": "getFeatures",
+        "operationId": "getFeature",
         "parameters": Array [
           Object {
             "in": "path",

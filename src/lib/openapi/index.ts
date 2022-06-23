@@ -62,7 +62,7 @@ import { versionSchema } from './spec/version-schema';
 import { clientMetricsEnvSchema } from './spec/client-metrics-env-schema';
 import { groupedClientMetricsSchema } from './spec/grouped-client-metrics-schema';
 import { toggleMetricsSummarySchema } from './spec/toggle-metrics-summary-schema';
-import { clientMetricsResponseSchema } from './spec/client-metrics-response-schema';
+import { featureMetricsSchema } from './spec/feature-metrics-schema';
 import { addonSchema } from './spec/addon-schema';
 import { addonsSchema } from './spec/addons-schema';
 import { addonParameterSchema } from './spec/addon-parameter-schema';
@@ -96,7 +96,6 @@ export const schemas = {
     constraintSchema,
     contextFieldSchema,
     clientMetricsEnvSchema,
-    clientMetricsResponseSchema,
     contextFieldsSchema,
     createApiTokenSchema,
     createFeatureSchema,
@@ -108,6 +107,7 @@ export const schemas = {
     exportParametersSchema,
     featureEnvironmentSchema,
     featureSchema,
+    featureMetricsSchema,
     featureStrategySchema,
     featureStrategySegmentSchema,
     featureTagSchema,

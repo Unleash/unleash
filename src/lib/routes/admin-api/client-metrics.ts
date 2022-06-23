@@ -13,7 +13,7 @@ import {
     ToggleMetricsSummarySchema,
     toggleMetricsSummarySchema,
 } from '../../openapi/spec/toggle-metrics-summary-schema';
-import { ClientMetricsResponseSchema } from '../../openapi/spec/client-metrics-response-schema';
+import { FeatureMetricsSchema } from '../../openapi/spec/feature-metrics-schema';
 
 class ClientMetricsController extends Controller {
     private logger: Logger;
@@ -65,9 +65,7 @@ class ClientMetricsController extends Controller {
                     operationId: 'getRawToggleMetrics',
                     tags: ['admin'],
                     responses: {
-                        200: createResponseSchema(
-                            'clientMetricsResponseSchema',
-                        ),
+                        200: createResponseSchema('featureMetricsSchema'),
                     },
                 }),
             ],
@@ -76,7 +74,7 @@ class ClientMetricsController extends Controller {
 
     async getRawToggleMetrics(
         req: Request<any, { name: string }, { hoursBack: number }, any>,
-        res: Response<ClientMetricsResponseSchema>,
+        res: Response<FeatureMetricsSchema>,
     ): Promise<void> {
         const { name } = req.params;
         const { hoursBack } = req.query;

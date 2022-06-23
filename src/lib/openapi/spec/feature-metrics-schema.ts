@@ -1,7 +1,7 @@
 import { FromSchema } from 'json-schema-to-ts';
 import { clientMetricsEnvSchema } from './client-metrics-env-schema';
 
-export const clientMetricsResponseSchema = {
+export const featureMetricsSchema = {
     $id: '#/components/schemas/clientMetricsResponseSchema',
     type: 'object',
     additionalProperties: false,
@@ -27,6 +27,4 @@ export const clientMetricsResponseSchema = {
     },
 } as const;
 
-export type ClientMetricsResponseSchema = FromSchema<
-    typeof clientMetricsResponseSchema
->;
+export type FeatureMetricsSchema = FromSchema<typeof featureMetricsSchema>;

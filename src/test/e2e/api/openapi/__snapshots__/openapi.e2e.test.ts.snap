@@ -968,31 +968,6 @@ Object {
         "required": Array [],
         "type": "object",
       },
-      "groupedClientMetricsSchema": Object {
-        "additionalProperties": false,
-        "properties": Object {
-          "environment": Object {
-            "type": "string",
-          },
-          "no": Object {
-            "type": "number",
-          },
-          "timestamp": Object {
-            "format": "date-time",
-            "type": "string",
-          },
-          "yes": Object {
-            "type": "number",
-          },
-        },
-        "required": Array [
-          "environment",
-          "timestamp",
-          "yes",
-          "no",
-        ],
-        "type": "object",
-      },
       "healthCheckSchema": Object {
         "additionalProperties": false,
         "properties": Object {

@@ -4,7 +4,7 @@ export interface IStrategy {
     name: string;
     editable: boolean;
     description: string;
-    parameters: object;
+    parameters: object[];
     deprecated: boolean;
     displayName: string;
 }

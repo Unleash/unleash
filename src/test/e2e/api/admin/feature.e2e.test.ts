@@ -7,9 +7,9 @@ import {
 } from '../../helpers/test-helper';
 import getLogger from '../../../fixtures/no-logger';
 import { DEFAULT_ENV } from '../../../../lib/util/constants';
-import { StrategySchema } from '../../../../lib/openapi/spec/strategy-schema';
 import { FeatureSchema } from '../../../../lib/openapi/spec/feature-schema';
 import { VariantSchema } from '../../../../lib/openapi/spec/variant-schema';
+import { FeatureStrategySchema } from '../../../../lib/openapi/spec/feature-strategy-schema';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -26,7 +26,7 @@ beforeAll(async () => {
 
     const createToggle = async (
         toggle: Omit<FeatureSchema, 'createdAt'>,
-        strategy: Omit<StrategySchema, 'id'> = defaultStrategy,
+        strategy: Omit<FeatureStrategySchema, 'id'> = defaultStrategy,
         projectId: string = 'default',
         username: string = 'test',
     ) => {
@@ -576,7 +576,7 @@ test('tagging a feature with an already existing tag should be a noop', async ()
 
 test('can untag feature', async () => {
     expect.assertions(1);
-    const feature1Name = faker.lorem.slug(3);
+    const feature1Name = faker.datatype.uuid();
     await app.request.post('/api/admin/features').send({
         name: feature1Name,
         type: 'killswitch',
@@ -584,7 +584,7 @@ test('can untag feature', async () => {
         strategies: [{ name: 'default' }],
     });
     const tag = {
-        value: faker.lorem.slug(1),
+        value: faker.lorem.word(),
         type: 'simple',
     };
     await app.request
@@ -607,8 +607,8 @@ test('can untag feature', async () => {
 
 test('Can get features tagged by tag', async () => {
     expect.assertions(2);
-    const feature1Name = faker.helpers.slugify(faker.lorem.words(3));
-    const feature2Name = faker.helpers.slugify(faker.lorem.words(3));
+    const feature1Name = faker.datatype.uuid();
+    const feature2Name = faker.datatype.uuid();
     await app.request.post('/api/admin/features').send({
         name: feature1Name,
         type: 'killswitch',
@@ -637,8 +637,8 @@ test('Can get features tagged by tag', async () => {
 });
 test('Can query for multiple tags using OR', async () => {
     expect.assertions(3);
-    const feature1Name = faker.helpers.slugify(faker.lorem.words(3));
-    const feature2Name = faker.helpers.slugify(faker.lorem.words(3));
+    const feature1Name = faker.datatype.uuid();
+    const feature2Name = faker.datatype.uuid();
     await app.request.post('/api/admin/features').send({
         name: feature1Name,
         type: 'killswitch',
@@ -678,8 +678,8 @@ test('Can query for multiple tags using OR', async () => {
         });
 });
 test('Querying with multiple filters ANDs the filters', async () => {
-    const feature1Name = `test.${faker.helpers.slugify(faker.hacker.phrase())}`;
-    const feature2Name = faker.helpers.slugify(faker.lorem.words());
+    const feature1Name = `test.${faker.datatype.uuid()}`;
+    const feature2Name = faker.datatype.uuid();
 
     await app.request.post('/api/admin/features').send({
         name: feature1Name,
@@ -729,7 +729,7 @@ test('Querying with multiple filters ANDs the filters', async () => {
 });
 
 test('Tagging a feature with a tag it already has should return 409', async () => {
-    const feature1Name = `test.${faker.helpers.slugify(faker.lorem.words(3))}`;
+    const feature1Name = `test.${faker.datatype.uuid()}`;
     await app.request.post('/api/admin/features').send({
         name: feature1Name,
         type: 'killswitch',

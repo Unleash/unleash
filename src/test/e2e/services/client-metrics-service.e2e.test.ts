@@ -43,7 +43,7 @@ test('Apps registered should be announced', async () => {
         color: faker.internet.color(),
     };
     const differentClient = {
-        appName: faker.lorem.slug(2),
+        appName: faker.datatype.uuid(),
         instanceId: faker.datatype.uuid(),
         strategies: ['default'],
         started: Date.now(),

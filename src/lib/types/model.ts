@@ -188,7 +188,7 @@ export interface ITag {
     type: string;
 }
 
-export interface IParameterDefinition {
+export interface IAddonParameterDefinition {
     name: string;
     displayName: string;
     type: string;
@@ -203,7 +203,7 @@ export interface IAddonDefinition {
     displayName: string;
     documentationUrl: string;
     description: string;
-    parameters?: IParameterDefinition[];
+    parameters?: IAddonParameterDefinition[];
     events?: string[];
     tagTypes?: ITagType[];
 }

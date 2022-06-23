@@ -1,24 +1,12 @@
 import { FromSchema } from 'json-schema-to-ts';
 
-export const strategySchema = {
-    $id: '#/components/schemas/strategySchema',
+export const upsertStrategySchema = {
+    $id: '#/components/schemas/upsertStrategySchema',
     type: 'object',
-    additionalProperties: false,
-    required: [
-        'name',
-        'displayName',
-        'description',
-        'editable',
-        'deprecated',
-        'parameters',
-    ],
+    required: ['name'],
     properties: {
         name: {
             type: 'string',
-        },
-        displayName: {
-            type: 'string',
-            nullable: true,
         },
         description: {
             type: 'string',
@@ -26,14 +14,10 @@ export const strategySchema = {
         editable: {
             type: 'boolean',
         },
-        deprecated: {
-            type: 'boolean',
-        },
         parameters: {
             type: 'array',
             items: {
                 type: 'object',
-                additionalProperties: false,
                 properties: {
                     name: {
                         type: 'string',
@@ -54,4 +38,4 @@ export const strategySchema = {
     components: {},
 } as const;
 
-export type StrategySchema = FromSchema<typeof strategySchema>;
+export type UpsertStrategySchema = FromSchema<typeof upsertStrategySchema>;

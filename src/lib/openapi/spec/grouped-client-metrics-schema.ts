@@ -4,7 +4,7 @@ export const groupedClientMetricsSchema = {
     $id: '#/components/schemas/groupedClientMetricsSchema',
     type: 'object',
     additionalProperties: false,
-    required: ['featureName', 'appName'],
+    required: ['environment', 'timestamp', 'yes', 'no'],
     properties: {
         environment: {
             type: 'string',

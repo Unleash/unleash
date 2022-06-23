@@ -206,6 +206,7 @@ test('should return toggle summary', async () => {
 
     const { body: demo } = await app.request
         .get('/api/admin/client-metrics/features/demo')
+        .expect((res) => console.log(res.body))
         .expect('Content-Type', /json/)
         .expect(200);
 

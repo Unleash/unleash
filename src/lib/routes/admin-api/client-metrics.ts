@@ -37,6 +37,7 @@ class ClientMetricsController extends Controller {
         this.logger = config.getLogger('/admin-api/client-metrics.ts');
 
         this.metrics = clientMetricsServiceV2;
+        this.openApiService = openApiService;
 
         this.route({
             method: 'get',

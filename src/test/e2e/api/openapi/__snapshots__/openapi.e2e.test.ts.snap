@@ -958,8 +958,10 @@ Object {
           },
         },
         "required": Array [
-          "featureName",
-          "appName",
+          "environment",
+          "timestamp",
+          "yes",
+          "no",
         ],
         "type": "object",
       },

@@ -1,0 +1,110 @@
+---
+title: Proxy hosting strategies
+---
+
+Because the [Unleash proxy](../sdks/unleash-proxy.md) is a separate piece of the Unleash architecture and because it should sit close to your application, there are numerous ways of hosting it. Another important distinction is whether you're hosting Unleash yourself or you have a managed solution.
+
+This document describes the three main ways of hosting the proxy alongside the Unleash API and the tradeoffs between hosting the proxy yourself and having Unleash host it for you.
+
+## Unleash-hosted proxy vs self-hosted proxy {#unleash-hosted-or-self-hosted}
+
+Which way is right for you will depend on your setup and your needs. In general, we recommend that you host the proxy yourself, but we do recognize that self-hosting requires some extra work on your part and that not all our customers need it.
+
+If you want Unleash to host the proxy for you, you should be aware of the following limitations:
+
+-   This is only available to Pro and Enterprise customers who have signed up for a managed Unleash instance.
+-   You'll get a total of two (2) proxies: One for the "development" environment and one for the "production" environment.
+-   The proxies _will not_ scale, regardless of how many requests you're getting.
+-   If you go above an average of 10 requests per second, then you'll be charged extra. (Is this pricing available anywhere?)
+-   There's no guarantee that it'll be close to your applications. This means you'll get higher response times.
+-   When we host the proxy, we will also receive whatever end user data you put in the [Unleash context](../user_guide/unleash-context.md). This may or may not be an issue depending on your business requirements.
+
+Hosting the proxy yourself requires a little more setup on your part than the Unleash-hosted proxy does, but it offers a number of benefits:
+
+-   You can scale the proxy horizontally and automatically.
+-   There's no request cap or extra charges.
+-   You can host as many proxies as you want for as many different environments as you want.
+-   You can arrange for the proxy to be close to your applications, minimizing response times.
+-   You have full control of all your user data. None of the data that the proxy receives is ever sent to the Unleash API. This keeps _your_ data in _your_ hands.
+-   You can easily add more proxies in different regions, as described in the [multi-region](#multi-region) section.
+
+## Unleash hosts everything
+
+:::info Availability
+
+This setup is only available to Pro and Enterprise customers.
+
+:::
+
+![An architecture diagram of using the proxy in a setup where Unleash hosts both the API and the proxy.](/img/proxy-hosting-all-unleash.svg)
+
+When Unleash hosts the proxy, it'll run alongside the Unleash API and the admin UI within Unleash's Kubernetes setup in AWS. The API is backed by an Amazon RDS database. Your applications can connect to the proxy from your own cloud or other hosting solution. You'll need to configure your proxy SDKs with the following details:
+
+-   One of the [proxy's client keys](../reference/api-tokens-and-client-keys.mdx#proxy-client-keys). Unleash will provide you with the actual keys.
+-   The proxy's endpoint. This will be the your Unleash instance's URL followed by "/api/proxy/development" or "/api/proxy/production" (depending on which environment you want to use).
+
+This is the simplest, but also most limited (by far) way to host the proxy. In this setup, Unleash hosts both the Unleash API and the Unleash proxy. With Unleash hosting the proxy, you'll only need to worry about the client keys and the URL the proxy is hosted at.
+
+While this is easy to get started with, it comes with the limitations described in the [section on tradeoffs between self-hosted and Unleash-hosted setups](#unleash-hosted-or-self-hosted).
+
+## Unleash hosts the API, you host the proxy
+
+:::info Availability
+
+This setup is only available to Pro and Enterprise customers.
+
+:::
+
+![An architecture diagram of using the proxy in a setup where Unleash hosts the API and you host the proxy.](/img/proxy-hosting-unleash-api-customer-proxy.svg)
+
+You host the proxy yourself. It runs in a standalone container alongside your other applications in your cloud or hosting setup. Unleash manages the Unleash API, the admin UI, and the backing database in our AWS setup: the API and the UI run together in a Kubernetes deployment and connect to an Amazon RDS database.
+
+You'll need to configure the proxy and the proxy client SDKs.
+
+For the proxy, configure:
+
+-   The Unleash API url. This is your Unleash instance URL followed by "/api".
+-   A [client API token](../reference/api-tokens-and-client-keys.mdx#client-tokens). (Refer to [how to create API tokens](../user_guide/token.md) for the steps to create one.)
+-   One or more [proxy client keys](../reference/api-tokens-and-client-keys.mdx#proxy-client-keys). Refer to the [configuration section of the proxy document](../sdks/unleash-proxy#configuration) for more details.
+
+For the proxy client SDK, configure:
+
+-   One of the proxy client keys that you configured for the proxy.
+-   The proxy's endpoint. This will depend on where and how you're hosting the proxy, but will typically end in "/proxy"
+
+This setup requires a little more setup on your part than the Unleash-hosted proxy does, but it offers all the benefits described in the [section on tradeoffs between self-hosted and Unleash-hosted setups](#unleash-hosted-or-self-hosted).
+
+## You host everything
+
+:::info Availability
+
+This setup is only available open-source and Enterprise customers.
+
+:::
+
+![An architecture diagram of using the proxy in a single-region, self-hosted setup.](/img/proxy-hosting-customer-single.svg)
+
+You host everything yourself. Everything runs where and how you configure it to.
+
+You'll need to configure the proxy and the proxy client SDKs.
+
+For the proxy, configure:
+
+-   The Unleash API url. This is your Unleash instance URL followed by "/api".
+-   A [client API token](../reference/api-tokens-and-client-keys.mdx#client-tokens). (Refer to [how to create API tokens](../user_guide/token.md) for the steps to create one.)
+-   One or more [proxy client keys](../reference/api-tokens-and-client-keys.mdx#proxy-client-keys). Refer to the [configuration section of the proxy document](../sdks/unleash-proxy#configuration) for more details.
+
+For the proxy client SDK, configure:
+
+-   One of the proxy client keys that you configured for the proxy.
+-   The proxy's endpoint. This will depend on where and how you're hosting the proxy, but will typically end in "/proxy"
+
+As you might expect, doing everything yourself _is_ going to give you the most flexibility, but it's also going to be the most work. If you're already hosting Unleash yourself, though, this shouldn't be any more difficult than the previous section.
+
+As described in the [section on tradeoffs between self-hosted and Unleash-hosted setups](#unleash-hosted-or-self-hosted), running the proxy yourself gives you a number of benefits.
+
+## Multi-region
+
+![An architecture diagram of using the proxy in a multi-region, self-hosted setup.](/img/proxy-hosting-customer-multi.svg)
+
+You can also use the proxy for a multi-region setup. You can run a proxy in a different region to the API and still connect to the API. Because the proxy runs closer to your applications it still provides you benefits in terms of quicker response times. Everything should be configured as described in the [you host everything section](#you-host-everything) or the [Unleash hosts the API, you host the proxy section](#unleash-hosts-the-api-you-host-the-proxy). You can add as many extra proxies in as many extra regions as you want.

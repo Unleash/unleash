@@ -1,0 +1,7 @@
+*
+!src
+!package.json
+!docker
+!yarn.lock
+!scripts
+!tsconfig.json

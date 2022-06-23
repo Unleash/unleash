@@ -52,7 +52,6 @@ Congratulations! The whole Unleash community thanks you. :sparkles:
 
 Once your PR is merged, you will be proudly listed as a contributor in the [contributor chart](https://github.com/unleash/Unleash/graphs/contributors).
 
-
 ## How to run the project
 
 Install the required prerequisites and then follow the steps below.
@@ -60,22 +59,23 @@ Install the required prerequisites and then follow the steps below.
 ### Prerequisites
 
 You'll need:
-   - [Docker](https://www.docker.com/) to run the database
-   - [Node.js](https://nodejs.org/en/) to run the project. You can install it directly, or use `nvm` (see the next point) to manage it for you.
-   - [nvm](https://github.com/nvm-sh/nvm) (optional) to manage your Node.js installation.
-   - [Yarn](https://yarnpkg.com/) (optional but recommended; the steps below assume that you have it installed) to install packages and run the project.
 
-### Steps
+- [Docker](https://www.docker.com/) to run the database
+- [Node.js](https://nodejs.org/en/) to run the project. You can install it directly, or use `nvm` (see the next point) to manage it for you.
+- [nvm](https://github.com/nvm-sh/nvm) (optional) to manage your Node.js installation.
+- [Yarn](https://yarnpkg.com/) (optional but recommended; the steps below assume that you have it installed) to install packages and run the project.
+
+### Steps running directly with node
 
 1. Use `nvm` to **install the correct version of Node.js**. From anywhere in the repo, run the below command. Skip this step if you're managing your Node.js installations yourself.
 
-   ``` bash
+   ```bash
    nvm use
    ```
 
 2. **Install packages**:
 
-   ``` bash
+   ```bash
    yarn
    ```
 
@@ -94,7 +94,7 @@ You'll need:
        postgres
    ```
 
-     The **connection details** that Unleash will try to use are found in **`src/server-dev.ts`**. The above command works with the current defaults (at the time of writing).
+   The **connection details** that Unleash will try to use are found in **`src/server-dev.ts`**. The above command works with the current defaults (at the time of writing).
 
    - If you've set up the database previously, you can restart the container by running this (assuming `postgres` is the name you gave the container):
 
@@ -103,9 +103,36 @@ You'll need:
    ```
 
 4. **Start the server.** Run the below command and the server will start up and try to connect to the database. On a successful connection it will also configure the database for Unleash.
-   ``` bash
+
+   ```bash
    yarn start:dev
    ```
+
+5. **Log into the admin UI**. Use a browser and navigate to `localhost:4242`. Log in using:
+   - username: `admin`
+   - password: `unleash4all`
+
+### Steps running locally with docker
+
+1. Build local docker image by running `docker build . -t unleash:local`
+2. Create a network by running `docker network create unleash`
+3. Start a postgres database:
+
+```sh
+docker run -e POSTGRES_PASSWORD=some_password \
+  -e POSTGRES_USER=unleash_user -e POSTGRES_DB=unleash \
+  --network unleash --name postgres postgres
+```
+
+4. Start Unleash via docker:
+
+```sh
+docker run -p 4242:4242 \
+  -e DATABASE_HOST=postgres -e DATABASE_NAME=unleash \
+  -e DATABASE_USERNAME=unleash_user -e DATABASE_PASSWORD=some_password \
+  -e DATABASE_SSL=false \
+  --network unleash unleash:local
+```
 
 5. **Log into the admin UI**. Use a browser and navigate to `localhost:4242`. Log in using:
    - username: `admin`
@@ -117,12 +144,7 @@ Have any issues when getting set up?
 
 #### Can't connect to the database
 
-If you can't connect to the docker container, check its status by running `docker ps`.
-This command lists the currently running containers.
-Find the name of the container that you set up.
-If it's there, make sure that its port is mapped to your local machine:
-It should look this: `0.0.0.0:5432->5432/tcp` with the arrow (`->`) connector.
-If it just says `5432/tcp`, it is _not_ exposed to your local network.
+If you can't connect to the docker container, check its status by running `docker ps`. This command lists the currently running containers. Find the name of the container that you set up. If it's there, make sure that its port is mapped to your local machine: It should look this: `0.0.0.0:5432->5432/tcp` with the arrow (`->`) connector. If it just says `5432/tcp`, it is _not_ exposed to your local network.
 
 To fix this, start a new container and make sure you give it the `-p 5432:5432` option.
 
@@ -133,12 +155,14 @@ To fix this, start a new container and make sure you give it the `-p 5432:5432` 
 In order to handle HTTP requests we have an abstraction called [Controller](https://github.com/Unleash/unleash/blob/master/src/lib/routes/controller.ts). If you want to introduce a new route handler for a specific path (and sub pats) you should implement a controller class which extends the base Controller. An example to follow is the [routes/admin-api/feature.ts](https://github.com/Unleash/unleash/blob/master/src/lib/routes/admin-api/feature.ts) implementation.
 
 The controller takes care of the following:
+
 - try/catch RequestHandler method
 - error handling with proper response code if they fail
 - `await` the RequestHandler method if it returns a promise (so you don't have to)
 - access control so that you can just list the required permission for a RequestHandler and the base Controller will make sure the user have these permissions.
 
 ## Creating a release
+
 In order to produce a release you will need to be a Unleash core team member and have the Unleash admin role assigned on the Unleash organization on GitHub.
 
 ### Step 1: create a new version tag
@@ -151,10 +175,10 @@ npm version 3.10.0
 
 This command will trigger an internal verification step where we will perform the following steps:
 
-- *STEP 1. Check unleash-frontend version* - Validate that a latest release of unleash-server does not depend on a pre-release of unleash-frontend (beta, alpha, etc)
-- *STEP 2. Lint* - Run lint checks on the code.
-- *STEP 3. Build* - Validate that we are able to build the project
-- *STEP 4. Test* - Validate that all test runs green.
+- _STEP 1. Check unleash-frontend version_ - Validate that a latest release of unleash-server does not depend on a pre-release of unleash-frontend (beta, alpha, etc)
+- _STEP 2. Lint_ - Run lint checks on the code.
+- _STEP 3. Build_ - Validate that we are able to build the project
+- _STEP 4. Test_ - Validate that all test runs green.
 
 If all steps completes a single commit is produced on the main branch where the `version` property in package.json is updated, and a git tag is created to point to that tag specifically.
 

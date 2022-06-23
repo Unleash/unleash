@@ -1,0 +1,41 @@
+{
+  "name": "unleash-docker",
+  "description": "Docker images for unleash.",
+  "main": "index.js",
+  "scripts": {
+    "start": "NODE_ENV=production node index.js",
+    "test:ci": "echo 'no tests for unleash-docker'"
+  },
+  "engines": {
+    "node": ">=14"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@exlinc/keycloak-passport": "^1.0.2",
+    "@passport-next/passport": "^3.1.0",
+    "@passport-next/passport-google-oauth2": "^1.0.0",
+    "basic-auth": "^2.0.1",
+    "passport": "^0.5.2",
+    "unleash-server": "file:./../"
+  },
+  "resolutions": {
+    "async": "^3.2.3",
+    "db-migrate/rc/minimist": "^1.2.5",
+    "knex/liftoff/object.map/**/kind-of": "^6.0.3",
+    "knex/liftoff/findup-sync/micromatc/kind-of": "^6.0.3",
+    "knex/liftoff/findup-sync/micromatc/nanomatch/kind-of": "^6.0.3",
+    "knex/liftoff/findup-sync/micromatch/define-property/**/kind-of": "^6.0.3",
+    "set-value": "^4.0.1",
+    "ansi-regex": "^5.0.1",
+    "ssh2": "^1.4.0",
+    "json-schema": "^0.4.0"
+  },
+  "overrides": {
+    "set-value": "^4.0.1",
+    "ansi-regex": "^5.0.1",
+    "ssh2": "^1.4.0",
+    "json-schema": "^0.4.0"
+  },
+  "version": "4.12.6"
+}

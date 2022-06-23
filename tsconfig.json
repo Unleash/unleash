@@ -63,12 +63,11 @@
     "skipLibCheck": true /* Skip type checking of declaration files. */,
     "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */
   },
-  "types": [
-    "src/types/openapi.d.ts"
-  ],
+  "types": ["src/types/openapi.d.ts"],
   "exclude": [
     "bin",
     "docs",
+    "docker",
     "examples",
     "migrations",
     "node_modules",

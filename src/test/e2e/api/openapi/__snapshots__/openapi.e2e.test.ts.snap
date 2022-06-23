@@ -2380,11 +2380,11 @@ Object {
             "content": Object {
               "application/json": Object {
                 "schema": Object {
-                  "$ref": "#/components/schemas/toggleMetricsSummarySchema",
+                  "$ref": "#/components/schemas/featureUsageSchema",
                 },
               },
             },
-            "description": "toggleMetricsSummarySchema",
+            "description": "featureUsageSchema",
           },
         },
         "tags": Array [

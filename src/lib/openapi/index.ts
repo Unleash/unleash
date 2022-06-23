@@ -170,20 +170,10 @@ export interface JsonSchemaProps {
     components: object;
 }
 
-interface ApiOperation<Tag = 'client' | 'admin' | 'other'>
+export interface ApiOperation<Tag = 'admin' | 'client' | 'auth' | 'other'>
     extends Omit<OpenAPIV3.OperationObject, 'tags'> {
     operationId: string;
     tags: [Tag];
-}
-
-export type AdminApiOperation = ApiOperation<'admin'>;
-export type ClientApiOperation = ApiOperation<'client'>;
-export type OtherApiOperation = ApiOperation<'other'>;
-
-export interface AuthApiOperation
-    extends Omit<OpenAPIV3.OperationObject, 'tags'> {
-    operationId: string;
-    tags: ['auth'];
 }
 
 export const createRequestSchema = (

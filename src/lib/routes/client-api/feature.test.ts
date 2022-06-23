@@ -71,8 +71,9 @@ test('if caching is enabled should memoize', async () => {
     const getClientFeatures = jest.fn().mockReturnValue([]);
     const getActive = jest.fn().mockReturnValue([]);
     const respondWithValidation = jest.fn().mockReturnValue({});
+    const validPath = jest.fn().mockReturnValue({});
     const clientSpecService = new ClientSpecService({ getLogger });
-    const openApiService = { respondWithValidation };
+    const openApiService = { respondWithValidation, validPath };
     const featureToggleServiceV2 = { getClientFeatures };
     const segmentService = { getActive };
 
@@ -104,10 +105,11 @@ test('if caching is not enabled all calls goes to service', async () => {
     const getClientFeatures = jest.fn().mockReturnValue([]);
     const getActive = jest.fn().mockReturnValue([]);
     const respondWithValidation = jest.fn().mockReturnValue({});
+    const validPath = jest.fn().mockReturnValue({});
     const clientSpecService = new ClientSpecService({ getLogger });
     const featureToggleServiceV2 = { getClientFeatures };
     const segmentService = { getActive };
-    const openApiService = { respondWithValidation };
+    const openApiService = { respondWithValidation, validPath };
 
     const controller = new FeatureController(
         {

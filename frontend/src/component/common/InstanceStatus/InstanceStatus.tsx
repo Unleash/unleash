@@ -27,6 +27,15 @@ const TrialDialog: VFC<ITrialDialogProps> = ({
     const expired = trialHasExpired(instanceStatus);
     const [dialogOpen, setDialogOpen] = useState(expired);
 
+    const onClose = (event: React.SyntheticEvent, muiCloseReason?: string) => {
+        if (!muiCloseReason) {
+            setDialogOpen(false);
+            if (canExtendTrial(instanceStatus)) {
+                onExtendTrial().catch(console.error);
+            }
+        }
+    };
+
     useEffect(() => {
         setDialogOpen(expired);
         const interval = setInterval(() => {
@@ -49,15 +58,7 @@ const TrialDialog: VFC<ITrialDialogProps> = ({
                     navigate('/admin/billing');
                     setDialogOpen(false);
                 }}
-                onClose={(_: any, reason?: string) => {
-                    if (
-                        reason !== 'backdropClick' &&
-                        reason !== 'escapeKeyDown'
-                    ) {
-                        onExtendTrial();
-                        setDialogOpen(false);
-                    }
-                }}
+                onClose={onClose}
                 title={`Your free ${instanceStatus.plan} trial has expired!`}
             >
                 <Typography>

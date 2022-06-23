@@ -29,6 +29,7 @@
     "start": "vite",
     "start:heroku": "UNLEASH_API=https://unleash.herokuapp.com yarn run start",
     "start:enterprise": "UNLEASH_API=https://unleash4.herokuapp.com yarn run start",
+    "start:demo": "UNLEASH_BASE_PATH=/demo/ yarn start",
     "test": "vitest",
     "prepare": "yarn run build",
     "fmt": "prettier src --write --loglevel warn",

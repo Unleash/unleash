@@ -119,7 +119,7 @@ unleash.start(unleashOptions);
   - _gracefulShutdownTimeout_: (number) - Used to control the timeout, in milliseconds, for shutdown Unleash gracefully. Will kill all connections regardless if this timeout is exceeded. Defaults to 1000ms `GRACEFUL_SHUTDOWN_TIMEOUT`
 - **session** - The session config object takes the following options:
   - _ttlHours_ (number) - The number of hours a user session is allowed to live before a new sign-in is required. Defaults to 48 hours. `SESSION_TTL_HOURS`
-  - _clearSiteDataOnLogout_ (`SESSION_CLEAR_SITE_DATA_ON_LOGOUT`) If true a logout action will return a Clear Site Data response header instructing the browser to clear all cookies on the same domain Unleash is running on. If disabled unleash will only destroy and clear the session cookie. Defaults to _true_.
+  - _clearSiteDataOnLogout_ (boolean) - When `true`, a logout action will return a Clear Site Data response header instructing the browser to clear all cookies on the same domain Unleash is running on. If disabled unleash will only destroy and clear the session cookie. Defaults to _true_. `SESSION_CLEAR_SITE_DATA_ON_LOGOUT`
   - _cookieName_ - Name of the cookies used to hold the session id. Defaults to 'unleash-session'.
 - **ui** (object) - Set of UI specific overrides. You may set the following keys: `environment`, `slogan`.
 - **versionCheck** - the object deciding where to check for latest version

@@ -9,6 +9,7 @@ import { createApiTokenSchema } from './spec/create-api-token-schema';
 import { createFeatureSchema } from './spec/create-feature-schema';
 import { createUserSchema } from './spec/create-user-schema';
 import { createFeatureStrategySchema } from './spec/create-feature-strategy-schema';
+import { clientFeaturesSchema } from './spec/client-features-schema';
 import { environmentSchema } from './spec/environment-schema';
 import { environmentsSchema } from './spec/environments-schema';
 import { featureEnvironmentSchema } from './spec/feature-environment-schema';
@@ -79,6 +80,7 @@ import { emailSchema } from './spec/email-schema';
 import { strategySchema } from './spec/strategy-schema';
 import { strategiesSchema } from './spec/strategies-schema';
 import { upsertStrategySchema } from './spec/upsert-strategy-schema';
+import { clientFeaturesQuerySchema } from './spec/client-features-query-schema';
 
 // All schemas in `openapi/spec` should be listed here.
 export const schemas = {
@@ -91,6 +93,8 @@ export const schemas = {
     applicationSchema,
     applicationsSchema,
     cloneFeatureSchema,
+    clientFeaturesSchema,
+    clientFeaturesQuerySchema,
     changePasswordSchema,
     constraintSchema,
     contextFieldSchema,

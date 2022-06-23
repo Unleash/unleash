@@ -309,6 +309,64 @@ Object {
         ],
         "type": "object",
       },
+      "clientFeaturesQuerySchema": Object {
+        "properties": Object {
+          "environment": Object {
+            "type": "string",
+          },
+          "inlineSegmentConstraints": Object {
+            "type": "boolean",
+          },
+          "namePrefix": Object {
+            "type": "string",
+          },
+          "project": Object {
+            "items": Object {
+              "type": "string",
+            },
+            "type": "array",
+          },
+          "tag": Object {
+            "items": Object {
+              "items": Object {
+                "type": "string",
+              },
+              "type": "array",
+            },
+            "type": "array",
+          },
+        },
+        "required": Array [],
+        "type": "object",
+      },
+      "clientFeaturesSchema": Object {
+        "properties": Object {
+          "features": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/featureSchema",
+            },
+            "type": "array",
+          },
+          "query": Object {
+            "$ref": "#/components/schemas/clientFeaturesQuerySchema",
+          },
+          "segments": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/segmentSchema",
+            },
+            "type": "array",
+          },
+          "version": Object {
+            "type": "number",
+          },
+        },
+        "required": Array [
+          "version",
+          "features",
+          "query",
+        ],
+        "type": "object",
+      },
       "cloneFeatureSchema": Object {
         "properties": Object {
           "name": Object {
@@ -4899,6 +4957,56 @@ Object {
         },
         "tags": Array [
           "admin",
+        ],
+      },
+    },
+    "/api/client/features": Object {
+      "get": Object {
+        "operationId": "getFeatures",
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/clientFeaturesSchema",
+                },
+              },
+            },
+            "description": "clientFeaturesSchema",
+          },
+        },
+        "tags": Array [
+          "client",
+        ],
+      },
+    },
+    "/api/client/features/{featureName}": Object {
+      "get": Object {
+        "operationId": "getFeatures",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "featureName",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/featureSchema",
+                },
+              },
+            },
+            "description": "featureSchema",
+          },
+        },
+        "tags": Array [
+          "client",
         ],
       },
     },

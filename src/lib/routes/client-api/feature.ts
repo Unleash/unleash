@@ -1,8 +1,7 @@
 import memoizee from 'memoizee';
 import { Response } from 'express';
 import Controller from '../controller';
-import { IUnleashServices } from '../../types/services';
-import { IUnleashConfig } from '../../types/option';
+import { IUnleashConfig, IUnleashServices } from '../../types';
 import FeatureToggleService from '../../services/feature-toggle-service';
 import { Logger } from '../../logger';
 import { querySchema } from '../../schema/feature-schema';
@@ -14,6 +13,15 @@ import { ALL, isAllProjects } from '../../types/models/api-token';
 import { SegmentService } from '../../services/segment-service';
 import { FeatureConfigurationClient } from '../../types/stores/feature-strategies-store';
 import { ClientSpecService } from '../../services/client-spec-service';
+import { OpenApiService } from '../../services/openapi-service';
+import { NONE } from '../../types/permissions';
+import { createResponseSchema } from '../../openapi';
+import { ClientFeaturesSchema } from '../../openapi/spec/client-features-schema';
+import { ClientFeaturesQuerySchema } from '../../openapi/spec/client-features-query-schema';
+import {
+    featureSchema,
+    FeatureSchema,
+} from '../../openapi/spec/feature-schema';
 
 const version = 2;
 
@@ -31,6 +39,8 @@ export default class FeatureController extends Controller {
 
     private clientSpecService: ClientSpecService;
 
+    private openApiService: OpenApiService;
+
     private readonly cache: boolean;
 
     private cachedFeatures: any;
@@ -40,9 +50,13 @@ export default class FeatureController extends Controller {
             featureToggleServiceV2,
             segmentService,
             clientSpecService,
+            openApiService,
         }: Pick<
             IUnleashServices,
-            'featureToggleServiceV2' | 'segmentService' | 'clientSpecService'
+            | 'featureToggleServiceV2'
+            | 'segmentService'
+            | 'clientSpecService'
+            | 'openApiService'
         >,
         config: IUnleashConfig,
     ) {
@@ -51,10 +65,40 @@ export default class FeatureController extends Controller {
         this.featureToggleServiceV2 = featureToggleServiceV2;
         this.segmentService = segmentService;
         this.clientSpecService = clientSpecService;
+        this.openApiService = openApiService;
         this.logger = config.getLogger('client-api/feature.js');
 
-        this.get('/', this.getAll);
-        this.get('/:featureName', this.getFeatureToggle);
+        this.route({
+            method: 'get',
+            path: '/:featureName',
+            handler: this.getFeatureToggle,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    operationId: 'getFeatures',
+                    tags: ['client'],
+                    responses: {
+                        200: createResponseSchema('featureSchema'),
+                    },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'get',
+            path: '',
+            handler: this.getAll,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    operationId: 'getFeatures',
+                    tags: ['client'],
+                    responses: {
+                        200: createResponseSchema('clientFeaturesSchema'),
+                    },
+                }),
+            ],
+        });
 
         if (clientFeatureCaching?.enabled) {
             this.cache = true;
@@ -148,7 +192,10 @@ export default class FeatureController extends Controller {
         return query;
     }
 
-    async getAll(req: IAuthRequest, res: Response): Promise<void> {
+    async getAll(
+        req: IAuthRequest,
+        res: Response<ClientFeaturesSchema>,
+    ): Promise<void> {
         const query = await this.resolveQuery(req);
 
         const [features, segments] = this.cache
@@ -156,13 +203,37 @@ export default class FeatureController extends Controller {
             : await this.resolveFeaturesAndSegments(query);
 
         if (this.clientSpecService.requestSupportsSpec(req, 'segments')) {
-            res.json({ version, features, query, segments });
+            this.openApiService.respondWithValidation(
+                200,
+                res,
+                featureSchema.$id,
+                { version, features, query: { ...query }, segments },
+            );
         } else {
-            res.json({ version, features, query });
+            this.openApiService.respondWithValidation(
+                200,
+                res,
+                featureSchema.$id,
+                { version, features, query: { ...query } },
+            );
         }
     }
 
-    async getFeatureToggle(req: IAuthRequest, res: Response): Promise<void> {
+    async getFeatureToggle(
+        req: IAuthRequest<{ featureName: string }, ClientFeaturesQuerySchema>,
+        res: Response<
+            Omit<
+                FeatureSchema,
+                | 'description'
+                | 'archived'
+                | 'project'
+                | 'impressionData'
+                | 'createdAt'
+                | 'lastSeenAt'
+                | 'environments'
+            >
+        >,
+    ): Promise<void> {
         const name = req.params.featureName;
         const featureQuery = await this.resolveQuery(req);
         const q = { ...featureQuery, namePrefix: name };
@@ -172,6 +243,11 @@ export default class FeatureController extends Controller {
         if (!toggle) {
             throw new NotFoundError(`Could not find feature toggle ${name}`);
         }
-        res.json(toggle).end();
+        this.openApiService.respondWithValidation(200, res, featureSchema.$id, {
+            ...toggle,
+            strategies: toggle.strategies.map((s) => {
+                return { id: s.id || '', ...s };
+            }),
+        });
     }
 }

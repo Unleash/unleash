@@ -2,9 +2,7 @@ import openapi, { IExpressOpenApi } from '@unleash/express-openapi';
 import { Express, RequestHandler, Response } from 'express';
 import { IUnleashConfig } from '../types/option';
 import {
-    AdminApiOperation,
-    ClientApiOperation,
-    OtherApiOperation,
+    ApiOperation,
     createOpenApiSchema,
     JsonSchemaProps,
     removeJsonSchemaProps,
@@ -31,9 +29,7 @@ export class OpenApiService {
         );
     }
 
-    validPath(
-        op: AdminApiOperation | ClientApiOperation | OtherApiOperation,
-    ): RequestHandler {
+    validPath(op: ApiOperation): RequestHandler {
         return this.api.validPath(op);
     }
 

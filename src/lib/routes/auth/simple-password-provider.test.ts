@@ -1,18 +1,24 @@
 import request from 'supertest';
 import express from 'express';
 import User from '../../types/user';
-import PasswordProvider from './simple-password-provider';
+import { SimplePasswordProvider } from './simple-password-provider';
 import PasswordMismatchError from '../../error/password-mismatch';
-import getLogger from '../../../test/fixtures/no-logger';
+import { createTestConfig } from '../../../test/config/test-config';
+import { OpenApiService } from '../../services/openapi-service';
 
 test('Should require password', async () => {
+    const config = createTestConfig();
+    const openApiService = new OpenApiService(config);
     const app = express();
     app.use(express.json());
     const userService = () => {};
-    // @ts-ignore
-    const ctr = new PasswordProvider({ getLogger }, { userService });
 
-    //@ts-ignore
+    const ctr = new SimplePasswordProvider(config, {
+        // @ts-expect-error
+        userService,
+        openApiService,
+    });
+
     app.use('/auth/simple', ctr.router);
 
     const res = await request(app)
@@ -23,6 +29,8 @@ test('Should require password', async () => {
 });
 
 test('Should login user', async () => {
+    const config = createTestConfig();
+    const openApiService = new OpenApiService(config);
     const username = 'ola';
     const password = 'simplepass';
     const user = new User({ id: 123, username });
@@ -30,10 +38,11 @@ test('Should login user', async () => {
     const app = express();
     app.use(express.json());
     app.use((req, res, next) => {
-        //@ts-ignore
+        // @ts-expect-error
         req.session = {};
         next();
     });
+
     const userService = {
         loginUser: (u, p) => {
             if (u === username && p === password) {
@@ -42,10 +51,13 @@ test('Should login user', async () => {
             throw new Error('Wrong password');
         },
     };
-    // @ts-ignore
-    const ctr = new PasswordProvider({ getLogger }, { userService });
 
-    //@ts-ignore
+    const ctr = new SimplePasswordProvider(config, {
+        // @ts-expect-error
+        userService,
+        openApiService,
+    });
+
     app.use('/auth/simple', ctr.router);
 
     const res = await request(app)
@@ -57,6 +69,8 @@ test('Should login user', async () => {
 });
 
 test('Should not login user with wrong password', async () => {
+    const config = createTestConfig();
+    const openApiService = new OpenApiService(config);
     const username = 'ola';
     const password = 'simplepass';
     const user = new User({ id: 133, username });
@@ -64,10 +78,11 @@ test('Should not login user with wrong password', async () => {
     const app = express();
     app.use(express.json());
     app.use((req, res, next) => {
-        //@ts-ignore
+        // @ts-expect-error
         req.session = {};
         next();
     });
+
     const userService = {
         loginUser: (u, p) => {
             if (u === username && p === password) {
@@ -76,10 +91,13 @@ test('Should not login user with wrong password', async () => {
             throw new PasswordMismatchError();
         },
     };
-    // @ts-ignore
-    const ctr = new PasswordProvider({ getLogger }, { userService });
 
-    //@ts-ignore
+    const ctr = new SimplePasswordProvider(config, {
+        // @ts-expect-error
+        userService,
+        openApiService,
+    });
+
     app.use('/auth/simple', ctr.router);
 
     const res = await request(app)

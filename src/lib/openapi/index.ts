@@ -23,6 +23,7 @@ import { healthCheckSchema } from './spec/health-check-schema';
 import { healthOverviewSchema } from './spec/health-overview-schema';
 import { healthReportSchema } from './spec/health-report-schema';
 import { legalValueSchema } from './spec/legal-value-schema';
+import { loginSchema } from './spec/login-schema';
 import { idSchema } from './spec/id-schema';
 import { mapValues } from '../util/map-values';
 import { nameSchema } from './spec/name-schema';
@@ -116,6 +117,7 @@ export const schemas = {
     healthOverviewSchema,
     healthReportSchema,
     legalValueSchema,
+    loginSchema,
     nameSchema,
     idSchema,
     meSchema,
@@ -172,15 +174,11 @@ export interface JsonSchemaProps {
     components: object;
 }
 
-interface ApiOperation<Tag = 'client' | 'admin' | 'other'>
+export interface ApiOperation<Tag = 'admin' | 'client' | 'auth' | 'other'>
     extends Omit<OpenAPIV3.OperationObject, 'tags'> {
     operationId: string;
     tags: [Tag];
 }
-
-export type AdminApiOperation = ApiOperation<'admin'>;
-export type ClientApiOperation = ApiOperation<'client'>;
-export type OtherApiOperation = ApiOperation<'other'>;
 
 export const createRequestSchema = (
     schemaName: string,

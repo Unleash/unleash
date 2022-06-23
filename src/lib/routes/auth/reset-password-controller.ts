@@ -55,7 +55,7 @@ class ResetPasswordController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['other'],
+                    tags: ['auth'],
                     operationId: 'validateToken',
                     responses: { 200: createResponseSchema('tokenUserSchema') },
                 }),

@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`clientApplicationSchema no fields 1`] = `
+Object {
+  "errors": Array [
+    Object {
+      "instancePath": "",
+      "keyword": "required",
+      "message": "must have required property 'appName'",
+      "params": Object {
+        "missingProperty": "appName",
+      },
+      "schemaPath": "#/required",
+    },
+  ],
+  "schema": "#/components/schemas/clientApplicationSchema",
+}
+`;

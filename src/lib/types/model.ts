@@ -280,7 +280,7 @@ export interface IClientApp {
     strategies?: string[] | Record<string, string>[];
     bucket?: any;
     count?: number;
-    started?: number | Date;
+    started?: string | number | Date;
     interval?: number;
     icon?: string;
     description?: string;

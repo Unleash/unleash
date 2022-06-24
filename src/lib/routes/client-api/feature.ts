@@ -18,9 +18,13 @@ import { NONE } from '../../types/permissions';
 import { createResponseSchema } from '../../openapi';
 import { ClientFeaturesQuerySchema } from '../../openapi/spec/client-features-query-schema';
 import {
-    featureSchema,
-    FeatureSchema,
-} from '../../openapi/spec/feature-schema';
+    clientFeatureSchema,
+    ClientFeatureSchema,
+} from '../../openapi/spec/client-feature-schema';
+import {
+    clientFeaturesSchema,
+    ClientFeaturesSchema,
+} from '../../openapi/spec/client-features-schema';
 
 const version = 2;
 
@@ -74,7 +78,7 @@ export default class FeatureController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    operationId: 'getFeature',
+                    operationId: 'getClientFeature',
                     tags: ['client'],
                     responses: {
                         200: createResponseSchema('featureSchema'),
@@ -90,7 +94,7 @@ export default class FeatureController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    operationId: 'getFeatures',
+                    operationId: 'getAllClientFeatures',
                     tags: ['client'],
                     responses: {
                         200: createResponseSchema('clientFeaturesSchema'),
@@ -191,7 +195,10 @@ export default class FeatureController extends Controller {
         return query;
     }
 
-    async getAll(req: IAuthRequest, res: Response): Promise<void> {
+    async getAll(
+        req: IAuthRequest,
+        res: Response<ClientFeaturesSchema>,
+    ): Promise<void> {
         const query = await this.resolveQuery(req);
 
         const [features, segments] = this.cache
@@ -202,14 +209,14 @@ export default class FeatureController extends Controller {
             this.openApiService.respondWithValidation(
                 200,
                 res,
-                featureSchema.$id,
+                clientFeaturesSchema.$id,
                 { version, features, query: { ...query }, segments },
             );
         } else {
             this.openApiService.respondWithValidation(
                 200,
                 res,
-                featureSchema.$id,
+                clientFeaturesSchema.$id,
                 { version, features, query: { ...query } },
             );
         }
@@ -217,18 +224,7 @@ export default class FeatureController extends Controller {
 
     async getFeatureToggle(
         req: IAuthRequest<{ featureName: string }, ClientFeaturesQuerySchema>,
-        res: Response<
-            Omit<
-                FeatureSchema,
-                | 'description'
-                | 'archived'
-                | 'project'
-                | 'impressionData'
-                | 'createdAt'
-                | 'lastSeenAt'
-                | 'environments'
-            >
-        >,
+        res: Response<ClientFeatureSchema>,
     ): Promise<void> {
         const name = req.params.featureName;
         const featureQuery = await this.resolveQuery(req);
@@ -239,11 +235,16 @@ export default class FeatureController extends Controller {
         if (!toggle) {
             throw new NotFoundError(`Could not find feature toggle ${name}`);
         }
-        this.openApiService.respondWithValidation(200, res, featureSchema.$id, {
-            ...toggle,
-            strategies: toggle.strategies.map((s) => {
-                return { id: s.id || '', ...s };
-            }),
-        });
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            clientFeatureSchema.$id,
+            {
+                ...toggle,
+                strategies: toggle.strategies.map((s) => {
+                    return { id: s.id || '', ...s };
+                }),
+            },
+        );
     }
 }

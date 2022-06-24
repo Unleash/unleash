@@ -309,6 +309,36 @@ Object {
         ],
         "type": "object",
       },
+      "clientFeatureSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "name": Object {
+            "type": "string",
+          },
+          "stale": Object {
+            "type": "boolean",
+          },
+          "strategies": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/featureStrategySchema",
+            },
+            "type": "array",
+          },
+          "type": Object {
+            "type": "string",
+          },
+          "variants": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/variantSchema",
+            },
+            "type": "array",
+          },
+        },
+        "required": Array [
+          "name",
+        ],
+        "type": "object",
+      },
       "clientFeaturesQuerySchema": Object {
         "properties": Object {
           "environment": Object {
@@ -4962,7 +4992,7 @@ Object {
     },
     "/api/client/features": Object {
       "get": Object {
-        "operationId": "getFeatures",
+        "operationId": "getAllClientFeatures",
         "responses": Object {
           "200": Object {
             "content": Object {
@@ -4982,7 +5012,7 @@ Object {
     },
     "/api/client/features/{featureName}": Object {
       "get": Object {
-        "operationId": "getFeature",
+        "operationId": "getClientFeature",
         "parameters": Array [
           Object {
             "in": "path",

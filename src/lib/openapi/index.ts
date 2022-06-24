@@ -81,6 +81,7 @@ import { strategySchema } from './spec/strategy-schema';
 import { strategiesSchema } from './spec/strategies-schema';
 import { upsertStrategySchema } from './spec/upsert-strategy-schema';
 import { clientFeaturesQuerySchema } from './spec/client-features-query-schema';
+import { clientFeatureSchema } from './spec/client-feature-schema';
 
 // All schemas in `openapi/spec` should be listed here.
 export const schemas = {
@@ -93,6 +94,7 @@ export const schemas = {
     applicationSchema,
     applicationsSchema,
     cloneFeatureSchema,
+    clientFeatureSchema,
     clientFeaturesSchema,
     clientFeaturesQuerySchema,
     changePasswordSchema,

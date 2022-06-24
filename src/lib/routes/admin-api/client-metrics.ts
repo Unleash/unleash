@@ -17,6 +17,14 @@ import {
     FeatureMetricsSchema,
 } from '../../openapi/spec/feature-metrics-schema';
 
+interface IName {
+    name: string;
+}
+
+interface IHoursBack {
+    hoursBack: number;
+}
+
 class ClientMetricsController extends Controller {
     private logger: Logger;
 
@@ -48,7 +56,7 @@ class ClientMetricsController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    operationId: 'getRawToggleMetrics',
+                    operationId: 'getRawFeatureMetrics',
                     tags: ['admin'],
                     responses: {
                         200: createResponseSchema('featureMetricsSchema'),
@@ -64,7 +72,7 @@ class ClientMetricsController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    operationId: 'getToggleMetricsSummary',
+                    operationId: 'getFeatureUsageSummary',
                     tags: ['admin'],
                     responses: {
                         200: createResponseSchema('featureUsageSchema'),
@@ -75,7 +83,7 @@ class ClientMetricsController extends Controller {
     }
 
     async getRawToggleMetrics(
-        req: Request<any, { name: string }, { hoursBack: number }, any>,
+        req: Request<any, IName, IHoursBack, any>,
         res: Response<FeatureMetricsSchema>,
     ): Promise<void> {
         const { name } = req.params;
@@ -93,7 +101,7 @@ class ClientMetricsController extends Controller {
     }
 
     async getToggleMetricsSummary(
-        req: Request<{ name: string }>,
+        req: Request<IName>,
         res: Response<FeatureUsageSchema>,
     ): Promise<void> {
         const { name } = req.params;

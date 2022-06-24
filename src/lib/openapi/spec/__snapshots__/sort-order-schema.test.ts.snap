@@ -2,9 +2,6 @@
 
 exports[`sortOrderSchema invalid value type 1`] = `
 Object {
-  "data": Object {
-    "a": "1",
-  },
   "errors": Array [
     Object {
       "instancePath": "/a",

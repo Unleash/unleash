@@ -13,6 +13,7 @@ test('featureSchema', () => {
                         operator: 'IN',
                     },
                 ],
+                segments: [1],
             },
         ],
         variants: [

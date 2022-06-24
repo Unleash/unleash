@@ -41,6 +41,12 @@ export const featureStrategySchema = {
         sortOrder: {
             type: 'number',
         },
+        segments: {
+            type: 'array',
+            items: {
+                type: 'number',
+            },
+        },
         constraints: {
             type: 'array',
             items: {

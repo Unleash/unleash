@@ -17,6 +17,12 @@ export const strategySchema = {
         sortOrder: {
             type: 'number',
         },
+        segments: {
+            type: 'array',
+            items: {
+                type: 'number',
+            },
+        },
         constraints: {
             type: 'array',
             items: {

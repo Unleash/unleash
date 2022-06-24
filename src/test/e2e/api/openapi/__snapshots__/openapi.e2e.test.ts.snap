@@ -748,6 +748,12 @@ Object {
           "parameters": Object {
             "$ref": "#/components/schemas/parametersSchema",
           },
+          "segments": Object {
+            "items": Object {
+              "type": "number",
+            },
+            "type": "array",
+          },
           "sortOrder": Object {
             "type": "number",
           },

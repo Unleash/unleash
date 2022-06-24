@@ -2,7 +2,6 @@
 
 exports[`meSchema empty 1`] = `
 Object {
-  "data": Object {},
   "errors": Array [
     Object {
       "instancePath": "",
@@ -20,11 +19,6 @@ Object {
 
 exports[`meSchema missing permissions 1`] = `
 Object {
-  "data": Object {
-    "user": Object {
-      "id": 1,
-    },
-  },
   "errors": Array [
     Object {
       "instancePath": "",
@@ -42,13 +36,6 @@ Object {
 
 exports[`meSchema missing splash 1`] = `
 Object {
-  "data": Object {
-    "feedback": Array [],
-    "permissions": Array [],
-    "user": Object {
-      "id": 1,
-    },
-  },
   "errors": Array [
     Object {
       "instancePath": "",

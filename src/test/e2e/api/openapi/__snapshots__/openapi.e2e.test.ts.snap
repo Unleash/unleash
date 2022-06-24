@@ -2364,7 +2364,7 @@ Object {
     },
     "/api/admin/client-metrics/features/{name}": Object {
       "get": Object {
-        "operationId": "getToggleMetricsSummary",
+        "operationId": "getFeatureUsageSummary",
         "parameters": Array [
           Object {
             "in": "path",
@@ -2394,7 +2394,7 @@ Object {
     },
     "/api/admin/client-metrics/features/{name}/raw": Object {
       "get": Object {
-        "operationId": "getRawToggleMetrics",
+        "operationId": "getRawFeatureMetrics",
         "parameters": Array [
           Object {
             "in": "path",

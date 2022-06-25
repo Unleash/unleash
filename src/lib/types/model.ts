@@ -47,13 +47,13 @@ export interface FeatureToggleDTO {
     archived?: boolean;
     createdAt?: Date;
     impressionData?: boolean;
+    variants?: IVariant[];
 }
 
 export interface FeatureToggle extends FeatureToggleDTO {
     project: string;
     lastSeenAt?: Date;
     createdAt?: Date;
-    variants?: IVariant[];
 }
 
 export interface IFeatureToggleClient {

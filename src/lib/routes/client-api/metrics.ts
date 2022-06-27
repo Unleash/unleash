@@ -1,7 +1,6 @@
 import { Response } from 'express';
 import Controller from '../controller';
-import { IUnleashServices } from '../../types';
-import { IUnleashConfig } from '../../types/option';
+import { IUnleashConfig, IUnleashServices } from '../../types';
 import ClientInstanceService from '../../services/client-metrics/instance-service';
 import { Logger } from '../../logger';
 import { IAuthRequest } from '../unleash-types';
@@ -11,11 +10,15 @@ import ClientMetricsServiceV2 from '../../services/client-metrics/metrics-servic
 import { User } from '../../server-impl';
 import { IClientApp } from '../../types/model';
 import { NONE } from '../../types/permissions';
+import { OpenApiService } from '../../services/openapi-service';
+import { createRequestSchema, createResponseSchema } from '../../openapi';
 
 export default class ClientMetricsController extends Controller {
     logger: Logger;
 
     clientInstanceService: ClientInstanceService;
+
+    openApiService: OpenApiService;
 
     metricsV2: ClientMetricsServiceV2;
 
@@ -23,9 +26,12 @@ export default class ClientMetricsController extends Controller {
         {
             clientInstanceService,
             clientMetricsServiceV2,
+            openApiService,
         }: Pick<
             IUnleashServices,
-            'clientInstanceService' | 'clientMetricsServiceV2'
+            | 'clientInstanceService'
+            | 'clientMetricsServiceV2'
+            | 'openApiService'
         >,
         config: IUnleashConfig,
     ) {
@@ -34,7 +40,26 @@ export default class ClientMetricsController extends Controller {
 
         this.logger = getLogger('/api/client/metrics');
         this.clientInstanceService = clientInstanceService;
+        this.openApiService = openApiService;
         this.metricsV2 = clientMetricsServiceV2;
+
+        this.route({
+            method: 'post',
+            path: '',
+            acceptAnyContentType: true,
+            handler: this.registerMetrics,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['client'],
+                    operationId: 'registerMetrics',
+                    requestBody: createRequestSchema('clientApplicationSchema'),
+                    responses: {
+                        202: createResponseSchema('emptyResponse'),
+                    },
+                }),
+            ],
+        });
 
         this.post('/', this.registerMetrics, NONE);
     }

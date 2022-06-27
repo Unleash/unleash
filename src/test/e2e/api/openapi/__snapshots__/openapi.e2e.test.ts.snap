@@ -5099,6 +5099,37 @@ Object {
         ],
       },
     },
+    "/api/client/metrics": Object {
+      "post": Object {
+        "operationId": "registerMetrics",
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/clientApplicationSchema",
+              },
+            },
+          },
+          "description": "clientApplicationSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "202": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/emptyResponse",
+                },
+              },
+            },
+            "description": "emptyResponse",
+          },
+        },
+        "tags": Array [
+          "client",
+        ],
+      },
+    },
     "/api/client/register": Object {
       "post": Object {
         "operationId": "registerClientApplication",

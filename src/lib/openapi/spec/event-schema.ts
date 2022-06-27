@@ -35,7 +35,7 @@ export const eventSchema = {
         tags: {
             type: 'array',
             items: {
-                $ref: '#/components/schemas/tagSchema',
+                $ref: tagSchema.$id,
             },
         },
     },

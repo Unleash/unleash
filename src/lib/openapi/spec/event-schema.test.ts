@@ -19,7 +19,7 @@ test('eventSchema', () => {
             impressionData: true,
         },
         preData: null,
-        tags: [],
+        tags: [{ type: 'simple', value: 'my-val' }],
         featureName: 'new-feature',
         project: 'my-project',
         environment: null,

@@ -13,7 +13,7 @@ export const eventsSchema = {
         },
         events: {
             type: 'array',
-            items: { $ref: '#/components/schemas/eventSchema' },
+            items: { $ref: eventSchema.$id },
         },
     },
     components: {

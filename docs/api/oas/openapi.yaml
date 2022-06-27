@@ -1,0 +1,1671 @@
+# TESTING
+# QA team test cases. Test code exists but were these based on a list of steps required to produce a result?
+# Are there any real-world users of Unleash who are happy to read and test the Open API specification and make suggestions for improvement? Would they be happy to screen-record what they are doing (how they use the API will give invaluable insights)?
+# Ideally, you'd want developers using Java, Node.js, Go, Ruby, Python and .Net to test
+# Could there be a simple sample app that implemented all API calls (using realistic scenarios)? Might just be a consolidated version of the tests/e2e code with some triggers (buttons) and some UI to display outcomes.
+# OAS REVIEW
+# Move responses to root responses section in components (from schema section)
+# Issues with rendering as nested externaldocs from Swagger UI. See GET /admin/feature-types. Not an issue in other tools (see redoc.html)
+# Other candidates for $ref: createdAt, lastSeen/updatedAt, instanceId, appName/appNamePath, sdkVersion, feature toggle type titles, enabled, stale, weight
+# STYLE
+# Add style guide MD. UK/US = US, Newspaper/Movie, Plurals. &. What 's the closest match for Unleash? http://apistylebook.com/design/guidelines/
+# OAS styler - Only use backticks for code samples and API paths. Use bold for schema items and italic for schema item settings
+
+openapi: 3.0.3
+servers:
+  - description: Local host
+    url: 'http://localhost:4242/api'
+  - description: Unleash open source demo
+    url: 'http://unleash.herokuapp.com/api'
+#  - description: Windows server
+#    url: 'http://192.168.178.108:4242/api'
+tags:
+  - name: Feature toggles
+    description: Accessing feature toggles
+  - name: Archive
+    description: Handling Feature Toggle archiving and un-archiving
+  - name: Events
+    description: Identifying events on the Unleash server
+  - name: Feature types
+    description: Details of the five Unleash Feature Toggle types
+  - name: Import and export
+    description: Importing and exporting feature toggles and strategies
+  - name: Metrics
+    description: Determining usage of feature toggles and applications
+  - name: Strategies
+    description: Accessing and updating strategies
+  - name: Client
+    description: Client application aspects of the Unleash API
+info:
+  title: Unleash API
+  description: |-
+
+    > The Open API specifications are currently considered a **"beta feature"** and will not cover the full Unleash Admin API. 
+    > You can follow the progress on making OAS official in [GitHub issue 1391](https://github.com/Unleash/unleash/issues/1391)
+
+    Unleash is an open source feature flag and toggle system for all your applications and services.
+
+    # Try it out
+
+    ## Try it in your browser
+
+    Once you have [set your Unleash server up](https://docs.getunleash.io/deploy/getting_started), you can test the API from inside your browser. The following assumes the server is running on localhost:4242.
+
+    The following 'endpoints' (such as `GET /admin/metrics/applications`) provide reference documentation for the Unleash REST API. To try out API calls:
+    1. Navigate to an endpoint
+    2. Click **Try it out** - in the right-hand (black) panel
+    3. Customize the **Request body** and/or **Parameters**.
+    4. Click **Execute**.
+
+    You will see the cURL request submitted to the API server and the corresponding response.
+
+    ## Try it in Postman
+
+    Alternatively, you can test the API in [Postman](https://app.getpostman.com/run-collection/8552ddcd4cc9fc012548)
+
+    [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/8552ddcd4cc9fc012548)
+  version: 4.0.13
+  contact:
+    name: The Unleash team
+    url: 'https://docs.getunleash.io'
+externalDocs:
+  description: Unleash documentation
+  url: 'https://unleash.github.io/docs/getting_started'
+paths:
+  /client/register:
+    post:
+      summary: Registers a client instance with the Unleash server.
+      description: You can retrieve this data with a `GET /admin/metrics/applications/{appName}` API call.
+      operationId: clientRegister
+      externalDocs:
+        description: Client specification
+        url: 'https://unleash.github.io/docs/client_specification'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/clientRegistrationSchema'
+      tags:
+        - Client
+      responses:
+        '202':
+          description: Successful response - client has been registered
+        '400':
+          description: 'Bad body request (for example, appName is not correct)'
+        '401':
+          $ref: '#/components/responses/notAuthorizedResponse'
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request POST \
+              --url http://localhost:4242/api/client/register \
+              --data '{"appName":"my-application","instanceId":"generated-732038-17080","sdkVersion":"unleash-client-node:3.4.0","strategies":[{"strategy":"default"}],"started":"2016-11-03T07:16:43.572Z","interval":10000}'
+  /client/metrics:
+    post:
+      summary: Register a metrics *bucket*.
+      description: A *bucket* is a set of metrics data that tells you how often a Feature Toggle was enabled or disabled during a specified period of time
+      operationId: sendMetrics
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/metricsPayloadSchema'
+      tags:
+        - Client
+        - Metrics
+      responses:
+        '202':
+          description: Successful response - payload has been accepted
+        '400':
+          description: 'Bad body request (for example, appName is not correct)'
+        '401':
+          $ref: '#/components/responses/notAuthorizedResponse'
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request POST \
+              --url http://localhost:4242/api/client/metrics \
+              --data '{"appName":"my-application","instanceId":"generated-732038-17080","bucket":{"start":"2020-12-08T13:50:00.000Z","stop":"2020-12-08T13:55:00.000Z","toggles":{"yesno":{"yesorno":"yes"},"metricsCount":{"count":1}}}}'
+  /client/features:
+    # Would normally $ref here but it tangles with an OAS bug - which affects both Redoc and Swagger UI - https://github.com/swagger-api/swagger-ui/issues/6249 (closed issue but still broken in latest release)
+    get:
+      summary: Fetches all feature toggles from the Unleash server.
+      description: |-
+        The response returns all active feature toggles and their current strategy configuration:
+        - Feature toggles will have *at least* one strategy
+        - Strategies have a `name` and `parameters` map.
+      operationId: getClientFeatures
+      externalDocs:
+        description: Activation strategies
+        url: 'https://unleash.github.io/docs/activation_strategy'
+      tags:
+        - Client
+        - Feature toggles
+      responses:
+        '200':
+          $ref: '#/components/responses/clientResponse'
+        '401':
+          $ref: '#/components/responses/notAuthorizedResponse'
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request GET \
+              --url http://localhost:4242/api/client/features
+  '/client/features/{featureName}':
+    get:
+      summary: Fetches a specific Feature Toggle from the Unleash server.
+      description: |
+        The response returns the Feature Toggle's current strategy configuration:
+        - It will have *at least* one configured strategy.
+        - A strategy will have a *name* and *parameters* map.
+        **This is mainly provided to help debug the API. Do not use for client implementations.**
+      externalDocs:
+        description: Activation strategies
+        url: 'https://unleash.github.io/docs/activation_strategy'
+      operationId: getClientFeature
+      parameters:
+        - $ref: '#/components/parameters/featureNamePath'
+      tags:
+        - Client
+        - Feature toggles
+      responses:
+        '200':
+          $ref: '#/components/responses/successResponse'
+        '401':
+          $ref: '#/components/responses/notAuthorizedResponse'
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request GET \
+              --url http://localhost:4242/api/client/features/featureName
+  /admin/features:
+    get:
+      summary: Fetches all feature toggles from the Unleash server.
+      description: |
+        The response returns all active feature toggles and their current strategy configuration:
+        - A feature toggle will have *at least* one configured strategy.
+        - A strategy will have a `name` and `parameters` map.
+      externalDocs:
+        description: Activation strategies
+        url: 'https://unleash.github.io/docs/activation_strategy'
+      operationId: getFeatures
+      tags:
+        - Feature toggles
+      responses:
+        '200':
+          $ref: '#/components/responses/successResponse'
+        '401':
+          $ref: '#/components/responses/notAuthorizedResponse'
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request GET \
+              --url http://localhost:4242/api/admin/features
+    post:
+      summary: Create a Feature Toggle
+      description: Create a new Feature Toggle
+      tags:
+        - Feature toggles
+      operationId: createFeatureToggle
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/featureToggleSchema'
+      responses:
+        '201':
+          description: Feature Toggle successfully created
+        '400':
+          description: 'Bad body request (for example, Feature Toggle name is not unique)'
+        '401':
+          $ref: '#/components/responses/notAuthorizedResponse'
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request POST \
+              --url http://localhost:4242/api/admin/features \
+              --data '{"name":"featureX","description":"Toggles featureX on and off","type":"release","enabled":true,"stale":false,"strategies":[{"name":"default","editable":true,"description":"Default on/off strategy.","parameters":{"parameter":{"name":"groupId","type":"string","description":"Define activation groups to allow you to correlate across feature toggles.","required":false}}}],"variants":[{"name":"yellow","weight":20}],"createdAt":"string"}'
+  '/admin/features/{featureName}':
+    get:
+      summary: Fetches a specific Feature Toggle from the Unleash server.
+      description: |
+        The response returns the Feature Toggle's current strategy configuration:
+        - It will have *at least* one configured strategy.
+        - A strategy will have a *name* and *parameters* map.
+      externalDocs:
+        description: Activation strategies
+        url: 'https://unleash.github.io/docs/activation_strategy'
+      operationId: getFeature
+      parameters:
+        - $ref: '#/components/parameters/featureNamePath'
+      tags:
+        - Feature toggles
+      responses:
+        '200':
+          $ref: '#/components/responses/successResponse'
+        '401':
+          $ref: '#/components/responses/notAuthorizedResponse'
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request GET \
+              --url http://localhost:4242/api/admin/features/featureName
+    put:
+      summary: Update a Feature Toggle
+      description: Update a Feature Toggle.
+      operationId: featureName
+      tags:
+        - Feature toggles
+      parameters:
+        - $ref: '#/components/parameters/featureNamePath'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/featureToggleSchema'
+      responses:
+        '200':
+          $ref: '#/components/responses/successResponse'
+        '401':
+          $ref: '#/components/responses/notAuthorizedResponse'
+        '400':
+          description: Bad body request (for example 'strategies' is not an array)
+        '404':
+          description: Feature Toggle not found
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request PUT \
+              --url http://localhost:4242/api/admin/features/featureName \
+              --data '[{"name":"featureX","description":"Toggles featureX on and off","type":"release","enabled":true,"stale":false,"strategies":[{"name":"default","editable":true,"description":"Default on/off strategy.","parameters":{"parameter":{"name":"groupId","type":"string","description":"Define activation groups to allow you to correlate across feature toggles.","required":false}}}],"variants":[{"name":"yellow","weight":20}],"createdAt":"string"}]'
+        - lang: 'Go'
+          source: |
+            package main
+            import (
+              "fmt"
+              "strings"
+              "net/http"
+              "io/ioutil"
+            )
+            func main() {
+              url := "http://localhost:4242/api/admin/features/featureName"
+              payload := strings.NewReader("[{\"name\":\"featureX\",\"description\":\"Toggles featureX on and off\",\"type\":\"release\",\"enabled\":true,\"stale\":false,\"strategies\":[{\"name\":\"default\",\"editable\":true,\"description\":\"Default on/off strategy.\",\"parameters\":{\"parameter\":{\"name\":\"groupId\",\"type\":\"string\",\"description\":\"Define activation groups to allow you to correlate across feature toggles.\",\"required\":false}}}],\"variants\":[{\"name\":\"yellow\",\"weight\":20}],\"createdAt\":\"string\"}]")
+              req, _ := http.NewRequest("PUT", url, payload)
+              res, _ := http.DefaultClient.Do(req)
+              defer res.Body.Close()
+              body, _ := ioutil.ReadAll(res.Body)
+              fmt.Println(res)
+              fmt.Println(string(body))
+            }
+        - lang: 'Java'
+          source: |
+            AsyncHttpClient client = new DefaultAsyncHttpClient();
+            client.prepare("PUT", "http://localhost:4242/api/admin/features/featureName")
+              .setBody("[{\"name\":\"featureX\",\"description\":\"Toggles featureX on and off\",\"type\":\"release\",\"enabled\":true,\"stale\":false,\"strategies\":[{\"name\":\"default\",\"editable\":true,\"description\":\"Default on/off strategy.\",\"parameters\":{\"parameter\":{\"name\":\"groupId\",\"type\":\"string\",\"description\":\"Define activation groups to allow you to correlate across feature toggles.\",\"required\":false}}}],\"variants\":[{\"name\":\"yellow\",\"weight\":20}],\"createdAt\":\"string\"}]")
+              .execute()
+              .toCompletableFuture()
+              .thenAccept(System.out::println)
+              .join();
+            client.close();
+        - lang: 'Python'
+          source: |
+            import requests
+            url = "http://localhost:4242/api/admin/features/featureName"
+            payload = "[{\"name\":\"featureX\",\"description\":\"Toggles featureX on and off\",\"type\":\"release\",\"enabled\":true,\"stale\":false,\"strategies\":[{\"name\":\"default\",\"editable\":true,\"description\":\"Default on/off strategy.\",\"parameters\":{\"parameter\":{\"name\":\"groupId\",\"type\":\"string\",\"description\":\"Define activation groups to allow you to correlate across feature toggles.\",\"required\":false}}}],\"variants\":[{\"name\":\"yellow\",\"weight\":20}],\"createdAt\":\"string\"}]"
+            response = requests.request("PUT", url, data=payload)
+            print(response.text)
+        - lang: 'Ruby'
+          source: |
+            require 'uri'
+            require 'net/http'
+            url = URI("http://localhost:4242/api/admin/features/featureName")
+            http = Net::HTTP.new(url.host, url.port)
+            request = Net::HTTP::Put.new(url)
+            request.body = "[{\"name\":\"featureX\",\"description\":\"Toggles featureX on and off\",\"type\":\"release\",\"enabled\":true,\"stale\":false,\"strategies\":[{\"name\":\"default\",\"editable\":true,\"description\":\"Default on/off strategy.\",\"parameters\":{\"parameter\":{\"name\":\"groupId\",\"type\":\"string\",\"description\":\"Define activation groups to allow you to correlate across feature toggles.\",\"required\":false}}}],\"variants\":[{\"name\":\"yellow\",\"weight\":20}],\"createdAt\":\"string\"}]"
+            response = http.request(request)
+            puts response.read_body
+        - lang: 'JavaScript'
+          source: |
+            fetch("http://localhost:4242/api/admin/features/featureName", {
+              "method": "PUT",
+              "headers": {},
+              "body": "[{\"name\":\"featureX\",\"description\":\"Toggles featureX on and off\",\"type\":\"release\",\"enabled\":true,\"stale\":false,\"strategies\":[{\"name\":\"default\",\"editable\":true,\"description\":\"Default on/off strategy.\",\"parameters\":{\"parameter\":{\"name\":\"groupId\",\"type\":\"string\",\"description\":\"Define activation groups to allow you to correlate across feature toggles.\",\"required\":false}}}],\"variants\":[{\"name\":\"yellow\",\"weight\":20}],\"createdAt\":\"string\"}]"
+            })
+            .then(response => {
+              console.log(response);
+            })
+            .catch(err => {
+              console.error(err);
+            });
+    delete:
+      summary: Archive a Feature Toggle.
+      description: |
+        Feature toggles can only be archived - they cannot be deleted.
+
+        If an old Feature Toggle *re-appears*, this is because someone else has created a new one with the same name.
+      operationId: archiveFeatureToggle
+      tags:
+        - Feature toggles
+        - Archive
+      parameters:
+        - $ref: '#/components/parameters/featureNamePath'
+      responses:
+        '200':
+          description: Feature Toggle successfully archived
+        '401':
+          $ref: '#/components/responses/notAuthorizedResponse'
+        '404':
+          description: Feature Toggle not found
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request DELETE \
+              --url http://localhost:4242/api/admin/features/featureName
+  '/admin/features/{featureName}/toggle/on':
+    post:
+      summary: Enable a Feature Toggle.
+      description: '**featureName** must match an existing Feature Toggle.'
+      operationId: enableFeatureToggle
+      tags:
+        - Feature toggles
+      parameters:
+        - $ref: '#/components/parameters/featureNamePath'
+      responses:
+        '200':
+          $ref: '#/components/responses/successResponse'
+        '401':
+          $ref: '#/components/responses/notAuthorizedResponse'
+        '404':
+          description: Feature Toggle not found
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request POST \
+              --url http://localhost:4242/api/admin/features/featureName/toggle/on
+  '/admin/features/{featureName}/toggle/off':
+    post:
+      summary: Disable a Feature Toggle.
+      description: '**featureName** must match an existing Feature Toggle.'
+      operationId: disableFeatureToggle
+      tags:
+        - Feature toggles
+      parameters:
+        - $ref: '#/components/parameters/featureNamePath'
+      responses:
+        '200':
+          $ref: '#/components/responses/successResponse'
+        '401':
+          $ref: '#/components/responses/notAuthorizedResponse'
+        '404':
+          description: Feature Toggle not found
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request POST \
+            --url http://localhost:4242/api/admin/features/featureName/toggle/off
+  '/admin/features/{featureName}/stale/on':
+    post:
+      summary: Mark a Feature Toggle as 'stale' (deprecated).
+      description: '**featureName** must match an existing Feature Toggle.'
+      externalDocs:
+        description: Feature Toggle types
+        url: 'https://unleash.github.io/docs/feature_toggle_types'
+      operationId: markFeatureToggleStale
+      tags:
+        - Feature toggles
+      parameters:
+        - $ref: '#/components/parameters/featureNamePath'
+      responses:
+        '200':
+          $ref: '#/components/responses/successResponse'
+        '401':
+          $ref: '#/components/responses/notAuthorizedResponse'
+        '404':
+          description: Feature Toggle not found
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request POST \
+            --url http://localhost:4242/api/admin/features/featureName/stale/on
+  '/admin/features/{featureName}/stale/off':
+    post:
+      summary: Mark a Feature Toggle as active.
+      description: '**featureName** must match an existing Feature Toggle.'
+      externalDocs:
+        description: Feature Toggle types
+        url: 'https://unleash.github.io/docs/feature_toggle_types'
+      operationId: markFeatureToggleActive
+      tags:
+        - Feature toggles
+      parameters:
+        - $ref: '#/components/parameters/featureNamePath'
+      responses:
+        '200':
+          $ref: '#/components/responses/successResponse'
+        '401':
+          $ref: '#/components/responses/notAuthorizedResponse'
+        '404':
+          description: Feature Toggle not found
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request POST \
+              --url http://localhost:4242/api/admin/features/featureName/stale/off
+  /admin/archive/features:
+    get:
+      summary: List all the archived feature toggles on the Unleash server
+      description: Archived feature toggles are those that have been previously deleted
+      operationId: fetchArchivedToggles
+      tags:
+        - Archive
+      responses:
+        '200':
+          $ref: '#/components/responses/successResponse'
+        '401':
+          $ref: '#/components/responses/notAuthorizedResponse'
+        '404':
+          description: Feature Toggle not found
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request GET \
+             --url http://localhost:4242/api/admin/archive/features
+  '/admin/archive/revive/{featureName}':
+    post:
+      summary: Un-archive a Feature Toggle
+      description: Restore a Feature Toggle that has been previously deleted
+      operationId: reviveFeatureToggle
+      tags:
+        - Archive
+      parameters:
+        - $ref: '#/components/parameters/featureNamePath'
+      responses:
+        '200':
+          description: Feature Toggle successfully revived
+        '404':
+          description: Feature Toggle not found
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request POST \
+              --url http://localhost:4242/api/admin/archive/revive/featureName
+  /admin/strategies:
+    get:
+      summary: Fetch all strategies and their parameters.
+      description: Fetch all strategies and their parameters.
+      operationId: getStrategies
+      tags:
+        - Strategies
+      responses:
+        '200':
+          $ref: '#/components/responses/strategyExistsResponse'
+        '401':
+          $ref: '#/components/responses/notAuthorizedResponse'
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request GET \
+              --url http://localhost:4242/api/admin/strategies
+    post:
+      summary: Create Strategy
+      description: Create Strategy
+      operationId: createStrategy
+      tags:
+        - Strategies
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createStrategy'
+      responses:
+        '201':
+          description: Strategy successfully added
+        '400':
+          description: Bad body request (for example 'strategies' is not an array)
+        '401':
+          $ref: '#/components/responses/notAuthorizedResponse'
+        '409':
+          $ref: '#/components/responses/strategyExistsResponse'
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request POST \
+              --url http://localhost:4242/api/admin/strategies \
+              --data '{"name":"gradualRollout","description":"Gradual rollout to logged in users","parameters":[{"name":"percentage","type":"percentage","description":"What percent of users should the new Feature Toggle be active for?","required":true}]}'
+  '/admin/strategies/{strategyName}':
+    put:
+      summary: Update Strategy
+      description: |
+        Use to update a Strategy definition.
+
+        **name** and **strategyName** must match and must also match an existing Strategy name.
+
+        **Caution: It can be dangerous to change a Strategy (as the implementation also might need to be changed).**
+      operationId: updateStrategy
+      tags:
+        - Strategies
+      parameters:
+        - $ref: '#/components/parameters/strategyNamePath'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createStrategy'
+      responses:
+        '200':
+          description: Strategy successfully updated.
+        '401':
+          $ref: '#/components/responses/notAuthorizedResponse'
+        '404':
+          description: Strategy not updated due to errors in query and/or request body (such as **name** and **strategyName** not matching).
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request PUT \
+              --url http://localhost:4242/api/admin/strategies/strategyName \
+              --data '{"name":"gradualRollout","description":"Gradual rollout to logged in users","parameters":[{"name":"percentage","type":"percentage","description":"What percent of users should the new Feature Toggle be active for?","required":true}]}'
+  /admin/metrics/seen-toggles:
+    get:
+      summary: Returns a list of applications and the feature toggles that Unleash has 'seen' for each application.
+      description: 'It is only guaranteed that feature toggles reported by client applications within the last hour will be returned. However, in most cases, earlier reported feature toggles will also be returned.'
+      operationId: seenToggles
+      tags:
+        - Metrics
+      responses:
+        '200':
+          $ref: '#/components/responses/seenTogglesResponse'
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request GET \
+              --url http://localhost:4242/api/admin/metrics/seen-toggles
+  /admin/metrics/feature-toggles:
+    get:
+      summary: Gives 'last minute' and 'last hour' metrics for all active feature toggles (based on what was reported by the client applications).
+      description: |-
+        - **Yes** is the number of times a given feature toggle was enabled in a client applucation
+        - **No** is the number of times it was disabled.
+      operationId: featureToggles
+      tags:
+        - Metrics
+      responses:
+        '200':
+          $ref: '#/components/responses/featureAccessResponse'
+        '401':
+          $ref: '#/components/responses/notAuthorizedResponse'
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request GET \
+              --url http://localhost:4242/api/admin/metrics/feature-toggles
+  /admin/metrics/applications:
+    get:
+      summary: A list of known applications ('seen' by Unleash in the last two days)
+      description: Also has a link for more details.
+      operationId: getApplications
+      tags:
+        - Metrics
+      responses:
+        '200':
+          $ref: '#/components/responses/applicationsResponse'
+        '401':
+          $ref: '#/components/responses/notAuthorizedResponse'
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request GET \
+              --url http://localhost:4242/api/admin/metrics/applications
+  '/admin/metrics/applications/{appName}':
+    get:
+      summary: Details about a client application.
+      description: 'Details include things such as instances, strategies implemented and seen feature toggles.'
+      operationId: getApplicationDetails
+      tags:
+        - Metrics
+      parameters:
+        - $ref: '#/components/parameters/appNamePath'
+      responses:
+        '200':
+          $ref: '#/components/responses/appDetailsResponse'
+        '401':
+          $ref: '#/components/responses/notAuthorizedResponse'
+        '500':
+          description: Application name not found
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request GET \
+              --url http://localhost:4242/api/admin/metrics/applications/appName
+  /admin/metrics/seen-apps:
+    get:
+      summary: Details about seen applications
+      description: (per Feature Toggle)
+      operationId: seenApps
+      tags:
+        - Metrics
+      responses:
+        '200':
+          $ref: '#/components/responses/applicationsResponse'
+        '401':
+          $ref: '#/components/responses/notAuthorizedResponse'
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request GET \
+              --url http://localhost:4242/api/admin/metrics/seen-apps
+  /admin/events:
+    get:
+      operationId: get-admin-events
+      summary: Fetch all changes in the Unleash system
+      description: |-
+        Returns one of the twelve event types:
+        - feature-created
+        - feature-metadata-updated
+        - feature-project-change
+        - feature-archived
+        - feature-revived
+        - feature-strategy-update
+        - feature-strategy-add
+        - feature-strategy-remove
+        - feature-stale-on
+        - feature-stale-off
+        - feature-environment-enabled
+        - feature-environment-disabled
+      tags:
+        - Events
+      responses:
+        '200':
+          $ref: '#/components/responses/eventsResponse'
+        '401':
+          $ref: '#/components/responses/notAuthorizedResponse'
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request GET \
+              --url http://localhost:4242/api/admin/events
+  /admin/state/export:
+    get:
+      operationId: get-admin-state-export
+      summary: Export feature toggles and strategies
+      description: Exports a list of feature toggles and/or strategies in either JSON or YAML format.
+      externalDocs:
+        description: Import and export
+        url: 'https://unleash.github.io/docs/import_export'
+      tags:
+        - Import and export
+      parameters:
+        - schema:
+            type: string
+            enum:
+              - json
+              - yaml
+          in: query
+          name: format
+          description: |
+            Choose export format, either json or yaml. json is the default
+          example: json
+        - schema:
+            type: boolean
+          in: query
+          name: download
+          example: false
+          description: Do you want to export the data as a file? Default is false
+        - schema:
+            type: boolean
+          in: query
+          name: featureToggles
+          description: Do you want to include feature toggles in the export? Default is true
+          example: true
+        - schema:
+            type: boolean
+          in: query
+          name: strategies
+          description: Do you want to include strategies in the export? Default is true
+          example: true
+      responses:
+        '200':
+          $ref: '#/components/responses/exportResponse'
+        '401':
+          $ref: '#/components/responses/notAuthorizedResponse'
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request GET \
+              --url http://localhost:4242/api/admin/state/export
+  /admin/state/import:
+    post:
+      summary: Import feature toggles and strategies
+      operationId: post-admin-state-import
+      tags:
+        - Import and export
+      description: |-
+        Upload the data, in JSON or YAML format.
+        You can add in the POST body or upload a file
+        - **POST body** (JSON format only) - next to **Request body**, choose the *application/json* dropdown option.
+        - **File upload** (JOSN or YAML format) - next to **Request body**, choose the *multipart/form-data* dropdown option. This adopts the same schema as `GET /admin/state/export`
+      externalDocs:
+        description: Import and export
+        url: 'https://unleash.github.io/docs/import_export'
+      parameters:
+        - schema:
+            type: boolean
+            default: 'false'
+            example: false
+          in: query
+          name: drop
+          description: Be careful using this in production environments. Set to true if you want the to remove all strategies and feature toggles from the datebase before import. Default is false.
+        - schema:
+            type: boolean
+            default: 'false'
+            example: false
+          in: query
+          name: keep
+          description: Set to *true* if you want keep all existing feature toggles and strategies as is; only the missing feature toggles and strategies will be inserted from the import data. Default is true.
+          example: true
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                fileName:
+                  type: string
+                  format: binary
+          application/json:
+            schema:
+              $ref: '#/components/schemas/200export'
+      responses:
+        '200':
+          description: Successful import.
+        '401':
+          $ref: '#/components/responses/notAuthorizedResponse'
+        '404':
+          description: No import data provided.
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request POST \
+              --url 'http://localhost:4242/api/admin/state/import?drop=false&keep=false' \
+              --data '{"fileName":"string"}'
+  /admin/feature-types:
+    get:
+      summary: Fetch the list of Unleash feature types
+      description: |-
+        - release
+        - experiment
+        - ops
+        - killswitch
+        - permission
+      operationId: get-admin-feature-types
+      tags:
+        - Feature types
+      responses:
+        '200':
+          $ref: '#/components/responses/featureTypeResponse'
+        '401':
+          $ref: '#/components/responses/notAuthorizedResponse'
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl --request GET \
+              --url http://localhost:4242/api/admin/feature-types
+components:
+  parameters:
+    featureNamePath:
+      name: featureName
+      description: Must match an existing Feature Toggle name.
+      example: featureX
+      required: true
+      in: path
+      schema:
+        type: string
+    strategyNamePath:
+      name: strategyName
+      required: true
+      in: path
+      description: Must match an existing Strategy name.
+      example: flexibleRollout
+      schema:
+        type: string
+    appNamePath:
+      name: appName
+      required: true
+      in: path
+      description: Must match an existing application name.
+      example: my-application
+      schema:
+        type: string
+  responses:
+    successResponse:
+      description: 'Successful response'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/200'
+    notAuthorizedResponse:
+      description: 'Not authorized'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/401'
+    clientResponse:
+      description: 'Successful response'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/200Client'
+    strategyExistsResponse:
+      description: 'Strategy already exists'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/409'
+    strategyResponse:
+      description: 'Successful response'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/200strategy'
+    seenTogglesResponse:
+      description: 'Successful response'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/200seen'
+    featureAccessResponse:
+      description: 'Successful response'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/200feature'
+    appDetailsResponse:
+      description: 'Successful response'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/200appdetails'
+    applicationsResponse:
+      description: 'Successful response'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/applicationArray'
+    eventsResponse:
+      description: 'Successful response'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/200-events'
+    exportResponse:
+      description: 'Successful response'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/200export'
+    featureTypeResponse:
+      description: 'Successful response'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/200featuretype'
+  schemas:
+    '200':
+      type: object
+      properties:
+        version:
+          $ref: '#/components/schemas/versionSchema'
+        features:
+          $ref: '#/components/schemas/featureToggleListSchema'
+      x-tags:
+        - Responses
+    '401':
+      type: object
+      properties:
+        type:
+          type: string
+          minLength: 1
+        path:
+          type: string
+          minLength: 1
+        message:
+          type: string
+          minLength: 1
+      required:
+        - type
+        - path
+        - message
+      x-tags:
+        - Responses
+    '409':
+      type: object
+      required:
+        - isJoi
+        - name
+        - details
+      properties:
+        isJoi:
+          description: For internal use by the Unleash developers
+          type: boolean
+        name:
+          description: Title of error
+          type: string
+          minLength: 1
+        details:
+          type: array
+          uniqueItems: true
+          minItems: 1
+          items:
+            required:
+              - message
+            properties:
+              message:
+                description: Error message
+                type: string
+                minLength: 1
+      x-tags:
+        - Responses
+    200strategy:
+      type: object
+      required:
+        - version
+        - strategies
+      properties:
+        version:
+          $ref: '#/components/schemas/versionSchema'
+        strategies:
+          $ref: '#/components/schemas/strategySchema'
+      x-tags:
+        - Responses
+    createStrategy:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          example: gradualRollout
+        description:
+          type: string
+          minLength: 1
+          example: Gradual rollout to logged in users
+        parameters:
+          type: array
+          uniqueItems: true
+          minItems: 1
+          items:
+            required:
+              - name
+              - type
+              - description
+              - required
+            properties:
+              name:
+                type: string
+                minLength: 1
+                example: percentage
+              type:
+                type: string
+                minLength: 1
+                example: percentage
+              description:
+                type: string
+                minLength: 1
+                example: What percent of users should the new Feature Toggle be active for?
+              required:
+                type: boolean
+                example: true
+      required:
+        - name
+        - description
+        - parameters
+      x-tags:
+        - Schemas
+    200seen:
+      type: array
+      minItems: 1
+      uniqueItems: true
+      items:
+        type: object
+        required:
+          - appName
+          - seenToggles
+          - metricsCount
+        properties:
+          appName:
+            type: string
+            minLength: 1
+            description: 'Application name'
+            example: 'my-application'
+          seenToggles:
+            $ref: '#/components/schemas/toggleSchema'
+      x-tags:
+        - Responses
+    200feature:
+      description: |-
+        - **lastHour** - how many times a Feature Toggle was accessed in the last hour.
+        - **lastMinute** - how many times a Feature Toggle was accessed in the last minute.
+      type: array
+      minItems: 1
+      uniqueItems: true
+      items:
+        type: object
+        required:
+          - appName
+          - seenToggles
+        properties:
+          appName:
+            type: string
+            enum:
+              - lastHour
+              - lastMinute
+            minLength: 1
+            example: lastHour
+          seenToggles:
+            $ref: '#/components/schemas/toggleSchema'
+      x-tags:
+        - Responses
+    metricsPayloadSchema:
+      description: A *bucket* of metrics data that tells you how often a Feature Toggle was enabled or disabled during a specified period of time
+      type: object
+      required:
+        - appName
+        - instanceId
+        - bucket
+      properties:
+        appName:
+          type: string
+          description: 'The name of your application'
+          example: 'my-application'
+        instanceId:
+          description: The name of the system running the application
+          type: string
+          minLength: 1
+          example: generated-732038-17080
+        bucket:
+          type: object
+          required:
+            - start
+            - stop
+            - toggles
+          properties:
+            start:
+              type: string
+              description: 'The start time for your metrics (in [ISO8601 format](https://www.w3.org/TR/NOTE-datetime))'
+              example: '2020-12-08T13:50:00.000Z'
+            stop:
+              type: string
+              description: 'The end time for your metrics (in [ISO8601 format](https://www.w3.org/TR/NOTE-datetime))'
+              example: '2020-12-08T13:55:00.000Z'
+            toggles:
+              $ref: '#/components/schemas/toggleSchema'
+      x-tags:
+        - Schemas
+    toggleSchema:
+      type: object
+      required:
+        - yesno
+        - metricsCount
+      properties:
+        yesno:
+          description: Was a Feature Toggle enabled (yes) or disabled (no)?
+          type: object
+          properties:
+            yesorno:
+              type: string
+              enum:
+                - 'yes'
+                - 'no'
+              example: 'yes'
+        metricsCount:
+          description: The number of times a Feature Toggle was enabled or disabled during the specified start and end time
+          type: object
+          properties:
+            count:
+              type: number
+              example: 1
+      x-tags:
+        - Schemas
+    clientRegistrationSchema:
+      type: object
+      required:
+        - appName
+        - instanceId
+        - strategies
+        - started
+        - interval
+      properties:
+        appName:
+          type: string
+          description: 'The name of your application'
+          example: 'my-application'
+        instanceId:
+          type: string
+          description: The name of the system running the application
+          minLength: 1
+          example: generated-732038-17080
+        sdkVersion:
+          description: The version of the Unleash client SDK running the application
+          type: string
+          example: 'unleash-client-node:3.4.0'
+        strategies:
+          type: array
+          description: List of strategy names implemented by this application
+          items:
+            required:
+              - strategy
+            properties:
+              strategy:
+                type: string
+                description: Strategy name
+                minLength: 1
+                example: 'default'
+        started:
+          type: string
+          description: 'When the client started (in [ISO8601 format](https://www.w3.org/TR/NOTE-datetime))'
+          example: '2016-11-03T07:16:43.572Z'
+        interval:
+          type: number
+          description: 'How often to send metrics to the Unleash API (in milliseconds)'
+          example: 10000
+      x-tags:
+        - Schemas
+    applicationArray:
+      type: array
+      items:
+        $ref: '#/components/schemas/application'
+      x-tags:
+        - Schemas
+    application:
+      type: object
+      required:
+        - applications
+      properties:
+        applications:
+          type: array
+          uniqueItems: true
+          minItems: 1
+          items:
+            required:
+              - appName
+              - createdAt
+              - updatedAt
+              - strategies
+            properties:
+              appName:
+                description: Application name
+                type: string
+                example: my-application
+              createdAt:
+                description: 'The first time the application registered with Unleash (in [ISO8601 format](https://www.w3.org/TR/NOTE-datetime))'
+                type: string
+                example: '2016-12-09T14:56:36.730Z'
+              updatedAt:
+                description: "The last time the application 'talked' to Unleash (sent metrics, registered, fetched feature toggles) - in [ISO8601 format](https://www.w3.org/TR/NOTE-datetime)"
+                type: string
+                example: '2020-11-14T09:55:23.653Z'
+              description:
+                description: A description of what the application does
+                type: string
+              strategies:
+                description: A description of what the application does
+                type: string
+              url:
+                description: Absolute URL to the actual application
+                type: string
+                example: 'http://someapp.internal.url'
+              color:
+                description: Deprecated. Do not use
+                type: string
+              icon:
+                description: "The application's icon. Must be one of the [Material Design icon names](https://material.io/resources/icons/?style=baseline)"
+                type: string
+                example: comment_bank
+      x-tags:
+        - Schemas
+    200appdetails:
+      type: object
+      required:
+        - application
+        - instances
+        - strategies
+        - seenToggles
+      properties:
+        application:
+          $ref: '#/components/schemas/application'
+        strategies:
+          $ref: '#/components/schemas/strategySchema'
+        instances:
+          type: object
+          required:
+            - appName
+            - instanceId
+            - sdkVersion
+            - clientIp
+            - lastSeen
+            - createdAt
+          properties:
+            appName:
+              description: Application name
+              type: string
+              minLength: 1
+              example: my-application
+            instanceId:
+              description: The name of the system running the application
+              type: string
+              minLength: 1
+              example: generated-732038-17080
+            sdkVersion:
+              description: The version of the Unleash client SDK running the application
+              type: string
+              minLength: 1
+              example: 'unleash-client-node:3.4.0'
+            clientIp:
+              description: The IP address of the system running this instance of the application
+              type: string
+              minLength: 1
+              example: '::ffff:127.0.0.1'
+            lastSeen:
+              description: "The last time the application 'talked' to Unleash (sent metrics, registered, fetched feature toggles) - in [ISO8601 format](https://www.w3.org/TR/NOTE-datetime)"
+              type: string
+              minLength: 1
+              example: '2020-11-14T11:17:24.482Z'
+            createdAt:
+              description: 'The first time the application registered with Unleash (in [ISO8601 format](https://www.w3.org/TR/NOTE-datetime))'
+              type: string
+              minLength: 1
+              example: '2020-11-13T16:56:29.279Z'
+        seenToggles:
+          $ref: '#/components/schemas/featureToggleListSchema'
+        links:
+          type: object
+          properties:
+            self:
+              description: Deprecated. Do not use
+              type: string
+              minLength: 1
+      x-tags:
+        - Responses
+    featureToggleTypeSchema:
+      type: string
+      enum:
+        - release
+        - experiment
+        - ops
+        - killswitch
+        - permission
+      description: |-
+        'One of the five Unleash Feature Toggle types.
+
+        **type** is optional. If not defined, it defaults to *release*'
+      default: release
+      externalDocs:
+        description: Feature Toggle types
+        url: 'https://unleash.github.io/docs/feature_toggle_types'
+      minLength: 1
+      example: release
+      x-tags:
+        - Schemas
+    versionSchema:
+      type: number
+      description: For internal use by the Unleash developers
+      example: 1
+      x-tags:
+        - Schemas
+    featureToggleListSchema:
+      type: array
+      items:
+        type: array
+    featureToggleSchema:
+      type: object
+      required:
+        - name
+        - description
+        - type
+        - enabled
+        - stale
+        - strategies
+      properties:
+        name:
+          description: Feature Toggle name must be unique.
+          type: string
+          minLength: 1
+          example: featureX
+        description:
+          type: string
+          minLength: 1
+          example: Toggles featureX on and off
+        type:
+          $ref: '#/components/schemas/featureToggleTypeSchema'
+        enabled:
+          description: Is the Feature Toggle enabled?
+          type: boolean
+          example: true
+        stale:
+          description: Is the Feature Toggle 'stale' (deprecated)?
+          type: boolean
+          example: false
+        strategies:
+          $ref: '#/components/schemas/strategySchema'
+        variants:
+          $ref: '#/components/schemas/variantsSchema'
+        createdAt:
+          type: string
+          minLength: 1
+    x-tags:
+      - Schemas
+    strategySchema:
+      type: array
+      items:
+        type: object
+        properties:
+          name:
+            description: Name of the Strategy
+            type: string
+            minLength: 1
+            example: default
+          editable:
+            type: boolean
+            example: true
+          description:
+            description: What the Strategy is
+            type: string
+            example: Default on/off strategy.
+          parameters:
+            type: object
+            properties:
+              parameter:
+                type: object
+                required:
+                  - name
+                  - type
+                properties:
+                  name:
+                    description: The name of the parameter
+                    type: string
+                    example: groupId
+                  type:
+                    description: The type of the parameter
+                    type: string
+                    example: string
+                  description:
+                    description: What the parameter does
+                    type: string
+                    example: Define activation groups to allow you to correlate across feature toggles.
+                  required:
+                    description: Is this a required parameter?
+                    type: boolean
+                    example: false
+      x-tags:
+        - Schemas
+    variantsSchema:
+      externalDocs:
+        description: How to use Feature Toggle variants
+        url: 'https://unleash.github.io/docs/toggle_variants'
+      type: array
+      items:
+        required:
+          - name
+          - weight
+        properties:
+          name:
+            description: The name of the Feature Toggle variant
+            type: string
+            minLength: 1
+            example: yellow
+          weight:
+            description: |-
+              A number between 0 and 1,000.
+              The client SDK will summarize all variant weights, hash the number and divide the users among them. The distribution will be according to the weight as a fraction of the sum of weight.
+            type: number
+            example: 20
+      x-tags:
+        - Schemas
+
+    200Client:
+      type: object
+      properties:
+        version:
+          $ref: '#/components/schemas/versionSchema'
+        features:
+          type: array
+          uniqueItems: true
+          minItems: 1
+          items:
+            required:
+              - name
+              - description
+              - type
+              - enabled
+              - stale
+              - strategies
+              - createdAt
+            properties:
+              name:
+                type: string
+                description: 'Feature Toggle name'
+                minLength: 1
+                example: 'Demo'
+              description:
+                type: string
+                description: 'A description of the Feature Toggle'
+                minLength: 1
+                example: 'Show off fedfdfature toggles'
+              type:
+                type: string
+                enum:
+                  - Release
+                  - Experiment
+                  - Operational
+                  - Kill switch
+                  - Permission
+                description: 'The title of one of the five Feature Toggle types'
+                minLength: 1
+                example: 'Operational'
+              enabled:
+                description: Is the Feature Toggle enabled?
+                type: boolean
+                example: true
+              stale:
+                description: Is the Feature Toggle 'stale' (deprecated)?
+                type: boolean
+                example: false
+              strategies:
+                $ref: '#/components/schemas/strategySchema'
+              variants:
+                type: array
+                uniqueItems: true
+                items:
+                  properties:
+                    name:
+                      type: string
+                      description: 'Variant name'
+                      minLength: 1
+                      example: 'Red'
+                    weight:
+                      description: |-
+                        A number between 0 and 1,000.
+                        The client SDK will allocate traffic to each variant based on this weighting (as a fraction of the sum of all variant weights).
+                        **Examples**
+                        - You have four variants, each with a weight of 1000. The SDK will distribute traffic evenly: 25% each
+                        - You have two variants, one with a weight of 100 and one with a weight of 900. The SDK will send 90% of traffic to the variant with a weight of 900
+                      type: number
+                      example: 20
+                    weightType:
+                      type: string
+                      minLength: 1
+                      example: 'variable'
+                    payload:
+                      type: object
+                      description: 'Optional data associated with the variant, consisting of a *type/value* pair (as defined in the SDK)'
+                      properties:
+                        type:
+                          type: string
+                          example: 'string'
+                        value:
+                          type: string
+                          example: 'Something'
+                    overrides:
+                      type: array
+                      description: An optional array of overrides. If any [context](https://unleash.github.io/docs/unleash_context) field matches any of these overrides, *this* variant will be selected.
+                      items:
+                        type: object
+                        properties:
+                          contextName:
+                            type: string
+                            description: 'One of the six context fields'
+                            enum:
+                              - userId
+                              - sessionId
+                              - remoteAddress
+                              - properties
+                              - appName
+                              - environment
+                            example: 'userId'
+                          values:
+                            type: array
+                            description: 'The value(s) for the context field'
+                            items:
+                              properties:
+                                value:
+                                  type: string
+                                  example: '123'
+              createdAt:
+                type: string
+                minLength: 1
+      x-tags:
+        - Responses
+    200-events:
+      type: object
+      properties:
+        version:
+          $ref: '#/components/schemas/versionSchema'
+        events:
+          type: array
+          required:
+            - id
+            - type
+            - createdBy
+            - createdAt
+          uniqueItems: true
+          minItems: 1
+          items:
+            properties:
+              id:
+                description: The event number. All events have a unique id.
+                type: number
+                example: 55
+              type:
+                description: Identifies the event
+                type: string
+                enum:
+                  - feature-created
+                  - feature-metadata-updated
+                  - feature-project-change
+                  - feature-archived
+                  - feature-revived
+                  - feature-strategy-update
+                  - feature-strategy-add
+                  - feature-strategy-remove
+                  - feature-stale-on
+                  - feature-stale-off
+                  - feature-environment-enabled
+                  - feature-environment-disabled
+                minLength: 1
+                example: feature-updated
+              createdBy:
+                description: The current user's *email* or *username* (taken from the *User* object on the current session)
+                type: string
+                minLength: 1
+              createdAt:
+                description: 'The first time the application registered with Unleash (in [ISO8601 format](https://www.w3.org/TR/NOTE-datetime))'
+                type: string
+                example: '2016-12-09T14:56:36.730Z'
+              data:
+                description: The current state of the updated resource
+                type: object
+              preData:
+                description: The previous state of the updated resource
+                type: object
+              featureName:
+                description: Name of the feature toggle (if event related to a feature toggle)
+                type: string
+              project:
+                description: Name of the project (if event related to a project resource)
+                type: string
+              environment:
+                description: Name of the environment (if event related to a environment resource)
+                type: string
+
+      x-tags:
+        - Responses
+    200export:
+      type: object
+      required:
+        - version
+        - features
+        - strategies
+      properties:
+        version:
+          $ref: '#/components/schemas/versionSchema'
+        features:
+          $ref: '#/components/schemas/featureToggleListSchema'
+        strategies:
+          $ref: '#/components/schemas/strategySchema'
+      x-tags:
+        - Responses
+    200featuretype:
+      type: object
+      required:
+        - version
+        - types
+      properties:
+        version:
+          $ref: '#/components/schemas/versionSchema'
+        types:
+          type: array
+          uniqueItems: true
+          minItems: 1
+          items:
+            required:
+              - id
+              - name
+              - description
+              - lifetimeDays
+            properties:
+              id:
+                $ref: '#/components/schemas/featureToggleTypeSchema'
+              name:
+                description: The title of the Feature Toggle type
+                type: string
+                enum:
+                  - Release
+                  - Experiment
+                  - Operational
+                  - Kill switch
+                  - Permission
+                minLength: 1
+                example: Release
+              description:
+                description: A description of what this Feature Toggle type could be used for
+                type: string
+                enum:
+                  - Enables trunk-based development for teams practicing continuous delivery
+                  - Performs multivariate or A/B testing
+                  - Controls operational aspects of the system behavior
+                  - Gracefully degrades system functionality
+                  - Changes the features or product experiences that certain users receive
+                minLength: 1
+              lifetimeDays:
+                description: The number of days this Feature Toggle is intended to be used. This information is used to issue deprecation notices
+                externalDocs:
+                  description: Feature Toggle types
+                  url: 'https://unleash.github.io/docs/feature_toggle_types'
+                type: number
+                example: 40
+      x-tags:
+        - Responses

@@ -82,6 +82,8 @@ import { emailSchema } from './spec/email-schema';
 import { strategySchema } from './spec/strategy-schema';
 import { strategiesSchema } from './spec/strategies-schema';
 import { upsertStrategySchema } from './spec/upsert-strategy-schema';
+import { eventSchema } from './spec/event-schema';
+import { eventsSchema } from './spec/events-schema';
 import { clientApplicationSchema } from './spec/client-application-schema';
 
 // All schemas in `openapi/spec` should be listed here.
@@ -107,6 +109,8 @@ export const schemas = {
     emailSchema,
     environmentSchema,
     environmentsSchema,
+    eventSchema,
+    eventsSchema,
     exportParametersSchema,
     featureEnvironmentSchema,
     featureEnvironmentMetricsSchema,

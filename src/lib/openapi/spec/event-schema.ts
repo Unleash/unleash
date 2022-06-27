@@ -1,4 +1,5 @@
 import { FromSchema } from 'json-schema-to-ts';
+import { tagSchema } from './tag-schema';
 
 export const eventSchema = {
     $id: '#/components/schemas/eventSchema',
@@ -20,6 +21,9 @@ export const eventSchema = {
         createdBy: {
             type: 'string',
         },
+        environment: {
+            type: 'string',
+        },
         project: {
             type: 'string',
         },
@@ -33,6 +37,11 @@ export const eventSchema = {
             items: {
                 $ref: '#/components/schemas/tagSchema',
             },
+        },
+    },
+    components: {
+        schemas: {
+            tagSchema,
         },
     },
 } as const;

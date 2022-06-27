@@ -21,9 +21,3 @@ test('featureUsageSchema', () => {
         validateSchema('#/components/schemas/featureUsageSchema', data),
     ).toBeUndefined();
 });
-
-test('featureUsageSchema empty', () => {
-    expect(
-        validateSchema('#/components/schemas/featureUsageSchema', {}),
-    ).toMatchSnapshot();
-});

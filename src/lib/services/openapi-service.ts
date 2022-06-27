@@ -24,10 +24,7 @@ export class OpenApiService {
 
         this.api = openapi(
             this.docsPath(),
-            createOpenApiSchema(
-                config.server?.unleashUrl,
-                config.server?.baseUriPath,
-            ),
+            createOpenApiSchema(config.server),
             { coerce: true },
         );
     }

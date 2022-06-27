@@ -83,6 +83,8 @@ import { strategySchema } from './spec/strategy-schema';
 import { strategiesSchema } from './spec/strategies-schema';
 import { upsertStrategySchema } from './spec/upsert-strategy-schema';
 import { clientApplicationSchema } from './spec/client-application-schema';
+import { IServerOption } from '../types';
+import { URL } from 'url';
 
 // All schemas in `openapi/spec` should be listed here.
 export const schemas = {
@@ -226,12 +228,31 @@ export const removeJsonSchemaProps = <T extends JsonSchemaProps>(
     return omitKeys(schema, '$id', 'components');
 };
 
-export const createOpenApiSchema = (
-    serverUrl?: string,
-): Omit<OpenAPIV3.Document, 'paths'> => {
+const findRootUrl: (unleashUrl: string, baseUriPath: string) => string = (
+    unleashUrl: string,
+    baseUriPath?: string,
+) => {
+    if (!baseUriPath) {
+        return unleashUrl;
+    }
+    const baseUrl = new URL(unleashUrl);
+    if (baseUrl.pathname.indexOf(baseUriPath) >= 0) {
+        return `${baseUrl.protocol}//${baseUrl.host}`;
+    }
+    return baseUrl.toString();
+};
+
+export const createOpenApiSchema = ({
+    unleashUrl,
+    baseUriPath,
+}: Pick<IServerOption, 'unleashUrl' | 'baseUriPath'>): Omit<
+    OpenAPIV3.Document,
+    'paths'
+> => {
+    const url = findRootUrl(unleashUrl, baseUriPath);
     return {
         openapi: '3.0.3',
-        servers: serverUrl ? [{ url: serverUrl }] : [],
+        servers: url ? [{ url }] : [],
         info: {
             title: 'Unleash API',
             version: process.env.npm_package_version!,

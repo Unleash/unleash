@@ -72,8 +72,46 @@ test('removeJsonSchemaProps', () => {
     `);
 });
 
-test('createOpenApiSchema url', () => {
-    expect(createOpenApiSchema('https://example.com').servers[0].url).toEqual(
-        'https://example.com',
-    );
+describe('createOpenApiSchema', () => {
+    test('createOpenApiSchema url', () => {
+        expect(
+            createOpenApiSchema({
+                unleashUrl: 'https://example.com',
+                baseUriPath: '',
+            }).servers[0].url,
+        ).toEqual('https://example.com');
+    });
+
+    test('if baseurl is set strips from serverUrl', () => {
+        expect(
+            createOpenApiSchema({
+                unleashUrl: 'https://example.com/demo2',
+                baseUriPath: '/demo2',
+            }).servers[0].url,
+        ).toEqual('https://example.com');
+    });
+
+    test('if baseurl does not end with suffix, cowardly refuses to strip', () => {
+        expect(
+            createOpenApiSchema({
+                unleashUrl: 'https://example.com/demo2',
+                baseUriPath: 'example',
+            }).servers[0].url,
+        ).toEqual('https://example.com/demo2');
+    });
+
+    test('avoids double trailing slash', () => {
+        expect(
+            createOpenApiSchema({
+                unleashUrl: 'https://example.com/example/',
+                baseUriPath: 'example',
+            }).servers[0].url,
+        ).toEqual('https://example.com');
+        expect(
+            createOpenApiSchema({
+                unleashUrl: 'https://example.com/example/',
+                baseUriPath: '/example',
+            }).servers[0].url,
+        ).toEqual('https://example.com');
+    });
 });

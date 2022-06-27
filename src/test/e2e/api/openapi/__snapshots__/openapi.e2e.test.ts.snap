@@ -377,9 +377,7 @@ Object {
         },
         "required": Array [
           "appName",
-          "interval",
-          "started",
-          "strategies",
+          "instanceId",
         ],
         "type": "object",
       },

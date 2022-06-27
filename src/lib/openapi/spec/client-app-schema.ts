@@ -4,7 +4,7 @@ import { parametersSchema } from './parameters-schema';
 export const clientAppSchema = {
     $id: '#/components/schemas/clientAppSchema',
     type: 'object',
-    required: ['appName', 'interval', 'started', 'strategies'],
+    required: ['appName', 'instanceId'],
     properties: {
         appName: {
             type: 'string',

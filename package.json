@@ -152,7 +152,7 @@
     "eslint-config-airbnb-typescript": "17.0.0",
     "eslint-config-prettier": "8.5.0",
     "eslint-plugin-import": "2.26.0",
-    "eslint-plugin-prettier": "4.0.0",
+    "eslint-plugin-prettier": "4.1.0",
     "faker": "5.5.3",
     "fetch-mock": "9.11.0",
     "husky": "8.0.1",

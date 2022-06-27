@@ -77,3 +77,17 @@ test('createOpenApiSchema url', () => {
         'https://example.com',
     );
 });
+
+test('if baseurl is set strips from serverUrl', () => {
+    expect(
+        createOpenApiSchema('https://example.com/demo2', '/demo2').servers[0]
+            .url,
+    ).toEqual('https://example.com');
+});
+
+test('if baseurl does not end with suffix, cowardly refuses to strip', () => {
+    expect(
+        createOpenApiSchema('https://example.com/demo2', 'example').servers[0]
+            .url,
+    ).toEqual('https://example.com/demo2');
+});

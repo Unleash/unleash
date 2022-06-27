@@ -39,7 +39,6 @@ export default async function getApp(
     app.disable('x-powered-by');
     app.set('port', config.server.port);
     app.locals.baseUriPath = baseUriPath;
-
     if (config.server.serverMetrics && config.eventBus) {
         app.use(responseTimeMetrics(config.eventBus));
     }
@@ -65,10 +64,6 @@ export default async function getApp(
     app.use(favicon(path.join(publicFolder, 'favicon.ico')));
     app.use(baseUriPath, favicon(path.join(publicFolder, 'favicon.ico')));
     app.use(baseUriPath, express.static(publicFolder, { index: false }));
-
-    if (config.enableOAS) {
-        app.use(`${baseUriPath}/oas`, express.static('docs/api/oas'));
-    }
 
     if (config.enableOAS && services.openApiService) {
         services.openApiService.useDocs(app);

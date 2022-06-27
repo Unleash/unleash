@@ -228,10 +228,15 @@ export const removeJsonSchemaProps = <T extends JsonSchemaProps>(
 
 export const createOpenApiSchema = (
     serverUrl?: string,
+    suffix?: string,
 ): Omit<OpenAPIV3.Document, 'paths'> => {
     return {
         openapi: '3.0.3',
-        servers: serverUrl ? [{ url: serverUrl }] : [],
+        servers: serverUrl
+            ? serverUrl.endsWith(suffix)
+                ? [{ url: serverUrl.replace(suffix, '') }]
+                : [{ url: serverUrl }]
+            : [],
         info: {
             title: 'Unleash API',
             version: process.env.npm_package_version!,

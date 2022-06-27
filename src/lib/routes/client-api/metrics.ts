@@ -46,14 +46,13 @@ export default class ClientMetricsController extends Controller {
         this.route({
             method: 'post',
             path: '',
-            acceptAnyContentType: true,
             handler: this.registerMetrics,
             permission: NONE,
             middleware: [
                 openApiService.validPath({
                     tags: ['client'],
-                    operationId: 'registerMetrics',
-                    requestBody: createRequestSchema('clientApplicationSchema'),
+                    operationId: 'registerClientMetrics',
+                    requestBody: createRequestSchema('clientAppSchema'),
                     responses: {
                         202: createResponseSchema('emptyResponse'),
                     },

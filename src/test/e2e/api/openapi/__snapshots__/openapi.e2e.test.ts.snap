@@ -309,6 +309,80 @@ Object {
         ],
         "type": "object",
       },
+      "clientAppSchema": Object {
+        "properties": Object {
+          "appName": Object {
+            "type": "string",
+          },
+          "bucket": Object {
+            "additionalProperties": true,
+          },
+          "clientIp": Object {
+            "type": "string",
+          },
+          "color": Object {
+            "type": "string",
+          },
+          "count": Object {
+            "type": "number",
+          },
+          "description": Object {
+            "type": "string",
+          },
+          "environment": Object {
+            "type": "string",
+          },
+          "icon": Object {
+            "type": "string",
+          },
+          "instanceId": Object {
+            "type": "string",
+          },
+          "interval": Object {
+            "type": "number",
+          },
+          "metricsCount": Object {
+            "type": "number",
+          },
+          "seenToggles": Object {
+            "items": Object {
+              "type": "string",
+            },
+            "type": "array",
+          },
+          "started": Object {
+            "oneOf": Array [
+              Object {
+                "format": "date-time",
+                "type": "string",
+              },
+              Object {
+                "type": "number",
+              },
+            ],
+          },
+          "strategies": Object {
+            "items": Object {
+              "oneOf": Array [
+                Object {
+                  "type": "string",
+                },
+                Object {
+                  "$ref": "#/components/schemas/parametersSchema",
+                },
+              ],
+            },
+            "type": "array",
+          },
+        },
+        "required": Array [
+          "appName",
+          "interval",
+          "started",
+          "strategies",
+        ],
+        "type": "object",
+      },
       "clientApplicationSchema": Object {
         "properties": Object {
           "appName": Object {
@@ -5101,16 +5175,16 @@ Object {
     },
     "/api/client/metrics": Object {
       "post": Object {
-        "operationId": "registerMetrics",
+        "operationId": "registerClientMetrics",
         "requestBody": Object {
           "content": Object {
             "application/json": Object {
               "schema": Object {
-                "$ref": "#/components/schemas/clientApplicationSchema",
+                "$ref": "#/components/schemas/clientAppSchema",
               },
             },
           },
-          "description": "clientApplicationSchema",
+          "description": "clientAppSchema",
           "required": true,
         },
         "responses": Object {

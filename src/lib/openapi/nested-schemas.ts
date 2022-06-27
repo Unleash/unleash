@@ -1,4 +1,4 @@
-interface ISchemaObject {
+export interface ISchemaObject {
     [k: string]: IComponentSchema;
 }
 
@@ -8,7 +8,7 @@ interface IComponentSchema {
 
 export const includeSchemasRecursively = (
     schemas: ISchemaObject,
-): ISchemaObject =>
+): { [key: string]: ISchemaObject } =>
     Object.entries(schemas).reduce(([key, value], acc) => ({
         ...acc,
         [key]: value,

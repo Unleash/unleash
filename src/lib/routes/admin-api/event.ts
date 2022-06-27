@@ -13,6 +13,10 @@ import {
     EventsSchema,
 } from '../../../lib/openapi/spec/events-schema';
 import { serializeDates } from '../../../lib/types/serialize-dates';
+import {
+    featureEventsSchema,
+    FeatureEventsSchema,
+} from '../../../lib/openapi/spec/feature-events-schema';
 
 const version = 1;
 export default class EventController extends Controller {
@@ -50,7 +54,21 @@ export default class EventController extends Controller {
             ],
         });
 
-        this.get('/:name', this.getEventsForToggle);
+        this.route({
+            method: 'get',
+            path: '/:name',
+            handler: this.getEventsForToggle,
+            permission: ADMIN,
+            middleware: [
+                openApiService.validPath({
+                    operationId: 'getEventsForToggle',
+                    tags: ['admin'],
+                    responses: {
+                        200: createResponseSchema('featureEventsSchema'),
+                    },
+                }),
+            ],
+        });
     }
 
     fixEvents(events: IEvent[]): IEvent[] {
@@ -89,15 +107,22 @@ export default class EventController extends Controller {
 
     async getEventsForToggle(
         req: Request<{ name: string }>,
-        res: Response,
+        res: Response<FeatureEventsSchema>,
     ): Promise<void> {
         const toggleName = req.params.name;
         const events = await this.eventService.getEventsForToggle(toggleName);
 
-        res.json({
+        const response = {
             version,
             toggleName,
-            events: this.fixEvents(events),
-        });
+            events: serializeDates(this.fixEvents(events)),
+        };
+
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            featureEventsSchema.$id,
+            response,
+        );
     }
 }

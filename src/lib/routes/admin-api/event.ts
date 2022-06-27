@@ -7,8 +7,12 @@ import { IEvent } from '../../types/events';
 import Controller from '../controller';
 import { anonymise } from '../../util/anonymise';
 import { OpenApiService } from '../../services/openapi-service';
-import { createResponseSchema } from 'lib/openapi';
-import { eventsSchema, EventsSchema } from 'lib/openapi/spec/events-schema';
+import { createResponseSchema } from '../../../lib/openapi';
+import {
+    eventsSchema,
+    EventsSchema,
+} from '../../../lib/openapi/spec/events-schema';
+import { serializeDates } from '../../../lib/types/serialize-dates';
 
 const version = 1;
 export default class EventController extends Controller {
@@ -73,7 +77,7 @@ export default class EventController extends Controller {
 
         const response: EventsSchema = {
             version,
-            events: this.fixEvents(events),
+            events: serializeDates(this.fixEvents(events)),
         };
         this.openApiService.respondWithValidation(
             200,

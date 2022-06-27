@@ -748,7 +748,7 @@ test('Tagging a feature with a tag it already has should return 409', async () =
         .expect(409)
         .expect((res) => {
             expect(res.body.details[0].message).toBe(
-                `${feature1Name} already had the tag: [${tag.type}:${tag.value}]`,
+                `${feature1Name} already has the tag: [${tag.type}:${tag.value}]`,
             );
         });
 });

@@ -77,7 +77,7 @@
     "immer": "9.0.15",
     "jsdom": "20.0.0",
     "lodash.clonedeep": "4.5.0",
-    "msw": "0.42.1",
+    "msw": "0.42.3",
     "pkginfo": "^0.4.1",
     "plausible-tracker": "0.3.8",
     "prettier": "2.7.1",

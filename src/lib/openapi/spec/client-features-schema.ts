@@ -1,6 +1,5 @@
 import { FromSchema } from 'json-schema-to-ts';
 import { clientFeaturesQuerySchema } from './client-features-query-schema';
-import { featureSchema } from './feature-schema';
 import { segmentSchema } from './segment-schema';
 import { constraintSchema } from './constraint-schema';
 import { environmentSchema } from './environment-schema';
@@ -8,6 +7,7 @@ import { overrideSchema } from './override-schema';
 import { parametersSchema } from './parameters-schema';
 import { featureStrategySchema } from './feature-strategy-schema';
 import { variantSchema } from './variant-schema';
+import { clientFeatureSchema } from './client-feature-schema';
 
 export const clientFeaturesSchema = {
     $id: '#/components/schemas/clientFeaturesSchema',
@@ -20,7 +20,7 @@ export const clientFeaturesSchema = {
         features: {
             type: 'array',
             items: {
-                $ref: '#/components/schemas/featureSchema',
+                $ref: '#/components/schemas/clientFeatureSchema',
             },
         },
         segments: {
@@ -36,7 +36,7 @@ export const clientFeaturesSchema = {
     components: {
         schemas: {
             constraintSchema,
-            featureSchema,
+            clientFeatureSchema,
             environmentSchema,
             segmentSchema,
             clientFeaturesQuerySchema,

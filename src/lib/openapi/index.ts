@@ -59,6 +59,9 @@ import { validateTagTypeSchema } from './spec/validate-tag-type-schema';
 import { variantSchema } from './spec/variant-schema';
 import { variantsSchema } from './spec/variants-schema';
 import { versionSchema } from './spec/version-schema';
+import { featureEnvironmentMetricsSchema } from './spec/feature-environment-metrics-schema';
+import { featureUsageSchema } from './spec/feature-usage-schema';
+import { featureMetricsSchema } from './spec/feature-metrics-schema';
 import { addonSchema } from './spec/addon-schema';
 import { addonsSchema } from './spec/addons-schema';
 import { addonParameterSchema } from './spec/addon-parameter-schema';
@@ -106,7 +109,10 @@ export const schemas = {
     environmentsSchema,
     exportParametersSchema,
     featureEnvironmentSchema,
+    featureEnvironmentMetricsSchema,
     featureSchema,
+    featureMetricsSchema,
+    featureUsageSchema,
     featureStrategySchema,
     featureStrategySegmentSchema,
     featureTagSchema,

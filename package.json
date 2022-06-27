@@ -120,7 +120,7 @@
     "serve-favicon": "^2.5.0",
     "stoppable": "^1.1.0",
     "type-is": "^1.6.18",
-    "unleash-frontend": "4.13.0-beta.1",
+    "unleash-frontend": "4.13.0-beta.5",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
@@ -157,7 +157,7 @@
     "fetch-mock": "9.11.0",
     "husky": "8.0.1",
     "jest": "27.5.1",
-    "lint-staged": "13.0.2",
+    "lint-staged": "13.0.3",
     "nock": "13.2.7",
     "prettier": "2.7.1",
     "proxyquire": "2.1.3",

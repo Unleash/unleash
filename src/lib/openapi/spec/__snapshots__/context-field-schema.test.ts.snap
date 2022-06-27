@@ -2,7 +2,6 @@
 
 exports[`contextFieldSchema empty 1`] = `
 Object {
-  "data": Object {},
   "errors": Array [
     Object {
       "instancePath": "",

@@ -9,7 +9,6 @@ import { createApiTokenSchema } from './spec/create-api-token-schema';
 import { createFeatureSchema } from './spec/create-feature-schema';
 import { createUserSchema } from './spec/create-user-schema';
 import { createFeatureStrategySchema } from './spec/create-feature-strategy-schema';
-import { clientFeaturesSchema } from './spec/client-features-schema';
 import { environmentSchema } from './spec/environment-schema';
 import { environmentsSchema } from './spec/environments-schema';
 import { featureEnvironmentSchema } from './spec/feature-environment-schema';
@@ -60,6 +59,9 @@ import { validateTagTypeSchema } from './spec/validate-tag-type-schema';
 import { variantSchema } from './spec/variant-schema';
 import { variantsSchema } from './spec/variants-schema';
 import { versionSchema } from './spec/version-schema';
+import { featureEnvironmentMetricsSchema } from './spec/feature-environment-metrics-schema';
+import { featureUsageSchema } from './spec/feature-usage-schema';
+import { featureMetricsSchema } from './spec/feature-metrics-schema';
 import { addonSchema } from './spec/addon-schema';
 import { addonsSchema } from './spec/addons-schema';
 import { addonParameterSchema } from './spec/addon-parameter-schema';
@@ -82,6 +84,8 @@ import { strategiesSchema } from './spec/strategies-schema';
 import { upsertStrategySchema } from './spec/upsert-strategy-schema';
 import { clientFeaturesQuerySchema } from './spec/client-features-query-schema';
 import { clientFeatureSchema } from './spec/client-feature-schema';
+import { clientFeaturesSchema } from './spec/client-features-schema';
+import { clientApplicationSchema } from './spec/client-application-schema';
 
 // All schemas in `openapi/spec` should be listed here.
 export const schemas = {
@@ -93,6 +97,7 @@ export const schemas = {
     apiTokensSchema,
     applicationSchema,
     applicationsSchema,
+    clientApplicationSchema,
     cloneFeatureSchema,
     clientFeatureSchema,
     clientFeaturesSchema,
@@ -110,7 +115,10 @@ export const schemas = {
     environmentsSchema,
     exportParametersSchema,
     featureEnvironmentSchema,
+    featureEnvironmentMetricsSchema,
     featureSchema,
+    featureMetricsSchema,
+    featureUsageSchema,
     featureStrategySchema,
     featureStrategySegmentSchema,
     featureTagSchema,

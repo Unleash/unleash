@@ -9,27 +9,47 @@ import { IClientApp } from '../../types/model';
 import ApiUser from '../../types/api-user';
 import { ALL } from '../../types/models/api-token';
 import { NONE } from '../../types/permissions';
+import { OpenApiService } from '../../services/openapi-service';
+import { emptyResponse } from '../../openapi/spec/empty-response';
+import { createRequestSchema } from '../../openapi';
+import { ClientApplicationSchema } from '../../openapi/spec/client-application-schema';
 
 export default class RegisterController extends Controller {
     logger: Logger;
 
-    metrics: ClientInstanceService;
+    clientInstanceService: ClientInstanceService;
+
+    openApiService: OpenApiService;
 
     constructor(
         {
             clientInstanceService,
-        }: Pick<IUnleashServices, 'clientInstanceService'>,
+            openApiService,
+        }: Pick<IUnleashServices, 'clientInstanceService' | 'openApiService'>,
         config: IUnleashConfig,
     ) {
         super(config);
         this.logger = config.getLogger('/api/client/register');
-        this.metrics = clientInstanceService;
+        this.clientInstanceService = clientInstanceService;
+        this.openApiService = openApiService;
 
-        // NONE permission is not optimal here in terms of readability.
-        this.post('/', this.handleRegister, NONE);
+        this.route({
+            method: 'post',
+            path: '',
+            handler: this.registerClientApplication,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['client'],
+                    operationId: 'registerClientApplication',
+                    requestBody: createRequestSchema('clientApplicationSchema'),
+                    responses: { 202: emptyResponse },
+                }),
+            ],
+        });
     }
 
-    private resolveEnvironment(user: User, data: IClientApp) {
+    private static resolveEnvironment(user: User, data: Partial<IClientApp>) {
         if (user instanceof ApiUser) {
             if (user.environment !== ALL) {
                 return user.environment;
@@ -40,10 +60,13 @@ export default class RegisterController extends Controller {
         return 'default';
     }
 
-    async handleRegister(req: IAuthRequest, res: Response): Promise<void> {
+    async registerClientApplication(
+        req: IAuthRequest<unknown, void, ClientApplicationSchema>,
+        res: Response<void>,
+    ): Promise<void> {
         const { body: data, ip: clientIp, user } = req;
-        data.environment = this.resolveEnvironment(user, data);
-        await this.metrics.registerClient(data, clientIp);
+        data.environment = RegisterController.resolveEnvironment(user, data);
+        await this.clientInstanceService.registerClient(data, clientIp);
         return res.status(202).end();
     }
 }

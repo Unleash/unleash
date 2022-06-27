@@ -1,18 +1,18 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`validatePasswordSchema empty 1`] = `
+exports[`clientApplicationSchema no fields 1`] = `
 Object {
   "errors": Array [
     Object {
       "instancePath": "",
       "keyword": "required",
-      "message": "must have required property 'password'",
+      "message": "must have required property 'appName'",
       "params": Object {
-        "missingProperty": "password",
+        "missingProperty": "appName",
       },
       "schemaPath": "#/required",
     },
   ],
-  "schema": "#/components/schemas/validatePasswordSchema",
+  "schema": "#/components/schemas/clientApplicationSchema",
 }
 `;

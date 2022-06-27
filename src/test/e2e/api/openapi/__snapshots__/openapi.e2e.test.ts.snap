@@ -309,91 +309,46 @@ Object {
         ],
         "type": "object",
       },
-      "clientFeatureSchema": Object {
-        "additionalProperties": false,
+      "clientApplicationSchema": Object {
         "properties": Object {
-          "name": Object {
+          "appName": Object {
             "type": "string",
           },
-          "stale": Object {
-            "type": "boolean",
-          },
-          "strategies": Object {
-            "items": Object {
-              "$ref": "#/components/schemas/featureStrategySchema",
-            },
-            "type": "array",
-          },
-          "type": Object {
-            "type": "string",
-          },
-          "variants": Object {
-            "items": Object {
-              "$ref": "#/components/schemas/variantSchema",
-            },
-            "type": "array",
-          },
-        },
-        "required": Array [
-          "name",
-        ],
-        "type": "object",
-      },
-      "clientFeaturesQuerySchema": Object {
-        "properties": Object {
           "environment": Object {
             "type": "string",
           },
-          "inlineSegmentConstraints": Object {
-            "type": "boolean",
-          },
-          "namePrefix": Object {
+          "instanceId": Object {
             "type": "string",
           },
-          "project": Object {
+          "interval": Object {
+            "type": "number",
+          },
+          "sdkVersion": Object {
+            "type": "string",
+          },
+          "started": Object {
+            "oneOf": Array [
+              Object {
+                "format": "date-time",
+                "type": "string",
+              },
+              Object {
+                "type": "number",
+              },
+            ],
+          },
+          "strategies": Object {
             "items": Object {
               "type": "string",
             },
             "type": "array",
           },
-          "tag": Object {
-            "items": Object {
-              "items": Object {
-                "type": "string",
-              },
-              "type": "array",
-            },
-            "type": "array",
-          },
-        },
-        "required": Array [],
-        "type": "object",
-      },
-      "clientFeaturesSchema": Object {
-        "properties": Object {
-          "features": Object {
-            "items": Object {
-              "$ref": "#/components/schemas/featureSchema",
-            },
-            "type": "array",
-          },
-          "query": Object {
-            "$ref": "#/components/schemas/clientFeaturesQuerySchema",
-          },
-          "segments": Object {
-            "items": Object {
-              "$ref": "#/components/schemas/segmentSchema",
-            },
-            "type": "array",
-          },
-          "version": Object {
-            "type": "number",
-          },
         },
         "required": Array [
-          "version",
-          "features",
-          "query",
+          "appName",
+          "interval",
+          "started",
+          "strategies",
         ],
         "type": "object",
       },
@@ -686,6 +641,37 @@ Object {
         },
         "type": "object",
       },
+      "featureEnvironmentMetricsSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "appName": Object {
+            "type": "string",
+          },
+          "environment": Object {
+            "type": "string",
+          },
+          "featureName": Object {
+            "type": "string",
+          },
+          "no": Object {
+            "type": "number",
+          },
+          "timestamp": Object {
+            "format": "date-time",
+            "type": "string",
+          },
+          "yes": Object {
+            "type": "number",
+          },
+        },
+        "required": Array [
+          "environment",
+          "timestamp",
+          "yes",
+          "no",
+        ],
+        "type": "object",
+      },
       "featureEnvironmentSchema": Object {
         "additionalProperties": false,
         "properties": Object {
@@ -754,6 +740,29 @@ Object {
         "required": Array [
           "name",
           "enabled",
+        ],
+        "type": "object",
+      },
+      "featureMetricsSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "data": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/featureEnvironmentMetricsSchema",
+            },
+            "type": "array",
+          },
+          "maturity": Object {
+            "type": "string",
+          },
+          "version": Object {
+            "type": "number",
+          },
+        },
+        "required": Array [
+          "version",
+          "maturity",
+          "data",
         ],
         "type": "object",
       },
@@ -835,6 +844,12 @@ Object {
           },
           "parameters": Object {
             "$ref": "#/components/schemas/parametersSchema",
+          },
+          "segments": Object {
+            "items": Object {
+              "type": "number",
+            },
+            "type": "array",
           },
           "sortOrder": Object {
             "type": "number",
@@ -928,6 +943,40 @@ Object {
         "required": Array [
           "version",
           "types",
+        ],
+        "type": "object",
+      },
+      "featureUsageSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "featureName": Object {
+            "type": "string",
+          },
+          "lastHourUsage": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/featureEnvironmentMetricsSchema",
+            },
+            "type": "array",
+          },
+          "maturity": Object {
+            "type": "string",
+          },
+          "seenApplications": Object {
+            "items": Object {
+              "type": "string",
+            },
+            "type": "array",
+          },
+          "version": Object {
+            "type": "number",
+          },
+        },
+        "required": Array [
+          "version",
+          "maturity",
+          "featureName",
+          "lastHourUsage",
+          "seenApplications",
         ],
         "type": "object",
       },
@@ -2468,6 +2517,66 @@ Object {
         "responses": Object {
           "200": Object {
             "description": "emptyResponse",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/client-metrics/features/{name}": Object {
+      "get": Object {
+        "operationId": "getFeatureUsageSummary",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/featureUsageSchema",
+                },
+              },
+            },
+            "description": "featureUsageSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/client-metrics/features/{name}/raw": Object {
+      "get": Object {
+        "operationId": "getRawFeatureMetrics",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/featureMetricsSchema",
+                },
+              },
+            },
+            "description": "featureMetricsSchema",
           },
         },
         "tags": Array [
@@ -4990,49 +5099,23 @@ Object {
         ],
       },
     },
-    "/api/client/features": Object {
-      "get": Object {
-        "operationId": "getAllClientFeatures",
-        "responses": Object {
-          "200": Object {
-            "content": Object {
-              "application/json": Object {
-                "schema": Object {
-                  "$ref": "#/components/schemas/clientFeaturesSchema",
-                },
+    "/api/client/register": Object {
+      "post": Object {
+        "operationId": "registerClientApplication",
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/clientApplicationSchema",
               },
             },
-            "description": "clientFeaturesSchema",
           },
+          "description": "clientApplicationSchema",
+          "required": true,
         },
-        "tags": Array [
-          "client",
-        ],
-      },
-    },
-    "/api/client/features/{featureName}": Object {
-      "get": Object {
-        "operationId": "getClientFeature",
-        "parameters": Array [
-          Object {
-            "in": "path",
-            "name": "featureName",
-            "required": true,
-            "schema": Object {
-              "type": "string",
-            },
-          },
-        ],
         "responses": Object {
-          "200": Object {
-            "content": Object {
-              "application/json": Object {
-                "schema": Object {
-                  "$ref": "#/components/schemas/featureSchema",
-                },
-              },
-            },
-            "description": "featureSchema",
+          "202": Object {
+            "description": "emptyResponse",
           },
         },
         "tags": Array [

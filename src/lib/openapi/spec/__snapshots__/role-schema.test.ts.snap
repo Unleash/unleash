@@ -2,7 +2,6 @@
 
 exports[`roleSchema 1`] = `
 Object {
-  "data": Object {},
   "errors": Array [
     Object {
       "instancePath": "",

@@ -3,9 +3,8 @@ import addFormats from 'ajv-formats';
 import { SchemaId, schemas } from './index';
 import { omitKeys } from '../util/omit-keys';
 
-interface ISchemaValidationErrors<T> {
+interface ISchemaValidationErrors {
     schema: SchemaId;
-    data: T;
     errors: ErrorObject[];
 }
 
@@ -17,14 +16,13 @@ const ajv = new Ajv({
 
 addFormats(ajv, ['date-time']);
 
-export const validateSchema = <T>(
+export const validateSchema = (
     schema: SchemaId,
-    data: T,
-): ISchemaValidationErrors<T> | undefined => {
+    data: unknown,
+): ISchemaValidationErrors | undefined => {
     if (!ajv.validate(schema, data)) {
         return {
             schema,
-            data: data,
             errors: ajv.errors ?? [],
         };
     }

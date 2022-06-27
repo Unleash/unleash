@@ -8,7 +8,7 @@ test('featureMetricsSchema', () => {
         data: [
             {
                 environment: 'some-env',
-                timestamp: new Date().toISOString(),
+                timestamp: new Date(2020, 6, 1, 17, 50, 3).toISOString(),
                 yes: 50,
                 no: 1,
             },

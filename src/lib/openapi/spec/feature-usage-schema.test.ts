@@ -10,7 +10,7 @@ test('featureUsageSchema', () => {
                 environment: 'some-env',
                 yes: 50,
                 no: 32,
-                timestamp: new Date().toISOString(),
+                timestamp: new Date(2020, 6, 1, 17, 50, 3).toISOString(),
             },
         ],
         maturity: 'stable',

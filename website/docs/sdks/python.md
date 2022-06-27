@@ -20,37 +20,39 @@ from UnleashClient import UnleashClient
 
 ## Checking if a feature is enabled {#checking-if-a-feature-is-enabled}
 
-A check of a simple toggle:
+Check a feature's status:
 
-```python
+```Python title="Check whether a feature is enabled"
 client.is_enabled("my_toggle")
 ```
 
-Specifying a default value:
+To supply application context, use the second positional argument:
 
-```python
-client.is_enabled("my_toggle", default_value=True)
-```
-
-Supplying application context:
-
-```python
+```Python title="Check whether a feature is enabled for the given context"
 app_context = {"userId": "test@email.com"}
 client.is_enabled("user_id_toggle", app_context)
 ```
 
-Supplying a fallback function:
+### Fallback function and default values
 
-```python
+You can specify a fallback function for cases where the client doesn't recognize the toggle by using the `fallback_function` keyword argument:
+
+```Python title="Check a feature status, using a fallback if the feature is unrecognized."
 def custom_fallback(feature_name: str, context: dict) -> bool:
     return True
 
 client.is_enabled("my_toggle", fallback_function=custom_fallback)
 ```
 
-- Must accept the feature name and context as an argument.
-- Client will evaluate the fallback function only if exception occurs when calling the `is_enabled()` method i.e. feature flag not found or other general exception.
-- If both a `default_value` and `fallback_function` are supplied, client will define the default value by `OR`ing the default value and the output of the fallback function.
+You can also use the `fallback_function` argument to replace the obsolete `default_value` keyword argument by using a lambda that ignores its inputs. Whatever the lambda returns will be used as the default value.
+
+```Python title="Use fallback_function to provide a default value"
+client.is_enabled("my_toggle", fallback_function=lambda feature_name, context: True)
+```
+
+The fallback function **must** accept the feature name and context as positional arguments in that order.
+
+The client will evaluate the fallback function only if an exception occurs when calling the `is_enabled()` method. This happens when the client can't find the feature flag. The client *may* also throw other, general exceptions.
 
 ## Getting a variant {#getting-a-variant}
 

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`featureTypeSchema empty 1`] = `
+exports[`featureUsageSchema empty 1`] = `
 Object {
   "data": Object {},
   "errors": Array [

@@ -22,7 +22,7 @@ test('featureUsageSchema', () => {
     ).toBeUndefined();
 });
 
-test('featureTypeSchema empty', () => {
+test('featureUsageSchema empty', () => {
     expect(
         validateSchema('#/components/schemas/featureUsageSchema', {}),
     ).toMatchSnapshot();

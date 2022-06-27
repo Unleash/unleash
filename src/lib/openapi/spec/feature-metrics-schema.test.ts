@@ -20,7 +20,7 @@ test('featureMetricsSchema', () => {
     ).toBeUndefined();
 });
 
-test('featureTypeSchema empty', () => {
+test('featureMetricsSchema empty', () => {
     expect(
         validateSchema('#/components/schemas/featureMetricsSchema', {}),
     ).toMatchSnapshot();

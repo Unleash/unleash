@@ -45,7 +45,11 @@ The below table shows what features the various server-side SDKs support. Note t
 - ❌: Not implemented, not planned
 - **N/A**: Not applicable to this SDK
 
-:::note If you see an item marked with a ❌ that you would find useful, feel free to reach out to us ([on Slack](https://slack.unleash.run/), for instance) with your use case. It may not be something we can prioritize right now, but if you'd like to contribute it back to the community, we'd love to help you build it.. :::
+:::note
+
+If you see an item marked with a ❌ that you would find useful, feel free to reach out to us ([on Slack](https://slack.unleash.run/), for instance) with your use case. It may not be something we can prioritize right now, but if you'd like to contribute it back to the community, we'd love to help you build it.
+
+:::
 
 | Capability | [Java](/sdks/java_sdk) | [Node.js](/sdks/node_sdk) | [Go](/sdks/go_sdk) | [Python](/sdks/python_sdk) | [Ruby](/sdks/ruby_sdk) | [.NET](/sdks/dot_net_sdk) | [PHP](/sdks/php_sdk) | [Rust](https://github.com/unleash/unleash-client-rust) | [Unleash Proxy](unleash-proxy.md) |
 | --- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
@@ -103,18 +107,18 @@ The below table shows what features the various server-side SDKs support. Note t
 
 Here's some of the fantastic work our community has done to make Unleash work in even more contexts. If you still can't find your favorite language, let us know and we'd love to help you create the client for it!
 
-- [afontaine/unleash_ex](https://gitlab.com/afontaine/unleash_ex) (Elixir)
-- [AppsFlyer/clojure-unleash](https://github.com/AppsFlyer/unleash-client-clojure) (Clojure)
-- [aruizs/unleash-client-cpp](https://github.com/aruizs/unleash-client-cpp) (C++)
-- [mikefrancis/laravel-unleash](https://github.com/mikefrancis/laravel-unleash) (Laravel - PHP)
-- [minds/unleash-client-php](https://gitlab.com/minds/unleash-client-php) (PHP)
-- [ngx-unleash-proxy-client](https://github.com/snowfrogdev/snowfrogdev/tree/main/packages/ngx-unleash-proxy-client) (Angular - TypeScript)
-- [nunogois/proxy-client-react-native](https://github.com/nunogois/proxy-client-react-native) (React Native / Expo)
-- [nunogois/proxy-client-solid](https://github.com/nunogois/proxy-client-solid) (Solid)
-- [pmb0/nestjs-unleash](https://github.com/pmb0/nestjs-unleash) (NestJS - Node.js)
-- [silvercar/unleash-client-kotlin](https://github.com/silvercar/unleash-client-kotlin) (Kotlin)
-- [Stogon/unleash-bundle](https://git.stogon.io/Stogon/unleash-bundle/) (PHP - Symfony)
-- [uekoetter.dev/unleash-client-dart](https://pub.dev/packages/unleash) (Dart)
+- Angular - TypeScript ([ngx-unleash-proxy-client](https://github.com/snowfrogdev/snowfrogdev/tree/main/packages/ngx-unleash-proxy-client))
+- Clojure ([AppsFlyer/clojure-unleash](https://github.com/AppsFlyer/unleash-client-clojure))
+- C++ ([aruizs/unleash-client-cpp](https://github.com/aruizs/unleash-client-cpp))
+- Dart ([uekoetter.dev/unleash-client-dart](https://pub.dev/packages/unleash))
+- Elixir ([afontaine/unleash_ex](https://gitlab.com/afontaine/unleash_ex))
+- Kotlin ([silvercar/unleash-client-kotlin](https://github.com/silvercar/unleash-client-kotlin))
+- Laravel - PHP ([mikefrancis/laravel-unleash](https://github.com/mikefrancis/laravel-unleash))
+- NestJS - Node.js ([pmb0/nestjs-unleash](https://github.com/pmb0/nestjs-unleash))
+- PHP ([minds/unleash-client-php](https://gitlab.com/minds/unleash-client-php))
+- PHP - Symfony ([Stogon/unleash-bundle](https://git.stogon.io/Stogon/unleash-bundle/))
+- React Native / Expo ([nunogois/proxy-client-react-native](https://github.com/nunogois/proxy-client-react-native))
+- Solid ([nunogois/proxy-client-solid](https://github.com/nunogois/proxy-client-solid))
 - _...your implementation for your favorite language._
 
 ### Implement your own SDK {#implement-your-own-sdk}

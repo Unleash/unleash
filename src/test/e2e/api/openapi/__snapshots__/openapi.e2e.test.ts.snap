@@ -352,6 +352,63 @@ Object {
         ],
         "type": "object",
       },
+      "clientMetricsSchema": Object {
+        "properties": Object {
+          "appName": Object {
+            "type": "string",
+          },
+          "bucket": Object {
+            "properties": Object {
+              "start": Object {
+                "$ref": "#/components/schemas/dateSchema",
+              },
+              "stop": Object {
+                "$ref": "#/components/schemas/dateSchema",
+              },
+              "toggles": Object {
+                "additionalProperties": Object {
+                  "properties": Object {
+                    "no": Object {
+                      "minimum": 0,
+                      "type": "integer",
+                    },
+                    "variants": Object {
+                      "additionalProperties": Object {
+                        "minimum": 0,
+                        "type": "integer",
+                      },
+                      "type": "object",
+                    },
+                    "yes": Object {
+                      "minimum": 0,
+                      "type": "integer",
+                    },
+                  },
+                  "type": "object",
+                },
+                "type": "object",
+              },
+            },
+            "required": Array [
+              "start",
+              "stop",
+              "toggles",
+            ],
+            "type": "object",
+          },
+          "environment": Object {
+            "type": "string",
+          },
+          "instanceId": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "appName",
+          "bucket",
+        ],
+        "type": "object",
+      },
       "cloneFeatureSchema": Object {
         "properties": Object {
           "name": Object {
@@ -1405,63 +1462,6 @@ Object {
         "required": Array [
           "version",
           "projects",
-        ],
-        "type": "object",
-      },
-      "registerMetricsSchema": Object {
-        "properties": Object {
-          "appName": Object {
-            "type": "string",
-          },
-          "bucket": Object {
-            "properties": Object {
-              "start": Object {
-                "$ref": "#/components/schemas/dateSchema",
-              },
-              "stop": Object {
-                "$ref": "#/components/schemas/dateSchema",
-              },
-              "toggles": Object {
-                "additionalProperties": Object {
-                  "properties": Object {
-                    "no": Object {
-                      "minimum": 0,
-                      "type": "integer",
-                    },
-                    "variants": Object {
-                      "additionalProperties": Object {
-                        "minimum": 0,
-                        "type": "integer",
-                      },
-                      "type": "object",
-                    },
-                    "yes": Object {
-                      "minimum": 0,
-                      "type": "integer",
-                    },
-                  },
-                  "type": "object",
-                },
-                "type": "object",
-              },
-            },
-            "required": Array [
-              "start",
-              "stop",
-              "toggles",
-            ],
-            "type": "object",
-          },
-          "environment": Object {
-            "type": "string",
-          },
-          "instanceId": Object {
-            "type": "string",
-          },
-        },
-        "required": Array [
-          "appName",
-          "bucket",
         ],
         "type": "object",
       },
@@ -5174,11 +5174,11 @@ Object {
           "content": Object {
             "application/json": Object {
               "schema": Object {
-                "$ref": "#/components/schemas/registerMetricsSchema",
+                "$ref": "#/components/schemas/clientMetricsSchema",
               },
             },
           },
-          "description": "registerMetricsSchema",
+          "description": "clientMetricsSchema",
           "required": true,
         },
         "responses": Object {

@@ -1,8 +1,8 @@
 import { FromSchema } from 'json-schema-to-ts';
 import { dateSchema } from './date-schema';
 
-export const registerMetricsSchema = {
-    $id: '#/components/schemas/registerMetricsSchema',
+export const clientMetricsSchema = {
+    $id: '#/components/schemas/clientMetricsSchema',
     type: 'object',
     required: ['appName', 'bucket'],
     properties: {
@@ -42,4 +42,4 @@ export const registerMetricsSchema = {
     },
 } as const;
 
-export type RegisterMetricsSchema = FromSchema<typeof registerMetricsSchema>;
+export type ClientMetricsSchema = FromSchema<typeof clientMetricsSchema>;

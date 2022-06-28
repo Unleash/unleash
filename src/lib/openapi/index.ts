@@ -83,7 +83,7 @@ import { strategySchema } from './spec/strategy-schema';
 import { strategiesSchema } from './spec/strategies-schema';
 import { upsertStrategySchema } from './spec/upsert-strategy-schema';
 import { clientApplicationSchema } from './spec/client-application-schema';
-import { registerMetricsSchema } from './spec/register-metrics-schema';
+import { clientMetricsSchema } from './spec/client-metrics-schema';
 import { dateSchema } from './spec/date-schema';
 import { IServerOption } from '../types';
 import { URL } from 'url';
@@ -99,6 +99,7 @@ export const schemas = {
     applicationSchema,
     applicationsSchema,
     clientApplicationSchema,
+    clientMetricsSchema,
     cloneFeatureSchema,
     changePasswordSchema,
     constraintSchema,
@@ -144,7 +145,6 @@ export const schemas = {
     projectSchema,
     projectsSchema,
     resetPasswordSchema,
-    registerMetricsSchema,
     roleSchema,
     segmentSchema,
     sortOrderSchema,

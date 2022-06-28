@@ -45,7 +45,7 @@ The below table shows what features the various server-side SDKs support. Note t
 - ❌: Not implemented, not planned
 - **N/A**: Not applicable to this SDK
 
-:::note If you see an item marked with a ❌ that you would find useful, feel free to reach out to us ([on Slack](https://slack.unleash.run/), for instance) with your use case. It may not be something we can prioritize right now, but if you'd like to contribute it back to the community, we'd love to help you build it. :::
+:::note If you see an item marked with a ❌ that you would find useful, feel free to reach out to us ([on Slack](https://slack.unleash.run/), for instance) with your use case. It may not be something we can prioritize right now, but if you'd like to contribute it back to the community, we'd love to help you build it.. :::
 
 | Capability | [Java](/sdks/java_sdk) | [Node.js](/sdks/node_sdk) | [Go](/sdks/go_sdk) | [Python](/sdks/python_sdk) | [Ruby](/sdks/ruby_sdk) | [.NET](/sdks/dot_net_sdk) | [PHP](/sdks/php_sdk) | [Rust](https://github.com/unleash/unleash-client-rust) | [Unleash Proxy](unleash-proxy.md) |
 | --- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |

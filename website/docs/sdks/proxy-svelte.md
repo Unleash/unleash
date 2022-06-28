@@ -115,7 +115,7 @@ To start the client, use the client's `start` method. The below snippet of pseud
 </svelte:component>
 ```
 
-# Usage
+## Usage
 
 ## Check feature toggle status
 

@@ -109,12 +109,12 @@ Here's some of the fantastic work our community has done to make Unleash work in
 - [mikefrancis/laravel-unleash](https://github.com/mikefrancis/laravel-unleash) (Laravel - PHP)
 - [minds/unleash-client-php](https://gitlab.com/minds/unleash-client-php) (PHP)
 - [ngx-unleash-proxy-client](https://github.com/snowfrogdev/snowfrogdev/tree/main/packages/ngx-unleash-proxy-client) (Angular - TypeScript)
+- [nunogois/proxy-client-react-native](https://github.com/nunogois/proxy-client-react-native) (React Native / Expo)
+- [nunogois/proxy-client-solid](https://github.com/nunogois/proxy-client-solid) (Solid)
 - [pmb0/nestjs-unleash](https://github.com/pmb0/nestjs-unleash) (NestJS - Node.js)
 - [silvercar/unleash-client-kotlin](https://github.com/silvercar/unleash-client-kotlin) (Kotlin)
 - [Stogon/unleash-bundle](https://git.stogon.io/Stogon/unleash-bundle/) (PHP - Symfony)
 - [uekoetter.dev/unleash-client-dart](https://pub.dev/packages/unleash) (Dart)
-- [nunogois/proxy-client-solid](https://github.com/nunogois/proxy-client-solid) (Solid)
-- [nunogois/proxy-client-react-native](https://github.com/nunogois/proxy-client-react-native) (React Native / Expo)
 - _...your implementation for your favorite language._
 
 ### Implement your own SDK {#implement-your-own-sdk}

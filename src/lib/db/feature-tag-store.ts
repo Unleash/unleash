@@ -112,7 +112,7 @@ class FeatureTagStore implements IFeatureTagStore {
             .catch((err) => {
                 if (err.code === UNIQUE_CONSTRAINT_VIOLATION) {
                     throw new FeatureHasTagError(
-                        `${featureName} already had the tag: [${tag.type}:${tag.value}]`,
+                        `${featureName} already has the tag: [${tag.type}:${tag.value}]`,
                     );
                 } else {
                     throw err;

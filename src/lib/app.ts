@@ -39,7 +39,6 @@ export default async function getApp(
     app.disable('x-powered-by');
     app.set('port', config.server.port);
     app.locals.baseUriPath = baseUriPath;
-
     if (config.server.serverMetrics && config.eventBus) {
         app.use(responseTimeMetrics(config.eventBus));
     }

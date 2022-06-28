@@ -52,7 +52,7 @@ class EventStore extends EventEmitter implements IEventStore {
             const savedEvent = this.rowToEvent(rows[0]);
             process.nextTick(() => this.emit(event.type, savedEvent));
         } catch (error: unknown) {
-            this.logger.warn(`Failed to store event "${event.type}": ${error}`);
+            this.logger.warn(`Failed to store "${event.type}" event: ${error}`);
         }
     }
 

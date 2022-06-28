@@ -1770,13 +1770,14 @@ passport-strategy@1.x.x:
   resolved "https://registry.yarnpkg.com/passport-strategy/-/passport-strategy-1.0.0.tgz#b5539aa8fc225a3d1ad179476ddf236b440f52e4"
   integrity sha1-tVOaqPwiWj0a0XlHbd8ja0QPUuQ=
 
-passport@^0.5.2:
-  version "0.5.2"
-  resolved "https://registry.yarnpkg.com/passport/-/passport-0.5.2.tgz#0cb38dd8a71552c8390dfa6a9a6f7f3909954bcf"
-  integrity sha512-w9n/Ot5I7orGD4y+7V3EFJCQEznE5RxHamUxcqLT2QoJY0f2JdN8GyHonYFvN0Vz+L6lUJfVhrk2aZz2LbuREw==
+passport@^0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/passport/-/passport-0.6.0.tgz#e869579fab465b5c0b291e841e6cc95c005fac9d"
+  integrity sha512-0fe+p3ZnrWRW74fe8+SvCyf4a3Pb2/h7gFkQ8yTJpAO50gDzlfjZUZTO1k5Eg9kUct22OxHLqDZoKUWRHOh9ug==
   dependencies:
     passport-strategy "1.x.x"
     pause "0.0.1"
+    utils-merge "^1.0.1"
 
 path-exists@^4.0.0:
   version "4.0.0"
@@ -2461,13 +2462,13 @@ universalify@^2.0.0:
   resolved "https://registry.yarnpkg.com/universalify/-/universalify-2.0.0.tgz#75a4984efedc4b08975c5aeb73f530d02df25717"
   integrity sha512-hAZsKq7Yy11Zu1DE0OzWjw7nnLZmJZYTDZZyEFHZdUhV8FkH5MCfoU1XMaxXovpyW5nq5scPqq0ZDP9Zyl04oQ==
 
-unleash-frontend@4.13.0-beta.1:
-  version "4.13.0-beta.1"
-  resolved "https://registry.yarnpkg.com/unleash-frontend/-/unleash-frontend-4.13.0-beta.1.tgz#fed74f2da2f3c45c21a978097a34ba54b3064cf8"
-  integrity sha512-zMKBS0ZVfsuF3ZTamQUjLND6dqW7a1zDSlVmlEP4y3jgG0vhdcnTWUG7qkv9jbhyPljaS3XCVks3ilJdJwFKqg==
+unleash-frontend@4.14.0-beta.0:
+  version "4.14.0-beta.0"
+  resolved "https://registry.yarnpkg.com/unleash-frontend/-/unleash-frontend-4.14.0-beta.0.tgz#c68335f92f92494bdd25eb3aeb5f2dd9ce7950de"
+  integrity sha512-RIBkNR2S/uayMFwc88xlUwluYix6GH+7Cf1DqVV1fD/s0MMFQHQzL7qpE3XUmiUw5rn4BqXs95V1bmjh00+ACg==
 
 "unleash-server@file:./..":
-  version "4.13.0-beta.5"
+  version "4.14.0-beta.0"
   dependencies:
     "@unleash/express-openapi" "^0.2.0"
     ajv "^8.11.0"
@@ -2513,7 +2514,7 @@ unleash-frontend@4.13.0-beta.1:
     serve-favicon "^2.5.0"
     stoppable "^1.1.0"
     type-is "^1.6.18"
-    unleash-frontend "4.13.0-beta.1"
+    unleash-frontend "4.14.0-beta.0"
     uuid "^8.3.2"
 
 unpipe@1.0.0, unpipe@~1.0.0:
@@ -2533,7 +2534,7 @@ util-deprecate@~1.0.1:
   resolved "https://registry.yarnpkg.com/util-deprecate/-/util-deprecate-1.0.2.tgz#450d4dc9fa70de732762fbd2d4a28981419a0ccf"
   integrity sha1-RQ1Nyfpw3nMnYvvS1KKJgUGaDM8=
 
-utils-merge@1.0.1, utils-merge@1.x.x:
+utils-merge@1.0.1, utils-merge@1.x.x, utils-merge@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/utils-merge/-/utils-merge-1.0.1.tgz#9f95710f50a267947b2ccc124741c1028427e713"
   integrity sha1-n5VxD1CiZ5R7LMwSR0HBAoQn5xM=

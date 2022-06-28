@@ -112,11 +112,11 @@ You'll need:
    - username: `admin`
    - password: `unleash4all`
 
-### Steps running locally with docker
+### How to run Unleash with Docker
 
 1. Build a local docker image by running `docker build . -t unleash:local`
 2. Create a network by running `docker network create unleash`
-3. Start a postgres database:
+3. Start a Postgres database. Make sure to use the network you created in step 2.
 
 ```sh
 docker run -e POSTGRES_PASSWORD=some_password \
@@ -124,7 +124,7 @@ docker run -e POSTGRES_PASSWORD=some_password \
   --network unleash --name postgres postgres
 ```
 
-4. Start Unleash via docker:
+4. Start Unleash. As with the database, use the network you created in step 2.
 
 ```sh
 docker run -p 4242:4242 \
@@ -144,7 +144,7 @@ Have any issues when getting set up?
 
 #### Can't connect to the database
 
-If you can't connect to the docker container, check its status by running `docker ps`. This command lists the currently running containers. Find the name of the container that you set up. If it's there, make sure that its port is mapped to your local machine: It should look this: `0.0.0.0:5432->5432/tcp` with the arrow (`->`) connector. If it just says `5432/tcp`, it is _not_ exposed to your local network.
+If you can't connect to the docker container, check its status by running `docker ps`. This command lists the currently running containers. Find the name of the container that you set up. If it's there, make sure that its port is mapped to your local machine: It should look like this: `0.0.0.0:5432->5432/tcp` with the arrow (`->`) connector. If it just says `5432/tcp`, it is _not_ exposed to your local network.
 
 To fix this, start a new container and make sure you give it the `-p 5432:5432` option.
 

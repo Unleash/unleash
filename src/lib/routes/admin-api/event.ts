@@ -58,7 +58,7 @@ export default class EventController extends Controller {
             method: 'get',
             path: '/:name',
             handler: this.getEventsForToggle,
-            permission: ADMIN,
+            permission: undefined,
             middleware: [
                 openApiService.validPath({
                     operationId: 'getEventsForToggle',

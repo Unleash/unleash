@@ -65,7 +65,7 @@ You'll need:
 - [nvm](https://github.com/nvm-sh/nvm) (optional) to manage your Node.js installation.
 - [Yarn](https://yarnpkg.com/) (optional but recommended; the steps below assume that you have it installed) to install packages and run the project.
 
-### Steps running directly with node
+### How to run Unleash with Node.js
 
 1. Use `nvm` to **install the correct version of Node.js**. From anywhere in the repo, run the below command. Skip this step if you're managing your Node.js installations yourself.
 

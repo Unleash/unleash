@@ -51,8 +51,8 @@ class EventStore extends EventEmitter implements IEventStore {
                 .returning(EVENT_COLUMNS);
             const savedEvent = this.rowToEvent(rows[0]);
             process.nextTick(() => this.emit(event.type, savedEvent));
-        } catch (e) {
-            this.logger.warn(`Failed to store event ${e}`);
+        } catch (error: unknown) {
+            this.logger.warn(`Failed to store event "${event.type}": ${error}`);
         }
     }
 
@@ -65,8 +65,8 @@ class EventStore extends EventEmitter implements IEventStore {
             process.nextTick(() =>
                 savedEvents.forEach((e) => this.emit(e.type, e)),
             );
-        } catch (e) {
-            this.logger.warn('Failed to store events');
+        } catch (error: unknown) {
+            this.logger.warn(`Failed to store events: ${error}`);
         }
     }
 

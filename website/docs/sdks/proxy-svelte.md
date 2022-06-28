@@ -1,16 +1,16 @@
 ---
 id: proxy-svelte
-title: Svelte proxy SDK
+title: Svelte Proxy SDK
 ---
 
 <div class="alert alert--info" role="alert">
-  <em>Svelte proxy SDK is currently at version 0.0.2 and is experimental</em>.
+  <em>Svelte Proxy SDK is currently at version 0.0.2 and is experimental</em>.
 </div>
 <br/>
 
 This library is meant to be used with the [unleash-proxy](https://github.com/Unleash/unleash-proxy). The proxy application layer will sit between your unleash instance and your client applications, and provides performance and security benefits. DO NOT TRY to connect this library directly to the unleash instance, as the datasets follow different formats because the proxy only returns evaluated toggle information.
 
-For more detailed information, check out [the svelte Proxy SDK on GitHub](https://github.com/Unleash/proxy-client-svelte).
+For more detailed information, check out the [Svelte Proxy SDK on GitHub](https://github.com/Unleash/proxy-client-svelte).
 
 ## Installation
 
@@ -24,24 +24,24 @@ Import the provider like this in your entrypoint file (typically index.svelte):
 
 ```html
 <script lang="ts">
-	let FlagProvider;
+  let FlagProvider;
 
-	onMount(async () => {
-		const proxyClientSvelte = await import('@unleash/proxy-client-svelte');
-		({ FlagProvider } = proxyClientSvelte);
-	});
+  onMount(async () => {
+    const proxyClientSvelte = await import('@unleash/proxy-client-svelte');
+    ({ FlagProvider } = proxyClientSvelte);
+  });
 
-	const config = {
-		url: 'https://HOSTNAME/proxy',
-		clientKey: 'PROXYKEY',
-		refreshInterval: 15,
-		appName: 'your-app-name',
-		environment: 'dev'
-	};
+  const config = {
+    url: 'https://HOSTNAME/proxy',
+    clientKey: 'PROXYKEY',
+    refreshInterval: 15,
+    appName: 'your-app-name',
+    environment: 'dev',
+  };
 </script>
 
-<svelte:component this={FlagProvider} {config}>
-	<App />
+<svelte:component this="{FlagProvider}" {config}>
+  <App />
 </svelte:component>
 ```
 
@@ -49,28 +49,28 @@ Alternatively, you can pass your own client in to the FlagProvider:
 
 ```html
 <script lang="ts">
-	import { UnleashClient } from '@unleash/proxy-client-svelte';
+  import { UnleashClient } from '@unleash/proxy-client-svelte';
 
-	let FlagProvider;
+  let FlagProvider;
 
-	onMount(async () => {
-		const proxyClientSvelte = await import('@unleash/proxy-client-svelte');
-		({ FlagProvider } = proxyClientSvelte);
-	});
+  onMount(async () => {
+    const proxyClientSvelte = await import('@unleash/proxy-client-svelte');
+    ({ FlagProvider } = proxyClientSvelte);
+  });
 
-	const config = {
-		url: 'https://HOSTNAME/proxy',
-		clientKey: 'PROXYKEY',
-		refreshInterval: 15,
-		appName: 'your-app-name',
-		environment: 'dev'
-	};
+  const config = {
+    url: 'https://HOSTNAME/proxy',
+    clientKey: 'PROXYKEY',
+    refreshInterval: 15,
+    appName: 'your-app-name',
+    environment: 'dev',
+  };
 
-	const client = new UnleashClient(config);
+  const client = new UnleashClient(config);
 </script>
 
-<svelte:component this={FlagProvider} unleashClient={client}>
-	<App />
+<svelte:component this="{FlagProvider}" unleashClient="{client}">
+  <App />
 </svelte:component>
 ```
 
@@ -82,8 +82,12 @@ By default, the Unleash client will start polling the Proxy for toggles immediat
 - passing a client instance to the `FlagProvider`
 
 ```html
-<svelte:component this={FlagProvider} unleashClient={client} startClient={false}>
-	<App />
+<svelte:component
+  this="{FlagProvider}"
+  unleashClient="{client}"
+  startClient="{false}"
+>
+  <App />
 </svelte:component>
 ```
 
@@ -93,21 +97,25 @@ To start the client, use the client's `start` method. The below snippet of pseud
 
 ```html
 <script lang="ts">
-	const client = new UnleashClient({
-		/* ... */
-	});
+  const client = new UnleashClient({
+    /* ... */
+  });
 
-	onMount(() => {
-		const asyncProcess = async () => {
-			// do async work ...
-			client.start();
-		};
-		asyncProcess();
-	});
+  onMount(() => {
+    const asyncProcess = async () => {
+      // do async work ...
+      client.start();
+    };
+    asyncProcess();
+  });
 </script>
 
-<svelte:component this={FlagProvider} unleashClient={client} startClient={false}>
-	<App />
+<svelte:component
+  this="{FlagProvider}"
+  unleashClient="{client}"
+  startClient="{false}"
+>
+  <App />
 </svelte:component>
 ```
 
@@ -119,9 +127,9 @@ To check if a feature is enabled:
 
 ```html
 <script lang="ts">
-	import { useFlag } from '@unleash/proxy-client-svelte';
+  import { useFlag } from '@unleash/proxy-client-svelte';
 
-	const enabled = useFlag('travel.landing');
+  const enabled = useFlag('travel.landing');
 </script>
 
 {#if $enabled}
@@ -137,9 +145,9 @@ To check variants:
 
 ```html
 <script lang="ts">
-	import { useVariant } from '@unleash/proxy-client-svelte';
+  import { useVariant } from '@unleash/proxy-client-svelte';
 
-	const variant = useVariant('travel.landing');
+  const variant = useVariant('travel.landing');
 </script>
 
 {#if $variant.enabled && $variant.name === 'SomeComponent'}
@@ -153,19 +161,18 @@ To check variants:
 
 ## Defer rendering until flags fetched
 
-useFlagsStatus retrieves the ready state and error events.
-Follow the following steps in order to delay rendering until the flags have been fetched.
+useFlagsStatus retrieves the ready state and error events. Follow the following steps in order to delay rendering until the flags have been fetched.
 
 ```html
 <script lang="ts">
-	import { useFlagsStatus } from '@unleash/proxy-client-svelte';
-	const { flagsReady, flagsError } = useFlagsStatus();
+  import { useFlagsStatus } from '@unleash/proxy-client-svelte';
+  const { flagsReady, flagsError } = useFlagsStatus();
 </script>
 
 {#if !$flagsReady}
 <Loading />
 {:else}
-<MyComponent error={flagsError} />
+<MyComponent error="{flagsError}" />
 {/if}
 ```
 
@@ -175,22 +182,22 @@ Follow the following steps in order to update the unleash context:
 
 ```html
 <script lang="ts">
-	import { useUnleashContext, useFlag } from '@unleash/proxy-client-svelte';
+  import { useUnleashContext, useFlag } from '@unleash/proxy-client-svelte';
 
-	export let userId: string = undefined;
+  export let userId: string = undefined;
 
-	const updateContext = useUnleashContext();
+  const updateContext = useUnleashContext();
 
-	onMount(() => {
-		updateContext({ userId });
-	});
+  onMount(() => {
+    updateContext({ userId });
+  });
 
-	$: {
-		async function run() {
-			await updateContext({ userId });
-			console.log('new flags loaded for', userId);
-		}
-		run();
-	}
+  $: {
+    async function run() {
+      await updateContext({ userId });
+      console.log('new flags loaded for', userId);
+    }
+    run();
+  }
 </script>
 ```

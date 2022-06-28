@@ -114,7 +114,7 @@ You'll need:
 
 ### Steps running locally with docker
 
-1. Build local docker image by running `docker build . -t unleash:local`
+1. Build a local docker image by running `docker build . -t unleash:local`
 2. Create a network by running `docker network create unleash`
 3. Start a postgres database:
 

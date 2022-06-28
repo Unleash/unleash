@@ -52,7 +52,7 @@ export default class ClientMetricsController extends Controller {
                 openApiService.validPath({
                     tags: ['client'],
                     operationId: 'registerClientMetrics',
-                    requestBody: createRequestSchema('clientAppSchema'),
+                    requestBody: createRequestSchema('registerMetricsSchema'),
                     responses: {
                         202: createResponseSchema('emptyResponse'),
                     },

@@ -309,78 +309,6 @@ Object {
         ],
         "type": "object",
       },
-      "clientAppSchema": Object {
-        "properties": Object {
-          "appName": Object {
-            "type": "string",
-          },
-          "bucket": Object {
-            "additionalProperties": true,
-          },
-          "clientIp": Object {
-            "type": "string",
-          },
-          "color": Object {
-            "type": "string",
-          },
-          "count": Object {
-            "type": "number",
-          },
-          "description": Object {
-            "type": "string",
-          },
-          "environment": Object {
-            "type": "string",
-          },
-          "icon": Object {
-            "type": "string",
-          },
-          "instanceId": Object {
-            "type": "string",
-          },
-          "interval": Object {
-            "type": "number",
-          },
-          "metricsCount": Object {
-            "type": "number",
-          },
-          "seenToggles": Object {
-            "items": Object {
-              "type": "string",
-            },
-            "type": "array",
-          },
-          "started": Object {
-            "oneOf": Array [
-              Object {
-                "format": "date-time",
-                "type": "string",
-              },
-              Object {
-                "type": "number",
-              },
-            ],
-          },
-          "strategies": Object {
-            "items": Object {
-              "oneOf": Array [
-                Object {
-                  "type": "string",
-                },
-                Object {
-                  "$ref": "#/components/schemas/parametersSchema",
-                },
-              ],
-            },
-            "type": "array",
-          },
-        },
-        "required": Array [
-          "appName",
-          "instanceId",
-        ],
-        "type": "object",
-      },
       "clientApplicationSchema": Object {
         "properties": Object {
           "appName": Object {
@@ -629,6 +557,17 @@ Object {
           "rootRole",
         ],
         "type": "object",
+      },
+      "dateSchema": Object {
+        "oneOf": Array [
+          Object {
+            "format": "date-time",
+            "type": "string",
+          },
+          Object {
+            "type": "number",
+          },
+        ],
       },
       "emailSchema": Object {
         "additionalProperties": false,
@@ -1466,6 +1405,63 @@ Object {
         "required": Array [
           "version",
           "projects",
+        ],
+        "type": "object",
+      },
+      "registerMetricsSchema": Object {
+        "properties": Object {
+          "appName": Object {
+            "type": "string",
+          },
+          "bucket": Object {
+            "properties": Object {
+              "start": Object {
+                "$ref": "#/components/schemas/dateSchema",
+              },
+              "stop": Object {
+                "$ref": "#/components/schemas/dateSchema",
+              },
+              "toggles": Object {
+                "additionalProperties": Object {
+                  "properties": Object {
+                    "no": Object {
+                      "minimum": 0,
+                      "type": "integer",
+                    },
+                    "variants": Object {
+                      "additionalProperties": Object {
+                        "minimum": 0,
+                        "type": "integer",
+                      },
+                      "type": "object",
+                    },
+                    "yes": Object {
+                      "minimum": 0,
+                      "type": "integer",
+                    },
+                  },
+                  "type": "object",
+                },
+                "type": "object",
+              },
+            },
+            "required": Array [
+              "start",
+              "stop",
+              "toggles",
+            ],
+            "type": "object",
+          },
+          "environment": Object {
+            "type": "string",
+          },
+          "instanceId": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "appName",
+          "bucket",
         ],
         "type": "object",
       },
@@ -5178,11 +5174,11 @@ Object {
           "content": Object {
             "application/json": Object {
               "schema": Object {
-                "$ref": "#/components/schemas/clientAppSchema",
+                "$ref": "#/components/schemas/registerMetricsSchema",
               },
             },
           },
-          "description": "clientAppSchema",
+          "description": "registerMetricsSchema",
           "required": true,
         },
         "responses": Object {

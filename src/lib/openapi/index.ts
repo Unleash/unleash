@@ -83,7 +83,8 @@ import { strategySchema } from './spec/strategy-schema';
 import { strategiesSchema } from './spec/strategies-schema';
 import { upsertStrategySchema } from './spec/upsert-strategy-schema';
 import { clientApplicationSchema } from './spec/client-application-schema';
-import { clientAppSchema } from './spec/client-app-schema';
+import { registerMetricsSchema } from './spec/register-metrics-schema';
+import { dateSchema } from './spec/date-schema';
 
 // All schemas in `openapi/spec` should be listed here.
 export const schemas = {
@@ -96,7 +97,6 @@ export const schemas = {
     applicationSchema,
     applicationsSchema,
     clientApplicationSchema,
-    clientAppSchema,
     cloneFeatureSchema,
     changePasswordSchema,
     constraintSchema,
@@ -106,6 +106,7 @@ export const schemas = {
     createFeatureSchema,
     createFeatureStrategySchema,
     createUserSchema,
+    dateSchema,
     emailSchema,
     environmentSchema,
     environmentsSchema,
@@ -141,6 +142,7 @@ export const schemas = {
     projectSchema,
     projectsSchema,
     resetPasswordSchema,
+    registerMetricsSchema,
     roleSchema,
     segmentSchema,
     sortOrderSchema,

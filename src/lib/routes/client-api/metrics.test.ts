@@ -192,7 +192,6 @@ test('should set lastSeen on toggle', async () => {
         .post('/api/client/metrics')
         .send({
             appName: 'demo',
-            instanceId: '1',
             bucket: {
                 start: Date.now(),
                 stop: Date.now(),

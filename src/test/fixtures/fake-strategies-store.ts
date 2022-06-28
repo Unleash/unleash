@@ -12,7 +12,7 @@ export default class FakeStrategiesStore implements IStrategyStore {
         description: 'default strategy',
         displayName: 'Default',
         editable: false,
-        parameters: {},
+        parameters: [],
         deprecated: false,
     };
 

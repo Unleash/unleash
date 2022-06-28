@@ -2,28 +2,15 @@
 
 exports[`featureSchema constraints 1`] = `
 Object {
-  "data": Object {
-    "name": "a",
-    "strategies": Array [
-      Object {
-        "constraints": Array [
-          Object {
-            "contextName": "a",
-          },
-        ],
-        "name": "a",
-      },
-    ],
-  },
   "errors": Array [
     Object {
-      "instancePath": "/strategies/0/constraints/0",
+      "instancePath": "/strategies/0",
       "keyword": "required",
-      "message": "must have required property 'operator'",
+      "message": "must have required property 'id'",
       "params": Object {
-        "missingProperty": "operator",
+        "missingProperty": "id",
       },
-      "schemaPath": "#/components/schemas/constraintSchema/required",
+      "schemaPath": "#/required",
     },
   ],
   "schema": "#/components/schemas/featureSchema",
@@ -32,27 +19,6 @@ Object {
 
 exports[`featureSchema overrides 1`] = `
 Object {
-  "data": Object {
-    "name": "a",
-    "variants": Array [
-      Object {
-        "name": "a",
-        "overrides": Array [
-          Object {
-            "contextName": "a",
-            "values": "b",
-          },
-        ],
-        "payload": Object {
-          "type": "a",
-          "value": "b",
-        },
-        "stickiness": "a",
-        "weight": 1,
-        "weightType": "a",
-      },
-    ],
-  },
   "errors": Array [
     Object {
       "instancePath": "/variants/0/overrides/0/values",

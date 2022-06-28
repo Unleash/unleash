@@ -1,38 +1,57 @@
 import { FromSchema } from 'json-schema-to-ts';
-import { constraintSchema } from './constraint-schema';
-import { parametersSchema } from './parameters-schema';
 
 export const strategySchema = {
     $id: '#/components/schemas/strategySchema',
     type: 'object',
     additionalProperties: false,
-    required: ['name'],
+    required: [
+        'name',
+        'displayName',
+        'description',
+        'editable',
+        'deprecated',
+        'parameters',
+    ],
     properties: {
-        id: {
-            type: 'string',
-        },
         name: {
             type: 'string',
         },
-        sortOrder: {
-            type: 'number',
+        displayName: {
+            type: 'string',
+            nullable: true,
         },
-        constraints: {
-            type: 'array',
-            items: {
-                $ref: '#/components/schemas/constraintSchema',
-            },
+        description: {
+            type: 'string',
+        },
+        editable: {
+            type: 'boolean',
+        },
+        deprecated: {
+            type: 'boolean',
         },
         parameters: {
-            $ref: '#/components/schemas/parametersSchema',
+            type: 'array',
+            items: {
+                type: 'object',
+                additionalProperties: false,
+                properties: {
+                    name: {
+                        type: 'string',
+                    },
+                    type: {
+                        type: 'string',
+                    },
+                    description: {
+                        type: 'string',
+                    },
+                    required: {
+                        type: 'boolean',
+                    },
+                },
+            },
         },
     },
-    components: {
-        schemas: {
-            constraintSchema,
-            parametersSchema,
-        },
-    },
+    components: {},
 } as const;
 
 export type StrategySchema = FromSchema<typeof strategySchema>;

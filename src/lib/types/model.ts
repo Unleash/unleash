@@ -48,12 +48,14 @@ export interface FeatureToggleDTO {
     archivedAt?: Date;
     createdAt?: Date;
     impressionData?: boolean;
+    variants?: IVariant[];
 }
 
 export interface FeatureToggle extends FeatureToggleDTO {
     project: string;
     lastSeenAt?: Date;
     variants?: IVariant[];
+    createdAt?: Date;
 }
 
 export interface IFeatureToggleClient {
@@ -188,7 +190,7 @@ export interface ITag {
     type: string;
 }
 
-export interface IParameterDefinition {
+export interface IAddonParameterDefinition {
     name: string;
     displayName: string;
     type: string;
@@ -203,7 +205,7 @@ export interface IAddonDefinition {
     displayName: string;
     documentationUrl: string;
     description: string;
-    parameters?: IParameterDefinition[];
+    parameters?: IAddonParameterDefinition[];
     events?: string[];
     tagTypes?: ITagType[];
 }
@@ -280,7 +282,7 @@ export interface IClientApp {
     strategies?: string[] | Record<string, string>[];
     bucket?: any;
     count?: number;
-    started?: number | Date;
+    started?: string | number | Date;
     interval?: number;
     icon?: string;
     description?: string;

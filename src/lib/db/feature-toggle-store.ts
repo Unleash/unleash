@@ -197,6 +197,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             stale: data.stale,
             created_at: data.createdAt,
             impression_data: data.impressionData,
+            variants: JSON.stringify(data.variants),
         };
         if (!row.created_at) {
             delete row.created_at;
@@ -235,7 +236,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         const now = new Date();
         const row = await this.db(TABLE)
             .where({ name })
-            .update({ archived: true, archived_at: now })
+            .update({ archived_at: now })
             .returning(FEATURE_COLUMNS);
         return this.rowToFeature(row[0]);
     }
@@ -249,7 +250,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
     async revive(name: string): Promise<FeatureToggle> {
         const row = await this.db(TABLE)
             .where({ name })
-            .update({ archived: false, archived_at: null })
+            .update({ archived_at: null })
             .returning(FEATURE_COLUMNS);
         return this.rowToFeature(row[0]);
     }

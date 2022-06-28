@@ -1,6 +1,5 @@
 import { FromSchema } from 'json-schema-to-ts';
 import { featureSchema } from './feature-schema';
-import { strategySchema } from './strategy-schema';
 import { tagSchema } from './tag-schema';
 import { tagTypeSchema } from './tag-type-schema';
 import { featureTagSchema } from './feature-tag-schema';
@@ -10,6 +9,7 @@ import { featureEnvironmentSchema } from './feature-environment-schema';
 import { environmentSchema } from './environment-schema';
 import { segmentSchema } from './segment-schema';
 import { featureStrategySegmentSchema } from './feature-strategy-segment-schema';
+import { strategySchema } from './strategy-schema';
 
 export const stateSchema = {
     $id: '#/components/schemas/stateSchema',
@@ -90,7 +90,6 @@ export const stateSchema = {
     components: {
         schemas: {
             featureSchema,
-            strategySchema,
             tagSchema,
             tagTypeSchema,
             featureTagSchema,
@@ -100,6 +99,7 @@ export const stateSchema = {
             environmentSchema,
             segmentSchema,
             featureStrategySegmentSchema,
+            strategySchema,
         },
     },
 } as const;

@@ -6,14 +6,7 @@ export const featureStrategySchema = {
     $id: '#/components/schemas/featureStrategySchema',
     type: 'object',
     additionalProperties: false,
-    required: [
-        'id',
-        'featureName',
-        'strategyName',
-        'constraints',
-        'parameters',
-        'environment',
-    ],
+    required: ['name', 'id'],
     properties: {
         id: {
             type: 'string',
@@ -21,25 +14,14 @@ export const featureStrategySchema = {
         name: {
             type: 'string',
         },
-        createdAt: {
-            type: 'string',
-            format: 'date-time',
-            nullable: true,
-        },
-        featureName: {
-            type: 'string',
-        },
-        projectId: {
-            type: 'string',
-        },
-        environment: {
-            type: 'string',
-        },
-        strategyName: {
-            type: 'string',
-        },
         sortOrder: {
             type: 'number',
+        },
+        segments: {
+            type: 'array',
+            items: {
+                type: 'number',
+            },
         },
         constraints: {
             type: 'array',

@@ -7,8 +7,8 @@ import { contextFieldSchema } from './spec/context-field-schema';
 import { contextFieldsSchema } from './spec/context-fields-schema';
 import { createApiTokenSchema } from './spec/create-api-token-schema';
 import { createFeatureSchema } from './spec/create-feature-schema';
-import { createStrategySchema } from './spec/create-strategy-schema';
 import { createUserSchema } from './spec/create-user-schema';
+import { createFeatureStrategySchema } from './spec/create-feature-strategy-schema';
 import { environmentSchema } from './spec/environment-schema';
 import { environmentsSchema } from './spec/environments-schema';
 import { featureEnvironmentSchema } from './spec/feature-environment-schema';
@@ -23,6 +23,7 @@ import { healthCheckSchema } from './spec/health-check-schema';
 import { healthOverviewSchema } from './spec/health-overview-schema';
 import { healthReportSchema } from './spec/health-report-schema';
 import { legalValueSchema } from './spec/legal-value-schema';
+import { loginSchema } from './spec/login-schema';
 import { idSchema } from './spec/id-schema';
 import { mapValues } from '../util/map-values';
 import { nameSchema } from './spec/name-schema';
@@ -40,14 +41,13 @@ import { projectsSchema } from './spec/projects-schema';
 import { roleSchema } from './spec/role-schema';
 import { sortOrderSchema } from './spec/sort-order-schema';
 import { splashSchema } from './spec/splash-schema';
-import { strategySchema } from './spec/strategy-schema';
 import { tagSchema } from './spec/tag-schema';
 import { tagsSchema } from './spec/tags-schema';
 import { tagTypeSchema } from './spec/tag-type-schema';
 import { tagTypesSchema } from './spec/tag-types-schema';
 import { uiConfigSchema } from './spec/ui-config-schema';
 import { updateFeatureSchema } from './spec/update-feature-schema';
-import { updateStrategySchema } from './spec/update-strategy-schema';
+import { updateFeatureStrategySchema } from './spec/update-feature-strategy-schema';
 import { updateApiTokenSchema } from './spec/update-api-token-schema';
 import { updateTagTypeSchema } from './spec/update-tag-type-schema';
 import { upsertContextFieldSchema } from './spec/upsert-context-field-schema';
@@ -59,6 +59,9 @@ import { validateTagTypeSchema } from './spec/validate-tag-type-schema';
 import { variantSchema } from './spec/variant-schema';
 import { variantsSchema } from './spec/variants-schema';
 import { versionSchema } from './spec/version-schema';
+import { featureEnvironmentMetricsSchema } from './spec/feature-environment-metrics-schema';
+import { featureUsageSchema } from './spec/feature-usage-schema';
+import { featureMetricsSchema } from './spec/feature-metrics-schema';
 import { addonSchema } from './spec/addon-schema';
 import { addonsSchema } from './spec/addons-schema';
 import { addonParameterSchema } from './spec/addon-parameter-schema';
@@ -76,6 +79,12 @@ import { stateSchema } from './spec/state-schema';
 import { featureTagSchema } from './spec/feature-tag-schema';
 import { exportParametersSchema } from './spec/export-parameters-schema';
 import { emailSchema } from './spec/email-schema';
+import { strategySchema } from './spec/strategy-schema';
+import { strategiesSchema } from './spec/strategies-schema';
+import { upsertStrategySchema } from './spec/upsert-strategy-schema';
+import { clientApplicationSchema } from './spec/client-application-schema';
+import { IServerOption } from '../types';
+import { URL } from 'url';
 
 // All schemas in `openapi/spec` should be listed here.
 export const schemas = {
@@ -87,6 +96,7 @@ export const schemas = {
     apiTokensSchema,
     applicationSchema,
     applicationsSchema,
+    clientApplicationSchema,
     cloneFeatureSchema,
     changePasswordSchema,
     constraintSchema,
@@ -94,14 +104,17 @@ export const schemas = {
     contextFieldsSchema,
     createApiTokenSchema,
     createFeatureSchema,
-    createStrategySchema,
+    createFeatureStrategySchema,
     createUserSchema,
     emailSchema,
     environmentSchema,
     environmentsSchema,
     exportParametersSchema,
     featureEnvironmentSchema,
+    featureEnvironmentMetricsSchema,
     featureSchema,
+    featureMetricsSchema,
+    featureUsageSchema,
     featureStrategySchema,
     featureStrategySegmentSchema,
     featureTagSchema,
@@ -114,6 +127,7 @@ export const schemas = {
     healthOverviewSchema,
     healthReportSchema,
     legalValueSchema,
+    loginSchema,
     nameSchema,
     idSchema,
     meSchema,
@@ -132,6 +146,7 @@ export const schemas = {
     sortOrderSchema,
     splashSchema,
     stateSchema,
+    strategiesSchema,
     strategySchema,
     tagSchema,
     tagWithVersionSchema,
@@ -141,10 +156,11 @@ export const schemas = {
     tokenUserSchema,
     uiConfigSchema,
     updateFeatureSchema,
-    updateStrategySchema,
+    updateFeatureStrategySchema,
     updateApiTokenSchema,
     updateTagTypeSchema,
     upsertContextFieldSchema,
+    upsertStrategySchema,
     validatePasswordSchema,
     validateTagTypeSchema,
     updateUserSchema,
@@ -168,15 +184,11 @@ export interface JsonSchemaProps {
     components: object;
 }
 
-interface ApiOperation<Tag = 'client' | 'admin' | 'other'>
+export interface ApiOperation<Tag = 'admin' | 'client' | 'auth' | 'other'>
     extends Omit<OpenAPIV3.OperationObject, 'tags'> {
     operationId: string;
     tags: [Tag];
 }
-
-export type AdminApiOperation = ApiOperation<'admin'>;
-export type ClientApiOperation = ApiOperation<'client'>;
-export type OtherApiOperation = ApiOperation<'other'>;
 
 export const createRequestSchema = (
     schemaName: string,
@@ -216,12 +228,31 @@ export const removeJsonSchemaProps = <T extends JsonSchemaProps>(
     return omitKeys(schema, '$id', 'components');
 };
 
-export const createOpenApiSchema = (
-    serverUrl?: string,
-): Omit<OpenAPIV3.Document, 'paths'> => {
+const findRootUrl: (unleashUrl: string, baseUriPath: string) => string = (
+    unleashUrl: string,
+    baseUriPath?: string,
+) => {
+    if (!baseUriPath) {
+        return unleashUrl;
+    }
+    const baseUrl = new URL(unleashUrl);
+    if (baseUrl.pathname.indexOf(baseUriPath) >= 0) {
+        return `${baseUrl.protocol}//${baseUrl.host}`;
+    }
+    return baseUrl.toString();
+};
+
+export const createOpenApiSchema = ({
+    unleashUrl,
+    baseUriPath,
+}: Pick<IServerOption, 'unleashUrl' | 'baseUriPath'>): Omit<
+    OpenAPIV3.Document,
+    'paths'
+> => {
+    const url = findRootUrl(unleashUrl, baseUriPath);
     return {
         openapi: '3.0.3',
-        servers: serverUrl ? [{ url: serverUrl }] : [],
+        servers: url ? [{ url }] : [],
         info: {
             title: 'Unleash API',
             version: process.env.npm_package_version!,

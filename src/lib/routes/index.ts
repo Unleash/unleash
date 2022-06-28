@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { BackstageController } from './backstage';
 import ResetPasswordController from './auth/reset-password-controller';
-import SimplePasswordProvider from './auth/simple-password-provider';
+import { SimplePasswordProvider } from './auth/simple-password-provider';
 import { IUnleashConfig } from '../types/option';
 import { IUnleashServices } from '../types/services';
 import { api } from './api-def';

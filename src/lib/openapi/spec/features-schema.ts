@@ -4,7 +4,7 @@ import { parametersSchema } from './parameters-schema';
 import { variantSchema } from './variant-schema';
 import { overrideSchema } from './override-schema';
 import { constraintSchema } from './constraint-schema';
-import { strategySchema } from './strategy-schema';
+import { featureStrategySchema } from './feature-strategy-schema';
 import { environmentSchema } from './environment-schema';
 
 export const featuresSchema = {
@@ -30,7 +30,7 @@ export const featuresSchema = {
             featureSchema,
             overrideSchema,
             parametersSchema,
-            strategySchema,
+            featureStrategySchema,
             variantSchema,
         },
     },

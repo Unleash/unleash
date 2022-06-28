@@ -52,7 +52,7 @@ If you use the docker compose file from the previous step, here's the configurat
   - URL: `http://localhost:3000`
   - `clientKey`: `proxy-client-key`
 - For server-side SDKs, use:
-  - Unleash API URL: `http://localhost:4242`
+  - Unleash API URL: `http://localhost:4242/api/`
   - API token: `default:development.unleash-insecure-api-token`
 
 If you use a different setup, your configuration details will most likely also be different.

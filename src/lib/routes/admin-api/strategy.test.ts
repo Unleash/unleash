@@ -54,8 +54,8 @@ test('require a name when creating a new strategy', async () => {
         .send({})
         .expect(400)
         .expect((res) => {
-            expect(res.body.details[0].message === '"name" is required').toBe(
-                true,
+            expect(res.body.validation[0].message).toEqual(
+                "should have required property 'name'",
             );
         });
 });

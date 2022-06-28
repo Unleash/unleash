@@ -1,5 +1,4 @@
 import { FromSchema } from 'json-schema-to-ts';
-import { featureStrategySchema } from './feature-strategy-schema';
 import { constraintSchema } from './constraint-schema';
 import { parametersSchema } from './parameters-schema';
 
@@ -24,13 +23,55 @@ export const featureEnvironmentSchema = {
         strategies: {
             type: 'array',
             items: {
-                $ref: '#/components/schemas/featureStrategySchema',
+                type: 'object',
+                additionalProperties: false,
+                required: [
+                    'id',
+                    'featureName',
+                    'projectId',
+                    'environment',
+                    'strategyName',
+                    'constraints',
+                    'parameters',
+                ],
+                properties: {
+                    id: {
+                        type: 'string',
+                    },
+                    featureName: {
+                        type: 'string',
+                    },
+                    projectId: {
+                        type: 'string',
+                    },
+                    environment: {
+                        type: 'string',
+                    },
+                    strategyName: {
+                        type: 'string',
+                    },
+                    sortOrder: {
+                        type: 'number',
+                    },
+                    createdAt: {
+                        type: 'string',
+                        format: 'date-time',
+                    },
+                    constraints: {
+                        type: 'array',
+                        items: {
+                            $ref: '#/components/schemas/constraintSchema',
+                        },
+                    },
+                    parameters: {
+                        $ref: '#/components/schemas/parametersSchema',
+                    },
+                },
             },
         },
     },
     components: {
         schemas: {
-            featureStrategySchema,
             constraintSchema,
             parametersSchema,
         },

@@ -6,6 +6,7 @@ test('featureSchema', () => {
         name: 'a',
         strategies: [
             {
+                id: 'a',
                 name: 'a',
                 constraints: [
                     {
@@ -13,6 +14,7 @@ test('featureSchema', () => {
                         operator: 'IN',
                     },
                 ],
+                segments: [1],
             },
         ],
         variants: [

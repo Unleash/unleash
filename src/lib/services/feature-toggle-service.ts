@@ -390,7 +390,7 @@ class FeatureToggleService {
         value: string | number,
         context: IFeatureStrategyContext,
         userName: string,
-    ): Promise<IStrategyConfig> {
+    ): Promise<Saved<IStrategyConfig>> {
         const { projectId, environment, featureName } = context;
 
         const existingStrategy = await this.featureStrategiesStore.get(id);
@@ -466,7 +466,7 @@ class FeatureToggleService {
         project: string,
         featureName: string,
         environment: string = DEFAULT_ENV,
-    ): Promise<IStrategyConfig[]> {
+    ): Promise<Saved<IStrategyConfig>[]> {
         const hasEnv = await this.featureEnvironmentStore.featureHasEnvironment(
             environment,
             featureName,
@@ -701,7 +701,7 @@ class FeatureToggleService {
         );
     }
 
-    async getStrategy(strategyId: string): Promise<IStrategyConfig> {
+    async getStrategy(strategyId: string): Promise<Saved<IStrategyConfig>> {
         const strategy = await this.featureStrategiesStore.getStrategyById(
             strategyId,
         );

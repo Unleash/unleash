@@ -31,6 +31,8 @@ For security and performance reasons, the front-end SDKs do not communicate dire
 - [iOS Proxy SDK](/sdks/proxy-ios)
 - [Javascript SDK](/sdks/proxy-javascript)
 - [React Proxy SDK](/sdks/proxy-react)
+- [Svelte Proxy SDK](/sdks/proxy-svelte)
+- [Vue Proxy SDK](/sdks/proxy-vue)
 
 
 ### Server-side SDK compatibility table
@@ -137,6 +139,8 @@ Unless the SDK supports [bootstrapping](#bootstrapping) it *will* need to connec
 By default, all SDKs reach out to the Unleash Server at startup to fetch their toggle configuration. Additionally some of the server-side SDKs and the Proxy (see the above [compatibility table](#server-side-sdk-compatibility-table)) also support *bootstrapping*, which allows them to get their toggle configuration from a file, the environment, or other local resources. These SDKs can work without any network connection whatsoever.
 
 Bootstrapping is also supported by the following front-end client SDKs:
-- [the JavaScript proxy client](/sdks/proxy-javascript)
-- [the React Proxy client](/sdks/proxy-react)
-- [the Android proxy client](/sdks/android_proxy_sdk)
+- [Android SDK](/sdks/android_proxy_sdk)
+- [Javascript SDK](/sdks/proxy-javascript)
+- [React Proxy SDK](/sdks/proxy-react)
+- [Svelte Proxy SDK](/sdks/proxy-svelte)
+- [Vue Proxy SDK](/sdks/proxy-vue)

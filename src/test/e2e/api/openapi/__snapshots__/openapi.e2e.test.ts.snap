@@ -5273,11 +5273,11 @@ Object {
             "content": Object {
               "application/json": Object {
                 "schema": Object {
-                  "$ref": "#/components/schemas/featureSchema",
+                  "$ref": "#/components/schemas/clientFeaturesSchema",
                 },
               },
             },
-            "description": "featureSchema",
+            "description": "clientFeaturesSchema",
           },
         },
         "tags": Array [

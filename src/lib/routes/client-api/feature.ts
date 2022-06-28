@@ -81,7 +81,7 @@ export default class FeatureController extends Controller {
                     operationId: 'getClientFeature',
                     tags: ['client'],
                     responses: {
-                        200: createResponseSchema('featureSchema'),
+                        200: createResponseSchema('clientFeaturesSchema'),
                     },
                 }),
             ],

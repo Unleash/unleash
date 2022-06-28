@@ -77,7 +77,7 @@ test('should throw if feature have tag', async () => {
     try {
         await featureTagStore.tagFeature(featureName, tag);
     } catch (e) {
-        expect(e.message).toContain('already had the tag');
+        expect(e.message).toContain('already has the tag');
     }
 });
 

@@ -1,10 +1,4 @@
-import {
-    useState,
-    useRef,
-    useEffect,
-    FormEventHandler,
-    ChangeEventHandler,
-} from 'react';
+import { useState, FormEventHandler, ChangeEventHandler } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
     Button,
@@ -31,15 +25,10 @@ export const CopyFeatureToggle = () => {
     const [nameError, setNameError] = useState<string | undefined>();
     const [newToggleName, setNewToggleName] = useState<string>();
     const { cloneFeatureToggle, validateFeatureToggleName } = useFeatureApi();
-    const inputRef = useRef<HTMLInputElement>();
     const featureId = useRequiredPathParam('featureId');
     const projectId = useRequiredPathParam('projectId');
     const { feature } = useFeature(projectId, featureId);
     const navigate = useNavigate();
-
-    useEffect(() => {
-        inputRef.current?.focus();
-    }, []);
 
     const setValue: ChangeEventHandler<HTMLInputElement> = event => {
         const value = trim(event.target.value);
@@ -53,17 +42,20 @@ export const CopyFeatureToggle = () => {
     const onValidateName = async () => {
         try {
             await validateFeatureToggleName(newToggleName);
-
             setNameError(undefined);
+            return true;
         } catch (error) {
             setNameError(formatUnknownError(error));
         }
+        return false;
     };
 
     const onSubmit: FormEventHandler = async event => {
         event.preventDefault();
 
-        if (nameError) {
+        const isValidName = await onValidateName();
+
+        if (!isValidName) {
             return;
         }
 
@@ -113,8 +105,8 @@ export const CopyFeatureToggle = () => {
                         helperText={nameError}
                         variant="outlined"
                         size="small"
-                        inputRef={inputRef}
-                        required
+                        aria-required
+                        autoFocus
                     />
                     <FormControlLabel
                         control={

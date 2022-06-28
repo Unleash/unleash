@@ -192,6 +192,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             stale: data.stale,
             created_at: data.createdAt,
             impression_data: data.impressionData,
+            variants: JSON.stringify(data.variants),
         };
         if (!row.created_at) {
             delete row.created_at;

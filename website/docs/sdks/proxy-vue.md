@@ -101,9 +101,9 @@ onMounted(() => {
 </template>
 ```
 
-# Usage
+## Usage
 
-## Check feature toggle status
+### Check feature toggle status
 
 To check if a feature is enabled:
 
@@ -120,7 +120,7 @@ const enabled = useFlag('travel.landing')
 </template>
 ```
 
-## Check variants
+### Check variants
 
 To check variants:
 
@@ -138,7 +138,7 @@ const variant = useVariant('travel.landing')
 </template>
 ```
 
-## Defer rendering until flags fetched
+### Defer rendering until flags fetched
 
 useFlagsStatus retrieves the ready state and error events. Follow the following steps in order to delay rendering until the flags have been fetched.
 
@@ -151,7 +151,7 @@ const { flagsReady, flagsError } = useFlagsStatus()
 <MyComponent v-else error={flagsError} />
 ```
 
-## Updating context
+### Updating context
 
 Follow the following steps in order to update the unleash context:
 

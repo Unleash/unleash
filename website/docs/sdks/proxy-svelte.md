@@ -117,7 +117,7 @@ To start the client, use the client's `start` method. The below snippet of pseud
 
 ## Usage
 
-## Check feature toggle status
+### Check feature toggle status
 
 To check if a feature is enabled:
 
@@ -135,7 +135,7 @@ To check if a feature is enabled:
 {/if}
 ```
 
-## Check variants
+### Check variants
 
 To check variants:
 
@@ -155,7 +155,7 @@ To check variants:
 {/if}
 ```
 
-## Defer rendering until flags fetched
+### Defer rendering until flags fetched
 
 useFlagsStatus retrieves the ready state and error events. Follow the following steps in order to delay rendering until the flags have been fetched.
 
@@ -172,7 +172,7 @@ useFlagsStatus retrieves the ready state and error events. Follow the following 
 {/if}
 ```
 
-## Updating context
+### Updating context
 
 Follow the following steps in order to update the unleash context:
 

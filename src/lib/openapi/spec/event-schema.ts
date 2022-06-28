@@ -23,12 +23,15 @@ export const eventSchema = {
         },
         environment: {
             type: 'string',
+            nullable: true,
         },
         project: {
             type: 'string',
+            nullable: true,
         },
         featureName: {
             type: 'string',
+            nullable: true,
         },
         data: {},
         preData: {},
@@ -37,6 +40,7 @@ export const eventSchema = {
             items: {
                 $ref: tagSchema.$id,
             },
+            nullable: true,
         },
     },
     components: {

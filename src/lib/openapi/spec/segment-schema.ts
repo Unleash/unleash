@@ -5,7 +5,7 @@ export const segmentSchema = {
     $id: '#/components/schemas/segmentSchema',
     type: 'object',
     additionalProperties: false,
-    required: ['name', 'constraints'],
+    required: ['id', 'constraints'],
     properties: {
         id: {
             type: 'number',

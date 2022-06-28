@@ -1585,7 +1585,7 @@ Object {
           },
         },
         "required": Array [
-          "name",
+          "id",
           "constraints",
         ],
         "type": "object",

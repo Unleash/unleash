@@ -238,3 +238,157 @@ test('clientFeaturesSchema unleash-proxy expected response', () => {
         ),
     ).toBeUndefined();
 });
+
+test('clientFeaturesSchema client specification test 15', () => {
+    const json = `{
+   "version": 2,
+    "features": [
+      {
+        "name": "F9.globalSegmentOn",
+        "description": "With global segment referencing constraint in on state",
+        "enabled": true,
+        "strategies": [
+          {
+            "name": "default",
+            "parameters": {},
+            "segments": [1]
+          }
+        ]
+      },
+      {
+        "name": "F9.globalSegmentOff",
+        "description": "With global segment referencing constraint in off state",
+        "enabled": true,
+        "strategies": [
+          {
+            "name": "default",
+            "parameters": {},
+            "segments": [2]
+          }
+        ]
+      },
+      {
+        "name": "F9.globalSegmentAndConstraint",
+        "description": "With global segment and constraint both on",
+        "enabled": true,
+        "strategies": [
+          {
+            "name": "default",
+            "parameters": {},
+            "constraints": [
+              {
+                "contextName": "version",
+                "operator": "SEMVER_EQ",
+                "value": "1.2.2"
+              }
+            ],
+            "segments": [1]
+          }
+        ]
+      },
+      {
+        "name": "F9.withMissingSegment",
+        "description": "With global segment that doesn't exist",
+        "enabled": true,
+        "strategies": [
+          {
+            "name": "default",
+            "parameters": {},
+            "constraints": [
+              {
+                "contextName": "version",
+                "operator": "SEMVER_EQ",
+                "value": "1.2.2"
+              }
+            ],
+            "segments": [3]
+          }
+        ]
+      },
+      {
+        "name": "F9.withSeveralConstraintsAndSegments",
+        "description": "With several segments and constraints",
+        "enabled": true,
+        "strategies": [
+          {
+            "name": "default",
+            "parameters": {},
+            "constraints": [
+              {
+                "contextName": "customNumber",
+                "operator": "NUM_LT",
+                "value": "10"
+              },
+              {
+                "contextName": "version",
+                "operator": "SEMVER_LT",
+                "value": "3.2.2"
+              }
+            ],
+            "segments": [1, 4, 5]
+          }
+        ]
+      }
+    ],
+    "segments": [
+      {
+        "id": 1,
+        "constraints": [
+          {
+            "contextName": "version",
+            "operator": "SEMVER_EQ",
+            "value": "1.2.2"
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "constraints": [
+          {
+            "contextName": "version",
+            "operator": "SEMVER_EQ",
+            "value": "3.1.4"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "constraints": [
+          {
+            "contextName": "version",
+            "operator": "SEMVER_EQ",
+            "value": "3.1.4"
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "constraints": [
+          {
+            "contextName": "customName",
+            "operator": "STR_CONTAINS",
+            "values": ["Pi"]
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "constraints": [
+          {
+            "contextName": "slicesLeft",
+            "operator": "NUM_LTE",
+            "value": "4"
+          }
+        ]
+      }
+    ]
+  }
+`;
+
+    expect(
+        validateSchema(
+            '#/components/schemas/clientFeaturesSchema',
+            JSON.parse(json),
+        ),
+    ).toBeUndefined();
+});

@@ -1,24 +1,36 @@
 import { FromSchema } from 'json-schema-to-ts';
-import { variantSchema } from './variant-schema';
 import { constraintSchema } from './constraint-schema';
-import { overrideSchema } from './override-schema';
 import { parametersSchema } from './parameters-schema';
 import { featureStrategySchema } from './feature-strategy-schema';
+import { clientVariantSchema } from './client-variant-schema';
 
 export const clientFeatureSchema = {
     $id: '#/components/schemas/clientFeatureSchema',
     type: 'object',
     additionalProperties: false,
-    required: ['name'],
+    required: ['name', 'enabled'],
     properties: {
         name: {
             type: 'string',
         },
-        type: {
+        description: {
             type: 'string',
+            nullable: true,
+        },
+        createdAt: {
+            type: 'string',
+            format: 'date-time',
+            nullable: true,
+        },
+        enabled: {
+            type: 'boolean',
         },
         stale: {
             type: 'boolean',
+        },
+        impressionData: {
+            type: 'boolean',
+            nullable: true,
         },
         strategies: {
             type: 'array',
@@ -29,17 +41,17 @@ export const clientFeatureSchema = {
         variants: {
             type: 'array',
             items: {
-                $ref: '#/components/schemas/variantSchema',
+                $ref: '#/components/schemas/clientVariantSchema',
             },
+            nullable: true,
         },
     },
     components: {
         schemas: {
             constraintSchema,
-            overrideSchema,
             parametersSchema,
             featureStrategySchema,
-            variantSchema,
+            clientVariantSchema,
         },
     },
 } as const;

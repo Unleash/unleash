@@ -7,11 +7,15 @@ export const segmentSchema = {
     additionalProperties: false,
     required: ['name', 'constraints'],
     properties: {
+        id: {
+            type: 'number',
+        },
         name: {
             type: 'string',
         },
         description: {
             type: 'string',
+            nullable: true,
         },
         constraints: {
             type: 'array',

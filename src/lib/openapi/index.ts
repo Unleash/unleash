@@ -86,6 +86,7 @@ import { clientFeaturesQuerySchema } from './spec/client-features-query-schema';
 import { clientFeatureSchema } from './spec/client-feature-schema';
 import { clientFeaturesSchema } from './spec/client-features-schema';
 import { clientApplicationSchema } from './spec/client-application-schema';
+import { clientVariantSchema } from './spec/client-variant-schema';
 import { IServerOption } from '../types';
 import { URL } from 'url';
 
@@ -103,6 +104,7 @@ export const schemas = {
     cloneFeatureSchema,
     clientFeatureSchema,
     clientFeaturesSchema,
+    clientVariantSchema,
     clientFeaturesQuerySchema,
     changePasswordSchema,
     constraintSchema,

@@ -12,7 +12,7 @@ import { clientFeatureSchema } from './client-feature-schema';
 export const clientFeaturesSchema = {
     $id: '#/components/schemas/clientFeaturesSchema',
     type: 'object',
-    required: ['version', 'features', 'query'],
+    required: ['version', 'features'],
     properties: {
         version: {
             type: 'number',

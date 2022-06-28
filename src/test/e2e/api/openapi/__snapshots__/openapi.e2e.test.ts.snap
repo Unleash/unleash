@@ -355,6 +355,22 @@ Object {
       "clientFeatureSchema": Object {
         "additionalProperties": false,
         "properties": Object {
+          "createdAt": Object {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string",
+          },
+          "description": Object {
+            "nullable": true,
+            "type": "string",
+          },
+          "enabled": Object {
+            "type": "boolean",
+          },
+          "impressionData": Object {
+            "nullable": true,
+            "type": "boolean",
+          },
           "name": Object {
             "type": "string",
           },
@@ -367,18 +383,17 @@ Object {
             },
             "type": "array",
           },
-          "type": Object {
-            "type": "string",
-          },
           "variants": Object {
             "items": Object {
-              "$ref": "#/components/schemas/variantSchema",
+              "$ref": "#/components/schemas/clientVariantSchema",
             },
+            "nullable": true,
             "type": "array",
           },
         },
         "required": Array [
           "name",
+          "enabled",
         ],
         "type": "object",
       },
@@ -436,6 +451,37 @@ Object {
         "required": Array [
           "version",
           "features",
+        ],
+        "type": "object",
+      },
+      "clientVariantSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "name": Object {
+            "type": "string",
+          },
+          "payload": Object {
+            "properties": Object {
+              "type": Object {
+                "type": "string",
+              },
+              "value": Object {
+                "type": "string",
+              },
+            },
+            "required": Array [
+              "type",
+              "value",
+            ],
+            "type": "object",
+          },
+          "weight": Object {
+            "type": "number",
+          },
+        },
+        "required": Array [
+          "name",
+          "weight",
         ],
         "type": "object",
       },
@@ -944,7 +990,6 @@ Object {
         },
         "required": Array [
           "name",
-          "id",
         ],
         "type": "object",
       },
@@ -1529,7 +1574,11 @@ Object {
             "type": "array",
           },
           "description": Object {
+            "nullable": true,
             "type": "string",
+          },
+          "id": Object {
+            "type": "number",
           },
           "name": Object {
             "type": "string",

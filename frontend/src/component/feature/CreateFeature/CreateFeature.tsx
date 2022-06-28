@@ -76,7 +76,7 @@ const CreateFeature = () => {
     return (
         <FormTemplate
             loading={loading}
-            title="Create Feature toggle"
+            title="Create feature toggle"
             description="Feature toggles support different use cases, each with their own specific needs such as simple static routing or more complex routing.
             The feature toggle is disabled when created and you decide when to enable"
             documentationLink="https://docs.getunleash.io/advanced/feature_toggle_types"
@@ -102,7 +102,7 @@ const CreateFeature = () => {
                 clearErrors={clearErrors}
             >
                 <CreateButton
-                    name="Feature"
+                    name="feature toggle"
                     permission={CREATE_FEATURE}
                     projectId={project}
                     data-testid={CF_CREATE_BTN_ID}

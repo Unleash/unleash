@@ -35,7 +35,7 @@ exports[`renders an empty list correctly 1`] = `
                 className="tss-119iiqp-container"
               >
                 <div
-                  className="tss-1mtd8gr-search search-container"
+                  className="tss-1xjrf9m-search search-container"
                 >
                   <svg
                     aria-hidden={true}

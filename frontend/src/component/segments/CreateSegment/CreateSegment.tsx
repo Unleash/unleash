@@ -1,3 +1,4 @@
+import React, { useContext } from 'react';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { CREATE_SEGMENT } from 'component/providers/AccessProvider/permissions';
@@ -6,7 +7,6 @@ import { useConstraintsValidation } from 'hooks/api/getters/useConstraintsValida
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
-import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useSegmentForm } from '../hooks/useSegmentForm';

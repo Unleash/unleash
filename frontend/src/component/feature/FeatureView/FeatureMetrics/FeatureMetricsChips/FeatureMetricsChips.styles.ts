@@ -4,7 +4,7 @@ export const useStyles = makeStyles()(theme => ({
     title: {
         margin: 0,
         marginBottom: '.5rem',
-        fontSize: theme.fontSizes.smallerBody,
+        fontSize: theme.fontSizes.smallBody,
         fontWeight: theme.fontWeight.thin,
         color: theme.palette.grey[800],
     },

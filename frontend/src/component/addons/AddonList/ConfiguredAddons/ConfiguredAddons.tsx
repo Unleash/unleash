@@ -53,7 +53,7 @@ export const ConfiguredAddons = () => {
                     type: 'success',
                     title: 'Success',
                     text: !addon.enabled
-                        ? 'Addon is now active'
+                        ? 'Addon is now enabled'
                         : 'Addon is now disabled',
                 });
             } catch (error: unknown) {

@@ -10,24 +10,24 @@ import PasswordChecker, {
 import { useThemeStyles } from 'themes/themeStyles';
 import PasswordMatcher from 'component/user/common/ResetPasswordForm/PasswordMatcher/PasswordMatcher';
 import { IUser } from 'interfaces/user';
+import useAdminUsersApi from 'hooks/api/actions/useAdminUsersApi/useAdminUsersApi';
 
 interface IChangePasswordProps {
     showDialog: boolean;
     closeDialog: () => void;
-    changePassword: (userId: number, password: string) => Promise<Response>;
     user: IUser;
 }
 
 const ChangePassword = ({
     showDialog,
     closeDialog,
-    changePassword,
     user,
 }: IChangePasswordProps) => {
     const [data, setData] = useState<Record<string, string>>({});
     const [error, setError] = useState<string>();
     const [validPassword, setValidPassword] = useState(false);
     const { classes: themeStyles } = useThemeStyles();
+    const { changePassword } = useAdminUsersApi();
 
     const updateField: React.ChangeEventHandler<HTMLInputElement> = event => {
         setError(undefined);

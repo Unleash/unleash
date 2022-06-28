@@ -4,7 +4,11 @@ export const useStyles = makeStyles()(theme => ({
     paramsContainer: {
         maxWidth: '400px',
     },
-    divider: { borderStyle: 'dashed', marginBottom: '1rem !important' },
+    divider: {
+        borderStyle: 'dashed',
+        marginBottom: '1rem !important',
+        borderColor: theme.palette.grey[500],
+    },
     nameContainer: {
         display: 'flex',
         alignItems: 'center',

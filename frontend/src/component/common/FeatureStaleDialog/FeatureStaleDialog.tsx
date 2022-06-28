@@ -1,5 +1,5 @@
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
-import { DialogContentText } from '@mui/material';
+import { Typography } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import React from 'react';
@@ -25,14 +25,13 @@ export const FeatureStaleDialog = ({
     const { patchFeatureToggle } = useFeatureApi();
 
     const toggleToStaleContent = (
-        <DialogContentText>
-            Setting a toggle to stale marks it for cleanup
-        </DialogContentText>
+        <Typography>Setting a toggle to stale marks it for cleanup</Typography>
     );
+
     const toggleToActiveContent = (
-        <DialogContentText>
+        <Typography>
             Setting a toggle to active marks it as in active use
-        </DialogContentText>
+        </Typography>
     );
 
     const toggleActionText = isStale ? 'active' : 'stale';

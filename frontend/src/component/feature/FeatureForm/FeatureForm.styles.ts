@@ -33,10 +33,11 @@ export const useStyles = makeStyles()(theme => ({
     },
     inputDescription: {
         marginBottom: '0.5rem',
+        color: theme.palette.text.secondary,
     },
     typeDescription: {
         fontSize: theme.fontSizes.smallBody,
-        color: theme.palette.grey[600],
+        color: theme.palette.text.secondary,
         top: '-13px',
         position: 'relative',
     },

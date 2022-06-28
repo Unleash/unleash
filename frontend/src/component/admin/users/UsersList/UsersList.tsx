@@ -45,8 +45,7 @@ const UsersList = () => {
     const navigate = useNavigate();
     const { users, roles, refetch, loading } = useUsers();
     const { setToastData, setToastApiError } = useToast();
-    const { removeUser, changePassword, userLoading, userApiErrors } =
-        useAdminUsersApi();
+    const { removeUser, userLoading, userApiErrors } = useAdminUsersApi();
     const [pwDialog, setPwDialog] = useState<{ open: boolean; user?: IUser }>({
         open: false,
     });
@@ -320,7 +319,6 @@ const UsersList = () => {
                     <ChangePassword
                         showDialog={pwDialog.open}
                         closeDialog={closePwDialog}
-                        changePassword={changePassword}
                         user={pwDialog.user!}
                     />
                 )}

@@ -162,7 +162,7 @@ const COLUMNS = [
     {
         Header: 'Name',
         accessor: 'name',
-        width: '80%',
+        width: '60%',
         Cell: ({ value, row: { original } }: any) => (
             <HighlightCell value={value} subtitle={original.description} />
         ),
@@ -177,6 +177,7 @@ const COLUMNS = [
     {
         Header: 'Created by',
         accessor: 'createdBy',
+        width: '25%',
     },
     {
         Header: 'Actions',

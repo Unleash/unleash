@@ -27,8 +27,6 @@ export const useStyles = makeStyles()(theme => ({
         position: 'absolute',
         top: 0,
         right: 0,
-        padding: '1rem',
-        cursor: 'pointer',
     },
     closeIcon: {
         fontSize: '1.5rem',

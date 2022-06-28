@@ -57,7 +57,9 @@ export const ProjectAccessPage = () => {
             refetchProjectAccess();
             setToastData({
                 type: 'success',
-                title: 'The user has been removed from project',
+                title: `${
+                    user.email || user.username || 'The user'
+                } has been removed from project`,
             });
         } catch (err: any) {
             setToastData({

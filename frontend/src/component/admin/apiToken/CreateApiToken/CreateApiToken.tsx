@@ -11,6 +11,9 @@ import { ConfirmToken } from '../ConfirmToken/ConfirmToken';
 import { useState } from 'react';
 import { scrollToTop } from 'component/common/util';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { usePageTitle } from 'hooks/usePageTitle';
+
+const pageTitle = 'Create API token';
 
 export const CreateApiToken = () => {
     const { setToastApiError } = useToast();
@@ -35,6 +38,8 @@ export const CreateApiToken = () => {
     } = useApiTokenForm();
 
     const { createToken, loading } = useApiTokensApi();
+
+    usePageTitle(pageTitle);
 
     const handleSubmit = async (e: Event) => {
         e.preventDefault();
@@ -76,7 +81,7 @@ export const CreateApiToken = () => {
     return (
         <FormTemplate
             loading={loading}
-            title="Create Api Token"
+            title={pageTitle}
             description="In order to connect to Unleash clients will need an API token to grant access. A client SDK will need to token with 'client privileges', which allows them to fetch feature toggle configuration and post usage metrics back."
             documentationLink="https://docs.getunleash.io/reference/api-tokens-and-client-keys"
             documentationLinkLabel="API tokens documentation"

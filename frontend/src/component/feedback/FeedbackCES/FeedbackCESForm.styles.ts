@@ -14,7 +14,7 @@ export const useStyles = makeStyles()(theme => ({
         all: 'unset',
         display: 'block',
         textAlign: 'center',
-        color: theme.palette.grey[600],
+        color: theme.palette.text.secondary,
     },
     subtitle: {
         all: 'unset',

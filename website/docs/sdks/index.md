@@ -34,7 +34,6 @@ For security and performance reasons, the front-end SDKs do not communicate dire
 - [Svelte Proxy SDK](/sdks/proxy-svelte)
 - [Vue Proxy SDK](/sdks/proxy-vue)
 
-
 ### Server-side SDK compatibility table
 
 The below table shows what features the various server-side SDKs support. Note that certain features make sense only for some clients due to how the programming language works or due to how the client works.
@@ -46,62 +45,59 @@ The below table shows what features the various server-side SDKs support. Note t
 - ❌: Not implemented, not planned
 - **N/A**: Not applicable to this SDK
 
-:::note
-If you see an item marked with a ❌ that you would find useful, feel free to reach out to us ([on Slack](https://slack.unleash.run/), for instance) with your use case. It may not be something we can prioritize right now, but if you'd like to contribute it back to the community, we'd love to help you build it.
-:::
+:::note If you see an item marked with a ❌ that you would find useful, feel free to reach out to us ([on Slack](https://slack.unleash.run/), for instance) with your use case. It may not be something we can prioritize right now, but if you'd like to contribute it back to the community, we'd love to help you build it. :::
 
-
-| Capability                                                                                                                                     | [Java](/sdks/java_sdk) | [Node.js](/sdks/node_sdk) | [Go](/sdks/go_sdk) | [Python](/sdks/python_sdk) | [Ruby](/sdks/ruby_sdk) | [.NET](/sdks/dot_net_sdk) | [PHP](/sdks/php_sdk) | [Rust](https://github.com/unleash/unleash-client-rust) | [Unleash Proxy](unleash-proxy.md) |
-|------------------------------------------------------------------------------------------------------------------------------------------------|:----------------------:|:-------------------------:|:------------------:|:--------------------------:|:----------------------:|:-------------------------:|:--------------------:|:------------------------------------------------------:|:---------------------------------:|
-| **Category: Initialization**                                                                                                                   |                        |                           |                    |                            |                        |                           |                      |                                                        |                                   |
-| Async initialization                                                                                                                           | ✅                     | ✅                        | ✅                 | ✅                         | ✅                     | ✅                        | ❌                   | ✅                                                     | N/A                               |
-| Can block until synchronized                                                                                                                   | ✅                     | ✅                        | ✅                 | ⭕                         | ⭕                     | ✅                        | ✅                   | ⭕                                                     | N/A                               |
-| Default refresh interval                                                                                                                       | 10s                    | 15s                       | 15s                | 15s                        | 15s                    | 30s                       | 30s                  | 15s                                                    | 5s                                |
-| Default metrics interval                                                                                                                       | 60s                    | 60s                       | 60s                | 60s                        | 60s                    | 60s                       | 30s                  | 15s                                                    | 30s                               |
-| Context provider                                                                                                                               | ✅                     | N/A                       | N/A                | N/A                        | N/A                    | ✅                        | ✅                   | N/A                                                    | N/A                               |
-| Global fallback function                                                                                                                       | ✅                     | ✅                        | ✅                 | ✅                         | ❌                     | ❌                        | ❌                   | ❌                                                     | N/A                               |
-| Toggle Query: `namePrefix`                                                                                                                     | ✅                     | ✅                        | ❌                 | ❌                         | ❌                     | ❌                        | ❌                   | ❌                                                     | ✅                                |
-| Toggle Query: `tags`                                                                                                                           | ✅                     | ✅                        | ❌                 | ❌                         | ❌                     | ❌                        | ❌                   | ❌                                                     | ✅                                |
-| Toggle Query: `project_name`                                                                                                                   | ✅                     | ✅                        | ✅                 | ✅                         | ✅                     | ✅                        | N/A                  | ⭕                                                     | ✅                                |
-| **Category: Custom Headers**                                                                                                                   |                        |                           |                    |                            |                        |                           |                      |                                                        |                                   |
-| static                                                                                                                                         | ✅                     | ✅                        | ✅                 | ✅                         | ✅                     | ✅                        | ✅                   | ⭕                                                     | N/A                               |
-| function                                                                                                                                       | ✅                     | ✅                        | ⭕                 | ✅                         | ⭕                     | ✅                        | ✅                   | ⭕                                                     | N/A                               |
-| **Category: Built-in strategies**                                                                                                              |                        |                           |                    |                            |                        |                           |                      |                                                        |                                   |
-| [Standard](../user_guide/activation_strategy#standard)                                                                                         | ✅                     | ✅                        | ✅                 | ✅                         | ✅                     | ✅                        | ✅                   | ✅                                                     | ✅                                |
-| [Gradual rollout](../user_guide/activation_strategy#gradual-rollout)                                                                           | ✅                     | ✅                        | ✅                 | ✅                         | ✅                     | ✅                        | ✅                   | ✅                                                     | ✅                                |
-| [Gradual rollout: custom stickiness](../user_guide/activation_strategy#customize-stickiness-beta)                                              | ✅                     | ✅                        | ✅                 | ✅                         | ✅                     | ✅                        | ✅                   | ⭕                                                     | ✅                                |
-| [UserID](../user_guide/activation_strategy#userids)                                                                                            | ✅                     | ✅                        | ✅                 | ✅                         | ✅                     | ✅                        | ✅                   | ✅                                                     | ✅                                |
-| [IP](../user_guide/activation_strategy#ips)                                                                                                    | ✅                     | ✅                        | ✅                 | ✅                         | ✅                     | ✅                        | ✅                   | ✅                                                     | ✅                                |
-| [IP](../user_guide/activation_strategy#ips): CIDR syntax                                                                                       | ✅                     | ✅                        | ✅                 | ✅                         | ✅                     | ⭕                        | ⭕                   | ✅                                                     | ✅                                |
-| [Hostname](../user_guide/activation_strategy#hostnames)                                                                                        | ✅                     | ✅                        | ✅                 | ✅                         | ✅                     | ✅                        | ✅                   | ✅                                                     | ✅                                |
-| **Category: [Custom strategies](../advanced/custom_activation_strategy)**                                                                      |                        |                           |                    |                            |                        |                           |                      |                                                        |                                   |
-| Basic support                                                                                                                                  | ✅                     | ✅                        | ✅                 | ✅                         | ✅                     | ✅                        | ✅                   | ✅                                                     | ✅                                |
-| <span id="strategy-constraints">**Category: [Strategy constraints](../advanced/strategy_constraints)**</span>                                  |                        |                           |                    |                            |                        |                           |                      |                                                        |                                   |
-| Basic support (`IN`, `NOT_IN` operators)                                                                                                       | ✅                     | ✅                        | ✅                 | ✅                         | ✅                     | ✅                        | ✅                   | ✅                                                     | ✅                                |
-| <span id="strategy-constraints-advanced-support">Advanced support (Semver, date, numeric and extended string operators)</span> (introduced in) | ✅ (5.1)               | ✅ (3.12)                 | ✅ (3.3)           | ✅ (5.1)                   | ✅ (4.2)               | ✅ (2.1)                  | ✅ (1.3.1)           | ⭕                                                     | ✅ (0.8)                          |
-| **Category: [Unleash Context](../user_guide/unleash_context)**                                                                                 |                        |                           |                    |                            |                        |                           |                      |                                                        |                                   |
-| Static fields (`environment`, `appName`)                                                                                                       | ✅                     | ✅                        | ✅                 | ✅                         | ✅                     | ✅                        | ✅                   | ✅                                                     | ✅                                |
-| Defined fields                                                                                                                                 | ✅                     | ✅                        | ✅                 | ✅                         | ✅                     | ✅                        | ✅                   | ✅                                                     | ✅                                |
-| Custom properties                                                                                                                              | ✅                     | ✅                        | ✅                 | ✅                         | ✅                     | ✅                        | ✅                   | ✅                                                     | ✅                                |
-| **Category: [`isEnabled`](../client-specification#implementation-of-isenabled)**                                                               |                        |                           |                    |                            |                        |                           |                      |                                                        |                                   |
-| Can take context                                                                                                                               | ✅                     | ✅                        | ✅                 | ✅                         | ✅                     | ✅                        | ✅                   | ✅                                                     | ✅                                |
-| Override fallback value                                                                                                                        | ✅                     | ✅                        | ✅                 | ✅                         | ✅                     | ✅                        | ✅                   | ✅                                                     | ✅                                |
-| Fallback function                                                                                                                              | ✅                     | ✅                        | ✅                 | ✅                         | ✅                     | ⭕                        | ⭕                   | ⭕                                                     | ✅                                |
-| **Category: [Variants](../advanced/toggle_variants)**                                                                                          |                        |                           |                    |                            |                        |                           |                      |                                                        |                                   |
-| Basic support                                                                                                                                  | ✅                     | ✅                        | ✅                 | ✅                         | ✅                     | ✅                        | ✅                   | ✅                                                     | ✅                                |
-| Custom fallback variant                                                                                                                        | ✅                     | ✅                        | ✅                 | ✅                         | ✅                     | ✅                        | ✅                   | ⭕                                                     | ✅                                |
-| Custom weight                                                                                                                                  | ✅                     | ✅                        | ✅                 | ✅                         | ✅                     | ✅                        | ✅                   | ⭕                                                     | ✅                                |
-| [Custom stickiness (beta)](../advanced/stickiness#custom-stickiness-beta)                                                                      | ✅                     | ✅                        | ✅                 | ✅                         | ✅                     | ✅                        | ✅                   | ⭕                                                     | ✅                                |
-| **Category: Local backup**                                                                                                                     |                        |                           |                    |                            |                        |                           |                      |                                                        |                                   |
-| File based backup                                                                                                                              | ✅                     | ✅                        | ✅                 | ✅                         | ✅                     | ✅                        | ✅                   | ⭕                                                     | ✅                                |
-| **Category: Usage metrics**                                                                                                                    |                        |                           |                    |                            |                        |                           |                      |                                                        |                                   |
-| Can disable metrics                                                                                                                            | ✅                     | ✅                        | ✅                 | ✅                         | ✅                     | ✅                        | ✅                   | ✅                                                     | ✅                                |
-| Client registration                                                                                                                            | ✅                     | ✅                        | ✅                 | ✅                         | ✅                     | ✅                        | ✅                   | ✅                                                     | ✅                                |
-| Basic usage metrics (yes/no)                                                                                                                   | ✅                     | ✅                        | ✅                 | ✅                         | ✅                     | ✅                        | ✅                   | ✅                                                     | ✅                                |
-| [Impression data](../advanced/impression-data.md)                                                                                              | ⭕                     | ⭕                        | ⭕                 | ⭕                         | ⭕                     | ⭕                        | ⭕                   | ⭕                                                     | N/A                               |
-| **Category: Bootstrap (beta)**                                                                                                                 |                        |                           |                    |                            |                        |                           |                      |                                                        |                                   |
-| Bootstrap from file                                                                                                                            | ✅                     | ✅                        | ✅                 | ⭕                         | ✅                     | ⭕                        | ✅                   | ⭕                                                     | ✅                                |
-| Custom Bootstrap implementation                                                                                                                | ✅                     | ✅                        | ✅                 | ⭕                         | ✅                     | ⭕                        | ✅                   | ⭕                                                     | ✅                                |
+| Capability | [Java](/sdks/java_sdk) | [Node.js](/sdks/node_sdk) | [Go](/sdks/go_sdk) | [Python](/sdks/python_sdk) | [Ruby](/sdks/ruby_sdk) | [.NET](/sdks/dot_net_sdk) | [PHP](/sdks/php_sdk) | [Rust](https://github.com/unleash/unleash-client-rust) | [Unleash Proxy](unleash-proxy.md) |
+| --- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
+| **Category: Initialization** |  |  |  |  |  |  |  |  |  |
+| Async initialization | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ | N/A |
+| Can block until synchronized | ✅ | ✅ | ✅ | ⭕ | ⭕ | ✅ | ✅ | ⭕ | N/A |
+| Default refresh interval | 10s | 15s | 15s | 15s | 15s | 30s | 30s | 15s | 5s |
+| Default metrics interval | 60s | 60s | 60s | 60s | 60s | 60s | 30s | 15s | 30s |
+| Context provider | ✅ | N/A | N/A | N/A | N/A | ✅ | ✅ | N/A | N/A |
+| Global fallback function | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | N/A |
+| Toggle Query: `namePrefix` | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
+| Toggle Query: `tags` | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
+| Toggle Query: `project_name` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | N/A | ⭕ | ✅ |
+| **Category: Custom Headers** |  |  |  |  |  |  |  |  |  |
+| static | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ | N/A |
+| function | ✅ | ✅ | ⭕ | ✅ | ⭕ | ✅ | ✅ | ⭕ | N/A |
+| **Category: Built-in strategies** |  |  |  |  |  |  |  |  |  |
+| [Standard](../user_guide/activation_strategy#standard) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| [Gradual rollout](../user_guide/activation_strategy#gradual-rollout) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| [Gradual rollout: custom stickiness](../user_guide/activation_strategy#customize-stickiness-beta) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ | ✅ |
+| [UserID](../user_guide/activation_strategy#userids) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| [IP](../user_guide/activation_strategy#ips) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| [IP](../user_guide/activation_strategy#ips): CIDR syntax | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ | ⭕ | ✅ | ✅ |
+| [Hostname](../user_guide/activation_strategy#hostnames) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **Category: [Custom strategies](../advanced/custom_activation_strategy)** |  |  |  |  |  |  |  |  |  |
+| Basic support | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| <span id="strategy-constraints">**Category: [Strategy constraints](../advanced/strategy_constraints)**</span> |  |  |  |  |  |  |  |  |  |
+| Basic support (`IN`, `NOT_IN` operators) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| <span id="strategy-constraints-advanced-support">Advanced support (Semver, date, numeric and extended string operators)</span> (introduced in) | ✅ (5.1) | ✅ (3.12) | ✅ (3.3) | ✅ (5.1) | ✅ (4.2) | ✅ (2.1) | ✅ (1.3.1) | ⭕ | ✅ (0.8) |
+| **Category: [Unleash Context](../user_guide/unleash_context)** |  |  |  |  |  |  |  |  |  |
+| Static fields (`environment`, `appName`) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Defined fields | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Custom properties | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **Category: [`isEnabled`](../client-specification#implementation-of-isenabled)** |  |  |  |  |  |  |  |  |  |
+| Can take context | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Override fallback value | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Fallback function | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ | ⭕ | ⭕ | ✅ |
+| **Category: [Variants](../advanced/toggle_variants)** |  |  |  |  |  |  |  |  |  |
+| Basic support | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Custom fallback variant | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ | ✅ |
+| Custom weight | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ | ✅ |
+| [Custom stickiness (beta)](../advanced/stickiness#custom-stickiness-beta) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ | ✅ |
+| **Category: Local backup** |  |  |  |  |  |  |  |  |  |
+| File based backup | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ | ✅ |
+| **Category: Usage metrics** |  |  |  |  |  |  |  |  |  |
+| Can disable metrics | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Client registration | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Basic usage metrics (yes/no) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| [Impression data](../advanced/impression-data.md) | ⭕ | ⭕ | ⭕ | ⭕ | ⭕ | ⭕ | ⭕ | ⭕ | N/A |
+| **Category: Bootstrap (beta)** |  |  |  |  |  |  |  |  |  |
+| Bootstrap from file | ✅ | ✅ | ✅ | ⭕ | ✅ | ⭕ | ✅ | ⭕ | ✅ |
+| Custom Bootstrap implementation | ✅ | ✅ | ✅ | ⭕ | ✅ | ⭕ | ✅ | ⭕ | ✅ |
 
 ## Community SDKs ❤️ {#community-sdks}
 
@@ -117,6 +113,8 @@ Here's some of the fantastic work our community has done to make Unleash work in
 - [silvercar/unleash-client-kotlin](https://github.com/silvercar/unleash-client-kotlin) (Kotlin)
 - [Stogon/unleash-bundle](https://git.stogon.io/Stogon/unleash-bundle/) (PHP - Symfony)
 - [uekoetter.dev/unleash-client-dart](https://pub.dev/packages/unleash) (Dart)
+- [nunogois/proxy-client-solid](https://github.com/nunogois/proxy-client-solid) (Solid)
+- [nunogois/proxy-client-react-native](https://github.com/nunogois/proxy-client-react-native) (React Native / Expo)
 - _...your implementation for your favorite language._
 
 ### Implement your own SDK {#implement-your-own-sdk}
@@ -132,13 +130,14 @@ Once they have been initialised, all Unleash clients will continue to work perfe
 
 Because the SDKs and the Unleash Proxy cache their feature toggle states locally and only communicate with the Unleash server (in the case of the server-side SDKs and the Proxy) or the Proxy (in the case of front-end SDKs) at predetermined intervals, a broken connection only means that they won't get any new updates.
 
-Unless the SDK supports [bootstrapping](#bootstrapping) it *will* need to connect to Unleash at startup to get its initial feature toggle data set. If the SDK doesn't have a feature toggle data set available, all toggles will fall back to evaluating as disabled or as the specified default value (in SDKs that support that).
+Unless the SDK supports [bootstrapping](#bootstrapping) it _will_ need to connect to Unleash at startup to get its initial feature toggle data set. If the SDK doesn't have a feature toggle data set available, all toggles will fall back to evaluating as disabled or as the specified default value (in SDKs that support that).
 
 ### Bootstrapping
 
-By default, all SDKs reach out to the Unleash Server at startup to fetch their toggle configuration. Additionally some of the server-side SDKs and the Proxy (see the above [compatibility table](#server-side-sdk-compatibility-table)) also support *bootstrapping*, which allows them to get their toggle configuration from a file, the environment, or other local resources. These SDKs can work without any network connection whatsoever.
+By default, all SDKs reach out to the Unleash Server at startup to fetch their toggle configuration. Additionally some of the server-side SDKs and the Proxy (see the above [compatibility table](#server-side-sdk-compatibility-table)) also support _bootstrapping_, which allows them to get their toggle configuration from a file, the environment, or other local resources. These SDKs can work without any network connection whatsoever.
 
 Bootstrapping is also supported by the following front-end client SDKs:
+
 - [Android SDK](/sdks/android_proxy_sdk)
 - [Javascript SDK](/sdks/proxy-javascript)
 - [React Proxy SDK](/sdks/proxy-react)

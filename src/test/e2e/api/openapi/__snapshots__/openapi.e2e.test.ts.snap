@@ -615,6 +615,73 @@ Object {
         ],
         "type": "object",
       },
+      "eventSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "createdAt": Object {
+            "format": "date-time",
+            "type": "string",
+          },
+          "createdBy": Object {
+            "type": "string",
+          },
+          "data": Object {},
+          "environment": Object {
+            "nullable": true,
+            "type": "string",
+          },
+          "featureName": Object {
+            "nullable": true,
+            "type": "string",
+          },
+          "id": Object {
+            "minimum": 1,
+            "type": "integer",
+          },
+          "preData": Object {},
+          "project": Object {
+            "nullable": true,
+            "type": "string",
+          },
+          "tags": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/tagSchema",
+            },
+            "nullable": true,
+            "type": "array",
+          },
+          "type": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "id",
+          "createdAt",
+          "type",
+          "createdBy",
+        ],
+        "type": "object",
+      },
+      "eventsSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "events": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/eventSchema",
+            },
+            "type": "array",
+          },
+          "version": Object {
+            "minimum": 1,
+            "type": "integer",
+          },
+        },
+        "required": Array [
+          "version",
+          "events",
+        ],
+        "type": "object",
+      },
       "exportParametersSchema": Object {
         "properties": Object {
           "download": Object {
@@ -740,6 +807,25 @@ Object {
         "required": Array [
           "name",
           "enabled",
+        ],
+        "type": "object",
+      },
+      "featureEventsSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "events": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/eventSchema",
+            },
+            "type": "array",
+          },
+          "toggleName": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "toggleName",
+          "events",
         ],
         "type": "object",
       },
@@ -2866,6 +2952,56 @@ Object {
         "responses": Object {
           "204": Object {
             "description": "emptyResponse",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/events": Object {
+      "get": Object {
+        "operationId": "getEvents",
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/eventsSchema",
+                },
+              },
+            },
+            "description": "eventsSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/events/{name}": Object {
+      "get": Object {
+        "operationId": "getEventsForToggle",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/featureEventsSchema",
+                },
+              },
+            },
+            "description": "featureEventsSchema",
           },
         },
         "tags": Array [

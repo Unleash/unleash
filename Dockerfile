@@ -5,11 +5,9 @@ RUN echo "Debug - node version: $NODE_VERSION "
 
 WORKDIR /unleash
 
-ADD . /unleash
+COPY . /unleash
 
-RUN yarn install --frozen-lockfile --ignore-scripts
-
-RUN yarn run build
+RUN yarn install --frozen-lockfile --ignore-scripts && yarn run build
 
 WORKDIR /unleash/docker
 
@@ -29,4 +27,4 @@ EXPOSE 4242
 
 USER node
 
-CMD node index.js
+CMD ["node", "index.js"]

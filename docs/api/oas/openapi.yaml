@@ -39,10 +39,10 @@ tags:
 info:
   title: Unleash API
   description: |-
-    
+
     > The Open API specifications are currently considered a **"beta feature"** and will not cover the full Unleash Admin API. 
     > You can follow the progress on making OAS official in [GitHub issue 1391](https://github.com/Unleash/unleash/issues/1391)
-    
+
     Unleash is an open source feature flag and toggle system for all your applications and services.
 
     # Try it out
@@ -133,9 +133,9 @@ paths:
     get:
       summary: Fetches all feature toggles from the Unleash server.
       description: |-
-          The response returns all active feature toggles and their current strategy configuration:
-          - Feature toggles will have *at least* one strategy
-          - Strategies have a `name` and `parameters` map.
+        The response returns all active feature toggles and their current strategy configuration:
+        - Feature toggles will have *at least* one strategy
+        - Strategies have a `name` and `parameters` map.
       operationId: getClientFeatures
       externalDocs:
         description: Activation strategies
@@ -598,7 +598,7 @@ paths:
         '200':
           $ref: '#/components/responses/featureAccessResponse'
         '401':
-         $ref: '#/components/responses/notAuthorizedResponse'
+          $ref: '#/components/responses/notAuthorizedResponse'
       x-code-samples:
         - lang: 'cURL'
           source: |
@@ -843,73 +843,73 @@ components:
         type: string
   responses:
     successResponse:
-      description: "Successful response"
+      description: 'Successful response'
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/200'
     notAuthorizedResponse:
-      description: "Not authorized"
+      description: 'Not authorized'
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/401'
     clientResponse:
-      description: "Successful response"
+      description: 'Successful response'
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/200Client'
     strategyExistsResponse:
-      description: "Strategy already exists"
+      description: 'Strategy already exists'
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/409'
     strategyResponse:
-      description: "Successful response"
+      description: 'Successful response'
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/200strategy'
     seenTogglesResponse:
-      description: "Successful response"
+      description: 'Successful response'
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/200seen'
     featureAccessResponse:
-      description: "Successful response"
+      description: 'Successful response'
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/200feature'
     appDetailsResponse:
-      description: "Successful response"
+      description: 'Successful response'
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/200appdetails'
     applicationsResponse:
-      description: "Successful response"
+      description: 'Successful response'
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/applicationArray'
     eventsResponse:
-      description: "Successful response"
+      description: 'Successful response'
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/200-events'
     exportResponse:
-      description: "Successful response"
+      description: 'Successful response'
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/200export'
     featureTypeResponse:
-      description: "Successful response"
+      description: 'Successful response'
       content:
         application/json:
           schema:
@@ -1205,7 +1205,7 @@ components:
                 type: string
                 example: '2016-12-09T14:56:36.730Z'
               updatedAt:
-                description: 'The last time the application ''talked'' to Unleash (sent metrics, registered, fetched feature toggles) - in [ISO8601 format](https://www.w3.org/TR/NOTE-datetime)'
+                description: "The last time the application 'talked' to Unleash (sent metrics, registered, fetched feature toggles) - in [ISO8601 format](https://www.w3.org/TR/NOTE-datetime)"
                 type: string
                 example: '2020-11-14T09:55:23.653Z'
               description:
@@ -1222,7 +1222,7 @@ components:
                 description: Deprecated. Do not use
                 type: string
               icon:
-                description: 'The application''s icon. Must be one of the [Material Design icon names](https://material.io/resources/icons/?style=baseline)'
+                description: "The application's icon. Must be one of the [Material Design icon names](https://material.io/resources/icons/?style=baseline)"
                 type: string
                 example: comment_bank
       x-tags:
@@ -1270,7 +1270,7 @@ components:
               minLength: 1
               example: '::ffff:127.0.0.1'
             lastSeen:
-              description: 'The last time the application ''talked'' to Unleash (sent metrics, registered, fetched feature toggles) - in [ISO8601 format](https://www.w3.org/TR/NOTE-datetime)'
+              description: "The last time the application 'talked' to Unleash (sent metrics, registered, fetched feature toggles) - in [ISO8601 format](https://www.w3.org/TR/NOTE-datetime)"
               type: string
               minLength: 1
               example: '2020-11-14T11:17:24.482Z'

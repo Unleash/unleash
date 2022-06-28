@@ -92,6 +92,12 @@ export const featureMetadataSchema = joi
             .default(false)
             .optional(),
         createdAt: joi.date().optional().allow(null),
+        variants: joi
+            .array()
+            .allow(null)
+            .unique((a, b) => a.name === b.name)
+            .optional()
+            .items(variantsSchema),
     })
     .options({ allowUnknown: false, stripUnknown: true, abortEarly: false });
 

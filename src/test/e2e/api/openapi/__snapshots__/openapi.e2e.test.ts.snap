@@ -625,7 +625,10 @@ Object {
           "createdBy": Object {
             "type": "string",
           },
-          "data": Object {},
+          "data": Object {
+            "nullable": true,
+            "type": "object",
+          },
           "environment": Object {
             "nullable": true,
             "type": "string",
@@ -638,7 +641,10 @@ Object {
             "minimum": 1,
             "type": "integer",
           },
-          "preData": Object {},
+          "preData": Object {
+            "nullable": true,
+            "type": "object",
+          },
           "project": Object {
             "nullable": true,
             "type": "string",

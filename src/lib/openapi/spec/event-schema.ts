@@ -33,8 +33,8 @@ export const eventSchema = {
             type: 'string',
             nullable: true,
         },
-        data: {},
-        preData: {},
+        data: { type: 'object', nullable: true },
+        preData: { type: 'object', nullable: true },
         tags: {
             type: 'array',
             items: {

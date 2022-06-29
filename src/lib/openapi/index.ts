@@ -1,104 +1,104 @@
 import { OpenAPIV3 } from 'openapi-types';
+import { addonParameterSchema } from './spec/addon-parameter-schema';
+import { addonSchema } from './spec/addon-schema';
+import { addonsSchema } from './spec/addons-schema';
+import { addonTypeSchema } from './spec/addon-type-schema';
 import { apiTokenSchema } from './spec/api-token-schema';
 import { apiTokensSchema } from './spec/api-tokens-schema';
+import { applicationSchema } from './spec/application-schema';
+import { applicationsSchema } from './spec/applications-schema';
+import { changePasswordSchema } from './spec/change-password-schema';
+import { clientApplicationSchema } from './spec/client-application-schema';
 import { cloneFeatureSchema } from './spec/clone-feature-schema';
 import { constraintSchema } from './spec/constraint-schema';
 import { contextFieldSchema } from './spec/context-field-schema';
 import { contextFieldsSchema } from './spec/context-fields-schema';
 import { createApiTokenSchema } from './spec/create-api-token-schema';
 import { createFeatureSchema } from './spec/create-feature-schema';
-import { createUserSchema } from './spec/create-user-schema';
 import { createFeatureStrategySchema } from './spec/create-feature-strategy-schema';
+import { createUserSchema } from './spec/create-user-schema';
+import { emailSchema } from './spec/email-schema';
 import { environmentSchema } from './spec/environment-schema';
 import { environmentsSchema } from './spec/environments-schema';
+import { exportParametersSchema } from './spec/export-parameters-schema';
+import { featureEnvironmentMetricsSchema } from './spec/feature-environment-metrics-schema';
 import { featureEnvironmentSchema } from './spec/feature-environment-schema';
+import { featureMetricsSchema } from './spec/feature-metrics-schema';
 import { featureSchema } from './spec/feature-schema';
+import { featuresSchema } from './spec/features-schema';
 import { featureStrategySchema } from './spec/feature-strategy-schema';
+import { featureStrategySegmentSchema } from './spec/feature-strategy-segment-schema';
+import { featureTagSchema } from './spec/feature-tag-schema';
 import { featureTypeSchema } from './spec/feature-type-schema';
 import { featureTypesSchema } from './spec/feature-types-schema';
+import { featureUsageSchema } from './spec/feature-usage-schema';
 import { featureVariantsSchema } from './spec/feature-variants-schema';
-import { featuresSchema } from './spec/features-schema';
 import { feedbackSchema } from './spec/feedback-schema';
 import { healthCheckSchema } from './spec/health-check-schema';
 import { healthOverviewSchema } from './spec/health-overview-schema';
 import { healthReportSchema } from './spec/health-report-schema';
+import { idSchema } from './spec/id-schema';
 import { legalValueSchema } from './spec/legal-value-schema';
 import { loginSchema } from './spec/login-schema';
-import { idSchema } from './spec/id-schema';
 import { mapValues } from '../util/map-values';
-import { nameSchema } from './spec/name-schema';
 import { meSchema } from './spec/me-schema';
+import { nameSchema } from './spec/name-schema';
 import { omitKeys } from '../util/omit-keys';
 import { overrideSchema } from './spec/override-schema';
 import { parametersSchema } from './spec/parameters-schema';
 import { passwordSchema } from './spec/password-schema';
-import { patchSchema } from './spec/patch-schema';
 import { patchesSchema } from './spec/patches-schema';
+import { patchSchema } from './spec/patch-schema';
 import { permissionSchema } from './spec/permission-schema';
 import { projectEnvironmentSchema } from './spec/project-environment-schema';
 import { projectSchema } from './spec/project-schema';
 import { projectsSchema } from './spec/projects-schema';
+import { resetPasswordSchema } from './spec/reset-password-schema';
 import { roleSchema } from './spec/role-schema';
+import { segmentSchema } from './spec/segment-schema';
 import { sortOrderSchema } from './spec/sort-order-schema';
 import { splashSchema } from './spec/splash-schema';
+import { stateSchema } from './spec/state-schema';
+import { strategiesSchema } from './spec/strategies-schema';
+import { strategySchema } from './spec/strategy-schema';
 import { tagSchema } from './spec/tag-schema';
 import { tagsSchema } from './spec/tags-schema';
 import { tagTypeSchema } from './spec/tag-type-schema';
 import { tagTypesSchema } from './spec/tag-types-schema';
+import { tagWithVersionSchema } from './spec/tag-with-version-schema';
+import { tokenUserSchema } from './spec/token-user-schema';
 import { uiConfigSchema } from './spec/ui-config-schema';
+import { updateApiTokenSchema } from './spec/update-api-token-schema';
 import { updateFeatureSchema } from './spec/update-feature-schema';
 import { updateFeatureStrategySchema } from './spec/update-feature-strategy-schema';
-import { updateApiTokenSchema } from './spec/update-api-token-schema';
 import { updateTagTypeSchema } from './spec/update-tag-type-schema';
-import { upsertContextFieldSchema } from './spec/upsert-context-field-schema';
 import { updateUserSchema } from './spec/update-user-schema';
+import { upsertContextFieldSchema } from './spec/upsert-context-field-schema';
+import { upsertStrategySchema } from './spec/upsert-strategy-schema';
 import { userSchema } from './spec/user-schema';
 import { usersSchema } from './spec/users-schema';
 import { usersSearchSchema } from './spec/users-search-schema';
+import { validatePasswordSchema } from './spec/validate-password-schema';
 import { validateTagTypeSchema } from './spec/validate-tag-type-schema';
 import { variantSchema } from './spec/variant-schema';
 import { variantsSchema } from './spec/variants-schema';
 import { versionSchema } from './spec/version-schema';
-import { featureEnvironmentMetricsSchema } from './spec/feature-environment-metrics-schema';
-import { featureUsageSchema } from './spec/feature-usage-schema';
-import { featureMetricsSchema } from './spec/feature-metrics-schema';
-import { addonSchema } from './spec/addon-schema';
-import { addonsSchema } from './spec/addons-schema';
-import { addonParameterSchema } from './spec/addon-parameter-schema';
-import { addonTypeSchema } from './spec/addon-type-schema';
-import { applicationSchema } from './spec/application-schema';
-import { applicationsSchema } from './spec/applications-schema';
-import { tagWithVersionSchema } from './spec/tag-with-version-schema';
-import { tokenUserSchema } from './spec/token-user-schema';
-import { changePasswordSchema } from './spec/change-password-schema';
-import { validatePasswordSchema } from './spec/validate-password-schema';
-import { resetPasswordSchema } from './spec/reset-password-schema';
-import { featureStrategySegmentSchema } from './spec/feature-strategy-segment-schema';
-import { segmentSchema } from './spec/segment-schema';
-import { stateSchema } from './spec/state-schema';
-import { featureTagSchema } from './spec/feature-tag-schema';
-import { exportParametersSchema } from './spec/export-parameters-schema';
-import { emailSchema } from './spec/email-schema';
-import { strategySchema } from './spec/strategy-schema';
-import { strategiesSchema } from './spec/strategies-schema';
-import { upsertStrategySchema } from './spec/upsert-strategy-schema';
-import { clientApplicationSchema } from './spec/client-application-schema';
 import { IServerOption } from '../types';
 import { URL } from 'url';
 
 // All schemas in `openapi/spec` should be listed here.
 export const schemas = {
+    addonParameterSchema,
     addonSchema,
     addonsSchema,
     addonTypeSchema,
-    addonParameterSchema,
     apiTokenSchema,
     apiTokensSchema,
     applicationSchema,
     applicationsSchema,
+    changePasswordSchema,
     clientApplicationSchema,
     cloneFeatureSchema,
-    changePasswordSchema,
     constraintSchema,
     contextFieldSchema,
     contextFieldsSchema,
@@ -110,32 +110,32 @@ export const schemas = {
     environmentSchema,
     environmentsSchema,
     exportParametersSchema,
-    featureEnvironmentSchema,
     featureEnvironmentMetricsSchema,
-    featureSchema,
+    featureEnvironmentSchema,
     featureMetricsSchema,
-    featureUsageSchema,
+    featureSchema,
+    featuresSchema,
     featureStrategySchema,
     featureStrategySegmentSchema,
     featureTagSchema,
     featureTypeSchema,
     featureTypesSchema,
+    featureUsageSchema,
     featureVariantsSchema,
-    featuresSchema,
     feedbackSchema,
     healthCheckSchema,
     healthOverviewSchema,
     healthReportSchema,
+    idSchema,
     legalValueSchema,
     loginSchema,
-    nameSchema,
-    idSchema,
     meSchema,
+    nameSchema,
     overrideSchema,
     parametersSchema,
     passwordSchema,
-    patchSchema,
     patchesSchema,
+    patchSchema,
     permissionSchema,
     projectEnvironmentSchema,
     projectSchema,
@@ -149,24 +149,24 @@ export const schemas = {
     strategiesSchema,
     strategySchema,
     tagSchema,
-    tagWithVersionSchema,
     tagsSchema,
     tagTypeSchema,
     tagTypesSchema,
+    tagWithVersionSchema,
     tokenUserSchema,
     uiConfigSchema,
+    updateApiTokenSchema,
     updateFeatureSchema,
     updateFeatureStrategySchema,
-    updateApiTokenSchema,
     updateTagTypeSchema,
+    updateUserSchema,
     upsertContextFieldSchema,
     upsertStrategySchema,
-    validatePasswordSchema,
-    validateTagTypeSchema,
-    updateUserSchema,
     userSchema,
     usersSchema,
     usersSearchSchema,
+    validatePasswordSchema,
+    validateTagTypeSchema,
     variantSchema,
     variantsSchema,
     versionSchema,

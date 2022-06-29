@@ -80,6 +80,13 @@ export default class FeatureToggleClientStore
 
         let query = this.db('features')
             .select(selectColumns)
+            .modify((queryBuilder) => {
+                if (archived) {
+                    queryBuilder.whereNotNull('archived_at');
+                } else {
+                    queryBuilder.whereNull('archived_at');
+                }
+            })
             .fullOuterJoin(
                 this.db('feature_strategies')
                     .select('*')
@@ -102,10 +109,6 @@ export default class FeatureToggleClientStore
                 `fs.id`,
             )
             .fullOuterJoin('segments', `segments.id`, `fss.segment_id`);
-
-        query = query.where({
-            archived,
-        });
 
         if (featureQuery) {
             if (featureQuery.tag) {

@@ -17,7 +17,7 @@ const FEATURE_COLUMNS = [
     'created_at',
     'impression_data',
     'last_seen_at',
-    'archived',
+    // 'archived',
     'archived_at',
 ];
 
@@ -56,10 +56,10 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
 
     async count(
         query: {
-            archived?: boolean;
+            // archived?: boolean;
             project?: string;
             stale?: boolean;
-        } = { archived: false },
+        } = { stale: false },
     ): Promise<number> {
         return this.db
             .from(TABLE)
@@ -89,10 +89,18 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             stale?: boolean;
         } = { archived: false },
     ): Promise<FeatureToggle[]> {
+        const { archived, ...rest } = query;
         const rows = await this.db
             .select(FEATURE_COLUMNS)
             .from(TABLE)
-            .where(query);
+            .where(rest)
+            .modify((queryBuilder) => {
+                if (query.archived) {
+                    queryBuilder.whereNotNull('archived_at');
+                } else {
+                    queryBuilder.whereNull('archived_at');
+                }
+            });
         return rows.map(this.rowToFeature);
     }
 
@@ -193,7 +201,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             description: data.description,
             type: data.type,
             project,
-            archived: data.archived || false,
+            archived_at: data.archived ? new Date() : null,
             stale: data.stale,
             created_at: data.createdAt,
             impression_data: data.impressionData,
@@ -243,7 +251,8 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
 
     async delete(name: string): Promise<void> {
         await this.db(TABLE)
-            .where({ name, archived: true }) // Feature toggle must be archived to allow deletion
+            .where({ name }) // Feature toggle must be archived to allow deletion
+            .whereNotNull('archived_at')
             .del();
     }
 

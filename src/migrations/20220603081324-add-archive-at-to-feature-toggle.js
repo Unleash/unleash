@@ -3,7 +3,7 @@
 exports.up = function (db, callback) {
     db.runSql(
         `
-        ALTER TABLE features ADD "archived_at" date;
+        ALTER TABLE features ADD archived_at date;
         UPDATE features f
         SET    archived_at = res.archived_at
             FROM   (SELECT f.name, e.created_at AS archived_at
@@ -20,7 +20,6 @@ exports.up = function (db, callback) {
         SET    archived_at = Now()
         WHERE  archived = TRUE
           AND archived_at IS NULL;
-        ALTER TABLE features DROP COLUMN archived;
         `,
         callback,
     );

@@ -253,7 +253,13 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 'environments.name',
             )
             .where('features.name', featureName)
-            .andWhere('features.archived', archived ? 1 : 0);
+            .modify((queryBuilder) => {
+                if (archived) {
+                    queryBuilder.whereNotNull('features.archived_at');
+                } else {
+                    queryBuilder.whereNull('features.archived_at');
+                }
+            });
         stopTimer();
         if (rows.length > 0) {
             const featureToggle = rows.reduce((acc, r) => {
@@ -325,7 +331,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         archived: boolean = false,
     ): Promise<IFeatureOverview[]> {
         const rows = await this.db('features')
-            .where({ project: projectId, archived })
+            .where({ project: projectId })
             .select(
                 'features.name as feature_name',
                 'features.type as type',
@@ -337,6 +343,13 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 'environments.type as environment_type',
                 'environments.sort_order as environment_sort_order',
             )
+            .modify((queryBuilder) => {
+                if (archived) {
+                    queryBuilder.whereNotNull('archived_at');
+                } else {
+                    queryBuilder.whereNull('archived_at');
+                }
+            })
             .fullOuterJoin(
                 'feature_environments',
                 'feature_environments.feature_name',

@@ -20,5 +20,5 @@ test('clientFeatureQuerySchema all fields', () => {
 
     expect(
         validateSchema('#/components/schemas/clientFeaturesQuerySchema', data),
-    ).toMatchSnapshot();
+    ).toBeUndefined();
 });

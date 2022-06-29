@@ -4,6 +4,7 @@ export const clientFeaturesQuerySchema = {
     $id: '#/components/schemas/clientFeaturesQuerySchema',
     type: 'object',
     required: [],
+    additionalProperties: false,
     properties: {
         tag: {
             type: 'array',

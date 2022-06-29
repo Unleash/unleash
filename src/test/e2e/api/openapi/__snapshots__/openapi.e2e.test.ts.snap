@@ -398,6 +398,7 @@ Object {
         "type": "object",
       },
       "clientFeaturesQuerySchema": Object {
+        "additionalProperties": false,
         "properties": Object {
           "environment": Object {
             "type": "string",

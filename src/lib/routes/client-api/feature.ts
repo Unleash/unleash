@@ -217,7 +217,7 @@ export default class FeatureController extends Controller {
                 200,
                 res,
                 clientFeaturesSchema.$id,
-                { version, features, query: { ...query } },
+                { version, features, query },
             );
         }
     }
@@ -241,9 +241,9 @@ export default class FeatureController extends Controller {
             clientFeatureSchema.$id,
             {
                 ...toggle,
-                strategies: toggle.strategies.map((s) => {
-                    return { id: s.id || '', ...s };
-                }),
+                // strategies: toggle.strategies.map((s) => {
+                //     return { id: s.id || '', ...s };
+                // }),
             },
         );
     }

@@ -11,13 +11,13 @@ const standardResponses = {
 
 type StandardResponses = typeof standardResponses;
 
-export const getStandardResponses = <K extends keyof StandardResponses>(
-    ...statusCodes: K[]
-): OpenAPIV3.ResponsesObject =>
+export const getStandardResponses = (
+    ...statusCodes: (keyof StandardResponses)[]
+): Partial<StandardResponses> =>
     statusCodes.reduce(
         (acc, n) => ({
             ...acc,
-            [n]: standardResponses[String(n)] as OpenAPIV3.ResponseObject,
+            [n]: standardResponses[n],
         }),
-        {},
+        {} as Partial<StandardResponses>,
     );

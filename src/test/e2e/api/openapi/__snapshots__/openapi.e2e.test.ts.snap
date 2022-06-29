@@ -389,11 +389,7 @@ Object {
                 "type": "object",
               },
             },
-            "required": Array [
-              "start",
-              "stop",
-              "toggles",
-            ],
+            "required": Array [],
             "type": "object",
           },
           "environment": Object {

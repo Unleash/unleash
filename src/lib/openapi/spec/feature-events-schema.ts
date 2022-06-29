@@ -1,6 +1,6 @@
 import { FromSchema } from 'json-schema-to-ts';
-import { includeSchemasRecursively } from '../nested-schemas';
 import { eventSchema } from './event-schema';
+import { tagSchema } from './tag-schema';
 
 export const featureEventsSchema = {
     $id: '#/components/schemas/featureEventsSchema',
@@ -17,9 +17,10 @@ export const featureEventsSchema = {
         },
     },
     components: {
-        schemas: includeSchemasRecursively({
+        schemas: {
             eventSchema,
-        }),
+            tagSchema,
+        },
     },
 } as const;
 

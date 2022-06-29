@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
 import EventService from '../../services/event-service';
-import { ADMIN } from '../../types/permissions';
+import { ADMIN, NONE } from '../../types/permissions';
 import { IEvent } from '../../types/events';
 import Controller from '../controller';
 import { anonymise } from '../../util/anonymise';
@@ -58,7 +58,7 @@ export default class EventController extends Controller {
             method: 'get',
             path: '/:name',
             handler: this.getEventsForToggle,
-            permission: undefined,
+            permission: NONE,
             middleware: [
                 openApiService.validPath({
                     operationId: 'getEventsForToggle',

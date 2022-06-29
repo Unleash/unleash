@@ -20,7 +20,11 @@ import { IStrategy } from '../../types/stores/strategy-store';
 import { IProject } from '../../types/model';
 import { IUserPermission } from '../../types/stores/access-store';
 
-class BootstrapController extends Controller {
+/**
+ * Provides admin UI configuration.
+ * Not to be confused with SDK bootstrapping.
+ */
+class BootstrapUIController extends Controller {
     private logger: Logger;
 
     private accessService: AccessService;
@@ -72,9 +76,7 @@ class BootstrapController extends Controller {
         this.emailService = emailService;
         this.versionService = versionService;
 
-        this.logger = config.getLogger(
-            'routes/admin-api/bootstrap-controller.ts',
-        );
+        this.logger = config.getLogger('routes/admin-api/bootstrap-ui.ts');
 
         this.get('/', this.bootstrap);
     }
@@ -130,5 +132,5 @@ class BootstrapController extends Controller {
     }
 }
 
-export default BootstrapController;
-module.exports = BootstrapController;
+export default BootstrapUIController;
+module.exports = BootstrapUIController;

@@ -89,43 +89,59 @@ const getEventTypeProperty = (eventType: string) => ({
     type: 'string',
     enum: [eventType],
     description: 'The type of the event.',
+    example: eventType,
 });
 
-// const createEvent = () => ({
-//         $id: '#/components/schemas/featureCreatedEventSchema',
-//     allOf: [
-//         { $ref: eventBaseSchema.$id },
-//         {
-//             type: 'object',
-//             additionalProperties: false,
-//             required: ['type', ...requiredProps],
-//             description:
-//                 'This event fires when you create a feature. The `data` property contains the details for the new feature.',
-//             properties: {
-//                 type: getEventTypeProperty(eventType),
-//             },
-//         },
-//     ],
-//     components: {},
-// })
-
-export const featureCreatedEventSchema = {
-    $id: '#/components/schemas/featureCreatedEventSchema',
+type EventData = {
+    type: string;
+    required: string[];
+    properties: {};
+    description: string;
+};
+const createEvent = (e: EventData) => ({
+    $id: `#/components/schemas/${e.type}EventSchema`,
     allOf: [
         { $ref: eventBaseSchema.$id },
         {
             type: 'object',
             additionalProperties: false,
-            required: ['type'],
+            required: ['type', ...e.required],
             description:
                 'This event fires when you create a feature. The `data` property contains the details for the new feature.',
             properties: {
-                type: getEventTypeProperty(FEATURE_CREATED),
+                type: getEventTypeProperty(e.type),
             },
         },
     ],
     components: {},
-};
+});
+
+export const featureCreatedEventSchema = createEvent({
+    type: FEATURE_CREATED,
+    description: 'blu',
+    required: ['other prop'],
+    properties: {
+        'other prop': { type: 'string' },
+    },
+});
+
+// export const featureCreatedEventSchema = {
+//     $id: '#/components/schemas/featureCreatedEventSchema',
+//     allOf: [
+//         { $ref: eventBaseSchema.$id },
+//         {
+//             type: 'object',
+//             additionalProperties: false,
+//             required: ['type'],
+//             description:
+//                 'This event fires when you create a feature. The `data` property contains the details for the new feature.',
+//             properties: {
+//                 type: getEventTypeProperty(FEATURE_CREATED),
+//             },
+//         },
+//     ],
+//     components: {},
+// };
 
 export const featureUpdatedEventSchema = {
     $id: '#/components/schemas/featureUpdatedEventSchema',

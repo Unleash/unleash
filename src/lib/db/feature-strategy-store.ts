@@ -15,6 +15,8 @@ import {
 } from '../types/model';
 import { IFeatureStrategiesStore } from '../types/stores/feature-strategies-store';
 import { PartialSome } from '../types/partial';
+import { ensureStringValue } from '../util/ensureStringValue';
+import { mapValues } from '../util/map-values';
 
 const COLUMNS = [
     'id',
@@ -53,15 +55,6 @@ interface IFeatureStrategiesTable {
     created_at?: Date;
 }
 
-function ensureStringValues(data: object): { [key: string]: string } {
-    const stringEntries = Object.entries(data).map(([key, value]) => [
-        key,
-        String(value),
-    ]);
-
-    return Object.fromEntries(stringEntries);
-}
-
 function mapRow(row: IFeatureStrategiesTable): IFeatureStrategy {
     return {
         id: row.id,
@@ -69,7 +62,7 @@ function mapRow(row: IFeatureStrategiesTable): IFeatureStrategy {
         projectId: row.project_name,
         environment: row.environment,
         strategyName: row.strategy_name,
-        parameters: ensureStringValues(row.parameters),
+        parameters: mapValues(row.parameters || {}, ensureStringValue),
         constraints: (row.constraints as unknown as IConstraint[]) || [],
         createdAt: row.created_at,
         sortOrder: row.sort_order,

@@ -8,6 +8,7 @@ import Controller from '../controller';
 import { anonymise } from '../../util/anonymise';
 import { OpenApiService } from '../../services/openapi-service';
 import { createResponseSchema } from '../../../lib/openapi';
+import { endpointDescriptions } from '../../../lib/openapi/endpoint-descriptions';
 import {
     eventsSchema,
     EventsSchema,
@@ -63,10 +64,7 @@ export default class EventController extends Controller {
                         },
                     ],
 
-                    description:
-                        'Returns **the last 100** from the Unleash instance when called without a query parameter. When called with a `project` parameter, returns **all events** for the specified project.\n\nIf the provided project does not exist, the list of events will be empty.',
-                    summary:
-                        'Get the most recent events from the Unleash instance or all events related to a project.',
+                    ...endpointDescriptions.admin.events,
                 }),
             ],
         });
@@ -84,10 +82,7 @@ export default class EventController extends Controller {
                         ...getStandardResponses(401),
                         200: createResponseSchema('featureEventsSchema'),
                     },
-                    description:
-                        'Returns all events related to the specified feature toggle. If the feature toggle does not exist, the list of events will be empty.',
-                    summary:
-                        'Get all events related to a specific feature toggle.',
+                    ...endpointDescriptions.admin.eventsPerFeature,
                 }),
             ],
         });

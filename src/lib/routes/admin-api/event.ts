@@ -56,7 +56,7 @@ export default class EventController extends Controller {
 
         this.route({
             method: 'get',
-            path: '/:name',
+            path: '/:featureName',
             handler: this.getEventsForToggle,
             permission: NONE,
             middleware: [
@@ -106,10 +106,10 @@ export default class EventController extends Controller {
     }
 
     async getEventsForToggle(
-        req: Request<{ name: string }>,
+        req: Request<{ featureName: string }>,
         res: Response<FeatureEventsSchema>,
     ): Promise<void> {
-        const toggleName = req.params.name;
+        const toggleName = req.params.featureName;
         const events = await this.eventService.getEventsForToggle(toggleName);
 
         const response = {

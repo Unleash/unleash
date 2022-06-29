@@ -17,6 +17,7 @@ import {
     featureEventsSchema,
     FeatureEventsSchema,
 } from '../../../lib/openapi/spec/feature-events-schema';
+import { getStandardResponses } from '../../../lib/openapi/standard-responses';
 
 const version = 1;
 export default class EventController extends Controller {
@@ -48,8 +49,24 @@ export default class EventController extends Controller {
                     operationId: 'getEvents',
                     tags: ['admin'],
                     responses: {
+                        ...getStandardResponses(401),
                         200: createResponseSchema('eventsSchema'),
                     },
+
+                    parameters: [
+                        {
+                            name: 'project',
+                            description:
+                                'The name of the project whose events you want to retrieve',
+                            schema: { type: 'string' },
+                            in: 'query',
+                        },
+                    ],
+
+                    description:
+                        'Returns **the last 100** from the Unleash instance when called without a query parameter. When called with a `project` parameter, returns **all events** for the specified project.\n\nIf the provided project does not exist, the list of events will be empty.',
+                    summary:
+                        'Get the most recent events from the Unleash instance or all events related to a project.',
                 }),
             ],
         });
@@ -64,8 +81,13 @@ export default class EventController extends Controller {
                     operationId: 'getEventsForToggle',
                     tags: ['admin'],
                     responses: {
+                        ...getStandardResponses(401),
                         200: createResponseSchema('featureEventsSchema'),
                     },
+                    description:
+                        'Returns all events related to the specified feature toggle. If the feature toggle does not exist, the list of events will be empty.',
+                    summary:
+                        'Get all events related to a specific feature toggle.',
                 }),
             ],
         });

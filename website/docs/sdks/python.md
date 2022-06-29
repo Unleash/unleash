@@ -52,7 +52,7 @@ client.is_enabled("my_toggle", fallback_function=lambda feature_name, context: T
 
 The fallback function **must** accept the feature name and context as positional arguments in that order.
 
-The client will evaluate the fallback function only if an exception occurs when calling the `is_enabled()` method. This happens when the client can't find the feature flag. The client _may_ also throw other, general exceptions.
+The client will evaluate the fallback function only if an exception occurs when calling the `is_enabled()` method. This happens when the client can't find the feature flag. The client *may* also throw other, general exceptions.
 
 ## Getting a variant {#getting-a-variant}
 

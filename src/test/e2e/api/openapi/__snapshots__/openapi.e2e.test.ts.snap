@@ -293,6 +293,73 @@ Object {
         },
         "type": "object",
       },
+      "bootstrapUiSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "context": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/contextFieldSchema",
+            },
+            "type": "array",
+          },
+          "email": Object {
+            "type": "boolean",
+          },
+          "featureTypes": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/featureTypeSchema",
+            },
+            "type": "array",
+          },
+          "projects": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/projectSchema",
+            },
+            "type": "array",
+          },
+          "strategies": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/strategySchema",
+            },
+            "type": "array",
+          },
+          "tagTypes": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/tagTypeSchema",
+            },
+            "type": "array",
+          },
+          "uiConfig": Object {
+            "$ref": "#/components/schemas/uiConfigSchema",
+          },
+          "user": Object {
+            "allOf": Array [
+              Object {
+                "$ref": "#/components/schemas/userSchema",
+              },
+            ],
+            "properties": Object {
+              "permissions": Object {
+                "items": Object {
+                  "$ref": "#/components/schemas/permissionSchema",
+                },
+                "type": "array",
+              },
+            },
+          },
+        },
+        "required": Array [
+          "uiConfig",
+          "user",
+          "email",
+          "context",
+          "featureTypes",
+          "tagTypes",
+          "strategies",
+          "projects",
+        ],
+        "type": "object",
+      },
       "changePasswordSchema": Object {
         "additionalProperties": false,
         "properties": Object {

@@ -8,8 +8,8 @@ import { contextFieldSchema } from './context-field-schema';
 import { strategySchema } from './strategy-schema';
 import { projectSchema } from './project-schema';
 
-export const bootstrapUISchema = {
-    $id: '#/components/schemas/bootstrapUISchema',
+export const bootstrapUiSchema = {
+    $id: '#/components/schemas/bootstrapUiSchema',
     type: 'object',
     additionalProperties: false,
     required: [
@@ -32,7 +32,7 @@ export const bootstrapUISchema = {
                 permissions: {
                     type: 'array',
                     items: {
-                        $ref: '#components/schemas/permissionSchema',
+                        $ref: '#/components/schemas/permissionSchema',
                     },
                 },
             },
@@ -85,4 +85,4 @@ export const bootstrapUISchema = {
     },
 } as const;
 
-export type BootstrapUISchema = FromSchema<typeof bootstrapUISchema>;
+export type BootstrapUiSchema = FromSchema<typeof bootstrapUiSchema>;

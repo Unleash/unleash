@@ -8,6 +8,7 @@ export const featureEventsSchema = {
     additionalProperties: false,
     required: ['toggleName', 'events'],
     properties: {
+        version: { type: 'number' },
         toggleName: {
             type: 'string',
         },

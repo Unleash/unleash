@@ -1,6 +1,4 @@
-import { OpenAPIV3 } from 'openapi-types';
-
-export const unauthorizedResponse: OpenAPIV3.ResponseObject = {
+export const unauthorizedResponse = {
     description:
         'Authorization information is missing or invalid. Provide a valid API token as the `authorization` header, e.g. `authorization:*.*.my-admin-token`.',
 } as const;

@@ -85,6 +85,9 @@ import { upsertStrategySchema } from './spec/upsert-strategy-schema';
 import { clientFeaturesQuerySchema } from './spec/client-features-query-schema';
 import { clientFeatureSchema } from './spec/client-feature-schema';
 import { clientFeaturesSchema } from './spec/client-features-schema';
+import { eventSchema } from './spec/event-schema';
+import { eventsSchema } from './spec/events-schema';
+import { featureEventsSchema } from './spec/feature-events-schema';
 import { clientApplicationSchema } from './spec/client-application-schema';
 import { clientVariantSchema } from './spec/client-variant-schema';
 import { IServerOption } from '../types';
@@ -117,9 +120,12 @@ export const schemas = {
     emailSchema,
     environmentSchema,
     environmentsSchema,
+    eventSchema,
+    eventsSchema,
     exportParametersSchema,
     featureEnvironmentSchema,
     featureEnvironmentMetricsSchema,
+    featureEventsSchema,
     featureSchema,
     featureMetricsSchema,
     featureUsageSchema,

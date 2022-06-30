@@ -287,9 +287,10 @@ test('clientFeaturesSchema client specification test 15', () => {
             ]
           },
           {
-            "name": "F9.withMissingSegment",
+            "name": "F9.withExtraParams",
             "description": "With global segment that doesn't exist",
             "enabled": true,
+            "project": "some-project",
             "strategies": [
               {
                 "name": "default",

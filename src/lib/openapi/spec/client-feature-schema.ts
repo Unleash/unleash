@@ -7,10 +7,12 @@ import { clientVariantSchema } from './client-variant-schema';
 export const clientFeatureSchema = {
     $id: '#/components/schemas/clientFeatureSchema',
     type: 'object',
-    additionalProperties: false,
     required: ['name', 'enabled'],
     properties: {
         name: {
+            type: 'string',
+        },
+        type: {
             type: 'string',
         },
         description: {
@@ -18,6 +20,11 @@ export const clientFeatureSchema = {
             nullable: true,
         },
         createdAt: {
+            type: 'string',
+            format: 'date-time',
+            nullable: true,
+        },
+        lastSeenAt: {
             type: 'string',
             format: 'date-time',
             nullable: true,
@@ -31,6 +38,9 @@ export const clientFeatureSchema = {
         impressionData: {
             type: 'boolean',
             nullable: true,
+        },
+        project: {
+            type: 'string',
         },
         strategies: {
             type: 'array',

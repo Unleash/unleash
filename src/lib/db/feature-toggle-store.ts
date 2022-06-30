@@ -17,7 +17,6 @@ const FEATURE_COLUMNS = [
     'created_at',
     'impression_data',
     'last_seen_at',
-    // 'archived',
     'archived_at',
 ];
 
@@ -56,15 +55,17 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
 
     async count(
         query: {
-            // archived?: boolean;
+            archived?: boolean;
             project?: string;
             stale?: boolean;
         } = { stale: false },
     ): Promise<number> {
+        const { archived, ...rest } = query;
         return this.db
             .from(TABLE)
             .count('*')
-            .where(query)
+            .where(rest)
+            .modify(FeatureToggleStore.filterByArchived, archived)
             .then((res) => Number(res[0].count));
     }
 
@@ -94,21 +95,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             .select(FEATURE_COLUMNS)
             .from(TABLE)
             .where(rest)
-            .modify((queryBuilder) => {
-                if (query.archived) {
-                    queryBuilder.whereNotNull('archived_at');
-                } else {
-                    queryBuilder.whereNull('archived_at');
-                }
-            });
-        return rows.map(this.rowToFeature);
-    }
-
-    async getFeatures(archived: boolean): Promise<FeatureToggle[]> {
-        const rows = await this.db
-            .select(FEATURE_COLUMNS)
-            .from(TABLE)
-            .where({ archived });
+            .modify(FeatureToggleStore.filterByArchived, archived);
         return rows.map(this.rowToFeature);
     }
 
@@ -138,15 +125,6 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         return present;
     }
 
-    async getArchivedFeatures(): Promise<FeatureToggle[]> {
-        const rows = await this.db
-            .select(FEATURE_COLUMNS)
-            .from(TABLE)
-            .where({ archived: true })
-            .orderBy('name', 'asc');
-        return rows.map(this.rowToFeature);
-    }
-
     async setLastSeen(toggleNames: string[]): Promise<void> {
         const now = new Date();
         try {
@@ -164,6 +142,18 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             this.logger.error('Could not update lastSeen, error: ', err);
         }
     }
+
+    static filterByArchived: Knex.QueryCallbackWithArgs = (
+        queryBuilder: Knex.QueryBuilder,
+        archived: boolean,
+    ) => {
+        if (archived) {
+            queryBuilder.whereNotNull('archived_at');
+        } else {
+            queryBuilder.whereNull('archived_at');
+        }
+        return queryBuilder;
+    };
 
     rowToFeature(row: FeaturesTable): FeatureToggle {
         if (!row) {

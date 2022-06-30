@@ -15,6 +15,7 @@ import {
 } from '../types/model';
 import { IFeatureStrategiesStore } from '../types/stores/feature-strategies-store';
 import { PartialSome } from '../types/partial';
+import FeatureToggleStore from './feature-toggle-store';
 
 const COLUMNS = [
     'id',
@@ -253,13 +254,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 'environments.name',
             )
             .where('features.name', featureName)
-            .modify((queryBuilder) => {
-                if (archived) {
-                    queryBuilder.whereNotNull('features.archived_at');
-                } else {
-                    queryBuilder.whereNull('features.archived_at');
-                }
-            });
+            .modify(FeatureToggleStore.filterByArchived, archived);
         stopTimer();
         if (rows.length > 0) {
             const featureToggle = rows.reduce((acc, r) => {
@@ -343,13 +338,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 'environments.type as environment_type',
                 'environments.sort_order as environment_sort_order',
             )
-            .modify((queryBuilder) => {
-                if (archived) {
-                    queryBuilder.whereNotNull('archived_at');
-                } else {
-                    queryBuilder.whereNull('archived_at');
-                }
-            })
+            .modify(FeatureToggleStore.filterByArchived, archived)
             .fullOuterJoin(
                 'feature_environments',
                 'feature_environments.feature_name',

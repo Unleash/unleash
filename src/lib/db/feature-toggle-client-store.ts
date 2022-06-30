@@ -11,6 +11,7 @@ import { IFeatureToggleClientStore } from '../types/stores/feature-toggle-client
 import { DEFAULT_ENV } from '../util/constants';
 import { PartialDeep } from '../types/partial';
 import EventEmitter from 'events';
+import FeatureToggleStore from './feature-toggle-store';
 
 export interface FeaturesTable {
     name: string;
@@ -80,13 +81,7 @@ export default class FeatureToggleClientStore
 
         let query = this.db('features')
             .select(selectColumns)
-            .modify((queryBuilder) => {
-                if (archived) {
-                    queryBuilder.whereNotNull('archived_at');
-                } else {
-                    queryBuilder.whereNull('archived_at');
-                }
-            })
+            .modify(FeatureToggleStore.filterByArchived, archived)
             .fullOuterJoin(
                 this.db('feature_strategies')
                     .select('*')

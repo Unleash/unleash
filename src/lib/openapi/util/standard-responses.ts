@@ -2,13 +2,13 @@ export const emptyResponse = {
     description: 'emptyResponse',
 };
 
-export const unauthorizedResponse = {
+const unauthorizedResponse = {
     description:
         'Authorization information is missing or invalid. Provide a valid API token as the `authorization` header, e.g. `authorization:*.*.my-admin-token`.',
 } as const;
 
-export const badRequestResponse = {
-    description: 'The request data do not match what we expect.',
+const badRequestResponse = {
+    description: 'The request data does not match what we expect.',
 } as const;
 
 const standardResponses = {

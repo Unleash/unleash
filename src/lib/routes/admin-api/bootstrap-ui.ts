@@ -22,6 +22,11 @@ import { IUserPermission } from '../../types/stores/access-store';
 import { OpenApiService } from '../../services/openapi-service';
 import { NONE } from '../../types/permissions';
 import { createResponseSchema } from '../../openapi';
+import {
+    BootstrapUiSchema,
+    bootstrapUiSchema,
+} from '../../openapi/spec/bootstrap-ui-schema';
+import { serializeDates } from '../../types/serialize-dates';
 
 /**
  * Provides admin UI configuration.
@@ -100,11 +105,12 @@ class BootstrapUIController extends Controller {
                 }),
             ],
         });
-
-        this.get('/', this.bootstrap);
     }
 
-    async bootstrap(req: AuthedRequest, res: Response): Promise<void> {
+    async bootstrap(
+        req: AuthedRequest,
+        res: Response<BootstrapUiSchema>,
+    ): Promise<void> {
         const jobs: [
             Promise<IContextField[]>,
             Promise<IFeatureType[]>,
@@ -142,16 +148,24 @@ class BootstrapUIController extends Controller {
             versionInfo,
         };
 
-        res.json({
-            uiConfig,
-            user: { ...req.user, permissions: userPermissions },
-            email: this.emailService.isEnabled(),
-            context,
-            featureTypes,
-            tagTypes,
-            strategies,
-            projects,
-        });
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            bootstrapUiSchema.$id,
+            {
+                uiConfig,
+                user: {
+                    ...serializeDates(req.user),
+                    permissions: userPermissions,
+                },
+                email: this.emailService.isEnabled(),
+                context: serializeDates(context),
+                featureTypes,
+                tagTypes,
+                strategies,
+                projects: serializeDates(projects),
+            },
+        );
     }
 }
 

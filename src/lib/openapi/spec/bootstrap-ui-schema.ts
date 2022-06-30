@@ -7,6 +7,8 @@ import { tagTypeSchema } from './tag-type-schema';
 import { contextFieldSchema } from './context-field-schema';
 import { strategySchema } from './strategy-schema';
 import { projectSchema } from './project-schema';
+import { versionSchema } from './version-schema';
+import { legalValueSchema } from './legal-value-schema';
 
 export const bootstrapUiSchema = {
     $id: '#/components/schemas/bootstrapUiSchema',
@@ -27,8 +29,10 @@ export const bootstrapUiSchema = {
             $ref: '#/components/schemas/uiConfigSchema',
         },
         user: {
-            allOf: [{ $ref: '#/components/schemas/userSchema' }],
+            type: 'object',
+            required: [...userSchema.required],
             properties: {
+                ...userSchema.properties,
                 permissions: {
                     type: 'array',
                     items: {
@@ -81,6 +85,8 @@ export const bootstrapUiSchema = {
             tagTypeSchema,
             strategySchema,
             projectSchema,
+            versionSchema,
+            legalValueSchema,
         },
     },
 } as const;

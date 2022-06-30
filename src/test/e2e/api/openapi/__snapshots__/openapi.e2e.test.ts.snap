@@ -333,19 +333,57 @@ Object {
             "$ref": "#/components/schemas/uiConfigSchema",
           },
           "user": Object {
-            "allOf": Array [
-              Object {
-                "$ref": "#/components/schemas/userSchema",
-              },
-            ],
             "properties": Object {
+              "createdAt": Object {
+                "format": "date-time",
+                "type": "string",
+              },
+              "email": Object {
+                "type": "string",
+              },
+              "emailSent": Object {
+                "type": "boolean",
+              },
+              "id": Object {
+                "type": "number",
+              },
+              "imageUrl": Object {
+                "type": "string",
+              },
+              "inviteLink": Object {
+                "type": "string",
+              },
+              "isAPI": Object {
+                "type": "boolean",
+              },
+              "loginAttempts": Object {
+                "type": "number",
+              },
+              "name": Object {
+                "type": "string",
+              },
               "permissions": Object {
                 "items": Object {
                   "$ref": "#/components/schemas/permissionSchema",
                 },
                 "type": "array",
               },
+              "rootRole": Object {
+                "type": "number",
+              },
+              "seenAt": Object {
+                "format": "date-time",
+                "nullable": true,
+                "type": "string",
+              },
+              "username": Object {
+                "type": "string",
+              },
             },
+            "required": Array [
+              "id",
+            ],
+            "type": "object",
           },
         },
         "required": Array [
@@ -1718,6 +1756,7 @@ Object {
             "type": "string",
           },
           "icon": Object {
+            "nullable": true,
             "type": "string",
           },
           "name": Object {
@@ -1878,9 +1917,6 @@ Object {
           "unleashUrl",
           "baseUriPath",
           "versionInfo",
-          "disablePasswordAuth",
-          "segmentValuesLimit",
-          "strategySegmentsLimit",
         ],
         "type": "object",
       },
@@ -4848,6 +4884,26 @@ Object {
         },
         "tags": Array [
           "admin",
+        ],
+      },
+    },
+    "/api/admin/ui-bootstrap": Object {
+      "get": Object {
+        "operationId": "bootstrapUiSchema",
+        "responses": Object {
+          "202": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/bootstrapUiSchema",
+                },
+              },
+            },
+            "description": "bootstrapUiSchema",
+          },
+        },
+        "tags": Array [
+          "other",
         ],
       },
     },

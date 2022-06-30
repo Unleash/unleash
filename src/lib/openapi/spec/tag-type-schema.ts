@@ -14,6 +14,7 @@ export const tagTypeSchema = {
         },
         icon: {
             type: 'string',
+            nullable: true,
         },
     },
     components: {},

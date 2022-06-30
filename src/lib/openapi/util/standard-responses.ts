@@ -1,6 +1,6 @@
 export const emptyResponse = {
-    description: 'emptyResponse',
-};
+    description: 'This response has no body.',
+} as const;
 
 const unauthorizedResponse = {
     description:

@@ -82,12 +82,16 @@ import { emailSchema } from './spec/email-schema';
 import { strategySchema } from './spec/strategy-schema';
 import { strategiesSchema } from './spec/strategies-schema';
 import { upsertStrategySchema } from './spec/upsert-strategy-schema';
+import { clientFeaturesQuerySchema } from './spec/client-features-query-schema';
+import { clientFeatureSchema } from './spec/client-feature-schema';
+import { clientFeaturesSchema } from './spec/client-features-schema';
 import { eventSchema } from './spec/event-schema';
 import { eventsSchema } from './spec/events-schema';
 import { featureEventsSchema } from './spec/feature-events-schema';
 import { clientApplicationSchema } from './spec/client-application-schema';
 import { clientMetricsSchema } from './spec/client-metrics-schema';
 import { dateSchema } from './spec/date-schema';
+import { clientVariantSchema } from './spec/client-variant-schema';
 import { IServerOption } from '../types';
 import { URL } from 'url';
 
@@ -104,6 +108,10 @@ export const schemas = {
     clientApplicationSchema,
     clientMetricsSchema,
     cloneFeatureSchema,
+    clientFeatureSchema,
+    clientFeaturesSchema,
+    clientVariantSchema,
+    clientFeaturesQuerySchema,
     changePasswordSchema,
     constraintSchema,
     contextFieldSchema,

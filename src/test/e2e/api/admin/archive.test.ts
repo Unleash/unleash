@@ -140,11 +140,11 @@ test('Reviving a non-existing toggle should yield 404', async () => {
 
 test('should contain archived and archived_at columns', async () => {
     await db.stores.featureToggleStore.create('proj-1', {
-        name: 'feat-proj-1',
+        name: 'feat-archive-column-1',
         archived: true,
     });
     await db.stores.featureToggleStore.create('proj-2', {
-        name: 'feat-proj-2',
+        name: 'feat-archive-column-2',
         archived: true,
     });
 

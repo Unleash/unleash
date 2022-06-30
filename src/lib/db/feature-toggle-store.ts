@@ -58,7 +58,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             archived?: boolean;
             project?: string;
             stale?: boolean;
-        } = { stale: false },
+        } = { archived: false },
     ): Promise<number> {
         const { archived, ...rest } = query;
         return this.db

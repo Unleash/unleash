@@ -12,6 +12,7 @@ import { IClientApp } from '../../types/model';
 import { NONE } from '../../types/permissions';
 import { OpenApiService } from '../../services/openapi-service';
 import { createRequestSchema, createResponseSchema } from '../../openapi';
+import { getStandardResponses } from '../../openapi/util/standard-responses';
 
 export default class ClientMetricsController extends Controller {
     logger: Logger;
@@ -45,7 +46,7 @@ export default class ClientMetricsController extends Controller {
 
         this.route({
             method: 'post',
-            path: '',
+            path: '/',
             handler: this.registerMetrics,
             permission: NONE,
             middleware: [
@@ -54,13 +55,12 @@ export default class ClientMetricsController extends Controller {
                     operationId: 'registerClientMetrics',
                     requestBody: createRequestSchema('clientMetricsSchema'),
                     responses: {
+                        ...getStandardResponses(400),
                         202: createResponseSchema('emptyResponse'),
                     },
                 }),
             ],
         });
-
-        this.post('/', this.registerMetrics, NONE);
     }
 
     private resolveEnvironment(user: User, data: IClientApp) {
@@ -79,8 +79,11 @@ export default class ClientMetricsController extends Controller {
         data.environment = this.resolveEnvironment(user, data);
         await this.clientInstanceService.registerInstance(data, clientIp);
 
-        await this.metricsV2.registerClientMetrics(data, clientIp);
-
-        return res.status(202).end();
+        try {
+            await this.metricsV2.registerClientMetrics(data, clientIp);
+            return res.status(202).end();
+        } catch (e) {
+            return res.status(400).end();
+        }
     }
 }

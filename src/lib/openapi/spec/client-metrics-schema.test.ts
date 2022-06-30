@@ -24,11 +24,30 @@ test('clientMetricsSchema full', () => {
     ).toBeUndefined();
 });
 
-test('clientMetricsSchema unexpected input', () => {
+test('clientMetricsSchema should ignore additional properties without failing when required fields are there', () => {
     expect(
         validateSchema('#/components/schemas/clientMetricsSchema', {
             appName: 'a',
             someParam: 'some-value',
+            bucket: {
+                start: Date.now(),
+                stop: Date.now(),
+                toggles: {
+                    someToggle: {
+                        yes: 52,
+                        variants: {},
+                        someOtherParam: 'some-other-value',
+                    },
+                },
+            },
+        }),
+    ).toBeUndefined();
+});
+
+test('clientMetricsSchema should fail', () => {
+    expect(
+        validateSchema('#/components/schemas/clientMetricsSchema', {
+            appName: 'a',
             bucket: {
                 start: Date.now(),
                 toggles: {
@@ -40,5 +59,5 @@ test('clientMetricsSchema unexpected input', () => {
                 },
             },
         }),
-    ).toBeUndefined();
+    ).toMatchSnapshot();
 });

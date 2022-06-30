@@ -17,7 +17,7 @@ export const clientMetricsSchema = {
         },
         bucket: {
             type: 'object',
-            required: [],
+            required: ['start', 'stop', 'toggles'],
             properties: {
                 start: {
                     $ref: '#/components/schemas/dateSchema',

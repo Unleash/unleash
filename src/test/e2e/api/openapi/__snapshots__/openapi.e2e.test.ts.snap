@@ -389,7 +389,11 @@ Object {
                 "type": "object",
               },
             },
-            "required": Array [],
+            "required": Array [
+              "start",
+              "stop",
+              "toggles",
+            ],
             "type": "object",
           },
           "environment": Object {
@@ -5330,7 +5334,7 @@ If the provided project does not exist, the list of events will be empty.",
         ],
       },
     },
-    "/api/client/metrics": Object {
+    "/api/client/metrics/": Object {
       "post": Object {
         "operationId": "registerClientMetrics",
         "requestBody": Object {
@@ -5354,6 +5358,9 @@ If the provided project does not exist, the list of events will be empty.",
               },
             },
             "description": "emptyResponse",
+          },
+          "400": Object {
+            "description": "The request data do not match what we expect.",
           },
         },
         "tags": Array [

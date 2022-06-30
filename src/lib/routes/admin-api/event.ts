@@ -18,7 +18,7 @@ import {
     featureEventsSchema,
     FeatureEventsSchema,
 } from '../../../lib/openapi/spec/feature-events-schema';
-import { getStandardResponses } from '../../../lib/openapi/standard-responses';
+import { getStandardResponses } from '../../../lib/openapi/util/standard-responses';
 
 const version = 1;
 export default class EventController extends Controller {

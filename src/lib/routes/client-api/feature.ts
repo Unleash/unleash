@@ -241,9 +241,6 @@ export default class FeatureController extends Controller {
             clientFeatureSchema.$id,
             {
                 ...toggle,
-                // strategies: toggle.strategies.map((s) => {
-                //     return { id: s.id || '', ...s };
-                // }),
             },
         );
     }

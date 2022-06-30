@@ -10,11 +10,11 @@ import UserSplashService from '../../services/user-splash-service';
 import { ADMIN, NONE } from '../../types/permissions';
 import { OpenApiService } from '../../services/openapi-service';
 import { createRequestSchema, createResponseSchema } from '../../openapi';
-import { emptyResponse } from '../../openapi/spec/empty-response';
 import { meSchema, MeSchema } from '../../openapi/spec/me-schema';
 import { serializeDates } from '../../types/serialize-dates';
 import { IUserPermission } from '../../types/stores/access-store';
 import { PasswordSchema } from '../../openapi/spec/password-schema';
+import { emptyResponse } from '../../openapi/util/standard-responses';
 
 class UserController extends Controller {
     private accessService: AccessService;

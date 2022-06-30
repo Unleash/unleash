@@ -28,8 +28,8 @@ import {
     apiTokenSchema,
     ApiTokenSchema,
 } from '../../openapi/spec/api-token-schema';
-import { emptyResponse } from '../../openapi/spec/empty-response';
 import { UpdateApiTokenSchema } from '../../openapi/spec/update-api-token-schema';
+import { emptyResponse } from '../../openapi/util/standard-responses';
 
 interface TokenParam {
     token: string;

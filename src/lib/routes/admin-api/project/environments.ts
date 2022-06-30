@@ -7,7 +7,7 @@ import EnvironmentService from '../../../services/environment-service';
 import { UPDATE_PROJECT } from '../../../types/permissions';
 import { createRequestSchema } from '../../../openapi';
 import { ProjectEnvironmentSchema } from '../../../openapi/spec/project-environment-schema';
-import { emptyResponse } from '../../../openapi/spec/empty-response';
+import { emptyResponse } from '../../../openapi/util/standard-responses';
 
 const PREFIX = '/:projectId/environments';
 

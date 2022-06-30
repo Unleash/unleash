@@ -6,13 +6,13 @@ import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types';
 import { NONE } from '../../types/permissions';
 import { createRequestSchema, createResponseSchema } from '../../openapi';
-import { emptyResponse } from '../../openapi/spec/empty-response';
 import { OpenApiService } from '../../services/openapi-service';
 import {
     tokenUserSchema,
     TokenUserSchema,
 } from '../../openapi/spec/token-user-schema';
 import { EmailSchema } from '../../openapi/spec/email-schema';
+import { emptyResponse } from '../../openapi/util/standard-responses';
 
 interface IValidateQuery {
     token: string;

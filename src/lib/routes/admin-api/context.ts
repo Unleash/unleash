@@ -26,8 +26,8 @@ import { UpsertContextFieldSchema } from '../../openapi/spec/upsert-context-fiel
 import { createRequestSchema, createResponseSchema } from '../../openapi';
 import { serializeDates } from '../../types/serialize-dates';
 import NotFoundError from '../../error/notfound-error';
-import { emptyResponse } from '../../openapi/spec/empty-response';
 import { NameSchema } from '../../openapi/spec/name-schema';
+import { emptyResponse } from '../../openapi/util/standard-responses';
 
 interface ContextParam {
     contextField: string;

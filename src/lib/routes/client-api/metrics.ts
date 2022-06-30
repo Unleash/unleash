@@ -12,8 +12,10 @@ import { IClientApp } from '../../types/model';
 import { NONE } from '../../types/permissions';
 import { OpenApiService } from '../../services/openapi-service';
 import { createRequestSchema } from '../../openapi';
-import { getStandardResponses } from '../../openapi/util/standard-responses';
-import { emptyResponse } from '../../openapi/spec/empty-response';
+import {
+    emptyResponse,
+    getStandardResponses,
+} from '../../openapi/util/standard-responses';
 
 export default class ClientMetricsController extends Controller {
     logger: Logger;

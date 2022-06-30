@@ -1,7 +1,8 @@
 import { validateSchema } from '../validate';
+import { BootstrapUiSchema } from './bootstrap-ui-schema';
 
 test('bootstrapUiSchema', () => {
-    const data = {
+    const data: BootstrapUiSchema = {
         uiConfig: {
             flags: { E: true },
             authenticationType: 'open-source',
@@ -145,6 +146,10 @@ test('bootstrapUiSchema', () => {
             },
         ],
     };
+
+    expect(
+        validateSchema('#/components/schemas/bootstrapUiSchema', {}),
+    ).not.toBeUndefined();
 
     expect(
         validateSchema('#/components/schemas/bootstrapUiSchema', data),

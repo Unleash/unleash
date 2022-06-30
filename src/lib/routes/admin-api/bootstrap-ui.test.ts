@@ -1,5 +1,6 @@
 import supertest from 'supertest';
 import { createTestConfig } from '../../../test/config/test-config';
+import { randomId } from '../../util/random-id';
 
 import createStores from '../../../test/fixtures/store';
 import getApp from '../../app';
@@ -10,7 +11,7 @@ const uiConfig = {
 };
 
 async function getSetup() {
-    const base = `/random${Math.round(Math.random() * 1000)}`;
+    const base = `/random${randomId()}`;
     const config = createTestConfig({
         server: { baseUriPath: base },
         ui: uiConfig,

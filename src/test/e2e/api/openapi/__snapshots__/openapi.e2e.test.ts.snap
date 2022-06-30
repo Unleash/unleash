@@ -5272,7 +5272,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/ui-bootstrap": Object {
       "get": Object {
-        "operationId": "bootstrapUiSchema",
+        "operationId": "getBootstrapUiData",
         "responses": Object {
           "202": Object {
             "content": Object {

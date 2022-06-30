@@ -98,7 +98,7 @@ class BootstrapUIController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['other'],
-                    operationId: 'bootstrapUiSchema',
+                    operationId: 'getBootstrapUiData',
                     responses: {
                         202: createResponseSchema('bootstrapUiSchema'),
                     },

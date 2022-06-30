@@ -19,8 +19,20 @@ import { ITagType } from '../../types/stores/tag-type-store';
 import { IStrategy } from '../../types/stores/strategy-store';
 import { IProject } from '../../types/model';
 import { IUserPermission } from '../../types/stores/access-store';
+import { OpenApiService } from '../../services/openapi-service';
+import { NONE } from '../../types/permissions';
+import { createResponseSchema } from '../../openapi';
+import {
+    BootstrapUiSchema,
+    bootstrapUiSchema,
+} from '../../openapi/spec/bootstrap-ui-schema';
+import { serializeDates } from '../../types/serialize-dates';
 
-class BootstrapController extends Controller {
+/**
+ * Provides admin UI configuration.
+ * Not to be confused with SDK bootstrapping.
+ */
+class BootstrapUIController extends Controller {
     private logger: Logger;
 
     private accessService: AccessService;
@@ -39,6 +51,8 @@ class BootstrapController extends Controller {
 
     private versionService: VersionService;
 
+    private openApiService: OpenApiService;
+
     constructor(
         config: IUnleashConfig,
         {
@@ -50,6 +64,7 @@ class BootstrapController extends Controller {
             emailService,
             versionService,
             featureTypeService,
+            openApiService,
         }: Pick<
             IUnleashServices,
             | 'contextService'
@@ -60,6 +75,7 @@ class BootstrapController extends Controller {
             | 'emailService'
             | 'versionService'
             | 'featureTypeService'
+            | 'openApiService'
         >,
     ) {
         super(config);
@@ -71,15 +87,30 @@ class BootstrapController extends Controller {
         this.featureTypeService = featureTypeService;
         this.emailService = emailService;
         this.versionService = versionService;
+        this.openApiService = openApiService;
 
-        this.logger = config.getLogger(
-            'routes/admin-api/bootstrap-controller.ts',
-        );
-
-        this.get('/', this.bootstrap);
+        this.logger = config.getLogger('routes/admin-api/bootstrap-ui.ts');
+        this.route({
+            method: 'get',
+            path: '',
+            handler: this.bootstrap,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['other'],
+                    operationId: 'getBootstrapUiData',
+                    responses: {
+                        202: createResponseSchema('bootstrapUiSchema'),
+                    },
+                }),
+            ],
+        });
     }
 
-    async bootstrap(req: AuthedRequest, res: Response): Promise<void> {
+    async bootstrap(
+        req: AuthedRequest,
+        res: Response<BootstrapUiSchema>,
+    ): Promise<void> {
         const jobs: [
             Promise<IContextField[]>,
             Promise<IFeatureType[]>,
@@ -117,18 +148,26 @@ class BootstrapController extends Controller {
             versionInfo,
         };
 
-        res.json({
-            uiConfig,
-            user: { ...req.user, permissions: userPermissions },
-            email: this.emailService.isEnabled(),
-            context,
-            featureTypes,
-            tagTypes,
-            strategies,
-            projects,
-        });
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            bootstrapUiSchema.$id,
+            {
+                uiConfig,
+                user: {
+                    ...serializeDates(req.user),
+                    permissions: userPermissions,
+                },
+                email: this.emailService.isEnabled(),
+                context: serializeDates(context),
+                featureTypes,
+                tagTypes,
+                strategies,
+                projects: serializeDates(projects),
+            },
+        );
     }
 }
 
-export default BootstrapController;
-module.exports = BootstrapController;
+export default BootstrapUIController;
+module.exports = BootstrapUIController;

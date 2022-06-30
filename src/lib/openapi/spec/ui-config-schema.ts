@@ -5,15 +5,7 @@ export const uiConfigSchema = {
     $id: '#/components/schemas/uiConfigSchema',
     type: 'object',
     additionalProperties: false,
-    required: [
-        'version',
-        'unleashUrl',
-        'baseUriPath',
-        'versionInfo',
-        'disablePasswordAuth',
-        'segmentValuesLimit',
-        'strategySegmentsLimit',
-    ],
+    required: ['version', 'unleashUrl', 'baseUriPath', 'versionInfo'],
     properties: {
         slogan: {
             type: 'string',

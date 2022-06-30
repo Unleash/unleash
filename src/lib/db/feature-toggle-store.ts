@@ -147,12 +147,9 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         queryBuilder: Knex.QueryBuilder,
         archived: boolean,
     ) => {
-        if (archived) {
-            queryBuilder.whereNotNull('archived_at');
-        } else {
-            queryBuilder.whereNull('archived_at');
-        }
-        return queryBuilder;
+        return archived
+            ? queryBuilder.whereNotNull('archived_at')
+            : queryBuilder.whereNull('archived_at');
     };
 
     rowToFeature(row: FeaturesTable): FeatureToggle {

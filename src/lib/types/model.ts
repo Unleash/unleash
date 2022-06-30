@@ -54,7 +54,6 @@ export interface FeatureToggleDTO {
 export interface FeatureToggle extends FeatureToggleDTO {
     project: string;
     lastSeenAt?: Date;
-    variants?: IVariant[];
     createdAt?: Date;
 }
 

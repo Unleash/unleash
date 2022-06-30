@@ -137,27 +137,3 @@ test('Reviving a non-existing toggle should yield 404', async () => {
         .send({})
         .expect(404);
 });
-
-test('should contain archived and archived_at columns', async () => {
-    await db.stores.featureToggleStore.create('proj-1', {
-        name: 'feat-archive-column-1',
-        archived: true,
-    });
-    await db.stores.featureToggleStore.create('proj-2', {
-        name: 'feat-archive-column-2',
-        archived: true,
-    });
-
-    await app.request
-        .get('/api/admin/archive/features')
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .expect((res) => {
-            expect(
-                res.body.features.every((f) => f.hasOwnProperty('archived')),
-            ).toBe(true);
-            expect(
-                res.body.features.every((f) => f.hasOwnProperty('archivedAt')),
-            ).toBe(true);
-        });
-});

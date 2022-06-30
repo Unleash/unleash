@@ -3,7 +3,7 @@
 exports.up = function (db, callback) {
     db.runSql(
         `
-        ALTER TABLE features ADD archived_at date;
+        ALTER TABLE features ADD archived_at TIMESTAMP WITH TIME ZONE;
         UPDATE features f
         SET    archived_at = res.archived_at
             FROM   (SELECT f.name, e.created_at AS archived_at

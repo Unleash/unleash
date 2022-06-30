@@ -30,12 +30,14 @@ Secret key: proxy-123
 
 Now you can open your application code and connect through one of the proxy SDKs:
 
-- [Javascript Proxy SDK](sdks/proxy-javascript.md)
-- [iOS Proxy SDK](sdks/proxy-ios.md)
 - [Android Proxy SDK](sdks/android-proxy.md)
-- [React](sdks/proxy-react.md)
+- [iOS Proxy SDK](sdks/proxy-ios.md)
+- [Javascript Proxy SDK](sdks/proxy-javascript.md)
+- [React Proxy SDK](sdks/proxy-react.md)
+- [Svelte Proxy SDK](sdks/proxy-svelte.md)
+- [Vue Proxy SDK](sdks/proxy-vue.md)
 
-Here is a connection example using the javascript proxy SDK:
+Here is a connection example using the JavaScript Proxy SDK:
 
 ```javascript
 import { UnleashClient } from 'unleash-proxy-client';

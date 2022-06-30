@@ -1,16 +1,16 @@
 ---
 id: proxy-vue
-title: Vue proxy SDK
+title: Vue Proxy SDK
 ---
 
 <div class="alert alert--info" role="alert">
-  <em>Vue proxy SDK is currently at version 0.0.1 and is experimental</em>.
+  <em>Vue Proxy SDK is currently at version 0.0.1 and is experimental</em>.
 </div>
 <br/>
 
 This library is meant to be used with the [unleash-proxy](https://github.com/Unleash/unleash-proxy). The proxy application layer will sit between your unleash instance and your client applications, and provides performance and security benefits. DO NOT TRY to connect this library directly to the unleash instance, as the datasets follow different formats because the proxy only returns evaluated toggle information.
 
-For more detailed information, check out [the vue Proxy SDK on GitHub](https://github.com/Unleash/proxy-client-vue).
+For more detailed information, check out the [Vue Proxy SDK on GitHub](https://github.com/Unleash/proxy-client-vue).
 
 ## Installation
 
@@ -101,9 +101,9 @@ onMounted(() => {
 </template>
 ```
 
-# Usage
+## Usage
 
-## Check feature toggle status
+### Check feature toggle status
 
 To check if a feature is enabled:
 
@@ -120,7 +120,7 @@ const enabled = useFlag('travel.landing')
 </template>
 ```
 
-## Check variants
+### Check variants
 
 To check variants:
 
@@ -138,10 +138,9 @@ const variant = useVariant('travel.landing')
 </template>
 ```
 
-## Defer rendering until flags fetched
+### Defer rendering until flags fetched
 
-useFlagsStatus retrieves the ready state and error events.
-Follow the following steps in order to delay rendering until the flags have been fetched.
+useFlagsStatus retrieves the ready state and error events. Follow the following steps in order to delay rendering until the flags have been fetched.
 
 ```jsx
 import { useFlagsStatus } from '@unleash/proxy-client-vue'
@@ -152,7 +151,7 @@ const { flagsReady, flagsError } = useFlagsStatus()
 <MyComponent v-else error={flagsError} />
 ```
 
-## Updating context
+### Updating context
 
 Follow the following steps in order to update the unleash context:
 

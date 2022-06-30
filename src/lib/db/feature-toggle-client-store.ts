@@ -12,6 +12,8 @@ import { DEFAULT_ENV } from '../util/constants';
 import { PartialDeep } from '../types/partial';
 import EventEmitter from 'events';
 import FeatureToggleStore from './feature-toggle-store';
+import { ensureStringValue } from '../util/ensureStringValue';
+import { mapValues } from '../util/map-values';
 
 export interface FeaturesTable {
     name: string;
@@ -178,7 +180,7 @@ export default class FeatureToggleClientStore
             id: row.strategy_id,
             name: row.strategy_name,
             constraints: row.constraints || [],
-            parameters: row.parameters,
+            parameters: mapValues(row.parameters || {}, ensureStringValue),
         };
     }
 

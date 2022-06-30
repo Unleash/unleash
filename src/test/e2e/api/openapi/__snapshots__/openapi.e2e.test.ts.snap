@@ -466,6 +466,63 @@ Object {
         ],
         "type": "object",
       },
+      "clientMetricsSchema": Object {
+        "properties": Object {
+          "appName": Object {
+            "type": "string",
+          },
+          "bucket": Object {
+            "properties": Object {
+              "start": Object {
+                "$ref": "#/components/schemas/dateSchema",
+              },
+              "stop": Object {
+                "$ref": "#/components/schemas/dateSchema",
+              },
+              "toggles": Object {
+                "additionalProperties": Object {
+                  "properties": Object {
+                    "no": Object {
+                      "minimum": 0,
+                      "type": "integer",
+                    },
+                    "variants": Object {
+                      "additionalProperties": Object {
+                        "minimum": 0,
+                        "type": "integer",
+                      },
+                      "type": "object",
+                    },
+                    "yes": Object {
+                      "minimum": 0,
+                      "type": "integer",
+                    },
+                  },
+                  "type": "object",
+                },
+                "type": "object",
+              },
+            },
+            "required": Array [
+              "start",
+              "stop",
+              "toggles",
+            ],
+            "type": "object",
+          },
+          "environment": Object {
+            "type": "string",
+          },
+          "instanceId": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "appName",
+          "bucket",
+        ],
+        "type": "object",
+      },
       "clientVariantSchema": Object {
         "additionalProperties": false,
         "properties": Object {
@@ -702,6 +759,17 @@ Object {
           "rootRole",
         ],
         "type": "object",
+      },
+      "dateSchema": Object {
+        "oneOf": Array [
+          Object {
+            "format": "date-time",
+            "type": "string",
+          },
+          Object {
+            "type": "number",
+          },
+        ],
       },
       "emailSchema": Object {
         "additionalProperties": false,
@@ -5457,6 +5525,40 @@ If the provided project does not exist, the list of events will be empty.",
               },
             },
             "description": "clientFeaturesSchema",
+          },
+        },
+        "tags": Array [
+          "client",
+        ],
+      },
+    },
+    "/api/client/metrics": Object {
+      "post": Object {
+        "operationId": "registerClientMetrics",
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/clientMetricsSchema",
+              },
+            },
+          },
+          "description": "clientMetricsSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "202": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/emptyResponse",
+                },
+              },
+            },
+            "description": "emptyResponse",
+          },
+          "400": Object {
+            "description": "The request data do not match what we expect.",
           },
         },
         "tags": Array [

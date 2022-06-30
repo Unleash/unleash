@@ -309,5 +309,5 @@ test('should send all segments that are in use by feature', async () => {
         .flat()
         .filter((x) => !!x);
     const toggleSegmentIds = [...new Set(allSegmentIds)];
-    expect(globalSegmentIds).toEqual(toggleSegmentIds);
+    expect(globalSegmentIds).toEqual(expect.arrayContaining(toggleSegmentIds));
 });

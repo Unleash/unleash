@@ -4,13 +4,13 @@ exports[`featureSchema constraints 1`] = `
 Object {
   "errors": Array [
     Object {
-      "instancePath": "/strategies/0",
+      "instancePath": "/strategies/0/constraints/0",
       "keyword": "required",
-      "message": "must have required property 'id'",
+      "message": "must have required property 'operator'",
       "params": Object {
-        "missingProperty": "id",
+        "missingProperty": "operator",
       },
-      "schemaPath": "#/required",
+      "schemaPath": "#/components/schemas/constraintSchema/required",
     },
   ],
   "schema": "#/components/schemas/featureSchema",

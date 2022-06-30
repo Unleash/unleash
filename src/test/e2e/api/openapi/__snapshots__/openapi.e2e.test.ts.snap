@@ -5042,7 +5042,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/user-admin/reset-password": Object {
       "post": Object {
-        "operationId": "resetPassword",
+        "operationId": "resetUserPassword",
         "requestBody": Object {
           "content": Object {
             "application/json": Object {
@@ -5093,7 +5093,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/user-admin/validate-password": Object {
       "post": Object {
-        "operationId": "validatePassword",
+        "operationId": "validateUserPassword",
         "requestBody": Object {
           "content": Object {
             "application/json": Object {
@@ -5207,7 +5207,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/user-admin/{id}/change-password": Object {
       "post": Object {
-        "operationId": "changePassword",
+        "operationId": "changeUserPassword",
         "parameters": Array [
           Object {
             "in": "path",

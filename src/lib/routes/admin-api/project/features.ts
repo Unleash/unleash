@@ -35,7 +35,7 @@ import { serializeDates } from '../../../types/serialize-dates';
 import { OpenApiService } from '../../../services/openapi-service';
 import { createRequestSchema, createResponseSchema } from '../../../openapi';
 import { FeatureEnvironmentSchema } from '../../../openapi/spec/feature-environment-schema';
-import { emptyResponse } from '../../../openapi/spec/empty-response';
+import { emptyResponse } from '../../../openapi/util/standard-responses';
 
 interface FeatureStrategyParams {
     projectId: string;

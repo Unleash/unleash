@@ -14,7 +14,6 @@ import { IUser, SimpleAuthSettings } from '../../server-impl';
 import { simpleAuthKey } from '../../types/settings/simple-auth-settings';
 import { anonymise } from '../../util/anonymise';
 import { OpenApiService } from '../../services/openapi-service';
-import { emptyResponse } from '../../openapi/spec/empty-response';
 import { createRequestSchema, createResponseSchema } from '../../openapi';
 import { userSchema, UserSchema } from '../../openapi/spec/user-schema';
 import { serializeDates } from '../../types/serialize-dates';
@@ -31,6 +30,7 @@ import {
     resetPasswordSchema,
     ResetPasswordSchema,
 } from '../../openapi/spec/reset-password-schema';
+import { emptyResponse } from '../../openapi/util/standard-responses';
 
 export default class UserAdminController extends Controller {
     private anonymise: boolean = false;

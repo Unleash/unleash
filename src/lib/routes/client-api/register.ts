@@ -10,9 +10,9 @@ import ApiUser from '../../types/api-user';
 import { ALL } from '../../types/models/api-token';
 import { NONE } from '../../types/permissions';
 import { OpenApiService } from '../../services/openapi-service';
-import { emptyResponse } from '../../openapi/spec/empty-response';
 import { createRequestSchema } from '../../openapi';
 import { ClientApplicationSchema } from '../../openapi/spec/client-application-schema';
+import { emptyResponse } from '../../openapi/util/standard-responses';
 
 export default class RegisterController extends Controller {
     logger: Logger;

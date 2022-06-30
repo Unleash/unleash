@@ -5671,13 +5671,6 @@ If the provided project does not exist, the list of events will be empty.",
         },
         "responses": Object {
           "202": Object {
-            "content": Object {
-              "application/json": Object {
-                "schema": Object {
-                  "$ref": "#/components/schemas/emptyResponse",
-                },
-              },
-            },
             "description": "emptyResponse",
           },
           "400": Object {

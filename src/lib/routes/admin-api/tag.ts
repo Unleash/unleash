@@ -10,7 +10,6 @@ import { NONE, UPDATE_FEATURE } from '../../types/permissions';
 import { extractUsername } from '../../util/extract-user';
 import { IAuthRequest } from '../unleash-types';
 import { createRequestSchema, createResponseSchema } from '../../openapi';
-import { emptyResponse } from '../../openapi/spec/empty-response';
 import { tagsSchema, TagsSchema } from '../../openapi/spec/tags-schema';
 import { TagSchema } from '../../openapi/spec/tag-schema';
 import { OpenApiService } from '../../services/openapi-service';
@@ -18,6 +17,7 @@ import {
     tagWithVersionSchema,
     TagWithVersionSchema,
 } from '../../openapi/spec/tag-with-version-schema';
+import { emptyResponse } from '../../openapi/util/standard-responses';
 
 const version = 1;
 

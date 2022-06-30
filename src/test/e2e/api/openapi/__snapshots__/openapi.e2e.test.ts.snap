@@ -352,6 +352,151 @@ Object {
         ],
         "type": "object",
       },
+      "clientFeatureSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "createdAt": Object {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string",
+          },
+          "description": Object {
+            "nullable": true,
+            "type": "string",
+          },
+          "enabled": Object {
+            "type": "boolean",
+          },
+          "impressionData": Object {
+            "nullable": true,
+            "type": "boolean",
+          },
+          "lastSeenAt": Object {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string",
+          },
+          "name": Object {
+            "type": "string",
+          },
+          "project": Object {
+            "type": "string",
+          },
+          "stale": Object {
+            "type": "boolean",
+          },
+          "strategies": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/featureStrategySchema",
+            },
+            "type": "array",
+          },
+          "type": Object {
+            "type": "string",
+          },
+          "variants": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/clientVariantSchema",
+            },
+            "nullable": true,
+            "type": "array",
+          },
+        },
+        "required": Array [
+          "name",
+          "enabled",
+        ],
+        "type": "object",
+      },
+      "clientFeaturesQuerySchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "environment": Object {
+            "type": "string",
+          },
+          "inlineSegmentConstraints": Object {
+            "type": "boolean",
+          },
+          "namePrefix": Object {
+            "type": "string",
+          },
+          "project": Object {
+            "items": Object {
+              "type": "string",
+            },
+            "type": "array",
+          },
+          "tag": Object {
+            "items": Object {
+              "items": Object {
+                "type": "string",
+              },
+              "type": "array",
+            },
+            "type": "array",
+          },
+        },
+        "required": Array [],
+        "type": "object",
+      },
+      "clientFeaturesSchema": Object {
+        "properties": Object {
+          "features": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/clientFeatureSchema",
+            },
+            "type": "array",
+          },
+          "query": Object {
+            "$ref": "#/components/schemas/clientFeaturesQuerySchema",
+          },
+          "segments": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/segmentSchema",
+            },
+            "type": "array",
+          },
+          "version": Object {
+            "type": "number",
+          },
+        },
+        "required": Array [
+          "version",
+          "features",
+        ],
+        "type": "object",
+      },
+      "clientVariantSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "name": Object {
+            "type": "string",
+          },
+          "payload": Object {
+            "properties": Object {
+              "type": Object {
+                "type": "string",
+              },
+              "value": Object {
+                "type": "string",
+              },
+            },
+            "required": Array [
+              "type",
+              "value",
+            ],
+            "type": "object",
+          },
+          "weight": Object {
+            "type": "number",
+          },
+        },
+        "required": Array [
+          "name",
+          "weight",
+        ],
+        "type": "object",
+      },
       "cloneFeatureSchema": Object {
         "properties": Object {
           "name": Object {
@@ -952,7 +1097,6 @@ Object {
         },
         "required": Array [
           "name",
-          "id",
         ],
         "type": "object",
       },
@@ -1537,14 +1681,18 @@ Object {
             "type": "array",
           },
           "description": Object {
+            "nullable": true,
             "type": "string",
+          },
+          "id": Object {
+            "type": "number",
           },
           "name": Object {
             "type": "string",
           },
         },
         "required": Array [
-          "name",
+          "id",
           "constraints",
         ],
         "type": "object",
@@ -5263,6 +5411,56 @@ If the provided project does not exist, the list of events will be empty.",
         },
         "tags": Array [
           "admin",
+        ],
+      },
+    },
+    "/api/client/features": Object {
+      "get": Object {
+        "operationId": "getAllClientFeatures",
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/clientFeaturesSchema",
+                },
+              },
+            },
+            "description": "clientFeaturesSchema",
+          },
+        },
+        "tags": Array [
+          "client",
+        ],
+      },
+    },
+    "/api/client/features/{featureName}": Object {
+      "get": Object {
+        "operationId": "getClientFeature",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "featureName",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/clientFeaturesSchema",
+                },
+              },
+            },
+            "description": "clientFeaturesSchema",
+          },
+        },
+        "tags": Array [
+          "client",
         ],
       },
     },

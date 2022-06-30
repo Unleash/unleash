@@ -6,7 +6,7 @@ export const featureStrategySchema = {
     $id: '#/components/schemas/featureStrategySchema',
     type: 'object',
     additionalProperties: false,
-    required: ['name', 'id'],
+    required: ['name'],
     properties: {
         id: {
             type: 'string',

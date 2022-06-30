@@ -4,8 +4,7 @@ import getApp from '../../app';
 import { createTestConfig } from '../../../test/config/test-config';
 import { clientMetricsSchema } from '../../services/client-metrics/schema';
 import { createServices } from '../../services';
-import { IUnleashStores } from '../../types';
-import { IUnleashOptions } from '../../server-impl';
+import { IUnleashOptions, IUnleashStores } from '../../types';
 
 async function getSetup(opts?: IUnleashOptions) {
     const stores = createStores();
@@ -208,4 +207,49 @@ test('should set lastSeen on toggle', async () => {
     const toggle = await stores.featureToggleStore.get('toggleLastSeen');
 
     expect(toggle.lastSeenAt).toBeTruthy();
+});
+
+test('should return a 400 when required fields are missing', async () => {
+    stores.featureToggleStore.create('default', {
+        name: 'toggleLastSeen',
+    });
+    await request
+        .post('/api/client/metrics')
+        .send({
+            appName: 'demo',
+            bucket: {
+                start: Date.now(),
+                toggles: {
+                    toggleLastSeen: {
+                        yes: 200,
+                        no: 0,
+                    },
+                },
+            },
+        })
+        .expect(400);
+});
+
+test('should return a 200 if required fields are there', async () => {
+    stores.featureToggleStore.create('default', {
+        name: 'toggleLastSeen',
+    });
+    await request
+        .post('/api/client/metrics')
+        .send({
+            appName: 'demo',
+            someParam: 'some-value',
+            somOtherParam: 'some--other-value',
+            bucket: {
+                start: Date.now(),
+                stop: Date.now(),
+                toggles: {
+                    toggleLastSeen: {
+                        yes: 200,
+                        no: 0,
+                    },
+                },
+            },
+        })
+        .expect(202);
 });

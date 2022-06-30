@@ -10,6 +10,11 @@ import { applicationsSchema } from './spec/applications-schema';
 import { bootstrapUiSchema } from './spec/bootstrap-ui-schema';
 import { changePasswordSchema } from './spec/change-password-schema';
 import { clientApplicationSchema } from './spec/client-application-schema';
+import { clientFeatureSchema } from './spec/client-feature-schema';
+import { clientFeaturesQuerySchema } from './spec/client-features-query-schema';
+import { clientFeaturesSchema } from './spec/client-features-schema';
+import { clientMetricsSchema } from './spec/client-metrics-schema';
+import { clientVariantSchema } from './spec/client-variant-schema';
 import { cloneFeatureSchema } from './spec/clone-feature-schema';
 import { constraintSchema } from './spec/constraint-schema';
 import { contextFieldSchema } from './spec/context-field-schema';
@@ -18,6 +23,7 @@ import { createApiTokenSchema } from './spec/create-api-token-schema';
 import { createFeatureSchema } from './spec/create-feature-schema';
 import { createFeatureStrategySchema } from './spec/create-feature-strategy-schema';
 import { createUserSchema } from './spec/create-user-schema';
+import { dateSchema } from './spec/date-schema';
 import { emailSchema } from './spec/email-schema';
 import { environmentSchema } from './spec/environment-schema';
 import { environmentsSchema } from './spec/environments-schema';
@@ -103,6 +109,11 @@ export const schemas = {
     bootstrapUiSchema,
     changePasswordSchema,
     clientApplicationSchema,
+    clientFeatureSchema,
+    clientFeaturesQuerySchema,
+    clientFeaturesSchema,
+    clientMetricsSchema,
+    clientVariantSchema,
     cloneFeatureSchema,
     constraintSchema,
     contextFieldSchema,
@@ -111,6 +122,7 @@ export const schemas = {
     createFeatureSchema,
     createFeatureStrategySchema,
     createUserSchema,
+    dateSchema,
     emailSchema,
     environmentSchema,
     environmentsSchema,

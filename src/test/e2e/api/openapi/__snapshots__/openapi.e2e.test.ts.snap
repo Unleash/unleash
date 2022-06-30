@@ -457,6 +457,208 @@ Object {
         ],
         "type": "object",
       },
+      "clientFeatureSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "createdAt": Object {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string",
+          },
+          "description": Object {
+            "nullable": true,
+            "type": "string",
+          },
+          "enabled": Object {
+            "type": "boolean",
+          },
+          "impressionData": Object {
+            "nullable": true,
+            "type": "boolean",
+          },
+          "lastSeenAt": Object {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string",
+          },
+          "name": Object {
+            "type": "string",
+          },
+          "project": Object {
+            "type": "string",
+          },
+          "stale": Object {
+            "type": "boolean",
+          },
+          "strategies": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/featureStrategySchema",
+            },
+            "type": "array",
+          },
+          "type": Object {
+            "type": "string",
+          },
+          "variants": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/clientVariantSchema",
+            },
+            "nullable": true,
+            "type": "array",
+          },
+        },
+        "required": Array [
+          "name",
+          "enabled",
+        ],
+        "type": "object",
+      },
+      "clientFeaturesQuerySchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "environment": Object {
+            "type": "string",
+          },
+          "inlineSegmentConstraints": Object {
+            "type": "boolean",
+          },
+          "namePrefix": Object {
+            "type": "string",
+          },
+          "project": Object {
+            "items": Object {
+              "type": "string",
+            },
+            "type": "array",
+          },
+          "tag": Object {
+            "items": Object {
+              "items": Object {
+                "type": "string",
+              },
+              "type": "array",
+            },
+            "type": "array",
+          },
+        },
+        "required": Array [],
+        "type": "object",
+      },
+      "clientFeaturesSchema": Object {
+        "properties": Object {
+          "features": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/clientFeatureSchema",
+            },
+            "type": "array",
+          },
+          "query": Object {
+            "$ref": "#/components/schemas/clientFeaturesQuerySchema",
+          },
+          "segments": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/segmentSchema",
+            },
+            "type": "array",
+          },
+          "version": Object {
+            "type": "number",
+          },
+        },
+        "required": Array [
+          "version",
+          "features",
+        ],
+        "type": "object",
+      },
+      "clientMetricsSchema": Object {
+        "properties": Object {
+          "appName": Object {
+            "type": "string",
+          },
+          "bucket": Object {
+            "properties": Object {
+              "start": Object {
+                "$ref": "#/components/schemas/dateSchema",
+              },
+              "stop": Object {
+                "$ref": "#/components/schemas/dateSchema",
+              },
+              "toggles": Object {
+                "additionalProperties": Object {
+                  "properties": Object {
+                    "no": Object {
+                      "minimum": 0,
+                      "type": "integer",
+                    },
+                    "variants": Object {
+                      "additionalProperties": Object {
+                        "minimum": 0,
+                        "type": "integer",
+                      },
+                      "type": "object",
+                    },
+                    "yes": Object {
+                      "minimum": 0,
+                      "type": "integer",
+                    },
+                  },
+                  "type": "object",
+                },
+                "type": "object",
+              },
+            },
+            "required": Array [
+              "start",
+              "stop",
+              "toggles",
+            ],
+            "type": "object",
+          },
+          "environment": Object {
+            "type": "string",
+          },
+          "instanceId": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "appName",
+          "bucket",
+        ],
+        "type": "object",
+      },
+      "clientVariantSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "name": Object {
+            "type": "string",
+          },
+          "payload": Object {
+            "properties": Object {
+              "type": Object {
+                "type": "string",
+              },
+              "value": Object {
+                "type": "string",
+              },
+            },
+            "required": Array [
+              "type",
+              "value",
+            ],
+            "type": "object",
+          },
+          "weight": Object {
+            "type": "number",
+          },
+        },
+        "required": Array [
+          "name",
+          "weight",
+        ],
+        "type": "object",
+      },
       "cloneFeatureSchema": Object {
         "properties": Object {
           "name": Object {
@@ -662,6 +864,17 @@ Object {
           "rootRole",
         ],
         "type": "object",
+      },
+      "dateSchema": Object {
+        "oneOf": Array [
+          Object {
+            "format": "date-time",
+            "type": "string",
+          },
+          Object {
+            "type": "number",
+          },
+        ],
       },
       "emailSchema": Object {
         "additionalProperties": false,
@@ -1057,7 +1270,6 @@ Object {
         },
         "required": Array [
           "name",
-          "id",
         ],
         "type": "object",
       },
@@ -1642,14 +1854,18 @@ Object {
             "type": "array",
           },
           "description": Object {
+            "nullable": true,
             "type": "string",
+          },
+          "id": Object {
+            "type": "number",
           },
           "name": Object {
             "type": "string",
           },
         },
         "required": Array [
-          "name",
+          "id",
           "constraints",
         ],
         "type": "object",
@@ -5386,6 +5602,90 @@ If the provided project does not exist, the list of events will be empty.",
         },
         "tags": Array [
           "admin",
+        ],
+      },
+    },
+    "/api/client/features": Object {
+      "get": Object {
+        "operationId": "getAllClientFeatures",
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/clientFeaturesSchema",
+                },
+              },
+            },
+            "description": "clientFeaturesSchema",
+          },
+        },
+        "tags": Array [
+          "client",
+        ],
+      },
+    },
+    "/api/client/features/{featureName}": Object {
+      "get": Object {
+        "operationId": "getClientFeature",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "featureName",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/clientFeaturesSchema",
+                },
+              },
+            },
+            "description": "clientFeaturesSchema",
+          },
+        },
+        "tags": Array [
+          "client",
+        ],
+      },
+    },
+    "/api/client/metrics": Object {
+      "post": Object {
+        "operationId": "registerClientMetrics",
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/clientMetricsSchema",
+              },
+            },
+          },
+          "description": "clientMetricsSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "202": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/emptyResponse",
+                },
+              },
+            },
+            "description": "emptyResponse",
+          },
+          "400": Object {
+            "description": "The request data do not match what we expect.",
+          },
+        },
+        "tags": Array [
+          "client",
         ],
       },
     },

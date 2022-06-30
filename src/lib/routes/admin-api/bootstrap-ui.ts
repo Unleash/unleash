@@ -19,6 +19,9 @@ import { ITagType } from '../../types/stores/tag-type-store';
 import { IStrategy } from '../../types/stores/strategy-store';
 import { IProject } from '../../types/model';
 import { IUserPermission } from '../../types/stores/access-store';
+import { OpenApiService } from '../../services/openapi-service';
+import { NONE } from '../../types/permissions';
+import { createResponseSchema } from '../../openapi';
 
 /**
  * Provides admin UI configuration.
@@ -43,6 +46,8 @@ class BootstrapUIController extends Controller {
 
     private versionService: VersionService;
 
+    private openApiService: OpenApiService;
+
     constructor(
         config: IUnleashConfig,
         {
@@ -54,6 +59,7 @@ class BootstrapUIController extends Controller {
             emailService,
             versionService,
             featureTypeService,
+            openApiService,
         }: Pick<
             IUnleashServices,
             | 'contextService'
@@ -64,6 +70,7 @@ class BootstrapUIController extends Controller {
             | 'emailService'
             | 'versionService'
             | 'featureTypeService'
+            | 'openApiService'
         >,
     ) {
         super(config);
@@ -75,8 +82,24 @@ class BootstrapUIController extends Controller {
         this.featureTypeService = featureTypeService;
         this.emailService = emailService;
         this.versionService = versionService;
+        this.openApiService = openApiService;
 
         this.logger = config.getLogger('routes/admin-api/bootstrap-ui.ts');
+        this.route({
+            method: 'get',
+            path: '',
+            handler: this.bootstrap,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['other'],
+                    operationId: 'bootstrapUiSchema',
+                    responses: {
+                        202: createResponseSchema('bootstrapUiSchema'),
+                    },
+                }),
+            ],
+        });
 
         this.get('/', this.bootstrap);
     }

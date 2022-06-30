@@ -8,6 +8,7 @@ export const clientFeatureSchema = {
     $id: '#/components/schemas/clientFeatureSchema',
     type: 'object',
     required: ['name', 'enabled'],
+    additionalProperties: false,
     properties: {
         name: {
             type: 'string',

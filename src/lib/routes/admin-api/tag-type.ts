@@ -15,7 +15,6 @@ import { IAuthRequest } from '../unleash-types';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import { TagTypesSchema } from '../../openapi/spec/tag-types-schema';
-import { emptyResponse } from '../../openapi/spec/empty-response';
 import { ValidateTagTypeSchema } from '../../openapi/spec/validate-tag-type-schema';
 import {
     tagTypeSchema,
@@ -23,6 +22,7 @@ import {
 } from '../../openapi/spec/tag-type-schema';
 import { UpdateTagTypeSchema } from '../../openapi/spec/update-tag-type-schema';
 import { OpenApiService } from '../../services/openapi-service';
+import { emptyResponse } from '../../openapi/util/standard-responses';
 
 const version = 1;
 

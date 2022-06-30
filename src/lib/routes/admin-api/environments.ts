@@ -17,7 +17,7 @@ import {
     EnvironmentSchema,
 } from '../../openapi/spec/environment-schema';
 import { SortOrderSchema } from '../../openapi/spec/sort-order-schema';
-import { emptyResponse } from '../../openapi/spec/empty-response';
+import { emptyResponse } from '../../openapi/util/standard-responses';
 
 interface EnvironmentParam {
     name: string;

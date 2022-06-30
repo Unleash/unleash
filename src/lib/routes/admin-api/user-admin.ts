@@ -14,7 +14,6 @@ import { IUser, SimpleAuthSettings } from '../../server-impl';
 import { simpleAuthKey } from '../../types/settings/simple-auth-settings';
 import { anonymise } from '../../util/anonymise';
 import { OpenApiService } from '../../services/openapi-service';
-import { emptyResponse } from '../../openapi/spec/empty-response';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import { userSchema, UserSchema } from '../../openapi/spec/user-schema';
@@ -32,6 +31,7 @@ import {
     resetPasswordSchema,
     ResetPasswordSchema,
 } from '../../openapi/spec/reset-password-schema';
+import { emptyResponse } from '../../openapi/util/standard-responses';
 
 export default class UserAdminController extends Controller {
     private anonymise: boolean = false;
@@ -85,12 +85,12 @@ export default class UserAdminController extends Controller {
         this.route({
             method: 'post',
             path: '/validate-password',
-            handler: this.validatePassword,
+            handler: this.validateUserPassword,
             permission: NONE,
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
-                    operationId: 'validatePassword',
+                    operationId: 'validateUserPassword',
                     requestBody: createRequestSchema('passwordSchema'),
                     responses: { 200: emptyResponse },
                 }),
@@ -100,12 +100,12 @@ export default class UserAdminController extends Controller {
         this.route({
             method: 'post',
             path: '/:id/change-password',
-            handler: this.changePassword,
+            handler: this.changeUserPassword,
             permission: ADMIN,
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
-                    operationId: 'changePassword',
+                    operationId: 'changeUserPassword',
                     requestBody: createRequestSchema('passwordSchema'),
                     responses: { 200: emptyResponse },
                 }),
@@ -115,12 +115,12 @@ export default class UserAdminController extends Controller {
         this.route({
             method: 'post',
             path: '/reset-password',
-            handler: this.resetPassword,
+            handler: this.resetUserPassword,
             permission: ADMIN,
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
-                    operationId: 'resetPassword',
+                    operationId: 'resetUserPassword',
                     requestBody: createRequestSchema('idSchema'),
                     responses: {
                         200: createResponseSchema('resetPasswordSchema'),
@@ -217,7 +217,7 @@ export default class UserAdminController extends Controller {
         });
     }
 
-    async resetPassword(
+    async resetUserPassword(
         req: IAuthRequest<unknown, ResetPasswordSchema, IdSchema>,
         res: Response<ResetPasswordSchema>,
     ): Promise<void> {
@@ -393,7 +393,7 @@ export default class UserAdminController extends Controller {
         res.status(200).send();
     }
 
-    async validatePassword(
+    async validateUserPassword(
         req: IAuthRequest<unknown, unknown, PasswordSchema>,
         res: Response,
     ): Promise<void> {
@@ -403,7 +403,7 @@ export default class UserAdminController extends Controller {
         res.status(200).send();
     }
 
-    async changePassword(
+    async changeUserPassword(
         req: IAuthRequest<{ id: string }, unknown, PasswordSchema>,
         res: Response,
     ): Promise<void> {

@@ -14,7 +14,7 @@ import {
 import { serializeDates } from '../../types/serialize-dates';
 import { OpenApiService } from '../../services/openapi-service';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
-import { emptyResponse } from '../../openapi/spec/empty-response';
+import { emptyResponse } from '../../openapi/util/standard-responses';
 
 export default class ArchiveController extends Controller {
     private readonly logger: Logger;

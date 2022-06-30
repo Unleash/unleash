@@ -26,7 +26,7 @@ import { serializeDates } from '../../types/serialize-dates';
 import { OpenApiService } from '../../services/openapi-service';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
-import { emptyResponse } from '../../openapi/spec/empty-response';
+import { emptyResponse } from '../../openapi/util/standard-responses';
 
 const version = 1;
 

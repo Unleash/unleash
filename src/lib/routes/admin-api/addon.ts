@@ -15,10 +15,10 @@ import { IAuthRequest } from '../unleash-types';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import { OpenApiService } from '../../services/openapi-service';
-import { emptyResponse } from '../../openapi/spec/empty-response';
 import { AddonSchema, addonSchema } from '../../openapi/spec/addon-schema';
 import { serializeDates } from '../../types/serialize-dates';
 import { AddonsSchema, addonsSchema } from '../../openapi/spec/addons-schema';
+import { emptyResponse } from '../../openapi/util/standard-responses';
 
 type AddonServices = Pick<IUnleashServices, 'addonService' | 'openApiService'>;
 

@@ -13,7 +13,7 @@ import {
 import { Request, Response } from 'express';
 import { IAuthRequest } from '../unleash-types';
 import { OpenApiService } from '../../services/openapi-service';
-import { emptyResponse } from '../../openapi/spec/empty-response';
+import { emptyResponse } from '../../openapi/util/standard-responses';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import {

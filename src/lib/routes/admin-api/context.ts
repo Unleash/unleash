@@ -23,7 +23,8 @@ import {
 } from '../../openapi/spec/context-field-schema';
 import { ContextFieldsSchema } from '../../openapi/spec/context-fields-schema';
 import { UpsertContextFieldSchema } from '../../openapi/spec/upsert-context-field-schema';
-import { createRequestSchema, createResponseSchema } from '../../openapi';
+import { createRequestSchema } from '../../openapi/util/create-request-schema';
+import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import { serializeDates } from '../../types/serialize-dates';
 import NotFoundError from '../../error/notfound-error';
 import { emptyResponse } from '../../openapi/spec/empty-response';

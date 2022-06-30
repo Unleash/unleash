@@ -1,10 +1,6 @@
-import {
-    createOpenApiSchema,
-    createRequestSchema,
-    createResponseSchema,
-    removeJsonSchemaProps,
-    schemas,
-} from './index';
+import { createOpenApiSchema, removeJsonSchemaProps, schemas } from './index';
+import { createRequestSchema } from './util/create-request-schema';
+import { createResponseSchema } from './util/create-response-schema';
 import fs from 'fs';
 import path from 'path';
 

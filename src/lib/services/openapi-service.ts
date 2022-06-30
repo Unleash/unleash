@@ -2,12 +2,12 @@ import openapi, { IExpressOpenApi } from '@unleash/express-openapi';
 import { Express, RequestHandler, Response } from 'express';
 import { IUnleashConfig } from '../types/option';
 import {
-    ApiOperation,
     createOpenApiSchema,
     JsonSchemaProps,
     removeJsonSchemaProps,
     SchemaId,
 } from '../openapi';
+import { ApiOperation } from '../openapi/util/api-operation';
 import { Logger } from '../logger';
 import { validateSchema } from '../openapi/validate';
 

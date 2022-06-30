@@ -13,6 +13,7 @@ import {
     DEFAULT_STRATEGY_SEGMENTS_LIMIT,
 } from '../../../../lib/util/segments';
 import { collectIds } from '../../../../lib/util/collect-ids';
+import { arraysHaveSameItems } from '../../../../lib/util/arraysHaveSameItems';
 
 let db: ITestDb;
 let app: IUnleashTest;
@@ -309,5 +310,7 @@ test('should send all segments that are in use by feature', async () => {
         .flat()
         .filter((x) => !!x);
     const toggleSegmentIds = [...new Set(allSegmentIds)];
-    expect(globalSegmentIds).toEqual(expect.arrayContaining(toggleSegmentIds));
+    expect(arraysHaveSameItems(globalSegmentIds, toggleSegmentIds)).toEqual(
+        true,
+    );
 });

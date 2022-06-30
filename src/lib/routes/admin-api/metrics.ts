@@ -6,7 +6,8 @@ import { IUnleashServices } from '../../types/services';
 import { Logger } from '../../logger';
 import ClientInstanceService from '../../services/client-metrics/instance-service';
 import { emptyResponse } from '../../openapi/spec/empty-response';
-import { createRequestSchema, createResponseSchema } from '../../openapi';
+import { createRequestSchema } from '../../openapi/util/create-request-schema';
+import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import { ApplicationSchema } from '../../openapi/spec/application-schema';
 import { ApplicationsSchema } from '../../openapi/spec/applications-schema';
 

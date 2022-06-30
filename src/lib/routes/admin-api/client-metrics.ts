@@ -5,7 +5,7 @@ import { IUnleashServices } from '../../types';
 import { Logger } from '../../logger';
 import ClientMetricsServiceV2 from '../../services/client-metrics/metrics-service-v2';
 import { NONE } from '../../types/permissions';
-import { createResponseSchema } from '../../openapi';
+import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import { OpenApiService } from '../../services/openapi-service';
 import { serializeDates } from '../../types/serialize-dates';
 import {

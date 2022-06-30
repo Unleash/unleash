@@ -5,7 +5,8 @@ import { Logger } from '../../logger';
 import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types';
 import { NONE } from '../../types/permissions';
-import { createRequestSchema, createResponseSchema } from '../../openapi';
+import { createRequestSchema } from '../../openapi/util/create-request-schema';
+import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import { emptyResponse } from '../../openapi/spec/empty-response';
 import { OpenApiService } from '../../services/openapi-service';
 import {

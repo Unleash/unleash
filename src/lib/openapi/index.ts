@@ -188,43 +188,6 @@ export interface JsonSchemaProps {
     components: object;
 }
 
-export interface ApiOperation<Tag = 'admin' | 'client' | 'auth' | 'other'>
-    extends Omit<OpenAPIV3.OperationObject, 'tags'> {
-    operationId: string;
-    tags: [Tag];
-}
-
-export const createRequestSchema = (
-    schemaName: string,
-): OpenAPIV3.RequestBodyObject => {
-    return {
-        description: schemaName,
-        required: true,
-        content: {
-            'application/json': {
-                schema: {
-                    $ref: `#/components/schemas/${schemaName}`,
-                },
-            },
-        },
-    };
-};
-
-export const createResponseSchema = (
-    schemaName: string,
-): OpenAPIV3.ResponseObject => {
-    return {
-        description: schemaName,
-        content: {
-            'application/json': {
-                schema: {
-                    $ref: `#/components/schemas/${schemaName}`,
-                },
-            },
-        },
-    };
-};
-
 // Remove JSONSchema keys that would result in an invalid OpenAPI spec.
 export const removeJsonSchemaProps = <T extends JsonSchemaProps>(
     schema: T,

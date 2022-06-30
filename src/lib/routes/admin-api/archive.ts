@@ -13,7 +13,7 @@ import {
 } from '../../openapi/spec/features-schema';
 import { serializeDates } from '../../types/serialize-dates';
 import { OpenApiService } from '../../services/openapi-service';
-import { createResponseSchema } from '../../openapi';
+import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import { emptyResponse } from '../../openapi/spec/empty-response';
 
 export default class ArchiveController extends Controller {

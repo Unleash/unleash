@@ -13,7 +13,8 @@ import {
 } from '../../openapi/spec/feedback-schema';
 import { serializeDates } from '../../types/serialize-dates';
 import { parseISO } from 'date-fns';
-import { createRequestSchema, createResponseSchema } from '../../openapi';
+import { createRequestSchema } from '../../openapi/util/create-request-schema';
+import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import BadDataError from '../../error/bad-data-error';
 
 class UserFeedbackController extends Controller {

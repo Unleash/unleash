@@ -7,7 +7,7 @@ import { NONE } from '../../types/permissions';
 import Controller from '../controller';
 import { Logger } from '../../logger';
 import { OpenApiService } from '../../services/openapi-service';
-import { createRequestSchema } from '../../openapi';
+import { createRequestSchema } from '../../openapi/util/create-request-schema';
 
 export default class ConstraintController extends Controller {
     private featureService: FeatureToggleService;

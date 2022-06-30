@@ -11,7 +11,7 @@ import { ALL } from '../../types/models/api-token';
 import { NONE } from '../../types/permissions';
 import { OpenApiService } from '../../services/openapi-service';
 import { emptyResponse } from '../../openapi/spec/empty-response';
-import { createRequestSchema } from '../../openapi';
+import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import { ClientApplicationSchema } from '../../openapi/spec/client-application-schema';
 
 export default class RegisterController extends Controller {

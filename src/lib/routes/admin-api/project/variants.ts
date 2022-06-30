@@ -10,7 +10,8 @@ import { IVariant } from '../../../types/model';
 import { extractUsername } from '../../../util/extract-user';
 import { IAuthRequest } from '../../unleash-types';
 import { FeatureVariantsSchema } from '../../../openapi/spec/feature-variants-schema';
-import { createRequestSchema, createResponseSchema } from '../../../openapi';
+import { createRequestSchema } from '../../../openapi/util/create-request-schema';
+import { createResponseSchema } from '../../../openapi/util/create-response-schema';
 
 const PREFIX = '/:projectId/features/:featureName/variants';
 

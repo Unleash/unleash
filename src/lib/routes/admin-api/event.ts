@@ -7,8 +7,8 @@ import { IEvent } from '../../types/events';
 import Controller from '../controller';
 import { anonymise } from '../../util/anonymise';
 import { OpenApiService } from '../../services/openapi-service';
-import { createResponseSchema } from '../../../lib/openapi';
-import { endpointDescriptions } from '../../../lib/openapi/endpoint-descriptions';
+import { createResponseSchema } from '../../openapi/util/create-response-schema';
+import { endpointDescriptions } from '../../openapi/endpoint-descriptions';
 import {
     eventsSchema,
     EventsSchema,

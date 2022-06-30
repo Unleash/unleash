@@ -10,7 +10,7 @@ import {
     SimpleAuthSettings,
 } from '../../types/settings/simple-auth-settings';
 import { NONE } from '../../types/permissions';
-import { createResponseSchema } from '../../openapi';
+import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import {
     uiConfigSchema,
     UiConfigSchema,

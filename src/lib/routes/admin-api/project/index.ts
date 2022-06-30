@@ -14,7 +14,7 @@ import {
 } from '../../../openapi/spec/projects-schema';
 import { OpenApiService } from '../../../services/openapi-service';
 import { serializeDates } from '../../../types/serialize-dates';
-import { createResponseSchema } from '../../../openapi';
+import { createResponseSchema } from '../../../openapi/util/create-response-schema';
 
 export default class ProjectApi extends Controller {
     private projectService: ProjectService;

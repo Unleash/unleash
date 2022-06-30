@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`clientMetricsSchema should fail 1`] = `
+exports[`clientMetricsSchema should fail when required field is missing 1`] = `
 Object {
   "errors": Array [
     Object {

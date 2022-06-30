@@ -44,7 +44,7 @@ test('clientMetricsSchema should ignore additional properties without failing wh
     ).toBeUndefined();
 });
 
-test('clientMetricsSchema should fail', () => {
+test('clientMetricsSchema should fail when required field is missing', () => {
     expect(
         validateSchema('#/components/schemas/clientMetricsSchema', {
             appName: 'a',

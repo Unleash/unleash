@@ -209,7 +209,7 @@ test('should set lastSeen on toggle', async () => {
     expect(toggle.lastSeenAt).toBeTruthy();
 });
 
-test('should return a 400', async () => {
+test('should return a 400 when required fields are missing', async () => {
     stores.featureToggleStore.create('default', {
         name: 'toggleLastSeen',
     });

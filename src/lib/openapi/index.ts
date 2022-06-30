@@ -21,9 +21,12 @@ import { createUserSchema } from './spec/create-user-schema';
 import { emailSchema } from './spec/email-schema';
 import { environmentSchema } from './spec/environment-schema';
 import { environmentsSchema } from './spec/environments-schema';
+import { eventSchema } from './spec/event-schema';
+import { eventsSchema } from './spec/events-schema';
 import { exportParametersSchema } from './spec/export-parameters-schema';
 import { featureEnvironmentMetricsSchema } from './spec/feature-environment-metrics-schema';
 import { featureEnvironmentSchema } from './spec/feature-environment-schema';
+import { featureEventsSchema } from './spec/feature-events-schema';
 import { featureMetricsSchema } from './spec/feature-metrics-schema';
 import { featureSchema } from './spec/feature-schema';
 import { featuresSchema } from './spec/features-schema';
@@ -111,9 +114,12 @@ export const schemas = {
     emailSchema,
     environmentSchema,
     environmentsSchema,
+    eventSchema,
+    eventsSchema,
     exportParametersSchema,
     featureEnvironmentMetricsSchema,
     featureEnvironmentSchema,
+    featureEventsSchema,
     featureMetricsSchema,
     featureSchema,
     featuresSchema,

@@ -615,6 +615,79 @@ Object {
         ],
         "type": "object",
       },
+      "eventSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "createdAt": Object {
+            "format": "date-time",
+            "type": "string",
+          },
+          "createdBy": Object {
+            "type": "string",
+          },
+          "data": Object {
+            "nullable": true,
+            "type": "object",
+          },
+          "environment": Object {
+            "nullable": true,
+            "type": "string",
+          },
+          "featureName": Object {
+            "nullable": true,
+            "type": "string",
+          },
+          "id": Object {
+            "minimum": 1,
+            "type": "integer",
+          },
+          "preData": Object {
+            "nullable": true,
+            "type": "object",
+          },
+          "project": Object {
+            "nullable": true,
+            "type": "string",
+          },
+          "tags": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/tagSchema",
+            },
+            "nullable": true,
+            "type": "array",
+          },
+          "type": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "id",
+          "createdAt",
+          "type",
+          "createdBy",
+        ],
+        "type": "object",
+      },
+      "eventsSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "events": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/eventSchema",
+            },
+            "type": "array",
+          },
+          "version": Object {
+            "minimum": 1,
+            "type": "integer",
+          },
+        },
+        "required": Array [
+          "version",
+          "events",
+        ],
+        "type": "object",
+      },
       "exportParametersSchema": Object {
         "properties": Object {
           "download": Object {
@@ -740,6 +813,28 @@ Object {
         "required": Array [
           "name",
           "enabled",
+        ],
+        "type": "object",
+      },
+      "featureEventsSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "events": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/eventSchema",
+            },
+            "type": "array",
+          },
+          "toggleName": Object {
+            "type": "string",
+          },
+          "version": Object {
+            "type": "number",
+          },
+        },
+        "required": Array [
+          "toggleName",
+          "events",
         ],
         "type": "object",
       },
@@ -2868,6 +2963,78 @@ Object {
             "description": "emptyResponse",
           },
         },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/events": Object {
+      "get": Object {
+        "description": "Returns **the last 100** from the Unleash instance when called without a query parameter. When called with a \`project\` parameter, returns **all events** for the specified project.
+
+If the provided project does not exist, the list of events will be empty.",
+        "operationId": "getEvents",
+        "parameters": Array [
+          Object {
+            "description": "The name of the project whose events you want to retrieve",
+            "in": "query",
+            "name": "project",
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/eventsSchema",
+                },
+              },
+            },
+            "description": "eventsSchema",
+          },
+          "401": Object {
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+        },
+        "summary": "Get the most recent events from the Unleash instance or all events related to a project.",
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/events/{featureName}": Object {
+      "get": Object {
+        "description": "Returns all events related to the specified feature toggle. If the feature toggle does not exist, the list of events will be empty.",
+        "operationId": "getEventsForToggle",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "featureName",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/featureEventsSchema",
+                },
+              },
+            },
+            "description": "featureEventsSchema",
+          },
+          "401": Object {
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+        },
+        "summary": "Get all events related to a specific feature toggle.",
         "tags": Array [
           "admin",
         ],

@@ -82,6 +82,9 @@ import { emailSchema } from './spec/email-schema';
 import { strategySchema } from './spec/strategy-schema';
 import { strategiesSchema } from './spec/strategies-schema';
 import { upsertStrategySchema } from './spec/upsert-strategy-schema';
+import { eventSchema } from './spec/event-schema';
+import { eventsSchema } from './spec/events-schema';
+import { featureEventsSchema } from './spec/feature-events-schema';
 import { clientApplicationSchema } from './spec/client-application-schema';
 import { clientMetricsSchema } from './spec/client-metrics-schema';
 import { dateSchema } from './spec/date-schema';
@@ -113,9 +116,12 @@ export const schemas = {
     emailSchema,
     environmentSchema,
     environmentsSchema,
+    eventSchema,
+    eventsSchema,
     exportParametersSchema,
     featureEnvironmentSchema,
     featureEnvironmentMetricsSchema,
+    featureEventsSchema,
     featureSchema,
     featureMetricsSchema,
     featureUsageSchema,

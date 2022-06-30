@@ -46,7 +46,7 @@ export default class ClientMetricsController extends Controller {
 
         this.route({
             method: 'post',
-            path: '/',
+            path: '',
             handler: this.registerMetrics,
             permission: NONE,
             middleware: [

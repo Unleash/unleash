@@ -1,6 +1,4 @@
 import { createOpenApiSchema, removeJsonSchemaProps, schemas } from './index';
-import { createRequestSchema } from './util/create-request-schema';
-import { createResponseSchema } from './util/create-response-schema';
 import fs from 'fs';
 import path from 'path';
 
@@ -26,37 +24,6 @@ test('all schema $id attributes should have the expected format', () => {
     schemaIds.forEach((schemaId) => {
         expect(schemaId).toMatch(schemaIdRegExp);
     });
-});
-
-test('createRequestSchema', () => {
-    expect(createRequestSchema('schemaName')).toMatchInlineSnapshot(`
-        Object {
-          "content": Object {
-            "application/json": Object {
-              "schema": Object {
-                "$ref": "#/components/schemas/schemaName",
-              },
-            },
-          },
-          "description": "schemaName",
-          "required": true,
-        }
-    `);
-});
-
-test('createResponseSchema', () => {
-    expect(createResponseSchema('schemaName')).toMatchInlineSnapshot(`
-        Object {
-          "content": Object {
-            "application/json": Object {
-              "schema": Object {
-                "$ref": "#/components/schemas/schemaName",
-              },
-            },
-          },
-          "description": "schemaName",
-        }
-    `);
 });
 
 test('removeJsonSchemaProps', () => {

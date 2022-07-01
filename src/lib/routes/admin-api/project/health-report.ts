@@ -7,7 +7,7 @@ import { Logger } from '../../../logger';
 import { IArchivedQuery, IProjectParam } from '../../../types/model';
 import { NONE } from '../../../types/permissions';
 import { OpenApiService } from '../../../services/openapi-service';
-import { createResponseSchema } from '../../../openapi';
+import { createResponseSchema } from '../../../openapi/util/create-response-schema';
 import {
     healthOverviewSchema,
     HealthOverviewSchema,

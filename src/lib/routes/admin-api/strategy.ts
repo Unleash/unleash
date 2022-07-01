@@ -13,7 +13,9 @@ import {
 import { Request, Response } from 'express';
 import { IAuthRequest } from '../unleash-types';
 import { OpenApiService } from '../../services/openapi-service';
-import { createRequestSchema, createResponseSchema } from '../../openapi';
+import { emptyResponse } from '../../openapi/util/standard-responses';
+import { createRequestSchema } from '../../openapi/util/create-request-schema';
+import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import {
     strategySchema,
     StrategySchema,
@@ -23,7 +25,6 @@ import {
     StrategiesSchema,
 } from '../../openapi/spec/strategies-schema';
 import { UpsertStrategySchema } from '../../openapi/spec/upsert-strategy-schema';
-import { emptyResponse } from '../../openapi/util/standard-responses';
 
 const version = 1;
 

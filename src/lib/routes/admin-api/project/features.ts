@@ -33,7 +33,8 @@ import { UpdateFeatureStrategySchema } from '../../../openapi/spec/update-featur
 import { CreateFeatureStrategySchema } from '../../../openapi/spec/create-feature-strategy-schema';
 import { serializeDates } from '../../../types/serialize-dates';
 import { OpenApiService } from '../../../services/openapi-service';
-import { createRequestSchema, createResponseSchema } from '../../../openapi';
+import { createRequestSchema } from '../../../openapi/util/create-request-schema';
+import { createResponseSchema } from '../../../openapi/util/create-response-schema';
 import { FeatureEnvironmentSchema } from '../../../openapi/spec/feature-environment-schema';
 import { emptyResponse } from '../../../openapi/util/standard-responses';
 

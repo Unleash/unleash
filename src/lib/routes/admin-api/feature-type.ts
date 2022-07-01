@@ -6,7 +6,7 @@ import { IUnleashConfig } from '../../types/option';
 import { OpenApiService } from '../../services/openapi-service';
 import { NONE } from '../../types/permissions';
 import { FeatureTypesSchema } from '../../openapi/spec/feature-types-schema';
-import { createResponseSchema } from '../../openapi';
+import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import Controller from '../controller';
 
 const version = 1;

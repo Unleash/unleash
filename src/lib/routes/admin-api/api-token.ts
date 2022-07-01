@@ -18,7 +18,8 @@ import { ApiTokenType, IApiToken } from '../../types/models/api-token';
 import { createApiToken } from '../../schema/api-token-schema';
 import { OpenApiService } from '../../services/openapi-service';
 import { IUnleashServices } from '../../types';
-import { createRequestSchema, createResponseSchema } from '../../openapi';
+import { createRequestSchema } from '../../openapi/util/create-request-schema';
+import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import {
     apiTokensSchema,
     ApiTokensSchema,

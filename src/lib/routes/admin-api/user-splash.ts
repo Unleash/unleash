@@ -7,7 +7,7 @@ import UserSplashService from '../../services/user-splash-service';
 import { IAuthRequest } from '../unleash-types';
 import { NONE } from '../../types/permissions';
 import { OpenApiService } from '../../services/openapi-service';
-import { createResponseSchema } from '../../openapi';
+import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import { splashSchema, SplashSchema } from '../../openapi/spec/splash-schema';
 
 class UserSplashController extends Controller {

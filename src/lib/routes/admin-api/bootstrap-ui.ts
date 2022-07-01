@@ -21,7 +21,7 @@ import { IProject } from '../../types/model';
 import { IUserPermission } from '../../types/stores/access-store';
 import { OpenApiService } from '../../services/openapi-service';
 import { NONE } from '../../types/permissions';
-import { createResponseSchema } from '../../openapi';
+import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import {
     BootstrapUiSchema,
     bootstrapUiSchema,

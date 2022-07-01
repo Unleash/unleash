@@ -5,7 +5,7 @@ import { IUnleashServices } from '../../../types/services';
 import { Logger } from '../../../logger';
 import EnvironmentService from '../../../services/environment-service';
 import { UPDATE_PROJECT } from '../../../types/permissions';
-import { createRequestSchema } from '../../../openapi';
+import { createRequestSchema } from '../../../openapi/util/create-request-schema';
 import { ProjectEnvironmentSchema } from '../../../openapi/spec/project-environment-schema';
 import { emptyResponse } from '../../../openapi/util/standard-responses';
 

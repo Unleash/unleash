@@ -15,7 +15,7 @@ import { FeatureConfigurationClient } from '../../types/stores/feature-strategie
 import { ClientSpecService } from '../../services/client-spec-service';
 import { OpenApiService } from '../../services/openapi-service';
 import { NONE } from '../../types/permissions';
-import { createResponseSchema } from '../../openapi';
+import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import { ClientFeaturesQuerySchema } from '../../openapi/spec/client-features-query-schema';
 import {
     clientFeatureSchema,

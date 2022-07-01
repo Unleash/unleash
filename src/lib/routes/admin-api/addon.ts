@@ -12,7 +12,8 @@ import {
     UPDATE_ADDON,
 } from '../../types/permissions';
 import { IAuthRequest } from '../unleash-types';
-import { createRequestSchema, createResponseSchema } from '../../openapi';
+import { createRequestSchema } from '../../openapi/util/create-request-schema';
+import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import { OpenApiService } from '../../services/openapi-service';
 import { AddonSchema, addonSchema } from '../../openapi/spec/addon-schema';
 import { serializeDates } from '../../types/serialize-dates';

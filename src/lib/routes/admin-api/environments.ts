@@ -6,7 +6,8 @@ import EnvironmentService from '../../services/environment-service';
 import { Logger } from '../../logger';
 import { ADMIN, NONE } from '../../types/permissions';
 import { OpenApiService } from '../../services/openapi-service';
-import { createRequestSchema, createResponseSchema } from '../../openapi';
+import { createRequestSchema } from '../../openapi/util/create-request-schema';
+import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import {
     environmentsSchema,
     EnvironmentsSchema,

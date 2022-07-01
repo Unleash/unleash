@@ -11,7 +11,7 @@ import { User } from '../../server-impl';
 import { IClientApp } from '../../types/model';
 import { NONE } from '../../types/permissions';
 import { OpenApiService } from '../../services/openapi-service';
-import { createRequestSchema } from '../../openapi';
+import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import {
     emptyResponse,
     getStandardResponses,

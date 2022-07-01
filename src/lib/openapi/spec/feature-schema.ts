@@ -41,6 +41,11 @@ export const featureSchema = {
             format: 'date-time',
             nullable: true,
         },
+        archivedAt: {
+            type: 'string',
+            format: 'date-time',
+            nullable: true,
+        },
         lastSeenAt: {
             type: 'string',
             format: 'date-time',

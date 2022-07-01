@@ -25,7 +25,7 @@ beforeAll(async () => {
     app = await setupApp(db.stores);
 
     const createToggle = async (
-        toggle: Omit<FeatureSchema, 'createdAt'>,
+        toggle: Omit<FeatureSchema, 'archivedAt' | 'createdAt'>,
         strategy: Omit<FeatureStrategySchema, 'id'> = defaultStrategy,
         projectId: string = 'default',
         username: string = 'test',

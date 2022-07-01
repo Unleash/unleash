@@ -11,6 +11,7 @@ import { IFeatureToggleClientStore } from '../types/stores/feature-toggle-client
 import { DEFAULT_ENV } from '../util/constants';
 import { PartialDeep } from '../types/partial';
 import EventEmitter from 'events';
+import FeatureToggleStore from './feature-toggle-store';
 import { ensureStringValue } from '../util/ensureStringValue';
 import { mapValues } from '../util/map-values';
 
@@ -82,6 +83,7 @@ export default class FeatureToggleClientStore
 
         let query = this.db('features')
             .select(selectColumns)
+            .modify(FeatureToggleStore.filterByArchived, archived)
             .fullOuterJoin(
                 this.db('feature_strategies')
                     .select('*')
@@ -104,10 +106,6 @@ export default class FeatureToggleClientStore
                 `fs.id`,
             )
             .fullOuterJoin('segments', `segments.id`, `fss.segment_id`);
-
-        query = query.where({
-            archived,
-        });
 
         if (featureQuery) {
             if (featureQuery.tag) {

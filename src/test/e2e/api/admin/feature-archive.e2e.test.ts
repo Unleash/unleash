@@ -98,6 +98,19 @@ test('returns three archived toggles', async () => {
         });
 });
 
+test('returns three archived toggles with archivedAt', async () => {
+    expect.assertions(3);
+    return app.request
+        .get('/api/admin/archive/features')
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.features.length).toEqual(3);
+            expect(res.body.features.every((f) => f.archived)).toEqual(true);
+            expect(res.body.features.every((f) => f.archivedAt)).toEqual(true);
+        });
+});
+
 test('revives a feature by name', async () => {
     return app.request
         .post('/api/admin/archive/revive/featureArchivedX')

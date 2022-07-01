@@ -45,6 +45,7 @@ export interface FeatureToggleDTO {
     type?: string;
     stale?: boolean;
     archived?: boolean;
+    archivedAt?: Date;
     createdAt?: Date;
     impressionData?: boolean;
     variants?: IVariant[];

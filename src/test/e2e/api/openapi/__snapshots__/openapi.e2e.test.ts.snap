@@ -1185,6 +1185,11 @@ Object {
           "archived": Object {
             "type": "boolean",
           },
+          "archivedAt": Object {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string",
+          },
           "createdAt": Object {
             "format": "date-time",
             "nullable": true,

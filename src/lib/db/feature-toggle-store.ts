@@ -17,6 +17,7 @@ const FEATURE_COLUMNS = [
     'created_at',
     'impression_data',
     'last_seen_at',
+    'archived_at',
 ];
 
 export interface FeaturesTable {
@@ -29,6 +30,8 @@ export interface FeaturesTable {
     last_seen_at?: Date;
     created_at?: Date;
     impression_data: boolean;
+    archived?: boolean;
+    archived_at?: Date;
 }
 
 const TABLE = 'features';
@@ -57,10 +60,12 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             stale?: boolean;
         } = { archived: false },
     ): Promise<number> {
+        const { archived, ...rest } = query;
         return this.db
             .from(TABLE)
             .count('*')
-            .where(query)
+            .where(rest)
+            .modify(FeatureToggleStore.filterByArchived, archived)
             .then((res) => Number(res[0].count));
     }
 
@@ -85,18 +90,12 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             stale?: boolean;
         } = { archived: false },
     ): Promise<FeatureToggle[]> {
+        const { archived, ...rest } = query;
         const rows = await this.db
             .select(FEATURE_COLUMNS)
             .from(TABLE)
-            .where(query);
-        return rows.map(this.rowToFeature);
-    }
-
-    async getFeatures(archived: boolean): Promise<FeatureToggle[]> {
-        const rows = await this.db
-            .select(FEATURE_COLUMNS)
-            .from(TABLE)
-            .where({ archived });
+            .where(rest)
+            .modify(FeatureToggleStore.filterByArchived, archived);
         return rows.map(this.rowToFeature);
     }
 
@@ -126,15 +125,6 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         return present;
     }
 
-    async getArchivedFeatures(): Promise<FeatureToggle[]> {
-        const rows = await this.db
-            .select(FEATURE_COLUMNS)
-            .from(TABLE)
-            .where({ archived: true })
-            .orderBy('name', 'asc');
-        return rows.map(this.rowToFeature);
-    }
-
     async setLastSeen(toggleNames: string[]): Promise<void> {
         const now = new Date();
         try {
@@ -153,6 +143,15 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         }
     }
 
+    static filterByArchived: Knex.QueryCallbackWithArgs = (
+        queryBuilder: Knex.QueryBuilder,
+        archived: boolean,
+    ) => {
+        return archived
+            ? queryBuilder.whereNotNull('archived_at')
+            : queryBuilder.whereNull('archived_at');
+    };
+
     rowToFeature(row: FeaturesTable): FeatureToggle {
         if (!row) {
             throw new NotFoundError('No feature toggle found');
@@ -169,6 +168,8 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             createdAt: row.created_at,
             lastSeenAt: row.last_seen_at,
             impressionData: row.impression_data,
+            archivedAt: row.archived_at,
+            archived: row.archived_at != null,
         };
     }
 
@@ -188,7 +189,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             description: data.description,
             type: data.type,
             project,
-            archived: data.archived || false,
+            archived_at: data.archived ? new Date() : null,
             stale: data.stale,
             created_at: data.createdAt,
             impression_data: data.impressionData,
@@ -228,23 +229,25 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
     }
 
     async archive(name: string): Promise<FeatureToggle> {
+        const now = new Date();
         const row = await this.db(TABLE)
             .where({ name })
-            .update({ archived: true })
+            .update({ archived_at: now })
             .returning(FEATURE_COLUMNS);
         return this.rowToFeature(row[0]);
     }
 
     async delete(name: string): Promise<void> {
         await this.db(TABLE)
-            .where({ name, archived: true }) // Feature toggle must be archived to allow deletion
+            .where({ name }) // Feature toggle must be archived to allow deletion
+            .whereNotNull('archived_at')
             .del();
     }
 
     async revive(name: string): Promise<FeatureToggle> {
         const row = await this.db(TABLE)
             .where({ name })
-            .update({ archived: false })
+            .update({ archived_at: null })
             .returning(FEATURE_COLUMNS);
         return this.rowToFeature(row[0]);
     }

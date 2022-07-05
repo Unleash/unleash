@@ -5,3 +5,7 @@
 !yarn.lock
 !scripts
 !tsconfig.json
+!docs
+!CHANGELOG.md
+!LICENSE
+!README.md

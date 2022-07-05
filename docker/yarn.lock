@@ -2467,7 +2467,7 @@ unleash-frontend@4.14.0-beta.0:
   resolved "https://registry.yarnpkg.com/unleash-frontend/-/unleash-frontend-4.14.0-beta.0.tgz#c68335f92f92494bdd25eb3aeb5f2dd9ce7950de"
   integrity sha512-RIBkNR2S/uayMFwc88xlUwluYix6GH+7Cf1DqVV1fD/s0MMFQHQzL7qpE3XUmiUw5rn4BqXs95V1bmjh00+ACg==
 
-"unleash-server@file:./..":
+"unleash-server@file:../build":
   version "4.14.0-beta.0"
   dependencies:
     "@unleash/express-openapi" "^0.2.0"

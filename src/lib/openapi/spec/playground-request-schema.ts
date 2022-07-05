@@ -7,10 +7,14 @@ export const playgroundRequestSchema = {
     type: 'object',
     required: ['environment', 'context'],
     properties: {
-        environment: { type: 'string' },
+        environment: { type: 'string', example: 'development' },
         projects: {
             oneOf: [
-                { type: 'array', items: { type: 'string' } },
+                {
+                    type: 'array',
+                    items: { type: 'string' },
+                    example: ['project-a', 'project-b'],
+                },
                 { type: 'string', pattern: 'ALL' },
             ],
         },

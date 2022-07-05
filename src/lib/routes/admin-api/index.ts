@@ -7,6 +7,7 @@ import { FeatureTypeController } from './feature-type';
 import ArchiveController from './archive';
 import StrategyController from './strategy';
 import EventController from './event';
+import PlaygroundController from './playground';
 import MetricsController from './metrics';
 import UserController from './user';
 import ConfigController from './config';
@@ -50,6 +51,10 @@ class AdminApi extends Controller {
             new StrategyController(config, services).router,
         );
         this.app.use('/events', new EventController(config, services).router);
+        this.app.use(
+            '/playground',
+            new PlaygroundController(config, services).router,
+        );
         this.app.use(
             '/metrics',
             new MetricsController(config, services).router,

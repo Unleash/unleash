@@ -11,5 +11,11 @@ export const endpointDescriptions = {
                 'Returns all events related to the specified feature toggle. If the feature toggle does not exist, the list of events will be empty.',
             summary: 'Get all events related to a specific feature toggle.',
         },
+        playground: {
+            description:
+                'Use the provided `context`, `environment`, and `projects` to evaluate toggles on this Unleash instance. Returns a list of all toggles that match the parameters and what they evaluate to. The response also contains the input parameters that were provided.',
+            summary:
+                'Evaluate an Unleash context against a set of environments and projects.',
+        },
     },
 } as const;

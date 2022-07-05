@@ -7,7 +7,7 @@ WORKDIR /unleash
 
 COPY . /unleash
 
-RUN yarn install --frozen-lockfile --ignore-scripts && yarn run build
+RUN yarn install --frozen-lockfile --ignore-scripts && yarn run build && yarn run local:package
 
 WORKDIR /unleash/docker
 

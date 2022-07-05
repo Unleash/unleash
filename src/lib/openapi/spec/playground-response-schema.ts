@@ -7,7 +7,7 @@ export const playgroundResponseSchema = {
     description: 'The state of all toggles given the provided input.',
     type: 'object',
     additionalProperties: false,
-    required: ['toggles', 'input', 'projects'],
+    required: ['toggles', 'input'],
     properties: {
         input: {
             $ref: playgroundRequestSchema.$id,

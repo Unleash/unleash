@@ -13,9 +13,14 @@ export const playgroundRequestSchema = {
                 {
                     type: 'array',
                     items: { type: 'string' },
-                    example: ['project-a', 'project-b'],
+                    example: ['my-project', 'my-other-project'],
+                    summary: 'A list of projects to check for toggles in.',
                 },
-                { type: 'string', pattern: 'ALL' },
+                {
+                    type: 'string',
+                    enum: ['ALL'],
+                    summary: 'Check toggles in all projects.',
+                },
             ],
         },
         context: {

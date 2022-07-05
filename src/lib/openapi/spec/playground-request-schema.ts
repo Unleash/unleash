@@ -3,6 +3,7 @@ import { sdkContextSchema } from './sdk-context-schema';
 
 export const playgroundRequestSchema = {
     $id: '#/components/schemas/playgroundRequestSchema',
+    description: 'Data for the playground API to evaluate toggles',
     type: 'object',
     required: ['environment', 'context'],
     properties: {
@@ -10,7 +11,7 @@ export const playgroundRequestSchema = {
         projects: {
             oneOf: [
                 { type: 'array', items: { type: 'string' } },
-                { type: 'string', pattern: 'all' },
+                { type: 'string', pattern: 'ALL' },
             ],
         },
         context: {

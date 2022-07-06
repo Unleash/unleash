@@ -1,4 +1,4 @@
-import fc, { Arbitrary } from 'fast-check';
+import fc from 'fast-check';
 
 import supertest from 'supertest';
 import { createServices } from '../../services';
@@ -9,16 +9,7 @@ import createStores from '../../../test/fixtures/store';
 import getApp from '../../app';
 import { PlaygroundRequestSchema } from '../../../lib/openapi/spec/playground-request-schema';
 
-import { generate as generateContext } from '../../../lib/openapi/spec/sdk-context-schema.test';
-
-// some strings should be URL-friendly
-// some props should be nullable / undefinable
-const requestPayload = (): Arbitrary<PlaygroundRequestSchema> =>
-    fc.record({
-        environment: fc.asciiString(),
-        projects: fc.uniqueArray(fc.asciiString()),
-        context: generateContext(),
-    });
+import { generate as generateRequest } from '../../../lib/openapi/spec/playground-request-schema.test';
 
 async function getSetup() {
     const base = `/random${Math.round(Math.random() * 1000)}`;
@@ -33,20 +24,24 @@ async function getSetup() {
 
 test('should return the same enabled toggles as the raw SDK', () => {});
 
-test('should filter the list according to the input parameters', () => {});
+test('should filter the list according to the input parameters', async () => {});
 
 test('should return the provided input arguments as part of the response', async () => {
-    // fc.assert(fc.property(fc.string(), (text) => false));
-    fc.assert(
-        fc.asyncProperty(requestPayload(), async (payload) =>
-            getSetup()
-                .then(({ request, base }) =>
-                    request
-                        .get(`${base}/api/admin/playground`)
-                        .expect('Content-Type', /json/)
-                        .expect(200),
-                )
-                .then(({ body }) => body.input === payload),
+    await fc.assert(
+        fc.asyncProperty(
+            generateRequest(),
+            async (payload: PlaygroundRequestSchema) => {
+                const { request, base } = await getSetup();
+                const { body } = await request
+                    .post(`${base}/api/admin/playground`)
+                    .send(payload)
+                    .expect('Content-Type', /json/)
+                    .expect(200);
+
+                expect(body.input).toStrictEqual(payload);
+
+                return true;
+            },
         ),
     );
 });

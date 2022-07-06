@@ -3212,6 +3212,13 @@ faker@5.5.3:
   resolved "https://registry.npmjs.org/faker/-/faker-5.5.3.tgz"
   integrity sha512-wLTv2a28wjUyWkbnX7u/ABZBkUkIF2fCd73V6P2oFqEGEktDfzWx4UxrSqtPRw0xPRAcjeAOIiJWqZm3pP4u3g==
 
+fast-check@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/fast-check/-/fast-check-3.0.1.tgz#b9e7b57c4643a4e62893aca85e21c270591d0eac"
+  integrity sha512-AriFDYpYVOBynpPZq/quxSLumFOo2hPB2H5Nz2vc1QlNfjOaA62zX8USNXcOY5nwKHEq7lZ84dG9M1W+LAND1g==
+  dependencies:
+    pure-rand "^5.0.1"
+
 fast-deep-equal@^3.1.1, fast-deep-equal@^3.1.3:
   version "3.1.3"
   resolved "https://registry.npmjs.org/fast-deep-equal/-/fast-deep-equal-3.1.3.tgz"
@@ -6410,6 +6417,11 @@ punycode@^2.1.0, punycode@^2.1.1:
   version "2.1.1"
   resolved "https://registry.npmjs.org/punycode/-/punycode-2.1.1.tgz"
   integrity sha512-XRsRjdf+j5ml+y/6GKHPZbrF/8p2Yga0JPtdqTIY2Xe5ohJPD9saDJJLPvp9+NSBprVvevdXZybnj2cv8OEd0A==
+
+pure-rand@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/pure-rand/-/pure-rand-5.0.1.tgz#97a287b4b4960b2a3448c0932bf28f2405cac51d"
+  integrity sha512-ksWccjmXOHU2gJBnH0cK1lSYdvSZ0zLoCMSz/nTGh6hDvCSgcRxDyIcOBD6KNxFz3xhMPm/T267Tbe2JRymKEQ==
 
 qs@6.7.0:
   version "6.7.0"

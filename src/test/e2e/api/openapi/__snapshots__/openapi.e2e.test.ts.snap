@@ -1746,6 +1746,44 @@ Object {
         ],
         "type": "object",
       },
+      "playgroundFeatureSchema": Object {
+        "additionalProperties": false,
+        "description": "A simplified feature toggle model intended for the Unleash playground.",
+        "properties": Object {
+          "isEnabled": Object {
+            "examples": Array [
+              true,
+            ],
+            "type": "boolean",
+          },
+          "name": Object {
+            "examples": Array [
+              "my-feature",
+            ],
+            "type": "string",
+          },
+          "projectId": Object {
+            "examples": Array [
+              "my-project",
+            ],
+            "type": "string",
+          },
+          "variant": Object {
+            "examples": Array [
+              "green",
+            ],
+            "nullable": true,
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "name",
+          "projectId",
+          "isEnabled",
+          "variant",
+        ],
+        "type": "object",
+      },
       "playgroundRequestSchema": Object {
         "description": "Data for the playground API to evaluate toggles",
         "properties": Object {
@@ -1774,7 +1812,7 @@ Object {
               Object {
                 "description": "Check toggles in all projects.",
                 "enum": Array [
-                  "ALL",
+                  "*",
                 ],
                 "type": "string",
               },
@@ -1796,41 +1834,7 @@ Object {
           },
           "toggles": Object {
             "items": Object {
-              "additionalProperties": false,
-              "properties": Object {
-                "isEnabled": Object {
-                  "examples": Array [
-                    true,
-                  ],
-                  "type": "boolean",
-                },
-                "name": Object {
-                  "examples": Array [
-                    "my-feature",
-                  ],
-                  "type": "string",
-                },
-                "projectId": Object {
-                  "examples": Array [
-                    "my-project",
-                  ],
-                  "type": "string",
-                },
-                "variant": Object {
-                  "examples": Array [
-                    "green",
-                  ],
-                  "nullable": true,
-                  "type": "string",
-                },
-              },
-              "required": Array [
-                "name",
-                "projectId",
-                "isEnabled",
-                "variant",
-              ],
-              "type": "object",
+              "$ref": "#/components/schemas/playgroundFeatureSchema",
             },
             "type": "array",
           },

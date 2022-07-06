@@ -7,7 +7,9 @@ import { createTestConfig } from '../../../test/config/test-config';
 import createStores from '../../../test/fixtures/store';
 
 import getApp from '../../app';
-import { PlaygroundRequestSchema } from 'lib/openapi/spec/playground-request-schema';
+import { PlaygroundRequestSchema } from '../../../lib/openapi/spec/playground-request-schema';
+
+import { generate as generateContext } from '../../../lib/openapi/spec/sdk-context-schema.test';
 
 // some strings should be URL-friendly
 // some props should be nullable / undefinable
@@ -15,15 +17,7 @@ const requestPayload = (): Arbitrary<PlaygroundRequestSchema> =>
     fc.record({
         environment: fc.asciiString(),
         projects: fc.uniqueArray(fc.asciiString()),
-        context: fc.record({
-            appName: fc.string(),
-            currentTime: fc.date().map((x) => x.toString()),
-            environment: fc.string(),
-            properties: fc.dictionary(fc.string(), fc.string()),
-            remoteAddress: fc.ipV4(),
-            sessionId: fc.uuid(),
-            userId: fc.emailAddress(),
-        }),
+        context: generateContext(),
     });
 
 async function getSetup() {

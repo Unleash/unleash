@@ -201,7 +201,11 @@ The logger interface with its `debug`, `info`, `warn` and `error` methods expect
 
 ## Database configuration
 
-:::info In-code configuration values take precedence over environment values: If you provide a database username both via environment variables and in code with the Unleash options object, Unleash will use the in-code username. :::
+:::info
+
+In-code configuration values take precedence over environment values: If you provide a database username both via environment variables and in code with the Unleash options object, Unleash will use the in-code username.
+
+:::
 
 You cannot run the Unleash server without a database. You must provide Unleash with database connection details for it to start correctly.
 

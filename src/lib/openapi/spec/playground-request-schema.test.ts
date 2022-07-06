@@ -22,11 +22,8 @@ export const urlFriendlyString = (): Arbitrary<string> =>
 
 test('url-friendly strings are URL-friendly', () =>
     fc.assert(
-        fc.property(
-            urlFriendlyString(),
-            (input: string) =>
-                input.length > 0 &&
-                [...input].every((c) => /[a-zA-Z0-9.~_-]/.test(c)),
+        fc.property(urlFriendlyString(), (input: string) =>
+            /^[\w~.-]+$/.test(input),
         ),
     ));
 

@@ -33,8 +33,11 @@ export const generate = (): Arbitrary<PlaygroundRequestSchema> =>
             fc.constantFrom('development', 'production', 'default'),
             fc.lorem({ maxCount: 1 }),
         ),
-        projects: fc.uniqueArray(
-            fc.oneof(fc.lorem({ maxCount: 1 }), urlFriendlyString()),
+        projects: fc.oneof(
+            fc.uniqueArray(
+                fc.oneof(fc.lorem({ maxCount: 1 }), urlFriendlyString()),
+            ),
+            fc.constant('*' as '*'),
         ),
         context: generateContext(),
     });

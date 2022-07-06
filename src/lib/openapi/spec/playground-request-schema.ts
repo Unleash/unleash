@@ -18,7 +18,7 @@ export const playgroundRequestSchema = {
                 },
                 {
                     type: 'string',
-                    enum: ['ALL'],
+                    enum: ['*'],
                     description: 'Check toggles in all projects.',
                 },
             ],

@@ -17,7 +17,7 @@ export const playgroundFeatureSchema = {
             examples: ['green'],
         },
     },
-    components: {},
+    components: { schemas: {} },
 } as const;
 
 export type PlaygroundFeatureSchema = FromSchema<

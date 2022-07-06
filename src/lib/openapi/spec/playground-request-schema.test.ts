@@ -32,8 +32,13 @@ test('url-friendly strings are URL-friendly', () =>
 
 export const generate = (): Arbitrary<PlaygroundRequestSchema> =>
     fc.record({
-        environment: urlFriendlyString(),
-        projects: fc.uniqueArray(urlFriendlyString()),
+        environment: fc.oneof(
+            fc.constantFrom('development', 'production', 'default'),
+            fc.lorem({ maxCount: 1 }),
+        ),
+        projects: fc.uniqueArray(
+            fc.oneof(fc.lorem({ maxCount: 1 }), urlFriendlyString()),
+        ),
         context: generateContext(),
     });
 

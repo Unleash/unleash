@@ -16,21 +16,7 @@ export const playgroundResponseSchema = {
         toggles: {
             type: 'array',
             items: {
-                // ref: playgroundFeatureSchema.$id
-                type: 'object',
-                // ref
-                additionalProperties: false,
-                required: ['name', 'projectId', 'isEnabled', 'variant'],
-                properties: {
-                    name: { type: 'string', examples: ['my-feature'] },
-                    projectId: { type: 'string', examples: ['my-project'] },
-                    isEnabled: { type: 'boolean', examples: [true] },
-                    variant: {
-                        type: 'string',
-                        nullable: true,
-                        examples: ['green'],
-                    },
-                },
+                $ref: playgroundFeatureSchema.$id,
             },
         },
     },

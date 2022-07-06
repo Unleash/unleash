@@ -13,6 +13,8 @@ import {
     playgroundResponseSchema,
 } from '../../../lib/openapi/spec/playground-response-schema';
 import { PlaygroundRequestSchema } from '../../../lib/openapi/spec/playground-request-schema';
+import { PlaygroundFeatureSchema } from '../../../lib/openapi/spec/playground-feature-schema';
+import { FeatureToggle } from '../../../lib/types/model';
 
 export default class PlaygroundController extends Controller {
     private openApiService: OpenApiService;
@@ -61,8 +63,19 @@ export default class PlaygroundController extends Controller {
         );
     }
 
-    // async doWork(
-    //     toggles: FeatureToggle,
-    //     parameters: PlaygroundRequestSchema
-    // ) : Promise<> =>
+    async doWork(
+        toggles: FeatureToggle[],
+        parameters: PlaygroundRequestSchema,
+    ): Promise<PlaygroundFeatureSchema[]> {
+        console.log(toggles, parameters);
+
+        return [
+            {
+                name: 'name',
+                projectId: 'project',
+                isEnabled: true,
+                variant: null,
+            },
+        ];
+    }
 }

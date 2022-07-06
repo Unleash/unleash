@@ -119,10 +119,24 @@ const generateFeatureToggle = (): Arbitrary<ClientFeatureSchema> =>
                 fc.record({
                     name: urlFriendlyString(),
                     weight: fc.nat({ max: 100 }),
-                    payload: fc.record({
-                        type: fc.constantFrom('json', 'csv', 'string'),
-                        value: fc.string(),
-                    }),
+                    payload: fc.option(
+                        fc.oneof(
+                            fc.record({
+                                type: fc.constant('json'),
+                                value: fc.json(),
+                            }),
+                            fc.record({
+                                type: fc.constant('csv'),
+                                value: fc
+                                    .array(fc.lorem())
+                                    .map((ls) => ls.join(',')),
+                            }),
+                            fc.record({
+                                type: fc.constant('string'),
+                                value: fc.string(),
+                            }),
+                        ),
+                    ),
                 }),
             ),
         },
@@ -169,10 +183,10 @@ describe('the playground API', () => {
                         .expect('Content-Type', /json/)
                         .expect(200);
 
-                    console.log(
-                        toggles,
-                        toggles.map((t) => t.strategies),
-                    );
+                    // console.log(
+                    //     toggles,
+                    //     toggles.map((t) => t.strategies),
+                    // );
 
                     switch (projects) {
                         case '*':

@@ -26,6 +26,7 @@ import FakeClientMetricsStoreV2 from './fake-client-metrics-store-v2';
 import FakeUserSplashStore from './fake-user-splash-store';
 import FakeRoleStore from './fake-role-store';
 import FakeSegmentStore from './fake-segment-store';
+import FakeGroupStore from './fake-group-store';
 
 const createStores: () => IUnleashStores = () => {
     const db = {
@@ -63,6 +64,7 @@ const createStores: () => IUnleashStores = () => {
         userSplashStore: new FakeUserSplashStore(),
         roleStore: new FakeRoleStore(),
         segmentStore: new FakeSegmentStore(),
+        groupStore: new FakeGroupStore(),
     };
 };
 

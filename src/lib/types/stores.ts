@@ -25,6 +25,7 @@ import { IClientMetricsStoreV2 } from './stores/client-metrics-store-v2';
 import { IUserSplashStore } from './stores/user-splash-store';
 import { IRoleStore } from './stores/role-store';
 import { ISegmentStore } from './stores/segment-store';
+import { IGroupStore } from './stores/group-store';
 
 export interface IUnleashStores {
     accessStore: IAccessStore;
@@ -42,6 +43,7 @@ export interface IUnleashStores {
     featureToggleStore: IFeatureToggleStore;
     featureToggleClientStore: IFeatureToggleClientStore;
     featureTypeStore: IFeatureTypeStore;
+    groupStore: IGroupStore;
     projectStore: IProjectStore;
     resetTokenStore: IResetTokenStore;
     sessionStore: ISessionStore;

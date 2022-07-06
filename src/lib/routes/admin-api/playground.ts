@@ -14,7 +14,7 @@ import {
 } from '../../../lib/openapi/spec/playground-response-schema';
 import { PlaygroundRequestSchema } from '../../../lib/openapi/spec/playground-request-schema';
 import { PlaygroundFeatureSchema } from '../../../lib/openapi/spec/playground-feature-schema';
-import { FeatureToggle } from '../../../lib/types/model';
+import { ClientFeatureSchema } from 'lib/openapi/spec/client-feature-schema';
 
 export default class PlaygroundController extends Controller {
     private openApiService: OpenApiService;
@@ -61,10 +61,12 @@ export default class PlaygroundController extends Controller {
             playgroundResponseSchema.$id,
             response,
         );
+
+        // getclientfeatures from features v2
     }
 
     async doWork(
-        toggles: FeatureToggle[],
+        toggles: ClientFeatureSchema[],
         parameters: PlaygroundRequestSchema,
     ): Promise<PlaygroundFeatureSchema[]> {
         console.log(toggles, parameters);

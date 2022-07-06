@@ -88,20 +88,42 @@ const generateFeatureToggle = (): Arbitrary<ClientFeatureSchema> =>
         { requiredKeys: ['name', 'enabled'] },
     );
 
-const generateToggles = (): Arbitrary<ClientFeatureSchema[]> =>
+export const generateToggles = (): Arbitrary<ClientFeatureSchema[]> =>
     fc.array(generateFeatureToggle());
 
 describe('the playground API', () => {
-    test('should return the same enabled toggles as the raw SDK', () => {
-        // initialize a client, bootstrap with a list of toggles
-        //
-        // hit the client directly and hit the endpoint
-        //
-        // expect the two lists to be the same (order not withstanding)
-        //
-        // can either sort the lists or use expect.(not.)arrayContaining(expected)
-        // https://jestjs.io/docs/expect#expectarraycontainingarray /
-        // https://jestjs.io/docs/expect#expectnotarraycontainingarray
+    test('should return all toggles when all projects (`*`) are specified', async () => {
+        await fc.assert(
+            fc.asyncProperty(
+                generateRequest(),
+                generateToggles(),
+                async (
+                    payload: PlaygroundRequestSchema,
+                    toggles: ClientFeatureSchema[],
+                ) => {
+                    const { request, base } = await getSetup();
+
+                    const modifiedPayload = { ...payload, projects: '*' };
+                    // console.log(toggles);
+
+                    // create a list of features that can be filtered
+
+                    // pass in args that should filter the list
+
+                    // make sure that none of the returned toggles have anything to do with the filter
+
+                    const { body } = await request
+                        .post(`${base}/api/admin/playground`)
+                        .send(modifiedPayload)
+                        .expect('Content-Type', /json/)
+                        .expect(200);
+
+                    console.log(toggles, body);
+
+                    return toggles.length === body.toggles.length;
+                },
+            ),
+        );
     });
 
     test('should filter the list according to the input parameters', async () => {
@@ -115,6 +137,7 @@ describe('the playground API', () => {
                 ) => {
                     const { request, base } = await getSetup();
 
+                    const;
                     // console.log(toggles);
 
                     // create a list of features that can be filtered
@@ -171,7 +194,8 @@ describe('the playground API', () => {
 
                     const { status } = await request
                         .post(`${base}/api/admin/playground`)
-                        .send(payload);
+                        .send(payload)
+                        .expect('Content-Type', /json/);
 
                     return status === 400;
                 },

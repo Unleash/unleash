@@ -9,6 +9,7 @@ export const offlineClientFromContext = (
     toggles: FeatureInterface[],
 ): UnleashClient =>
     new UnleashClient({
+        appName: 'playground',
         ...context,
         disableMetrics: true,
         refreshInterval: 0,

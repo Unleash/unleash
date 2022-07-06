@@ -19,6 +19,7 @@ import {
 import { commonISOTimestamp } from '../../../lib/openapi/spec/sdk-context-schema.test';
 import { ALL_OPERATORS } from '../../../lib/util/constants';
 import { ClientFeatureSchema } from '../../../lib/openapi/spec/client-feature-schema';
+import { PlaygroundFeatureSchema } from 'lib/openapi/spec/playground-feature-schema';
 
 async function getSetup() {
     const base = `/random${Math.round(Math.random() * 1000)}`;
@@ -88,63 +89,39 @@ const generateFeatureToggle = (): Arbitrary<ClientFeatureSchema> =>
         { requiredKeys: ['name', 'enabled'] },
     );
 
-export const generateToggles = (): Arbitrary<ClientFeatureSchema[]> =>
-    fc.array(generateFeatureToggle());
+export const generateToggles = (
+    minLength?: number,
+): Arbitrary<ClientFeatureSchema[]> =>
+    fc.array(generateFeatureToggle(), { minLength });
 
 describe('the playground API', () => {
-    test('should return all toggles when all projects (`*`) are specified', async () => {
-        await fc.assert(
-            fc.asyncProperty(
-                generateRequest(),
-                generateToggles(),
-                async (
-                    payload: PlaygroundRequestSchema,
-                    toggles: ClientFeatureSchema[],
-                ) => {
-                    const { request, base } = await getSetup();
-
-                    const modifiedPayload = { ...payload, projects: '*' };
-                    // console.log(toggles);
-
-                    // create a list of features that can be filtered
-
-                    // pass in args that should filter the list
-
-                    // make sure that none of the returned toggles have anything to do with the filter
-
-                    const { body } = await request
-                        .post(`${base}/api/admin/playground`)
-                        .send(modifiedPayload)
-                        .expect('Content-Type', /json/)
-                        .expect(200);
-
-                    console.log(toggles, body);
-
-                    return toggles.length === body.toggles.length;
-                },
-            ),
-        );
-    });
-
     test('should filter the list according to the input parameters', async () => {
         await fc.assert(
             fc.asyncProperty(
                 generateRequest(),
-                generateToggles(),
+                generateToggles(1),
                 async (
                     payload: PlaygroundRequestSchema,
                     toggles: ClientFeatureSchema[],
                 ) => {
                     const { request, base } = await getSetup();
 
-                    const;
-                    // console.log(toggles);
+                    // get a subset of projects that exist among the toggles
+                    const [projects] = fc.sample(
+                        fc.oneof(
+                            fc.constant('*' as '*'),
+                            fc.uniqueArray(
+                                fc.constantFrom(
+                                    ...toggles.map((t) => t.project),
+                                ),
+                            ),
+                        ),
+                    );
+
+                    payload.projects = projects;
 
                     // create a list of features that can be filtered
-
                     // pass in args that should filter the list
-
-                    // make sure that none of the returned toggles have anything to do with the filter
 
                     const { body } = await request
                         .post(`${base}/api/admin/playground`)
@@ -152,11 +129,22 @@ describe('the playground API', () => {
                         .expect('Content-Type', /json/)
                         .expect(200);
 
-                    console.log(toggles, body);
+                    // console.log(toggles, body);
 
-                    // return body.toggles.every(x => !x...something)
-
-                    return false;
+                    switch (projects) {
+                        case '*':
+                            // no toggles have been filtered out
+                            return body.toggles.length === toggles.length;
+                        case []:
+                            // no toggle should be without a project
+                            return body.toggles.length === 0;
+                        default:
+                            // no toggle should be without a project
+                            return body.toggles.every(
+                                (x: PlaygroundFeatureSchema) =>
+                                    projects.includes(x.projectId),
+                            );
+                    }
                 },
             ),
         );
@@ -201,5 +189,12 @@ describe('the playground API', () => {
                 },
             ),
         );
+    });
+
+    test('should return a subset of the toggles in the actual db', () => {
+        // find a way to verify that the returned toggles (responseBody.toggles)
+        // is actually a subset of the toggles that exist in the
+        // database/repository. To ensure that it's not just a hardcoded empty
+        // list or similar.
     });
 });

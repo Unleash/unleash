@@ -83,7 +83,7 @@ const strategies = () =>
                 'userWithId',
                 fc.record({
                     userIds: fc
-                        .uniqueArray(fc.lorem({ maxCount: 1 }))
+                        .uniqueArray(fc.emailAddress())
                         .map((ids) => ids.join(',')),
                 }),
             ),

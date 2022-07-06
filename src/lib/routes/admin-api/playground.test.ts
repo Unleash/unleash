@@ -32,7 +32,7 @@ async function getSetup() {
     return { base, request: supertest(app) };
 }
 
-const constraints = () =>
+const strategyConstraints = () =>
     fc.array(
         fc.record({
             contextName: urlFriendlyString(),
@@ -51,7 +51,7 @@ const strategy = (
     fc.record({
         name: fc.constant(name),
         parameters,
-        constraints: constraints(),
+        constraints: strategyConstraints(),
     });
 
 const strategies = () =>
@@ -143,17 +143,17 @@ const generateFeatureToggle = (): Arbitrary<ClientFeatureSchema> =>
         { requiredKeys: ['name', 'enabled', 'project', 'strategies'] },
     );
 
-export const generateToggles = (
-    minLength?: number,
-): Arbitrary<ClientFeatureSchema[]> =>
-    fc.array(generateFeatureToggle(), { minLength });
+export const generateToggles = (constraints?: {
+    minLength?: number;
+}): Arbitrary<ClientFeatureSchema[]> =>
+    fc.array(generateFeatureToggle(), constraints);
 
 describe('the playground API', () => {
     test('should filter the list according to the input parameters', async () => {
         await fc.assert(
             fc.asyncProperty(
                 generateRequest(),
-                generateToggles(1),
+                generateToggles({ minLength: 1 }),
                 async (
                     payload: PlaygroundRequestSchema,
                     toggles: ClientFeatureSchema[],

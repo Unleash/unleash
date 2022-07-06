@@ -196,7 +196,7 @@ describe('the playground API', () => {
                             // no toggle should be without a project
                             return body.toggles.length === 0;
                         default:
-                            // no toggle should be without a project
+                            // every toggle should be in one of the prescribed projects
                             return body.toggles.every(
                                 (x: PlaygroundFeatureSchema) =>
                                     projects.includes(x.projectId),

@@ -66,7 +66,10 @@ const generateFeatureToggle = (): Arbitrary<ClientFeatureSchema> =>
                                 value: fc.string(),
                             }),
                         ),
-                        parameters: fc.nat(),
+                        parameters: fc.dictionary(
+                            fc.string({ minLength: 1 }),
+                            fc.string(),
+                        ),
                     },
                     { requiredKeys: ['name'] },
                 ),

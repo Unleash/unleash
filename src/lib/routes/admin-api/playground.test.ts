@@ -7,7 +7,10 @@ import { createTestConfig } from '../../../test/config/test-config';
 import createStores from '../../../test/fixtures/store';
 
 import getApp from '../../app';
-import { PlaygroundRequestSchema } from '../../../lib/openapi/spec/playground-request-schema';
+import {
+    playgroundRequestSchema,
+    PlaygroundRequestSchema,
+} from '../../../lib/openapi/spec/playground-request-schema';
 
 import {
     generate as generateRequest,
@@ -85,69 +88,91 @@ const generateFeatureToggle = (): Arbitrary<ClientFeatureSchema> =>
 const generateToggles = (): Arbitrary<ClientFeatureSchema[]> =>
     fc.array(generateFeatureToggle());
 
-test('should return the same enabled toggles as the raw SDK', () => {
-    // initialize a client, bootstrap with a list of toggles
-    //
-    // hit the client directly and hit the endpoint
-    //
-    // expect the two lists to be the same (order not withstanding)
-    //
-    // can either sort the lists or use expect.(not.)arrayContaining(expected)
-    // https://jestjs.io/docs/expect#expectarraycontainingarray /
-    // https://jestjs.io/docs/expect#expectnotarraycontainingarray
-});
+describe('the playground API', () => {
+    test('should return the same enabled toggles as the raw SDK', () => {
+        // initialize a client, bootstrap with a list of toggles
+        //
+        // hit the client directly and hit the endpoint
+        //
+        // expect the two lists to be the same (order not withstanding)
+        //
+        // can either sort the lists or use expect.(not.)arrayContaining(expected)
+        // https://jestjs.io/docs/expect#expectarraycontainingarray /
+        // https://jestjs.io/docs/expect#expectnotarraycontainingarray
+    });
 
-test('should filter the list according to the input parameters', async () => {
-    await fc.assert(
-        fc.asyncProperty(
-            generateRequest(),
-            generateToggles(),
-            async (
-                payload: PlaygroundRequestSchema,
-                toggles: ClientFeatureSchema[],
-            ) => {
-                const { request, base } = await getSetup();
+    test('should filter the list according to the input parameters', async () => {
+        await fc.assert(
+            fc.asyncProperty(
+                generateRequest(),
+                generateToggles(),
+                async (
+                    payload: PlaygroundRequestSchema,
+                    toggles: ClientFeatureSchema[],
+                ) => {
+                    const { request, base } = await getSetup();
 
-                // console.log(toggles);
+                    // console.log(toggles);
 
-                // create a list of features that can be filtered
+                    // create a list of features that can be filtered
 
-                // pass in args that should filter the list
+                    // pass in args that should filter the list
 
-                // make sure that none of the returned toggles have anything to do with the filter
+                    // make sure that none of the returned toggles have anything to do with the filter
 
-                const { body } = await request
-                    .post(`${base}/api/admin/playground`)
-                    .send(payload)
-                    .expect('Content-Type', /json/)
-                    .expect(200);
+                    const { body } = await request
+                        .post(`${base}/api/admin/playground`)
+                        .send(payload)
+                        .expect('Content-Type', /json/)
+                        .expect(200);
 
-                console.log(toggles, body);
+                    console.log(toggles, body);
 
-                // return body.toggles.every(x => !x...something)
+                    // return body.toggles.every(x => !x...something)
 
-                return false;
-            },
-        ),
-    );
-});
+                    return false;
+                },
+            ),
+        );
+    });
 
-test('should return the provided input arguments as part of the response', async () => {
-    await fc.assert(
-        fc.asyncProperty(
-            generateRequest(),
-            async (payload: PlaygroundRequestSchema) => {
-                const { request, base } = await getSetup();
-                const { body } = await request
-                    .post(`${base}/api/admin/playground`)
-                    .send(payload)
-                    .expect('Content-Type', /json/)
-                    .expect(200);
+    test('should return the provided input arguments as part of the response', async () => {
+        await fc.assert(
+            fc.asyncProperty(
+                generateRequest(),
+                async (payload: PlaygroundRequestSchema) => {
+                    const { request, base } = await getSetup();
+                    const { body } = await request
+                        .post(`${base}/api/admin/playground`)
+                        .send(payload)
+                        .expect('Content-Type', /json/)
+                        .expect(200);
 
-                expect(body.input).toStrictEqual(payload);
+                    expect(body.input).toStrictEqual(payload);
 
-                return true;
-            },
-        ),
-    );
+                    return true;
+                },
+            ),
+        );
+    });
+
+    test('should return 400 if any of the required query properties are missing', async () => {
+        await fc.assert(
+            fc.asyncProperty(
+                generateRequest(),
+                fc.constantFrom(...playgroundRequestSchema.required),
+                async (payload, requiredKey) => {
+                    const { request, base } = await getSetup();
+
+                    delete payload[requiredKey];
+
+                    const { status } = await request
+                        .post(`${base}/api/admin/playground`)
+                        .send(payload);
+
+                    return status === 400;
+                },
+            ),
+        );
+    });
 });

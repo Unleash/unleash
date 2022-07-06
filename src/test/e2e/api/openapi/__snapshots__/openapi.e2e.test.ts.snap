@@ -1753,12 +1753,19 @@ Object {
             "$ref": "#/components/schemas/sdkContextSchema",
           },
           "environment": Object {
+            "examples": Array [
+              "development",
+            ],
             "type": "string",
           },
           "projects": Object {
             "oneOf": Array [
               Object {
                 "description": "A list of projects to check for toggles in.",
+                "examples": Array [
+                  "my-project",
+                  "my-other-project",
+                ],
                 "items": Object {
                   "type": "string",
                 },
@@ -1792,15 +1799,27 @@ Object {
               "additionalProperties": false,
               "properties": Object {
                 "isEnabled": Object {
+                  "examples": Array [
+                    true,
+                  ],
                   "type": "boolean",
                 },
                 "name": Object {
+                  "examples": Array [
+                    "my-feature",
+                  ],
                   "type": "string",
                 },
                 "projectId": Object {
+                  "examples": Array [
+                    "my-project",
+                  ],
                   "type": "string",
                 },
                 "variant": Object {
+                  "examples": Array [
+                    "green",
+                  ],
                   "nullable": true,
                   "type": "string",
                 },
@@ -1927,14 +1946,23 @@ Object {
       },
       "sdkContextSchema": Object {
         "additionalProperties": Object {
+          "examples": Array [
+            "top-level custom context value",
+          ],
           "type": "string",
         },
         "description": "The Unleash context as modeled in client SDKs",
         "properties": Object {
           "appName": Object {
+            "examples": Array [
+              "My cool application.",
+            ],
             "type": "string",
           },
           "currentTime": Object {
+            "examples": Array [
+              "2022-07-05T12:56:41+02:00",
+            ],
             "format": "date-time",
             "type": "string",
           },
@@ -1946,16 +1974,30 @@ Object {
             "additionalProperties": Object {
               "type": "string",
             },
+            "examples": Array [
+              Object {
+                "customContextField": "this is one!",
+                "otherCustomField": 3,
+              },
+            ],
             "type": "object",
           },
           "remoteAddress": Object {
-            "pattern": "^(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[0-9][0-9]?)\\\\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[0-9][0-9]?)\\\\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[0-9][0-9]?)\\\\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[0-9][0-9]?)$",
+            "examples": Array [
+              "192.168.1.1",
+            ],
             "type": "string",
           },
           "sessionId": Object {
+            "examples": Array [
+              "b65e7b23-fec0-4814-a129-0e9861ef18fc",
+            ],
             "type": "string",
           },
           "userId": Object {
+            "examples": Array [
+              "username@provider.com",
+            ],
             "type": "string",
           },
         },

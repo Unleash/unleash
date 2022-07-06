@@ -19,13 +19,13 @@ export const playgroundResponseSchema = {
                 additionalProperties: false,
                 required: ['name', 'projectId', 'isEnabled', 'variant'],
                 properties: {
-                    name: { type: 'string', example: 'my-feature' },
-                    projectId: { type: 'string', example: 'my-project' },
-                    isEnabled: { type: 'boolean', example: true },
+                    name: { type: 'string', examples: ['my-feature'] },
+                    projectId: { type: 'string', examples: ['my-project'] },
+                    isEnabled: { type: 'boolean', examples: [true] },
                     variant: {
                         type: 'string',
                         nullable: true,
-                        example: 'green',
+                        examples: ['green'],
                     },
                 },
             },

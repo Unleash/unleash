@@ -7,19 +7,19 @@ export const playgroundRequestSchema = {
     type: 'object',
     required: ['environment', 'context'],
     properties: {
-        environment: { type: 'string', example: 'development' },
+        environment: { type: 'string', examples: ['development'] },
         projects: {
             oneOf: [
                 {
                     type: 'array',
                     items: { type: 'string' },
-                    example: ['my-project', 'my-other-project'],
-                    summary: 'A list of projects to check for toggles in.',
+                    examples: ['my-project', 'my-other-project'],
+                    description: 'A list of projects to check for toggles in.',
                 },
                 {
                     type: 'string',
                     enum: ['ALL'],
-                    summary: 'Check toggles in all projects.',
+                    description: 'Check toggles in all projects.',
                 },
             ],
         },

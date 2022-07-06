@@ -32,6 +32,70 @@ async function getSetup() {
     return { base, request: supertest(app) };
 }
 
+const constraints = () =>
+    fc.array(
+        fc.record({
+            contextName: urlFriendlyString(),
+            operator: fc.constantFrom(...ALL_OPERATORS),
+            caseInsensitive: fc.boolean(),
+            inverted: fc.boolean(),
+            values: fc.array(fc.string()),
+            value: fc.string(),
+        }),
+    );
+
+const strategy = (
+    name: string,
+    parameters: Arbitrary<Record<string, string>>,
+) =>
+    fc.record({
+        name: fc.constant(name),
+        parameters,
+        constraints: constraints(),
+    });
+
+const strategies = () =>
+    fc.array(
+        fc.oneof(
+            strategy('default', fc.constant({})),
+            strategy(
+                'flexibleRollout',
+                fc.record({
+                    groupId: fc.lorem({ maxCount: 1 }),
+                    rollout: fc.nat({ max: 100 }).map(String),
+                    stickiness: fc.constantFrom(
+                        'default',
+                        'userId',
+                        'sessionId',
+                    ),
+                }),
+            ),
+            strategy(
+                'applicationHostname',
+                fc.record({
+                    hostNames: fc
+                        .uniqueArray(fc.domain())
+                        .map((ds) => ds.join(',')),
+                }),
+            ),
+
+            strategy(
+                'userWithId',
+                fc.record({
+                    userIds: fc
+                        .uniqueArray(fc.lorem({ maxCount: 1 }))
+                        .map((ids) => ids.join(',')),
+                }),
+            ),
+            strategy(
+                'remoteAddress',
+                fc.record({
+                    IPs: fc.uniqueArray(fc.ipV4()).map((ips) => ips.join(',')),
+                }),
+            ),
+        ),
+    );
+
 const generateFeatureToggle = (): Arbitrary<ClientFeatureSchema> =>
     fc.record(
         {
@@ -50,31 +114,7 @@ const generateFeatureToggle = (): Arbitrary<ClientFeatureSchema> =>
             lastSeenAt: commonISOTimestamp(),
             stale: fc.boolean(),
             impressionData: fc.option(fc.boolean()),
-            strategies: fc.array(
-                fc.record(
-                    {
-                        name: urlFriendlyString(),
-                        id: fc.uuid(),
-                        sortOrder: fc.integer(),
-                        segments: fc.array(fc.nat()),
-                        constraints: fc.array(
-                            fc.record({
-                                contextName: urlFriendlyString(),
-                                operator: fc.constantFrom(ALL_OPERATORS),
-                                caseInsensitive: fc.boolean(),
-                                inverted: fc.boolean(),
-                                values: fc.array(fc.string()),
-                                value: fc.string(),
-                            }),
-                        ),
-                        parameters: fc.dictionary(
-                            fc.string({ minLength: 1 }),
-                            fc.string(),
-                        ),
-                    },
-                    { requiredKeys: ['name'] },
-                ),
-            ),
+            strategies: strategies(),
             variants: fc.array(
                 fc.record({
                     name: urlFriendlyString(),
@@ -86,7 +126,7 @@ const generateFeatureToggle = (): Arbitrary<ClientFeatureSchema> =>
                 }),
             ),
         },
-        { requiredKeys: ['name', 'enabled'] },
+        { requiredKeys: ['name', 'enabled', 'project', 'strategies'] },
     );
 
 export const generateToggles = (
@@ -129,7 +169,10 @@ describe('the playground API', () => {
                         .expect('Content-Type', /json/)
                         .expect(200);
 
-                    // console.log(toggles, body);
+                    console.log(
+                        toggles,
+                        toggles.map((t) => t.strategies),
+                    );
 
                     switch (projects) {
                         case '*':

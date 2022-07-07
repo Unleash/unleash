@@ -18,6 +18,9 @@ import {
 const T = {
     ROLE_USER: 'role_user',
     ROLES: 'roles',
+    GROUPS: 'groups',
+    GROUP_ROLE: 'group_role',
+    GROUP_USER: 'group_user',
     ROLE_PERMISSION: 'role_permission',
     PERMISSIONS: 'permissions',
     PERMISSION_TYPES: 'permission_types',
@@ -40,8 +43,16 @@ export class AccessStore implements IAccessStore {
 
     private db: Knex;
 
-    constructor(db: Knex, eventBus: EventEmitter, getLogger: Function) {
+    private enableUserGroupPermissions: boolean;
+
+    constructor(
+        db: Knex,
+        eventBus: EventEmitter,
+        getLogger: Function,
+        enableUserGroupPermissions: boolean,
+    ) {
         this.db = db;
+        this.enableUserGroupPermissions = enableUserGroupPermissions;
         this.logger = getLogger('access-store.ts');
         this.timer = (action: string) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
@@ -107,7 +118,7 @@ export class AccessStore implements IAccessStore {
 
     async getPermissionsForUser(userId: number): Promise<IUserPermission[]> {
         const stopTimer = this.timer('getPermissionsForUser');
-        const rows = await this.db
+        let userPermissionQuery = this.db
             .select(
                 'project',
                 'permission',
@@ -119,6 +130,29 @@ export class AccessStore implements IAccessStore {
             .join(`${T.ROLE_USER} AS ur`, 'ur.role_id', 'rp.role_id')
             .join(`${T.PERMISSIONS} AS p`, 'p.id', 'rp.permission_id')
             .where('ur.user_id', '=', userId);
+
+        if (this.enableUserGroupPermissions) {
+            userPermissionQuery = userPermissionQuery.union((db) => {
+                db.select(
+                    'project',
+                    'permission',
+                    'environment',
+                    'p.type',
+                    'gr.role_id',
+                )
+                    .from<IPermissionRow>(`${T.GROUP_USER} AS gu`)
+                    .join(`${T.GROUPS} AS g`, 'g.id', 'gu.group_id')
+                    .join(`${T.GROUP_ROLE} AS gr`, 'gu.group_id', 'gr.group_id')
+                    .join(
+                        `${T.ROLE_PERMISSION} AS rp`,
+                        'rp.role_id',
+                        'gr.role_id',
+                    )
+                    .join(`${T.PERMISSIONS} AS p`, 'p.id', 'rp.permission_id')
+                    .where('gu.user_id', '=', userId);
+            });
+        }
+        const rows = await userPermissionQuery;
         stopTimer();
         return rows.map(this.mapUserPermission);
     }
@@ -241,6 +275,33 @@ export class AccessStore implements IAccessStore {
         return this.db(T.ROLE_USER)
             .where({
                 user_id: userId,
+                role_id: roleId,
+                project: projectId,
+            })
+            .delete();
+    }
+
+    async addGroupToRole(
+        groupId: number,
+        roleId: number,
+        projectId?: string,
+    ): Promise<void> {
+        return this.db(T.GROUP_ROLE).insert({
+            group_id: groupId,
+            role_id: roleId,
+            project: projectId,
+            created_by: 'DummyData',
+        });
+    }
+
+    async removeGroupFromRole(
+        groupId: number,
+        roleId: number,
+        projectId?: string,
+    ): Promise<void> {
+        return this.db(T.GROUP_ROLE)
+            .where({
+                group_id: groupId,
                 role_id: roleId,
                 project: projectId,
             })

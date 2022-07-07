@@ -88,7 +88,7 @@ export default class GroupStore implements IGroupStore {
         const rows = users.map((user) => {
             return {
                 group_id: id,
-                user_ud: user.user.id,
+                user_id: user.user.id,
                 type: user.type,
                 created_by: userName,
             };

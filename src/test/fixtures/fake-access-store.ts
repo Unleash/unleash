@@ -9,6 +9,22 @@ import {
 import { IAvailablePermissions, IPermission } from 'lib/types/model';
 
 class AccessStoreMock implements IAccessStore {
+    addGroupToRole(
+        groupId: number,
+        roleId: number,
+        projectId?: string,
+    ): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+
+    removeGroupFromRole(
+        groupId: number,
+        roleId: number,
+        projectId?: string,
+    ): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+
     updateUserProjectRole(
         userId: number,
         roleId: number,

@@ -76,6 +76,8 @@ describe('Playground API E2E', () => {
     });
 
     test('should filter the list according to the input parameters', async () => {
+        jest.setTimeout(20000); // this test might take a while to complete due
+        // to its property-based nature.
         await fc.assert(
             fc
                 .asyncProperty(

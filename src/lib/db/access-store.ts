@@ -284,13 +284,14 @@ export class AccessStore implements IAccessStore {
     async addGroupToRole(
         groupId: number,
         roleId: number,
+        createdBy: string,
         projectId?: string,
     ): Promise<void> {
         return this.db(T.GROUP_ROLE).insert({
             group_id: groupId,
             role_id: roleId,
             project: projectId,
-            created_by: 'DummyData',
+            created_by: createdBy,
         });
     }
 

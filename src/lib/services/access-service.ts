@@ -177,9 +177,10 @@ export class AccessService {
     async addGroupToRole(
         groupId: number,
         roleId: number,
+        createdBy: string,
         projectId: string,
     ): Promise<void> {
-        return this.store.addGroupToRole(groupId, roleId, projectId);
+        return this.store.addGroupToRole(groupId, roleId, createdBy, projectId);
     }
 
     async getRoleByName(roleName: string): Promise<IRole> {

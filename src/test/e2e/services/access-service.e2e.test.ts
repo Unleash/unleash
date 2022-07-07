@@ -884,6 +884,7 @@ test('Should be allowed move feature toggle to project when given access through
     await accessService.addGroupToRole(
         groupWithProjectAccess.id,
         projectRole.id,
+        'SomeAdminUser',
         project,
     );
 
@@ -914,6 +915,7 @@ test('Should not lose user role access when given permissions from a group', asy
     await accessService.addGroupToRole(
         groupWithNoAccess.id,
         viewerRole.id,
+        'SomeAdminUser',
         project,
     );
 
@@ -986,12 +988,14 @@ test('Should allow user to take multiple group roles and have expected permissio
     await accessService.addGroupToRole(
         groupWithCreateAccess.id,
         deleteFeatureRole.id,
+        'SomeAdminUser',
         projectForDelete,
     );
 
     await accessService.addGroupToRole(
         groupWithDeleteAccess.id,
         createFeatureRole.id,
+        'SomeAdminUser',
         projectForCreate,
     );
 

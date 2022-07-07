@@ -54,7 +54,7 @@ const strategy = (
         constraints: strategyConstraints(),
     });
 
-const strategies = () =>
+export const strategies = (): Arbitrary<Record<string, string>[]> =>
     fc.array(
         fc.oneof(
             strategy('default', fc.constant({})),

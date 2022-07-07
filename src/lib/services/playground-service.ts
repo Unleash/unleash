@@ -3,12 +3,17 @@ import { SdkContextSchema } from 'lib/openapi/spec/sdk-context-schema';
 import { InMemStorageProvider, Unleash as UnleashClient } from 'unleash-client';
 import { FeatureInterface } from 'unleash-client/lib/feature';
 import { IUnleashServices } from 'lib/types/services';
+import { ALL } from '../../lib/types/models/api-token';
+import { PlaygroundFeatureSchema } from 'lib/openapi/spec/playground-feature-schema';
+import { FeatureConfigurationClient } from 'lib/types/stores/feature-strategies-store';
+
+export type ClientToggle = FeatureInterface;
 
 export const offlineClientFromContext = (
     context: SdkContextSchema,
-    toggles: FeatureInterface[],
-): UnleashClient =>
-    new UnleashClient({
+    toggles: ClientToggle[],
+): UnleashClient => {
+    const client = new UnleashClient({
         appName: 'playground',
         ...context,
         disableMetrics: true,
@@ -20,6 +25,11 @@ export const offlineClientFromContext = (
         },
     });
 
+    client.on('ready', console.log.bind(console, 'ready'));
+    client.on('error', console.error);
+
+    return client;
+};
 export class PlaygroundService {
     // private readonly logger: Logger;
 
@@ -36,15 +46,40 @@ export class PlaygroundService {
         projects: '*' | string[],
         environment: string,
         context: SdkContextSchema,
-    ): Promise<FeatureInterface[]> {
+    ): Promise<PlaygroundFeatureSchema[]> {
         const toggles = await this.featureToggleService.getClientFeatures({
-            project: projects === '*' ? undefined : projects, // how do I do this?
+            project: projects === '*' ? [ALL] : projects, // how do I do this?
             environment,
         });
 
-        //@ts-expect-error
-        const client = offlineClientFromContext(context, toggles);
+        console.log(context, toggles);
 
-        return client.getFeatureToggleDefinitions();
+        // const client = offlineClientFromContext(
+        //     context,
+        //     //@ts-expect-error the Operator enum from unleash-client contains the same strings as the operator enums in this repo, but they're not the same
+        //     toggles.map((x) => ({
+        //         type: 'release',
+        //         ...x,
+        //         impressionData: true,
+        //         strategies: x.strategies.map((s) => ({
+        //             parameters: {},
+        //             ...s,
+        //             // parameters: s.parameters ?? {},
+        //         })),
+        //     })),
+        // );
+
+        // return client.getFeatureToggleDefinitions();
+        // return mapToggles([]);
+        return [];
     }
 }
+
+export const mapToggles = (
+    input: FeatureConfigurationClient[],
+): Omit<PlaygroundFeatureSchema, 'projectId'>[] =>
+    input.map(() => ({
+        isEnabled: true,
+        variant: null,
+        name: 'any',
+    }));

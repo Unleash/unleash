@@ -28,6 +28,7 @@ export const useStyles = makeStyles()(theme => ({
     },
     textContainer: {
         marginLeft: '1rem',
+        wordBreak: 'break-word',
     },
     headerStyles: {
         fontWeight: 'normal',

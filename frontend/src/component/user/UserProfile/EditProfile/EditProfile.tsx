@@ -3,10 +3,10 @@ import { Button, Typography } from '@mui/material';
 import classnames from 'classnames';
 import { useStyles } from './EditProfile.styles';
 import { useThemeStyles } from 'themes/themeStyles';
-import PasswordChecker from 'component/user/common/ResetPasswordForm/PasswordChecker/PasswordChecker';
+import PasswordChecker, {
+    PASSWORD_FORMAT_MESSAGE,
+} from 'component/user/common/ResetPasswordForm/PasswordChecker/PasswordChecker';
 import PasswordMatcher from 'component/user/common/ResetPasswordForm/PasswordMatcher/PasswordMatcher';
-import { Alert } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useLoading from 'hooks/useLoading';
 import {
     BAD_REQUEST,
@@ -17,6 +17,7 @@ import {
 import { formatApiPath } from 'utils/formatPath';
 import PasswordField from 'component/common/PasswordField/PasswordField';
 import { headers } from 'utils/apiUtils';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 interface IEditProfileProps {
     setEditingProfile: React.Dispatch<React.SetStateAction<boolean>>;
@@ -31,7 +32,7 @@ const EditProfile = ({
     const { classes: themeStyles } = useThemeStyles();
     const [loading, setLoading] = useState(false);
     const [validPassword, setValidPassword] = useState(false);
-    const [error, setError] = useState('');
+    const [error, setError] = useState<string>();
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const ref = useLoading(loading);
@@ -39,13 +40,13 @@ const EditProfile = ({
     const submit = async (e: SyntheticEvent) => {
         e.preventDefault();
 
-        if (!validPassword || password !== confirmPassword) {
-            setError(
-                'Password is not valid, or your passwords do not match. Please provide a password with length over 10 characters, an uppercase letter, a lowercase letter, a number and a symbol.'
-            );
+        if (password !== confirmPassword) {
+            return;
+        } else if (!validPassword) {
+            setError(PASSWORD_FORMAT_MESSAGE);
         } else {
             setLoading(true);
-            setError('');
+            setError(undefined);
             try {
                 const path = formatApiPath('api/admin/user/change-password');
                 const res = await fetch(path, {
@@ -55,8 +56,8 @@ const EditProfile = ({
                     credentials: 'include',
                 });
                 handleResponse(res);
-            } catch (e: any) {
-                setError(e);
+            } catch (error: unknown) {
+                setError(formatUnknownError(error));
             }
         }
         setLoading(false);
@@ -64,9 +65,7 @@ const EditProfile = ({
 
     const handleResponse = (res: Response) => {
         if (res.status === BAD_REQUEST) {
-            setError(
-                'Password could not be accepted. Please make sure you are inputting a valid password.'
-            );
+            setError(PASSWORD_FORMAT_MESSAGE);
         }
 
         if (res.status === UNAUTHORIZED) {
@@ -94,14 +93,6 @@ const EditProfile = ({
             >
                 Update password
             </Typography>
-            <ConditionallyRender
-                condition={Boolean(error)}
-                show={
-                    <Alert data-loading severity="error">
-                        {error}
-                    </Alert>
-                }
-            />
             <form
                 className={classnames(styles.form, themeStyles.contentSpacingY)}
             >
@@ -115,7 +106,9 @@ const EditProfile = ({
                     label="Password"
                     name="password"
                     value={password}
-                    autoComplete="on"
+                    error={Boolean(error)}
+                    helperText={error}
+                    autoComplete="new-password"
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                         setPassword(e.target.value)
                     }
@@ -125,7 +118,7 @@ const EditProfile = ({
                     label="Confirm password"
                     name="confirmPassword"
                     value={confirmPassword}
-                    autoComplete="on"
+                    autoComplete="new-password"
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                         setConfirmPassword(e.target.value)
                     }

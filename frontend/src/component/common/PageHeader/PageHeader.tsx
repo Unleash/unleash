@@ -26,7 +26,7 @@ const StyledDivider = styled(Divider)(({ theme }) => ({
 }));
 
 interface IPageHeaderProps {
-    title: string;
+    title?: string;
     titleElement?: ReactNode;
     subtitle?: string;
     variant?: TypographyProps['variant'];

@@ -5,6 +5,7 @@ import {
     ListItemAvatar,
     ListItemText,
     Tooltip,
+    useTheme,
 } from '@mui/material';
 import { Add, RadioButtonChecked } from '@mui/icons-material';
 import { AppsLinkList } from 'component/common';
@@ -26,6 +27,7 @@ export const StrategyDetails = ({
     applications,
     toggles,
 }: IStrategyDetailsProps) => {
+    const theme = useTheme();
     const { parameters = [] } = strategy;
     const renderParameters = (params: IStrategyParameter[]) => {
         if (params.length > 0) {
@@ -70,7 +72,9 @@ export const StrategyDetails = ({
                     condition={strategy.deprecated}
                     show={
                         <Grid item>
-                            <h5 style={{ color: '#ff0000' }}>Deprecated</h5>
+                            <h5 style={{ color: theme.palette.error.main }}>
+                                Deprecated
+                            </h5>
                         </Grid>
                     }
                 />

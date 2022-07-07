@@ -30,12 +30,13 @@ export const StrategySwitch: VFC<IStrategySwitchProps> = ({
             describeChild
             arrow
         >
-            <div id={id} role="tooltip">
+            <div id={id}>
                 <PermissionSwitch
                     checked={!deprecated}
                     permission={UPDATE_STRATEGY}
                     onClick={onClick}
                     disabled={disabled}
+                    inputProps={{ 'aria-labelledby': id }}
                 />
             </div>
         </Tooltip>

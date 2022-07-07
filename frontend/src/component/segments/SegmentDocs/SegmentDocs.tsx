@@ -1,25 +1,5 @@
 import { Alert } from '@mui/material';
-import { useStyles } from 'component/segments/SegmentDocs/SegmentDocs.styles';
 import { useSegmentLimits } from 'hooks/api/getters/useSegmentLimits/useSegmentLimits';
-
-export const SegmentDocsWarning = () => {
-    const { classes: styles } = useStyles();
-
-    return (
-        <Alert severity="warning">
-            <p className={styles.paragraph}>
-                Segments is an experimental feature available to select users.
-            </p>
-            <p className={styles.paragraph}>
-                This feature is currently in development. Future versions may
-                require to update your SDKs.
-            </p>
-            <p className={styles.paragraph}>
-                <SegmentDocsLink />
-            </p>
-        </Alert>
-    );
-};
 
 export const SegmentDocsValuesWarning = () => {
     const { segmentValuesLimit } = useSegmentLimits();
@@ -30,9 +10,8 @@ export const SegmentDocsValuesWarning = () => {
 
     return (
         <Alert severity="warning">
-            Segments is an experimental feature available to select users.
-            Currently, segments are limited to at most {segmentValuesLimit}{' '}
-            values. <SegmentLimitsLink />
+            Segments is an experimental feature, currently limited to at most{' '}
+            {segmentValuesLimit} values. <SegmentLimitsLink />
         </Alert>
     );
 };
@@ -65,22 +44,6 @@ export const SegmentDocsStrategyWarning = () => {
             Strategies are limited to {strategySegmentsLimit} segments.{' '}
             <SegmentLimitsLink />
         </Alert>
-    );
-};
-
-const SegmentDocsLink = () => {
-    return (
-        <>
-            <a
-                href={segmentsDocsLink}
-                target="_blank"
-                rel="noreferrer"
-                style={{ color: 'inherit' }}
-            >
-                Read more about segments in the documentation
-            </a>
-            .
-        </>
     );
 };
 

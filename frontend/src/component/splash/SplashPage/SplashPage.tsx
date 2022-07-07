@@ -1,5 +1,4 @@
 import { useNavigate, Navigate } from 'react-router-dom';
-import { SplashPageEnvironments } from '../SplashPageEnvironments/SplashPageEnvironments';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useSplashApi from 'hooks/api/actions/useSplashApi/useSplashApi';
 import { SplashPageOperators } from 'component/splash/SplashPageOperators/SplashPageOperators';
@@ -31,8 +30,6 @@ export const SplashPage = () => {
     }
 
     switch (splashId) {
-        case 'environments':
-            return <SplashPageEnvironments />;
         case 'operators':
             return <SplashPageOperators />;
         default:

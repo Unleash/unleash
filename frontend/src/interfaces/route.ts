@@ -17,5 +17,5 @@ interface IRouteMenu {
     mobile?: boolean;
     advanced?: boolean;
     adminSettings?: boolean;
-    isBilling?: boolean;
+    isEnterprise?: boolean;
 }

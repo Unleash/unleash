@@ -17,7 +17,6 @@ export const HelpIcon = ({ tooltip, style }: IHelpIconProps) => {
                 className={styles.container}
                 style={style}
                 tabIndex={0}
-                role="tooltip"
                 aria-label="Help"
             >
                 <Info className={styles.icon} />

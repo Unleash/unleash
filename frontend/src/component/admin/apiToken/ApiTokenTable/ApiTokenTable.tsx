@@ -56,24 +56,21 @@ export const ApiTokenTable = () => {
         setHiddenColumns(hiddenColumns);
     }, [setHiddenColumns, hiddenColumns]);
 
-    const headerSearch = (
-        <Search initialValue={globalFilter} onChange={setGlobalFilter} />
-    );
-
-    const headerActions = (
-        <>
-            {headerSearch}
-            <PageHeader.Divider />
-            <CreateApiTokenButton />
-        </>
-    );
-
     return (
         <PageContent
             header={
                 <PageHeader
                     title={`API access (${rows.length})`}
-                    actions={headerActions}
+                    actions={
+                        <>
+                            <Search
+                                initialValue={globalFilter}
+                                onChange={setGlobalFilter}
+                            />
+                            <PageHeader.Divider />
+                            <CreateApiTokenButton />
+                        </>
+                    }
                 />
             }
         >

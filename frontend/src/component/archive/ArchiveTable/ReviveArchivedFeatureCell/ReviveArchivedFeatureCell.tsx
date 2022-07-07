@@ -19,7 +19,7 @@ export const ReviveArchivedFeatureCell: VFC<IReviveArchivedFeatureCell> = ({
                 onClick={onRevive}
                 projectId={project}
                 permission={UPDATE_FEATURE}
-                tooltipProps={{ title: 'Revive feature' }}
+                tooltipProps={{ title: 'Revive feature toggle' }}
             >
                 <Undo />
             </PermissionIconButton>

@@ -11,7 +11,7 @@ import {
 import { useTable, useGlobalFilter, useSortBy } from 'react-table';
 import { CreateSegmentButton } from 'component/segments/CreateSegmentButton/CreateSegmentButton';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { useMediaQuery, Box } from '@mui/material';
+import { useMediaQuery } from '@mui/material';
 import { sortTypes } from 'utils/sortTypes';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { useMemo, useEffect, useState } from 'react';
@@ -22,7 +22,6 @@ import { SegmentActionCell } from 'component/segments/SegmentActionCell/SegmentA
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import theme from 'themes/theme';
-import { SegmentDocsWarning } from 'component/segments/SegmentDocs/SegmentDocs';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Search } from 'component/common/Search/Search';
 
@@ -99,9 +98,6 @@ export const SegmentTable = () => {
             }
             isLoading={loading}
         >
-            <Box sx={{ mb: 4 }}>
-                <SegmentDocsWarning />
-            </Box>
             <ConditionallyRender
                 condition={!loading && data.length === 0}
                 show={
@@ -166,7 +162,7 @@ const COLUMNS = [
     {
         Header: 'Name',
         accessor: 'name',
-        width: '80%',
+        width: '60%',
         Cell: ({ value, row: { original } }: any) => (
             <HighlightCell value={value} subtitle={original.description} />
         ),
@@ -181,6 +177,7 @@ const COLUMNS = [
     {
         Header: 'Created by',
         accessor: 'createdBy',
+        width: '25%',
     },
     {
         Header: 'Actions',

@@ -1,53 +1,49 @@
 import React, { useState } from 'react';
 import classnames from 'classnames';
-import { Avatar, TextField, Typography, Alert } from '@mui/material';
+import { Avatar, TextField, Typography } from '@mui/material';
 import { trim } from 'component/common/util';
 import { modalStyles } from 'component/admin/users/util';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import PasswordChecker from 'component/user/common/ResetPasswordForm/PasswordChecker/PasswordChecker';
+import PasswordChecker, {
+    PASSWORD_FORMAT_MESSAGE,
+} from 'component/user/common/ResetPasswordForm/PasswordChecker/PasswordChecker';
 import { useThemeStyles } from 'themes/themeStyles';
 import PasswordMatcher from 'component/user/common/ResetPasswordForm/PasswordMatcher/PasswordMatcher';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { IUser } from 'interfaces/user';
+import useAdminUsersApi from 'hooks/api/actions/useAdminUsersApi/useAdminUsersApi';
 
 interface IChangePasswordProps {
     showDialog: boolean;
     closeDialog: () => void;
-    changePassword: (userId: number, password: string) => Promise<Response>;
     user: IUser;
 }
 
 const ChangePassword = ({
     showDialog,
     closeDialog,
-    changePassword,
     user,
 }: IChangePasswordProps) => {
     const [data, setData] = useState<Record<string, string>>({});
-    const [error, setError] = useState<Record<string, string>>({});
+    const [error, setError] = useState<string>();
     const [validPassword, setValidPassword] = useState(false);
     const { classes: themeStyles } = useThemeStyles();
+    const { changePassword } = useAdminUsersApi();
 
     const updateField: React.ChangeEventHandler<HTMLInputElement> = event => {
-        setError({});
+        setError(undefined);
         setData({ ...data, [event.target.name]: trim(event.target.value) });
     };
 
     const submit = async (event: React.SyntheticEvent) => {
         event.preventDefault();
 
+        if (data.password !== data.confirm) {
+            return;
+        }
+
         if (!validPassword) {
-            if (!data.password || data.password.length < 8) {
-                setError({
-                    password:
-                        'You must specify a password with at least 8 chars.',
-                });
-                return;
-            }
-            if (!(data.password === data.confirm)) {
-                setError({ confirm: 'Passwords does not match' });
-                return;
-            }
+            setError(PASSWORD_FORMAT_MESSAGE);
+            return;
         }
 
         try {
@@ -55,16 +51,15 @@ const ChangePassword = ({
             setData({});
             closeDialog();
         } catch (error: unknown) {
-            const msg =
-                (error instanceof Error && error.message) ||
-                'Could not update password';
-            setError({ general: msg });
+            console.warn(error);
+            setError(PASSWORD_FORMAT_MESSAGE);
         }
     };
 
     const onCancel = (event: React.SyntheticEvent) => {
         event.preventDefault();
         setData({});
+        setError(undefined);
         closeDialog();
     };
 
@@ -77,6 +72,7 @@ const ChangePassword = ({
             primaryButtonText="Save"
             title="Update password"
             secondaryButtonText="Cancel"
+            maxWidth="xs"
         >
             <form
                 onSubmit={submit}
@@ -85,10 +81,6 @@ const ChangePassword = ({
                     themeStyles.flexColumn
                 )}
             >
-                <ConditionallyRender
-                    condition={Boolean(error.general)}
-                    show={<Alert severity="error">{error.general}</Alert>}
-                />
                 <Typography variant="subtitle1">
                     Changing password for user
                 </Typography>
@@ -117,7 +109,8 @@ const ChangePassword = ({
                     name="password"
                     type="password"
                     value={data.password}
-                    helperText={error.password}
+                    error={Boolean(error)}
+                    helperText={error}
                     onChange={updateField}
                     variant="outlined"
                     size="small"
@@ -127,8 +120,6 @@ const ChangePassword = ({
                     name="confirm"
                     type="password"
                     value={data.confirm}
-                    error={error.confirm !== undefined}
-                    helperText={error.confirm}
                     onChange={updateField}
                     variant="outlined"
                     size="small"

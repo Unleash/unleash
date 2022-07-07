@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, VFC } from 'react';
 import { ProjectAccessPage } from 'component/project/ProjectAccess/ProjectAccessPage';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -7,11 +7,17 @@ import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import AccessContext from 'contexts/AccessContext';
 import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import { usePageTitle } from 'hooks/usePageTitle';
 
-export const ProjectAccess = () => {
+interface IProjectAccess {
+    projectName: string;
+}
+
+export const ProjectAccess: VFC<IProjectAccess> = ({ projectName }) => {
     const projectId = useRequiredPathParam('projectId');
     const { hasAccess } = useContext(AccessContext);
     const { isOss } = useUiConfig();
+    usePageTitle(`Project access – ${projectName}`);
 
     if (isOss()) {
         return (

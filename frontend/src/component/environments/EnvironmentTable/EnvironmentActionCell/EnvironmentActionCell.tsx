@@ -4,11 +4,8 @@ import {
     UPDATE_ENVIRONMENT,
 } from 'component/providers/AccessProvider/permissions';
 import { Edit, Delete } from '@mui/icons-material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { IconButton, Tooltip } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import AccessContext from 'contexts/AccessContext';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { IEnvironment } from 'interfaces/environments';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import EnvironmentToggleConfirm from '../../EnvironmentToggleConfirm/EnvironmentToggleConfirm';
@@ -17,8 +14,8 @@ import useEnvironmentApi from 'hooks/api/actions/useEnvironmentApi/useEnvironmen
 import useProjectRolePermissions from 'hooks/api/getters/useProjectRolePermissions/useProjectRolePermissions';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import useToast from 'hooks/useToast';
-import { useId } from 'hooks/useId';
 import PermissionSwitch from 'component/common/PermissionSwitch/PermissionSwitch';
+import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 
 interface IEnvironmentTableActionsProps {
     environment: IEnvironment;
@@ -28,9 +25,6 @@ export const EnvironmentActionCell = ({
     environment,
 }: IEnvironmentTableActionsProps) => {
     const navigate = useNavigate();
-    const { hasAccess } = useContext(AccessContext);
-    const updatePermission = hasAccess(UPDATE_ENVIRONMENT);
-
     const { setToastApiError, setToastData } = useToast();
     const { refetchEnvironments } = useEnvironments();
     const { refetch: refetchPermissions } = useProjectRolePermissions();
@@ -95,84 +89,46 @@ export const EnvironmentActionCell = ({
         }
     };
 
-    const toggleIconTooltip = environment.enabled
-        ? `Disable environment ${environment.name}`
-        : `Enable environment ${environment.name}`;
-
-    const editId = useId();
-    const deleteId = useId();
-
     return (
         <ActionCell>
-            <ConditionallyRender
-                condition={updatePermission}
-                show={
-                    <>
-                        <Tooltip title={toggleIconTooltip} arrow describeChild>
-                            <PermissionSwitch
-                                permission={UPDATE_ENVIRONMENT}
-                                checked={environment.enabled}
-                                onClick={() => setToggleModal(true)}
-                                disabled={environment.protected}
-                            />
-                        </Tooltip>
-                        <ActionCell.Divider />
-                    </>
+            <PermissionSwitch
+                permission={UPDATE_ENVIRONMENT}
+                checked={environment.enabled}
+                disabled={environment.protected}
+                tooltip={
+                    environment.enabled
+                        ? `Disable environment ${environment.name}`
+                        : `Enable environment ${environment.name}`
                 }
+                onClick={() => setToggleModal(true)}
             />
-            <ConditionallyRender
-                condition={updatePermission}
-                show={
-                    <Tooltip
-                        title={
-                            environment.protected
-                                ? 'You cannot edit protected environment'
-                                : 'Edit environment'
-                        }
-                        arrow
-                    >
-                        <span id={editId}>
-                            <IconButton
-                                aria-describedby={editId}
-                                disabled={environment.protected}
-                                onClick={() => {
-                                    navigate(
-                                        `/environments/${environment.name}`
-                                    );
-                                }}
-                                size="large"
-                            >
-                                <Edit />
-                            </IconButton>
-                        </span>
-                    </Tooltip>
-                }
-            />
-            <ConditionallyRender
-                condition={hasAccess(DELETE_ENVIRONMENT)}
-                show={
-                    <Tooltip
-                        title={
-                            environment.protected
-                                ? 'You cannot delete protected environment'
-                                : 'Delete environment'
-                        }
-                        describeChild
-                        arrow
-                    >
-                        <span id={deleteId}>
-                            <IconButton
-                                aria-describedby={deleteId}
-                                disabled={environment.protected}
-                                onClick={() => setDeleteModal(true)}
-                                size="large"
-                            >
-                                <Delete />
-                            </IconButton>
-                        </span>
-                    </Tooltip>
-                }
-            />
+            <ActionCell.Divider />
+            <PermissionIconButton
+                permission={UPDATE_ENVIRONMENT}
+                disabled={environment.protected}
+                size="large"
+                tooltipProps={{
+                    title: environment.protected
+                        ? 'You cannot edit protected environment'
+                        : 'Edit environment',
+                }}
+                onClick={() => navigate(`/environments/${environment.name}`)}
+            >
+                <Edit />
+            </PermissionIconButton>
+            <PermissionIconButton
+                permission={DELETE_ENVIRONMENT}
+                disabled={environment.protected}
+                size="large"
+                tooltipProps={{
+                    title: environment.protected
+                        ? 'You cannot delete protected environment'
+                        : 'Delete environment',
+                }}
+                onClick={() => setDeleteModal(true)}
+            >
+                <Delete />
+            </PermissionIconButton>
             <EnvironmentDeleteConfirm
                 env={environment}
                 setDeldialogue={setDeleteModal}

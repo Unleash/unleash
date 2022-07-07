@@ -23,7 +23,6 @@ import { useAuthPermissions } from 'hooks/api/getters/useAuth/useAuthPermissions
 import { useStyles } from './Header.styles';
 import classNames from 'classnames';
 import { useId } from 'hooks/useId';
-import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
 import { IRoute } from 'interfaces/route';
 
 const Header: VFC = () => {
@@ -37,6 +36,7 @@ const Header: VFC = () => {
     const { permissions } = useAuthPermissions();
     const {
         uiConfig: { links, name, flags },
+        isOss,
     } = useUiConfig();
     const smallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const { classes: styles } = useStyles();
@@ -57,15 +57,18 @@ const Header: VFC = () => {
         }
     }, [permissions]);
 
-    const { isBilling } = useInstanceStatus();
     const routes = getRoutes();
+
+    const filterByEnterprise = (route: IRoute): boolean => {
+        return !route.menu.isEnterprise || !isOss();
+    };
 
     const filteredMainRoutes = {
         mainNavRoutes: routes.mainNavRoutes.filter(filterByFlags(flags)),
         mobileRoutes: routes.mobileRoutes.filter(filterByFlags(flags)),
         adminRoutes: routes.adminRoutes
             .filter(filterByFlags(flags))
-            .filter(filterByBilling(isBilling)),
+            .filter(filterByEnterprise),
     };
 
     if (smallScreen) {
@@ -195,8 +198,5 @@ const Header: VFC = () => {
         </AppBar>
     );
 };
-
-export const filterByBilling = (isBilling?: boolean) => (route: IRoute) =>
-    !route.menu.isBilling || isBilling;
 
 export default Header;

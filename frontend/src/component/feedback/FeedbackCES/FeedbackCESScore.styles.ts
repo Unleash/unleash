@@ -8,9 +8,9 @@ export const useStyles = makeStyles()(theme => ({
         margin: '0 auto',
     },
     scoreHelp: {
-        width: '8rem',
+        width: '6.25rem',
         whiteSpace: 'nowrap',
-        color: theme.palette.grey[600],
+        color: theme.palette.text.secondary,
         '&:first-of-type': {
             textAlign: 'right',
         },

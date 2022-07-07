@@ -1,4 +1,10 @@
-import { Checkbox, FormControlLabel, IconButton, Tooltip } from '@mui/material';
+import {
+    Checkbox,
+    Divider,
+    FormControlLabel,
+    IconButton,
+    Tooltip,
+} from '@mui/material';
 import { Delete } from '@mui/icons-material';
 import { useStyles } from './StrategyParameter.styles';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
@@ -69,7 +75,7 @@ export const StrategyParameter = ({
 
     return (
         <div className={styles.paramsContainer}>
-            <hr className={styles.divider} />
+            <Divider className={styles.divider} />
             <ConditionallyRender
                 condition={index === 0}
                 show={

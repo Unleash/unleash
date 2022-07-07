@@ -1,10 +1,6 @@
 import { IFeatureToggleListItem } from 'interfaces/featureToggle';
 import { PERMISSION, KILLSWITCH } from 'constants/featureToggleTypes';
-import {
-    getDiffInDays,
-    expired,
-    toggleExpiryByTypeMap,
-} from 'component/Reporting/utils';
+import { getDiffInDays, expired, toggleExpiryByTypeMap } from '../utils';
 import { subDays, parseISO } from 'date-fns';
 
 export const formatExpiredAt = (

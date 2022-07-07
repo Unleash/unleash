@@ -7,7 +7,7 @@ exports[`FeedbackCESForm 1`] = `
       class="tss-fdcp7c-container"
     >
       <h1
-        class="tss-1a5bydb-title"
+        class="tss-iyd7t0-title"
       >
         Please help us improve
       </h1>
@@ -24,7 +24,7 @@ exports[`FeedbackCESForm 1`] = `
           class="tss-io6e1g-scoreInput"
         >
           <span
-            class="tss-b4a690-scoreHelp"
+            class="tss-16omcck-scoreHelp"
           >
             Very difficult
           </span>
@@ -113,7 +113,7 @@ exports[`FeedbackCESForm 1`] = `
             </span>
           </label>
           <span
-            class="tss-b4a690-scoreHelp"
+            class="tss-16omcck-scoreHelp"
           >
             Very easy
           </span>

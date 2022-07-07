@@ -61,7 +61,7 @@ const PermissionIconButton = ({
             arrow
             onClick={e => e.preventDefault()}
         >
-            <div id={id} role="tooltip">
+            <div id={id}>
                 <IconButton
                     {...rest}
                     disabled={!access || disabled}

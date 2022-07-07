@@ -33,34 +33,55 @@ const Project = () => {
     const { isOss } = useUiConfig();
 
     const basePath = `/projects/${projectId}`;
+    const projectName = project?.name || projectId;
     const tabData = [
         {
             title: 'Overview',
-            component: <ProjectOverview projectId={projectId} />,
+            component: (
+                <ProjectOverview
+                    projectId={projectId}
+                    projectName={projectName}
+                />
+            ),
             path: basePath,
             name: 'overview',
         },
         {
             title: 'Health',
-            component: <ProjectHealth projectId={projectId} />,
+            component: (
+                <ProjectHealth
+                    projectId={projectId}
+                    projectName={projectName}
+                />
+            ),
             path: `${basePath}/health`,
             name: 'health',
         },
         {
             title: 'Access',
-            component: <ProjectAccess />,
+            component: <ProjectAccess projectName={projectName} />,
             path: `${basePath}/access`,
             name: 'access',
         },
         {
             title: 'Environments',
-            component: <ProjectEnvironment projectId={projectId} />,
+            component: (
+                <ProjectEnvironment
+                    projectId={projectId}
+                    projectName={projectName}
+                />
+            ),
             path: `${basePath}/environments`,
             name: 'environments',
         },
         {
             title: 'Archive',
-            component: <ProjectFeaturesArchive projectId={projectId} />,
+            component: (
+                <ProjectFeaturesArchive
+                    projectId={projectId}
+                    projectName={projectName}
+                />
+            ),
             path: `${basePath}/archive`,
             name: 'archive',
         },
@@ -116,7 +137,7 @@ const Project = () => {
                 <div className={styles.innerContainer}>
                     <h2 className={styles.title}>
                         <div className={styles.titleText} data-loading>
-                            {project?.name || projectId}
+                            {projectName}
                         </div>
                         <PermissionIconButton
                             permission={UPDATE_PROJECT}

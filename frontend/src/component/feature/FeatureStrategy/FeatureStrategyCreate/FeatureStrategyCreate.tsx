@@ -121,7 +121,7 @@ export const formatCreateStrategyPath = (
     return `/projects/${projectId}/features/${featureId}/strategies/create?${params}`;
 };
 
-const formatAddStrategyApiCode = (
+export const formatAddStrategyApiCode = (
     projectId: string,
     featureId: string,
     environmentId: string,
@@ -132,7 +132,7 @@ const formatAddStrategyApiCode = (
         return '';
     }
 
-    const url = `${unleashUrl}/api/admin/projects/${projectId}/features/${featureId}/${environmentId}/development/strategies`;
+    const url = `${unleashUrl}/api/admin/projects/${projectId}/features/${featureId}/environments/${environmentId}/strategies`;
     const payload = JSON.stringify(strategy, undefined, 2);
 
     return `curl --location --request POST '${url}' \\

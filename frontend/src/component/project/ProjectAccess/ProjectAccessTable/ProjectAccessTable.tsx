@@ -7,7 +7,7 @@ import {
     TableCell,
     SortableTableHeader,
 } from 'component/common/Table';
-import { Avatar, Box, SelectChangeEvent } from '@mui/material';
+import { Avatar, SelectChangeEvent } from '@mui/material';
 import { Delete } from '@mui/icons-material';
 import { sortTypes } from 'utils/sortTypes';
 import {
@@ -18,6 +18,7 @@ import { ProjectRoleCell } from './ProjectRoleCell/ProjectRoleCell';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
+import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 
 const initialState = {
     sortBy: [{ id: 'name' }],
@@ -94,16 +95,10 @@ export const ProjectAccessTable: VFC<IProjectAccessTableProps> = ({
                 align: 'center',
                 width: 80,
                 Cell: ({ row: { original: user } }: any) => (
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                        }}
-                    >
+                    <ActionCell>
                         <PermissionIconButton
                             permission={UPDATE_PROJECT}
                             projectId={projectId}
-                            edge="end"
                             onClick={() => handleRemoveAccess(user)}
                             disabled={access.users.length === 1}
                             tooltipProps={{
@@ -115,7 +110,7 @@ export const ProjectAccessTable: VFC<IProjectAccessTableProps> = ({
                         >
                             <Delete />
                         </PermissionIconButton>
-                    </Box>
+                    </ActionCell>
                 ),
             },
         ],

@@ -35,6 +35,8 @@ const LOWERCASE_ERROR =
     'The password must contain at least one lowercase letter.';
 const REPEATING_CHARACTER_ERROR =
     'The password may not contain sequences of three or more repeated characters.';
+export const PASSWORD_FORMAT_MESSAGE =
+    'The password must be at least 10 characters long and must include an uppercase letter, a lowercase letter, a number, and a symbol.';
 
 const PasswordChecker = ({
     password,
@@ -159,7 +161,7 @@ const PasswordChecker = ({
         <>
             <Typography variant="body2" className={styles.title} data-loading>
                 Please set a strong password
-                <HelpIcon tooltip="Your password needs to be at least ten characters long, and include an uppercase letter, a lowercase letter, a number and a symbol to be a valid OWASP password" />
+                <HelpIcon tooltip={PASSWORD_FORMAT_MESSAGE} />
             </Typography>
             <div
                 className={styles.container}

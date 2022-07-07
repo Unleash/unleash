@@ -148,7 +148,7 @@ export const formatEditStrategyPath = (
     return `/projects/${projectId}/features/${featureId}/strategies/edit?${params}`;
 };
 
-const formatUpdateStrategyApiCode = (
+export const formatUpdateStrategyApiCode = (
     projectId: string,
     featureId: string,
     environmentId: string,
@@ -159,7 +159,7 @@ const formatUpdateStrategyApiCode = (
         return '';
     }
 
-    const url = `${unleashUrl}/api/admin/projects/${projectId}/features/${featureId}/${environmentId}/development/strategies/${strategy.id}`;
+    const url = `${unleashUrl}/api/admin/projects/${projectId}/features/${featureId}/environments/${environmentId}/strategies/${strategy.id}`;
     const payload = JSON.stringify(strategy, undefined, 2);
 
     return `curl --location --request PUT '${url}' \\

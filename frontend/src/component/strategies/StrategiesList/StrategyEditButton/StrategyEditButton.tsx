@@ -5,6 +5,7 @@ import { Edit } from '@mui/icons-material';
 import { IconButton, Tooltip } from '@mui/material';
 import { UPDATE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { IStrategy } from 'interfaces/strategy';
+import { useId } from 'hooks/useId';
 
 interface IStrategyEditButtonProps {
     strategy: IStrategy;
@@ -14,26 +15,30 @@ interface IStrategyEditButtonProps {
 export const StrategyEditButton: VFC<IStrategyEditButtonProps> = ({
     strategy,
     onClick,
-}) => (
-    <ConditionallyRender
-        condition={strategy?.editable}
-        show={
-            <PermissionIconButton
-                onClick={onClick}
-                permission={UPDATE_STRATEGY}
-                tooltipProps={{ title: 'Edit strategy' }}
-            >
-                <Edit />
-            </PermissionIconButton>
-        }
-        elseShow={
-            <Tooltip title="You cannot edit a built-in strategy" arrow>
-                <div>
-                    <IconButton disabled size="large">
-                        <Edit titleAccess="Edit strategy" />
-                    </IconButton>
-                </div>
-            </Tooltip>
-        }
-    />
-);
+}) => {
+    const id = useId();
+
+    return (
+        <ConditionallyRender
+            condition={strategy?.editable}
+            show={
+                <PermissionIconButton
+                    onClick={onClick}
+                    permission={UPDATE_STRATEGY}
+                    tooltipProps={{ title: 'Edit strategy' }}
+                >
+                    <Edit />
+                </PermissionIconButton>
+            }
+            elseShow={
+                <Tooltip title="You cannot edit a built-in strategy" arrow>
+                    <div id={id}>
+                        <IconButton disabled size="large">
+                            <Edit aria-labelledby={id} />
+                        </IconButton>
+                    </div>
+                </Tooltip>
+            }
+        />
+    );
+};

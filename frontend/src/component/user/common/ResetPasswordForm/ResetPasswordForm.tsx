@@ -115,7 +115,7 @@ const ResetPasswordForm = ({ token, setLoading }: IResetPasswordProps) => {
                         setPassword(e.target.value)
                     }
                     onFocus={() => setShowPasswordChecker(true)}
-                    autoComplete="password"
+                    autoComplete="new-password"
                     data-loading
                 />
                 <PasswordField
@@ -124,7 +124,7 @@ const ResetPasswordForm = ({ token, setLoading }: IResetPasswordProps) => {
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                         setConfirmPassword(e.target.value)
                     }
-                    autoComplete="confirm-password"
+                    autoComplete="new-password"
                     data-loading
                 />
                 <ConditionallyRender

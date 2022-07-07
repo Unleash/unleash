@@ -5,11 +5,11 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { IInstanceStatus, InstanceState } from 'interfaces/instance';
+import { IInstanceStatus } from 'interfaces/instance';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import AccessContext from 'contexts/AccessContext';
 import useInstanceStatusApi from 'hooks/api/actions/useInstanceStatusApi/useInstanceStatusApi';
-import { hasTrialExpired } from 'utils/instanceTrial';
+import { trialHasExpired, canExtendTrial } from 'utils/instanceTrial';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 
@@ -24,16 +24,25 @@ const TrialDialog: VFC<ITrialDialogProps> = ({
 }) => {
     const { hasAccess } = useContext(AccessContext);
     const navigate = useNavigate();
-    const trialHasExpired = hasTrialExpired(instanceStatus);
-    const [dialogOpen, setDialogOpen] = useState(trialHasExpired);
+    const expired = trialHasExpired(instanceStatus);
+    const [dialogOpen, setDialogOpen] = useState(expired);
+
+    const onClose = (event: React.SyntheticEvent, muiCloseReason?: string) => {
+        if (!muiCloseReason) {
+            setDialogOpen(false);
+            if (canExtendTrial(instanceStatus)) {
+                onExtendTrial().catch(console.error);
+            }
+        }
+    };
 
     useEffect(() => {
-        setDialogOpen(trialHasExpired);
+        setDialogOpen(expired);
         const interval = setInterval(() => {
-            setDialogOpen(trialHasExpired);
+            setDialogOpen(expired);
         }, 60000);
         return () => clearInterval(interval);
-    }, [trialHasExpired]);
+    }, [expired]);
 
     if (hasAccess(ADMIN)) {
         return (
@@ -41,23 +50,15 @@ const TrialDialog: VFC<ITrialDialogProps> = ({
                 open={dialogOpen}
                 primaryButtonText="Upgrade trial"
                 secondaryButtonText={
-                    instanceStatus?.trialExtended
-                        ? 'Remind me later'
-                        : 'Extend trial (5 days)'
+                    canExtendTrial(instanceStatus)
+                        ? 'Extend trial (5 days)'
+                        : 'Remind me later'
                 }
                 onClick={() => {
                     navigate('/admin/billing');
                     setDialogOpen(false);
                 }}
-                onClose={(_: any, reason?: string) => {
-                    if (
-                        reason !== 'backdropClick' &&
-                        reason !== 'escapeKeyDown'
-                    ) {
-                        onExtendTrial();
-                        setDialogOpen(false);
-                    }
-                }}
+                onClose={onClose}
                 title={`Your free ${instanceStatus.plan} trial has expired!`}
             >
                 <Typography>
@@ -92,16 +93,11 @@ export const InstanceStatus: FC = ({ children }) => {
     const { setToastApiError } = useToast();
 
     const onExtendTrial = async () => {
-        if (
-            instanceStatus?.state === InstanceState.TRIAL &&
-            !instanceStatus?.trialExtended
-        ) {
-            try {
-                await extendTrial();
-                await refetchInstanceStatus();
-            } catch (error: unknown) {
-                setToastApiError(formatUnknownError(error));
-            }
+        try {
+            await extendTrial();
+            await refetchInstanceStatus();
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
         }
     };
 

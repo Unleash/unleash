@@ -6,11 +6,12 @@ import { useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import AccessContext from 'contexts/AccessContext';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
-    hasTrialExpired,
-    formatTrialExpirationWarning,
+    trialHasExpired,
+    trialExpiresSoon,
+    isTrialInstance,
 } from 'utils/instanceTrial';
+import { formatDistanceToNowStrict, parseISO } from 'date-fns';
 
 const StyledWarningBar = styled('aside')(({ theme }) => ({
     position: 'relative',
@@ -61,57 +62,74 @@ interface IInstanceStatusBarProps {
 export const InstanceStatusBar = ({
     instanceStatus,
 }: IInstanceStatusBarProps) => {
-    const { hasAccess } = useContext(AccessContext);
-    const trialHasExpired = hasTrialExpired(instanceStatus);
-    const trialExpirationWarning = formatTrialExpirationWarning(instanceStatus);
-
-    if (trialHasExpired) {
-        return (
-            <StyledWarningBar data-testid={INSTANCE_STATUS_BAR_ID}>
-                <StyledWarningIcon />
-                <Typography
-                    sx={theme => ({
-                        fontSize: theme.fontSizes.smallBody,
-                    })}
-                >
-                    <strong>Warning!</strong> Your free {instanceStatus.plan}{' '}
-                    trial has expired. <strong>Upgrade trial</strong> otherwise
-                    your <strong>account will be deleted.</strong>
-                </Typography>
-                <ConditionallyRender
-                    condition={hasAccess(ADMIN)}
-                    show={<UpgradeButton />}
-                />
-            </StyledWarningBar>
-        );
+    if (trialHasExpired(instanceStatus)) {
+        return <StatusBarExpired instanceStatus={instanceStatus} />;
     }
 
-    if (trialExpirationWarning) {
-        return (
-            <StyledInfoBar data-testid={INSTANCE_STATUS_BAR_ID}>
-                <StyledInfoIcon />
-                <Typography
-                    sx={theme => ({
-                        fontSize: theme.fontSizes.smallBody,
-                    })}
-                >
-                    <strong>Heads up!</strong> You have{' '}
-                    <strong>{trialExpirationWarning}</strong> left of your free{' '}
-                    {instanceStatus.plan} trial.
-                </Typography>
-                <ConditionallyRender
-                    condition={hasAccess(ADMIN)}
-                    show={<UpgradeButton />}
-                />
-            </StyledInfoBar>
-        );
+    if (trialExpiresSoon(instanceStatus)) {
+        return <StatusBarExpiresSoon instanceStatus={instanceStatus} />;
+    }
+
+    if (isTrialInstance(instanceStatus)) {
+        return <StatusBarExpiresLater instanceStatus={instanceStatus} />;
     }
 
     return null;
 };
 
-const UpgradeButton = () => {
+const StatusBarExpired = ({ instanceStatus }: IInstanceStatusBarProps) => {
+    return (
+        <StyledWarningBar data-testid={INSTANCE_STATUS_BAR_ID}>
+            <StyledWarningIcon />
+            <Typography sx={theme => ({ fontSize: theme.fontSizes.smallBody })}>
+                <strong>Warning!</strong> Your free {instanceStatus.plan} trial
+                has expired. <strong>Upgrade trial</strong> otherwise your{' '}
+                <strong>account will be deleted.</strong>
+            </Typography>
+            <BillingLink />
+        </StyledWarningBar>
+    );
+};
+
+const StatusBarExpiresSoon = ({ instanceStatus }: IInstanceStatusBarProps) => {
+    const timeRemaining = formatDistanceToNowStrict(
+        parseISO(instanceStatus.trialExpiry!),
+        { roundingMethod: 'floor' }
+    );
+
+    return (
+        <StyledInfoBar data-testid={INSTANCE_STATUS_BAR_ID}>
+            <StyledInfoIcon />
+            <Typography sx={theme => ({ fontSize: theme.fontSizes.smallBody })}>
+                <strong>Heads up!</strong> You have{' '}
+                <strong>{timeRemaining}</strong> left of your free{' '}
+                {instanceStatus.plan} trial.
+            </Typography>
+            <BillingLink />
+        </StyledInfoBar>
+    );
+};
+
+const StatusBarExpiresLater = ({ instanceStatus }: IInstanceStatusBarProps) => {
+    return (
+        <StyledInfoBar data-testid={INSTANCE_STATUS_BAR_ID}>
+            <StyledInfoIcon />
+            <Typography sx={theme => ({ fontSize: theme.fontSizes.smallBody })}>
+                <strong>Heads up!</strong> You're currently on a free{' '}
+                {instanceStatus.plan} trial account.
+            </Typography>
+            <BillingLink />
+        </StyledInfoBar>
+    );
+};
+
+const BillingLink = () => {
+    const { hasAccess } = useContext(AccessContext);
     const navigate = useNavigate();
+
+    if (!hasAccess(ADMIN)) {
+        return null;
+    }
 
     return (
         <StyledButton

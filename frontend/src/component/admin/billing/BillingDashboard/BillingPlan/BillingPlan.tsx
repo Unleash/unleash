@@ -9,7 +9,7 @@ import {
     InstanceState,
     InstancePlan,
 } from 'interfaces/instance';
-import { hasTrialExpired } from 'utils/instanceTrial';
+import { trialHasExpired, isTrialInstance } from 'utils/instanceTrial';
 import { GridRow } from 'component/common/GridRow/GridRow';
 import { GridCol } from 'component/common/GridCol/GridCol';
 import { GridColLink } from './GridColLink/GridColLink';
@@ -81,7 +81,7 @@ interface IBillingPlanProps {
 
 export const BillingPlan: FC<IBillingPlanProps> = ({ instanceStatus }) => {
     const { users } = useUsers();
-    const trialHasExpired = hasTrialExpired(instanceStatus);
+    const expired = trialHasExpired(instanceStatus);
 
     const price = {
         [InstancePlan.PRO]: 80,
@@ -124,18 +124,16 @@ export const BillingPlan: FC<IBillingPlanProps> = ({ instanceStatus }) => {
                                 {instanceStatus.plan}
                             </StyledPlanSpan>
                             <ConditionallyRender
-                                condition={
-                                    instanceStatus.state === InstanceState.TRIAL
-                                }
+                                condition={isTrialInstance(instanceStatus)}
                                 show={
                                     <StyledTrialSpan
                                         sx={theme => ({
-                                            color: trialHasExpired
+                                            color: expired
                                                 ? theme.palette.error.dark
                                                 : theme.palette.warning.dark,
                                         })}
                                     >
-                                        {trialHasExpired
+                                        {expired
                                             ? 'Trial expired'
                                             : instanceStatus.trialExtended
                                             ? 'Extended Trial'

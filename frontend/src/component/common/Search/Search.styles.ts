@@ -16,7 +16,7 @@ export const useStyles = makeStyles()(theme => ({
         display: 'flex',
         alignItems: 'center',
         backgroundColor: theme.palette.background.paper,
-        border: `1px solid ${theme.palette.grey[300]}`,
+        border: `1px solid ${theme.palette.grey[500]}`,
         borderRadius: theme.shape.borderRadiusExtraLarge,
         padding: '3px 5px 3px 12px',
         width: '100%',

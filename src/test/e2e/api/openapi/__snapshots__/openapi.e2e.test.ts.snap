@@ -1781,6 +1781,27 @@ Object {
               "name": Object {
                 "type": "string",
               },
+              "payload": Object {
+                "additionalProperties": false,
+                "properties": Object {
+                  "type": Object {
+                    "enum": Array [
+                      "json",
+                      "csv",
+                      "string",
+                    ],
+                    "type": "string",
+                  },
+                  "value": Object {
+                    "type": "string",
+                  },
+                },
+                "required": Array [
+                  "type",
+                  "value",
+                ],
+                "type": "object",
+              },
             },
             "required": Array [
               "name",

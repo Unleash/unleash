@@ -5,13 +5,22 @@ import dbInit, { ITestDb } from '../../helpers/database-init';
 import { IUnleashTest, setupAppWithAuth } from '../../helpers/test-helper';
 import { WeightType } from '../../../../lib/types/model';
 import getLogger from '../../../fixtures/no-logger';
+import { ApiTokenType } from '../../../../lib/types/models/api-token';
 
 let app: IUnleashTest;
 let db: ITestDb;
+let token;
 
 beforeAll(async () => {
     db = await dbInit('playground_api_serial', getLogger);
     app = await setupAppWithAuth(db.stores);
+    const { apiTokenService } = app.services;
+    token = await apiTokenService.createApiTokenWithProjects({
+        type: ApiTokenType.ADMIN,
+        username: 'tester',
+        environment: '*',
+        projects: ['*'],
+    });
 });
 
 afterAll(async () => {
@@ -48,6 +57,7 @@ describe('Playground API E2E', () => {
 
                         const { body } = await app.request
                             .post('/api/admin/playground')
+                            .set('Authorization', token.secret)
                             .send(request)
                             .expect(200);
 
@@ -109,6 +119,7 @@ describe('Playground API E2E', () => {
 
                         const { body } = await app.request
                             .post('/api/admin/playground')
+                            .set('Authorization', token.secret)
                             .send(payload)
                             .expect(200);
 

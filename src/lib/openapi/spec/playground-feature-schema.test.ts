@@ -7,12 +7,36 @@ import {
 import { urlFriendlyString } from './playground-request-schema.test';
 
 export const generate = (): Arbitrary<PlaygroundFeatureSchema> =>
-    fc.record({
-        isEnabled: fc.boolean(),
-        projectId: urlFriendlyString(),
-        name: urlFriendlyString(),
-        variant: fc.option(urlFriendlyString()),
-    });
+    fc.boolean().chain((isEnabled) =>
+        fc.record({
+            isEnabled: fc.constant(isEnabled),
+            projectId: urlFriendlyString(),
+            name: urlFriendlyString(),
+            variant: fc.record(
+                {
+                    name: urlFriendlyString(),
+                    enabled: fc.constant(isEnabled),
+                    payload: fc.oneof(
+                        fc.record({
+                            type: fc.constant('json' as 'json'),
+                            value: fc.json(),
+                        }),
+                        fc.record({
+                            type: fc.constant('csv' as 'csv'),
+                            value: fc
+                                .array(fc.lorem())
+                                .map((ls) => ls.join(',')),
+                        }),
+                        fc.record({
+                            type: fc.constant('string' as 'string'),
+                            value: fc.string(),
+                        }),
+                    ),
+                },
+                { requiredKeys: ['name', 'enabled'] },
+            ),
+        }),
+    );
 
 test('playgroundFeatureSchema', () =>
     fc.assert(

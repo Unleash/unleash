@@ -12,7 +12,25 @@ export const playgroundFeatureSchema = {
         projectId: { type: 'string', examples: ['my-project'] },
         isEnabled: { type: 'boolean', examples: [true] },
         variant: {
-            type: 'string',
+            type: 'object',
+            additionalProperties: false,
+            required: ['name', 'enabled'],
+            properties: {
+                name: { type: 'string' },
+                enabled: { type: 'boolean' },
+                payload: {
+                    type: 'object',
+                    additionalProperties: false,
+                    required: ['type', 'value'],
+                    properties: {
+                        type: {
+                            type: 'string',
+                            enum: ['json', 'csv', 'string'],
+                        },
+                        value: { type: 'string' },
+                    },
+                },
+            },
             nullable: true,
             examples: ['green'],
         },

@@ -76,22 +76,12 @@ export class PlaygroundService {
 
         const output: PlaygroundFeatureSchema[] = await Promise.all(
             client.getFeatureToggleDefinitions().map(async (x) => {
-                const variantDef = client.getVariant(x.name, clientContext);
-
-                console.log(x.name, variantDef, client.isEnabled(x.name));
-
-                const variant =
-                    variantDef.name === 'disabled' &&
-                    variantDef.enabled === false
-                        ? null
-                        : variantDef.name;
-
                 return {
                     isEnabled: client.isEnabled(x.name, clientContext),
                     projectId: await this.featureToggleService.getProjectId(
                         x.name,
                     ),
-                    variant: variant,
+                    variant: client.getVariant(x.name),
                     name: x.name,
                 };
             }),

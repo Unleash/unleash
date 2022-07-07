@@ -197,9 +197,11 @@ describe('Playground API E2E', () => {
                             mapped &&
                             x.name === mapped.name &&
                             x.project === mapped.projectId &&
-                            x.variants
-                                .map((v) => v.name)
-                                .includes(mapped.variant)
+                            x.variants.some(
+                                ({ name, payload }) =>
+                                    name === mapped.variant.name &&
+                                    payload === mapped.variant.payload,
+                            )
                         );
                     });
                 })

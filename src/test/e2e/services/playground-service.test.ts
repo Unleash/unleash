@@ -37,7 +37,15 @@ afterAll(async () => {
 });
 
 describe('the playground service (e2e)', () => {
-    test('should return the same enabled toggles as the raw SDK', async () => {
+    const isDisabledVariant = ({
+        name,
+        enabled,
+    }: {
+        name: string;
+        enabled: boolean;
+    }) => name === 'disabled' && !enabled;
+
+    test('should return the same enabled toggles as the raw SDK correctly mapped', async () => {
         await fc.assert(
             fc
                 .asyncProperty(
@@ -88,97 +96,30 @@ describe('the playground service (e2e)', () => {
                                 client.isEnabled(x.name, clientContext);
 
                             // if x.isEnabled then variant should === variant.name. Otherwise it should be null
-                            if (x.isEnabled) {
-                                const variant = client.getVariant(
-                                    x.name,
-                                    clientContext,
-                                ).name;
 
-                                const b = x.variant
-                                    ? x.variant === variant
-                                    : variant === null;
-
-                                return a && b;
+                            // if x is disabled, then the variant will be the
+                            // disabled variant.
+                            if (!x.isEnabled) {
+                                return a && isDisabledVariant(x.variant);
                             }
 
-                            return a;
-                        });
-                    },
-                )
-                .afterEach(async () => {
-                    await stores.featureToggleStore.deleteAll();
-                }),
-        );
-    });
-
-    test('should map correctly from SDK output to endpoint output', async () => {
-        await fc.assert(
-            fc
-                .asyncProperty(
-                    generateToggles({ minLength: 1 }).map((xs) =>
-                        xs.map((x) => ({
-                            ...x,
-                            strategies: x.strategies.map((s) => ({
-                                ...s,
-                                constraints: [],
-                            })),
-                        })),
-                    ),
-                    generateContext(),
-                    async (toggles, context) => {
-                        await Promise.all(
-                            toggles.map((t) =>
-                                stores.featureToggleStore.create(t.project, {
-                                    ...t,
-                                    createdAt: undefined,
-                                    variants: [
-                                        ...(t.variants ?? []).map(
-                                            (variant) => ({
-                                                ...variant,
-                                                weightType: WeightType.VARIABLE,
-                                                stickiness: 'default',
-                                            }),
-                                        ),
-                                    ],
-                                }),
-                            ),
-                        );
-
-                        const projects = '*';
-                        const env = 'default';
-
-                        const serviceToggles: PlaygroundFeatureSchema[] =
-                            await service.evaluateQuery(projects, env, context);
-
-                        const createDict = (xs: { name: string }[]) =>
-                            xs.reduce(
-                                (acc, next) => ({ ...acc, [next.name]: next }),
-                                {},
+                            const clientVariant = client.getVariant(
+                                x.name,
+                                clientContext,
                             );
 
-                        expect(serviceToggles.length).toEqual(toggles.length);
-
-                        const serviceDict = createDict(serviceToggles);
-
-                        return toggles.every((x) => {
-                            const mapped: PlaygroundFeatureSchema =
-                                serviceDict[x.name];
-
-                            const variants = x.variants ?? [];
-                            const variantIsValid =
-                                mapped.isEnabled && variants.length > 0
-                                    ? variants
-                                          .map((v) => v.name)
-                                          .includes(mapped.variant)
-                                    : mapped.variant === null;
-                            // ^ the mapped variant must be one of the original variants
-                            // if they exist. If they do not exist, then the mapped
-                            // variant must be null.
+                            // if x is enabled, but its variant is the disabled
+                            // variant, then the source does not have any
+                            // variants
+                            if (x.isEnabled && isDisabledVariant(x.variant)) {
+                                return a && isDisabledVariant(clientVariant);
+                            }
 
                             return (
-                                x.name === mapped.name &&
-                                variantIsValid &&
-                                x.project === mapped.projectId
+                                a &&
+                                clientVariant.name === x.variant.name &&
+                                clientVariant.enabled === x.variant.enabled &&
+                                clientVariant.payload === x.variant.payload
                             );
                         });
                     },
@@ -252,5 +193,33 @@ describe('offline client', () => {
         expect(client.isEnabled(name)).toBeFalsy();
         expect(client.getVariant(name).name).toEqual('disabled');
         expect(client.getVariant(name).enabled).toBeFalsy();
+    });
+
+    it('returns the disabled variant if there are no variants', async () => {
+        const name = 'toggle-name';
+        const client = await offlineUnleashClient(
+            [
+                {
+                    strategies: [
+                        {
+                            name: 'default',
+                            constraints: [],
+                            parameters: {},
+                        },
+                    ],
+                    stale: false,
+                    enabled: false,
+                    name,
+                    type: 'experiment',
+                    variants: [],
+                },
+            ],
+            {},
+            console.log,
+        );
+
+        expect(client.getVariant(name).name).toEqual('disabled');
+        expect(client.getVariant(name).enabled).toBeFalsy();
+        expect(client.isEnabled(name)).toBeTruthy();
     });
 });

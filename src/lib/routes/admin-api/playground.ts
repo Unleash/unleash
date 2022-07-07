@@ -13,18 +13,23 @@ import {
     playgroundResponseSchema,
 } from '../../../lib/openapi/spec/playground-response-schema';
 import { PlaygroundRequestSchema } from '../../../lib/openapi/spec/playground-request-schema';
-import { PlaygroundFeatureSchema } from '../../../lib/openapi/spec/playground-feature-schema';
-import { ClientFeatureSchema } from 'lib/openapi/spec/client-feature-schema';
+import { PlaygroundService } from '../../../lib/services/playground-service';
 
 export default class PlaygroundController extends Controller {
     private openApiService: OpenApiService;
 
+    private playgroundService: PlaygroundService;
+
     constructor(
         config: IUnleashConfig,
-        { openApiService }: Pick<IUnleashServices, 'openApiService'>,
+        {
+            openApiService,
+            playgroundService,
+        }: Pick<IUnleashServices, 'openApiService' | 'playgroundService'>,
     ) {
         super(config);
         this.openApiService = openApiService;
+        this.playgroundService = playgroundService;
 
         this.route({
             method: 'post',
@@ -52,7 +57,11 @@ export default class PlaygroundController extends Controller {
     ): Promise<void> {
         const response: PlaygroundResponseSchema = {
             input: req.body,
-            toggles: [],
+            toggles: await this.playgroundService.evaluateQuery(
+                req.body.projects,
+                req.body.environment,
+                req.body.context,
+            ),
         };
 
         this.openApiService.respondWithValidation(
@@ -61,23 +70,5 @@ export default class PlaygroundController extends Controller {
             playgroundResponseSchema.$id,
             response,
         );
-
-        // getclientfeatures from features v2
-    }
-
-    async doWork(
-        toggles: ClientFeatureSchema[],
-        parameters: PlaygroundRequestSchema,
-    ): Promise<PlaygroundFeatureSchema[]> {
-        console.log(toggles, parameters);
-
-        return [
-            {
-                name: 'name',
-                projectId: 'project',
-                isEnabled: true,
-                variant: null,
-            },
-        ];
     }
 }

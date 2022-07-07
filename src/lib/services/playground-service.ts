@@ -58,11 +58,8 @@ export class PlaygroundService {
             environment,
         });
 
-        // console.log('service got these toggles', toggles);
-
         const clientContext = {
             ...context,
-
             currentTime: context.currentTime
                 ? new Date(context.currentTime)
                 : undefined,

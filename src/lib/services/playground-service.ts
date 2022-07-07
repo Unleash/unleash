@@ -5,40 +5,44 @@ import { FeatureInterface } from 'unleash-client/lib/feature';
 import { IUnleashServices } from 'lib/types/services';
 import { ALL } from '../../lib/types/models/api-token';
 import { PlaygroundFeatureSchema } from 'lib/openapi/spec/playground-feature-schema';
-// import { FeatureConfigurationClient } from 'lib/types/stores/feature-strategies-store';
+import { Logger } from '../logger';
+import { IUnleashConfig } from 'lib/types';
+import { FeatureConfigurationClient } from 'lib/types/stores/feature-strategies-store';
 
-export type ClientToggle = FeatureInterface;
-
-export const offlineClientFromContext = (
+export const offlineUnleashClient = (
+    toggles: FeatureConfigurationClient[],
     context: SdkContextSchema,
-    toggles: ClientToggle[],
+    logError: (message: any, ...args: any[]) => void,
 ): UnleashClient => {
     const client = new UnleashClient({
-        appName: 'playground',
         ...context,
+        appName: context.appName || 'playground',
         disableMetrics: true,
         refreshInterval: 0,
         url: 'not-needed',
         storageProvider: new InMemStorageProvider(),
         bootstrap: {
-            data: toggles,
+            data: toggles as unknown as FeatureInterface[],
         },
     });
 
-    client.on('ready', console.log.bind(console, 'ready'));
-    client.on('error', console.error);
+    client.on('error', logError);
 
     return client;
 };
+
 export class PlaygroundService {
-    // private readonly logger: Logger;
+    private readonly logger: Logger;
 
     private readonly featureToggleService: FeatureToggleService;
 
-    constructor({
-        featureToggleServiceV2,
-    }: Pick<IUnleashServices, 'featureToggleServiceV2'>) {
-        // this.logger = config.getLogger('services/playground-service.ts');
+    constructor(
+        config: IUnleashConfig,
+        {
+            featureToggleServiceV2,
+        }: Pick<IUnleashServices, 'featureToggleServiceV2'>,
+    ) {
+        this.logger = config.getLogger('services/playground-service.ts');
         this.featureToggleService = featureToggleServiceV2;
     }
 
@@ -48,39 +52,25 @@ export class PlaygroundService {
         context: SdkContextSchema,
     ): Promise<PlaygroundFeatureSchema[]> {
         const toggles = await this.featureToggleService.getClientFeatures({
-            project: projects === '*' ? [ALL] : projects, // how do I do this?
+            project: projects === '*' ? [ALL] : projects,
             environment,
         });
 
-        console.log(context, toggles);
+        const client = offlineUnleashClient(
+            toggles,
+            context,
+            this.logger.error,
+        );
 
-        // const client = offlineClientFromContext(
-        //     context,
-        //     //@ts-expect-error the Operator enum from unleash-client contains the same strings as the operator enums in this repo, but they're not the same
-        //     toggles.map((x) => ({
-        //         type: 'release',
-        //         ...x,
-        //         impressionData: true,
-        //         strategies: x.strategies.map((s) => ({
-        //             parameters: {},
-        //             ...s,
-        //             // parameters: s.parameters ?? {},
-        //         })),
-        //     })),
-        // );
+        const output: PlaygroundFeatureSchema[] = await Promise.all(
+            client.getFeatureToggleDefinitions().map(async (x) => ({
+                isEnabled: client.isEnabled(x.name),
+                projectId: await this.featureToggleService.getProjectId(x.name),
+                variant: client.getVariant(x.name)?.name,
+                name: x.name,
+            })),
+        );
 
-        // return client.getFeatureToggleDefinitions();
-        // return mapToggles([]);
-        return [];
+        return output;
     }
 }
-
-// export const mapToggles = (
-//     input: FeatureConfigurationClient[],
-//     client: UnleashClient,
-// ): Omit<PlaygroundFeatureSchema, 'projectId'>[] =>
-//     input.map((x) => ({
-//         isEnabled: x.enabled,
-//         variant: client.getVariant(x.name).name,
-//         name: x.name,
-//     }));

@@ -5,12 +5,15 @@ import dbInit, { ITestDb } from '../../helpers/database-init';
 import { IUnleashTest, setupAppWithAuth } from '../../helpers/test-helper';
 import { WeightType } from '../../../../lib/types/model';
 import getLogger from '../../../fixtures/no-logger';
-import { ApiTokenType } from '../../../../lib/types/models/api-token';
+import {
+    ApiTokenType,
+    IApiToken,
+} from '../../../../lib/types/models/api-token';
 import { PlaygroundFeatureSchema } from 'lib/openapi/spec/playground-feature-schema';
 
 let app: IUnleashTest;
 let db: ITestDb;
-let token;
+let token: IApiToken;
 
 beforeAll(async () => {
     db = await dbInit('playground_api_serial', getLogger);

@@ -20,6 +20,7 @@ import { commonISOTimestamp } from '../../../lib/openapi/spec/sdk-context-schema
 import { ALL_OPERATORS } from '../../../lib/util/constants';
 import { ClientFeatureSchema } from '../../../lib/openapi/spec/client-feature-schema';
 import { WeightType } from '../../../lib/types/model';
+import { FeatureStrategySchema } from '../../../lib/openapi/spec/feature-strategy-schema';
 
 async function getSetup() {
     const base = `/random${Math.round(Math.random() * 1000)}`;
@@ -54,7 +55,7 @@ const strategy = (
         constraints: strategyConstraints(),
     });
 
-export const strategies = (): Arbitrary<Record<string, string>[]> =>
+export const strategies = (): Arbitrary<FeatureStrategySchema[]> =>
     fc.array(
         fc.oneof(
             strategy('default', fc.constant({})),

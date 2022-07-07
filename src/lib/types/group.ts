@@ -10,8 +10,18 @@ export interface IGroup {
 }
 
 export interface IGroupUser {
+    groupId: number;
+    userId: number;
+    type: string;
+}
+
+export interface IGroupUserModel {
     user: IUser;
     type: string;
+}
+
+export interface IGroupModel extends IGroup {
+    users: IGroupUserModel[];
 }
 
 export default class Group implements IGroup {

@@ -9,14 +9,14 @@ import { Logger } from '../logger';
 import { IUnleashConfig } from 'lib/types';
 import { FeatureConfigurationClient } from 'lib/types/stores/feature-strategies-store';
 
-export const offlineUnleashClient = (
+export const offlineUnleashClient = async (
     toggles: FeatureConfigurationClient[],
     context: SdkContextSchema,
     logError: (message: any, ...args: any[]) => void,
-): UnleashClient => {
+): Promise<UnleashClient> => {
     const client = new UnleashClient({
         ...context,
-        appName: context.appName || 'playground',
+        appName: context.appName || 'playground', // this is required and might mess people up
         disableMetrics: true,
         refreshInterval: 0,
         url: 'not-needed',
@@ -27,6 +27,8 @@ export const offlineUnleashClient = (
     });
 
     client.on('error', logError);
+
+    await client.start();
 
     return client;
 };
@@ -47,28 +49,52 @@ export class PlaygroundService {
     }
 
     async evaluateQuery(
-        projects: '*' | string[],
+        projects: typeof ALL | string[],
         environment: string,
         context: SdkContextSchema,
     ): Promise<PlaygroundFeatureSchema[]> {
         const toggles = await this.featureToggleService.getClientFeatures({
-            project: projects === '*' ? [ALL] : projects,
+            project: projects === ALL ? undefined : projects,
             environment,
         });
 
-        const client = offlineUnleashClient(
+        // console.log('service got these toggles', toggles);
+
+        const clientContext = {
+            ...context,
+
+            currentTime: context.currentTime
+                ? new Date(context.currentTime)
+                : undefined,
+        };
+
+        const client = await offlineUnleashClient(
             toggles,
             context,
             this.logger.error,
         );
 
         const output: PlaygroundFeatureSchema[] = await Promise.all(
-            client.getFeatureToggleDefinitions().map(async (x) => ({
-                isEnabled: client.isEnabled(x.name),
-                projectId: await this.featureToggleService.getProjectId(x.name),
-                variant: client.getVariant(x.name)?.name,
-                name: x.name,
-            })),
+            client.getFeatureToggleDefinitions().map(async (x) => {
+                const variantDef = client.getVariant(x.name, clientContext);
+
+                console.log(x.name, variantDef, client.isEnabled(x.name));
+
+                const variant =
+                    variantDef.name === 'disabled' &&
+                    variantDef.enabled === false
+                        ? null
+                        : variantDef.name;
+
+                return {
+                    isEnabled: client.isEnabled(x.name, clientContext),
+                    projectId: await this.featureToggleService.getProjectId(
+                        x.name,
+                    ),
+                    variant: variant,
+                    name: x.name,
+                };
+            }),
         );
 
         return output;

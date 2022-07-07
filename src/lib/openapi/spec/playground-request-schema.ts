@@ -1,4 +1,5 @@
 import { FromSchema } from 'json-schema-to-ts';
+import { ALL } from '../../types/models/api-token';
 import { sdkContextSchema } from './sdk-context-schema';
 
 export const playgroundRequestSchema = {
@@ -18,7 +19,7 @@ export const playgroundRequestSchema = {
                 },
                 {
                     type: 'string',
-                    enum: ['*'],
+                    enum: [ALL],
                     description: 'Check toggles in all projects.',
                 },
             ],

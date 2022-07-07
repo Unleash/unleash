@@ -1769,11 +1769,24 @@ Object {
             "type": "string",
           },
           "variant": Object {
+            "additionalProperties": false,
             "examples": Array [
               "green",
             ],
             "nullable": true,
-            "type": "string",
+            "properties": Object {
+              "enabled": Object {
+                "type": "boolean",
+              },
+              "name": Object {
+                "type": "string",
+              },
+            },
+            "required": Array [
+              "name",
+              "enabled",
+            ],
+            "type": "object",
           },
         },
         "required": Array [

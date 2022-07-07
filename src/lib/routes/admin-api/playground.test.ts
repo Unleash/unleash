@@ -19,15 +19,58 @@ import {
 import { commonISOTimestamp } from '../../../lib/openapi/spec/sdk-context-schema.test';
 import { ALL_OPERATORS } from '../../../lib/util/constants';
 import { ClientFeatureSchema } from '../../../lib/openapi/spec/client-feature-schema';
-import { PlaygroundFeatureSchema } from 'lib/openapi/spec/playground-feature-schema';
+import { PlaygroundFeatureSchema } from '../../../lib/openapi/spec/playground-feature-schema';
+import { WeightType } from '../../../lib/types/model';
 
-async function getSetup() {
+async function getSetup(features?: ClientFeatureSchema[]) {
     const base = `/random${Math.round(Math.random() * 1000)}`;
     const stores = createStores();
     const config = createTestConfig({
         server: { baseUriPath: base },
     });
     const services = createServices(stores, config);
+    if (features) {
+        await Promise.all(
+            features.map((x) => async () => {
+                await stores.featureToggleStore.create(x.project, {
+                    ...x,
+                    createdAt: new Date(x.createdAt),
+                    variants: [
+                        ...x.variants.map((variant) => ({
+                            ...variant,
+                            weightType: WeightType.VARIABLE,
+                            stickiness: 'default',
+                        })),
+                    ],
+                });
+                await services.featureToggleServiceV2.createFeatureToggle(
+                    x.project,
+                    {
+                        ...x,
+                        createdAt: new Date(x.createdAt),
+                        variants: [
+                            ...x.variants.map((variant) => ({
+                                ...variant,
+                                weightType: WeightType.VARIABLE,
+                                stickiness: 'default',
+                            })),
+                        ],
+                    },
+                    'playground tester',
+                );
+                Promise.all(
+                    x.strategies.map((s) =>
+                        services.featureToggleServiceV2.createStrategy(
+                            s,
+                            null,
+                            'playground tester',
+                        ),
+                    ),
+                );
+            }),
+        );
+        // console.log(`created ${features.length} features`);
+    }
     const app = await getApp(config, stores, services);
     return { base, request: supertest(app) };
 }
@@ -96,13 +139,13 @@ const strategies = () =>
         ),
     );
 
-const generateFeatureToggle = (): Arbitrary<ClientFeatureSchema> =>
+const generateFeatureToggle = (name?: string): Arbitrary<ClientFeatureSchema> =>
     fc.record(
         {
-            name: urlFriendlyString(),
+            name: name ? fc.constant(name) : urlFriendlyString(),
             type: fc.constantFrom(
                 'release',
-                'kill switch',
+                'kill-switch',
                 'experiment',
                 'operational',
                 'permission',
@@ -119,6 +162,8 @@ const generateFeatureToggle = (): Arbitrary<ClientFeatureSchema> =>
                 fc.record({
                     name: urlFriendlyString(),
                     weight: fc.nat({ max: 100 }),
+                    weightType: fc.constant(WeightType.VARIABLE),
+                    stickiness: fc.constant('default'),
                     payload: fc.option(
                         fc.oneof(
                             fc.record({
@@ -146,7 +191,21 @@ const generateFeatureToggle = (): Arbitrary<ClientFeatureSchema> =>
 export const generateToggles = (constraints?: {
     minLength?: number;
 }): Arbitrary<ClientFeatureSchema[]> =>
-    fc.array(generateFeatureToggle(), constraints);
+    fc.uniqueArray(generateFeatureToggle(), {
+        ...constraints,
+        selector: (v) => v.name,
+    });
+
+describe('toggle generator', () => {
+    it('generates toggles with unique names', () => {
+        fc.assert(
+            fc.property(
+                generateToggles(),
+                (toggles) => toggles.length === [...new Set(toggles)].length,
+            ),
+        );
+    });
+});
 
 describe('the playground API', () => {
     test('should filter the list according to the input parameters', async () => {
@@ -158,7 +217,28 @@ describe('the playground API', () => {
                     payload: PlaygroundRequestSchema,
                     toggles: ClientFeatureSchema[],
                 ) => {
-                    const { request, base } = await getSetup();
+                    const { request, base } = await getSetup(toggles);
+
+                    await Promise.all(
+                        toggles.map((t) => async () => {
+                            await request
+                                .post(
+                                    `${base}/api/admin/projects/${t.project}/features`,
+                                )
+                                .send(t)
+                                .expect(201);
+                            await Promise.all(
+                                t.strategies.map((s) =>
+                                    request
+                                        .post(
+                                            `/api/admin/projects/${t.project}/features/${t.name}/environments/default/strategies`,
+                                        )
+                                        .send(s)
+                                        .expect(200),
+                                ),
+                            );
+                        }),
+                    );
 
                     // get a subset of projects that exist among the toggles
                     const [projects] = fc.sample(
@@ -183,9 +263,19 @@ describe('the playground API', () => {
                         .expect('Content-Type', /json/)
                         .expect(200);
 
+                    // const [firstToggle] = toggles;
+
+                    // const { body: otherbody } = await request
+                    //     .get(
+                    //         `${base}/api/admin/projects/${firstToggle.project}/features`,
+                    //     )
+                    //     .expect(200);
+
                     // console.log(
-                    //     toggles,
-                    //     toggles.map((t) => t.strategies),
+                    //     otherbody,
+                    //     'lengths:',
+                    //     toggles.length,
+                    //     body.toggles.length,
                     // );
 
                     switch (projects) {
@@ -248,10 +338,50 @@ describe('the playground API', () => {
         );
     });
 
-    test('should return a subset of the toggles in the actual db', () => {
+    test('should return a subset of the toggles in the actual db', async () => {
         // find a way to verify that the returned toggles (responseBody.toggles)
         // is actually a subset of the toggles that exist in the
         // database/repository. To ensure that it's not just a hardcoded empty
         // list or similar.
+        await fc.assert(
+            fc.asyncProperty(
+                generateRequest(),
+                generateToggles({ minLength: 1 }),
+                async (
+                    payload: PlaygroundRequestSchema,
+                    toggles: ClientFeatureSchema[],
+                ) => {
+                    const { request, base } = await getSetup(toggles);
+
+                    // get a subset of projects that exist among the toggles
+                    const [projects] = fc.sample(
+                        fc.oneof(
+                            fc.constant('*' as '*'),
+                            fc.uniqueArray(
+                                fc.constantFrom(
+                                    ...toggles.map((t) => t.project),
+                                ),
+                            ),
+                        ),
+                    );
+
+                    payload.projects = projects;
+
+                    // create a list of features that can be filtered
+                    // pass in args that should filter the list
+
+                    const { body } = await request
+                        .post(`${base}/api/admin/playground`)
+                        .send(payload)
+                        .expect('Content-Type', /json/)
+                        .expect(200);
+
+                    // the returned list should always be a subset of the provided list
+                    expect(toggles.map((x) => x.name)).toEqual(
+                        expect.arrayContaining(body.toggles.map((x) => x.name)),
+                    );
+                },
+            ),
+        );
     });
 });

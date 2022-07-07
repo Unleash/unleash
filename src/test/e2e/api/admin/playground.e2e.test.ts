@@ -6,6 +6,7 @@ import { IUnleashTest, setupAppWithAuth } from '../../helpers/test-helper';
 import { WeightType } from '../../../../lib/types/model';
 import getLogger from '../../../fixtures/no-logger';
 import { ApiTokenType } from '../../../../lib/types/models/api-token';
+import { PlaygroundFeatureSchema } from 'lib/openapi/spec/playground-feature-schema';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -140,6 +141,65 @@ describe('Playground API E2E', () => {
                         }
                     },
                 )
+                .afterEach(async () => {
+                    await db.stores.featureToggleStore.deleteAll();
+                }),
+        );
+    });
+
+    test('should map toggles correctly', async () => {
+        await fc.assert(
+            fc
+                .asyncProperty(generateToggles(), async (toggles) => {
+                    await Promise.all(
+                        toggles.map((t) =>
+                            db.stores.featureToggleStore.create(t.project, {
+                                ...t,
+                                createdAt: undefined,
+                                variants: [
+                                    ...(t.variants ?? []).map((variant) => ({
+                                        ...variant,
+                                        weightType: WeightType.VARIABLE,
+                                        stickiness: 'default',
+                                    })),
+                                ],
+                            }),
+                        ),
+                    );
+
+                    const { body } = await app.request
+                        .post('/api/admin/playground')
+                        .set('Authorization', token.secret)
+                        .send({
+                            projects: '*',
+                            environment: 'default',
+                            context: {},
+                        })
+                        .expect(200);
+
+                    const createDict = (xs: { name: string }[]) =>
+                        xs.reduce(
+                            (acc, next) => ({ ...acc, [next.name]: next }),
+                            {},
+                        );
+
+                    // const unmapped = createDict(toggles)
+                    const mappedToggles = createDict(body.toggles);
+
+                    return toggles.every((x) => {
+                        const mapped: PlaygroundFeatureSchema =
+                            mappedToggles[x.name];
+
+                        return (
+                            mapped &&
+                            x.name === mapped.name &&
+                            x.project === mapped.projectId &&
+                            x.variants
+                                .map((v) => v.name)
+                                .includes(mapped.variant)
+                        );
+                    });
+                })
                 .afterEach(async () => {
                     await db.stores.featureToggleStore.deleteAll();
                 }),

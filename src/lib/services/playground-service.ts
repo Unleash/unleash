@@ -5,7 +5,7 @@ import { FeatureInterface } from 'unleash-client/lib/feature';
 import { IUnleashServices } from 'lib/types/services';
 import { ALL } from '../../lib/types/models/api-token';
 import { PlaygroundFeatureSchema } from 'lib/openapi/spec/playground-feature-schema';
-import { FeatureConfigurationClient } from 'lib/types/stores/feature-strategies-store';
+// import { FeatureConfigurationClient } from 'lib/types/stores/feature-strategies-store';
 
 export type ClientToggle = FeatureInterface;
 
@@ -75,11 +75,12 @@ export class PlaygroundService {
     }
 }
 
-export const mapToggles = (
-    input: FeatureConfigurationClient[],
-): Omit<PlaygroundFeatureSchema, 'projectId'>[] =>
-    input.map(() => ({
-        isEnabled: true,
-        variant: null,
-        name: 'any',
-    }));
+// export const mapToggles = (
+//     input: FeatureConfigurationClient[],
+//     client: UnleashClient,
+// ): Omit<PlaygroundFeatureSchema, 'projectId'>[] =>
+//     input.map((x) => ({
+//         isEnabled: x.enabled,
+//         variant: client.getVariant(x.name).name,
+//         name: x.name,
+//     }));

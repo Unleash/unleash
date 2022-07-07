@@ -27,6 +27,7 @@ exports.up = function (db, callback) {
                 role_id integer not null references roles (id) ON DELETE CASCADE,
                 created_by text,
                 created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
+                project text,
                 PRIMARY KEY (group_id, role_id)
             );
         `,

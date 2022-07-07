@@ -157,8 +157,10 @@ describe('toggle generator', () => {
     it('generates toggles with unique names', () => {
         fc.assert(
             fc.property(
-                generateToggles(),
-                (toggles) => toggles.length === [...new Set(toggles)].length,
+                generateToggles({ minLength: 2 }),
+                (toggles) =>
+                    toggles.length ===
+                    [...new Set(toggles.map((x) => x.name))].length,
             ),
         );
     });

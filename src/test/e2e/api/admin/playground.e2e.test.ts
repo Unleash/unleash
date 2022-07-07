@@ -193,15 +193,22 @@ describe('Playground API E2E', () => {
                         const mapped: PlaygroundFeatureSchema =
                             mappedToggles[x.name];
 
+                        expect(mapped).toBeTruthy();
+
+                        const variantIsCorrect =
+                            x.variants && mapped.isEnabled
+                                ? x.variants.some(
+                                      ({ name, payload }) =>
+                                          name === mapped.variant.name &&
+                                          payload === mapped.variant.payload,
+                                  )
+                                : mapped.variant.name === 'disabled' &&
+                                  mapped.variant.enabled === false;
+
                         return (
-                            mapped &&
                             x.name === mapped.name &&
                             x.project === mapped.projectId &&
-                            x.variants.some(
-                                ({ name, payload }) =>
-                                    name === mapped.variant.name &&
-                                    payload === mapped.variant.payload,
-                            )
+                            variantIsCorrect
                         );
                     });
                 })

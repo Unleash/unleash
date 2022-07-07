@@ -174,6 +174,15 @@ export class AccessService {
         return this.store.addUserToRole(userId, roleId, projectId);
     }
 
+    async addGroupToRole(
+        groupId: number,
+        roleId: number,
+        createdBy: string,
+        projectId: string,
+    ): Promise<void> {
+        return this.store.addGroupToRole(groupId, roleId, createdBy, projectId);
+    }
+
     async getRoleByName(roleName: string): Promise<IRole> {
         return this.roleStore.getRoleByName(roleName);
     }
@@ -216,6 +225,14 @@ export class AccessService {
         projectId: string,
     ): Promise<void> {
         return this.store.removeUserFromRole(userId, roleId, projectId);
+    }
+
+    async removeGroupFromRole(
+        groupId: number,
+        roleId: number,
+        projectId: string,
+    ): Promise<void> {
+        return this.store.removeGroupFromRole(groupId, roleId, projectId);
     }
 
     async updateUserProjectRole(

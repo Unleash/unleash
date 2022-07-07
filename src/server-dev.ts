@@ -33,6 +33,7 @@ process.nextTick(async () => {
                 experimental: {
                     metricsV2: { enabled: true },
                     anonymiseEventLog: false,
+                    userGroups: true,
                 },
                 authentication: {
                     initApiTokens: [

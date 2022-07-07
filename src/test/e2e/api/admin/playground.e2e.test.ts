@@ -1,6 +1,6 @@
 import fc from 'fast-check';
 import { generateToggles } from '../../../../lib/routes/admin-api/playground.test';
-import { generate } from '../../../../lib/openapi/spec/playground-request-schema.test';
+import { generate as generateRequest } from '../../../../lib/openapi/spec/playground-request-schema.test';
 import dbInit, { ITestDb } from '../../helpers/database-init';
 import { IUnleashTest, setupAppWithAuth } from '../../helpers/test-helper';
 import { WeightType } from '../../../../lib/types/model';
@@ -25,7 +25,7 @@ describe('Playground API E2E', () => {
             fc
                 .asyncProperty(
                     generateToggles({ minLength: 1 }),
-                    generate(),
+                    generateRequest(),
                     async (toggles, request) => {
                         // seed the database
                         await Promise.all(
@@ -65,5 +65,71 @@ describe('Playground API E2E', () => {
         );
     });
 
-    test('Returned toggles should be filtered according to input params', async () => {});
+    test('should filter the list according to the input parameters', async () => {
+        await fc.assert(
+            fc
+                .asyncProperty(
+                    generateRequest(),
+                    generateToggles({ minLength: 1 }),
+                    async (payload, toggles) => {
+                        await Promise.all(
+                            toggles.map((t) =>
+                                db.stores.featureToggleStore.create(t.project, {
+                                    ...t,
+                                    createdAt: undefined,
+                                    variants: [
+                                        ...(t.variants ?? []).map(
+                                            (variant) => ({
+                                                ...variant,
+                                                weightType: WeightType.VARIABLE,
+                                                stickiness: 'default',
+                                            }),
+                                        ),
+                                    ],
+                                }),
+                            ),
+                        );
+
+                        // get a subset of projects that exist among the toggles
+                        const [projects] = fc.sample(
+                            fc.oneof(
+                                fc.constant('*' as '*'),
+                                fc.uniqueArray(
+                                    fc.constantFrom(
+                                        ...toggles.map((t) => t.project),
+                                    ),
+                                ),
+                            ),
+                        );
+
+                        payload.projects = projects;
+
+                        // create a list of features that can be filtered
+                        // pass in args that should filter the list
+
+                        const { body } = await app.request
+                            .post('/api/admin/playground')
+                            .send(payload)
+                            .expect(200);
+
+                        switch (projects) {
+                            case '*':
+                                // no toggles have been filtered out
+                                return body.toggles.length === toggles.length;
+                            case []:
+                                // no toggle should be without a project
+                                return body.toggles.length === 0;
+                            default:
+                                // every toggle should be in one of the prescribed projects
+                                return body.toggles.every((x) =>
+                                    projects.includes(x.projectId),
+                                );
+                        }
+                    },
+                )
+                .afterEach(async () => {
+                    await db.stores.featureToggleStore.deleteAll();
+                }),
+        );
+    });
 });

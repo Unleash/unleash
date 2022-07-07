@@ -1,13 +1,17 @@
 import FeatureToggleService from './feature-toggle-service';
 import { SdkContextSchema } from 'lib/openapi/spec/sdk-context-schema';
 import { InMemStorageProvider, Unleash as UnleashClient } from 'unleash-client';
-import { FeatureInterface } from 'unleash-client/lib/feature';
 import { IUnleashServices } from 'lib/types/services';
 import { ALL } from '../../lib/types/models/api-token';
 import { PlaygroundFeatureSchema } from 'lib/openapi/spec/playground-feature-schema';
 import { Logger } from '../logger';
 import { IUnleashConfig } from 'lib/types';
 import { FeatureConfigurationClient } from 'lib/types/stores/feature-strategies-store';
+import { Operator } from 'unleash-client/lib/strategy/strategy';
+
+enum PayloadType {
+    STRING = 'string',
+}
 
 export const offlineUnleashClient = async (
     toggles: FeatureConfigurationClient[],
@@ -22,7 +26,30 @@ export const offlineUnleashClient = async (
         url: 'not-needed',
         storageProvider: new InMemStorageProvider(),
         bootstrap: {
-            data: toggles as unknown as FeatureInterface[],
+            data: toggles.map((x) => ({
+                impressionData: false,
+                ...x,
+                variants: x.variants.map((v) => ({
+                    overrides: [],
+                    ...v,
+                    payload: v.payload && {
+                        ...v.payload,
+                        type: v.payload.type as unknown as PayloadType,
+                    },
+                })),
+                strategies: x.strategies.map((s) => ({
+                    parameters: {},
+                    ...s,
+                    constraints:
+                        s.constraints &&
+                        s.constraints.map((c) => ({
+                            inverted: false,
+                            values: [],
+                            ...c,
+                            operator: c.operator as unknown as Operator,
+                        })),
+                })),
+            })),
         },
     });
 

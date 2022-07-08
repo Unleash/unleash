@@ -32,6 +32,7 @@ import { SegmentService } from './segment-service';
 import { OpenApiService } from './openapi-service';
 import { ClientSpecService } from './client-spec-service';
 import { PlaygroundService } from './playground-service';
+import { GroupService } from './group-service';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -89,6 +90,7 @@ export const createServices = (
         featureToggleServiceV2,
     });
 
+    const groupService = new GroupService(stores, config);
     return {
         accessService,
         addonService,
@@ -121,6 +123,7 @@ export const createServices = (
         openApiService,
         clientSpecService,
         playgroundService,
+        groupService,
     };
 };
 

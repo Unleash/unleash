@@ -1,11 +1,12 @@
-import { ICreateGroup, IGroupStore } from '../types/stores/group-store';
+import { IGroupStore, IStoreGroup } from '../types/stores/group-store';
 import { Knex } from 'knex';
 import NotFoundError from '../error/notfound-error';
-import Group, { IGroupUser } from '../types/group';
+import Group, { IGroupUser, IGroupUserModel } from '../types/group';
 
 const T = {
     GROUPS: 'groups',
     GROUP_USER: 'group_user',
+    USERS: 'users',
 };
 
 const GROUP_COLUMNS = ['id', 'name', 'description', 'created_at', 'created_by'];
@@ -18,12 +19,23 @@ const rowToGroup = (row) => {
         id: row.id,
         name: row.name,
         description: row.description,
-        createdAt: row.createdAt,
-        createdBy: row.createdBy,
+        createdAt: row.created_at,
+        createdBy: row.created_by,
     });
 };
 
-const groupToRow = (user: ICreateGroup) => ({
+const rowToGroupUser = (row) => {
+    if (!row) {
+        throw new NotFoundError('No group user found');
+    }
+    return {
+        userId: row.user_id,
+        groupId: row.group_id,
+        type: row.type,
+    };
+};
+
+const groupToRow = (user: IStoreGroup) => ({
     name: user.name,
     description: user.description,
 });
@@ -33,6 +45,15 @@ export default class GroupStore implements IGroupStore {
 
     constructor(db: Knex) {
         this.db = db;
+    }
+
+    async getAllUsersByGroups(groupIds: number[]): Promise<IGroupUser[]> {
+        const rows = await this.db
+            .select('gu.group_id', 'u.id as user_id', 'type')
+            .from(`${T.GROUP_USER} AS gu`)
+            .join(`${T.USERS} AS u`, 'u.id', 'gu.user_id')
+            .whereIn('gu.group_id', groupIds);
+        return rows.map(rowToGroupUser);
     }
 
     async getAll(): Promise<Group[]> {
@@ -73,7 +94,7 @@ export default class GroupStore implements IGroupStore {
         return rowToGroup(row);
     }
 
-    async create(group: ICreateGroup): Promise<Group> {
+    async create(group: IStoreGroup): Promise<Group> {
         const row = await this.db(T.GROUPS)
             .insert(groupToRow(group))
             .returning('*');
@@ -82,7 +103,7 @@ export default class GroupStore implements IGroupStore {
 
     async addUsersToGroup(
         id: number,
-        users: IGroupUser[],
+        users: IGroupUserModel[],
         userName: string,
     ): Promise<void> {
         const rows = users.map((user) => {

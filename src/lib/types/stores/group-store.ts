@@ -1,14 +1,14 @@
 import { Store } from './store';
-import { IGroup, IGroupUser } from '../group';
+import { IGroup, IGroupUser, IGroupUserModel } from '../group';
 
-export interface ICreateGroup {
+export interface IStoreGroup {
     name: string;
     description: string;
-    users: IGroupUser[];
 }
 
 export interface IGroupStore extends Store<IGroup, number> {
-    addUsersToGroup(id: number, users: IGroupUser[], userName: string);
+    getAllUsersByGroups(groupIds: number[]): Promise<IGroupUser[]>;
+    addUsersToGroup(id: number, users: IGroupUserModel[], userName: string);
     existsWithName(name: string): Promise<boolean>;
-    create(group: ICreateGroup): Promise<IGroup>;
+    create(group: IStoreGroup): Promise<IGroup>;
 }

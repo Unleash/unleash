@@ -868,7 +868,6 @@ test('Should be allowed move feature toggle to project when given access through
     const groupWithProjectAccess = await groupStore.create({
         name: 'Project Editors',
         description: '',
-        users: [],
     });
 
     await groupStore.addUsersToGroup(
@@ -901,7 +900,6 @@ test('Should not lose user role access when given permissions from a group', asy
     const groupWithNoAccess = await groupStore.create({
         name: 'ViewersOnly',
         description: '',
-        users: [],
     });
 
     await groupStore.addUsersToGroup(
@@ -936,13 +934,11 @@ test('Should allow user to take multiple group roles and have expected permissio
     const groupWithCreateAccess = await groupStore.create({
         name: 'ViewersOnly',
         description: '',
-        users: [],
     });
 
     const groupWithDeleteAccess = await groupStore.create({
         name: 'ViewersOnly',
         description: '',
-        users: [],
     });
 
     await groupStore.addUsersToGroup(

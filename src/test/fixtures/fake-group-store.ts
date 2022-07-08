@@ -1,5 +1,5 @@
-import { ICreateGroup, IGroupStore } from '../../lib/types/stores/group-store';
-import { IGroup, IGroupUser } from '../../lib/types/group';
+import { IGroupStore, IStoreGroup } from '../../lib/types/stores/group-store';
+import { IGroup, IGroupUser, IGroupUserModel } from '../../lib/types/group';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 export default class FakeGroupStore implements IGroupStore {
     data: IGroup[];
@@ -27,7 +27,7 @@ export default class FakeGroupStore implements IGroupStore {
         return this.data.find((u) => u.id === key);
     }
 
-    create(group: ICreateGroup): Promise<IGroup> {
+    create(group: IStoreGroup): Promise<IGroup> {
         throw new Error('Method not implemented.');
     }
 
@@ -36,5 +36,13 @@ export default class FakeGroupStore implements IGroupStore {
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    addUsersToGroup(id: number, users: IGroupUser[], userName: string) {}
+    addUsersToGroup(id: number, users: IGroupUserModel[], userName: string) {}
+
+    getAllGroupUsers(): Promise<IGroupUser[]> {
+        throw new Error('Method not implemented.');
+    }
+
+    getAllUsersByGroups(groupIds: number[]): Promise<IGroupUser[]> {
+        throw new Error('Method not implemented.');
+    }
 }

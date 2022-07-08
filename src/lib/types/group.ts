@@ -5,13 +5,23 @@ export interface IGroup {
     id: number;
     name: string;
     description: string;
-    createdAt: Date;
-    createdBy: string;
+    createdAt?: Date;
+    createdBy?: string;
 }
 
 export interface IGroupUser {
+    groupId: number;
+    userId: number;
+    type: string;
+}
+
+export interface IGroupUserModel {
     user: IUser;
     type: string;
+}
+
+export interface IGroupModel extends IGroup {
+    users: IGroupUserModel[];
 }
 
 export default class Group implements IGroup {

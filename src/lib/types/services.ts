@@ -27,6 +27,7 @@ import UserSplashService from '../services/user-splash-service';
 import { SegmentService } from '../services/segment-service';
 import { OpenApiService } from '../services/openapi-service';
 import { ClientSpecService } from '../services/client-spec-service';
+import { GroupService } from '../services/group-service';
 
 export interface IUnleashServices {
     accessService: AccessService;
@@ -42,6 +43,7 @@ export interface IUnleashServices {
     featureToggleService: FeatureToggleService;
     featureToggleServiceV2: FeatureToggleService; // deprecated
     featureTypeService: FeatureTypeService;
+    groupService: GroupService;
     healthService: HealthService;
     projectHealthService: ProjectHealthService;
     projectService: ProjectService;

@@ -137,11 +137,29 @@ describe('offline client', () => {
         const client = await offlineUnleashClient(
             [
                 {
+                    name,
+                    enabled: true,
+                    strategies: [{ name: 'default' }],
+                    variants: [],
+                    type: '',
+                    stale: false,
+                },
+            ],
+            { appName: 'other-app', environment: 'default' },
+            console.log,
+        );
+
+        expect(client.isEnabled(name)).toBeTruthy();
+    });
+
+    it('considers disabled variants with a default strategy to be off', async () => {
+        const name = 'toggle-name';
+        const client = await offlineUnleashClient(
+            [
+                {
                     strategies: [
                         {
                             name: 'default',
-                            constraints: [],
-                            parameters: {},
                         },
                     ],
                     stale: false,
@@ -155,7 +173,46 @@ describe('offline client', () => {
             console.log,
         );
 
-        expect(client.isEnabled(name)).toBeTruthy();
+        expect(client.isEnabled(name)).toBeFalsy();
+    });
+
+    it('considers disabled variants with a default strategy and variants to be off', async () => {
+        const name = 'toggle-name';
+        const client = await offlineUnleashClient(
+            [
+                {
+                    strategies: [
+                        {
+                            name: 'default',
+                        },
+                    ],
+                    stale: false,
+                    enabled: false,
+                    name,
+                    type: 'experiment',
+                    variants: [
+                        {
+                            name: 'a',
+                            weight: 500,
+                            weightType: 'variable',
+                            stickiness: 'default',
+                            overrides: [],
+                        },
+                        {
+                            name: 'b',
+                            weight: 500,
+                            weightType: 'variable',
+                            stickiness: 'default',
+                            overrides: [],
+                        },
+                    ],
+                },
+            ],
+            {},
+            console.log,
+        );
+
+        expect(client.isEnabled(name)).toBeFalsy();
     });
 
     it("returns variant {name: 'disabled', enabled: false } if the toggle isn't enabled", async () => {
@@ -165,7 +222,7 @@ describe('offline client', () => {
                 {
                     strategies: [],
                     stale: false,
-                    enabled: true,
+                    enabled: false,
                     name,
                     type: 'experiment',
                     variants: [
@@ -204,11 +261,10 @@ describe('offline client', () => {
                         {
                             name: 'default',
                             constraints: [],
-                            parameters: {},
                         },
                     ],
                     stale: false,
-                    enabled: false,
+                    enabled: true,
                     name,
                     type: 'experiment',
                     variants: [],
@@ -218,8 +274,8 @@ describe('offline client', () => {
             console.log,
         );
 
-        expect(client.getVariant(name).name).toEqual('disabled');
-        expect(client.getVariant(name).enabled).toBeFalsy();
-        expect(client.isEnabled(name)).toBeTruthy();
+        expect(client.getVariant(name, {}).name).toEqual('disabled');
+        expect(client.getVariant(name, {}).enabled).toBeFalsy();
+        expect(client.isEnabled(name, {})).toBeTruthy();
     });
 });

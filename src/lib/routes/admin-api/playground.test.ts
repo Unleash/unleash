@@ -119,7 +119,7 @@ const generateFeatureToggle = (name?: string): Arbitrary<ClientFeatureSchema> =>
             variants: fc.array(
                 fc.record({
                     name: urlFriendlyString(),
-                    weight: fc.nat({ max: 100 }),
+                    weight: fc.nat({ max: 1000 }),
                     weightType: fc.constant(WeightType.VARIABLE),
                     stickiness: fc.constant('default'),
                     payload: fc.option(

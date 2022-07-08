@@ -65,6 +65,7 @@ export const SEGMENT_CREATED = 'segment-created';
 export const SEGMENT_UPDATED = 'segment-updated';
 export const SEGMENT_DELETED = 'segment-deleted';
 export const GROUP_CREATED = 'group-created';
+export const GROUP_UPDATED = 'group-updated';
 
 export const CLIENT_METRICS = 'client-metrics';
 

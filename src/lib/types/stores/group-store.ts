@@ -1,5 +1,5 @@
 import { Store } from './store';
-import { IGroup, IGroupUser, IGroupUserModel } from '../group';
+import { IGroup, IGroupModel, IGroupUser, IGroupUserModel } from '../group';
 
 export interface IStoreGroup {
     name: string;
@@ -7,8 +7,10 @@ export interface IStoreGroup {
 }
 
 export interface IGroupStore extends Store<IGroup, number> {
+    deleteOldUsersFromGroup(deletableUsers: IGroupUser[]);
+    update(group: IGroupModel): Promise<IGroup>;
     getAllUsersByGroups(groupIds: number[]): Promise<IGroupUser[]>;
-    addUsersToGroup(id: number, users: IGroupUserModel[], userName: string);
+    addNewUsersToGroup(id: number, users: IGroupUserModel[], userName: string);
     existsWithName(name: string): Promise<boolean>;
     create(group: IStoreGroup): Promise<IGroup>;
 }

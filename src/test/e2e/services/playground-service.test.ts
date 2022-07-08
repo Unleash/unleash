@@ -37,9 +37,8 @@ afterAll(async () => {
 });
 
 const testParams = {
-    interruptAfterTimeLimit: 400, // Default timeout in Jest 5000ms
+    interruptAfterTimeLimit: 4000, // Default timeout in Jest 5000ms
     markInterruptAsFailure: false, // When set to false, timeout during initial cases will not be considered as a failure
-    numRuns: 1,
 };
 
 describe('the playground service (e2e)', () => {

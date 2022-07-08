@@ -8,6 +8,7 @@ import { Logger } from '../logger';
 import { IUnleashConfig } from 'lib/types';
 import { FeatureConfigurationClient } from 'lib/types/stores/feature-strategies-store';
 import { Operator } from 'unleash-client/lib/strategy/strategy';
+import { once } from 'events';
 
 enum PayloadType {
     STRING = 'string',
@@ -54,8 +55,11 @@ export const offlineUnleashClient = async (
     });
 
     client.on('error', logError);
+    client.start();
 
-    await client.start();
+    // make sure the client is ready before we pass it back. otherwise toggles
+    // will all be false.
+    await once(client, 'ready');
 
     return client;
 };

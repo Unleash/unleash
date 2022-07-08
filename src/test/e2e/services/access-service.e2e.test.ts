@@ -870,7 +870,7 @@ test('Should be allowed move feature toggle to project when given access through
         description: '',
     });
 
-    await groupStore.addUsersToGroup(
+    await groupStore.addNewUsersToGroup(
         groupWithProjectAccess.id,
         [{ user: viewerUser, type: 'Owner' }],
         'Admin',
@@ -902,7 +902,7 @@ test('Should not lose user role access when given permissions from a group', asy
         description: '',
     });
 
-    await groupStore.addUsersToGroup(
+    await groupStore.addNewUsersToGroup(
         groupWithNoAccess.id,
         [{ user: editorUser, type: 'Owner' }],
         'Admin',
@@ -941,13 +941,13 @@ test('Should allow user to take multiple group roles and have expected permissio
         description: '',
     });
 
-    await groupStore.addUsersToGroup(
+    await groupStore.addNewUsersToGroup(
         groupWithCreateAccess.id,
         [{ user: viewerUser, type: 'Owner' }],
         'Admin',
     );
 
-    await groupStore.addUsersToGroup(
+    await groupStore.addNewUsersToGroup(
         groupWithDeleteAccess.id,
         [{ user: viewerUser, type: 'Owner' }],
         'Admin',

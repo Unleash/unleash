@@ -1,7 +1,12 @@
 import { IGroupStore, IStoreGroup } from '../types/stores/group-store';
 import { Knex } from 'knex';
 import NotFoundError from '../error/notfound-error';
-import Group, { IGroupUser, IGroupUserModel } from '../types/group';
+import Group, {
+    IGroup,
+    IGroupModel,
+    IGroupUser,
+    IGroupUserModel,
+} from '../types/group';
 
 const T = {
     GROUPS: 'groups',
@@ -45,6 +50,18 @@ export default class GroupStore implements IGroupStore {
 
     constructor(db: Knex) {
         this.db = db;
+    }
+
+    async update(group: IGroupModel): Promise<IGroup> {
+        const rows = await this.db(T.GROUPS)
+            .where({ id: group.id })
+            .update({
+                name: group.name,
+                description: group.description,
+            })
+            .returning(GROUP_COLUMNS);
+
+        return rowToGroup(rows[0]);
     }
 
     async getAllUsersByGroups(groupIds: number[]): Promise<IGroupUser[]> {
@@ -101,7 +118,7 @@ export default class GroupStore implements IGroupStore {
         return rowToGroup(row[0]);
     }
 
-    async addUsersToGroup(
+    async addNewUsersToGroup(
         id: number,
         users: IGroupUserModel[],
         userName: string,
@@ -115,5 +132,14 @@ export default class GroupStore implements IGroupStore {
             };
         });
         return this.db.batchInsert(T.GROUP_USER, rows);
+    }
+
+    async deleteOldUsersFromGroup(deletableUsers: IGroupUser[]): Promise<void> {
+        return this.db(T.GROUP_USER)
+            .whereIn(
+                ['group_id', 'user_id'],
+                deletableUsers.map((user) => [user.groupId, user.userId]),
+            )
+            .delete();
     }
 }

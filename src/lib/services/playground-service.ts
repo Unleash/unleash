@@ -57,9 +57,13 @@ export const offlineUnleashClient = async (
     client.on('error', logError);
     client.start();
 
-    // make sure the client is ready before we pass it back. otherwise toggles
-    // will all be false.
-    await once(client, 'ready');
+    if (toggles.length > 0) {
+        // make sure the client is ready before we pass it back. otherwise toggles
+        // will all be false.
+        //
+        // if there are no toggles provided, the client will never be ready.
+        await once(client, 'ready');
+    }
 
     return client;
 };
@@ -88,6 +92,16 @@ export class PlaygroundService {
             project: projects === ALL ? undefined : projects,
             environment,
         });
+
+        if (toggles.length === 0) {
+            // if there are no toggles, we can exit early. This does two things:
+            //
+            // 1. it saves us computation
+            //
+            // 2. the node unleash-client is *never ready* if you provide it
+            // with an empty list of toggles. That means the server spins forever.
+            return [];
+        }
 
         const clientContext = {
             ...context,

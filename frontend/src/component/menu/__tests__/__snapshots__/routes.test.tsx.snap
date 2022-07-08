@@ -121,6 +121,16 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
+    "hidden": false,
+    "menu": {
+      "mobile": true,
+    },
+    "path": "/playground",
+    "title": "Playground",
+    "type": "protected",
+  },
+  {
+    "component": [Function],
     "menu": {},
     "parent": "/applications",
     "path": "/applications/:name",

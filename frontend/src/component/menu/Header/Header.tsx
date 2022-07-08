@@ -127,6 +127,12 @@ const Header: VFC = () => {
                         <Link to="/features" className={themeStyles.focusable}>
                             Feature toggles
                         </Link>
+                        <Link
+                            to="/playground"
+                            className={themeStyles.focusable}
+                        >
+                            Playground
+                        </Link>
                         <button
                             className={styles.advancedNavButton}
                             onClick={e => setConfigRef(e.currentTarget)}

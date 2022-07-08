@@ -5,8 +5,8 @@ export interface IGroup {
     id: number;
     name: string;
     description: string;
-    createdAt: Date;
-    createdBy: string;
+    createdAt?: Date;
+    createdBy?: string;
 }
 
 export interface IGroupUser {

@@ -1,11 +1,7 @@
-import { IGroupStore } from '../types/stores/group-store';
+import { IGroupStore, IStoreGroup } from '../types/stores/group-store';
 import { Knex } from 'knex';
 import NotFoundError from '../error/notfound-error';
-import Group, {
-    IGroupModel,
-    IGroupUser,
-    IGroupUserModel,
-} from '../types/group';
+import Group, { IGroupUser, IGroupUserModel } from '../types/group';
 
 const T = {
     GROUPS: 'groups',
@@ -39,7 +35,7 @@ const rowToGroupUser = (row) => {
     };
 };
 
-const groupToRow = (user: IGroupModel) => ({
+const groupToRow = (user: IStoreGroup) => ({
     name: user.name,
     description: user.description,
 });
@@ -98,7 +94,7 @@ export default class GroupStore implements IGroupStore {
         return rowToGroup(row);
     }
 
-    async create(group: IGroupModel): Promise<Group> {
+    async create(group: IStoreGroup): Promise<Group> {
         const row = await this.db(T.GROUPS)
             .insert(groupToRow(group))
             .returning('*');

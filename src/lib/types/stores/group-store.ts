@@ -7,10 +7,20 @@ export interface IStoreGroup {
 }
 
 export interface IGroupStore extends Store<IGroup, number> {
-    deleteOldUsersFromGroup(deletableUsers: IGroupUser[]);
+    updateGroupUsers(
+        groupId: number,
+        newUsers: IGroupUserModel[],
+        deletableUsers: IGroupUser[],
+        userName: string,
+    ): Promise<void>;
+    deleteOldUsersFromGroup(deletableUsers: IGroupUser[]): Promise<void>;
     update(group: IGroupModel): Promise<IGroup>;
     getAllUsersByGroups(groupIds: number[]): Promise<IGroupUser[]>;
-    addNewUsersToGroup(id: number, users: IGroupUserModel[], userName: string);
+    addNewUsersToGroup(
+        groupId: number,
+        users: IGroupUserModel[],
+        userName: string,
+    ): Promise<void>;
     existsWithName(name: string): Promise<boolean>;
     create(group: IStoreGroup): Promise<IGroup>;
 }

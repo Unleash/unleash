@@ -96,21 +96,21 @@ export class GroupService {
         ]);
         const existingUserIds = existingUsers.map((g) => g.userId);
 
-        await this.groupStore.addNewUsersToGroup(
-            newGroup.id,
-            group.users.filter(
-                (user) => !existingUserIds.includes(user.user.id),
-            ),
-            userName,
-        );
-
         const deletableUsers = existingUsers.filter(
             (existingUser) =>
                 !group.users.some(
                     (groupUser) => groupUser.user.id == existingUser.userId,
                 ),
         );
-        await this.groupStore.deleteOldUsersFromGroup(deletableUsers);
+
+        await this.groupStore.updateGroupUsers(
+            newGroup.id,
+            group.users.filter(
+                (user) => !existingUserIds.includes(user.user.id),
+            ),
+            deletableUsers,
+            userName,
+        );
 
         await this.eventStore.store({
             type: GROUP_UPDATED,

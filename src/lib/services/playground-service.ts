@@ -14,8 +14,10 @@ enum PayloadType {
     STRING = 'string',
 }
 
+type NonEmptyList<T> = [T, ...T[]];
+
 export const offlineUnleashClient = async (
-    toggles: FeatureConfigurationClient[],
+    toggles: NonEmptyList<FeatureConfigurationClient>,
     context: SdkContextSchema,
     logError: (message: any, ...args: any[]) => void,
 ): Promise<UnleashClient> => {
@@ -57,13 +59,7 @@ export const offlineUnleashClient = async (
     client.on('error', logError);
     client.start();
 
-    if (toggles.length > 0) {
-        // make sure the client is ready before we pass it back. otherwise toggles
-        // will all be false.
-        //
-        // if there are no toggles provided, the client will never be ready.
-        await once(client, 'ready');
-    }
+    await once(client, 'ready');
 
     return client;
 };
@@ -93,42 +89,35 @@ export class PlaygroundService {
             environment,
         });
 
-        if (toggles.length === 0) {
-            // if there are no toggles, we can exit early. This does two things:
-            //
-            // 1. it saves us computation
-            //
-            // 2. the node unleash-client is *never ready* if you provide it
-            // with an empty list of toggles. That means the server spins forever.
+        const [head, ...rest] = toggles;
+        if (!head) {
             return [];
+        } else {
+            const client = await offlineUnleashClient(
+                [head, ...rest],
+                context,
+                this.logger.error,
+            );
+
+            const clientContext = {
+                ...context,
+                currentTime: context.currentTime
+                    ? new Date(context.currentTime)
+                    : undefined,
+            };
+            const output: PlaygroundFeatureSchema[] = await Promise.all(
+                client.getFeatureToggleDefinitions().map(async (x) => {
+                    return {
+                        isEnabled: client.isEnabled(x.name, clientContext),
+                        projectId: await this.featureToggleService.getProjectId(
+                            x.name,
+                        ),
+                        variant: client.getVariant(x.name),
+                        name: x.name,
+                    };
+                }),
+            );
+            return output;
         }
-
-        const clientContext = {
-            ...context,
-            currentTime: context.currentTime
-                ? new Date(context.currentTime)
-                : undefined,
-        };
-
-        const client = await offlineUnleashClient(
-            toggles,
-            context,
-            this.logger.error,
-        );
-
-        const output: PlaygroundFeatureSchema[] = await Promise.all(
-            client.getFeatureToggleDefinitions().map(async (x) => {
-                return {
-                    isEnabled: client.isEnabled(x.name, clientContext),
-                    projectId: await this.featureToggleService.getProjectId(
-                        x.name,
-                    ),
-                    variant: client.getVariant(x.name),
-                    name: x.name,
-                };
-            }),
-        );
-
-        return output;
     }
 }

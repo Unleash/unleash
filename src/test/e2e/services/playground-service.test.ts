@@ -81,8 +81,14 @@ describe('the playground service (e2e)', () => {
                         const serviceToggles: PlaygroundFeatureSchema[] =
                             await service.evaluateQuery(projects, env, context);
 
+                        const [head, ...rest] =
+                            await featureToggleService.getClientFeatures();
+                        if (!head) {
+                            return serviceToggles.length === 0;
+                        }
+
                         const client = await offlineUnleashClient(
-                            await featureToggleService.getClientFeatures(),
+                            [head, ...rest],
                             context,
                             console.log,
                         );

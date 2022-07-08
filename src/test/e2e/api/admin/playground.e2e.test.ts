@@ -32,6 +32,12 @@ afterAll(async () => {
     await db.destroy();
 });
 
+const testParams = {
+    interruptAfterTimeLimit: 400, // Default timeout in Jest 5000ms
+    markInterruptAsFailure: false, // When set to false, timeout during initial cases will not be considered as a failure
+    numRuns: 1,
+};
+
 describe('Playground API E2E', () => {
     test('Returned toggles should be a subset of the provided toggles', async () => {
         await fc.assert(
@@ -76,11 +82,10 @@ describe('Playground API E2E', () => {
                 .afterEach(async () => {
                     await db.stores.featureToggleStore.deleteAll();
                 }),
+            testParams,
         );
     });
 
-    jest.setTimeout(20000); // this test might take a while to complete due
-    // to its property-based nature.
     test('should filter the list according to the input parameters', async () => {
         await fc.assert(
             fc
@@ -147,6 +152,7 @@ describe('Playground API E2E', () => {
                 .afterEach(async () => {
                     await db.stores.featureToggleStore.deleteAll();
                 }),
+            { ...testParams, examples: [] },
         );
     });
 
@@ -215,6 +221,7 @@ describe('Playground API E2E', () => {
                 .afterEach(async () => {
                     await db.stores.featureToggleStore.deleteAll();
                 }),
+            testParams,
         );
     });
 });

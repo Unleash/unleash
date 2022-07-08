@@ -167,6 +167,11 @@ describe('toggle generator', () => {
     });
 });
 
+const testParams = {
+    interruptAfterTimeLimit: 400, // Default timeout in Jest 5000ms
+    markInterruptAsFailure: false, // When set to false, timeout during initial cases will not be considered as a failure
+    numRuns: 1,
+};
 describe('the playground API', () => {
     test('should return the provided input arguments as part of the response', async () => {
         await fc.assert(
@@ -185,6 +190,7 @@ describe('the playground API', () => {
                     return true;
                 },
             ),
+            testParams,
         );
     });
 
@@ -206,6 +212,7 @@ describe('the playground API', () => {
                     return status === 400;
                 },
             ),
+            testParams,
         );
     });
 });

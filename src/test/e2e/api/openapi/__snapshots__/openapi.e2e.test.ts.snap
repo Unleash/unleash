@@ -97,6 +97,12 @@ Object {
           "enabled": Object {
             "type": "boolean",
           },
+          "environments": Object {
+            "items": Object {
+              "type": "string",
+            },
+            "type": "array",
+          },
           "events": Object {
             "items": Object {
               "type": "string",
@@ -109,6 +115,12 @@ Object {
           "parameters": Object {
             "additionalProperties": true,
             "type": "object",
+          },
+          "projects": Object {
+            "items": Object {
+              "type": "string",
+            },
+            "type": "array",
           },
           "provider": Object {
             "type": "string",

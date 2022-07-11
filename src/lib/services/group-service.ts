@@ -122,6 +122,10 @@ export class GroupService {
         return newGroup;
     }
 
+    async deleteGroup(id: number): Promise<void> {
+        return this.groupStore.delete(id);
+    }
+
     async validateGroup(
         { name, users }: IGroupModel,
         existingGroup?: IGroup,

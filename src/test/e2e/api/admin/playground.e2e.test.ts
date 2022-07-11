@@ -316,10 +316,10 @@ describe('Playground API E2E', () => {
                             .tuple(appName(), generateRequest())
                             .map(([generatedAppName, req]) => ({
                                 ...req,
-                                // generate a context that has `appName` set to
+                                // generate a context that has dynamic context field set to
                                 // one of the above values
                                 context: {
-                                    generatedAppName,
+                                    appName: generatedAppName,
                                     environment: 'default',
                                 },
                             })),
@@ -331,6 +331,7 @@ describe('Playground API E2E', () => {
                                 .set('Authorization', token.secret)
                                 .send(req)
                                 .expect(200);
+
                             const shouldBeEnabled = toggles.reduce(
                                 (acc, next) => ({
                                     ...acc,
@@ -440,8 +441,97 @@ describe('Playground API E2E', () => {
             );
         });
 
-        it('applies custom context fields correctly', () => {
+        it('applies custom context fields correctly', async () => {
             // check both on the top level and on the nested level.
+            const contextValue = () =>
+                fc.record({
+                    name: fc.string({ minLength: 1 }),
+                    value: fc.string({ minLength: 1 }),
+                });
+
+            const constrainedFeatures = (): Arbitrary<ClientFeatureSchema[]> =>
+                fc.array(
+                    fc
+                        .tuple(
+                            generateFeatureToggle(),
+                            contextValue().map((context) => ({
+                                name: 'default',
+                                constraints: [
+                                    {
+                                        values: [context.value],
+                                        inverted: false,
+                                        operator: 'IN' as 'IN',
+                                        contextName: context.name,
+                                        caseInsensitive: false,
+                                    },
+                                ],
+                            })),
+                        )
+                        .map(([toggle, strategy]) => ({
+                            ...toggle,
+                            enabled: true,
+                            strategies: [strategy],
+                        })),
+                );
+            await fc.assert(
+                fc
+                    .asyncProperty(
+                        fc
+                            .tuple(
+                                contextValue(),
+                                fc.constantFrom('top', 'nested'),
+                                generateRequest(),
+                            )
+                            .map(([generatedContextValue, placement, req]) => {
+                                if (placement === 'top') {
+                                    return {
+                                        ...req,
+                                        context: {
+                                            [generatedContextValue.name]:
+                                                generatedContextValue.value,
+                                        },
+                                    };
+                                } else {
+                                    return {
+                                        ...req,
+                                        context: {
+                                            properties: {
+                                                [generatedContextValue.name]:
+                                                    generatedContextValue.value,
+                                            },
+                                        },
+                                    };
+                                }
+                            }),
+                        constrainedFeatures(),
+                        async (req, toggles) => {
+                            await seedDatabase(db, toggles, 'default');
+
+                            const { body }: ApiResponse = await app.request
+                                .post('/api/admin/playground')
+                                .set('Authorization', token.secret)
+                                .send(req)
+                                .expect(200);
+
+                            const contextField = Object.values(req.context)[0];
+
+                            const shouldBeEnabled = toggles.reduce(
+                                (acc, next) => ({
+                                    ...acc,
+                                    [next.name]:
+                                        next.strategies[0].constraints[0]
+                                            .values[0] === contextField,
+                                }),
+                                {},
+                            );
+                            return body.toggles.every(
+                                (x) => x.isEnabled === shouldBeEnabled[x.name],
+                            );
+                        },
+                    )
+                    .afterEach(reset(db)),
+                testParams,
+            );
         });
     });
 });

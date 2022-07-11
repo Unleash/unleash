@@ -117,6 +117,7 @@ export class PlaygroundService {
                     };
                 }),
             );
+
             return output;
         }
     }

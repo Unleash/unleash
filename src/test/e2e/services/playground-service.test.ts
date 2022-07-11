@@ -164,6 +164,59 @@ describe('offline client', () => {
         expect(client.isEnabled(name)).toBeTruthy();
     });
 
+    it('constrains on appName', async () => {
+        const enabledFeature = 'toggle-name';
+        const disabledFeature = 'other-toggle';
+        const appName = 'app-name';
+        const client = await offlineUnleashClient(
+            [
+                {
+                    name: enabledFeature,
+                    enabled: true,
+                    strategies: [
+                        {
+                            name: 'default',
+                            constraints: [
+                                {
+                                    contextName: 'appName',
+                                    operator: 'IN',
+                                    values: [appName],
+                                },
+                            ],
+                        },
+                    ],
+                    variants: [],
+                    type: '',
+                    stale: false,
+                },
+                {
+                    name: disabledFeature,
+                    enabled: true,
+                    strategies: [
+                        {
+                            name: 'default',
+                            constraints: [
+                                {
+                                    contextName: 'appName',
+                                    operator: 'IN',
+                                    values: ['otherApp'],
+                                },
+                            ],
+                        },
+                    ],
+                    variants: [],
+                    type: '',
+                    stale: false,
+                },
+            ],
+            { appName, environment: 'default' },
+            console.log,
+        );
+
+        expect(client.isEnabled(enabledFeature)).toBeTruthy();
+        expect(client.isEnabled(disabledFeature)).toBeFalsy();
+    });
+
     it('considers disabled variants with a default strategy to be off', async () => {
         const name = 'toggle-name';
         const client = await offlineUnleashClient(

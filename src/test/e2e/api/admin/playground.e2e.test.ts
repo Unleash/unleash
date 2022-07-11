@@ -1,6 +1,6 @@
-import fc from 'fast-check';
+import fc, { Arbitrary } from 'fast-check';
 import {
-    // generateFeatureToggle,
+    generateFeatureToggle,
     generateToggles,
 } from '../../../../lib/routes/admin-api/playground.test';
 import { generate as generateRequest } from '../../../../lib/openapi/spec/playground-request-schema.test';
@@ -39,9 +39,10 @@ afterAll(async () => {
 
 const reset = (database: ITestDb) => async () => {
     await database.stores.featureToggleStore.deleteAll();
+    await database.stores.environmentStore.deleteAll();
 };
 
-// const toArray = <T>(x: T): [T] => [x]
+const toArray = <T>(x: T): [T] => [x];
 
 const testParams = {
     interruptAfterTimeLimit: 4000, // Default timeout in Jest 5000ms
@@ -53,24 +54,69 @@ type ApiResponse = {
 };
 
 describe('Playground API E2E', () => {
+    // utility function for seeding the database before runs
     const seedDatabase = (
         database: ITestDb,
         toggles: ClientFeatureSchema[],
+        environment: string,
     ): Promise<FeatureToggle[]> =>
         Promise.all(
-            toggles.map((t) =>
-                database.stores.featureToggleStore.create(t.project, {
-                    ...t,
-                    createdAt: undefined,
-                    variants: [
-                        ...(t.variants ?? []).map((variant) => ({
-                            ...variant,
-                            weightType: WeightType.VARIABLE,
-                            stickiness: 'default',
-                        })),
-                    ],
-                }),
-            ),
+            toggles.map(async (feature) => {
+                // create feature
+                const toggle = await database.stores.featureToggleStore.create(
+                    feature.project,
+                    {
+                        ...feature,
+                        createdAt: undefined,
+                        variants: [
+                            ...(feature.variants ?? []).map((variant) => ({
+                                ...variant,
+                                weightType: WeightType.VARIABLE,
+                                stickiness: 'default',
+                            })),
+                        ],
+                    },
+                );
+
+                // create environment if necessary
+                await database.stores.environmentStore
+                    .create({
+                        name: environment,
+                        type: 'development',
+                        enabled: true,
+                    })
+                    .catch(() => {
+                        // purposefully left empty: env creation may fail if the
+                        // env already exists, and because of the async nature
+                        // of things, this is the easiest way to make it work.
+                    });
+
+                // assign strategies
+                await Promise.all(
+                    (feature.strategies || []).map((strategy) =>
+                        database.stores.featureStrategiesStore.createStrategyFeatureEnv(
+                            {
+                                parameters: {},
+                                constraints: [],
+                                ...strategy,
+                                featureName: feature.name,
+                                environment,
+                                strategyName: strategy.name,
+                                projectId: feature.project,
+                            },
+                        ),
+                    ),
+                );
+
+                // enable/disable the feature in environment
+                await database.stores.featureEnvironmentStore.addEnvironmentToFeature(
+                    feature.name,
+                    environment,
+                    feature.enabled,
+                );
+
+                return toggle;
+            }),
         );
 
     test('Returned toggles should be a subset of the provided toggles', async () => {
@@ -81,7 +127,7 @@ describe('Playground API E2E', () => {
                     generateRequest(),
                     async (toggles, request) => {
                         // seed the database
-                        await seedDatabase(db, toggles);
+                        await seedDatabase(db, toggles, request.environment);
 
                         const { body }: ApiResponse = await app.request
                             .post('/api/admin/playground')
@@ -108,8 +154,8 @@ describe('Playground API E2E', () => {
                 .asyncProperty(
                     generateRequest(),
                     generateToggles({ minLength: 1 }),
-                    async (payload, toggles) => {
-                        await seedDatabase(db, toggles);
+                    async (request, toggles) => {
+                        await seedDatabase(db, toggles, request.environment);
 
                         // get a subset of projects that exist among the toggles
                         const [projects] = fc.sample(
@@ -123,7 +169,7 @@ describe('Playground API E2E', () => {
                             ),
                         );
 
-                        payload.projects = projects;
+                        request.projects = projects;
 
                         // create a list of features that can be filtered
                         // pass in args that should filter the list
@@ -131,7 +177,7 @@ describe('Playground API E2E', () => {
                         const { body }: ApiResponse = await app.request
                             .post('/api/admin/playground')
                             .set('Authorization', token.secret)
-                            .send(payload)
+                            .send(request)
                             .expect(200);
 
                         switch (projects) {
@@ -168,7 +214,7 @@ describe('Playground API E2E', () => {
                     generateToggles(),
                     fc.context(),
                     async (toggles, ctx) => {
-                        await seedDatabase(db, toggles);
+                        await seedDatabase(db, toggles, 'default');
 
                         const { body } = await app.request
                             .post('/api/admin/playground')
@@ -229,147 +275,173 @@ describe('Playground API E2E', () => {
     });
 
     describe('context application', () => {
-        it('applies static context fields correctly', async () => {
-            // const appNames = ['A', 'B', 'C'];
-            // // Choose one of the app names at random
-            // const appName = () => fc.constantFrom(...appNames);
-            // // generate a list of features that are active only for a specific
-            // // app name (constraints). Each feature will be constrained to a
-            // // random appName from the list above.
-            // const constrainedFeatures = (): Arbitrary<ClientFeatureSchema[]> =>
-            //     fc.array(
-            //         fc
-            //             .tuple(
-            //                 generateFeatureToggle(),
-            //                 fc.record({
-            //                     name: fc.constant('default'),
-            //                     constraints: fc.array(
-            //                         fc.record({
-            //                             values: appName().map(toArray),
-            //                             inverted: fc.constant(false),
-            //                             operator: fc.constant('IN' as 'IN'),
-            //                             contextName: fc.constant('appName'),
-            //                             caseInsensitive: fc.boolean(),
-            //                         }),
-            //                         { maxLength: 1, minLength: 1 },
-            //                     ),
-            //                 }),
-            //             )
-            //             .map(([toggle, strategy]) => ({
-            //                 ...toggle,
-            //                 enabled: true,
-            //                 strategies: [strategy],
-            //             })),
-            //     );
-            // await fc.assert(
-            //     fc
-            //         .asyncProperty(
-            //             fc
-            //                 .tuple(appName(), generateRequest())
-            //                 .map(([appName, req]) => ({
-            //                     ...req,
-            //                     // generate a context that has `appName` set to
-            //                     // one of the above values
-            //                     context: { appName },
-            //                 })),
-            //             constrainedFeatures(),
-            //             async (req, toggles) => {
-            //                 seedDatabase(db, toggles);
-            //                 const { body }: ApiResponse =
-            //                     await app.request
-            //                         .post('/api/admin/playground')
-            //                         .set('Authorization', token.secret)
-            //                         .send(req)
-            //                         .expect(200);
-            //                 const shouldBeEnabled = toggles.reduce(
-            //                     (acc, next) => ({
-            //                         ...acc,
-            //                         [next.name]:
-            //                             next.strategies[0].constraints[0]
-            //                                 .values[0] === req.context.appName,
-            //                     }),
-            //                     {},
-            //                 );
-            //                 return body.toggles.every(
-            //                     (x) => x.isEnabled === shouldBeEnabled[x.name],
-            //                 );
-            //             },
-            //         )
-            //         .afterEach(reset(db)),
-            //     testParams,
-            // );
+        it('applies appName constraints correctly', async () => {
+            const appNames = ['A', 'B', 'C'];
+
+            // Choose one of the app names at random
+            const appName = () => fc.constantFrom(...appNames);
+
+            // generate a list of features that are active only for a specific
+            // app name (constraints). Each feature will be constrained to a
+            // random appName from the list above.
+            const constrainedFeatures = (): Arbitrary<ClientFeatureSchema[]> =>
+                fc.array(
+                    fc
+                        .tuple(
+                            generateFeatureToggle(),
+                            fc.record({
+                                name: fc.constant('default'),
+                                constraints: fc
+                                    .record({
+                                        values: appName().map(toArray),
+                                        inverted: fc.constant(false),
+                                        operator: fc.constant('IN' as 'IN'),
+                                        contextName: fc.constant('appName'),
+                                        caseInsensitive: fc.boolean(),
+                                    })
+                                    .map(toArray),
+                            }),
+                        )
+                        .map(([toggle, strategy]) => ({
+                            ...toggle,
+                            enabled: true,
+                            strategies: [strategy],
+                        })),
+                );
+
+            await fc.assert(
+                fc
+                    .asyncProperty(
+                        fc
+                            .tuple(appName(), generateRequest())
+                            .map(([generatedAppName, req]) => ({
+                                ...req,
+                                // generate a context that has `appName` set to
+                                // one of the above values
+                                context: {
+                                    generatedAppName,
+                                    environment: 'default',
+                                },
+                            })),
+                        constrainedFeatures(),
+                        async (req, toggles) => {
+                            await seedDatabase(db, toggles, req.environment);
+                            const { body }: ApiResponse = await app.request
+                                .post('/api/admin/playground')
+                                .set('Authorization', token.secret)
+                                .send(req)
+                                .expect(200);
+                            const shouldBeEnabled = toggles.reduce(
+                                (acc, next) => ({
+                                    ...acc,
+                                    [next.name]:
+                                        next.strategies[0].constraints[0]
+                                            .values[0] === req.context.appName,
+                                }),
+                                {},
+                            );
+
+                            return body.toggles.every(
+                                (x) => x.isEnabled === shouldBeEnabled[x.name],
+                            );
+                        },
+                    )
+                    .afterEach(reset(db)),
+                testParams,
+            );
         });
 
         it('applies dynamic context fields correctly', async () => {
-            // const dynamicContextField = () => fc.oneof()
-            // // generate a list of features that are constrained on a
-            // // random dynamic context field.
-            // const constrainedFeatures = (): Arbitrary<ClientFeatureSchema[]> =>
-            //     fc.array(
-            //         fc
-            //             .tuple(
-            //                 generateFeatureToggle(),
-            //                 fc.record({
-            //                     name: fc.constant('default'),
-            //                     constraints: fc.array(
-            //                         fc.record({
-            //                             values: appName().map((name) => [name]),
-            //                             inverted: fc.constant(false),
-            //                             operator: fc.constant('IN' as 'IN'),
-            //                             contextName: fc.constant('appName'),
-            //                             caseInsensitive: fc.boolean(),
-            //                         }),
-            //                         { maxLength: 1, minLength: 1 },
-            //                     ),
-            //                 }),
-            //             )
-            //             .map(([toggle, strategy]) => ({
-            //                 ...toggle,
-            //                 enabled: true,
-            //                 strategies: [strategy],
-            //             })),
-            //     );
-            //             await fc.assert(
-            //     fc
-            //         .asyncProperty(
-            //             fc
-            //                 .tuple(appName(), generateRequest())
-            //                 .map(([appName, req]) => ({
-            //                     ...req,
-            //                     // generate a context that has `appName` set to
-            //                     // one of the above values
-            //                     context: { appName },
-            //                 })),
-            //             constrainedFeatures(),
-            //             async (req, toggles) => {
-            //                 seedDatabase(db, toggles);
-            //                 const { body }: ApiResponse =
-            //                     await app.request
-            //                         .post('/api/admin/playground')
-            //                         .set('Authorization', token.secret)
-            //                         .send(req)
-            //                         .expect(200);
-            //                 const shouldBeEnabled = toggles.reduce(
-            //                     (acc, next) => ({
-            //                         ...acc,
-            //                         [next.name]:
-            //                             next.strategies[0].constraints[0]
-            //                                 .values[0] === req.context.appName,
-            //                     }),
-            //                     {},
-            //                 );
-            //                 return body.toggles.every(
-            //                     (x) => x.isEnabled === shouldBeEnabled[x.name],
-            //                 );
-            //             },
-            //         )
-            //         .afterEach(reset(db)),
-            //     testParams,
-            // );
-        });
-    });
+            const contextValue = () =>
+                fc.oneof(
+                    fc.record({
+                        name: fc.constant('remoteAddress'),
+                        value: fc.ipV4(),
+                        operator: fc.constant('IN' as 'IN'),
+                    }),
+                    fc.record({
+                        name: fc.constant('sessionId'),
+                        value: fc.uuid(),
+                        operator: fc.constant('IN' as 'IN'),
+                    }),
+                    fc.record({
+                        name: fc.constant('userId'),
+                        value: fc.emailAddress(),
+                        operator: fc.constant('IN' as 'IN'),
+                    }),
+                );
 
-    it('applies custom context fields correctly', () => {
-        // check both on the top level and on the nested level.
+            const constrainedFeatures = (): Arbitrary<ClientFeatureSchema[]> =>
+                fc.array(
+                    fc
+                        .tuple(
+                            generateFeatureToggle(),
+                            contextValue().map((context) => ({
+                                name: 'default',
+                                constraints: [
+                                    {
+                                        values: [context.value],
+                                        inverted: false,
+                                        operator: context.operator,
+                                        contextName: context.name,
+                                        caseInsensitive: false,
+                                    },
+                                ],
+                            })),
+                        )
+                        .map(([toggle, strategy]) => ({
+                            ...toggle,
+                            enabled: true,
+                            strategies: [strategy],
+                        })),
+                );
+            await fc.assert(
+                fc
+                    .asyncProperty(
+                        fc
+                            .tuple(contextValue(), generateRequest())
+                            .map(([generatedContextValue, req]) => ({
+                                ...req,
+                                // generate a context that has `appName` set to
+                                // one of the above values
+                                context: {
+                                    [generatedContextValue.name]:
+                                        generatedContextValue.value,
+                                },
+                            })),
+                        constrainedFeatures(),
+                        async (req, toggles) => {
+                            await seedDatabase(db, toggles, 'default');
+
+                            const { body }: ApiResponse = await app.request
+                                .post('/api/admin/playground')
+                                .set('Authorization', token.secret)
+                                .send(req)
+                                .expect(200);
+
+                            const contextField = Object.values(req.context)[0];
+
+                            const shouldBeEnabled = toggles.reduce(
+                                (acc, next) => ({
+                                    ...acc,
+                                    [next.name]:
+                                        next.strategies[0].constraints[0]
+                                            .values[0] === contextField,
+                                }),
+                                {},
+                            );
+                            return body.toggles.every(
+                                (x) => x.isEnabled === shouldBeEnabled[x.name],
+                            );
+                        },
+                    )
+                    .afterEach(reset(db)),
+                testParams,
+            );
+        });
+
+        it('applies custom context fields correctly', () => {
+            // check both on the top level and on the nested level.
+        });
     });
 });

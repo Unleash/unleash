@@ -7,6 +7,7 @@ import Group, {
     IGroupUser,
     IGroupUserModel,
 } from '../types/group';
+import Transaction = Knex.Transaction;
 
 const T = {
     GROUPS: 'groups',
@@ -119,27 +120,43 @@ export default class GroupStore implements IGroupStore {
     }
 
     async addNewUsersToGroup(
-        id: number,
+        groupId: number,
         users: IGroupUserModel[],
         userName: string,
+        transaction?: Transaction,
     ): Promise<void> {
         const rows = users.map((user) => {
             return {
-                group_id: id,
+                group_id: groupId,
                 user_id: user.user.id,
                 type: user.type,
                 created_by: userName,
             };
         });
-        return this.db.batchInsert(T.GROUP_USER, rows);
+        return (transaction || this.db).batchInsert(T.GROUP_USER, rows);
     }
 
-    async deleteOldUsersFromGroup(deletableUsers: IGroupUser[]): Promise<void> {
-        return this.db(T.GROUP_USER)
+    async deleteOldUsersFromGroup(
+        deletableUsers: IGroupUser[],
+        transaction?: Transaction,
+    ): Promise<void> {
+        return (transaction || this.db)(T.GROUP_USER)
             .whereIn(
                 ['group_id', 'user_id'],
                 deletableUsers.map((user) => [user.groupId, user.userId]),
             )
             .delete();
+    }
+
+    async updateGroupUsers(
+        groupId: number,
+        newUsers: IGroupUserModel[],
+        deletableUsers: IGroupUser[],
+        userName: string,
+    ): Promise<void> {
+        await this.db.transaction(async (tx) => {
+            await this.addNewUsersToGroup(groupId, newUsers, userName, tx);
+            await this.deleteOldUsersFromGroup(deletableUsers, tx);
+        });
     }
 }

@@ -40,14 +40,11 @@ export default class FakeGroupStore implements IGroupStore {
         throw new Error('Method not implemented.');
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     addNewUsersToGroup(
         id: number,
         users: IGroupUserModel[],
         userName: string,
-    ) {}
-
-    getAllGroupUsers(): Promise<IGroupUser[]> {
+    ): Promise<void> {
         throw new Error('Method not implemented.');
     }
 
@@ -55,12 +52,20 @@ export default class FakeGroupStore implements IGroupStore {
         throw new Error('Method not implemented.');
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    deleteOldUsersFromGroup(deletableUsers: IGroupUser[]) {
+    deleteOldUsersFromGroup(deletableUsers: IGroupUser[]): Promise<void> {
         throw new Error('Method not implemented.');
     }
 
     update(group: IGroupModel): Promise<IGroup> {
+        throw new Error('Method not implemented.');
+    }
+
+    updateGroupUsers(
+        groupId: number,
+        newUsers: IGroupUserModel[],
+        deletableUsers: IGroupUser[],
+        userName: string,
+    ): Promise<void> {
         throw new Error('Method not implemented.');
     }
 }

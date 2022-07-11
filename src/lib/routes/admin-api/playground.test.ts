@@ -21,6 +21,7 @@ import { ALL_OPERATORS } from '../../../lib/util/constants';
 import { ClientFeatureSchema } from '../../../lib/openapi/spec/client-feature-schema';
 import { WeightType } from '../../../lib/types/model';
 import { FeatureStrategySchema } from '../../../lib/openapi/spec/feature-strategy-schema';
+import { ConstraintSchema } from 'lib/openapi/spec/constraint-schema';
 
 async function getSetup() {
     const base = `/random${Math.round(Math.random() * 1000)}`;
@@ -33,7 +34,7 @@ async function getSetup() {
     return { base, request: supertest(app) };
 }
 
-const strategyConstraints = () =>
+const strategyConstraints = (): Arbitrary<ConstraintSchema[]> =>
     fc.array(
         fc.record({
             contextName: urlFriendlyString(),
@@ -97,7 +98,9 @@ export const strategies = (): Arbitrary<FeatureStrategySchema[]> =>
         ),
     );
 
-const generateFeatureToggle = (name?: string): Arbitrary<ClientFeatureSchema> =>
+export const generateFeatureToggle = (
+    name?: string,
+): Arbitrary<ClientFeatureSchema> =>
     fc.record(
         {
             name: name ? fc.constant(name) : urlFriendlyString(),

@@ -446,7 +446,7 @@ describe('Playground API E2E', () => {
             const contextValue = () =>
                 fc.record({
                     name: fc.string({ minLength: 1 }),
-                    value: fc.string({ minLength: 1 }),
+                    value: fc.constantFrom('a', 'b', 'c'),
                 });
 
             const constrainedFeatures = (): Arbitrary<ClientFeatureSchema[]> =>
@@ -483,24 +483,25 @@ describe('Playground API E2E', () => {
                                 generateRequest(),
                             )
                             .map(([generatedContextValue, placement, req]) => {
-                                if (placement === 'top') {
-                                    return {
-                                        ...req,
-                                        context: {
-                                            [generatedContextValue.name]:
-                                                generatedContextValue.value,
-                                        },
-                                    };
-                                } else {
-                                    return {
-                                        ...req,
-                                        context: {
-                                            properties: {
+                                switch (placement) {
+                                    case 'top':
+                                        return {
+                                            ...req,
+                                            context: {
                                                 [generatedContextValue.name]:
                                                     generatedContextValue.value,
                                             },
-                                        },
-                                    };
+                                        };
+                                    case 'nested':
+                                        return {
+                                            ...req,
+                                            context: {
+                                                properties: {
+                                                    [generatedContextValue.name]:
+                                                        generatedContextValue.value,
+                                                },
+                                            },
+                                        };
                                 }
                             }),
                         constrainedFeatures(),

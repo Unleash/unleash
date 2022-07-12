@@ -31,6 +31,7 @@ import UserSplashService from './user-splash-service';
 import { SegmentService } from './segment-service';
 import { OpenApiService } from './openapi-service';
 import { ClientSpecService } from './client-spec-service';
+import { PlaygroundService } from './playground-service';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -84,6 +85,9 @@ export const createServices = (
     const userSplashService = new UserSplashService(stores, config);
     const openApiService = new OpenApiService(config);
     const clientSpecService = new ClientSpecService(config);
+    const playgroundService = new PlaygroundService(config, {
+        featureToggleServiceV2,
+    });
 
     return {
         accessService,
@@ -116,6 +120,7 @@ export const createServices = (
         segmentService,
         openApiService,
         clientSpecService,
+        playgroundService,
     };
 };
 

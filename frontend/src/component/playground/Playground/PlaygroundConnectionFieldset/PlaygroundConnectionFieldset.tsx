@@ -1,4 +1,4 @@
-import { ComponentProps, useMemo, useState, VFC } from 'react';
+import { ComponentProps, useState, VFC } from 'react';
 import {
     Autocomplete,
     Box,

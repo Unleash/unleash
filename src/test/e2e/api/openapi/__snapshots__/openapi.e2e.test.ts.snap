@@ -1861,20 +1861,20 @@ Object {
       },
       "playgroundResponseSchema": Object {
         "additionalProperties": false,
-        "description": "The state of all toggles given the provided input.",
+        "description": "The state of all features given the provided input.",
         "properties": Object {
-          "input": Object {
-            "$ref": "#/components/schemas/playgroundRequestSchema",
-          },
-          "toggles": Object {
+          "features": Object {
             "items": Object {
               "$ref": "#/components/schemas/playgroundFeatureSchema",
             },
             "type": "array",
           },
+          "input": Object {
+            "$ref": "#/components/schemas/playgroundRequestSchema",
+          },
         },
         "required": Array [
-          "toggles",
+          "features",
           "input",
         ],
         "type": "object",

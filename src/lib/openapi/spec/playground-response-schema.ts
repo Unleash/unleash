@@ -5,15 +5,15 @@ import { playgroundFeatureSchema } from './playground-feature-schema';
 
 export const playgroundResponseSchema = {
     $id: '#/components/schemas/playgroundResponseSchema',
-    description: 'The state of all toggles given the provided input.',
+    description: 'The state of all features given the provided input.',
     type: 'object',
     additionalProperties: false,
-    required: ['toggles', 'input'],
+    required: ['features', 'input'],
     properties: {
         input: {
             $ref: playgroundRequestSchema.$id,
         },
-        toggles: {
+        features: {
             type: 'array',
             items: {
                 $ref: playgroundFeatureSchema.$id,

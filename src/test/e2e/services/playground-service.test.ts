@@ -2,7 +2,7 @@ import {
     offlineUnleashClient,
     PlaygroundService,
 } from '../../../lib/services/playground-service';
-import { generateToggles } from '../../../lib/routes/admin-api/playground.test';
+import { generateFeatures } from '../../../lib/routes/admin-api/playground.test';
 import { generate as generateContext } from '../../../lib/openapi/spec/sdk-context-schema.test';
 import fc from 'fast-check';
 import { createTestConfig } from '../../config/test-config';
@@ -54,7 +54,7 @@ describe('the playground service (e2e)', () => {
         await fc.assert(
             fc
                 .asyncProperty(
-                    generateToggles({ minLength: 1 }),
+                    generateFeatures({ minLength: 1 }),
                     generateContext(),
                     async (toggles, context) => {
                         await Promise.all(

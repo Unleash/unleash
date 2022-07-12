@@ -57,7 +57,7 @@ export default class PlaygroundController extends Controller {
     ): Promise<void> {
         const response: PlaygroundResponseSchema = {
             input: req.body,
-            toggles: await this.playgroundService.evaluateQuery(
+            features: await this.playgroundService.evaluateQuery(
                 req.body.projects,
                 req.body.environment,
                 req.body.context,

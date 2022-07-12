@@ -98,7 +98,7 @@ export const strategies = (): Arbitrary<FeatureStrategySchema[]> =>
         ),
     );
 
-export const generateFeatureToggle = (
+export const generateFeature = (
     name?: string,
 ): Arbitrary<ClientFeatureSchema> =>
     fc.record(
@@ -149,10 +149,10 @@ export const generateFeatureToggle = (
         { requiredKeys: ['name', 'enabled', 'project', 'strategies'] },
     );
 
-export const generateToggles = (constraints?: {
+export const generateFeatures = (constraints?: {
     minLength?: number;
 }): Arbitrary<ClientFeatureSchema[]> =>
-    fc.uniqueArray(generateFeatureToggle(), {
+    fc.uniqueArray(generateFeature(), {
         ...constraints,
         selector: (v) => v.name,
     });
@@ -161,7 +161,7 @@ describe('toggle generator', () => {
     it('generates toggles with unique names', () => {
         fc.assert(
             fc.property(
-                generateToggles({ minLength: 2 }),
+                generateFeatures({ minLength: 2 }),
                 (toggles) =>
                     toggles.length ===
                     [...new Set(toggles.map((x) => x.name))].length,

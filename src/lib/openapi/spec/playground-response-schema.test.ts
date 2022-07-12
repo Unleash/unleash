@@ -10,7 +10,7 @@ import { generate as generateToggles } from './playground-feature-schema.test';
 const generate = (): Arbitrary<PlaygroundResponseSchema> =>
     fc.record({
         input: generateInput(),
-        toggles: fc.array(generateToggles()),
+        features: fc.array(generateToggles()),
     });
 
 test('playgroundResponseSchema', () =>

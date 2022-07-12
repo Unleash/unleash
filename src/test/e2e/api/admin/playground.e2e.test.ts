@@ -1,7 +1,7 @@
 import fc, { Arbitrary } from 'fast-check';
 import {
-    generateFeatureToggle,
-    generateToggles,
+    generateFeature,
+    generateFeatures,
 } from '../../../../lib/routes/admin-api/playground.test';
 import { generate as generateRequest } from '../../../../lib/openapi/spec/playground-request-schema.test';
 import dbInit, { ITestDb } from '../../helpers/database-init';
@@ -57,11 +57,11 @@ describe('Playground API E2E', () => {
     // utility function for seeding the database before runs
     const seedDatabase = (
         database: ITestDb,
-        toggles: ClientFeatureSchema[],
+        features: ClientFeatureSchema[],
         environment: string,
     ): Promise<FeatureToggle[]> =>
         Promise.all(
-            toggles.map(async (feature) => {
+            features.map(async (feature) => {
                 // create feature
                 const toggle = await database.stores.featureToggleStore.create(
                     feature.project,
@@ -119,15 +119,15 @@ describe('Playground API E2E', () => {
             }),
         );
 
-    test('Returned toggles should be a subset of the provided toggles', async () => {
+    test('Returned features should be a subset of the provided toggles', async () => {
         await fc.assert(
             fc
                 .asyncProperty(
-                    generateToggles({ minLength: 1 }),
+                    generateFeatures({ minLength: 1 }),
                     generateRequest(),
-                    async (toggles, request) => {
+                    async (features, request) => {
                         // seed the database
-                        await seedDatabase(db, toggles, request.environment);
+                        await seedDatabase(db, features, request.environment);
 
                         const { body }: ApiResponse = await app.request
                             .post('/api/admin/playground')
@@ -136,9 +136,9 @@ describe('Playground API E2E', () => {
                             .expect(200);
 
                         // the returned list should always be a subset of the provided list
-                        expect(toggles.map((x) => x.name)).toEqual(
+                        expect(features.map((x) => x.name)).toEqual(
                             expect.arrayContaining(
-                                body.toggles.map((x) => x.name),
+                                body.features.map((x) => x.name),
                             ),
                         );
                     },
@@ -153,17 +153,17 @@ describe('Playground API E2E', () => {
             fc
                 .asyncProperty(
                     generateRequest(),
-                    generateToggles({ minLength: 1 }),
-                    async (request, toggles) => {
-                        await seedDatabase(db, toggles, request.environment);
+                    generateFeatures({ minLength: 1 }),
+                    async (request, features) => {
+                        await seedDatabase(db, features, request.environment);
 
-                        // get a subset of projects that exist among the toggles
+                        // get a subset of projects that exist among the features
                         const [projects] = fc.sample(
                             fc.oneof(
                                 fc.constant('*' as '*'),
                                 fc.uniqueArray(
                                     fc.constantFrom(
-                                        ...toggles.map((t) => t.project),
+                                        ...features.map((t) => t.project),
                                     ),
                                 ),
                             ),
@@ -182,14 +182,14 @@ describe('Playground API E2E', () => {
 
                         switch (projects) {
                             case '*':
-                                // no toggles have been filtered out
-                                return body.toggles.length === toggles.length;
+                                // no features have been filtered out
+                                return body.features.length === features.length;
                             case []:
-                                // no toggle should be without a project
-                                return body.toggles.length === 0;
+                                // no feature should be without a project
+                                return body.features.length === 0;
                             default:
-                                // every toggle should be in one of the prescribed projects
-                                return body.toggles.every((x) =>
+                                // every feature should be in one of the prescribed projects
+                                return body.features.every((x) =>
                                     projects.includes(x.projectId),
                                 );
                         }
@@ -208,10 +208,10 @@ describe('Playground API E2E', () => {
         await fc.assert(
             fc
                 .asyncProperty(
-                    generateToggles(),
+                    generateFeatures(),
                     fc.context(),
-                    async (toggles, ctx) => {
-                        await seedDatabase(db, toggles, 'default');
+                    async (features, ctx) => {
+                        await seedDatabase(db, features, 'default');
 
                         const { body } = await app.request
                             .post('/api/admin/playground')
@@ -231,16 +231,16 @@ describe('Playground API E2E', () => {
                                 {},
                             );
 
-                        const mappedToggles = createDict(body.toggles);
+                        const mappedToggles = createDict(body.features);
 
-                        if (toggles.length !== body.toggles.length) {
+                        if (features.length !== body.features.length) {
                             ctx.log(
-                                `I expected the number of mapped toggles (${body.toggles.length}) to be the same as the number of created toggles (${toggles.length}), but that was not the case.`,
+                                `I expected the number of mapped toggles (${body.features.length}) to be the same as the number of created toggles (${features.length}), but that was not the case.`,
                             );
                             return false;
                         }
 
-                        return toggles.every((x) => {
+                        return features.every((x) => {
                             const mapped: PlaygroundFeatureSchema =
                                 mappedToggles[x.name];
 
@@ -272,7 +272,7 @@ describe('Playground API E2E', () => {
                 fc.uniqueArray(
                     fc
                         .tuple(
-                            generateFeatureToggle(),
+                            generateFeature(),
                             fc.record({
                                 name: fc.constant('default'),
                                 constraints: fc
@@ -286,8 +286,8 @@ describe('Playground API E2E', () => {
                                     .map(toArray),
                             }),
                         )
-                        .map(([toggle, strategy]) => ({
-                            ...toggle,
+                        .map(([feature, strategy]) => ({
+                            ...feature,
                             enabled: true,
                             strategies: [strategy],
                         })),
@@ -309,15 +309,15 @@ describe('Playground API E2E', () => {
                                 },
                             })),
                         constrainedFeatures(),
-                        async (req, toggles) => {
-                            await seedDatabase(db, toggles, req.environment);
+                        async (req, features) => {
+                            await seedDatabase(db, features, req.environment);
                             const { body }: ApiResponse = await app.request
                                 .post('/api/admin/playground')
                                 .set('Authorization', token.secret)
                                 .send(req)
                                 .expect(200);
 
-                            const shouldBeEnabled = toggles.reduce(
+                            const shouldBeEnabled = features.reduce(
                                 (acc, next) => ({
                                     ...acc,
                                     [next.name]:
@@ -327,7 +327,7 @@ describe('Playground API E2E', () => {
                                 {},
                             );
 
-                            return body.toggles.every(
+                            return body.features.every(
                                 (x) => x.isEnabled === shouldBeEnabled[x.name],
                             );
                         },
@@ -364,7 +364,7 @@ describe('Playground API E2E', () => {
                 fc.uniqueArray(
                     fc
                         .tuple(
-                            generateFeatureToggle(),
+                            generateFeature(),
                             contextValue().map((context) => ({
                                 name: 'default',
                                 constraints: [
@@ -378,8 +378,8 @@ describe('Playground API E2E', () => {
                                 ],
                             })),
                         )
-                        .map(([toggle, strategy]) => ({
-                            ...toggle,
+                        .map(([feature, strategy]) => ({
+                            ...feature,
                             enabled: true,
                             strategies: [strategy],
                         })),
@@ -401,8 +401,8 @@ describe('Playground API E2E', () => {
                                 },
                             })),
                         constrainedFeatures(),
-                        async (req, toggles) => {
-                            await seedDatabase(db, toggles, 'default');
+                        async (req, features) => {
+                            await seedDatabase(db, features, 'default');
 
                             const { body }: ApiResponse = await app.request
                                 .post('/api/admin/playground')
@@ -412,7 +412,7 @@ describe('Playground API E2E', () => {
 
                             const contextField = Object.values(req.context)[0];
 
-                            const shouldBeEnabled = toggles.reduce(
+                            const shouldBeEnabled = features.reduce(
                                 (acc, next) => ({
                                     ...acc,
                                     [next.name]:
@@ -421,7 +421,7 @@ describe('Playground API E2E', () => {
                                 }),
                                 {},
                             );
-                            return body.toggles.every(
+                            return body.features.every(
                                 (x) => x.isEnabled === shouldBeEnabled[x.name],
                             );
                         },
@@ -445,7 +445,7 @@ describe('Playground API E2E', () => {
                 fc.uniqueArray(
                     fc
                         .tuple(
-                            generateFeatureToggle(),
+                            generateFeature(),
                             contextValue().map((context) => ({
                                 name: 'default',
                                 constraints: [
@@ -459,8 +459,8 @@ describe('Playground API E2E', () => {
                                 ],
                             })),
                         )
-                        .map(([toggle, strategy]) => ({
-                            ...toggle,
+                        .map(([feature, strategy]) => ({
+                            ...feature,
                             enabled: true,
                             strategies: [strategy],
                         })),
@@ -514,17 +514,17 @@ describe('Playground API E2E', () => {
                         fc.context(),
                         async (
                             { generatedContextValue, request },
-                            toggles,
+                            features,
                             ctx,
                         ) => {
-                            await seedDatabase(db, toggles, environment);
+                            await seedDatabase(db, features, environment);
                             const { body }: ApiResponse = await app.request
                                 .post('/api/admin/playground')
                                 .set('Authorization', token.secret)
                                 .send(request)
                                 .expect(200);
 
-                            const shouldBeEnabled = toggles.reduce(
+                            const shouldBeEnabled = features.reduce(
                                 (acc, next) => {
                                     const constraint =
                                         next.strategies[0].constraints[0];
@@ -543,13 +543,13 @@ describe('Playground API E2E', () => {
 
                             ctx.log(
                                 `Got these ${JSON.stringify(
-                                    body.toggles,
+                                    body.features,
                                 )} and I expect them to be enabled/disabled: ${JSON.stringify(
                                     shouldBeEnabled,
                                 )}`,
                             );
 
-                            return body.toggles.every(
+                            return body.features.every(
                                 (x) => x.isEnabled === shouldBeEnabled[x.name],
                             );
                         },

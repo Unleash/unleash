@@ -200,14 +200,11 @@ describe('Playground API E2E', () => {
         );
     });
 
-    // property failure:
-    // { seed: -138317910, path: "4:2:0:5:3:1:9:1:40:7:1:6:1:3:9:1:2:4:5:1:2:2:3:2:1:1:1:2:1:1:1:11:2:11:2:12:6:10:8:1:1:2:3:1:4:9:3:8:1:1:2:3:1:8", endOnFailure: true }
-    // Counterexample: [[{"name":"-","description":"convallis","project":"0","enabled":false,"lastSeenAt":"1941-10-13T21:55:29.193Z","strategies":[],"variants":[{"name":"AH","weight":0,"weightType":"variable","stickiness":"default","payload":null}]}]]
-    //
-    // Got error: Error: expect(received).toBeTruthy()
-    //
-    // Received: undefined
-    test('should map toggles correctly', async () => {
+    test('should map project and name correctly', async () => {
+        // note: we're not testing `isEnabled` and `variant` here, because
+        // that's the SDK's responsibility. Trying to model 'what variant you
+        // would get' gets really tricky, so it's best left for later if it
+        // becomes relevant.
         await fc.assert(
             fc
                 .asyncProperty(
@@ -222,7 +219,9 @@ describe('Playground API E2E', () => {
                             .send({
                                 projects: '*',
                                 environment: 'default',
-                                context: {},
+                                context: {
+                                    appName: 'playground-test',
+                                },
                             })
                             .expect(200);
 
@@ -245,26 +244,11 @@ describe('Playground API E2E', () => {
                             const mapped: PlaygroundFeatureSchema =
                                 mappedToggles[x.name];
 
-                            ctx.log(
-                                `Original: ${x}, mapped: ${mapped}, allmapped (${body.toggles.length}): ${body.toggles}`,
-                            );
                             expect(mapped).toBeTruthy();
-
-                            const variantIsCorrect =
-                                x.variants && mapped.isEnabled
-                                    ? x.variants.some(
-                                          ({ name, payload }) =>
-                                              name === mapped.variant.name &&
-                                              payload ===
-                                                  mapped.variant.payload,
-                                      )
-                                    : mapped.variant.name === 'disabled' &&
-                                      mapped.variant.enabled === false;
 
                             return (
                                 x.name === mapped.name &&
-                                x.project === mapped.projectId &&
-                                variantIsCorrect
+                                x.project === mapped.projectId
                             );
                         });
                     },
@@ -411,6 +395,7 @@ describe('Playground API E2E', () => {
                                 // generate a context that has a dynamic context field set to
                                 // one of the above values
                                 context: {
+                                    ...req.context,
                                     [generatedContextValue.name]:
                                         generatedContextValue.value,
                                 },
@@ -496,6 +481,7 @@ describe('Playground API E2E', () => {
                                 ? {
                                       ...req,
                                       context: {
+                                          ...req.context,
                                           [generatedContextValue.name]:
                                               generatedContextValue.value,
                                       },
@@ -503,6 +489,7 @@ describe('Playground API E2E', () => {
                                 : {
                                       ...req,
                                       context: {
+                                          ...req.context,
                                           properties: {
                                               [generatedContextValue.name]:
                                                   generatedContextValue.value,
@@ -551,6 +538,8 @@ describe('Playground API E2E', () => {
                                 },
                                 {},
                             );
+
+                            ctx.log(JSON.stringify(shouldBeEnabled));
 
                             return body.toggles.every(
                                 (x) => x.isEnabled === shouldBeEnabled[x.name],

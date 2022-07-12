@@ -1,69 +1,11 @@
 import FeatureToggleService from './feature-toggle-service';
 import { SdkContextSchema } from 'lib/openapi/spec/sdk-context-schema';
-import { InMemStorageProvider, Unleash as UnleashClient } from 'unleash-client';
 import { IUnleashServices } from 'lib/types/services';
 import { ALL } from '../../lib/types/models/api-token';
 import { PlaygroundFeatureSchema } from 'lib/openapi/spec/playground-feature-schema';
 import { Logger } from '../logger';
 import { IUnleashConfig } from 'lib/types';
-import { FeatureConfigurationClient } from 'lib/types/stores/feature-strategies-store';
-import { Operator } from 'unleash-client/lib/strategy/strategy';
-import { once } from 'events';
-
-enum PayloadType {
-    STRING = 'string',
-}
-
-type NonEmptyList<T> = [T, ...T[]];
-
-export const offlineUnleashClient = async (
-    features: NonEmptyList<FeatureConfigurationClient>,
-    context: SdkContextSchema,
-    logError: (message: any, ...args: any[]) => void,
-): Promise<UnleashClient> => {
-    const client = new UnleashClient({
-        ...context,
-        appName: context.appName,
-        disableMetrics: true,
-        refreshInterval: 0,
-        url: 'not-needed',
-        storageProvider: new InMemStorageProvider(),
-        bootstrap: {
-            data: features.map((feature) => ({
-                impressionData: false,
-                ...feature,
-                variants: feature.variants.map((variant) => ({
-                    overrides: [],
-                    ...variant,
-                    payload: variant.payload && {
-                        ...variant.payload,
-                        type: variant.payload.type as unknown as PayloadType,
-                    },
-                })),
-                strategies: feature.strategies.map((strategy) => ({
-                    parameters: {},
-                    ...strategy,
-                    constraints:
-                        strategy.constraints &&
-                        strategy.constraints.map((constraint) => ({
-                            inverted: false,
-                            values: [],
-                            ...constraint,
-                            operator:
-                                constraint.operator as unknown as Operator,
-                        })),
-                })),
-            })),
-        },
-    });
-
-    client.on('error', logError);
-    client.start();
-
-    await once(client, 'ready');
-
-    return client;
-};
+import { offlineUnleashClient } from '..//util/offline-unleash-client';
 
 export class PlaygroundService {
     private readonly logger: Logger;

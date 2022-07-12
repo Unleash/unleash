@@ -1504,7 +1504,7 @@ Object {
       "groupUserModelSchema": Object {
         "additionalProperties": false,
         "properties": Object {
-          "type": Object {
+          "role": Object {
             "type": "string",
           },
           "user": Object {
@@ -1512,7 +1512,7 @@ Object {
           },
         },
         "required": Array [
-          "type",
+          "role",
           "user",
         ],
         "type": "object",

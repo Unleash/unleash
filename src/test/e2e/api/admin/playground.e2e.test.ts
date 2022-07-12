@@ -285,7 +285,7 @@ describe('Playground API E2E', () => {
             // app name (constraints). Each feature will be constrained to a
             // random appName from the list above.
             const constrainedFeatures = (): Arbitrary<ClientFeatureSchema[]> =>
-                fc.array(
+                fc.uniqueArray(
                     fc
                         .tuple(
                             generateFeatureToggle(),
@@ -307,6 +307,7 @@ describe('Playground API E2E', () => {
                             enabled: true,
                             strategies: [strategy],
                         })),
+                    { selector: (feature) => feature.name },
                 );
 
             await fc.assert(
@@ -316,7 +317,7 @@ describe('Playground API E2E', () => {
                             .tuple(appName(), generateRequest())
                             .map(([generatedAppName, req]) => ({
                                 ...req,
-                                // generate a context that has dynamic context field set to
+                                // generate a context that has appName set to
                                 // one of the above values
                                 context: {
                                     appName: generatedAppName,
@@ -348,7 +349,10 @@ describe('Playground API E2E', () => {
                         },
                     )
                     .afterEach(reset(db)),
-                testParams,
+                {
+                    ...testParams,
+                    examples: [],
+                },
             );
         });
 
@@ -373,7 +377,7 @@ describe('Playground API E2E', () => {
                 );
 
             const constrainedFeatures = (): Arbitrary<ClientFeatureSchema[]> =>
-                fc.array(
+                fc.uniqueArray(
                     fc
                         .tuple(
                             generateFeatureToggle(),
@@ -395,6 +399,7 @@ describe('Playground API E2E', () => {
                             enabled: true,
                             strategies: [strategy],
                         })),
+                    { selector: (feature) => feature.name },
                 );
             await fc.assert(
                 fc
@@ -403,7 +408,7 @@ describe('Playground API E2E', () => {
                             .tuple(contextValue(), generateRequest())
                             .map(([generatedContextValue, req]) => ({
                                 ...req,
-                                // generate a context that has `appName` set to
+                                // generate a context that has a dynamic context field set to
                                 // one of the above values
                                 context: {
                                     [generatedContextValue.name]:
@@ -445,12 +450,11 @@ describe('Playground API E2E', () => {
             // check both on the top level and on the nested level.
             const contextValue = () =>
                 fc.record({
-                    name: fc.string({ minLength: 1 }),
-                    value: fc.constantFrom('a', 'b', 'c'),
+                    name: fc.constantFrom('A', 'B'),
+                    value: fc.constantFrom('a', 'b'),
                 });
-
             const constrainedFeatures = (): Arbitrary<ClientFeatureSchema[]> =>
-                fc.array(
+                fc.uniqueArray(
                     fc
                         .tuple(
                             generateFeatureToggle(),
@@ -472,6 +476,7 @@ describe('Playground API E2E', () => {
                             enabled: true,
                             strategies: [strategy],
                         })),
+                    { selector: (feature) => feature.name },
                 );
             await fc.assert(
                 fc

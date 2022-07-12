@@ -17,7 +17,7 @@ enum PayloadType {
 type NonEmptyList<T> = [T, ...T[]];
 
 export const offlineUnleashClient = async (
-    toggles: NonEmptyList<FeatureConfigurationClient>,
+    features: NonEmptyList<FeatureConfigurationClient>,
     context: SdkContextSchema,
     logError: (message: any, ...args: any[]) => void,
 ): Promise<UnleashClient> => {
@@ -29,27 +29,28 @@ export const offlineUnleashClient = async (
         url: 'not-needed',
         storageProvider: new InMemStorageProvider(),
         bootstrap: {
-            data: toggles.map((x) => ({
+            data: features.map((feature) => ({
                 impressionData: false,
-                ...x,
-                variants: x.variants.map((v) => ({
+                ...feature,
+                variants: feature.variants.map((variant) => ({
                     overrides: [],
-                    ...v,
-                    payload: v.payload && {
-                        ...v.payload,
-                        type: v.payload.type as unknown as PayloadType,
+                    ...variant,
+                    payload: variant.payload && {
+                        ...variant.payload,
+                        type: variant.payload.type as unknown as PayloadType,
                     },
                 })),
-                strategies: x.strategies.map((s) => ({
+                strategies: feature.strategies.map((strategy) => ({
                     parameters: {},
-                    ...s,
+                    ...strategy,
                     constraints:
-                        s.constraints &&
-                        s.constraints.map((c) => ({
+                        strategy.constraints &&
+                        strategy.constraints.map((constraint) => ({
                             inverted: false,
                             values: [],
-                            ...c,
-                            operator: c.operator as unknown as Operator,
+                            ...constraint,
+                            operator:
+                                constraint.operator as unknown as Operator,
                         })),
                 })),
             })),
@@ -106,14 +107,17 @@ export class PlaygroundService {
                     : undefined,
             };
             const output: PlaygroundFeatureSchema[] = await Promise.all(
-                client.getFeatureToggleDefinitions().map(async (x) => {
+                client.getFeatureToggleDefinitions().map(async (feature) => {
                     return {
-                        isEnabled: client.isEnabled(x.name, clientContext),
-                        projectId: await this.featureToggleService.getProjectId(
-                            x.name,
+                        isEnabled: client.isEnabled(
+                            feature.name,
+                            clientContext,
                         ),
-                        variant: client.getVariant(x.name),
-                        name: x.name,
+                        projectId: await this.featureToggleService.getProjectId(
+                            feature.name,
+                        ),
+                        variant: client.getVariant(feature.name),
+                        name: feature.name,
                     };
                 }),
             );

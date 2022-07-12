@@ -58,20 +58,24 @@ describe('the playground service (e2e)', () => {
                     generateContext(),
                     async (toggles, context) => {
                         await Promise.all(
-                            toggles.map((t) =>
-                                stores.featureToggleStore.create(t.project, {
-                                    ...t,
-                                    createdAt: undefined,
-                                    variants: [
-                                        ...(t.variants ?? []).map(
-                                            (variant) => ({
-                                                ...variant,
-                                                weightType: WeightType.VARIABLE,
-                                                stickiness: 'default',
-                                            }),
-                                        ),
-                                    ],
-                                }),
+                            toggles.map((feature) =>
+                                stores.featureToggleStore.create(
+                                    feature.project,
+                                    {
+                                        ...feature,
+                                        createdAt: undefined,
+                                        variants: [
+                                            ...(feature.variants ?? []).map(
+                                                (variant) => ({
+                                                    ...variant,
+                                                    weightType:
+                                                        WeightType.VARIABLE,
+                                                    stickiness: 'default',
+                                                }),
+                                            ),
+                                        ],
+                                    },
+                                ),
                             ),
                         );
 
@@ -101,36 +105,47 @@ describe('the playground service (e2e)', () => {
                                 : undefined,
                         };
 
-                        return serviceToggles.every((x) => {
-                            const a =
-                                x.isEnabled ===
-                                client.isEnabled(x.name, clientContext);
+                        return serviceToggles.every((feature) => {
+                            const enabledStateMatches =
+                                feature.isEnabled ===
+                                client.isEnabled(feature.name, clientContext);
 
                             // if x.isEnabled then variant should === variant.name. Otherwise it should be null
 
                             // if x is disabled, then the variant will be the
                             // disabled variant.
-                            if (!x.isEnabled) {
-                                return a && isDisabledVariant(x.variant);
+                            if (!feature.isEnabled) {
+                                return (
+                                    enabledStateMatches &&
+                                    isDisabledVariant(feature.variant)
+                                );
                             }
 
                             const clientVariant = client.getVariant(
-                                x.name,
+                                feature.name,
                                 clientContext,
                             );
 
                             // if x is enabled, but its variant is the disabled
                             // variant, then the source does not have any
                             // variants
-                            if (x.isEnabled && isDisabledVariant(x.variant)) {
-                                return a && isDisabledVariant(clientVariant);
+                            if (
+                                feature.isEnabled &&
+                                isDisabledVariant(feature.variant)
+                            ) {
+                                return (
+                                    enabledStateMatches &&
+                                    isDisabledVariant(clientVariant)
+                                );
                             }
 
                             return (
-                                a &&
-                                clientVariant.name === x.variant.name &&
-                                clientVariant.enabled === x.variant.enabled &&
-                                clientVariant.payload === x.variant.payload
+                                enabledStateMatches &&
+                                clientVariant.name === feature.variant.name &&
+                                clientVariant.enabled ===
+                                    feature.variant.enabled &&
+                                clientVariant.payload ===
+                                    feature.variant.payload
                             );
                         });
                     },

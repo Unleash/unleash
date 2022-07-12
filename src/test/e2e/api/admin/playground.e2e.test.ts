@@ -136,9 +136,9 @@ describe('Playground API E2E', () => {
                             .expect(200);
 
                         // the returned list should always be a subset of the provided list
-                        expect(features.map((x) => x.name)).toEqual(
+                        expect(features.map((feature) => feature.name)).toEqual(
                             expect.arrayContaining(
-                                body.features.map((x) => x.name),
+                                body.features.map((feature) => feature.name),
                             ),
                         );
                     },
@@ -163,7 +163,9 @@ describe('Playground API E2E', () => {
                                 fc.constant('*' as '*'),
                                 fc.uniqueArray(
                                     fc.constantFrom(
-                                        ...features.map((t) => t.project),
+                                        ...features.map(
+                                            (feature) => feature.project,
+                                        ),
                                     ),
                                 ),
                             ),
@@ -189,8 +191,8 @@ describe('Playground API E2E', () => {
                                 return body.features.length === 0;
                             default:
                                 // every feature should be in one of the prescribed projects
-                                return body.features.every((x) =>
-                                    projects.includes(x.projectId),
+                                return body.features.every((feature) =>
+                                    projects.includes(feature.projectId),
                                 );
                         }
                     },
@@ -240,15 +242,15 @@ describe('Playground API E2E', () => {
                             return false;
                         }
 
-                        return features.every((x) => {
+                        return features.every((feature) => {
                             const mapped: PlaygroundFeatureSchema =
-                                mappedToggles[x.name];
+                                mappedToggles[feature.name];
 
                             expect(mapped).toBeTruthy();
 
                             return (
-                                x.name === mapped.name &&
-                                x.project === mapped.projectId
+                                feature.name === mapped.name &&
+                                feature.project === mapped.projectId
                             );
                         });
                     },
@@ -328,7 +330,9 @@ describe('Playground API E2E', () => {
                             );
 
                             return body.features.every(
-                                (x) => x.isEnabled === shouldBeEnabled[x.name],
+                                (feature) =>
+                                    feature.isEnabled ===
+                                    shouldBeEnabled[feature.name],
                             );
                         },
                     )
@@ -422,7 +426,9 @@ describe('Playground API E2E', () => {
                                 {},
                             );
                             return body.features.every(
-                                (x) => x.isEnabled === shouldBeEnabled[x.name],
+                                (feature) =>
+                                    feature.isEnabled ===
+                                    shouldBeEnabled[feature.name],
                             );
                         },
                     )
@@ -550,7 +556,9 @@ describe('Playground API E2E', () => {
                             );
 
                             return body.features.every(
-                                (x) => x.isEnabled === shouldBeEnabled[x.name],
+                                (feature) =>
+                                    feature.isEnabled ===
+                                    shouldBeEnabled[feature.name],
                             );
                         },
                     )

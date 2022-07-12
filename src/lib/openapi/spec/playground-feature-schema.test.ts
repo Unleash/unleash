@@ -25,7 +25,7 @@ export const generate = (): Arbitrary<PlaygroundFeatureSchema> =>
                             type: fc.constant('csv' as 'csv'),
                             value: fc
                                 .array(fc.lorem())
-                                .map((ls) => ls.join(',')),
+                                .map((words) => words.join(',')),
                         }),
                         fc.record({
                             type: fc.constant('string' as 'string'),

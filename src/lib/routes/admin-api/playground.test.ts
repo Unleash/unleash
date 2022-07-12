@@ -77,7 +77,7 @@ export const strategies = (): Arbitrary<FeatureStrategySchema[]> =>
                 fc.record({
                     hostNames: fc
                         .uniqueArray(fc.domain())
-                        .map((ds) => ds.join(',')),
+                        .map((domains) => domains.join(',')),
                 }),
             ),
 
@@ -135,7 +135,7 @@ export const generateFeature = (
                                 type: fc.constant('csv'),
                                 value: fc
                                     .array(fc.lorem())
-                                    .map((ls) => ls.join(',')),
+                                    .map((words) => words.join(',')),
                             }),
                             fc.record({
                                 type: fc.constant('string'),
@@ -164,7 +164,7 @@ describe('toggle generator', () => {
                 generateFeatures({ minLength: 2 }),
                 (toggles) =>
                     toggles.length ===
-                    [...new Set(toggles.map((x) => x.name))].length,
+                    [...new Set(toggles.map((feature) => feature.name))].length,
             ),
         );
     });

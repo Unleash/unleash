@@ -95,6 +95,9 @@ import { variantsSchema } from './spec/variants-schema';
 import { versionSchema } from './spec/version-schema';
 import { IServerOption } from '../types';
 import { URL } from 'url';
+import { groupSchema } from './spec/group-schema';
+import { groupsSchema } from './spec/groups-schema';
+import { groupUserModelSchema } from './spec/group-user-model-schema';
 
 // All schemas in `openapi/spec` should be listed here.
 export const schemas = {
@@ -143,6 +146,9 @@ export const schemas = {
     featureUsageSchema,
     featureVariantsSchema,
     feedbackSchema,
+    groupSchema,
+    groupsSchema,
+    groupUserModelSchema,
     healthCheckSchema,
     healthOverviewSchema,
     healthReportSchema,

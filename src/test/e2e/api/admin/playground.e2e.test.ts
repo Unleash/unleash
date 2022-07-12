@@ -15,6 +15,7 @@ import {
 import { PlaygroundFeatureSchema } from 'lib/openapi/spec/playground-feature-schema';
 import { ClientFeatureSchema } from 'lib/openapi/spec/client-feature-schema';
 import { PlaygroundResponseSchema } from 'lib/openapi/spec/playground-response-schema';
+import { PlaygroundRequestSchema } from 'lib/openapi/spec/playground-request-schema';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -49,8 +50,22 @@ const testParams = {
     markInterruptAsFailure: false, // When set to false, timeout during initial cases will not be considered as a failure
 };
 
-type ApiResponse = {
-    body: PlaygroundResponseSchema;
+const playgroundRequest = async (
+    testApp: IUnleashTest,
+    secret: string,
+    request: PlaygroundRequestSchema,
+): Promise<PlaygroundResponseSchema> => {
+    const {
+        body,
+    }: {
+        body: PlaygroundResponseSchema;
+    } = await testApp.request
+        .post('/api/admin/playground')
+        .set('Authorization', secret)
+        .send(request)
+        .expect(200);
+
+    return body;
 };
 
 describe('Playground API E2E', () => {
@@ -129,11 +144,11 @@ describe('Playground API E2E', () => {
                         // seed the database
                         await seedDatabase(db, features, request.environment);
 
-                        const { body }: ApiResponse = await app.request
-                            .post('/api/admin/playground')
-                            .set('Authorization', token.secret)
-                            .send(request)
-                            .expect(200);
+                        const body = await playgroundRequest(
+                            app,
+                            token.secret,
+                            request,
+                        );
 
                         // the returned list should always be a subset of the provided list
                         expect(features.map((feature) => feature.name)).toEqual(
@@ -175,12 +190,11 @@ describe('Playground API E2E', () => {
 
                         // create a list of features that can be filtered
                         // pass in args that should filter the list
-
-                        const { body }: ApiResponse = await app.request
-                            .post('/api/admin/playground')
-                            .set('Authorization', token.secret)
-                            .send(request)
-                            .expect(200);
+                        const body = await playgroundRequest(
+                            app,
+                            token.secret,
+                            request,
+                        );
 
                         switch (projects) {
                             case '*':
@@ -215,17 +229,17 @@ describe('Playground API E2E', () => {
                     async (features, ctx) => {
                         await seedDatabase(db, features, 'default');
 
-                        const { body } = await app.request
-                            .post('/api/admin/playground')
-                            .set('Authorization', token.secret)
-                            .send({
+                        const body = await playgroundRequest(
+                            app,
+                            token.secret,
+                            {
                                 projects: '*',
                                 environment: 'default',
                                 context: {
                                     appName: 'playground-test',
                                 },
-                            })
-                            .expect(200);
+                            },
+                        );
 
                         const createDict = (xs: { name: string }[]) =>
                             xs.reduce(
@@ -313,11 +327,11 @@ describe('Playground API E2E', () => {
                         constrainedFeatures(),
                         async (req, features) => {
                             await seedDatabase(db, features, req.environment);
-                            const { body }: ApiResponse = await app.request
-                                .post('/api/admin/playground')
-                                .set('Authorization', token.secret)
-                                .send(req)
-                                .expect(200);
+                            const body = await playgroundRequest(
+                                app,
+                                token.secret,
+                                req,
+                            );
 
                             const shouldBeEnabled = features.reduce(
                                 (acc, next) => ({
@@ -408,11 +422,11 @@ describe('Playground API E2E', () => {
                         async (req, features) => {
                             await seedDatabase(db, features, 'default');
 
-                            const { body }: ApiResponse = await app.request
-                                .post('/api/admin/playground')
-                                .set('Authorization', token.secret)
-                                .send(req)
-                                .expect(200);
+                            const body = await playgroundRequest(
+                                app,
+                                token.secret,
+                                req,
+                            );
 
                             const contextField = Object.values(req.context)[0];
 
@@ -524,11 +538,12 @@ describe('Playground API E2E', () => {
                             ctx,
                         ) => {
                             await seedDatabase(db, features, environment);
-                            const { body }: ApiResponse = await app.request
-                                .post('/api/admin/playground')
-                                .set('Authorization', token.secret)
-                                .send(request)
-                                .expect(200);
+
+                            const body = await playgroundRequest(
+                                app,
+                                token.secret,
+                                request,
+                            );
 
                             const shouldBeEnabled = features.reduce(
                                 (acc, next) => {

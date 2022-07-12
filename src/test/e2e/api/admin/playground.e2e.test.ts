@@ -432,6 +432,7 @@ describe('Playground API E2E', () => {
         });
 
         it('applies custom context fields correctly', async () => {
+            const environment = 'default';
             const contextValue = () =>
                 fc.record({
                     name: fc.constantFrom('Context field A', 'Context field B'),
@@ -480,6 +481,7 @@ describe('Playground API E2E', () => {
                             placement === 'top'
                                 ? {
                                       ...req,
+                                      environment,
                                       context: {
                                           ...req.context,
                                           [generatedContextValue.name]:
@@ -488,6 +490,7 @@ describe('Playground API E2E', () => {
                                   }
                                 : {
                                       ...req,
+                                      environment,
                                       context: {
                                           ...req.context,
                                           properties: {
@@ -514,7 +517,7 @@ describe('Playground API E2E', () => {
                             toggles,
                             ctx,
                         ) => {
-                            await seedDatabase(db, toggles, 'default');
+                            await seedDatabase(db, toggles, environment);
                             const { body }: ApiResponse = await app.request
                                 .post('/api/admin/playground')
                                 .set('Authorization', token.secret)
@@ -526,20 +529,25 @@ describe('Playground API E2E', () => {
                                     const constraint =
                                         next.strategies[0].constraints[0];
 
-                                    ctx.log(JSON.stringify(next));
                                     return {
                                         ...acc,
                                         [next.name]:
                                             constraint.contextName ===
                                                 generatedContextValue.name &&
-                                            constraint.value ===
+                                            constraint.values[0] ===
                                                 generatedContextValue.value,
                                     };
                                 },
                                 {},
                             );
 
-                            ctx.log(JSON.stringify(shouldBeEnabled));
+                            ctx.log(
+                                `Got these ${JSON.stringify(
+                                    body.toggles,
+                                )} and I expect them to be enabled/disabled: ${JSON.stringify(
+                                    shouldBeEnabled,
+                                )}`,
+                            );
 
                             return body.toggles.every(
                                 (x) => x.isEnabled === shouldBeEnabled[x.name],

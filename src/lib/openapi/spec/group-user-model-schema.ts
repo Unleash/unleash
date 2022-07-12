@@ -5,9 +5,9 @@ export const groupUserModelSchema = {
     $id: '#/components/schemas/groupUserModelSchema',
     type: 'object',
     additionalProperties: false,
-    required: ['type', 'user'],
+    required: ['role', 'user'],
     properties: {
-        type: {
+        role: {
             type: 'string',
         },
         user: {

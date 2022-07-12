@@ -9,7 +9,7 @@ test('groupsSchema', () => {
                 name: 'Group',
                 users: [
                     {
-                        type: 'Owner',
+                        role: 'Owner',
                         user: {
                             id: 3,
                         },

@@ -44,10 +44,14 @@ export class GroupService {
             const selectedUsers = users.filter((user) =>
                 groupUsersId.includes(user.id),
             );
-            const finalUsers = selectedUsers.map((user) => ({
-                user: user,
-                type: groupUsers.find((gu) => gu.userId == user.id).type,
-            }));
+            const finalUsers = selectedUsers.map((user) => {
+                const roleUser = groupUsers.find((gu) => gu.userId == user.id);
+                return {
+                    user: user,
+                    joinedAt: roleUser.joinedAt,
+                    role: roleUser.role,
+                };
+            });
             return { ...group, users: finalUsers };
         });
     }
@@ -58,10 +62,14 @@ export class GroupService {
         const users = await this.userStore.getAllWithId(
             groupUsers.map((u) => u.userId),
         );
-        const finalUsers = users.map((user) => ({
-            user: user,
-            type: groupUsers.find((gu) => gu.userId == user.id).type,
-        }));
+        const finalUsers = users.map((user) => {
+            const roleUser = groupUsers.find((gu) => gu.userId == user.id);
+            return {
+                user: user,
+                joinedAt: roleUser.joinedAt,
+                role: roleUser.role,
+            };
+        });
         return { ...group, users: finalUsers };
     }
 
@@ -141,7 +149,7 @@ export class GroupService {
             }
         }
 
-        if (users.length == 0 || !users.some((u) => u.type == 'Owner')) {
+        if (users.length == 0 || !users.some((u) => u.role == 'Owner')) {
             throw new BadDataError('Group needs to have at least one Owner');
         }
     }

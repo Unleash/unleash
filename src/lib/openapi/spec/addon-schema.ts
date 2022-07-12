@@ -32,6 +32,18 @@ export const addonSchema = {
                 type: 'string',
             },
         },
+        projects: {
+            type: 'array',
+            items: {
+                type: 'string',
+            },
+        },
+        environments: {
+            type: 'array',
+            items: {
+                type: 'string',
+            },
+        },
     },
     components: {},
 } as const;

@@ -12,5 +12,7 @@ export const addonSchema = joi
             .pattern(joi.string(), [joi.string(), joi.number(), joi.boolean()])
             .optional(),
         events: joi.array().optional().items(joi.string()),
+        projects: joi.array().optional().items(joi.string()),
+        environments: joi.array().optional().items(joi.string()),
     })
     .options({ allowUnknown: false, stripUnknown: true });

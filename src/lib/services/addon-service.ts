@@ -114,7 +114,7 @@ export default class AddonService {
                     .filter(
                         (addon) =>
                             !addon.environments ||
-                            addon.environments?.length == 0 ||
+                            addon.environments.length == 0 ||
                             addon.environments.includes(event.environment),
                     )
                     .filter((addon) => addonProviders[addon.provider])

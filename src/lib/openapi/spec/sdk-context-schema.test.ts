@@ -13,7 +13,7 @@ export const commonISOTimestamp = (): Arbitrary<string> =>
 export const generate = (): Arbitrary<SdkContextSchema> =>
     fc.record(
         {
-            appName: fc.string(),
+            appName: fc.string({ minLength: 1 }),
             currentTime: commonISOTimestamp(),
             environment: fc.string(),
             properties: fc.dictionary(fc.string(), fc.string()),

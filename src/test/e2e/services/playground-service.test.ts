@@ -234,7 +234,7 @@ describe('offline client', () => {
                     variants: [],
                 },
             ],
-            {},
+            { appName: 'client-test' },
             console.log,
         );
 
@@ -273,7 +273,7 @@ describe('offline client', () => {
                     ],
                 },
             ],
-            {},
+            { appName: 'client-test' },
             console.log,
         );
 
@@ -308,7 +308,8 @@ describe('offline client', () => {
                     ],
                 },
             ],
-            {},
+            { appName: 'client-test' },
+
             console.log,
         );
 
@@ -335,7 +336,8 @@ describe('offline client', () => {
                     variants: [],
                 },
             ],
-            {},
+            { appName: 'client-test' },
+
             console.log,
         );
 

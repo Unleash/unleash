@@ -14,6 +14,8 @@ const COLUMNS = [
     'description',
     'parameters',
     'events',
+    'projects',
+    'environments',
 ];
 const TABLE = 'addons';
 

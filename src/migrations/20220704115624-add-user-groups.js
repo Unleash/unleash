@@ -16,7 +16,7 @@ exports.up = function (db, callback) {
             (
                 group_id integer not null references groups (id) on DELETE CASCADE,
                 user_id integer not null references users (id) ON DELETE CASCADE,
-                type text check(type in ('Owner', 'Member')),
+                role text check(role in ('Owner', 'Member')),
                 created_by text,
                 created_at timestamp with time zone not null default now(),
                 primary key (group_id, user_id)

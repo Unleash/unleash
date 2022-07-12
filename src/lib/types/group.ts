@@ -12,12 +12,14 @@ export interface IGroup {
 export interface IGroupUser {
     groupId: number;
     userId: number;
-    type: string;
+    role: string;
+    joinedAt: Date;
 }
 
 export interface IGroupUserModel {
     user: IUser;
-    type: string;
+    role: string;
+    joinedAt?: Date;
 }
 
 export interface IGroupModel extends IGroup {

@@ -17,6 +17,8 @@ const SUPPORTED_EVENTS = Object.keys(events).map((k) => events[k]);
 
 const MASKED_VALUE = '*****';
 
+const WILDCARD_OPTION = '*';
+
 interface ISensitiveParams {
     [key: string]: string[];
 }
@@ -109,12 +111,14 @@ export default class AddonService {
                         (addon) =>
                             !addon.projects ||
                             addon.projects.length == 0 ||
+                            addon.projects[0] === WILDCARD_OPTION ||
                             addon.projects.includes(event.project),
                     )
                     .filter(
                         (addon) =>
                             !addon.environments ||
                             addon.environments.length == 0 ||
+                            addon.environments[0] === WILDCARD_OPTION ||
                             addon.environments.includes(event.environment),
                     )
                     .filter((addon) => addonProviders[addon.provider])

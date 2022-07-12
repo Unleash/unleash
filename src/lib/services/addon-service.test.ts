@@ -292,6 +292,65 @@ test('should filter events on environment if addon is setup to filter for it', a
     expect(events[0].event.data.name).toBe('some-toggle');
 });
 
+test('should support wildcard option for filtering addons', async () => {
+    const { addonService, stores } = getSetup();
+    const desiredProjects = ['desired', 'desired2'];
+    const otherProject = 'other';
+    const config = {
+        provider: 'simple',
+        enabled: true,
+        events: [FEATURE_CREATED],
+        projects: ['*'],
+        description: '',
+        parameters: {
+            url: 'http://localhost:wh',
+        },
+    };
+
+    await addonService.createAddon(config, 'me@mail.com');
+    await stores.eventStore.store({
+        type: FEATURE_CREATED,
+        createdBy: 'some@user.com',
+        project: desiredProjects[0],
+        data: {
+            name: 'some-toggle',
+            enabled: false,
+            strategies: [{ name: 'default' }],
+        },
+    });
+    await stores.eventStore.store({
+        type: FEATURE_CREATED,
+        createdBy: 'some@user.com',
+        project: otherProject,
+        data: {
+            name: 'other-toggle',
+            enabled: false,
+            strategies: [{ name: 'default' }],
+        },
+    });
+    await stores.eventStore.store({
+        type: FEATURE_CREATED,
+        createdBy: 'some@user.com',
+        project: desiredProjects[1],
+        data: {
+            name: 'third-toggle',
+            enabled: false,
+            strategies: [{ name: 'default' }],
+        },
+    });
+    const simpleProvider = addonService.addonProviders.simple;
+    // @ts-expect-error
+    const events = simpleProvider.getEvents();
+
+    expect(events).toHaveLength(3);
+    expect(events[0].event.type).toBe(FEATURE_CREATED);
+    expect(events[0].event.data.name).toBe('some-toggle');
+    expect(events[1].event.type).toBe(FEATURE_CREATED);
+    expect(events[1].event.data.name).toBe('other-toggle');
+    expect(events[2].event.type).toBe(FEATURE_CREATED);
+    expect(events[2].event.data.name).toBe('third-toggle');
+});
+
 test('Should support filtering by both project and environment', async () => {
     const { addonService, stores } = getSetup();
     const desiredProjects = ['desired1', 'desired2', 'desired3'];

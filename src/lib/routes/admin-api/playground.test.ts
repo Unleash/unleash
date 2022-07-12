@@ -13,7 +13,7 @@ import {
 } from '../../../lib/openapi/spec/playground-request-schema';
 
 import { generate as generateRequest } from '../../../lib/openapi/spec/playground-request-schema.test';
-import { generateClientFeatures } from '../../../test/arbitraries.test';
+import { clientFeatures } from '../../../test/arbitraries.test';
 
 async function getSetup() {
     const base = `/random${Math.round(Math.random() * 1000)}`;
@@ -29,7 +29,7 @@ describe('toggle generator', () => {
     it('generates toggles with unique names', () => {
         fc.assert(
             fc.property(
-                generateClientFeatures({ minLength: 2 }),
+                clientFeatures({ minLength: 2 }),
                 (toggles) =>
                     toggles.length ===
                     [...new Set(toggles.map((feature) => feature.name))].length,

@@ -92,9 +92,7 @@ export const strategies = (): Arbitrary<FeatureStrategySchema[]> =>
         ),
     );
 
-export const generateClientFeature = (
-    name?: string,
-): Arbitrary<ClientFeatureSchema> =>
+export const clientFeature = (name?: string): Arbitrary<ClientFeatureSchema> =>
     fc.record(
         {
             name: name ? fc.constant(name) : urlFriendlyString(),
@@ -143,10 +141,10 @@ export const generateClientFeature = (
         { requiredKeys: ['name', 'enabled', 'project', 'strategies'] },
     );
 
-export const generateClientFeatures = (constraints?: {
+export const clientFeatures = (constraints?: {
     minLength?: number;
 }): Arbitrary<ClientFeatureSchema[]> =>
-    fc.uniqueArray(generateClientFeature(), {
+    fc.uniqueArray(clientFeature(), {
         ...constraints,
         selector: (v) => v.name,
     });

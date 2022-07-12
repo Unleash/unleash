@@ -21,7 +21,7 @@ export const generate = (): Arbitrary<SdkContextSchema> =>
             sessionId: fc.uuid(),
             userId: fc.emailAddress(),
         },
-        { withDeletedKeys: true },
+        { requiredKeys: ['appName'] },
     );
 
 test('sdkContextSchema', () =>

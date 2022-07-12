@@ -2039,6 +2039,9 @@ Object {
             "type": "string",
           },
         },
+        "required": Array [
+          "appName",
+        ],
         "type": "object",
       },
       "segmentSchema": Object {

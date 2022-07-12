@@ -447,11 +447,13 @@ describe('Playground API E2E', () => {
         });
 
         it('applies custom context fields correctly', async () => {
-            // check both on the top level and on the nested level.
             const contextValue = () =>
                 fc.record({
-                    name: fc.constantFrom('A', 'B'),
-                    value: fc.constantFrom('a', 'b'),
+                    name: fc.constantFrom('Context field A', 'Context field B'),
+                    value: fc.constantFrom(
+                        'Context value 1',
+                        'Context value 2',
+                    ),
                 });
             const constrainedFeatures = (): Arbitrary<ClientFeatureSchema[]> =>
                 fc.uniqueArray(
@@ -478,58 +480,78 @@ describe('Playground API E2E', () => {
                         })),
                     { selector: (feature) => feature.name },
                 );
+
+            // generate a constraint to be used for the context and a request
+            // that contains that constraint value.
+            const constraintAndRequest = () =>
+                fc
+                    .tuple(
+                        contextValue(),
+                        fc.constantFrom('top', 'nested'),
+                        generateRequest(),
+                    )
+                    .map(([generatedContextValue, placement, req]) => {
+                        const request =
+                            placement === 'top'
+                                ? {
+                                      ...req,
+                                      context: {
+                                          [generatedContextValue.name]:
+                                              generatedContextValue.value,
+                                      },
+                                  }
+                                : {
+                                      ...req,
+                                      context: {
+                                          properties: {
+                                              [generatedContextValue.name]:
+                                                  generatedContextValue.value,
+                                          },
+                                      },
+                                  };
+
+                        return {
+                            generatedContextValue,
+                            request,
+                        };
+                    });
+
             await fc.assert(
                 fc
                     .asyncProperty(
-                        fc
-                            .tuple(
-                                contextValue(),
-                                fc.constantFrom('top', 'nested'),
-                                generateRequest(),
-                            )
-                            .map(([generatedContextValue, placement, req]) => {
-                                switch (placement) {
-                                    case 'top':
-                                        return {
-                                            ...req,
-                                            context: {
-                                                [generatedContextValue.name]:
-                                                    generatedContextValue.value,
-                                            },
-                                        };
-                                    case 'nested':
-                                        return {
-                                            ...req,
-                                            context: {
-                                                properties: {
-                                                    [generatedContextValue.name]:
-                                                        generatedContextValue.value,
-                                                },
-                                            },
-                                        };
-                                }
-                            }),
+                        constraintAndRequest(),
                         constrainedFeatures(),
-                        async (req, toggles) => {
+                        fc.context(),
+                        async (
+                            { generatedContextValue, request },
+                            toggles,
+                            ctx,
+                        ) => {
                             await seedDatabase(db, toggles, 'default');
-
                             const { body }: ApiResponse = await app.request
                                 .post('/api/admin/playground')
                                 .set('Authorization', token.secret)
-                                .send(req)
+                                .send(request)
                                 .expect(200);
 
-                            const contextField = Object.values(req.context)[0];
-
                             const shouldBeEnabled = toggles.reduce(
-                                (acc, next) => ({
-                                    ...acc,
-                                    [next.name]:
-                                        next.strategies[0].constraints[0]
-                                            .values[0] === contextField,
-                                }),
+                                (acc, next) => {
+                                    const constraint =
+                                        next.strategies[0].constraints[0];
+
+                                    ctx.log(JSON.stringify(next));
+                                    return {
+                                        ...acc,
+                                        [next.name]:
+                                            constraint.contextName ===
+                                                generatedContextValue.name &&
+                                            constraint.value ===
+                                                generatedContextValue.value,
+                                    };
+                                },
                                 {},
                             );
+
                             return body.toggles.every(
                                 (x) => x.isEnabled === shouldBeEnabled[x.name],
                             );

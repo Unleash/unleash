@@ -23,7 +23,7 @@ export const offlineUnleashClient = async (
 ): Promise<UnleashClient> => {
     const client = new UnleashClient({
         ...context,
-        appName: context.appName || 'playground', // this is required and might mess people up
+        appName: context.appName,
         disableMetrics: true,
         refreshInterval: 0,
         url: 'not-needed',

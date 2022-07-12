@@ -8,6 +8,7 @@ export const sdkContextSchema = {
         type: 'string',
         examples: ['top-level custom context value'],
     },
+    required: ['appName'],
     properties: {
         appName: { type: 'string', examples: ['My cool application.'] },
         currentTime: {

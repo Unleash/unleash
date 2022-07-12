@@ -1995,6 +1995,7 @@ Object {
             "examples": Array [
               "My cool application.",
             ],
+            "minLength": 1,
             "type": "string",
           },
           "currentTime": Object {

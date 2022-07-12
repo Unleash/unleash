@@ -10,7 +10,11 @@ export const sdkContextSchema = {
     },
     required: ['appName'],
     properties: {
-        appName: { type: 'string', examples: ['My cool application.'] },
+        appName: {
+            type: 'string',
+            minLength: 1,
+            examples: ['My cool application.'],
+        },
         currentTime: {
             type: 'string',
             format: 'date-time',

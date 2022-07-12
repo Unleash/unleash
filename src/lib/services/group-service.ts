@@ -35,6 +35,7 @@ export class GroupService {
         const users = await this.userStore.getAllWithId(
             allGroupUsers.map((u) => u.userId),
         );
+
         return groups.map((group) => {
             const groupUsers = allGroupUsers.filter(
                 (user) => user.groupId == group.id,

@@ -1,10 +1,10 @@
 import fc, { Arbitrary } from 'fast-check';
+import { urlFriendlyString } from '../../../test/arbitraries.test';
 import { validateSchema } from '../validate';
 import {
     playgroundFeatureSchema,
     PlaygroundFeatureSchema,
 } from './playground-feature-schema';
-import { urlFriendlyString } from './playground-request-schema.test';
 
 export const generate = (): Arbitrary<PlaygroundFeatureSchema> =>
     fc.boolean().chain((isEnabled) =>

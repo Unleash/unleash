@@ -40,10 +40,10 @@ const strategyConstraints = (): Arbitrary<ConstraintSchema[]> =>
         }),
     );
 
-const strategy = (
+export const strategy = (
     name: string,
     parameters: Arbitrary<Record<string, string>>,
-) =>
+): Arbitrary<FeatureStrategySchema> =>
     fc.record({
         name: fc.constant(name),
         parameters,

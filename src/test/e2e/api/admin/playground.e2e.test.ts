@@ -218,9 +218,7 @@ describe('Playground API E2E', () => {
 
     test('should map project and name correctly', async () => {
         // note: we're not testing `isEnabled` and `variant` here, because
-        // that's the SDK's responsibility. Trying to model 'what variant you
-        // would get' gets really tricky, so it's best left for later if it
-        // becomes relevant.
+        // that's the SDK's responsibility and it's tested elsewhere.
         await fc.assert(
             fc
                 .asyncProperty(

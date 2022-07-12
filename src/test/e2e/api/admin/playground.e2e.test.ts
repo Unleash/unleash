@@ -1,8 +1,8 @@
 import fc, { Arbitrary } from 'fast-check';
 import {
-    generateFeature,
-    generateFeatures,
-} from '../../../../lib/routes/admin-api/playground.test';
+    generateClientFeature,
+    generateClientFeatures,
+} from '../../../arbitraries.test';
 import { generate as generateRequest } from '../../../../lib/openapi/spec/playground-request-schema.test';
 import dbInit, { ITestDb } from '../../helpers/database-init';
 import { IUnleashTest, setupAppWithAuth } from '../../helpers/test-helper';
@@ -123,7 +123,7 @@ describe('Playground API E2E', () => {
         await fc.assert(
             fc
                 .asyncProperty(
-                    generateFeatures({ minLength: 1 }),
+                    generateClientFeatures({ minLength: 1 }),
                     generateRequest(),
                     async (features, request) => {
                         // seed the database
@@ -153,7 +153,7 @@ describe('Playground API E2E', () => {
             fc
                 .asyncProperty(
                     generateRequest(),
-                    generateFeatures({ minLength: 1 }),
+                    generateClientFeatures({ minLength: 1 }),
                     async (request, features) => {
                         await seedDatabase(db, features, request.environment);
 
@@ -210,7 +210,7 @@ describe('Playground API E2E', () => {
         await fc.assert(
             fc
                 .asyncProperty(
-                    generateFeatures(),
+                    generateClientFeatures(),
                     fc.context(),
                     async (features, ctx) => {
                         await seedDatabase(db, features, 'default');
@@ -274,7 +274,7 @@ describe('Playground API E2E', () => {
                 fc.uniqueArray(
                     fc
                         .tuple(
-                            generateFeature(),
+                            generateClientFeature(),
                             fc.record({
                                 name: fc.constant('default'),
                                 constraints: fc
@@ -368,7 +368,7 @@ describe('Playground API E2E', () => {
                 fc.uniqueArray(
                     fc
                         .tuple(
-                            generateFeature(),
+                            generateClientFeature(),
                             contextValue().map((context) => ({
                                 name: 'default',
                                 constraints: [
@@ -451,7 +451,7 @@ describe('Playground API E2E', () => {
                 fc.uniqueArray(
                     fc
                         .tuple(
-                            generateFeature(),
+                            generateClientFeature(),
                             contextValue().map((context) => ({
                                 name: 'default',
                                 constraints: [

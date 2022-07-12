@@ -1,14 +1,7 @@
 import fc, { Arbitrary } from 'fast-check';
 import { validateSchema } from '../validate';
 import { SdkContextSchema, sdkContextSchema } from './sdk-context-schema';
-
-export const commonISOTimestamp = (): Arbitrary<string> =>
-    fc
-        .date({
-            min: new Date('1900-01-01T00:00:00.000Z'),
-            max: new Date('9999-12-31T23:59:59.999Z'),
-        })
-        .map((x) => x.toISOString());
+import { commonISOTimestamp } from '../../../test/arbitraries.test';
 
 export const generate = (): Arbitrary<SdkContextSchema> =>
     fc.record(

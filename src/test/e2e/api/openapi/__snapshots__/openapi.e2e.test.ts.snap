@@ -1468,6 +1468,67 @@ Object {
         "required": Array [],
         "type": "object",
       },
+      "groupSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "createdAt": Object {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string",
+          },
+          "createdBy": Object {
+            "type": "string",
+          },
+          "description": Object {
+            "type": "string",
+          },
+          "id": Object {
+            "type": "number",
+          },
+          "name": Object {
+            "type": "string",
+          },
+          "users": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/groupUserModelSchema",
+            },
+            "type": "array",
+          },
+        },
+        "required": Array [
+          "name",
+          "users",
+        ],
+        "type": "object",
+      },
+      "groupUserModelSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "type": Object {
+            "type": "string",
+          },
+          "user": Object {
+            "$ref": "#/components/schemas/userSchema",
+          },
+        },
+        "required": Array [
+          "type",
+          "user",
+        ],
+        "type": "object",
+      },
+      "groupsSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "groups": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/groupSchema",
+            },
+            "type": "array",
+          },
+        },
+        "type": "object",
+      },
       "healthCheckSchema": Object {
         "additionalProperties": false,
         "properties": Object {

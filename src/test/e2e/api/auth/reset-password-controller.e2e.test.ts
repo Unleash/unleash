@@ -15,6 +15,7 @@ import SessionService from '../../../../lib/services/session-service';
 import { RoleName } from '../../../../lib/types/model';
 import SettingService from '../../../../lib/services/setting-service';
 import FakeSettingStore from '../../../fixtures/fake-setting-store';
+import FakeEventStore from '../../../fixtures/fake-event-store';
 
 let app;
 let stores;
@@ -56,7 +57,10 @@ beforeAll(async () => {
     );
     const sessionService = new SessionService({ sessionStore }, config);
     const settingService = new SettingService(
-        { settingStore: new FakeSettingStore() },
+        {
+            settingStore: new FakeSettingStore(),
+            eventStore: new FakeEventStore(),
+        },
         config,
     );
     userService = new UserService(stores, config, {

@@ -33,12 +33,15 @@ export const PlaygroundCodeFieldset: VFC<IPlaygroundCodeFieldsetProps> = ({
 }) => {
     const theme = useTheme();
     const { setToastData } = useToast();
-    const { context } = useUnleashContext();
-    const contextOptions = context
+    const { context: contextData } = useUnleashContext();
+    const contextOptions = contextData
         .sort((a, b) => a.sortOrder - b.sortOrder)
         .map(({ name }) => name);
     const [error, setError] = useState<string>();
-    const debounceSetError = useMemo(
+    const [fieldExist, setFieldExist] = useState<boolean>(false);
+    const [contextField, setContextField] = useState<string>('');
+    const [contextValue, setContextValue] = useState<string>('');
+    const debounceJsonParsing = useMemo(
         () =>
             debounce((input?: string) => {
                 if (!input) {
@@ -46,22 +49,22 @@ export const PlaygroundCodeFieldset: VFC<IPlaygroundCodeFieldsetProps> = ({
                 }
 
                 try {
-                    JSON.parse(input);
+                    const contextValue = JSON.parse(input);
+
+                    setFieldExist(contextValue[contextField] !== undefined);
                 } catch (error: unknown) {
                     return setError(formatUnknownError(error));
                 }
 
                 return setError(undefined);
             }, 250),
-        [setError]
+        [setError, contextField, setFieldExist]
     );
 
     useEffect(() => {
-        debounceSetError(value);
-    }, [debounceSetError, value]);
+        debounceJsonParsing(value);
+    }, [debounceJsonParsing, value]);
 
-    const [contextField, setContextField] = useState<string>('');
-    const [contextValue, setContextValue] = useState<string>('');
     const onAddField = () => {
         try {
             const currentValue = JSON.parse(value || '{}');
@@ -75,6 +78,7 @@ export const PlaygroundCodeFieldset: VFC<IPlaygroundCodeFieldsetProps> = ({
                     2
                 )
             );
+            setContextValue('');
         } catch (error) {
             setToastData({
                 type: 'error',
@@ -154,7 +158,11 @@ export const PlaygroundCodeFieldset: VFC<IPlaygroundCodeFieldsetProps> = ({
                     disabled={!contextField || Boolean(error)}
                     onClick={onAddField}
                 >
-                    Add context field
+                    {`${
+                        !fieldExist
+                            ? 'Add context field'
+                            : 'Replace context field value'
+                    } `}
                 </Button>
             </Box>
         </Box>

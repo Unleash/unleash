@@ -15,6 +15,7 @@ interface ISearchProps {
     className?: string;
     placeholder?: string;
     hasFilters?: boolean;
+    disabled?: boolean;
     getSearchContext?: () => IGetSearchContextOutput;
 }
 
@@ -24,6 +25,7 @@ export const Search = ({
     className,
     placeholder: customPlaceholder,
     hasFilters,
+    disabled,
     getSearchContext,
 }: ISearchProps) => {
     const ref = useRef<HTMLInputElement>();
@@ -79,6 +81,7 @@ export const Search = ({
                     onChange={e => onSearchChange(e.target.value)}
                     onFocus={() => setShowSuggestions(true)}
                     onBlur={() => setShowSuggestions(false)}
+                    disabled={disabled}
                 />
                 <div
                     className={classnames(

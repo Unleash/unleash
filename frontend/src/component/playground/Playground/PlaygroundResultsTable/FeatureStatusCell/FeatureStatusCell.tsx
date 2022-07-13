@@ -1,9 +1,8 @@
 import React from 'react';
-import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { colors } from 'themes/colors';
 import { ReactComponent as FeatureEnabledIcon } from 'assets/icons/isenabled-true.svg';
 import { ReactComponent as FeatureDisabledIcon } from 'assets/icons/isenabled-false.svg';
-import { Chip, styled, useTheme } from '@mui/material';
+import { Box, Chip, styled, useTheme } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface IFeatureStatusCellProps {
@@ -36,6 +35,16 @@ const StyledTrueChip = styled(Chip)(({ theme }) => ({
     },
 }));
 
+const StyledCellBox = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    padding: theme.spacing(1, 2),
+}));
+
+const StyledChipWrapper = styled(Box)(() => ({
+    marginRight: 'auto',
+}));
+
 export const FeatureStatusCell = ({ enabled }: IFeatureStatusCellProps) => {
     const theme = useTheme();
     const icon = (
@@ -43,13 +52,13 @@ export const FeatureStatusCell = ({ enabled }: IFeatureStatusCellProps) => {
             condition={enabled}
             show={
                 <FeatureEnabledIcon
-                    stroke={theme.palette.success.main}
+                    color={theme.palette.success.main}
                     strokeWidth="0.25"
                 />
             }
             elseShow={
                 <FeatureDisabledIcon
-                    stroke={theme.palette.error.main}
+                    color={theme.palette.error.main}
                     strokeWidth="0.25"
                 />
             }
@@ -59,12 +68,14 @@ export const FeatureStatusCell = ({ enabled }: IFeatureStatusCellProps) => {
     const label = enabled ? 'True' : 'False';
 
     return (
-        <TextCell>
-            <ConditionallyRender
-                condition={enabled}
-                show={<StyledTrueChip icon={icon} label={label} />}
-                elseShow={<StyledFalseChip icon={icon} label={label} />}
-            />
-        </TextCell>
+        <StyledCellBox>
+            <StyledChipWrapper data-loading>
+                <ConditionallyRender
+                    condition={enabled}
+                    show={<StyledTrueChip icon={icon} label={label} />}
+                    elseShow={<StyledFalseChip icon={icon} label={label} />}
+                />
+            </StyledChipWrapper>
+        </StyledCellBox>
     );
 };

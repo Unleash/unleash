@@ -1,3 +1,5 @@
+// TODO: replace with auto-generated openapi code
+
 export enum PlaygroundFeatureSchemaVariantPayloadTypeEnum {
     Json = 'json',
     Csv = 'csv',

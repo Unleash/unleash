@@ -17,8 +17,22 @@ interface IPageContentProps extends PaperProps {
      * @deprecated fix feature event log and remove
      */
     disableBorder?: boolean;
+    disableLoading?: boolean;
     bodyClass?: string;
 }
+
+const PageContentLoading: FC<{ isLoading: boolean }> = ({
+    children,
+    isLoading,
+}) => {
+    const ref = useLoading(isLoading);
+
+    return (
+        <div ref={ref} aria-busy={isLoading} aria-live="polite">
+            {children}
+        </div>
+    );
+};
 
 export const PageContent: FC<IPageContentProps> = ({
     children,
@@ -27,11 +41,11 @@ export const PageContent: FC<IPageContentProps> = ({
     disableBorder = false,
     bodyClass = '',
     isLoading = false,
+    disableLoading = false,
     className,
     ...rest
 }) => {
     const { classes: styles } = useStyles();
-    const ref = useLoading(isLoading);
 
     const headerClasses = classnames(styles.headerContainer, {
         [styles.paddingDisabled]: disablePadding,
@@ -48,27 +62,33 @@ export const PageContent: FC<IPageContentProps> = ({
 
     const paperProps = disableBorder ? { elevation: 0 } : {};
 
+    const content = (
+        <Paper
+            {...rest}
+            {...paperProps}
+            className={classnames(styles.container, className)}
+        >
+            <ConditionallyRender
+                condition={Boolean(header)}
+                show={
+                    <div className={headerClasses}>
+                        <ConditionallyRender
+                            condition={typeof header === 'string'}
+                            show={<PageHeader title={header as string} />}
+                            elseShow={header}
+                        />
+                    </div>
+                }
+            />
+            <div className={bodyClasses}>{children}</div>
+        </Paper>
+    );
+
+    if (disableLoading) {
+        return content;
+    }
+
     return (
-        <div ref={ref} aria-busy={isLoading} aria-live="polite">
-            <Paper
-                {...rest}
-                {...paperProps}
-                className={classnames(styles.container, className)}
-            >
-                <ConditionallyRender
-                    condition={Boolean(header)}
-                    show={
-                        <div className={headerClasses}>
-                            <ConditionallyRender
-                                condition={typeof header === 'string'}
-                                show={<PageHeader title={header as string} />}
-                                elseShow={header}
-                            />
-                        </div>
-                    }
-                />
-                <div className={bodyClasses}>{children}</div>
-            </Paper>
-        </div>
+        <PageContentLoading isLoading={isLoading}>{content}</PageContentLoading>
     );
 };

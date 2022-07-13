@@ -1,4 +1,4 @@
-import { ComponentProps, useState, VFC } from 'react';
+import { ComponentProps, VFC } from 'react';
 import {
     Autocomplete,
     Box,
@@ -9,7 +9,12 @@ import {
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 
-interface IPlaygroundConnectionFieldsetProps {}
+interface IPlaygroundConnectionFieldsetProps {
+    environment: string;
+    projects: string[];
+    setProjects: (projects: string[]) => void;
+    setEnvironment: (environment: string) => void;
+}
 
 interface IOption {
     label: string;
@@ -20,7 +25,7 @@ const allOption: IOption = { label: 'ALL', id: '*' };
 
 export const PlaygroundConnectionFieldset: VFC<
     IPlaygroundConnectionFieldsetProps
-> = () => {
+> = ({ environment, projects, setProjects, setEnvironment }) => {
     const theme = useTheme();
     const { environments } = useEnvironments();
     const environmentOptions = environments
@@ -36,7 +41,6 @@ export const PlaygroundConnectionFieldset: VFC<
             id,
         })),
     ];
-    const [projects, setProjects] = useState<IOption | IOption[]>(allOption);
 
     const onProjectsChange: ComponentProps<typeof Autocomplete>['onChange'] = (
         event,
@@ -45,25 +49,28 @@ export const PlaygroundConnectionFieldset: VFC<
     ) => {
         const newProjects = value as IOption | IOption[];
         if (reason === 'clear' || newProjects === null) {
-            return setProjects(allOption);
+            return setProjects([allOption.id]);
         }
         if (Array.isArray(newProjects)) {
             if (newProjects.length === 0) {
-                return setProjects(allOption);
+                return setProjects([allOption.id]);
             }
             if (
                 newProjects.find(({ id }) => id === allOption.id) !== undefined
             ) {
-                return setProjects(allOption);
+                return setProjects([allOption.id]);
             }
-            return setProjects(newProjects);
+            return setProjects(newProjects.map(({ id }) => id));
         }
         if (newProjects.id === allOption.id) {
-            return setProjects(allOption);
+            return setProjects([allOption.id]);
         }
 
-        return setProjects([newProjects]);
+        return setProjects([newProjects.id]);
     };
+
+    const isAllProjects =
+        projects.length === 0 || (projects.length === 1 && projects[0] === '*');
 
     return (
         <Box sx={{ pb: 2 }}>
@@ -83,19 +90,27 @@ export const PlaygroundConnectionFieldset: VFC<
                     renderInput={params => (
                         <TextField {...params} label="Environment" required />
                     )}
+                    value={environment}
+                    onChange={(event, value) => setEnvironment(value || '')}
                     size="small"
                 />
                 <Autocomplete
                     disablePortal
                     id="projects"
-                    multiple={Array.isArray(projects)}
+                    multiple={!isAllProjects}
                     options={projectsOptions}
                     sx={{ width: 300, maxWidth: '100%' }}
                     renderInput={params => (
                         <TextField {...params} label="Projects" />
                     )}
                     size="small"
-                    value={projects}
+                    value={
+                        isAllProjects
+                            ? allOption
+                            : projectsOptions.filter(({ id }) =>
+                                  projects.includes(id)
+                              )
+                    }
                     onChange={onProjectsChange}
                 />
             </Box>

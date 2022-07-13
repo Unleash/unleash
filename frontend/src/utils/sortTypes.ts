@@ -15,7 +15,7 @@ export const sortTypes = {
         return a === b ? 0 : a ? 1 : -1;
     },
     alphanumeric: (a: any, b: any, id: string) =>
-        a?.values?.[id]
+        (a?.values?.[id] || '')
             ?.toLowerCase()
-            .localeCompare(b?.values?.[id]?.toLowerCase()),
+            .localeCompare(b?.values?.[id]?.toLowerCase() || ''),
 };

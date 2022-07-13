@@ -20,7 +20,7 @@ import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { useSearch } from 'hooks/useSearch';
 import { createLocalStorage } from 'utils/createLocalStorage';
 import { FeatureStatusCell } from './FeatureStatusCell/FeatureStatusCell';
-import { PlaygroundFeatureSchema } from '../playground.model';
+import { PlaygroundFeatureSchema } from 'hooks/api/actions/usePlayground/playground.model';
 
 const defaultSort: SortingRule<string> = { id: 'name' };
 const { value, setValue } = createLocalStorage(
@@ -53,9 +53,9 @@ export const PlaygroundResultsTable = ({
         return loading
             ? Array(5).fill({
                   name: 'Feature name',
-                  project: 'Feature Project',
-                  variant: 'Feature variant',
-                  enabled: 'Feature state',
+                  projectId: 'FeatureProject',
+                  variant: { name: 'FeatureVariant' },
+                  enabled: true,
               })
             : searchedData;
     }, [searchedData, loading]);
@@ -109,6 +109,8 @@ export const PlaygroundResultsTable = ({
         }
         if (searchValue) {
             tableState.search = searchValue;
+        } else {
+            delete tableState.search;
         }
 
         setSearchParams(tableState, {
@@ -138,6 +140,7 @@ export const PlaygroundResultsTable = ({
                             onChange={setSearchValue}
                             hasFilters
                             getSearchContext={getSearchContext}
+                            disabled={loading}
                         />
                     }
                 />
@@ -145,10 +148,12 @@ export const PlaygroundResultsTable = ({
             isLoading={loading}
         >
             <ConditionallyRender
-                condition={!loading && data.length === 0}
+                condition={!loading && (!data || data.length === 0)}
                 show={() => (
                     <TablePlaceholder>
-                        None of the feature toggles were evaluated yet.
+                        {data === undefined
+                            ? 'None of the feature toggles were evaluated yet.'
+                            : 'No results found.'}
                     </TablePlaceholder>
                 )}
                 elseShow={() => (
@@ -203,8 +208,11 @@ const COLUMNS = [
         accessor: 'name',
         searchable: true,
         width: '60%',
-        Cell: ({ value }: any) => (
-            <LinkCell title={value} to={`/feature/${value}`} />
+        Cell: ({ value, row: { original } }: any) => (
+            <LinkCell
+                title={value}
+                to={`/projects/${original?.projectId}/features/${value}`}
+            />
         ),
     },
     {
@@ -226,7 +234,12 @@ const COLUMNS = [
         filterName: 'variant',
         searchable: true,
         maxWidth: 170,
-        Cell: ({ value }: any) => <HighlightCell value={value} />,
+        Cell: ({
+            value,
+            row: {
+                original: { variant },
+            },
+        }: any) => <HighlightCell value={variant?.enabled ? value : ''} />,
     },
     {
         Header: 'isEnabled',
@@ -234,5 +247,6 @@ const COLUMNS = [
         maxWidth: 170,
         Cell: ({ value }: any) => <FeatureStatusCell enabled={value} />,
         sortType: 'boolean',
+        sortInverted: true,
     },
 ];

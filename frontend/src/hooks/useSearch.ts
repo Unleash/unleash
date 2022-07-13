@@ -112,7 +112,7 @@ export const getColumnValues = (column: any, row: any) => {
             : column.accessor.includes('.')
             ? column.accessor
                   .split('.')
-                  .reduce((object: any, key: string) => object[key], row)
+                  .reduce((object: any, key: string) => object?.[key], row)
             : row[column.accessor];
 
     if (column.filterParsing) {

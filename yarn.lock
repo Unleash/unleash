@@ -7624,10 +7624,10 @@ ts-jest@27.1.5:
     semver "7.x"
     yargs-parser "20.x"
 
-ts-node@10.8.2:
-  version "10.8.2"
-  resolved "https://registry.yarnpkg.com/ts-node/-/ts-node-10.8.2.tgz#3185b75228cef116bf82ffe8762594f54b2a23f2"
-  integrity sha512-LYdGnoGddf1D6v8REPtIH+5iq/gTDuZqv2/UJUU7tKjuEU8xVZorBM+buCGNjj+pGEud+sOoM4CX3/YzINpENA==
+ts-node@10.9.0:
+  version "10.9.0"
+  resolved "https://registry.yarnpkg.com/ts-node/-/ts-node-10.9.0.tgz#d719c3e66e821fb9ad5e1c006542974c29145ca8"
+  integrity sha512-bunW18GUyaCSYRev4DPf4SQpom3pWH29wKl0sDk5zE7ze19RImEVhCW7K4v3hHKkUyfWotU08ToE2RS+Y49aug==
   dependencies:
     "@cspotcode/source-map-support" "^0.8.0"
     "@tsconfig/node10" "^1.0.7"

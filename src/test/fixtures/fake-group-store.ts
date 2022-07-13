@@ -48,6 +48,13 @@ export default class FakeGroupStore implements IGroupStore {
         throw new Error('Method not implemented.');
     }
 
+    updateExistingUsersInGroup(
+        id: number,
+        users: IGroupUserModel[],
+    ): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+
     getAllUsersByGroups(groupIds: number[]): Promise<IGroupUser[]> {
         throw new Error('Method not implemented.');
     }
@@ -63,6 +70,7 @@ export default class FakeGroupStore implements IGroupStore {
     updateGroupUsers(
         groupId: number,
         newUsers: IGroupUserModel[],
+        existingUsers: IGroupUserModel[],
         deletableUsers: IGroupUser[],
         userName: string,
     ): Promise<void> {

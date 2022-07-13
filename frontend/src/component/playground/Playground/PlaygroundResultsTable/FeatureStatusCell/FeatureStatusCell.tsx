@@ -10,7 +10,7 @@ interface IFeatureStatusCellProps {
     enabled: boolean;
 }
 
-const StyledFalseChip = styled(Chip)(({theme}) => ({
+const StyledFalseChip = styled(Chip)(({ theme }) => ({
     width: 80,
     borderRadius: '5px',
     border: `1px solid ${theme.palette.error.main}`,
@@ -23,7 +23,7 @@ const StyledFalseChip = styled(Chip)(({theme}) => ({
     },
 }));
 
-const StyledTrueChip = styled(Chip)(({theme}) => ({
+const StyledTrueChip = styled(Chip)(({ theme }) => ({
     width: 80,
     borderRadius: '5px',
     border: `1px solid ${theme.palette.success.main}`,

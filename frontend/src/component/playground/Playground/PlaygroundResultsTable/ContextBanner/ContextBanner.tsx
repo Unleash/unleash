@@ -6,7 +6,7 @@ interface IContextBannerProps {
     context: SdkContextSchema;
 }
 
-const StyledContextFieldList = styled('ul')(({theme}) => ({
+const StyledContextFieldList = styled('ul')(({ theme }) => ({
     color: colors.black,
     listStyleType: 'none',
     paddingInlineStart: theme.spacing(16),

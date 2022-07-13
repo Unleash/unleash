@@ -10,29 +10,29 @@ interface IFeatureStatusCellProps {
     enabled: boolean;
 }
 
-const StyledFalseChip = styled(Chip)(() => ({
+const StyledFalseChip = styled(Chip)(({theme}) => ({
     width: 80,
     borderRadius: '5px',
-    border: `1px solid ${colors.red['700']}`,
+    border: `1px solid ${theme.palette.error.main}`,
     backgroundColor: colors.red['200'],
     ['& .MuiChip-label']: {
-        color: colors.red['700'],
+        color: theme.palette.error.main,
     },
     ['& .MuiChip-icon']: {
-        color: colors.red['700'],
+        color: theme.palette.error.main,
     },
 }));
 
-const StyledTrueChip = styled(Chip)(() => ({
+const StyledTrueChip = styled(Chip)(({theme}) => ({
     width: 80,
     borderRadius: '5px',
-    border: `1px solid ${colors.green['700']}`,
+    border: `1px solid ${theme.palette.success.main}`,
     backgroundColor: colors.green['100'],
     ['& .MuiChip-label']: {
-        color: colors.green['700'],
+        color: theme.palette.success.main,
     },
     ['& .MuiChip-icon']: {
-        color: colors.green['700'],
+        color: theme.palette.success.main,
     },
 }));
 

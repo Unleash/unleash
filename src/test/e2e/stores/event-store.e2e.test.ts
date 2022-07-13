@@ -1,6 +1,9 @@
 import {
     APPLICATION_CREATED,
     FEATURE_CREATED,
+    FEATURE_DELETED,
+    FeatureCreatedEvent,
+    FeatureDeletedEvent,
     IEvent,
 } from '../../../lib/types/events';
 
@@ -19,6 +22,9 @@ beforeAll(async () => {
     eventStore = stores.eventStore;
 });
 
+beforeEach(async () => {
+    await eventStore.deleteAll();
+});
 afterAll(async () => {
     if (db) {
         await db.destroy();
@@ -140,6 +146,7 @@ test('Should delete stored event', async () => {
         },
     };
     await eventStore.store(event);
+    await eventStore.store(event);
     const events = await eventStore.getAll();
     const lastEvent = events[0];
     await eventStore.delete(lastEvent.id);
@@ -177,4 +184,37 @@ test('Should delete all stored events', async () => {
     const events = await eventStore.getAll();
 
     expect(events).toHaveLength(0);
+});
+
+test('Should get all events of type', async () => {
+    const data = { name: 'someName', project: 'test-project' };
+    await Promise.all(
+        [0, 1, 2, 3, 4, 5].map(async (id) => {
+            const event =
+                id % 2 == 0
+                    ? new FeatureCreatedEvent({
+                          project: data.project,
+                          featureName: data.name,
+                          createdBy: 'test-user',
+                          data,
+                          tags: [],
+                      })
+                    : new FeatureDeletedEvent({
+                          project: data.project,
+                          preData: data,
+                          featureName: data.name,
+                          createdBy: 'test-user',
+                          tags: [],
+                      });
+            return eventStore.store(event);
+        }),
+    );
+    const featureCreatedEvents = await eventStore.getEventsFilterByType(
+        FEATURE_CREATED,
+    );
+    expect(featureCreatedEvents).toHaveLength(3);
+    const featureDeletedEvents = await eventStore.getEventsFilterByType(
+        FEATURE_DELETED,
+    );
+    expect(featureDeletedEvents).toHaveLength(3);
 });

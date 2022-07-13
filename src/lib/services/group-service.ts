@@ -111,11 +111,17 @@ export class GroupService {
                     (groupUser) => groupUser.user.id == existingUser.userId,
                 ),
         );
+        const deletableUserIds = deletableUsers.map((g) => g.userId);
 
         await this.groupStore.updateGroupUsers(
             newGroup.id,
             group.users.filter(
                 (user) => !existingUserIds.includes(user.user.id),
+            ),
+            group.users.filter(
+                (user) =>
+                    existingUserIds.includes(user.user.id) &&
+                    !deletableUserIds.includes(user.user.id),
             ),
             deletableUsers,
             userName,

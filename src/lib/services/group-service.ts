@@ -19,7 +19,7 @@ export class GroupService {
 
     constructor(
         stores: Pick<IUnleashStores, 'groupStore' | 'eventStore' | 'userStore'>,
-        { getLogger }: Pick<IUnleashConfig, 'getLogger' | 'authentication'>,
+        { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
     ) {
         this.logger = getLogger('service/group-service.js');
         this.groupStore = stores.groupStore;

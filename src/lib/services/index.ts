@@ -76,16 +76,17 @@ export const createServices = (
         config,
         featureToggleServiceV2,
     );
+    const groupService = new GroupService(stores, config);
     const projectService = new ProjectService(
         stores,
         config,
         accessService,
         featureToggleServiceV2,
+        groupService,
     );
     const userSplashService = new UserSplashService(stores, config);
     const openApiService = new OpenApiService(config);
     const clientSpecService = new ClientSpecService(config);
-    const groupService = new GroupService(stores, config);
     return {
         accessService,
         addonService,

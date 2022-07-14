@@ -25,6 +25,15 @@ export interface IRoleDescriptor {
     type: string;
 }
 
+export interface IProjectAccessModel {
+    users: IAccessInfo[];
+    groups: IAccessInfo[];
+}
+
+export interface IAccessInfo {
+    id: number;
+}
+
 export interface IUserRole {
     roleId: number;
     userId: number;
@@ -47,6 +56,13 @@ export interface IAccessStore extends Store<IRole, number> {
         roleId: number,
         projectId?: string,
     ): Promise<void>;
+    addAccessToProject(
+        users: IAccessInfo[],
+        groups: IAccessInfo[],
+        projectId: string,
+        roleId: number,
+        createdBy: string,
+    ): Promise<void>;
     removeUserFromRole(
         userId: number,
         roleId: number,
@@ -64,6 +80,11 @@ export interface IAccessStore extends Store<IRole, number> {
         projectId?: string,
     ): Promise<void>;
     updateUserProjectRole(
+        userId: number,
+        roleId: number,
+        projectId: string,
+    ): Promise<void>;
+    updateGroupProjectRole(
         userId: number,
         roleId: number,
         projectId: string,

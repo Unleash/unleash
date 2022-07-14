@@ -9,6 +9,7 @@ import ProjectService from '../../../lib/services/project-service';
 import FeatureToggleService from '../../../lib/services/feature-toggle-service';
 import { AccessService } from '../../../lib/services/access-service';
 import { SegmentService } from '../../../lib/services/segment-service';
+import { GroupService } from '../../../lib/services/group-service';
 
 let db;
 let stores;
@@ -27,6 +28,7 @@ beforeAll(async () => {
         config,
         new SegmentService(stores, config),
     );
+    const groupService = new GroupService(stores, config);
     const project = {
         id: 'test-project',
         name: 'Test Project',
@@ -42,6 +44,7 @@ beforeAll(async () => {
         config,
         accessService,
         featureToggleService,
+        groupService,
     );
 
     await projectService.createProject(project, user);

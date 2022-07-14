@@ -4,6 +4,7 @@ import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
 import { Logger } from '../logger';
 import {
+    IAccessInfo,
     IAccessStore,
     IRole,
     IUserPermission,
@@ -324,6 +325,59 @@ export class AccessStore implements IAccessStore {
                 this.db(T.ROLES).select('id as role_id').where('type', 'root'),
             )
             .update('role_id', roleId);
+    }
+
+    updateGroupProjectRole(
+        groupId: number,
+        roleId: number,
+        projectId: string,
+    ): Promise<void> {
+        return this.db(T.GROUP_ROLE)
+            .where({
+                group_id: groupId,
+                project: projectId,
+            })
+            .whereNotIn(
+                'role_id',
+                this.db(T.ROLES).select('id as role_id').where('type', 'root'),
+            )
+            .update('role_id', roleId);
+    }
+
+    async addAccessToProject(
+        users: IAccessInfo[],
+        groups: IAccessInfo[],
+        projectId: string,
+        roleId: number,
+        createdBy: string,
+    ): Promise<void> {
+        const userRows = users.map((user) => {
+            return {
+                user_id: user.id,
+                project: projectId,
+                role_id: roleId,
+            };
+        });
+
+        const groupRows = groups.map((group) => {
+            return {
+                group_id: group.id,
+                project: projectId,
+                role_id: roleId,
+                created_by: createdBy,
+            };
+        });
+
+        await this.db.transaction(async (tx) => {
+            await tx(T.ROLE_USER)
+                .insert(userRows)
+                .onConflict(['project', 'role_id', 'user_id'])
+                .merge();
+            await tx(T.GROUP_ROLE)
+                .insert(groupRows)
+                .onConflict(['project', 'role_id', 'group_id'])
+                .merge();
+        });
     }
 
     async removeRolesOfTypeForUser(

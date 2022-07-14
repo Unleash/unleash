@@ -1,19 +1,17 @@
-import {
-    useState,
-    useEffect,
-    ChangeEvent,
-    VFC,
+import React, {
     ChangeEventHandler,
     FormEventHandler,
     MouseEventHandler,
+    useEffect,
+    useState,
+    VFC,
 } from 'react';
-import { TextField, FormControlLabel, Switch, Button } from '@mui/material';
+import { Button, FormControlLabel, Switch, TextField } from '@mui/material';
 import produce from 'immer';
 import { styles as themeStyles } from 'component/common';
 import { trim } from 'component/common/util';
 import { IAddon, IAddonProvider } from 'interfaces/addons';
 import { AddonParameters } from './AddonParameters/AddonParameters';
-import { AddonEvents } from './AddonEvents/AddonEvents';
 import cloneDeep from 'lodash.clonedeep';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { useNavigate } from 'react-router-dom';
@@ -21,6 +19,9 @@ import useAddonsApi from 'hooks/api/actions/useAddonsApi/useAddonsApi';
 import useToast from 'hooks/useToast';
 import { makeStyles } from 'tss-react/mui';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import useProjects from '../../../hooks/api/getters/useProjects/useProjects';
+import { useEnvironments } from '../../../hooks/api/getters/useEnvironments/useEnvironments';
+import { AddonMultiSelector } from './AddonMultiSelector/AddonMultiSelector';
 
 const useStyles = makeStyles()(theme => ({
     nameInput: {
@@ -52,12 +53,27 @@ export const AddonForm: VFC<IAddonFormProps> = ({
     const { setToastData, setToastApiError } = useToast();
     const navigate = useNavigate();
     const { classes: styles } = useStyles();
-
+    const { projects: availableProjects } = useProjects();
+    const selectableProjects = availableProjects.map(project => ({
+        value: project.id,
+        label: project.name,
+    }));
+    const { environments: availableEnvironments } = useEnvironments();
+    const selectableEnvironments = availableEnvironments.map(environment => ({
+        value: environment.name,
+        label: environment.name,
+    }));
+    const selectableEvents = provider?.events.map(event => ({
+        value: event,
+        label: event,
+    }));
     const [formValues, setFormValues] = useState(initialValues);
     const [errors, setErrors] = useState<{
         containsErrors: boolean;
         parameters: Record<string, string>;
         events?: string;
+        projects?: string;
+        environments?: string;
         general?: string;
         description?: string;
     }>({
@@ -106,22 +122,39 @@ export const AddonForm: VFC<IAddonFormProps> = ({
             );
         };
 
-    const setEventValue =
-        (name: string) => (event: ChangeEvent<HTMLInputElement>) => {
-            setFormValues(
-                produce(draft => {
-                    if (event.target.checked) {
-                        draft.events.push(name);
-                    } else {
-                        draft.events = draft.events.filter(e => e !== name);
-                    }
-                })
-            );
-            setErrors(prev => ({
-                ...prev,
-                events: undefined,
-            }));
-        };
+    const setEventValues = (events: string[]) => {
+        setFormValues(
+            produce(draft => {
+                draft.events = events;
+            })
+        );
+        setErrors(prev => ({
+            ...prev,
+            events: undefined,
+        }));
+    };
+    const setProjects = (projects: string[]) => {
+        setFormValues(
+            produce(draft => {
+                draft.projects = projects;
+            })
+        );
+        setErrors(prev => ({
+            ...prev,
+            projects: undefined,
+        }));
+    };
+    const setEnvironments = (environments: string[]) => {
+        setFormValues(
+            produce(draft => {
+                draft.environments = environments;
+            })
+        );
+        setErrors(prev => ({
+            ...prev,
+            environments: undefined,
+        }));
+    };
 
     const onCancel = () => {
         navigate(-1);
@@ -234,12 +267,32 @@ export const AddonForm: VFC<IAddonFormProps> = ({
                         variant="outlined"
                     />
                 </section>
+
                 <section className={styles.formSection}>
-                    <AddonEvents
-                        provider={provider}
-                        checkedEvents={formValues.events}
-                        setEventValue={setEventValue}
-                        error={errors.events}
+                    <AddonMultiSelector
+                        options={selectableEvents || []}
+                        selectedItems={formValues.events}
+                        onChange={setEventValues}
+                        entityName={'event'}
+                        selectAllEnabled={false}
+                    />
+                </section>
+                <section className={styles.formSection}>
+                    <AddonMultiSelector
+                        options={selectableProjects}
+                        selectedItems={formValues.projects || []}
+                        onChange={setProjects}
+                        entityName={'project'}
+                        selectAllEnabled={true}
+                    />
+                </section>
+                <section className={styles.formSection}>
+                    <AddonMultiSelector
+                        options={selectableEnvironments}
+                        selectedItems={formValues.environments || []}
+                        onChange={setEnvironments}
+                        entityName={'environment'}
+                        selectAllEnabled={true}
                     />
                 </section>
                 <section className={styles.formSection}>

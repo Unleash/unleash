@@ -5,6 +5,8 @@ export interface IAddon {
     parameters: Record<string, any>;
     id: number;
     events: string[];
+    projects?: string[];
+    environments?: string[];
     enabled: boolean;
     description: string;
 }
@@ -34,6 +36,8 @@ export interface IAddonConfig {
     parameters: Record<string, any>;
     id: number;
     events: string[];
+    projects?: string[];
+    environments?: string[];
     enabled: boolean;
     description: string;
 }

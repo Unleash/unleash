@@ -10,6 +10,8 @@ export const DEFAULT_DATA = {
     enabled: true,
     parameters: {},
     events: [],
+    projects: [],
+    environments: [],
 } as unknown as IAddon; // TODO: improve type
 
 export const CreateAddon = () => {

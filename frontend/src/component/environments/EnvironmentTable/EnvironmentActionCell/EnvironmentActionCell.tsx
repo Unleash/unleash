@@ -41,8 +41,8 @@ export const EnvironmentActionCell = ({
             refetchPermissions();
             setToastData({
                 type: 'success',
-                title: 'Project environment deleted',
-                text: 'You have successfully deleted the project environment.',
+                title: 'Environment deleted',
+                text: `You have successfully deleted the ${environment.name} environment.`,
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));

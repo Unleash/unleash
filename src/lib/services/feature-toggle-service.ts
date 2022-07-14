@@ -988,8 +988,9 @@ class FeatureToggleService {
 
     async getMetadataForAllFeatures(
         archived: boolean,
+        query?: Partial<IFeatureToggleQuery>,
     ): Promise<FeatureToggle[]> {
-        return this.featureToggleStore.getAll({ archived });
+        return this.featureToggleStore.getAll({ ...query, archived });
     }
 
     async getMetadataForAllFeaturesByProjectId(

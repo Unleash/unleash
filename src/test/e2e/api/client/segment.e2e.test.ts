@@ -26,10 +26,8 @@ const fetchSegments = (): Promise<ISegment[]> => {
 };
 
 const fetchFeatures = (): Promise<IFeatureToggleClient[]> => {
-    return app.request
-        .get(FEATURES_ADMIN_BASE_PATH)
-        .expect(200)
-        .then((res) => res.body.features);
+    //@ts-expect-error
+    return app.services.featureToggleService.getFeatureToggles({}, false);
 };
 
 const fetchClientFeatures = (): Promise<IFeatureToggleClient[]> => {

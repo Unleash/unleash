@@ -3,8 +3,10 @@ import { Store } from './store';
 
 export interface IFeatureToggleQuery {
     archived: boolean;
-    project: string;
+    project: string | string[];
+    namePrefix?: string;
     stale: boolean;
+    tag?: string[][];
 }
 
 export interface IFeatureToggleStore extends Store<FeatureToggle, string> {

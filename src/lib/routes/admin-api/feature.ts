@@ -177,7 +177,11 @@ class FeatureController extends Controller {
         req: Request,
         res: Response<FeaturesSchema>,
     ): Promise<void> {
-        const features = await this.service.getMetadataForAllFeatures(false);
+        const query = await this.prepQuery(req.query);
+        const features = await this.service.getMetadataForAllFeatures(
+            false,
+            query,
+        );
         this.openApiService.respondWithValidation(
             200,
             res,

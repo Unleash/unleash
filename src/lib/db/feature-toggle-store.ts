@@ -86,16 +86,26 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
     async getAll(
         query: {
             archived?: boolean;
-            project?: string;
+            project?: string | string[];
             stale?: boolean;
+            tag?: string[][];
+            namePrefix?: string;
         } = { archived: false },
     ): Promise<FeatureToggle[]> {
-        const { archived, ...rest } = query;
-        const rows = await this.db
+        const { archived, tag, project, namePrefix } = query;
+        let queryBuilder = this.db(TABLE)
             .select(FEATURE_COLUMNS)
-            .from(TABLE)
-            .where(rest)
-            .modify(FeatureToggleStore.filterByArchived, archived);
+            .modify(FeatureToggleStore.filterByArchived, archived)
+            .modify(FeatureToggleStore.filterByProject, project)
+            .modify(FeatureToggleStore.filterByNamePrefix, namePrefix);
+        if (tag) {
+            const tagQuery = this.db
+                .from('feature_tag')
+                .select('feature_name')
+                .whereIn(['tag_type', 'tag_value'], tag);
+            queryBuilder = queryBuilder.whereIn('features.name', tagQuery);
+        }
+        const rows = await queryBuilder;
         return rows.map(this.rowToFeature);
     }
 
@@ -150,6 +160,44 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         return archived
             ? queryBuilder.whereNotNull('archived_at')
             : queryBuilder.whereNull('archived_at');
+    };
+
+    static filterByTags: Knex.QueryCallbackWithArgs = (
+        queryBuilder: Knex.QueryBuilder,
+        tag?: string[][],
+    ) => {
+        if (tag && tag.length > 0) {
+            const tagQuery = queryBuilder
+                .from('feature_tag')
+                .select('feature_name')
+                .whereIn(['tag_type', 'tag_value'], tag);
+            return queryBuilder.whereIn('feature.name', tagQuery);
+        }
+        return queryBuilder;
+    };
+
+    static filterByProject: Knex.QueryCallbackWithArgs = (
+        queryBuilder: Knex.QueryBuilder,
+        project?: string | string[],
+    ) => {
+        if (project) {
+            if (Array.isArray(project) && project.length > 0) {
+                return queryBuilder.whereIn('features.project', project);
+            } else {
+                return queryBuilder.where({ project });
+            }
+        }
+        return queryBuilder;
+    };
+
+    static filterByNamePrefix: Knex.QueryCallbackWithArgs = (
+        queryBuilder: Knex.QueryBuilder,
+        namePrefix?: string,
+    ) => {
+        if (namePrefix) {
+            return queryBuilder.whereILike('name', `${namePrefix}%`);
+        }
+        return queryBuilder;
     };
 
     rowToFeature(row: FeaturesTable): FeatureToggle {

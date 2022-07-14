@@ -180,8 +180,8 @@ afterAll(async () => {
 test('returns list of feature toggles', async () =>
     app.request
         .get('/api/admin/features')
-        .expect('Content-Type', /json/)
         .expect(200)
+        .expect('Content-Type', /json/)
         .expect((res) => {
             expect(res.body.features).toHaveLength(4);
         }));
@@ -628,8 +628,8 @@ test('Can get features tagged by tag', async () => {
         .expect(201);
     return app.request
         .get(`/api/admin/features?tag=${tag.type}:${tag.value}`)
-        .expect('Content-Type', /json/)
         .expect(200)
+        .expect('Content-Type', /json/)
         .expect((res) => {
             expect(res.body.features).toHaveLength(1);
             expect(res.body.features[0].name).toBe(feature1Name);
@@ -665,8 +665,8 @@ test('Can query for multiple tags using OR', async () => {
         .get(
             `/api/admin/features?tag[]=${tag.type}:${tag.value}&tag[]=${tag2.type}:${tag2.value}`,
         )
-        .expect('Content-Type', /json/)
         .expect(200)
+        .expect('Content-Type', /json/)
         .expect((res) => {
             expect(res.body.features).toHaveLength(2);
             expect(res.body.features.some((f) => f.name === feature1Name)).toBe(
@@ -715,8 +715,8 @@ test('Querying with multiple filters ANDs the filters', async () => {
         .expect(201);
     await app.request
         .get(`/api/admin/features?tag=${tag.type}:${tag.value}`)
-        .expect('Content-Type', /json/)
         .expect(200)
+        .expect('Content-Type', /json/)
         .expect((res) => expect(res.body.features).toHaveLength(2));
     await app.request
         .get(`/api/admin/features?namePrefix=test&tag=${tag.type}:${tag.value}`)

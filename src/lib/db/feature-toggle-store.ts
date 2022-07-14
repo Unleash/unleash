@@ -162,20 +162,6 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             : queryBuilder.whereNull('archived_at');
     };
 
-    static filterByTags: Knex.QueryCallbackWithArgs = (
-        queryBuilder: Knex.QueryBuilder,
-        tag?: string[][],
-    ) => {
-        if (tag && tag.length > 0) {
-            const tagQuery = queryBuilder
-                .from('feature_tag')
-                .select('feature_name')
-                .whereIn(['tag_type', 'tag_value'], tag);
-            return queryBuilder.whereIn('feature.name', tagQuery);
-        }
-        return queryBuilder;
-    };
-
     static filterByProject: Knex.QueryCallbackWithArgs = (
         queryBuilder: Knex.QueryBuilder,
         project?: string | string[],

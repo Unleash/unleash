@@ -103,7 +103,7 @@ export default class FeatureToggleClientStore
                 `fss.feature_strategy_id`,
                 `fs.id`,
             )
-            .fullOuterJoin('segments', `segments.id`, `fss.segment_id`);
+            .leftJoin('segments', `segments.id`, `fss.segment_id`);
 
         query = query.where({
             archived,

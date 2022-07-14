@@ -2,7 +2,7 @@ import Joi from 'joi';
 import { IUser } from './user';
 
 export interface IGroup {
-    id: number;
+    id?: number;
     name: string;
     description: string;
     createdAt?: Date;

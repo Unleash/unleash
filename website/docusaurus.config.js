@@ -119,7 +119,8 @@ module.exports = {
                             { sync: true },
                         ],
                     ],
-                    // docItemComponent: '@theme/ApiItem',
+                    docLayoutComponent: "@theme/DocPage",
+                    docItemComponent: '@theme/ApiItem',
                 },
                 theme: {
                     customCss: require.resolve('./src/css/custom.css'),
@@ -184,16 +185,18 @@ module.exports = {
             'docusaurus-plugin-openapi-docs',
             {
                 id: 'apiDocs',
+                docsPluginId: "classic",
                 config: {
-                    Proxy: {
-                        specPath: 'http://localhost:3000/docs/openapi.json',
-                        outputDir: 'api/proxy',
+                    server: {
+                        specPath: './openapi.json',
+                        outputDir: 'docs/openapi/server',
                         sidebarOptions: {
-                            groupPathsBy: 'tags',
+                            groupPathsBy: 'tag',
                         },
                     },
                 },
             },
         ],
     ],
+  themes: ["docusaurus-theme-openapi-docs"] // Allows use of @theme/ApiItem and other components
 };

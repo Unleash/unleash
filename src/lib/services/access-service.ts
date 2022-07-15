@@ -1,6 +1,7 @@
 import * as permissions from '../types/permissions';
 import User, { IUser } from '../types/user';
 import {
+    IAccessInfo,
     IAccessStore,
     IRole,
     IRoleWithPermissions,
@@ -183,6 +184,22 @@ export class AccessService {
         return this.store.addGroupToRole(groupId, roleId, createdBy, projectId);
     }
 
+    async addAccessToProject(
+        users: IAccessInfo[],
+        groups: IAccessInfo[],
+        projectId: string,
+        roleId: number,
+        createdBy: string,
+    ): Promise<void> {
+        return this.store.addAccessToProject(
+            users,
+            groups,
+            projectId,
+            roleId,
+            createdBy,
+        );
+    }
+
     async getRoleByName(roleName: string): Promise<IRole> {
         return this.roleStore.getRoleByName(roleName);
     }
@@ -241,6 +258,14 @@ export class AccessService {
         projectId: string,
     ): Promise<void> {
         return this.store.updateUserProjectRole(userId, roleId, projectId);
+    }
+
+    async updateGroupProjectRole(
+        userId: number,
+        roleId: number,
+        projectId: string,
+    ): Promise<void> {
+        return this.store.updateGroupProjectRole(userId, roleId, projectId);
     }
 
     //This actually only exists for testing purposes

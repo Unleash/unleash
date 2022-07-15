@@ -10,11 +10,13 @@ import { randomId } from '../../../lib/util/random-id';
 import EnvironmentService from '../../../lib/services/environment-service';
 import IncompatibleProjectError from '../../../lib/error/incompatible-project-error';
 import { SegmentService } from '../../../lib/services/segment-service';
+import { GroupService } from '../../../lib/services/group-service';
 
 let stores;
 let db: ITestDb;
 
 let projectService: ProjectService;
+let groupService: GroupService;
 let accessService: AccessService;
 let environmentService: EnvironmentService;
 let featureToggleService: FeatureToggleService;
@@ -33,6 +35,7 @@ beforeAll(async () => {
         experimental: { environments: { enabled: true } },
     });
     accessService = new AccessService(stores, config);
+    groupService = new GroupService(stores, config);
     featureToggleService = new FeatureToggleService(
         stores,
         config,
@@ -44,6 +47,7 @@ beforeAll(async () => {
         config,
         accessService,
         featureToggleService,
+        groupService,
     );
 });
 
@@ -826,5 +830,44 @@ test('should not update role for user on project when she is the owner', async (
         );
     }).rejects.toThrowError(
         new Error('A project must have at least one owner'),
+    );
+});
+
+test('Should allow bulk update of group permissions', async () => {
+    const project = 'bulk-update-project';
+    const groupStore = stores.groupStore;
+
+    const user1 = await stores.userStore.insert({
+        name: 'Vanessa Viewer',
+        email: 'vanv@getunleash.io',
+    });
+
+    const group1 = await groupStore.create({
+        name: 'ViewersOnly',
+        description: '',
+    });
+
+    const createFeatureRole = await accessService.createRole({
+        name: 'CreateRole',
+        description: '',
+        permissions: [
+            {
+                id: 2,
+                name: 'CREATE_FEATURE',
+                environment: null,
+                displayName: 'Create Feature Toggles',
+                type: 'project',
+            },
+        ],
+    });
+
+    await projectService.addAccess(
+        project,
+        createFeatureRole.id,
+        {
+            users: [{ id: user1.id }],
+            groups: [{ id: group1.id }],
+        },
+        'some-admin-user',
     );
 });

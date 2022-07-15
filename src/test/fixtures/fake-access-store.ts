@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import noLoggerProvider from './no-logger';
 import {
+    IAccessInfo,
     IAccessStore,
     IRole,
     IUserPermission,
@@ -9,6 +10,24 @@ import {
 import { IAvailablePermissions, IPermission } from 'lib/types/model';
 
 class AccessStoreMock implements IAccessStore {
+    addAccessToProject(
+        users: IAccessInfo[],
+        groups: IAccessInfo[],
+        projectId: string,
+        roleId: number,
+        createdBy: string,
+    ): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+
+    updateGroupProjectRole(
+        userId: number,
+        roleId: number,
+        projectId: string,
+    ): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+
     addGroupToRole(
         groupId: number,
         roleId: number,

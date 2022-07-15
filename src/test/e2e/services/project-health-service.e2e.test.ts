@@ -8,10 +8,12 @@ import { createTestConfig } from '../../config/test-config';
 import { IUnleashStores } from '../../../lib/types';
 import { IUser } from '../../../lib/server-impl';
 import { SegmentService } from '../../../lib/services/segment-service';
+import { GroupService } from '../../../lib/services/group-service';
 
 let stores: IUnleashStores;
 let db: ITestDb;
 let projectService;
+let groupService;
 let accessService;
 let projectHealthService;
 let featureToggleService;
@@ -26,6 +28,7 @@ beforeAll(async () => {
         email: 'test@getunleash.io',
     });
     accessService = new AccessService(stores, config);
+    groupService = new GroupService(stores, config);
     featureToggleService = new FeatureToggleService(
         stores,
         config,
@@ -36,6 +39,7 @@ beforeAll(async () => {
         config,
         accessService,
         featureToggleService,
+        groupService,
     );
     projectHealthService = new ProjectHealthService(
         stores,

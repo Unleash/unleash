@@ -13,10 +13,12 @@ import { createTestConfig } from '../../config/test-config';
 import { DEFAULT_PROJECT } from '../../../lib/types/project';
 import { ALL_PROJECTS } from '../../../lib/util/constants';
 import { SegmentService } from '../../../lib/services/segment-service';
+import { GroupService } from '../../../lib/services/group-service';
 
 let db: ITestDb;
 let stores: IUnleashStores;
 let accessService;
+let groupService;
 let featureToggleService;
 let projectService;
 let editorUser;
@@ -207,6 +209,7 @@ beforeAll(async () => {
         experimental: { environments: { enabled: true } },
     });
     accessService = new AccessService(stores, { getLogger });
+    groupService = new GroupService(stores, { getLogger });
     const roles = await accessService.getRootRoles();
     editorRole = roles.find((r) => r.name === RoleName.EDITOR);
     adminRole = roles.find((r) => r.name === RoleName.ADMIN);
@@ -221,6 +224,7 @@ beforeAll(async () => {
         config,
         accessService,
         featureToggleService,
+        groupService,
     );
 
     editorUser = await createUserEditorAccess('Bob Test', 'bob@getunleash.io');

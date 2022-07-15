@@ -4,10 +4,21 @@ import dbInit from '../helpers/database-init';
 import { DEFAULT_ENV } from '../../../lib/util/constants';
 import { SegmentService } from '../../../lib/services/segment-service';
 import { FeatureStrategySchema } from '../../../lib/openapi/spec/feature-strategy-schema';
+import User from '../../../lib/types/user';
+import { IConstraint } from '../../../lib/types/model';
 
 let stores;
 let db;
 let service: FeatureToggleService;
+let segmentService: SegmentService;
+
+const mockConstraints = (): IConstraint[] => {
+    return Array.from({ length: 5 }).map(() => ({
+        values: ['x', 'y', 'z'],
+        operator: 'IN',
+        contextName: 'a',
+    }));
+};
 
 beforeAll(async () => {
     const config = createTestConfig();
@@ -16,11 +27,8 @@ beforeAll(async () => {
         config.getLogger,
     );
     stores = db.stores;
-    service = new FeatureToggleService(
-        stores,
-        config,
-        new SegmentService(stores, config),
-    );
+    segmentService = new SegmentService(stores, config);
+    service = new FeatureToggleService(stores, config, segmentService);
 });
 
 afterAll(async () => {
@@ -151,4 +159,41 @@ test('should ignore name in the body when updating feature toggle', async () => 
 
     expect(featureOne.description).toBe(`I'm changed`);
     expect(featureTwo.description).toBe('Second toggle');
+});
+
+test('should not get empty rows as features', async () => {
+    const projectId = 'default';
+
+    const userName = 'strategy';
+
+    await service.createFeatureToggle(
+        projectId,
+        {
+            name: 'linked-with-segment',
+            description: 'First toggle',
+        },
+        userName,
+    );
+
+    await service.createFeatureToggle(
+        projectId,
+        {
+            name: 'not-linked-with-segment',
+            description: 'Second toggle',
+        },
+        userName,
+    );
+
+    const user = { email: 'test@example.com' } as User;
+    const postData = {
+        name: 'Unlinked segment',
+        constraints: mockConstraints(),
+    };
+    await segmentService.create(postData, user);
+
+    const features = await service.getClientFeatures();
+    const namelessFeature = features.find((p) => !p.name);
+
+    expect(features.length).toBe(7);
+    expect(namelessFeature).toBeUndefined();
 });

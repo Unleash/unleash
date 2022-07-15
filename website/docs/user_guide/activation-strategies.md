@@ -97,7 +97,7 @@ This strategy has the following modelling name in the code:
 
 You can apply as many activation strategies to a toggle as you want. When a toggle has multiple strategies, Unleash will check each strategy in isolation. If any one of the strategies would enable the toggle for the current user, then the toggle is enabled.
 
-As an example, consider a case where you want to roll a feature out to 75% of your users. However, you also want to make sure that the you and your product lead get access to the feature. To achieve this, you would apply a **gradual rollout** strategy and set it to 75%. Additionally, you would add a **user IDs** strategy and add `engineer@mycompany.com` and `productlead@mycompany.com`.
+As an example, consider a case where you want to roll a feature out to 75% of your users. However, you also want to make sure that you and your product lead get access to the feature. To achieve this, you would apply a **gradual rollout** strategy and set it to 75%. Additionally, you would add a **user IDs** strategy and add `engineer@mycompany.com` and `productlead@mycompany.com`.
 
 ![A feature toggle with two active strategies: a user ID strategy and a gradual rollout strategy. The strategies are configured as described in the preceding paragraph.](/img/control_rollout_multiple_strategies.png)
 

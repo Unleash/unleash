@@ -74,6 +74,7 @@ export const SETTING_UPDATED = 'setting-updated';
 export const SETTING_DELETED = 'setting-deleted';
 
 export const CLIENT_METRICS = 'client-metrics';
+export const CLIENT_REGISTER = 'client-register';
 
 export interface IBaseEvent {
     type: string;

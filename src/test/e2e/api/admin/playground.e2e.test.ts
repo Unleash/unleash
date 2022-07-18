@@ -577,5 +577,59 @@ describe('Playground API E2E', () => {
                 testParams,
             );
         });
+
+        test('context is applied to variant checks', async () => {
+            const environment = 'development';
+            const featureName = 'feature-name';
+            const customContextFieldName = 'customField';
+            const customContextValue = 'customValue';
+
+            const features = [
+                {
+                    project: 'any-project',
+                    strategies: [
+                        {
+                            name: 'default',
+                            constraints: [
+                                {
+                                    contextName: customContextFieldName,
+                                    operator: 'IN' as 'IN',
+                                    values: [customContextValue],
+                                },
+                            ],
+                        },
+                    ],
+                    stale: false,
+                    enabled: true,
+                    name: featureName,
+                    type: 'experiment',
+                    variants: [
+                        {
+                            name: 'a',
+                            weight: 1000,
+                            weightType: 'variable',
+                            stickiness: 'default',
+                            overrides: [],
+                        },
+                    ],
+                },
+            ];
+
+            await seedDatabase(db, features, environment);
+
+            const request = {
+                projects: ALL as '*',
+                environment,
+                context: {
+                    appName: 'playground',
+                    [customContextFieldName]: customContextValue,
+                },
+            };
+
+            const body = await playgroundRequest(app, token.secret, request);
+
+            // when enabled, this toggle should have one of the variants
+            expect(body.features[0].variant.name).toBe('a');
+        });
     });
 });

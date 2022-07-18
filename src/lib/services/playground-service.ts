@@ -58,7 +58,7 @@ export class PlaygroundService {
                         projectId: await this.featureToggleService.getProjectId(
                             feature.name,
                         ),
-                        variant: client.getVariant(feature.name),
+                        variant: client.getVariant(feature.name, clientContext),
                         name: feature.name,
                     };
                 }),

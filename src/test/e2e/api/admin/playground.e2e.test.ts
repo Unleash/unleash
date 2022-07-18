@@ -6,6 +6,7 @@ import { IUnleashTest, setupAppWithAuth } from '../../helpers/test-helper';
 import { FeatureToggle, WeightType } from '../../../../lib/types/model';
 import getLogger from '../../../fixtures/no-logger';
 import {
+    ALL,
     ApiTokenType,
     IApiToken,
 } from '../../../../lib/types/models/api-token';
@@ -25,8 +26,8 @@ beforeAll(async () => {
     token = await apiTokenService.createApiTokenWithProjects({
         type: ApiTokenType.ADMIN,
         username: 'tester',
-        environment: '*',
-        projects: ['*'],
+        environment: ALL,
+        projects: [ALL],
     });
 });
 
@@ -172,7 +173,7 @@ describe('Playground API E2E', () => {
                         // get a subset of projects that exist among the features
                         const [projects] = fc.sample(
                             fc.oneof(
-                                fc.constant('*' as '*'),
+                                fc.constant(ALL as '*'),
                                 fc.uniqueArray(
                                     fc.constantFrom(
                                         ...features.map(
@@ -194,7 +195,7 @@ describe('Playground API E2E', () => {
                         );
 
                         switch (projects) {
-                            case '*':
+                            case ALL:
                                 // no features have been filtered out
                                 return body.features.length === features.length;
                             case []:
@@ -228,7 +229,7 @@ describe('Playground API E2E', () => {
                             app,
                             token.secret,
                             {
-                                projects: '*',
+                                projects: ALL,
                                 environment: 'default',
                                 context: {
                                     appName: 'playground-test',

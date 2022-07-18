@@ -4,6 +4,7 @@ import NotFoundError from '../error/notfound-error';
 import Group, {
     IGroup,
     IGroupModel,
+    IGroupRole,
     IGroupUser,
     IGroupUserModel,
 } from '../types/group';
@@ -12,6 +13,7 @@ import Transaction = Knex.Transaction;
 const T = {
     GROUPS: 'groups',
     GROUP_USER: 'group_user',
+    GROUP_ROLE: 'group_role',
     USERS: 'users',
 };
 
@@ -54,6 +56,14 @@ export default class GroupStore implements IGroupStore {
         this.db = db;
     }
 
+    async getAllWithId(ids: number[]): Promise<Group[]> {
+        const groups = await this.db
+            .select(GROUP_COLUMNS)
+            .from(T.GROUPS)
+            .whereIn('id', ids);
+        return groups.map(rowToGroup);
+    }
+
     async update(group: IGroupModel): Promise<IGroup> {
         const rows = await this.db(T.GROUPS)
             .where({ id: group.id })
@@ -64,6 +74,19 @@ export default class GroupStore implements IGroupStore {
             .returning(GROUP_COLUMNS);
 
         return rowToGroup(rows[0]);
+    }
+
+    async getProjectGroupRoles(projectId: string): Promise<IGroupRole[]> {
+        const rows = await this.db
+            .select(['group_id', 'role_id'])
+            .from(`${T.GROUP_ROLE}`)
+            .where('project', projectId);
+        return rows.map((r) => {
+            return {
+                groupId: r.group_id,
+                roleId: r.role_id,
+            };
+        });
     }
 
     async getAllUsersByGroups(groupIds: number[]): Promise<IGroupUser[]> {
@@ -92,7 +115,7 @@ export default class GroupStore implements IGroupStore {
 
     async exists(id: number): Promise<boolean> {
         const result = await this.db.raw(
-            `SELECT EXISTS (SELECT 1 FROM ${T.GROUPS} WHERE id = ?) AS present`,
+            `SELECT EXISTS(SELECT 1 FROM ${T.GROUPS} WHERE id = ?) AS present`,
             [id],
         );
         const { present } = result.rows[0];
@@ -101,7 +124,7 @@ export default class GroupStore implements IGroupStore {
 
     async existsWithName(name: string): Promise<boolean> {
         const result = await this.db.raw(
-            `SELECT EXISTS (SELECT 1 FROM ${T.GROUPS} WHERE name = ?) AS present`,
+            `SELECT EXISTS(SELECT 1 FROM ${T.GROUPS} WHERE name = ?) AS present`,
             [name],
         );
         const { present } = result.rows[0];

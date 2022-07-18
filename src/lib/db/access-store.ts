@@ -74,7 +74,7 @@ export class AccessStore implements IAccessStore {
 
     async exists(key: number): Promise<boolean> {
         const result = await this.db.raw(
-            `SELECT EXISTS (SELECT 1 FROM ${T.ROLES} WHERE id = ?) AS present`,
+            `SELECT EXISTS(SELECT 1 FROM ${T.ROLES} WHERE id = ?) AS present`,
             [key],
         );
         const { present } = result.rows[0];

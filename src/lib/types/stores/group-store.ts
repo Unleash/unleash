@@ -1,5 +1,11 @@
 import { Store } from './store';
-import { IGroup, IGroupModel, IGroupUser, IGroupUserModel } from '../group';
+import {
+    IGroup,
+    IGroupModel,
+    IGroupRole,
+    IGroupUser,
+    IGroupUserModel,
+} from '../group';
 
 export interface IStoreGroup {
     name: string;
@@ -7,6 +13,8 @@ export interface IStoreGroup {
 }
 
 export interface IGroupStore extends Store<IGroup, number> {
+    getProjectGroupRoles(projectId: string): Promise<IGroupRole[]>;
+    getAllWithId(ids: number[]): Promise<IGroup[]>;
     updateGroupUsers(
         groupId: number,
         newUsers: IGroupUserModel[],

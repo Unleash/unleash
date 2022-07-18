@@ -208,8 +208,8 @@ beforeAll(async () => {
         // @ts-ignore
         experimental: { environments: { enabled: true } },
     });
-    accessService = new AccessService(stores, { getLogger });
     groupService = new GroupService(stores, { getLogger });
+    accessService = new AccessService(stores, { getLogger }, groupService);
     const roles = await accessService.getRootRoles();
     editorRole = roles.find((r) => r.name === RoleName.EDITOR);
     adminRole = roles.find((r) => r.name === RoleName.ADMIN);

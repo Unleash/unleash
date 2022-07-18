@@ -11,6 +11,7 @@ import InvalidTokenError from '../../../lib/error/invalid-token-error';
 import { IUser } from '../../../lib/types/user';
 import SettingService from '../../../lib/services/setting-service';
 import FakeSettingStore from '../../fixtures/fake-setting-store';
+import { GroupService } from '../../../lib/services/group-service';
 
 const config: IUnleashConfig = createTestConfig();
 
@@ -26,7 +27,8 @@ let sessionService: SessionService;
 beforeAll(async () => {
     db = await dbInit('reset_token_service_serial', getLogger);
     stores = db.stores;
-    accessService = new AccessService(stores, config);
+    const groupService = new GroupService(stores, config);
+    accessService = new AccessService(stores, config, groupService);
     resetTokenService = new ResetTokenService(stores, config);
     sessionService = new SessionService(stores, config);
     const emailService = new EmailService(undefined, config.getLogger);

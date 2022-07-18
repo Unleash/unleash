@@ -2,6 +2,7 @@ import { IGroupStore, IStoreGroup } from '../../lib/types/stores/group-store';
 import {
     IGroup,
     IGroupModel,
+    IGroupRole,
     IGroupUser,
     IGroupUserModel,
 } from '../../lib/types/group';
@@ -74,6 +75,14 @@ export default class FakeGroupStore implements IGroupStore {
         deletableUsers: IGroupUser[],
         userName: string,
     ): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+
+    getAllWithId(ids: number[]): Promise<IGroup[]> {
+        throw new Error('Method not implemented.');
+    }
+
+    getProjectGroupRoles(projectId: string): Promise<IGroupRole[]> {
         throw new Error('Method not implemented.');
     }
 }

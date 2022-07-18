@@ -38,24 +38,35 @@ export interface IUserRole {
     roleId: number;
     userId: number;
 }
+
 export interface IAccessStore extends Store<IRole, number> {
     getAvailablePermissions(): Promise<IPermission[]>;
+
     getPermissionsForUser(userId: number): Promise<IUserPermission[]>;
+
     getPermissionsForRole(roleId: number): Promise<IPermission[]>;
+
     unlinkUserRoles(userId: number): Promise<void>;
+
     getRolesForUserId(userId: number): Promise<IRole[]>;
+
     getProjectUserIdsForRole(roleId: number, projectId?: string);
+
     getUserIdsForRole(roleId: number, projectId?: string): Promise<number[]>;
+
     wipePermissionsFromRole(role_id: number): Promise<void>;
+
     addEnvironmentPermissionsToRole(
         role_id: number,
         permissions: IPermission[],
     ): Promise<void>;
+
     addUserToRole(
         userId: number,
         roleId: number,
         projectId?: string,
     ): Promise<void>;
+
     addAccessToProject(
         users: IAccessInfo[],
         groups: IAccessInfo[],
@@ -63,38 +74,46 @@ export interface IAccessStore extends Store<IRole, number> {
         roleId: number,
         createdBy: string,
     ): Promise<void>;
+
     removeUserFromRole(
         userId: number,
         roleId: number,
         projectId?: string,
     ): Promise<void>;
+
     addGroupToRole(
         groupId: number,
         roleId: number,
         created_by: string,
         projectId?: string,
     ): Promise<void>;
+
     removeGroupFromRole(
         groupId: number,
         roleId: number,
         projectId?: string,
     ): Promise<void>;
+
     updateUserProjectRole(
         userId: number,
         roleId: number,
         projectId: string,
     ): Promise<void>;
+
     updateGroupProjectRole(
         userId: number,
         roleId: number,
         projectId: string,
     ): Promise<void>;
+
     removeRolesOfTypeForUser(userId: number, roleType: string): Promise<void>;
+
     addPermissionsToRole(
         role_id: number,
         permissions: string[],
         environment?: string,
     ): Promise<void>;
+
     removePermissionFromRole(
         roleId: number,
         permission: string,

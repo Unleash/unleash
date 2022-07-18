@@ -1,4 +1,9 @@
-import { IGroup, IGroupModel } from '../types/group';
+import {
+    IGroup,
+    IGroupModel,
+    IGroupModelWithRole,
+    IGroupUser,
+} from '../types/group';
 import { IUnleashConfig, IUnleashStores } from '../types';
 import { IGroupStore } from '../types/stores/group-store';
 import { Logger } from '../logger';
@@ -7,6 +12,7 @@ import { GROUP_CREATED, GROUP_UPDATED } from '../types/events';
 import { IEventStore } from '../types/stores/event-store';
 import NameExistsError from '../error/name-exists-error';
 import { IUserStore } from '../types/stores/user-store';
+import { IUser } from '../types/user';
 
 export class GroupService {
     private groupStore: IGroupStore;
@@ -37,32 +43,23 @@ export class GroupService {
         );
 
         return groups.map((group) => {
-            const groupUsers = allGroupUsers.filter(
-                (user) => user.groupId == group.id,
-            );
-            const groupUsersId = groupUsers.map((user) => user.userId);
-            const selectedUsers = users.filter((user) =>
-                groupUsersId.includes(user.id),
-            );
-            const finalUsers = selectedUsers.map((user) => {
-                const roleUser = groupUsers.find((gu) => gu.userId == user.id);
-                return {
-                    user: user,
-                    joinedAt: roleUser.joinedAt,
-                    role: roleUser.role,
-                };
-            });
-            return { ...group, users: finalUsers };
+            return this.getGroupWithUsers(group, allGroupUsers, users);
         });
     }
 
-    async getGroup(id: number): Promise<IGroupModel> {
-        const group = await this.groupStore.get(id);
-        const groupUsers = await this.groupStore.getAllUsersByGroups([id]);
-        const users = await this.userStore.getAllWithId(
-            groupUsers.map((u) => u.userId),
+    private getGroupWithUsers(
+        group: IGroup,
+        allGroupUsers: IGroupUser[],
+        users: IUser[],
+    ) {
+        const groupUsers = allGroupUsers.filter(
+            (user) => user.groupId == group.id,
         );
-        const finalUsers = users.map((user) => {
+        const groupUsersId = groupUsers.map((user) => user.userId);
+        const selectedUsers = users.filter((user) =>
+            groupUsersId.includes(user.id),
+        );
+        const finalUsers = selectedUsers.map((user) => {
             const roleUser = groupUsers.find((gu) => gu.userId == user.id);
             return {
                 user: user,
@@ -71,6 +68,15 @@ export class GroupService {
             };
         });
         return { ...group, users: finalUsers };
+    }
+
+    async getGroup(id: number): Promise<IGroupModel> {
+        const group = await this.groupStore.get(id);
+        const groupUsers = await this.groupStore.getAllUsersByGroups([id]);
+        const users = await this.userStore.getAllWithId(
+            groupUsers.map((u) => u.userId),
+        );
+        return this.getGroupWithUsers(group, groupUsers, users);
     }
 
     async createGroup(group: IGroupModel, userName: string): Promise<IGroup> {
@@ -135,6 +141,29 @@ export class GroupService {
         });
 
         return newGroup;
+    }
+
+    async getProjectGroups(projectId?: string): Promise<IGroupModelWithRole[]> {
+        const groupRoles = await this.groupStore.getProjectGroupRoles(
+            projectId,
+        );
+        if (groupRoles.length > 0) {
+            const groups = await this.groupStore.getAllWithId(
+                groupRoles.map((a) => a.groupId),
+            );
+            const groupUsers = await this.groupStore.getAllUsersByGroups(
+                groups.map((g) => g.id),
+            );
+
+            const users = await this.userStore.getAllWithId(
+                groupUsers.map((u) => u.userId),
+            );
+            return groups.map((group) => ({
+                ...this.getGroupWithUsers(group, groupUsers, users),
+                roleId: groupRoles.find((g) => g.groupId == group.id).roleId,
+            }));
+        }
+        return [];
     }
 
     async deleteGroup(id: number): Promise<void> {

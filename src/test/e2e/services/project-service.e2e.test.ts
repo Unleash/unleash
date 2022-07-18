@@ -876,8 +876,8 @@ test('Should bulk update of only users', async () => {
     const project = 'bulk-update-project-users';
 
     const user1 = await stores.userStore.insert({
-        name: 'Vanessa Viewer',
-        email: 'vanv@getunleash.io',
+        name: 'Van Viewer',
+        email: 'vv@getunleash.io',
     });
 
     const createFeatureRole = await accessService.createRole({

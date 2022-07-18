@@ -6,6 +6,7 @@ import { IUnleashTest, setupAppWithAuth } from '../../helpers/test-helper';
 import { FeatureToggle, WeightType } from '../../../../lib/types/model';
 import getLogger from '../../../fixtures/no-logger';
 import {
+    ALL,
     ApiTokenType,
     IApiToken,
 } from '../../../../lib/types/models/api-token';
@@ -25,8 +26,8 @@ beforeAll(async () => {
     token = await apiTokenService.createApiTokenWithProjects({
         type: ApiTokenType.ADMIN,
         username: 'tester',
-        environment: '*',
-        projects: ['*'],
+        environment: ALL,
+        projects: [ALL],
     });
 });
 
@@ -172,7 +173,7 @@ describe('Playground API E2E', () => {
                         // get a subset of projects that exist among the features
                         const [projects] = fc.sample(
                             fc.oneof(
-                                fc.constant('*' as '*'),
+                                fc.constant(ALL as '*'),
                                 fc.uniqueArray(
                                     fc.constantFrom(
                                         ...features.map(
@@ -194,7 +195,7 @@ describe('Playground API E2E', () => {
                         );
 
                         switch (projects) {
-                            case '*':
+                            case ALL:
                                 // no features have been filtered out
                                 return body.features.length === features.length;
                             case []:
@@ -228,7 +229,7 @@ describe('Playground API E2E', () => {
                             app,
                             token.secret,
                             {
-                                projects: '*',
+                                projects: ALL,
                                 environment: 'default',
                                 context: {
                                     appName: 'playground-test',
@@ -575,6 +576,60 @@ describe('Playground API E2E', () => {
                     .afterEach(reset(db)),
                 testParams,
             );
+        });
+
+        test('context is applied to variant checks', async () => {
+            const environment = 'development';
+            const featureName = 'feature-name';
+            const customContextFieldName = 'customField';
+            const customContextValue = 'customValue';
+
+            const features = [
+                {
+                    project: 'any-project',
+                    strategies: [
+                        {
+                            name: 'default',
+                            constraints: [
+                                {
+                                    contextName: customContextFieldName,
+                                    operator: 'IN' as 'IN',
+                                    values: [customContextValue],
+                                },
+                            ],
+                        },
+                    ],
+                    stale: false,
+                    enabled: true,
+                    name: featureName,
+                    type: 'experiment',
+                    variants: [
+                        {
+                            name: 'a',
+                            weight: 1000,
+                            weightType: 'variable',
+                            stickiness: 'default',
+                            overrides: [],
+                        },
+                    ],
+                },
+            ];
+
+            await seedDatabase(db, features, environment);
+
+            const request = {
+                projects: ALL as '*',
+                environment,
+                context: {
+                    appName: 'playground',
+                    [customContextFieldName]: customContextValue,
+                },
+            };
+
+            const body = await playgroundRequest(app, token.secret, request);
+
+            // when enabled, this toggle should have one of the variants
+            expect(body.features[0].variant.name).toBe('a');
         });
     });
 });

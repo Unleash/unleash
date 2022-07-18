@@ -3230,7 +3230,7 @@ faker@5.5.3:
   resolved "https://registry.npmjs.org/faker/-/faker-5.5.3.tgz"
   integrity sha512-wLTv2a28wjUyWkbnX7u/ABZBkUkIF2fCd73V6P2oFqEGEktDfzWx4UxrSqtPRw0xPRAcjeAOIiJWqZm3pP4u3g==
 
-fast-check@^3.0.1:
+fast-check@3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/fast-check/-/fast-check-3.0.1.tgz#b9e7b57c4643a4e62893aca85e21c270591d0eac"
   integrity sha512-AriFDYpYVOBynpPZq/quxSLumFOo2hPB2H5Nz2vc1QlNfjOaA62zX8USNXcOY5nwKHEq7lZ84dG9M1W+LAND1g==

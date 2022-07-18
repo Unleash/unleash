@@ -871,3 +871,70 @@ test('Should allow bulk update of group permissions', async () => {
         'some-admin-user',
     );
 });
+
+test('Should bulk update of only users', async () => {
+    const project = 'bulk-update-project-users';
+
+    const user1 = await stores.userStore.insert({
+        name: 'Vanessa Viewer',
+        email: 'vanv@getunleash.io',
+    });
+
+    const createFeatureRole = await accessService.createRole({
+        name: 'CreateRoleForUsers',
+        description: '',
+        permissions: [
+            {
+                id: 2,
+                name: 'CREATE_FEATURE',
+                environment: null,
+                displayName: 'Create Feature Toggles',
+                type: 'project',
+            },
+        ],
+    });
+
+    await projectService.addAccess(
+        project,
+        createFeatureRole.id,
+        {
+            users: [{ id: user1.id }],
+            groups: [],
+        },
+        'some-admin-user',
+    );
+});
+
+test('Should allow bulk update of only groups', async () => {
+    const project = 'bulk-update-project';
+    const groupStore = stores.groupStore;
+
+    const group1 = await groupStore.create({
+        name: 'ViewersOnly',
+        description: '',
+    });
+
+    const createFeatureRole = await accessService.createRole({
+        name: 'CreateRoleForGroups',
+        description: '',
+        permissions: [
+            {
+                id: 2,
+                name: 'CREATE_FEATURE',
+                environment: null,
+                displayName: 'Create Feature Toggles',
+                type: 'project',
+            },
+        ],
+    });
+
+    await projectService.addAccess(
+        project,
+        createFeatureRole.id,
+        {
+            users: [],
+            groups: [{ id: group1.id }],
+        },
+        'some-admin-user',
+    );
+});

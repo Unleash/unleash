@@ -1,4 +1,6 @@
 import { FromSchema } from 'json-schema-to-ts';
+import { variantSchema } from './variant-schema';
+import { overrideSchema } from './override-schema';
 
 export const playgroundFeatureSchema = {
     $id: '#/components/schemas/playgroundFeatureSchema',
@@ -6,7 +8,7 @@ export const playgroundFeatureSchema = {
         'A simplified feature toggle model intended for the Unleash playground.',
     type: 'object',
     additionalProperties: false,
-    required: ['name', 'projectId', 'isEnabled', 'variant'],
+    required: ['name', 'projectId', 'isEnabled', 'variant', 'variants'],
     properties: {
         name: { type: 'string', examples: ['my-feature'] },
         projectId: { type: 'string', examples: ['my-project'] },
@@ -34,8 +36,9 @@ export const playgroundFeatureSchema = {
             nullable: true,
             examples: ['green'],
         },
+        variants: { type: 'array', items: { $ref: variantSchema.$id } },
     },
-    components: { schemas: {} },
+    components: { schemas: { variantSchema, overrideSchema } },
 } as const;
 
 export type PlaygroundFeatureSchema = FromSchema<

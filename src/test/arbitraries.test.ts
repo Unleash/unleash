@@ -93,28 +93,34 @@ export const strategies = (): Arbitrary<FeatureStrategySchema[]> =>
     );
 
 export const variant = (): Arbitrary<IVariant> =>
-    fc.record({
-        name: urlFriendlyString(),
-        weight: fc.nat({ max: 1000 }),
-        weightType: fc.constant(WeightType.VARIABLE),
-        stickiness: fc.constant('default'),
-        payload: fc.option(
-            fc.oneof(
-                fc.record({
-                    type: fc.constant('json'),
-                    value: fc.json(),
-                }),
-                fc.record({
-                    type: fc.constant('csv'),
-                    value: fc.array(fc.lorem()).map((words) => words.join(',')),
-                }),
-                fc.record({
-                    type: fc.constant('string'),
-                    value: fc.string(),
-                }),
+    fc.record(
+        {
+            name: urlFriendlyString(),
+            weight: fc.nat({ max: 1000 }),
+            weightType: fc.constant(WeightType.VARIABLE),
+            stickiness: fc.constant('default'),
+            payload: fc.option(
+                fc.oneof(
+                    fc.record({
+                        type: fc.constant('json' as 'json'),
+                        value: fc.json(),
+                    }),
+                    fc.record({
+                        type: fc.constant('csv' as 'csv'),
+                        value: fc
+                            .array(fc.lorem())
+                            .map((words) => words.join(',')),
+                    }),
+                    fc.record({
+                        type: fc.constant('string' as 'string'),
+                        value: fc.string(),
+                    }),
+                ),
+                { nil: undefined },
             ),
-        ),
-    });
+        },
+        { requiredKeys: ['name', 'weight', 'weightType', 'stickiness'] },
+    );
 
 export const variants = (): Arbitrary<IVariant[]> =>
     fc
@@ -167,5 +173,15 @@ test('url-friendly strings are URL-friendly', () =>
     fc.assert(
         fc.property(urlFriendlyString(), (input: string) =>
             /^[\w~.-]+$/.test(input),
+        ),
+    ));
+
+test('variant payloads are either present or undefined; never null', () =>
+    fc.assert(
+        fc.property(
+            variant(),
+            (generatedVariant) =>
+                !!generatedVariant.payload ||
+                generatedVariant.payload === undefined,
         ),
     ));

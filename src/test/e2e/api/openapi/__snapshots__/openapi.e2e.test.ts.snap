@@ -1821,12 +1821,19 @@ Object {
             ],
             "type": "object",
           },
+          "variants": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/variantSchema",
+            },
+            "type": "array",
+          },
         },
         "required": Array [
           "name",
           "projectId",
           "isEnabled",
           "variant",
+          "variants",
         ],
         "type": "object",
       },
@@ -1877,25 +1884,7 @@ Object {
         "properties": Object {
           "features": Object {
             "items": Object {
-              "allOf": Array [
-                Object {
-                  "$ref": "#/components/schemas/playgroundFeatureSchema",
-                },
-                Object {
-                  "properties": Object {
-                    "variants": Object {
-                      "items": Object {
-                        "$ref": "#/components/schemas/featureVariantsSchema",
-                      },
-                      "type": "array",
-                    },
-                  },
-                  "required": Array [
-                    "variants",
-                  ],
-                  "type": "object",
-                },
-              ],
+              "$ref": "#/components/schemas/playgroundFeatureSchema",
             },
             "type": "array",
           },

@@ -421,35 +421,6 @@ export default class ProjectService {
         );
     }
 
-    async updateGroup(
-        projectId: string,
-        roleId: number,
-        groupId: number,
-        modifiedBy?: string,
-    ): Promise<void> {
-        const group = await this.groupService.getGroup(groupId);
-        const role = await this.accessService.getRole(roleId);
-        const project = await this.getProject(projectId);
-
-        await this.accessService.removeGroupFromRole(
-            group.id,
-            role.id,
-            project.id,
-        );
-
-        await this.eventStore.store(
-            new ProjectGroupRemovedEvent({
-                project: projectId,
-                createdBy: modifiedBy,
-                preData: {
-                    groupId: group.id,
-                    projectId: project.id,
-                    roleName: role.name,
-                },
-            }),
-        );
-    }
-
     async addAccess(
         projectId: string,
         roleId: number,
@@ -488,7 +459,9 @@ export default class ProjectService {
                 currentRole.id,
                 projectId,
             );
-            if (users.length < 2) {
+            const groups = await this.groupService.getProjectGroups(projectId);
+            const roleGroups = groups.filter((g) => g.roleId == currentRole.id);
+            if (users.length + roleGroups.length < 2) {
                 throw new ProjectWithoutOwnerError();
             }
         }

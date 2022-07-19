@@ -172,12 +172,11 @@ export class AccessStore implements IAccessStore {
                 ? row.environment
                 : undefined;
 
-        const result = {
+        return {
             project,
             environment,
             permission: row.permission,
         };
-        return result;
     }
 
     async getPermissionsForRole(roleId: number): Promise<IPermission[]> {
@@ -259,12 +258,12 @@ export class AccessStore implements IAccessStore {
     async addUserToRole(
         userId: number,
         roleId: number,
-        projecId?: string,
+        projectId?: string,
     ): Promise<void> {
         return this.db(T.ROLE_USER).insert({
             user_id: userId,
             role_id: roleId,
-            project: projecId,
+            project: projectId,
         });
     }
 

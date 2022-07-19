@@ -154,4 +154,46 @@ describe('the playground service (e2e)', () => {
             testParams,
         );
     });
+
+    test('returned list of variants is always the same as the one that goes in', async () => {
+        // await fc.assert(
+        //     fc
+        //         .asyncProperty(
+        //             clientFeatures({ minLength: 1 }),
+        //             generateContext(),
+        //             async (toggles, context) => {
+        //                 await Promise.all(
+        //                     toggles.map((feature) =>
+        //                         stores.featureToggleStore.create(
+        //                             feature.project,
+        //                             {
+        //                                 ...feature,
+        //                                 createdAt: new Date(feature.createdAt),
+        //                             },
+        //                         ),
+        //                     ),
+        //                 );
+        //                 const projects = '*';
+        //                 const env = 'default';
+        //                 const serviceToggles: PlaygroundFeatureSchema[] =
+        //                     await service.evaluateQuery(projects, env, context);
+        //                 const ts = toggles.reduce(
+        //                     (acc, t) => ({
+        //                         ...acc,
+        //                         [t.name]: t,
+        //                     }),
+        //                     {},
+        //                 );
+        //                 return serviceToggles.every((feature) => {
+        //                     feature.variants.length ===
+        //                         ts[feature.name].variants.length;
+        //                 });
+        //             },
+        //         )
+        //         .afterEach(async () => {
+        //             await stores.featureToggleStore.deleteAll();
+        //         }),
+        //     testParams,
+        // );
+    });
 });

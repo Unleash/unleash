@@ -1877,7 +1877,25 @@ Object {
         "properties": Object {
           "features": Object {
             "items": Object {
-              "$ref": "#/components/schemas/playgroundFeatureSchema",
+              "allOf": Array [
+                Object {
+                  "$ref": "#/components/schemas/playgroundFeatureSchema",
+                },
+                Object {
+                  "properties": Object {
+                    "variants": Object {
+                      "items": Object {
+                        "$ref": "#/components/schemas/featureVariantsSchema",
+                      },
+                      "type": "array",
+                    },
+                  },
+                  "required": Array [
+                    "variants",
+                  ],
+                  "type": "object",
+                },
+              ],
             },
             "type": "array",
           },

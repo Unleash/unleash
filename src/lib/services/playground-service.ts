@@ -60,6 +60,7 @@ export class PlaygroundService {
                         ),
                         variant: client.getVariant(feature.name, clientContext),
                         name: feature.name,
+                        variants: [],
                     };
                 }),
             );

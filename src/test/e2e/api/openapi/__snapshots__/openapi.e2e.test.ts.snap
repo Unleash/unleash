@@ -1465,6 +1465,7 @@ Object {
             "type": "string",
           },
           "createdBy": Object {
+            "nullable": true,
             "type": "string",
           },
           "description": Object {
@@ -1492,6 +1493,10 @@ Object {
       "groupUserModelSchema": Object {
         "additionalProperties": false,
         "properties": Object {
+          "joinedAt": Object {
+            "format": "date-time",
+            "type": "string",
+          },
           "role": Object {
             "type": "string",
           },

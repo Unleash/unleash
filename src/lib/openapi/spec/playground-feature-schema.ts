@@ -1,4 +1,6 @@
 import { FromSchema } from 'json-schema-to-ts';
+import { overrideSchema } from './override-schema';
+import { variantSchema } from './variant-schema';
 
 export const playgroundFeatureSchema = {
     $id: '#/components/schemas/playgroundFeatureSchema',
@@ -6,36 +8,28 @@ export const playgroundFeatureSchema = {
         'A simplified feature toggle model intended for the Unleash playground.',
     type: 'object',
     additionalProperties: false,
-    required: ['name', 'projectId', 'isEnabled', 'variant'],
+    required: ['name', 'projectId', 'isEnabled', 'variants'],
     properties: {
         name: { type: 'string', examples: ['my-feature'] },
         projectId: { type: 'string', examples: ['my-project'] },
         isEnabled: { type: 'boolean', examples: [true] },
-        variant: {
-            type: 'object',
-            additionalProperties: false,
-            required: ['name', 'enabled'],
-            properties: {
-                name: { type: 'string' },
-                enabled: { type: 'boolean' },
-                payload: {
-                    type: 'object',
-                    additionalProperties: false,
-                    required: ['type', 'value'],
-                    properties: {
-                        type: {
-                            type: 'string',
-                            enum: ['json', 'csv', 'string'],
+        variants: {
+            type: 'array',
+            items: {
+                allOf: [
+                    { $ref: variantSchema.$id },
+                    {
+                        type: 'object',
+                        required: ['enabled'],
+                        properties: {
+                            enabled: { type: 'boolean', examples: [true] },
                         },
-                        value: { type: 'string' },
                     },
-                },
+                ],
             },
-            nullable: true,
-            examples: ['green'],
         },
     },
-    components: { schemas: {} },
+    components: { schemas: { variantSchema, overrideSchema } },
 } as const;
 
 export type PlaygroundFeatureSchema = FromSchema<

@@ -38,19 +38,32 @@ test('should serve the OpenAPI spec', async () => {
         });
 });
 
+// test('the generated OpenAPI should not have any warnings', async () => {
+//     const { body } = await app.request
+//         .get('/docs/openapi.json')
+//         .expect('Content-Type', /json/)
+//         .expect(200);
+
+//     const [_openapi, _error, warning] = await enforcer(body, {
+//         fullResult: true,
+//     });
+
+//     if (warning !== undefined) console.warn(warning);
+
+//     expect(warning).toBeFalsy();
+// });
+
 test('the generated OpenAPI spec is valid', async () => {
     const { body } = await app.request
         .get('/docs/openapi.json')
         .expect('Content-Type', /json/)
         .expect(200);
 
-    const [openapi, error, warning] = await enforcer(body, {
+    const [openapi, error] = await enforcer(body, {
         fullResult: true,
     });
 
     if (error !== undefined) console.error(error);
-    if (warning !== undefined) console.warn(warning);
-    if (openapi !== undefined) console.log('Document is valid');
 
     expect(openapi).toBeTruthy();
 });

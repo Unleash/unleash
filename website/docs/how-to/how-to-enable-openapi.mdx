@@ -18,7 +18,17 @@ To enable the OpenAPI documentation and the Swagger UI, you must start Unleash o
 
 ## Location of the OpenAPI spec
 
-Once you enable OpenAPI, you can find the specification in JSON format at `<unleash-url>/docs/openapi.json` for the Unleash server or at `<proxy-url>/docs/openapi.json` for the Unleash proxy. The swagger UI can be found at `<unleash-url>/docs/openapi` for the Unleash server and at`<proxy-url>/docs/openapi` for the Proxy.
+Once you enable OpenAPI, you can find the specification in JSON format at `/docs/openapi.json` and the swagger UI at `/docs/openapi`.
+
+For instance, if you're running the Unleash server locally at `http://localhost:4242`, then
+
+-   the JSON specification will be at `http://localhost:4242/docs/openapi.json`
+-   the Swagger UI will be at `http://localhost:4242/docs/openapi`
+
+Similarly, if you're running the Unleash proxy locally at `http://localhost:3000` (so that the proxy endpoint is at `http://localhost:3000/proxy`), then
+
+-   the JSON specification will be at `http://localhost:3000/docs/openapi.json`
+-   the Swagger UI will be at `http://localhost:3000/docs/openapi`
 
 ## Step 1: enable OpenAPI
 
@@ -43,8 +53,7 @@ export ENABLE_OAS=true
 ```bash title="Enable OpenAPI for Unleash via Docker"
 docker run \
     // highlight-next-line
-    -e ENABLE_OAS=true \
-    # other variables omitted for brevity \
+    -e ENABLE_OAS=true \ # other variables omitted for brevity
     unleashorg/unleash-server
 ```
 
@@ -55,8 +64,7 @@ docker run \
 ```bash title="Enable OpenAPI for the Unleash proxy via Docker"
 docker run \
     // highlight-next-line
-    -e ENABLE_OAS=true \
-    # other variables omitted for brevity \
+    -e ENABLE_OAS=true \ # other variables omitted for brevity
     unleashorg/unleash-proxy
 ```
 
@@ -68,11 +76,11 @@ docker run \
 
 The configuration option for enabling OpenAPI and the swagger UI is `enableOAS`. Set this option to `true`.
 
-The following examples have been shortened to show the only the relevant configuration options. For more detailed instructions on how to run Unleash or the proxy, refer to [how to run the Unleash proxy](how-to-run-the-unleash-proxy.mdx) or the [http://localhost:3000/deploy/getting_started#option-three---from-nodejs](section on running Unleash via Node.js from the deployment section) of the documentation.
+The following examples have been shortened to show the only the relevant configuration options. For more detailed instructions on how to run Unleash or the proxy, refer to [how to run the Unleash proxy](how-to-run-the-unleash-proxy.mdx) or the [section on running Unleash via Node.js from the deployment section](../deploy/getting-started.md#option-three---from-nodejs) of the documentation.
 
 <Tabs groupId="openapi-configuration">
 
-<TabItem value="docker-unleash" label="Docker (Unleash)">
+<TabItem value="unleash" label="Unleash">
 
 ```js title="Enable OpenAPI for Unleash via configuration option"
 const unleash = require('unleash-server');
@@ -92,7 +100,7 @@ unleash
 
 </TabItem>
 
-<TabItem value="docker-proxy" label="Docker (Unleash proxy)">
+<TabItem value="proxy" label="Unleash proxy">
 
 ```js title="Enable OpenAPI for the Unleash proxy via configuration"
 const port = 3000;

@@ -4,7 +4,6 @@ export const feedbackSchema = {
     $id: '#/components/schemas/feedbackSchema',
     type: 'object',
     additionalProperties: false,
-    required: [],
     properties: {
         userId: {
             type: 'number',

@@ -16,6 +16,10 @@ const ajv = new Ajv({
 
 addFormats(ajv, ['date-time']);
 
+// example was superseded by examples in openapi 3.1, but we're still on 3.0, so
+// let's add it back in!
+ajv.addKeyword('example');
+
 export const validateSchema = (
     schema: SchemaId,
     data: unknown,

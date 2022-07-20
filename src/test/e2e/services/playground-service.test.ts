@@ -9,7 +9,10 @@ import FeatureToggleService from '../../../lib/services/feature-toggle-service';
 import { SegmentService } from '../../../lib/services/segment-service';
 import { WeightType } from '../../../lib/types/model';
 import { PlaygroundFeatureSchema } from '../../../lib/openapi/spec/playground-feature-schema';
-import { offlineUnleashClient } from '../../../lib/util/offline-unleash-client';
+import {
+    offlineUnleashClient,
+    offlineUnleashClientNode,
+} from '../../../lib/util/offline-unleash-client';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -89,7 +92,7 @@ describe('the playground service (e2e)', () => {
                             return serviceToggles.length === 0;
                         }
 
-                        const client = await offlineUnleashClient(
+                        const client = await offlineUnleashClientNode(
                             [head, ...rest],
                             context,
                             console.log,

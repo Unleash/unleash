@@ -6,6 +6,8 @@ import { PlaygroundFeatureSchema } from 'lib/openapi/spec/playground-feature-sch
 import { Logger } from '../logger';
 import { IUnleashConfig } from 'lib/types';
 import { offlineUnleashClient } from '..//util/offline-unleash-client';
+import { FeatureInterface } from 'lib/util/feature-evaluator/feature';
+import { EnabledStatus } from 'lib/util/feature-evaluator/client';
 
 export class PlaygroundService {
     private readonly logger: Logger;
@@ -48,20 +50,33 @@ export class PlaygroundService {
                     ? new Date(context.currentTime)
                     : undefined,
             };
+            // console.log(
+            //     'got these',
+            //     await client.getFeatureToggleDefinitions(),
+            // );
             const output: PlaygroundFeatureSchema[] = await Promise.all(
-                client.getFeatureToggleDefinitions().map(async (feature) => {
-                    return {
-                        isEnabled: client.isEnabled(
+                client
+                    .getFeatureToggleDefinitions()
+                    .map(async (feature: FeatureInterface) => {
+                        const enabledStatus: EnabledStatus = client.isEnabled(
                             feature.name,
                             clientContext,
-                        ),
-                        projectId: await this.featureToggleService.getProjectId(
-                            feature.name,
-                        ),
-                        variant: client.getVariant(feature.name, clientContext),
-                        name: feature.name,
-                    };
-                }),
+                        );
+
+                        return {
+                            isEnabled: enabledStatus.enabled,
+                            reasons: enabledStatus.reasons,
+                            projectId:
+                                await this.featureToggleService.getProjectId(
+                                    feature.name,
+                                ),
+                            variant: client.getVariant(
+                                feature.name,
+                                clientContext,
+                            ),
+                            name: feature.name,
+                        };
+                    }),
             );
 
             return output;

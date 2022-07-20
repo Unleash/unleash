@@ -1,5 +1,12 @@
 import { SdkContextSchema } from 'lib/openapi/spec/sdk-context-schema';
-import { InMemStorageProvider, Unleash as UnleashClient } from 'unleash-client';
+import {
+    InMemStorageProvider,
+    Unleash as UnleashClient,
+} from './feature-evaluator';
+import {
+    InMemStorageProvider as InMemStorageProviderNode,
+    Unleash as UnleashClientNode,
+} from 'unleash-client';
 import { FeatureConfigurationClient } from 'lib/types/stores/feature-strategies-store';
 import { Operator } from 'unleash-client/lib/strategy/strategy';
 import { once } from 'events';
@@ -42,6 +49,31 @@ export const offlineUnleashClient = async (
     logError: (message: any, ...args: any[]) => void,
 ): Promise<UnleashClient> => {
     const client = new UnleashClient({
+        ...context,
+        appName: context.appName,
+        disableMetrics: true,
+        refreshInterval: 0,
+        url: 'not-needed',
+        storageProvider: new InMemStorageProvider(),
+        bootstrap: {
+            data: mapFeaturesForBootstrap(features),
+        },
+    });
+
+    client.on('error', logError);
+    client.start();
+
+    await once(client, 'ready');
+
+    return client;
+};
+
+export const offlineUnleashClientNode = async (
+    features: NonEmptyList<FeatureConfigurationClient>,
+    context: SdkContextSchema,
+    logError: (message: any, ...args: any[]) => void,
+): Promise<UnleashClientNode> => {
+    const client = new UnleashClientNode({
         ...context,
         appName: context.appName,
         disableMetrics: true,

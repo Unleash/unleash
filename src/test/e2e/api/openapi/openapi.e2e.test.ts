@@ -1,6 +1,7 @@
 import { setupApp } from '../../helpers/test-helper';
 import dbInit from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
+import enforcer from 'openapi-enforcer';
 
 let app;
 let db;
@@ -35,4 +36,21 @@ test('should serve the OpenAPI spec', async () => {
             // If the change is intended, update the snapshot with `jest -u`.
             expect(res.body).toMatchSnapshot();
         });
+});
+
+test('the generated OpenAPI spec is valid', async () => {
+    const { body } = await app.request
+        .get('/docs/openapi.json')
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+    const [openapi, error, warning] = await enforcer(body, {
+        fullResult: true,
+    });
+
+    if (error !== undefined) console.error(error);
+    if (warning !== undefined) console.warn(warning);
+    if (openapi !== undefined) console.log('Document is valid');
+
+    expect(openapi).toBeTruthy();
 });

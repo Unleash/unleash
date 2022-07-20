@@ -32,6 +32,12 @@ export const groupSchema = {
                 $ref: '#/components/schemas/groupUserModelSchema',
             },
         },
+        projects: {
+            type: 'array',
+            items: {
+                type: 'string',
+            },
+        },
     },
     components: {
         schemas: {

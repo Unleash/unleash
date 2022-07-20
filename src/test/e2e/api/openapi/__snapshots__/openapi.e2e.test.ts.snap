@@ -1477,6 +1477,12 @@ Object {
           "name": Object {
             "type": "string",
           },
+          "projects": Object {
+            "items": Object {
+              "type": "string",
+            },
+            "type": "array",
+          },
           "users": Object {
             "items": Object {
               "$ref": "#/components/schemas/groupUserModelSchema",

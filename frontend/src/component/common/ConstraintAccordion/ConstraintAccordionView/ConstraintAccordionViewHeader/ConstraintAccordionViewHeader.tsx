@@ -5,11 +5,12 @@ import { IConstraint } from 'interfaces/strategy';
 
 import { useStyles } from 'component/common/ConstraintAccordion/ConstraintAccordion.styles';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { formatConstraintValue } from 'utils/formatConstraintValue';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { ConstraintOperator } from 'component/common/ConstraintAccordion/ConstraintOperator/ConstraintOperator';
 import classnames from 'classnames';
+import ReactDOM from 'react-dom';
 
 const StyledHeaderText = styled('span')(({ theme }) => ({
     display: '-webkit-box',
@@ -54,6 +55,7 @@ interface IConstraintAccordionViewHeaderProps {
     onDelete?: () => void;
     onEdit?: () => void;
     singleValue: boolean;
+    allowExpand: (shouldExpand: boolean) => void;
 }
 
 export const ConstraintAccordionViewHeader = ({
@@ -62,9 +64,14 @@ export const ConstraintAccordionViewHeader = ({
     onEdit,
     onDelete,
     singleValue,
+    allowExpand
 }: IConstraintAccordionViewHeaderProps) => {
     const { classes: styles } = useStyles();
     const { locationSettings } = useLocationSettings();
+    const [height, setHeight] = useState(0);
+    const [width, setWidth] = useState(0);
+    const [textWidth, setTextWidth] = useState(0);
+    const elementRef = useRef<HTMLElement>(null);
 
     const onEditClick =
         onEdit &&
@@ -79,6 +86,35 @@ export const ConstraintAccordionViewHeader = ({
             event.stopPropagation();
             onDelete();
         });
+
+    useEffect(() => {
+        if (elementRef && elementRef.current != null) {
+            console.log(elementRef.current.clientHeight);
+            console.log(elementRef.current.clientWidth);
+            setTextWidth(
+                Math.round(getTextWidth(elementRef.current.innerText) / 2) // 2 lines
+            );
+            setHeight(elementRef.current.clientHeight);
+            setWidth(elementRef.current.clientWidth);
+            allowExpand(textWidth > width)
+        }
+    }, []);
+
+    function getTextWidth(text: string | null) {
+        if (text != null) {
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+
+            if (context != null) {
+                context.font = getComputedStyle(document.body).font;
+
+                return context.measureText(text).width;
+            }
+        }
+        return 0;
+    }
+
+    const shouldBeExpandable = textWidth > width;
 
     return (
         <div className={styles.headerContainer}>
@@ -104,20 +140,25 @@ export const ConstraintAccordionViewHeader = ({
                     }
                     elseShow={
                         <div className={styles.headerValuesContainer}>
-                            <StyledValuesSpan>
+                            <StyledValuesSpan ref={elementRef}>
                                 {constraint?.values
                                     ?.map(value => value)
                                     .join(', ')}
                             </StyledValuesSpan>
-                            <p
-                                className={classnames(
-                                    styles.headerValuesExpand,
-                                    'valuesExpandLabel'
-                                )}
-                            >
-                                Expand to view all ({constraint?.values?.length}
-                                )
-                            </p>
+                            <ConditionallyRender
+                                condition={shouldBeExpandable}
+                                show={
+                                    <p
+                                        className={classnames(
+                                            styles.headerValuesExpand,
+                                            'valuesExpandLabel'
+                                        )}
+                                    >
+                                        Expand to view all (
+                                        {constraint?.values?.length})
+                                    </p>
+                                }
+                            />
                         </div>
                     }
                 />

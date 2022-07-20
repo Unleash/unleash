@@ -110,8 +110,8 @@ export const FreeTextInput = ({
                 </div>
                 <Button
                     className={styles.button}
-                    variant="contained"
-                    color="primary"
+                    variant="outlined"
+                    color="secondary"
                     onClick={() => addValues()}
                 >
                     Add values

@@ -106,7 +106,8 @@ export const useStyles = makeStyles()(theme => ({
             marginTop: '1rem',
         },
     },
-    headerSelect: { marginRight: '2rem', width: '200px' },
+    invertedOperatorButton: { marginRight: '1rem', marginLeft: 'auto', },
+    headerSelect: { marginRight: '1rem', width: '200px' },
     chip: {
         margin: '0 0.5rem 0.5rem 0',
     },

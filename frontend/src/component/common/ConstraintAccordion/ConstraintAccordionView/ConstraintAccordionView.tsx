@@ -12,7 +12,7 @@ import {
 } from 'constants/operators';
 
 import { useStyles } from '../ConstraintAccordion.styles';
-import {useState} from "react";
+import { useState } from 'react';
 interface IConstraintAccordionViewProps {
     constraint: IConstraint;
     onDelete?: () => void;
@@ -27,7 +27,7 @@ export const ConstraintAccordionView = ({
     onDelete,
 }: IConstraintAccordionViewProps) => {
     const { classes: styles } = useStyles();
-    const [expandable, setExpandable] = useState(true)
+    const [expandable, setExpandable] = useState(true);
     const [expanded, setExpanded] = useState(false);
 
     const singleValue = oneOf(
@@ -35,8 +35,8 @@ export const ConstraintAccordionView = ({
         constraint.operator
     );
 
-    const handleClick = ()  => {
-        console.log('click')
+    const handleClick = () => {
+        console.log('click');
         if (expandable) {
             setExpanded(!expanded);
         }
@@ -48,17 +48,18 @@ export const ConstraintAccordionView = ({
             classes={{ root: styles.accordionRoot }}
             expanded={expanded}
         >
-            <AccordionSummary className={styles.summary} expandIcon={null} onClick={handleClick}>
+            <AccordionSummary
+                className={styles.summary}
+                expandIcon={null}
+                onClick={handleClick}
+            >
                 <ConstraintAccordionViewHeader
                     compact={compact}
                     constraint={constraint}
                     onEdit={onEdit}
                     onDelete={onDelete}
                     singleValue={singleValue}
-                    allowExpand={(shouldExpand) => {
-                        console.log(shouldExpand)
-                        setExpandable(shouldExpand)
-                    }}
+                    allowExpand={setExpandable}
                 />
             </AccordionSummary>
 

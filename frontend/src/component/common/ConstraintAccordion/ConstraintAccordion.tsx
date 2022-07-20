@@ -33,6 +33,7 @@ export const ConstraintAccordion = ({
                     constraint={constraint}
                     onCancel={onCancel}
                     onSave={onSave!}
+                    onDelete={onDelete}
                     compact={compact}
                 />
             }

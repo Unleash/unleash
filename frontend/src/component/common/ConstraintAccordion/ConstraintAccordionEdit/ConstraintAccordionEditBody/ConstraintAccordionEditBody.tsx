@@ -17,7 +17,6 @@ interface IConstraintAccordionBody {
     setValue: (value: string) => void;
     setAction: React.Dispatch<React.SetStateAction<string>>;
     setCaseInsensitive: () => void;
-    setInvertedOperator: () => void;
     onSubmit: () => void;
 }
 
@@ -39,10 +38,6 @@ export const ConstraintAccordionEditBody: React.FC<
                 <ConditionallyRender
                     condition={oneOf(newOperators, localConstraint.operator)}
                     show={<OperatorUpgradeAlert />}
-                />
-                <InvertedOperator
-                    inverted={Boolean(localConstraint.inverted)}
-                    setInvertedOperator={setInvertedOperator}
                 />
                 {children}
             </div>
@@ -68,36 +63,6 @@ export const ConstraintAccordionEditBody: React.FC<
                     </Button>
                 </div>
             </div>
-        </>
-    );
-};
-
-interface IInvertedOperatorProps {
-    inverted: boolean;
-    setInvertedOperator: () => void;
-}
-
-const InvertedOperator = ({
-    inverted,
-    setInvertedOperator,
-}: IInvertedOperatorProps) => {
-    return (
-        <>
-            <ConstraintFormHeader>
-                Should the operator be negated? (this will make the operator do
-                the opposite)
-            </ConstraintFormHeader>
-            <FormControlLabel
-                style={{ display: 'inline-block' }}
-                control={
-                    <Switch
-                        checked={inverted}
-                        onChange={() => setInvertedOperator()}
-                        color="primary"
-                    />
-                }
-                label="Negated"
-            />
         </>
     );
 };

@@ -11,6 +11,7 @@ import { useLocationSettings } from 'hooks/useLocationSettings';
 import { ConstraintOperator } from 'component/common/ConstraintAccordion/ConstraintOperator/ConstraintOperator';
 import classnames from 'classnames';
 import ReactDOM from 'react-dom';
+import { getTextWidth } from '../../utils';
 
 const StyledHeaderText = styled('span')(({ theme }) => ({
     display: '-webkit-box',
@@ -64,13 +65,13 @@ export const ConstraintAccordionViewHeader = ({
     onEdit,
     onDelete,
     singleValue,
-    allowExpand
+    allowExpand,
 }: IConstraintAccordionViewHeaderProps) => {
     const { classes: styles } = useStyles();
     const { locationSettings } = useLocationSettings();
-    const [height, setHeight] = useState(0);
     const [width, setWidth] = useState(0);
     const [textWidth, setTextWidth] = useState(0);
+    const [expandable, setExpandable] = useState(false);
     const elementRef = useRef<HTMLElement>(null);
 
     const onEditClick =
@@ -92,29 +93,16 @@ export const ConstraintAccordionViewHeader = ({
             setTextWidth(
                 Math.round(getTextWidth(elementRef.current.innerText) / 2) // 2 lines
             );
-            setHeight(elementRef.current.clientHeight);
             setWidth(elementRef.current.clientWidth);
-            console.log(textWidth)
-            console.log(width)
-            allowExpand(textWidth > width)
         }
     }, []);
 
-    function getTextWidth(text: string | null) {
-        if (text != null) {
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-
-            if (context != null) {
-                context.font = getComputedStyle(document.body).font;
-
-                return context.measureText(text).width;
-            }
+    useEffect(() => {
+        if (textWidth && width) {
+            setExpandable(textWidth > width);
+            allowExpand(textWidth > width);
         }
-        return 0;
-    }
-
-    const shouldBeExpandable = textWidth > width;
+    }, [textWidth, width, allowExpand]);
 
     return (
         <div className={styles.headerContainer}>
@@ -146,7 +134,7 @@ export const ConstraintAccordionViewHeader = ({
                                     .join(', ')}
                             </StyledValuesSpan>
                             <ConditionallyRender
-                                condition={shouldBeExpandable}
+                                condition={expandable}
                                 show={
                                     <p
                                         className={classnames(

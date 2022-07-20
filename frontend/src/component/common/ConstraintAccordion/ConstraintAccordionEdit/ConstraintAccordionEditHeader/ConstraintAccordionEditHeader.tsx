@@ -4,7 +4,7 @@ import { useStyles } from 'component/common/ConstraintAccordion/ConstraintAccord
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { ConstraintIcon } from 'component/common/ConstraintAccordion/ConstraintIcon';
-import { Help } from '@mui/icons-material';
+import { Delete, Edit, Help } from '@mui/icons-material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { dateOperators, DATE_AFTER, IN } from 'constants/operators';
 import { SAVE } from '../ConstraintAccordionEdit';
@@ -17,7 +17,10 @@ import {
     operatorsForContext,
     CURRENT_TIME_CONTEXT_FIELD,
 } from 'utils/operatorsForContext';
-import { Tooltip } from '@mui/material';
+import { IconButton, Tooltip } from '@mui/material';
+import { ReactComponent as NegatedIcon } from 'assets/icons/24_Negator.svg';
+import { ReactComponent as NegatedIconOff } from 'assets/icons/24_Negator off.svg';
+import { InvertedOperator } from './InvertedOperatorButton/InvertedOperator';
 
 interface IConstraintAccordionViewHeader {
     localConstraint: IConstraint;
@@ -26,6 +29,8 @@ interface IConstraintAccordionViewHeader {
     setLocalConstraint: React.Dispatch<React.SetStateAction<IConstraint>>;
     action: string;
     compact: boolean;
+    onDelete?: () => void;
+    setInvertedOperator: () => void;
 }
 
 export const ConstraintAccordionEditHeader = ({
@@ -34,7 +39,8 @@ export const ConstraintAccordionEditHeader = ({
     setLocalConstraint,
     setContextName,
     setOperator,
-    action,
+    onDelete,
+    setInvertedOperator,
 }: IConstraintAccordionViewHeader) => {
     const { classes: styles } = useStyles();
     const { context } = useUnleashContext();
@@ -83,6 +89,13 @@ export const ConstraintAccordionEditHeader = ({
         }
     };
 
+    const onDeleteClick =
+        onDelete &&
+        ((event: React.SyntheticEvent) => {
+            event.stopPropagation();
+            onDelete();
+        });
+
     return (
         <div className={styles.headerContainer}>
             <ConstraintIcon />
@@ -97,6 +110,13 @@ export const ConstraintAccordionEditHeader = ({
                         value={contextName || ''}
                         onChange={setContextName}
                         className={styles.headerSelect}
+                    />
+                </div>
+                <div>
+                    <InvertedOperator
+                        localConstraint={localConstraint}
+                        setInvertedOperator={setInvertedOperator}
+                        className={styles.invertedOperatorButton}
                     />
                 </div>
                 <div className={styles.bottomSelect}>
@@ -117,21 +137,18 @@ export const ConstraintAccordionEditHeader = ({
                     </p>
                 }
             />
-            <ConditionallyRender
-                condition={action === SAVE}
-                show={<p className={styles.editingBadge}>Updating...</p>}
-                elseShow={<p className={styles.editingBadge}>Editing</p>}
-            />
-            <Tooltip title="Help" arrow>
-                <a
-                    href="https://docs.getunleash.io/advanced/strategy_constraints"
-                    style={{ marginLeft: 'auto' }}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    <Help className={styles.help} />
-                </a>
-            </Tooltip>
+            <div className={styles.headerActions}>
+                <Tooltip title="Edit constraint" arrow>
+                    <IconButton type="button" disabled>
+                        <Edit />
+                    </IconButton>
+                </Tooltip>
+                <Tooltip title="Delete constraint" arrow>
+                    <IconButton type="button" onClick={onDeleteClick}>
+                        <Delete />
+                    </IconButton>
+                </Tooltip>
+            </div>
         </div>
     );
 };

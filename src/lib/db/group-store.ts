@@ -4,6 +4,7 @@ import NotFoundError from '../error/notfound-error';
 import Group, {
     IGroup,
     IGroupModel,
+    IGroupProject,
     IGroupRole,
     IGroupUser,
     IGroupUserModel,
@@ -15,6 +16,7 @@ const T = {
     GROUP_USER: 'group_user',
     GROUP_ROLE: 'group_role',
     USERS: 'users',
+    PROJECTS: 'projects',
 };
 
 const GROUP_COLUMNS = ['id', 'name', 'description', 'created_at', 'created_by'];
@@ -85,6 +87,20 @@ export default class GroupStore implements IGroupStore {
             return {
                 groupId: r.group_id,
                 roleId: r.role_id,
+            };
+        });
+    }
+
+    async getGroupProjects(groupIds: number[]): Promise<IGroupProject[]> {
+        const rows = await this.db
+            .select('group_id', 'project')
+            .from(T.GROUP_ROLE)
+            .whereIn('group_id', groupIds)
+            .distinct();
+        return rows.map((r) => {
+            return {
+                groupId: r.group_id,
+                project: r.project,
             };
         });
     }

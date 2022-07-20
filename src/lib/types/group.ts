@@ -21,6 +21,11 @@ export interface IGroupRole {
     roleId: number;
 }
 
+export interface IGroupProject {
+    groupId: number;
+    project: string;
+}
+
 export interface IGroupUserModel {
     user: IUser;
     role: string;
@@ -29,6 +34,7 @@ export interface IGroupUserModel {
 
 export interface IGroupModel extends IGroup {
     users: IGroupUserModel[];
+    projects?: string[];
 }
 
 export interface IGroupModelWithRole extends IGroupModel {

@@ -2,6 +2,7 @@ import {
     IGroup,
     IGroupModel,
     IGroupModelWithRole,
+    IGroupProject,
     IGroupUser,
 } from '../types/group';
 import { IUnleashConfig, IUnleashStores } from '../types';
@@ -41,33 +42,30 @@ export class GroupService {
         const users = await this.userStore.getAllWithId(
             allGroupUsers.map((u) => u.userId),
         );
+        const groupProjects = await this.groupStore.getGroupProjects(
+            groups.map((g) => g.id),
+        );
 
         return groups.map((group) => {
-            return this.getGroupWithUsers(group, allGroupUsers, users);
+            const mappedGroup = this.mapGroupWithUsers(
+                group,
+                allGroupUsers,
+                users,
+            );
+            return this.mapGroupWithProjects(groupProjects, mappedGroup);
         });
     }
 
-    private getGroupWithUsers(
-        group: IGroup,
-        allGroupUsers: IGroupUser[],
-        users: IUser[],
-    ) {
-        const groupUsers = allGroupUsers.filter(
-            (user) => user.groupId == group.id,
-        );
-        const groupUsersId = groupUsers.map((user) => user.userId);
-        const selectedUsers = users.filter((user) =>
-            groupUsersId.includes(user.id),
-        );
-        const finalUsers = selectedUsers.map((user) => {
-            const roleUser = groupUsers.find((gu) => gu.userId == user.id);
-            return {
-                user: user,
-                joinedAt: roleUser.joinedAt,
-                role: roleUser.role,
-            };
-        });
-        return { ...group, users: finalUsers };
+    mapGroupWithProjects(
+        groupProjects: IGroupProject[],
+        group: IGroupModel,
+    ): IGroupModel {
+        return {
+            ...group,
+            projects: groupProjects
+                .filter((project) => project.groupId === group.id)
+                .map((project) => project.project),
+        };
     }
 
     async getGroup(id: number): Promise<IGroupModel> {
@@ -76,7 +74,7 @@ export class GroupService {
         const users = await this.userStore.getAllWithId(
             groupUsers.map((u) => u.userId),
         );
-        return this.getGroupWithUsers(group, groupUsers, users);
+        return this.mapGroupWithUsers(group, groupUsers, users);
     }
 
     async createGroup(group: IGroupModel, userName: string): Promise<IGroup> {
@@ -159,7 +157,7 @@ export class GroupService {
                 groupUsers.map((u) => u.userId),
             );
             return groups.map((group) => ({
-                ...this.getGroupWithUsers(group, groupUsers, users),
+                ...this.mapGroupWithUsers(group, groupUsers, users),
                 roleId: groupRoles.find((g) => g.groupId == group.id).roleId,
             }));
         }
@@ -187,5 +185,28 @@ export class GroupService {
         if (users.length == 0 || !users.some((u) => u.role == 'Owner')) {
             throw new BadDataError('Group needs to have at least one Owner');
         }
+    }
+
+    private mapGroupWithUsers(
+        group: IGroup,
+        allGroupUsers: IGroupUser[],
+        allUsers: IUser[],
+    ): IGroupModel {
+        const groupUsers = allGroupUsers.filter(
+            (user) => user.groupId == group.id,
+        );
+        const groupUsersId = groupUsers.map((user) => user.userId);
+        const selectedUsers = allUsers.filter((user) =>
+            groupUsersId.includes(user.id),
+        );
+        const finalUsers = selectedUsers.map((user) => {
+            const roleUser = groupUsers.find((gu) => gu.userId == user.id);
+            return {
+                user: user,
+                joinedAt: roleUser.joinedAt,
+                role: roleUser.role,
+            };
+        });
+        return { ...group, users: finalUsers };
     }
 }

@@ -2,6 +2,7 @@ import { IGroupStore, IStoreGroup } from '../../lib/types/stores/group-store';
 import {
     IGroup,
     IGroupModel,
+    IGroupProject,
     IGroupRole,
     IGroupUser,
     IGroupUserModel,
@@ -83,6 +84,10 @@ export default class FakeGroupStore implements IGroupStore {
     }
 
     getProjectGroupRoles(projectId: string): Promise<IGroupRole[]> {
+        throw new Error('Method not implemented.');
+    }
+
+    getGroupProjects(groupIds: number[]): Promise<IGroupProject[]> {
         throw new Error('Method not implemented.');
     }
 }

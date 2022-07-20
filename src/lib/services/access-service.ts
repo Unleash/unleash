@@ -29,6 +29,8 @@ import { CUSTOM_ROLE_TYPE, ALL_PROJECTS, ALL_ENVS } from '../util/constants';
 import { DEFAULT_PROJECT } from '../types/project';
 import InvalidOperationError from '../error/invalid-operation-error';
 import BadDataError from '../error/bad-data-error';
+import { IGroupModelWithRole } from '../types/group';
+import { GroupService } from './group-service';
 
 const { ADMIN } = permissions;
 
@@ -62,6 +64,8 @@ export class AccessService {
 
     private roleStore: IRoleStore;
 
+    private groupService: GroupService;
+
     private environmentStore: IEnvironmentStore;
 
     private logger: Logger;
@@ -77,10 +81,12 @@ export class AccessService {
             'accessStore' | 'userStore' | 'roleStore' | 'environmentStore'
         >,
         { getLogger }: { getLogger: Function },
+        groupService: GroupService,
     ) {
         this.store = accessStore;
         this.userStore = userStore;
         this.roleStore = roleStore;
+        this.groupService = groupService;
         this.environmentStore = environmentStore;
         this.logger = getLogger('/services/access-service.ts');
     }
@@ -364,10 +370,9 @@ export class AccessService {
         return [];
     }
 
-    // Move to project-service?
-    async getProjectRoleUsers(
+    async getProjectRoleAccess(
         projectId: string,
-    ): Promise<[IRole[], IUserWithRole[]]> {
+    ): Promise<[IRole[], IUserWithRole[], IGroupModelWithRole[]]> {
         const roles = await this.roleStore.getProjectRoles();
 
         const users = await Promise.all(
@@ -379,7 +384,8 @@ export class AccessService {
                 return projectUsers.map((u) => ({ ...u, roleId: role.id }));
             }),
         );
-        return [roles, users.flat()];
+        const groups = await this.groupService.getProjectGroups(projectId);
+        return [roles, users.flat(), groups];
     }
 
     async createDefaultProjectRoles(

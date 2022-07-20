@@ -19,6 +19,7 @@ export const groupSchema = {
         },
         createdBy: {
             type: 'string',
+            nullable: true,
         },
         createdAt: {
             type: 'string',

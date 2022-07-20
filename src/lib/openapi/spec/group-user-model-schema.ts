@@ -7,6 +7,10 @@ export const groupUserModelSchema = {
     additionalProperties: false,
     required: ['role', 'user'],
     properties: {
+        joinedAt: {
+            type: 'string',
+            format: 'date-time',
+        },
         role: {
             type: 'string',
         },

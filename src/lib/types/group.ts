@@ -16,6 +16,11 @@ export interface IGroupUser {
     joinedAt: Date;
 }
 
+export interface IGroupRole {
+    groupId: number;
+    roleId: number;
+}
+
 export interface IGroupUserModel {
     user: IUser;
     role: string;
@@ -24,6 +29,10 @@ export interface IGroupUserModel {
 
 export interface IGroupModel extends IGroup {
     users: IGroupUserModel[];
+}
+
+export interface IGroupModelWithRole extends IGroupModel {
+    roleId: number;
 }
 
 export default class Group implements IGroup {

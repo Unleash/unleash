@@ -45,12 +45,14 @@ import ProjectWithoutOwnerError from '../error/project-without-owner-error';
 import { IUserStore } from 'lib/types/stores/user-store';
 import { arraysHaveSameItems } from '../util/arraysHaveSameItems';
 import { GroupService } from './group-service';
+import { IGroupModelWithRole } from 'lib/types/group';
 
 const getCreatedBy = (user: User) => user.email || user.username;
 
 export interface UsersWithRoles {
     users: IUserWithRole[];
     roles: IRoleDescriptor[];
+    groups: IGroupModelWithRole[];
 }
 
 export default class ProjectService {
@@ -281,13 +283,13 @@ export default class ProjectService {
 
     // RBAC methods
     async getUsersWithAccess(projectId: string): Promise<UsersWithRoles> {
-        const [roles, users] = await this.accessService.getProjectRoleUsers(
-            projectId,
-        );
+        const [roles, users, groups] =
+            await this.accessService.getProjectRoleAccess(projectId);
 
         return {
             roles,
             users,
+            groups,
         };
     }
 
@@ -298,7 +300,7 @@ export default class ProjectService {
         userId: number,
         createdBy?: string,
     ): Promise<void> {
-        const [roles, users] = await this.accessService.getProjectRoleUsers(
+        const [roles, users] = await this.accessService.getProjectRoleAccess(
             projectId,
         );
         const user = await this.userStore.get(userId);
@@ -419,35 +421,6 @@ export default class ProjectService {
         );
     }
 
-    async updateGroup(
-        projectId: string,
-        roleId: number,
-        groupId: number,
-        modifiedBy?: string,
-    ): Promise<void> {
-        const group = await this.groupService.getGroup(groupId);
-        const role = await this.accessService.getRole(roleId);
-        const project = await this.getProject(projectId);
-
-        await this.accessService.removeGroupFromRole(
-            group.id,
-            role.id,
-            project.id,
-        );
-
-        await this.eventStore.store(
-            new ProjectGroupRemovedEvent({
-                project: projectId,
-                createdBy: modifiedBy,
-                preData: {
-                    groupId: group.id,
-                    projectId: project.id,
-                    roleName: role.name,
-                },
-            }),
-        );
-    }
-
     async addAccess(
         projectId: string,
         roleId: number,
@@ -486,7 +459,9 @@ export default class ProjectService {
                 currentRole.id,
                 projectId,
             );
-            if (users.length < 2) {
+            const groups = await this.groupService.getProjectGroups(projectId);
+            const roleGroups = groups.filter((g) => g.roleId == currentRole.id);
+            if (users.length + roleGroups.length < 2) {
                 throw new ProjectWithoutOwnerError();
             }
         }

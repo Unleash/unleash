@@ -22,13 +22,13 @@ beforeAll(async () => {
     });
     db = await dbInit('api_token_service_serial', getLogger);
     stores = db.stores;
-    const accessService = new AccessService(stores, config);
+    const groupService = new GroupService(stores, config);
+    const accessService = new AccessService(stores, config, groupService);
     const featureToggleService = new FeatureToggleService(
         stores,
         config,
         new SegmentService(stores, config),
     );
-    const groupService = new GroupService(stores, config);
     const project = {
         id: 'test-project',
         name: 'Test Project',

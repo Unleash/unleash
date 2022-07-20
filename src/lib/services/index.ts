@@ -37,7 +37,8 @@ export const createServices = (
     stores: IUnleashStores,
     config: IUnleashConfig,
 ): IUnleashServices => {
-    const accessService = new AccessService(stores, config);
+    const groupService = new GroupService(stores, config);
+    const accessService = new AccessService(stores, config, groupService);
     const apiTokenService = new ApiTokenService(stores, config);
     const clientInstanceService = new ClientInstanceService(stores, config);
     const clientMetricsServiceV2 = new ClientMetricsServiceV2(stores, config);
@@ -76,7 +77,6 @@ export const createServices = (
         config,
         featureToggleServiceV2,
     );
-    const groupService = new GroupService(stores, config);
     const projectService = new ProjectService(
         stores,
         config,

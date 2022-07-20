@@ -36,6 +36,11 @@ export class PlaygroundService {
         if (!head) {
             return [];
         } else {
+            const variantsMap = toggles.reduce((acc, feature) => {
+                acc[feature.name] = feature.variants;
+                return acc;
+            }, {});
+
             const client = await offlineUnleashClient(
                 [head, ...rest],
                 context,
@@ -60,6 +65,7 @@ export class PlaygroundService {
                         ),
                         variant: client.getVariant(feature.name, clientContext),
                         name: feature.name,
+                        variants: variantsMap[feature.name] || [],
                     };
                 }),
             );

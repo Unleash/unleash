@@ -2,7 +2,7 @@ import fc, { Arbitrary } from 'fast-check';
 
 import { ALL_OPERATORS } from '../lib/util/constants';
 import { ClientFeatureSchema } from '../lib/openapi/spec/client-feature-schema';
-import { WeightType } from '../lib/types/model';
+import { IVariant, WeightType } from '../lib/types/model';
 import { FeatureStrategySchema } from '../lib/openapi/spec/feature-strategy-schema';
 import { ConstraintSchema } from 'lib/openapi/spec/constraint-schema';
 
@@ -92,6 +92,49 @@ export const strategies = (): Arbitrary<FeatureStrategySchema[]> =>
         ),
     );
 
+export const variant = (): Arbitrary<IVariant> =>
+    fc.record(
+        {
+            name: urlFriendlyString(),
+            weight: fc.nat({ max: 1000 }),
+            weightType: fc.constant(WeightType.VARIABLE),
+            stickiness: fc.constant('default'),
+            payload: fc.option(
+                fc.oneof(
+                    fc.record({
+                        type: fc.constant('json' as 'json'),
+                        value: fc.json(),
+                    }),
+                    fc.record({
+                        type: fc.constant('csv' as 'csv'),
+                        value: fc
+                            .array(fc.lorem())
+                            .map((words) => words.join(',')),
+                    }),
+                    fc.record({
+                        type: fc.constant('string' as 'string'),
+                        value: fc.string(),
+                    }),
+                ),
+                { nil: undefined },
+            ),
+        },
+        { requiredKeys: ['name', 'weight', 'weightType', 'stickiness'] },
+    );
+
+export const variants = (): Arbitrary<IVariant[]> =>
+    fc
+        .uniqueArray(variant(), {
+            maxLength: 1000,
+            selector: (variantInstance) => variantInstance.name,
+        })
+        .map((allVariants) =>
+            allVariants.map((variantInstance) => ({
+                ...variantInstance,
+                weight: Math.round(1000 / allVariants.length),
+            })),
+        );
+
 export const clientFeature = (name?: string): Arbitrary<ClientFeatureSchema> =>
     fc.record(
         {
@@ -111,32 +154,7 @@ export const clientFeature = (name?: string): Arbitrary<ClientFeatureSchema> =>
             stale: fc.boolean(),
             impressionData: fc.option(fc.boolean()),
             strategies: strategies(),
-            variants: fc.array(
-                fc.record({
-                    name: urlFriendlyString(),
-                    weight: fc.nat({ max: 1000 }),
-                    weightType: fc.constant(WeightType.VARIABLE),
-                    stickiness: fc.constant('default'),
-                    payload: fc.option(
-                        fc.oneof(
-                            fc.record({
-                                type: fc.constant('json'),
-                                value: fc.json(),
-                            }),
-                            fc.record({
-                                type: fc.constant('csv'),
-                                value: fc
-                                    .array(fc.lorem())
-                                    .map((words) => words.join(',')),
-                            }),
-                            fc.record({
-                                type: fc.constant('string'),
-                                value: fc.string(),
-                            }),
-                        ),
-                    ),
-                }),
-            ),
+            variants: variants(),
         },
         { requiredKeys: ['name', 'enabled', 'project', 'strategies'] },
     );
@@ -155,5 +173,15 @@ test('url-friendly strings are URL-friendly', () =>
     fc.assert(
         fc.property(urlFriendlyString(), (input: string) =>
             /^[\w~.-]+$/.test(input),
+        ),
+    ));
+
+test('variant payloads are either present or undefined; never null', () =>
+    fc.assert(
+        fc.property(
+            variant(),
+            (generatedVariant) =>
+                !!generatedVariant.payload ||
+                generatedVariant.payload === undefined,
         ),
     ));

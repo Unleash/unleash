@@ -2,6 +2,8 @@ import { FromSchema } from 'json-schema-to-ts';
 import { sdkContextSchema } from './sdk-context-schema';
 import { playgroundRequestSchema } from './playground-request-schema';
 import { playgroundFeatureSchema } from './playground-feature-schema';
+import { variantSchema } from './variant-schema';
+import { overrideSchema } from './override-schema';
 
 export const playgroundResponseSchema = {
     $id: '#/components/schemas/playgroundResponseSchema',
@@ -15,16 +17,16 @@ export const playgroundResponseSchema = {
         },
         features: {
             type: 'array',
-            items: {
-                $ref: playgroundFeatureSchema.$id,
-            },
+            items: { $ref: playgroundFeatureSchema.$id },
         },
     },
     components: {
         schemas: {
-            sdkContextSchema,
-            playgroundRequestSchema,
             playgroundFeatureSchema,
+            playgroundRequestSchema,
+            sdkContextSchema,
+            variantSchema,
+            overrideSchema,
         },
     },
 } as const;

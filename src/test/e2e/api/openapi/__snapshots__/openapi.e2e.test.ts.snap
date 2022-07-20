@@ -1821,12 +1821,19 @@ Object {
             ],
             "type": "object",
           },
+          "variants": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/variantSchema",
+            },
+            "type": "array",
+          },
         },
         "required": Array [
           "name",
           "projectId",
           "isEnabled",
           "variant",
+          "variants",
         ],
         "type": "object",
       },

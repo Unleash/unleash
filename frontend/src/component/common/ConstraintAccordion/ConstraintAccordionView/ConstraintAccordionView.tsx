@@ -35,26 +35,30 @@ export const ConstraintAccordionView = ({
         constraint.operator
     );
 
-    const handleChange =
-        () => (event: React.SyntheticEvent, isExpanded: boolean) => {
-            setExpanded((!isExpanded && expandable));
-        };
+    const handleClick = ()  => {
+        console.log('click')
+        if (expandable) {
+            setExpanded(!expanded);
+        }
+    };
 
     return (
         <Accordion
             className={styles.accordion}
             classes={{ root: styles.accordionRoot }}
             expanded={expanded}
-            onChange={handleChange}
         >
-            <AccordionSummary className={styles.summary} expandIcon={null}>
+            <AccordionSummary className={styles.summary} expandIcon={null} onClick={handleClick}>
                 <ConstraintAccordionViewHeader
                     compact={compact}
                     constraint={constraint}
                     onEdit={onEdit}
                     onDelete={onDelete}
                     singleValue={singleValue}
-                    allowExpand={(shouldExpand) => setExpandable(shouldExpand)}
+                    allowExpand={(shouldExpand) => {
+                        console.log(shouldExpand)
+                        setExpandable(shouldExpand)
+                    }}
                 />
             </AccordionSummary>
 

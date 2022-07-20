@@ -89,13 +89,13 @@ export const ConstraintAccordionViewHeader = ({
 
     useEffect(() => {
         if (elementRef && elementRef.current != null) {
-            console.log(elementRef.current.clientHeight);
-            console.log(elementRef.current.clientWidth);
             setTextWidth(
                 Math.round(getTextWidth(elementRef.current.innerText) / 2) // 2 lines
             );
             setHeight(elementRef.current.clientHeight);
             setWidth(elementRef.current.clientWidth);
+            console.log(textWidth)
+            console.log(width)
             allowExpand(textWidth > width)
         }
     }, []);

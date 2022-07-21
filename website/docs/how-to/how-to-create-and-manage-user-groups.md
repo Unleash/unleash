@@ -18,7 +18,7 @@ This guide takes you through how to use user groups to manage permissions on you
 
 2. Navigate to new group
 
-![A visual representation of the current step: the groups screen with the new group button highlighted.](/img/create-ug-step-2.png).
+![A visual representation of the current step: the groups screen with the new group button highlighted.](/img/create-ug-step-2.png)
 
 3. Give the group a name and an optional description and select the users you'd like to be in the group.
 

@@ -76,6 +76,6 @@ This guide takes you through how to use user groups to manage permissions on you
 
 ![A visual representation of the current step: the access sidepane for a project with a group selected.](/img/add-group-to-project-step-4.png)
 
-5. Select the role that the group should have in this project, this role will be passed transitively to users in that group. You can review the list of permissions that the group users will gain by having this role. Note that groups never reduce permissions, so if the user is present in another group and that group has a role on the same project, the user may have more permissions than seen in the side pane.
+5. Select the role that the group should have in this project. You can review the list of permissions that the group users will gain by having this role before confirming.
 
 ![A visual representation of the current step: the access sidepane for a project with a role selected.](/img/add-group-to-project-step-5.png)

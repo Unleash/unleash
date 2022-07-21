@@ -37,9 +37,9 @@ When you add a new user, you can assign them one of the global roles listed belo
 
 ## Custom Project Roles
 
-:::info availability 
+:::info availability
 
-Custom project roles were introduced in **Unleash 4.6** and are only available in Unleash Enterprise. 
+Custom project roles were introduced in **Unleash 4.6** and are only available in Unleash Enterprise.
 
 :::
 
@@ -54,9 +54,9 @@ Each custom project role consists of:
 
 ## User Groups
 
-:::info availability 
+:::info availability
 
-User groups are available to Unleash Enterprise users since **Unleash 4.14**. 
+User groups are available to Unleash Enterprise users since **Unleash 4.14**.
 
 :::
 
@@ -66,7 +66,7 @@ A user group consists of the following:
 
 - a **name** (required)
 - a **description** (optional)
-- any number of users, but at least one user who is the owner of that group
+- one or more users. At least one user must have the owner role
 
 Groups do nothing on their own. They must be given a role on a project to assign permissions.
 

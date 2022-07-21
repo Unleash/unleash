@@ -8,7 +8,7 @@ User groups are available to Unleash Enterprise users since **Unleash 4.14**.
 
 :::
 
-This guide takes you through how to use user groups to manage permissions on your projects. User groups allow you to manage large groups of users more easily than assigning roles directly to those users.
+This guide takes you through how to use user groups to manage permissions on your projects. User groups allow you to manage large groups of users more easily than assigning roles directly to those users. Refer to the section on [user groups](../user_guide/rbac.md#user-groups) in the RBAC documentation for more information.
 
 ## Creating user groups
 
@@ -34,7 +34,7 @@ This guide takes you through how to use user groups to manage permissions on you
 
 ![The Unleash Admin UI with the steps highlighted to navigate to groups.](/img/create-ug-step-1.png)
 
-2. Click the card of the group you want to edit, you can click anywhere on the card.
+2. Select the card of the group you want to edit.
 
 ![The manage groups with a pointer to a group card.](/img/edit-ug-step-2.png)
 
@@ -46,15 +46,15 @@ This guide takes you through how to use user groups to manage permissions on you
 
 ![The manage group page with the confirm user removal dialog shown.](/img/remove-user-from-group-step-2.png)
 
-5. Add users by clicking the add button.
+5. Add users by selecting the add button.
 
 ![The groups page shown with the add user button highlighted.](/img/add-user-to-group-step-1.png)
 
-6. Find the user you'd like to add to the group and click add.
+6. Find the user you'd like to add to the group add them.
 
 ![The groups page shown with a user selected.](/img/add-user-to-group-step-2.png)
 
-7. Assign the user a role in the group, every group needs to have at least one owner, and click save.
+7. Assign the user a role in the group and save the group. Remember that every group needs to have _at least_ one owner.
 
 ![The groups page shown with the user role highlighted.](/img/add-user-to-group-step-3.png)
 

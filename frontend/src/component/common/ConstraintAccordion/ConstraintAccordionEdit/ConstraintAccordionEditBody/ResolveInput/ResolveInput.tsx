@@ -25,7 +25,6 @@ interface IResolveInputProps {
     localConstraint: IConstraint;
     setValue: (value: string) => void;
     setValues: (values: string[]) => void;
-    setCaseInsensitive: () => void;
     setError: React.Dispatch<React.SetStateAction<string>>;
     removeValue: (index: number) => void;
     input: Input;
@@ -38,7 +37,6 @@ export const ResolveInput = ({
     localConstraint,
     setValue,
     setValues,
-    setCaseInsensitive,
     setError,
     removeValue,
     error,
@@ -58,12 +56,6 @@ export const ResolveInput = ({
             case STRING_OPERATORS_LEGAL_VALUES:
                 return (
                     <>
-                        <CaseInsensitive
-                            setCaseInsensitive={setCaseInsensitive}
-                            caseInsensitive={Boolean(
-                                localConstraint.caseInsensitive
-                            )}
-                        />
                         <RestrictiveLegalValues
                             legalValues={contextDefinition.legalValues || []}
                             values={localConstraint.values || []}
@@ -125,13 +117,6 @@ export const ResolveInput = ({
             case STRING_OPERATORS_FREETEXT:
                 return (
                     <>
-                        {' '}
-                        <CaseInsensitive
-                            setCaseInsensitive={setCaseInsensitive}
-                            caseInsensitive={Boolean(
-                                localConstraint.caseInsensitive
-                            )}
-                        />
                         <FreeTextInput
                             values={localConstraint.values || []}
                             removeValue={removeValue}

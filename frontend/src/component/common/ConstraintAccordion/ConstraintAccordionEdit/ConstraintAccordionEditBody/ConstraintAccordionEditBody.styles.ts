@@ -1,8 +1,9 @@
-import { makeStyles } from 'tss-react/mui';
+import {makeStyles} from 'tss-react/mui';
 
 export const useStyles = makeStyles()(theme => ({
     inputContainer: {
         padding: '1rem',
+        backgroundColor: theme.palette.grey[100]
     },
     buttonContainer: {
         display: 'flex',

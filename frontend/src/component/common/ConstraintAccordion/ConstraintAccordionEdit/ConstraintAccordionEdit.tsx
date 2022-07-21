@@ -206,6 +206,7 @@ export const ConstraintAccordionEdit = ({
                         action={action}
                         compact={compact}
                         setInvertedOperator={setInvertedOperator}
+                        setCaseInsensitive={setCaseInsensitive}
                         onDelete={onDelete}
                     />
                 </AccordionSummary>
@@ -218,7 +219,6 @@ export const ConstraintAccordionEdit = ({
                         localConstraint={localConstraint}
                         setValues={setValues}
                         setValue={setValue}
-                        setCaseInsensitive={setCaseInsensitive}
                         triggerTransition={triggerTransition}
                         setAction={setAction}
                         onSubmit={onSubmit}
@@ -232,7 +232,6 @@ export const ConstraintAccordionEdit = ({
                             error={error}
                             contextDefinition={contextDefinition}
                             removeValue={removeValue}
-                            setCaseInsensitive={setCaseInsensitive}
                         />
                     </ConstraintAccordionEditBody>
                 </AccordionDetails>

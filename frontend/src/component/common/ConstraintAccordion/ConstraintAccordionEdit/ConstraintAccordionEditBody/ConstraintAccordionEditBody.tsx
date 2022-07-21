@@ -16,20 +16,12 @@ interface IConstraintAccordionBody {
     triggerTransition: () => void;
     setValue: (value: string) => void;
     setAction: React.Dispatch<React.SetStateAction<string>>;
-    setCaseInsensitive: () => void;
     onSubmit: () => void;
 }
 
 export const ConstraintAccordionEditBody: React.FC<
     IConstraintAccordionBody
-> = ({
-    localConstraint,
-    children,
-    triggerTransition,
-    setInvertedOperator,
-    setAction,
-    onSubmit,
-}) => {
+> = ({ localConstraint, children, triggerTransition, setAction, onSubmit }) => {
     const { classes: styles } = useStyles();
 
     return (

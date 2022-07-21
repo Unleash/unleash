@@ -6,11 +6,15 @@ import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { ConstraintIcon } from 'component/common/ConstraintAccordion/ConstraintIcon';
 import { Delete, Edit, Help } from '@mui/icons-material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { dateOperators, DATE_AFTER, IN } from 'constants/operators';
-import { SAVE } from '../ConstraintAccordionEdit';
+import {
+    dateOperators,
+    DATE_AFTER,
+    IN,
+    stringOperators,
+} from 'constants/operators';
 import { resolveText } from './helpers';
 import { oneOf } from 'utils/oneOf';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Operator } from 'constants/operators';
 import { ConstraintOperatorSelect } from 'component/common/ConstraintAccordion/ConstraintOperatorSelect/ConstraintOperatorSelect';
 import {
@@ -18,9 +22,8 @@ import {
     CURRENT_TIME_CONTEXT_FIELD,
 } from 'utils/operatorsForContext';
 import { IconButton, Tooltip } from '@mui/material';
-import { ReactComponent as NegatedIcon } from 'assets/icons/24_Negator.svg';
-import { ReactComponent as NegatedIconOff } from 'assets/icons/24_Negator off.svg';
-import { InvertedOperator } from './InvertedOperatorButton/InvertedOperator';
+import { InvertedOperatorButton } from '../StyledToggleButton/InvertedOperatorButton/InvertedOperatorButton';
+import { CaseSensitiveButton } from '../StyledToggleButton/CaseSensitiveButton/CaseSensitiveButton';
 
 interface IConstraintAccordionViewHeader {
     localConstraint: IConstraint;
@@ -31,6 +34,7 @@ interface IConstraintAccordionViewHeader {
     compact: boolean;
     onDelete?: () => void;
     setInvertedOperator: () => void;
+    setCaseInsensitive: () => void;
 }
 
 export const ConstraintAccordionEditHeader = ({
@@ -41,10 +45,13 @@ export const ConstraintAccordionEditHeader = ({
     setOperator,
     onDelete,
     setInvertedOperator,
+    setCaseInsensitive,
 }: IConstraintAccordionViewHeader) => {
     const { classes: styles } = useStyles();
     const { context } = useUnleashContext();
     const { contextName, operator } = localConstraint;
+    const [showCaseSensitiveButton, setShowCaseSensitiveButton] =
+        useState(false);
 
     /* We need a special case to handle the currenTime context field. Since
     this field will be the only one to allow DATE_BEFORE and DATE_AFTER operators
@@ -66,6 +73,8 @@ export const ConstraintAccordionEditHeader = ({
             oneOf(dateOperators, operator)
         ) {
             setOperator(IN);
+        } else  if (oneOf(stringOperators, operator)) {
+            setShowCaseSensitiveButton(true);
         }
     }, [contextName, setOperator, operator, setLocalConstraint]);
 
@@ -85,6 +94,9 @@ export const ConstraintAccordionEditHeader = ({
                 value: new Date().toISOString(),
             }));
         } else {
+            if (oneOf(stringOperators, operator)) {
+                setShowCaseSensitiveButton(true);
+            }
             setOperator(operator);
         }
     };
@@ -112,14 +124,11 @@ export const ConstraintAccordionEditHeader = ({
                         className={styles.headerSelect}
                     />
                 </div>
-                <div>
-                    <InvertedOperator
+                <div className={styles.bottomSelect}>
+                    <InvertedOperatorButton
                         localConstraint={localConstraint}
                         setInvertedOperator={setInvertedOperator}
-                        className={styles.invertedOperatorButton}
                     />
-                </div>
-                <div className={styles.bottomSelect}>
                     <div className={styles.headerSelect}>
                         <ConstraintOperatorSelect
                             options={operatorsForContext(contextName)}
@@ -127,6 +136,15 @@ export const ConstraintAccordionEditHeader = ({
                             onChange={onOperatorChange}
                         />
                     </div>
+                    <ConditionallyRender
+                        condition={showCaseSensitiveButton}
+                        show={
+                            <CaseSensitiveButton
+                                localConstraint={localConstraint}
+                                setCaseInsensitive={setCaseInsensitive}
+                            />
+                        }
+                    />
                 </div>
             </div>
             <ConditionallyRender
@@ -138,11 +156,9 @@ export const ConstraintAccordionEditHeader = ({
                 }
             />
             <div className={styles.headerActions}>
-                <Tooltip title="Edit constraint" arrow>
-                    <IconButton type="button" disabled>
-                        <Edit />
-                    </IconButton>
-                </Tooltip>
+                <IconButton type="button" disabled>
+                    <Edit />
+                </IconButton>
                 <Tooltip title="Delete constraint" arrow>
                     <IconButton type="button" onClick={onDeleteClick}>
                         <Delete />

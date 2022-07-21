@@ -4,7 +4,7 @@ title: How to create and manage user groups
 
 :::info availability User groups are available to Unleash Enterprise users since **Unleash 4.14**. :::
 
-This guide takes you through how use user groups to manage permissions on your projects. User groups allow you to manage large groups of users more easily than assigning roles directly to those users.
+This guide takes you through how to use user groups to manage permissions on your projects. User groups allow you to manage large groups of users more easily than assigning roles directly to those users.
 
 ## Creating user groups
 
@@ -70,4 +70,8 @@ This guide takes you through how use user groups to manage permissions on your p
 
 4. Find your group in the drop down
 
+![A visual representation of the current step: the access sidepane for a project with a group selected.](/img/add-group-to-project-step-4.png)
+
 5. Select the role that the group should have in this project, this role will be passed transitively to users in that group. You can review the list of permissions that the group users will gain by having this role. Note that groups never reduce permissions, so if the user is present in another group and that group has a role on the same project, the user may have more permissions than seen in the side pane.
+
+![A visual representation of the current step: the access sidepane for a project with a role selected.](/img/add-group-to-project-step-5.png)

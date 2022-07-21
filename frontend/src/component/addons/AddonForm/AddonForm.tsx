@@ -6,35 +6,39 @@ import React, {
     useState,
     VFC,
 } from 'react';
-import { Button, FormControlLabel, Switch, TextField } from '@mui/material';
+import {
+    Button,
+    Divider,
+    FormControlLabel,
+    Switch,
+    TextField,
+} from '@mui/material';
 import produce from 'immer';
-import { styles as themeStyles } from 'component/common';
 import { trim } from 'component/common/util';
 import { IAddon, IAddonProvider } from 'interfaces/addons';
 import { AddonParameters } from './AddonParameters/AddonParameters';
 import cloneDeep from 'lodash.clonedeep';
-import { PageContent } from 'component/common/PageContent/PageContent';
 import { useNavigate } from 'react-router-dom';
 import useAddonsApi from 'hooks/api/actions/useAddonsApi/useAddonsApi';
 import useToast from 'hooks/useToast';
-import { makeStyles } from 'tss-react/mui';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useProjects from '../../../hooks/api/getters/useProjects/useProjects';
 import { useEnvironments } from '../../../hooks/api/getters/useEnvironments/useEnvironments';
 import { AddonMultiSelector } from './AddonMultiSelector/AddonMultiSelector';
-
-const useStyles = makeStyles()(theme => ({
-    nameInput: {
-        marginRight: '1.5rem',
-    },
-    formSection: { padding: '10px 28px' },
-    buttonsSection: {
-        padding: '10px 28px',
-        '& > *': {
-            marginRight: theme.spacing(1),
-        },
-    },
-}));
+import FormTemplate from 'component/common/FormTemplate/FormTemplate';
+import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
+import PermissionButton from '../../common/PermissionButton/PermissionButton';
+import { ADMIN } from '../../providers/AccessProvider/permissions';
+import {
+    StyledForm,
+    StyledFormSection,
+    StyledHelpText,
+    StyledTextField,
+    StyledContainer,
+    StyledButtonContainer,
+    StyledButtonSection,
+} from './AddonForm.styles';
+import { useTheme } from '@mui/system';
 
 interface IAddonFormProps {
     provider?: IAddonProvider;
@@ -52,7 +56,7 @@ export const AddonForm: VFC<IAddonFormProps> = ({
     const { createAddon, updateAddon } = useAddonsApi();
     const { setToastData, setToastApiError } = useToast();
     const navigate = useNavigate();
-    const { classes: styles } = useStyles();
+    const theme = useTheme();
     const { projects: availableProjects } = useProjects();
     const selectableProjects = availableProjects.map(project => ({
         value: project.id,
@@ -67,6 +71,7 @@ export const AddonForm: VFC<IAddonFormProps> = ({
         value: event,
         label: event,
     }));
+    const { uiConfig } = useUiConfig();
     const [formValues, setFormValues] = useState(initialValues);
     const [errors, setErrors] = useState<{
         containsErrors: boolean;
@@ -81,6 +86,18 @@ export const AddonForm: VFC<IAddonFormProps> = ({
         parameters: {},
     });
     const submitText = editMode ? 'Update' : 'Create';
+    let url = `${uiConfig.unleashUrl}/api/admin/addons${
+        editMode ? `/${formValues.id}` : ``
+    }`;
+
+    const formatApiCode = () => {
+        return `curl --location --request ${
+            editMode ? 'PUT' : 'POST'
+        } '${url}' \\
+        --header 'Authorization: INSERT_API_KEY' \\
+        --header 'Content-Type: application/json' \\
+        --data-raw '${JSON.stringify(formValues, undefined, 2)}'`;
+    };
 
     useEffect(() => {
         if (!provider) {
@@ -162,7 +179,9 @@ export const AddonForm: VFC<IAddonFormProps> = ({
 
     const onSubmit: FormEventHandler<HTMLFormElement> = async event => {
         event.preventDefault();
-        if (!provider) return;
+        if (!provider) {
+            return;
+        }
 
         const updatedErrors = cloneDeep(errors);
         updatedErrors.containsErrors = false;
@@ -222,97 +241,113 @@ export const AddonForm: VFC<IAddonFormProps> = ({
     } = provider ? provider : ({} as Partial<IAddonProvider>);
 
     return (
-        <PageContent header={`Configure ${name} addon`}>
-            <section className={styles.formSection}>
-                {description}&nbsp;
-                <a href={documentationUrl} target="_blank" rel="noreferrer">
-                    Read more
-                </a>
-                <p className={themeStyles.error}>{errors.general}</p>
-            </section>
-            <form onSubmit={onSubmit}>
-                <section className={styles.formSection}>
-                    <TextField
-                        size="small"
-                        label="Provider"
-                        name="provider"
-                        value={formValues.provider}
-                        disabled
-                        variant="outlined"
-                        className={styles.nameInput}
-                    />
-                    <FormControlLabel
-                        control={
-                            <Switch
-                                checked={formValues.enabled}
-                                onClick={onEnabled}
-                            />
-                        }
-                        label={formValues.enabled ? 'Enabled' : 'Disabled'}
-                    />
-                </section>
-                <section className={styles.formSection}>
-                    <TextField
-                        size="small"
-                        style={{ width: '80%' }}
-                        minRows={4}
-                        multiline
-                        label="Description"
-                        name="description"
-                        placeholder=""
-                        value={formValues.description}
-                        error={Boolean(errors.description)}
-                        helperText={errors.description}
-                        onChange={setFieldValue('description')}
-                        variant="outlined"
-                    />
-                </section>
+        <FormTemplate
+            title={`${submitText} ${name} addon`}
+            description={description || ''}
+            documentationLink={documentationUrl}
+            documentationLinkLabel="Addon documentation"
+            formatApiCode={formatApiCode}
+        >
+            <StyledForm onSubmit={onSubmit}>
+                <StyledContainer>
+                    <StyledFormSection>
+                        <StyledTextField
+                            size="small"
+                            label="Provider"
+                            name="provider"
+                            value={formValues.provider}
+                            disabled
+                            hidden={true}
+                            variant="outlined"
+                        />
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    checked={formValues.enabled}
+                                    onClick={onEnabled}
+                                />
+                            }
+                            label={formValues.enabled ? 'Enabled' : 'Disabled'}
+                        />
+                    </StyledFormSection>
+                    <StyledFormSection>
+                        <StyledHelpText>
+                            What is your addon description?
+                        </StyledHelpText>
 
-                <section className={styles.formSection}>
-                    <AddonMultiSelector
-                        options={selectableEvents || []}
-                        selectedItems={formValues.events}
-                        onChange={setEventValues}
-                        entityName={'event'}
-                        selectAllEnabled={false}
-                    />
-                </section>
-                <section className={styles.formSection}>
-                    <AddonMultiSelector
-                        options={selectableProjects}
-                        selectedItems={formValues.projects || []}
-                        onChange={setProjects}
-                        entityName={'project'}
-                        selectAllEnabled={true}
-                    />
-                </section>
-                <section className={styles.formSection}>
-                    <AddonMultiSelector
-                        options={selectableEnvironments}
-                        selectedItems={formValues.environments || []}
-                        onChange={setEnvironments}
-                        entityName={'environment'}
-                        selectAllEnabled={true}
-                    />
-                </section>
-                <section className={styles.formSection}>
-                    <AddonParameters
-                        provider={provider}
-                        config={formValues}
-                        parametersErrors={errors.parameters}
-                        editMode={editMode}
-                        setParameterValue={setParameterValue}
-                    />
-                </section>
-                <section className={styles.buttonsSection}>
-                    <Button type="submit" color="primary" variant="contained">
-                        {submitText}
-                    </Button>
-                    <Button type="button" onClick={onCancel}>
-                        Cancel
-                    </Button>
-                </section>
-            </form>
-        </PageContent>
+                        <StyledTextField
+                            size="small"
+                            style={{ width: '80%' }}
+                            minRows={4}
+                            multiline
+                            label="Description"
+                            name="description"
+                            placeholder=""
+                            value={formValues.description}
+                            error={Boolean(errors.description)}
+                            helperText={errors.description}
+                            onChange={setFieldValue('description')}
+                            variant="outlined"
+                        />
+                    </StyledFormSection>
+
+                    <StyledFormSection>
+                        <AddonMultiSelector
+                            options={selectableEvents || []}
+                            selectedItems={formValues.events}
+                            onChange={setEventValues}
+                            entityName={'event'}
+                            selectAllEnabled={false}
+                            description={
+                                'Select what events you want your addon to be notified about'
+                            }
+                        />
+                    </StyledFormSection>
+                    <StyledFormSection>
+                        <AddonMultiSelector
+                            options={selectableProjects}
+                            selectedItems={formValues.projects || []}
+                            onChange={setProjects}
+                            entityName={'project'}
+                            selectAllEnabled={true}
+                        />
+                    </StyledFormSection>
+                    <StyledFormSection>
+                        <AddonMultiSelector
+                            options={selectableEnvironments}
+                            selectedItems={formValues.environments || []}
+                            onChange={setEnvironments}
+                            entityName={'environment'}
+                            selectAllEnabled={true}
+                        />
+                    </StyledFormSection>
+                    <StyledFormSection>
+                        <AddonParameters
+                            provider={provider}
+                            config={formValues}
+                            parametersErrors={errors.parameters}
+                            editMode={editMode}
+                            setParameterValue={setParameterValue}
+                        />
+                    </StyledFormSection>
+                </StyledContainer>
+                <Divider />
+                <StyledButtonContainer>
+                    <StyledButtonSection theme={theme}>
+                        <PermissionButton
+                            type="submit"
+                            color="primary"
+                            variant="contained"
+                            permission={ADMIN}
+                        >
+                            {submitText}
+                        </PermissionButton>
+                        <Button type="button" onClick={onCancel}>
+                            Cancel
+                        </Button>
+                    </StyledButtonSection>
+                </StyledButtonContainer>
+            </StyledForm>
+        </FormTemplate>
     );
 };

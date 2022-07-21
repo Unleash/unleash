@@ -38,7 +38,7 @@ This guide takes you through how to use user groups to manage permissions on you
 
 ![The manage groups with a pointer to a group card.](/img/edit-ug-step-2.png)
 
-3. Remove users by clicking the bin icon.
+3. Remove users by using the remove user button (displayed as a bin).
 
 ![The manage group page with the remove user button highlighted.](/img/remove-user-from-group-step-1.png)
 

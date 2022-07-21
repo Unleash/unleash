@@ -35,7 +35,7 @@ export default class SettingService {
     async insert(id: string, value: object, createdBy: string): Promise<void> {
         const exists = await this.settingStore.exists(id);
         if (exists) {
-            await this.settingStore.insert(id, value);
+            await this.settingStore.updateRow(id, value);
             await this.eventStore.store(
                 new SettingUpdatedEvent({
                     createdBy,

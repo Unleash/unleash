@@ -221,6 +221,7 @@ export interface IUserWithRole {
     username?: string;
     email?: string;
     imageUrl?: string;
+    addedAt: Date;
 }
 
 export interface IRoleData {

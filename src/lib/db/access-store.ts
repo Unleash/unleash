@@ -8,6 +8,7 @@ import {
     IAccessStore,
     IRole,
     IUserPermission,
+    IUserRole,
 } from '../types/stores/access-store';
 import { IPermission } from '../types/model';
 import NotFoundError from '../error/notfound-error';
@@ -226,17 +227,20 @@ export class AccessStore implements IAccessStore {
             .delete();
     }
 
-    async getProjectUserIdsForRole(
+    async getProjectUsersForRole(
         roleId: number,
         projectId?: string,
-    ): Promise<number[]> {
+    ): Promise<IUserRole[]> {
         const rows = await this.db
-            .select(['user_id'])
+            .select(['user_id', 'ru.created_at'])
             .from<IRole>(`${T.ROLE_USER} AS ru`)
             .join(`${T.ROLES} as r`, 'ru.role_id', 'id')
             .where('r.id', roleId)
             .andWhere('ru.project', projectId);
-        return rows.map((r) => r.user_id);
+        return rows.map((r) => ({
+            userId: r.user_id,
+            addedAt: r.created_at,
+        }));
     }
 
     async getRolesForUserId(userId: number): Promise<IRole[]> {

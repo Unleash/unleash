@@ -68,7 +68,7 @@ This guide takes you through how to use user groups to manage permissions on you
 
 ![A visual representation of the current step: the projects page with a project highlighted.](/img/add-group-to-project-step-2.png)
 
-3. Click the access tab and then click assign user/group (note that this is only for enterprise, otherwise this button will be called "assign user")
+3. Navigate to the access tab and then use the assign user/group button.
 
 ![A visual representation of the current step: steps to access.](/img/add-group-to-project-step-3.png)
 

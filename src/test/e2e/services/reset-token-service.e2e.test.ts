@@ -11,6 +11,7 @@ import InvalidTokenError from '../../../lib/error/invalid-token-error';
 import { IUser } from '../../../lib/types/user';
 import SettingService from '../../../lib/services/setting-service';
 import FakeSettingStore from '../../fixtures/fake-setting-store';
+import FakeEventStore from '../../fixtures/fake-event-store';
 
 const config: IUnleashConfig = createTestConfig();
 
@@ -31,7 +32,10 @@ beforeAll(async () => {
     sessionService = new SessionService(stores, config);
     const emailService = new EmailService(undefined, config.getLogger);
     const settingService = new SettingService(
-        { settingStore: new FakeSettingStore() },
+        {
+            settingStore: new FakeSettingStore(),
+            eventStore: new FakeEventStore(),
+        },
         config,
     );
 

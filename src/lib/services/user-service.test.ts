@@ -13,6 +13,7 @@ import User from '../types/user';
 import FakeResetTokenStore from '../../test/fixtures/fake-reset-token-store';
 import SettingService from './setting-service';
 import FakeSettingStore from '../../test/fixtures/fake-setting-store';
+import FakeEventStore from '../../test/fixtures/fake-event-store';
 
 const config: IUnleashConfig = createTestConfig();
 
@@ -31,7 +32,10 @@ test('Should create new user', async () => {
     const sessionService = new SessionService({ sessionStore }, config);
     const emailService = new EmailService(config.email, config.getLogger);
     const settingService = new SettingService(
-        { settingStore: new FakeSettingStore() },
+        {
+            settingStore: new FakeSettingStore(),
+            eventStore: new FakeEventStore(),
+        },
         config,
     );
 
@@ -71,7 +75,10 @@ test('Should create default user', async () => {
     const sessionStore = new FakeSessionStore();
     const sessionService = new SessionService({ sessionStore }, config);
     const settingService = new SettingService(
-        { settingStore: new FakeSettingStore() },
+        {
+            settingStore: new FakeSettingStore(),
+            eventStore: new FakeEventStore(),
+        },
         config,
     );
 
@@ -103,7 +110,10 @@ test('Should be a valid password', async () => {
     const sessionStore = new FakeSessionStore();
     const sessionService = new SessionService({ sessionStore }, config);
     const settingService = new SettingService(
-        { settingStore: new FakeSettingStore() },
+        {
+            settingStore: new FakeSettingStore(),
+            eventStore: new FakeEventStore(),
+        },
         config,
     );
 
@@ -133,7 +143,10 @@ test('Password must be at least 10 chars', async () => {
     const sessionStore = new FakeSessionStore();
     const sessionService = new SessionService({ sessionStore }, config);
     const settingService = new SettingService(
-        { settingStore: new FakeSettingStore() },
+        {
+            settingStore: new FakeSettingStore(),
+            eventStore: new FakeEventStore(),
+        },
         config,
     );
 
@@ -165,7 +178,10 @@ test('The password must contain at least one uppercase letter.', async () => {
     const sessionStore = new FakeSessionStore();
     const sessionService = new SessionService({ sessionStore }, config);
     const settingService = new SettingService(
-        { settingStore: new FakeSettingStore() },
+        {
+            settingStore: new FakeSettingStore(),
+            eventStore: new FakeEventStore(),
+        },
         config,
     );
 
@@ -199,7 +215,10 @@ test('The password must contain at least one number', async () => {
     const sessionStore = new FakeSessionStore();
     const sessionService = new SessionService({ sessionStore }, config);
     const settingService = new SettingService(
-        { settingStore: new FakeSettingStore() },
+        {
+            settingStore: new FakeSettingStore(),
+            eventStore: new FakeEventStore(),
+        },
         config,
     );
 
@@ -232,7 +251,10 @@ test('The password must contain at least one special character', async () => {
     const sessionStore = new FakeSessionStore();
     const sessionService = new SessionService({ sessionStore }, config);
     const settingService = new SettingService(
-        { settingStore: new FakeSettingStore() },
+        {
+            settingStore: new FakeSettingStore(),
+            eventStore: new FakeEventStore(),
+        },
         config,
     );
 
@@ -265,7 +287,10 @@ test('Should be a valid password with special chars', async () => {
     const sessionStore = new FakeSessionStore();
     const sessionService = new SessionService({ sessionStore }, config);
     const settingService = new SettingService(
-        { settingStore: new FakeSettingStore() },
+        {
+            settingStore: new FakeSettingStore(),
+            eventStore: new FakeEventStore(),
+        },
         config,
     );
 

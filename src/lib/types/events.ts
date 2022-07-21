@@ -64,6 +64,9 @@ export const ENVIRONMENT_IMPORT = 'environment-import';
 export const SEGMENT_CREATED = 'segment-created';
 export const SEGMENT_UPDATED = 'segment-updated';
 export const SEGMENT_DELETED = 'segment-deleted';
+export const SETTING_CREATED = 'setting-created';
+export const SETTING_UPDATED = 'setting-updated';
+export const SETTING_DELETED = 'setting-deleted';
 
 export const CLIENT_METRICS = 'client-metrics';
 
@@ -435,5 +438,32 @@ export class ProjectUserUpdateRoleEvent extends BaseEvent {
         this.project = project;
         this.data = data;
         this.preData = preData;
+    }
+}
+
+export class SettingCreatedEvent extends BaseEvent {
+    readonly data: any;
+
+    constructor(eventData: { createdBy: string; data: any }) {
+        super(SETTING_CREATED, eventData.createdBy);
+        this.data = eventData.data;
+    }
+}
+
+export class SettingDeletedEvent extends BaseEvent {
+    readonly data: any;
+
+    constructor(eventData: { createdBy: string; data: any }) {
+        super(SETTING_DELETED, eventData.createdBy);
+        this.data = eventData.data;
+    }
+}
+
+export class SettingUpdatedEvent extends BaseEvent {
+    readonly data: any;
+
+    constructor(eventData: { createdBy: string; data: any }) {
+        super(SETTING_UPDATED, eventData.createdBy);
+        this.data = eventData.data;
     }
 }

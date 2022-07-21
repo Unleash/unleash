@@ -1,6 +1,6 @@
 import { FromSchema } from 'json-schema-to-ts';
 
-export const exportParameters = {
+const exportParameters = {
     format: {
         type: 'string',
         enum: ['json', 'yaml'],

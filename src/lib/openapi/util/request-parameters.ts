@@ -1,25 +1,29 @@
 import { OpenAPIV3 } from 'openapi-types';
 
-// type ParameterDetails = {
-//     description: string;
-// } & (
-//     | { type: 'boolean'; default?: boolean; enum?: boolean[] }
-//     | { type: 'string'; default?: string; enum?: string[] }
-//     | { type: 'number'; default?: number; enum?: number[] }
-// );
+export type ParameterDescription<TypeName, T> = {
+    type: TypeName;
+    default?: T;
+    enum?: T[];
+};
 
-// { [parameterName: string]: Parameter };
-// type Parameters = Record<ParameterName, ParameterDetails>;
+export type ParameterDetails = {
+    description: string;
+} & (
+    | ParameterDescription<'boolean', boolean>
+    | ParameterDescription<'string', string>
+    | ParameterDescription<'number', number>
+);
+
+export type Parameters = Record<ParameterName, ParameterDetails>;
 
 type ParameterName = string;
-type Description = string;
 
 export const createRequestParameters = (
-    params: Record<ParameterName, Description>,
+    params: Parameters,
 ): OpenAPIV3.ParameterObject[] =>
-    Object.entries(params).map(([name, description]) => ({
+    Object.entries(params).map(([name, deets]) => ({
         name,
-        description,
+        description: deets.description,
         schema: { type: 'string' },
         in: 'query',
     }));

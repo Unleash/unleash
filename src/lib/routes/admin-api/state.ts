@@ -79,7 +79,7 @@ class StateController extends Controller {
                     responses: {
                         200: createResponseSchema('stateSchema'),
                     },
-                    parameters: createRequestParameters(exportParametersSchema),
+                    // parameters: createRequestParameters(exportParametersSchema),
                 }),
             ],
         });

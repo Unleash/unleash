@@ -22,7 +22,7 @@ This guide takes you through how to use user groups to manage permissions on you
 
 3. Give the group a name and an optional description and select the users you'd like to be in the group.
 
-![A visual representation of the current step: the new group screen with the users drop down open and highlighted.](/img/create-ug-step-3.png).
+![A visual representation of the current step: the new group screen with the users drop down open and highlighted.](/img/create-ug-step-3.png)
 
 4. Review the details of the group. Each group must contain at least one user with the Owner role, the owner(s) will have permissions to change group membership, so remember to include yourself if you want to manage this group later. If you're happy with the group details, click save. The group is now created.
 

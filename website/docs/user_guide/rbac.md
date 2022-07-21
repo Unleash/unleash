@@ -68,7 +68,7 @@ A user group consists of the following:
 - a **description** (optional)
 - any number of users, but at least one user who is the owner of that group
 
-Groups do nothing on their own, and must be given a role on a project, in same way that a user must be given a role on a project to assign permissions.
+Groups do nothing on their own. They must be given a role on a project to assign permissions.
 
 While a user can only have one role in a given project, a user may belong to multiple groups, and each of those groups may be given a role on a project. In the case where a given user is given permissions to a project through more than one group, the user will inherit most permissive permissions of all their groups in that project.
 

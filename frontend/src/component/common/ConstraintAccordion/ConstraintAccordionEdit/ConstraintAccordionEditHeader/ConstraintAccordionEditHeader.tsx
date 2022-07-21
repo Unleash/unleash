@@ -73,7 +73,7 @@ export const ConstraintAccordionEditHeader = ({
             oneOf(dateOperators, operator)
         ) {
             setOperator(IN);
-        } else  if (oneOf(stringOperators, operator)) {
+        } else if (oneOf(stringOperators, operator)) {
             setShowCaseSensitiveButton(true);
         }
     }, [contextName, setOperator, operator, setLocalConstraint]);

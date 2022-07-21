@@ -1,7 +1,7 @@
 import { Tooltip } from '@mui/material';
 import { ReactComponent as CaseSensitive } from 'assets/icons/24_Text format.svg';
 import { ReactComponent as CaseSensitiveOff } from 'assets/icons/24_Text format off.svg';
-import React  from 'react';
+import React from 'react';
 import {
     StyledToggleButtonOff,
     StyledToggleButtonOn,
@@ -19,33 +19,28 @@ export const CaseSensitiveButton = ({
     setCaseInsensitive,
 }: CaseSensitiveButtonProps) => {
     return (
-        <Tooltip
-            title={
-                localConstraint.caseInsensitive
-                    ? 'Make it case sensitive'
-                    : 'Remove case sensitive'
-            }
-            arrow
-        >
-            <ConditionallyRender
-                condition={Boolean(localConstraint.caseInsensitive)}
-                show={
+        <ConditionallyRender
+            condition={Boolean(localConstraint.caseInsensitive)}
+            show={
+                <Tooltip title="Make it case sensitive" arrow>
                     <StyledToggleButtonOff
                         onClick={setCaseInsensitive}
                         disableRipple
                     >
                         <CaseSensitiveOff />
                     </StyledToggleButtonOff>
-                }
-                elseShow={
+                </Tooltip>
+            }
+            elseShow={
+                <Tooltip title="Remove case sensitive" arrow>
                     <StyledToggleButtonOn
                         onClick={setCaseInsensitive}
                         disableRipple
                     >
                         <CaseSensitive />
                     </StyledToggleButtonOn>
-                }
-            />
-        </Tooltip>
+                </Tooltip>
+            }
+        />
     );
 };

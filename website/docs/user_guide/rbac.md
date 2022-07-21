@@ -60,7 +60,7 @@ User groups are available to Unleash Enterprise users since **Unleash 4.14**.
 
 :::
 
-User groups allow you to assign roles to a group of users within a project, rather than a user directly. This allows you to manage your user permissions more easily when there's lots of users in the system. For a guide on how to create and manage user groups see [_how to create and manage user groups_](../how-to/how-to-create-and-manage-user-groups.md).
+User groups allow you to assign roles to a group of users within a project, rather than to a user directly. This allows you to manage your user permissions more easily when there's lots of users in the system. For a guide on how to create and manage user groups see [_how to create and manage user groups_](../how-to/how-to-create-and-manage-user-groups.md).
 
 A user group consists of the following:
 

@@ -2,7 +2,11 @@
 title: How to create and manage user groups
 ---
 
-:::info availability User groups are available to Unleash Enterprise users since **Unleash 4.14**. :::
+:::info availability 
+
+User groups are available to Unleash Enterprise users since **Unleash 4.14**. 
+
+:::
 
 This guide takes you through how to use user groups to manage permissions on your projects. User groups allow you to manage large groups of users more easily than assigning roles directly to those users.
 

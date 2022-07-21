@@ -60,7 +60,7 @@ This guide takes you through how to use user groups to manage permissions on you
 
 ## Assigning groups to projects
 
-1. Click projects
+1. Navigate to projects
 
 ![The landing page with the projects navigation link highlighted.](/img/add-group-to-project-step-1.png)
 

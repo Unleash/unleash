@@ -85,6 +85,7 @@ module.exports = {
                     items: [
                         'user_guide/user-management',
                         'how-to/how-to-create-and-assign-custom-project-roles',
+                        'how-to/how-to-create-and-manage-user-groups',
                     ],
                     type: 'category',
                     link: {

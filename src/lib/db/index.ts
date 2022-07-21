@@ -29,6 +29,7 @@ import { ClientMetricsStoreV2 } from './client-metrics-store-v2';
 import UserSplashStore from './user-splash-store';
 import RoleStore from './role-store';
 import SegmentStore from './segment-store';
+import GroupStore from './group-store';
 
 export const createStores = (
     config: IUnleashConfig,
@@ -56,7 +57,12 @@ export const createStores = (
         tagStore: new TagStore(db, eventBus, getLogger),
         tagTypeStore: new TagTypeStore(db, eventBus, getLogger),
         addonStore: new AddonStore(db, eventBus, getLogger),
-        accessStore: new AccessStore(db, eventBus, getLogger),
+        accessStore: new AccessStore(
+            db,
+            eventBus,
+            getLogger,
+            config?.experimental?.userGroups,
+        ),
         apiTokenStore: new ApiTokenStore(db, eventBus, getLogger),
         resetTokenStore: new ResetTokenStore(db, eventBus, getLogger),
         sessionStore: new SessionStore(db, eventBus, getLogger),
@@ -82,6 +88,7 @@ export const createStores = (
         userSplashStore: new UserSplashStore(db, eventBus, getLogger),
         roleStore: new RoleStore(db, eventBus, getLogger),
         segmentStore: new SegmentStore(db, eventBus, getLogger),
+        groupStore: new GroupStore(db),
     };
 };
 

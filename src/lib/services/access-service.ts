@@ -1,6 +1,7 @@
 import * as permissions from '../types/permissions';
-import User, { IUser } from '../types/user';
+import User, { IProjectUser, IUser } from '../types/user';
 import {
+    IAccessInfo,
     IAccessStore,
     IRole,
     IRoleWithPermissions,
@@ -28,6 +29,8 @@ import { CUSTOM_ROLE_TYPE, ALL_PROJECTS, ALL_ENVS } from '../util/constants';
 import { DEFAULT_PROJECT } from '../types/project';
 import InvalidOperationError from '../error/invalid-operation-error';
 import BadDataError from '../error/bad-data-error';
+import { IGroupModelWithProjectRole } from '../types/group';
+import { GroupService } from './group-service';
 
 const { ADMIN } = permissions;
 
@@ -61,6 +64,8 @@ export class AccessService {
 
     private roleStore: IRoleStore;
 
+    private groupService: GroupService;
+
     private environmentStore: IEnvironmentStore;
 
     private logger: Logger;
@@ -76,10 +81,12 @@ export class AccessService {
             'accessStore' | 'userStore' | 'roleStore' | 'environmentStore'
         >,
         { getLogger }: { getLogger: Function },
+        groupService: GroupService,
     ) {
         this.store = accessStore;
         this.userStore = userStore;
         this.roleStore = roleStore;
+        this.groupService = groupService;
         this.environmentStore = environmentStore;
         this.logger = getLogger('/services/access-service.ts');
     }
@@ -174,6 +181,31 @@ export class AccessService {
         return this.store.addUserToRole(userId, roleId, projectId);
     }
 
+    async addGroupToRole(
+        groupId: number,
+        roleId: number,
+        createdBy: string,
+        projectId: string,
+    ): Promise<void> {
+        return this.store.addGroupToRole(groupId, roleId, createdBy, projectId);
+    }
+
+    async addAccessToProject(
+        users: IAccessInfo[],
+        groups: IAccessInfo[],
+        projectId: string,
+        roleId: number,
+        createdBy: string,
+    ): Promise<void> {
+        return this.store.addAccessToProject(
+            users,
+            groups,
+            projectId,
+            roleId,
+            createdBy,
+        );
+    }
+
     async getRoleByName(roleName: string): Promise<IRole> {
         return this.roleStore.getRoleByName(roleName);
     }
@@ -218,12 +250,28 @@ export class AccessService {
         return this.store.removeUserFromRole(userId, roleId, projectId);
     }
 
+    async removeGroupFromRole(
+        groupId: number,
+        roleId: number,
+        projectId: string,
+    ): Promise<void> {
+        return this.store.removeGroupFromRole(groupId, roleId, projectId);
+    }
+
     async updateUserProjectRole(
         userId: number,
         roleId: number,
         projectId: string,
     ): Promise<void> {
         return this.store.updateUserProjectRole(userId, roleId, projectId);
+    }
+
+    async updateGroupProjectRole(
+        userId: number,
+        roleId: number,
+        projectId: string,
+    ): Promise<void> {
+        return this.store.updateGroupProjectRole(userId, roleId, projectId);
     }
 
     //This actually only exists for testing purposes
@@ -311,21 +359,28 @@ export class AccessService {
     async getProjectUsersForRole(
         roleId: number,
         projectId?: string,
-    ): Promise<IUser[]> {
-        const userIdList = await this.store.getProjectUserIdsForRole(
+    ): Promise<IProjectUser[]> {
+        const userRoleList = await this.store.getProjectUsersForRole(
             roleId,
             projectId,
         );
-        if (userIdList.length > 0) {
-            return this.userStore.getAllWithId(userIdList);
+        if (userRoleList.length > 0) {
+            const userIdList = userRoleList.map((u) => u.userId);
+            const users = await this.userStore.getAllWithId(userIdList);
+            return users.map((user) => {
+                const role = userRoleList.find((r) => r.userId == user.id);
+                return {
+                    ...user,
+                    addedAt: role.addedAt,
+                };
+            });
         }
         return [];
     }
 
-    // Move to project-service?
-    async getProjectRoleUsers(
+    async getProjectRoleAccess(
         projectId: string,
-    ): Promise<[IRole[], IUserWithRole[]]> {
+    ): Promise<[IRole[], IUserWithRole[], IGroupModelWithProjectRole[]]> {
         const roles = await this.roleStore.getProjectRoles();
 
         const users = await Promise.all(
@@ -337,7 +392,8 @@ export class AccessService {
                 return projectUsers.map((u) => ({ ...u, roleId: role.id }));
             }),
         );
-        return [roles, users.flat()];
+        const groups = await this.groupService.getProjectGroups(projectId);
+        return [roles, users.flat(), groups];
     }
 
     async createDefaultProjectRoles(

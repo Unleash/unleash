@@ -42,6 +42,9 @@ export const PROJECT_IMPORT = 'project-import';
 export const PROJECT_USER_ADDED = 'project-user-added';
 export const PROJECT_USER_REMOVED = 'project-user-removed';
 export const PROJECT_USER_ROLE_CHANGED = 'project-user-role-changed';
+export const PROJECT_GROUP_ADDED = 'project-group-added';
+export const PROJECT_GROUP_REMOVED = 'project-group-removed';
+export const PROJECT_GROUP_ROLE_CHANGED = 'project-group-role-changed';
 export const DROP_PROJECTS = 'drop-projects';
 export const TAG_CREATED = 'tag-created';
 export const TAG_DELETED = 'tag-deleted';
@@ -64,6 +67,8 @@ export const ENVIRONMENT_IMPORT = 'environment-import';
 export const SEGMENT_CREATED = 'segment-created';
 export const SEGMENT_UPDATED = 'segment-updated';
 export const SEGMENT_DELETED = 'segment-deleted';
+export const GROUP_CREATED = 'group-created';
+export const GROUP_UPDATED = 'group-updated';
 export const SETTING_CREATED = 'setting-created';
 export const SETTING_UPDATED = 'setting-updated';
 export const SETTING_DELETED = 'setting-deleted';
@@ -434,6 +439,59 @@ export class ProjectUserUpdateRoleEvent extends BaseEvent {
         preData: any;
     }) {
         super(PROJECT_USER_REMOVED, eventData.createdBy);
+        const { project, data, preData } = eventData;
+        this.project = project;
+        this.data = data;
+        this.preData = preData;
+    }
+}
+
+export class ProjectGroupAddedEvent extends BaseEvent {
+    readonly project: string;
+
+    readonly data: any;
+
+    readonly preData: any;
+
+    constructor(p: { project: string; createdBy: string; data: any }) {
+        super(PROJECT_GROUP_ADDED, p.createdBy);
+        const { project, data } = p;
+        this.project = project;
+        this.data = data;
+        this.preData = null;
+    }
+}
+
+export class ProjectGroupRemovedEvent extends BaseEvent {
+    readonly project: string;
+
+    readonly data: any;
+
+    readonly preData: any;
+
+    constructor(p: { project: string; createdBy: string; preData: any }) {
+        super(PROJECT_GROUP_REMOVED, p.createdBy);
+        const { project, preData } = p;
+        this.project = project;
+        this.data = null;
+        this.preData = preData;
+    }
+}
+
+export class ProjectGroupUpdateRoleEvent extends BaseEvent {
+    readonly project: string;
+
+    readonly data: any;
+
+    readonly preData: any;
+
+    constructor(eventData: {
+        project: string;
+        createdBy: string;
+        data: any;
+        preData: any;
+    }) {
+        super(PROJECT_GROUP_ROLE_CHANGED, eventData.createdBy);
         const { project, data, preData } = eventData;
         this.project = project;
         this.data = data;

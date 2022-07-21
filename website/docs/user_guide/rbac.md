@@ -7,9 +7,9 @@ This document forms the specifications for [Role-Based Access Control](https://e
 
 ## Core principles {#core-principles}
 
-Unleash has two levels in it’s hierarchy of resources:
+Unleash has two levels in its hierarchy of resources:
 
-1. **Global resources** - Everything that lives across the entire Unleash instance. Examples of this includes:
+1. **Global resources** - Everything that lives across the entire Unleash instance. Examples of this include:
    - activation strategies
    - context field definitions
    - addon configurations
@@ -27,27 +27,50 @@ Unleash comes with a set of built-in roles that you can use. The _global roles_ 
 
 When you add a new user, you can assign them one of the global roles listed below.
 
-| Role       | Scope   | Description                                                                                                                                                                                                                                                         | Availability       |
-|------------|---------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------|
-| **Admin**  | Global  | Users with the global admin role have superuser access to Unleash and can perform any operation within the Unleash platform.                                                                                                                                        | All versions       |
-| **Editor** | Global  | Users with the editor role have access to most features in Unleash but can not manage users and roles in the global scope. Editors will be added as project owners when creating projects and get superuser rights within the context of these projects. Users with the editor role will also get access to most permissions on the default project by default.           | All versions       |
-| **Viewer** | Global  | Users with the viewer role can read global resources in Unleash.                                                                                                                                                                                                    | All versions       |
-| **Owner**  | Project | Users with this the project owner role have full control over the project, and can add and manage other users within the project context; manage feature toggles within the project; and control advanced project features like archiving and deleting the project. | Pro and Enterprise |
-| **Member** | Project | Users with the project member role are allowed to view, create, and update feature toggles within a project, but have limited permissions in regards to managing the project's user access and can not archive or delete the project.                               | Pro and Enterprise |
+| Role | Scope | Description | Availability |
+| --- | --- | --- | --- |
+| **Admin** | Global | Users with the global admin role have superuser access to Unleash and can perform any operation within the Unleash platform. | All versions |
+| **Editor** | Global | Users with the editor role have access to most features in Unleash but can not manage users and roles in the global scope. Editors will be added as project owners when creating projects and get superuser rights within the context of these projects. Users with the editor role will also get access to most permissions on the default project by default. | All versions |
+| **Viewer** | Global | Users with the viewer role can read global resources in Unleash. | All versions |
+| **Owner** | Project | Users with this the project owner role have full control over the project, and can add and manage other users within the project context; manage feature toggles within the project; and control advanced project features like archiving and deleting the project. | Pro and Enterprise |
+| **Member** | Project | Users with the project member role are allowed to view, create, and update feature toggles within a project, but have limited permissions in regards to managing the project's user access and can not archive or delete the project. | Pro and Enterprise |
 
 ## Custom Project Roles
 
 :::info availability
+
 Custom project roles were introduced in **Unleash 4.6** and are only available in Unleash Enterprise.
+
 :::
 
 Custom project roles let you define your own roles with a specific set of project permissions down to the environment level. The roles can then be assigned to users in specific projects. All users have viewer access to all projects and resources, but must be assigned a project role to be allowed to edit a project's resources. For a step-by-step walkthrough of how to create and assign custom project roles, see [_how to create and assign custom project roles_](../how-to/how-to-create-and-assign-custom-project-roles.md).
 
 Each custom project role consists of:
+
 - a **name** (required)
 - a **role description** (optional)
 - a set of **project permissions** (optional)
 - a set of **environment permissions** (optional)
+
+## User Groups
+
+:::info availability
+
+User groups are available to Unleash Enterprise users since **Unleash 4.14**.
+
+:::
+
+User groups allow you to assign roles to a group of users within a project, rather than to a user directly. This allows you to manage your user permissions more easily when there's lots of users in the system. For a guide on how to create and manage user groups see [_how to create and manage user groups_](../how-to/how-to-create-and-manage-user-groups.md).
+
+A user group consists of the following:
+
+- a **name** (required)
+- a **description** (optional)
+- one or more users. At least one user must have the owner role
+
+Groups do nothing on their own. They must be given a role on a project to assign permissions.
+
+While a user can only have one role in a given project, a user may belong to multiple groups, and each of those groups may be given a role on a project. In the case where a given user is given permissions to a project through more than one group, the user will inherit most permissive permissions of all their groups in that project.
 
 ### Project permissions
 

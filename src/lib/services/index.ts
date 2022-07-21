@@ -32,12 +32,13 @@ import { SegmentService } from './segment-service';
 import { OpenApiService } from './openapi-service';
 import { ClientSpecService } from './client-spec-service';
 import { PlaygroundService } from './playground-service';
-
+import { GroupService } from './group-service';
 export const createServices = (
     stores: IUnleashStores,
     config: IUnleashConfig,
 ): IUnleashServices => {
-    const accessService = new AccessService(stores, config);
+    const groupService = new GroupService(stores, config);
+    const accessService = new AccessService(stores, config, groupService);
     const apiTokenService = new ApiTokenService(stores, config);
     const clientInstanceService = new ClientInstanceService(stores, config);
     const clientMetricsServiceV2 = new ClientMetricsServiceV2(stores, config);
@@ -81,6 +82,7 @@ export const createServices = (
         config,
         accessService,
         featureToggleServiceV2,
+        groupService,
     );
     const userSplashService = new UserSplashService(stores, config);
     const openApiService = new OpenApiService(config);
@@ -121,6 +123,7 @@ export const createServices = (
         openApiService,
         clientSpecService,
         playgroundService,
+        groupService,
     };
 };
 

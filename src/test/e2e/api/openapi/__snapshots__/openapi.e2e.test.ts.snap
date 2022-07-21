@@ -1468,6 +1468,78 @@ Object {
         "required": Array [],
         "type": "object",
       },
+      "groupSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "createdAt": Object {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string",
+          },
+          "createdBy": Object {
+            "nullable": true,
+            "type": "string",
+          },
+          "description": Object {
+            "type": "string",
+          },
+          "id": Object {
+            "type": "number",
+          },
+          "name": Object {
+            "type": "string",
+          },
+          "projects": Object {
+            "items": Object {
+              "type": "string",
+            },
+            "type": "array",
+          },
+          "users": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/groupUserModelSchema",
+            },
+            "type": "array",
+          },
+        },
+        "required": Array [
+          "name",
+          "users",
+        ],
+        "type": "object",
+      },
+      "groupUserModelSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "joinedAt": Object {
+            "format": "date-time",
+            "type": "string",
+          },
+          "role": Object {
+            "type": "string",
+          },
+          "user": Object {
+            "$ref": "#/components/schemas/userSchema",
+          },
+        },
+        "required": Array [
+          "role",
+          "user",
+        ],
+        "type": "object",
+      },
+      "groupsSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "groups": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/groupSchema",
+            },
+            "type": "array",
+          },
+        },
+        "type": "object",
+      },
       "healthCheckSchema": Object {
         "additionalProperties": false,
         "properties": Object {

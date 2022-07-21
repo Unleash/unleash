@@ -1,7 +1,7 @@
 import {
     IGroup,
     IGroupModel,
-    IGroupModelWithRole,
+    IGroupModelWithProjectRole,
     IGroupProject,
     IGroupUser,
 } from '../types/group';
@@ -141,7 +141,9 @@ export class GroupService {
         return newGroup;
     }
 
-    async getProjectGroups(projectId?: string): Promise<IGroupModelWithRole[]> {
+    async getProjectGroups(
+        projectId?: string,
+    ): Promise<IGroupModelWithProjectRole[]> {
         const groupRoles = await this.groupStore.getProjectGroupRoles(
             projectId,
         );
@@ -156,10 +158,14 @@ export class GroupService {
             const users = await this.userStore.getAllWithId(
                 groupUsers.map((u) => u.userId),
             );
-            return groups.map((group) => ({
-                ...this.mapGroupWithUsers(group, groupUsers, users),
-                roleId: groupRoles.find((g) => g.groupId == group.id).roleId,
-            }));
+            return groups.map((group) => {
+                const groupRole = groupRoles.find((g) => g.groupId == group.id);
+                return {
+                    ...this.mapGroupWithUsers(group, groupUsers, users),
+                    roleId: groupRole.roleId,
+                    addedAt: groupRole.createdAt,
+                };
+            });
         }
         return [];
     }

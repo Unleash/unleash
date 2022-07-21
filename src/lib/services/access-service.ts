@@ -1,5 +1,5 @@
 import * as permissions from '../types/permissions';
-import User, { IUser } from '../types/user';
+import User, { IProjectUser, IUser } from '../types/user';
 import {
     IAccessInfo,
     IAccessStore,
@@ -29,7 +29,7 @@ import { CUSTOM_ROLE_TYPE, ALL_PROJECTS, ALL_ENVS } from '../util/constants';
 import { DEFAULT_PROJECT } from '../types/project';
 import InvalidOperationError from '../error/invalid-operation-error';
 import BadDataError from '../error/bad-data-error';
-import { IGroupModelWithRole } from '../types/group';
+import { IGroupModelWithProjectRole } from '../types/group';
 import { GroupService } from './group-service';
 
 const { ADMIN } = permissions;
@@ -359,20 +359,28 @@ export class AccessService {
     async getProjectUsersForRole(
         roleId: number,
         projectId?: string,
-    ): Promise<IUser[]> {
-        const userIdList = await this.store.getProjectUserIdsForRole(
+    ): Promise<IProjectUser[]> {
+        const userRoleList = await this.store.getProjectUsersForRole(
             roleId,
             projectId,
         );
-        if (userIdList.length > 0) {
-            return this.userStore.getAllWithId(userIdList);
+        if (userRoleList.length > 0) {
+            const userIdList = userRoleList.map((u) => u.userId);
+            const users = await this.userStore.getAllWithId(userIdList);
+            return users.map((user) => {
+                const role = userRoleList.find((r) => r.userId == user.id);
+                return {
+                    ...user,
+                    addedAt: role.addedAt,
+                };
+            });
         }
         return [];
     }
 
     async getProjectRoleAccess(
         projectId: string,
-    ): Promise<[IRole[], IUserWithRole[], IGroupModelWithRole[]]> {
+    ): Promise<[IRole[], IUserWithRole[], IGroupModelWithProjectRole[]]> {
         const roles = await this.roleStore.getProjectRoles();
 
         const users = await Promise.all(

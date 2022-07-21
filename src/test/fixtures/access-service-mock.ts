@@ -9,7 +9,7 @@ import {
     IRoleData,
     IUserWithRole,
 } from '../../lib/types/model';
-import { IGroupModelWithRole } from '../../lib/types/group';
+import { IGroupModelWithProjectRole } from '../../lib/types/group';
 
 class AccessServiceMock extends AccessService {
     constructor() {
@@ -79,7 +79,7 @@ class AccessServiceMock extends AccessService {
 
     getProjectRoleAccess(
         projectId: string,
-    ): Promise<[IRole[], IUserWithRole[], IGroupModelWithRole[]]> {
+    ): Promise<[IRole[], IUserWithRole[], IGroupModelWithProjectRole[]]> {
         throw new Error('Method not implemented.');
     }
 

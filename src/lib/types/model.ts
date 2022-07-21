@@ -3,9 +3,8 @@ import { LogProvider } from '../logger';
 import { IRole } from './stores/access-store';
 import { IUser } from './user';
 import { ALL_OPERATORS } from '../util/constants';
-import { AllowedStrings } from './allowed-strings';
 
-export type Operator = AllowedStrings<typeof ALL_OPERATORS>;
+export type Operator = typeof ALL_OPERATORS[number];
 
 export interface IConstraint {
     contextName: string;
@@ -221,6 +220,7 @@ export interface IUserWithRole {
     username?: string;
     email?: string;
     imageUrl?: string;
+    addedAt: Date;
 }
 
 export interface IRoleData {

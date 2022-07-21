@@ -45,14 +45,14 @@ import ProjectWithoutOwnerError from '../error/project-without-owner-error';
 import { IUserStore } from 'lib/types/stores/user-store';
 import { arraysHaveSameItems } from '../util/arraysHaveSameItems';
 import { GroupService } from './group-service';
-import { IGroupModelWithRole } from 'lib/types/group';
+import { IGroupModelWithProjectRole } from 'lib/types/group';
 
 const getCreatedBy = (user: User) => user.email || user.username;
 
-export interface UsersWithRoles {
+export interface AccessWithRoles {
     users: IUserWithRole[];
     roles: IRoleDescriptor[];
-    groups: IGroupModelWithRole[];
+    groups: IGroupModelWithProjectRole[];
 }
 
 export default class ProjectService {
@@ -282,7 +282,7 @@ export default class ProjectService {
     }
 
     // RBAC methods
-    async getUsersWithAccess(projectId: string): Promise<UsersWithRoles> {
+    async getAccessToProject(projectId: string): Promise<AccessWithRoles> {
         const [roles, users, groups] =
             await this.accessService.getProjectRoleAccess(projectId);
 
@@ -473,7 +473,7 @@ export default class ProjectService {
         userId: number,
         createdBy: string,
     ): Promise<void> {
-        const usersWithRoles = await this.getUsersWithAccess(projectId);
+        const usersWithRoles = await this.getAccessToProject(projectId);
         const user = usersWithRoles.users.find((u) => u.id === userId);
         const currentRole = usersWithRoles.roles.find(
             (r) => r.id === user.roleId,

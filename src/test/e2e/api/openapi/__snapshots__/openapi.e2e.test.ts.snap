@@ -97,6 +97,12 @@ Object {
           "enabled": Object {
             "type": "boolean",
           },
+          "environments": Object {
+            "items": Object {
+              "type": "string",
+            },
+            "type": "array",
+          },
           "events": Object {
             "items": Object {
               "type": "string",
@@ -109,6 +115,12 @@ Object {
           "parameters": Object {
             "additionalProperties": true,
             "type": "object",
+          },
+          "projects": Object {
+            "items": Object {
+              "type": "string",
+            },
+            "type": "array",
           },
           "provider": Object {
             "type": "string",
@@ -1818,6 +1830,146 @@ Object {
         ],
         "type": "object",
       },
+      "playgroundFeatureSchema": Object {
+        "additionalProperties": false,
+        "description": "A simplified feature toggle model intended for the Unleash playground.",
+        "properties": Object {
+          "isEnabled": Object {
+            "examples": Array [
+              true,
+            ],
+            "type": "boolean",
+          },
+          "name": Object {
+            "examples": Array [
+              "my-feature",
+            ],
+            "type": "string",
+          },
+          "projectId": Object {
+            "examples": Array [
+              "my-project",
+            ],
+            "type": "string",
+          },
+          "variant": Object {
+            "additionalProperties": false,
+            "examples": Array [
+              "green",
+            ],
+            "nullable": true,
+            "properties": Object {
+              "enabled": Object {
+                "type": "boolean",
+              },
+              "name": Object {
+                "type": "string",
+              },
+              "payload": Object {
+                "additionalProperties": false,
+                "properties": Object {
+                  "type": Object {
+                    "enum": Array [
+                      "json",
+                      "csv",
+                      "string",
+                    ],
+                    "type": "string",
+                  },
+                  "value": Object {
+                    "type": "string",
+                  },
+                },
+                "required": Array [
+                  "type",
+                  "value",
+                ],
+                "type": "object",
+              },
+            },
+            "required": Array [
+              "name",
+              "enabled",
+            ],
+            "type": "object",
+          },
+          "variants": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/variantSchema",
+            },
+            "type": "array",
+          },
+        },
+        "required": Array [
+          "name",
+          "projectId",
+          "isEnabled",
+          "variant",
+          "variants",
+        ],
+        "type": "object",
+      },
+      "playgroundRequestSchema": Object {
+        "description": "Data for the playground API to evaluate toggles",
+        "properties": Object {
+          "context": Object {
+            "$ref": "#/components/schemas/sdkContextSchema",
+          },
+          "environment": Object {
+            "examples": Array [
+              "development",
+            ],
+            "type": "string",
+          },
+          "projects": Object {
+            "oneOf": Array [
+              Object {
+                "description": "A list of projects to check for toggles in.",
+                "examples": Array [
+                  "my-project",
+                  "my-other-project",
+                ],
+                "items": Object {
+                  "type": "string",
+                },
+                "type": "array",
+              },
+              Object {
+                "description": "Check toggles in all projects.",
+                "enum": Array [
+                  "*",
+                ],
+                "type": "string",
+              },
+            ],
+          },
+        },
+        "required": Array [
+          "environment",
+          "context",
+        ],
+        "type": "object",
+      },
+      "playgroundResponseSchema": Object {
+        "additionalProperties": false,
+        "description": "The state of all features given the provided input.",
+        "properties": Object {
+          "features": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/playgroundFeatureSchema",
+            },
+            "type": "array",
+          },
+          "input": Object {
+            "$ref": "#/components/schemas/playgroundRequestSchema",
+          },
+        },
+        "required": Array [
+          "features",
+          "input",
+        ],
+        "type": "object",
+      },
       "projectEnvironmentSchema": Object {
         "additionalProperties": false,
         "properties": Object {
@@ -1918,6 +2070,69 @@ Object {
           "id",
           "type",
           "name",
+        ],
+        "type": "object",
+      },
+      "sdkContextSchema": Object {
+        "additionalProperties": Object {
+          "examples": Array [
+            "top-level custom context value",
+          ],
+          "type": "string",
+        },
+        "description": "The Unleash context as modeled in client SDKs",
+        "properties": Object {
+          "appName": Object {
+            "examples": Array [
+              "My cool application.",
+            ],
+            "minLength": 1,
+            "type": "string",
+          },
+          "currentTime": Object {
+            "examples": Array [
+              "2022-07-05T12:56:41+02:00",
+            ],
+            "format": "date-time",
+            "type": "string",
+          },
+          "environment": Object {
+            "deprecated": true,
+            "type": "string",
+          },
+          "properties": Object {
+            "additionalProperties": Object {
+              "type": "string",
+            },
+            "examples": Array [
+              Object {
+                "customContextField": "this is one!",
+                "otherCustomField": 3,
+              },
+            ],
+            "type": "object",
+          },
+          "remoteAddress": Object {
+            "examples": Array [
+              "192.168.1.1",
+            ],
+            "type": "string",
+          },
+          "sessionId": Object {
+            "examples": Array [
+              "b65e7b23-fec0-4814-a129-0e9861ef18fc",
+            ],
+            "type": "string",
+          },
+          "userId": Object {
+            "examples": Array [
+              "username@provider.com",
+            ],
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "appName",
         ],
         "type": "object",
       },
@@ -3768,6 +3983,45 @@ If the provided project does not exist, the list of events will be empty.",
             "description": "This response has no body.",
           },
         },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/playground": Object {
+      "post": Object {
+        "description": "Use the provided \`context\`, \`environment\`, and \`projects\` to evaluate toggles on this Unleash instance. Returns a list of all toggles that match the parameters and what they evaluate to. The response also contains the input parameters that were provided.",
+        "operationId": "getPlayground",
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/playgroundRequestSchema",
+              },
+            },
+          },
+          "description": "playgroundRequestSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/playgroundResponseSchema",
+                },
+              },
+            },
+            "description": "playgroundResponseSchema",
+          },
+          "400": Object {
+            "description": "The request data does not match what we expect.",
+          },
+          "401": Object {
+            "description": "Authorization information is missing or invalid. Provide a valid API token as the \`authorization\` header, e.g. \`authorization:*.*.my-admin-token\`.",
+          },
+        },
+        "summary": "Evaluate an Unleash context against a set of environments and projects.",
         "tags": Array [
           "admin",
         ],

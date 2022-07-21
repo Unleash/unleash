@@ -100,12 +100,12 @@ export default class FeatureToggleClientStore
                 'fe.feature_name',
                 'features.name',
             )
-            .fullOuterJoin(
+            .leftJoin(
                 'feature_strategy_segment as fss',
                 `fss.feature_strategy_id`,
                 `fs.id`,
             )
-            .fullOuterJoin('segments', `segments.id`, `fss.segment_id`);
+            .leftJoin('segments', `segments.id`, `fss.segment_id`);
 
         if (featureQuery) {
             if (featureQuery.tag) {

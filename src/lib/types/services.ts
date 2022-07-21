@@ -27,6 +27,7 @@ import UserSplashService from '../services/user-splash-service';
 import { SegmentService } from '../services/segment-service';
 import { OpenApiService } from '../services/openapi-service';
 import { ClientSpecService } from '../services/client-spec-service';
+import { PlaygroundService } from 'lib/services/playground-service';
 import { GroupService } from '../services/group-service';
 
 export interface IUnleashServices {
@@ -61,4 +62,5 @@ export interface IUnleashServices {
     segmentService: SegmentService;
     openApiService: OpenApiService;
     clientSpecService: ClientSpecService;
+    playgroundService: PlaygroundService;
 }

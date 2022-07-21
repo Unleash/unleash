@@ -8,14 +8,14 @@ title: Python SDK
 ```python
 from UnleashClient import UnleashClient
 
-    client = UnleashClient(
-        url="<API url>",
-        app_name="my-python-app",
-        custom_headers={'Authorization': '<API token>'})
+client = UnleashClient(
+    url="<API url>",
+    app_name="my-python-app",
+    custom_headers={'Authorization': '<API token>'})
 
-    client.initialize_client()
+client.initialize_client()
 
-    client.is_enabled("unleash.beta.variants")
+client.is_enabled("unleash.beta.variants")
 ```
 
 ## Checking if a feature is enabled {#checking-if-a-feature-is-enabled}

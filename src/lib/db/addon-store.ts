@@ -14,6 +14,8 @@ const COLUMNS = [
     'description',
     'parameters',
     'events',
+    'projects',
+    'environments',
 ];
 const TABLE = 'addons';
 
@@ -115,6 +117,8 @@ export default class AddonStore implements IAddonStore {
             description: row.description,
             parameters: row.parameters,
             events: row.events,
+            projects: row.projects || [],
+            environments: row.environments || [],
             createdAt: row.created_at,
         };
     }
@@ -127,6 +131,8 @@ export default class AddonStore implements IAddonStore {
             description: addon.description,
             parameters: JSON.stringify(addon.parameters),
             events: JSON.stringify(addon.events),
+            projects: JSON.stringify(addon.projects || []),
+            environments: JSON.stringify(addon.environments || []),
         };
     }
 }

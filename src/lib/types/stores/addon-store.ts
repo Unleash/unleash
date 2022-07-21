@@ -5,6 +5,8 @@ export interface IAddonDto {
     description: string;
     enabled: boolean;
     parameters: Record<string, unknown>;
+    projects?: string[];
+    environments?: string[];
     events: string[];
 }
 

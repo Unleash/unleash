@@ -53,19 +53,20 @@ const StyledSingleValueChip = styled(Chip)(({ theme }) => ({
     },
 }));
 
-const StyledIconWrapper = styled('div')<{ marginRight?: string, marginTop?: string  }>(
-    ({ theme, marginRight, marginTop }) => ({
-        backgroundColor: theme.palette.grey[200],
-        width: 28,
-        height: 47,
-        display: 'inline-flex',
-        justifyContent: 'center',
-        padding: '10px 0',
-        color: theme.palette.primary.main,
-        marginRight: marginRight ? marginRight : '0.75rem',
-        marginTop: marginTop ? marginTop: 0
-    })
-);
+const StyledIconWrapper = styled('div')<{
+    marginRight?: string;
+    marginTop?: string;
+}>(({ theme, marginRight, marginTop }) => ({
+    backgroundColor: theme.palette.grey[200],
+    width: 28,
+    height: 47,
+    display: 'inline-flex',
+    justifyContent: 'center',
+    padding: '10px 0',
+    color: theme.palette.primary.main,
+    marginRight: marginRight ? marginRight : '0.75rem',
+    marginTop: marginTop ? marginTop : 0,
+}));
 
 interface IConstraintAccordionViewHeaderProps {
     compact: boolean;
@@ -208,8 +209,10 @@ export const ConstraintAccordionViewHeader = ({
                                                 'valuesExpandLabel'
                                             )}
                                         >
-                                            {!expanded ? `Expand to view all (
-                                            ${constraint?.values?.length})` : 'Collapse to view less' }
+                                            {!expanded
+                                                ? `Expand to view all (
+                                            ${constraint?.values?.length})`
+                                                : 'Collapse to view less'}
                                         </p>
                                     }
                                 />

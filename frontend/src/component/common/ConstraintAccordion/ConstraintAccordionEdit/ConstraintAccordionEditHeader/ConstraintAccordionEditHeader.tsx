@@ -4,7 +4,7 @@ import { useStyles } from 'component/common/ConstraintAccordion/ConstraintAccord
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { ConstraintIcon } from 'component/common/ConstraintAccordion/ConstraintIcon';
-import { Delete, Edit, Help } from '@mui/icons-material';
+import { Delete, Edit } from '@mui/icons-material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
     dateOperators,

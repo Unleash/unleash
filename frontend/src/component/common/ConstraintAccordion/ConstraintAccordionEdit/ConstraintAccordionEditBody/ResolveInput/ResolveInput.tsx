@@ -1,6 +1,5 @@
 import { IUnleashContextDefinition } from 'interfaces/context';
 import { IConstraint } from 'interfaces/strategy';
-import { CaseInsensitive } from '../CaseInsensitive/CaseInsensitive';
 import { DateSingleValue } from '../DateSingleValue/DateSingleValue';
 import { FreeTextInput } from '../FreeTextInput/FreeTextInput';
 import { RestrictiveLegalValues } from '../RestrictiveLegalValues/RestrictiveLegalValues';

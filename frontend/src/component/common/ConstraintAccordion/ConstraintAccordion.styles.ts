@@ -49,7 +49,7 @@ export const useStyles = makeStyles()(theme => ({
     headerValuesContainerWrapper: {
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     headerValuesContainer: {
         display: 'flex',

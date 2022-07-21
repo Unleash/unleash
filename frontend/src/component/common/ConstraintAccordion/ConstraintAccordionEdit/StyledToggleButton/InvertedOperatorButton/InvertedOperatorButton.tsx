@@ -1,7 +1,7 @@
-import { Button, IconButton, Tooltip } from '@mui/material';
+import { Tooltip } from '@mui/material';
 import { ReactComponent as NegatedIcon } from '../../../../../../assets/icons/24_Negator.svg';
 import { ReactComponent as NegatedIconOff } from '../../../../../../assets/icons/24_Negator off.svg';
-import React, { useMemo } from 'react';
+import React from 'react';
 import { IConstraint } from '../../../../../../interfaces/strategy';
 import {
     StyledToggleButtonOff,

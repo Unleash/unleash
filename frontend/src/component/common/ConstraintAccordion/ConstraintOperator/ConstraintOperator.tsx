@@ -1,9 +1,6 @@
 import { IConstraint } from 'interfaces/strategy';
 import { formatOperatorDescription } from 'component/common/ConstraintAccordion/ConstraintOperator/formatOperatorDescription';
 import { useStyles } from 'component/common/ConstraintAccordion/ConstraintOperator/ConstraintOperator.styles';
-import { ConditionallyRender } from '../../ConditionallyRender/ConditionallyRender';
-import { ReactComponent as NegatedIcon } from '../../../../assets/icons/24_Negator.svg';
-import { colors } from '../../../../themes/colors';
 import React from 'react';
 
 interface IConstraintOperatorProps {

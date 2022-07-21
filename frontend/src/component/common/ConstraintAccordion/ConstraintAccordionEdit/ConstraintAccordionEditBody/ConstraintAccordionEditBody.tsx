@@ -1,8 +1,7 @@
-import { Button, FormControlLabel, Switch } from '@mui/material';
+import { Button } from '@mui/material';
 import { IConstraint } from 'interfaces/strategy';
 import { CANCEL } from '../ConstraintAccordionEdit';
 
-import { ConstraintFormHeader } from './ConstraintFormHeader/ConstraintFormHeader';
 import { useStyles } from './ConstraintAccordionEditBody.styles';
 import React from 'react';
 import { newOperators } from 'constants/operators';

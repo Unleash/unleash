@@ -10,8 +10,11 @@ import { formatConstraintValue } from 'utils/formatConstraintValue';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { ConstraintOperator } from 'component/common/ConstraintAccordion/ConstraintOperator/ConstraintOperator';
 import classnames from 'classnames';
-import ReactDOM from 'react-dom';
 import { getTextWidth } from '../../utils';
+import { ReactComponent as NegatedIcon } from 'assets/icons/24_Negator.svg';
+import { ReactComponent as CaseSensitive } from 'assets/icons/24_Text format.svg';
+import { stringOperators } from 'constants/operators';
+import { oneOf } from 'utils/oneOf';
 
 const StyledHeaderText = styled('span')(({ theme }) => ({
     display: '-webkit-box',
@@ -50,12 +53,27 @@ const StyledSingleValueChip = styled(Chip)(({ theme }) => ({
     },
 }));
 
+const StyledIconWrapper = styled('div')<{ marginRight?: string, marginTop?: string  }>(
+    ({ theme, marginRight, marginTop }) => ({
+        backgroundColor: theme.palette.grey[200],
+        width: 28,
+        height: 47,
+        display: 'inline-flex',
+        justifyContent: 'center',
+        padding: '10px 0',
+        color: theme.palette.primary.main,
+        marginRight: marginRight ? marginRight : '0.75rem',
+        marginTop: marginTop ? marginTop: 0
+    })
+);
+
 interface IConstraintAccordionViewHeaderProps {
     compact: boolean;
     constraint: IConstraint;
     onDelete?: () => void;
     onEdit?: () => void;
     singleValue: boolean;
+    expanded: boolean;
     allowExpand: (shouldExpand: boolean) => void;
 }
 
@@ -66,6 +84,7 @@ export const ConstraintAccordionViewHeader = ({
     onDelete,
     singleValue,
     allowExpand,
+    expanded,
 }: IConstraintAccordionViewHeaderProps) => {
     const { classes: styles } = useStyles();
     const { locationSettings } = useLocationSettings();
@@ -113,40 +132,88 @@ export const ConstraintAccordionViewHeader = ({
                         {constraint.contextName}
                     </StyledHeaderText>
                 </Tooltip>
-                <div className={styles.headerConstraintContainer}>
-                    <ConstraintOperator constraint={constraint} />
+                <div className={styles.headerValuesContainerWrapper}>
+                    <ConditionallyRender
+                        condition={Boolean(constraint.inverted)}
+                        show={
+                            <Tooltip title={'Operator is negated'} arrow>
+                                <StyledIconWrapper marginRight={'0'}>
+                                    <NegatedIcon />
+                                </StyledIconWrapper>
+                            </Tooltip>
+                        }
+                    />
+                    <div className={styles.headerConstraintContainer}>
+                        <ConstraintOperator constraint={constraint} />
+                    </div>
                 </div>
                 <ConditionallyRender
                     condition={singleValue}
                     show={
-                        <StyledSingleValueChip
-                            label={formatConstraintValue(
-                                constraint,
-                                locationSettings
-                            )}
-                        />
-                    }
-                    elseShow={
-                        <div className={styles.headerValuesContainer}>
-                            <StyledValuesSpan ref={elementRef}>
-                                {constraint?.values
-                                    ?.map(value => value)
-                                    .join(', ')}
-                            </StyledValuesSpan>
+                        <div className={styles.headerValuesContainerWrapper}>
                             <ConditionallyRender
-                                condition={expandable}
+                                condition={
+                                    !Boolean(constraint.caseInsensitive) &&
+                                    oneOf(stringOperators, constraint.operator)
+                                }
                                 show={
-                                    <p
-                                        className={classnames(
-                                            styles.headerValuesExpand,
-                                            'valuesExpandLabel'
-                                        )}
+                                    <Tooltip
+                                        title="Case sensitive is active"
+                                        arrow
                                     >
-                                        Expand to view all (
-                                        {constraint?.values?.length})
-                                    </p>
+                                        <StyledIconWrapper>
+                                            <CaseSensitive />{' '}
+                                        </StyledIconWrapper>
+                                    </Tooltip>
                                 }
                             />
+                            <StyledSingleValueChip
+                                label={formatConstraintValue(
+                                    constraint,
+                                    locationSettings
+                                )}
+                            />
+                        </div>
+                    }
+                    elseShow={
+                        <div className={styles.headerValuesContainerWrapper}>
+                            <ConditionallyRender
+                                condition={
+                                    !Boolean(constraint.caseInsensitive) &&
+                                    oneOf(stringOperators, constraint.operator)
+                                }
+                                show={
+                                    <Tooltip
+                                        title="Case sensitive is active"
+                                        arrow
+                                    >
+                                        <StyledIconWrapper marginTop={'7px'}>
+                                            <CaseSensitive />{' '}
+                                        </StyledIconWrapper>
+                                    </Tooltip>
+                                }
+                            />
+                            <div className={styles.headerValuesContainer}>
+                                <StyledValuesSpan ref={elementRef}>
+                                    {constraint?.values
+                                        ?.map(value => value)
+                                        .join(', ')}
+                                </StyledValuesSpan>
+                                <ConditionallyRender
+                                    condition={expandable}
+                                    show={
+                                        <p
+                                            className={classnames(
+                                                styles.headerValuesExpand,
+                                                'valuesExpandLabel'
+                                            )}
+                                        >
+                                            {!expanded ? `Expand to view all (
+                                            ${constraint?.values?.length})` : 'Collapse to view less' }
+                                        </p>
+                                    }
+                                />
+                            </div>
                         </div>
                     }
                 />

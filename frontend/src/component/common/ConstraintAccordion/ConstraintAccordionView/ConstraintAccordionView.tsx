@@ -60,6 +60,7 @@ export const ConstraintAccordionView = ({
                     onDelete={onDelete}
                     singleValue={singleValue}
                     allowExpand={setExpandable}
+                    expanded={expanded}
                 />
             </AccordionSummary>
 

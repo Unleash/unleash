@@ -46,6 +46,11 @@ export const useStyles = makeStyles()(theme => ({
             position: 'relative',
         },
     },
+    headerValuesContainerWrapper: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center'
+    },
     headerValuesContainer: {
         display: 'flex',
         flexDirection: 'column',

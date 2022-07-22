@@ -12,7 +12,6 @@ import {
     Box,
     capitalize,
     Checkbox,
-    FormControlLabel,
     Paper,
     TextField,
 } from '@mui/material';
@@ -20,6 +19,12 @@ import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';
 import { SelectAllButton } from '../../../admin/apiToken/ApiTokenForm/SelectProjectInput/SelectAllButton/SelectAllButton';
+import {
+    StyledHelpText,
+    StyledSelectAllFormControlLabel,
+    StyledTitle,
+    StyledAutocomplete,
+} from '../AddonForm.styles';
 
 export interface IAddonMultiSelectorProps {
     options: IAutocompleteBoxOption[];
@@ -29,6 +34,7 @@ export interface IAddonMultiSelectorProps {
     onFocus?: () => void;
     entityName: string;
     selectAllEnabled: boolean;
+    description?: string;
 }
 
 const ALL_OPTIONS = '*';
@@ -47,6 +53,7 @@ export const AddonMultiSelector: VFC<IAddonMultiSelectorProps> = ({
     onFocus,
     entityName,
     selectAllEnabled = true,
+    description,
 }) => {
     const [isWildcardSelected, selectWildcard] = useState(
         selectedItems.includes(ALL_OPTIONS)
@@ -117,68 +124,70 @@ export const AddonMultiSelector: VFC<IAddonMultiSelectorProps> = ({
         </Fragment>
     );
     const SelectAllFormControl = () => (
-        <Box sx={{ mt: 1, mb: 0.25, ml: 1.5 }}>
-            <FormControlLabel
-                data-testid={`select-all-${entityName}s`}
-                control={
-                    <Checkbox
-                        checked={isWildcardSelected}
-                        onChange={onAllItemsChange}
-                    />
-                }
-                label={`ALL current and future ${entityName}s`}
-            />
-        </Box>
+        <StyledSelectAllFormControlLabel
+            data-testid={`select-all-${entityName}s`}
+            control={
+                <Checkbox
+                    checked={isWildcardSelected}
+                    onChange={onAllItemsChange}
+                />
+            }
+            label={`ALL current and future ${entityName}s`}
+        />
     );
 
-    const HelpText = () => (
-        <p>
+    const DefaultHelpText = () => (
+        <StyledHelpText>
             Selecting {entityName}(s) here will filter events so that your addon
             will only receive events that are tagged with one of your{' '}
             {entityName}s.
-        </p>
+        </StyledHelpText>
     );
 
     return (
         <React.Fragment>
-            <h4>{capitalize(entityName)}s</h4>
+            <StyledTitle>{capitalize(entityName)}s</StyledTitle>
+            <ConditionallyRender
+                condition={description !== undefined}
+                show={<StyledHelpText>{description}</StyledHelpText>}
+            />
             <ConditionallyRender
                 condition={selectAllEnabled}
-                show={<HelpText />}
+                show={<DefaultHelpText />}
             />
             <span className={themeStyles.error}>{error}</span>
-            <br />
-            <Box sx={{ mt: -1, mb: 3 }}>
-                <ConditionallyRender
-                    condition={selectAllEnabled}
-                    show={<SelectAllFormControl />}
-                />
-                <Autocomplete
-                    disabled={isWildcardSelected}
-                    multiple
-                    limitTags={2}
-                    options={options}
-                    disableCloseOnSelect
-                    getOptionLabel={({ label }) => label}
-                    fullWidth
-                    groupBy={() => 'Select/Deselect all'}
-                    renderGroup={renderGroup}
-                    PaperComponent={CustomPaper}
-                    renderOption={renderOption}
-                    renderInput={renderInput}
-                    value={
-                        isWildcardSelected
-                            ? options
-                            : options.filter(option =>
-                                  selectedItems.includes(option.value)
-                              )
-                    }
-                    onChange={(_, input) => {
-                        const state = input.map(({ value }) => value);
-                        onChange(state);
-                    }}
-                />
-            </Box>
+            <ConditionallyRender
+                condition={selectAllEnabled}
+                show={<SelectAllFormControl />}
+            />
+            <StyledAutocomplete
+                disabled={isWildcardSelected}
+                multiple
+                limitTags={2}
+                options={options}
+                disableCloseOnSelect
+                //@ts-expect-error
+                getOptionLabel={({ label }) => label}
+                fullWidth
+                groupBy={() => 'Select/Deselect all'}
+                renderGroup={renderGroup}
+                PaperComponent={CustomPaper}
+                //@ts-expect-error
+                renderOption={renderOption}
+                renderInput={renderInput}
+                value={
+                    isWildcardSelected
+                        ? options
+                        : options.filter(option =>
+                              selectedItems.includes(option.value)
+                          )
+                }
+                onChange={(_, input) => {
+                    //@ts-expect-error
+                    const state = input.map(({ value }) => value);
+                    onChange(state);
+                }}
+            />
         </React.Fragment>
     );
 };

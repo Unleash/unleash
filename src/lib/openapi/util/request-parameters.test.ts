@@ -1,5 +1,6 @@
 import { SchemaObject } from 'ajv';
 import fc, { Arbitrary } from 'fast-check';
+import { OpenAPIV3 } from 'openapi-types';
 import { urlFriendlyString } from '../../../test/arbitraries.test';
 import {
     createRequestParameters,
@@ -37,23 +38,37 @@ const parameterDetails = (): Arbitrary<Parameters> =>
     fc.dictionary(paramName(), parameterDescription());
 
 describe('request parameter utils', () => {
+    const parameterDetailsAreMappedCorrectly = (
+        parameterDetailsObject: ParameterDetails<unknown>,
+        parameterObject: OpenAPIV3.ParameterObject,
+    ) => {
+        const schema: SchemaObject = parameterObject.schema;
+
+        return (
+            schema.type === parameterDetailsObject.type &&
+            parameterObject.description ===
+                parameterDetailsObject.description &&
+            parameterObject.example === parameterDetailsObject.example &&
+            schema.enum === parameterDetailsObject.enum &&
+            schema.default === parameterDetailsObject.default &&
+            parameterObject.required === parameterDetailsObject.required
+        );
+    };
+
     it('turns a name and a parameter details description into a parameter object', () => {
         fc.assert(
             fc.property(
                 paramName(),
                 parameterDescription(),
-                (name, details) => {
+                fc.context(),
+                (name, details, ctx) => {
                     const result = toParamObject(name, details);
-                    const schema: SchemaObject = result.schema;
+
+                    ctx.log(JSON.stringify(result));
 
                     return (
                         result.name === name &&
-                        schema.type === details.type &&
-                        result.description === details.description &&
-                        result.example === details.example &&
-                        schema.enum === details.enum &&
-                        schema.default === details.default &&
-                        result.required === details.required
+                        parameterDetailsAreMappedCorrectly(details, result)
                     );
                 },
             ),
@@ -65,15 +80,13 @@ describe('request parameter utils', () => {
             fc.property(parameterDetails(), fc.context(), (parameters, ctx) => {
                 const result = createRequestParameters(parameters);
 
-                ctx.log(JSON.stringify(parameters));
                 ctx.log(JSON.stringify(result));
 
-                return result.every(
-                    (paramsObject) =>
-                        paramsObject.description ===
-                            parameters[paramsObject.name].description &&
-                        (paramsObject.schema as SchemaObject).type ===
-                            parameters[paramsObject.name].type,
+                return result.every((paramsObject) =>
+                    parameterDetailsAreMappedCorrectly(
+                        parameters[paramsObject.name],
+                        paramsObject,
+                    ),
                 );
             }),
         );

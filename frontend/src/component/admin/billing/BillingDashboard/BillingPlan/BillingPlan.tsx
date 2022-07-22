@@ -14,6 +14,7 @@ import { GridRow } from 'component/common/GridRow/GridRow';
 import { GridCol } from 'component/common/GridCol/GridCol';
 import { GridColLink } from './GridColLink/GridColLink';
 import { STRIPE } from 'component/admin/billing/flags';
+import { Badge } from 'component/common/Badge/Badge';
 
 const StyledPlanBox = styled('aside')(({ theme }) => ({
     padding: theme.spacing(2.5),
@@ -28,15 +29,6 @@ const StyledPlanBox = styled('aside')(({ theme }) => ({
 const StyledInfoLabel = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
     color: theme.palette.text.secondary,
-}));
-
-const StyledPlanBadge = styled('span')(({ theme }) => ({
-    padding: `${theme.spacing(0.5)} ${theme.spacing(1)}`,
-    borderRadius: theme.shape.borderRadiusLarge,
-    fontSize: theme.fontSizes.smallerBody,
-    backgroundColor: theme.palette.statusBadge.success,
-    color: theme.palette.success.dark,
-    fontWeight: theme.fontWeight.bold,
 }));
 
 const StyledPlanSpan = styled('span')(({ theme }) => ({
@@ -116,7 +108,7 @@ export const BillingPlan: FC<IBillingPlanProps> = ({ instanceStatus }) => {
                         </StyledAlert>
                     }
                 />
-                <StyledPlanBadge>Current plan</StyledPlanBadge>
+                <Badge color="success">Current plan</Badge>
                 <Grid container>
                     <GridRow sx={theme => ({ marginBottom: theme.spacing(3) })}>
                         <GridCol>

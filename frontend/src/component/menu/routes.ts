@@ -6,9 +6,10 @@ import { AddonList } from 'component/addons/AddonList/AddonList';
 import Admin from 'component/admin';
 import AdminApi from 'component/admin/api';
 import AdminUsers from 'component/admin/users/UsersAdmin';
+import { GroupsAdmin } from 'component/admin/groups/GroupsAdmin';
 import { AuthSettings } from 'component/admin/auth/AuthSettings';
 import Login from 'component/user/Login/Login';
-import { C, EEA, P, RE, SE } from 'component/common/flags';
+import { C, EEA, P, RE, SE, UG } from 'component/common/flags';
 import { NewUser } from 'component/user/NewUser/NewUser';
 import ResetPassword from 'component/user/ResetPassword/ResetPassword';
 import ForgottenPassword from 'component/user/ForgottenPassword/ForgottenPassword';
@@ -53,6 +54,9 @@ import FlaggedBillingRedirect from 'component/admin/billing/FlaggedBillingRedire
 import { FeaturesArchiveTable } from '../archive/FeaturesArchiveTable';
 import { Billing } from 'component/admin/billing/Billing';
 import { Playground } from 'component/playground/Playground/Playground';
+import { Group } from 'component/admin/groups/Group/Group';
+import { CreateGroup } from 'component/admin/groups/CreateGroup/CreateGroup';
+import { EditGroup } from 'component/admin/groups/EditGroup/EditGroup';
 
 export const routes: IRoute[] = [
     // Splash
@@ -449,6 +453,42 @@ export const routes: IRoute[] = [
         component: CreateUser,
         type: 'protected',
         menu: {},
+    },
+    {
+        path: '/admin/groups',
+        parent: '/admin',
+        title: 'Groups',
+        component: GroupsAdmin,
+        type: 'protected',
+        menu: { adminSettings: true },
+        flag: UG,
+    },
+    {
+        path: '/admin/groups/:groupId',
+        parent: '/admin',
+        title: ':groupId',
+        component: Group,
+        type: 'protected',
+        menu: {},
+        flag: UG,
+    },
+    {
+        path: '/admin/groups/create-group',
+        parent: '/admin/groups',
+        title: 'Create group',
+        component: CreateGroup,
+        type: 'protected',
+        menu: {},
+        flag: UG,
+    },
+    {
+        path: '/admin/groups/:groupId/edit',
+        parent: '/admin/groups',
+        title: 'Edit group',
+        component: EditGroup,
+        type: 'protected',
+        menu: {},
+        flag: UG,
     },
     {
         path: '/admin/roles',

@@ -10,12 +10,14 @@ import classnames from 'classnames';
 interface ILinkCellProps {
     title?: string;
     to?: string;
+    onClick?: () => void;
     subtitle?: string;
 }
 
 export const LinkCell: FC<ILinkCellProps> = ({
     title,
     to,
+    onClick,
     subtitle,
     children,
 }) => {
@@ -58,6 +60,14 @@ export const LinkCell: FC<ILinkCellProps> = ({
         <Link
             component={RouterLink}
             to={to}
+            underline="hover"
+            className={classnames(styles.wrapper, styles.link)}
+        >
+            {content}
+        </Link>
+    ) : onClick ? (
+        <Link
+            onClick={onClick}
             underline="hover"
             className={classnames(styles.wrapper, styles.link)}
         >

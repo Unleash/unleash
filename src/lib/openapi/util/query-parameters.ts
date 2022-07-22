@@ -15,7 +15,7 @@ export type Parameters = {
     [parameterName: string]: ParameterDetails<unknown>;
 };
 
-export const toParamObject = (
+const toParamObject = (
     name: string,
     details: ParameterDetails<unknown>,
 ): OpenAPIV3.ParameterObject => ({

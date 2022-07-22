@@ -4,7 +4,6 @@ import { useStyles } from 'component/common/ConstraintAccordion/ConstraintAccord
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { ConstraintIcon } from 'component/common/ConstraintAccordion/ConstraintIcon';
-import { Delete, Edit } from '@mui/icons-material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
     dateOperators,
@@ -21,9 +20,9 @@ import {
     operatorsForContext,
     CURRENT_TIME_CONTEXT_FIELD,
 } from 'utils/operatorsForContext';
-import { IconButton, Tooltip } from '@mui/material';
 import { InvertedOperatorButton } from '../StyledToggleButton/InvertedOperatorButton/InvertedOperatorButton';
 import { CaseSensitiveButton } from '../StyledToggleButton/CaseSensitiveButton/CaseSensitiveButton';
+import { ConstraintAccordionHeaderActions } from '../../ConstraintAccordionHeaderActions/ConstraintAccordionHeaderActions';
 
 interface IConstraintAccordionViewHeader {
     localConstraint: IConstraint;
@@ -101,13 +100,6 @@ export const ConstraintAccordionEditHeader = ({
         }
     };
 
-    const onDeleteClick =
-        onDelete &&
-        ((event: React.SyntheticEvent) => {
-            event.stopPropagation();
-            onDelete();
-        });
-
     return (
         <div className={styles.headerContainer}>
             <ConstraintIcon />
@@ -155,16 +147,7 @@ export const ConstraintAccordionEditHeader = ({
                     </p>
                 }
             />
-            <div className={styles.headerActions}>
-                <IconButton type="button" disabled>
-                    <Edit />
-                </IconButton>
-                <Tooltip title="Delete constraint" arrow>
-                    <IconButton type="button" onClick={onDeleteClick}>
-                        <Delete />
-                    </IconButton>
-                </Tooltip>
-            </div>
+            <ConstraintAccordionHeaderActions onDelete={onDelete} />
         </div>
     );
 };

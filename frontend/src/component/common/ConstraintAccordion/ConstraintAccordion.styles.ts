@@ -17,8 +17,8 @@ export const useStyles = makeStyles()(theme => ({
         fill: '#fff',
     },
     accordion: {
-        border: `1px solid ${theme.palette.grey[300]}`,
-        borderRadius: '5px',
+        border: `1px solid ${theme.palette.grey[400]}`,
+        borderRadius: '8px',
         backgroundColor: '#fff',
         boxShadow: 'none',
         margin: 0,

@@ -7,7 +7,6 @@ import { ConstraintAccordionViewHeaderInfo } from './ConstraintAccordionViewHead
 import { ConstraintAccordionHeaderActions } from '../../ConstraintAccordionHeaderActions/ConstraintAccordionHeaderActions';
 
 interface IConstraintAccordionViewHeaderProps {
-    compact: boolean;
     constraint: IConstraint;
     onDelete?: () => void;
     onEdit?: () => void;
@@ -17,7 +16,6 @@ interface IConstraintAccordionViewHeaderProps {
 }
 
 export const ConstraintAccordionViewHeader = ({
-    compact,
     constraint,
     onEdit,
     onDelete,
@@ -31,7 +29,6 @@ export const ConstraintAccordionViewHeader = ({
         <div className={styles.headerContainer}>
             <ConstraintIcon />
             <ConstraintAccordionViewHeaderInfo
-                compact={compact}
                 constraint={constraint}
                 singleValue={singleValue}
                 allowExpand={allowExpand}

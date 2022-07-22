@@ -375,13 +375,13 @@ export class AccessStore implements IAccessStore {
             if (userRows.length > 0) {
                 await tx(T.ROLE_USER)
                     .insert(userRows)
-                    .onConflict(['project', 'role_id', 'user_id'])
+                    .onConflict(['project', 'user_id'])
                     .merge();
             }
             if (groupRows.length > 0) {
                 await tx(T.GROUP_ROLE)
                     .insert(groupRows)
-                    .onConflict(['project', 'role_id', 'group_id'])
+                    .onConflict(['project', 'group_id'])
                     .merge();
             }
         });

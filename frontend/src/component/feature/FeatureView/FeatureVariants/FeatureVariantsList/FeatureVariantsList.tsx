@@ -9,7 +9,6 @@ import {
     useMediaQuery,
 } from '@mui/material';
 import { AddVariant } from './AddFeatureVariant/AddFeatureVariant';
-
 import { useContext, useEffect, useState, useMemo, useCallback } from 'react';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import AccessContext from 'contexts/AccessContext';
@@ -20,7 +19,7 @@ import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { IFeatureVariant } from 'interfaces/featureToggle';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import useToast from 'hooks/useToast';
-import { updateWeight } from 'component/common/util';
+import { calculateVariantWeight, updateWeight } from 'component/common/util';
 import cloneDeep from 'lodash.clonedeep';
 import useDeleteVariantMarkup from './useDeleteVariantMarkup';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
@@ -141,7 +140,7 @@ export const FeatureVariantsList = () => {
                 }: any) => {
                     return (
                         <TextCell data-testid={`VARIANT_WEIGHT_${name}`}>
-                            {weight / 10.0} %
+                            {calculateVariantWeight(weight)} %
                         </TextCell>
                     );
                 },

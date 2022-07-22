@@ -8,6 +8,7 @@ export const useStyles = makeStyles<{ lineClamp?: number }>()(
             overflow: lineClamp ? 'hidden' : 'auto',
             WebkitLineClamp: lineClamp ? lineClamp : 'none',
             WebkitBoxOrient: 'vertical',
+            wordBreak: 'break-all',
         },
     })
 );

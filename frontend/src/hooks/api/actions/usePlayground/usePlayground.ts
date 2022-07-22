@@ -4,7 +4,7 @@ import {
     PlaygroundResponseSchema,
 } from './playground.model';
 
-const usePlaygroundApi = () => {
+export const usePlaygroundApi = () => {
     const { makeRequest, createRequest, errors, loading } = useAPI({
         propagateErrors: true,
     });
@@ -33,5 +33,3 @@ const usePlaygroundApi = () => {
         loading,
     };
 };
-
-export default usePlaygroundApi;

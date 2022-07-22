@@ -1,17 +1,12 @@
 import { ConstraintFormHeader } from '../ConstraintFormHeader/ConstraintFormHeader';
-import { format, isValid } from 'date-fns';
 import Input from 'component/common/Input/Input';
+import { parseDateValue, parseValidDate } from 'component/common/util';
 interface IDateSingleValueProps {
     setValue: (value: string) => void;
     value?: string;
     error: string;
     setError: React.Dispatch<React.SetStateAction<string>>;
 }
-
-export const parseDateValue = (value: string) => {
-    const date = new Date(value);
-    return format(date, 'yyyy-MM-dd') + 'T' + format(date, 'HH:mm');
-};
 
 export const DateSingleValue = ({
     setValue,
@@ -44,12 +39,4 @@ export const DateSingleValue = ({
             />
         </>
     );
-};
-
-const parseValidDate = (value: string): Date | undefined => {
-    const parsed = new Date(value);
-
-    if (isValid(parsed)) {
-        return parsed;
-    }
 };

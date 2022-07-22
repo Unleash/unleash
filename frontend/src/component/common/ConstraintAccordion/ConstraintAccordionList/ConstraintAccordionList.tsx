@@ -105,7 +105,11 @@ export const ConstraintAccordionList = forwardRef<
                     <div>
                         <p>
                             Add any number of custom constraints
-                            <a href={'https://docs.getunleash.io/advanced/strategy_constraints'}>
+                            <a
+                                href={
+                                    'https://docs.getunleash.io/advanced/strategy_constraints'
+                                }
+                            >
                                 <IconButton>
                                     <Help />
                                 </IconButton>

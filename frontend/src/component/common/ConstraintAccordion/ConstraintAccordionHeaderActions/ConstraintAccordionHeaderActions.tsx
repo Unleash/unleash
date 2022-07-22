@@ -13,7 +13,7 @@ interface ConstraintAccordionHeaderActionsProps {
 export const ConstraintAccordionHeaderActions = ({
     onEdit,
     onDelete,
-    disableEdit = false
+    disableEdit = false,
 }: ConstraintAccordionHeaderActionsProps) => {
     const { classes: styles } = useStyles();
     const onEditClick =

@@ -103,8 +103,8 @@ export const ConstraintAccordionList = forwardRef<
                 condition={Boolean(showCreateButton && onAdd)}
                 show={
                     <div>
-                        <p>
-                            Add any number of custom constraints
+                        <div className={styles.addCustomLabel}>
+                            <p>Add any number of custom constraints</p>
                             <Tooltip title="Help" arrow>
                                 <a
                                     href={
@@ -116,7 +116,7 @@ export const ConstraintAccordionList = forwardRef<
                                     <Help className={styles.help} />
                                 </a>
                             </Tooltip>
-                        </p>
+                        </div>
                         <Button
                             type="button"
                             onClick={onAdd}

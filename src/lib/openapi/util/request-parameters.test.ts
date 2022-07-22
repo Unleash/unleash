@@ -52,7 +52,8 @@ describe('request parameter utils', () => {
                         result.description === details.description &&
                         result.example === details.example &&
                         schema.enum === details.enum &&
-                        schema.default === details.default
+                        schema.default === details.default &&
+                        result.required === details.required
                     );
                 },
             ),

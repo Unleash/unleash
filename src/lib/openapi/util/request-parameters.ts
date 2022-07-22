@@ -5,6 +5,7 @@ export type ParameterType = OpenAPIV3.NonArraySchemaObjectType;
 export type ParameterDetails<U> = {
     description: string;
     type: ParameterType;
+    required?: boolean;
     default?: U;
     enum?: [U, ...U[]];
     example?: U;
@@ -21,6 +22,7 @@ export const toParamObject = (
     name,
     example: details.example,
     description: details.description,
+    required: details.required,
     schema: {
         type: details.type,
         enum: details.enum,

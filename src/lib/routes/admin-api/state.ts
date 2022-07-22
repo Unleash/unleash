@@ -15,11 +15,11 @@ import { OpenApiService } from '../../services/openapi-service';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import {
-    exportParametersSchema,
+    exportParameters,
     ExportParametersSchema,
 } from '../../openapi/spec/export-parameters-schema';
 import { emptyResponse } from '../../openapi/util/standard-responses';
-import { createRequestParameters } from 'lib/openapi/util/request-parameters';
+import { createRequestParameters } from '../../openapi/util/request-parameters';
 
 const upload = multer({ limits: { fileSize: 5242880 } });
 const paramToBool = (param, def) => {
@@ -79,7 +79,7 @@ class StateController extends Controller {
                     responses: {
                         200: createResponseSchema('stateSchema'),
                     },
-                    // parameters: createRequestParameters(exportParametersSchema),
+                    parameters: createRequestParameters(exportParameters),
                 }),
             ],
         });

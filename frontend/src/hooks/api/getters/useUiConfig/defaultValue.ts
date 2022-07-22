@@ -15,6 +15,7 @@ export const defaultValue: IUiConfig = {
         SE: false,
         T: false,
         UNLEASH_CLOUD: false,
+        UG: false,
     },
     links: [
         {

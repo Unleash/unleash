@@ -1,6 +1,5 @@
 import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
 import { ExpandMore } from '@mui/icons-material';
-import React from 'react';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import useFeatureMetrics from 'hooks/api/getters/useFeatureMetrics/useFeatureMetrics';
 import { IFeatureEnvironment } from 'interfaces/featureToggle';
@@ -15,8 +14,8 @@ import FeatureOverviewEnvironmentMetrics from './FeatureOverviewEnvironmentMetri
 import { FeatureStrategyMenu } from 'component/feature/FeatureStrategy/FeatureStrategyMenu/FeatureStrategyMenu';
 import { FEATURE_ENVIRONMENT_ACCORDION } from 'utils/testIds';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { StatusBadge } from 'component/common/StatusBadge/StatusBadge';
 import { FeatureStrategyIcons } from 'component/feature/FeatureStrategy/FeatureStrategyIcons/FeatureStrategyIcons';
+import { Badge } from 'component/common/Badge/Badge';
 
 interface IFeatureOverviewEnvironmentProps {
     env: IFeatureEnvironment;
@@ -87,12 +86,12 @@ const FeatureOverviewEnvironment = ({
                         <ConditionallyRender
                             condition={!env.enabled}
                             show={
-                                <StatusBadge
-                                    severity="warning"
+                                <Badge
+                                    color="warning"
                                     className={styles.disabledIndicatorPos}
                                 >
                                     Disabled
-                                </StatusBadge>
+                                </Badge>
                             }
                         />
                     </div>

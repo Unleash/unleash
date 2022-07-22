@@ -33,6 +33,7 @@ interface IPageHeaderProps {
     loading?: boolean;
     actions?: ReactNode;
     className?: string;
+    secondary?: boolean;
 }
 
 const PageHeaderComponent: FC<IPageHeaderProps> & {
@@ -45,12 +46,13 @@ const PageHeaderComponent: FC<IPageHeaderProps> & {
     variant,
     loading,
     className = '',
+    secondary,
     children,
 }) => {
     const { classes: styles } = useStyles();
     const headerClasses = classnames({ skeleton: loading });
 
-    usePageTitle(title);
+    usePageTitle(secondary ? '' : title);
 
     return (
         <div className={styles.headerContainer}>
@@ -60,7 +62,7 @@ const PageHeaderComponent: FC<IPageHeaderProps> & {
                     data-loading
                 >
                     <Typography
-                        variant={variant || 'h1'}
+                        variant={variant || secondary ? 'h2' : 'h1'}
                         className={classnames(styles.headerTitle, className)}
                     >
                         {titleElement || title}

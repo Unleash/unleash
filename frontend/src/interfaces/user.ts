@@ -12,6 +12,7 @@ export interface IUser {
     username?: string;
     isAPI: boolean;
     paid?: boolean;
+    addedAt?: string;
 }
 
 export interface IPermission {

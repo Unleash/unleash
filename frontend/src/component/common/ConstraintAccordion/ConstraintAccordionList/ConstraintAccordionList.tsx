@@ -8,7 +8,7 @@ import { objectId } from 'utils/objectId';
 import { useStyles } from './ConstraintAccordionList.styles';
 import { createEmptyConstraint } from 'component/common/ConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { Button, IconButton } from '@mui/material';
+import { Button } from '@mui/material';
 import { Help } from '@mui/icons-material';
 
 interface IConstraintAccordionListProps {
@@ -109,10 +109,10 @@ export const ConstraintAccordionList = forwardRef<
                                 href={
                                     'https://docs.getunleash.io/advanced/strategy_constraints'
                                 }
+                                target="_blank"
+                                rel="noopener noreferrer"
                             >
-                                <IconButton>
-                                    <Help />
-                                </IconButton>
+                                <Help className={styles.help} />
                             </a>
                         </p>
                         <Button

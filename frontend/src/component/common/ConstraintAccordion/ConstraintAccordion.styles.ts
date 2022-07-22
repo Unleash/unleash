@@ -86,12 +86,6 @@ export const useStyles = makeStyles()(theme => ({
             top: '-10px',
         },
     },
-    help: {
-        fill: theme.palette.grey[600],
-        [theme.breakpoints.down(860)]: {
-            display: 'none',
-        },
-    },
     headerText: {
         maxWidth: '400px',
         fontSize: theme.fontSizes.smallBody,

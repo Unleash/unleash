@@ -90,9 +90,9 @@ export const ConstraintAccordionViewHeaderMultipleValues = ({
                             )}
                         >
                             {!expanded
-                                ? `Expand to view all (
+                                ? `View all (
                                             ${constraint?.values?.length})`
-                                : 'Collapse to view less'}
+                                : 'View less'}
                         </p>
                     }
                 />

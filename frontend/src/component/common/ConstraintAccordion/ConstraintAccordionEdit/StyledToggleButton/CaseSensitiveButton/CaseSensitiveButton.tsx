@@ -32,7 +32,7 @@ export const CaseSensitiveButton = ({
                 </Tooltip>
             }
             elseShow={
-                <Tooltip title="Remove case sensitive" arrow>
+                <Tooltip title="Make it case insensitive" arrow>
                     <StyledToggleButtonOn
                         onClick={setCaseInsensitive}
                         disableRipple

@@ -6,7 +6,7 @@ export const StyledToggleButtonOff = styled(Button)(({ theme }) => ({
     minWidth: '28px!important',
     minHeight: 40,
     backgroundColor: 'white',
-    color: theme.palette.grey[600],
+    color: theme.palette.inactiveIcon,
     borderRadius: theme.shape.borderRadius,
     padding: '0 1px 0',
     marginRight: '1rem',

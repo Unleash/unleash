@@ -17,6 +17,7 @@ interface ISearchProps {
     hasFilters?: boolean;
     disabled?: boolean;
     getSearchContext?: () => IGetSearchContextOutput;
+    containerStyles?: React.CSSProperties;
 }
 
 export const Search = ({
@@ -27,6 +28,7 @@ export const Search = ({
     hasFilters,
     disabled,
     getSearchContext,
+    containerStyles,
 }: ISearchProps) => {
     const ref = useRef<HTMLInputElement>();
     const { classes: styles } = useStyles();
@@ -59,7 +61,7 @@ export const Search = ({
     const placeholder = `${customPlaceholder ?? 'Search'} (${hotkey})`;
 
     return (
-        <div className={styles.container}>
+        <div className={styles.container} style={containerStyles}>
             <div
                 className={classnames(
                     styles.search,

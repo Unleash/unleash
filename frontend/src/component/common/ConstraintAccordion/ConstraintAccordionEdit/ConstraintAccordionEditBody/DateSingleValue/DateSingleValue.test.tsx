@@ -1,4 +1,4 @@
-import { parseDateValue } from 'component/common/ConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/DateSingleValue/DateSingleValue';
+import { parseDateValue } from 'component/common/util';
 
 test(`Date component is able to parse midnight when it's 00`, () => {
     let f = parseDateValue('2022-03-15T12:27');

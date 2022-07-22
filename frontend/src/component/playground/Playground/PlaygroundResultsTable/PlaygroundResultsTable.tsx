@@ -1,8 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { SortingRule, useGlobalFilter, useSortBy, useTable } from 'react-table';
-import { PageContent } from 'component/common/PageContent/PageContent';
-import { PageHeader } from 'component/common/PageHeader/PageHeader';
+
 import {
     SortableTableHeader,
     Table,
@@ -21,6 +20,10 @@ import { useSearch } from 'hooks/useSearch';
 import { createLocalStorage } from 'utils/createLocalStorage';
 import { FeatureStatusCell } from './FeatureStatusCell/FeatureStatusCell';
 import { PlaygroundFeatureSchema } from 'hooks/api/actions/usePlayground/playground.model';
+import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
+import useLoading from 'hooks/useLoading';
+import { GuidanceIndicator } from 'component/common/GuidanceIndicator/GuidanceIndicator';
+import { VariantCell } from './VariantCell/VariantCell';
 
 const defaultSort: SortingRule<string> = { id: 'name' };
 const { value, setValue } = createLocalStorage(
@@ -38,10 +41,13 @@ export const PlaygroundResultsTable = ({
     loading,
 }: IPlaygroundResultsTableProps) => {
     const [searchParams, setSearchParams] = useSearchParams();
-
+    const ref = useLoading(loading);
     const [searchValue, setSearchValue] = useState(
         searchParams.get('search') || ''
     );
+    const theme = useTheme();
+    const isExtraSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
     const {
         data: searchedData,
@@ -54,7 +60,7 @@ export const PlaygroundResultsTable = ({
             ? Array(5).fill({
                   name: 'Feature name',
                   projectId: 'FeatureProject',
-                  variant: { name: 'FeatureVariant' },
+                  variant: { name: 'FeatureVariant', variants: [] },
                   enabled: true,
               })
             : searchedData;
@@ -78,6 +84,7 @@ export const PlaygroundResultsTable = ({
         state: { sortBy },
         rows,
         prepareRow,
+        setHiddenColumns,
     } = useTable(
         {
             initialState,
@@ -94,6 +101,17 @@ export const PlaygroundResultsTable = ({
         useGlobalFilter,
         useSortBy
     );
+
+    useEffect(() => {
+        const hiddenColumns = [];
+        if (isSmallScreen) {
+            hiddenColumns.push('projectId');
+        }
+        if (isExtraSmallScreen) {
+            hiddenColumns.push('variant');
+        }
+        setHiddenColumns(hiddenColumns);
+    }, [setHiddenColumns, isExtraSmallScreen, isSmallScreen]);
 
     useEffect(() => {
         if (loading) {
@@ -122,33 +140,37 @@ export const PlaygroundResultsTable = ({
     }, [loading, sortBy, searchValue]);
 
     return (
-        <PageContent
-            header={
-                <PageHeader
-                    titleElement={
-                        features !== undefined
-                            ? `Results (${
-                                  rows.length < data.length
-                                      ? `${rows.length} of ${data.length}`
-                                      : data.length
-                              })`
-                            : 'Results'
-                    }
-                    actions={
-                        <Search
-                            initialValue={searchValue}
-                            onChange={setSearchValue}
-                            hasFilters
-                            getSearchContext={getSearchContext}
-                            disabled={loading}
-                        />
-                    }
+        <>
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    mb: 3,
+                }}
+            >
+                <Typography variant="subtitle1" sx={{ ml: 1 }}>
+                    {features !== undefined && !loading
+                        ? `Results (${
+                              rows.length < data.length
+                                  ? `${rows.length} of ${data.length}`
+                                  : data.length
+                          })`
+                        : 'Results'}
+                </Typography>
+
+                <Search
+                    initialValue={searchValue}
+                    onChange={setSearchValue}
+                    hasFilters
+                    getSearchContext={getSearchContext}
+                    disabled={loading}
+                    containerStyles={{ marginLeft: '1rem', maxWidth: '400px' }}
                 />
-            }
-            isLoading={loading}
-        >
+            </Box>
+
             <ConditionallyRender
-                condition={!loading && (!data || data.length === 0)}
+                condition={!loading && !data}
                 show={() => (
                     <TablePlaceholder>
                         {data === undefined
@@ -157,7 +179,7 @@ export const PlaygroundResultsTable = ({
                     </TablePlaceholder>
                 )}
                 elseShow={() => (
-                    <>
+                    <Box ref={ref}>
                         <SearchHighlightProvider
                             value={getSearchText(searchValue)}
                         >
@@ -187,7 +209,9 @@ export const PlaygroundResultsTable = ({
                             </Table>
                         </SearchHighlightProvider>
                         <ConditionallyRender
-                            condition={searchValue?.length > 0}
+                            condition={
+                                data.length === 0 && searchValue?.length > 0
+                            }
                             show={
                                 <TablePlaceholder>
                                     No feature toggles found matching &ldquo;
@@ -195,10 +219,21 @@ export const PlaygroundResultsTable = ({
                                 </TablePlaceholder>
                             }
                         />
-                    </>
+
+                        <ConditionallyRender
+                            condition={
+                                data && data.length === 0 && !searchValue
+                            }
+                            show={
+                                <TablePlaceholder>
+                                    No features toggles to display
+                                </TablePlaceholder>
+                            }
+                        />
+                    </Box>
                 )}
             />
-        </PageContent>
+        </>
     );
 };
 
@@ -207,7 +242,7 @@ const COLUMNS = [
         Header: 'Name',
         accessor: 'name',
         searchable: true,
-        width: '60%',
+        minWidth: 160,
         Cell: ({ value, row: { original } }: any) => (
             <LinkCell
                 title={value}
@@ -233,18 +268,26 @@ const COLUMNS = [
         sortType: 'alphanumeric',
         filterName: 'variant',
         searchable: true,
-        maxWidth: 170,
+        width: 200,
         Cell: ({
             value,
             row: {
-                original: { variant },
+                original: { variant, feature, variants, isEnabled },
             },
-        }: any) => <HighlightCell value={variant?.enabled ? value : ''} />,
+        }: any) => (
+            <VariantCell
+                variant={variant?.enabled ? value : ''}
+                variants={variants}
+                feature={feature}
+                isEnabled={isEnabled}
+            />
+        ),
     },
     {
         Header: 'isEnabled',
         accessor: 'isEnabled',
-        maxWidth: 170,
+        filterName: 'isEnabled',
+        filterParsing: (value: boolean) => (value ? 'true' : 'false'),
         Cell: ({ value }: any) => <FeatureStatusCell enabled={value} />,
         sortType: 'boolean',
         sortInverted: true,

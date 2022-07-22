@@ -16,11 +16,9 @@ interface IConstraintAccordionViewProps {
     constraint: IConstraint;
     onDelete?: () => void;
     onEdit?: () => void;
-    compact: boolean;
 }
 
 export const ConstraintAccordionView = ({
-    compact,
     constraint,
     onEdit,
     onDelete,
@@ -53,7 +51,6 @@ export const ConstraintAccordionView = ({
                 onClick={handleClick}
             >
                 <ConstraintAccordionViewHeader
-                    compact={compact}
                     constraint={constraint}
                     onEdit={onEdit}
                     onDelete={onDelete}

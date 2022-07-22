@@ -6,13 +6,7 @@ import React, {
     useState,
     VFC,
 } from 'react';
-import {
-    Button,
-    Divider,
-    FormControlLabel,
-    Switch,
-    TextField,
-} from '@mui/material';
+import { Button, Divider, FormControlLabel, Switch } from '@mui/material';
 import produce from 'immer';
 import { trim } from 'component/common/util';
 import { IAddon, IAddonProvider } from 'interfaces/addons';

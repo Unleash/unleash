@@ -1,29 +1,35 @@
 import { OpenAPIV3 } from 'openapi-types';
 
-export type ParameterDescription<TypeName, T> = {
-    type: TypeName;
-    default?: T;
-    enum?: T[];
+export type ParameterType = OpenAPIV3.NonArraySchemaObjectType;
+
+export type ParameterDetails<U> = {
+    description: string;
+    type: ParameterType;
+    default?: U;
+    enum?: [U, ...U[]];
+    example?: U;
 };
 
-export type ParameterDetails = {
-    description: string;
-} & (
-    | ParameterDescription<'boolean', boolean>
-    | ParameterDescription<'string', string>
-    | ParameterDescription<'number', number>
-);
+export type Parameters = {
+    [parameterName: string]: ParameterDetails<unknown>;
+};
 
-export type Parameters = Record<ParameterName, ParameterDetails>;
+export const toParamObject = (
+    name: string,
+    details: ParameterDetails<unknown>,
+): OpenAPIV3.ParameterObject => ({
+    name,
+    example: details.example,
+    description: details.description,
+    schema: {
+        type: details.type,
+        enum: details.enum,
+        default: details.default,
+    },
+    in: 'query',
+});
 
-type ParameterName = string;
-
-export const createRequestParameters = (
-    params: Parameters,
-): OpenAPIV3.ParameterObject[] =>
-    Object.entries(params).map(([name, deets]) => ({
-        name,
-        description: deets.description,
-        schema: { type: 'string' },
-        in: 'query',
-    }));
+export const createRequestParameters = (params: {
+    [parameterName: string]: ParameterDetails<unknown>;
+}): OpenAPIV3.ParameterObject[] =>
+    Object.entries(params).map(([name, deets]) => toParamObject(name, deets));

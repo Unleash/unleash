@@ -1,76 +1,80 @@
 import { SchemaObject } from 'ajv';
 import fc, { Arbitrary } from 'fast-check';
+import { urlFriendlyString } from '../../../test/arbitraries.test';
 import {
     createRequestParameters,
-    ParameterDescription,
     ParameterDetails,
     Parameters,
+    ParameterType,
+    toParamObject,
 } from './request-parameters';
 
-const paramDesc = <T, U>(
-    typeName: U,
-    gen: Arbitrary<T>,
-): Arbitrary<ParameterDescription<U, T>> =>
+const paramName = urlFriendlyString;
+
+const paramDesc = <T>(
+    typeName: ParameterType,
+    arb: Arbitrary<T>,
+): Arbitrary<ParameterDetails<T>> =>
     fc.record(
         {
             type: fc.constant(typeName),
-            default: gen,
-            enum: fc.array(gen, { minLength: 1 }),
+            description: fc.string(),
+            default: arb,
+            enum: fc.array(arb, { minLength: 1 }) as Arbitrary<[T, ...T[]]>,
+            example: arb,
         },
-        { requiredKeys: ['type'] },
+        { requiredKeys: ['type', 'description'] },
     );
 
-const parameterDescription = (): Arbitrary<ParameterDescription<any, any>> =>
+const parameterDescription = (): Arbitrary<ParameterDetails<any>> =>
     fc.oneof(
         paramDesc('boolean', fc.boolean()),
         paramDesc('string', fc.string()),
         paramDesc('number', fc.integer()),
     );
 
-const paramDetails = (): Arbitrary<ParameterDetails> =>
-    fc
-        .tuple(fc.string(), parameterDescription())
-        .map(([description, deets]) => ({
-            description,
-            ...deets,
-        }));
-
 const parameterDetails = (): Arbitrary<Parameters> =>
-    fc.dictionary(fc.string({ minLength: 1 }), paramDetails());
+    fc.dictionary(paramName(), parameterDescription());
 
 describe('request parameter utils', () => {
+    it('turns a name and a parameter details description into a parameter object', () => {
+        fc.assert(
+            fc.property(
+                paramName(),
+                parameterDescription(),
+                (name, details) => {
+                    const result = toParamObject(name, details);
+                    const schema: SchemaObject = result.schema;
+
+                    return (
+                        result.name === name &&
+                        schema.type === details.type &&
+                        result.description === details.description &&
+                        result.example === details.example &&
+                        schema.enum === details.enum &&
+                        schema.default === details.default
+                    );
+                },
+            ),
+        );
+    });
+
     it('turns an object of names and descriptions into a an expected parameter list', () => {
         fc.assert(
             fc.property(parameterDetails(), fc.context(), (parameters, ctx) => {
                 const result = createRequestParameters(parameters);
 
                 ctx.log(JSON.stringify(parameters));
-                // ctx.log(JSON.stringify(result));
-                return false;
-                // return result.every((paramsObject) => {
-                //     return false;
-                // });
+                ctx.log(JSON.stringify(result));
+
+                return result.every(
+                    (paramsObject) =>
+                        paramsObject.description ===
+                            parameters[paramsObject.name].description &&
+                        (paramsObject.schema as SchemaObject).type ===
+                            parameters[paramsObject.name].type,
+                );
             }),
         );
     });
-
-    // it('assigns parameter descriptions correctly', () => {
-    //     fc.assert(fc.property());
-    // });
-
-    // it('says every parameter is of type string and goes in the query', () => {
-    //     fc.assert(
-    //         fc.property(
-    //             fc.dictionary(fc.string({ minLength: 1 }), fc.string()),
-
-    //             (parameters) => {
-    //                 return createRequestParameters(parameters).every(
-    //                     (paramsObject) =>
-    //                         (paramsObject.schema as SchemaObject).type ===
-    //                             'string' && paramsObject.in === 'query',
-    //                 );
-    //             },
-    //         ),
-    //     );
-    // });
 });

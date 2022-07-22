@@ -70,7 +70,7 @@ export const ConstraintAccordionViewHeaderMultipleValues = ({
                 }
                 show={
                     <Tooltip title="Case sensitive is active" arrow>
-                        <StyledIconWrapper marginTop={'7px'}>
+                        <StyledIconWrapper margintop={'auto'}>
                             <CaseSensitive />{' '}
                         </StyledIconWrapper>
                     </Tooltip>

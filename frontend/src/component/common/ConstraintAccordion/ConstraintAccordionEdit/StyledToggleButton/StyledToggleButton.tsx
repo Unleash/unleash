@@ -1,12 +1,11 @@
 import { styled } from '@mui/system';
-import { Button } from '@mui/material';
+import { IconButton } from '@mui/material';
 
-export const StyledToggleButtonOff = styled(Button)(({ theme }) => ({
+export const StyledToggleButtonOff = styled(IconButton)(({ theme }) => ({
     width: 28,
     minWidth: '28px!important',
     minHeight: 40,
     backgroundColor: 'white',
-    color: theme.palette.inactiveIcon,
     borderRadius: theme.shape.borderRadius,
     padding: '0 1px 0',
     marginRight: '1rem',
@@ -15,7 +14,7 @@ export const StyledToggleButtonOff = styled(Button)(({ theme }) => ({
     },
 }));
 
-export const StyledToggleButtonOn = styled(Button)(({ theme }) => ({
+export const StyledToggleButtonOn = styled(IconButton)(({ theme }) => ({
     width: 28,
     minWidth: '28px!important',
     minHeight: 40,

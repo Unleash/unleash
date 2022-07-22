@@ -8,7 +8,8 @@ import { objectId } from 'utils/objectId';
 import { useStyles } from './ConstraintAccordionList.styles';
 import { createEmptyConstraint } from 'component/common/ConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { Button } from '@mui/material';
+import { Button, IconButton } from '@mui/material';
+import { Help } from '@mui/icons-material';
 
 interface IConstraintAccordionListProps {
     constraints: IConstraint[];
@@ -102,11 +103,19 @@ export const ConstraintAccordionList = forwardRef<
                 condition={Boolean(showCreateButton && onAdd)}
                 show={
                     <div>
+                        <p>
+                            Add any number of custom constraints
+                            <a href={'https://docs.getunleash.io/advanced/strategy_constraints'}>
+                                <IconButton>
+                                    <Help />
+                                </IconButton>
+                            </a>
+                        </p>
                         <Button
                             type="button"
                             onClick={onAdd}
-                            variant="text"
-                            color="primary"
+                            variant="outlined"
+                            color="secondary"
                         >
                             Add custom constraint
                         </Button>

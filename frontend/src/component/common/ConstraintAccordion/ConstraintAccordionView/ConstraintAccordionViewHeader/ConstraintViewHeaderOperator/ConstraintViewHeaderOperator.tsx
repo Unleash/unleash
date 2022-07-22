@@ -22,7 +22,7 @@ export const ConstraintViewHeaderOperator = ({
                 condition={Boolean(constraint.inverted)}
                 show={
                     <Tooltip title={'Operator is negated'} arrow>
-                        <StyledIconWrapper marginRight={'0'}>
+                        <StyledIconWrapper marginright={'0'}>
                             <NegatedIcon />
                         </StyledIconWrapper>
                     </Tooltip>

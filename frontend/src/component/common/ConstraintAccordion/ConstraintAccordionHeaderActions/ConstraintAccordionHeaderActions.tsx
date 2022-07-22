@@ -7,11 +7,13 @@ import { useStyles } from '../ConstraintAccordion.styles';
 interface ConstraintAccordionHeaderActionsProps {
     onDelete?: () => void;
     onEdit?: () => void;
+    disableEdit?: boolean;
 }
 
 export const ConstraintAccordionHeaderActions = ({
     onEdit,
     onDelete,
+    disableEdit = false
 }: ConstraintAccordionHeaderActionsProps) => {
     const { classes: styles } = useStyles();
     const onEditClick =
@@ -31,7 +33,7 @@ export const ConstraintAccordionHeaderActions = ({
     return (
         <div className={styles.headerActions}>
             <ConditionallyRender
-                condition={Boolean(onEditClick)}
+                condition={Boolean(onEditClick) && !disableEdit}
                 show={() => (
                     <Tooltip title="Edit constraint" arrow>
                         <IconButton

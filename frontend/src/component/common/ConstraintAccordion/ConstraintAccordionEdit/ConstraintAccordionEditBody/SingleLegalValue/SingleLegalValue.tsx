@@ -37,7 +37,7 @@ export const SingleLegalValue = ({
                 Add a single {type.toLowerCase()} value
             </ConstraintFormHeader>
             <ConditionallyRender
-                condition={Boolean(legalValues.length > 500)}
+                condition={Boolean(legalValues.length > 100)}
                 show={
                     <ConstraintValueSearch
                         filter={filter}

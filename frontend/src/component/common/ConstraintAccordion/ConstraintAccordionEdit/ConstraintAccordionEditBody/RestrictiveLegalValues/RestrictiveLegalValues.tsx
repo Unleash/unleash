@@ -64,37 +64,37 @@ export const RestrictiveLegalValues = ({
     };
 
     return (
-        <ConditionallyRender
-            condition={Boolean(values.length > 500)}
-            show={
-                <>
-                    <ConstraintFormHeader>
-                        Select values from a predefined set
-                    </ConstraintFormHeader>
+        <>
+            <ConstraintFormHeader>
+                Select values from a predefined set
+            </ConstraintFormHeader>
+            <ConditionallyRender
+                condition={Boolean(legalValues.length > 100)}
+                show={
                     <ConstraintValueSearch
                         filter={filter}
                         setFilter={setFilter}
                     />
-                    {filteredValues.map(match => (
-                        <LegalValueLabel
-                            key={match.value}
-                            legal={match}
-                            control={
-                                <Checkbox
-                                    checked={Boolean(valuesMap[match.value])}
-                                    onChange={() => onChange(match.value)}
-                                    name={match.value}
-                                    color="primary"
-                                />
-                            }
+                }
+            />
+            {filteredValues.map(match => (
+                <LegalValueLabel
+                    key={match.value}
+                    legal={match}
+                    control={
+                        <Checkbox
+                            checked={Boolean(valuesMap[match.value])}
+                            onChange={() => onChange(match.value)}
+                            name={match.value}
+                            color="primary"
                         />
-                    ))}
-                    <ConditionallyRender
-                        condition={Boolean(error)}
-                        show={<p className={styles.error}>{error}</p>}
-                    />
-                </>
-            }
-        />
+                    }
+                />
+            ))}
+            <ConditionallyRender
+                condition={Boolean(error)}
+                show={<p className={styles.error}>{error}</p>}
+            />
+        </>
     );
 };

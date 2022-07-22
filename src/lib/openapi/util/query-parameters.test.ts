@@ -3,12 +3,12 @@ import fc, { Arbitrary } from 'fast-check';
 import { OpenAPIV3 } from 'openapi-types';
 import { urlFriendlyString } from '../../../test/arbitraries.test';
 import {
-    createRequestParameters,
+    createQueryParameters,
     ParameterDetails,
     Parameters,
     ParameterType,
     toParamObject,
-} from './request-parameters';
+} from './query-parameters';
 
 const paramName = urlFriendlyString;
 
@@ -78,7 +78,7 @@ describe('request parameter utils', () => {
     it('turns an object of names and descriptions into a an expected parameter list', () => {
         fc.assert(
             fc.property(parameterDetails(), fc.context(), (parameters, ctx) => {
-                const result = createRequestParameters(parameters);
+                const result = createQueryParameters(parameters);
 
                 ctx.log(JSON.stringify(result));
 

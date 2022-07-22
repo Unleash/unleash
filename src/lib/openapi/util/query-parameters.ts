@@ -31,7 +31,7 @@ export const toParamObject = (
     in: 'query',
 });
 
-export const createRequestParameters = (params: {
+export const createQueryParameters = (params: {
     [parameterName: string]: ParameterDetails<unknown>;
 }): OpenAPIV3.ParameterObject[] =>
     Object.entries(params).map(([name, deets]) => toParamObject(name, deets));

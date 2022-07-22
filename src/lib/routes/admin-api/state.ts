@@ -19,7 +19,7 @@ import {
     ExportParametersSchema,
 } from '../../openapi/spec/export-parameters-schema';
 import { emptyResponse } from '../../openapi/util/standard-responses';
-import { createRequestParameters } from '../../openapi/util/request-parameters';
+import { createQueryParameters } from '../../openapi/util/query-parameters';
 
 const upload = multer({ limits: { fileSize: 5242880 } });
 const paramToBool = (param, def) => {
@@ -79,7 +79,7 @@ class StateController extends Controller {
                     responses: {
                         200: createResponseSchema('stateSchema'),
                     },
-                    parameters: createRequestParameters(exportParameters),
+                    parameters: createQueryParameters(exportParameters),
                 }),
             ],
         });

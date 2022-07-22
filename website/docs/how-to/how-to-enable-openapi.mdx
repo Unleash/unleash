@@ -1,0 +1,123 @@
+---
+title: How to enable OpenAPI and the Swagger UI
+---
+
+import Tabs from '@theme/Tabs';
+
+import TabItem from '@theme/TabItem';
+
+:::info Availability
+
+OpenAPI schemas were introduced in v4.13.0 of Unleash and v0.10.0 of the Unleash proxy.
+
+:::
+
+Both Unleash and the Unleash proxy have included OpenAPI schemas and Swagger UIs for their APIs. The schemas can be used to get an overview over all API operations and to generate API clients using OpenAPI client generators. The Swagger UI lets you see and try out all the available API operations directly in your browser.
+
+To enable the OpenAPI documentation and the Swagger UI, you must start Unleash or the proxy with the correct configuration option. The following section shows you how. The methods are the same for both Unleash and the Unleash proxy, so the steps described in the next section will work for either.
+
+## Location of the OpenAPI spec
+
+Once you enable OpenAPI, you can find the specification in JSON format at `/docs/openapi.json` and the swagger UI at `/docs/openapi`.
+
+For instance, if you're running the Unleash server locally at `http://localhost:4242`, then
+
+-   the JSON specification will be at `http://localhost:4242/docs/openapi.json`
+-   the Swagger UI will be at `http://localhost:4242/docs/openapi`
+
+Similarly, if you're running the Unleash proxy locally at `http://localhost:3000` (so that the proxy endpoint is at `http://localhost:3000/proxy`), then
+
+-   the JSON specification will be at `http://localhost:3000/docs/openapi.json`
+-   the Swagger UI will be at `http://localhost:3000/docs/openapi`
+
+## Step 1: enable OpenAPI
+
+The OpenAPI spec and the Swagger UI can be turned on either via environment variables or via configuration options. Configuration options take precedence over environment variables.
+
+### Enable OpenAPI via environment variables
+
+To turn on OpenAPI via environment variables, set the `ENABLE_OAS` to `true` in the environment you're running the server in.
+
+<Tabs groupId="openapi-env-configuration">
+
+<TabItem value="bash" label="Environment variable (bash)" default>
+
+```bash title="Enable OpenAPI via an environment variable"
+export ENABLE_OAS=true
+```
+
+</TabItem>
+
+<TabItem value="docker-unleash" label="Docker (Unleash)">
+
+```bash title="Enable OpenAPI for Unleash via Docker"
+docker run \
+    // highlight-next-line
+    -e ENABLE_OAS=true \ # other variables omitted for brevity
+    unleashorg/unleash-server
+```
+
+</TabItem>
+
+<TabItem value="docker-proxy" label="Docker (Unleash proxy)">
+
+```bash title="Enable OpenAPI for the Unleash proxy via Docker"
+docker run \
+    // highlight-next-line
+    -e ENABLE_OAS=true \ # other variables omitted for brevity
+    unleashorg/unleash-proxy
+```
+
+</TabItem>
+
+</Tabs>
+
+### Enable OpenAPI via configuration options
+
+The configuration option for enabling OpenAPI and the swagger UI is `enableOAS`. Set this option to `true`.
+
+The following examples have been shortened to show the only the relevant configuration options. For more detailed instructions on how to run Unleash or the proxy, refer to [how to run the Unleash proxy](how-to-run-the-unleash-proxy.mdx) or the [section on running Unleash via Node.js from the deployment section](../deploy/getting-started.md#option-three---from-nodejs) of the documentation.
+
+<Tabs groupId="openapi-configuration">
+
+<TabItem value="unleash" label="Unleash">
+
+```js title="Enable OpenAPI for Unleash via configuration option"
+const unleash = require('unleash-server');
+
+unleash
+    .start({
+        // ... Other options elided for brevity
+        // highlight-next-line
+        enableOAS: true,
+    })
+    .then((unleash) => {
+        console.log(
+            `Unleash started on http://localhost:${unleash.app.get('port')}`,
+        );
+    });
+```
+
+</TabItem>
+
+<TabItem value="proxy" label="Unleash proxy">
+
+```js title="Enable OpenAPI for the Unleash proxy via configuration"
+const port = 3000;
+
+const { createApp } = require('@unleash/proxy');
+
+const app = createApp({
+    // ... Other options elided for brevity
+    // highlight-next-line
+    enableOAS: true,
+});
+
+app.listen(port, () =>
+    console.log(`Unleash Proxy listening on http://localhost:${port}/proxy`),
+);
+```
+
+</TabItem>
+
+</Tabs>

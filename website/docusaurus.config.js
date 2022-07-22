@@ -119,7 +119,7 @@ module.exports = {
                             { sync: true },
                         ],
                     ],
-                    docLayoutComponent: "@theme/DocPage",
+                    docLayoutComponent: '@theme/DocPage',
                     docItemComponent: '@theme/ApiItem',
                 },
                 theme: {
@@ -184,11 +184,11 @@ module.exports = {
         [
             'docusaurus-plugin-openapi-docs',
             {
-                id: 'apiDocs',
-                docsPluginId: "classic",
+                id: 'api-operations',
+                docsPluginId: 'classic',
                 config: {
                     server: {
-                        specPath: './openapi.json',
+                        specPath: 'http://localhost:4242/docs/openapi.json',
                         outputDir: 'docs/openapi/server',
                         sidebarOptions: {
                             groupPathsBy: 'tag',
@@ -198,5 +198,5 @@ module.exports = {
             },
         ],
     ],
-  themes: ["docusaurus-theme-openapi-docs"] // Allows use of @theme/ApiItem and other components
+    themes: ['docusaurus-theme-openapi-docs'], // Allows use of @theme/ApiItem and other components
 };

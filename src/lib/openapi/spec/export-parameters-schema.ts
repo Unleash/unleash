@@ -1,7 +1,6 @@
 import { FromSchema } from 'json-schema-to-ts';
 import { OpenAPIV3 } from 'openapi-types';
 import { createQueryParameters } from '../util/query-parameters';
-import { Parameters } from '../util/query-parameters';
 
 const exportParameters = {
     format: {
@@ -53,8 +52,9 @@ type Mutable = {
     [Property in keyof ExportParams]: { type: ExportParams[Property]['type'] };
 };
 
-const p = {
-    $id: 'th',
+// this schema is here only to generate types
+const exportQueryParametersSchema = {
+    $id: '#/components/schemas/exportQueryParameters',
     type: 'object',
     properties: createQueryParameters(exportParameters).reduce(
         (acc, next: OpenAPIV3.ParameterObject) => ({
@@ -67,114 +67,8 @@ const p = {
     ) as Mutable,
 } as const;
 
-export type ExpType = FromSchema<typeof p>;
+export type ExportQueryParameters = FromSchema<
+    typeof exportQueryParametersSchema
+>;
 
 export const exportQueryParameters = createQueryParameters(exportParameters);
-
-const s = {
-    $id: '#/components/schemas/exportParametersSchema2',
-    parameters: [
-        {
-            name: 'format',
-            description:
-                'Desired export format. Must be either `json` or `yaml`.',
-            schema: {
-                type: 'string',
-                enum: ['json', 'yaml'],
-                default: 'json',
-            },
-            in: 'query',
-        },
-        {
-            name: 'download',
-            description:
-                'Whether exported data should be downloaded as a file.',
-            schema: {
-                type: 'boolean',
-                default: false,
-            },
-            in: 'query',
-        },
-        {
-            name: 'strategies',
-            description:
-                'Whether strategies should be included in the exported data.',
-            schema: {
-                type: 'boolean',
-                default: true,
-            },
-            in: 'query',
-        },
-        {
-            name: 'featureToggles',
-            description:
-                'Whether feature toggles should be included in the exported data.',
-            schema: {
-                type: 'boolean',
-                default: true,
-            },
-            in: 'query',
-        },
-        {
-            name: 'projects',
-            description:
-                'Whether projects should be included in the exported data.',
-            schema: {
-                type: 'boolean',
-                default: true,
-            },
-            in: 'query',
-        },
-        {
-            name: 'tags',
-            description:
-                'Whether tag types, tags, and feature_tags should be included in the exported data.',
-            schema: {
-                type: 'boolean',
-                default: true,
-            },
-            in: 'query',
-        },
-        {
-            name: 'environments',
-            description:
-                'Whether environments should be included in the exported data.',
-            schema: {
-                type: 'boolean',
-                default: true,
-            },
-            in: 'query',
-        },
-    ],
-} as const;
-
-export const exportParametersSchema = {
-    $id: '#/components/schemas/exportParametersSchema',
-    type: 'object',
-    properties: {
-        format: {
-            type: 'string',
-        },
-        download: {
-            type: 'boolean',
-        },
-        strategies: {
-            type: 'boolean',
-        },
-        featureToggles: {
-            type: 'boolean',
-        },
-        projects: {
-            type: 'boolean',
-        },
-        tags: {
-            type: 'boolean',
-        },
-        environments: {
-            type: 'boolean',
-        },
-    },
-    components: {},
-} as const;
-
-export type ExportParametersSchema = FromSchema<typeof exportParametersSchema>;

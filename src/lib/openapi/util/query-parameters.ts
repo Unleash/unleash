@@ -2,14 +2,14 @@ import { OpenAPIV3 } from 'openapi-types';
 
 export type ParameterType = OpenAPIV3.NonArraySchemaObjectType;
 
-export type ParameterDetails<U> = {
+export type ParameterDetails<U> = Readonly<{
     description: string;
     type: ParameterType;
     required?: boolean;
     default?: U;
-    enum?: [U, ...U[]];
+    enum?: Readonly<[U, ...U[]]>;
     example?: U;
-};
+}>;
 
 export type Parameters = {
     [parameterName: string]: ParameterDetails<unknown>;
@@ -25,7 +25,7 @@ export const toParamObject = (
     required: details.required,
     schema: {
         type: details.type,
-        enum: details.enum,
+        enum: details.enum as unknown as any[],
         default: details.default,
     },
     in: 'query',

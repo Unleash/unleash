@@ -17,6 +17,7 @@ import { createResponseSchema } from '../../openapi/util/create-response-schema'
 import {
     exportQueryParameters,
     ExportParametersSchema,
+    ExpType,
 } from '../../openapi/spec/export-parameters-schema';
 import { emptyResponse } from '../../openapi/util/standard-responses';
 
@@ -113,7 +114,7 @@ class StateController extends Controller {
     }
 
     async export(
-        req: Request<unknown, unknown, unknown, ExportParametersSchema>,
+        req: Request<unknown, unknown, unknown, ExpType>,
         res: Response,
     ): Promise<void> {
         const { format } = req.query;

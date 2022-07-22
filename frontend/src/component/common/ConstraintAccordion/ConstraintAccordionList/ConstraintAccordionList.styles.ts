@@ -17,6 +17,6 @@ export const useStyles = makeStyles()(theme => ({
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'start',
-        margin: '0.75rem 0'
-    }
+        margin: '0.75rem 0',
+    },
 }));

@@ -8,7 +8,7 @@ import { objectId } from 'utils/objectId';
 import { useStyles } from './ConstraintAccordionList.styles';
 import { createEmptyConstraint } from 'component/common/ConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import {Button, Tooltip} from '@mui/material';
+import { Button, Tooltip } from '@mui/material';
 import { Help } from '@mui/icons-material';
 
 interface IConstraintAccordionListProps {

@@ -1,7 +1,8 @@
 import { FromSchema } from 'json-schema-to-ts';
-import { Parameters } from '../util/request-parameters';
+import { createQueryParameters } from '../util/query-parameters';
+import { Parameters } from '../util/query-parameters';
 
-export const exportParameters: Parameters = {
+const exportParameters: Parameters = {
     format: {
         type: 'string',
         enum: ['json', 'yaml'],
@@ -44,6 +45,8 @@ export const exportParameters: Parameters = {
             'Whether environments should be included in the exported data.',
     },
 };
+
+export const exportQueryParameters = createQueryParameters(exportParameters);
 
 export const exportParametersSchema = {
     $id: '#/components/schemas/exportParametersSchema',

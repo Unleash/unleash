@@ -46,10 +46,10 @@ const exportParameters = {
     },
 } as const;
 
-type ExportParams = typeof exportParameters;
-
-type Mutable = {
-    [Property in keyof ExportParams]: { type: ExportParams[Property]['type'] };
+type ExportParameters = {
+    [Property in keyof typeof exportParameters]: {
+        type: typeof exportParameters[Property]['type'];
+    };
 };
 
 // this schema is here only to generate types
@@ -63,8 +63,8 @@ const exportQueryParametersSchema = {
                 type: (next.schema as OpenAPIV3.SchemaObject).type,
             },
         }),
-        {} as Partial<Mutable>,
-    ) as Mutable,
+        {} as Partial<ExportParameters>,
+    ) as ExportParameters,
 } as const;
 
 export type ExportQueryParameters = FromSchema<

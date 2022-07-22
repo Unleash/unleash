@@ -12,6 +12,7 @@ import {
     FEATURE_STRATEGY_UPDATE,
     FEATURE_UPDATED,
     CLIENT_METRICS,
+    CLIENT_REGISTER,
 } from './types/events';
 import { IUnleashConfig } from './types/option';
 import { IUnleashStores } from './types/stores';
@@ -78,6 +79,12 @@ export default class MetricsMonitor {
         const projectsTotal = new client.Gauge({
             name: 'projects_total',
             help: 'Number of projects',
+        });
+
+        const clientSdkVersionUsage = new client.Counter({
+            name: 'client_sdk_versions',
+            help: 'Which sdk versions are being used',
+            labelNames: ['sdk_name', 'sdk_version'],
         });
 
         async function collectStaticCounters() {
@@ -155,6 +162,12 @@ export default class MetricsMonitor {
                     .labels(entry[0], 'false', m.appName)
                     // @ts-expect-error
                     .inc(entry[1].no);
+            }
+        });
+        eventBus.on(CLIENT_REGISTER, (m) => {
+            if (m.sdkVersion && m.sdkVersion.indexOf(':') > -1) {
+                const [sdkName, sdkVersion] = m.sdkVersion.split(':');
+                clientSdkVersionUsage.labels(sdkName, sdkVersion).inc();
             }
         });
 

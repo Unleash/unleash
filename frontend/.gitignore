@@ -50,5 +50,6 @@ build
 .DS_Store
 
 cypress/videos/*
+cypress/downloads/*
 cypress/screenshots/*
 .env.local

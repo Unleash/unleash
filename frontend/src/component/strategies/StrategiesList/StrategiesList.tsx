@@ -1,6 +1,6 @@
 import { useState, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box } from '@mui/material';
+import { Box, styled } from '@mui/material';
 import { Extension } from '@mui/icons-material';
 import {
     Table,
@@ -26,17 +26,22 @@ import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightC
 import { sortTypes } from 'utils/sortTypes';
 import { useTable, useGlobalFilter, useSortBy } from 'react-table';
 import { AddStrategyButton } from './AddStrategyButton/AddStrategyButton';
-import { StatusBadge } from 'component/common/StatusBadge/StatusBadge';
 import { StrategySwitch } from './StrategySwitch/StrategySwitch';
 import { StrategyEditButton } from './StrategyEditButton/StrategyEditButton';
 import { StrategyDeleteButton } from './StrategyDeleteButton/StrategyDeleteButton';
 import { Search } from 'component/common/Search/Search';
+import { Badge } from 'component/common/Badge/Badge';
 
 interface IDialogueMetaData {
     show: boolean;
     title: string;
     onConfirm: () => void;
 }
+
+const StyledBadge = styled(Badge)(({ theme }) => ({
+    marginLeft: theme.spacing(1),
+    display: 'inline-block',
+}));
 
 export const StrategiesList = () => {
     const navigate = useNavigate();
@@ -191,9 +196,9 @@ export const StrategiesList = () => {
                             <ConditionallyRender
                                 condition={!editable}
                                 show={() => (
-                                    <StatusBadge severity="success">
+                                    <StyledBadge color="success">
                                         Predefined
-                                    </StatusBadge>
+                                    </StyledBadge>
                                 )}
                             />
                         </LinkCell>

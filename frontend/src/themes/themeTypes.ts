@@ -24,11 +24,16 @@ declare module '@mui/material/styles' {
          */
         boxShadows: {
             main: string;
+            card: string;
             elevated: string;
         };
     }
 
     interface CustomPalette {
+        /**
+         * Generic neutral palette color.
+         */
+        neutral: PaletteColorOptions;
         /**
          * Colors for event log output.
          */
@@ -50,13 +55,6 @@ declare module '@mui/material/styles' {
             abandoned: string;
         };
         dividerAlternative: string;
-        /**
-         * Background colors for status badges.
-         */
-        statusBadge: {
-            success: string;
-            warning: string;
-        };
         /**
          * For table header hover effect.
          */

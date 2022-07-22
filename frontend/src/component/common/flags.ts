@@ -4,3 +4,4 @@ export const E = 'E';
 export const EEA = 'EEA';
 export const RE = 'RE';
 export const SE = 'SE';
+export const UG = 'UG';

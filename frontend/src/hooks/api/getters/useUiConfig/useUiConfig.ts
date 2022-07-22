@@ -22,7 +22,11 @@ const useUiConfig = (): IUseUIConfigOutput => {
     }, [data]);
 
     const uiConfig: IUiConfig = useMemo(() => {
-        return { ...defaultValue, ...data };
+        return {
+            ...defaultValue,
+            ...data,
+            flags: { ...defaultValue.flags, ...data?.flags },
+        };
     }, [data]);
 
     return {

@@ -109,6 +109,7 @@ export const CellSortable: FC<ICellSortableProps> = ({
                 show={
                     <Tooltip title={title} arrow>
                         <button
+                            type="button"
                             className={classnames(
                                 isSorted && styles.sortedButton,
                                 styles.sortButton,

@@ -47,12 +47,13 @@ export const PageContent: FC<IPageContentProps> = ({
 }) => {
     const { classes: styles } = useStyles();
 
-    const headerClasses = classnames(styles.headerContainer, {
+    const headerClasses = classnames('header', styles.headerContainer, {
         [styles.paddingDisabled]: disablePadding,
         [styles.borderDisabled]: disableBorder,
     });
 
     const bodyClasses = classnames(
+        'body',
         bodyClass ? bodyClass : styles.bodyContainer,
         {
             [styles.paddingDisabled]: disablePadding,

@@ -35,6 +35,7 @@ export interface IFlags {
     SE?: boolean;
     T?: boolean;
     UNLEASH_CLOUD?: boolean;
+    UG?: boolean;
 }
 
 export interface IVersionInfo {

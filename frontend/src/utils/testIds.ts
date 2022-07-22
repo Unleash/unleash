@@ -9,6 +9,11 @@ export const CF_TYPE_ID = 'CF_TYPE_ID';
 export const CF_DESC_ID = 'CF_DESC_ID';
 export const CF_CREATE_BTN_ID = 'CF_CREATE_BTN_ID';
 
+/* CREATE GROUP */
+export const UG_NAME_ID = 'UG_NAME_ID';
+export const UG_DESC_ID = 'UG_DESC_ID';
+export const UG_CREATE_BTN_ID = 'UG_CREATE_BTN_ID';
+
 /* SEGMENT */
 export const SEGMENT_NAME_ID = 'SEGMENT_NAME_ID';
 export const SEGMENT_DESC_ID = 'SEGMENT_DESC_ID';

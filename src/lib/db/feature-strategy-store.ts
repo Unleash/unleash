@@ -332,12 +332,12 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 'environments.sort_order as environment_sort_order',
             )
             .modify(FeatureToggleStore.filterByArchived, archived)
-            .fullOuterJoin(
+            .leftJoin(
                 'feature_environments',
                 'feature_environments.feature_name',
                 'features.name',
             )
-            .fullOuterJoin(
+            .leftJoin(
                 'environments',
                 'feature_environments.environment',
                 'environments.name',

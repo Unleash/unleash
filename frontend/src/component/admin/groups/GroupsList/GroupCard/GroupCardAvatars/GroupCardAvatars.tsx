@@ -1,8 +1,9 @@
 import { Avatar, Badge, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { IGroupUser, Role } from 'interfaces/group';
-import { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import StarIcon from '@mui/icons-material/Star';
+import { GroupPopover } from './GroupPopover/GroupPopover';
 
 const StyledAvatars = styled('div')(({ theme }) => ({
     display: 'inline-flex',
@@ -42,6 +43,20 @@ export const GroupCardAvatars = ({ users }: IGroupCardAvatarsProps) => {
         () => users.sort((a, b) => (a.role < b.role ? 1 : -1)).slice(0, 9),
         [users]
     );
+
+    const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+    const [popupUser, setPopupUser] = useState<IGroupUser>();
+
+    const onPopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const onPopoverClose = () => {
+        setAnchorEl(null);
+    };
+
+    const avatarOpen = Boolean(anchorEl);
+
     return (
         <StyledAvatars>
             {shownUsers.map(user => (
@@ -53,9 +68,11 @@ export const GroupCardAvatars = ({ users }: IGroupCardAvatarsProps) => {
                             data-loading
                             alt="Gravatar"
                             src={user.imageUrl}
-                            title={`${
-                                user.name || user.email || user.username
-                            } (id: ${user.id})`}
+                            onMouseEnter={event => {
+                                onPopoverOpen(event);
+                                setPopupUser(user);
+                            }}
+                            onMouseLeave={onPopoverClose}
                         />
                     }
                     elseShow={
@@ -71,9 +88,11 @@ export const GroupCardAvatars = ({ users }: IGroupCardAvatarsProps) => {
                                 data-loading
                                 alt="Gravatar"
                                 src={user.imageUrl}
-                                title={`${
-                                    user.name || user.email || user.username
-                                } (id: ${user.id})`}
+                                onMouseEnter={event => {
+                                    onPopoverOpen(event);
+                                    setPopupUser(user);
+                                }}
+                                onMouseLeave={onPopoverClose}
                             />
                         </Badge>
                     }
@@ -86,6 +105,12 @@ export const GroupCardAvatars = ({ users }: IGroupCardAvatarsProps) => {
                         +{users.length - shownUsers.length}
                     </StyledAvatarMore>
                 }
+            />
+            <GroupPopover
+                open={avatarOpen}
+                user={popupUser}
+                anchorEl={anchorEl}
+                onPopoverClose={onPopoverClose}
             />
         </StyledAvatars>
     );

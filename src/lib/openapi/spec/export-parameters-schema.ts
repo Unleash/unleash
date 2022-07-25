@@ -1,74 +1,143 @@
-import { FromSchema } from 'json-schema-to-ts';
-import { OpenAPIV3 } from 'openapi-types';
-import { createQueryParameters } from '../util/query-parameters';
+import { FromQueryParams } from '../util/from-query-params';
 
-const exportParameters = {
-    format: {
-        type: 'string',
-        enum: ['json', 'yaml'],
-        default: 'json',
+export const exportQueryParameters = [
+    {
+        name: 'format',
+        schema: {
+            type: 'string',
+            enum: ['json', 'yaml'],
+            default: 'json',
+        },
         description: 'Desired export format. Must be either `json` or `yaml`.',
+        in: 'query',
     },
-    download: {
-        type: 'boolean',
-        default: false,
+    {
+        name: 'download',
+        schema: {
+            default: false,
+            anyOf: [
+                {
+                    type: 'boolean',
+                },
+                {
+                    type: 'string',
+                    minLength: 1,
+                },
+                {
+                    type: 'number',
+                },
+            ],
+        },
         description: 'Whether exported data should be downloaded as a file.',
+        in: 'query',
     },
-    strategies: {
-        type: 'boolean',
-        default: true,
+    {
+        name: 'strategies',
+        schema: {
+            default: true,
+            anyOf: [
+                {
+                    type: 'boolean',
+                },
+                {
+                    type: 'string',
+                    minLength: 1,
+                },
+                {
+                    type: 'number',
+                },
+            ],
+        },
         description:
             'Whether strategies should be included in the exported data.',
+        in: 'query',
     },
-    featureToggles: {
-        type: 'boolean',
-        default: true,
+    {
+        name: 'featureToggles',
+        schema: {
+            anyOf: [
+                {
+                    type: 'boolean',
+                },
+                {
+                    type: 'string',
+                    minLength: 1,
+                },
+                {
+                    type: 'number',
+                },
+            ],
+            default: true,
+        },
         description:
             'Whether feature toggles should be included in the exported data.',
+        in: 'query',
     },
-    projects: {
-        type: 'boolean',
-        default: true,
+    {
+        name: 'projects',
+        schema: {
+            anyOf: [
+                {
+                    type: 'boolean',
+                },
+                {
+                    type: 'string',
+                    minLength: 1,
+                },
+                {
+                    type: 'number',
+                },
+            ],
+            default: true,
+        },
         description:
             'Whether projects should be included in the exported data.',
+        in: 'query',
     },
-    tags: {
-        type: 'boolean',
-        default: true,
+    {
+        name: 'tags',
+        schema: {
+            anyOf: [
+                {
+                    type: 'boolean',
+                },
+                {
+                    type: 'string',
+                    minLength: 1,
+                },
+                {
+                    type: 'number',
+                },
+            ],
+            default: true,
+        },
         description:
             'Whether tag types, tags, and feature_tags should be included in the exported data.',
+        in: 'query',
     },
-    environments: {
-        type: 'boolean',
-        default: true,
+    {
+        name: 'environments',
+        schema: {
+            anyOf: [
+                {
+                    type: 'boolean',
+                },
+                {
+                    type: 'string',
+                    minLength: 1,
+                },
+                {
+                    type: 'number',
+                },
+            ],
+            default: true,
+        },
         description:
             'Whether environments should be included in the exported data.',
+        in: 'query',
     },
-} as const;
+] as const;
 
-type ExportParameters = {
-    [Property in keyof typeof exportParameters]: {
-        type: typeof exportParameters[Property]['type'];
-    };
-};
-
-// this schema is here only to generate types
-const exportQueryParametersSchema = {
-    $id: '#/components/schemas/exportQueryParameters',
-    type: 'object',
-    properties: createQueryParameters(exportParameters).reduce(
-        (acc, next: OpenAPIV3.ParameterObject) => ({
-            ...acc,
-            [next.name]: {
-                type: (next.schema as OpenAPIV3.SchemaObject).type,
-            },
-        }),
-        {} as Partial<ExportParameters>,
-    ) as ExportParameters,
-} as const;
-
-export type ExportQueryParameters = FromSchema<
-    typeof exportQueryParametersSchema
+export type ExportQueryParameters = FromQueryParams<
+    typeof exportQueryParameters
 >;
-
-export const exportQueryParameters = createQueryParameters(exportParameters);

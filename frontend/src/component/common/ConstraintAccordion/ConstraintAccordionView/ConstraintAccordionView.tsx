@@ -44,6 +44,7 @@ export const ConstraintAccordionView = ({
             className={styles.accordion}
             classes={{ root: styles.accordionRoot }}
             expanded={expanded}
+            sx={{ cursor: expandable ? 'pointer' : 'default' }}
         >
             <AccordionSummary
                 className={styles.summary}

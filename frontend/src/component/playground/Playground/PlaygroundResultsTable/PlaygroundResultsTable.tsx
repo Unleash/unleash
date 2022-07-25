@@ -22,7 +22,6 @@ import { FeatureStatusCell } from './FeatureStatusCell/FeatureStatusCell';
 import { PlaygroundFeatureSchema } from 'hooks/api/actions/usePlayground/playground.model';
 import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
 import useLoading from 'hooks/useLoading';
-import { GuidanceIndicator } from 'component/common/GuidanceIndicator/GuidanceIndicator';
 import { VariantCell } from './VariantCell/VariantCell';
 
 const defaultSort: SortingRule<string> = { id: 'name' };

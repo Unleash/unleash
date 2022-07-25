@@ -120,6 +120,7 @@
     "semver": "^7.3.5",
     "serve-favicon": "^2.5.0",
     "stoppable": "^1.1.0",
+    "ts-toolbelt": "^9.6.0",
     "type-is": "^1.6.18",
     "unleash-client": "^3.15.0",
     "unleash-frontend": "4.14.0-beta.1",

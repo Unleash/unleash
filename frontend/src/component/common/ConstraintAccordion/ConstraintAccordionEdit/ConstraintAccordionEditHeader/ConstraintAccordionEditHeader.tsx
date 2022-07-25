@@ -147,7 +147,7 @@ export const ConstraintAccordionEditHeader = ({
                     </p>
                 }
             />
-            <ConstraintAccordionHeaderActions onDelete={onDelete} />
+            <ConstraintAccordionHeaderActions onDelete={onDelete} disableEdit/>
         </div>
     );
 };

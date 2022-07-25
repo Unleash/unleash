@@ -14,6 +14,7 @@ import { SplashPageRedirect } from 'component/splash/SplashPageRedirect/SplashPa
 import { useStyles } from './App.styles';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { Suspense } from 'react';
 
 export const App = () => {
     const { classes: styles } = useStyles();
@@ -30,37 +31,39 @@ export const App = () => {
 
     return (
         <SWRProvider isUnauthorized={!isLoggedIn}>
-            <ConditionallyRender
-                condition={!hasFetchedAuth}
-                show={<Loader />}
-                elseShow={
-                    <div className={styles.container}>
-                        <ToastRenderer />
-                        <LayoutPicker>
-                            <Routes>
-                                {availableRoutes.map(route => (
+            <Suspense fallback={<Loader />}>
+                <ConditionallyRender
+                    condition={!hasFetchedAuth}
+                    show={<Loader />}
+                    elseShow={
+                        <div className={styles.container}>
+                            <ToastRenderer />
+                            <LayoutPicker>
+                                <Routes>
+                                    {availableRoutes.map(route => (
+                                        <Route
+                                            key={route.path}
+                                            path={route.path}
+                                            element={
+                                                <ProtectedRoute route={route} />
+                                            }
+                                        />
+                                    ))}
                                     <Route
-                                        key={route.path}
-                                        path={route.path}
+                                        path="/"
                                         element={
-                                            <ProtectedRoute route={route} />
+                                            <Navigate to="/features" replace />
                                         }
                                     />
-                                ))}
-                                <Route
-                                    path="/"
-                                    element={
-                                        <Navigate to="/features" replace />
-                                    }
-                                />
-                                <Route path="*" element={<NotFound />} />
-                            </Routes>
-                            <FeedbackNPS openUrl="http://feedback.unleash.run" />
-                            <SplashPageRedirect />
-                        </LayoutPicker>
-                    </div>
-                }
-            />
+                                    <Route path="*" element={<NotFound />} />
+                                </Routes>
+                                <FeedbackNPS openUrl="http://feedback.unleash.run" />
+                                <SplashPageRedirect />
+                            </LayoutPicker>
+                        </div>
+                    }
+                />
+            </Suspense>
         </SWRProvider>
     );
 };

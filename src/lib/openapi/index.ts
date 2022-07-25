@@ -62,8 +62,8 @@ import { patchesSchema } from './spec/patches-schema';
 import { patchSchema } from './spec/patch-schema';
 import { permissionSchema } from './spec/permission-schema';
 import { playgroundFeatureSchema } from './spec/playground-feature-schema';
-import { playgroundResponseSchema } from './spec/playground-response-schema';
 import { playgroundRequestSchema } from './spec/playground-request-schema';
+import { playgroundResponseSchema } from './spec/playground-response-schema';
 import { projectEnvironmentSchema } from './spec/project-environment-schema';
 import { projectSchema } from './spec/project-schema';
 import { projectsSchema } from './spec/projects-schema';
@@ -71,6 +71,7 @@ import { resetPasswordSchema } from './spec/reset-password-schema';
 import { roleSchema } from './spec/role-schema';
 import { sdkContextSchema } from './spec/sdk-context-schema';
 import { segmentSchema } from './spec/segment-schema';
+import { setStrategySortOrderSchema } from './spec/set-strategy-sort-order-schema';
 import { sortOrderSchema } from './spec/sort-order-schema';
 import { splashSchema } from './spec/splash-schema';
 import { stateSchema } from './spec/state-schema';
@@ -170,8 +171,8 @@ export const schemas = {
     patchSchema,
     permissionSchema,
     playgroundFeatureSchema,
-    playgroundResponseSchema,
     playgroundRequestSchema,
+    playgroundResponseSchema,
     projectEnvironmentSchema,
     projectSchema,
     projectsSchema,
@@ -179,6 +180,7 @@ export const schemas = {
     roleSchema,
     sdkContextSchema,
     segmentSchema,
+    setStrategySortOrderSchema,
     sortOrderSchema,
     splashSchema,
     stateSchema,

@@ -36,6 +36,8 @@ import { OpenApiService } from '../../../services/openapi-service';
 import { createRequestSchema } from '../../../openapi/util/create-request-schema';
 import { createResponseSchema } from '../../../openapi/util/create-response-schema';
 import { FeatureEnvironmentSchema } from '../../../openapi/spec/feature-environment-schema';
+import { SetStrategySortOrderSchema } from '../../../openapi/spec/set-strategy-sort-order-schema';
+
 import { emptyResponse } from '../../../openapi/util/standard-responses';
 
 interface FeatureStrategyParams {
@@ -183,6 +185,25 @@ export default class ProjectFeaturesController extends Controller {
         });
 
         this.route({
+            method: 'post',
+            path: `${PATH_STRATEGIES}/set-sort-order`,
+            handler: this.setStrategiesSortOrder,
+            permission: UPDATE_FEATURE_STRATEGY,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'setStrategySortOrder',
+                    requestBody: createRequestSchema(
+                        'setStrategySortOrderSchema',
+                    ),
+                    responses: {
+                        200: emptyResponse,
+                    },
+                }),
+            ],
+        });
+
+        this.route({
             method: 'put',
             path: PATH_STRATEGY,
             handler: this.updateFeatureStrategy,
@@ -217,6 +238,7 @@ export default class ProjectFeaturesController extends Controller {
                 }),
             ],
         });
+
         this.route({
             method: 'delete',
             path: PATH_STRATEGY,
@@ -554,6 +576,24 @@ export default class ProjectFeaturesController extends Controller {
                 environment,
             );
         res.status(200).json(featureStrategies);
+    }
+
+    async setStrategiesSortOrder(
+        req: Request<
+            FeatureStrategyParams,
+            any,
+            SetStrategySortOrderSchema,
+            any
+        >,
+        res: Response,
+    ): Promise<void> {
+        const { featureName } = req.params;
+        await this.featureService.updateStrategiesSortOrder(
+            featureName,
+            req.body,
+        );
+
+        res.status(200).send();
     }
 
     async updateFeatureStrategy(

@@ -70,6 +70,7 @@ import {
 import { IContextFieldStore } from 'lib/types/stores/context-field-store';
 import { Saved, Unsaved } from '../types/saved';
 import { SegmentService } from './segment-service';
+import { SetStrategySortOrderSchema } from 'lib/openapi/spec/set-strategy-sort-order-schema';
 
 interface IFeatureContext {
     featureName: string;
@@ -280,6 +281,17 @@ class FeatureToggleService {
             constraints: featureStrategy.constraints || [],
             parameters: featureStrategy.parameters,
         };
+    }
+
+    async updateStrategiesSortOrder(
+        featureName: string,
+        sortOrders: SetStrategySortOrderSchema,
+    ): Promise<Saved<any>> {
+        await Promise.all(
+            sortOrders.map(({ id, sortOrder }) => {
+                this.featureStrategiesStore.updateSortOrder(id, sortOrder);
+            }),
+        );
     }
 
     async createStrategy(

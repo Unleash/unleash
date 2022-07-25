@@ -4,7 +4,6 @@ import { ALL_OPERATORS } from '../../util/constants';
 export const constraintSchema = {
     $id: '#/components/schemas/constraintSchema',
     type: 'object',
-    additionalProperties: false,
     required: ['contextName', 'operator'],
     properties: {
         contextName: {

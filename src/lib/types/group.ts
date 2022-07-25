@@ -17,6 +17,7 @@ export interface IGroupUser {
 }
 
 export interface IGroupRole {
+    name: string;
     groupId: number;
     roleId: number;
     createdAt: Date;

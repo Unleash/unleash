@@ -3,6 +3,7 @@ import {
     IGroupModel,
     IGroupModelWithProjectRole,
     IGroupProject,
+    IGroupRole,
     IGroupUser,
 } from '../types/group';
 import { IUnleashConfig, IUnleashStores } from '../types';
@@ -191,6 +192,10 @@ export class GroupService {
         if (users.length == 0 || !users.some((u) => u.role == 'Owner')) {
             throw new BadDataError('Group needs to have at least one Owner');
         }
+    }
+
+    async getRolesForProject(projectId: string): Promise<IGroupRole[]> {
+        return this.groupStore.getProjectGroupRoles(projectId);
     }
 
     private mapGroupWithUsers(

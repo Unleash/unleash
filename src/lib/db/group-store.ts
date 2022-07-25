@@ -17,10 +17,10 @@ const T = {
     GROUP_ROLE: 'group_role',
     USERS: 'users',
     PROJECTS: 'projects',
+    ROLES: 'roles',
 };
 
 const GROUP_COLUMNS = ['id', 'name', 'description', 'created_at', 'created_by'];
-const GROUP_ROLE_COLUMNS = ['group_id', 'role_id', 'created_at'];
 
 const rowToGroup = (row) => {
     if (!row) {
@@ -81,14 +81,17 @@ export default class GroupStore implements IGroupStore {
 
     async getProjectGroupRoles(projectId: string): Promise<IGroupRole[]> {
         const rows = await this.db
-            .select(GROUP_ROLE_COLUMNS)
-            .from(`${T.GROUP_ROLE}`)
+            .select('gr.group_id', 'gr.role_id', 'gr.created_at', 'r.name')
+            .from(`${T.GROUP_ROLE} as gr`)
+            .innerJoin(`${T.ROLES} as r`, 'gr.role_id', 'r.id')
             .where('project', projectId);
+
         return rows.map((r) => {
             return {
                 groupId: r.group_id,
                 roleId: r.role_id,
                 createdAt: r.created_at,
+                name: r.name,
             };
         });
     }

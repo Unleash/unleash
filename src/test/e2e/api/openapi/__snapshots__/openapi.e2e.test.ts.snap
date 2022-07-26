@@ -2162,6 +2162,25 @@ Object {
         ],
         "type": "object",
       },
+      "setStrategySortOrderSchema": Object {
+        "items": Object {
+          "additionalProperties": false,
+          "properties": Object {
+            "id": Object {
+              "type": "string",
+            },
+            "sortOrder": Object {
+              "type": "number",
+            },
+          },
+          "required": Array [
+            "id",
+            "sortOrder",
+          ],
+          "type": "object",
+        },
+        "type": "array",
+      },
       "sortOrderSchema": Object {
         "additionalProperties": Object {
           "type": "number",
@@ -4653,6 +4672,56 @@ If the provided project does not exist, the list of events will be empty.",
               },
             },
             "description": "featureStrategySchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/projects/{projectId}/features/{featureName}/environments/{environment}/strategies/set-sort-order": Object {
+      "post": Object {
+        "operationId": "setStrategySortOrder",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+          Object {
+            "in": "path",
+            "name": "featureName",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+          Object {
+            "in": "path",
+            "name": "environment",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/setStrategySortOrderSchema",
+              },
+            },
+          },
+          "description": "setStrategySortOrderSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "200": Object {
+            "description": "This response has no body.",
           },
         },
         "tags": Array [

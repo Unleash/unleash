@@ -1,24 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`setStrategySortOrderSchema empty 1`] = `undefined`;
-
-exports[`setStrategySortOrderSchema invalid value type 1`] = `
-Object {
-  "errors": Array [
-    Object {
-      "instancePath": "/0",
-      "keyword": "required",
-      "message": "must have required property 'sortOrder'",
-      "params": Object {
-        "missingProperty": "sortOrder",
-      },
-      "schemaPath": "#/items/required",
-    },
-  ],
-  "schema": "#/components/schemas/setStrategySortOrderSchema",
-}
-`;
-
 exports[`setStrategySortOrderSchema missing id 1`] = `
 Object {
   "errors": Array [

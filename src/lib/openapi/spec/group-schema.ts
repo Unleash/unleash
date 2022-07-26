@@ -5,8 +5,8 @@ import { userSchema } from './user-schema';
 export const groupSchema = {
     $id: '#/components/schemas/groupSchema',
     type: 'object',
-    additionalProperties: false,
-    required: ['name', 'users'],
+    additionalProperties: true,
+    required: ['name'],
     properties: {
         id: {
             type: 'number',

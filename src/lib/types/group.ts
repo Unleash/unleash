@@ -4,8 +4,9 @@ import { IUser } from './user';
 export interface IGroup {
     id?: number;
     name: string;
-    description: string;
+    description?: string;
     createdAt?: Date;
+    userCount?: number;
     createdBy?: string;
 }
 

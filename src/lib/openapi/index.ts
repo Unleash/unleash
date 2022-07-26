@@ -104,6 +104,7 @@ import { URL } from 'url';
 import { groupSchema } from './spec/group-schema';
 import { groupsSchema } from './spec/groups-schema';
 import { groupUserModelSchema } from './spec/group-user-model-schema';
+import { usersGroupsBaseSchema } from './spec/users-groups-base-schema';
 
 // All schemas in `openapi/spec` should be listed here.
 export const schemas = {
@@ -198,6 +199,7 @@ export const schemas = {
     updateUserSchema,
     upsertContextFieldSchema,
     upsertStrategySchema,
+    usersGroupsBaseSchema,
     userSchema,
     usersSchema,
     usersSearchSchema,

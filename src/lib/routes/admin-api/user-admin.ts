@@ -4,10 +4,9 @@ import { ADMIN, NONE } from '../../types/permissions';
 import UserService from '../../services/user-service';
 import { AccessService } from '../../services/access-service';
 import { Logger } from '../../logger';
-import { IUnleashConfig } from '../../types/option';
+import { IUnleashConfig, IUnleashServices } from '../../types';
 import { EmailService } from '../../services/email-service';
 import ResetTokenService from '../../services/reset-token-service';
-import { IUnleashServices } from '../../types/services';
 import { IAuthRequest } from '../unleash-types';
 import SettingService from '../../services/setting-service';
 import { IUser, SimpleAuthSettings } from '../../server-impl';
@@ -32,6 +31,12 @@ import {
     ResetPasswordSchema,
 } from '../../openapi/spec/reset-password-schema';
 import { emptyResponse } from '../../openapi/util/standard-responses';
+import { GroupService } from '../../services/group-service';
+import {
+    UsersGroupsBaseSchema,
+    usersGroupsBaseSchema,
+} from '../../openapi/spec/users-groups-base-schema';
+import { IGroup } from '../../types/group';
 
 export default class UserAdminController extends Controller {
     private anonymise: boolean = false;
@@ -50,6 +55,8 @@ export default class UserAdminController extends Controller {
 
     private openApiService: OpenApiService;
 
+    private groupService: GroupService;
+
     readonly unleashUrl: string;
 
     constructor(
@@ -61,6 +68,7 @@ export default class UserAdminController extends Controller {
             resetTokenService,
             settingService,
             openApiService,
+            groupService,
         }: Pick<
             IUnleashServices,
             | 'userService'
@@ -69,6 +77,7 @@ export default class UserAdminController extends Controller {
             | 'resetTokenService'
             | 'settingService'
             | 'openApiService'
+            | 'groupService'
         >,
     ) {
         super(config);
@@ -78,6 +87,7 @@ export default class UserAdminController extends Controller {
         this.resetTokenService = resetTokenService;
         this.settingService = settingService;
         this.openApiService = openApiService;
+        this.groupService = groupService;
         this.logger = config.getLogger('routes/user-controller.ts');
         this.unleashUrl = config.server.unleashUrl;
         this.anonymise = config.experimental?.anonymiseEventLog;
@@ -147,12 +157,28 @@ export default class UserAdminController extends Controller {
             method: 'get',
             path: '/search',
             handler: this.searchUsers,
-            permission: ADMIN,
+            permission: NONE,
             middleware: [
                 openApiService.validPath({
                     tags: ['admin'],
                     operationId: 'searchUsers',
                     responses: { 200: createResponseSchema('usersSchema') },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'get',
+            path: '/access',
+            handler: this.getBaseUsersAndGroups,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['admin'],
+                    operationId: 'getBaseUsersAndGroups',
+                    responses: {
+                        200: createResponseSchema('usersGroupsBaseSchema'),
+                    },
                 }),
             ],
         });
@@ -276,6 +302,35 @@ export default class UserAdminController extends Controller {
             res,
             usersSearchSchema.$id,
             serializeDates(users),
+        );
+    }
+
+    async getBaseUsersAndGroups(
+        req: Request,
+        res: Response<UsersGroupsBaseSchema>,
+    ): Promise<void> {
+        let allUsers = await this.userService.getAll();
+        let users = allUsers.map((u) => {
+            const { rootRole, ...user } = u;
+            return user as IUser;
+        });
+
+        let allGroups = await this.groupService.getAll();
+        let groups = allGroups.map((g) => {
+            return {
+                id: g.id,
+                name: g.name,
+                userCount: g.users.length,
+            } as IGroup;
+        });
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            usersGroupsBaseSchema.$id,
+            {
+                users: serializeDates(users),
+                groups: serializeDates(groups),
+            },
         );
     }
 

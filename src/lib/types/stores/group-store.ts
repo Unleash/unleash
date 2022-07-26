@@ -10,7 +10,7 @@ import {
 
 export interface IStoreGroup {
     name: string;
-    description: string;
+    description?: string;
 }
 
 export interface IGroupStore extends Store<IGroup, number> {

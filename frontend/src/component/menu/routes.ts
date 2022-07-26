@@ -53,10 +53,10 @@ import { SegmentTable } from 'component/segments/SegmentTable/SegmentTable';
 import FlaggedBillingRedirect from 'component/admin/billing/FlaggedBillingRedirect/FlaggedBillingRedirect';
 import { FeaturesArchiveTable } from '../archive/FeaturesArchiveTable';
 import { Billing } from 'component/admin/billing/Billing';
-import { Playground } from 'component/playground/Playground/Playground';
 import { Group } from 'component/admin/groups/Group/Group';
 import { CreateGroup } from 'component/admin/groups/CreateGroup/CreateGroup';
 import { EditGroup } from 'component/admin/groups/EditGroup/EditGroup';
+import { LazyPlayground } from 'component/playground/Playground/LazyPlayground';
 
 export const routes: IRoute[] = [
     // Splash
@@ -182,7 +182,7 @@ export const routes: IRoute[] = [
     {
         path: '/playground',
         title: 'Playground',
-        component: Playground,
+        component: LazyPlayground,
         hidden: false,
         type: 'protected',
         menu: { mobile: true },
@@ -518,7 +518,7 @@ export const routes: IRoute[] = [
     {
         path: '/admin-invoices',
         parent: '/admin',
-        title: 'Invoices',
+        title: 'Billing & invoices',
         component: FlaggedBillingRedirect,
         type: 'protected',
         menu: { adminSettings: true, isEnterprise: true },

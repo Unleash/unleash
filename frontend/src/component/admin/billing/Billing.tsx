@@ -1,6 +1,6 @@
 import AdminMenu from '../menu/AdminMenu';
 import { PageContent } from 'component/common/PageContent/PageContent';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import AccessContext from 'contexts/AccessContext';
@@ -12,14 +12,28 @@ import { BillingHistory } from './BillingHistory/BillingHistory';
 import useInvoices from 'hooks/api/getters/useInvoices/useInvoices';
 
 export const Billing = () => {
-    const { instanceStatus, isBilling } = useInstanceStatus();
+    const {
+        instanceStatus,
+        isBilling,
+        refetchInstanceStatus,
+        refresh,
+        loading,
+    } = useInstanceStatus();
     const { invoices } = useInvoices();
     const { hasAccess } = useContext(AccessContext);
+
+    useEffect(() => {
+        const hardRefresh = async () => {
+            await refresh();
+            refetchInstanceStatus();
+        };
+        hardRefresh();
+    }, [refetchInstanceStatus, refresh]);
 
     return (
         <div>
             <AdminMenu />
-            <PageContent header="Billing">
+            <PageContent header="Billing" isLoading={loading}>
                 <ConditionallyRender
                     condition={isBilling}
                     show={

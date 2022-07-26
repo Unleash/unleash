@@ -212,3 +212,5 @@ export const Playground: VFC<{}> = () => {
         </PageContent>
     );
 };
+
+export default Playground;

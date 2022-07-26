@@ -32,6 +32,7 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { IUser } from 'interfaces/user';
 import { IGroup } from 'interfaces/group';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
+import { mapGroupUsers } from '../../../../hooks/api/getters/useGroup/useGroup';
 
 const StyledAvatar = styled(Avatar)(({ theme }) => ({
     width: theme.spacing(4),
@@ -339,7 +340,6 @@ export const ProjectAccessTable: VFC = () => {
         setRemoveOpen(false);
         setSelectedRow(undefined);
     };
-
     return (
         <PageContent
             header={

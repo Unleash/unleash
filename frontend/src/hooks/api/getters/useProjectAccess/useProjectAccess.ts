@@ -1,10 +1,12 @@
 import useSWR, { mutate, SWRConfiguration } from 'swr';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { IProjectRole } from 'interfaces/role';
 import { IGroup } from 'interfaces/group';
 import { IUser } from 'interfaces/user';
+import { useGroups } from '../useGroups/useGroups';
+import { mapGroupUsers } from '../useGroup/useGroup';
 
 export enum ENTITY_TYPE {
     USER = 'USERS',
@@ -45,11 +47,7 @@ const useProjectAccess = (
 
     const CACHE_KEY = `api/admin/projects/${projectId}/users`;
 
-    const { data, error } = useSWR<IProjectAccessOutput>(
-        CACHE_KEY,
-        fetcher,
-        options
-    );
+    const { data, error } = useSWR(CACHE_KEY, fetcher, options);
 
     const [loading, setLoading] = useState(!error && !data);
 
@@ -61,21 +59,19 @@ const useProjectAccess = (
         setLoading(!error && !data);
     }, [data, error]);
 
-    // TODO: Remove this and replace `mockData` back for `data` @79. This mocks what a group looks like when returned along with the access.
-    // const { groups } = useGroups();
-    // const mockData = useMemo(
-    //     () => ({
-    //         ...data,
-    //         groups: groups?.map(group => ({
-    //             ...group,
-    //             roleId: 4,
-    //         })) as IProjectAccessGroup[],
-    //     }),
-    //     [data, groups]
-    // );
-
+    let access: IProjectAccessOutput = data
+        ? {
+              roles: data.roles,
+              users: data.users,
+              groups:
+                  data?.groups.map((group: any) => ({
+                      ...group,
+                      users: mapGroupUsers(group.users ?? []),
+                  })) ?? [],
+          }
+        : { roles: [], users: [], groups: [] };
     return {
-        access: data ? data : { roles: [], users: [], groups: [] },
+        access: access,
         error,
         loading,
         refetchProjectAccess,

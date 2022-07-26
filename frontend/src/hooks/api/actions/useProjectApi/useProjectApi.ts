@@ -112,23 +112,6 @@ const useProjectApi = () => {
         }
     };
 
-    const addUserToRole = async (
-        projectId: string,
-        roleId: number,
-        userId: number
-    ) => {
-        const path = `api/admin/projects/${projectId}/users/${userId}/roles/${roleId}`;
-        const req = createRequest(path, { method: 'POST' });
-
-        try {
-            const res = await makeRequest(req.caller, req.id);
-
-            return res;
-        } catch (e) {
-            throw e;
-        }
-    };
-
     const addAccessToProject = async (
         projectId: string,
         roleId: number,
@@ -226,7 +209,6 @@ const useProjectApi = () => {
         deleteProject,
         addEnvironmentToProject,
         removeEnvironmentFromProject,
-        addUserToRole,
         addAccessToProject,
         removeUserFromRole,
         removeGroupFromRole,

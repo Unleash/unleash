@@ -40,7 +40,7 @@ export const BillingInformation: FC<IBillingInformationProps> = ({
     return (
         <Grid item xs={12} md={5}>
             <StyledInfoBox>
-                <StyledTitle variant="body1">Billing Information</StyledTitle>
+                <StyledTitle variant="body1">Billing information</StyledTitle>
                 <ConditionallyRender
                     condition={inactive}
                     show={
@@ -54,7 +54,7 @@ export const BillingInformation: FC<IBillingInformationProps> = ({
                 <StyledInfoLabel>
                     {inactive
                         ? 'Once we have received your billing information we will upgrade your trial within 1 business day'
-                        : 'These changes may take up to 1 business day and they will be visible on your next invoice'}
+                        : 'Update your credit card and business information and change which email address we send invoices to'}
                 </StyledInfoLabel>
                 <StyledDivider />
                 <StyledInfoLabel>

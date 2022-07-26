@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 export interface IUseInstanceStatusOutput {
     instanceStatus?: IInstanceStatus;
     refetchInstanceStatus: () => void;
+    refresh: () => Promise<void>;
     isBilling: boolean;
     loading: boolean;
     error?: Error;
@@ -33,9 +34,14 @@ export const useInstanceStatus = (): IUseInstanceStatusOutput => {
         InstancePlan.TEAM,
     ];
 
+    const refresh = async (): Promise<void> => {
+        await fetch(formatApiPath('api/instance/refresh'));
+    };
+
     return {
         instanceStatus: data,
         refetchInstanceStatus: refetch,
+        refresh,
         isBilling: billingPlans.includes(data?.plan ?? InstancePlan.UNKNOWN),
         loading,
         error,

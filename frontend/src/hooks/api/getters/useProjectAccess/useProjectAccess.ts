@@ -1,11 +1,10 @@
 import useSWR, { mutate, SWRConfiguration } from 'swr';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { IProjectRole } from 'interfaces/role';
 import { IGroup } from 'interfaces/group';
 import { IUser } from 'interfaces/user';
-import { useGroups } from '../useGroups/useGroups';
 import { mapGroupUsers } from '../useGroup/useGroup';
 
 export enum ENTITY_TYPE {

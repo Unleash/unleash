@@ -1,14 +1,9 @@
-import { Popover, Badge, styled, Tooltip } from '@mui/material';
-import { IGroup, IGroupUser, Role } from 'interfaces/group';
-import { Link } from 'react-router-dom';
+import { Badge, Popover, styled } from '@mui/material';
+import { IGroupUser, Role } from 'interfaces/group';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 import { Badge as StyledBadge } from 'component/common/Badge/Badge';
-
-import { RemoveGroup } from 'component/admin/groups/RemoveGroup/RemoveGroup';
-import { useState } from 'react';
 import StarIcon from '@mui/icons-material/Star';
-import { IUser } from '../../../../../../../interfaces/user';
 
 const StyledPopover = styled(Popover)(({ theme }) => ({
     pointerEvents: 'none',

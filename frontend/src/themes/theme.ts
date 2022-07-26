@@ -96,7 +96,7 @@ export default createTheme({
             main: colors.grey[400],
             dark: colors.grey[600],
             background: 'white',
-            contrast: colors.grey[300]
+            contrast: colors.grey[300],
         },
         divider: colors.grey[300],
         dividerAlternative: colors.grey[400],

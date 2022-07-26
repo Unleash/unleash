@@ -1,0 +1,69 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`setStrategySortOrderSchema missing id 1`] = `
+Object {
+  "errors": Array [
+    Object {
+      "instancePath": "/0",
+      "keyword": "required",
+      "message": "must have required property 'id'",
+      "params": Object {
+        "missingProperty": "id",
+      },
+      "schemaPath": "#/items/required",
+    },
+  ],
+  "schema": "#/components/schemas/setStrategySortOrderSchema",
+}
+`;
+
+exports[`setStrategySortOrderSchema missing sortOrder 1`] = `
+Object {
+  "errors": Array [
+    Object {
+      "instancePath": "/0",
+      "keyword": "required",
+      "message": "must have required property 'sortOrder'",
+      "params": Object {
+        "missingProperty": "sortOrder",
+      },
+      "schemaPath": "#/items/required",
+    },
+  ],
+  "schema": "#/components/schemas/setStrategySortOrderSchema",
+}
+`;
+
+exports[`setStrategySortOrderSchema no additional parameters 1`] = `
+Object {
+  "errors": Array [
+    Object {
+      "instancePath": "/1",
+      "keyword": "additionalProperties",
+      "message": "must NOT have additional properties",
+      "params": Object {
+        "additionalProperty": "extra",
+      },
+      "schemaPath": "#/items/additionalProperties",
+    },
+  ],
+  "schema": "#/components/schemas/setStrategySortOrderSchema",
+}
+`;
+
+exports[`setStrategySortOrderSchema wrong sortOrder type 1`] = `
+Object {
+  "errors": Array [
+    Object {
+      "instancePath": "/0/sortOrder",
+      "keyword": "type",
+      "message": "must be number",
+      "params": Object {
+        "type": "number",
+      },
+      "schemaPath": "#/items/properties/sortOrder/type",
+    },
+  ],
+  "schema": "#/components/schemas/setStrategySortOrderSchema",
+}
+`;

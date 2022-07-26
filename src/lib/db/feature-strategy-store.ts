@@ -385,6 +385,12 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         throw new NotFoundError(`Could not find strategy with id: ${id}`);
     }
 
+    async updateSortOrder(id: string, sortOrder: number): Promise<void> {
+        await this.db<IFeatureStrategiesTable>(T.featureStrategies)
+            .where({ id })
+            .update({ sort_order: sortOrder });
+    }
+
     async updateStrategy(
         id: string,
         updates: Partial<IFeatureStrategy>,

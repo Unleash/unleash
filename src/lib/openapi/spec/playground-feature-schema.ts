@@ -41,7 +41,6 @@ export const playgroundSegmentSchema = {
     components: {
         schemas: {
             playgroundConstraintSchema,
-            constraintSchema,
         },
     },
 } as const;
@@ -81,7 +80,6 @@ export const playgroundStrategySchema = {
     },
     components: {
         schemas: {
-            constraintSchema,
             playgroundConstraintSchema,
             playgroundSegmentSchema,
             parametersSchema,
@@ -140,7 +138,6 @@ export const playgroundFeatureSchema = {
     components: {
         schemas: {
             playgroundStrategySchema,
-            constraintSchema,
             playgroundConstraintSchema,
             playgroundSegmentSchema,
             parametersSchema,

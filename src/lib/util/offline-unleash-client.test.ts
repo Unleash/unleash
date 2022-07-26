@@ -18,7 +18,7 @@ describe('offline client', () => {
             console.log,
         );
 
-        expect(client.isEnabled(name)).toBeTruthy();
+        expect(client.isEnabled(name).enabled).toBeTruthy();
     });
 
     it('constrains on appName', async () => {
@@ -70,8 +70,8 @@ describe('offline client', () => {
             console.log,
         );
 
-        expect(client.isEnabled(enabledFeature)).toBeTruthy();
-        expect(client.isEnabled(disabledFeature)).toBeFalsy();
+        expect(client.isEnabled(enabledFeature).enabled).toBeTruthy();
+        expect(client.isEnabled(disabledFeature).enabled).toBeFalsy();
     });
 
     it('considers disabled variants with a default strategy to be off', async () => {
@@ -95,7 +95,7 @@ describe('offline client', () => {
             console.log,
         );
 
-        expect(client.isEnabled(name)).toBeFalsy();
+        expect(client.isEnabled(name).enabled).toBeFalsy();
     });
 
     it('considers disabled variants with a default strategy and variants to be off', async () => {
@@ -134,7 +134,7 @@ describe('offline client', () => {
             console.log,
         );
 
-        expect(client.isEnabled(name)).toBeFalsy();
+        expect(client.isEnabled(name).enabled).toBeFalsy();
     });
 
     it("returns variant {name: 'disabled', enabled: false } if the toggle isn't enabled", async () => {
@@ -170,7 +170,7 @@ describe('offline client', () => {
             console.log,
         );
 
-        expect(client.isEnabled(name)).toBeFalsy();
+        expect(client.isEnabled(name).enabled).toBeFalsy();
         expect(client.getVariant(name).name).toEqual('disabled');
         expect(client.getVariant(name).enabled).toBeFalsy();
     });
@@ -200,6 +200,8 @@ describe('offline client', () => {
 
         expect(client.getVariant(name, {}).name).toEqual('disabled');
         expect(client.getVariant(name, {}).enabled).toBeFalsy();
-        expect(client.isEnabled(name, {})).toBeTruthy();
+        expect(client.isEnabled(name, {}).enabled).toBeTruthy();
     });
+
+    it("returns 'not found' if there are no strategies");
 });

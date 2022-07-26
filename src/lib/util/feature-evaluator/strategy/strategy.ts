@@ -1,6 +1,9 @@
-import { constraintNumberTypeSchema } from 'lib/schema/constraint-value-types';
+import { PlaygroundConstraintSchema } from 'lib/openapi/spec/playground-feature-schema';
 import { gt as semverGt, lt as semverLt, eq as semverEq } from 'semver';
-import { EnabledStatus } from '../client';
+import {
+    NamedStrategyEvaluationResult,
+    StrategyEvaluationResult,
+} from '../client';
 import { Context } from '../context';
 import { resolveContextValue } from '../helpers';
 
@@ -190,56 +193,35 @@ export class Strategy {
     checkConstraints(
         context: Context,
         constraints?: Constraint[],
-    ): EnabledStatus {
+    ): { result: boolean; constraints: PlaygroundConstraintSchema[] } {
         if (!constraints || constraints.length === 0) {
             return {
-                enabled: true,
-                reasons: ['This strategy has no constraints'],
+                result: true,
+                constraints: [],
+                // reasons: ['This strategy has no constraints'],
             };
         }
 
-        if (
-            constraints.every((constraint) =>
-                this.checkConstraint(constraint, context),
-            )
-        ) {
-            return {
-                enabled: true,
-                reasons: constraints.map(
-                    (constraint) =>
-                        `${constraint.contextName} is ${
-                            constraint.inverted ? 'not' : ''
-                        } ${constraint.operator} ${
-                            constraint.value || constraint.values
-                        }.`,
-                ),
-            };
-        } else {
-            const failedConstraints = constraints.filter(
-                (constraint) => !this.checkConstraint(constraint, context),
-            );
+        const mappedConstraints = constraints.map((constraint) => ({
+            ...constraint,
+            value: constraint.value?.toString() ?? undefined,
+            result: this.checkConstraint(constraint, context),
+        }));
 
-            return {
-                enabled: false,
-                reasons: failedConstraints.map(
-                    (constraint) =>
-                        `${constraint.contextName} is ${
-                            constraint.inverted ? '' : 'not'
-                        } ${constraint.operator} ${
-                            constraint.value || constraint.values
-                        }.`,
-                ),
-            };
-        }
+        const result = mappedConstraints.every(
+            (constraint) => constraint.result,
+        );
+
+        return {
+            result,
+            constraints: mappedConstraints,
+        };
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    isEnabled(parameters: any, context: Context): EnabledStatus {
+    isEnabled(parameters: any, context: Context): StrategyEvaluationResult {
         return {
-            enabled: this.returnValue,
-            reasons: [
-                `${this.returnValue} is the default return value for  this strategy.`,
-            ],
+            result: this.returnValue,
         };
     }
 
@@ -247,36 +229,38 @@ export class Strategy {
         parameters: any,
         context: Context,
         constraints: Constraint[] = [],
-    ): EnabledStatus {
+    ): StrategyEvaluationResult {
         const constraintResults = this.checkConstraints(context, constraints);
         const enabledResult = this.isEnabled(parameters, context);
 
-        if (constraintResults.enabled && enabledResult.enabled) {
+        if (constraintResults.result && enabledResult.result) {
             return {
-                enabled: true,
-                reasons: [
-                    ...constraintResults.reasons,
-                    ...enabledResult.reasons,
-                ],
+                result: true,
+                constraints: [],
+                // reasons: [
+                //     ...constraintResults.reasons,
+                //     ...enabledResult.reasons,
+                // ],
             };
         } else {
             const result = {
-                enabled: false,
-                reasons: [
-                    ...(!constraintResults.enabled
-                        ? constraintResults.reasons
-                        : []),
-                    ...(!enabledResult.enabled ? enabledResult.reasons : []),
-                ],
+                result: false,
+                constraints: [],
+                // reasons: [
+                //     ...(!constraintResults.enabled
+                //         ? constraintResults.reasons
+                //         : []),
+                //     ...(!enabledResult.enabled ? enabledResult.reasons : []),
+                // ],
             };
 
-            if (!constraintResults.enabled) {
-                console.log(
-                    'contsraint results',
-                    constraintResults,
-                    result.reasons,
-                );
-            }
+            // if (!constraintResults.enabled) {
+            //     console.log(
+            //         'contsraint results',
+            //         constraintResults,
+            //         result.reasons,
+            //     );
+            // }
 
             return result;
         }

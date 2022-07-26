@@ -1,39 +1,29 @@
 import { FromSchema } from 'json-schema-to-ts';
-import { constraintSchema } from './constraint-schema';
+import { constraintSchema, constraintSchemaBase } from './constraint-schema';
 import { parametersSchema } from './parameters-schema';
 
-const evalResults = ['enabled', 'disabled'] as const;
 
 const resultsSchema = {
-    type: 'string',
-    enum: evalResults,
+    type: 'boolean',
 } as const;
 
 export const playgroundConstraintSchema = {
     $id: '#/components/schemas/playgroundConstraintSchema',
-    type: 'object',
-    allOf: [
-        { $ref: constraintSchema.$id },
-        {
-            required: ['result'],
-            properties: {
-                result: {
-                    type: 'string',
-                    enum: evalResults,
-                },
-            },
-        },
-    ],
-    components: {
-        schemas: {
-            constraintSchema,
-        },
-    },
+    additionalProperties: false,
+    ...constraintSchemaBase,
+    required: [...constraintSchemaBase.required, 'result'],
+    properties: {
+        ...constraintSchemaBase.properties,
+        result: resultsSchema
+    }
 } as const;
+
+export type PlaygroundConstraintSchema = FromSchema<typeof playgroundConstraintSchema>
 
 export const playgroundSegmentSchema = {
     $id: '#/components/schemas/playgroundSegmentSchema',
     type: 'object',
+    additionalProperties: false,
     required: ['name', 'id', 'constraints', 'result'],
     properties: {
         id: {
@@ -56,19 +46,23 @@ export const playgroundSegmentSchema = {
     },
 } as const;
 
+export type PlaygroundSegmentSchema = FromSchema<typeof playgroundSegmentSchema>
+
 export const playgroundStrategySchema = {
     $id: '#/components/schemas/playgroundStrategySchema',
     type: 'object',
     additionalProperties: false,
-    required: ['name', 'id'],
+    required: ['name', 'result'],
     properties: {
-        id: {
-            type: 'string',
-        },
         name: {
             type: 'string',
         },
-        result: resultsSchema,
+        result: {
+            anyOf: [
+                resultsSchema,
+                { type: 'string', enum: ['not found']}
+            ]
+        },
         segments: {
             type: 'array',
             items: {
@@ -95,6 +89,8 @@ export const playgroundStrategySchema = {
     },
 } as const;
 
+export type PlaygroundStrategySchema = FromSchema<typeof playgroundStrategySchema>
+
 export const playgroundFeatureSchema = {
     $id: '#/components/schemas/playgroundFeatureSchema',
     description:
@@ -111,7 +107,12 @@ export const playgroundFeatureSchema = {
                 $ref: playgroundStrategySchema.$id,
             },
         },
-        isEnabled: { type: 'boolean', examples: [true] },
+        isEnabled: {
+            anyOf: [
+                { type: 'boolean', examples: [true] },
+                { type: 'string', enum: ['unevaluated'] },
+            ]
+        },
         variant: {
             type: 'object',
             additionalProperties: false,

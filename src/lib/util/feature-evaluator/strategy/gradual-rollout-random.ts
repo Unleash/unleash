@@ -1,6 +1,6 @@
 import { Strategy } from './strategy';
 import { Context } from '../context';
-import { EnabledStatus } from '../client';
+import { StrategyEvaluationResult } from '../client';
 
 export default class GradualRolloutRandomStrategy extends Strategy {
     private randomGenerator: Function = () =>
@@ -12,16 +12,16 @@ export default class GradualRolloutRandomStrategy extends Strategy {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    isEnabled(parameters: any, context: Context): EnabledStatus {
+    isEnabled(parameters: any, context: Context): StrategyEvaluationResult {
         const percentage: number = Number(parameters.percentage);
         const random: number = this.randomGenerator();
 
         const enabled = percentage >= random;
         return {
-            enabled,
-            reasons: [
-                `Because you were randomly selected to be in the ${percentage}% of users to receive this result.`,
-            ],
+            result: enabled,
+            // reasons: [
+            //     `Because you were randomly selected to be in the ${percentage}% of users to receive this result.`,
+            // ],
         };
     }
 }

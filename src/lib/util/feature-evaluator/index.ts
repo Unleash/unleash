@@ -6,7 +6,7 @@ import { TagFilter } from './tags';
 import { UnleashEvents } from './events';
 import { ClientFeaturesResponse } from './feature';
 import InMemStorageProvider from './repository/storage-provider-in-mem';
-import { EnabledStatus } from './client';
+import { FeatureEvaluationResult } from './client';
 
 // exports
 export { Strategy } from './strategy/index';
@@ -43,13 +43,14 @@ export function isEnabled(
     name: string,
     context: Context = {},
     fallbackValue?: boolean,
-): EnabledStatus {
+): FeatureEvaluationResult {
     console.log('index.isEnabled');
     if (!instance) {
         return {
             enabled: false,
+            strategies: [],
             reasons: ["The Unleash client instance doesn't exist."],
-        };
+        } as FeatureEvaluationResult;
     } else {
         console.log('Have an instance. Feature:', name);
 

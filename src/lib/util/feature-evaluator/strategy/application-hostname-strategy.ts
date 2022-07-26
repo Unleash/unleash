@@ -1,5 +1,5 @@
 import { hostname } from 'os';
-import { EnabledStatus } from '../client';
+import { StrategyEvaluationResult } from '../client';
 import { Strategy } from './strategy';
 
 export default class ApplicationHostnameStrategy extends Strategy {
@@ -14,13 +14,13 @@ export default class ApplicationHostnameStrategy extends Strategy {
         ).toLowerCase();
     }
 
-    isEnabled(parameters: any): EnabledStatus {
+    isEnabled(parameters: any): StrategyEvaluationResult {
         if (!parameters.hostNames) {
             return {
-                enabled: false,
-                reasons: [
-                    'You have not provided any hostnames to activate this strategy for.',
-                ],
+                result: false,
+                // reasons: [
+                //     'You have not provided any hostnames to activate this strategy for.',
+                // ],
             };
         }
 
@@ -30,12 +30,12 @@ export default class ApplicationHostnameStrategy extends Strategy {
             .includes(this.hostname);
 
         return {
-            enabled,
-            reasons: [
-                `${this.hostname} is ${enabled ? '' : 'not '}one of ${
-                    parameters.hostNames
-                }`,
-            ],
+            result: enabled,
+            // reasons: [
+            //     `${this.hostname} is ${enabled ? '' : 'not '}one of ${
+            //         parameters.hostNames
+            //     }`,
+            // ],
         };
     }
 }

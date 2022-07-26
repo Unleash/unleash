@@ -1,6 +1,6 @@
 import { tmpdir } from 'os';
 import { EventEmitter } from 'events';
-import Client, { EnabledStatus } from './client';
+import Client, { FeatureEvaluationResult } from './client';
 import Repository, { RepositoryInterface } from './repository';
 import { CustomHeaders, CustomHeadersFunction } from './headers';
 import { Context } from './context';
@@ -200,17 +200,17 @@ export class Unleash extends EventEmitter {
         name: string,
         context?: Context,
         fallbackFunction?: FallbackFunction,
-    ): EnabledStatus;
+    ): FeatureEvaluationResult;
     isEnabled(
         name: string,
         context?: Context,
         fallbackValue?: boolean,
-    ): EnabledStatus;
+    ): FeatureEvaluationResult;
     isEnabled(
         name: string,
         context: Context = {},
         fallback?: FallbackFunction | boolean,
-    ): EnabledStatus {
+    ): FeatureEvaluationResult {
         console.log('unleash.isEnabled');
 
         const enhancedContext = { ...this.staticContext, ...context };

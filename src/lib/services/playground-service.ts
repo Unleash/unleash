@@ -7,7 +7,7 @@ import { Logger } from '../logger';
 import { IUnleashConfig } from 'lib/types';
 import { offlineUnleashClient } from '../util/offline-unleash-client';
 import { FeatureInterface } from 'lib/util/feature-evaluator/feature';
-import { EnabledStatus } from 'lib/util/feature-evaluator/client';
+import { FeatureEvaluationResult } from 'lib/util/feature-evaluator/client';
 
 export class PlaygroundService {
     private readonly logger: Logger;
@@ -58,14 +58,12 @@ export class PlaygroundService {
                 client
                     .getFeatureToggleDefinitions()
                     .map(async (feature: FeatureInterface) => {
-                        const enabledStatus: EnabledStatus = client.isEnabled(
-                            feature.name,
-                            clientContext,
-                        );
+                        const enabledStatus: FeatureEvaluationResult =
+                            client.isEnabled(feature.name, clientContext);
 
                         return {
                             isEnabled: enabledStatus.enabled,
-                            reasons: enabledStatus.reasons,
+                            strategies: enabledStatus.strategies,
                             projectId:
                                 await this.featureToggleService.getProjectId(
                                     feature.name,

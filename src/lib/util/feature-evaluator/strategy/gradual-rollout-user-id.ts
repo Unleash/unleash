@@ -1,19 +1,19 @@
 import { Strategy } from './strategy';
 import { Context } from '../context';
 import normalizedValue from './util';
-import { EnabledStatus } from '../client';
+import { StrategyEvaluationResult } from '../client';
 
 export default class GradualRolloutUserIdStrategy extends Strategy {
     constructor() {
         super('gradualRolloutUserId');
     }
 
-    isEnabled(parameters: any, context: Context): EnabledStatus {
+    isEnabled(parameters: any, context: Context): StrategyEvaluationResult {
         const { userId } = context;
         if (!userId) {
             return {
-                enabled: false,
-                reasons: ['There was no user ID provided.'],
+                result: false,
+                // reasons: ['There was no user ID provided.'],
             };
         }
 
@@ -29,8 +29,8 @@ export default class GradualRolloutUserIdStrategy extends Strategy {
         }active.`;
 
         return {
-            enabled,
-            reasons: [reason],
+            result: enabled,
+            // reasons: [reason],
         };
     }
 }

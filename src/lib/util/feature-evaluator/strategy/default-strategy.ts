@@ -1,4 +1,4 @@
-import { EnabledStatus } from '../client';
+import { StrategyEvaluationResult } from '../client';
 import { Strategy } from './strategy';
 
 export default class DefaultStrategy extends Strategy {
@@ -6,10 +6,10 @@ export default class DefaultStrategy extends Strategy {
         super('default');
     }
 
-    isEnabled(): EnabledStatus {
+    isEnabled(): StrategyEvaluationResult {
         return {
-            enabled: true,
-            reasons: ['The default strategy is on for all users.'],
+            result: true,
+            // reasons: ['The default strategy is on for all users.'],
         };
     }
 }

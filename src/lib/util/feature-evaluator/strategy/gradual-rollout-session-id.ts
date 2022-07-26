@@ -11,8 +11,8 @@ export default class GradualRolloutSessionIdStrategy extends Strategy {
         const { sessionId } = context;
         if (!sessionId) {
             return {
-                enabled: false,
-                reasons: ['There was no session ID provided.'],
+                result: false,
+                // reasons: ['There was no session ID provided.'],
             };
         }
 
@@ -27,8 +27,8 @@ export default class GradualRolloutSessionIdStrategy extends Strategy {
         }active.`;
 
         return {
-            enabled,
-            reasons: [reason],
+            result: enabled,
+            // reasons: [reason],
         };
     }
 }

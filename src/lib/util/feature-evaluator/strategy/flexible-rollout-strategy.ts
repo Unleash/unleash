@@ -2,7 +2,7 @@ import { Strategy } from './strategy';
 import { Context } from '../context';
 import normalizedValue from './util';
 import { resolveContextValue } from '../helpers';
-import { EnabledStatus } from '../client';
+import { StrategyEvaluationResult } from '../client';
 
 const STICKINESS = {
     default: 'default',
@@ -35,7 +35,7 @@ export default class FlexibleRolloutStrategy extends Strategy {
         }
     }
 
-    isEnabled(parameters: any, context: Context): EnabledStatus {
+    isEnabled(parameters: any, context: Context): StrategyEvaluationResult {
         const groupId = parameters.groupId || context.featureToggle || '';
         const percentage = Number(parameters.rollout);
         const stickiness: string = parameters.stickiness || STICKINESS.default;
@@ -43,10 +43,10 @@ export default class FlexibleRolloutStrategy extends Strategy {
 
         if (!stickinessId) {
             return {
-                enabled: false,
-                reasons: [
-                    'There is no stickiness ID provided to this strategy.',
-                ],
+                result: false,
+                // reasons: [
+                //     'There is no stickiness ID provided to this strategy.',
+                // ],
             };
         }
         const normalizedUserId = normalizedValue(stickinessId, groupId);
@@ -60,8 +60,8 @@ export default class FlexibleRolloutStrategy extends Strategy {
         }active.`;
 
         return {
-            enabled,
-            reasons: [reason],
+            result: enabled,
+            // reasons: [reason],
         };
     }
 }

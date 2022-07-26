@@ -9,54 +9,97 @@ import {
     selectVariant,
 } from './variant';
 import { Context } from './context';
+import type { PlaygroundStrategySchema } from '../../openapi/spec/playground-feature-schema';
 
 interface BooleanMap {
     [key: string]: boolean;
 }
 
-export type EnabledStatus = {
+export type NamedStrategyEvaluationResult = PlaygroundStrategySchema;
+export type StrategyEvaluationResult = Omit<
+    NamedStrategyEvaluationResult,
+    'name'
+>;
+
+export type FeatureEvaluationResult = {
     enabled: boolean;
-    reasons: string[];
+    strategies: NamedStrategyEvaluationResult[];
 };
 
-const appendStrategyStatuses = (...statuses: EnabledStatus[]): EnabledStatus =>
-    statuses.reduce((acc, next) => {
-        if (acc.enabled && next.enabled) {
-            return {
-                enabled: true,
-                reasons: [...acc.reasons, ...next.reasons],
-            };
-        } else if (acc.enabled) {
-            return acc;
-        } else if (next.enabled) {
-            return next;
-        } else {
-            return {
-                enabled: false,
-                reasons: [...acc.reasons, ...next.reasons],
-            };
-        }
+type EvalResult<T> = {
+    enabled: boolean;
+    results: T[];
+};
 
-        // switch ([acc.enabled, next.enabled]) {
-        //     case [true, true]:
-        //         return {
-        //             enabled: true,
-        //             reasons: [...acc.reasons, ...next.reasons],
-        //         };
-        //     case [true, false]:
-        //         // if one strat is true, the feature is enabled
-        //         return acc;
-        //     case [false, true]:
-        //         return next;
-        //     case [false, false]:
-        //         return {
-        //             enabled: false,
-        //             reasons: [...acc.reasons, ...next.reasons],
-        //         };
-        //     default:
-        //         return acc;
-        // }
-    });
+const append = (
+    a: EvalResult<'constraint'>,
+    b: EvalResult<'constraint'>,
+): EvalResult<'constraint'> => ({
+    enabled: a.enabled && b.enabled,
+    results: [...a.results, ...b.results],
+});
+
+const appendSegs = (
+    a: EvalResult<'segment'>,
+    b: EvalResult<'segment'>,
+): EvalResult<'segment'> => ({
+    enabled: a.enabled && b.enabled,
+    results: [...a.results, ...b.results],
+});
+
+const appendStrats = (
+    a: EvalResult<'strategy'>,
+    b: EvalResult<'strategy'>,
+): EvalResult<'strategy'> => ({
+    enabled: a.enabled || b.enabled,
+    results: [...a.results, ...b.results],
+});
+
+// const append =
+
+// export type EnabledStatus = {
+//     enabled: boolean;
+//     reasons: string[];
+// };
+
+// const appendStrategyStatuses = (...statuses: EnabledStatus[]): EnabledStatus =>
+//     statuses.reduce((acc, next) => {
+//         if (acc.enabled && next.enabled) {
+//             return {
+//                 enabled: true,
+//                 reasons: [...acc.reasons, ...next.reasons],
+//             };
+//         } else if (acc.enabled) {
+//             return acc;
+//         } else if (next.enabled) {
+//             return next;
+//         } else {
+//             return {
+//                 enabled: false,
+//                 reasons: [...acc.reasons, ...next.reasons],
+//             };
+//         }
+
+//         // switch ([acc.enabled, next.enabled]) {
+//         //     case [true, true]:
+//         //         return {
+//         //             enabled: true,
+//         //             reasons: [...acc.reasons, ...next.reasons],
+//         //         };
+//         //     case [true, false]:
+//         //         // if one strat is true, the feature is enabled
+//         //         return acc;
+//         //     case [false, true]:
+//         //         return next;
+//         //     case [false, false]:
+//         //         return {
+//         //             enabled: false,
+//         //             reasons: [...acc.reasons, ...next.reasons],
+//         //         };
+//         //     default:
+//         //         return acc;
+//         // }
+//     });
 
 export default class UnleashClient extends EventEmitter {
     private repository: RepositoryInterface;
@@ -110,7 +153,7 @@ export default class UnleashClient extends EventEmitter {
         name: string,
         context: Context,
         fallback: Function,
-    ): EnabledStatus {
+    ): FeatureEvaluationResult {
         const feature = this.repository.getToggle(name);
         return this.isFeatureEnabled(feature, context, fallback);
     }
@@ -119,7 +162,7 @@ export default class UnleashClient extends EventEmitter {
         feature: FeatureInterface,
         context: Context,
         fallback: Function,
-    ): EnabledStatus {
+    ): FeatureEvaluationResult {
         if (!feature) {
             return fallback();
         }
@@ -127,9 +170,10 @@ export default class UnleashClient extends EventEmitter {
         if (!feature || !feature.enabled) {
             return {
                 enabled: false,
-                reasons: [
-                    "The feature doesn't exist or isn't enabled in this environment.",
-                ],
+                strategies: [],
+                // reasons: [
+                //     "The feature doesn't exist or isn't enabled in this environment.",
+                // ],
             };
         }
 
@@ -139,9 +183,10 @@ export default class UnleashClient extends EventEmitter {
             this.emit('error', new Error(errorMsg));
             return {
                 enabled: false,
-                reasons: [
-                    `The feature is malformed and could not be read: ${errorMsg} `,
-                ],
+                strategies: [],
+                // reasons: [
+                //     `The feature is malformed and could not be read: ${errorMsg} `,
+                // ],
             };
         }
 
@@ -151,11 +196,12 @@ export default class UnleashClient extends EventEmitter {
                 : 'The feature has no strategies and is not enabled in this environment.';
             return {
                 enabled: feature.enabled,
-                reasons: [reason],
+                strategies: [],
+                // reasons: [reason],
             };
         } else {
-            const evalResults = appendStrategyStatuses(
-                ...feature.strategies.map((strategySelector): EnabledStatus => {
+            const strategies = feature.strategies.map(
+                (strategySelector): NamedStrategyEvaluationResult => {
                     const strategy = this.getStrategy(strategySelector.name);
                     if (!strategy) {
                         this.warnOnce(
@@ -164,21 +210,37 @@ export default class UnleashClient extends EventEmitter {
                             feature.strategies,
                         );
                         return {
-                            enabled: false,
-                            reasons: [
-                                `Couldn't find the strategy called ${strategySelector.name}`,
-                            ],
+                            name: strategySelector.name,
+                            result: 'not found',
+                            // reasons: [
+                            //     `Couldn't find the strategy called ${strategySelector.name}`,
+                            // ],
                         };
                     }
 
-                    return strategy.isEnabledWithConstraints(
+                    const strategyResults = strategy.isEnabledWithConstraints(
                         strategySelector.parameters,
                         context,
                         strategySelector.constraints,
                     );
-                }),
+
+                    return {
+                        name: strategySelector.name,
+                        ...strategyResults,
+                    };
+                },
             );
 
+            const isEnabled = strategies.every((strategy) =>
+                strategy.result === 'not found'
+                    ? 'unevaluated'
+                    : strategies.some((strategy) => strategy.result === true),
+            );
+
+            const evalResults: FeatureEvaluationResult = {
+                enabled: isEnabled,
+                strategies,
+            };
             return evalResults;
             // return feature.strategies.some((strategySelector): boolean => {
             //     const strategy = this.getStrategy(strategySelector.name);

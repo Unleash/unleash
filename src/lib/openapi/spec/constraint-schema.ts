@@ -1,8 +1,7 @@
 import { FromSchema } from 'json-schema-to-ts';
 import { ALL_OPERATORS } from '../../util/constants';
 
-export const constraintSchema = {
-    $id: '#/components/schemas/constraintSchema',
+export const constraintSchemaBase = {
     type: 'object',
     required: ['contextName', 'operator'],
     properties: {
@@ -30,6 +29,12 @@ export const constraintSchema = {
         },
     },
     components: {},
+} as const;
+
+export const constraintSchema = {
+    $id: '#/components/schemas/constraintSchema',
+    additionalProperties: false,
+    ...constraintSchemaBase,
 } as const;
 
 export type ConstraintSchema = FromSchema<typeof constraintSchema>;

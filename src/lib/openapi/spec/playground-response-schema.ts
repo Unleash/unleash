@@ -1,7 +1,14 @@
 import { FromSchema } from 'json-schema-to-ts';
 import { sdkContextSchema } from './sdk-context-schema';
 import { playgroundRequestSchema } from './playground-request-schema';
-import { playgroundFeatureSchema } from './playground-feature-schema';
+import {
+    playgroundConstraintSchema,
+    playgroundFeatureSchema,
+    playgroundSegmentSchema,
+    playgroundStrategySchema,
+} from './playground-feature-schema';
+import { constraintSchema } from './constraint-schema';
+import { parametersSchema } from './parameters-schema';
 
 export const playgroundResponseSchema = {
     $id: '#/components/schemas/playgroundResponseSchema',
@@ -22,9 +29,14 @@ export const playgroundResponseSchema = {
     },
     components: {
         schemas: {
-            sdkContextSchema,
-            playgroundRequestSchema,
+            constraintSchema,
+            parametersSchema,
+            playgroundConstraintSchema,
             playgroundFeatureSchema,
+            playgroundRequestSchema,
+            playgroundSegmentSchema,
+            playgroundStrategySchema,
+            sdkContextSchema,
         },
     },
 } as const;

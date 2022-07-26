@@ -28,17 +28,18 @@ export const commonISOTimestamp = (): Arbitrary<string> =>
         })
         .map((timestamp) => timestamp.toISOString());
 
+export const strategyConstraint = (): Arbitrary<ConstraintSchema> =>
+    fc.record({
+        contextName: urlFriendlyString(),
+        operator: fc.constantFrom(...ALL_OPERATORS),
+        caseInsensitive: fc.boolean(),
+        inverted: fc.boolean(),
+        values: fc.array(fc.string()),
+        value: fc.string(),
+    });
+
 const strategyConstraints = (): Arbitrary<ConstraintSchema[]> =>
-    fc.array(
-        fc.record({
-            contextName: urlFriendlyString(),
-            operator: fc.constantFrom(...ALL_OPERATORS),
-            caseInsensitive: fc.boolean(),
-            inverted: fc.boolean(),
-            values: fc.array(fc.string()),
-            value: fc.string(),
-        }),
-    );
+    fc.array(strategyConstraint());
 
 export const strategy = (
     name: string,

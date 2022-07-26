@@ -17,8 +17,8 @@ export const useStyles = makeStyles()(theme => ({
         fill: '#fff',
     },
     accordion: {
-        border: `1px solid ${theme.palette.grey[300]}`,
-        borderRadius: '5px',
+        border: `1px solid ${theme.palette.grey[400]}`,
+        borderRadius: '8px',
         backgroundColor: '#fff',
         boxShadow: 'none',
         margin: 0,
@@ -45,6 +45,11 @@ export const useStyles = makeStyles()(theme => ({
             alignItems: 'center',
             position: 'relative',
         },
+    },
+    headerValuesContainerWrapper: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center',
     },
     headerValuesContainer: {
         display: 'flex',
@@ -81,12 +86,6 @@ export const useStyles = makeStyles()(theme => ({
             top: '-10px',
         },
     },
-    help: {
-        fill: theme.palette.grey[600],
-        [theme.breakpoints.down(860)]: {
-            display: 'none',
-        },
-    },
     headerText: {
         maxWidth: '400px',
         fontSize: theme.fontSizes.smallBody,
@@ -105,8 +104,9 @@ export const useStyles = makeStyles()(theme => ({
         [theme.breakpoints.down(770)]: {
             marginTop: '1rem',
         },
+        display: 'inline-flex',
     },
-    headerSelect: { marginRight: '2rem', width: '200px' },
+    headerSelect: { marginRight: '1rem', width: '200px' },
     chip: {
         margin: '0 0.5rem 0.5rem 0',
     },

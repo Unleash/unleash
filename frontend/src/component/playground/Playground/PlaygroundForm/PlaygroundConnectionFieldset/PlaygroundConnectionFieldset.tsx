@@ -6,7 +6,6 @@ import {
     Typography,
     useTheme,
 } from '@mui/material';
-import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { GuidanceIndicator } from 'component/common/GuidanceIndicator/GuidanceIndicator';
 

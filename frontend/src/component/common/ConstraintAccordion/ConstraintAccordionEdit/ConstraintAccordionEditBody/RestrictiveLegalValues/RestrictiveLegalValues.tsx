@@ -68,7 +68,15 @@ export const RestrictiveLegalValues = ({
             <ConstraintFormHeader>
                 Select values from a predefined set
             </ConstraintFormHeader>
-            <ConstraintValueSearch filter={filter} setFilter={setFilter} />
+            <ConditionallyRender
+                condition={legalValues.length > 100}
+                show={
+                    <ConstraintValueSearch
+                        filter={filter}
+                        setFilter={setFilter}
+                    />
+                }
+            />
             {filteredValues.map(match => (
                 <LegalValueLabel
                     key={match.value}

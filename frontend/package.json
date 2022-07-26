@@ -35,7 +35,8 @@
     "fmt": "prettier src --write --loglevel warn",
     "fmt:check": "prettier src --check",
     "e2e": "yarn run cypress open --config baseUrl='http://localhost:3000' --env AUTH_USER=admin,AUTH_PASSWORD=unleash4all",
-    "e2e:heroku": "yarn run cypress open --config baseUrl='http://localhost:3000' --env AUTH_USER=example@example.com"
+    "e2e:heroku": "yarn run cypress open --config baseUrl='http://localhost:3000' --env AUTH_USER=example@example.com",
+    "isready": "yarn lint && yarn fmt && yarn prepare"
   },
   "devDependencies": {
     "@emotion/react": "11.9.3",

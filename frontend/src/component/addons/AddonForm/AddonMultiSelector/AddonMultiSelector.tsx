@@ -7,14 +7,7 @@ import {
     AutocompleteRenderOptionState,
 } from '@mui/material/Autocomplete';
 import { styled } from '@mui/system';
-import {
-    Autocomplete,
-    Box,
-    capitalize,
-    Checkbox,
-    Paper,
-    TextField,
-} from '@mui/material';
+import { capitalize, Checkbox, Paper, TextField } from '@mui/material';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';

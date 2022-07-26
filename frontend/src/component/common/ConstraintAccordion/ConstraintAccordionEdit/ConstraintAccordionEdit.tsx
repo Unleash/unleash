@@ -19,6 +19,7 @@ interface IConstraintAccordionEditProps {
     onCancel: () => void;
     onSave: (constraint: IConstraint) => void;
     compact: boolean;
+    onDelete?: () => void;
 }
 
 export const CANCEL = 'cancel';
@@ -48,6 +49,7 @@ export const ConstraintAccordionEdit = ({
     compact,
     onCancel,
     onSave,
+    onDelete,
 }: IConstraintAccordionEditProps) => {
     const [localConstraint, setLocalConstraint] = useState<IConstraint>(
         cleanConstraint(constraint)
@@ -203,6 +205,9 @@ export const ConstraintAccordionEdit = ({
                         setOperator={setOperator}
                         action={action}
                         compact={compact}
+                        setInvertedOperator={setInvertedOperator}
+                        setCaseInsensitive={setCaseInsensitive}
+                        onDelete={onDelete}
                     />
                 </AccordionSummary>
 
@@ -214,10 +219,8 @@ export const ConstraintAccordionEdit = ({
                         localConstraint={localConstraint}
                         setValues={setValues}
                         setValue={setValue}
-                        setCaseInsensitive={setCaseInsensitive}
                         triggerTransition={triggerTransition}
                         setAction={setAction}
-                        setInvertedOperator={setInvertedOperator}
                         onSubmit={onSubmit}
                     >
                         <ResolveInput
@@ -229,7 +232,6 @@ export const ConstraintAccordionEdit = ({
                             error={error}
                             contextDefinition={contextDefinition}
                             removeValue={removeValue}
-                            setCaseInsensitive={setCaseInsensitive}
                         />
                     </ConstraintAccordionEditBody>
                 </AccordionDetails>

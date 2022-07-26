@@ -311,8 +311,12 @@ export default class UserAdminController extends Controller {
     ): Promise<void> {
         let allUsers = await this.userService.getAll();
         let users = allUsers.map((u) => {
-            const { rootRole, ...user } = u;
-            return user as IUser;
+            return {
+                id: u.id,
+                name: u.name,
+                username: u.username,
+                email: u.email,
+            } as IUser;
         });
 
         let allGroups = await this.groupService.getAll();

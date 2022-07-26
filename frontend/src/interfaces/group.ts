@@ -13,6 +13,7 @@ export interface IGroup {
     users: IGroupUser[];
     projects: string[];
     addedAt?: string;
+    userCount?: number;
 }
 
 export interface IGroupUser extends IUser {

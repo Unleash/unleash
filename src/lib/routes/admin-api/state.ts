@@ -120,12 +120,15 @@ class StateController extends Controller {
     ): Promise<void> {
         const { format } = req.query;
 
-        const downloadFile = req.query.download ?? false;
-        const includeStrategies = req.query.strategies ?? true;
-        const includeFeatureToggles = req.query.featureToggles ?? true;
-        const includeProjects = req.query.projects ?? true;
-        const includeTags = req.query.tags ?? true;
-        const includeEnvironments = req.query.environments ?? true;
+        const downloadFile = paramToBool(req.query.download, false);
+        const includeStrategies = paramToBool(req.query.strategies, true);
+        const includeFeatureToggles = paramToBool(
+            req.query.featureToggles,
+            true,
+        );
+        const includeProjects = paramToBool(req.query.projects, true);
+        const includeTags = paramToBool(req.query.tags, true);
+        const includeEnvironments = paramToBool(req.query.environments, true);
 
         const data = await this.stateService.export({
             includeStrategies,

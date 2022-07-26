@@ -2276,3 +2276,80 @@ test('should allow long parameter values', async () => {
         .send(strategy)
         .expect(200);
 });
+
+test.only('should change strategy sort order when payload is valid', async () => {
+    const toggle = { name: uuidv4(), impressionData: false }
+    console.log("Getting here")
+    await app.request
+        .post('/api/admin/projects/default/features')
+        .send({
+            name: toggle.name
+        })
+        .expect(201)
+ 
+
+     const { body: strategyOne} =   await app.request
+        .post(
+            `/api/admin/projects/default/features/${toggle.name}/environments/default/strategies`,
+        )
+        .send({
+            name: 'default',
+            parameters: {
+                userId: 'string',
+            },
+        })
+        .expect(200);
+
+    
+
+
+     const { body: strategyTwo } = await app.request
+        .post(
+            `/api/admin/projects/default/features/${toggle.name}/environments/default/strategies`,
+        )
+        .send({
+            name: 'gradualrollout',
+            parameters: {
+                userId: 'string',
+            },
+        })
+        .expect(200);
+    
+    const { body: strategies } = await app.request.get(
+        `/api/admin/projects/default/features/${toggle.name}/environments/default/strategies`,
+        );
+                
+    expect(strategies[0].sortOrder).toBe(9999);
+    expect(strategies[0].id).toBe(strategyOne.id);
+    expect(strategies[1].sortOrder).toBe(9999);
+    expect(strategies[1].id).toBe(strategyTwo.id);
+
+    await app.request.post(`/api/admin/projects/default/features/${toggle.name}/environments/default/strategies/set-sort-order`).send([
+        {
+            id: strategyOne.id,
+            sortOrder: 2 
+        },
+        {
+            id: strategyTwo.id,
+            sortOrder: 1
+        }
+    ]).expect(200);
+
+        
+    const { body: strategiesOrdered } = await app.request.get(
+        `/api/admin/projects/default/features/${toggle.name}/environments/default/strategies`,
+        );
+
+    expect(strategiesOrdered[0].sortOrder).toBe(1);
+    expect(strategiesOrdered[0].id).toBe(strategyTwo.id);
+    expect(strategiesOrdered[1].sortOrder).toBe(2);
+    expect(strategiesOrdered[1].id).toBe(strategyOne.id);
+})
+
+test('should reject set sort order request when payload is invalid', () => {
+    
+})
+
+test('should return strategies in correct order when new strategies are added', () => {
+
+})

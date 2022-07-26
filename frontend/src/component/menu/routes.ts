@@ -518,7 +518,7 @@ export const routes: IRoute[] = [
     {
         path: '/admin-invoices',
         parent: '/admin',
-        title: 'Invoices',
+        title: 'Billing & invoices',
         component: FlaggedBillingRedirect,
         type: 'protected',
         menu: { adminSettings: true, isEnterprise: true },

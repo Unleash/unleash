@@ -2603,7 +2603,7 @@ Object {
         "type": "object",
       },
       "updateUserSchema": Object {
-        "additionalProperties": false,
+        "additionalProperties": true,
         "properties": Object {
           "email": Object {
             "type": "string",

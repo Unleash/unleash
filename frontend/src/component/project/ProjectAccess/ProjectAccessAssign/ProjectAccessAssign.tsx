@@ -27,6 +27,7 @@ import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
 import { useGroups } from 'hooks/api/getters/useGroups/useGroups';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ProjectRoleDescription } from './ProjectRoleDescription/ProjectRoleDescription';
+import { useAccess } from '../../../../hooks/api/getters/useAccess/useAccess';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',
@@ -109,8 +110,7 @@ export const ProjectAccessAssign = ({
     const { refetchProjectAccess } = useProjectAccess(projectId);
     const { addAccessToProject, changeUserRole, changeGroupRole, loading } =
         useProjectApi();
-    const { users = [] } = useUsers();
-    const { groups = [] } = useGroups();
+    const { users, groups } = useAccess();
     const edit = Boolean(selected);
 
     const { setToastData, setToastApiError } = useToast();
@@ -148,7 +148,7 @@ export const ProjectAccessAssign = ({
                                 group.id === id && type === ENTITY_TYPE.GROUP
                         )
                 )
-                .map(group => ({
+                .map((group: IGroup) => ({
                     id: group.id,
                     entity: group,
                     type: ENTITY_TYPE.GROUP,
@@ -249,7 +249,7 @@ export const ProjectAccessAssign = ({
                     show={
                         <StyledGroupOption>
                             <span>{optionGroup?.name}</span>
-                            <span>{optionGroup?.users.length} users</span>
+                            <span>{optionGroup?.userCount} users</span>
                         </StyledGroupOption>
                     }
                     elseShow={

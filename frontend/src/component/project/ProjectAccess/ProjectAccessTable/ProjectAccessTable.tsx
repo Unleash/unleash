@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState, VFC } from 'react';
 import { SortingRule, useFlexLayout, useSortBy, useTable } from 'react-table';
 import { VirtualizedTable, TablePlaceholder } from 'component/common/Table';
-import { Avatar, Button, styled, useMediaQuery, useTheme } from '@mui/material';
+import { Button, useMediaQuery, useTheme } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
 import { sortTypes } from 'utils/sortTypes';
 import useProjectAccess, {
@@ -32,16 +32,7 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { IUser } from 'interfaces/user';
 import { IGroup } from 'interfaces/group';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
-
-const StyledAvatar = styled(Avatar)(({ theme }) => ({
-    width: theme.spacing(4),
-    height: theme.spacing(4),
-    margin: 'auto',
-    backgroundColor: theme.palette.secondary.light,
-    color: theme.palette.text.primary,
-    fontSize: theme.fontSizes.smallBody,
-    fontWeight: theme.fontWeight.bold,
-}));
+import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 
 export type PageQueryType = Partial<
     Record<'sort' | 'order' | 'search', string>
@@ -106,18 +97,9 @@ export const ProjectAccessTable: VFC = () => {
                 accessor: 'imageUrl',
                 Cell: ({ row: { original: row } }: any) => (
                     <TextCell>
-                        <StyledAvatar
-                            data-loading
-                            alt="Gravatar"
-                            src={row.entity.imageUrl}
-                            title={`${
-                                row.entity.name ||
-                                row.entity.email ||
-                                row.entity.username
-                            } (id: ${row.entity.id})`}
-                        >
+                        <UserAvatar user={row.entity}>
                             {row.entity.users?.length}
-                        </StyledAvatar>
+                        </UserAvatar>
                     </TextCell>
                 ),
                 maxWidth: 85,

@@ -1,4 +1,3 @@
-/* eslint-disable no-alert */
 import React, { useState, useEffect, useMemo } from 'react';
 import {
     Table,
@@ -21,7 +20,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { useUsersPlan } from 'hooks/useUsersPlan';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
-import { Avatar, Button, styled, useMediaQuery } from '@mui/material';
+import { Button, useMediaQuery } from '@mui/material';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { UserTypeCell } from './UserTypeCell/UserTypeCell';
 import { useGlobalFilter, useSortBy, useTable } from 'react-table';
@@ -34,12 +33,7 @@ import theme from 'themes/theme';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
 import { UsersActionsCell } from './UsersActionsCell/UsersActionsCell';
 import { Search } from 'component/common/Search/Search';
-
-const StyledAvatar = styled(Avatar)(({ theme }) => ({
-    width: theme.spacing(4),
-    height: theme.spacing(4),
-    margin: 'auto',
-}));
+import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 
 const UsersList = () => {
     const navigate = useNavigate();
@@ -125,14 +119,7 @@ const UsersList = () => {
                 accessor: 'imageUrl',
                 Cell: ({ row: { original: user } }: any) => (
                     <TextCell>
-                        <StyledAvatar
-                            data-loading
-                            alt="Gravatar"
-                            src={user.imageUrl}
-                            title={`${
-                                user.name || user.email || user.username
-                            } (id: ${user.id})`}
-                        />
+                        <UserAvatar user={user} />
                     </TextCell>
                 ),
                 disableGlobalFilter: true,
@@ -212,7 +199,7 @@ const UsersList = () => {
         setHiddenColumns,
     } = useTable(
         {
-            columns: columns as any[], // TODO: fix after `react-table` v8 update
+            columns: columns,
             data,
             initialState,
             sortTypes,

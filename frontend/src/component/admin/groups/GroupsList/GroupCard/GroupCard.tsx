@@ -7,6 +7,7 @@ import { Badge } from 'component/common/Badge/Badge';
 import { GroupCardActions } from './GroupCardActions/GroupCardActions';
 import { RemoveGroup } from 'component/admin/groups/RemoveGroup/RemoveGroup';
 import { useState } from 'react';
+import TopicOutlinedIcon from '@mui/icons-material/TopicOutlined';
 
 const StyledLink = styled(Link)(({ theme }) => ({
     textDecoration: 'none',
@@ -93,6 +94,7 @@ export const GroupCard = ({ group }: IGroupCardProps) => {
                                 show={group.projects.map(project => (
                                     <Badge
                                         color="secondary"
+                                        icon={<TopicOutlinedIcon />}
                                         sx={{ marginRight: 0.5 }}
                                     >
                                         {project}

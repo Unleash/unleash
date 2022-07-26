@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import classnames from 'classnames';
-import { Avatar, TextField, Typography } from '@mui/material';
+import { styled, TextField, Typography } from '@mui/material';
 import { trim } from 'component/common/util';
 import { modalStyles } from 'component/admin/users/util';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
@@ -11,6 +11,13 @@ import { useThemeStyles } from 'themes/themeStyles';
 import PasswordMatcher from 'component/user/common/ResetPasswordForm/PasswordMatcher/PasswordMatcher';
 import { IUser } from 'interfaces/user';
 import useAdminUsersApi from 'hooks/api/actions/useAdminUsersApi/useAdminUsersApi';
+import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
+
+const StyledUserAvatar = styled(UserAvatar)(({ theme }) => ({
+    width: theme.spacing(5),
+    height: theme.spacing(5),
+    margin: 0,
+}));
 
 interface IChangePasswordProps {
     showDialog: boolean;
@@ -85,14 +92,7 @@ const ChangePassword = ({
                     Changing password for user
                 </Typography>
                 <div className={themeStyles.flexRow}>
-                    <Avatar
-                        variant="rounded"
-                        alt="Gravatar"
-                        src={user.imageUrl}
-                        title={`${
-                            user.name || user.email || user.username
-                        } (id: ${user.id})`}
-                    />
+                    <StyledUserAvatar user={user} variant="rounded" />
                     <Typography
                         variant="subtitle1"
                         style={{ marginLeft: '1rem' }}

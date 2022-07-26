@@ -2,11 +2,18 @@ import React from 'react';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { REMOVE_USER_ERROR } from 'hooks/api/actions/useAdminUsersApi/useAdminUsersApi';
-import { Alert } from '@mui/material';
+import { Alert, styled } from '@mui/material';
 import useLoading from 'hooks/useLoading';
-import { Avatar, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { useThemeStyles } from 'themes/themeStyles';
 import { IUser } from 'interfaces/user';
+import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
+
+const StyledUserAvatar = styled(UserAvatar)(({ theme }) => ({
+    width: theme.spacing(5),
+    height: theme.spacing(5),
+    margin: 0,
+}));
 
 interface IDeleteUserProps {
     showDialog: boolean;
@@ -51,14 +58,7 @@ const DeleteUser = ({
                     }
                 />
                 <div data-loading className={themeStyles.flexRow}>
-                    <Avatar
-                        variant="rounded"
-                        alt="Gravatar"
-                        src={user.imageUrl}
-                        title={`${
-                            user.name || user.email || user.username
-                        } (id: ${user.id})`}
-                    />
+                    <StyledUserAvatar user={user} variant="rounded" />
                     <Typography
                         variant="subtitle1"
                         style={{ marginLeft: '1rem' }}

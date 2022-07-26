@@ -1,9 +1,9 @@
-import { Avatar, Badge, styled } from '@mui/material';
+import { styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { IGroupUser, Role } from 'interfaces/group';
 import React, { useMemo, useState } from 'react';
-import StarIcon from '@mui/icons-material/Star';
 import { GroupPopover } from './GroupPopover/GroupPopover';
+import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 
 const StyledAvatars = styled('div')(({ theme }) => ({
     display: 'inline-flex',
@@ -12,25 +12,8 @@ const StyledAvatars = styled('div')(({ theme }) => ({
     marginLeft: theme.spacing(1),
 }));
 
-const StyledAvatar = styled(Avatar)(({ theme }) => ({
-    width: theme.spacing(4),
-    height: theme.spacing(4),
-    outline: `2px solid ${theme.palette.background.paper}`,
-    marginLeft: theme.spacing(-1),
-}));
-
-const StyledAvatarMore = styled(StyledAvatar)(({ theme }) => ({
-    backgroundColor: theme.palette.secondary.light,
-    color: theme.palette.text.primary,
-    fontSize: theme.fontSizes.smallerBody,
-    fontWeight: theme.fontWeight.bold,
-}));
-
-const StyledStar = styled(StarIcon)(({ theme }) => ({
-    color: theme.palette.warning.main,
-    backgroundColor: theme.palette.background.paper,
-    borderRadius: theme.shape.borderRadiusExtraLarge,
-    fontSize: theme.fontSizes.smallBody,
+const StyledAvatar = styled(UserAvatar)(({ theme }) => ({
+    outline: `${theme.spacing(0.25)} solid ${theme.palette.background.paper}`,
     marginLeft: theme.spacing(-1),
 }));
 
@@ -60,50 +43,22 @@ export const GroupCardAvatars = ({ users }: IGroupCardAvatarsProps) => {
     return (
         <StyledAvatars>
             {shownUsers.map(user => (
-                <ConditionallyRender
-                    key={user.id}
-                    condition={user.role === Role.Member}
-                    show={
-                        <StyledAvatar
-                            data-loading
-                            alt="Gravatar"
-                            src={user.imageUrl}
-                            onMouseEnter={event => {
-                                onPopoverOpen(event);
-                                setPopupUser(user);
-                            }}
-                            onMouseLeave={onPopoverClose}
-                        />
-                    }
-                    elseShow={
-                        <Badge
-                            overlap="circular"
-                            anchorOrigin={{
-                                vertical: 'top',
-                                horizontal: 'left',
-                            }}
-                            badgeContent={<StyledStar />}
-                        >
-                            <StyledAvatar
-                                data-loading
-                                alt="Gravatar"
-                                src={user.imageUrl}
-                                onMouseEnter={event => {
-                                    onPopoverOpen(event);
-                                    setPopupUser(user);
-                                }}
-                                onMouseLeave={onPopoverClose}
-                            />
-                        </Badge>
-                    }
+                <StyledAvatar
+                    user={user}
+                    star={user.role === Role.Owner}
+                    onMouseEnter={event => {
+                        onPopoverOpen(event);
+                        setPopupUser(user);
+                    }}
+                    onMouseLeave={onPopoverClose}
                 />
             ))}
             <ConditionallyRender
                 condition={users.length > 9}
                 show={
-                    <StyledAvatarMore>
+                    <StyledAvatar>
                         +{users.length - shownUsers.length}
-                    </StyledAvatarMore>
+                    </StyledAvatar>
                 }
             />
             <GroupPopover

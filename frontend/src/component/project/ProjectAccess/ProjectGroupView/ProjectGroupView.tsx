@@ -1,5 +1,5 @@
 import { Delete, Edit } from '@mui/icons-material';
-import { Avatar, styled, useMediaQuery, useTheme } from '@mui/material';
+import { styled, useMediaQuery, useTheme } from '@mui/material';
 import { GroupUserRoleCell } from 'component/admin/groups/GroupUserRoleCell/GroupUserRoleCell';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageContent } from 'component/common/PageContent/PageContent';
@@ -13,18 +13,13 @@ import { HighlightCell } from 'component/common/Table/cells/HighlightCell/Highli
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
+import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
 import { useSearch } from 'hooks/useSearch';
 import { IGroup, IGroupUser } from 'interfaces/group';
 import { VFC, useState } from 'react';
 import { SortingRule, useFlexLayout, useSortBy, useTable } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
-
-const StyledAvatar = styled(Avatar)(({ theme }) => ({
-    width: theme.spacing(4),
-    height: theme.spacing(4),
-    margin: 'auto',
-}));
 
 const StyledPageContent = styled(PageContent)(({ theme }) => ({
     height: '100vh',
@@ -54,14 +49,7 @@ const columns = [
         accessor: 'imageUrl',
         Cell: ({ row: { original: user } }: any) => (
             <TextCell>
-                <StyledAvatar
-                    data-loading
-                    alt="Gravatar"
-                    src={user.imageUrl}
-                    title={`${user.name || user.email || user.username} (id: ${
-                        user.id
-                    })`}
-                />
+                <UserAvatar user={user} />
             </TextCell>
         ),
         maxWidth: 85,

@@ -1,5 +1,5 @@
 import { useMemo, VFC } from 'react';
-import { Avatar, IconButton, styled, Tooltip } from '@mui/material';
+import { IconButton, Tooltip } from '@mui/material';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { IGroupUser } from 'interfaces/group';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
@@ -10,12 +10,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { VirtualizedTable } from 'component/common/Table';
 import { useFlexLayout, useSortBy, useTable } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
-
-const StyledAvatar = styled(Avatar)(({ theme }) => ({
-    width: theme.spacing(4),
-    height: theme.spacing(4),
-    margin: 'auto',
-}));
+import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 
 interface IGroupFormUsersTableProps {
     users: IGroupUser[];
@@ -33,14 +28,7 @@ export const GroupFormUsersTable: VFC<IGroupFormUsersTableProps> = ({
                 accessor: 'imageUrl',
                 Cell: ({ row: { original: user } }: any) => (
                     <TextCell>
-                        <StyledAvatar
-                            data-loading
-                            alt="Gravatar"
-                            src={user.imageUrl}
-                            title={`${
-                                user.name || user.email || user.username
-                            } (id: ${user.id})`}
-                        />
+                        <UserAvatar user={user} />
                     </TextCell>
                 ),
                 maxWidth: 85,

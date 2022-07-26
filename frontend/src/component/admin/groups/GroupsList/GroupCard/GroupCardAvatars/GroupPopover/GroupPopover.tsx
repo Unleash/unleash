@@ -1,7 +1,6 @@
 import { Badge, Popover, styled } from '@mui/material';
 import { IGroupUser, Role } from 'interfaces/group';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-
 import { Badge as StyledBadge } from 'component/common/Badge/Badge';
 import StarIcon from '@mui/icons-material/Star';
 
@@ -76,7 +75,7 @@ export const GroupPopover = ({
                 }
             />
 
-            <StyledName>{user?.name}</StyledName>
+            <StyledName>{user?.name || user?.username}</StyledName>
             <div>{user?.email}</div>
         </StyledPopover>
     );

@@ -24,12 +24,14 @@ interface IBadgeIconProps {
 }
 
 const StyledBadge = styled('div')<IBadgeProps>(
-    ({ theme, color = 'neutral' }) => ({
+    ({ theme, color = 'neutral', icon }) => ({
         display: 'inline-flex',
         alignItems: 'center',
-        padding: theme.spacing(0.5, 1),
+        padding: theme.spacing(icon ? 0.375 : 0.625, 1),
         borderRadius: theme.shape.borderRadius,
         fontSize: theme.fontSizes.smallerBody,
+        fontWeight: theme.fontWeight.bold,
+        lineHeight: 1,
         backgroundColor: theme.palette[color].light,
         color: theme.palette[color].dark,
         border: `1px solid ${theme.palette[color].border}`,
@@ -58,6 +60,7 @@ export const Badge: FC<IBadgeProps> = forwardRef(
     ) => (
         <StyledBadge
             color={color}
+            icon={icon}
             className={className}
             sx={sx}
             {...props}

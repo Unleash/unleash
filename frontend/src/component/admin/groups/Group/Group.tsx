@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState, VFC } from 'react';
 import {
-    Avatar,
     Button,
     IconButton,
     styled,
@@ -37,12 +36,7 @@ import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 import { AddGroupUser } from './AddGroupUser/AddGroupUser';
 import { EditGroupUser } from './EditGroupUser/EditGroupUser';
 import { RemoveGroupUser } from './RemoveGroupUser/RemoveGroupUser';
-
-const StyledAvatar = styled(Avatar)(({ theme }) => ({
-    width: theme.spacing(4),
-    height: theme.spacing(4),
-    margin: 'auto',
-}));
+import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 
 const StyledEdit = styled(Edit)(({ theme }) => ({
     fontSize: theme.fontSizes.mainHeader,
@@ -87,14 +81,7 @@ export const Group: VFC = () => {
                 accessor: 'imageUrl',
                 Cell: ({ row: { original: user } }: any) => (
                     <TextCell>
-                        <StyledAvatar
-                            data-loading
-                            alt="Gravatar"
-                            src={user.imageUrl}
-                            title={`${
-                                user.name || user.email || user.username
-                            } (id: ${user.id})`}
-                        />
+                        <UserAvatar user={user} />
                     </TextCell>
                 ),
                 maxWidth: 85,

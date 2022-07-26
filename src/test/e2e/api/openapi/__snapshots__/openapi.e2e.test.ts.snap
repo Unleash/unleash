@@ -1469,7 +1469,7 @@ Object {
         "type": "object",
       },
       "groupSchema": Object {
-        "additionalProperties": false,
+        "additionalProperties": true,
         "properties": Object {
           "createdAt": Object {
             "format": "date-time",
@@ -1504,7 +1504,6 @@ Object {
         },
         "required": Array [
           "name",
-          "users",
         ],
         "type": "object",
       },
@@ -2726,6 +2725,24 @@ Object {
         "required": Array [
           "id",
         ],
+        "type": "object",
+      },
+      "usersGroupsBaseSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "groups": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/groupSchema",
+            },
+            "type": "array",
+          },
+          "users": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/userSchema",
+            },
+            "type": "array",
+          },
+        },
         "type": "object",
       },
       "usersSchema": Object {
@@ -5703,6 +5720,26 @@ If the provided project does not exist, the list of events will be empty.",
               },
             },
             "description": "userSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/user-admin/access": Object {
+      "get": Object {
+        "operationId": "getBaseUsersAndGroups",
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/usersGroupsBaseSchema",
+                },
+              },
+            },
+            "description": "usersGroupsBaseSchema",
           },
         },
         "tags": Array [

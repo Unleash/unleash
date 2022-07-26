@@ -2433,6 +2433,18 @@ test('should return strategies in correct order when new strategies are added', 
         })
         .expect(200);
 
+    const { body: strategyFour } = await app.request
+        .post(
+            `/api/admin/projects/default/features/${toggle.name}/environments/default/strategies`,
+        )
+        .send({
+            name: 'gradualrollout',
+            parameters: {
+                userId: 'string',
+            },
+        })
+        .expect(200);
+
     const { body: strategiesOrdered } = await app.request.get(
         `/api/admin/projects/default/features/${toggle.name}/environments/default/strategies`,
     );
@@ -2442,4 +2454,32 @@ test('should return strategies in correct order when new strategies are added', 
     expect(strategiesOrdered[1].sortOrder).toBe(2);
     expect(strategiesOrdered[1].id).toBe(strategyOne.id);
     expect(strategiesOrdered[2].id).toBe(strategyThree.id);
+    expect(strategiesOrdered[3].id).toBe(strategyFour.id);
+
+    await app.request
+        .post(
+            `/api/admin/projects/default/features/${toggle.name}/environments/default/strategies/set-sort-order`,
+        )
+        .send([
+            {
+                id: strategyFour.id,
+                sortOrder: 0,
+            },
+        ])
+        .expect(200);
+
+    const { body: strategiesReOrdered } = await app.request.get(
+        `/api/admin/projects/default/features/${toggle.name}/environments/default/strategies`,
+    );
+
+    // This block checks the order of the strategies retrieved from the endpoint. After partial update, the order should
+    // change because the new element received a lower sort order than the previous objects.
+    expect(strategiesReOrdered[0].sortOrder).toBe(0);
+    expect(strategiesReOrdered[0].id).toBe(strategyFour.id);
+    expect(strategiesReOrdered[1].sortOrder).toBe(1);
+    expect(strategiesReOrdered[1].id).toBe(strategyTwo.id);
+    expect(strategiesReOrdered[2].sortOrder).toBe(2);
+    expect(strategiesReOrdered[2].id).toBe(strategyOne.id);
+    expect(strategiesReOrdered[3].sortOrder).toBe(9999);
+    expect(strategiesReOrdered[3].id).toBe(strategyThree.id);
 });

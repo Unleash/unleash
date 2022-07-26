@@ -74,7 +74,13 @@ export default class FakeFeatureStrategiesStore
     }
 
     // FIXME: implement
-    async updateSortOrder(id: string, sortOrder: number): Promise<void> {}
+    async updateSortOrder(id: string, sortOrder: number): Promise<void> {
+        const found = this.featureStrategies.find((item) => item.id === id);
+
+        if (found) {
+            found.sortOrder = sortOrder;
+        }
+    }
 
     destroy(): void {
         throw new Error('Method not implemented.');

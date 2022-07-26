@@ -3,10 +3,7 @@ import {
     InMemStorageProvider,
     Unleash as UnleashClient,
 } from './feature-evaluator';
-import {
-    InMemStorageProvider as InMemStorageProviderNode,
-    Unleash as UnleashClientNode,
-} from 'unleash-client';
+import { Unleash as UnleashClientNode } from 'unleash-client';
 import { FeatureConfigurationClient } from 'lib/types/stores/feature-strategies-store';
 import { Operator } from 'unleash-client/lib/strategy/strategy';
 import { once } from 'events';

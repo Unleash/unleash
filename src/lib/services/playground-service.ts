@@ -5,7 +5,7 @@ import { ALL } from '../../lib/types/models/api-token';
 import { PlaygroundFeatureSchema } from 'lib/openapi/spec/playground-feature-schema';
 import { Logger } from '../logger';
 import { IUnleashConfig } from 'lib/types';
-import { offlineUnleashClient } from '..//util/offline-unleash-client';
+import { offlineUnleashClient } from '../util/offline-unleash-client';
 import { FeatureInterface } from 'lib/util/feature-evaluator/feature';
 import { EnabledStatus } from 'lib/util/feature-evaluator/client';
 

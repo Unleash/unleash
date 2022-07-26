@@ -33,7 +33,6 @@ export const ConstraintAccordionView = ({
     );
 
     const handleClick = () => {
-        console.log('click');
         if (expandable) {
             setExpanded(!expanded);
         }

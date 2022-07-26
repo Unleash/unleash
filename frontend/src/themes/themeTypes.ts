@@ -88,6 +88,8 @@ declare module '@mui/material/styles' {
             main: string;
             light: string;
             dark: string;
+            background: string;
+            contrast: string
         };
     }
 

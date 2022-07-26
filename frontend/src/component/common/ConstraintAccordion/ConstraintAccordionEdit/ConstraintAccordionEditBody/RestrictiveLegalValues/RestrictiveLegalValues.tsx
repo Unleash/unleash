@@ -69,7 +69,7 @@ export const RestrictiveLegalValues = ({
                 Select values from a predefined set
             </ConstraintFormHeader>
             <ConditionallyRender
-                condition={Boolean(legalValues.length > 100)}
+                condition={legalValues.length > 100}
                 show={
                     <ConstraintValueSearch
                         filter={filter}

@@ -211,7 +211,7 @@ export class Unleash extends EventEmitter {
         context: Context = {},
         fallback?: FallbackFunction | boolean,
     ): FeatureEvaluationResult {
-        console.log('unleash.isEnabled');
+        // console.log('unleash.isEnabled');
 
         const enhancedContext = { ...this.staticContext, ...context };
         const fallbackFunc = createFallbackFunction(
@@ -238,7 +238,7 @@ export class Unleash extends EventEmitter {
         context: Context = {},
         fallbackVariant?: Variant,
     ): Variant {
-        console.log('unleash.getVariant');
+        // console.log('unleash.getVariant');
         const enhancedContext = { ...this.staticContext, ...context };
         let result;
         if (this.ready) {

@@ -7,6 +7,8 @@ export default class DefaultStrategy extends Strategy {
     }
 
     isEnabled(): StrategyEvaluationResult {
+        // console.log('default-strategy.isEnabled');
+
         return {
             result: true,
             // reasons: ['The default strategy is on for all users.'],

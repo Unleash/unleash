@@ -3,7 +3,10 @@ import {
     InMemStorageProvider,
     Unleash as UnleashClient,
 } from './feature-evaluator';
-import { Unleash as UnleashClientNode } from 'unleash-client';
+import {
+    Unleash as UnleashClientNode,
+    InMemStorageProvider as InMemStorageProviderNode,
+} from 'unleash-client';
 import { FeatureConfigurationClient } from 'lib/types/stores/feature-strategies-store';
 import { Operator } from 'unleash-client/lib/strategy/strategy';
 import { once } from 'events';
@@ -76,7 +79,7 @@ export const offlineUnleashClientNode = async (
         disableMetrics: true,
         refreshInterval: 0,
         url: 'not-needed',
-        storageProvider: new InMemStorageProvider(),
+        storageProvider: new InMemStorageProviderNode(),
         bootstrap: {
             data: mapFeaturesForBootstrap(features),
         },

@@ -1,9 +1,6 @@
 import { PlaygroundConstraintSchema } from 'lib/openapi/spec/playground-feature-schema';
 import { gt as semverGt, lt as semverLt, eq as semverEq } from 'semver';
-import {
-    NamedStrategyEvaluationResult,
-    StrategyEvaluationResult,
-} from '../client';
+import { StrategyEvaluationResult } from '../client';
 import { Context } from '../context';
 import { resolveContextValue } from '../helpers';
 
@@ -52,9 +49,20 @@ const InOperator = (constraint: Constraint, context: Context) => {
     const field = constraint.contextName;
     const values = cleanValues(constraint.values);
     const contextValue = resolveContextValue(context, field);
-    if (!contextValue) {
-        return false;
-    }
+
+    // console.log(
+    //     'InOperator',
+    //     'field',
+    //     field,
+    //     'values',
+    //     values,
+    //     'contextValue',
+    //     contextValue,
+    // );
+
+    // if (!contextValue) {
+    //     return false;
+    // }
 
     const isIn = values.some((val) => val === contextValue);
     return constraint.operator === Operator.IN ? isIn : !isIn;
@@ -212,6 +220,12 @@ export class Strategy {
             (constraint) => constraint.result,
         );
 
+        // if (old !== result) {
+        //     console.log('used to be:', old, "now it's", result);
+        // }
+
+        // console.log(constraints, mappedConstraints, result);
+
         return {
             result,
             constraints: mappedConstraints,
@@ -220,6 +234,8 @@ export class Strategy {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     isEnabled(parameters: any, context: Context): StrategyEvaluationResult {
+        // console.log('strategy.isEnabled');
+
         return {
             result: this.returnValue,
         };
@@ -232,6 +248,8 @@ export class Strategy {
     ): StrategyEvaluationResult {
         const constraintResults = this.checkConstraints(context, constraints);
         const enabledResult = this.isEnabled(parameters, context);
+
+        // console.log('constraints', constraintResults, 'enabled', enabledResult);
 
         if (constraintResults.result && enabledResult.result) {
             return {

@@ -45,11 +45,15 @@ export const strategy = (
     name: string,
     parameters: Arbitrary<Record<string, string>>,
 ): Arbitrary<FeatureStrategySchema> =>
-    fc.record({
-        name: fc.constant(name),
-        parameters,
-        constraints: strategyConstraints(),
-    });
+    fc.record(
+        {
+            name: fc.constant(name),
+            parameters,
+            segments: fc.uniqueArray(fc.integer({ min: 1 })),
+            constraints: strategyConstraints(),
+        },
+        { requiredKeys: ['name'] },
+    );
 
 export const strategies = (): Arbitrary<FeatureStrategySchema[]> =>
     fc.array(

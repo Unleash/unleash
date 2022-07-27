@@ -171,9 +171,6 @@ export default class UnleashClient extends EventEmitter {
             return {
                 enabled: false,
                 strategies: [],
-                // reasons: [
-                //     "The feature doesn't exist or isn't enabled in this environment.",
-                // ],
             };
         }
 
@@ -189,6 +186,17 @@ export default class UnleashClient extends EventEmitter {
                 // ],
             };
         }
+
+        // // this must be moved much later, apparently, so we can also evaluate the strategies
+        // if (!feature.enabled) {
+        //     return {
+        //         enabled: false,
+        //         strategies: [],
+        //         // reasons: [
+        //         //     "The feature doesn't exist or isn't enabled in this environment.",
+        //         // ],
+        //     };
+        // }
 
         if (feature.strategies.length === 0) {
             const reason = feature.enabled
@@ -236,6 +244,10 @@ export default class UnleashClient extends EventEmitter {
                     ? 'unevaluated'
                     : strategies.some((strategy) => strategy.result === true),
             );
+
+            // if (!isEnabled) {
+            //     // console.log(feature.name, strategies);
+            // }
 
             const evalResults: FeatureEvaluationResult = {
                 enabled: isEnabled,

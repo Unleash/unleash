@@ -1,6 +1,6 @@
+import { forwardRef, ReactNode } from 'react';
 import { styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { FC, forwardRef } from 'react';
 
 export const StyledIconWrapperBase = styled('div')<{
     prefix?: boolean;
@@ -24,7 +24,7 @@ const StyledPrefixIconWrapper = styled(StyledIconWrapperBase)(() => ({
 
 export const StyledIconWrapper = forwardRef<
     HTMLDivElement,
-    { isPrefix?: boolean; children?: React.ReactNode }
+    { isPrefix?: boolean; children?: ReactNode }
 >(({ isPrefix, ...props }, ref) => (
     <ConditionallyRender
         condition={Boolean(isPrefix)}

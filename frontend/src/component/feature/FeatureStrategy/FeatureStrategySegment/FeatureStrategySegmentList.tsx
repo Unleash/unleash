@@ -24,6 +24,14 @@ export const FeatureStrategySegmentList = ({
 
     return (
         <>
+            <ConditionallyRender
+                condition={segments && segments.length > 0}
+                show={
+                    <p className={styles.selectedSegmentsLabel}>
+                        Selected Segments
+                    </p>
+                }
+            />
             <div className={styles.list}>
                 {segments.map((segment, i) => (
                     <Fragment key={segment.id}>

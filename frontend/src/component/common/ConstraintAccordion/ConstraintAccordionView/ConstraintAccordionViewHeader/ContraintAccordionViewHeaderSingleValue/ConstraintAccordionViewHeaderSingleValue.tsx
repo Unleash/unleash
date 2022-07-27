@@ -1,3 +1,4 @@
+import React, { useEffect } from 'react';
 import { ConditionallyRender } from '../../../../ConditionallyRender/ConditionallyRender';
 import { oneOf } from '../../../../../../utils/oneOf';
 import { stringOperators } from '../../../../../../constants/operators';
@@ -18,13 +19,19 @@ const StyledSingleValueChip = styled(Chip)(({ theme }) => ({
 
 interface ConstraintSingleValueProps {
     constraint: IConstraint;
+    allowExpand: (shouldExpand: boolean) => void;
 }
 
-export const ContraintAccordionViewHeaderSingleValue = ({
+export const ConstraintAccordionViewHeaderSingleValue = ({
     constraint,
+    allowExpand,
 }: ConstraintSingleValueProps) => {
     const { locationSettings } = useLocationSettings();
     const { classes: styles } = useStyles();
+
+    useEffect(() => {
+        allowExpand(false);
+    }, [allowExpand]);
 
     return (
         <div className={styles.headerValuesContainerWrapper}>

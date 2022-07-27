@@ -23,8 +23,6 @@ import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { IUser } from 'interfaces/user';
 import { IGroup } from 'interfaces/group';
-import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
-import { useGroups } from 'hooks/api/getters/useGroups/useGroups';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ProjectRoleDescription } from './ProjectRoleDescription/ProjectRoleDescription';
 import { useAccess } from '../../../../hooks/api/getters/useAccess/useAccess';

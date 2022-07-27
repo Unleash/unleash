@@ -22,4 +22,7 @@ export const useStyles = makeStyles()(theme => ({
         alignItems: 'center',
         borderRadius: theme.shape.borderRadius,
     },
+    selectedSegmentsLabel: {
+        color: theme.palette.text.secondary,
+    },
 }));

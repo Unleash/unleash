@@ -6,4 +6,7 @@ export const useStyles = makeStyles()(theme => ({
         fontSize: theme.fontSizes.bodySize,
         fontWeight: theme.fontWeight.bold,
     },
+    divider: {
+        border: `1px dashed ${theme.palette.divider}`,
+    },
 }));

@@ -34,4 +34,10 @@ export const useStyles = makeStyles()(theme => ({
             borderTopColor: theme.palette.grey[300],
         },
     },
+    formInput: {
+        [theme.breakpoints.between(1101, 1365)]: {
+            width: '170px',
+            marginRight: '8px',
+        },
+    },
 }));

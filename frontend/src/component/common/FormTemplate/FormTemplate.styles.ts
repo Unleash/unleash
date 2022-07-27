@@ -27,6 +27,7 @@ export const useStyles = makeStyles()(theme => ({
         width: formTemplateSidebarWidth,
         [theme.breakpoints.down(1100)]: {
             width: '100%',
+            color: 'red',
         },
         [theme.breakpoints.down(500)]: {
             padding: '2rem 1rem',

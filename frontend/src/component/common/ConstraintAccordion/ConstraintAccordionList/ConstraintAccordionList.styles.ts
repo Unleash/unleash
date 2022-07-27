@@ -11,12 +11,18 @@ export const useStyles = makeStyles()(theme => ({
         [theme.breakpoints.down(860)]: {
             display: 'none',
         },
-        marginLeft: '0.75rem',
+    },
+    helpWrapper: {
+        marginLeft: '12px',
+        height: '24px',
     },
     addCustomLabel: {
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'start',
-        margin: '0.75rem 0',
+        margin: '0.75rem 0 ',
+    },
+    customConstraintLabel: {
+        color: theme.palette.text.secondary,
     },
 }));

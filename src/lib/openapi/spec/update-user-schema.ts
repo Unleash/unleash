@@ -3,7 +3,7 @@ import { FromSchema } from 'json-schema-to-ts';
 export const updateUserSchema = {
     $id: '#/components/schemas/updateUserSchema',
     type: 'object',
-    additionalProperties: false,
+    additionalProperties: true,
     properties: {
         email: {
             type: 'string',

@@ -30,7 +30,7 @@
     "file-loader": "6.2.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "unleash-proxy-client": "2.0.1",
+    "unleash-proxy-client": "2.0.3",
     "url-loader": "4.1.1"
   },
   "resolutions": {

@@ -1,9 +1,5 @@
 import { PlaygroundService } from '../../../lib/services/playground-service';
-import {
-    clientFeatures,
-    commonISOTimestamp,
-    strategyConstraint,
-} from '../../arbitraries.test';
+import { clientFeatures, commonISOTimestamp } from '../../arbitraries.test';
 import { generate as generateContext } from '../../../lib/openapi/spec/sdk-context-schema.test';
 import fc from 'fast-check';
 import { createTestConfig } from '../../config/test-config';
@@ -13,12 +9,8 @@ import FeatureToggleService from '../../../lib/services/feature-toggle-service';
 import { SegmentService } from '../../../lib/services/segment-service';
 import { FeatureToggle, WeightType } from '../../../lib/types/model';
 import { PlaygroundFeatureSchema } from '../../../lib/openapi/spec/playground-feature-schema';
-import {
-    offlineUnleashClient,
-    offlineUnleashClientNode,
-} from '../../../lib/util/offline-unleash-client';
+import { offlineUnleashClientNode } from '../../../lib/util/offline-unleash-client';
 import { ClientFeatureSchema } from 'lib/openapi/spec/client-feature-schema';
-import { Context } from 'unleash-client';
 import { SdkContextSchema } from 'lib/openapi/spec/sdk-context-schema';
 
 let stores: IUnleashStores;
@@ -53,7 +45,7 @@ const testParams = {
     markInterruptAsFailure: false, // When set to false, timeout during initial cases will not be considered as a failure
 };
 
-const seedDatabase = (
+export const seedDatabaseForPlaygroundTest = (
     database: ITestDb,
     features: ClientFeatureSchema[],
     environment: string,
@@ -131,7 +123,7 @@ describe('the playground service (e2e)', () => {
         context: SdkContextSchema,
         env: string = 'default',
     ): Promise<PlaygroundFeatureSchema[]> => {
-        await seedDatabase(db, features, env);
+        await seedDatabaseForPlaygroundTest(db, features, env);
 
         const projects = '*';
 
@@ -259,11 +251,11 @@ describe('the playground service (e2e)', () => {
         );
     });
 
+    // counterexamples found by fastcheck
     const counterexamples = [
         [
             [
                 {
-                    // should be enabled
                     name: '-',
                     type: 'release',
                     project: 'A',
@@ -297,21 +289,20 @@ describe('the playground service (e2e)', () => {
                 currentTime: '9999-12-31T23:59:59.956Z',
                 environment: 'r',
             },
-            // {
-            //     logs: [
-            //         'feature is enabled',
-            //         'feature has a variant',
-            //         '{"name":"-","payload":{"type":"string","value":""},"enabled":true}',
-            //         '{"name":"~3dignissim~gravidaod","payload":{"type":"json","value":"{\\"Sv7gRNNl=\\":[true,\\"Mfs >mp.D\\",\\"O-jtK\\",\\"y%i\\\\\\"Ub~\\",null,\\"J\\",false,\\"(\'R\\"],\\"F0g+>1X\\":3.892913121148499e-188,\\"Fi~k(\\":-4.882970135331098e+146,\\"\\":null,\\"nPT]\\":true}"},"enabled":true}',
-            //         'true',
-            //         'false',
-            //     ],
-            // },
+            {
+                logs: [
+                    'feature is enabled',
+                    'feature has a variant',
+                    '{"name":"-","payload":{"type":"string","value":""},"enabled":true}',
+                    '{"name":"~3dignissim~gravidaod","payload":{"type":"json","value":"{\\"Sv7gRNNl=\\":[true,\\"Mfs >mp.D\\",\\"O-jtK\\",\\"y%i\\\\\\"Ub~\\",null,\\"J\\",false,\\"(\'R\\"],\\"F0g+>1X\\":3.892913121148499e-188,\\"Fi~k(\\":-4.882970135331098e+146,\\"\\":null,\\"nPT]\\":true}"},"enabled":true}',
+                    'true',
+                    'false',
+                ],
+            },
         ],
         [
             [
                 {
-                    // should be enabled
                     name: '-',
                     project: '0',
                     enabled: true,
@@ -333,12 +324,11 @@ describe('the playground service (e2e)', () => {
                 },
             ],
             { appName: ' ', userId: 'constant', sessionId: 'constant2' },
-            // { logs: [] },
+            { logs: [] },
         ],
         [
             [
                 {
-                    // should be enabled
                     name: 'a',
                     project: 'a',
                     enabled: true,
@@ -359,7 +349,6 @@ describe('the playground service (e2e)', () => {
                     ],
                 },
                 {
-                    // should be disabled
                     name: '-',
                     project: 'elementum',
                     enabled: false,
@@ -367,17 +356,16 @@ describe('the playground service (e2e)', () => {
                 },
             ],
             { appName: ' ', userId: 'constant', sessionId: 'constant2' },
-            // {
-            //     logs: [
-            //         'feature is not enabled',
-            //         '{"name":"disabled","enabled":false}',
-            //     ],
-            // },
+            {
+                logs: [
+                    'feature is not enabled',
+                    '{"name":"disabled","enabled":false}',
+                ],
+            },
         ],
         [
             [
                 {
-                    // should be enabled
                     name: '0',
                     project: '-',
                     enabled: true,
@@ -399,19 +387,18 @@ describe('the playground service (e2e)', () => {
                 },
             ],
             { appName: ' ', userId: 'constant', sessionId: 'constant2' },
-            // {
-            //     logs: [
-            //         '0 is not enabled',
-            //         '{"name":"disabled","enabled":false}',
-            //         'true',
-            //         'true',
-            //     ],
-            // },
+            {
+                logs: [
+                    '0 is not enabled',
+                    '{"name":"disabled","enabled":false}',
+                    'true',
+                    'true',
+                ],
+            },
         ],
         [
             [
                 {
-                    // should be enabled
                     name: '0',
                     project: 'ac',
                     enabled: true,
@@ -434,22 +421,21 @@ describe('the playground service (e2e)', () => {
                 },
             ],
             { appName: ' ', userId: 'constant', sessionId: 'constant2' },
-            // {
-            //     logs: [
-            //         'feature.isEnabled: false',
-            //         'client.isEnabled: true',
-            //         '0 is not enabled',
-            //         '{"name":"disabled","enabled":false}',
-            //         'false',
-            //         'true',
-            //         'true',
-            //     ],
-            // },
+            {
+                logs: [
+                    'feature.isEnabled: false',
+                    'client.isEnabled: true',
+                    '0 is not enabled',
+                    '{"name":"disabled","enabled":false}',
+                    'false',
+                    'true',
+                    'true',
+                ],
+            },
         ],
         [
             [
                 {
-                    // should be enabled
                     name: '0',
                     project: 'aliquam',
                     enabled: true,
@@ -470,7 +456,6 @@ describe('the playground service (e2e)', () => {
                     ],
                 },
                 {
-                    // should be disabled
                     name: '-',
                     project: '-',
                     enabled: false,
@@ -497,9 +482,8 @@ describe('the playground service (e2e)', () => {
         ],
     ];
 
+    // these tests test counterexamples found by fast check. The may seem redundant, but are concrete cases that might break.
     counterexamples.map(async ([features, context], i) => {
-        // console.log(features);
-
         it(`should do the same as the raw SDK: counterexample ${i}`, async () => {
             const serviceFeatures = await insertAndEvaluateFeatures(
                 // @ts-expect-error

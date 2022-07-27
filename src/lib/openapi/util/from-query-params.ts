@@ -3,7 +3,7 @@
 // https://github.com/ThomasAribart/json-schema-to-ts/issues/82
 import { FromSchema, JSONSchema } from 'json-schema-to-ts';
 
-import { O, L } from 'ts-toolbelt';
+import { O, L, A } from 'ts-toolbelt';
 
 type OpenApiParam = {
     readonly name: string;
@@ -20,17 +20,12 @@ type RecurseOnParams<
     continue: RecurseOnParams<
         L.Tail<P>,
         L.Head<P>['in'] extends 'query'
-            ? O.Merge<
-                  R,
-                  {
-                      [key in L.Head<P>['name']]: FromSchema<
-                          L.Head<P>['schema']
-                      >;
-                  }
-              >
+            ? R & {
+                  [key in L.Head<P>['name']]: FromSchema<L.Head<P>['schema']>;
+              }
             : R
     >;
-    stop: R;
+    stop: A.Compute<R>;
 }[P extends readonly [OpenApiParam, ...OpenApiParam[]] ? 'continue' : 'stop'];
 
 export type FromQueryParams<P extends readonly OpenApiParam[]> =

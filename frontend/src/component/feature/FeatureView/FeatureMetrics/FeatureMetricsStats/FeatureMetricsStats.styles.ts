@@ -3,7 +3,7 @@ import { makeStyles } from 'tss-react/mui';
 export const useStyles = makeStyles()(theme => ({
     item: {
         padding: theme.spacing(2),
-        background: theme.palette.grey[100],
+        background: theme.palette.secondaryContainer,
         borderRadius: theme.spacing(2),
         textAlign: 'center',
         [theme.breakpoints.up('md')]: {

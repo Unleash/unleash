@@ -16,7 +16,9 @@ export const FeatureStrategyIcon = ({
     return (
         <StyledIcon>
             <Tooltip title={formatStrategyName(strategyName)} arrow>
-                <Icon />
+                <>
+                    <Icon />
+                </>
             </Tooltip>
         </StyledIcon>
     );

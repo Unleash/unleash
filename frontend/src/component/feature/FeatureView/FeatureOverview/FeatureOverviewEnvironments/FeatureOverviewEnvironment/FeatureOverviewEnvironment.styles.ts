@@ -2,13 +2,13 @@ import { makeStyles } from 'tss-react/mui';
 
 export const useStyles = makeStyles()(theme => ({
     featureOverviewEnvironment: {
-        borderRadius: '12.5px',
-        padding: '0.2rem',
-        marginBottom: '1rem',
-        backgroundColor: '#fff',
+        borderRadius: theme.shape.borderRadiusLarge,
+        marginBottom: theme.spacing(2),
+        background: theme.palette.background.default,
     },
-    accordionContainer: {
-        width: '100%',
+    accordion: {
+        boxShadow: 'none',
+        background: 'none',
     },
     accordionHeader: {
         boxShadow: 'none',
@@ -22,16 +22,26 @@ export const useStyles = makeStyles()(theme => ({
             padding: '0.5rem',
         },
     },
+    accordionDetails: {
+        padding: theme.spacing(3),
+        background: theme.palette.secondaryContainer,
+        borderBottomLeftRadius: theme.shape.borderRadiusLarge,
+        borderBottomRightRadius: theme.shape.borderRadiusLarge,
+        borderBottom: `4px solid ${theme.palette.primary.light}`,
+    },
+    accordionDetailsDisabled: {
+        borderBottom: `4px solid ${theme.palette.dividerAlternative}`,
+    },
     accordionBody: {
         width: '100%',
         position: 'relative',
-        paddingBottom: '1rem',
+        paddingBottom: theme.spacing(2),
     },
     header: {
         display: 'flex',
         justifyContent: 'center',
         flexDirection: 'column',
-        paddingTop: '1.5rem',
+        // paddingTop: '1.5rem',
     },
     headerTitle: {
         display: 'flex',
@@ -44,14 +54,6 @@ export const useStyles = makeStyles()(theme => ({
     headerIcon: {
         [theme.breakpoints.down(560)]: {
             marginBottom: '0.5rem',
-        },
-    },
-    disabledIndicatorPos: {
-        position: 'absolute',
-        top: '15px',
-        left: '20px',
-        [theme.breakpoints.down(560)]: {
-            top: '13px',
         },
     },
     iconContainer: {
@@ -69,32 +71,14 @@ export const useStyles = makeStyles()(theme => ({
         width: '17px',
         height: '17px',
     },
-    resultInfo: {
-        display: 'flex',
-        alignItems: 'center',
-        margin: '1rem 0',
-    },
-    leftWing: {
-        height: '2px',
-        backgroundColor: theme.palette.grey[300],
-        width: '90%',
-    },
-    separatorText: {
-        fontSize: theme.fontSizes.smallBody,
-        textAlign: 'center',
-        padding: '0 1rem',
-    },
-    rightWing: {
-        height: '2px',
-        backgroundColor: theme.palette.grey[300],
-        width: '90%',
-    },
     linkContainer: {
         display: 'flex',
         justifyContent: 'flex-end',
         marginBottom: '1rem',
     },
     truncator: {
+        fontSize: theme.fontSizes.bodySize,
+        fontWeight: theme.typography.fontWeightMedium,
         [theme.breakpoints.down(560)]: {
             textAlign: 'center',
         },

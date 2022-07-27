@@ -9,4 +9,10 @@ export const useStyles = makeStyles()(theme => ({
     valueSeparator: {
         color: theme.palette.grey[700],
     },
+    summary: {
+        width: '100%',
+        padding: theme.spacing(2, 3),
+        borderRadius: theme.shape.borderRadius,
+        border: `1px solid ${theme.palette.divider}`,
+    },
 }));

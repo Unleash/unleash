@@ -1,4 +1,12 @@
-import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
+import {
+    Accordion,
+    AccordionDetails,
+    AccordionSummary,
+    Box,
+    Chip,
+    useTheme,
+} from '@mui/material';
+import classNames from 'classnames';
 import { ExpandMore } from '@mui/icons-material';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import useFeatureMetrics from 'hooks/api/getters/useFeatureMetrics/useFeatureMetrics';
@@ -8,14 +16,14 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import EnvironmentIcon from 'component/common/EnvironmentIcon/EnvironmentIcon';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { useStyles } from './FeatureOverviewEnvironment.styles';
-import FeatureOverviewEnvironmentBody from './FeatureOverviewEnvironmentBody/FeatureOverviewEnvironmentBody';
-import FeatureOverviewEnvironmentFooter from './FeatureOverviewEnvironmentFooter/FeatureOverviewEnvironmentFooter';
+import EnvironmentAccordionBody from './EnvironmentAccordionBody/EnvironmentAccordionBody';
+import { EnvironmentFooter } from './EnvironmentFooter/EnvironmentFooter';
 import FeatureOverviewEnvironmentMetrics from './FeatureOverviewEnvironmentMetrics/FeatureOverviewEnvironmentMetrics';
 import { FeatureStrategyMenu } from 'component/feature/FeatureStrategy/FeatureStrategyMenu/FeatureStrategyMenu';
 import { FEATURE_ENVIRONMENT_ACCORDION } from 'utils/testIds';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { FeatureStrategyIcons } from 'component/feature/FeatureStrategy/FeatureStrategyIcons/FeatureStrategyIcons';
-import { Badge } from 'component/common/Badge/Badge';
+// import { Badge } from 'component/common/Badge/Badge';
 
 interface IFeatureOverviewEnvironmentProps {
     env: IFeatureEnvironment;
@@ -25,6 +33,7 @@ const FeatureOverviewEnvironment = ({
     env,
 }: IFeatureOverviewEnvironmentProps) => {
     const { classes: styles } = useStyles();
+    const theme = useTheme();
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const { metrics } = useFeatureMetrics(projectId, featureId);
@@ -38,38 +47,57 @@ const FeatureOverviewEnvironment = ({
         featureEnvironment => featureEnvironment.name === env.name
     );
 
-    const getOverviewText = () => {
-        if (env.enabled) {
-            return `${environmentMetric?.yes} received this feature because the following strategies are executing`;
-        }
-        return `This environment is disabled, which means that none of your strategies are executing`;
-    };
-
     return (
-        <div className={styles.featureOverviewEnvironment}>
+        <div
+            className={styles.featureOverviewEnvironment}
+            style={{
+                background: !env.enabled
+                    ? theme.palette.neutral.light
+                    : theme.palette.background.default,
+            }}
+        >
             <Accordion
-                style={{ boxShadow: 'none' }}
+                className={styles.accordion}
                 data-testid={`${FEATURE_ENVIRONMENT_ACCORDION}_${env.name}`}
             >
                 <AccordionSummary
                     className={styles.accordionHeader}
                     expandIcon={<ExpandMore titleAccess="Toggle" />}
                 >
-                    <div className={styles.header} data-loading>
+                    <div
+                        className={styles.header}
+                        data-loading
+                        style={{
+                            color: !env.enabled
+                                ? theme.palette.text.disabled
+                                : theme.palette.text.primary,
+                        }}
+                    >
                         <div className={styles.headerTitle}>
                             <EnvironmentIcon
                                 enabled={env.enabled}
                                 className={styles.headerIcon}
                             />
-                            <p>
-                                Feature toggle execution for&nbsp;
+                            <div>
                                 <StringTruncator
                                     text={env.name}
                                     className={styles.truncator}
                                     maxWidth="100"
                                     maxLength={15}
                                 />
-                            </p>
+                                <ConditionallyRender
+                                    condition={!env.enabled}
+                                    show={
+                                        <Chip
+                                            size="small"
+                                            variant="outlined"
+                                            // severity="disabled"
+                                            label="Disabled"
+                                            sx={{ ml: 1 }}
+                                        />
+                                    }
+                                />
+                            </div>
                         </div>
                         <div className={styles.container}>
                             <FeatureStrategyMenu
@@ -83,17 +111,6 @@ const FeatureOverviewEnvironment = ({
                                 strategies={featureEnvironment?.strategies}
                             />
                         </div>
-                        <ConditionallyRender
-                            condition={!env.enabled}
-                            show={
-                                <Badge
-                                    color="warning"
-                                    className={styles.disabledIndicatorPos}
-                                >
-                                    Disabled
-                                </Badge>
-                            }
-                        />
                     </div>
 
                     <FeatureOverviewEnvironmentMetrics
@@ -101,26 +118,41 @@ const FeatureOverviewEnvironment = ({
                     />
                 </AccordionSummary>
 
-                <AccordionDetails>
-                    <div className={styles.accordionContainer}>
-                        <FeatureOverviewEnvironmentBody
-                            featureEnvironment={featureEnvironment}
-                            getOverviewText={getOverviewText}
-                        />
-                        <ConditionallyRender
-                            condition={
-                                // @ts-expect-error
-                                featureEnvironment?.strategies?.length > 0
-                            }
-                            show={
-                                <FeatureOverviewEnvironmentFooter
-                                    // @ts-expect-error
-                                    env={env}
+                <AccordionDetails
+                    className={classNames(styles.accordionDetails, {
+                        [styles.accordionDetailsDisabled]: !env.enabled,
+                    })}
+                >
+                    <EnvironmentAccordionBody
+                        featureEnvironment={featureEnvironment}
+                        isDisabled={!env.enabled}
+                    />
+                    <ConditionallyRender
+                        condition={
+                            (featureEnvironment?.strategies?.length || 0) > 0
+                        }
+                        show={
+                            <>
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        py: 1,
+                                    }}
+                                >
+                                    <FeatureStrategyMenu
+                                        label="Add strategy"
+                                        projectId={projectId}
+                                        featureId={featureId}
+                                        environmentId={env.name}
+                                    />
+                                </Box>
+                                <EnvironmentFooter
                                     environmentMetric={environmentMetric}
                                 />
-                            }
-                        />
-                    </div>
+                            </>
+                        }
+                    />
                 </AccordionDetails>
             </Accordion>
         </div>

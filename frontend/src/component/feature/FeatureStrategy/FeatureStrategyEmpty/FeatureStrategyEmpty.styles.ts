@@ -1,14 +1,22 @@
 import { makeStyles } from 'tss-react/mui';
 
 export const useStyles = makeStyles()(theme => ({
-    noItemsParagraph: {
-        margin: '1rem 0',
+    container: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
-    link: {
-        display: 'block',
-        margin: '1rem 0 0 0',
+    title: {
+        fontSize: theme.fontSizes.bodySize,
+        textAlign: 'center',
+        color: theme.palette.text.primary,
+        marginBottom: theme.spacing(1),
     },
-    envName: {
-        fontWeight: 'bold',
+    description: {
+        color: theme.palette.text.secondary,
+        fontSize: theme.fontSizes.smallBody,
+        textAlign: 'center',
+        marginBottom: theme.spacing(3),
     },
 }));

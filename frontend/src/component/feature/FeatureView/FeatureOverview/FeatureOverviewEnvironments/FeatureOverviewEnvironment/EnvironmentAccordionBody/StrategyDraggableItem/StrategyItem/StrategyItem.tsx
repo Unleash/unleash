@@ -1,5 +1,5 @@
-import { Edit } from '@mui/icons-material';
-import { useTheme } from '@mui/material/styles';
+import { DragIndicator, Edit } from '@mui/icons-material';
+import { styled, useTheme, IconButton } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { IFeatureStrategy } from 'interfaces/strategy';
 import {
@@ -8,28 +8,36 @@ import {
 } from 'utils/strategyNames';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
-import FeatureOverviewExecution from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewExecution/FeatureOverviewExecution';
-import { useStyles } from './FeatureOverviewEnvironmentStrategy.styles';
 import { formatEditStrategyPath } from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
 import { FeatureStrategyRemove } from 'component/feature/FeatureStrategy/FeatureStrategyRemove/FeatureStrategyRemove';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import { StrategyExecution } from './StrategyExecution/StrategyExecution';
+import { useStyles } from './StrategyItem.styles';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
-interface IFeatureOverviewEnvironmentStrategyProps {
+interface IStrategyItemProps {
     environmentId: string;
     strategy: IFeatureStrategy;
+    isDraggable?: boolean;
 }
 
-const FeatureOverviewEnvironmentStrategy = ({
+const DragIcon = styled(IconButton)(({ theme }) => ({
+    padding: 0,
+    cursor: 'inherit',
+    transition: 'color 0.2s ease-in-out',
+}));
+
+export const StrategyItem = ({
     environmentId,
     strategy,
-}: IFeatureOverviewEnvironmentStrategyProps) => {
+    isDraggable,
+}: IStrategyItemProps) => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const theme = useTheme();
     const { classes: styles } = useStyles();
     const Icon = getFeatureStrategyIcon(strategy.name);
-    const { parameters, constraints } = strategy;
 
     const editStrategyPath = formatEditStrategyPath(
         projectId,
@@ -41,6 +49,17 @@ const FeatureOverviewEnvironmentStrategy = ({
     return (
         <div className={styles.container}>
             <div className={styles.header}>
+                <ConditionallyRender
+                    condition={Boolean(isDraggable)}
+                    show={() => (
+                        <DragIcon disableRipple disabled size="small">
+                            <DragIndicator
+                                titleAccess="Drag to reorder"
+                                cursor="grab"
+                            />
+                        </DragIcon>
+                    )}
+                />
                 <Icon className={styles.icon} />
                 <StringTruncator
                     maxWidth="150"
@@ -68,15 +87,11 @@ const FeatureOverviewEnvironmentStrategy = ({
                 </div>
             </div>
             <div className={styles.body}>
-                <FeatureOverviewExecution
-                    parameters={parameters}
+                <StrategyExecution
                     strategy={strategy}
-                    constraints={constraints}
                     percentageFill={theme.palette.grey[200]}
                 />
             </div>
         </div>
     );
 };
-
-export default FeatureOverviewEnvironmentStrategy;

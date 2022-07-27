@@ -2,7 +2,7 @@ import { makeStyles } from 'tss-react/mui';
 
 export const useStyles = makeStyles()(theme => ({
     container: {
-        padding: '0.5rem 0.75rem',
+        padding: theme.spacing(0.5, 1.5),
         borderRadius: theme.shape.borderRadius,
         backgroundColor: theme.palette.grey[200],
         lineHeight: 1.25,

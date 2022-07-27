@@ -1,17 +1,14 @@
 import { Chip } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useStyles } from './FeatureOverviewExecutionChips.styles';
+import { useStyles } from './ConstraintItem.styles';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 
-interface IFeatureOverviewExecutionChipsProps {
+interface IConstraintItemProps {
     value: string[];
     text: string;
 }
 
-const FeatureOverviewExecutionChips = ({
-    value,
-    text,
-}: IFeatureOverviewExecutionChipsProps) => {
+export const ConstraintItem = ({ value, text }: IConstraintItemProps) => {
     const { classes: styles } = useStyles();
     return (
         <div className={styles.container}>
@@ -44,5 +41,3 @@ const FeatureOverviewExecutionChips = ({
         </div>
     );
 };
-
-export default FeatureOverviewExecutionChips;

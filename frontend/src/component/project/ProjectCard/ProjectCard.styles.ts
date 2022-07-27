@@ -16,7 +16,7 @@ export const useStyles = makeStyles()(theme => ({
         },
         '&:hover': {
             transition: 'background-color 0.2s ease-in-out',
-            backgroundColor: theme.palette.grey[100],
+            backgroundColor: theme.palette.neutral.light,
         },
     },
     header: {

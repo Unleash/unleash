@@ -26,6 +26,9 @@ export default createTheme({
             fontSize: '1.5rem',
             lineHeight: 1.875,
         },
+        caption: {
+            fontSize: `${12 / 16}rem`,
+        },
     },
     fontSizes: {
         mainHeader: '1.25rem',
@@ -285,6 +288,29 @@ export default createTheme({
                         opacity: 0.66,
                     },
                 },
+            },
+        },
+        MuiChip: {
+            styleOverrides: {
+                root: ({ ownerState, theme }) => ({
+                    ...(ownerState.variant === 'outlined' &&
+                        ownerState.size === 'small' && {
+                            borderRadius: theme.shape.borderRadius,
+                            margin: 0,
+                            borderWidth: 1,
+                            borderStyle: 'solid',
+                            fontWeight: theme.typography.fontWeightBold,
+                            fontSize: theme.typography.caption.fontSize,
+                            ...(ownerState.color === 'success' && {
+                                backgroundColor: colors.green[50],
+                                borderColor: theme.palette.success.border,
+                                color: theme.palette.success.dark,
+                            }),
+                            ...(ownerState.color === 'default' && {
+                                color: theme.palette.text.secondary,
+                            }),
+                        }),
+                }),
             },
         },
     },

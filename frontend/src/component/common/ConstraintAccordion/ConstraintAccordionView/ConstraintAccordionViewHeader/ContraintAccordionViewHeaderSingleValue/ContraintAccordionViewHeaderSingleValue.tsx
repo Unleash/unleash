@@ -4,13 +4,13 @@ import { stringOperators } from '../../../../../../constants/operators';
 import { Chip, styled, Tooltip } from '@mui/material';
 import { ReactComponent as CaseSensitive } from '../../../../../../assets/icons/24_Text format.svg';
 import { formatConstraintValue } from '../../../../../../utils/formatConstraintValue';
-import React from 'react';
 import { useStyles } from '../../../ConstraintAccordion.styles';
 import { StyledIconWrapper } from '../StyledIconWrapper/StyledIconWrapper';
 import { IConstraint } from '../../../../../../interfaces/strategy';
 import { useLocationSettings } from '../../../../../../hooks/useLocationSettings';
 
 const StyledSingleValueChip = styled(Chip)(({ theme }) => ({
+    margin: 'auto 0',
     [theme.breakpoints.down(710)]: {
         margin: theme.spacing(1, 0),
     },

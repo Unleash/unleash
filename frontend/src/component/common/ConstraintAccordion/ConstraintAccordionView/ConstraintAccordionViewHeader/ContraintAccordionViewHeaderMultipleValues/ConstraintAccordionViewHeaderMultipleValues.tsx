@@ -17,6 +17,7 @@ const StyledValuesSpan = styled('span')(({ theme }) => ({
     overflow: 'hidden',
     wordBreak: 'break-word',
     fontSize: theme.fontSizes.smallBody,
+    margin: 'auto 0',
     [theme.breakpoints.down(710)]: {
         margin: theme.spacing(1, 0),
         textAlign: 'center',
@@ -90,8 +91,7 @@ export const ConstraintAccordionViewHeaderMultipleValues = ({
                             )}
                         >
                             {!expanded
-                                ? `View all (
-                                            ${constraint?.values?.length})`
+                                ? `View all (${constraint?.values?.length})`
                                 : 'View less'}
                         </p>
                     }

@@ -1,7 +1,12 @@
 import { makeStyles } from 'tss-react/mui';
 
 export const useStyles = makeStyles()(theme => ({
-    container: { textAlign: 'center' },
+    container: {
+        width: '100%',
+        padding: theme.spacing(2, 3),
+        borderRadius: theme.shape.borderRadius,
+        border: `1px solid ${theme.palette.divider}`,
+    },
     chip: {
         margin: '0.25rem',
     },

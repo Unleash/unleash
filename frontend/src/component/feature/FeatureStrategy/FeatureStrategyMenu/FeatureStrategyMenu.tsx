@@ -1,7 +1,7 @@
+import React, { useState } from 'react';
 import PermissionButton, {
     IPermissionButtonProps,
 } from 'component/common/PermissionButton/PermissionButton';
-import React, { useState } from 'react';
 import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { Popover } from '@mui/material';
 import { FeatureStrategyMenuCards } from './FeatureStrategyMenuCards/FeatureStrategyMenuCards';

@@ -2,7 +2,7 @@ import { makeStyles } from 'tss-react/mui';
 
 export const useStyles = makeStyles()(theme => ({
     emptyStateListItem: {
-        border: `2px dashed ${theme.palette.grey[100]}`,
+        border: `2px dashed ${theme.palette.neutral.light}`,
         padding: '0.8rem',
         textAlign: 'center',
         display: 'flex',

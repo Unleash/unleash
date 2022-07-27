@@ -1,8 +1,7 @@
-import { Tooltip } from '@mui/material';
-import { ReactComponent as NegatedIcon } from '../../../../../../assets/icons/24_Negator.svg';
-import { ReactComponent as NegatedIconOff } from '../../../../../../assets/icons/24_Negator off.svg';
-import React from 'react';
-import { IConstraint } from '../../../../../../interfaces/strategy';
+import { Box, Tooltip } from '@mui/material';
+import { ReactComponent as NegatedIcon } from 'assets/icons/24_Negator.svg';
+import { ReactComponent as NegatedIconOff } from 'assets/icons/24_Negator off.svg';
+import { IConstraint } from 'interfaces/strategy';
 import {
     StyledToggleButtonOff,
     StyledToggleButtonOn,
@@ -17,30 +16,35 @@ interface InvertedOperatorButtonProps {
 export const InvertedOperatorButton = ({
     localConstraint,
     setInvertedOperator,
-}: InvertedOperatorButtonProps) => {
-    return (
-        <ConditionallyRender
-            condition={Boolean(localConstraint.inverted)}
-            show={
-                <Tooltip title="Remove negation" arrow>
+}: InvertedOperatorButtonProps) => (
+    <Tooltip
+        title={
+            Boolean(localConstraint.inverted)
+                ? 'Remove negation'
+                : 'Negate operator'
+        }
+        arrow
+    >
+        <Box sx={{ display: 'flex', alignItems: 'stretch' }}>
+            <ConditionallyRender
+                condition={Boolean(localConstraint.inverted)}
+                show={
                     <StyledToggleButtonOn
                         onClick={setInvertedOperator}
                         disableRipple
                     >
                         <NegatedIcon />
                     </StyledToggleButtonOn>
-                </Tooltip>
-            }
-            elseShow={
-                <Tooltip title="Negate operator" arrow>
+                }
+                elseShow={
                     <StyledToggleButtonOff
                         onClick={setInvertedOperator}
                         disableRipple
                     >
                         <NegatedIconOff />
                     </StyledToggleButtonOff>
-                </Tooltip>
-            }
-        />
-    );
-};
+                }
+            />
+        </Box>
+    </Tooltip>
+);

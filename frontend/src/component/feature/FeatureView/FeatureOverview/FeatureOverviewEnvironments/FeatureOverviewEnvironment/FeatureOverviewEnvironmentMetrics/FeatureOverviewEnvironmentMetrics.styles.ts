@@ -20,7 +20,7 @@ export const useStyles = makeStyles()(theme => ({
         },
     },
     infoParagraph: {
-        maxWidth: '215px',
+        maxWidth: '270px',
         marginTop: '0.25rem',
         fontSize: theme.fontSizes.smallBody,
         [theme.breakpoints.down(700)]: {

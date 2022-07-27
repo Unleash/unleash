@@ -1,6 +1,6 @@
+import { useState } from 'react';
 import { Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
 import { IConstraint } from 'interfaces/strategy';
-
 import { ConstraintAccordionViewBody } from './ConstraintAccordionViewBody/ConstraintAccordionViewBody';
 import { ConstraintAccordionViewHeader } from './ConstraintAccordionViewHeader/ConstraintAccordionViewHeader';
 import { oneOf } from 'utils/oneOf';
@@ -9,9 +9,8 @@ import {
     numOperators,
     semVerOperators,
 } from 'constants/operators';
-
 import { useStyles } from '../ConstraintAccordion.styles';
-import { useState } from 'react';
+
 interface IConstraintAccordionViewProps {
     constraint: IConstraint;
     onDelete?: () => void;
@@ -46,7 +45,7 @@ export const ConstraintAccordionView = ({
             sx={{ cursor: expandable ? 'pointer' : 'default' }}
         >
             <AccordionSummary
-                className={styles.summary}
+                classes={{ root: styles.summary }}
                 expandIcon={null}
                 onClick={handleClick}
             >

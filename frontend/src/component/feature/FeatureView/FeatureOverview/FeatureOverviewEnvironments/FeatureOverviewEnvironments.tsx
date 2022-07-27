@@ -11,13 +11,13 @@ const FeatureOverviewEnvironments = () => {
 
     const { environments } = feature;
 
-    const renderEnvironments = () => {
-        return environments?.map(env => {
-            return <FeatureOverviewEnvironment env={env} key={env.name} />;
-        });
-    };
-
-    return <>{renderEnvironments()}</>;
+    return (
+        <>
+            {environments?.map(env => (
+                <FeatureOverviewEnvironment env={env} key={env.name} />
+            ))}
+        </>
+    );
 };
 
 export default FeatureOverviewEnvironments;

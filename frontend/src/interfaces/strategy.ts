@@ -51,3 +51,8 @@ export interface IConstraint {
     operator: Operator;
     contextName: string;
 }
+
+export interface IFeatureStrategySortOrder {
+    id: string;
+    sortOrder: number;
+}

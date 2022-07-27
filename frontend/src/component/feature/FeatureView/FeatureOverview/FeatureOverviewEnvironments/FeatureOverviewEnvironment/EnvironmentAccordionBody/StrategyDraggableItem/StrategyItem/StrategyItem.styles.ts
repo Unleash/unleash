@@ -2,18 +2,20 @@ import { makeStyles } from 'tss-react/mui';
 
 export const useStyles = makeStyles()(theme => ({
     container: {
-        borderRadius: theme.shape.borderRadius,
+        borderRadius: theme.shape.borderRadiusMedium,
         border: `1px solid ${theme.palette.grey[300]}`,
         '& + &': {
             marginTop: '1rem',
         },
+        background: theme.palette.background.default,
     },
     header: {
-        padding: '0.5rem',
+        padding: theme.spacing(0.5, 2),
         display: 'flex',
         gap: '0.5rem',
         alignItems: 'center',
         borderBottom: `1px solid ${theme.palette.grey[300]}`,
+        fontWeight: theme.typography.fontWeightMedium,
     },
     icon: {
         fill: theme.palette.inactiveIcon,
@@ -25,7 +27,6 @@ export const useStyles = makeStyles()(theme => ({
     body: {
         padding: '1rem',
         display: 'grid',
-        gap: '1rem',
         justifyItems: 'center',
     },
 }));

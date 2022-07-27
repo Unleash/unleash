@@ -1,10 +1,8 @@
 import { ConstraintIcon } from 'component/common/ConstraintAccordion/ConstraintIcon';
 import { IConstraint } from 'interfaces/strategy';
-
-import { useStyles } from 'component/common/ConstraintAccordion/ConstraintAccordion.styles';
-import React from 'react';
 import { ConstraintAccordionViewHeaderInfo } from './ConstraintAccordionViewHeaderInfo/ConstraintAccordionViewHeaderInfo';
 import { ConstraintAccordionHeaderActions } from '../../ConstraintAccordionHeaderActions/ConstraintAccordionHeaderActions';
+import { useStyles } from 'component/common/ConstraintAccordion/ConstraintAccordion.styles';
 
 interface IConstraintAccordionViewHeaderProps {
     constraint: IConstraint;

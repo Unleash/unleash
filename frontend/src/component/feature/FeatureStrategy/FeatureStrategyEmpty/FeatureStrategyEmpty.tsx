@@ -1,7 +1,13 @@
-import NoItems from 'component/common/NoItems/NoItems';
-import StringTruncator from 'component/common/StringTruncator/StringTruncator';
-import { useStyles } from './FeatureStrategyEmpty.styles';
+import { Link } from 'react-router-dom';
+import { Box } from '@mui/material';
+import { SectionSeparator } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/SectionSeparator/SectionSeparator';
+import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFeatureStrategyApi';
+import useToast from 'hooks/useToast';
+import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { FeatureStrategyMenu } from '../FeatureStrategyMenu/FeatureStrategyMenu';
+import { PresetCard } from './PresetCard/PresetCard';
+import { useStyles } from './FeatureStrategyEmpty.styles';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 interface IFeatureStrategyEmptyProps {
     projectId: string;
@@ -15,30 +21,58 @@ export const FeatureStrategyEmpty = ({
     environmentId,
 }: IFeatureStrategyEmptyProps) => {
     const { classes: styles } = useStyles();
+    const { addStrategyToFeature } = useFeatureStrategyApi();
+    const { setToastData, setToastApiError } = useToast();
+    const { refetchFeature } = useFeature(projectId, featureId);
+
+    const onAfterAddStrategy = () => {
+        refetchFeature();
+        setToastData({
+            title: 'Strategy created',
+            text: 'Successfully created strategy',
+            type: 'success',
+        });
+    };
+
+    const onAddSimpleStrategy = async () => {
+        try {
+            await addStrategyToFeature(projectId, featureId, environmentId, {
+                name: 'default',
+                parameters: {},
+                constraints: [],
+            });
+            onAfterAddStrategy();
+        } catch (error) {
+            setToastApiError(formatUnknownError(error));
+        }
+    };
+
+    const onAddGradualRolloutStrategy = async () => {
+        try {
+            await addStrategyToFeature(projectId, featureId, environmentId, {
+                name: 'flexibleRollout',
+                parameters: {
+                    rollout: '50',
+                    stickiness: 'default',
+                },
+                constraints: [],
+            });
+            onAfterAddStrategy();
+        } catch (error) {
+            setToastApiError(formatUnknownError(error));
+        }
+    };
 
     return (
-        <NoItems>
-            <p className={styles.noItemsParagraph}>
-                No strategies added in the{' '}
-                <StringTruncator
-                    text={environmentId}
-                    maxWidth={'130'}
-                    maxLength={15}
-                    className={styles.envName}
-                />{' '}
-                environment
-            </p>
-            <p className={styles.noItemsParagraph}>
+        <div className={styles.container}>
+            <div className={styles.title}>
+                You have not defined any strategies yet.
+            </div>
+            <p className={styles.description}>
                 Strategies added in this environment will only be executed if
-                the SDK is using an API key configured for this environment.
-                <a
-                    className={styles.link}
-                    href="https://docs.getunleash.io/user_guide/environments"
-                    target="_blank"
-                    rel="noreferrer"
-                >
-                    Read more here
-                </a>
+                the SDK is using an{' '}
+                <Link to="/admin/api">API key configured</Link> for this
+                environment.
             </p>
             <FeatureStrategyMenu
                 label="Add your first strategy"
@@ -46,6 +80,31 @@ export const FeatureStrategyEmpty = ({
                 featureId={featureId}
                 environmentId={environmentId}
             />
-        </NoItems>
+            <Box sx={{ width: '100%', mt: 3 }}>
+                <SectionSeparator>Or use a strategy template</SectionSeparator>
+            </Box>
+            <Box
+                sx={{
+                    display: 'grid',
+                    width: '100%',
+                    gap: 2,
+                    gridTemplateColumns: '1fr 1fr',
+                }}
+            >
+                <PresetCard
+                    title="Standard strategy"
+                    onClick={onAddSimpleStrategy}
+                >
+                    The standard strategy is strictly on/off for your entire
+                    userbase.
+                </PresetCard>
+                <PresetCard
+                    title="Gradual rollout"
+                    onClick={onAddGradualRolloutStrategy}
+                >
+                    Roll out to a percentage of your userbase.
+                </PresetCard>
+            </Box>
+        </div>
     );
 };

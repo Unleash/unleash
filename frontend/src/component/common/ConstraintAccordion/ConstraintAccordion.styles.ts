@@ -33,7 +33,7 @@ export const useStyles = makeStyles()(theme => ({
     },
     headerMetaInfo: {
         display: 'flex',
-        alignItems: 'center',
+        alignItems: 'stretch',
         [theme.breakpoints.down(710)]: { flexDirection: 'column' },
     },
     headerContainer: {
@@ -48,12 +48,11 @@ export const useStyles = makeStyles()(theme => ({
     },
     headerValuesContainerWrapper: {
         display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'center',
+        alignItems: 'stretch',
     },
     headerValuesContainer: {
         display: 'flex',
-        flexDirection: 'column',
+        alignItems: 'stretch',
     },
     headerValues: {
         fontSize: theme.fontSizes.smallBody,
@@ -106,7 +105,10 @@ export const useStyles = makeStyles()(theme => ({
         },
         display: 'inline-flex',
     },
-    headerSelect: { marginRight: '1rem', width: '200px' },
+    headerSelect: {
+        marginRight: '1rem',
+        width: '200px',
+    },
     chip: {
         margin: '0 0.5rem 0.5rem 0',
     },
@@ -121,7 +123,7 @@ export const useStyles = makeStyles()(theme => ({
         },
     },
     accordionDetails: {
-        borderTop: `1px solid ${theme.palette.grey[300]}`,
+        borderTop: `1px dashed ${theme.palette.grey[300]}`,
         display: 'flex',
         flexDirection: 'column',
     },
@@ -132,33 +134,16 @@ export const useStyles = makeStyles()(theme => ({
     },
     summary: {
         border: 'none',
-        padding: '0.25rem 1rem',
+        padding: theme.spacing(0.5, 3),
         '&:hover .valuesExpandLabel': {
             textDecoration: 'underline',
         },
-    },
-    settingsParagraph: {
-        display: 'flex',
-        alignItems: 'center',
-        padding: '0.5rem 0',
     },
     settingsIcon: {
         height: '32.5px',
         width: '32.5px',
         marginRight: '0.5rem',
         fill: theme.palette.inactiveIcon,
-    },
-    singleValueView: {
-        display: 'flex',
-        alignItems: 'center',
-        [theme.breakpoints.down(600)]: { flexDirection: 'column' },
-    },
-    singleValueText: {
-        marginRight: '0.75rem',
-        [theme.breakpoints.down(600)]: {
-            marginBottom: '0.75rem',
-            marginRight: 0,
-        },
     },
     form: { padding: 0, margin: 0, width: '100%' },
 }));

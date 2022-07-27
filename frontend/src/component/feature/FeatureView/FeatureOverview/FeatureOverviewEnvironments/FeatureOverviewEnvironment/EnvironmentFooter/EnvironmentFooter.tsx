@@ -1,27 +1,22 @@
 import { IFeatureEnvironmentMetrics } from 'interfaces/featureToggle';
-import { useStyles } from '../FeatureOverviewEnvironment.styles';
 import { FeatureMetricsStats } from 'component/feature/FeatureView/FeatureMetrics/FeatureMetricsStats/FeatureMetricsStats';
+import { SectionSeparator } from '../SectionSeparator/SectionSeparator';
 
-interface IFeatureOverviewEnvironmentFooterProps {
+interface IEnvironmentFooterProps {
     environmentMetric?: IFeatureEnvironmentMetrics;
 }
 
-const FeatureOverviewEnvironmentFooter = ({
+export const EnvironmentFooter = ({
     environmentMetric,
-}: IFeatureOverviewEnvironmentFooterProps) => {
-    const { classes: styles } = useStyles();
-
+}: IEnvironmentFooterProps) => {
     if (!environmentMetric) {
         return null;
     }
 
     return (
         <>
-            <div className={styles.resultInfo}>
-                <div className={styles.leftWing} />
-                <div className={styles.separatorText}>Result</div>
-                <div className={styles.rightWing} />
-            </div>
+            <SectionSeparator>Feature toggle exposure</SectionSeparator>
+
             <div>
                 <FeatureMetricsStats
                     totalYes={environmentMetric.yes}
@@ -32,4 +27,3 @@ const FeatureOverviewEnvironmentFooter = ({
         </>
     );
 };
-export default FeatureOverviewEnvironmentFooter;

@@ -5,10 +5,12 @@ import React from 'react';
 
 interface IConstraintOperatorProps {
     constraint: IConstraint;
+    hasPrefix?: boolean;
 }
 
 export const ConstraintOperator = ({
     constraint,
+    hasPrefix,
 }: IConstraintOperatorProps) => {
     const { classes: styles } = useStyles();
 
@@ -16,7 +18,13 @@ export const ConstraintOperator = ({
     const operatorText = formatOperatorDescription(constraint.operator);
 
     return (
-        <div className={styles.container}>
+        <div
+            className={styles.container}
+            style={{
+                borderTopLeftRadius: hasPrefix ? 0 : undefined,
+                borderBottomLeftRadius: hasPrefix ? 0 : undefined,
+            }}
+        >
             <div className={styles.name}>{operatorName}</div>
             <div className={styles.text}>{operatorText}</div>
         </div>

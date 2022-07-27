@@ -1,37 +1,29 @@
 import { Fragment } from 'react';
-import {
-    IFeatureStrategy,
-    IFeatureStrategyParameters,
-    IConstraint,
-} from 'interfaces/strategy';
+import { Box, Chip } from '@mui/material';
+import { IFeatureStrategy } from 'interfaces/strategy';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import PercentageCircle from 'component/common/PercentageCircle/PercentageCircle';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
-import FeatureOverviewExecutionChips from './FeatureOverviewExecutionChips/FeatureOverviewExecutionChips';
+import { ConstraintItem } from './ConstraintItem/ConstraintItem';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { FeatureOverviewSegment } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewSegment/FeatureOverviewSegment';
 import { ConstraintAccordionList } from 'component/common/ConstraintAccordion/ConstraintAccordionList/ConstraintAccordionList';
-import { useStyles } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewExecution/FeatureOverviewExecution.styles';
+import { useStyles } from './StrategyExecution.styles';
 import {
     parseParameterString,
     parseParameterNumber,
     parseParameterStrings,
 } from 'utils/parseParameter';
 
-interface IFeatureOverviewExecutionProps {
-    parameters: IFeatureStrategyParameters;
-    constraints?: IConstraint[];
+interface IStrategyExecutionProps {
     strategy: IFeatureStrategy;
     percentageFill?: string;
 }
 
-const FeatureOverviewExecution = ({
-    parameters,
-    constraints = [],
-    strategy,
-}: IFeatureOverviewExecutionProps) => {
+export const StrategyExecution = ({ strategy }: IStrategyExecutionProps) => {
+    const { parameters, constraints = [] } = strategy;
     const { classes: styles } = useStyles();
     const { strategies } = useStrategies();
     const { uiConfig } = useUiConfig();
@@ -52,51 +44,51 @@ const FeatureOverviewExecution = ({
                 case 'rollout':
                 case 'Rollout':
                     return (
-                        <Fragment key={key}>
-                            <p>
-                                {parameters[key]}% of your base{' '}
-                                {constraints.length > 0
-                                    ? 'who match constraints'
-                                    : ''}{' '}
-                                is included.
-                            </p>
-
+                        <Box
+                            className={styles.summary}
+                            key={key}
+                            sx={{ display: 'flex', alignItems: 'center' }}
+                        >
                             <PercentageCircle
                                 percentage={parseParameterNumber(
                                     parameters[key]
                                 )}
+                                styles={{
+                                    width: '2rem',
+                                    height: '2rem',
+                                    marginRight: '1rem',
+                                }}
                             />
-                        </Fragment>
+                            <div>
+                                <Chip
+                                    color="success"
+                                    variant="outlined"
+                                    size="small"
+                                    label={`${parameters[key]}%`}
+                                />{' '}
+                                of your base{' '}
+                                {constraints.length > 0
+                                    ? 'who match constraints'
+                                    : ''}{' '}
+                                is included.
+                            </div>
+                        </Box>
                     );
                 case 'userIds':
                 case 'UserIds':
                     const users = parseParameterStrings(parameters[key]);
                     return (
-                        <FeatureOverviewExecutionChips
-                            key={key}
-                            value={users}
-                            text="user"
-                        />
+                        <ConstraintItem key={key} value={users} text="user" />
                     );
                 case 'hostNames':
                 case 'HostNames':
                     const hosts = parseParameterStrings(parameters[key]);
                     return (
-                        <FeatureOverviewExecutionChips
-                            key={key}
-                            value={hosts}
-                            text={'host'}
-                        />
+                        <ConstraintItem key={key} value={hosts} text={'host'} />
                     );
                 case 'IPs':
                     const IPs = parseParameterStrings(parameters[key]);
-                    return (
-                        <FeatureOverviewExecutionChips
-                            key={key}
-                            value={IPs}
-                            text={'IP'}
-                        />
-                    );
+                    return <ConstraintItem key={key} value={IPs} text={'IP'} />;
                 case 'stickiness':
                 case 'groupId':
                     return null;
@@ -117,10 +109,7 @@ const FeatureOverviewExecution = ({
                     );
                     return (
                         <Fragment key={param?.name}>
-                            <FeatureOverviewExecutionChips
-                                value={values}
-                                text={param.name}
-                            />
+                            <ConstraintItem value={values} text={param.name} />
                             <ConditionallyRender
                                 condition={notLastItem}
                                 show={<StrategySeparator text="AND" />}
@@ -130,13 +119,21 @@ const FeatureOverviewExecution = ({
                 case 'percentage':
                     return (
                         <Fragment key={param?.name}>
-                            <p>
-                                {strategy?.parameters[param.name]}% of your base{' '}
+                            <div>
+                                <Chip
+                                    size="small"
+                                    variant="outlined"
+                                    color="success"
+                                    label={`${
+                                        strategy?.parameters[param.name]
+                                    }%`}
+                                />{' '}
+                                of your base{' '}
                                 {constraints?.length > 0
                                     ? 'who match constraints'
                                     : ''}{' '}
                                 is included.
-                            </p>
+                            </div>
                             <PercentageCircle
                                 percentage={parseParameterNumber(
                                     strategy.parameters[param.name]
@@ -266,12 +263,21 @@ const FeatureOverviewExecution = ({
             />
             <ConditionallyRender
                 condition={strategy.name === 'default'}
-                show={<p>The standard strategy is on for all users.</p>}
+                show={
+                    <Box sx={{ width: '100%' }} className={styles.summary}>
+                        The standard strategy is{' '}
+                        <Chip
+                            variant="outlined"
+                            size="small"
+                            color="success"
+                            label="ON"
+                        />{' '}
+                        for all users.
+                    </Box>
+                }
             />
             {renderParameters()}
             {renderCustomStrategy()}
         </>
     );
 };
-
-export default FeatureOverviewExecution;

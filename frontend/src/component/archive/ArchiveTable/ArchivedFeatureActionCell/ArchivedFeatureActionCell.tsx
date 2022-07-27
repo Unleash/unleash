@@ -1,16 +1,21 @@
 import { VFC } from 'react';
 import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
-import { Undo } from '@mui/icons-material';
+import { Delete, Undo } from '@mui/icons-material';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
-import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
+import {
+    DELETE_FEATURE,
+    UPDATE_FEATURE,
+} from 'component/providers/AccessProvider/permissions';
 
 interface IReviveArchivedFeatureCell {
     onRevive: () => void;
+    onDelete: () => void;
     project: string;
 }
 
-export const ReviveArchivedFeatureCell: VFC<IReviveArchivedFeatureCell> = ({
+export const ArchivedFeatureActionCell: VFC<IReviveArchivedFeatureCell> = ({
     onRevive,
+    onDelete,
     project,
 }) => {
     return (
@@ -22,6 +27,14 @@ export const ReviveArchivedFeatureCell: VFC<IReviveArchivedFeatureCell> = ({
                 tooltipProps={{ title: 'Revive feature toggle' }}
             >
                 <Undo />
+            </PermissionIconButton>
+            <PermissionIconButton
+                permission={DELETE_FEATURE}
+                projectId={project}
+                tooltipProps={{ title: 'Delete feature toggle' }}
+                onClick={onDelete}
+            >
+                <Delete />
             </PermissionIconButton>
         </ActionCell>
     );

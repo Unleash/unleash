@@ -14,7 +14,7 @@ import { FeatureTypeCell } from 'component/common/Table/cells/FeatureTypeCell/Fe
 import { FeatureSeenCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureSeenCell';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { FeatureStaleCell } from 'component/feature/FeatureToggleList/FeatureStaleCell/FeatureStaleCell';
-import { ReviveArchivedFeatureCell } from 'component/archive/ArchiveTable/ReviveArchivedFeatureCell/ReviveArchivedFeatureCell';
+import { ArchivedFeatureActionCell } from 'component/archive/ArchiveTable/ArchivedFeatureActionCell/ArchivedFeatureActionCell';
 import { featuresPlaceholder } from 'component/feature/FeatureToggleList/FeatureToggleListTable';
 import theme from 'themes/theme';
 import { FeatureSchema } from 'openapi';
@@ -24,6 +24,8 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { useSearch } from 'hooks/useSearch';
 import { FeatureArchivedCell } from './FeatureArchivedCell/FeatureArchivedCell';
 import { useSearchParams } from 'react-router-dom';
+import { ArchivedFeatureDeleteConfirm } from './ArchivedFeatureActionCell/ArchivedFeatureDeleteConfirm/ArchivedFeatureDeleteConfirm';
+import { IFeatureToggle } from 'interfaces/featureToggle';
 
 export interface IFeaturesArchiveTableProps {
     archivedFeatures: FeatureSchema[];
@@ -51,6 +53,9 @@ export const ArchiveTable = ({
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const isMediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
     const { setToastData, setToastApiError } = useToast();
+
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+    const [deletedFeature, setDeletedFeature] = useState<IFeatureToggle>();
 
     const [searchParams, setSearchParams] = useSearchParams();
     const { reviveFeature } = useFeatureArchiveApi();
@@ -153,12 +158,16 @@ export const ArchiveTable = ({
                 Header: 'Actions',
                 id: 'Actions',
                 align: 'center',
-                maxWidth: 85,
+                maxWidth: 120,
                 canSort: false,
-                Cell: ({ row: { original } }: any) => (
-                    <ReviveArchivedFeatureCell
-                        project={original.project}
-                        onRevive={() => onRevive(original.name)}
+                Cell: ({ row: { original: feature } }: any) => (
+                    <ArchivedFeatureActionCell
+                        project={feature.project}
+                        onRevive={() => onRevive(feature.name)}
+                        onDelete={() => {
+                            setDeletedFeature(feature);
+                            setDeleteModalOpen(true);
+                        }}
                     />
                 ),
             },
@@ -289,6 +298,12 @@ export const ArchiveTable = ({
                         }
                     />
                 )}
+            />
+            <ArchivedFeatureDeleteConfirm
+                deletedFeature={deletedFeature}
+                open={deleteModalOpen}
+                setOpen={setDeleteModalOpen}
+                refetch={refetch}
             />
         </PageContent>
     );

@@ -11,5 +11,11 @@ export const useFeatureArchiveApi = () => {
         return makeRequest(req.caller, req.id);
     };
 
-    return { reviveFeature, errors, loading };
+    const deleteFeature = async (feature: string) => {
+        const path = `api/admin/archive/${feature}`;
+        const req = createRequest(path, { method: 'DELETE' });
+        return makeRequest(req.caller, req.id);
+    };
+
+    return { reviveFeature, deleteFeature, errors, loading };
 };

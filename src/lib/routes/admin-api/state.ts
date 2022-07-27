@@ -17,7 +17,7 @@ import { createResponseSchema } from '../../openapi/util/create-response-schema'
 import {
     exportQueryParameters,
     ExportQueryParameters,
-} from '../../openapi/spec/export-parameters-schema';
+} from '../../openapi/spec/export-query-parameters';
 import { emptyResponse } from '../../openapi/util/standard-responses';
 import { OpenAPIV3 } from 'openapi-types';
 

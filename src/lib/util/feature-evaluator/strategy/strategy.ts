@@ -19,6 +19,15 @@ export interface Constraint {
     caseInsensitive?: boolean;
 }
 
+export interface Segment {
+    id: number;
+    name: string;
+    description?: string;
+    constraints: Constraint[];
+    createdBy: string;
+    createdAt: string;
+}
+
 export enum Operator {
     IN = 'IN',
     NOT_IN = 'NOT_IN',
@@ -49,20 +58,6 @@ const InOperator = (constraint: Constraint, context: Context) => {
     const field = constraint.contextName;
     const values = cleanValues(constraint.values);
     const contextValue = resolveContextValue(context, field);
-
-    // console.log(
-    //     'InOperator',
-    //     'field',
-    //     field,
-    //     'values',
-    //     values,
-    //     'contextValue',
-    //     contextValue,
-    // );
-
-    // if (!contextValue) {
-    //     return false;
-    // }
 
     const isIn = values.some((val) => val === contextValue);
     return constraint.operator === Operator.IN ? isIn : !isIn;
@@ -254,7 +249,7 @@ export class Strategy {
         if (constraintResults.result && enabledResult.result) {
             return {
                 result: true,
-                constraints: [],
+                constraints: constraintResults.constraints,
                 // reasons: [
                 //     ...constraintResults.reasons,
                 //     ...enabledResult.reasons,
@@ -263,7 +258,7 @@ export class Strategy {
         } else {
             const result = {
                 result: false,
-                constraints: [],
+                constraints: constraintResults.constraints,
                 // reasons: [
                 //     ...(!constraintResults.enabled
                 //         ? constraintResults.reasons

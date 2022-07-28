@@ -34,15 +34,17 @@ export class PlaygroundService {
             environment,
         });
 
+        // console.log(toggles.map((t) => t.strategies));
+
         const [head, ...rest] = toggles;
         if (!head) {
             return [];
         } else {
-            const client = await offlineUnleashClient(
-                [head, ...rest],
+            const client = await offlineUnleashClient({
+                features: [head, ...rest],
                 context,
-                this.logger.error,
-            );
+                logError: this.logger.error,
+            });
 
             const clientContext = {
                 ...context,

@@ -159,11 +159,11 @@ describe('the playground service (e2e)', () => {
                             return serviceToggles.length === 0;
                         }
 
-                        const client = await offlineUnleashClientNode(
-                            [head, ...rest],
+                        const client = await offlineUnleashClientNode({
+                            features: [head, ...rest],
                             context,
-                            console.log,
-                        );
+                            logError: console.log,
+                        });
 
                         const clientContext = {
                             ...context,
@@ -526,63 +526,104 @@ describe('the playground service (e2e)', () => {
     // should it? The order doesn't matter for now. How do you know what the right sort order is?
     // test('should return strategies in the same order as they are listed', () => {});
 
-    // const todo = () => Promise.reject();
-    // test("should return all of a feature's strategies", async () => {
-    //     await fc.assert(
-    //         fc
-    //             .asyncProperty(
-    //                 clientFeatures({ minLength: 1 }),
-    //                 generateContext(),
-    //                 fc.context(),
-    //                 async (generatedFeatures, context, ctx) => {
-    //                     const log = (x: unknown) => ctx.log(JSON.stringify(x))
-    //                     const serviceFeatures = await insertAndEvaluateFeatures(
-    //                         generatedFeatures,
-    //                         context,
-    //                     );
+    const todo = () => Promise.reject();
+    test("should return all of a feature's strategies", async () => {
+        await fc.assert(
+            fc
+                .asyncProperty(
+                    clientFeatures({ minLength: 1 }),
+                    generateContext(),
+                    fc.context(),
+                    async (generatedFeatures, context, ctx) => {
+                        const log = (x: unknown) => ctx.log(JSON.stringify(x));
+                        const serviceFeatures = await insertAndEvaluateFeatures(
+                            generatedFeatures,
+                            context,
+                        );
 
-    //                     const serviceFeaturesDict: {
-    //                         [key: string]: PlaygroundFeatureSchema;
-    //                     } = serviceFeatures.reduce(
-    //                         (acc, feature) => ({
-    //                             ...acc,
-    //                             [feature.name]: feature,
-    //                         }),
-    //                         {},
-    //                     );
+                        const serviceFeaturesDict: {
+                            [key: string]: PlaygroundFeatureSchema;
+                        } = serviceFeatures.reduce(
+                            (acc, feature) => ({
+                                ...acc,
+                                [feature.name]: feature,
+                            }),
+                            {},
+                        );
 
-    //                     // for each feature, find the corresponding evaluated feature
-    //                     // and make sure that the evaluated
-    //                     // return genFeat.length === servFeat.length && zip(gen, serv).
-    //                     return generatedFeatures.every((feature) => {
-    //                         const mappedFeature: PlaygroundFeatureSchema =
-    //                             serviceFeaturesDict[feature.name];
+                        // for each feature, find the corresponding evaluated feature
+                        // and make sure that the evaluated
+                        // return genFeat.length === servFeat.length && zip(gen, serv).
+                        generatedFeatures.forEach((feature) => {
+                            const mappedFeature: PlaygroundFeatureSchema =
+                                serviceFeaturesDict[feature.name];
 
-    //                         log(mappedFeature)
+                            // log(feature);
+                            log(mappedFeature);
 
-    //                         const featureStrategies =  feature.strategies ?? []
+                            const featureStrategies = feature.strategies ?? [];
+                            featureStrategies.reverse();
 
-    //                         const lengthsAreEqual =
-    //                             featureStrategies.length ===
-    //                             mappedFeature.strategies.length;
+                            expect(mappedFeature.strategies.length).toEqual(
+                                featureStrategies.length,
+                            );
 
-    //                         const strategiesAreTheSame = feature.strategies.every((strategy, index) => {
-    //                             expect(strategy).toStrictEqual(mappedFeature.strategies[index])
-    //                         })
+                            feature.strategies.every((strategy, index) => {
+                                const expected = {
+                                    ...strategy,
+                                    // provide an empty list as fallback because
+                                    // the code doesn't know the difference
+                                    constraints: strategy.constraints ?? [],
+                                };
 
-    //                         return lengthsAreEqual && strategiesAreTheSame
-    //                     });
-    //                 },
-    //             )
-    //             .afterEach(async () => {
-    //                 await stores.featureToggleStore.deleteAll();
-    //             }),
-    //         testParams,
-    //     );
-    // });
+                                // extract the `result` property, because it
+                                // doesn't exist in the input
+                                // const remove =
+                                //     <T, K extends keyof T>(key: K) =>
+                                //     (input: T): Omit<T, K> => {
+                                //         delete input[key]
+                                //         return input;
+                                //     };
+
+                                // remove('result')(
+                                //     mappedFeature.strategies[index],
+                                // );
+
+                                const removeResult = <T>({
+                                    result,
+                                    ...rest
+                                }: T & {
+                                    result: unknown;
+                                }) => rest;
+
+                                const mappedStrategy = removeResult(
+                                    mappedFeature.strategies[index],
+                                );
+
+                                const receivedCleaned = {
+                                    ...mappedStrategy,
+                                    constraints:
+                                        mappedStrategy.constraints?.map(
+                                            removeResult,
+                                        ),
+                                };
+
+                                expect(receivedCleaned).toEqual(expected);
+                            });
+                        });
+                    },
+                )
+                .afterEach(async () => {
+                    await stores.featureToggleStore.deleteAll();
+                }),
+            testParams,
+        );
+    });
 
     // test('should return feature strategies with all their constraints', todo);
     // test('should return feature strategies with all their segments', todo);
+    // test("if a strategy isn't found, it should get 'not found' as its status", todo);
+    // test("if no strategies are found, it should return 'unknown'", todo);
 
     // // test that if a feature is enabled it either has no strats OR
     // // _at least_ one strategy with result = true if it is disabled,

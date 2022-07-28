@@ -167,7 +167,7 @@ export default class UnleashClient extends EventEmitter {
             return fallback();
         }
 
-        if (!feature || !feature.enabled) {
+        if (!feature) {
             return {
                 enabled: false,
                 strategies: [],
@@ -234,20 +234,24 @@ export default class UnleashClient extends EventEmitter {
 
                     return {
                         name: strategySelector.name,
+                        parameters: strategySelector.parameters,
                         ...strategyResults,
                     };
                 },
             );
 
-            const isEnabled = strategies.every((strategy) =>
-                strategy.result === 'not found'
-                    ? 'unevaluated'
-                    : strategies.some((strategy) => strategy.result === true),
-            );
+            const isEnabled =
+                feature.enabled &&
+                strategies.every((strategy) =>
+                    strategy.result === 'not found'
+                        ? 'unevaluated'
+                        : strategies.some(
+                              (strategy) => strategy.result === true,
+                          ),
+                );
 
-            // if (!isEnabled) {
-            //     // console.log(feature.name, strategies);
-            // }
+            // console.log(strategies.length, strategies);
+            // console.log(feature.name, strategies);
 
             const evalResults: FeatureEvaluationResult = {
                 enabled: isEnabled,

@@ -8,7 +8,7 @@ import {
     InMemStorageProvider as InMemStorageProviderNode,
 } from 'unleash-client';
 import { FeatureConfigurationClient } from 'lib/types/stores/feature-strategies-store';
-import { Operator } from 'unleash-client/lib/strategy/strategy';
+import { Operator, Segment } from 'unleash-client/lib/strategy/strategy';
 import { once } from 'events';
 
 enum PayloadType {
@@ -43,11 +43,19 @@ const mapFeaturesForBootstrap = (features: FeatureConfigurationClient[]) =>
         })),
     }));
 
-export const offlineUnleashClient = async (
-    features: NonEmptyList<FeatureConfigurationClient>,
-    context: SdkContextSchema,
-    logError: (message: any, ...args: any[]) => void,
-): Promise<UnleashClient> => {
+type ClientInitOptions = {
+    features: NonEmptyList<FeatureConfigurationClient>;
+    segments?: Segment[];
+    context: SdkContextSchema;
+    logError: (message: any, ...args: any[]) => void;
+};
+
+export const offlineUnleashClient = async ({
+    features,
+    context,
+    logError,
+    segments,
+}: ClientInitOptions): Promise<UnleashClient> => {
     const client = new UnleashClient({
         ...context,
         appName: context.appName,
@@ -57,6 +65,7 @@ export const offlineUnleashClient = async (
         storageProvider: new InMemStorageProvider(),
         bootstrap: {
             data: mapFeaturesForBootstrap(features),
+            segments,
         },
     });
 
@@ -68,11 +77,12 @@ export const offlineUnleashClient = async (
     return client;
 };
 
-export const offlineUnleashClientNode = async (
-    features: NonEmptyList<FeatureConfigurationClient>,
-    context: SdkContextSchema,
-    logError: (message: any, ...args: any[]) => void,
-): Promise<UnleashClientNode> => {
+export const offlineUnleashClientNode = async ({
+    features,
+    context,
+    logError,
+    segments,
+}: ClientInitOptions): Promise<UnleashClientNode> => {
     const client = new UnleashClientNode({
         ...context,
         appName: context.appName,
@@ -82,6 +92,7 @@ export const offlineUnleashClientNode = async (
         storageProvider: new InMemStorageProviderNode(),
         bootstrap: {
             data: mapFeaturesForBootstrap(features),
+            segments,
         },
     });
 

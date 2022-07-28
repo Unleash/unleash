@@ -43,22 +43,32 @@ const strategyConstraints = (): Arbitrary<ConstraintSchema[]> =>
 
 export const strategy = (
     name: string,
-    parameters: Arbitrary<Record<string, string>>,
+    parameters?: Arbitrary<Record<string, string>>,
 ): Arbitrary<FeatureStrategySchema> =>
-    fc.record(
-        {
-            name: fc.constant(name),
-            parameters,
-            segments: fc.uniqueArray(fc.integer({ min: 1 })),
-            constraints: strategyConstraints(),
-        },
-        { requiredKeys: ['name'] },
-    );
+    parameters
+        ? fc.record(
+              {
+                  name: fc.constant(name),
+                  parameters,
+                  segments: fc.uniqueArray(fc.integer({ min: 1 })),
+                  constraints: strategyConstraints(),
+              },
+              { requiredKeys: ['name', 'parameters'] },
+          )
+        : fc.record(
+              {
+                  name: fc.constant(name),
+                  parameters: fc.constant({}),
+                  segments: fc.uniqueArray(fc.integer({ min: 1 })),
+                  constraints: strategyConstraints(),
+              },
+              { requiredKeys: ['name'] },
+          );
 
 export const strategies = (): Arbitrary<FeatureStrategySchema[]> =>
     fc.array(
         fc.oneof(
-            strategy('default', fc.constant({})),
+            strategy('default'),
             strategy(
                 'flexibleRollout',
                 fc.record({

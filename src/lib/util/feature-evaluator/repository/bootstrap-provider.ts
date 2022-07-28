@@ -1,12 +1,13 @@
 import { ClientFeaturesResponse, FeatureInterface } from '../feature';
+import { Segment } from '../strategy/strategy';
 
 export interface BootstrapProvider {
     readBootstrap(): Promise<ClientFeaturesResponse | undefined>;
 }
 
 export interface BootstrapOptions {
-    // data: [FeatureInterface, ...FeatureInterface[]];
     data: FeatureInterface[];
+    segments?: Segment[];
 }
 
 export class DefaultBootstrapProvider implements BootstrapProvider {

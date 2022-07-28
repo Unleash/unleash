@@ -150,7 +150,7 @@
     "@typescript-eslint/parser": "5.30.0",
     "copyfiles": "2.4.1",
     "coveralls": "3.1.1",
-    "del-cli": "4.0.1",
+    "del-cli": "5.0.0",
     "eslint": "8.20.0",
     "eslint-config-airbnb-base": "15.0.0",
     "eslint-config-airbnb-typescript": "17.0.0",

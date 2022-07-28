@@ -41,7 +41,6 @@ export const useStyles = makeStyles()(theme => ({
         display: 'flex',
         justifyContent: 'center',
         flexDirection: 'column',
-        // paddingTop: '1.5rem',
     },
     headerTitle: {
         display: 'flex',

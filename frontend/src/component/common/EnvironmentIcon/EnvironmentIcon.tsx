@@ -14,7 +14,7 @@ const EnvironmentIcon = ({ enabled, className }: IEnvironmentIcon) => {
     const container = {
         backgroundColor: enabled
             ? theme.palette.primary.light
-            : theme.palette.inactiveIcon,
+            : theme.palette.neutral.border,
         borderRadius: '50%',
         width: '28px',
         height: '28px',
@@ -22,13 +22,13 @@ const EnvironmentIcon = ({ enabled, className }: IEnvironmentIcon) => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        marginRight: '0.5rem',
+        marginRight: theme.spacing(1),
     };
 
     const icon = {
         fill: '#fff',
-        width: '17px',
-        height: '17px',
+        width: '16px',
+        height: '16px',
     };
 
     return (

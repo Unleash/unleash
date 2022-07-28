@@ -1,8 +1,9 @@
+import { Fragment } from 'react';
+import { Link } from 'react-router-dom';
+import { DonutLarge } from '@mui/icons-material';
 import { useStyles } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewSegment/FeatureOverviewSegment.styles';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
-import { Link } from 'react-router-dom';
-import { Fragment } from 'react';
 
 interface IFeatureOverviewSegmentProps {
     strategyId: string;
@@ -23,7 +24,7 @@ export const FeatureOverviewSegment = ({
             {segments.map(segment => (
                 <Fragment key={segment.id}>
                     <div className={styles.container}>
-                        Segment{' '}
+                        <DonutLarge color="secondary" sx={{ mr: 1 }} /> Segment:{' '}
                         <Link
                             to={segmentPath(segment.id)}
                             className={styles.link}

@@ -7,13 +7,10 @@ export const useStyles = makeStyles()(theme => ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        marginRight: theme.spacing(2),
+        marginRight: theme.spacing(1),
         [theme.breakpoints.down(650)]: {
             marginBottom: '1rem',
             marginRight: 0,
-        },
-        [theme.breakpoints.between(1101, 1365)]: {
-            marginRight: '8px',
         },
     },
     constraintIcon: {
@@ -52,10 +49,13 @@ export const useStyles = makeStyles()(theme => ({
     headerValuesContainerWrapper: {
         display: 'flex',
         alignItems: 'stretch',
+        margin: 'auto 0',
     },
     headerValuesContainer: {
         display: 'flex',
-        alignItems: 'stretch',
+        justifyContent: 'stretch',
+        margin: 'auto 0',
+        flexDirection: 'column',
     },
     headerValues: {
         fontSize: theme.fontSizes.smallBody,
@@ -72,9 +72,6 @@ export const useStyles = makeStyles()(theme => ({
         minWidth: '220px',
         position: 'relative',
         paddingRight: '1rem',
-        [theme.breakpoints.down(650)]: {
-            paddingRight: 0,
-        },
         [theme.breakpoints.between(1101, 1365)]: {
             minWidth: '152px',
             paddingRight: '0.5rem',

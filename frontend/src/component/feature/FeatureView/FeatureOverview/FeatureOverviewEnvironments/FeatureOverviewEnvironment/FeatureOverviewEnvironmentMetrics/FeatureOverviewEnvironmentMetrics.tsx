@@ -1,4 +1,5 @@
 import { FiberManualRecord } from '@mui/icons-material';
+import { useTheme } from '@mui/system';
 import { IFeatureEnvironmentMetrics } from 'interfaces/featureToggle';
 import { calculatePercentage } from 'utils/calculatePercentage';
 import PercentageCircle from 'component/common/PercentageCircle/PercentageCircle';
@@ -6,12 +7,15 @@ import { useStyles } from './FeatureOverviewEnvironmentMetrics.styles';
 
 interface IFeatureOverviewEnvironmentMetrics {
     environmentMetric?: IFeatureEnvironmentMetrics;
+    disabled?: boolean;
 }
 
 const FeatureOverviewEnvironmentMetrics = ({
     environmentMetric,
+    disabled = false,
 }: IFeatureOverviewEnvironmentMetrics) => {
     const { classes: styles } = useStyles();
+    const theme = useTheme();
 
     if (!environmentMetric) return null;
 
@@ -25,10 +29,26 @@ const FeatureOverviewEnvironmentMetrics = ({
         return (
             <div className={styles.container}>
                 <div className={styles.info}>
-                    <p className={styles.percentage} data-loading>
+                    <p
+                        className={styles.percentage}
+                        style={{
+                            color: disabled
+                                ? theme.palette.text.secondary
+                                : undefined,
+                        }}
+                        data-loading
+                    >
                         {percentage}%
                     </p>
-                    <p className={styles.infoParagraph} data-loading>
+                    <p
+                        className={styles.infoParagraph}
+                        style={{
+                            color: disabled
+                                ? theme.palette.text.secondary
+                                : theme.palette.text.primary,
+                        }}
+                        data-loading
+                    >
                         The feature has been requested <b>0 times</b> and
                         exposed<b> 0 times</b> in the last hour
                     </p>

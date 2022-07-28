@@ -1,10 +1,13 @@
-import { IConstraint } from '../../../../../../interfaces/strategy';
+import { IConstraint } from 'interfaces/strategy';
 import { ConditionallyRender } from '../../../../ConditionallyRender/ConditionallyRender';
 import { Tooltip, Box } from '@mui/material';
-import { ReactComponent as NegatedIcon } from '../../../../../../assets/icons/24_Negator.svg';
+import { stringOperators } from 'constants/operators';
+import { ReactComponent as NegatedIcon } from 'assets/icons/24_Negator.svg';
 import { ConstraintOperator } from '../../../ConstraintOperator/ConstraintOperator';
 import { useStyles } from '../../../ConstraintAccordion.styles';
 import { StyledIconWrapper } from '../StyledIconWrapper/StyledIconWrapper';
+import { ReactComponent as CaseSensitive } from 'assets/icons/24_Text format.svg';
+import { oneOf } from 'utils/oneOf';
 
 interface ConstraintViewHeaderOperatorProps {
     constraint: IConstraint;
@@ -35,6 +38,19 @@ export const ConstraintViewHeaderOperator = ({
                     hasPrefix={Boolean(constraint.inverted)}
                 />
             </div>
+            <ConditionallyRender
+                condition={
+                    !Boolean(constraint.caseInsensitive) &&
+                    oneOf(stringOperators, constraint.operator)
+                }
+                show={
+                    <Tooltip title="Case sensitive is active" arrow>
+                        <StyledIconWrapper>
+                            <CaseSensitive />
+                        </StyledIconWrapper>
+                    </Tooltip>
+                }
+            />
         </div>
     );
 };

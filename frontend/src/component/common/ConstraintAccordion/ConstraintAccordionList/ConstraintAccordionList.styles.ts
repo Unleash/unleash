@@ -23,6 +23,7 @@ export const useStyles = makeStyles()(theme => ({
         margin: '0.75rem 0 ',
     },
     customConstraintLabel: {
+        marginBottom: theme.spacing(1),
         color: theme.palette.text.secondary,
     },
 }));

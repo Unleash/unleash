@@ -8,6 +8,7 @@ import { FeatureStrategyMenu } from '../FeatureStrategyMenu/FeatureStrategyMenu'
 import { PresetCard } from './PresetCard/PresetCard';
 import { useStyles } from './FeatureStrategyEmpty.styles';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { useFeatureImmutable } from 'hooks/api/getters/useFeature/useFeatureImmutable';
 import { getFeatureStrategyIcon } from 'utils/strategyNames';
 
 interface IFeatureStrategyEmptyProps {
@@ -25,9 +26,15 @@ export const FeatureStrategyEmpty = ({
     const { addStrategyToFeature } = useFeatureStrategyApi();
     const { setToastData, setToastApiError } = useToast();
     const { refetchFeature } = useFeature(projectId, featureId);
+    const { refetchFeature: refetchFeatureImmutable } = useFeatureImmutable(
+        projectId,
+        featureId
+    );
 
     const onAfterAddStrategy = () => {
         refetchFeature();
+        refetchFeatureImmutable();
+
         setToastData({
             title: 'Strategy created',
             text: 'Successfully created strategy',

@@ -50,6 +50,7 @@ export const StrategyExecution = ({ strategy }: IStrategyExecutionProps) => {
                             sx={{ display: 'flex', alignItems: 'center' }}
                         >
                             <PercentageCircle
+                                hideNumber
                                 percentage={parseParameterNumber(
                                     parameters[key]
                                 )}

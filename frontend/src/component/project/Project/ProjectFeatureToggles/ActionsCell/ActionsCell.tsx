@@ -59,13 +59,7 @@ export const ActionsCell: VFC<IActionsCellProps> = ({
 
     return (
         <Box className={classes.cell}>
-            <Tooltip
-                title="Feature toggle actions"
-                arrow
-                placement="bottom-end"
-                describeChild
-                enterDelay={1000}
-            >
+            <Tooltip title="Feature toggle actions" arrow describeChild>
                 <IconButton
                     id={id}
                     aria-controls={open ? menuId : undefined}

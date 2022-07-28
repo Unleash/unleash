@@ -102,11 +102,9 @@ export const GroupCard = ({ group }: IGroupCardProps) => {
                                 ))}
                                 elseShow={
                                     <Tooltip
-                                        title="This project is not used in any project"
+                                        title="This group is not used in any project"
                                         arrow
-                                        placement="bottom-end"
                                         describeChild
-                                        enterDelay={1000}
                                     >
                                         <Badge>Not used</Badge>
                                     </Tooltip>

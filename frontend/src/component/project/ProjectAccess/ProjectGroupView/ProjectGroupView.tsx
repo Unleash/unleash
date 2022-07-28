@@ -23,6 +23,7 @@ import { sortTypes } from 'utils/sortTypes';
 
 const StyledPageContent = styled(PageContent)(({ theme }) => ({
     height: '100vh',
+    overflow: 'auto',
     padding: theme.spacing(7.5, 6),
     '& .header': {
         padding: theme.spacing(0, 0, 2, 0),

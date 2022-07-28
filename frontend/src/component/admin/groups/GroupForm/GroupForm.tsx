@@ -24,6 +24,10 @@ const StyledInput = styled(Input)(({ theme }) => ({
     marginBottom: theme.spacing(2),
 }));
 
+const StyledGroupFormUsersTableWrapper = styled('div')(({ theme }) => ({
+    marginBottom: theme.spacing(6),
+}));
+
 const StyledButtonContainer = styled('div')(() => ({
     marginTop: 'auto',
     display: 'flex',
@@ -101,10 +105,12 @@ export const GroupForm: FC<IGroupForm> = ({
                             users={users}
                             setUsers={setUsers}
                         />
-                        <GroupFormUsersTable
-                            users={users}
-                            setUsers={setUsers}
-                        />
+                        <StyledGroupFormUsersTableWrapper>
+                            <GroupFormUsersTable
+                                users={users}
+                                setUsers={setUsers}
+                            />
+                        </StyledGroupFormUsersTableWrapper>
                     </>
                 }
             />

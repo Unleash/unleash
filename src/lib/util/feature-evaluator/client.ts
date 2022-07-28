@@ -10,6 +10,7 @@ import {
 } from './variant';
 import { Context } from './context';
 import type { PlaygroundStrategySchema } from '../../openapi/spec/playground-feature-schema';
+import { Constraint, Segment } from './strategy/strategy';
 
 interface BooleanMap {
     [key: string]: boolean;
@@ -226,10 +227,12 @@ export default class UnleashClient extends EventEmitter {
                         };
                     }
 
+                    const constraints =
+                        this.yieldConstraintsFor(strategySelector);
                     const strategyResults = strategy.isEnabledWithConstraints(
                         strategySelector.parameters,
                         context,
-                        strategySelector.constraints,
+                        constraints,
                     );
 
                     return {
@@ -274,6 +277,37 @@ export default class UnleashClient extends EventEmitter {
             //         strategySelector.constraints,
             //     );
             // });
+        }
+    }
+
+    *yieldConstraintsFor(
+        strategy: StrategyTransportInterface,
+    ): IterableIterator<Constraint | undefined> {
+        if (strategy.constraints) {
+            yield* strategy.constraints;
+        }
+        const segments = strategy.segments?.map((segmentId) =>
+            this.repository.getSegment(segmentId),
+        );
+        if (!segments) {
+            return;
+        }
+        yield* this.yieldSegmentConstraints(segments);
+    }
+
+    *yieldSegmentConstraints(
+        segments: (Segment | undefined)[],
+    ): IterableIterator<Constraint | undefined> {
+        // eslint-disable-next-line no-restricted-syntax
+        for (const segment of segments) {
+            if (segment) {
+                // eslint-disable-next-line no-restricted-syntax
+                for (const constraint of segment?.constraints) {
+                    yield constraint;
+                }
+            } else {
+                yield undefined;
+            }
         }
     }
 

@@ -8,6 +8,7 @@ export interface StrategyTransportInterface {
     name: string;
     parameters: any;
     constraints: Constraint[];
+    segments?: number[];
 }
 
 export interface Constraint {
@@ -195,9 +196,9 @@ export class Strategy {
 
     checkConstraints(
         context: Context,
-        constraints?: Constraint[],
+        constraints?: IterableIterator<Constraint | undefined>,
     ): { result: boolean; constraints: PlaygroundConstraintSchema[] } {
-        if (!constraints || constraints.length === 0) {
+        if (!constraints) {
             return {
                 result: true,
                 constraints: [],
@@ -205,11 +206,20 @@ export class Strategy {
             };
         }
 
-        const mappedConstraints = constraints.map((constraint) => ({
-            ...constraint,
-            value: constraint.value?.toString() ?? undefined,
-            result: this.checkConstraint(constraint, context),
-        }));
+        const mappedConstraints = [];
+        for (const constraint of constraints) {
+            mappedConstraints.push({
+                ...constraint,
+                value: constraint.value?.toString() ?? undefined,
+                result: this.checkConstraint(constraint, context),
+            });
+        }
+
+        // const mappedConstraints = constraints.map((constraint) => ({
+        //     ...constraint,
+        //     value: constraint.value?.toString() ?? undefined,
+        //     result: this.checkConstraint(constraint, context),
+        // }));
 
         const result = mappedConstraints.every(
             (constraint) => constraint.result,
@@ -239,7 +249,7 @@ export class Strategy {
     isEnabledWithConstraints(
         parameters: any,
         context: Context,
-        constraints: Constraint[] = [],
+        constraints: IterableIterator<Constraint | undefined>,
     ): StrategyEvaluationResult {
         const constraintResults = this.checkConstraints(context, constraints);
         const enabledResult = this.isEnabled(parameters, context);

@@ -7,10 +7,12 @@ import { TagFilter } from '../tags';
 import { BootstrapProvider } from './bootstrap-provider';
 import { StorageProvider } from './storage-provider';
 import { UnleashEvents } from '../events';
+import { Segment } from '../strategy/strategy';
 
 export interface RepositoryInterface extends EventEmitter {
     getToggle(name: string): FeatureInterface;
     getToggles(): FeatureInterface[];
+    getSegment(id: number): Segment | undefined;
     stop(): void;
     start(): Promise<void>;
 }
@@ -76,6 +78,8 @@ export default class Repository extends EventEmitter implements EventEmitter {
 
     private data: FeatureToggleData = {};
 
+    private segments: Map<number, Segment>;
+
     constructor({
         url,
         appName,
@@ -107,6 +111,7 @@ export default class Repository extends EventEmitter implements EventEmitter {
         this.bootstrapProvider = bootstrapProvider;
         this.bootstrapOverride = bootstrapOverride;
         this.storageProvider = storageProvider;
+        this.segments = new Map();
     }
 
     validateFeature(feature: FeatureInterface) {
@@ -149,6 +154,7 @@ export default class Repository extends EventEmitter implements EventEmitter {
 
             if (content && this.notEmpty(content)) {
                 this.data = this.convertToMap(content.features);
+                this.segments = this.createSegmentLookup(content.segments);
                 this.setReady();
             }
         } catch (err) {
@@ -165,6 +171,13 @@ export default class Repository extends EventEmitter implements EventEmitter {
                 this.emit(UnleashEvents.Ready);
             });
         }
+    }
+
+    createSegmentLookup(segments: Segment[] | undefined): Map<number, Segment> {
+        if (!segments) {
+            return new Map();
+        }
+        return new Map(segments.map((segment) => [segment.id, segment]));
     }
 
     async save(
@@ -236,6 +249,10 @@ Message: ${err.message}`,
             clearTimeout(this.timer);
         }
         this.removeAllListeners();
+    }
+
+    getSegment(segmentId: number): Segment | undefined {
+        return this.segments.get(segmentId);
     }
 
     getToggle(name: string): FeatureInterface {

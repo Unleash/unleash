@@ -497,12 +497,12 @@ describe('the playground service (e2e)', () => {
                 return serviceFeatures.length === 0;
             }
 
-            const client = await offlineUnleashClientNode(
-                [head, ...rest],
+            const client = await offlineUnleashClientNode({
+                features: [head, ...rest],
                 // @ts-expect-error
                 context,
-                console.log,
-            );
+                logError: console.log,
+            });
 
             const clientContext = {
                 ...context,

@@ -3,19 +3,11 @@ import React, { ReactNode } from 'react';
 
 interface IIconCellProps {
     icon: ReactNode;
-    onClick?: () => void;
 }
 
-export const IconCell = ({ icon, onClick }: IIconCellProps) => {
-    const handleClick =
-        onClick &&
-        ((event: React.SyntheticEvent) => {
-            event.stopPropagation();
-            onClick();
-        });
+export const IconCell = ({ icon }: IIconCellProps) => {
     return (
         <Box
-            onClick={handleClick}
             sx={{
                 pl: 2,
                 pr: 1,

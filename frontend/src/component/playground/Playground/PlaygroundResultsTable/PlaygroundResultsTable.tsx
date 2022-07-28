@@ -25,7 +25,7 @@ import useLoading from 'hooks/useLoading';
 import { VariantCell } from './VariantCell/VariantCell';
 import { IconCell } from '../../../common/Table/cells/IconCell/IconCell';
 import { InfoOutlined } from '@mui/icons-material';
-import { PlaygroundFeatureResultInfoModal } from '../PlaygroundFeatureResultInfoModal/PlaygroundFeatureResultInfoModal';
+import { FeatureResultInfoPopoverCell } from './FeatureResultInfoPopoverCell/FeatureResultInfoPopoverCell';
 
 const defaultSort: SortingRule<string> = { id: 'name' };
 const { value, setValue } = createLocalStorage(
@@ -51,87 +51,11 @@ export const PlaygroundResultsTable = ({
     const isExtraSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
-    const [selectedFeature, setSelectedFeature] = useState<
-        PlaygroundFeatureSchema | undefined
-    >();
-    const [showResultInfoModal, setShowResultInfoModal] = useState(false);
-
-    const columns = useMemo(
-        () => [
-            {
-                Header: 'Name',
-                accessor: 'name',
-                searchable: true,
-                minWidth: 160,
-                Cell: ({ value, row: { original } }: any) => (
-                    <LinkCell
-                        title={value}
-                        to={`/projects/${original?.projectId}/features/${value}`}
-                    />
-                ),
-            },
-            {
-                Header: 'Project ID',
-                accessor: 'projectId',
-                sortType: 'alphanumeric',
-                filterName: 'projectId',
-                searchable: true,
-                maxWidth: 170,
-                Cell: ({ value }: any) => (
-                    <LinkCell title={value} to={`/projects/${value}`} />
-                ),
-            },
-            {
-                Header: 'Variant',
-                id: 'variant',
-                accessor: 'variant.name',
-                sortType: 'alphanumeric',
-                filterName: 'variant',
-                searchable: true,
-                width: 200,
-                Cell: ({
-                    value,
-                    row: {
-                        original: { variant, feature, variants, isEnabled },
-                    },
-                }: any) => (
-                    <VariantCell
-                        variant={variant?.enabled ? value : ''}
-                        variants={variants}
-                        feature={feature}
-                        isEnabled={isEnabled}
-                    />
-                ),
-            },
-            {
-                Header: 'isEnabled',
-                accessor: 'isEnabled',
-                filterName: 'isEnabled',
-                filterParsing: (value: boolean) => (value ? 'true' : 'false'),
-                Cell: ({ value }: any) => <FeatureStatusCell enabled={value} />,
-                sortType: 'boolean',
-                sortInverted: true,
-            },
-            {
-                Header: '',
-                id: 'info',
-                Cell: ({ row }: any) => (
-                    <IconCell
-                        icon={<InfoOutlined />}
-                        onClick={() => onFeatureResultInfoClick(row.original)}
-                    />
-                ),
-            },
-        ],
-        //eslint-disable-next-line
-        []
-    );
-
     const {
         data: searchedData,
         getSearchText,
         getSearchContext,
-    } = useSearch(columns, searchValue, features || []);
+    } = useSearch(COLUMNS, searchValue, features || []);
 
     const data = useMemo(() => {
         return loading
@@ -166,7 +90,7 @@ export const PlaygroundResultsTable = ({
     } = useTable(
         {
             initialState,
-            columns: columns as any,
+            columns: COLUMNS as any,
             data: data as any,
             sortTypes,
             autoResetGlobalFilter: false,
@@ -217,18 +141,8 @@ export const PlaygroundResultsTable = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps -- don't re-render after search params change
     }, [loading, sortBy, searchValue]);
 
-    const onFeatureResultInfoClick = (feature: PlaygroundFeatureSchema) => {
-        setSelectedFeature(feature);
-        setShowResultInfoModal(true);
-    };
-
     return (
         <>
-            <PlaygroundFeatureResultInfoModal
-                feature={selectedFeature}
-                open={showResultInfoModal}
-                setOpen={setShowResultInfoModal}
-            />
             <Box
                 sx={{
                     display: 'flex',
@@ -324,3 +238,67 @@ export const PlaygroundResultsTable = ({
         </>
     );
 };
+
+const COLUMNS = [
+    {
+        Header: 'Name',
+        accessor: 'name',
+        searchable: true,
+        minWidth: 160,
+        Cell: ({ value, row: { original } }: any) => (
+            <LinkCell
+                title={value}
+                to={`/projects/${original?.projectId}/features/${value}`}
+            />
+        ),
+    },
+    {
+        Header: 'Project ID',
+        accessor: 'projectId',
+        sortType: 'alphanumeric',
+        filterName: 'projectId',
+        searchable: true,
+        maxWidth: 170,
+        Cell: ({ value }: any) => (
+            <LinkCell title={value} to={`/projects/${value}`} />
+        ),
+    },
+    {
+        Header: 'Variant',
+        id: 'variant',
+        accessor: 'variant.name',
+        sortType: 'alphanumeric',
+        filterName: 'variant',
+        searchable: true,
+        width: 200,
+        Cell: ({
+            value,
+            row: {
+                original: { variant, feature, variants, isEnabled },
+            },
+        }: any) => (
+            <VariantCell
+                variant={variant?.enabled ? value : ''}
+                variants={variants}
+                feature={feature}
+                isEnabled={isEnabled}
+            />
+        ),
+    },
+    {
+        Header: 'isEnabled',
+        accessor: 'isEnabled',
+        filterName: 'isEnabled',
+        filterParsing: (value: boolean) => (value ? 'true' : 'false'),
+        Cell: ({ value }: any) => <FeatureStatusCell enabled={value} />,
+        sortType: 'boolean',
+        sortInverted: true,
+    },
+    {
+        Header: '',
+        id: 'info',
+        Cell: ({ row }: any) => (
+            <FeatureResultInfoPopoverCell feature={row.original} />
+        ),
+    },
+];

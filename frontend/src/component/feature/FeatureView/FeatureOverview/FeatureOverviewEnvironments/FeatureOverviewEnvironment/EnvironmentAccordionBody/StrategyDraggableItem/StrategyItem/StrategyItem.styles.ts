@@ -24,6 +24,9 @@ export const useStyles = makeStyles()(theme => ({
         marginLeft: 'auto',
         display: 'flex',
     },
+    resultChip: {
+        marginLeft: 'auto',
+    },
     body: {
         padding: theme.spacing(2),
         justifyItems: 'center',

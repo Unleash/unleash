@@ -100,7 +100,7 @@
     "helmet": "^5.0.0",
     "joi": "^17.3.0",
     "js-yaml": "^4.1.0",
-    "json-schema-to-ts": "^2.5.3",
+    "json-schema-to-ts": "2.5.4",
     "knex": "^2.0.0",
     "log4js": "^6.0.0",
     "make-fetch-happen": "^10.1.2",
@@ -120,12 +120,14 @@
     "semver": "^7.3.5",
     "serve-favicon": "^2.5.0",
     "stoppable": "^1.1.0",
+    "ts-toolbelt": "^9.6.0",
     "type-is": "^1.6.18",
     "unleash-client": "^3.15.0",
     "unleash-frontend": "4.14.0-beta.6",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "@apidevtools/swagger-parser": "^10.1.0",
     "@babel/core": "7.18.9",
     "@types/bcryptjs": "2.4.2",
     "@types/express": "4.17.13",

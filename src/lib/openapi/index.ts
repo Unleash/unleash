@@ -30,7 +30,6 @@ import { environmentSchema } from './spec/environment-schema';
 import { environmentsSchema } from './spec/environments-schema';
 import { eventSchema } from './spec/event-schema';
 import { eventsSchema } from './spec/events-schema';
-import { exportParametersSchema } from './spec/export-parameters-schema';
 import { featureEnvironmentMetricsSchema } from './spec/feature-environment-metrics-schema';
 import { featureEnvironmentSchema } from './spec/feature-environment-schema';
 import { featureEventsSchema } from './spec/feature-events-schema';
@@ -139,7 +138,6 @@ export const schemas = {
     environmentsSchema,
     eventSchema,
     eventsSchema,
-    exportParametersSchema,
     featureEnvironmentMetricsSchema,
     featureEnvironmentSchema,
     featureEventsSchema,

@@ -8,13 +8,13 @@ export const playgroundRequestSchema = {
     type: 'object',
     required: ['environment', 'context'],
     properties: {
-        environment: { type: 'string', examples: ['development'] },
+        environment: { type: 'string', example: 'development' },
         projects: {
             oneOf: [
                 {
                     type: 'array',
                     items: { type: 'string' },
-                    examples: ['my-project', 'my-other-project'],
+                    example: ['my-project'],
                     description: 'A list of projects to check for toggles in.',
                 },
                 {

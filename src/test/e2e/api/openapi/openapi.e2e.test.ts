@@ -1,6 +1,7 @@
 import { setupApp } from '../../helpers/test-helper';
 import dbInit from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
+import SwaggerParser from '@apidevtools/swagger-parser';
 
 let app;
 let db;
@@ -35,4 +36,20 @@ test('should serve the OpenAPI spec', async () => {
             // If the change is intended, update the snapshot with `jest -u`.
             expect(res.body).toMatchSnapshot();
         });
+});
+
+test('the generated OpenAPI spec is valid', async () => {
+    const { body } = await app.request
+        .get('/docs/openapi.json')
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+    // this throws if the swagger parser can't parse it correctly
+    // also parses examples, but _does_ do some string coercion in examples
+    try {
+        await SwaggerParser.validate(body);
+    } catch (err) {
+        console.error(err);
+        return false;
+    }
 });

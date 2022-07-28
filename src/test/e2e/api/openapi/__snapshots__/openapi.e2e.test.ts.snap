@@ -553,7 +553,6 @@ Object {
             "type": "array",
           },
         },
-        "required": Array [],
         "type": "object",
       },
       "clientFeaturesSchema": Object {
@@ -1018,32 +1017,6 @@ Object {
         ],
         "type": "object",
       },
-      "exportParametersSchema": Object {
-        "properties": Object {
-          "download": Object {
-            "type": "boolean",
-          },
-          "environments": Object {
-            "type": "boolean",
-          },
-          "featureToggles": Object {
-            "type": "boolean",
-          },
-          "format": Object {
-            "type": "string",
-          },
-          "projects": Object {
-            "type": "boolean",
-          },
-          "strategies": Object {
-            "type": "boolean",
-          },
-          "tags": Object {
-            "type": "boolean",
-          },
-        },
-        "type": "object",
-      },
       "featureEnvironmentMetricsSchema": Object {
         "additionalProperties": false,
         "properties": Object {
@@ -1465,7 +1438,6 @@ Object {
             "type": "number",
           },
         },
-        "required": Array [],
         "type": "object",
       },
       "groupSchema": Object {
@@ -1834,28 +1806,23 @@ Object {
         "description": "A simplified feature toggle model intended for the Unleash playground.",
         "properties": Object {
           "isEnabled": Object {
-            "examples": Array [
-              true,
-            ],
+            "example": true,
             "type": "boolean",
           },
           "name": Object {
-            "examples": Array [
-              "my-feature",
-            ],
+            "example": "my-feature",
             "type": "string",
           },
           "projectId": Object {
-            "examples": Array [
-              "my-project",
-            ],
+            "example": "my-project",
             "type": "string",
           },
           "variant": Object {
             "additionalProperties": false,
-            "examples": Array [
-              "green",
-            ],
+            "example": Object {
+              "enabled": true,
+              "name": "green",
+            },
             "nullable": true,
             "properties": Object {
               "enabled": Object {
@@ -1915,18 +1882,15 @@ Object {
             "$ref": "#/components/schemas/sdkContextSchema",
           },
           "environment": Object {
-            "examples": Array [
-              "development",
-            ],
+            "example": "development",
             "type": "string",
           },
           "projects": Object {
             "oneOf": Array [
               Object {
                 "description": "A list of projects to check for toggles in.",
-                "examples": Array [
+                "example": Array [
                   "my-project",
-                  "my-other-project",
                 ],
                 "items": Object {
                   "type": "string",
@@ -2074,24 +2038,18 @@ Object {
       },
       "sdkContextSchema": Object {
         "additionalProperties": Object {
-          "examples": Array [
-            "top-level custom context value",
-          ],
+          "example": "top-level custom context value",
           "type": "string",
         },
         "description": "The Unleash context as modeled in client SDKs",
         "properties": Object {
           "appName": Object {
-            "examples": Array [
-              "My cool application.",
-            ],
+            "example": "My cool application.",
             "minLength": 1,
             "type": "string",
           },
           "currentTime": Object {
-            "examples": Array [
-              "2022-07-05T12:56:41+02:00",
-            ],
+            "example": "2022-07-05T12:56:41+02:00",
             "format": "date-time",
             "type": "string",
           },
@@ -2103,30 +2061,22 @@ Object {
             "additionalProperties": Object {
               "type": "string",
             },
-            "examples": Array [
-              Object {
-                "customContextField": "this is one!",
-                "otherCustomField": 3,
-              },
-            ],
+            "example": Object {
+              "customContextField": "this is one!",
+              "otherCustomField": "3",
+            },
             "type": "object",
           },
           "remoteAddress": Object {
-            "examples": Array [
-              "192.168.1.1",
-            ],
+            "example": "192.168.1.1",
             "type": "string",
           },
           "sessionId": Object {
-            "examples": Array [
-              "b65e7b23-fec0-4814-a129-0e9861ef18fc",
-            ],
+            "example": "b65e7b23-fec0-4814-a129-0e9861ef18fc",
             "type": "string",
           },
           "userId": Object {
-            "examples": Array [
-              "username@provider.com",
-            ],
+            "example": "username@provider.com",
             "type": "string",
           },
         },
@@ -5168,7 +5118,137 @@ If the provided project does not exist, the list of events will be empty.",
         "operationId": "export",
         "parameters": Array [
           Object {
-            "$ref": "#/components/schema/exportParametersSchema",
+            "description": "Desired export format. Must be either \`json\` or \`yaml\`.",
+            "in": "query",
+            "name": "format",
+            "schema": Object {
+              "default": "json",
+              "enum": Array [
+                "json",
+                "yaml",
+              ],
+              "type": "string",
+            },
+          },
+          Object {
+            "description": "Whether exported data should be downloaded as a file.",
+            "in": "query",
+            "name": "download",
+            "schema": Object {
+              "anyOf": Array [
+                Object {
+                  "type": "boolean",
+                },
+                Object {
+                  "minLength": 1,
+                  "type": "string",
+                },
+                Object {
+                  "type": "number",
+                },
+              ],
+              "default": false,
+            },
+          },
+          Object {
+            "description": "Whether strategies should be included in the exported data.",
+            "in": "query",
+            "name": "strategies",
+            "schema": Object {
+              "anyOf": Array [
+                Object {
+                  "type": "boolean",
+                },
+                Object {
+                  "minLength": 1,
+                  "type": "string",
+                },
+                Object {
+                  "type": "number",
+                },
+              ],
+              "default": true,
+            },
+          },
+          Object {
+            "description": "Whether feature toggles should be included in the exported data.",
+            "in": "query",
+            "name": "featureToggles",
+            "schema": Object {
+              "anyOf": Array [
+                Object {
+                  "type": "boolean",
+                },
+                Object {
+                  "minLength": 1,
+                  "type": "string",
+                },
+                Object {
+                  "type": "number",
+                },
+              ],
+              "default": true,
+            },
+          },
+          Object {
+            "description": "Whether projects should be included in the exported data.",
+            "in": "query",
+            "name": "projects",
+            "schema": Object {
+              "anyOf": Array [
+                Object {
+                  "type": "boolean",
+                },
+                Object {
+                  "minLength": 1,
+                  "type": "string",
+                },
+                Object {
+                  "type": "number",
+                },
+              ],
+              "default": true,
+            },
+          },
+          Object {
+            "description": "Whether tag types, tags, and feature_tags should be included in the exported data.",
+            "in": "query",
+            "name": "tags",
+            "schema": Object {
+              "anyOf": Array [
+                Object {
+                  "type": "boolean",
+                },
+                Object {
+                  "minLength": 1,
+                  "type": "string",
+                },
+                Object {
+                  "type": "number",
+                },
+              ],
+              "default": true,
+            },
+          },
+          Object {
+            "description": "Whether environments should be included in the exported data.",
+            "in": "query",
+            "name": "environments",
+            "schema": Object {
+              "anyOf": Array [
+                Object {
+                  "type": "boolean",
+                },
+                Object {
+                  "minLength": 1,
+                  "type": "string",
+                },
+                Object {
+                  "type": "number",
+                },
+              ],
+              "default": true,
+            },
           },
         ],
         "responses": Object {

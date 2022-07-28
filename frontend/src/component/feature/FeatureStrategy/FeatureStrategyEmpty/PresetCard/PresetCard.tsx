@@ -1,22 +1,34 @@
-import { Button, Card, CardContent, Typography } from '@mui/material';
-import { FC } from 'react';
+import { ElementType, FC } from 'react';
+import { Button, Card, CardContent, styled, Typography } from '@mui/material';
 
 interface IPresetCardProps {
     title: string;
     onClick: () => void;
+    Icon: ElementType;
 }
+
+const StyledCard = styled(Card)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    borderRadius: theme.shape.borderRadiusMedium,
+}));
 
 export const PresetCard: FC<IPresetCardProps> = ({
     title,
     children,
+    Icon,
     onClick,
 }) => (
-    <Card variant="outlined" sx={{ display: 'flex', flexDirection: 'column' }}>
+    <StyledCard variant="outlined">
         <CardContent
             sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}
         >
-            <Typography variant="body1" fontWeight="medium" sx={{ mb: 0.5 }}>
-                {title}
+            <Typography
+                variant="body1"
+                fontWeight="medium"
+                sx={{ mb: 0.5, display: 'flex', alignItems: 'center' }}
+            >
+                <Icon color="disabled" sx={{ mr: 1 }} /> {title}
             </Typography>
             <Typography variant="body2" color="text.secondary" component="p">
                 {children}
@@ -31,5 +43,5 @@ export const PresetCard: FC<IPresetCardProps> = ({
                 Use template
             </Button>
         </CardContent>
-    </Card>
+    </StyledCard>
 );

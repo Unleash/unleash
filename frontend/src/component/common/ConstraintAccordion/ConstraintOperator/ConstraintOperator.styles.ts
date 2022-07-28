@@ -9,6 +9,7 @@ export const useStyles = makeStyles()(theme => ({
     },
     name: {
         fontSize: theme.fontSizes.smallBody,
+        lineHeight: 17 / 14,
     },
     text: {
         fontSize: theme.fontSizes.smallerBody,

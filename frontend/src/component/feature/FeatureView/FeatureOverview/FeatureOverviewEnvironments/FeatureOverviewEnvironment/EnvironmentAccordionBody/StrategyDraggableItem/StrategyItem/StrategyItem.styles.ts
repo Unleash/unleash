@@ -3,20 +3,19 @@ import { makeStyles } from 'tss-react/mui';
 export const useStyles = makeStyles()(theme => ({
     container: {
         borderRadius: theme.shape.borderRadiusMedium,
-        border: `1px solid ${theme.palette.grey[300]}`,
+        border: `1px solid ${theme.palette.divider}`,
         '& + &': {
-            marginTop: '1rem',
+            marginTop: theme.spacing(2),
         },
         background: theme.palette.background.default,
     },
     header: {
         padding: theme.spacing(0.5, 2),
         display: 'flex',
-        gap: '0.5rem',
+        gap: theme.spacing(1),
         alignItems: 'center',
-        borderBottom: `1px solid ${theme.palette.grey[300]}`,
+        borderBottom: `1px solid ${theme.palette.divider}`,
         fontWeight: theme.typography.fontWeightMedium,
-        fontSize: theme.fontSizes.smallBody,
     },
     icon: {
         fill: theme.palette.inactiveIcon,
@@ -26,8 +25,7 @@ export const useStyles = makeStyles()(theme => ({
         display: 'flex',
     },
     body: {
-        padding: '1rem',
-        display: 'grid',
+        padding: theme.spacing(2),
         justifyItems: 'center',
     },
 }));

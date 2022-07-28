@@ -23,6 +23,7 @@ export const ConstraintOperator = ({
             style={{
                 borderTopLeftRadius: hasPrefix ? 0 : undefined,
                 borderBottomLeftRadius: hasPrefix ? 0 : undefined,
+                paddingLeft: hasPrefix ? 0 : undefined,
             }}
         >
             <div className={styles.name}>{operatorName}</div>

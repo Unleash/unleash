@@ -14,13 +14,11 @@ export const FeatureStrategyIcon = ({
     const Icon = getFeatureStrategyIcon(strategyName);
 
     return (
-        <StyledIcon>
-            <Tooltip title={formatStrategyName(strategyName)} arrow>
-                <>
-                    <Icon />
-                </>
-            </Tooltip>
-        </StyledIcon>
+        <Tooltip title={formatStrategyName(strategyName)} arrow>
+            <StyledIcon>
+                <Icon />
+            </StyledIcon>
+        </Tooltip>
     );
 };
 

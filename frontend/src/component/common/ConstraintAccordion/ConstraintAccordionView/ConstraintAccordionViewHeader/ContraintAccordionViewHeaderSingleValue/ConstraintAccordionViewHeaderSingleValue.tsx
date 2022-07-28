@@ -1,12 +1,7 @@
 import React, { useEffect } from 'react';
-import { ConditionallyRender } from '../../../../ConditionallyRender/ConditionallyRender';
-import { oneOf } from '../../../../../../utils/oneOf';
-import { stringOperators } from '../../../../../../constants/operators';
-import { Chip, styled, Tooltip } from '@mui/material';
-import { ReactComponent as CaseSensitive } from '../../../../../../assets/icons/24_Text format.svg';
+import { Chip, styled } from '@mui/material';
 import { formatConstraintValue } from '../../../../../../utils/formatConstraintValue';
 import { useStyles } from '../../../ConstraintAccordion.styles';
-import { StyledIconWrapper } from '../StyledIconWrapper/StyledIconWrapper';
 import { IConstraint } from '../../../../../../interfaces/strategy';
 import { useLocationSettings } from '../../../../../../hooks/useLocationSettings';
 
@@ -35,19 +30,6 @@ export const ConstraintAccordionViewHeaderSingleValue = ({
 
     return (
         <div className={styles.headerValuesContainerWrapper}>
-            <ConditionallyRender
-                condition={
-                    !Boolean(constraint.caseInsensitive) &&
-                    oneOf(stringOperators, constraint.operator)
-                }
-                show={
-                    <Tooltip title="Case sensitive is active" arrow>
-                        <StyledIconWrapper>
-                            <CaseSensitive />{' '}
-                        </StyledIconWrapper>
-                    </Tooltip>
-                }
-            />
             <StyledSingleValueChip
                 label={formatConstraintValue(constraint, locationSettings)}
             />

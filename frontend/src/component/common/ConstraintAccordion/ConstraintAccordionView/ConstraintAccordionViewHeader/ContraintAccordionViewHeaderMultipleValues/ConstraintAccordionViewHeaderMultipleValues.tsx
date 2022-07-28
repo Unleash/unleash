@@ -1,11 +1,7 @@
 import { ConditionallyRender } from '../../../../ConditionallyRender/ConditionallyRender';
-import { oneOf } from '../../../../../../utils/oneOf';
-import { stringOperators } from '../../../../../../constants/operators';
-import { styled, Tooltip } from '@mui/material';
-import { ReactComponent as CaseSensitive } from '../../../../../../assets/icons/24_Text format.svg';
+import { styled } from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react';
 import classnames from 'classnames';
-import { StyledIconWrapper } from '../StyledIconWrapper/StyledIconWrapper';
 import { IConstraint } from '../../../../../../interfaces/strategy';
 import { useStyles } from '../../../ConstraintAccordion.styles';
 
@@ -53,19 +49,6 @@ export const ConstraintAccordionViewHeaderMultipleValues = ({
 
     return (
         <div className={styles.headerValuesContainerWrapper}>
-            <ConditionallyRender
-                condition={
-                    !Boolean(constraint.caseInsensitive) &&
-                    oneOf(stringOperators, constraint.operator)
-                }
-                show={
-                    <Tooltip title="Case sensitive is active" arrow>
-                        <StyledIconWrapper>
-                            <CaseSensitive />
-                        </StyledIconWrapper>
-                    </Tooltip>
-                }
-            />
             <div className={styles.headerValuesContainer}>
                 <StyledValuesSpan>{text}</StyledValuesSpan>
                 <ConditionallyRender

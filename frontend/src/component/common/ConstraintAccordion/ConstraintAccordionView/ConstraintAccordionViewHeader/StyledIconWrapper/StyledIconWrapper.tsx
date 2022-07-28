@@ -6,13 +6,13 @@ export const StyledIconWrapperBase = styled('div')<{
     prefix?: boolean;
 }>(({ theme }) => ({
     backgroundColor: theme.palette.grey[200],
-    width: 28,
+    width: 24,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'stretch',
     color: theme.palette.primary.main,
-    marginRight: '1rem',
+    marginRight: theme.spacing(1),
     borderRadius: theme.shape.borderRadius,
 }));
 

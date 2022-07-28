@@ -69,7 +69,7 @@ const FeatureOverviewEnvironment = ({
                         data-loading
                         style={{
                             color: !env.enabled
-                                ? theme.palette.text.disabled
+                                ? theme.palette.text.secondary
                                 : theme.palette.text.primary,
                         }}
                     >
@@ -91,7 +91,6 @@ const FeatureOverviewEnvironment = ({
                                         <Chip
                                             size="small"
                                             variant="outlined"
-                                            // severity="disabled"
                                             label="Disabled"
                                             sx={{ ml: 1 }}
                                         />
@@ -115,6 +114,7 @@ const FeatureOverviewEnvironment = ({
 
                     <FeatureOverviewEnvironmentMetrics
                         environmentMetric={environmentMetric}
+                        disabled={!env.enabled}
                     />
                 </AccordionSummary>
 

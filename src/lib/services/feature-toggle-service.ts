@@ -288,9 +288,9 @@ class FeatureToggleService {
         sortOrders: SetStrategySortOrderSchema,
     ): Promise<Saved<any>> {
         await Promise.all(
-            sortOrders.map(({ id, sortOrder }) => {
-                this.featureStrategiesStore.updateSortOrder(id, sortOrder);
-            }),
+            sortOrders.map(async ({ id, sortOrder }) =>
+                this.featureStrategiesStore.updateSortOrder(id, sortOrder),
+            ),
         );
     }
 

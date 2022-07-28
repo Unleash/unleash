@@ -526,54 +526,8 @@ describe('the playground service (e2e)', () => {
     // should it? The order doesn't matter for now. How do you know what the right sort order is?
     // test('should return strategies in the same order as they are listed', () => {});
 
-    const todo = () => Promise.reject();
+    // const todo = () => Promise.reject();
     test("should return all of a feature's strategies", async () => {
-        const counter = [
-            [
-                {
-                    name: 'a',
-                    project: '0',
-                    enabled: false,
-                    lastSeenAt: '1970-01-01T00:00:00.000Z',
-                    impressionData: null,
-                    strategies: [
-                        {
-                            name: 'flexibleRollout',
-                            parameters: {
-                                groupId: 'in',
-                                rollout: '0',
-                                stickiness: 'default',
-                            },
-                            constraints: [],
-                        },
-                        {
-                            name: 'flexibleRollout',
-                            parameters: {
-                                groupId: 'in',
-                                rollout: '2',
-                                stickiness: 'userId',
-                            },
-                            constraints: [],
-                        },
-                    ],
-                },
-            ],
-            {
-                appName: ' ',
-                currentTime: '1970-01-01T00:00:00.000Z',
-                environment: '',
-                properties: {},
-                remoteAddress: '0.0.0.0',
-                sessionId: '00000000-0000-1000-8000-0000e41ffff2',
-                userId: '8b3.wz%d.{|?a.derg&k_^9~.e@7wl6zdsk.w.amc',
-            },
-            {
-                logs: [
-                    '{"isEnabled":false,"strategies":[{"name":"flexibleRollout","parameters":{"groupId":"in","rollout":"2","stickiness":"userId"},"result":false,"constraints":[]},{"name":"flexibleRollout","parameters":{"groupId":"in","rollout":"0","stickiness":"default"},"result":false,"constraints":[]}],"projectId":"0","variant":{"name":"disabled","enabled":false},"name":"a"}',
-                ],
-            },
-        ];
-
         await fc.assert(
             fc
                 .asyncProperty(
@@ -613,52 +567,51 @@ describe('the playground service (e2e)', () => {
                                 featureStrategies.length,
                             );
 
-                            feature.strategies.every((strategy, index) => {
-                                // segments are not in the same format
-                                const { segments: _rawSegments, ...expected } =
-                                    {
-                                        ...strategy,
-                                        // provide an empty list as fallback because
-                                        // the code doesn't know the difference
-                                        constraints: strategy.constraints ?? [],
+                            // we can't guarantee that the order we inserted
+                            // strategies into the database is the same as it
+                            // was returned by the service (and at the time of
+                            // writing we don't return IDs), so we'll need to
+                            // scan through the list of strats.
+
+                            // extract the `result` property, because it
+                            // doesn't exist in the input
+
+                            const removeResult = <T>({
+                                result,
+                                ...rest
+                            }: T & {
+                                result: unknown;
+                            }) => rest;
+
+                            const cleanedReceivedStrategies =
+                                mappedFeature.strategies.map((strategy) => {
+                                    const {
+                                        segments: mappedSegments,
+                                        ...mappedStrategy
+                                    } = removeResult(strategy);
+
+                                    return {
+                                        ...mappedStrategy,
+                                        constraints:
+                                            mappedStrategy.constraints?.map(
+                                                removeResult,
+                                            ),
                                     };
+                                });
 
-                                // extract the `result` property, because it
-                                // doesn't exist in the input
-                                // const remove =
-                                //     <T, K extends keyof T>(key: K) =>
-                                //     (input: T): Omit<T, K> => {
-                                //         delete input[key]
-                                //         return input;
-                                //     };
-
-                                // remove('result')(
-                                //     mappedFeature.strategies[index],
-                                // );
-
-                                const removeResult = <T>({
-                                    result,
-                                    ...rest
-                                }: T & {
-                                    result: unknown;
-                                }) => rest;
-
-                                // segments are not in the same format
-                                const { segments: _, ...mappedStrategy } =
-                                    removeResult(
-                                        mappedFeature.strategies[index],
+                            feature.strategies.forEach(
+                                ({ segments, ...strategy }) => {
+                                    expect(cleanedReceivedStrategies).toEqual(
+                                        expect.arrayContaining([
+                                            {
+                                                ...strategy,
+                                                constraints:
+                                                    strategy.constraints ?? [],
+                                            },
+                                        ]),
                                     );
-
-                                const receivedCleaned = {
-                                    ...mappedStrategy,
-                                    constraints:
-                                        mappedStrategy.constraints?.map(
-                                            removeResult,
-                                        ),
-                                };
-
-                                expect(receivedCleaned).toEqual(expected);
-                            });
+                                },
+                            );
                         });
                     },
                 )

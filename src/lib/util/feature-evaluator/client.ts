@@ -150,19 +150,24 @@ export default class UnleashClient extends EventEmitter {
                         };
                     }
 
-                    const constraints =
-                        this.yieldConstraintsFor(strategySelector);
-                    const strategyResults = strategy.isEnabledWithConstraints(
+                    const results = strategy.isEnabledWithConstraints(
                         strategySelector.parameters,
                         context,
-                        constraints,
+                        this.yieldConstraintsFor(strategySelector),
                     );
 
-                    return {
+                    const isEmptyObject = (obj: {}) =>
+                        !Object.keys(obj).some(Boolean);
+
+                    const evalResult = {
                         name: strategySelector.name,
-                        parameters: strategySelector.parameters,
-                        ...strategyResults,
+                        ...results,
+                        ...(!isEmptyObject(strategySelector.parameters) && {
+                            parameters: strategySelector.parameters,
+                        }),
                     };
+
+                    return evalResult;
                 },
             );
 
@@ -173,30 +178,11 @@ export default class UnleashClient extends EventEmitter {
                 : feature.enabled &&
                   strategies.some((strategy) => strategy.result === true);
 
-            // console.log(strategies.length, strategies);
-            // console.log(feature.name, strategies);
-
             const evalResults: FeatureEvaluationResult = {
                 enabled: isEnabled,
                 strategies,
             };
             return evalResults;
-            // return feature.strategies.some((strategySelector): boolean => {
-            //     const strategy = this.getStrategy(strategySelector.name);
-            //     if (!strategy) {
-            //         this.warnOnce(
-            //             strategySelector.name,
-            //             feature.name,
-            //             feature.strategies,
-            //         );
-            //         return false;
-            //     }
-            //     return strategy.isEnabledWithConstraints(
-            //         strategySelector.parameters,
-            //         context,
-            //         strategySelector.constraints,
-            //     );
-            // });
         }
     }
 

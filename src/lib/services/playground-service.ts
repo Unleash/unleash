@@ -34,8 +34,6 @@ export class PlaygroundService {
             environment,
         });
 
-        // console.log(toggles.map((t) => t.strategies));
-
         const [head, ...rest] = toggles;
         if (!head) {
             return [];

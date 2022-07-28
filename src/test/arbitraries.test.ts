@@ -58,7 +58,6 @@ export const strategy = (
         : fc.record(
               {
                   name: fc.constant(name),
-                  parameters: fc.constant({}),
                   segments: fc.uniqueArray(fc.integer({ min: 1 })),
                   constraints: strategyConstraints(),
               },

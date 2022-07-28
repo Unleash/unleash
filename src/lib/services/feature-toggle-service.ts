@@ -521,8 +521,9 @@ class FeatureToggleService {
 
     async getClientFeatures(
         query?: IFeatureToggleQuery,
+        includeIds?: boolean,
     ): Promise<FeatureConfigurationClient[]> {
-        return this.featureToggleClientStore.getClient(query);
+        return this.featureToggleClientStore.getClient(query, includeIds);
     }
 
     /**

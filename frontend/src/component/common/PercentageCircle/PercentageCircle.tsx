@@ -5,12 +5,14 @@ interface IPercentageCircleProps {
     percentage: number;
     secondaryPieColor?: string;
     className?: string;
+    hideNumber?: boolean;
 }
 
 const PercentageCircle = ({
     styles,
     percentage,
     secondaryPieColor,
+    hideNumber,
     ...rest
 }: IPercentageCircleProps) => {
     const theme = useTheme();
@@ -35,9 +37,10 @@ const PercentageCircle = ({
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
+                    fontSize: '12px',
                 }}
             >
-                100%
+                {hideNumber ? null : '100%'}
             </div>
         );
     }

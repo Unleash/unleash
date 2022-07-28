@@ -8,6 +8,7 @@ import { FeatureStrategyMenu } from '../FeatureStrategyMenu/FeatureStrategyMenu'
 import { PresetCard } from './PresetCard/PresetCard';
 import { useStyles } from './FeatureStrategyEmpty.styles';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { useFeatureImmutable } from 'hooks/api/getters/useFeature/useFeatureImmutable';
 import { getFeatureStrategyIcon } from 'utils/strategyNames';
 
 interface IFeatureStrategyEmptyProps {
@@ -25,9 +26,15 @@ export const FeatureStrategyEmpty = ({
     const { addStrategyToFeature } = useFeatureStrategyApi();
     const { setToastData, setToastApiError } = useToast();
     const { refetchFeature } = useFeature(projectId, featureId);
+    const { refetchFeature: refetchFeatureImmutable } = useFeatureImmutable(
+        projectId,
+        featureId
+    );
 
     const onAfterAddStrategy = () => {
         refetchFeature();
+        refetchFeatureImmutable();
+
         setToastData({
             title: 'Strategy created',
             text: 'Successfully created strategy',
@@ -96,6 +103,8 @@ export const FeatureStrategyEmpty = ({
                     title="Standard strategy"
                     Icon={getFeatureStrategyIcon('default')}
                     onClick={onAddSimpleStrategy}
+                    projectId={projectId}
+                    environmentId={environmentId}
                 >
                     The standard strategy is strictly on/off for your entire
                     userbase.
@@ -104,6 +113,8 @@ export const FeatureStrategyEmpty = ({
                     title="Gradual rollout"
                     Icon={getFeatureStrategyIcon('flexibleRollout')}
                     onClick={onAddGradualRolloutStrategy}
+                    projectId={projectId}
+                    environmentId={environmentId}
                 >
                     Roll out to a percentage of your userbase.
                 </PresetCard>

@@ -1,8 +1,12 @@
 import { ElementType, FC } from 'react';
-import { Button, Card, CardContent, styled, Typography } from '@mui/material';
+import { Card, CardContent, Typography, styled, Box } from '@mui/material';
+import PermissionButton from 'component/common/PermissionButton/PermissionButton';
+import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 
 interface IPresetCardProps {
     title: string;
+    projectId: string;
+    environmentId: string;
     onClick: () => void;
     Icon: ElementType;
 }
@@ -17,6 +21,8 @@ export const PresetCard: FC<IPresetCardProps> = ({
     title,
     children,
     Icon,
+    projectId,
+    environmentId,
     onClick,
 }) => (
     <StyledCard variant="outlined">
@@ -34,14 +40,18 @@ export const PresetCard: FC<IPresetCardProps> = ({
                 {children}
             </Typography>
 
-            <Button
-                variant="outlined"
-                size="small"
-                sx={{ ml: 'auto', mt: 'auto' }}
-                onClick={onClick}
-            >
-                Use template
-            </Button>
+            <Box sx={{ ml: 'auto', mt: 'auto', pt: 1 }}>
+                <PermissionButton
+                    permission={CREATE_FEATURE_STRATEGY}
+                    projectId={projectId}
+                    environmentId={environmentId}
+                    variant="outlined"
+                    size="small"
+                    onClick={onClick}
+                >
+                    Use template
+                </PermissionButton>
+            </Box>
         </CardContent>
     </StyledCard>
 );

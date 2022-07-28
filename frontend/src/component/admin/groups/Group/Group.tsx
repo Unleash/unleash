@@ -132,13 +132,7 @@ export const Group: VFC = () => {
                 align: 'center',
                 Cell: ({ row: { original: rowUser } }: any) => (
                     <ActionCell>
-                        <Tooltip
-                            title="Edit user"
-                            arrow
-                            placement="bottom-end"
-                            describeChild
-                            enterDelay={1000}
-                        >
+                        <Tooltip title="Edit user" arrow describeChild>
                             <IconButton
                                 onClick={() => {
                                     setSelectedUser(rowUser);
@@ -151,9 +145,7 @@ export const Group: VFC = () => {
                         <Tooltip
                             title="Remove user from group"
                             arrow
-                            placement="bottom-end"
                             describeChild
-                            enterDelay={1000}
                         >
                             <IconButton
                                 onClick={() => {

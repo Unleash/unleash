@@ -83,9 +83,7 @@ export const GroupFormUsersTable: VFC<IGroupFormUsersTableProps> = ({
                         <Tooltip
                             title="Remove user from group"
                             arrow
-                            placement="bottom-end"
                             describeChild
-                            enterDelay={1000}
                         >
                             <IconButton
                                 onClick={() =>

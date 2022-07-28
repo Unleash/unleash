@@ -52,13 +52,7 @@ export const GroupCardActions: FC<IGroupCardActions> = ({
                 e.stopPropagation();
             }}
         >
-            <Tooltip
-                title="Group actions"
-                arrow
-                placement="bottom-end"
-                describeChild
-                enterDelay={1000}
-            >
+            <Tooltip title="Group actions" arrow describeChild>
                 <IconButton
                     id={id}
                     aria-controls={open ? menuId : undefined}

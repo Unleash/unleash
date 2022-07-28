@@ -6,7 +6,7 @@ interface IStrategySeparatorProps {
 }
 
 const StyledContainer = styled('div')(({ theme }) => ({
-    height: theme.spacing(2),
+    height: theme.spacing(1),
     position: 'relative',
     width: '100%',
 }));

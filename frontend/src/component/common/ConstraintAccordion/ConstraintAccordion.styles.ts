@@ -52,10 +52,13 @@ export const useStyles = makeStyles()(theme => ({
     headerValuesContainerWrapper: {
         display: 'flex',
         alignItems: 'stretch',
+        margin: 'auto 0',
     },
     headerValuesContainer: {
         display: 'flex',
-        alignItems: 'stretch',
+        justifyContent: 'stretch',
+        margin: 'auto 0',
+        flexDirection: 'column',
     },
     headerValues: {
         fontSize: theme.fontSizes.smallBody,

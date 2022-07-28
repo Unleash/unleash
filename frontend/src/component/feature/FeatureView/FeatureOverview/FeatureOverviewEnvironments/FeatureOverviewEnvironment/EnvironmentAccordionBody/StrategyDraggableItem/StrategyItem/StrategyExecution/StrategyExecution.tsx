@@ -256,7 +256,10 @@ export const StrategyExecution = ({ strategy }: IStrategyExecutionProps) => {
                 condition={constraints.length > 0}
                 show={
                     <>
-                        <ConstraintAccordionList constraints={constraints} />
+                        <ConstraintAccordionList
+                            constraints={constraints}
+                            showLabel={false}
+                        />
                         <StrategySeparator text="AND" />
                     </>
                 }

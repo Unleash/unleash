@@ -528,6 +528,52 @@ describe('the playground service (e2e)', () => {
 
     const todo = () => Promise.reject();
     test("should return all of a feature's strategies", async () => {
+        const counter = [
+            [
+                {
+                    name: 'a',
+                    project: '0',
+                    enabled: false,
+                    lastSeenAt: '1970-01-01T00:00:00.000Z',
+                    impressionData: null,
+                    strategies: [
+                        {
+                            name: 'flexibleRollout',
+                            parameters: {
+                                groupId: 'in',
+                                rollout: '0',
+                                stickiness: 'default',
+                            },
+                            constraints: [],
+                        },
+                        {
+                            name: 'flexibleRollout',
+                            parameters: {
+                                groupId: 'in',
+                                rollout: '2',
+                                stickiness: 'userId',
+                            },
+                            constraints: [],
+                        },
+                    ],
+                },
+            ],
+            {
+                appName: ' ',
+                currentTime: '1970-01-01T00:00:00.000Z',
+                environment: '',
+                properties: {},
+                remoteAddress: '0.0.0.0',
+                sessionId: '00000000-0000-1000-8000-0000e41ffff2',
+                userId: '8b3.wz%d.{|?a.derg&k_^9~.e@7wl6zdsk.w.amc',
+            },
+            {
+                logs: [
+                    '{"isEnabled":false,"strategies":[{"name":"flexibleRollout","parameters":{"groupId":"in","rollout":"2","stickiness":"userId"},"result":false,"constraints":[]},{"name":"flexibleRollout","parameters":{"groupId":"in","rollout":"0","stickiness":"default"},"result":false,"constraints":[]}],"projectId":"0","variant":{"name":"disabled","enabled":false},"name":"a"}',
+                ],
+            },
+        ];
+
         await fc.assert(
             fc
                 .asyncProperty(
@@ -562,19 +608,20 @@ describe('the playground service (e2e)', () => {
                             log(mappedFeature);
 
                             const featureStrategies = feature.strategies ?? [];
-                            featureStrategies.reverse();
 
                             expect(mappedFeature.strategies.length).toEqual(
                                 featureStrategies.length,
                             );
 
                             feature.strategies.every((strategy, index) => {
-                                const expected = {
-                                    ...strategy,
-                                    // provide an empty list as fallback because
-                                    // the code doesn't know the difference
-                                    constraints: strategy.constraints ?? [],
-                                };
+                                // segments are not in the same format
+                                const { segments: _rawSegments, ...expected } =
+                                    {
+                                        ...strategy,
+                                        // provide an empty list as fallback because
+                                        // the code doesn't know the difference
+                                        constraints: strategy.constraints ?? [],
+                                    };
 
                                 // extract the `result` property, because it
                                 // doesn't exist in the input
@@ -596,9 +643,11 @@ describe('the playground service (e2e)', () => {
                                     result: unknown;
                                 }) => rest;
 
-                                const mappedStrategy = removeResult(
-                                    mappedFeature.strategies[index],
-                                );
+                                // segments are not in the same format
+                                const { segments: _, ...mappedStrategy } =
+                                    removeResult(
+                                        mappedFeature.strategies[index],
+                                    );
 
                                 const receivedCleaned = {
                                     ...mappedStrategy,

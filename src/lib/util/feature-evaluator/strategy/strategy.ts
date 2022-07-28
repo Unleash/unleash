@@ -180,7 +180,7 @@ export class Strategy {
         this.returnValue = returnValue;
     }
 
-    checkConstraint(constraint: Constraint, context: Context) {
+    checkConstraint(constraint: Constraint, context: Context): boolean {
         const evaluator = operators.get(constraint.operator);
 
         if (!evaluator) {
@@ -208,11 +208,13 @@ export class Strategy {
 
         const mappedConstraints = [];
         for (const constraint of constraints) {
-            mappedConstraints.push({
-                ...constraint,
-                value: constraint.value?.toString() ?? undefined,
-                result: this.checkConstraint(constraint, context),
-            });
+            if (constraint) {
+                mappedConstraints.push({
+                    ...constraint,
+                    value: constraint?.value?.toString() ?? undefined,
+                    result: this.checkConstraint(constraint, context),
+                });
+            }
         }
 
         // const mappedConstraints = constraints.map((constraint) => ({

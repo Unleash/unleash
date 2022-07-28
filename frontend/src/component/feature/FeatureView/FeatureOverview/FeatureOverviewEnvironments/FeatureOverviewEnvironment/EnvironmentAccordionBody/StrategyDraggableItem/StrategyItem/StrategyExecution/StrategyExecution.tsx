@@ -16,9 +16,10 @@ import {
     parseParameterNumber,
     parseParameterStrings,
 } from 'utils/parseParameter';
+import { PlaygroundFeatureStrategyResult } from 'hooks/api/actions/usePlayground/playground.model';
 
 interface IStrategyExecutionProps {
-    strategy: IFeatureStrategy;
+    strategy: IFeatureStrategy | PlaygroundFeatureStrategyResult;
     percentageFill?: string;
 }
 

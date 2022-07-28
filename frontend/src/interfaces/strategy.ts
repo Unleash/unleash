@@ -1,5 +1,4 @@
 import { Operator } from 'constants/operators';
-import {ISegment} from "./segment";
 
 export interface IFeatureStrategy {
     id: string;
@@ -56,21 +55,4 @@ export interface IConstraint {
 export interface IFeatureStrategySortOrder {
     id: string;
     sortOrder: number;
-}
-
-
-export interface IPlaygroundFeatureStrategyConstraintResult extends IConstraint {
-    result: boolean;
-}
-
-export interface IPlaygroundFeatureStrategySegmentResult extends ISegment {
-    result: boolean;
-}
-
-export interface IPlaygroundFeatureStrategyResult {
-    type: string;
-    result: boolean;
-    id?: string;
-    constraints?: IPlaygroundFeatureStrategyConstraintResult[];
-    segments?: IPlaygroundFeatureStrategySegmentResult[];
 }

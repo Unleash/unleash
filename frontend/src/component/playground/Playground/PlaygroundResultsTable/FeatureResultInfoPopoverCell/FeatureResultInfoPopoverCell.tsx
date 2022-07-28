@@ -1,8 +1,17 @@
-import { PlaygroundFeatureSchema } from '../../../../../hooks/api/actions/usePlayground/playground.model';
-import { Box, IconButton, Popover } from '@mui/material';
+import {
+    PlaygroundFeatureSchema,
+    PlaygroundFeatureStrategyResult,
+} from '../../../../../hooks/api/actions/usePlayground/playground.model';
+import { Box, IconButton, Popover, Typography } from '@mui/material';
 import { InfoOutlined } from '@mui/icons-material';
 import { IconCell } from '../../../../common/Table/cells/IconCell/IconCell';
 import React, { useRef, useState } from 'react';
+import { ConditionallyRender } from '../../../../common/ConditionallyRender/ConditionallyRender';
+import { StrategyDraggableItem } from '../../../../feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyDraggableItem';
+import { FeatureStrategyEmpty } from '../../../../feature/FeatureStrategy/FeatureStrategyEmpty/FeatureStrategyEmpty';
+import { PlaygroundResultFeatureStrategyItem } from './PlaygroundResultFeatureStrategyItem/PlaygroundResultFeatureStrategyItem';
+import { useStyles } from './FeatureResultInfoPopoverCell.styles';
+import { PlaygroundResultFeatureDetails } from './PlaygroundResultFeatureDetails/PlaygroundResultFeatureDetails';
 
 interface FeatureResultInfoPopoverCellProps {
     feature?: PlaygroundFeatureSchema;
@@ -15,16 +24,18 @@ export const FeatureResultInfoPopoverCell = ({
         return null;
     }
     const [open, setOpen] = useState(false);
+    const { classes: styles } = useStyles();
     const ref = useRef(null);
 
     const togglePopover = (event: React.SyntheticEvent) => {
         setOpen(!open);
     };
 
-    const strategies = [
+    const strategies: PlaygroundFeatureStrategyResult[] = [
         {
-            type: 'standard',
+            name: 'default',
             id: 'strategy-id',
+            parameters: {},
             result: false,
             constraints: [
                 {
@@ -54,10 +65,6 @@ export const FeatureResultInfoPopoverCell = ({
                 },
             ],
         },
-        {
-            type: 'default',
-            result: true,
-        },
     ];
 
     return (
@@ -77,8 +84,26 @@ export const FeatureResultInfoPopoverCell = ({
                     vertical: 'center',
                     horizontal: 'left',
                 }}
+                classes={{ paper: styles.popoverPaper }}
             >
-                {feature.name}
+                <PlaygroundResultFeatureDetails feature={feature} />
+                <ConditionallyRender
+                    condition={strategies.length > 0}
+                    show={
+                        <>
+                            <Typography
+                                variant={'subtitle2'}
+                            >{`Strategies (${strategies.length})`}</Typography>
+                            {strategies.map((strategy, index) => (
+                                <PlaygroundResultFeatureStrategyItem
+                                    key={strategy.id}
+                                    strategy={strategy}
+                                    index={index}
+                                />
+                            ))}
+                        </>
+                    }
+                />
             </Popover>
         </>
     );

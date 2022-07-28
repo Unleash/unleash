@@ -4,7 +4,7 @@ import { ReactComponent as FeatureEnabledIcon } from 'assets/icons/isenabled-tru
 import { ReactComponent as FeatureDisabledIcon } from 'assets/icons/isenabled-false.svg';
 import { Box, Chip, styled, useTheme } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import {ResultChip} from "../ResultChip/ResultChip";
+import { PlaygroundResultChip } from '../PlaygroundResultChip/PlaygroundResultChip';
 
 interface IFeatureStatusCellProps {
     enabled: boolean;
@@ -21,31 +21,10 @@ const StyledChipWrapper = styled(Box)(() => ({
 }));
 
 export const FeatureStatusCell = ({ enabled }: IFeatureStatusCellProps) => {
-    const theme = useTheme();
-    const icon = (
-        <ConditionallyRender
-            condition={enabled}
-            show={
-                <FeatureEnabledIcon
-                    color={theme.palette.success.main}
-                    strokeWidth="0.25"
-                />
-            }
-            elseShow={
-                <FeatureDisabledIcon
-                    color={theme.palette.error.main}
-                    strokeWidth="0.25"
-                />
-            }
-        />
-    );
-
-    const label = enabled ? 'True' : 'False';
-
     return (
         <StyledCellBox>
             <StyledChipWrapper data-loading>
-               <ResultChip enabled label={label} icon={icon} />
+                <PlaygroundResultChip enabled />
             </StyledChipWrapper>
         </StyledCellBox>
     );

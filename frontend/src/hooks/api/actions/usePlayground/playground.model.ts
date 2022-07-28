@@ -1,5 +1,10 @@
 // TODO: replace with auto-generated openapi code
 
+import {
+    IConstraint,
+    IFeatureStrategyParameters,
+} from '../../../../interfaces/strategy';
+
 export enum PlaygroundFeatureSchemaVariantPayloadTypeEnum {
     Json = 'json',
     Csv = 'csv',
@@ -158,7 +163,7 @@ export interface PlaygroundFeatureSchema {
      * @type {boolean}
      * @memberof PlaygroundFeatureSchema
      */
-    isEnabled: boolean;
+    enabled: boolean | 'unevaluated';
     /**
      *
      * @type {PlaygroundFeatureSchemaVariant}
@@ -247,4 +252,25 @@ export interface SdkContextSchema {
      * @memberof SdkContextSchema
      */
     userId?: string;
+}
+
+export interface PlaygroundFeatureStrategyConstraintResult extends IConstraint {
+    result: boolean;
+}
+
+export interface PlaygroundFeatureStrategySegmentResult {
+    id: number;
+    name: string;
+    result: boolean;
+    constraints?: PlaygroundFeatureStrategyConstraintResult[];
+}
+
+export interface PlaygroundFeatureStrategyResult {
+    id: string;
+    name: string;
+    result: boolean | 'not found';
+    type?: string;
+    constraints?: PlaygroundFeatureStrategyConstraintResult[];
+    segments?: PlaygroundFeatureStrategySegmentResult[];
+    parameters: IFeatureStrategyParameters;
 }

@@ -1,7 +1,7 @@
 import { DragIndicator, Edit } from '@mui/icons-material';
-import { styled, useTheme, IconButton, Chip } from '@mui/material';
+import { styled, useTheme, IconButton } from '@mui/material';
 import { Link } from 'react-router-dom';
-import {IFeatureStrategy, IPlaygroundFeatureStrategyResult} from 'interfaces/strategy';
+import { IFeatureStrategy } from 'interfaces/strategy';
 import {
     getFeatureStrategyIcon,
     formatStrategyName,
@@ -18,10 +18,8 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 
 interface IStrategyItemProps {
     environmentId: string;
-    strategy: IFeatureStrategy | IPlaygroundFeatureStrategyResult;
+    strategy: IFeatureStrategy;
     isDraggable?: boolean;
-    showActions?: boolean;
-    result?: boolean;
 }
 
 const DragIcon = styled(IconButton)(({ theme }) => ({
@@ -34,8 +32,6 @@ export const StrategyItem = ({
     environmentId,
     strategy,
     isDraggable,
-    showActions = true,
-    result,
 }: IStrategyItemProps) => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
@@ -49,8 +45,6 @@ export const StrategyItem = ({
         environmentId,
         strategy.id
     );
-
-    const showShouldShowResultChip = result !== undefined;
 
     return (
         <div className={styles.container}>
@@ -72,36 +66,25 @@ export const StrategyItem = ({
                     maxLength={15}
                     text={formatStrategyName(strategy.name)}
                 />
-                <ConditionallyRender
-                    condition={showActions}
-                    show={
-                        <div className={styles.actions}>
-                            <PermissionIconButton
-                                permission={UPDATE_FEATURE_STRATEGY}
-                                environmentId={environmentId}
-                                projectId={projectId}
-                                component={Link}
-                                to={editStrategyPath}
-                                tooltipProps={{ title: 'Edit strategy' }}
-                            >
-                                <Edit />
-                            </PermissionIconButton>
-                            <FeatureStrategyRemove
-                                projectId={projectId}
-                                featureId={featureId}
-                                environmentId={environmentId}
-                                strategyId={strategy.id}
-                                icon
-                            />
-                        </div>
-                    }
-                />
-                <ConditionallyRender
-                    condition={showShouldShowResultChip}
-                    show={
-                        <Featur>
-                    }
-                />
+                <div className={styles.actions}>
+                    <PermissionIconButton
+                        permission={UPDATE_FEATURE_STRATEGY}
+                        environmentId={environmentId}
+                        projectId={projectId}
+                        component={Link}
+                        to={editStrategyPath}
+                        tooltipProps={{ title: 'Edit strategy' }}
+                    >
+                        <Edit />
+                    </PermissionIconButton>
+                    <FeatureStrategyRemove
+                        projectId={projectId}
+                        featureId={featureId}
+                        environmentId={environmentId}
+                        strategyId={strategy.id}
+                        icon
+                    />
+                </div>
             </div>
             <div className={styles.body}>
                 <StrategyExecution

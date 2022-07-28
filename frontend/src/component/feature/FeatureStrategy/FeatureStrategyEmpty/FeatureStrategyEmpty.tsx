@@ -103,6 +103,8 @@ export const FeatureStrategyEmpty = ({
                     title="Standard strategy"
                     Icon={getFeatureStrategyIcon('default')}
                     onClick={onAddSimpleStrategy}
+                    projectId={projectId}
+                    environmentId={environmentId}
                 >
                     The standard strategy is strictly on/off for your entire
                     userbase.
@@ -111,6 +113,8 @@ export const FeatureStrategyEmpty = ({
                     title="Gradual rollout"
                     Icon={getFeatureStrategyIcon('flexibleRollout')}
                     onClick={onAddGradualRolloutStrategy}
+                    projectId={projectId}
+                    environmentId={environmentId}
                 >
                     Roll out to a percentage of your userbase.
                 </PresetCard>

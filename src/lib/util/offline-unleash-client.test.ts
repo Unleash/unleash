@@ -3,8 +3,8 @@ import { offlineUnleashClient } from './offline-unleash-client';
 describe('offline client', () => {
     it('considers enabled variants with a default strategy to be on', async () => {
         const name = 'toggle-name';
-        const client = await offlineUnleashClient(
-            [
+        const client = await offlineUnleashClient({
+            features: [
                 {
                     name,
                     enabled: true,
@@ -14,9 +14,9 @@ describe('offline client', () => {
                     stale: false,
                 },
             ],
-            { appName: 'other-app', environment: 'default' },
-            console.log,
-        );
+            context: { appName: 'other-app', environment: 'default' },
+            logError: console.log,
+        });
 
         expect(client.isEnabled(name).enabled).toBeTruthy();
     });
@@ -25,8 +25,8 @@ describe('offline client', () => {
         const enabledFeature = 'toggle-name';
         const disabledFeature = 'other-toggle';
         const appName = 'app-name';
-        const client = await offlineUnleashClient(
-            [
+        const client = await offlineUnleashClient({
+            features: [
                 {
                     name: enabledFeature,
                     enabled: true,
@@ -66,9 +66,9 @@ describe('offline client', () => {
                     stale: false,
                 },
             ],
-            { appName, environment: 'default' },
-            console.log,
-        );
+            context: { appName, environment: 'default' },
+            logError: console.log,
+        });
 
         expect(client.isEnabled(enabledFeature).enabled).toBeTruthy();
         expect(client.isEnabled(disabledFeature).enabled).toBeFalsy();
@@ -76,8 +76,8 @@ describe('offline client', () => {
 
     it('considers disabled variants with a default strategy to be off', async () => {
         const name = 'toggle-name';
-        const client = await offlineUnleashClient(
-            [
+        const client = await offlineUnleashClient({
+            features: [
                 {
                     strategies: [
                         {
@@ -91,17 +91,17 @@ describe('offline client', () => {
                     variants: [],
                 },
             ],
-            { appName: 'client-test' },
-            console.log,
-        );
+            context: { appName: 'client-test' },
+            logError: console.log,
+        });
 
         expect(client.isEnabled(name).enabled).toBeFalsy();
     });
 
     it('considers disabled variants with a default strategy and variants to be off', async () => {
         const name = 'toggle-name';
-        const client = await offlineUnleashClient(
-            [
+        const client = await offlineUnleashClient({
+            features: [
                 {
                     strategies: [
                         {
@@ -130,17 +130,17 @@ describe('offline client', () => {
                     ],
                 },
             ],
-            { appName: 'client-test' },
-            console.log,
-        );
+            context: { appName: 'client-test' },
+            logError: console.log,
+        });
 
         expect(client.isEnabled(name).enabled).toBeFalsy();
     });
 
     it("returns variant {name: 'disabled', enabled: false } if the toggle isn't enabled", async () => {
         const name = 'toggle-name';
-        const client = await offlineUnleashClient(
-            [
+        const client = await offlineUnleashClient({
+            features: [
                 {
                     strategies: [],
                     stale: false,
@@ -165,10 +165,9 @@ describe('offline client', () => {
                     ],
                 },
             ],
-            { appName: 'client-test' },
-
-            console.log,
-        );
+            context: { appName: 'client-test' },
+            logError: console.log,
+        });
 
         expect(client.isEnabled(name).enabled).toBeFalsy();
         expect(client.getVariant(name).name).toEqual('disabled');
@@ -177,8 +176,8 @@ describe('offline client', () => {
 
     it('returns the disabled variant if there are no variants', async () => {
         const name = 'toggle-name';
-        const client = await offlineUnleashClient(
-            [
+        const client = await offlineUnleashClient({
+            features: [
                 {
                     strategies: [
                         {
@@ -193,10 +192,9 @@ describe('offline client', () => {
                     variants: [],
                 },
             ],
-            { appName: 'client-test' },
-
-            console.log,
-        );
+            context: { appName: 'client-test' },
+            logError: console.log,
+        });
 
         expect(client.getVariant(name, {}).name).toEqual('disabled');
         expect(client.getVariant(name, {}).enabled).toBeFalsy();

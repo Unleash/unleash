@@ -1,8 +1,9 @@
-import { styled } from '@mui/material';
+import { styled, SxProps, Theme } from '@mui/material';
 import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
 
 interface IStrategySeparatorProps {
     text: 'AND' | 'OR';
+    sx?: SxProps<Theme>;
 }
 
 const StyledContainer = styled('div')(({ theme }) => ({
@@ -32,8 +33,8 @@ const StyledCenteredContent = styled(StyledContent)(({ theme }) => ({
     border: `1px solid ${theme.palette.primary.border}`,
 }));
 
-export const StrategySeparator = ({ text }: IStrategySeparatorProps) => (
-    <StyledContainer>
+export const StrategySeparator = ({ text, sx }: IStrategySeparatorProps) => (
+    <StyledContainer sx={sx}>
         <ConditionallyRender
             condition={text === 'AND'}
             show={() => <StyledContent>{text}</StyledContent>}

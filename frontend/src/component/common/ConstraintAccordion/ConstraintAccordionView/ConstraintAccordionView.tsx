@@ -1,5 +1,11 @@
 import { useState } from 'react';
-import { Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
+import {
+    Accordion,
+    AccordionSummary,
+    AccordionDetails,
+    SxProps,
+    Theme,
+} from '@mui/material';
 import { IConstraint } from 'interfaces/strategy';
 import { ConstraintAccordionViewBody } from './ConstraintAccordionViewBody/ConstraintAccordionViewBody';
 import { ConstraintAccordionViewHeader } from './ConstraintAccordionViewHeader/ConstraintAccordionViewHeader';
@@ -15,12 +21,14 @@ interface IConstraintAccordionViewProps {
     constraint: IConstraint;
     onDelete?: () => void;
     onEdit?: () => void;
+    sx?: SxProps<Theme>;
 }
 
 export const ConstraintAccordionView = ({
     constraint,
     onEdit,
     onDelete,
+    sx = undefined,
 }: IConstraintAccordionViewProps) => {
     const { classes: styles } = useStyles();
     const [expandable, setExpandable] = useState(true);
@@ -42,6 +50,7 @@ export const ConstraintAccordionView = ({
             className={styles.accordion}
             classes={{ root: styles.accordionRoot }}
             expanded={expanded}
+            sx={sx}
         >
             <AccordionSummary
                 classes={{ root: styles.summary }}

@@ -8,8 +8,8 @@ import {
 } from '../../../../../../utils/strategyNames';
 import StringTruncator from '../../../../../common/StringTruncator/StringTruncator';
 import { PlaygroundResultChip } from '../../PlaygroundResultChip/PlaygroundResultChip';
-import { StrategyExecution } from '../../../../../feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyExecution/StrategyExecution';
 import { PlaygroundFeatureStrategyResult } from 'hooks/api/actions/usePlayground/playground.model';
+import { PlaygroundResultStrategyExecution } from '../PlaygroundResultStrategyExecution/PlaygroundResultStrategyExecution';
 
 interface IPlaygroundResultFeatureStrategyItemProps {
     strategy: PlaygroundFeatureStrategyResult;
@@ -31,14 +31,14 @@ export const PlaygroundResultFeatureStrategyItem = ({
     strategy,
     index,
 }: IPlaygroundResultFeatureStrategyItemProps) => {
-    const { result } = strategy;
+    const { result, name } = strategy;
     const { classes: styles } = useStyles();
     const theme = useTheme();
     const Icon = getFeatureStrategyIcon(strategy.name);
     const label =
         result === undefined ? 'Not found' : result ? 'True' : 'False';
     const border = Boolean(result)
-        ? `2px solid ${theme.palette.success.main}`
+        ? `1px solid ${theme.palette.success.main}`
         : `1px solid ${theme.palette.divider}`;
 
     return (
@@ -54,7 +54,7 @@ export const PlaygroundResultFeatureStrategyItem = ({
                         <StringTruncator
                             maxWidth="150"
                             maxLength={15}
-                            text={formatStrategyName(strategy.name)}
+                            text={formatStrategyName(name)}
                         />
                     </div>
                     <PlaygroundResultChip
@@ -64,9 +64,9 @@ export const PlaygroundResultFeatureStrategyItem = ({
                     />
                 </div>
                 <div className={styles.body}>
-                    <StrategyExecution
-                        strategy={strategy}
-                        percentageFill={theme.palette.grey[200]}
+                    <PlaygroundResultStrategyExecution
+                        strategyResult={strategy}
+                        percentageFill={theme.palette.tertiary.light}
                     />
                 </div>
             </div>

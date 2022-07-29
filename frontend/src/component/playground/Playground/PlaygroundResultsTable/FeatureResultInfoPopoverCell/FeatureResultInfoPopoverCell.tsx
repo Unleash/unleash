@@ -2,13 +2,10 @@ import {
     PlaygroundFeatureSchema,
     PlaygroundFeatureStrategyResult,
 } from '../../../../../hooks/api/actions/usePlayground/playground.model';
-import { Box, IconButton, Popover, Typography } from '@mui/material';
+import { IconButton, Popover, styled, Typography } from '@mui/material';
 import { InfoOutlined } from '@mui/icons-material';
-import { IconCell } from '../../../../common/Table/cells/IconCell/IconCell';
 import React, { useRef, useState } from 'react';
 import { ConditionallyRender } from '../../../../common/ConditionallyRender/ConditionallyRender';
-import { StrategyDraggableItem } from '../../../../feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyDraggableItem';
-import { FeatureStrategyEmpty } from '../../../../feature/FeatureStrategy/FeatureStrategyEmpty/FeatureStrategyEmpty';
 import { PlaygroundResultFeatureStrategyItem } from './PlaygroundResultFeatureStrategyItem/PlaygroundResultFeatureStrategyItem';
 import { useStyles } from './FeatureResultInfoPopoverCell.styles';
 import { PlaygroundResultFeatureDetails } from './PlaygroundResultFeatureDetails/PlaygroundResultFeatureDetails';
@@ -17,12 +14,14 @@ interface FeatureResultInfoPopoverCellProps {
     feature?: PlaygroundFeatureSchema;
 }
 
+const FeatureResultPopoverWrapper = styled('div')(({ theme }) => ({
+    alignItems: 'flex-end',
+    color: theme.palette.tertiary.main,
+}));
+
 export const FeatureResultInfoPopoverCell = ({
     feature,
 }: FeatureResultInfoPopoverCellProps) => {
-    if (!feature) {
-        return null;
-    }
     const [open, setOpen] = useState(false);
     const { classes: styles } = useStyles();
     const ref = useRef(null);
@@ -36,7 +35,7 @@ export const FeatureResultInfoPopoverCell = ({
             name: 'default',
             id: 'strategy-id',
             parameters: {},
-            result: false,
+            result: true,
             constraints: [
                 {
                     result: false,
@@ -44,7 +43,12 @@ export const FeatureResultInfoPopoverCell = ({
                     operator: 'IN',
                     caseInsensitive: true,
                     inverted: false,
-                    values: ['a', 'b'],
+                    values: [
+                        'a',
+                        'b',
+                        'sdlghigoiahr;g',
+                        'WOGIHwegoihwlwEGHLwgklWEGK;L',
+                    ],
                 },
             ],
             segments: [
@@ -55,9 +59,9 @@ export const FeatureResultInfoPopoverCell = ({
                     constraints: [
                         {
                             result: false,
-                            contextName: 'appName',
+                            contextName: 'environment',
                             operator: 'IN',
-                            caseInsensitive: true,
+                            caseInsensitive: false,
                             inverted: false,
                             values: ['a', 'b'],
                         },
@@ -67,8 +71,12 @@ export const FeatureResultInfoPopoverCell = ({
         },
     ];
 
+    if (!feature) {
+        return null;
+    }
+
     return (
-        <>
+        <FeatureResultPopoverWrapper>
             <IconButton onClick={togglePopover}>
                 <InfoOutlined ref={ref} />
             </IconButton>
@@ -92,7 +100,7 @@ export const FeatureResultInfoPopoverCell = ({
                     show={
                         <>
                             <Typography
-                                variant={'subtitle2'}
+                                variant={'subtitle1'}
                             >{`Strategies (${strategies.length})`}</Typography>
                             {strategies.map((strategy, index) => (
                                 <PlaygroundResultFeatureStrategyItem
@@ -105,6 +113,6 @@ export const FeatureResultInfoPopoverCell = ({
                     }
                 />
             </Popover>
-        </>
+        </FeatureResultPopoverWrapper>
     );
 };

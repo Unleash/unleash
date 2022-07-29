@@ -23,8 +23,6 @@ import { PlaygroundFeatureSchema } from 'hooks/api/actions/usePlayground/playgro
 import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
 import useLoading from 'hooks/useLoading';
 import { VariantCell } from './VariantCell/VariantCell';
-import { IconCell } from '../../../common/Table/cells/IconCell/IconCell';
-import { InfoOutlined } from '@mui/icons-material';
 import { FeatureResultInfoPopoverCell } from './FeatureResultInfoPopoverCell/FeatureResultInfoPopoverCell';
 
 const defaultSort: SortingRule<string> = { id: 'name' };

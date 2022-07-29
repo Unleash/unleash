@@ -9,6 +9,7 @@ export const useStyles = makeStyles()(theme => ({
         gap: '24px',
         width: '728px',
         height: 'auto',
-        // overflowY: 'scroll',
+        overflowY: 'scroll',
+        backgroundColor: theme.palette.tertiary.light,
     },
 }));

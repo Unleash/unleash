@@ -1,5 +1,5 @@
 import { PlaygroundFeatureSchema } from '../../../../../../hooks/api/actions/usePlayground/playground.model';
-import { Typography } from '@mui/material';
+import {Typography, useTheme} from '@mui/material';
 import { PlaygroundResultChip } from '../../PlaygroundResultChip/PlaygroundResultChip';
 import { useStyles } from './PlaygroundResultFeatureDetails.styles';
 interface PlaygroundFeatureResultDetailsProps {
@@ -9,6 +9,7 @@ export const PlaygroundResultFeatureDetails = ({
     feature,
 }: PlaygroundFeatureResultDetailsProps) => {
     const { classes: styles } = useStyles();
+    const theme = useTheme();
 
     const description = feature.isEnabled
         ? 'This feature toggle is True in production because '
@@ -16,7 +17,7 @@ export const PlaygroundResultFeatureDetails = ({
     const reason = feature.isEnabled
         ? 'at least one strategy is True'
         : 'all strategies are False';
-    const color = feature.isEnabled ? 'success' : 'error';
+    const color = feature.isEnabled ? theme.palette.success.main : theme.palette.error.main;
 
     return (
         <>
@@ -30,7 +31,7 @@ export const PlaygroundResultFeatureDetails = ({
             </div>
             <div className={styles.descriptionRow}>
                 <Typography variant={'body1'}>{description}</Typography>
-                <Typography variant={'body1'} color={color}>
+                <Typography variant={'subtitle1'} color={color}>
                     {reason}
                 </Typography>
             </div>

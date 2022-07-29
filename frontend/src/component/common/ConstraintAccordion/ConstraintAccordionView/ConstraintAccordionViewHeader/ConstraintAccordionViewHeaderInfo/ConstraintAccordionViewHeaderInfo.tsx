@@ -67,7 +67,6 @@ export const ConstraintAccordionViewHeaderInfo = ({
                         <ConditionallyRender
                             condition={
                                 result !== undefined &&
-                                !Boolean(result) &&
                                 Boolean(playgroundContext)
                             }
                             show={

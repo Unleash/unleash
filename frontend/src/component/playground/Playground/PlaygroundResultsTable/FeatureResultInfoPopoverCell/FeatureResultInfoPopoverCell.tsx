@@ -30,30 +30,43 @@ export const FeatureResultInfoPopoverCell = ({
         setOpen(!open);
     };
 
+    const dummyPlaygroundFeatureTrue: PlaygroundFeatureSchema = {
+        name: feature?.name as any,
+        projectId: 'default',
+        isEnabled: true,
+
+    } as any;
+
+    const dummyPlaygroundFeatureFalse: PlaygroundFeatureSchema = {
+        name: feature?.name as any,
+        projectId: 'default',
+        isEnabled: false,
+
+    } as any;
+
     const strategies: PlaygroundFeatureStrategyResult[] = [
         {
             name: 'default',
             id: 'strategy-id',
             parameters: {},
-            result: true,
+            result: feature?.isEnabled as any,
             constraints: [
                 {
-                    result: false,
+                    result: true,
                     contextName: 'appName',
                     operator: 'IN',
-                    caseInsensitive: true,
+                    caseInsensitive: false,
                     inverted: false,
                     values: [
-                        'a',
-                        'b',
-                        'sdlghigoiahr;g',
-                        'WOGIHwegoihwlwEGHLwgklWEGK;L',
+                        'MyApp',
+                        'MyOtherApp',
+                        'Unleash',
                     ],
                 },
             ],
             segments: [
                 {
-                    result: true,
+                    result: false,
                     id: 5,
                     name: 'my-segment',
                     constraints: [
@@ -63,7 +76,7 @@ export const FeatureResultInfoPopoverCell = ({
                             operator: 'IN',
                             caseInsensitive: false,
                             inverted: false,
-                            values: ['a', 'b'],
+                            values: ['development'],
                         },
                     ],
                 },
@@ -94,7 +107,7 @@ export const FeatureResultInfoPopoverCell = ({
                 }}
                 classes={{ paper: styles.popoverPaper }}
             >
-                <PlaygroundResultFeatureDetails feature={feature} />
+                <PlaygroundResultFeatureDetails feature={feature.isEnabled ? dummyPlaygroundFeatureTrue : dummyPlaygroundFeatureFalse} />
                 <ConditionallyRender
                     condition={strategies.length > 0}
                     show={

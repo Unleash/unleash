@@ -17,6 +17,7 @@ export const useStyles = makeStyles()(theme => ({
         display: 'inline-flex',
         alignItems: 'flex-start',
         justifyItems: 'center',
+        marginTop: '-24px',
         gap: '6px',
     },
     name: {

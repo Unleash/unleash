@@ -48,8 +48,10 @@ export const PlaygroundResultFeatureDetails = ({
                 </IconButton>
             </div>
             <div className={styles.descriptionRow}>
-                <Typography variant={'body1'}>{description}</Typography>
-                <Typography variant={'subtitle1'} color={color}>
+                <Typography variant="body1" component="span">
+                    {description}
+                </Typography>
+                <Typography variant="subtitle1" color={color} component="span">
                     {reason}
                 </Typography>
             </div>

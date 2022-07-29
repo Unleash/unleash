@@ -12,9 +12,18 @@ interface IResultChipProps {
     label?: string;
 }
 
-export const StyledFalseChip = styled(Chip)(({ theme }) => ({
-    width: 80,
-    borderRadius: '5px',
+export const StyledChip = styled(Chip)(({ theme }) => ({
+    width: 60,
+    height: 24,
+    borderRadius: theme.shape.borderRadius,
+    fontWeight: theme.typography.fontWeightMedium,
+    ['& .MuiChip-label']: {
+        padding: 0,
+        paddingLeft: theme.spacing(0.5),
+    },
+}));
+
+export const StyledFalseChip = styled(StyledChip)(({ theme }) => ({
     border: `1px solid ${theme.palette.error.main}`,
     backgroundColor: colors.red['200'],
     ['& .MuiChip-label']: {
@@ -25,9 +34,7 @@ export const StyledFalseChip = styled(Chip)(({ theme }) => ({
     },
 }));
 
-export const StyledTrueChip = styled(Chip)(({ theme }) => ({
-    width: 80,
-    borderRadius: '5px',
+export const StyledTrueChip = styled(StyledChip)(({ theme }) => ({
     border: `1px solid ${theme.palette.success.main}`,
     backgroundColor: colors.green['100'],
     ['& .MuiChip-label']: {

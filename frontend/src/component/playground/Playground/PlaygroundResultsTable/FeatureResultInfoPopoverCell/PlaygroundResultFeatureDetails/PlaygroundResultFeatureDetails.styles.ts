@@ -13,12 +13,7 @@ export const useStyles = makeStyles()(theme => ({
         gap: '12px',
     },
     descriptionRow: {
-        flexDirection: 'row',
-        display: 'inline-flex',
-        alignItems: 'flex-start',
-        justifyItems: 'center',
-        marginTop: '-24px',
-        gap: '6px',
+        marginBottom: theme.spacing(2),
     },
     name: {
         fontWeight: 600,

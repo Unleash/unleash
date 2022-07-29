@@ -1,7 +1,7 @@
 import {
     PlaygroundFeatureSchema,
     PlaygroundFeatureStrategyResult,
-} from '../../../../../hooks/api/actions/usePlayground/playground.model';
+} from 'hooks/api/actions/usePlayground/playground.model';
 import { IconButton, Popover, styled, Typography } from '@mui/material';
 import { InfoOutlined } from '@mui/icons-material';
 import React, { useRef, useState } from 'react';
@@ -138,6 +138,7 @@ export const FeatureResultInfoPopoverCell = ({
                         <>
                             <Typography
                                 variant={'subtitle1'}
+                                sx={{ mb: 2, color: 'text.secondary' }}
                             >{`Strategies (${strategies.length})`}</Typography>
                             {strategies.map((strategy, index) => (
                                 <PlaygroundResultFeatureStrategyItem

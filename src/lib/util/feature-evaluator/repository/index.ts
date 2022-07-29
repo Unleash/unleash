@@ -187,9 +187,11 @@ export default class Repository extends EventEmitter implements EventEmitter {
         if (fromApi) {
             this.connected = true;
             this.data = this.convertToMap(response.features);
+            this.segments = this.createSegmentLookup(response.segments);
         } else if (!this.connected) {
             // Only allow bootstrap if not connected
             this.data = this.convertToMap(response.features);
+            this.segments = this.createSegmentLookup(response.segments);
         }
 
         this.setReady();

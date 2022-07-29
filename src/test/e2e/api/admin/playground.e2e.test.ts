@@ -38,6 +38,7 @@ afterAll(async () => {
 
 const reset = (database: ITestDb) => async () => {
     await database.stores.featureToggleStore.deleteAll();
+    await database.stores.featureStrategiesStore.deleteAll();
     await database.stores.environmentStore.deleteAll();
 };
 

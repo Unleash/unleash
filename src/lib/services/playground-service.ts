@@ -8,20 +8,24 @@ import { IUnleashConfig } from 'lib/types';
 import { offlineUnleashClient } from '../util/offline-unleash-client';
 import { FeatureInterface } from 'lib/util/feature-evaluator/feature';
 import { FeatureEvaluationResult } from 'lib/util/feature-evaluator/client';
+import { SegmentService } from './segment-service';
 
 export class PlaygroundService {
     private readonly logger: Logger;
 
     private readonly featureToggleService: FeatureToggleService;
+    private readonly segmentService: SegmentService;
 
     constructor(
         config: IUnleashConfig,
         {
             featureToggleServiceV2,
-        }: Pick<IUnleashServices, 'featureToggleServiceV2'>,
+            segmentService,
+        }: Pick<IUnleashServices, 'featureToggleServiceV2' | 'segmentService'>,
     ) {
         this.logger = config.getLogger('services/playground-service.ts');
         this.featureToggleService = featureToggleServiceV2;
+        this.segmentService = segmentService;
     }
 
     async evaluateQuery(
@@ -29,12 +33,18 @@ export class PlaygroundService {
         environment: string,
         context: SdkContextSchema,
     ): Promise<PlaygroundFeatureSchema[]> {
-        const toggles = await this.featureToggleService.getClientFeatures({
-            project: projects === ALL ? undefined : projects,
-            environment,
-        });
+        const [features, segments] = await Promise.all([
+            this.featureToggleService.getClientFeatures(
+                {
+                    project: projects === ALL ? undefined : projects,
+                    environment,
+                },
+                true,
+            ),
+            this.segmentService.getActive(),
+        ]);
 
-        const [head, ...rest] = toggles;
+        const [head, ...rest] = features;
         if (!head) {
             return [];
         } else {
@@ -42,6 +52,7 @@ export class PlaygroundService {
                 features: [head, ...rest],
                 context,
                 logError: this.logger.error,
+                segments,
             });
 
             const clientContext = {
@@ -50,10 +61,6 @@ export class PlaygroundService {
                     ? new Date(context.currentTime)
                     : undefined,
             };
-            // console.log(
-            //     'got these',
-            //     await client.getFeatureToggleDefinitions(),
-            // );
             const output: PlaygroundFeatureSchema[] = await Promise.all(
                 client
                     .getFeatureToggleDefinitions()

@@ -12,13 +12,19 @@ export interface BootstrapOptions {
 
 export class DefaultBootstrapProvider implements BootstrapProvider {
     private data?: FeatureInterface[];
+    private segments?: Segment[];
     constructor(options: BootstrapOptions) {
         this.data = options.data;
+        this.segments = options.segments;
     }
 
     async readBootstrap(): Promise<ClientFeaturesResponse | undefined> {
         if (this.data) {
-            return { version: 2, features: [...this.data] };
+            return {
+                version: 2,
+                segments: this.segments,
+                features: [...this.data],
+            };
         }
         return undefined;
     }

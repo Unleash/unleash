@@ -2,7 +2,6 @@ import { FromSchema } from 'json-schema-to-ts';
 import { constraintSchema, constraintSchemaBase } from './constraint-schema';
 import { parametersSchema } from './parameters-schema';
 
-
 const resultsSchema = {
     type: 'boolean',
 } as const;
@@ -14,11 +13,13 @@ export const playgroundConstraintSchema = {
     required: [...constraintSchemaBase.required, 'result'],
     properties: {
         ...constraintSchemaBase.properties,
-        result: resultsSchema
-    }
+        result: resultsSchema,
+    },
 } as const;
 
-export type PlaygroundConstraintSchema = FromSchema<typeof playgroundConstraintSchema>
+export type PlaygroundConstraintSchema = FromSchema<
+    typeof playgroundConstraintSchema
+>;
 
 export const playgroundSegmentSchema = {
     $id: '#/components/schemas/playgroundSegmentSchema',
@@ -45,7 +46,9 @@ export const playgroundSegmentSchema = {
     },
 } as const;
 
-export type PlaygroundSegmentSchema = FromSchema<typeof playgroundSegmentSchema>
+export type PlaygroundSegmentSchema = FromSchema<
+    typeof playgroundSegmentSchema
+>;
 
 export const playgroundStrategySchema = {
     $id: '#/components/schemas/playgroundStrategySchema',
@@ -56,11 +59,11 @@ export const playgroundStrategySchema = {
         name: {
             type: 'string',
         },
+        id: {
+            type: 'string',
+        },
         result: {
-            anyOf: [
-                resultsSchema,
-                { type: 'string', enum: ['not found']}
-            ]
+            anyOf: [resultsSchema, { type: 'string', enum: ['not found'] }],
         },
         segments: {
             type: 'array',
@@ -87,7 +90,9 @@ export const playgroundStrategySchema = {
     },
 } as const;
 
-export type PlaygroundStrategySchema = FromSchema<typeof playgroundStrategySchema>
+export type PlaygroundStrategySchema = FromSchema<
+    typeof playgroundStrategySchema
+>;
 
 export const playgroundFeatureSchema = {
     $id: '#/components/schemas/playgroundFeatureSchema',
@@ -109,7 +114,7 @@ export const playgroundFeatureSchema = {
             anyOf: [
                 { type: 'boolean', examples: [true] },
                 { type: 'string', enum: ['unevaluated'] },
-            ]
+            ],
         },
         variant: {
             type: 'object',

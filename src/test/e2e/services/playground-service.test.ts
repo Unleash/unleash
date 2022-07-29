@@ -1,5 +1,8 @@
 import { PlaygroundService } from '../../../lib/services/playground-service';
-import { clientFeatures, commonISOTimestamp } from '../../arbitraries.test';
+import {
+    clientFeaturesAndSegments,
+    commonISOTimestamp,
+} from '../../arbitraries.test';
 import { generate as generateContext } from '../../../lib/openapi/spec/sdk-context-schema.test';
 import fc from 'fast-check';
 import { createTestConfig } from '../../config/test-config';
@@ -8,27 +11,34 @@ import { IUnleashStores } from '../../../lib/types/stores';
 import FeatureToggleService from '../../../lib/services/feature-toggle-service';
 import { SegmentService } from '../../../lib/services/segment-service';
 import { FeatureToggle, WeightType } from '../../../lib/types/model';
-import { PlaygroundFeatureSchema } from '../../../lib/openapi/spec/playground-feature-schema';
+import {
+    PlaygroundFeatureSchema,
+    PlaygroundSegmentSchema,
+} from '../../../lib/openapi/spec/playground-feature-schema';
 import { offlineUnleashClientNode } from '../../../lib/util/offline-unleash-client';
 import { ClientFeatureSchema } from 'lib/openapi/spec/client-feature-schema';
 import { SdkContextSchema } from 'lib/openapi/spec/sdk-context-schema';
+import { SegmentSchema } from 'lib/openapi/spec/segment-schema';
 
 let stores: IUnleashStores;
 let db: ITestDb;
 let service: PlaygroundService;
 let featureToggleService: FeatureToggleService;
+let segmentService: SegmentService;
 
 beforeAll(async () => {
     const config = createTestConfig();
     db = await dbInit('playground_service_serial', config.getLogger);
     stores = db.stores;
-    featureToggleService = new FeatureToggleService(
-        stores,
-        config,
-        new SegmentService(stores, config),
-    );
+    (segmentService = new SegmentService(stores, config)),
+        (featureToggleService = new FeatureToggleService(
+            stores,
+            config,
+            segmentService,
+        ));
     service = new PlaygroundService(config, {
         featureToggleServiceV2: featureToggleService,
+        segmentService,
     });
 });
 
@@ -36,21 +46,44 @@ afterAll(async () => {
     await db.destroy();
 });
 
-afterEach(async () => {
+const cleanup = async () => {
+    await stores.segmentStore.deleteAll();
     await stores.featureToggleStore.deleteAll();
-});
+    await stores.eventStore.deleteAll();
+    await stores.featureStrategiesStore.deleteAll();
+    await stores.segmentStore.deleteAll();
+};
+
+afterEach(cleanup);
 
 const testParams = {
     interruptAfterTimeLimit: 4000, // Default timeout in Jest 5000ms
     markInterruptAsFailure: false, // When set to false, timeout during initial cases will not be considered as a failure
 };
 
-export const seedDatabaseForPlaygroundTest = (
+export const seedDatabaseForPlaygroundTest = async (
     database: ITestDb,
     features: ClientFeatureSchema[],
     environment: string,
-): Promise<FeatureToggle[]> =>
-    Promise.all(
+    segments?: SegmentSchema[],
+): Promise<FeatureToggle[]> => {
+    if (segments) {
+        await Promise.all(
+            segments.map(
+                async (segment, index) =>
+                    await database.stores.segmentStore.create(
+                        {
+                            ...segment,
+                            name: segment.name || `test-segment ${index}`,
+                            createdAt: new Date(),
+                        },
+                        { username: 'test' },
+                    ),
+            ),
+        );
+    }
+
+    return await Promise.all(
         features.map(async (feature) => {
             // create feature
             const toggle = await database.stores.featureToggleStore.create(
@@ -83,18 +116,31 @@ export const seedDatabaseForPlaygroundTest = (
 
             // assign strategies
             await Promise.all(
-                (feature.strategies || []).map((strategy) =>
-                    database.stores.featureStrategiesStore.createStrategyFeatureEnv(
-                        {
-                            parameters: {},
-                            constraints: [],
-                            ...strategy,
-                            featureName: feature.name,
-                            environment,
-                            strategyName: strategy.name,
-                            projectId: feature.project,
-                        },
-                    ),
+                (feature.strategies || []).map(
+                    async ({ segments, ...strategy }) => {
+                        await database.stores.featureStrategiesStore.createStrategyFeatureEnv(
+                            {
+                                parameters: {},
+                                constraints: [],
+                                ...strategy,
+                                featureName: feature.name,
+                                environment,
+                                strategyName: strategy.name,
+                                projectId: feature.project,
+                            },
+                        );
+
+                        if (segments) {
+                            await Promise.all(
+                                segments.map((segmentId) =>
+                                    database.stores.segmentStore.addToStrategy(
+                                        segmentId,
+                                        strategy.id,
+                                    ),
+                                ),
+                            );
+                        }
+                    },
                 ),
             );
 
@@ -108,6 +154,7 @@ export const seedDatabaseForPlaygroundTest = (
             return toggle;
         }),
     );
+};
 
 describe('the playground service (e2e)', () => {
     const isDisabledVariant = ({
@@ -118,12 +165,21 @@ describe('the playground service (e2e)', () => {
         enabled: boolean;
     }) => name === 'disabled' && !enabled;
 
-    const insertAndEvaluateFeatures = async (
-        features: ClientFeatureSchema[],
-        context: SdkContextSchema,
-        env: string = 'default',
-    ): Promise<PlaygroundFeatureSchema[]> => {
-        await seedDatabaseForPlaygroundTest(db, features, env);
+    const insertAndEvaluateFeatures = async ({
+        features,
+        context,
+        env = 'default',
+        segments,
+    }: {
+        features: ClientFeatureSchema[];
+        context: SdkContextSchema;
+        env?: string;
+        segments?: SegmentSchema[];
+    }): Promise<PlaygroundFeatureSchema[]> => {
+        await seedDatabaseForPlaygroundTest(db, features, env, segments);
+
+        //     const activeSegments = await db.stores.segmentStore.getAllFeatureStrategySegments()
+        // console.log("active segments db seeding", activeSegments)
 
         const projects = '*';
 
@@ -137,7 +193,7 @@ describe('the playground service (e2e)', () => {
         await fc.assert(
             fc
                 .asyncProperty(
-                    clientFeatures({ minLength: 1 }),
+                    clientFeaturesAndSegments({ minLength: 1 }),
                     fc
                         .tuple(generateContext(), commonISOTimestamp())
                         .map(([context, currentTime]) => ({
@@ -147,11 +203,12 @@ describe('the playground service (e2e)', () => {
                             currentTime,
                         })),
                     fc.context(),
-                    async (toggles, context, ctx) => {
-                        const serviceToggles = await insertAndEvaluateFeatures(
-                            toggles,
+                    async ({ segments, features }, context, ctx) => {
+                        const serviceToggles = await insertAndEvaluateFeatures({
+                            features: features,
                             context,
-                        );
+                            segments,
+                        });
 
                         const [head, ...rest] =
                             await featureToggleService.getClientFeatures();
@@ -244,9 +301,7 @@ describe('the playground service (e2e)', () => {
                         });
                     },
                 )
-                .afterEach(async () => {
-                    await stores.featureToggleStore.deleteAll();
-                }),
+                .afterEach(cleanup),
             { ...testParams, examples: [] },
         );
     });
@@ -485,11 +540,12 @@ describe('the playground service (e2e)', () => {
     // these tests test counterexamples found by fast check. The may seem redundant, but are concrete cases that might break.
     counterexamples.map(async ([features, context], i) => {
         it(`should do the same as the raw SDK: counterexample ${i}`, async () => {
-            const serviceFeatures = await insertAndEvaluateFeatures(
+            const serviceFeatures = await insertAndEvaluateFeatures({
                 // @ts-expect-error
                 features,
+                // @ts-expect-error
                 context,
-            );
+            });
 
             const [head, ...rest] =
                 await featureToggleService.getClientFeatures();
@@ -523,22 +579,25 @@ describe('the playground service (e2e)', () => {
         });
     });
 
-    // should it? The order doesn't matter for now. How do you know what the right sort order is?
-    // test('should return strategies in the same order as they are listed', () => {});
-
-    // const todo = () => Promise.reject();
     test("should return all of a feature's strategies", async () => {
         await fc.assert(
             fc
                 .asyncProperty(
-                    clientFeatures({ minLength: 1 }),
+                    clientFeaturesAndSegments({ minLength: 1 }),
                     generateContext(),
                     fc.context(),
-                    async (generatedFeatures, context, ctx) => {
+                    async (
+                        { segments, features: generatedFeatures },
+                        context,
+                        ctx,
+                    ) => {
                         const log = (x: unknown) => ctx.log(JSON.stringify(x));
                         const serviceFeatures = await insertAndEvaluateFeatures(
-                            generatedFeatures,
-                            context,
+                            {
+                                features: generatedFeatures,
+                                context,
+                                segments,
+                            },
                         );
 
                         const serviceFeaturesDict: {
@@ -569,8 +628,7 @@ describe('the playground service (e2e)', () => {
 
                             // we can't guarantee that the order we inserted
                             // strategies into the database is the same as it
-                            // was returned by the service (and at the time of
-                            // writing we don't return IDs), so we'll need to
+                            // was returned by the service , so we'll need to
                             // scan through the list of strats.
 
                             // extract the `result` property, because it
@@ -607,6 +665,8 @@ describe('the playground service (e2e)', () => {
                                                 ...strategy,
                                                 constraints:
                                                     strategy.constraints ?? [],
+                                                parameters:
+                                                    strategy.parameters ?? {},
                                             },
                                         ]),
                                     );
@@ -615,20 +675,128 @@ describe('the playground service (e2e)', () => {
                         });
                     },
                 )
-                .afterEach(async () => {
-                    await stores.featureToggleStore.deleteAll();
-                }),
+                .afterEach(cleanup),
             testParams,
         );
     });
 
-    // test('should return feature strategies with all their constraints', todo);
-    // test('should return feature strategies with all their segments', todo);
-    // test("if a strategy isn't found, it should get 'not found' as its status", todo);
-    // test("if no strategies are found, it should return 'unknown'", todo);
+    const todo = () => Promise.reject();
+    test('should return feature strategies with all their segments', async () => {
+        await fc.assert(
+            fc
+                .asyncProperty(
+                    clientFeaturesAndSegments({ minLength: 1 }),
+                    generateContext(),
+                    fc.context(),
+                    async (
+                        { segments, features: generatedFeatures },
+                        context,
+                        ctx,
+                    ) => {
+                        const log = (x: unknown) => ctx.log(JSON.stringify(x));
+                        const serviceFeatures = await insertAndEvaluateFeatures(
+                            {
+                                features: generatedFeatures,
+                                context,
+                                segments,
+                            },
+                        );
+
+                        const serviceFeaturesDict: {
+                            [key: string]: PlaygroundFeatureSchema;
+                        } = serviceFeatures.reduce(
+                            (acc, feature) => ({
+                                ...acc,
+                                [feature.name]: feature,
+                            }),
+                            {},
+                        );
+
+                        // ensure that segments are mapped on to features
+                        // correctly. We do not need to check whether the
+                        // evaluation is correct; that is taken care of by other
+                        // tests.
+
+                        // For each feature strategy, find its list of segments and
+                        // compare it to the input.
+                        //
+                        // We can assert three things:
+                        //
+                        // 1. The segments lists have the same length
+                        //
+                        // 2. All segment ids listed in an input id list are
+                        // also in the original segments list
+                        //
+                        // 3. If a feature is considered enabled, _all_ segments
+                        // must be true. If a feature is _disabled_, _at least_
+                        // one segment is not true.
+                        generatedFeatures.forEach((unmappedFeature) => {
+                            const strategies = serviceFeaturesDict[
+                                unmappedFeature.name
+                            ].strategies?.reduce(
+                                (acc, strategy) => ({
+                                    ...acc,
+                                    [strategy.id]: strategy,
+                                }),
+                                {},
+                            );
+
+                            unmappedFeature.strategies?.forEach(
+                                (unmappedStrategy) => {
+                                    const mappedStrategySegments: PlaygroundSegmentSchema[] =
+                                        strategies[unmappedStrategy.id]
+                                            .segments;
+
+                                    const unmappedSegments =
+                                        unmappedStrategy.segments ?? [];
+
+                                    // 1. The segments lists have the same length
+                                    // 2. All segment ids listed in the input exist:
+                                    expect(
+                                        [
+                                            ...mappedStrategySegments?.map(
+                                                (segment) => segment.id,
+                                            ),
+                                        ].sort(),
+                                    ).toEqual([...unmappedSegments].sort());
+
+                                    switch (
+                                        strategies[unmappedStrategy.id].result
+                                    ) {
+                                        case true:
+                                            // If a strategy is considered true, _all_ segments
+                                            // must be true.
+                                            expect(
+                                                mappedStrategySegments.every(
+                                                    (segment) =>
+                                                        segment.result === true,
+                                                ),
+                                            ).toBeTruthy();
+                                        case false:
+                                            // If a strategy is false, _at least_
+                                            // one segment is not true.
+                                            expect(
+                                                mappedStrategySegments.some(
+                                                    (segment) =>
+                                                        segment.result ===
+                                                        false,
+                                                ),
+                                            ).toBeTruthy;
+                                        case 'not found':
+                                        // empty -- we can't evaluate this
+                                    }
+                                },
+                            );
+                        });
+                    },
+                )
+                .afterEach(cleanup),
+            testParams,
+        );
+    });
 
     // // test that if a feature is enabled it either has no strats OR
-    // // _at least_ one strategy with result = true if it is disabled,
+    // // _at least_ one strategy with result = true. if it is disabled,
     // // it EITHER has enabled = false OR no strats with result = true
     // test('enabled state is reflected in the strats', todo);
 });

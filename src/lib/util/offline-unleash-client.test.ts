@@ -240,7 +240,6 @@ describe('offline client', () => {
                 name: 'default',
                 constraints: [],
                 parameters: {},
-                segments: [2],
             },
             {
                 name: 'default',

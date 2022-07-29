@@ -10,7 +10,7 @@ import {
 } from './variant';
 import { Context } from './context';
 import type { PlaygroundStrategySchema } from '../../openapi/spec/playground-feature-schema';
-import { Constraint, Segment } from './strategy/strategy';
+import { Constraint, Segment, SegmentForEvaluation } from './strategy/strategy';
 
 interface BooleanMap {
     [key: string]: boolean;
@@ -143,28 +143,42 @@ export default class UnleashClient extends EventEmitter {
 
                         return {
                             name: strategySelector.name,
+                            id: strategySelector.id,
                             result: 'not found',
-                            // reasons: [
-                            //     `Couldn't find the strategy called ${strategySelector.name}`,
-                            // ],
+                            parameters: {},
+                            constraints: [],
+                            segments: [],
                         };
                     }
+
+                    const segments =
+                        strategySelector.segments
+                            ?.map(this.getSegment(this.repository))
+                            .filter(Boolean) ?? [];
+
+                    // if (
+                    //     (strategySelector.segments ?? []).length !==
+                    //     segments.length
+                    // ) {
+                    //     console.log(
+                    //         "some segments weren't found 😱",
+                    //         strategySelector.segments,
+                    //         segments,
+                    //     );
+                    // }
 
                     const results = strategy.isEnabledWithConstraints(
                         strategySelector.parameters,
                         context,
-                        this.yieldConstraintsFor(strategySelector),
+                        strategySelector.constraints,
+                        segments,
                     );
-
-                    const isEmptyObject = (obj: {}) =>
-                        !Object.keys(obj).some(Boolean);
 
                     const evalResult = {
                         name: strategySelector.name,
+                        id: strategySelector.id,
+                        parameters: strategySelector.parameters,
                         ...results,
-                        ...(!isEmptyObject(strategySelector.parameters) && {
-                            parameters: strategySelector.parameters,
-                        }),
                     };
 
                     return evalResult;
@@ -182,8 +196,23 @@ export default class UnleashClient extends EventEmitter {
                 enabled: isEnabled,
                 strategies,
             };
+
             return evalResults;
         }
+    }
+
+    getSegment(repo: RepositoryInterface) {
+        return (segmentId: number): SegmentForEvaluation | undefined => {
+            const segment = repo.getSegment(segmentId);
+            if (!segment) {
+                return undefined;
+            }
+            return {
+                name: segment.name,
+                id: segmentId,
+                constraints: segment.constraints,
+            };
+        };
     }
 
     *yieldConstraintsFor(

@@ -10,6 +10,8 @@ import {
 import { FeatureConfigurationClient } from 'lib/types/stores/feature-strategies-store';
 import { Operator, Segment } from 'unleash-client/lib/strategy/strategy';
 import { once } from 'events';
+import { ISegment } from 'lib/types/model';
+import { serializeDates } from '../../lib/types/serialize-dates';
 
 enum PayloadType {
     STRING = 'string',
@@ -43,9 +45,12 @@ const mapFeaturesForBootstrap = (features: FeatureConfigurationClient[]) =>
         })),
     }));
 
+const mapSegmentsForBootstrap = (segments: ISegment[]): Segment[] =>
+    serializeDates(segments) as Segment[];
+
 type ClientInitOptions = {
     features: NonEmptyList<FeatureConfigurationClient>;
-    segments?: Segment[];
+    segments?: ISegment[];
     context: SdkContextSchema;
     logError: (message: any, ...args: any[]) => void;
 };
@@ -65,7 +70,7 @@ export const offlineUnleashClient = async ({
         storageProvider: new InMemStorageProvider(),
         bootstrap: {
             data: mapFeaturesForBootstrap(features),
-            segments,
+            segments: mapSegmentsForBootstrap(segments),
         },
     });
 
@@ -92,7 +97,7 @@ export const offlineUnleashClientNode = async ({
         storageProvider: new InMemStorageProviderNode(),
         bootstrap: {
             data: mapFeaturesForBootstrap(features),
-            segments,
+            segments: mapSegmentsForBootstrap(segments),
         },
     });
 

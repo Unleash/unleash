@@ -1,14 +1,24 @@
-import { PlaygroundConstraintSchema } from 'lib/openapi/spec/playground-feature-schema';
+import {
+    PlaygroundConstraintSchema,
+    PlaygroundSegmentSchema,
+} from 'lib/openapi/spec/playground-feature-schema';
 import { gt as semverGt, lt as semverLt, eq as semverEq } from 'semver';
 import { StrategyEvaluationResult } from '../client';
 import { Context } from '../context';
 import { resolveContextValue } from '../helpers';
+
+export type SegmentForEvaluation = {
+    name: string;
+    id: number;
+    constraints: Constraint[];
+};
 
 export interface StrategyTransportInterface {
     name: string;
     parameters: any;
     constraints: Constraint[];
     segments?: number[];
+    id?: string;
 }
 
 export interface Constraint {
@@ -196,7 +206,7 @@ export class Strategy {
 
     checkConstraints(
         context: Context,
-        constraints?: IterableIterator<Constraint | undefined>,
+        constraints?: Iterable<Constraint>,
     ): { result: boolean; constraints: PlaygroundConstraintSchema[] } {
         if (!constraints) {
             return {
@@ -248,46 +258,50 @@ export class Strategy {
         };
     }
 
+    checkSegments(
+        context: Context,
+        segments: SegmentForEvaluation[],
+    ): { result: boolean; segments: PlaygroundSegmentSchema[] } {
+        const resolvedSegments = segments.map((segment) => {
+            const { result, constraints } = this.checkConstraints(
+                context,
+                segment.constraints,
+            );
+            return {
+                name: segment.name,
+                id: segment.id,
+                result,
+                constraints,
+            };
+        });
+
+        return {
+            result: resolvedSegments.every(
+                (segment) => segment.result === true,
+            ),
+            segments: resolvedSegments,
+        };
+    }
+
     isEnabledWithConstraints(
         parameters: any,
         context: Context,
-        constraints: IterableIterator<Constraint | undefined>,
+        constraints: Iterable<Constraint>,
+        segments: SegmentForEvaluation[],
     ): StrategyEvaluationResult {
         const constraintResults = this.checkConstraints(context, constraints);
         const enabledResult = this.isEnabled(parameters, context);
+        const segmentResults = this.checkSegments(context, segments);
 
-        // console.log('constraints', constraintResults, 'enabled', enabledResult);
+        const overallResult =
+            constraintResults.result &&
+            enabledResult.result &&
+            segmentResults.result;
 
-        if (constraintResults.result && enabledResult.result) {
-            return {
-                result: true,
-                constraints: constraintResults.constraints,
-                // reasons: [
-                //     ...constraintResults.reasons,
-                //     ...enabledResult.reasons,
-                // ],
-            };
-        } else {
-            const result = {
-                result: false,
-                constraints: constraintResults.constraints,
-                // reasons: [
-                //     ...(!constraintResults.enabled
-                //         ? constraintResults.reasons
-                //         : []),
-                //     ...(!enabledResult.enabled ? enabledResult.reasons : []),
-                // ],
-            };
-
-            // if (!constraintResults.enabled) {
-            //     console.log(
-            //         'contsraint results',
-            //         constraintResults,
-            //         result.reasons,
-            //     );
-            // }
-
-            return result;
-        }
+        return {
+            result: overallResult,
+            constraints: constraintResults.constraints,
+            segments: segmentResults.segments,
+        };
     }
 }

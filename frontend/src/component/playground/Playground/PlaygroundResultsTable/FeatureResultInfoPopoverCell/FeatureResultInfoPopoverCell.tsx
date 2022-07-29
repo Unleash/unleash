@@ -34,14 +34,12 @@ export const FeatureResultInfoPopoverCell = ({
         name: feature?.name as any,
         projectId: 'default',
         isEnabled: true,
-
     } as any;
 
     const dummyPlaygroundFeatureFalse: PlaygroundFeatureSchema = {
         name: feature?.name as any,
         projectId: 'default',
         isEnabled: false,
-
     } as any;
 
     const strategies: PlaygroundFeatureStrategyResult[] = [
@@ -57,11 +55,7 @@ export const FeatureResultInfoPopoverCell = ({
                     operator: 'IN',
                     caseInsensitive: false,
                     inverted: false,
-                    values: [
-                        'MyApp',
-                        'MyOtherApp',
-                        'Unleash',
-                    ],
+                    values: ['MyApp', 'MyOtherApp', 'Unleash'],
                 },
             ],
             segments: [
@@ -108,7 +102,11 @@ export const FeatureResultInfoPopoverCell = ({
                 classes={{ paper: styles.popoverPaper }}
             >
                 <PlaygroundResultFeatureDetails
-                    feature={feature.isEnabled ? dummyPlaygroundFeatureTrue : dummyPlaygroundFeatureFalse}
+                    feature={
+                        feature.isEnabled
+                            ? dummyPlaygroundFeatureTrue
+                            : dummyPlaygroundFeatureFalse
+                    }
                     onClose={() => setOpen(false)}
                 />
                 <ConditionallyRender

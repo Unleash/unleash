@@ -47,7 +47,11 @@ export const PlaygroundResultConstraintExecution = ({
                     />
                     <ConstraintAccordionView
                         constraint={constraint}
-                        playgroundContext={Boolean(constraint.result) ? contextTrue : contextFalse}
+                        playgroundContext={
+                            Boolean(constraint.result)
+                                ? contextTrue
+                                : contextFalse
+                        }
                         maxLength={80}
                         sx={{
                             backgroundColor: 'transparent!important',

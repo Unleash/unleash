@@ -24,7 +24,6 @@ export const useStyles = makeStyles()(theme => ({
         padding: '4px',
     },
     icon: {
-        textAlign: 'right'
-
-    }
+        textAlign: 'right',
+    },
 }));

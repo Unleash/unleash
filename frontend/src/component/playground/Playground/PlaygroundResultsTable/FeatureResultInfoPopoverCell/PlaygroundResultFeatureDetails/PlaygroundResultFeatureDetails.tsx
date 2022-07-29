@@ -1,12 +1,12 @@
 import { PlaygroundFeatureSchema } from '../../../../../../hooks/api/actions/usePlayground/playground.model';
-import {IconButton, Typography, useTheme} from '@mui/material';
+import { IconButton, Typography, useTheme } from '@mui/material';
 import { PlaygroundResultChip } from '../../PlaygroundResultChip/PlaygroundResultChip';
 import { useStyles } from './PlaygroundResultFeatureDetails.styles';
-import {CloseOutlined} from "@mui/icons-material";
-import React from "react";
+import { CloseOutlined } from '@mui/icons-material';
+import React from 'react';
 interface PlaygroundFeatureResultDetailsProps {
     feature: PlaygroundFeatureSchema;
-    onClose: () => void
+    onClose: () => void;
 }
 export const PlaygroundResultFeatureDetails = ({
     feature,
@@ -21,7 +21,9 @@ export const PlaygroundResultFeatureDetails = ({
     const reason = feature.isEnabled
         ? 'at least one strategy is True'
         : 'all strategies are False';
-    const color = feature.isEnabled ? theme.palette.success.main : theme.palette.error.main;
+    const color = feature.isEnabled
+        ? theme.palette.success.main
+        : theme.palette.error.main;
 
     const onCloseClick =
         onClose &&
@@ -29,6 +31,7 @@ export const PlaygroundResultFeatureDetails = ({
             event.stopPropagation();
             onClose();
         });
+
     return (
         <>
             <div className={styles.titleRowWrapper}>
@@ -40,7 +43,7 @@ export const PlaygroundResultFeatureDetails = ({
                         <PlaygroundResultChip enabled={feature.isEnabled} />
                     </span>
                 </div>
-                <IconButton onClick={() => onClose()} className={styles.icon}>
+                <IconButton onClick={onCloseClick} className={styles.icon}>
                     <CloseOutlined />
                 </IconButton>
             </div>

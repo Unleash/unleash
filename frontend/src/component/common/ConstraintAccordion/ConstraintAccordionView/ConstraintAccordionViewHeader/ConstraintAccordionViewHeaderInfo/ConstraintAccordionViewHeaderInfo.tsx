@@ -78,8 +78,7 @@ export const ConstraintAccordionViewHeaderInfo = ({
                                                 constraint.contextName
                                             ]
                                         )
-                                            ? theme.palette.neutral
-                                                  .dark
+                                            ? theme.palette.neutral.dark
                                             : theme.palette.error.main
                                     }
                                 >

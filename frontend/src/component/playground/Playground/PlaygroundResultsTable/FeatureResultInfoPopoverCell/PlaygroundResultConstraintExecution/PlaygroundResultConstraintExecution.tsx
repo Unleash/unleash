@@ -25,9 +25,14 @@ export const PlaygroundResultConstraintExecution = ({
     constraints,
 }: PlaygroundResultConstraintExecutionProps) => {
     // const context = usePlaygroundContext();
-    const context: SdkContextSchema = {
+    const contextFalse: SdkContextSchema = {
         appName: 'MyApp',
         environment: '',
+    };
+
+    const contextTrue: SdkContextSchema = {
+        appName: 'MyApp',
+        environment: 'development',
     };
 
     if (!constraints) return null;
@@ -42,7 +47,7 @@ export const PlaygroundResultConstraintExecution = ({
                     />
                     <ConstraintAccordionView
                         constraint={constraint}
-                        playgroundContext={context}
+                        playgroundContext={Boolean(constraint.result) ? contextTrue : contextFalse}
                         maxLength={80}
                         sx={{
                             backgroundColor: 'transparent!important',

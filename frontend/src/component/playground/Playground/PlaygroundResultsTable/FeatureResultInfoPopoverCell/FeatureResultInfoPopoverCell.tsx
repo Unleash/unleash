@@ -66,12 +66,12 @@ export const FeatureResultInfoPopoverCell = ({
             ],
             segments: [
                 {
-                    result: false,
+                    result: feature?.isEnabled as any,
                     id: 5,
                     name: 'my-segment',
                     constraints: [
                         {
-                            result: false,
+                            result: feature?.isEnabled as any,
                             contextName: 'environment',
                             operator: 'IN',
                             caseInsensitive: false,
@@ -107,7 +107,10 @@ export const FeatureResultInfoPopoverCell = ({
                 }}
                 classes={{ paper: styles.popoverPaper }}
             >
-                <PlaygroundResultFeatureDetails feature={feature.isEnabled ? dummyPlaygroundFeatureTrue : dummyPlaygroundFeatureFalse} />
+                <PlaygroundResultFeatureDetails
+                    feature={feature.isEnabled ? dummyPlaygroundFeatureTrue : dummyPlaygroundFeatureFalse}
+                    onClose={() => setOpen(false)}
+                />
                 <ConditionallyRender
                     condition={strategies.length > 0}
                     show={

@@ -1,6 +1,11 @@
 import { makeStyles } from 'tss-react/mui';
 
 export const useStyles = makeStyles()(theme => ({
+    titleRowWrapper: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        width: '100%',
+    },
     titleRow: {
         display: 'inline-flex',
         alignItems: 'flex-start',
@@ -18,4 +23,8 @@ export const useStyles = makeStyles()(theme => ({
         fontWeight: 600,
         padding: '4px',
     },
+    icon: {
+        textAlign: 'right'
+
+    }
 }));

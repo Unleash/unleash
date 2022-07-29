@@ -3,14 +3,20 @@ import { IConstraint } from 'interfaces/strategy';
 import { ConstraintAccordionViewHeaderInfo } from './ConstraintAccordionViewHeaderInfo/ConstraintAccordionViewHeaderInfo';
 import { ConstraintAccordionHeaderActions } from '../../ConstraintAccordionHeaderActions/ConstraintAccordionHeaderActions';
 import { useStyles } from 'component/common/ConstraintAccordion/ConstraintAccordion.styles';
+import {
+    PlaygroundFeatureStrategyConstraintResult,
+    SdkContextSchema,
+} from '../../../../../hooks/api/actions/usePlayground/playground.model';
 
 interface IConstraintAccordionViewHeaderProps {
-    constraint: IConstraint;
+    constraint: IConstraint | PlaygroundFeatureStrategyConstraintResult;
     onDelete?: () => void;
     onEdit?: () => void;
     singleValue: boolean;
     expanded: boolean;
     allowExpand: (shouldExpand: boolean) => void;
+    playgroundContext?: SdkContextSchema;
+    maxLength?: number;
 }
 
 export const ConstraintAccordionViewHeader = ({
@@ -20,6 +26,8 @@ export const ConstraintAccordionViewHeader = ({
     singleValue,
     allowExpand,
     expanded,
+    maxLength,
+    playgroundContext,
 }: IConstraintAccordionViewHeaderProps) => {
     const { classes: styles } = useStyles();
 
@@ -31,6 +39,9 @@ export const ConstraintAccordionViewHeader = ({
                 singleValue={singleValue}
                 allowExpand={allowExpand}
                 expanded={expanded}
+                result={'result' in constraint ? constraint.result : undefined}
+                maxLength={maxLength}
+                playgroundContext={playgroundContext}
             />
             <ConstraintAccordionHeaderActions
                 onEdit={onEdit}

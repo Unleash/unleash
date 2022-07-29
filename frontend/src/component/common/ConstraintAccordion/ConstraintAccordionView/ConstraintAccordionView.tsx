@@ -16,11 +16,17 @@ import {
     semVerOperators,
 } from 'constants/operators';
 import { useStyles } from '../ConstraintAccordion.styles';
+import {
+    PlaygroundFeatureStrategyConstraintResult,
+    SdkContextSchema,
+} from '../../../../hooks/api/actions/usePlayground/playground.model';
 
 interface IConstraintAccordionViewProps {
-    constraint: IConstraint;
+    constraint: IConstraint | PlaygroundFeatureStrategyConstraintResult;
     onDelete?: () => void;
     onEdit?: () => void;
+    playgroundContext?: SdkContextSchema;
+    maxLength?: number;
     sx?: SxProps<Theme>;
 }
 
@@ -29,6 +35,8 @@ export const ConstraintAccordionView = ({
     onEdit,
     onDelete,
     sx = undefined,
+    maxLength,
+    playgroundContext,
 }: IConstraintAccordionViewProps) => {
     const { classes: styles } = useStyles();
     const [expandable, setExpandable] = useState(true);
@@ -70,6 +78,8 @@ export const ConstraintAccordionView = ({
                     singleValue={singleValue}
                     allowExpand={setExpandable}
                     expanded={expanded}
+                    maxLength={maxLength ?? 112}
+                    playgroundContext={playgroundContext}
                 />
             </AccordionSummary>
 

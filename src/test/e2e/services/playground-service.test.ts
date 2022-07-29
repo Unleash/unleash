@@ -10,7 +10,7 @@ import dbInit, { ITestDb } from '../helpers/database-init';
 import { IUnleashStores } from '../../../lib/types/stores';
 import FeatureToggleService from '../../../lib/services/feature-toggle-service';
 import { SegmentService } from '../../../lib/services/segment-service';
-import { FeatureToggle, WeightType } from '../../../lib/types/model';
+import { FeatureToggle, ISegment, WeightType } from '../../../lib/types/model';
 import {
     PlaygroundFeatureSchema,
     PlaygroundSegmentSchema,
@@ -30,12 +30,12 @@ beforeAll(async () => {
     const config = createTestConfig();
     db = await dbInit('playground_service_serial', config.getLogger);
     stores = db.stores;
-    (segmentService = new SegmentService(stores, config)),
-        (featureToggleService = new FeatureToggleService(
-            stores,
-            config,
-            segmentService,
-        ));
+    segmentService = new SegmentService(stores, config);
+    featureToggleService = new FeatureToggleService(
+        stores,
+        config,
+        segmentService,
+    );
     service = new PlaygroundService(config, {
         featureToggleServiceV2: featureToggleService,
         segmentService,
@@ -61,6 +61,15 @@ const testParams = {
     markInterruptAsFailure: false, // When set to false, timeout during initial cases will not be considered as a failure
 };
 
+const mapSegmentSchemaToISegment = (
+    segment: SegmentSchema,
+    index?: number,
+): ISegment => ({
+    ...segment,
+    name: segment.name || `test-segment ${index ?? 'unnumbered'}`,
+    createdAt: new Date(),
+});
+
 export const seedDatabaseForPlaygroundTest = async (
     database: ITestDb,
     features: ClientFeatureSchema[],
@@ -69,21 +78,16 @@ export const seedDatabaseForPlaygroundTest = async (
 ): Promise<FeatureToggle[]> => {
     if (segments) {
         await Promise.all(
-            segments.map(
-                async (segment, index) =>
-                    await database.stores.segmentStore.create(
-                        {
-                            ...segment,
-                            name: segment.name || `test-segment ${index}`,
-                            createdAt: new Date(),
-                        },
-                        { username: 'test' },
-                    ),
+            segments.map(async (segment, index) =>
+                database.stores.segmentStore.create(
+                    mapSegmentSchemaToISegment(segment, index),
+                    { username: 'test' },
+                ),
             ),
         );
     }
 
-    return await Promise.all(
+    return Promise.all(
         features.map(async (feature) => {
             // create feature
             const toggle = await database.stores.featureToggleStore.create(
@@ -117,7 +121,7 @@ export const seedDatabaseForPlaygroundTest = async (
             // assign strategies
             await Promise.all(
                 (feature.strategies || []).map(
-                    async ({ segments, ...strategy }) => {
+                    async ({ segments: strategySegments, ...strategy }) => {
                         await database.stores.featureStrategiesStore.createStrategyFeatureEnv(
                             {
                                 parameters: {},
@@ -130,9 +134,9 @@ export const seedDatabaseForPlaygroundTest = async (
                             },
                         );
 
-                        if (segments) {
+                        if (strategySegments) {
                             await Promise.all(
-                                segments.map((segmentId) =>
+                                strategySegments.map((segmentId) =>
                                     database.stores.segmentStore.addToStrategy(
                                         segmentId,
                                         strategy.id,
@@ -220,6 +224,7 @@ describe('the playground service (e2e)', () => {
                             features: [head, ...rest],
                             context,
                             logError: console.log,
+                            segments: segments.map(mapSegmentSchemaToISegment),
                         });
 
                         const clientContext = {
@@ -586,17 +591,12 @@ describe('the playground service (e2e)', () => {
                     clientFeaturesAndSegments({ minLength: 1 }),
                     generateContext(),
                     fc.context(),
-                    async (
-                        { segments, features: generatedFeatures },
-                        context,
-                        ctx,
-                    ) => {
+                    async (data, context, ctx) => {
                         const log = (x: unknown) => ctx.log(JSON.stringify(x));
                         const serviceFeatures = await insertAndEvaluateFeatures(
                             {
-                                features: generatedFeatures,
+                                ...data,
                                 context,
-                                segments,
                             },
                         );
 
@@ -613,7 +613,7 @@ describe('the playground service (e2e)', () => {
                         // for each feature, find the corresponding evaluated feature
                         // and make sure that the evaluated
                         // return genFeat.length === servFeat.length && zip(gen, serv).
-                        generatedFeatures.forEach((feature) => {
+                        data.features.forEach((feature) => {
                             const mappedFeature: PlaygroundFeatureSchema =
                                 serviceFeaturesDict[feature.name];
 
@@ -680,20 +680,16 @@ describe('the playground service (e2e)', () => {
         );
     });
 
-    const todo = () => Promise.reject();
     test('should return feature strategies with all their segments', async () => {
         await fc.assert(
             fc
                 .asyncProperty(
                     clientFeaturesAndSegments({ minLength: 1 }),
                     generateContext(),
-                    fc.context(),
                     async (
                         { segments, features: generatedFeatures },
                         context,
-                        ctx,
                     ) => {
-                        const log = (x: unknown) => ctx.log(JSON.stringify(x));
                         const serviceFeatures = await insertAndEvaluateFeatures(
                             {
                                 features: generatedFeatures,
@@ -781,7 +777,7 @@ describe('the playground service (e2e)', () => {
                                                         segment.result ===
                                                         false,
                                                 ),
-                                            ).toBeTruthy;
+                                            ).toBeTruthy();
                                         case 'not found':
                                         // empty -- we can't evaluate this
                                     }
@@ -794,9 +790,4 @@ describe('the playground service (e2e)', () => {
             testParams,
         );
     });
-
-    // // test that if a feature is enabled it either has no strats OR
-    // // _at least_ one strategy with result = true. if it is disabled,
-    // // it EITHER has enabled = false OR no strats with result = true
-    // test('enabled state is reflected in the strats', todo);
 });

@@ -769,15 +769,9 @@ describe('the playground service (e2e)', () => {
                                                 ),
                                             ).toBeTruthy();
                                         case false:
-                                            // If a strategy is false, _at least_
-                                            // one segment is not true.
-                                            expect(
-                                                mappedStrategySegments.some(
-                                                    (segment) =>
-                                                        segment.result ===
-                                                        false,
-                                                ),
-                                            ).toBeTruthy();
+                                        // empty -- all segments can be true and
+                                        // the toggle still not enabled. We
+                                        // can't check for anything here.
                                         case 'not found':
                                         // empty -- we can't evaluate this
                                     }

@@ -76,6 +76,29 @@ export const FeatureResultInfoPopoverCell = ({
                 },
             ],
         },
+        {
+            name: 'flexibleRollout',
+            id: 'strategy-id',
+            parameters: {},
+            result: false,
+            segments: [
+                {
+                    result: false,
+                    id: 6,
+                    name: 'my-segment',
+                    constraints: [
+                        {
+                            result: false,
+                            contextName: 'appName',
+                            operator: 'IN',
+                            caseInsensitive: false,
+                            inverted: false,
+                            values: ['MyApp2'],
+                        },
+                    ],
+                },
+            ],
+        },
     ];
 
     if (!feature) {

@@ -60,7 +60,7 @@ export const PlaygroundResultSegmentExecution = ({
     if (!segments) return null;
     return (
         <>
-            {segments.map(segment => (
+            {segments.map((segment, index) => (
                 <SegmentExecutionWrapper key={segment.id}>
                     <SegmentExecutionHeader>
                         <SegmentExecutionLinkWrapper>
@@ -95,7 +95,10 @@ export const PlaygroundResultSegmentExecution = ({
                             constraints={segment.constraints}
                         />
                     </SegmentExecutionConstraintWrapper>
-                    <StrategySeparator text="AND" sx={{ pt: 1 }} />
+                    <ConditionallyRender
+                        condition={index < segments?.length -1}
+                        show={<StrategySeparator text="AND" sx={{ pt: 1 }} />}
+                    />
                 </SegmentExecutionWrapper>
             ))}
         </>

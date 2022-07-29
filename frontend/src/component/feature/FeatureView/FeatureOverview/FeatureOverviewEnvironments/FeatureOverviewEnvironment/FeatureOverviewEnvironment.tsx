@@ -126,6 +126,9 @@ const FeatureOverviewEnvironment = ({
                     <EnvironmentAccordionBody
                         featureEnvironment={featureEnvironment}
                         isDisabled={!env.enabled}
+                        otherEnvironments={feature?.environments
+                            .map(({ name }) => name)
+                            .filter(name => name !== env.name)}
                     />
                     <ConditionallyRender
                         condition={

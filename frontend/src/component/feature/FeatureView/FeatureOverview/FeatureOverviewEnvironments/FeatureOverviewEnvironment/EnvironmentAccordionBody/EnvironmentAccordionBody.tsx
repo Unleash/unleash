@@ -14,11 +14,13 @@ import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 interface IEnvironmentAccordionBodyProps {
     isDisabled: boolean;
     featureEnvironment?: IFeatureEnvironment;
+    otherEnvironments?: IFeatureEnvironment['name'][];
 }
 
 const EnvironmentAccordionBody = ({
     featureEnvironment,
     isDisabled,
+    otherEnvironments,
 }: IEnvironmentAccordionBodyProps) => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
@@ -93,6 +95,7 @@ const EnvironmentAccordionBody = ({
                                     strategy={strategy}
                                     index={index}
                                     environmentName={featureEnvironment.name}
+                                    otherEnvironments={otherEnvironments}
                                 />
                             ))}
                         </>

@@ -1,6 +1,7 @@
 import { DragIndicator, Edit } from '@mui/icons-material';
 import { styled, useTheme, IconButton } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { IFeatureEnvironment } from 'interfaces/featureToggle';
 import { IFeatureStrategy } from 'interfaces/strategy';
 import {
     getFeatureStrategyIcon,
@@ -13,13 +14,15 @@ import { FeatureStrategyRemove } from 'component/feature/FeatureStrategy/Feature
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { StrategyExecution } from './StrategyExecution/StrategyExecution';
-import { useStyles } from './StrategyItem.styles';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { CopyStrategyIconMenu } from './CopyStrategyIconMenu/CopyStrategyIconMenu';
+import { useStyles } from './StrategyItem.styles';
 
 interface IStrategyItemProps {
     environmentId: string;
     strategy: IFeatureStrategy;
     isDraggable?: boolean;
+    otherEnvironments?: IFeatureEnvironment['name'][];
 }
 
 const DragIcon = styled(IconButton)(({ theme }) => ({
@@ -32,6 +35,7 @@ export const StrategyItem = ({
     environmentId,
     strategy,
     isDraggable,
+    otherEnvironments,
 }: IStrategyItemProps) => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
@@ -67,6 +71,17 @@ export const StrategyItem = ({
                     text={formatStrategyName(strategy.name)}
                 />
                 <div className={styles.actions}>
+                    <ConditionallyRender
+                        condition={Boolean(
+                            otherEnvironments && otherEnvironments?.length > 0
+                        )}
+                        show={() => (
+                            <CopyStrategyIconMenu
+                                environments={otherEnvironments as string[]}
+                                strategy={strategy}
+                            />
+                        )}
+                    />
                     <PermissionIconButton
                         permission={UPDATE_FEATURE_STRATEGY}
                         environmentId={environmentId}

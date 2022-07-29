@@ -96,7 +96,7 @@ export const PlaygroundResultSegmentExecution = ({
                         />
                     </SegmentExecutionConstraintWrapper>
                     <ConditionallyRender
-                        condition={index < segments?.length -1}
+                        condition={index < segments?.length - 1}
                         show={<StrategySeparator text="AND" sx={{ pt: 1 }} />}
                     />
                 </SegmentExecutionWrapper>

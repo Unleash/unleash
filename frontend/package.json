@@ -45,7 +45,7 @@
     "@mui/lab": "5.0.0-alpha.92",
     "@mui/material": "5.9.2",
     "@openapitools/openapi-generator-cli": "2.5.1",
-    "@testing-library/dom": "8.14.0",
+    "@testing-library/dom": "8.16.0",
     "@testing-library/jest-dom": "5.16.4",
     "@testing-library/react": "12.1.5",
     "@testing-library/react-hooks": "^7.0.2",

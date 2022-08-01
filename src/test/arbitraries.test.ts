@@ -113,6 +113,14 @@ export const strategies = (): Arbitrary<FeatureStrategySchema[]> =>
                     IPs: fc.uniqueArray(fc.ipV4()).map((ips) => ips.join(',')),
                 }),
             ),
+            strategy(
+                'custom-strategy',
+                fc.record({
+                    customParam: fc
+                        .uniqueArray(fc.lorem())
+                        .map((words) => words.join(',')),
+                }),
+            ),
         ),
         { selector: (strategy) => strategy.id },
     );

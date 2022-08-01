@@ -1,25 +1,17 @@
 import { Strategy } from './strategy';
 import { Context } from '../context';
-import { StrategyEvaluationResult } from '../client';
-
-const ip = require('ip');
+import ip from 'ip';
 
 export default class RemoteAddressStrategy extends Strategy {
     constructor() {
         super('remoteAddress');
     }
 
-    isEnabled(parameters: any, context: Context): StrategyEvaluationResult {
+    isEnabled(parameters: any, context: Context): boolean {
         if (!parameters.IPs) {
-            return {
-                result: false,
-                // reasons: [
-                //     'You have not provided any IPs to activate this strategy for.',
-                // ],
-            };
+            return false;
         }
-
-        const enabled = parameters.IPs.split(/\s*,\s*/).some(
+        return parameters.IPs.split(/\s*,\s*/).some(
             (range: string): Boolean => {
                 if (range === context.remoteAddress) {
                     return true;
@@ -36,14 +28,5 @@ export default class RemoteAddressStrategy extends Strategy {
                 return false;
             },
         );
-
-        return {
-            result: enabled,
-            // reasons: [
-            //     `${context.remoteAddress} is ${enabled ? '' : 'not '}one of ${
-            //         parameters.IPs
-            //     }`,
-            // ],
-        };
     }
 }

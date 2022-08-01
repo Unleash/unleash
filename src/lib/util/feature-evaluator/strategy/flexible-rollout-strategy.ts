@@ -2,7 +2,6 @@ import { Strategy } from './strategy';
 import { Context } from '../context';
 import normalizedValue from './util';
 import { resolveContextValue } from '../helpers';
-import { StrategyEvaluationResult } from '../client';
 
 const STICKINESS = {
     default: 'default',
@@ -35,33 +34,16 @@ export default class FlexibleRolloutStrategy extends Strategy {
         }
     }
 
-    isEnabled(parameters: any, context: Context): StrategyEvaluationResult {
+    isEnabled(parameters: any, context: Context): boolean {
         const groupId = parameters.groupId || context.featureToggle || '';
         const percentage = Number(parameters.rollout);
         const stickiness: string = parameters.stickiness || STICKINESS.default;
         const stickinessId = this.resolveStickiness(stickiness, context);
 
         if (!stickinessId) {
-            return {
-                result: false,
-                // reasons: [
-                //     'There is no stickiness ID provided to this strategy.',
-                // ],
-            };
+            return false;
         }
         const normalizedUserId = normalizedValue(stickinessId, groupId);
-
-        const enabled = percentage > 0 && normalizedUserId <= percentage;
-
-        const reason = `This feature is enabled for ${percentage}% of your users and is sticky on the ${
-            parameters.stickiness || STICKINESS.default
-        } context field. Based on the provided context, this feature is ${
-            enabled ? '' : 'not '
-        }active.`;
-
-        return {
-            result: enabled,
-            // reasons: [reason],
-        };
+        return percentage > 0 && normalizedUserId <= percentage;
     }
 }

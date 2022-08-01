@@ -250,12 +250,8 @@ export class Strategy {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    isEnabled(parameters: any, context: Context): StrategyEvaluationResult {
-        // console.log('strategy.isEnabled');
-
-        return {
-            result: this.returnValue,
-        };
+    isEnabled(parameters: any, context: Context): boolean {
+        return this.returnValue;
     }
 
     checkSegments(
@@ -294,9 +290,7 @@ export class Strategy {
         const segmentResults = this.checkSegments(context, segments);
 
         const overallResult =
-            constraintResults.result &&
-            enabledResult.result &&
-            segmentResults.result;
+            constraintResults.result && enabledResult && segmentResults.result;
 
         return {
             result: overallResult,

@@ -7,13 +7,10 @@ export default class GradualRolloutSessionIdStrategy extends Strategy {
         super('gradualRolloutSessionId');
     }
 
-    isEnabled(parameters: any, context: Context) {
+    isEnabled(parameters: any, context: Context): boolean {
         const { sessionId } = context;
         if (!sessionId) {
-            return {
-                result: false,
-                // reasons: ['There was no session ID provided.'],
-            };
+            return false;
         }
 
         const percentage = Number(parameters.percentage);
@@ -21,14 +18,6 @@ export default class GradualRolloutSessionIdStrategy extends Strategy {
 
         const normalizedId = normalizedValue(sessionId, groupId);
 
-        const enabled = percentage > 0 && normalizedId <= percentage;
-        const reason = `This feature is enabled for ${percentage}% of your users and is sticky on the "sessionId" context field. Based on the provided context, this feature is ${
-            enabled ? '' : 'not '
-        }active.`;
-
-        return {
-            result: enabled,
-            // reasons: [reason],
-        };
+        return percentage > 0 && normalizedId <= percentage;
     }
 }

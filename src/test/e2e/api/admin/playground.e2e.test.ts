@@ -271,6 +271,51 @@ describe('Playground API E2E', () => {
         );
     });
 
+    test('isEnabledInEnvironment should always match feature.enabled', async () => {
+        await fc.assert(
+            fc
+                .asyncProperty(
+                    clientFeatures(),
+                    fc.context(),
+                    async (features, ctx) => {
+                        await seedDatabase(db, features, 'default');
+
+                        const body = await playgroundRequest(
+                            app,
+                            token.secret,
+                            {
+                                projects: ALL,
+                                environment: 'default',
+                                context: {
+                                    appName: 'playground-test',
+                                },
+                            },
+                        );
+
+                        const createDict = (xs: { name: string }[]) =>
+                            xs.reduce(
+                                (acc, next) => ({ ...acc, [next.name]: next }),
+                                {},
+                            );
+
+                        const mappedToggles = createDict(body.features);
+
+                        ctx.log(JSON.stringify(features));
+                        ctx.log(JSON.stringify(mappedToggles));
+
+                        return features.every(
+                            (feature) =>
+                                feature.enabled ===
+                                mappedToggles[feature.name]
+                                    .isEnabledInEnvironment,
+                        );
+                    },
+                )
+                .afterEach(reset(db)),
+            testParams,
+        );
+    });
+
     describe('context application', () => {
         it('applies appName constraints correctly', async () => {
             const appNames = ['A', 'B', 'C'];

@@ -93,10 +93,10 @@ export const generate = (): Arbitrary<PlaygroundFeatureSchema> =>
         .chain((isEnabled) =>
             fc.record({
                 isEnabled: fc.constant(isEnabled),
+                isEnabledInCurrentEnvironment: fc.boolean(),
                 projectId: urlFriendlyString(),
                 name: urlFriendlyString(),
-                // strategies: playgroundStrategies(),
-                strategies: fc.constant([]),
+                strategies: playgroundStrategies(),
                 variant: fc.record(
                     {
                         name: urlFriendlyString(),

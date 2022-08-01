@@ -94,13 +94,22 @@ export type PlaygroundStrategySchema = FromSchema<
     typeof playgroundStrategySchema
 >;
 
+export const unknownFeatureEvaluationResult = 'unevaluated' as const;
+
 export const playgroundFeatureSchema = {
     $id: '#/components/schemas/playgroundFeatureSchema',
     description:
         'A simplified feature toggle model intended for the Unleash playground.',
     type: 'object',
     additionalProperties: false,
-    required: ['name', 'projectId', 'isEnabled', 'variant', 'strategies'],
+    required: [
+        'name',
+        'projectId',
+        'isEnabled',
+        'isEnabledInCurrentEnvironment',
+        'variant',
+        'strategies',
+    ],
     properties: {
         name: { type: 'string', examples: ['my-feature'] },
         projectId: { type: 'string', examples: ['my-project'] },
@@ -110,10 +119,16 @@ export const playgroundFeatureSchema = {
                 $ref: playgroundStrategySchema.$id,
             },
         },
+        isEnabledInCurrentEnvironment: {
+            type: 'boolean',
+            description:
+                'Whether the feature is active and would be evaluated in the provided environment in a normal SDK context.',
+        },
         isEnabled: {
+            description: `Whether this feature is enabled or not given the current strategies. Can be \`true\`, \`false\`, or \`${unknownFeatureEvaluationResult}\`. A feature will only be \`${unknownFeatureEvaluationResult}\` if Unleash does not recognize the strategy it uses (i.e. it's a custom strategy that Unleash doesn't have an implementation for) and all the strategy's constraints and segments (if any) are satisfied. Note that a strategy that Unleash doesn't have an implementation for can still be deemed false if it doesn't satisfy its constraints.`,
             anyOf: [
                 { type: 'boolean', examples: [true] },
-                { type: 'string', enum: ['unevaluated'] },
+                { type: 'string', enum: [unknownFeatureEvaluationResult] },
             ],
         },
         variant: {

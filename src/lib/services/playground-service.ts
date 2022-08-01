@@ -14,6 +14,7 @@ export class PlaygroundService {
     private readonly logger: Logger;
 
     private readonly featureToggleService: FeatureToggleService;
+
     private readonly segmentService: SegmentService;
 
     constructor(
@@ -70,6 +71,7 @@ export class PlaygroundService {
 
                         return {
                             isEnabled: enabledStatus.enabled,
+                            isEnabledInCurrentEnvironment: feature.enabled,
                             strategies: enabledStatus.strategies,
                             projectId:
                                 await this.featureToggleService.getProjectId(

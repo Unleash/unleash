@@ -105,7 +105,6 @@ export const OverrideConfig: VFC<IOverrideConfigProps> = ({
                                         options={legalValues}
                                         onChange={updateSelectValues(index)}
                                         getOptionLabel={option => option}
-                                        defaultValue={filteredValues}
                                         value={filteredValues}
                                         style={{ width: '100%' }}
                                         filterSelectedOptions

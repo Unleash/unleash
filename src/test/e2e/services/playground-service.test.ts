@@ -906,4 +906,52 @@ describe('the playground service (e2e)', () => {
             testParams,
         );
     });
+
+    test("features can be evaluated to true, even if they're not enabled in the current environment", async () => {
+        await fc.assert(
+            fc
+                .asyncProperty(
+                    clientFeaturesAndSegments({ minLength: 1 }).map(
+                        ({ features, ...rest }) => ({
+                            ...rest,
+                            features: features.map((feature) => ({
+                                ...feature,
+                                enabled: false,
+                                // remove any constraints and use a name that doesn't exist
+                                strategies: [{ name: 'default' }],
+                            })),
+                        }),
+                    ),
+                    generateContext(),
+                    fc.context(),
+                    async (featsAndSegments, context, ctx) => {
+                        const serviceFeatures = await insertAndEvaluateFeatures(
+                            {
+                                ...featsAndSegments,
+                                context,
+                            },
+                        );
+
+                        serviceFeatures.forEach((feature) =>
+                            feature.strategies.forEach((strategy) => {
+                                expect(strategy.result.evaluationStatus).toBe(
+                                    playgroundStrategyEvaluation.evaluationComplete,
+                                );
+                                expect(strategy.result.enabled).toBe(true);
+                            }),
+                        );
+
+                        ctx.log(JSON.stringify(serviceFeatures));
+                        serviceFeatures.forEach((feature) => {
+                            expect(feature.isEnabled).toBe(true);
+                            expect(feature.isEnabledInCurrentEnvironment).toBe(
+                                false,
+                            );
+                        });
+                    },
+                )
+                .afterEach(cleanup),
+            testParams,
+        );
+    });
 });

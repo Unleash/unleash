@@ -50,7 +50,7 @@
     call-me-maybe "^1.0.1"
     z-schema "^5.0.1"
 
-"@apidevtools/swagger-parser@^10.1.0":
+"@apidevtools/swagger-parser@10.1.0":
   version "10.1.0"
   resolved "https://registry.yarnpkg.com/@apidevtools/swagger-parser/-/swagger-parser-10.1.0.tgz#a987d71e5be61feb623203be0c96e5985b192ab6"
   integrity sha512-9Kt7EuS/7WbMAUv2gSziqjvxwDbFSg3Xeyfuj5laUODX8o/k/CpsAKiQ8W7/R88eXFTMbJYg6+7uAmOWNKmwnw==

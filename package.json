@@ -127,7 +127,7 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@apidevtools/swagger-parser": "^10.1.0",
+    "@apidevtools/swagger-parser": "10.1.0",
     "@babel/core": "7.18.9",
     "@types/bcryptjs": "2.4.2",
     "@types/express": "4.17.13",

@@ -74,7 +74,7 @@ export const ConstraintAccordionViewHeaderInfo = ({
                                     variant={'body1'}
                                     color={
                                         Boolean(
-                                            playgroundContext![
+                                            playgroundContext?.[
                                                 constraint.contextName
                                             ]
                                         )
@@ -82,7 +82,7 @@ export const ConstraintAccordionViewHeaderInfo = ({
                                             : theme.palette.error.main
                                     }
                                 >
-                                    {playgroundContext![
+                                    {playgroundContext?.[
                                         constraint.contextName
                                     ] || 'no value'}
                                 </Typography>

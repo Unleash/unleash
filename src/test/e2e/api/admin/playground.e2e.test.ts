@@ -271,7 +271,7 @@ describe('Playground API E2E', () => {
         );
     });
 
-    test('isEnabledInEnvironment should always match feature.enabled', async () => {
+    test('isEnabledInCurrentEnvironment should always match feature.enabled', async () => {
         await fc.assert(
             fc
                 .asyncProperty(
@@ -307,7 +307,7 @@ describe('Playground API E2E', () => {
                             (feature) =>
                                 feature.enabled ===
                                 mappedToggles[feature.name]
-                                    .isEnabledInEnvironment,
+                                    .isEnabledInCurrentEnvironment,
                         );
                     },
                 )

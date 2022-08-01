@@ -7,6 +7,7 @@ import UserWithIdStrategy from './user-with-id-strategy';
 import RemoteAddressStrategy from './remote-addresss-strategy';
 import FlexibleRolloutStrategy from './flexible-rollout-strategy';
 import { Strategy } from './strategy';
+import UnknownStrategy from './unknown-strategy';
 
 export { Strategy } from './strategy';
 export { StrategyTransportInterface } from './strategy';
@@ -20,4 +21,5 @@ export const defaultStrategies: Array<Strategy> = [
     new UserWithIdStrategy(),
     new RemoteAddressStrategy(),
     new FlexibleRolloutStrategy(),
+    new UnknownStrategy(),
 ];

@@ -1,0 +1,42 @@
+import { playgroundStrategyEvaluation } from 'lib/openapi/spec/playground-feature-schema';
+import { StrategyEvaluationResult } from '../client';
+import { Context } from '../context';
+import { Constraint, SegmentForEvaluation, Strategy } from './strategy';
+
+export default class UnknownStrategy extends Strategy {
+    constructor() {
+        super('unknown');
+    }
+
+    isEnabled(): boolean {
+        return false;
+    }
+
+    isEnabledWithConstraints(
+        // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+        parameters: any,
+        context: Context,
+        constraints: Iterable<Constraint>,
+        segments: SegmentForEvaluation[],
+    ): StrategyEvaluationResult {
+        const constraintResults = this.checkConstraints(context, constraints);
+        const segmentResults = this.checkSegments(context, segments);
+
+        const overallResult:
+            | false
+            | typeof playgroundStrategyEvaluation.unknownResult =
+            constraintResults.result && segmentResults.result
+                ? playgroundStrategyEvaluation.unknownResult
+                : false;
+
+        return {
+            result: {
+                enabled: overallResult,
+                reason: 'strategy not found' as 'strategy not found',
+                evaluationStatus: 'incomplete',
+            },
+            constraints: constraintResults.constraints,
+            segments: segmentResults.segments,
+        };
+    }
+}

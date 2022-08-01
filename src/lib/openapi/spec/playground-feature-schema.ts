@@ -50,6 +50,13 @@ export type PlaygroundSegmentSchema = FromSchema<
     typeof playgroundSegmentSchema
 >;
 
+export const playgroundStrategyEvaluation = {
+    evaluationComplete: 'complete',
+    evaluationIncomplete: 'incomplete',
+    unknownResult: 'unknown',
+    incompleteEvaluationCauses: ['strategy not found'],
+} as const;
+
 export const playgroundStrategySchema = {
     $id: '#/components/schemas/playgroundStrategySchema',
     type: 'object',
@@ -63,7 +70,48 @@ export const playgroundStrategySchema = {
             type: 'string',
         },
         result: {
-            anyOf: [resultsSchema, { type: 'string', enum: ['not found'] }],
+            anyOf: [
+                {
+                    type: 'object',
+                    additionalProperties: false,
+                    required: ['evaluationStatus', 'enabled', 'reason'],
+                    properties: {
+                        evaluationStatus: {
+                            type: 'string',
+                            enum: [
+                                playgroundStrategyEvaluation.evaluationIncomplete,
+                            ],
+                        },
+                        reason: {
+                            type: 'string',
+                            enum: playgroundStrategyEvaluation.incompleteEvaluationCauses,
+                        },
+                        enabled: {
+                            anyOf: [
+                                { type: 'boolean', enum: [false] },
+                                {
+                                    type: 'string',
+                                    enum: [
+                                        playgroundStrategyEvaluation.unknownResult,
+                                    ],
+                                },
+                            ],
+                        },
+                    },
+                },
+                {
+                    type: 'object',
+                    additionalProperties: false,
+                    required: ['evaluationStatus', 'enabled'],
+                    properties: {
+                        evaluationStatus: {
+                            type: 'string',
+                            enum: ['complete'],
+                        },
+                        enabled: { type: 'boolean' },
+                    },
+                },
+            ],
         },
         segments: {
             type: 'array',

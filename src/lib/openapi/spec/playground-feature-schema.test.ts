@@ -9,6 +9,7 @@ import {
     playgroundFeatureSchema,
     PlaygroundFeatureSchema,
     PlaygroundSegmentSchema,
+    playgroundStrategyEvaluation,
     PlaygroundStrategySchema,
 } from './playground-feature-schema';
 
@@ -39,7 +40,26 @@ const playgroundStrategy = (
 ): Arbitrary<PlaygroundStrategySchema> =>
     fc.record({
         name: fc.constant(name),
-        result: fc.oneof(fc.boolean(), fc.constant('not found' as 'not found')),
+        result: fc.oneof(
+            fc.record({
+                evaluationStatus: fc.constant(
+                    playgroundStrategyEvaluation.evaluationComplete,
+                ),
+                enabled: fc.boolean(),
+            }),
+            fc.record({
+                evaluationStatus: fc.constant(
+                    playgroundStrategyEvaluation.evaluationIncomplete,
+                ),
+                reason: fc.constantFrom(
+                    ...playgroundStrategyEvaluation.incompleteEvaluationCauses,
+                ),
+                enabled: fc.constantFrom(
+                    playgroundStrategyEvaluation.unknownResult,
+                    false as false,
+                ),
+            }),
+        ),
         parameters,
         constraints: playgroundStrategyConstraints(),
         segments: fc.array(playgroundSegment()),

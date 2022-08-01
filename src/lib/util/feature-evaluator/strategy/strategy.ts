@@ -249,7 +249,7 @@ export class Strategy {
         };
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/explicit-module-boundary-types
     isEnabled(parameters: any, context: Context): boolean {
         return this.returnValue;
     }
@@ -280,6 +280,7 @@ export class Strategy {
     }
 
     isEnabledWithConstraints(
+        // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
         parameters: any,
         context: Context,
         constraints: Iterable<Constraint>,
@@ -293,7 +294,7 @@ export class Strategy {
             constraintResults.result && enabledResult && segmentResults.result;
 
         return {
-            result: overallResult,
+            result: { enabled: overallResult, evaluationStatus: 'complete' },
             constraints: constraintResults.constraints,
             segments: segmentResults.segments,
         };

@@ -9,7 +9,11 @@ import {
     selectVariant,
 } from './variant';
 import { Context } from './context';
-import type { PlaygroundStrategySchema } from '../../openapi/spec/playground-feature-schema';
+import {
+    playgroundStrategyEvaluation,
+    PlaygroundStrategySchema,
+    unknownFeatureEvaluationResult,
+} from '../../openapi/spec/playground-feature-schema';
 import { Constraint, Segment, SegmentForEvaluation } from './strategy/strategy';
 
 interface BooleanMap {
@@ -144,7 +148,12 @@ export default class UnleashClient extends EventEmitter {
                         return {
                             name: strategySelector.name,
                             id: strategySelector.id,
-                            result: 'not found',
+                            result: {
+                                enabled: false,
+                                reason: 'strategy not found',
+                                evaluationStatus:
+                                    playgroundStrategyEvaluation.evaluationIncomplete,
+                            },
                             parameters: {},
                             constraints: [],
                             segments: [],
@@ -195,11 +204,15 @@ export default class UnleashClient extends EventEmitter {
             // Toggle evaluation
 
             const isEnabled: boolean | 'unevaluated' = strategies.every(
-                (strategy) => strategy.result === 'not found',
+                (strategy) =>
+                    strategy.result.evaluationStatus ===
+                    playgroundStrategyEvaluation.evaluationIncomplete,
             )
-                ? ('unevaluated' as 'unevaluated')
+                ? unknownFeatureEvaluationResult
                 : feature.enabled &&
-                  strategies.some((strategy) => strategy.result === true);
+                  strategies.some(
+                      (strategy) => strategy.result.enabled === true,
+                  );
 
             const evalResults: FeatureEvaluationResult = {
                 enabled: isEnabled,

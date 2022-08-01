@@ -14,12 +14,12 @@ import { FeatureToggle, ISegment, WeightType } from '../../../lib/types/model';
 import {
     PlaygroundFeatureSchema,
     PlaygroundSegmentSchema,
+    unknownFeatureEvaluationResult,
 } from '../../../lib/openapi/spec/playground-feature-schema';
 import { offlineUnleashClientNode } from '../../../lib/util/offline-unleash-client';
 import { ClientFeatureSchema } from 'lib/openapi/spec/client-feature-schema';
 import { SdkContextSchema } from 'lib/openapi/spec/sdk-context-schema';
 import { SegmentSchema } from 'lib/openapi/spec/segment-schema';
-
 let stores: IUnleashStores;
 let db: ITestDb;
 let service: PlaygroundService;
@@ -785,7 +785,61 @@ describe('the playground service (e2e)', () => {
         );
     });
 
-    test("should evaluate constraints and segments even if it doesn't know the strategy", () => {});
-    test("should evaluate a strategy to be unknown if it doesn't recognize the strategy and all constraints pass", () => {});
-    test("should evaluate a strategy as false if it doesn't recognize the strategy and constraint checks fail", () => {});
+    test("should evaluate a strategy to be unknown if it doesn't recognize the strategy and all constraints pass", async () => {
+        await fc.assert(
+            fc
+                .asyncProperty(
+                    clientFeaturesAndSegments({ minLength: 1 }),
+                    generateContext(),
+                    async (
+                        { segments, features: generatedFeatures },
+                        context,
+                    ) => {
+                        const serviceFeatures = await insertAndEvaluateFeatures(
+                            {
+                                features: generatedFeatures,
+                                context,
+                                segments,
+                            },
+                        );
+
+                        return serviceFeatures.every(
+                            (feature) =>
+                                feature.isEnabled ===
+                                unknownFeatureEvaluationResult,
+                        );
+                    },
+                )
+                .afterEach(cleanup),
+            testParams,
+        );
+    });
+
+    test("should evaluate a strategy as false if it doesn't recognize the strategy and constraint checks fail", async () => {
+        await fc.assert(
+            fc
+                .asyncProperty(
+                    clientFeaturesAndSegments({ minLength: 1 }),
+                    generateContext(),
+                    async (
+                        { segments, features: generatedFeatures },
+                        context,
+                    ) => {
+                        const serviceFeatures = await insertAndEvaluateFeatures(
+                            {
+                                features: generatedFeatures,
+                                context,
+                                segments,
+                            },
+                        );
+
+                        return serviceFeatures.every(
+                            (feature) => feature.isEnabled === false,
+                        );
+                    },
+                )
+                .afterEach(cleanup),
+            testParams,
+        );
+    });
 });

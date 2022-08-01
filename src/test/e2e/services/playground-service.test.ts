@@ -784,4 +784,8 @@ describe('the playground service (e2e)', () => {
             testParams,
         );
     });
+
+    test("should evaluate constraints and segments even if it doesn't know the strategy", () => {});
+    test("should evaluate a strategy to be unknown if it doesn't recognize the strategy and all constraints pass", () => {});
+    test("should evaluate a strategy as false if it doesn't recognize the strategy and constraint checks fail", () => {});
 });

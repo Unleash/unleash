@@ -185,6 +185,15 @@ export default class UnleashClient extends EventEmitter {
                 },
             );
 
+            // case enumeration:
+            //
+            // 1: Happy path: we know all the strategies and they're fully evaluated
+            // 2: We know all the strategies and they're fully evaluated, but the toggle isn't enabled in the selected environment
+            // 3: We know some of the strategies and at least one of the ones we know is true
+            // 4: We know some of the strategies and all the ones we know are false
+
+            // Toggle evaluation
+
             const isEnabled: boolean | 'unevaluated' = strategies.every(
                 (strategy) => strategy.result === 'not found',
             )

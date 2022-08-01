@@ -17,9 +17,9 @@ interface BooleanMap {
 }
 
 export type NamedStrategyEvaluationResult = PlaygroundStrategySchema;
-export type StrategyEvaluationResult = Omit<
+export type StrategyEvaluationResult = Pick<
     NamedStrategyEvaluationResult,
-    'name'
+    'result' | 'segments' | 'constraints'
 >;
 
 export type FeatureEvaluationResult = {

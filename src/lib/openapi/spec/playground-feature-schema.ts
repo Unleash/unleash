@@ -1,5 +1,5 @@
 import { FromSchema } from 'json-schema-to-ts';
-import { constraintSchema, constraintSchemaBase } from './constraint-schema';
+import { constraintSchemaBase } from './constraint-schema';
 import { parametersSchema } from './parameters-schema';
 
 const resultsSchema = {
@@ -54,7 +54,7 @@ export const playgroundStrategySchema = {
     $id: '#/components/schemas/playgroundStrategySchema',
     type: 'object',
     additionalProperties: false,
-    required: ['name', 'result'],
+    required: ['name', 'result', 'segments', 'constraints', 'parameters'],
     properties: {
         name: {
             type: 'string',

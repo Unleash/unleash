@@ -14,6 +14,7 @@ import { FeatureToggle, ISegment, WeightType } from '../../../lib/types/model';
 import {
     PlaygroundFeatureSchema,
     PlaygroundSegmentSchema,
+    playgroundStrategyEvaluation,
     unknownFeatureEvaluationResult,
 } from '../../../lib/openapi/spec/playground-feature-schema';
 import { offlineUnleashClientNode } from '../../../lib/util/offline-unleash-client';
@@ -789,25 +790,52 @@ describe('the playground service (e2e)', () => {
         await fc.assert(
             fc
                 .asyncProperty(
-                    clientFeaturesAndSegments({ minLength: 1 }),
+                    clientFeaturesAndSegments({ minLength: 1 }).map(
+                        ({ features, ...rest }) => ({
+                            ...rest,
+                            features: features.map((feature) => ({
+                                ...feature,
+                                // remove any constraints and use a name that doesn't exist
+                                strategies: feature.strategies.map(
+                                    (strategy) => ({
+                                        ...strategy,
+                                        name: 'bogus-strategy',
+                                        constraints: [],
+                                        segments: [],
+                                    }),
+                                ),
+                            })),
+                        }),
+                    ),
                     generateContext(),
-                    async (
-                        { segments, features: generatedFeatures },
-                        context,
-                    ) => {
+                    fc.context(),
+                    async (featsAndSegments, context, ctx) => {
                         const serviceFeatures = await insertAndEvaluateFeatures(
                             {
-                                features: generatedFeatures,
+                                ...featsAndSegments,
                                 context,
-                                segments,
                             },
                         );
 
-                        return serviceFeatures.every(
-                            (feature) =>
-                                feature.isEnabled ===
-                                unknownFeatureEvaluationResult,
+                        serviceFeatures.forEach((feature) =>
+                            feature.strategies.forEach((strategy) => {
+                                expect(strategy.result.evaluationStatus).toBe(
+                                    playgroundStrategyEvaluation.evaluationIncomplete,
+                                );
+                                expect(strategy.result.enabled).toBe(
+                                    playgroundStrategyEvaluation.unknownResult,
+                                );
+                            }),
                         );
+
+                        ctx.log(JSON.stringify(serviceFeatures));
+                        serviceFeatures.forEach((feature) => {
+                            if (feature.strategies.length) {
+                                expect(feature.isEnabled).toBe(
+                                    unknownFeatureEvaluationResult,
+                                );
+                            }
+                        });
                     },
                 )
                 .afterEach(cleanup),
@@ -819,23 +847,52 @@ describe('the playground service (e2e)', () => {
         await fc.assert(
             fc
                 .asyncProperty(
-                    clientFeaturesAndSegments({ minLength: 1 }),
+                    fc
+                        .tuple(
+                            fc.uuid(),
+                            clientFeaturesAndSegments({ minLength: 1 }),
+                        )
+                        .map(([uuid, { features, ...rest }]) => ({
+                            ...rest,
+                            features: features.map((feature) => ({
+                                ...feature,
+                                // remove any constraints and use a name that doesn't exist
+                                strategies: feature.strategies.map(
+                                    (strategy) => ({
+                                        ...strategy,
+                                        name: 'bogusStrategy',
+                                        constraints: [
+                                            {
+                                                contextName: 'appName',
+                                                operator: 'IN' as 'IN',
+                                                values: [uuid],
+                                            },
+                                        ],
+                                    }),
+                                ),
+                            })),
+                        })),
                     generateContext(),
-                    async (
-                        { segments, features: generatedFeatures },
-                        context,
-                    ) => {
+                    async (featsAndSegments, context) => {
                         const serviceFeatures = await insertAndEvaluateFeatures(
                             {
-                                features: generatedFeatures,
+                                ...featsAndSegments,
                                 context,
-                                segments,
                             },
                         );
 
-                        return serviceFeatures.every(
-                            (feature) => feature.isEnabled === false,
+                        serviceFeatures.forEach((feature) =>
+                            feature.strategies.forEach((strategy) => {
+                                expect(strategy.result.evaluationStatus).toBe(
+                                    playgroundStrategyEvaluation.evaluationIncomplete,
+                                );
+                                expect(strategy.result.enabled).toBe(false);
+                            }),
                         );
+
+                        serviceFeatures.forEach((feature) => {
+                            expect(feature.isEnabled).toBe(false);
+                        });
                     },
                 )
                 .afterEach(cleanup),

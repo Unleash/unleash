@@ -149,7 +149,8 @@ export default class UnleashClient extends EventEmitter {
                             name: strategySelector.name,
                             id: strategySelector.id,
                             result: {
-                                enabled: false,
+                                enabled:
+                                    playgroundStrategyEvaluation.unknownResult,
                                 reason: 'strategy not found',
                                 evaluationStatus:
                                     playgroundStrategyEvaluation.evaluationIncomplete,
@@ -164,17 +165,6 @@ export default class UnleashClient extends EventEmitter {
                         strategySelector.segments
                             ?.map(this.getSegment(this.repository))
                             .filter(Boolean) ?? [];
-
-                    // if (
-                    //     (strategySelector.segments ?? []).length !==
-                    //     segments.length
-                    // ) {
-                    //     console.log(
-                    //         "some segments weren't found 😱",
-                    //         strategySelector.segments,
-                    //         segments,
-                    //     );
-                    // }
 
                     const results = strategy.isEnabledWithConstraints(
                         strategySelector.parameters,

@@ -51,9 +51,9 @@ const playgroundStrategy = (
                 evaluationStatus: fc.constant(
                     playgroundStrategyEvaluation.evaluationIncomplete,
                 ),
-                reason: fc.constantFrom(
-                    ...playgroundStrategyEvaluation.incompleteEvaluationCauses,
-                ),
+                // reason: fc.constantFrom(
+                //     ...playgroundStrategyEvaluation.incompleteEvaluationCauses,
+                // ),
                 enabled: fc.constantFrom(
                     playgroundStrategyEvaluation.unknownResult,
                     false as false,

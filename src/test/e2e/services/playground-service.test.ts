@@ -856,7 +856,7 @@ describe('the playground service (e2e)', () => {
                             ...rest,
                             features: features.map((feature) => ({
                                 ...feature,
-                                // remove any constraints and use a name that doesn't exist
+                                // use a constraint that will never be true
                                 strategies: feature.strategies.map(
                                     (strategy) => ({
                                         ...strategy,
@@ -873,7 +873,8 @@ describe('the playground service (e2e)', () => {
                             })),
                         })),
                     generateContext(),
-                    async (featsAndSegments, context) => {
+                    fc.context(),
+                    async (featsAndSegments, context, ctx) => {
                         const serviceFeatures = await insertAndEvaluateFeatures(
                             {
                                 ...featsAndSegments,
@@ -890,8 +891,14 @@ describe('the playground service (e2e)', () => {
                             }),
                         );
 
+                        ctx.log(JSON.stringify(serviceFeatures));
+
                         serviceFeatures.forEach((feature) => {
-                            expect(feature.isEnabled).toBe(false);
+                            if (feature.strategies.length) {
+                                expect(feature.isEnabled).toBe(
+                                    unknownFeatureEvaluationResult,
+                                );
+                            }
                         });
                     },
                 )

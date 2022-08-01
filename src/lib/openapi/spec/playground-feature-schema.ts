@@ -74,7 +74,7 @@ export const playgroundStrategySchema = {
                 {
                     type: 'object',
                     additionalProperties: false,
-                    required: ['evaluationStatus', 'enabled', 'reason'],
+                    required: ['evaluationStatus', 'enabled'],
                     properties: {
                         evaluationStatus: {
                             type: 'string',

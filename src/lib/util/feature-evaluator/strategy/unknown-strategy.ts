@@ -1,4 +1,4 @@
-import { playgroundStrategyEvaluation } from 'lib/openapi/spec/playground-feature-schema';
+import { playgroundStrategyEvaluation } from '../../../openapi/spec/playground-feature-schema';
 import { StrategyEvaluationResult } from '../client';
 import { Context } from '../context';
 import { Constraint, SegmentForEvaluation, Strategy } from './strategy';
@@ -22,9 +22,7 @@ export default class UnknownStrategy extends Strategy {
         const constraintResults = this.checkConstraints(context, constraints);
         const segmentResults = this.checkSegments(context, segments);
 
-        const overallResult:
-            | false
-            | typeof playgroundStrategyEvaluation.unknownResult =
+        const overallResult =
             constraintResults.result && segmentResults.result
                 ? playgroundStrategyEvaluation.unknownResult
                 : false;

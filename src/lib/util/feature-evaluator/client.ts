@@ -138,6 +138,12 @@ export default class UnleashClient extends EventEmitter {
             const strategies = feature.strategies.map(
                 (strategySelector): NamedStrategyEvaluationResult => {
                     const strategy = this.getStrategy(strategySelector.name);
+
+                    const segments =
+                        strategySelector.segments
+                            ?.map(this.getSegment(this.repository))
+                            .filter(Boolean) ?? [];
+
                     if (!strategy) {
                         this.warnOnce(
                             strategySelector.name,
@@ -145,26 +151,22 @@ export default class UnleashClient extends EventEmitter {
                             feature.strategies,
                         );
 
+                        const unknownStrategy = this.getStrategy('unknown');
+                        const results =
+                            unknownStrategy.isEnabledWithConstraints(
+                                strategySelector.parameters,
+                                context,
+                                strategySelector.constraints,
+                                segments,
+                            );
+
                         return {
                             name: strategySelector.name,
                             id: strategySelector.id,
-                            result: {
-                                enabled:
-                                    playgroundStrategyEvaluation.unknownResult,
-                                reason: 'strategy not found',
-                                evaluationStatus:
-                                    playgroundStrategyEvaluation.evaluationIncomplete,
-                            },
-                            parameters: {},
-                            constraints: [],
-                            segments: [],
+                            parameters: strategySelector.parameters,
+                            ...results,
                         };
                     }
-
-                    const segments =
-                        strategySelector.segments
-                            ?.map(this.getSegment(this.repository))
-                            .filter(Boolean) ?? [];
 
                     const results = strategy.isEnabledWithConstraints(
                         strategySelector.parameters,

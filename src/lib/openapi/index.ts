@@ -30,7 +30,6 @@ import { environmentSchema } from './spec/environment-schema';
 import { environmentsSchema } from './spec/environments-schema';
 import { eventSchema } from './spec/event-schema';
 import { eventsSchema } from './spec/events-schema';
-import { exportParametersSchema } from './spec/export-parameters-schema';
 import { featureEnvironmentMetricsSchema } from './spec/feature-environment-metrics-schema';
 import { featureEnvironmentSchema } from './spec/feature-environment-schema';
 import { featureEventsSchema } from './spec/feature-events-schema';
@@ -67,8 +66,8 @@ import {
     playgroundConstraintSchema,
     playgroundSegmentSchema,
 } from './spec/playground-feature-schema';
-import { playgroundResponseSchema } from './spec/playground-response-schema';
 import { playgroundRequestSchema } from './spec/playground-request-schema';
+import { playgroundResponseSchema } from './spec/playground-response-schema';
 import { projectEnvironmentSchema } from './spec/project-environment-schema';
 import { projectSchema } from './spec/project-schema';
 import { projectsSchema } from './spec/projects-schema';
@@ -76,6 +75,7 @@ import { resetPasswordSchema } from './spec/reset-password-schema';
 import { roleSchema } from './spec/role-schema';
 import { sdkContextSchema } from './spec/sdk-context-schema';
 import { segmentSchema } from './spec/segment-schema';
+import { setStrategySortOrderSchema } from './spec/set-strategy-sort-order-schema';
 import { sortOrderSchema } from './spec/sort-order-schema';
 import { splashSchema } from './spec/splash-schema';
 import { stateSchema } from './spec/state-schema';
@@ -106,6 +106,10 @@ import { versionSchema } from './spec/version-schema';
 
 import { IServerOption } from '../types';
 import { URL } from 'url';
+import { groupSchema } from './spec/group-schema';
+import { groupsSchema } from './spec/groups-schema';
+import { groupUserModelSchema } from './spec/group-user-model-schema';
+import { usersGroupsBaseSchema } from './spec/users-groups-base-schema';
 
 // All schemas in `openapi/spec` should be listed here.
 export const schemas = {
@@ -139,7 +143,6 @@ export const schemas = {
     environmentsSchema,
     eventSchema,
     eventsSchema,
-    exportParametersSchema,
     featureEnvironmentMetricsSchema,
     featureEnvironmentSchema,
     featureEventsSchema,
@@ -154,6 +157,9 @@ export const schemas = {
     featureUsageSchema,
     featureVariantsSchema,
     feedbackSchema,
+    groupSchema,
+    groupsSchema,
+    groupUserModelSchema,
     healthCheckSchema,
     healthOverviewSchema,
     healthReportSchema,
@@ -172,8 +178,8 @@ export const schemas = {
     playgroundStrategySchema,
     playgroundConstraintSchema,
     playgroundSegmentSchema,
-    playgroundResponseSchema,
     playgroundRequestSchema,
+    playgroundResponseSchema,
     projectEnvironmentSchema,
     projectSchema,
     projectsSchema,
@@ -181,6 +187,7 @@ export const schemas = {
     roleSchema,
     sdkContextSchema,
     segmentSchema,
+    setStrategySortOrderSchema,
     sortOrderSchema,
     splashSchema,
     stateSchema,
@@ -200,6 +207,7 @@ export const schemas = {
     updateUserSchema,
     upsertContextFieldSchema,
     upsertStrategySchema,
+    usersGroupsBaseSchema,
     userSchema,
     usersSchema,
     usersSearchSchema,

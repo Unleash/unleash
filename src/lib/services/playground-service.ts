@@ -55,6 +55,11 @@ export class PlaygroundService {
                 logError: this.logger.error,
                 segments,
             });
+            
+            const variantsMap = toggles.reduce((acc, feature) => {
+                acc[feature.name] = feature.variants;
+                return acc;
+            }, {});
 
             const clientContext = {
                 ...context,
@@ -82,6 +87,7 @@ export class PlaygroundService {
                                 clientContext,
                             ),
                             name: feature.name,
+                            variants: variantsMap[feature.name] || [],
                         };
                     }),
             );

@@ -1,6 +1,8 @@
 import { FromSchema } from 'json-schema-to-ts';
 import { constraintSchemaBase } from './constraint-schema';
 import { parametersSchema } from './parameters-schema';
+import { variantSchema } from './variant-schema';
+import { overrideSchema } from './override-schema';
 
 const resultsSchema = {
     description: 'Whether this was evaluated as true or false.',
@@ -185,6 +187,7 @@ export const playgroundFeatureSchema = {
         'isEnabled',
         'isEnabledInCurrentEnvironment',
         'variant',
+        'variants',
         'strategies',
     ],
     properties: {
@@ -217,7 +220,7 @@ export const playgroundFeatureSchema = {
                 { type: 'string', enum: [unknownFeatureEvaluationResult] },
             ],
         },
-        variant: {
+      variant: {
             description:
                 "The feature variant you receive based on the provided context or the _disabled variant_. If a feature is disabled or doesn't have any variants, you would get the _disabled variant_. Otherwise, you'll get one of the feature's defined variants.",
             type: 'object',
@@ -255,8 +258,9 @@ export const playgroundFeatureSchema = {
                 },
             },
             nullable: true,
-            example: 'green',
+            example:  { name: 'green', enabled: true },
         },
+        variants: { type: 'array', items: { $ref: variantSchema.$id } },
     },
     components: {
         schemas: {
@@ -264,7 +268,11 @@ export const playgroundFeatureSchema = {
             playgroundConstraintSchema,
             playgroundSegmentSchema,
             parametersSchema,
+            variantSchema,
+            overrideSchema,
+
         },
+        variants: { type: 'array', items: { $ref: variantSchema.$id } },
     },
 } as const;
 

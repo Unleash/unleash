@@ -10,7 +10,7 @@ import dbInit, { ITestDb } from '../helpers/database-init';
 import { IUnleashStores } from '../../../lib/types/stores';
 import FeatureToggleService from '../../../lib/services/feature-toggle-service';
 import { SegmentService } from '../../../lib/services/segment-service';
-import { FeatureToggle, ISegment, WeightType } from '../../../lib/types/model';
+import { FeatureToggle, ISegment, WeightType, FeatureToggleDTO, IVariant } from '../../../lib/types/model';
 import {
     PlaygroundFeatureSchema,
     PlaygroundSegmentSchema,
@@ -21,6 +21,7 @@ import { offlineUnleashClientNode } from '../../../lib/util/offline-unleash-clie
 import { ClientFeatureSchema } from 'lib/openapi/spec/client-feature-schema';
 import { SdkContextSchema } from 'lib/openapi/spec/sdk-context-schema';
 import { SegmentSchema } from 'lib/openapi/spec/segment-schema';
+
 let stores: IUnleashStores;
 let db: ITestDb;
 let service: PlaygroundService;
@@ -193,6 +194,16 @@ describe('the playground service (e2e)', () => {
 
         return serviceFeatures;
     };
+
+    const toFeatureToggleDTO = (
+        feature: ClientFeatureSchema,
+    ): FeatureToggleDTO => ({
+        ...feature,
+        // the arbitrary generator takes care of this
+        variants: feature.variants as IVariant[] | undefined,
+        createdAt: undefined,
+    });
+
 
     test('should return the same enabled toggles as the raw SDK correctly mapped', async () => {
         await fc.assert(
@@ -984,6 +995,59 @@ describe('the playground service (e2e)', () => {
                     },
                 )
                 .afterEach(cleanup),
+            testParams,
+        );
+    });
+
+    test('output toggles should have the same variants as input toggles', async () => {
+        await fc.assert(
+            fc
+                .asyncProperty(
+                    clientFeatures({ minLength: 1 }),
+                    generateContext(),
+                    async (toggles, context) => {
+                        await Promise.all(
+                            toggles.map((feature) =>
+                                stores.featureToggleStore.create(
+                                    feature.project,
+                                    toFeatureToggleDTO(feature),
+                                ),
+                            ),
+                        );
+
+                        const projects = '*';
+                        const env = 'default';
+
+                        const serviceToggles: PlaygroundFeatureSchema[] =
+                            await service.evaluateQuery(projects, env, context);
+
+                        const variantsMap = toggles.reduce(
+                            (acc, feature) => ({
+                                ...acc,
+                                [feature.name]: feature.variants,
+                            }),
+                            {},
+                        );
+
+                        serviceToggles.forEach((feature) => {
+                            if (variantsMap[feature.name]) {
+                                expect(feature.variants).toEqual(
+                                    expect.arrayContaining(
+                                        variantsMap[feature.name],
+                                    ),
+                                );
+                                expect(variantsMap[feature.name]).toEqual(
+                                    expect.arrayContaining(feature.variants),
+                                );
+                            } else {
+                                expect(feature.variants).toStrictEqual([]);
+                            }
+                        });
+                    },
+                )
+                .afterEach(async () => {
+                    await stores.featureToggleStore.deleteAll();
+                }),
             testParams,
         );
     });

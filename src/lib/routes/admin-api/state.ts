@@ -14,8 +14,12 @@ import { IAuthRequest } from '../unleash-types';
 import { OpenApiService } from '../../services/openapi-service';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
-import { ExportParametersSchema } from '../../openapi/spec/export-parameters-schema';
+import {
+    exportQueryParameters,
+    ExportQueryParameters,
+} from '../../openapi/spec/export-query-parameters';
 import { emptyResponse } from '../../openapi/util/standard-responses';
+import { OpenAPIV3 } from 'openapi-types';
 
 const upload = multer({ limits: { fileSize: 5242880 } });
 const paramToBool = (param, def) => {
@@ -75,11 +79,8 @@ class StateController extends Controller {
                     responses: {
                         200: createResponseSchema('stateSchema'),
                     },
-                    parameters: [
-                        {
-                            $ref: '#/components/schema/exportParametersSchema',
-                        },
-                    ],
+                    parameters:
+                        exportQueryParameters as unknown as OpenAPIV3.ParameterObject[],
                 }),
             ],
         });
@@ -114,7 +115,7 @@ class StateController extends Controller {
     }
 
     async export(
-        req: Request<unknown, unknown, unknown, ExportParametersSchema>,
+        req: Request<unknown, unknown, unknown, ExportQueryParameters>,
         res: Response,
     ): Promise<void> {
         const { format } = req.query;

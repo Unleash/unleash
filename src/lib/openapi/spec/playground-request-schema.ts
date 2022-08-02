@@ -19,7 +19,6 @@ export const playgroundRequestSchema = {
                     type: 'array',
                     items: { type: 'string' },
                     example: ['my-project'],
-
                     description: 'A list of projects to check for toggles in.',
                 },
                 {

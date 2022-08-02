@@ -13,10 +13,12 @@ import { createTestConfig } from '../../config/test-config';
 import { DEFAULT_PROJECT } from '../../../lib/types/project';
 import { ALL_PROJECTS } from '../../../lib/util/constants';
 import { SegmentService } from '../../../lib/services/segment-service';
+import { GroupService } from '../../../lib/services/group-service';
 
 let db: ITestDb;
 let stores: IUnleashStores;
 let accessService;
+let groupService;
 let featureToggleService;
 let projectService;
 let editorUser;
@@ -184,7 +186,7 @@ const hasFullProjectAccess = async (user, projectName, condition) => {
             projectName,
         ),
     );
-    hasCommonProjectAccess(user, projectName, condition);
+    await hasCommonProjectAccess(user, projectName, condition);
 };
 
 const createSuperUser = async () => {
@@ -206,7 +208,8 @@ beforeAll(async () => {
         // @ts-ignore
         experimental: { environments: { enabled: true } },
     });
-    accessService = new AccessService(stores, { getLogger });
+    groupService = new GroupService(stores, { getLogger });
+    accessService = new AccessService(stores, { getLogger }, groupService);
     const roles = await accessService.getRootRoles();
     editorRole = roles.find((r) => r.name === RoleName.EDITOR);
     adminRole = roles.find((r) => r.name === RoleName.ADMIN);
@@ -221,6 +224,7 @@ beforeAll(async () => {
         config,
         accessService,
         featureToggleService,
+        groupService,
     );
 
     editorUser = await createUserEditorAccess('Bob Test', 'bob@getunleash.io');
@@ -286,13 +290,13 @@ test('should have project admin to default project as editor', async () => {
     const projectName = 'default';
 
     const user = editorUser;
-    hasFullProjectAccess(user, projectName, true);
+    await hasFullProjectAccess(user, projectName, true);
 });
 
 test('should not have project admin to other projects as editor', async () => {
     const projectName = 'unusedprojectname';
     const user = editorUser;
-    hasFullProjectAccess(user, projectName, false);
+    await hasFullProjectAccess(user, projectName, false);
 });
 
 test('cannot add CREATE_FEATURE without defining project', async () => {
@@ -371,7 +375,7 @@ test('should create default roles to project', async () => {
     const project = 'some-project';
     const user = editorUser;
     await accessService.createDefaultProjectRoles(user, project);
-    hasFullProjectAccess(user, project, true);
+    await hasFullProjectAccess(user, project, true);
 });
 
 test('should require name when create default roles to project', async () => {
@@ -394,7 +398,7 @@ test('should grant user access to project', async () => {
     await accessService.addUserToRole(sUser.id, projectRole.id, project);
 
     // // Should be able to update feature toggles inside the project
-    hasCommonProjectAccess(sUser, project, true);
+    await hasCommonProjectAccess(sUser, project, true);
 
     // Should not be able to admin the project itself.
     expect(
@@ -419,7 +423,7 @@ test('should not get access if not specifying project', async () => {
     await accessService.addUserToRole(sUser.id, projectRole.id, project);
 
     // Should not be able to update feature toggles outside project
-    hasCommonProjectAccess(sUser, undefined, false);
+    await hasCommonProjectAccess(sUser, undefined, false);
 });
 
 test('should remove user from role', async () => {
@@ -855,4 +859,173 @@ test('Should not be allowed to delete a project role', async () => {
             'InvalidOperationError: You cannot change built in roles.',
         );
     }
+});
+
+test('Should be allowed move feature toggle to project when given access through group', async () => {
+    const project = 'yet-another-project';
+    const groupStore = stores.groupStore;
+    const viewerUser = await createUserViewerAccess(
+        'Victoria Viewer',
+        'vickyv@getunleash.io',
+    );
+
+    const groupWithProjectAccess = await groupStore.create({
+        name: 'Project Editors',
+        description: '',
+    });
+
+    await groupStore.addNewUsersToGroup(
+        groupWithProjectAccess.id,
+        [{ user: viewerUser, role: 'Owner' }],
+        'Admin',
+    );
+
+    const projectRole = await accessService.getRoleByName(RoleName.MEMBER);
+
+    await hasCommonProjectAccess(viewerUser, project, false);
+
+    await accessService.addGroupToRole(
+        groupWithProjectAccess.id,
+        projectRole.id,
+        'SomeAdminUser',
+        project,
+    );
+
+    await hasCommonProjectAccess(viewerUser, project, true);
+});
+
+test('Should not lose user role access when given permissions from a group', async () => {
+    const project = 'yet-another-project';
+    const user = editorUser;
+    const groupStore = stores.groupStore;
+
+    await accessService.createDefaultProjectRoles(user, project);
+
+    const groupWithNoAccess = await groupStore.create({
+        name: 'ViewersOnly',
+        description: '',
+    });
+
+    await groupStore.addNewUsersToGroup(
+        groupWithNoAccess.id,
+        [{ user: editorUser, role: 'Owner' }],
+        'Admin',
+    );
+
+    const viewerRole = await accessService.getRoleByName(RoleName.VIEWER);
+
+    await accessService.addGroupToRole(
+        groupWithNoAccess.id,
+        viewerRole.id,
+        'SomeAdminUser',
+        project,
+    );
+
+    await hasFullProjectAccess(editorUser, project, true);
+});
+
+test('Should allow user to take multiple group roles and have expected permissions on each project', async () => {
+    const projectForCreate =
+        'project-that-should-have-create-toggle-permission';
+    const projectForDelete =
+        'project-that-should-have-delete-toggle-permission';
+    const groupStore = stores.groupStore;
+    const viewerUser = await createUserViewerAccess(
+        'Victor Viewer',
+        'victore@getunleash.io',
+    );
+
+    const groupWithCreateAccess = await groupStore.create({
+        name: 'ViewersOnly',
+        description: '',
+    });
+
+    const groupWithDeleteAccess = await groupStore.create({
+        name: 'ViewersOnly',
+        description: '',
+    });
+
+    await groupStore.addNewUsersToGroup(
+        groupWithCreateAccess.id,
+        [{ user: viewerUser, role: 'Owner' }],
+        'Admin',
+    );
+
+    await groupStore.addNewUsersToGroup(
+        groupWithDeleteAccess.id,
+        [{ user: viewerUser, role: 'Owner' }],
+        'Admin',
+    );
+
+    const createFeatureRole = await accessService.createRole({
+        name: 'CreateRole',
+        description: '',
+        permissions: [
+            {
+                id: 2,
+                name: 'CREATE_FEATURE',
+                environment: null,
+                displayName: 'Create Feature Toggles',
+                type: 'project',
+            },
+        ],
+    });
+
+    const deleteFeatureRole = await accessService.createRole({
+        name: 'DeleteRole',
+        description: '',
+        permissions: [
+            {
+                id: 8,
+                name: 'DELETE_FEATURE',
+                environment: null,
+                displayName: 'Delete Feature Toggles',
+                type: 'project',
+            },
+        ],
+    });
+
+    await accessService.addGroupToRole(
+        groupWithCreateAccess.id,
+        deleteFeatureRole.id,
+        'SomeAdminUser',
+        projectForDelete,
+    );
+
+    await accessService.addGroupToRole(
+        groupWithDeleteAccess.id,
+        createFeatureRole.id,
+        'SomeAdminUser',
+        projectForCreate,
+    );
+
+    expect(
+        await accessService.hasPermission(
+            viewerUser,
+            permissions.CREATE_FEATURE,
+            projectForCreate,
+        ),
+    ).toBe(true);
+    expect(
+        await accessService.hasPermission(
+            viewerUser,
+            permissions.DELETE_FEATURE,
+            projectForCreate,
+        ),
+    ).toBe(false);
+
+    expect(
+        await accessService.hasPermission(
+            viewerUser,
+            permissions.CREATE_FEATURE,
+            projectForDelete,
+        ),
+    ).toBe(false);
+    expect(
+        await accessService.hasPermission(
+            viewerUser,
+            permissions.DELETE_FEATURE,
+            projectForDelete,
+        ),
+    ).toBe(true);
 });

@@ -22,6 +22,9 @@ export function createTestConfig(config?: IUnleashOptions): IUnleashConfig {
         clientFeatureCaching: {
             enabled: false,
         },
+        experimental: {
+            userGroups: true,
+        },
     };
     const options = mergeAll<IUnleashOptions>([testConfig, config]);
     return createConfig(options);

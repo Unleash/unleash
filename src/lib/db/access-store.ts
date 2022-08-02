@@ -4,9 +4,11 @@ import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
 import { Logger } from '../logger';
 import {
+    IAccessInfo,
     IAccessStore,
     IRole,
     IUserPermission,
+    IUserRole,
 } from '../types/stores/access-store';
 import { IPermission } from '../types/model';
 import NotFoundError from '../error/notfound-error';
@@ -18,6 +20,9 @@ import {
 const T = {
     ROLE_USER: 'role_user',
     ROLES: 'roles',
+    GROUPS: 'groups',
+    GROUP_ROLE: 'group_role',
+    GROUP_USER: 'group_user',
     ROLE_PERMISSION: 'role_permission',
     PERMISSIONS: 'permissions',
     PERMISSION_TYPES: 'permission_types',
@@ -40,8 +45,16 @@ export class AccessStore implements IAccessStore {
 
     private db: Knex;
 
-    constructor(db: Knex, eventBus: EventEmitter, getLogger: Function) {
+    private enableUserGroupPermissions: boolean;
+
+    constructor(
+        db: Knex,
+        eventBus: EventEmitter,
+        getLogger: Function,
+        enableUserGroupPermissions: boolean,
+    ) {
         this.db = db;
+        this.enableUserGroupPermissions = enableUserGroupPermissions;
         this.logger = getLogger('access-store.ts');
         this.timer = (action: string) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
@@ -62,7 +75,7 @@ export class AccessStore implements IAccessStore {
 
     async exists(key: number): Promise<boolean> {
         const result = await this.db.raw(
-            `SELECT EXISTS (SELECT 1 FROM ${T.ROLES} WHERE id = ?) AS present`,
+            `SELECT EXISTS(SELECT 1 FROM ${T.ROLES} WHERE id = ?) AS present`,
             [key],
         );
         const { present } = result.rows[0];
@@ -107,7 +120,7 @@ export class AccessStore implements IAccessStore {
 
     async getPermissionsForUser(userId: number): Promise<IUserPermission[]> {
         const stopTimer = this.timer('getPermissionsForUser');
-        const rows = await this.db
+        let userPermissionQuery = this.db
             .select(
                 'project',
                 'permission',
@@ -119,6 +132,29 @@ export class AccessStore implements IAccessStore {
             .join(`${T.ROLE_USER} AS ur`, 'ur.role_id', 'rp.role_id')
             .join(`${T.PERMISSIONS} AS p`, 'p.id', 'rp.permission_id')
             .where('ur.user_id', '=', userId);
+
+        if (this.enableUserGroupPermissions) {
+            userPermissionQuery = userPermissionQuery.union((db) => {
+                db.select(
+                    'project',
+                    'permission',
+                    'environment',
+                    'p.type',
+                    'gr.role_id',
+                )
+                    .from<IPermissionRow>(`${T.GROUP_USER} AS gu`)
+                    .join(`${T.GROUPS} AS g`, 'g.id', 'gu.group_id')
+                    .join(`${T.GROUP_ROLE} AS gr`, 'gu.group_id', 'gr.group_id')
+                    .join(
+                        `${T.ROLE_PERMISSION} AS rp`,
+                        'rp.role_id',
+                        'gr.role_id',
+                    )
+                    .join(`${T.PERMISSIONS} AS p`, 'p.id', 'rp.permission_id')
+                    .where('gu.user_id', '=', userId);
+            });
+        }
+        const rows = await userPermissionQuery;
         stopTimer();
         return rows.map(this.mapUserPermission);
     }
@@ -137,12 +173,11 @@ export class AccessStore implements IAccessStore {
                 ? row.environment
                 : undefined;
 
-        const result = {
+        return {
             project,
             environment,
             permission: row.permission,
         };
-        return result;
     }
 
     async getPermissionsForRole(roleId: number): Promise<IPermission[]> {
@@ -192,17 +227,20 @@ export class AccessStore implements IAccessStore {
             .delete();
     }
 
-    async getProjectUserIdsForRole(
+    async getProjectUsersForRole(
         roleId: number,
         projectId?: string,
-    ): Promise<number[]> {
+    ): Promise<IUserRole[]> {
         const rows = await this.db
-            .select(['user_id'])
+            .select(['user_id', 'ru.created_at'])
             .from<IRole>(`${T.ROLE_USER} AS ru`)
             .join(`${T.ROLES} as r`, 'ru.role_id', 'id')
             .where('r.id', roleId)
             .andWhere('ru.project', projectId);
-        return rows.map((r) => r.user_id);
+        return rows.map((r) => ({
+            userId: r.user_id,
+            addedAt: r.created_at,
+        }));
     }
 
     async getRolesForUserId(userId: number): Promise<IRole[]> {
@@ -224,12 +262,12 @@ export class AccessStore implements IAccessStore {
     async addUserToRole(
         userId: number,
         roleId: number,
-        projecId?: string,
+        projectId?: string,
     ): Promise<void> {
         return this.db(T.ROLE_USER).insert({
             user_id: userId,
             role_id: roleId,
-            project: projecId,
+            project: projectId,
         });
     }
 
@@ -241,6 +279,34 @@ export class AccessStore implements IAccessStore {
         return this.db(T.ROLE_USER)
             .where({
                 user_id: userId,
+                role_id: roleId,
+                project: projectId,
+            })
+            .delete();
+    }
+
+    async addGroupToRole(
+        groupId: number,
+        roleId: number,
+        createdBy: string,
+        projectId?: string,
+    ): Promise<void> {
+        return this.db(T.GROUP_ROLE).insert({
+            group_id: groupId,
+            role_id: roleId,
+            project: projectId,
+            created_by: createdBy,
+        });
+    }
+
+    async removeGroupFromRole(
+        groupId: number,
+        roleId: number,
+        projectId?: string,
+    ): Promise<void> {
+        return this.db(T.GROUP_ROLE)
+            .where({
+                group_id: groupId,
                 role_id: roleId,
                 project: projectId,
             })
@@ -262,6 +328,63 @@ export class AccessStore implements IAccessStore {
                 this.db(T.ROLES).select('id as role_id').where('type', 'root'),
             )
             .update('role_id', roleId);
+    }
+
+    updateGroupProjectRole(
+        groupId: number,
+        roleId: number,
+        projectId: string,
+    ): Promise<void> {
+        return this.db(T.GROUP_ROLE)
+            .where({
+                group_id: groupId,
+                project: projectId,
+            })
+            .whereNotIn(
+                'role_id',
+                this.db(T.ROLES).select('id as role_id').where('type', 'root'),
+            )
+            .update('role_id', roleId);
+    }
+
+    async addAccessToProject(
+        users: IAccessInfo[],
+        groups: IAccessInfo[],
+        projectId: string,
+        roleId: number,
+        createdBy: string,
+    ): Promise<void> {
+        const userRows = users.map((user) => {
+            return {
+                user_id: user.id,
+                project: projectId,
+                role_id: roleId,
+            };
+        });
+
+        const groupRows = groups.map((group) => {
+            return {
+                group_id: group.id,
+                project: projectId,
+                role_id: roleId,
+                created_by: createdBy,
+            };
+        });
+
+        await this.db.transaction(async (tx) => {
+            if (userRows.length > 0) {
+                await tx(T.ROLE_USER)
+                    .insert(userRows)
+                    .onConflict(['project', 'role_id', 'user_id'])
+                    .merge();
+            }
+            if (groupRows.length > 0) {
+                await tx(T.GROUP_ROLE)
+                    .insert(groupRows)
+                    .onConflict(['project', 'role_id', 'group_id'])
+                    .merge();
+            }
+        });
     }
 
     async removeRolesOfTypeForUser(

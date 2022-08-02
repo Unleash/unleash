@@ -332,12 +332,12 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 'environments.sort_order as environment_sort_order',
             )
             .modify(FeatureToggleStore.filterByArchived, archived)
-            .fullOuterJoin(
+            .leftJoin(
                 'feature_environments',
                 'feature_environments.feature_name',
                 'features.name',
             )
-            .fullOuterJoin(
+            .leftJoin(
                 'environments',
                 'feature_environments.environment',
                 'environments.name',
@@ -383,6 +383,12 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             return mapRow(strat);
         }
         throw new NotFoundError(`Could not find strategy with id: ${id}`);
+    }
+
+    async updateSortOrder(id: string, sortOrder: number): Promise<void> {
+        await this.db<IFeatureStrategiesTable>(T.featureStrategies)
+            .where({ id })
+            .update({ sort_order: sortOrder });
     }
 
     async updateStrategy(

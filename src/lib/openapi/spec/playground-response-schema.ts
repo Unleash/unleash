@@ -9,6 +9,9 @@ import {
 } from './playground-feature-schema';
 import { constraintSchema } from './constraint-schema';
 import { parametersSchema } from './parameters-schema';
+import { variantSchema } from './variant-schema';
+import { overrideSchema } from './override-schema';
+
 
 export const playgroundResponseSchema = {
     $id: '#/components/schemas/playgroundResponseSchema',
@@ -39,6 +42,9 @@ export const playgroundResponseSchema = {
             playgroundSegmentSchema,
             playgroundStrategySchema,
             sdkContextSchema,
+            variantSchema,
+            overrideSchema,
+
         },
     },
 } as const;

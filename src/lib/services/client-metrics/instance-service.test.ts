@@ -2,6 +2,7 @@ import ClientInstanceService from './instance-service';
 import getLogger from '../../../test/fixtures/no-logger';
 import { IClientApp } from '../../types/model';
 import { secondsToMilliseconds } from 'date-fns';
+import FakeEventStore from '../../../test/fixtures/fake-event-store';
 
 /**
  * A utility to wait for any pending promises in the test subject code.
@@ -54,7 +55,7 @@ test('Multiple registrations of same appname and instanceid within same time per
             featureToggleStore: null,
             clientApplicationsStore,
             clientInstanceStore,
-            eventStore: null,
+            eventStore: new FakeEventStore(),
         },
         { getLogger },
     );
@@ -104,7 +105,7 @@ test('Multiple unique clients causes multiple registrations', async () => {
             featureToggleStore: null,
             clientApplicationsStore,
             clientInstanceStore,
-            eventStore: null,
+            eventStore: new FakeEventStore(),
         },
         { getLogger },
     );
@@ -157,7 +158,7 @@ test('Same client registered outside of dedup interval will be registered twice'
             featureToggleStore: null,
             clientApplicationsStore,
             clientInstanceStore,
-            eventStore: null,
+            eventStore: new FakeEventStore(),
         },
         { getLogger },
         bulkInterval,
@@ -210,7 +211,7 @@ test('No registrations during a time period will not call stores', async () => {
             featureToggleStore: null,
             clientApplicationsStore,
             clientInstanceStore,
-            eventStore: null,
+            eventStore: new FakeEventStore(),
         },
         { getLogger },
     );

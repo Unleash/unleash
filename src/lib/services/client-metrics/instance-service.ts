@@ -1,5 +1,5 @@
 import { applicationSchema } from './schema';
-import { APPLICATION_CREATED } from '../../types/events';
+import { APPLICATION_CREATED, CLIENT_REGISTER } from '../../types/events';
 import { IApplication } from './models';
 import { IUnleashStores } from '../../types/stores';
 import { IUnleashConfig } from '../../types/option';
@@ -111,6 +111,7 @@ export default class ClientInstanceService {
         value.clientIp = clientIp;
         value.createdBy = clientIp;
         this.seenClients[this.clientKey(value)] = value;
+        this.eventStore.emit(CLIENT_REGISTER, value);
     }
 
     async announceUnannounced(): Promise<void> {

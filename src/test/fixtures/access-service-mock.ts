@@ -9,6 +9,7 @@ import {
     IRoleData,
     IUserWithRole,
 } from '../../lib/types/model';
+import { IGroupModelWithProjectRole } from '../../lib/types/group';
 
 class AccessServiceMock extends AccessService {
     constructor() {
@@ -20,6 +21,7 @@ class AccessServiceMock extends AccessService {
                 environmentStore: undefined,
             },
             { getLogger: noLoggerProvider },
+            undefined,
         );
     }
 
@@ -75,9 +77,9 @@ class AccessServiceMock extends AccessService {
         throw new Error('Method not implemented.');
     }
 
-    getProjectRoleUsers(
+    getProjectRoleAccess(
         projectId: string,
-    ): Promise<[IRole[], IUserWithRole[]]> {
+    ): Promise<[IRole[], IUserWithRole[], IGroupModelWithProjectRole[]]> {
         throw new Error('Method not implemented.');
     }
 

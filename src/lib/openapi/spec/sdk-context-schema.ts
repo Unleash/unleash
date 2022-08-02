@@ -26,7 +26,8 @@ export const sdkContextSchema = {
             additionalProperties: { type: 'string' },
             example: {
                 customContextField: 'this is one!',
-                otherCustomField: 3,
+                otherCustomField: '3',
+
             },
         },
         remoteAddress: {

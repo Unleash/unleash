@@ -12,6 +12,7 @@ import { IRole, IUserRole } from 'lib/types/stores/access-store';
 
 const T = {
     ROLE_USER: 'role_user',
+    GROUP_ROLE: 'group_role',
     ROLES: 'roles',
 };
 

@@ -26,6 +26,10 @@ export interface IUser {
     imageUrl: string;
 }
 
+export interface IProjectUser extends IUser {
+    addedAt: Date;
+}
+
 export default class User implements IUser {
     isAPI: boolean = false;
 

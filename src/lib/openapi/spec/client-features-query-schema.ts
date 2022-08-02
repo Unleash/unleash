@@ -3,7 +3,6 @@ import { FromSchema } from 'json-schema-to-ts';
 export const clientFeaturesQuerySchema = {
     $id: '#/components/schemas/clientFeaturesQuerySchema',
     type: 'object',
-    required: [],
     additionalProperties: false,
     properties: {
         tag: {

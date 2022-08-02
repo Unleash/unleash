@@ -47,8 +47,12 @@ module.exports = {
                         description: 'Learn how to work with the Unleash API',
                         slug: '/how-to/api',
                     },
-                    label: 'Using the APIs',
-                    items: ['user_guide/api-token', 'advanced/api_access'],
+                    label: 'Unleash API guides',
+                    items: [
+                        'user_guide/api-token',
+                        'advanced/api_access',
+                        'how-to/how-to-enable-openapi',
+                    ],
                 },
                 {
                     type: 'category',
@@ -85,6 +89,7 @@ module.exports = {
                     items: [
                         'user_guide/user-management',
                         'how-to/how-to-create-and-assign-custom-project-roles',
+                        'how-to/how-to-create-and-manage-user-groups',
                     ],
                     type: 'category',
                     link: {

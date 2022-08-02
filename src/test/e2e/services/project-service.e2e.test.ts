@@ -10,11 +10,13 @@ import { randomId } from '../../../lib/util/random-id';
 import EnvironmentService from '../../../lib/services/environment-service';
 import IncompatibleProjectError from '../../../lib/error/incompatible-project-error';
 import { SegmentService } from '../../../lib/services/segment-service';
+import { GroupService } from '../../../lib/services/group-service';
 
 let stores;
 let db: ITestDb;
 
 let projectService: ProjectService;
+let groupService: GroupService;
 let accessService: AccessService;
 let environmentService: EnvironmentService;
 let featureToggleService: FeatureToggleService;
@@ -32,7 +34,8 @@ beforeAll(async () => {
         // @ts-ignore
         experimental: { environments: { enabled: true } },
     });
-    accessService = new AccessService(stores, config);
+    groupService = new GroupService(stores, config);
+    accessService = new AccessService(stores, config, groupService);
     featureToggleService = new FeatureToggleService(
         stores,
         config,
@@ -44,6 +47,7 @@ beforeAll(async () => {
         config,
         accessService,
         featureToggleService,
+        groupService,
     );
 });
 
@@ -219,7 +223,7 @@ test('should get list of users with access to project', async () => {
         description: 'Blah',
     };
     await projectService.createProject(project, user);
-    const { users } = await projectService.getUsersWithAccess(project.id);
+    const { users } = await projectService.getAccessToProject(project.id);
 
     const member = await stores.roleStore.getRoleByName(RoleName.MEMBER);
     const owner = await stores.roleStore.getRoleByName(RoleName.OWNER);
@@ -253,7 +257,7 @@ test('should add a member user to the project', async () => {
     await projectService.addUser(project.id, memberRole.id, projectMember1.id);
     await projectService.addUser(project.id, memberRole.id, projectMember2.id);
 
-    const { users } = await projectService.getUsersWithAccess(project.id);
+    const { users } = await projectService.getAccessToProject(project.id);
     const memberUsers = users.filter((u) => u.roleId === memberRole.id);
 
     expect(memberUsers).toHaveLength(2);
@@ -285,7 +289,7 @@ test('should add admin users to the project', async () => {
     await projectService.addUser(project.id, ownerRole.id, projectAdmin1.id);
     await projectService.addUser(project.id, ownerRole.id, projectAdmin2.id);
 
-    const { users } = await projectService.getUsersWithAccess(project.id);
+    const { users } = await projectService.getAccessToProject(project.id);
 
     const adminUsers = users.filter((u) => u.roleId === ownerRole.id);
 
@@ -342,7 +346,7 @@ test('should remove user from the project', async () => {
         projectMember1.id,
     );
 
-    const { users } = await projectService.getUsersWithAccess(project.id);
+    const { users } = await projectService.getAccessToProject(project.id);
     const memberUsers = users.filter((u) => u.roleId === memberRole.id);
 
     expect(memberUsers).toHaveLength(0);
@@ -615,7 +619,7 @@ test('should add a user to the project with a custom role', async () => {
 
     await projectService.addUser(project.id, customRole.id, projectMember1.id);
 
-    const { users } = await projectService.getUsersWithAccess(project.id);
+    const { users } = await projectService.getAccessToProject(project.id);
 
     const customRoleMember = users.filter((u) => u.roleId === customRole.id);
 
@@ -712,7 +716,7 @@ test('should change a users role in the project', async () => {
     const member = await stores.roleStore.getRoleByName(RoleName.MEMBER);
 
     await projectService.addUser(project.id, member.id, projectUser.id);
-    const { users } = await projectService.getUsersWithAccess(project.id);
+    const { users } = await projectService.getAccessToProject(project.id);
     let memberUser = users.filter((u) => u.roleId === member.id);
 
     expect(memberUser).toHaveLength(1);
@@ -721,7 +725,7 @@ test('should change a users role in the project', async () => {
     await projectService.removeUser(project.id, member.id, projectUser.id);
     await projectService.addUser(project.id, customRole.id, projectUser.id);
 
-    let { users: updatedUsers } = await projectService.getUsersWithAccess(
+    let { users: updatedUsers } = await projectService.getAccessToProject(
         project.id,
     );
     const customUser = updatedUsers.filter((u) => u.roleId === customRole.id);
@@ -755,7 +759,7 @@ test('should update role for user on project', async () => {
         'test',
     );
 
-    const { users } = await projectService.getUsersWithAccess(project.id);
+    const { users } = await projectService.getAccessToProject(project.id);
     const memberUsers = users.filter((u) => u.roleId === memberRole.id);
     const ownerUsers = users.filter((u) => u.roleId === ownerRole.id);
 
@@ -792,7 +796,7 @@ test('should able to assign role without existing members', async () => {
         'test',
     );
 
-    const { users } = await projectService.getUsersWithAccess(project.id);
+    const { users } = await projectService.getAccessToProject(project.id);
     const memberUsers = users.filter((u) => u.roleId === memberRole.id);
     const testUsers = users.filter((u) => u.roleId === testRole.id);
 
@@ -826,5 +830,111 @@ test('should not update role for user on project when she is the owner', async (
         );
     }).rejects.toThrowError(
         new Error('A project must have at least one owner'),
+    );
+});
+
+test('Should allow bulk update of group permissions', async () => {
+    const project = 'bulk-update-project';
+    const groupStore = stores.groupStore;
+
+    const user1 = await stores.userStore.insert({
+        name: 'Vanessa Viewer',
+        email: 'vanv@getunleash.io',
+    });
+
+    const group1 = await groupStore.create({
+        name: 'ViewersOnly',
+        description: '',
+    });
+
+    const createFeatureRole = await accessService.createRole({
+        name: 'CreateRole',
+        description: '',
+        permissions: [
+            {
+                id: 2,
+                name: 'CREATE_FEATURE',
+                environment: null,
+                displayName: 'Create Feature Toggles',
+                type: 'project',
+            },
+        ],
+    });
+
+    await projectService.addAccess(
+        project,
+        createFeatureRole.id,
+        {
+            users: [{ id: user1.id }],
+            groups: [{ id: group1.id }],
+        },
+        'some-admin-user',
+    );
+});
+
+test('Should bulk update of only users', async () => {
+    const project = 'bulk-update-project-users';
+
+    const user1 = await stores.userStore.insert({
+        name: 'Van Viewer',
+        email: 'vv@getunleash.io',
+    });
+
+    const createFeatureRole = await accessService.createRole({
+        name: 'CreateRoleForUsers',
+        description: '',
+        permissions: [
+            {
+                id: 2,
+                name: 'CREATE_FEATURE',
+                environment: null,
+                displayName: 'Create Feature Toggles',
+                type: 'project',
+            },
+        ],
+    });
+
+    await projectService.addAccess(
+        project,
+        createFeatureRole.id,
+        {
+            users: [{ id: user1.id }],
+            groups: [],
+        },
+        'some-admin-user',
+    );
+});
+
+test('Should allow bulk update of only groups', async () => {
+    const project = 'bulk-update-project';
+    const groupStore = stores.groupStore;
+
+    const group1 = await groupStore.create({
+        name: 'ViewersOnly',
+        description: '',
+    });
+
+    const createFeatureRole = await accessService.createRole({
+        name: 'CreateRoleForGroups',
+        description: '',
+        permissions: [
+            {
+                id: 2,
+                name: 'CREATE_FEATURE',
+                environment: null,
+                displayName: 'Create Feature Toggles',
+                type: 'project',
+            },
+        ],
+    });
+
+    await projectService.addAccess(
+        project,
+        createFeatureRole.id,
+        {
+            users: [],
+            groups: [{ id: group1.id }],
+        },
+        'some-admin-user',
     );
 });

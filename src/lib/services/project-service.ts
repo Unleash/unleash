@@ -12,6 +12,9 @@ import {
     ProjectUserAddedEvent,
     ProjectUserRemovedEvent,
     ProjectUserUpdateRoleEvent,
+    ProjectGroupAddedEvent,
+    ProjectGroupRemovedEvent,
+    ProjectGroupUpdateRoleEvent,
 } from '../types/events';
 import { IUnleashStores } from '../types';
 import { IUnleashConfig } from '../types/option';
@@ -28,7 +31,10 @@ import { IFeatureTypeStore } from '../types/stores/feature-type-store';
 import { IFeatureToggleStore } from '../types/stores/feature-toggle-store';
 import { IFeatureEnvironmentStore } from '../types/stores/feature-environment-store';
 import { IProjectQuery, IProjectStore } from '../types/stores/project-store';
-import { IRoleDescriptor } from '../types/stores/access-store';
+import {
+    IProjectAccessModel,
+    IRoleDescriptor,
+} from '../types/stores/access-store';
 import { IEventStore } from '../types/stores/event-store';
 import FeatureToggleService from './feature-toggle-service';
 import { MOVE_FEATURE_TOGGLE } from '../types/permissions';
@@ -39,12 +45,15 @@ import { IFeatureTagStore } from 'lib/types/stores/feature-tag-store';
 import ProjectWithoutOwnerError from '../error/project-without-owner-error';
 import { IUserStore } from 'lib/types/stores/user-store';
 import { arraysHaveSameItems } from '../util/arraysHaveSameItems';
+import { GroupService } from './group-service';
+import { IGroupModelWithProjectRole, IGroupRole } from 'lib/types/group';
 
 const getCreatedBy = (user: User) => user.email || user.username;
 
-export interface UsersWithRoles {
+export interface AccessWithRoles {
     users: IUserWithRole[];
     roles: IRoleDescriptor[];
+    groups: IGroupModelWithProjectRole[];
 }
 
 export default class ProjectService {
@@ -61,6 +70,8 @@ export default class ProjectService {
     private featureEnvironmentStore: IFeatureEnvironmentStore;
 
     private environmentStore: IEnvironmentStore;
+
+    private groupService: GroupService;
 
     private logger: any;
 
@@ -94,6 +105,7 @@ export default class ProjectService {
         config: IUnleashConfig,
         accessService: AccessService,
         featureToggleService: FeatureToggleService,
+        groupService: GroupService,
     ) {
         this.store = projectStore;
         this.environmentStore = environmentStore;
@@ -105,6 +117,7 @@ export default class ProjectService {
         this.featureToggleService = featureToggleService;
         this.tagStore = featureTagStore;
         this.userStore = userStore;
+        this.groupService = groupService;
         this.logger = config.getLogger('services/project-service.js');
     }
 
@@ -270,14 +283,14 @@ export default class ProjectService {
     }
 
     // RBAC methods
-    async getUsersWithAccess(projectId: string): Promise<UsersWithRoles> {
-        const [roles, users] = await this.accessService.getProjectRoleUsers(
-            projectId,
-        );
+    async getAccessToProject(projectId: string): Promise<AccessWithRoles> {
+        const [roles, users, groups] =
+            await this.accessService.getProjectRoleAccess(projectId);
 
         return {
             roles,
             users,
+            groups,
         };
     }
 
@@ -288,7 +301,7 @@ export default class ProjectService {
         userId: number,
         createdBy?: string,
     ): Promise<void> {
-        const [roles, users] = await this.accessService.getProjectRoleUsers(
+        const [roles, users] = await this.accessService.getProjectRoleAccess(
             projectId,
         );
         const user = await this.userStore.get(userId);
@@ -350,6 +363,94 @@ export default class ProjectService {
         );
     }
 
+    async addGroup(
+        projectId: string,
+        roleId: number,
+        groupId: number,
+        modifiedBy?: string,
+    ): Promise<void> {
+        const role = await this.accessService.getRole(roleId);
+        const group = await this.groupService.getGroup(groupId);
+        const project = await this.getProject(projectId);
+
+        await this.accessService.addGroupToRole(
+            group.id,
+            role.id,
+            modifiedBy,
+            project.id,
+        );
+
+        await this.eventStore.store(
+            new ProjectGroupAddedEvent({
+                project: project.id,
+                createdBy: modifiedBy,
+                data: {
+                    groupId: group.id,
+                    projectId: project.id,
+                    roleName: role.name,
+                },
+            }),
+        );
+    }
+
+    async removeGroup(
+        projectId: string,
+        roleId: number,
+        groupId: number,
+        modifiedBy?: string,
+    ): Promise<void> {
+        const group = await this.groupService.getGroup(groupId);
+        const role = await this.accessService.getRole(roleId);
+        const project = await this.getProject(projectId);
+
+        await this.accessService.removeGroupFromRole(
+            group.id,
+            role.id,
+            project.id,
+        );
+
+        await this.eventStore.store(
+            new ProjectGroupRemovedEvent({
+                project: projectId,
+                createdBy: modifiedBy,
+                preData: {
+                    groupId: group.id,
+                    projectId: project.id,
+                    roleName: role.name,
+                },
+            }),
+        );
+    }
+
+    async addAccess(
+        projectId: string,
+        roleId: number,
+        usersAndGroups: IProjectAccessModel,
+        createdBy: string,
+    ): Promise<void> {
+        return this.accessService.addAccessToProject(
+            usersAndGroups.users,
+            usersAndGroups.groups,
+            projectId,
+            roleId,
+            createdBy,
+        );
+    }
+
+    async findProjectGroupRole(
+        projectId: string,
+        roleId: number,
+    ): Promise<IGroupRole> {
+        const roles = await this.groupService.getRolesForProject(projectId);
+        const role = roles.find((r) => r.roleId === roleId);
+        if (!role) {
+            throw new NotFoundError(
+                `Couldn't find roleId=${roleId} on project=${projectId}`,
+            );
+        }
+        return role;
+    }
+
     async findProjectRole(
         projectId: string,
         roleId: number,
@@ -373,7 +474,9 @@ export default class ProjectService {
                 currentRole.id,
                 projectId,
             );
-            if (users.length < 2) {
+            const groups = await this.groupService.getProjectGroups(projectId);
+            const roleGroups = groups.filter((g) => g.roleId == currentRole.id);
+            if (users.length + roleGroups.length < 2) {
                 throw new ProjectWithoutOwnerError();
             }
         }
@@ -385,7 +488,7 @@ export default class ProjectService {
         userId: number,
         createdBy: string,
     ): Promise<void> {
-        const usersWithRoles = await this.getUsersWithAccess(projectId);
+        const usersWithRoles = await this.getAccessToProject(projectId);
         const user = usersWithRoles.users.find((u) => u.id === userId);
         const currentRole = usersWithRoles.roles.find(
             (r) => r.id === user.roleId,
@@ -420,6 +523,50 @@ export default class ProjectService {
                     roleId,
                     roleName: role.name,
                     email: user.email,
+                },
+            }),
+        );
+    }
+
+    async changeGroupRole(
+        projectId: string,
+        roleId: number,
+        userId: number,
+        createdBy: string,
+    ): Promise<void> {
+        const usersWithRoles = await this.getAccessToProject(projectId);
+        const user = usersWithRoles.groups.find((u) => u.id === userId);
+        const currentRole = usersWithRoles.roles.find(
+            (r) => r.id === user.roleId,
+        );
+
+        if (currentRole.id === roleId) {
+            // Nothing to do....
+            return;
+        }
+
+        await this.validateAtLeastOneOwner(projectId, currentRole);
+
+        await this.accessService.updateGroupProjectRole(
+            userId,
+            roleId,
+            projectId,
+        );
+        const role = await this.findProjectGroupRole(projectId, roleId);
+
+        await this.eventStore.store(
+            new ProjectGroupUpdateRoleEvent({
+                project: projectId,
+                createdBy,
+                preData: {
+                    userId,
+                    roleId: currentRole.id,
+                    roleName: currentRole.name,
+                },
+                data: {
+                    userId,
+                    roleId,
+                    roleName: role.name,
                 },
             }),
         );

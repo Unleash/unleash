@@ -5,11 +5,9 @@ title: Activation Strategies
 
 It is powerful to be able to turn a feature on and off instantaneously, without redeploying the application. The next level of control comes when you are able to enable a feature for specific users or enable it for a small subset of users. We achieve this level of control with the help of activation strategies. The most straightforward strategy is the standard strategy, which basically means that the feature should be enabled to everyone.
 
-Unleash comes with a number of built-in strategies (described below) and also lets you add your own [custom activation strategies](../advanced/custom-activation-strategy.md) if you need more control.
-However, while activation strategies are *defined* on the server, the server does not *implement* the strategies. Instead, activation strategy implementation is done client-side. This means that it is *the client* that decides whether a feature should be enabled or not.
+Unleash comes with a number of built-in strategies (described below) and also lets you add your own [custom activation strategies](../advanced/custom-activation-strategy.md) if you need more control. However, while activation strategies are _defined_ on the server, the server does not _implement_ the strategies. Instead, activation strategy implementation is done client-side. This means that it is _the client_ that decides whether a feature should be enabled or not.
 
-All [server-side client SDKs](../sdks/index.md#server-side-sdks) and the [Unleash Proxy](../sdks/unleash-proxy.md) implement the default strategies (and allow you to add your own [custom strategy implementations](../advanced/custom-activation-strategy.md#implementation)).
-The [front-end client SDKs](../sdks/index.md#front-end-sdks) do not do the evaluation themselves, instead relying on the [Unleash Proxy](../sdks/unleash-proxy.md) to take care of the implementation and evaluation.
+All [server-side client SDKs](../sdks/index.md#server-side-sdks) and the [Unleash Proxy](../sdks/unleash-proxy.md) implement the default strategies (and allow you to add your own [custom strategy implementations](../advanced/custom-activation-strategy.md#implementation)). The [front-end client SDKs](../sdks/index.md#front-end-sdks) do not do the evaluation themselves, instead relying on the [Unleash Proxy](../sdks/unleash-proxy.md) to take care of the implementation and evaluation.
 
 Some activation strategies require the client to provide the current [Unleash context](unleash-context.md) to the toggle evaluation function for the evaluation to be done correctly.
 
@@ -61,12 +59,9 @@ This strategy has the following modelling name in the code:
 
 ### Custom stickiness (beta) {#custom-stickiness}
 
-:::note
-This feature is currently in beta and is not yet supported by all our SDKs. Check out the [SDK compatibility table](../sdks/index.md#server-side-sdk-compatibility-table) to see what SDKs support it at the moment.
-:::
+:::note This feature is currently in beta and is not yet supported by all our SDKs. Check out the [SDK compatibility table](../sdks/index.md#server-side-sdk-compatibility-table) to see what SDKs support it at the moment. :::
 
 By enabling the stickiness option on a custom context field you can use the custom context field to group users with the gradual rollout strategy. This will guarantee a consistent behavior for specific values of this context field.
-
 
 ## IPs {#ips}
 
@@ -91,7 +86,6 @@ The application hostname strategy activates a feature toggle for client instance
 This strategy has the following modelling name in the code:
 
 - **applicationHostname**
-
 
 ## Multiple activation strategies {#multiple-activation-strategies}
 

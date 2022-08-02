@@ -13,6 +13,7 @@ import { RoleName } from '../../../lib/types/model';
 import SettingService from '../../../lib/services/setting-service';
 import { simpleAuthKey } from '../../../lib/types/settings/simple-auth-settings';
 import { addDays, minutesToMilliseconds } from 'date-fns';
+import { GroupService } from '../../../lib/services/group-service';
 
 let db;
 let stores;
@@ -26,7 +27,8 @@ beforeAll(async () => {
     db = await dbInit('user_service_serial', getLogger);
     stores = db.stores;
     const config = createTestConfig();
-    const accessService = new AccessService(stores, config);
+    const groupService = new GroupService(stores, config);
+    const accessService = new AccessService(stores, config, groupService);
     const resetTokenService = new ResetTokenService(stores, config);
     const emailService = new EmailService(undefined, config.getLogger);
     sessionService = new SessionService(stores, config);

@@ -553,7 +553,6 @@ Object {
             "type": "array",
           },
         },
-        "required": Array [],
         "type": "object",
       },
       "clientFeaturesSchema": Object {
@@ -1028,32 +1027,6 @@ Object {
         ],
         "type": "object",
       },
-      "exportParametersSchema": Object {
-        "properties": Object {
-          "download": Object {
-            "type": "boolean",
-          },
-          "environments": Object {
-            "type": "boolean",
-          },
-          "featureToggles": Object {
-            "type": "boolean",
-          },
-          "format": Object {
-            "type": "string",
-          },
-          "projects": Object {
-            "type": "boolean",
-          },
-          "strategies": Object {
-            "type": "boolean",
-          },
-          "tags": Object {
-            "type": "boolean",
-          },
-        },
-        "type": "object",
-      },
       "featureEnvironmentMetricsSchema": Object {
         "additionalProperties": false,
         "properties": Object {
@@ -1475,7 +1448,77 @@ Object {
             "type": "number",
           },
         },
-        "required": Array [],
+        "type": "object",
+      },
+      "groupSchema": Object {
+        "additionalProperties": true,
+        "properties": Object {
+          "createdAt": Object {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string",
+          },
+          "createdBy": Object {
+            "nullable": true,
+            "type": "string",
+          },
+          "description": Object {
+            "type": "string",
+          },
+          "id": Object {
+            "type": "number",
+          },
+          "name": Object {
+            "type": "string",
+          },
+          "projects": Object {
+            "items": Object {
+              "type": "string",
+            },
+            "type": "array",
+          },
+          "users": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/groupUserModelSchema",
+            },
+            "type": "array",
+          },
+        },
+        "required": Array [
+          "name",
+        ],
+        "type": "object",
+      },
+      "groupUserModelSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "joinedAt": Object {
+            "format": "date-time",
+            "type": "string",
+          },
+          "role": Object {
+            "type": "string",
+          },
+          "user": Object {
+            "$ref": "#/components/schemas/userSchema",
+          },
+        },
+        "required": Array [
+          "role",
+          "user",
+        ],
+        "type": "object",
+      },
+      "groupsSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "groups": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/groupSchema",
+            },
+            "type": "array",
+          },
+        },
         "type": "object",
       },
       "healthCheckSchema": Object {
@@ -1874,7 +1917,10 @@ Object {
           "variant": Object {
             "additionalProperties": false,
             "description": "The feature variant you receive based on the provided context or the _disabled variant_. If a feature is disabled or doesn't have any variants, you would get the _disabled variant_. Otherwise, you'll get one of the feature's defined variants.",
-            "example": "green",
+            "example": Object {
+              "enabled": true,
+              "name": "green",
+            },
             "nullable": true,
             "properties": Object {
               "enabled": Object {
@@ -1918,6 +1964,12 @@ Object {
             ],
             "type": "object",
           },
+          "variants": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/variantSchema",
+            },
+            "type": "array",
+          },
         },
         "required": Array [
           "name",
@@ -1926,6 +1978,7 @@ Object {
           "isEnabledInCurrentEnvironment",
           "variant",
           "strategies",
+          "variants",
         ],
         "type": "object",
       },
@@ -1945,7 +1998,9 @@ Object {
             "oneOf": Array [
               Object {
                 "description": "A list of projects to check for toggles in.",
-                "example": "my-project",
+                "example": Array [
+                  "my-project",
+                ],
                 "items": Object {
                   "type": "string",
                 },
@@ -2260,7 +2315,8 @@ Object {
             },
             "example": Object {
               "customContextField": "this is one!",
-              "otherCustomField": 3,
+              "otherCustomField": "3",
+
             },
             "type": "object",
           },
@@ -2307,6 +2363,25 @@ Object {
           "constraints",
         ],
         "type": "object",
+      },
+      "setStrategySortOrderSchema": Object {
+        "items": Object {
+          "additionalProperties": false,
+          "properties": Object {
+            "id": Object {
+              "type": "string",
+            },
+            "sortOrder": Object {
+              "type": "number",
+            },
+          },
+          "required": Array [
+            "id",
+            "sortOrder",
+          ],
+          "type": "object",
+        },
+        "type": "array",
       },
       "sortOrderSchema": Object {
         "additionalProperties": Object {
@@ -2749,7 +2824,7 @@ Object {
         "type": "object",
       },
       "updateUserSchema": Object {
-        "additionalProperties": false,
+        "additionalProperties": true,
         "properties": Object {
           "email": Object {
             "type": "string",
@@ -2872,6 +2947,24 @@ Object {
         "required": Array [
           "id",
         ],
+        "type": "object",
+      },
+      "usersGroupsBaseSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "groups": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/groupSchema",
+            },
+            "type": "array",
+          },
+          "users": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/userSchema",
+            },
+            "type": "array",
+          },
+        },
         "type": "object",
       },
       "usersSchema": Object {
@@ -4806,6 +4899,56 @@ If the provided project does not exist, the list of events will be empty.",
         ],
       },
     },
+    "/api/admin/projects/{projectId}/features/{featureName}/environments/{environment}/strategies/set-sort-order": Object {
+      "post": Object {
+        "operationId": "setStrategySortOrder",
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+          Object {
+            "in": "path",
+            "name": "featureName",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+          Object {
+            "in": "path",
+            "name": "environment",
+            "required": true,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/setStrategySortOrderSchema",
+              },
+            },
+          },
+          "description": "setStrategySortOrderSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "200": Object {
+            "description": "This response has no body.",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
     "/api/admin/projects/{projectId}/features/{featureName}/environments/{environment}/strategies/{strategyId}": Object {
       "delete": Object {
         "operationId": "deleteFeatureStrategy",
@@ -5228,7 +5371,137 @@ If the provided project does not exist, the list of events will be empty.",
         "operationId": "export",
         "parameters": Array [
           Object {
-            "$ref": "#/components/schema/exportParametersSchema",
+            "description": "Desired export format. Must be either \`json\` or \`yaml\`.",
+            "in": "query",
+            "name": "format",
+            "schema": Object {
+              "default": "json",
+              "enum": Array [
+                "json",
+                "yaml",
+              ],
+              "type": "string",
+            },
+          },
+          Object {
+            "description": "Whether exported data should be downloaded as a file.",
+            "in": "query",
+            "name": "download",
+            "schema": Object {
+              "anyOf": Array [
+                Object {
+                  "type": "boolean",
+                },
+                Object {
+                  "minLength": 1,
+                  "type": "string",
+                },
+                Object {
+                  "type": "number",
+                },
+              ],
+              "default": false,
+            },
+          },
+          Object {
+            "description": "Whether strategies should be included in the exported data.",
+            "in": "query",
+            "name": "strategies",
+            "schema": Object {
+              "anyOf": Array [
+                Object {
+                  "type": "boolean",
+                },
+                Object {
+                  "minLength": 1,
+                  "type": "string",
+                },
+                Object {
+                  "type": "number",
+                },
+              ],
+              "default": true,
+            },
+          },
+          Object {
+            "description": "Whether feature toggles should be included in the exported data.",
+            "in": "query",
+            "name": "featureToggles",
+            "schema": Object {
+              "anyOf": Array [
+                Object {
+                  "type": "boolean",
+                },
+                Object {
+                  "minLength": 1,
+                  "type": "string",
+                },
+                Object {
+                  "type": "number",
+                },
+              ],
+              "default": true,
+            },
+          },
+          Object {
+            "description": "Whether projects should be included in the exported data.",
+            "in": "query",
+            "name": "projects",
+            "schema": Object {
+              "anyOf": Array [
+                Object {
+                  "type": "boolean",
+                },
+                Object {
+                  "minLength": 1,
+                  "type": "string",
+                },
+                Object {
+                  "type": "number",
+                },
+              ],
+              "default": true,
+            },
+          },
+          Object {
+            "description": "Whether tag types, tags, and feature_tags should be included in the exported data.",
+            "in": "query",
+            "name": "tags",
+            "schema": Object {
+              "anyOf": Array [
+                Object {
+                  "type": "boolean",
+                },
+                Object {
+                  "minLength": 1,
+                  "type": "string",
+                },
+                Object {
+                  "type": "number",
+                },
+              ],
+              "default": true,
+            },
+          },
+          Object {
+            "description": "Whether environments should be included in the exported data.",
+            "in": "query",
+            "name": "environments",
+            "schema": Object {
+              "anyOf": Array [
+                Object {
+                  "type": "boolean",
+                },
+                Object {
+                  "minLength": 1,
+                  "type": "string",
+                },
+                Object {
+                  "type": "number",
+                },
+              ],
+              "default": true,
+            },
           },
         ],
         "responses": Object {
@@ -5849,6 +6122,26 @@ If the provided project does not exist, the list of events will be empty.",
               },
             },
             "description": "userSchema",
+          },
+        },
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/user-admin/access": Object {
+      "get": Object {
+        "operationId": "getBaseUsersAndGroups",
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/usersGroupsBaseSchema",
+                },
+              },
+            },
+            "description": "usersGroupsBaseSchema",
           },
         },
         "tags": Array [

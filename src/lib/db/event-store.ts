@@ -121,7 +121,7 @@ class EventStore extends EventEmitter implements IEventStore {
                 .select(EVENT_COLUMNS)
                 .from(TABLE)
                 .limit(100)
-                .whereRaw("data ->> 'name' = ?", [name])
+                .where('type', name)
                 .andWhere(
                     'id',
                     '>=',

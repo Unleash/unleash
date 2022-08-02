@@ -19,18 +19,18 @@
     "build-storybook": "build-storybook"
   },
   "dependencies": {
-    "@docusaurus/core": "2.0.0-rc.1",
-    "@docusaurus/plugin-client-redirects": "2.0.0-rc.1",
-    "@docusaurus/plugin-google-analytics": "2.0.0-rc.1",
-    "@docusaurus/preset-classic": "2.0.0-rc.1",
-    "@docusaurus/remark-plugin-npm2yarn": "2.0.0-rc.1",
+    "@docusaurus/core": "2.0.1",
+    "@docusaurus/plugin-client-redirects": "2.0.1",
+    "@docusaurus/plugin-google-analytics": "2.0.1",
+    "@docusaurus/preset-classic": "2.0.1",
+    "@docusaurus/remark-plugin-npm2yarn": "2.0.1",
     "@mdx-js/react": "1.6.22",
-    "@svgr/webpack": "6.3.0",
+    "@svgr/webpack": "6.3.1",
     "clsx": "1.2.1",
     "file-loader": "6.2.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "unleash-proxy-client": "2.0.1",
+    "unleash-proxy-client": "2.0.3",
     "url-loader": "4.1.1"
   },
   "resolutions": {
@@ -55,8 +55,8 @@
     ]
   },
   "devDependencies": {
-    "@babel/core": "7.18.9",
-    "@docusaurus/module-type-aliases": "2.0.0-rc.1",
+    "@babel/core": "7.18.10",
+    "@docusaurus/module-type-aliases": "2.0.1",
     "@storybook/addon-actions": "6.5.9",
     "@storybook/addon-essentials": "6.5.9",
     "@storybook/addon-interactions": "6.5.9",

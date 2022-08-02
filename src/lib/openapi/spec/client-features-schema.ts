@@ -6,8 +6,8 @@ import { environmentSchema } from './environment-schema';
 import { overrideSchema } from './override-schema';
 import { parametersSchema } from './parameters-schema';
 import { featureStrategySchema } from './feature-strategy-schema';
-import { variantSchema } from './variant-schema';
 import { clientFeatureSchema } from './client-feature-schema';
+import { clientVariantSchema } from './client-variant-schema';
 
 export const clientFeaturesSchema = {
     $id: '#/components/schemas/clientFeaturesSchema',
@@ -43,7 +43,7 @@ export const clientFeaturesSchema = {
             overrideSchema,
             parametersSchema,
             featureStrategySchema,
-            variantSchema,
+            clientVariantSchema,
         },
     },
 } as const;

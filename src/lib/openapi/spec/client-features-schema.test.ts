@@ -16,6 +16,12 @@ test('clientFeaturesSchema required fields', () => {
                 name: 'some-name',
                 enabled: false,
                 impressionData: false,
+                variants: [
+                    {
+                        name: 'a',
+                        weight: 1,
+                    },
+                ],
             },
         ],
     };

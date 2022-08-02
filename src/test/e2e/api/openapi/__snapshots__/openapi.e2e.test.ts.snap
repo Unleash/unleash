@@ -1977,8 +1977,8 @@ Object {
           "isEnabled",
           "isEnabledInCurrentEnvironment",
           "variant",
-          "strategies",
           "variants",
+          "strategies",
         ],
         "type": "object",
       },
@@ -2316,7 +2316,6 @@ Object {
             "example": Object {
               "customContextField": "this is one!",
               "otherCustomField": "3",
-
             },
             "type": "object",
           },

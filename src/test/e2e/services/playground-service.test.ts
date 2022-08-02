@@ -15,7 +15,7 @@ import {
     PlaygroundFeatureSchema,
     unknownFeatureEvaluationResult,
 } from '../../../lib/openapi/spec/playground-feature-schema';
-import { offlineUnleashClientNode } from '../../../lib/util/offline-unleash-client';
+import { offlineUnleashClientNode } from '../../../lib/util/offline-unleash-client.test';
 import { ClientFeatureSchema } from 'lib/openapi/spec/client-feature-schema';
 import { SdkContextSchema } from 'lib/openapi/spec/sdk-context-schema';
 import { SegmentSchema } from 'lib/openapi/spec/segment-schema';

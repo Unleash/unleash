@@ -3,15 +3,12 @@ import {
     InMemStorageProvider,
     Unleash as UnleashClient,
 } from './feature-evaluator';
-import {
-    Unleash as UnleashClientNode,
-    InMemStorageProvider as InMemStorageProviderNode,
-} from 'unleash-client';
 import { FeatureConfigurationClient } from 'lib/types/stores/feature-strategies-store';
-import { Operator, Segment } from 'unleash-client/lib/strategy/strategy';
+import { Operator, Segment } from './feature-evaluator/strategy/strategy';
 import { once } from 'events';
 import { ISegment } from 'lib/types/model';
 import { serializeDates } from '../../lib/types/serialize-dates';
+import { FeatureInterface } from './feature-evaluator/feature';
 
 enum PayloadType {
     STRING = 'string',
@@ -19,7 +16,9 @@ enum PayloadType {
 
 type NonEmptyList<T> = [T, ...T[]];
 
-const mapFeaturesForBootstrap = (features: FeatureConfigurationClient[]) =>
+export const mapFeaturesForBootstrap = (
+    features: FeatureConfigurationClient[],
+): FeatureInterface[] =>
     features.map((feature) => ({
         impressionData: false,
         ...feature,
@@ -45,10 +44,10 @@ const mapFeaturesForBootstrap = (features: FeatureConfigurationClient[]) =>
         })),
     }));
 
-const mapSegmentsForBootstrap = (segments: ISegment[]): Segment[] =>
+export const mapSegmentsForBootstrap = (segments: ISegment[]): Segment[] =>
     serializeDates(segments) as Segment[];
 
-type ClientInitOptions = {
+export type ClientInitOptions = {
     features: NonEmptyList<FeatureConfigurationClient>;
     segments?: ISegment[];
     context: SdkContextSchema;
@@ -68,33 +67,6 @@ export const offlineUnleashClient = async ({
         refreshInterval: 0,
         url: 'not-needed',
         storageProvider: new InMemStorageProvider(),
-        bootstrap: {
-            data: mapFeaturesForBootstrap(features),
-            segments: mapSegmentsForBootstrap(segments),
-        },
-    });
-
-    client.on('error', logError);
-    client.start();
-
-    await once(client, 'ready');
-
-    return client;
-};
-
-export const offlineUnleashClientNode = async ({
-    features,
-    context,
-    logError,
-    segments,
-}: ClientInitOptions): Promise<UnleashClientNode> => {
-    const client = new UnleashClientNode({
-        ...context,
-        appName: context.appName,
-        disableMetrics: true,
-        refreshInterval: 0,
-        url: 'not-needed',
-        storageProvider: new InMemStorageProviderNode(),
         bootstrap: {
             data: mapFeaturesForBootstrap(features),
             segments: mapSegmentsForBootstrap(segments),

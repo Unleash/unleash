@@ -1,4 +1,41 @@
-import { offlineUnleashClient } from './offline-unleash-client';
+import {
+    ClientInitOptions,
+    mapFeaturesForBootstrap,
+    mapSegmentsForBootstrap,
+    offlineUnleashClient,
+} from './offline-unleash-client';
+import {
+    Unleash as UnleashClientNode,
+    InMemStorageProvider as InMemStorageProviderNode,
+} from 'unleash-client';
+import { once } from 'events';
+
+export const offlineUnleashClientNode = async ({
+    features,
+    context,
+    logError,
+    segments,
+}: ClientInitOptions): Promise<UnleashClientNode> => {
+    const client = new UnleashClientNode({
+        ...context,
+        appName: context.appName,
+        disableMetrics: true,
+        refreshInterval: 0,
+        url: 'not-needed',
+        storageProvider: new InMemStorageProviderNode(),
+        bootstrap: {
+            data: mapFeaturesForBootstrap(features),
+            segments: mapSegmentsForBootstrap(segments),
+        },
+    });
+
+    client.on('error', logError);
+    client.start();
+
+    await once(client, 'ready');
+
+    return client;
+};
 
 describe('offline client', () => {
     it('considers enabled variants with a default strategy to be on', async () => {

@@ -255,7 +255,9 @@ describe('the playground service (e2e)', () => {
                                 presumedSDKState ===
                                 client.isEnabled(feature.name, clientContext);
 
-                            ctx.log(`feature.isEnabled: ${feature.isEnabled}`);
+                            ctx.log(
+                                `feature.isEnabled, feature.isEnabledInCurrentEnvironment, presumedSDKState: ${feature.isEnabled}, ${feature.isEnabledInCurrentEnvironment}, ${presumedSDKState}`,
+                            );
                             ctx.log(
                                 `client.isEnabled: ${client.isEnabled(
                                     feature.name,
@@ -329,18 +331,6 @@ describe('the playground service (e2e)', () => {
                             }
 
                             return enabledStateMatches;
-
-                            // const allgood =
-                            //     enabledStateMatches &&
-                            //     clientVariant.name === feature.variant.name &&
-                            //     clientVariant.enabled ===
-                            //         feature.variant.enabled &&
-                            //     clientVariant.payload?.type ===
-                            //         feature.variant.payload?.type &&
-                            //     clientVariant.payload?.value ===
-                            //         feature.variant.payload?.value;
-
-                            // return allgood;
                         });
                     },
                 )

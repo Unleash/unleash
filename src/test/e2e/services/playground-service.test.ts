@@ -10,7 +10,7 @@ import dbInit, { ITestDb } from '../helpers/database-init';
 import { IUnleashStores } from '../../../lib/types/stores';
 import FeatureToggleService from '../../../lib/services/feature-toggle-service';
 import { SegmentService } from '../../../lib/services/segment-service';
-import { FeatureToggle, ISegment, WeightType, FeatureToggleDTO, IVariant } from '../../../lib/types/model';
+import { FeatureToggle, ISegment, WeightType } from '../../../lib/types/model';
 import {
     PlaygroundFeatureSchema,
     PlaygroundSegmentSchema,
@@ -194,16 +194,6 @@ describe('the playground service (e2e)', () => {
 
         return serviceFeatures;
     };
-
-    const toFeatureToggleDTO = (
-        feature: ClientFeatureSchema,
-    ): FeatureToggleDTO => ({
-        ...feature,
-        // the arbitrary generator takes care of this
-        variants: feature.variants as IVariant[] | undefined,
-        createdAt: undefined,
-    });
-
 
     test('should return the same enabled toggles as the raw SDK correctly mapped', async () => {
         await fc.assert(
@@ -1003,25 +993,18 @@ describe('the playground service (e2e)', () => {
         await fc.assert(
             fc
                 .asyncProperty(
-                    clientFeatures({ minLength: 1 }),
+                    clientFeaturesAndSegments({ minLength: 1 }),
                     generateContext(),
-                    async (toggles, context) => {
-                        await Promise.all(
-                            toggles.map((feature) =>
-                                stores.featureToggleStore.create(
-                                    feature.project,
-                                    toFeatureToggleDTO(feature),
-                                ),
-                            ),
+                    async ({ features, segments }, context) => {
+                        const serviceFeatures = await insertAndEvaluateFeatures(
+                            {
+                                features,
+                                segments,
+                                context,
+                            },
                         );
 
-                        const projects = '*';
-                        const env = 'default';
-
-                        const serviceToggles: PlaygroundFeatureSchema[] =
-                            await service.evaluateQuery(projects, env, context);
-
-                        const variantsMap = toggles.reduce(
+                        const variantsMap = features.reduce(
                             (acc, feature) => ({
                                 ...acc,
                                 [feature.name]: feature.variants,
@@ -1029,7 +1012,7 @@ describe('the playground service (e2e)', () => {
                             {},
                         );
 
-                        serviceToggles.forEach((feature) => {
+                        serviceFeatures.forEach((feature) => {
                             if (variantsMap[feature.name]) {
                                 expect(feature.variants).toEqual(
                                     expect.arrayContaining(
@@ -1045,9 +1028,51 @@ describe('the playground service (e2e)', () => {
                         });
                     },
                 )
-                .afterEach(async () => {
-                    await stores.featureToggleStore.deleteAll();
-                }),
+                .afterEach(cleanup),
+            testParams,
+        );
+    });
+
+    test('unevaluated features should have variants', async () => {
+        await fc.assert(
+            fc
+                .asyncProperty(
+                    clientFeaturesAndSegments({ minLength: 1 }),
+                    generateContext(),
+                    async ({ features, segments }, context) => {
+                        const serviceFeatures = await insertAndEvaluateFeatures(
+                            {
+                                features,
+                                segments,
+                                context,
+                            },
+                        );
+
+                        const variantsMap = features.reduce(
+                            (acc, feature) => ({
+                                ...acc,
+                                [feature.name]: feature.variants,
+                            }),
+                            {},
+                        );
+
+                        serviceFeatures.forEach((feature) => {
+                            if (variantsMap[feature.name]) {
+                                expect(feature.variants).toEqual(
+                                    expect.arrayContaining(
+                                        variantsMap[feature.name],
+                                    ),
+                                );
+                                expect(variantsMap[feature.name]).toEqual(
+                                    expect.arrayContaining(feature.variants),
+                                );
+                            } else {
+                                expect(feature.variants).toStrictEqual([]);
+                            }
+                        });
+                    },
+                )
+                .afterEach(cleanup),
             testParams,
         );
     });

@@ -2,7 +2,7 @@ import fc, { Arbitrary } from 'fast-check';
 import {
     strategyConstraint,
     urlFriendlyString,
-    variants
+    variants,
 } from '../../../test/arbitraries.test';
 import { validateSchema } from '../validate';
 import {
@@ -12,8 +12,8 @@ import {
     PlaygroundSegmentSchema,
     playgroundStrategyEvaluation,
     PlaygroundStrategySchema,
+    unknownFeatureEvaluationResult,
 } from './playground-feature-schema';
-
 
 const playgroundStrategyConstraint =
     (): Arbitrary<PlaygroundConstraintSchema> =>
@@ -113,15 +113,20 @@ const playgroundStrategies = (): Arbitrary<PlaygroundStrategySchema[]> =>
 export const generate = (): Arbitrary<PlaygroundFeatureSchema> =>
     fc
         .tuple(
-            fc.boolean(),
             variants(),
             fc.nat(),
             fc.record({
+                isEnabled: fc.oneof(
+                    fc.boolean(),
+                    fc.constant(unknownFeatureEvaluationResult),
+                ),
+                isEnabledInCurrentEnvironment: fc.boolean(),
                 projectId: urlFriendlyString(),
                 name: urlFriendlyString(),
+                strategies: playgroundStrategies(),
             }),
         )
-        .map(([isEnabled, generatedVariants, activeVariantIndex, feature]) => {
+        .map(([generatedVariants, activeVariantIndex, feature]) => {
             // the active variant is the disabled variant if the feature is
             // disabled or has no variants.
             let activeVariant = { name: 'disabled', enabled: false } as {
@@ -133,7 +138,7 @@ export const generate = (): Arbitrary<PlaygroundFeatureSchema> =>
                 };
             };
 
-            if (generatedVariants.length && isEnabled) {
+            if (generatedVariants.length && feature.isEnabled) {
                 const targetVariant =
                     generatedVariants[
                         activeVariantIndex % generatedVariants.length
@@ -146,7 +151,7 @@ export const generate = (): Arbitrary<PlaygroundFeatureSchema> =>
                     : undefined;
 
                 activeVariant = {
-                    enabled: isEnabled,
+                    enabled: true,
                     name: targetVariant.name,
                     payload: targetPayload,
                 };
@@ -154,51 +159,10 @@ export const generate = (): Arbitrary<PlaygroundFeatureSchema> =>
 
             return {
                 ...feature,
-                isEnabled,
                 variants: generatedVariants,
                 variant: activeVariant,
             };
         });
-
-
-export const generate = (): Arbitrary<PlaygroundFeatureSchema> =>
-    fc
-        .oneof(fc.boolean(), fc.constant('unevaluated' as 'unevaluated'))
-        .chain((isEnabled) =>
-            fc.record({
-                isEnabled: fc.constant(isEnabled),
-                isEnabledInCurrentEnvironment: fc.boolean(),
-                projectId: urlFriendlyString(),
-                name: urlFriendlyString(),
-                strategies: playgroundStrategies(),
-                variant: fc.record(
-                    {
-                        name: urlFriendlyString(),
-                        enabled:
-                            isEnabled === 'unevaluated'
-                                ? fc.constant(false)
-                                : fc.constant(isEnabled),
-                        payload: fc.oneof(
-                            fc.record({
-                                type: fc.constant('json' as 'json'),
-                                value: fc.json(),
-                            }),
-                            fc.record({
-                                type: fc.constant('csv' as 'csv'),
-                                value: fc
-                                    .array(fc.lorem())
-                                    .map((words) => words.join(',')),
-                            }),
-                            fc.record({
-                                type: fc.constant('string' as 'string'),
-                                value: fc.string(),
-                            }),
-                        ),
-                    },
-                    { requiredKeys: ['name', 'enabled'] },
-                ),
-            }),
-        );
 
 test('playgroundFeatureSchema', () =>
     fc.assert(

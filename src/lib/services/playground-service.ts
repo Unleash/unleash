@@ -55,8 +55,8 @@ export class PlaygroundService {
                 logError: this.logger.error,
                 segments,
             });
-            
-            const variantsMap = toggles.reduce((acc, feature) => {
+
+            const variantsMap = features.reduce((acc, feature) => {
                 acc[feature.name] = feature.variants;
                 return acc;
             }, {});

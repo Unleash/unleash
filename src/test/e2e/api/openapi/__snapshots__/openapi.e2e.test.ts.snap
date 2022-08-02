@@ -2130,13 +2130,6 @@ Object {
                     ],
                     "type": "string",
                   },
-                  "reason": Object {
-                    "description": "The reason why this strategy could not be evaluated.",
-                    "enum": Array [
-                      "strategy not found",
-                    ],
-                    "type": "string",
-                  },
                 },
                 "required": Array [
                   "evaluationStatus",

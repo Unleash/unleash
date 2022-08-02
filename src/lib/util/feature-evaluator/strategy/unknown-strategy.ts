@@ -30,7 +30,6 @@ export default class UnknownStrategy extends Strategy {
         return {
             result: {
                 enabled: overallResult,
-                reason: 'strategy not found' as 'strategy not found',
                 evaluationStatus: 'incomplete',
             },
             constraints: constraintResults.constraints,

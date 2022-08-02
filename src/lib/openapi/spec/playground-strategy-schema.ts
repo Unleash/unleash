@@ -7,7 +7,6 @@ export const playgroundStrategyEvaluation = {
     evaluationComplete: 'complete',
     evaluationIncomplete: 'incomplete',
     unknownResult: 'unknown',
-    incompleteEvaluationCauses: ['strategy not found'],
 } as const;
 
 export const playgroundStrategySchema = {
@@ -39,12 +38,6 @@ export const playgroundStrategySchema = {
                             enum: [
                                 playgroundStrategyEvaluation.evaluationIncomplete,
                             ],
-                        },
-                        reason: {
-                            type: 'string',
-                            description:
-                                'The reason why this strategy could not be evaluated.',
-                            enum: playgroundStrategyEvaluation.incompleteEvaluationCauses,
                         },
                         enabled: {
                             description:

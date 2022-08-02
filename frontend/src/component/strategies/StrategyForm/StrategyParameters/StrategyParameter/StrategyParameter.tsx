@@ -17,31 +17,22 @@ const paramTypesOptions = [
     {
         key: 'string',
         label: 'string',
-        description: 'A string is a collection of characters',
     },
     {
         key: 'percentage',
         label: 'percentage',
-        description:
-            'Percentage is used when you want to make your feature visible to a process part of your customers',
     },
     {
         key: 'list',
         label: 'list',
-        description:
-            'A list is used when you want to define several parameters that must be met before your feature becomes visible to your customers',
     },
     {
         key: 'number',
         label: 'number',
-        description:
-            'Number is used when you have one or more digits that must be met for your feature to be visible to your customers',
     },
     {
         key: 'boolean',
         label: 'boolean',
-        description:
-            'A boolean value represents a truth value, which is either true or false',
     },
 ];
 
@@ -68,11 +59,6 @@ export const StrategyParameter = ({
         set({ type });
     };
 
-    const renderParamTypeDescription = () => {
-        return paramTypesOptions.find(param => param.key === input.type)
-            ?.description;
-    };
-
     return (
         <div className={styles.paramsContainer}>
             <Divider className={styles.divider} />
@@ -80,7 +66,16 @@ export const StrategyParameter = ({
                 condition={index === 0}
                 show={
                     <p className={styles.input}>
-                        The parameters define what the strategy will look like.
+                        Parameters let you provide arguments to your strategy
+                        that it can access for evaluation. Read more in the{' '}
+                        <a
+                            href="https://docs.getunleash.io/advanced/custom_activation_strategy#parameter-types"
+                            target="_blank"
+                            rel="noreferrer"
+                        >
+                            parameter types documentation
+                        </a>
+                        .
                     </p>
                 }
             />
@@ -114,9 +109,6 @@ export const StrategyParameter = ({
                 id={`prop-type-${index}-select`}
                 className={styles.input}
             />
-            <p className={styles.typeDescription}>
-                {renderParamTypeDescription()}
-            </p>
             <Input
                 rows={2}
                 multiline

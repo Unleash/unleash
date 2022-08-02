@@ -2,5 +2,6 @@
   "projectId": "tc2qff",
   "defaultCommandTimeout": 12000,
   "screenshotOnRunFailure": false,
-  "video": false
+  "video": false,
+  "experimentalSessionAndOrigin": true
 }

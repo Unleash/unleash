@@ -12,6 +12,7 @@ interface IStrategyFormProps {
     strategyDesc: string;
     params: IStrategyParameter[];
     setStrategyName: React.Dispatch<React.SetStateAction<string>>;
+    validateStrategyName?: () => void;
     setStrategyDesc: React.Dispatch<React.SetStateAction<string>>;
     setParams: React.Dispatch<React.SetStateAction<IStrategyParameter[]>>;
     handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
@@ -31,6 +32,7 @@ export const StrategyForm: React.FC<IStrategyFormProps> = ({
     params,
     setParams,
     setStrategyName,
+    validateStrategyName,
     setStrategyDesc,
     errors,
     mode,
@@ -65,7 +67,8 @@ export const StrategyForm: React.FC<IStrategyFormProps> = ({
                     onChange={e => setStrategyName(trim(e.target.value))}
                     error={Boolean(errors.name)}
                     errorText={errors.name}
-                    onFocus={() => clearErrors()}
+                    onFocus={clearErrors}
+                    onBlur={validateStrategyName}
                 />
                 <p className={styles.inputDescription}>
                     What is your strategy description?

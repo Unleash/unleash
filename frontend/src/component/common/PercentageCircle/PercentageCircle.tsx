@@ -1,51 +1,45 @@
 import { useTheme } from '@mui/material';
+import { CSSProperties } from 'react';
 
 interface IPercentageCircleProps {
-    styles?: object;
     percentage: number;
-    secondaryPieColor?: string;
-    className?: string;
-    hideNumber?: boolean;
+    size?: `${number}rem`;
 }
 
 const PercentageCircle = ({
-    styles,
     percentage,
-    secondaryPieColor,
-    hideNumber,
-    ...rest
+    size = '4rem',
 }: IPercentageCircleProps) => {
     const theme = useTheme();
 
-    let circle = {
-        height: '65px',
-        width: '65px',
-        borderRadius: '50%',
-        color: '#fff',
-        backgroundColor: theme.palette.grey[200],
-        backgroundImage: `conic-gradient(${
-            theme.palette.primary.light
-        } ${percentage}%, ${secondaryPieColor || theme.palette.grey[200]} 1%)`,
+    const style: CSSProperties = {
+        display: 'block',
+        borderRadius: '100%',
+        transform: 'rotate(-90deg)',
+        height: size,
+        width: size,
+        background: theme.palette.grey[200],
     };
 
-    if (percentage === 100) {
-        return (
-            <div
-                style={{
-                    ...circle,
-                    ...styles,
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    fontSize: '12px',
-                }}
-            >
-                {hideNumber ? null : '100%'}
-            </div>
-        );
-    }
+    // The percentage circle used to be drawn by CSS with a conic-gradient,
+    // but the result was either jagged or blurry. SVG seems to look better.
+    // See https://stackoverflow.com/a/70659532.
+    const r = 100 / (2 * Math.PI);
+    const d = 2 * r;
 
-    return <div style={{ ...circle, ...styles }} {...rest} />;
+    return (
+        <svg viewBox={`0 0 ${d} ${d}`} style={style} aria-hidden>
+            <circle
+                r={r}
+                cx={r}
+                cy={r}
+                fill="none"
+                stroke={theme.palette.primary.light}
+                strokeWidth={d}
+                strokeDasharray={`${percentage} 100`}
+            />
+        </svg>
+    );
 };
 
 export default PercentageCircle;

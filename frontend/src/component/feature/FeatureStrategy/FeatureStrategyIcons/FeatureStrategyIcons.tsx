@@ -13,22 +13,15 @@ export const FeatureStrategyIcons = ({
         return null;
     }
 
-    const strategyNames = strategies.map(strategy => strategy.name);
-    const uniqueStrategyNames = uniqueValues(strategyNames);
-
     return (
         <StyledList aria-label="Feature strategies">
-            {uniqueStrategyNames.map(strategyName => (
-                <StyledListItem key={strategyName}>
-                    <FeatureStrategyIcon strategyName={strategyName} />
+            {strategies.map(strategy => (
+                <StyledListItem key={strategy.name}>
+                    <FeatureStrategyIcon strategyName={strategy.name} />
                 </StyledListItem>
             ))}
         </StyledList>
     );
-};
-
-const uniqueValues = <T,>(values: T[]): T[] => {
-    return [...new Set(values)];
 };
 
 const StyledList = styled('ul')(() => ({

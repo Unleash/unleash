@@ -23,6 +23,7 @@ export const useStyles = makeStyles()(theme => ({
         maxWidth: '270px',
         marginTop: '0.25rem',
         fontSize: theme.fontSizes.smallBody,
+        textAlign: 'right',
         [theme.breakpoints.down(700)]: {
             display: 'none',
         },
@@ -33,7 +34,7 @@ export const useStyles = makeStyles()(theme => ({
         fontSize: theme.fontSizes.subHeader,
     },
     percentageCircle: {
-        transform: 'scale(0.85)',
+        margin: '0 1rem',
         [theme.breakpoints.down(500)]: {
             display: 'none',
         },

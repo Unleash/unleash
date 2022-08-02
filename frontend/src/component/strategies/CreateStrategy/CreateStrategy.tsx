@@ -83,6 +83,7 @@ export const CreateStrategy = () => {
                 handleCancel={handleCancel}
                 strategyName={strategyName}
                 setStrategyName={setStrategyName}
+                validateStrategyName={validateStrategyName}
                 strategyDesc={strategyDesc}
                 setStrategyDesc={setStrategyDesc}
                 params={params}

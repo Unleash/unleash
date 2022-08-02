@@ -6,7 +6,7 @@ import {
     getFeatureStrategyIcon,
 } from 'utils/strategyNames';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
-import { PlaygroundResultChip } from '../../PlaygroundResultChip/PlaygroundResultChip';
+import { PlaygroundResultChip } from '../../../../PlaygroundResultChip/PlaygroundResultChip';
 import {
     PlaygroundFeatureStrategyResult,
     PlaygroundRequestSchema,

@@ -9,9 +9,10 @@ import { ConditionallyRender } from '../../../../common/ConditionallyRender/Cond
 import { useStyles } from './FeatureResultInfoPopoverCell.styles';
 import { PlaygroundResultFeatureDetails } from './PlaygroundResultFeatureDetails/PlaygroundResultFeatureDetails';
 import {
-    PlaygroundResultStrategyList,
+    PlaygroundResultStrategyLists,
     WrappedPlaygroundResultStrategyList,
-} from './PlaygroundResultStrategyList/PlaygroundResultStrategyList';
+} from './PlaygroundResultFeatureStrategyList/PlaygroundResultStrategyList/playgroundResultStrategyLists';
+import { PlaygroundResultFeatureStrategyList } from './PlaygroundResultFeatureStrategyList/PlaygroundResultFeatureStrategyList';
 
 interface FeatureResultInfoPopoverCellProps {
     feature: PlaygroundFeatureSchema;
@@ -63,21 +64,9 @@ export const FeatureResultInfoPopoverCell = ({
                     input={input}
                     onClose={() => setOpen(false)}
                 />
-                <ConditionallyRender
-                    condition={!feature.isEnabledInCurrentEnvironment}
-                    show={
-                        <PlaygroundResultStrategyList
-                            strategies={feature?.strategies}
-                            input={input}
-                        />
-                    }
-                    elseShow={
-                        <WrappedPlaygroundResultStrategyList
-                            strategies={feature?.strategies}
-                            feature={feature}
-                            input={input}
-                        />
-                    }
+                <PlaygroundResultFeatureStrategyList
+                    feature={feature}
+                    input={input}
                 />
             </Popover>
         </FeatureResultPopoverWrapper>

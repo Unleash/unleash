@@ -2,10 +2,27 @@ import {
     PlaygroundFeatureSchema,
     PlaygroundFeatureStrategyResult,
     PlaygroundRequestSchema,
-} from '../../../../../../hooks/api/actions/usePlayground/playground.model';
-import { ConditionallyRender } from '../../../../../common/ConditionallyRender/ConditionallyRender';
+} from '../../../../../../../hooks/api/actions/usePlayground/playground.model';
+import { ConditionallyRender } from '../../../../../../common/ConditionallyRender/ConditionallyRender';
 import { Alert, styled, Typography } from '@mui/material';
-import { PlaygroundResultFeatureStrategyItem } from '../PlaygroundResultFeatureStrategyItem/PlaygroundResultFeatureStrategyItem';
+import { PlaygroundResultFeatureStrategyItem } from './PlaygroundResultFeatureStrategyItem/PlaygroundResultFeatureStrategyItem';
+
+const StyledAlertWrapper = styled('div')(({ theme }) => ({
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    borderRadius: theme.shape.borderRadiusMedium,
+    border: `1px solid ${theme.palette.info.main}`,
+}));
+
+const StyledListWrapper = styled('div')(({ theme }) => ({
+    padding: theme.spacing(1, 0.5),
+}));
+
+const StyledAlert = styled(Alert)(({ theme }) => ({
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
+}));
 
 interface PlaygroundResultStrategyListProps {
     strategies: PlaygroundFeatureStrategyResult[];
@@ -13,7 +30,7 @@ interface PlaygroundResultStrategyListProps {
     compact?: boolean;
 }
 
-export const PlaygroundResultStrategyList = ({
+export const PlaygroundResultStrategyLists = ({
     strategies,
     input,
     compact = false,
@@ -42,23 +59,6 @@ export const PlaygroundResultStrategyList = ({
     );
 };
 
-const StyledAlertWrapper = styled('div')(({ theme }) => ({
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    borderRadius: theme.shape.borderRadiusMedium,
-    border: `1px solid ${theme.palette.info.main}`,
-}));
-
-const StyledListWrapper = styled('div')(({ theme }) => ({
-    padding: theme.spacing(1, 0.5),
-}));
-
-const StyledAlert = styled(Alert)(({ theme }) => ({
-    borderBottomLeftRadius: 0,
-    borderBottomRightRadius: 0,
-}));
-
 interface WrappedPlaygroundResultStrategyListProps
     extends PlaygroundResultStrategyListProps {
     feature: PlaygroundFeatureSchema;
@@ -77,7 +77,7 @@ export const WrappedPlaygroundResultStrategyList = ({
                 evaluate like this:{' '}
             </StyledAlert>
             <StyledListWrapper>
-                <PlaygroundResultStrategyList
+                <PlaygroundResultStrategyLists
                     strategies={strategies}
                     input={input}
                     compact

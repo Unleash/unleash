@@ -28,7 +28,7 @@ export const PlaygroundResultFeatureDetails = ({
 
     const reason = Boolean(feature.isEnabled)
         ? 'at least one strategy is True'
-        : feature?.isEnabledInCurrentEnvironment
+        : !feature?.isEnabledInCurrentEnvironment
         ? 'the environment is disabled'
         : 'all strategies are False';
 

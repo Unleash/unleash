@@ -1,14 +1,14 @@
 import {
     PlaygroundFeatureStrategySegmentResult,
     PlaygroundRequestSchema,
-} from '../../../../../../../hooks/api/actions/usePlayground/playground.model';
+} from '../../../../../../../../../hooks/api/actions/usePlayground/playground.model';
 import { PlaygroundResultConstraintExecution } from '../PlaygroundResultConstraintExecution/PlaygroundResultConstraintExecution';
 import { CancelOutlined, DonutLarge } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
-import { StrategySeparator } from '../../../../../../common/StrategySeparator/StrategySeparator';
+import { StrategySeparator } from '../../../../../../../../common/StrategySeparator/StrategySeparator';
 import { useStyles } from './PlaygroundResultSegmentExecution.styles';
 import { styled, Typography } from '@mui/material';
-import { ConditionallyRender } from '../../../../../../common/ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from '../../../../../../../../common/ConditionallyRender/ConditionallyRender';
 
 interface PlaygroundResultSegmentExecutionProps {
     segments?: PlaygroundFeatureStrategySegmentResult[];

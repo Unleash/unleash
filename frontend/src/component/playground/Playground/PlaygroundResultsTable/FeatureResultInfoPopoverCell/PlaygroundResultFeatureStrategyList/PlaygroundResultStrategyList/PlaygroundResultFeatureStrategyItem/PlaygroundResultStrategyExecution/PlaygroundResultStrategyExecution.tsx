@@ -1,12 +1,12 @@
-import { ConditionallyRender } from '../../../../../../common/ConditionallyRender/ConditionallyRender';
-import { StrategySeparator } from '../../../../../../common/StrategySeparator/StrategySeparator';
+import { ConditionallyRender } from '../../../../../../../../common/ConditionallyRender/ConditionallyRender';
+import { StrategySeparator } from '../../../../../../../../common/StrategySeparator/StrategySeparator';
 import { Box, Chip, styled } from '@mui/material';
 import { useStyles } from './PlaygroundResultStrategyExecution.styles';
 import {
     PlaygroundFeatureStrategyResult,
     PlaygroundRequestSchema,
-} from '../../../../../../../hooks/api/actions/usePlayground/playground.model';
-import useUiConfig from '../../../../../../../hooks/api/getters/useUiConfig/useUiConfig';
+} from '../../../../../../../../../hooks/api/actions/usePlayground/playground.model';
+import useUiConfig from '../../../../../../../../../hooks/api/getters/useUiConfig/useUiConfig';
 import React from 'react';
 import { PlaygroundResultConstraintExecution } from '../PlaygroundResultConstraintExecution/PlaygroundResultConstraintExecution';
 import { PlaygroundResultSegmentExecution } from '../PlaygroundResultSegmentExecution/PlaygroundResultSegmentExecution';

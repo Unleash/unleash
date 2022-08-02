@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 import { Logger } from '../logger';
-import { ADMIN, CLIENT } from '../types/permissions';
+import { ADMIN, PROXY, CLIENT } from '../types/permissions';
 import { IUnleashStores } from '../types/stores';
 import { IUnleashConfig } from '../types/option';
 import ApiUser from '../types/api-user';
@@ -89,13 +89,17 @@ export class ApiTokenService {
         const token = this.activeTokens.find((t) => t.secret === secret);
         if (token) {
             const permissions =
-                token.type === ApiTokenType.ADMIN ? [ADMIN] : [CLIENT];
+                token.type === ApiTokenType.ADMIN
+                    ? [ADMIN]
+                    : ApiTokenType.PROXY
+                    ? [PROXY]
+                    : [CLIENT];
 
             return new ApiUser({
                 username: token.username,
                 permissions,
                 projects: token.projects,
-                environment: token.environment,
+                environments: token.environments,
                 type: token.type,
             });
         }
@@ -147,12 +151,15 @@ export class ApiTokenService {
             if (error.code === FOREIGN_KEY_VIOLATION) {
                 let { message } = error;
                 if (error.constraint === 'api_token_project_project_fkey') {
-                    message = `Project=${this.findInvalidProject(
+                    message = `Project=${this.findInvalid(
                         error.detail,
                         newApiToken.projects,
                     )} does not exist`;
                 } else if (error.constraint === 'api_tokens_environment_fkey') {
-                    message = `Environment=${newApiToken.environment} does not exist`;
+                    message = `Environment=${this.findInvalid(
+                        error.detail,
+                        newApiToken.environments,
+                    )} does not exist`;
                 }
                 throw new BadDataError(message);
             }
@@ -160,23 +167,21 @@ export class ApiTokenService {
         }
     }
 
-    private findInvalidProject(errorDetails, projects) {
+    private findInvalid(errorDetails, values) {
         if (!errorDetails) {
             return 'invalid';
         }
-        let invalidProject = projects.find((project) => {
-            return errorDetails.includes(`=(${project})`);
+        let invalid = values.find((value) => {
+            return errorDetails.includes(`=(${value})`);
         });
-        return invalidProject || 'invalid';
+        return invalid || 'invalid';
     }
 
-    private generateSecretKey({ projects, environment }) {
+    private generateSecretKey({ projects, environments }) {
         const randomStr = crypto.randomBytes(28).toString('hex');
-        if (projects.length > 1) {
-            return `[]:${environment}.${randomStr}`;
-        } else {
-            return `${projects[0]}:${environment}.${randomStr}`;
-        }
+        return `${projects.length > 1 ? '[]' : projects[0]}:${
+            environments.length > 1 ? '[]' : environments[0]
+        }.${randomStr}`;
     }
 
     destroy(): void {

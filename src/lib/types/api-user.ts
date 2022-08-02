@@ -6,7 +6,8 @@ interface IApiUserData {
     permissions?: string[];
     projects?: string[];
     project?: string;
-    environment: string;
+    environments?: string[];
+    environment?: string;
     type: ApiTokenType;
 }
 
@@ -19,7 +20,7 @@ export default class ApiUser {
 
     readonly projects: string[];
 
-    readonly environment: string;
+    readonly environments: string[];
 
     readonly type: ApiTokenType;
 
@@ -28,6 +29,7 @@ export default class ApiUser {
         permissions = [CLIENT],
         projects,
         project,
+        environments,
         environment,
         type,
     }: IApiUserData) {
@@ -36,12 +38,16 @@ export default class ApiUser {
         }
         this.username = username;
         this.permissions = permissions;
-        this.environment = environment;
         this.type = type;
         if (projects && projects.length > 0) {
             this.projects = projects;
         } else {
             this.projects = [project];
+        }
+        if (environments && environments.length > 0) {
+            this.environments = environments;
+        } else {
+            this.environments = [environment];
         }
     }
 }

@@ -9,7 +9,7 @@ import { IFeatureToggleQuery, ISegment } from '../../types/model';
 import NotFoundError from '../../error/notfound-error';
 import { IAuthRequest } from '../unleash-types';
 import ApiUser from '../../types/api-user';
-import { ALL, isAllProjects } from '../../types/models/api-token';
+import { isAll } from '../../types/models/api-token';
 import { SegmentService } from '../../services/segment-service';
 import { FeatureConfigurationClient } from '../../types/stores/feature-strategies-store';
 import { ClientSpecService } from '../../services/client-spec-service';
@@ -30,7 +30,7 @@ const version = 2;
 
 interface QueryOverride {
     project?: string[];
-    environment?: string;
+    environment?: string[];
 }
 
 export default class FeatureController extends Controller {
@@ -135,11 +135,11 @@ export default class FeatureController extends Controller {
 
         const override: QueryOverride = {};
         if (user instanceof ApiUser) {
-            if (!isAllProjects(user.projects)) {
+            if (!isAll(user.projects)) {
                 override.project = user.projects;
             }
-            if (user.environment !== ALL) {
-                override.environment = user.environment;
+            if (!isAll(user.environments)) {
+                override.environment = user.environments;
             }
         }
 

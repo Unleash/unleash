@@ -1,5 +1,6 @@
 //Special
 export const ADMIN = 'ADMIN';
+export const PROXY = 'PROXY';
 export const CLIENT = 'CLIENT';
 export const NONE = 'NONE';
 

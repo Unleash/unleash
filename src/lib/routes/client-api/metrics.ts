@@ -5,7 +5,7 @@ import ClientInstanceService from '../../services/client-metrics/instance-servic
 import { Logger } from '../../logger';
 import { IAuthRequest } from '../unleash-types';
 import ApiUser from '../../types/api-user';
-import { ALL } from '../../types/models/api-token';
+import { isAll } from '../../types/models/api-token';
 import ClientMetricsServiceV2 from '../../services/client-metrics/metrics-service-v2';
 import { User } from '../../server-impl';
 import { IClientApp } from '../../types/model';
@@ -68,9 +68,9 @@ export default class ClientMetricsController extends Controller {
 
     private resolveEnvironment(user: User, data: IClientApp) {
         if (user instanceof ApiUser) {
-            if (user.environment !== ALL) {
-                return user.environment;
-            } else if (user.environment === ALL && data.environment) {
+            if (!isAll(user.environments)) {
+                return user.environments;
+            } else if (isAll(user.environments) && data.environment) {
                 return data.environment;
             }
         }

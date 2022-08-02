@@ -9,12 +9,13 @@ import {
     ApiTokenType,
     IApiToken,
     IApiTokenCreate,
-    isAllProjects,
+    isAll,
 } from '../types/models/api-token';
 import { ALL_PROJECTS } from '../util/constants';
 
 const TABLE = 'api_tokens';
-const API_LINK_TABLE = 'api_token_project';
+const API_LINK_TABLE_PROJECT = 'api_token_project';
+const API_LINK_TABLE_ENVIRONMENT = 'api_token_environment';
 
 const ALL = '*';
 
@@ -26,15 +27,15 @@ interface ITokenInsert {
     expires_at?: Date;
     created_at: Date;
     seen_at?: Date;
-    environment: string;
 }
 
 interface ITokenRow extends ITokenInsert {
     project: string;
+    environment: string;
 }
 
 const tokenRowReducer = (acc, tokenRow) => {
-    const { project, ...token } = tokenRow;
+    const { project, environment, ...token } = tokenRow;
     if (!acc[tokenRow.secret]) {
         acc[tokenRow.secret] = {
             secret: token.secret,
@@ -42,18 +43,26 @@ const tokenRowReducer = (acc, tokenRow) => {
             type: token.type,
             project: ALL,
             projects: [ALL],
-            environment: token.environment ? token.environment : ALL,
+            environment: ALL,
+            environments: [ALL],
             expiresAt: token.expires_at,
             createdAt: token.created_at,
         };
     }
     const currentToken = acc[tokenRow.secret];
     if (tokenRow.project) {
-        if (isAllProjects(currentToken.projects)) {
+        if (isAll(currentToken.projects)) {
             currentToken.projects = [];
         }
         currentToken.projects.push(tokenRow.project);
         currentToken.project = currentToken.projects.join(',');
+    }
+    if (tokenRow.environment) {
+        if (isAll(currentToken.environments)) {
+            currentToken.environments = [];
+        }
+        currentToken.environments.push(tokenRow.environment);
+        currentToken.environment = currentToken.environments.join(',');
     }
     return acc;
 };
@@ -62,8 +71,9 @@ const toRow = (newToken: IApiTokenCreate) => ({
     username: newToken.username,
     secret: newToken.secret,
     type: newToken.type,
-    environment:
-        newToken.environment === ALL ? undefined : newToken.environment,
+    environment: isAll(newToken.environments)
+        ? undefined
+        : newToken.environments,
     expires_at: newToken.expiresAt,
 });
 
@@ -114,9 +124,14 @@ export class ApiTokenStore implements IApiTokenStore {
     private makeTokenProjectQuery() {
         return this.db<ITokenRow>(`${TABLE} as tokens`)
             .leftJoin(
-                `${API_LINK_TABLE} as token_project_link`,
+                `${API_LINK_TABLE_PROJECT} as token_project_link`,
                 'tokens.secret',
                 'token_project_link.secret',
+            )
+            .leftJoin(
+                `${API_LINK_TABLE_ENVIRONMENT} as token_environment_link`,
+                'tokens.secret',
+                'token_environment_link.secret',
             )
             .select(
                 'tokens.secret',
@@ -125,8 +140,8 @@ export class ApiTokenStore implements IApiTokenStore {
                 'expires_at',
                 'created_at',
                 'seen_at',
-                'environment',
                 'token_project_link.project',
+                'token_environment_link.environment',
             );
     }
 
@@ -143,14 +158,26 @@ export class ApiTokenStore implements IApiTokenStore {
                 })
                 .map((project) => {
                     return tx.raw(
-                        `INSERT INTO ${API_LINK_TABLE} VALUES (?, ?)`,
+                        `INSERT INTO ${API_LINK_TABLE_PROJECT} VALUES (?, ?)`,
                         [newToken.secret, project],
                     );
                 });
             await Promise.all(updateProjectTasks);
+            const updateEnvironmentTasks = (newToken.environments || [])
+                .filter((environment) => {
+                    return environment !== ALL;
+                })
+                .map((environment) => {
+                    return tx.raw(
+                        `INSERT INTO ${API_LINK_TABLE_ENVIRONMENT} VALUES (?, ?)`,
+                        [newToken.secret, environment],
+                    );
+                });
+            await Promise.all(updateEnvironmentTasks);
             return {
                 ...newToken,
                 project: newToken.projects?.join(',') || '*',
+                environment: newToken.environments?.join(',') || '*',
                 createdAt: row.created_at,
             };
         });

@@ -27,7 +27,6 @@ export const sdkContextSchema = {
             example: {
                 customContextField: 'this is one!',
                 otherCustomField: '3',
-
             },
         },
         remoteAddress: {

@@ -122,7 +122,7 @@ export const strategies = (): Arbitrary<FeatureStrategySchema[]> =>
                 }),
             ),
         ),
-        { selector: (strategy) => strategy.id },
+        { selector: (generatedStrategy) => generatedStrategy.id },
     );
 
 export const variant = (): Arbitrary<IVariant> =>
@@ -208,7 +208,7 @@ export const clientFeaturesAndSegments = (featureConstraints?: {
 }> => {
     const segments = () =>
         fc.uniqueArray(segment(), {
-            selector: (segment) => segment.id,
+            selector: (generatedSegment) => generatedSegment.id,
         });
 
     // create segments and make sure that all strategies reference segments that
@@ -217,8 +217,8 @@ export const clientFeaturesAndSegments = (featureConstraints?: {
         .tuple(segments(), clientFeatures(featureConstraints))
         .map(([generatedSegments, generatedFeatures]) => {
             const renumberedSegments = generatedSegments.map(
-                (segment, index) => ({
-                    ...segment,
+                (generatedSegment, index) => ({
+                    ...generatedSegment,
                     id: index + 1,
                 }),
             );
@@ -227,24 +227,26 @@ export const clientFeaturesAndSegments = (featureConstraints?: {
                 (feature) => ({
                     ...feature,
                     ...(feature.strategies && {
-                        strategies: feature.strategies.map((strategy) => ({
-                            ...strategy,
-                            ...(strategy.segments && {
-                                segments:
-                                    renumberedSegments.length > 0
-                                        ? [
-                                              ...new Set(
-                                                  strategy.segments.map(
-                                                      (segment) =>
-                                                          (segment %
-                                                              renumberedSegments.length) +
-                                                          1,
+                        strategies: feature.strategies.map(
+                            (generatedStrategy) => ({
+                                ...generatedStrategy,
+                                ...(generatedStrategy.segments && {
+                                    segments:
+                                        renumberedSegments.length > 0
+                                            ? [
+                                                  ...new Set(
+                                                      generatedStrategy.segments.map(
+                                                          (generatedSegment) =>
+                                                              (generatedSegment %
+                                                                  renumberedSegments.length) +
+                                                              1,
+                                                      ),
                                                   ),
-                                              ),
-                                          ]
-                                        : [],
+                                              ]
+                                            : [],
+                                }),
                             }),
-                        })),
+                        ),
                     }),
                 }),
             );

@@ -687,17 +687,25 @@ Object {
       },
       "constraintSchema": Object {
         "additionalProperties": false,
+        "description": "A strategy constraint. For more information, refer to [the strategy constraint reference documentation](https://docs.getunleash.io/advanced/strategy_constraints)",
         "properties": Object {
           "caseInsensitive": Object {
+            "default": false,
+            "description": "Whether the operator should be case sensitive or not. Defaults to \`false\` (being case sensitive).",
             "type": "boolean",
           },
           "contextName": Object {
+            "description": "The name of the context field that this constraint should apply to.",
+            "example": "appName",
             "type": "string",
           },
           "inverted": Object {
+            "default": false,
+            "description": "Whether the result should be negated or not. If \`true\`, will turn a \`true\` result into a \`false\` result and vice versa.",
             "type": "boolean",
           },
           "operator": Object {
+            "description": "The operator to use when evaluating this constraint. For more information about the various operators, refer to [the strategy constraint operator documentation](https://docs.getunleash.io/advanced/strategy_constraints#strategy-constraint-operators).",
             "enum": Array [
               "NOT_IN",
               "IN",
@@ -718,9 +726,11 @@ Object {
             "type": "string",
           },
           "value": Object {
+            "description": "The context value that should be used for constraint evaluation. Use this property instead of \`values\` for properties that only accept single values.",
             "type": "string",
           },
           "values": Object {
+            "description": "The context values that should be used for constraint evaluation. Use this property instead of \`value\` for properties that accept multiple values.",
             "items": Object {
               "type": "string",
             },
@@ -1758,45 +1768,130 @@ Object {
         ],
         "type": "object",
       },
+      "playgroundConstraintSchema": Object {
+        "additionalProperties": false,
+        "description": "A strategy constraint. For more information, refer to [the strategy constraint reference documentation](https://docs.getunleash.io/advanced/strategy_constraints)",
+        "properties": Object {
+          "caseInsensitive": Object {
+            "default": false,
+            "description": "Whether the operator should be case sensitive or not. Defaults to \`false\` (being case sensitive).",
+            "type": "boolean",
+          },
+          "contextName": Object {
+            "description": "The name of the context field that this constraint should apply to.",
+            "example": "appName",
+            "type": "string",
+          },
+          "inverted": Object {
+            "default": false,
+            "description": "Whether the result should be negated or not. If \`true\`, will turn a \`true\` result into a \`false\` result and vice versa.",
+            "type": "boolean",
+          },
+          "operator": Object {
+            "description": "The operator to use when evaluating this constraint. For more information about the various operators, refer to [the strategy constraint operator documentation](https://docs.getunleash.io/advanced/strategy_constraints#strategy-constraint-operators).",
+            "enum": Array [
+              "NOT_IN",
+              "IN",
+              "STR_ENDS_WITH",
+              "STR_STARTS_WITH",
+              "STR_CONTAINS",
+              "NUM_EQ",
+              "NUM_GT",
+              "NUM_GTE",
+              "NUM_LT",
+              "NUM_LTE",
+              "DATE_AFTER",
+              "DATE_BEFORE",
+              "SEMVER_EQ",
+              "SEMVER_GT",
+              "SEMVER_LT",
+            ],
+            "type": "string",
+          },
+          "result": Object {
+            "description": "Whether this was evaluated as true or false.",
+            "type": "boolean",
+          },
+          "value": Object {
+            "description": "The context value that should be used for constraint evaluation. Use this property instead of \`values\` for properties that only accept single values.",
+            "type": "string",
+          },
+          "values": Object {
+            "description": "The context values that should be used for constraint evaluation. Use this property instead of \`value\` for properties that accept multiple values.",
+            "items": Object {
+              "type": "string",
+            },
+            "type": "array",
+          },
+        },
+        "required": Array [
+          "contextName",
+          "operator",
+          "result",
+        ],
+        "type": "object",
+      },
       "playgroundFeatureSchema": Object {
         "additionalProperties": false,
         "description": "A simplified feature toggle model intended for the Unleash playground.",
         "properties": Object {
           "isEnabled": Object {
-            "examples": Array [
-              true,
+            "anyOf": Array [
+              Object {
+                "example": true,
+                "type": "boolean",
+              },
+              Object {
+                "enum": Array [
+                  "unevaluated",
+                ],
+                "type": "string",
+              },
             ],
+            "description": "Whether this feature is enabled or not given the current strategies. Can be \`true\`, \`false\`, or \`unevaluated\`. A feature will only be \`unevaluated\` if Unleash does not recognize the strategy it uses (i.e. it's a custom strategy that Unleash doesn't have an implementation for) and all the strategy's constraints and segments (if any) are satisfied. Note that a strategy that Unleash doesn't have an implementation for can still be deemed false if it doesn't satisfy its constraints.",
+          },
+          "isEnabledInCurrentEnvironment": Object {
+            "description": "Whether the feature is active and would be evaluated in the provided environment in a normal SDK context.",
             "type": "boolean",
           },
           "name": Object {
-            "examples": Array [
-              "my-feature",
-            ],
+            "description": "The feature's name.",
+            "example": "my-feature",
             "type": "string",
           },
           "projectId": Object {
-            "examples": Array [
-              "my-project",
-            ],
+            "description": "The ID of the project that contains this feature.",
+            "example": "my-project",
             "type": "string",
+          },
+          "strategies": Object {
+            "description": "The strategies that apply to this feature.",
+            "items": Object {
+              "$ref": "#/components/schemas/playgroundStrategySchema",
+            },
+            "type": "array",
           },
           "variant": Object {
             "additionalProperties": false,
-            "examples": Array [
-              "green",
-            ],
+            "description": "The feature variant you receive based on the provided context or the _disabled variant_. If a feature is disabled or doesn't have any variants, you would get the _disabled variant_. Otherwise, you'll get one of the feature's defined variants.",
+            "example": "green",
             "nullable": true,
             "properties": Object {
               "enabled": Object {
+                "description": "Whether the variant is enabled or not. If the feature is disabled or if it doesn't have variants, this property will be \`false\`",
                 "type": "boolean",
               },
               "name": Object {
+                "description": "The variant's name. If there is no variant or if the toggle is disabled, this will be \`disabled\`",
+                "example": "red-variant",
                 "type": "string",
               },
               "payload": Object {
                 "additionalProperties": false,
+                "description": "An optional payload attached to the variant.",
                 "properties": Object {
                   "type": Object {
+                    "description": "The format of the payload.",
                     "enum": Array [
                       "json",
                       "csv",
@@ -1805,6 +1900,8 @@ Object {
                     "type": "string",
                   },
                   "value": Object {
+                    "description": "The payload value stringified.",
+                    "example": "{\\"property\\": \\"value\\"}",
                     "type": "string",
                   },
                 },
@@ -1826,7 +1923,9 @@ Object {
           "name",
           "projectId",
           "isEnabled",
+          "isEnabledInCurrentEnvironment",
           "variant",
+          "strategies",
         ],
         "type": "object",
       },
@@ -1835,21 +1934,18 @@ Object {
         "properties": Object {
           "context": Object {
             "$ref": "#/components/schemas/sdkContextSchema",
+            "description": "The context to use when evaluating toggles",
           },
           "environment": Object {
-            "examples": Array [
-              "development",
-            ],
+            "description": "The environment to evaluate toggles in.",
+            "example": "development",
             "type": "string",
           },
           "projects": Object {
             "oneOf": Array [
               Object {
                 "description": "A list of projects to check for toggles in.",
-                "examples": Array [
-                  "my-project",
-                  "my-other-project",
-                ],
+                "example": "my-project",
                 "items": Object {
                   "type": "string",
                 },
@@ -1876,6 +1972,7 @@ Object {
         "description": "The state of all features given the provided input.",
         "properties": Object {
           "features": Object {
+            "description": "The list of features that have been evaluated.",
             "items": Object {
               "$ref": "#/components/schemas/playgroundFeatureSchema",
             },
@@ -1883,11 +1980,153 @@ Object {
           },
           "input": Object {
             "$ref": "#/components/schemas/playgroundRequestSchema",
+            "description": "The given input used to evaluate the features.",
           },
         },
         "required": Array [
           "features",
           "input",
+        ],
+        "type": "object",
+      },
+      "playgroundSegmentSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "constraints": Object {
+            "description": "The list of constraints in this segment.",
+            "items": Object {
+              "$ref": "#/components/schemas/playgroundConstraintSchema",
+            },
+            "type": "array",
+          },
+          "id": Object {
+            "description": "The segment's id.",
+            "type": "integer",
+          },
+          "name": Object {
+            "description": "The name of the segment.",
+            "example": "segment A",
+            "type": "string",
+          },
+          "result": Object {
+            "description": "Whether this was evaluated as true or false.",
+            "type": "boolean",
+          },
+        },
+        "required": Array [
+          "name",
+          "id",
+          "constraints",
+          "result",
+        ],
+        "type": "object",
+      },
+      "playgroundStrategySchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "constraints": Object {
+            "description": "The strategy's constraints and their evaluation results.",
+            "items": Object {
+              "$ref": "#/components/schemas/playgroundConstraintSchema",
+            },
+            "type": "array",
+          },
+          "id": Object {
+            "description": "The strategy's id.",
+            "type": "string",
+          },
+          "name": Object {
+            "description": "The strategy's name.",
+            "type": "string",
+          },
+          "parameters": Object {
+            "$ref": "#/components/schemas/parametersSchema",
+            "description": "The strategy's constraints and their evaluation results.",
+            "example": Object {
+              "myParam1": "param value",
+            },
+          },
+          "result": Object {
+            "anyOf": Array [
+              Object {
+                "additionalProperties": false,
+                "properties": Object {
+                  "enabled": Object {
+                    "anyOf": Array [
+                      Object {
+                        "enum": Array [
+                          false,
+                        ],
+                        "type": "boolean",
+                      },
+                      Object {
+                        "enum": Array [
+                          "unknown",
+                        ],
+                        "type": "string",
+                      },
+                    ],
+                    "description": "Whether this strategy resolves to \`false\` or if it might resolve to \`true\`. Because Unleash can't evaluate the strategy, it can't say for certain whether it will be \`true\`, but if you have failing constraints or segments, it _can_ determine that your strategy would be \`false\`.",
+                  },
+                  "evaluationStatus": Object {
+                    "description": "Signals that this strategy could not be evaluated. This is most likely because you're using a custom strategy that Unleash doesn't know about.",
+                    "enum": Array [
+                      "incomplete",
+                    ],
+                    "type": "string",
+                  },
+                  "reason": Object {
+                    "description": "The reason why this strategy could not be evaluated.",
+                    "enum": Array [
+                      "strategy not found",
+                    ],
+                    "type": "string",
+                  },
+                },
+                "required": Array [
+                  "evaluationStatus",
+                  "enabled",
+                ],
+                "type": "object",
+              },
+              Object {
+                "additionalProperties": false,
+                "properties": Object {
+                  "enabled": Object {
+                    "description": "Whether this strategy evaluates to true or not.",
+                    "type": "boolean",
+                  },
+                  "evaluationStatus": Object {
+                    "description": "Signals that this strategy was evaluated successfully.",
+                    "enum": Array [
+                      "complete",
+                    ],
+                    "type": "string",
+                  },
+                },
+                "required": Array [
+                  "evaluationStatus",
+                  "enabled",
+                ],
+                "type": "object",
+              },
+            ],
+            "description": "The strategy's evaluation result.",
+          },
+          "segments": Object {
+            "description": "The strategy's segments and their evaluation results.",
+            "items": Object {
+              "$ref": "#/components/schemas/playgroundSegmentSchema",
+            },
+            "type": "array",
+          },
+        },
+        "required": Array [
+          "name",
+          "result",
+          "segments",
+          "constraints",
+          "parameters",
         ],
         "type": "object",
       },
@@ -1996,24 +2235,18 @@ Object {
       },
       "sdkContextSchema": Object {
         "additionalProperties": Object {
-          "examples": Array [
-            "top-level custom context value",
-          ],
+          "example": "top-level custom context value",
           "type": "string",
         },
         "description": "The Unleash context as modeled in client SDKs",
         "properties": Object {
           "appName": Object {
-            "examples": Array [
-              "My cool application.",
-            ],
+            "example": "My cool application.",
             "minLength": 1,
             "type": "string",
           },
           "currentTime": Object {
-            "examples": Array [
-              "2022-07-05T12:56:41+02:00",
-            ],
+            "example": "2022-07-05T12:56:41+02:00",
             "format": "date-time",
             "type": "string",
           },
@@ -2025,30 +2258,22 @@ Object {
             "additionalProperties": Object {
               "type": "string",
             },
-            "examples": Array [
-              Object {
-                "customContextField": "this is one!",
-                "otherCustomField": 3,
-              },
-            ],
+            "example": Object {
+              "customContextField": "this is one!",
+              "otherCustomField": 3,
+            },
             "type": "object",
           },
           "remoteAddress": Object {
-            "examples": Array [
-              "192.168.1.1",
-            ],
+            "example": "192.168.1.1",
             "type": "string",
           },
           "sessionId": Object {
-            "examples": Array [
-              "b65e7b23-fec0-4814-a129-0e9861ef18fc",
-            ],
+            "example": "b65e7b23-fec0-4814-a129-0e9861ef18fc",
             "type": "string",
           },
           "userId": Object {
-            "examples": Array [
-              "username@provider.com",
-            ],
+            "example": "username@provider.com",
             "type": "string",
           },
         },

@@ -660,8 +660,14 @@ Object {
             ],
             "type": "object",
           },
+          "stickiness": Object {
+            "type": "string",
+          },
           "weight": Object {
             "type": "number",
+          },
+          "weightType": Object {
+            "type": "string",
           },
         },
         "required": Array [

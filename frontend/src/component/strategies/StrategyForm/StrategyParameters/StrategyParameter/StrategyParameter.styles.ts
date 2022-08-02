@@ -29,12 +29,6 @@ export const useStyles = makeStyles()(theme => ({
     inputDescription: {
         marginBottom: '0.5rem',
     },
-    typeDescription: {
-        fontSize: theme.fontSizes.smallBody,
-        color: theme.palette.grey[600],
-        top: '-13px',
-        position: 'relative',
-    },
     errorMessage: {
         fontSize: theme.fontSizes.smallBody,
         color: theme.palette.error.main,

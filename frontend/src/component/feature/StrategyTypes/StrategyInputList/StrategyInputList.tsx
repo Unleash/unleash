@@ -97,7 +97,13 @@ const StrategyInputList = ({
             <ConditionallyRender
                 condition={!disabled}
                 show={
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <div
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '1rem',
+                        }}
+                    >
                         <TextField
                             name={`input_field`}
                             variant="outlined"
@@ -116,6 +122,7 @@ const StrategyInputList = ({
                         <Button
                             onClick={setValue}
                             data-testid={ADD_TO_STRATEGY_INPUT_LIST}
+                            variant="outlined"
                             color="secondary"
                             startIcon={<Add />}
                         >

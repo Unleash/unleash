@@ -5,15 +5,17 @@ import {
     variants,
 } from '../../../test/arbitraries.test';
 import { validateSchema } from '../validate';
+import { PlaygroundConstraintSchema } from './playground-constraint-schema';
 import {
-    PlaygroundConstraintSchema,
     playgroundFeatureSchema,
     PlaygroundFeatureSchema,
-    PlaygroundSegmentSchema,
-    playgroundStrategyEvaluation,
-    PlaygroundStrategySchema,
     unknownFeatureEvaluationResult,
 } from './playground-feature-schema';
+import { PlaygroundSegmentSchema } from './playground-segment-schema';
+import {
+    playgroundStrategyEvaluation,
+    PlaygroundStrategySchema,
+} from './playground-strategy-schema';
 
 const playgroundStrategyConstraint =
     (): Arbitrary<PlaygroundConstraintSchema> =>

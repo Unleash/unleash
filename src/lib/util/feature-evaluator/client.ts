@@ -9,11 +9,9 @@ import {
     selectVariant,
 } from './variant';
 import { Context } from './context';
-import {
-    PlaygroundStrategySchema,
-    unknownFeatureEvaluationResult,
-} from '../../openapi/spec/playground-feature-schema';
+import { unknownFeatureEvaluationResult } from '../../openapi/spec/playground-feature-schema';
 import { Constraint, Segment, SegmentForEvaluation } from './strategy/strategy';
+import { PlaygroundStrategySchema } from 'lib/openapi/spec/playground-strategy-schema';
 
 interface BooleanMap {
     [key: string]: boolean;

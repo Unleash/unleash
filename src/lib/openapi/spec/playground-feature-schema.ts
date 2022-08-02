@@ -1,177 +1,10 @@
 import { FromSchema } from 'json-schema-to-ts';
-import { constraintSchemaBase } from './constraint-schema';
 import { parametersSchema } from './parameters-schema';
 import { variantSchema } from './variant-schema';
 import { overrideSchema } from './override-schema';
-
-const resultsSchema = {
-    description: 'Whether this was evaluated as true or false.',
-    type: 'boolean',
-} as const;
-
-export const playgroundConstraintSchema = {
-    $id: '#/components/schemas/playgroundConstraintSchema',
-    additionalProperties: false,
-    ...constraintSchemaBase,
-    required: [...constraintSchemaBase.required, 'result'],
-    properties: {
-        ...constraintSchemaBase.properties,
-        result: resultsSchema,
-    },
-} as const;
-
-export type PlaygroundConstraintSchema = FromSchema<
-    typeof playgroundConstraintSchema
->;
-
-export const playgroundSegmentSchema = {
-    $id: '#/components/schemas/playgroundSegmentSchema',
-    type: 'object',
-    additionalProperties: false,
-    required: ['name', 'id', 'constraints', 'result'],
-    properties: {
-        id: {
-            description: "The segment's id.",
-            type: 'integer',
-        },
-        name: {
-            description: 'The name of the segment.',
-            example: 'segment A',
-            type: 'string',
-        },
-        result: resultsSchema,
-        constraints: {
-            type: 'array',
-            description: 'The list of constraints in this segment.',
-            items: { $ref: playgroundConstraintSchema.$id },
-        },
-    },
-    components: {
-        schemas: {
-            playgroundConstraintSchema,
-        },
-    },
-} as const;
-
-export type PlaygroundSegmentSchema = FromSchema<
-    typeof playgroundSegmentSchema
->;
-
-export const playgroundStrategyEvaluation = {
-    evaluationComplete: 'complete',
-    evaluationIncomplete: 'incomplete',
-    unknownResult: 'unknown',
-    incompleteEvaluationCauses: ['strategy not found'],
-} as const;
-
-export const playgroundStrategySchema = {
-    $id: '#/components/schemas/playgroundStrategySchema',
-    type: 'object',
-    additionalProperties: false,
-    required: ['name', 'result', 'segments', 'constraints', 'parameters'],
-    properties: {
-        name: {
-            description: "The strategy's name.",
-            type: 'string',
-        },
-        id: {
-            description: "The strategy's id.",
-            type: 'string',
-        },
-        result: {
-            description: "The strategy's evaluation result.",
-            anyOf: [
-                {
-                    type: 'object',
-                    additionalProperties: false,
-                    required: ['evaluationStatus', 'enabled'],
-                    properties: {
-                        evaluationStatus: {
-                            type: 'string',
-                            description:
-                                "Signals that this strategy could not be evaluated. This is most likely because you're using a custom strategy that Unleash doesn't know about.",
-                            enum: [
-                                playgroundStrategyEvaluation.evaluationIncomplete,
-                            ],
-                        },
-                        reason: {
-                            type: 'string',
-                            description:
-                                'The reason why this strategy could not be evaluated.',
-                            enum: playgroundStrategyEvaluation.incompleteEvaluationCauses,
-                        },
-                        enabled: {
-                            description:
-                                "Whether this strategy resolves to `false` or if it might resolve to `true`. Because Unleash can't evaluate the strategy, it can't say for certain whether it will be `true`, but if you have failing constraints or segments, it _can_ determine that your strategy would be `false`.",
-                            anyOf: [
-                                { type: 'boolean', enum: [false] },
-                                {
-                                    type: 'string',
-                                    enum: [
-                                        playgroundStrategyEvaluation.unknownResult,
-                                    ],
-                                },
-                            ],
-                        },
-                    },
-                },
-                {
-                    type: 'object',
-                    additionalProperties: false,
-                    required: ['evaluationStatus', 'enabled'],
-                    properties: {
-                        evaluationStatus: {
-                            description:
-                                'Signals that this strategy was evaluated successfully.',
-                            type: 'string',
-                            enum: ['complete'],
-                        },
-                        enabled: {
-                            type: 'boolean',
-                            description:
-                                'Whether this strategy evaluates to true or not.',
-                        },
-                    },
-                },
-            ],
-        },
-        segments: {
-            type: 'array',
-            description:
-                "The strategy's segments and their evaluation results.",
-            items: {
-                $ref: playgroundSegmentSchema.$id,
-            },
-        },
-        constraints: {
-            type: 'array',
-            description:
-                "The strategy's constraints and their evaluation results.",
-            items: {
-                $ref: playgroundConstraintSchema.$id,
-            },
-        },
-        parameters: {
-            description:
-                "The strategy's constraints and their evaluation results.",
-            example: {
-                myParam1: 'param value',
-            },
-            $ref: parametersSchema.$id,
-        },
-    },
-    components: {
-        schemas: {
-            playgroundConstraintSchema,
-            playgroundSegmentSchema,
-            parametersSchema,
-        },
-    },
-} as const;
-
-export type PlaygroundStrategySchema = FromSchema<
-    typeof playgroundStrategySchema
->;
+import { playgroundStrategySchema } from './playground-strategy-schema';
+import { playgroundConstraintSchema } from './playground-constraint-schema';
+import { playgroundSegmentSchema } from './playground-segment-schema';
 
 export const unknownFeatureEvaluationResult = 'unevaluated' as const;
 
@@ -220,7 +53,7 @@ export const playgroundFeatureSchema = {
                 { type: 'string', enum: [unknownFeatureEvaluationResult] },
             ],
         },
-      variant: {
+        variant: {
             description:
                 "The feature variant you receive based on the provided context or the _disabled variant_. If a feature is disabled or doesn't have any variants, you would get the _disabled variant_. Otherwise, you'll get one of the feature's defined variants.",
             type: 'object',
@@ -258,7 +91,7 @@ export const playgroundFeatureSchema = {
                 },
             },
             nullable: true,
-            example:  { name: 'green', enabled: true },
+            example: { name: 'green', enabled: true },
         },
         variants: { type: 'array', items: { $ref: variantSchema.$id } },
     },
@@ -270,7 +103,6 @@ export const playgroundFeatureSchema = {
             parametersSchema,
             variantSchema,
             overrideSchema,
-
         },
         variants: { type: 'array', items: { $ref: variantSchema.$id } },
     },

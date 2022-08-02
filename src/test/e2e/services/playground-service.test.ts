@@ -13,14 +13,14 @@ import { SegmentService } from '../../../lib/services/segment-service';
 import { FeatureToggle, ISegment, WeightType } from '../../../lib/types/model';
 import {
     PlaygroundFeatureSchema,
-    PlaygroundSegmentSchema,
-    playgroundStrategyEvaluation,
     unknownFeatureEvaluationResult,
 } from '../../../lib/openapi/spec/playground-feature-schema';
 import { offlineUnleashClientNode } from '../../../lib/util/offline-unleash-client';
 import { ClientFeatureSchema } from 'lib/openapi/spec/client-feature-schema';
 import { SdkContextSchema } from 'lib/openapi/spec/sdk-context-schema';
 import { SegmentSchema } from 'lib/openapi/spec/segment-schema';
+import { playgroundStrategyEvaluation } from '../../../lib/openapi/spec/playground-strategy-schema';
+import { PlaygroundSegmentSchema } from 'lib/openapi/spec/playground-segment-schema';
 
 let stores: IUnleashStores;
 let db: ITestDb;

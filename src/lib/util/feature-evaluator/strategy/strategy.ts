@@ -1,7 +1,5 @@
-import {
-    PlaygroundConstraintSchema,
-    PlaygroundSegmentSchema,
-} from 'lib/openapi/spec/playground-feature-schema';
+import { PlaygroundConstraintSchema } from 'lib/openapi/spec/playground-constraint-schema';
+import { PlaygroundSegmentSchema } from 'lib/openapi/spec/playground-segment-schema';
 import { gt as semverGt, lt as semverLt, eq as semverEq } from 'semver';
 import { StrategyEvaluationResult } from '../client';
 import { Context } from '../context';

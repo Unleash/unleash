@@ -12,6 +12,12 @@ export const clientVariantSchema = {
         weight: {
             type: 'number',
         },
+        weightType: {
+            type: 'string',
+        },
+        stickiness: {
+            type: 'string',
+        },
         payload: {
             type: 'object',
             required: ['type', 'value'],

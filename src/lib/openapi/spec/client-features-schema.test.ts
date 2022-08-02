@@ -20,6 +20,8 @@ test('clientFeaturesSchema required fields', () => {
                     {
                         name: 'a',
                         weight: 1,
+                        weightType: 'b',
+                        stickiness: 'c',
                     },
                 ],
             },

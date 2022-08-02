@@ -10,7 +10,7 @@ import {
 } from './variant';
 import { Context } from './context';
 import { unknownFeatureEvaluationResult } from '../../openapi/spec/playground-feature-schema';
-import { Constraint, Segment, SegmentForEvaluation } from './strategy/strategy';
+import { SegmentForEvaluation } from './strategy/strategy';
 import { PlaygroundStrategySchema } from 'lib/openapi/spec/playground-strategy-schema';
 
 interface BooleanMap {
@@ -108,28 +108,13 @@ export default class UnleashClient extends EventEmitter {
             return {
                 enabled: false,
                 strategies: [],
-                // reasons: [
-                //     `The feature is malformed and could not be read: ${errorMsg} `,
-                // ],
             };
         }
-
-        // // this must be moved much later, apparently, so we can also evaluate the strategies
-        // if (!feature.enabled) {
-        //     return {
-        //         enabled: false,
-        //         strategies: [],
-        //         // reasons: [
-        //         //     "The feature doesn't exist or isn't enabled in this environment.",
-        //         // ],
-        //     };
-        // }
 
         if (feature.strategies.length === 0) {
             return {
                 enabled: feature.enabled,
                 strategies: [],
-                // reasons: [reason],
             };
         } else {
             const strategies = feature.strategies.map(
@@ -227,37 +212,6 @@ export default class UnleashClient extends EventEmitter {
                 constraints: segment.constraints,
             };
         };
-    }
-
-    *yieldConstraintsFor(
-        strategy: StrategyTransportInterface,
-    ): IterableIterator<Constraint | undefined> {
-        if (strategy.constraints) {
-            yield* strategy.constraints;
-        }
-        const segments = strategy.segments?.map((segmentId) =>
-            this.repository.getSegment(segmentId),
-        );
-        if (!segments) {
-            return;
-        }
-        yield* this.yieldSegmentConstraints(segments);
-    }
-
-    *yieldSegmentConstraints(
-        segments: (Segment | undefined)[],
-    ): IterableIterator<Constraint | undefined> {
-        // eslint-disable-next-line no-restricted-syntax
-        for (const segment of segments) {
-            if (segment) {
-                // eslint-disable-next-line no-restricted-syntax
-                for (const constraint of segment?.constraints) {
-                    yield constraint;
-                }
-            } else {
-                yield undefined;
-            }
-        }
     }
 
     getVariant(

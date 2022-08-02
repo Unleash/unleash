@@ -210,7 +210,6 @@ export class Strategy {
             return {
                 result: true,
                 constraints: [],
-                // reasons: ['This strategy has no constraints'],
             };
         }
 
@@ -225,21 +224,9 @@ export class Strategy {
             }
         }
 
-        // const mappedConstraints = constraints.map((constraint) => ({
-        //     ...constraint,
-        //     value: constraint.value?.toString() ?? undefined,
-        //     result: this.checkConstraint(constraint, context),
-        // }));
-
         const result = mappedConstraints.every(
             (constraint) => constraint.result,
         );
-
-        // if (old !== result) {
-        //     console.log('used to be:', old, "now it's", result);
-        // }
-
-        // console.log(constraints, mappedConstraints, result);
 
         return {
             result,

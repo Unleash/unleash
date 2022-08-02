@@ -1,13 +1,15 @@
 import { makeStyles } from 'tss-react/mui';
 
 export const useStyles = makeStyles()(theme => ({
+    container: {
+        display: 'grid',
+        gap: theme.spacing(4),
+    },
     helpText: {
-        color: 'rgba(0, 0, 0, 0.54)',
+        color: theme.palette.text.secondary,
         fontSize: theme.fontSizes.smallerBody,
         lineHeight: '14px',
-        margin: '0.5rem 0',
-    },
-    generalSection: {
-        margin: '1rem 0',
+        margin: 0,
+        marginTop: theme.spacing(1),
     },
 }));

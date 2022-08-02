@@ -27,10 +27,6 @@
 const AUTH_USER = Cypress.env('AUTH_USER');
 const AUTH_PASSWORD = Cypress.env('AUTH_PASSWORD');
 
-Cypress.config({
-    experimentalSessionSupport: true,
-});
-
 Cypress.Commands.add('login', (user = AUTH_USER, password = AUTH_PASSWORD) =>
     cy.session(user, () => {
         cy.visit('/');

@@ -73,11 +73,9 @@ const FeatureOverviewEnvironmentMetrics = ({
                     hour
                 </p>
             </div>
-            <PercentageCircle
-                className={styles.percentageCircle}
-                percentage={percentage}
-                data-loading
-            />
+            <div className={styles.percentageCircle} data-loading>
+                <PercentageCircle percentage={percentage} size="3rem" />
+            </div>
         </div>
     );
 };

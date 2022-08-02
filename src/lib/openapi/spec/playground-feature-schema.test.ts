@@ -111,7 +111,6 @@ const playgroundStrategies = (): Arbitrary<PlaygroundStrategySchema[]> =>
         ),
     );
 
-// todo : manually merge this!
 export const generate = (): Arbitrary<PlaygroundFeatureSchema> =>
     fc
         .tuple(

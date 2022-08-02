@@ -190,12 +190,12 @@ export const playgroundFeatureSchema = {
     properties: {
         name: {
             type: 'string',
-            examples: ['my-feature'],
+            example: 'my-feature',
             description: "The feature's name.",
         },
         projectId: {
             type: 'string',
-            examples: ['my-project'],
+            example: 'my-project',
             description: 'The ID of the project that contains this feature.',
         },
         strategies: {
@@ -213,7 +213,7 @@ export const playgroundFeatureSchema = {
         isEnabled: {
             description: `Whether this feature is enabled or not given the current strategies. Can be \`true\`, \`false\`, or \`${unknownFeatureEvaluationResult}\`. A feature will only be \`${unknownFeatureEvaluationResult}\` if Unleash does not recognize the strategy it uses (i.e. it's a custom strategy that Unleash doesn't have an implementation for) and all the strategy's constraints and segments (if any) are satisfied. Note that a strategy that Unleash doesn't have an implementation for can still be deemed false if it doesn't satisfy its constraints.`,
             anyOf: [
-                { type: 'boolean', examples: [true] },
+                { type: 'boolean', example: true },
                 { type: 'string', enum: [unknownFeatureEvaluationResult] },
             ],
         },
@@ -255,7 +255,7 @@ export const playgroundFeatureSchema = {
                 },
             },
             nullable: true,
-            examples: ['green'],
+            example: 'green',
         },
     },
     components: {

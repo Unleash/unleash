@@ -247,9 +247,12 @@ describe('the playground service (e2e)', () => {
                             // and `isEnabledInCurrentEnvironment` to get the
                             // same state.
 
+                            const presumedSDKState =
+                                feature.isEnabled === true &&
+                                feature.isEnabledInCurrentEnvironment;
+
                             const enabledStateMatches =
-                                (feature.isEnabled === true &&
-                                    feature.isEnabledInCurrentEnvironment) ===
+                                presumedSDKState ===
                                 client.isEnabled(feature.name, clientContext);
 
                             ctx.log(`feature.isEnabled: ${feature.isEnabled}`);
@@ -298,23 +301,46 @@ describe('the playground service (e2e)', () => {
                                 );
                             }
 
-                            const allgood =
-                                enabledStateMatches &&
-                                clientVariant.name === feature.variant.name &&
-                                clientVariant.enabled ===
-                                    feature.variant.enabled &&
-                                clientVariant.payload?.type ===
-                                    feature.variant.payload?.type &&
-                                clientVariant.payload?.value ===
-                                    feature.variant.payload?.value;
+                            ctx.log(`feature "${feature.name}" has a variant`);
+                            ctx.log(
+                                `Feature variant: ${JSON.stringify(
+                                    feature.variant,
+                                )}`,
+                            );
+                            ctx.log(
+                                `Client variant: ${JSON.stringify(
+                                    clientVariant,
+                                )}`,
+                            );
+                            ctx.log(
+                                `enabledStateMatches: ${enabledStateMatches}`,
+                            );
 
-                            ctx.log('feature has a variant');
-                            ctx.log(JSON.stringify(clientVariant));
-                            ctx.log(JSON.stringify(feature.variant));
-                            ctx.log(JSON.stringify(enabledStateMatches));
-                            ctx.log(JSON.stringify(allgood));
+                            // variants should be the same if the
+                            // toggle is enabled in both versions. If
+                            // they're not and one of them has a
+                            // variant, then they should be different.
+                            if (presumedSDKState === true) {
+                                expect(feature.variant).toEqual(clientVariant);
+                            } else {
+                                expect(feature.variant).not.toEqual(
+                                    clientVariant,
+                                );
+                            }
 
-                            return allgood;
+                            return enabledStateMatches;
+
+                            // const allgood =
+                            //     enabledStateMatches &&
+                            //     clientVariant.name === feature.variant.name &&
+                            //     clientVariant.enabled ===
+                            //         feature.variant.enabled &&
+                            //     clientVariant.payload?.type ===
+                            //         feature.variant.payload?.type &&
+                            //     clientVariant.payload?.value ===
+                            //         feature.variant.payload?.value;
+
+                            // return allgood;
                         });
                     },
                 )

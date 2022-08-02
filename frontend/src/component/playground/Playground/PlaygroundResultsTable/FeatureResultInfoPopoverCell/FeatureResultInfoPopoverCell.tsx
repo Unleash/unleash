@@ -1,17 +1,21 @@
 import {
     PlaygroundFeatureSchema,
-    PlaygroundFeatureStrategyResult,
+    PlaygroundRequestSchema,
 } from 'hooks/api/actions/usePlayground/playground.model';
-import { IconButton, Popover, styled, Typography } from '@mui/material';
+import { IconButton, Popover, styled } from '@mui/material';
 import { InfoOutlined } from '@mui/icons-material';
 import React, { useRef, useState } from 'react';
 import { ConditionallyRender } from '../../../../common/ConditionallyRender/ConditionallyRender';
-import { PlaygroundResultFeatureStrategyItem } from './PlaygroundResultFeatureStrategyItem/PlaygroundResultFeatureStrategyItem';
 import { useStyles } from './FeatureResultInfoPopoverCell.styles';
 import { PlaygroundResultFeatureDetails } from './PlaygroundResultFeatureDetails/PlaygroundResultFeatureDetails';
+import {
+    PlaygroundResultStrategyList,
+    WrappedPlaygroundResultStrategyList,
+} from './PlaygroundResultStrategyList/PlaygroundResultStrategyList';
 
 interface FeatureResultInfoPopoverCellProps {
-    feature?: PlaygroundFeatureSchema;
+    feature: PlaygroundFeatureSchema;
+    input?: PlaygroundRequestSchema;
 }
 
 const FeatureResultPopoverWrapper = styled('div')(({ theme }) => ({
@@ -21,6 +25,7 @@ const FeatureResultPopoverWrapper = styled('div')(({ theme }) => ({
 
 export const FeatureResultInfoPopoverCell = ({
     feature,
+    input,
 }: FeatureResultInfoPopoverCellProps) => {
     const [open, setOpen] = useState(false);
     const { classes: styles } = useStyles();
@@ -29,77 +34,6 @@ export const FeatureResultInfoPopoverCell = ({
     const togglePopover = (event: React.SyntheticEvent) => {
         setOpen(!open);
     };
-
-    const dummyPlaygroundFeatureTrue: PlaygroundFeatureSchema = {
-        name: feature?.name as any,
-        projectId: 'default',
-        isEnabled: true,
-    } as any;
-
-    const dummyPlaygroundFeatureFalse: PlaygroundFeatureSchema = {
-        name: feature?.name as any,
-        projectId: 'default',
-        isEnabled: false,
-    } as any;
-
-    const strategies: PlaygroundFeatureStrategyResult[] = [
-        {
-            name: 'default',
-            id: 'strategy-id',
-            parameters: {},
-            result: feature?.isEnabled as any,
-            constraints: [
-                {
-                    result: true,
-                    contextName: 'appName',
-                    operator: 'IN',
-                    caseInsensitive: false,
-                    inverted: false,
-                    values: ['MyApp', 'MyOtherApp', 'Unleash'],
-                },
-            ],
-            segments: [
-                {
-                    result: feature?.isEnabled as any,
-                    id: 5,
-                    name: 'my-segment',
-                    constraints: [
-                        {
-                            result: feature?.isEnabled as any,
-                            contextName: 'environment',
-                            operator: 'IN',
-                            caseInsensitive: false,
-                            inverted: false,
-                            values: ['development'],
-                        },
-                    ],
-                },
-            ],
-        },
-        {
-            name: 'flexibleRollout',
-            id: 'strategy-id',
-            parameters: {},
-            result: false,
-            segments: [
-                {
-                    result: false,
-                    id: 6,
-                    name: 'my-segment',
-                    constraints: [
-                        {
-                            result: false,
-                            contextName: 'appName',
-                            operator: 'IN',
-                            caseInsensitive: false,
-                            inverted: false,
-                            values: ['MyApp2'],
-                        },
-                    ],
-                },
-            ],
-        },
-    ];
 
     if (!feature) {
         return null;
@@ -125,29 +59,24 @@ export const FeatureResultInfoPopoverCell = ({
                 classes={{ paper: styles.popoverPaper }}
             >
                 <PlaygroundResultFeatureDetails
-                    feature={
-                        feature.isEnabled
-                            ? dummyPlaygroundFeatureTrue
-                            : dummyPlaygroundFeatureFalse
-                    }
+                    feature={feature}
+                    input={input}
                     onClose={() => setOpen(false)}
                 />
                 <ConditionallyRender
-                    condition={strategies.length > 0}
+                    condition={!feature.isEnabledInCurrentEnvironment}
                     show={
-                        <>
-                            <Typography
-                                variant={'subtitle1'}
-                                sx={{ mb: 2, color: 'text.secondary' }}
-                            >{`Strategies (${strategies.length})`}</Typography>
-                            {strategies.map((strategy, index) => (
-                                <PlaygroundResultFeatureStrategyItem
-                                    key={strategy.id}
-                                    strategy={strategy}
-                                    index={index}
-                                />
-                            ))}
-                        </>
+                        <PlaygroundResultStrategyList
+                            strategies={feature?.strategies}
+                            input={input}
+                        />
+                    }
+                    elseShow={
+                        <WrappedPlaygroundResultStrategyList
+                            strategies={feature?.strategies}
+                            feature={feature}
+                            input={input}
+                        />
                     }
                 />
             </Popover>

@@ -28,6 +28,7 @@ export const useStyles = makeStyles()(theme => ({
         [theme.breakpoints.down(400)]: {
             padding: '0.5rem',
         },
+        width: '100%',
         paddingBottom: '1rem',
         borderRadius: theme.shape.borderRadiusMedium,
         background: theme.palette.background.default,

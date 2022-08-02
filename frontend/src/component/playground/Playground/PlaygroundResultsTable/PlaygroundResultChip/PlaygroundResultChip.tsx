@@ -6,7 +6,7 @@ import { ReactComponent as FeatureEnabledIcon } from '../../../../../assets/icon
 import { ReactComponent as FeatureDisabledIcon } from '../../../../../assets/icons/isenabled-false.svg';
 
 interface IResultChipProps {
-    enabled: boolean;
+    enabled: boolean | 'unevaluated';
     // Result icon - defaults to true
     showIcon?: boolean;
     label?: string;
@@ -53,7 +53,7 @@ export const PlaygroundResultChip = ({
     const theme = useTheme();
     const icon = (
         <ConditionallyRender
-            condition={enabled}
+            condition={Boolean(enabled)}
             show={
                 <FeatureEnabledIcon
                     color={theme.palette.success.main}
@@ -73,7 +73,7 @@ export const PlaygroundResultChip = ({
 
     return (
         <ConditionallyRender
-            condition={enabled}
+            condition={Boolean(enabled)}
             show={
                 <StyledTrueChip
                     icon={showIcon ? icon : undefined}

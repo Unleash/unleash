@@ -10,7 +10,7 @@ export const useStyles = makeStyles()(theme => ({
         color: theme.palette.grey[700],
     },
     summary: {
-        width: '100%',
+        width: 'auto',
         padding: theme.spacing(2, 3),
         borderRadius: theme.shape.borderRadius,
         border: `1px solid ${theme.palette.divider}`,

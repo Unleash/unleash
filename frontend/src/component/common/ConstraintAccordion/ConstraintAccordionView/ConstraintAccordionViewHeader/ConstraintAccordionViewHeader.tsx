@@ -5,7 +5,7 @@ import { ConstraintAccordionHeaderActions } from '../../ConstraintAccordionHeade
 import { useStyles } from 'component/common/ConstraintAccordion/ConstraintAccordion.styles';
 import {
     PlaygroundFeatureStrategyConstraintResult,
-    SdkContextSchema,
+    PlaygroundRequestSchema,
 } from '../../../../../hooks/api/actions/usePlayground/playground.model';
 
 interface IConstraintAccordionViewHeaderProps {
@@ -15,7 +15,7 @@ interface IConstraintAccordionViewHeaderProps {
     singleValue: boolean;
     expanded: boolean;
     allowExpand: (shouldExpand: boolean) => void;
-    playgroundContext?: SdkContextSchema;
+    playgroundInput?: PlaygroundRequestSchema;
     maxLength?: number;
 }
 
@@ -27,7 +27,7 @@ export const ConstraintAccordionViewHeader = ({
     allowExpand,
     expanded,
     maxLength,
-    playgroundContext,
+    playgroundInput,
 }: IConstraintAccordionViewHeaderProps) => {
     const { classes: styles } = useStyles();
 
@@ -41,7 +41,7 @@ export const ConstraintAccordionViewHeader = ({
                 expanded={expanded}
                 result={'result' in constraint ? constraint.result : undefined}
                 maxLength={maxLength}
-                playgroundContext={playgroundContext}
+                playgroundInput={playgroundInput}
             />
             <ConstraintAccordionHeaderActions
                 onEdit={onEdit}

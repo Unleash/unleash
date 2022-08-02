@@ -7,7 +7,7 @@ import React from 'react';
 import { IConstraint } from '../../../../../../interfaces/strategy';
 import { useStyles } from '../../../ConstraintAccordion.styles';
 import { CancelOutlined } from '@mui/icons-material';
-import { SdkContextSchema } from '../../../../../../hooks/api/actions/usePlayground/playground.model';
+import { PlaygroundRequestSchema } from '../../../../../../hooks/api/actions/usePlayground/playground.model';
 
 const StyledHeaderText = styled('span')(({ theme }) => ({
     display: '-webkit-box',
@@ -43,7 +43,7 @@ interface ConstraintAccordionViewHeaderMetaInfoProps {
     allowExpand: (shouldExpand: boolean) => void;
     result?: boolean;
     maxLength?: number;
-    playgroundContext?: SdkContextSchema;
+    playgroundInput?: PlaygroundRequestSchema;
 }
 
 export const ConstraintAccordionViewHeaderInfo = ({
@@ -52,11 +52,16 @@ export const ConstraintAccordionViewHeaderInfo = ({
     allowExpand,
     expanded,
     result,
+    playgroundInput,
     maxLength = 112,
-    playgroundContext,
 }: ConstraintAccordionViewHeaderMetaInfoProps) => {
     const { classes: styles } = useStyles();
     const theme = useTheme();
+
+    const isPlayground = Boolean(playgroundInput);
+    const constrainExistsInContext =
+        isPlayground &&
+        Boolean(playgroundInput?.context[constraint.contextName]);
 
     return (
         <StyledHeaderWrapper>
@@ -65,24 +70,17 @@ export const ConstraintAccordionViewHeaderInfo = ({
                     <StyledHeaderText>
                         {constraint.contextName}
                         <ConditionallyRender
-                            condition={
-                                result !== undefined &&
-                                Boolean(playgroundContext)
-                            }
+                            condition={isPlayground}
                             show={
                                 <Typography
                                     variant={'body1'}
                                     color={
-                                        Boolean(
-                                            playgroundContext![
-                                                constraint.contextName
-                                            ]
-                                        )
+                                        constrainExistsInContext
                                             ? theme.palette.neutral.dark
                                             : theme.palette.error.main
                                     }
                                 >
-                                    {playgroundContext![
+                                    {playgroundInput?.context[
                                         constraint.contextName
                                     ] || 'no value'}
                                 </Typography>

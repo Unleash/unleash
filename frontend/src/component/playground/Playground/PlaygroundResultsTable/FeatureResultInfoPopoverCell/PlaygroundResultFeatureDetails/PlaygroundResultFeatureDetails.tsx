@@ -1,29 +1,44 @@
-import { PlaygroundFeatureSchema } from '../../../../../../hooks/api/actions/usePlayground/playground.model';
-import { IconButton, Typography, useTheme } from '@mui/material';
+import {
+    PlaygroundFeatureSchema,
+    PlaygroundRequestSchema,
+} from '../../../../../../hooks/api/actions/usePlayground/playground.model';
+import { Alert, IconButton, Typography, useTheme } from '@mui/material';
 import { PlaygroundResultChip } from '../../PlaygroundResultChip/PlaygroundResultChip';
 import { useStyles } from './PlaygroundResultFeatureDetails.styles';
 import { CloseOutlined } from '@mui/icons-material';
 import React from 'react';
+import { ConditionallyRender } from '../../../../../common/ConditionallyRender/ConditionallyRender';
+import { checkForEmptyValues } from './helpers';
 interface PlaygroundFeatureResultDetailsProps {
     feature: PlaygroundFeatureSchema;
+    input?: PlaygroundRequestSchema;
     onClose: () => void;
 }
 export const PlaygroundResultFeatureDetails = ({
     feature,
+    input,
     onClose,
 }: PlaygroundFeatureResultDetailsProps) => {
     const { classes: styles } = useStyles();
     const theme = useTheme();
 
-    const description = feature.isEnabled
-        ? 'This feature toggle is True in production because '
-        : 'This feature toggle is False in production because ';
-    const reason = feature.isEnabled
+    const description = Boolean(feature.isEnabled)
+        ? `This feature toggle is True in ${input?.environment} because `
+        : `This feature toggle is False in ${input?.environment} because `;
+
+    const reason = Boolean(feature.isEnabled)
         ? 'at least one strategy is True'
+        : feature?.isEnabledInCurrentEnvironment
+        ? 'the environment is disabled'
         : 'all strategies are False';
-    const color = feature.isEnabled
+
+    const color = Boolean(feature.isEnabled)
         ? theme.palette.success.main
         : theme.palette.error.main;
+
+    const noValueTxt = checkForEmptyValues(input?.context)
+        ? 'You did not provide a value for your context filed in step 2 of the configuration'
+        : undefined;
 
     const onCloseClick =
         onClose &&
@@ -55,6 +70,14 @@ export const PlaygroundResultFeatureDetails = ({
                     {reason}
                 </Typography>
             </div>
+            <ConditionallyRender
+                condition={Boolean(noValueTxt)}
+                show={
+                    <div className={styles.alertRow}>
+                        <Alert color={'info'}>{noValueTxt}</Alert>
+                    </div>
+                }
+            />
         </>
     );
 };

@@ -203,6 +203,7 @@ export const Playground: VFC<{}> = () => {
                             <PlaygroundResultsTable
                                 loading={loading}
                                 features={results?.features}
+                                input={results?.input}
                             />
                         }
                         elseShow={<PlaygroundGuidance />}

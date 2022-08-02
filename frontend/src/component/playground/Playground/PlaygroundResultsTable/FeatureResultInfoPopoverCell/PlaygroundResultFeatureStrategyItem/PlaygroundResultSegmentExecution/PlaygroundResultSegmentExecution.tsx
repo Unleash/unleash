@@ -1,14 +1,19 @@
-import { PlaygroundFeatureStrategySegmentResult } from '../../../../../../hooks/api/actions/usePlayground/playground.model';
+import {
+    PlaygroundFeatureStrategySegmentResult,
+    PlaygroundRequestSchema,
+} from '../../../../../../../hooks/api/actions/usePlayground/playground.model';
 import { PlaygroundResultConstraintExecution } from '../PlaygroundResultConstraintExecution/PlaygroundResultConstraintExecution';
 import { CancelOutlined, DonutLarge } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
-import { StrategySeparator } from '../../../../../common/StrategySeparator/StrategySeparator';
+import { StrategySeparator } from '../../../../../../common/StrategySeparator/StrategySeparator';
 import { useStyles } from './PlaygroundResultSegmentExecution.styles';
 import { styled, Typography } from '@mui/material';
-import { ConditionallyRender } from '../../../../../common/ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from '../../../../../../common/ConditionallyRender/ConditionallyRender';
 
 interface PlaygroundResultSegmentExecutionProps {
     segments?: PlaygroundFeatureStrategySegmentResult[];
+    input?: PlaygroundRequestSchema;
+    hasConstraints: boolean;
 }
 
 const SegmentExecutionLinkWrapper = styled('div')(({ theme }) => ({
@@ -55,8 +60,11 @@ const SegmentResultTextWrapper = styled('div')(({ theme }) => ({
 
 export const PlaygroundResultSegmentExecution = ({
     segments,
+    input,
+    hasConstraints,
 }: PlaygroundResultSegmentExecutionProps) => {
     const { classes: styles } = useStyles();
+
     if (!segments) return null;
     return (
         <>
@@ -93,10 +101,14 @@ export const PlaygroundResultSegmentExecution = ({
                     <SegmentExecutionConstraintWrapper>
                         <PlaygroundResultConstraintExecution
                             constraints={segment.constraints}
+                            compact={true}
+                            input={input}
                         />
                     </SegmentExecutionConstraintWrapper>
                     <ConditionallyRender
-                        condition={index < segments?.length - 1}
+                        condition={
+                            index === segments?.length - 1 && hasConstraints
+                        }
                         show={<StrategySeparator text="AND" sx={{ pt: 1 }} />}
                     />
                 </SegmentExecutionWrapper>

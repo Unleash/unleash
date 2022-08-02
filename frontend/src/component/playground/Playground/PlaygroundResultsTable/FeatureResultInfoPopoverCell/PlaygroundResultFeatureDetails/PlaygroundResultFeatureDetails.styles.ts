@@ -9,9 +9,11 @@ export const useStyles = makeStyles()(theme => ({
     titleRow: {
         display: 'inline-flex',
         alignItems: 'flex-start',
-        justifyItems: 'center',
+        justifyContent: 'center',
         gap: '12px',
+        marginTop: '12px',
     },
+    alertRow: {},
     descriptionRow: {
         marginBottom: theme.spacing(2),
     },

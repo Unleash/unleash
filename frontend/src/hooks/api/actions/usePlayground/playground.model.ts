@@ -65,13 +65,17 @@ export interface PlaygroundFeatureSchema {
      * @type {boolean}
      * @memberof PlaygroundFeatureSchema
      */
-    isEnabled: boolean;
+    isEnabled: boolean | 'unevaluated';
+
+    isEnabledInCurrentEnvironment: boolean;
     /**
      *
      * @type {PlaygroundFeatureSchemaVariant}
      * @memberof PlaygroundFeatureSchema
      */
     variant: PlaygroundFeatureSchemaVariant | null;
+
+    strategies: PlaygroundFeatureStrategyResult[];
 }
 export interface PlaygroundResponseSchema {
     /**

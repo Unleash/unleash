@@ -1,16 +1,18 @@
 import {
     PlaygroundFeatureStrategyConstraintResult,
-    SdkContextSchema,
+    PlaygroundRequestSchema,
 } from 'hooks/api/actions/usePlayground/playground.model';
 import React, { Fragment } from 'react';
-import { objectId } from '../../../../../../utils/objectId';
-import { ConditionallyRender } from '../../../../../common/ConditionallyRender/ConditionallyRender';
-import { StrategySeparator } from '../../../../../common/StrategySeparator/StrategySeparator';
-import { ConstraintAccordionView } from '../../../../../common/ConstraintAccordion/ConstraintAccordionView/ConstraintAccordionView';
+import { objectId } from '../../../../../../../utils/objectId';
+import { ConditionallyRender } from '../../../../../../common/ConditionallyRender/ConditionallyRender';
+import { StrategySeparator } from '../../../../../../common/StrategySeparator/StrategySeparator';
+import { ConstraintAccordionView } from '../../../../../../common/ConstraintAccordion/ConstraintAccordionView/ConstraintAccordionView';
 import { styled } from '@mui/material';
 
 interface PlaygroundResultConstraintExecutionProps {
     constraints?: PlaygroundFeatureStrategyConstraintResult[];
+    compact: boolean;
+    input?: PlaygroundRequestSchema;
 }
 
 export const PlaygroundResultConstraintExecutionWrapper = styled('div')(
@@ -23,18 +25,9 @@ export const PlaygroundResultConstraintExecutionWrapper = styled('div')(
 
 export const PlaygroundResultConstraintExecution = ({
     constraints,
+    compact,
+    input,
 }: PlaygroundResultConstraintExecutionProps) => {
-    // const context = usePlaygroundContext();
-    const contextFalse: SdkContextSchema = {
-        appName: 'MyApp',
-        environment: '',
-    };
-
-    const contextTrue: SdkContextSchema = {
-        appName: 'MyApp',
-        environment: 'development',
-    };
-
     if (!constraints) return null;
 
     return (
@@ -47,12 +40,8 @@ export const PlaygroundResultConstraintExecution = ({
                     />
                     <ConstraintAccordionView
                         constraint={constraint}
-                        playgroundContext={
-                            Boolean(constraint.result)
-                                ? contextTrue
-                                : contextFalse
-                        }
-                        maxLength={80}
+                        playgroundInput={input}
+                        maxLength={compact ? 25 : 50}
                         sx={{
                             backgroundColor: 'transparent!important',
                         }}

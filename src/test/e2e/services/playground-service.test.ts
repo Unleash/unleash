@@ -929,6 +929,59 @@ describe('the playground service (e2e)', () => {
                                 // if there are strategies and they're all
                                 // incomplete and false, then the feature
                                 // is also false
+                                expect(feature.isEnabled).toEqual(false);
+                            }
+                        });
+                    },
+                )
+                .afterEach(cleanup),
+            testParams,
+        );
+    });
+
+    test('should evaluate a feature as unknown if there is at least one incomplete strategy among all failed strategies', async () => {
+        await fc.assert(
+            fc
+                .asyncProperty(
+                    fc
+                        .tuple(
+                            fc.uuid(),
+                            clientFeaturesAndSegments({ minLength: 1 }),
+                        )
+                        .map(([uuid, { features, ...rest }]) => ({
+                            ...rest,
+                            features: features.map((feature) => ({
+                                ...feature,
+                                // use a constraint that will never be true
+                                strategies: [
+                                    ...feature.strategies.map((strategy) => ({
+                                        ...strategy,
+                                        constraints: [
+                                            {
+                                                contextName: 'appName',
+                                                operator: 'IN' as 'IN',
+                                                values: [uuid],
+                                            },
+                                        ],
+                                    })),
+                                    { name: 'my-custom-strategy' },
+                                ],
+                            })),
+                        })),
+                    generateContext(),
+                    async (featsAndSegments, context) => {
+                        const serviceFeatures = await insertAndEvaluateFeatures(
+                            {
+                                ...featsAndSegments,
+                                context,
+                            },
+                        );
+
+                        serviceFeatures.forEach((feature) => {
+                            if (feature.strategies.length) {
+                                // if there are strategies and they're all
+                                // incomplete and unknown, then the feature
+                                // is also unknown
                                 expect(feature.isEnabled).toEqual(
                                     unknownFeatureEvaluationResult,
                                 );
@@ -1048,26 +1101,16 @@ describe('the playground service (e2e)', () => {
                             },
                         );
 
-                        const variantsMap = features.reduce(
-                            (acc, feature) => ({
-                                ...acc,
-                                [feature.name]: feature.variants,
-                            }),
-                            {},
-                        );
-
                         serviceFeatures.forEach((feature) => {
-                            if (variantsMap[feature.name]) {
-                                expect(feature.variants).toEqual(
-                                    expect.arrayContaining(
-                                        variantsMap[feature.name],
-                                    ),
-                                );
-                                expect(variantsMap[feature.name]).toEqual(
-                                    expect.arrayContaining(feature.variants),
-                                );
-                            } else {
-                                expect(feature.variants).toStrictEqual([]);
+                            if (
+                                feature.isEnabled ===
+                                    unknownFeatureEvaluationResult &&
+                                feature.variants.length > 0
+                            ) {
+                                expect(feature.variant).not.toEqual({
+                                    name: 'disabled',
+                                    enabled: false,
+                                });
                             }
                         });
                     },

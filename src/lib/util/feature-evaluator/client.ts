@@ -10,7 +10,6 @@ import {
 } from './variant';
 import { Context } from './context';
 import {
-    playgroundStrategyEvaluation,
     PlaygroundStrategySchema,
     unknownFeatureEvaluationResult,
 } from '../../openapi/spec/playground-feature-schema';
@@ -186,27 +185,31 @@ export default class UnleashClient extends EventEmitter {
                 },
             );
 
-            // case enumeration:
-            //
-            // 1: Happy path: we know all the strategies and they're fully evaluated
-            // 2: We know all the strategies and they're fully evaluated, but the toggle isn't enabled in the selected environment
-            // 3: We know some of the strategies and at least one of the ones we know is true
-            // 4: We know some of the strategies and all the ones we know are false
+            // Feature evaluation
+            const isEnabled = () => {
+                // if at least one strategy is enabled, then the feature is enabled
+                if (
+                    strategies.some(
+                        (strategy) => strategy.result.enabled === true,
+                    )
+                ) {
+                    return true;
+                }
 
-            // Toggle evaluation
+                // if at least one strategy is unknown, then the feature _may_ be enabled
+                if (
+                    strategies.some(
+                        (strategy) => strategy.result.enabled === 'unknown',
+                    )
+                ) {
+                    return unknownFeatureEvaluationResult;
+                }
 
-            const isEnabled: boolean | 'unevaluated' = strategies.every(
-                (strategy) =>
-                    strategy.result.evaluationStatus ===
-                    playgroundStrategyEvaluation.evaluationIncomplete,
-            )
-                ? unknownFeatureEvaluationResult
-                : strategies.some(
-                      (strategy) => strategy.result.enabled === true,
-                  );
+                return false;
+            };
 
             const evalResults: FeatureEvaluationResult = {
-                enabled: isEnabled,
+                enabled: isEnabled(),
                 strategies,
             };
 
@@ -297,11 +300,10 @@ export default class UnleashClient extends EventEmitter {
 
         let enabled = true;
         if (checkToggle) {
-            enabled = Boolean(
+            enabled =
                 this.isFeatureEnabled(feature, context, () =>
                     fallbackVariant ? fallbackVariant.enabled : false,
-                ).enabled,
-            );
+                ).enabled !== false;
             if (!enabled) {
                 return fallback;
             }

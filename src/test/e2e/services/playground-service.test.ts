@@ -237,8 +237,19 @@ describe('the playground service (e2e)', () => {
                         };
 
                         return serviceToggles.every((feature) => {
+                            // the playground differs from a normal SDK in that
+                            // it _must_ evaluate all srategies and features
+                            // regardless of whether they're supposed to be
+                            // enabled in the current environment or not. As
+                            // such, a playground feature's `isEnable` is not
+                            // necessarily the same as an SDK feature's
+                            // `isEnabled`. Instead, we must combine `isEnabled`
+                            // and `isEnabledInCurrentEnvironment` to get the
+                            // same state.
+
                             const enabledStateMatches =
-                                feature.isEnabled ===
+                                (feature.isEnabled === true &&
+                                    feature.isEnabledInCurrentEnvironment) ===
                                 client.isEnabled(feature.name, clientContext);
 
                             ctx.log(`feature.isEnabled: ${feature.isEnabled}`);
@@ -830,6 +841,9 @@ describe('the playground service (e2e)', () => {
 
                         ctx.log(JSON.stringify(serviceFeatures));
                         serviceFeatures.forEach((feature) => {
+                            // if there are strategies and they're all
+                            // incomplete and unknown, then the feature can't be
+                            // evaluated fully
                             if (feature.strategies.length) {
                                 expect(feature.isEnabled).toBe(
                                     unknownFeatureEvaluationResult,
@@ -895,7 +909,10 @@ describe('the playground service (e2e)', () => {
 
                         serviceFeatures.forEach((feature) => {
                             if (feature.strategies.length) {
-                                expect(feature.isEnabled).toBe(
+                                // if there are strategies and they're all
+                                // incomplete and false, then the feature
+                                // is also false
+                                expect(feature.isEnabled).toEqual(
                                     unknownFeatureEvaluationResult,
                                 );
                             }

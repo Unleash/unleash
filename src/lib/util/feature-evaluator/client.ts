@@ -201,8 +201,7 @@ export default class UnleashClient extends EventEmitter {
                     playgroundStrategyEvaluation.evaluationIncomplete,
             )
                 ? unknownFeatureEvaluationResult
-                : feature.enabled &&
-                  strategies.some(
+                : strategies.some(
                       (strategy) => strategy.result.enabled === true,
                   );
 

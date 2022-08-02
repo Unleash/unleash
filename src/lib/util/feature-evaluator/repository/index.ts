@@ -1,8 +1,5 @@
 import { EventEmitter } from 'events';
 import { ClientFeaturesResponse, FeatureInterface } from '../feature';
-import { CustomHeaders, CustomHeadersFunction } from '../headers';
-import getUrl from '../url-utils';
-import { HttpOptions } from '../http-options';
 import { TagFilter } from '../tags';
 import { BootstrapProvider } from './bootstrap-provider';
 import { StorageProvider } from './storage-provider';
@@ -17,19 +14,8 @@ export interface RepositoryInterface extends EventEmitter {
     start(): Promise<void>;
 }
 export interface RepositoryOptions {
-    url: string;
     appName: string;
-    instanceId: string;
-    projectName?: string;
-    refreshInterval: number;
-    timeout?: number;
-    headers?: CustomHeaders;
-    customHeadersFunction?: CustomHeadersFunction;
-    httpOptions?: HttpOptions;
-    namePrefix?: string;
-    tags?: Array<TagFilter>;
     bootstrapProvider: BootstrapProvider;
-    bootstrapOverride?: boolean;
     storageProvider: StorageProvider<ClientFeaturesResponse>;
 }
 
@@ -40,81 +26,31 @@ interface FeatureToggleData {
 export default class Repository extends EventEmitter implements EventEmitter {
     private timer: NodeJS.Timer | undefined;
 
-    private url: string;
-
-    private etag: string | undefined;
-
     private appName: string;
 
-    private instanceId: string;
-
-    private refreshInterval: number;
-
-    private headers?: CustomHeaders;
-
-    private customHeadersFunction?: CustomHeadersFunction;
-
-    private timeout?: number;
-
-    private stopped = false;
-
-    private projectName?: string;
-
-    private httpOptions?: HttpOptions;
-
-    private readonly namePrefix?: string;
-
-    private readonly tags?: Array<TagFilter>;
-
     private bootstrapProvider: BootstrapProvider;
-
-    private bootstrapOverride: boolean;
 
     private storageProvider: StorageProvider<ClientFeaturesResponse>;
 
     private ready: boolean = false;
-
-    private connected: boolean = false;
 
     private data: FeatureToggleData = {};
 
     private segments: Map<number, Segment>;
 
     constructor({
-        url,
         appName,
-        instanceId,
-        projectName,
-        refreshInterval = 15_000,
-        timeout,
-        headers,
-        customHeadersFunction,
-        httpOptions,
-        namePrefix,
-        tags,
         bootstrapProvider,
-        bootstrapOverride = true,
         storageProvider,
     }: RepositoryOptions) {
         super();
-        this.url = url;
-        this.refreshInterval = refreshInterval;
-        this.instanceId = instanceId;
         this.appName = appName;
-        this.projectName = projectName;
-        this.headers = headers;
-        this.timeout = timeout;
-        this.customHeadersFunction = customHeadersFunction;
-        this.httpOptions = httpOptions;
-        this.namePrefix = namePrefix;
-        this.tags = tags;
         this.bootstrapProvider = bootstrapProvider;
-        this.bootstrapOverride = bootstrapOverride;
         this.storageProvider = storageProvider;
         this.segments = new Map();
     }
 
-    validateFeature(feature: FeatureInterface) {
+    validateFeature(feature: FeatureInterface): void {
         const errors: string[] = [];
         if (!Array.isArray(feature.strategies)) {
             errors.push(
@@ -140,26 +76,8 @@ export default class Repository extends EventEmitter implements EventEmitter {
         }
     }
 
-    async start(): Promise<void> {
-        await Promise.all([this.loadBackup(), this.loadBootstrap()]);
-    }
-
-    async loadBackup(): Promise<void> {
-        try {
-            const content = await this.storageProvider.get(this.appName);
-
-            if (this.ready) {
-                return;
-            }
-
-            if (content && this.notEmpty(content)) {
-                this.data = this.convertToMap(content.features);
-                this.segments = this.createSegmentLookup(content.segments);
-                this.setReady();
-            }
-        } catch (err) {
-            this.emit(UnleashEvents.Error, err);
-        }
+    start(): Promise<void> {
+        return this.loadBootstrap();
     }
 
     setReady(): void {
@@ -180,19 +98,9 @@ export default class Repository extends EventEmitter implements EventEmitter {
         return new Map(segments.map((segment) => [segment.id, segment]));
     }
 
-    async save(
-        response: ClientFeaturesResponse,
-        fromApi: boolean,
-    ): Promise<void> {
-        if (fromApi) {
-            this.connected = true;
-            this.data = this.convertToMap(response.features);
-            this.segments = this.createSegmentLookup(response.segments);
-        } else if (!this.connected) {
-            // Only allow bootstrap if not connected
-            this.data = this.convertToMap(response.features);
-            this.segments = this.createSegmentLookup(response.segments);
-        }
+    async save(response: ClientFeaturesResponse): Promise<void> {
+        this.data = this.convertToMap(response.features);
+        this.segments = this.createSegmentLookup(response.segments);
 
         this.setReady();
         this.emit(UnleashEvents.Changed, [...response.features]);
@@ -207,13 +115,8 @@ export default class Repository extends EventEmitter implements EventEmitter {
         try {
             const content = await this.bootstrapProvider.readBootstrap();
 
-            if (!this.bootstrapOverride && this.ready) {
-                // early exit if we already have backup data and should not override it.
-                return;
-            }
-
             if (content && this.notEmpty(content)) {
-                await this.save(content, false);
+                await this.save(content);
             }
         } catch (err: any) {
             this.emit(
@@ -245,8 +148,7 @@ Message: ${err.message}`,
         return tags.map((tag) => `${tag.name}:${tag.value}`);
     }
 
-    stop() {
-        this.stopped = true;
+    stop(): void {
         if (this.timer) {
             clearTimeout(this.timer);
         }

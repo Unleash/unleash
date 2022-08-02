@@ -63,9 +63,6 @@ export const offlineUnleashClient = async ({
     const client = new UnleashClient({
         ...context,
         appName: context.appName,
-        disableMetrics: true,
-        refreshInterval: 0,
-        url: 'not-needed',
         storageProvider: new InMemStorageProvider(),
         bootstrap: {
             data: mapFeaturesForBootstrap(features),

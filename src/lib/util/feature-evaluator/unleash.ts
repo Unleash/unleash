@@ -1,56 +1,32 @@
-import { tmpdir } from 'os';
 import { EventEmitter } from 'events';
 import Client, { FeatureEvaluationResult } from './client';
 import Repository, { RepositoryInterface } from './repository';
-import { CustomHeaders, CustomHeadersFunction } from './headers';
 import { Context } from './context';
 import { Strategy, defaultStrategies } from './strategy';
 
 import { ClientFeaturesResponse, FeatureInterface } from './feature';
 import { Variant, getDefaultVariant } from './variant';
-import {
-    FallbackFunction,
-    createFallbackFunction,
-    generateInstanceId,
-} from './helpers';
-import { HttpOptions } from './http-options';
+import { FallbackFunction, createFallbackFunction } from './helpers';
 import { TagFilter } from './tags';
 import {
     BootstrapOptions,
     resolveBootstrapProvider,
 } from './repository/bootstrap-provider';
-import {
-    FileStorageProvider,
-    StorageProvider,
-} from './repository/storage-provider';
+import { StorageProvider } from './repository/storage-provider';
 import { UnleashEvents } from './events';
 
 export { Strategy, UnleashEvents };
 
-const BACKUP_PATH: string = tmpdir();
-
 export interface UnleashConfig {
     appName: string;
     environment?: string;
-    instanceId?: string;
-    url: string;
-    refreshInterval?: number;
     projectName?: string;
-    metricsInterval?: number;
-    namePrefix?: string;
-    disableMetrics?: boolean;
-    backupPath?: string;
     strategies?: Strategy[];
-    customHeaders?: CustomHeaders;
-    customHeadersFunction?: CustomHeadersFunction;
-    timeout?: number;
     repository?: RepositoryInterface;
-    httpOptions?: HttpOptions;
     tags?: Array<TagFilter>;
     bootstrap?: BootstrapOptions;
     bootstrapOverride?: boolean;
     storageProvider?: StorageProvider<ClientFeaturesResponse>;
-    disableAutoStart?: boolean;
 }
 
 export interface StaticContext {
@@ -72,36 +48,12 @@ export class Unleash extends EventEmitter {
     constructor({
         appName,
         environment = 'default',
-        projectName,
-        instanceId,
-        url,
-        refreshInterval = 15 * 1000,
-        backupPath = BACKUP_PATH,
         strategies = [],
         repository,
-        namePrefix,
-        customHeaders,
-        customHeadersFunction,
-        timeout,
-        httpOptions,
-        tags,
         bootstrap = { data: [] },
-        bootstrapOverride,
         storageProvider,
-        disableAutoStart = false,
     }: UnleashConfig) {
         super();
-
-        if (!url) {
-            throw new Error('Unleash API "url" is required');
-        }
-        if (!appName) {
-            throw new Error('Unleash client "appName" is required');
-        }
-
-        const unleashUrl = this.cleanUnleashUrl(url);
-
-        const unleashInstanceId = generateInstanceId(instanceId);
 
         this.staticContext = { appName, environment };
 
@@ -110,21 +62,9 @@ export class Unleash extends EventEmitter {
         this.repository =
             repository ||
             new Repository({
-                projectName,
-                url: unleashUrl,
                 appName,
-                instanceId: unleashInstanceId,
-                refreshInterval,
-                headers: customHeaders,
-                customHeadersFunction,
-                timeout,
-                httpOptions,
-                namePrefix,
-                tags,
                 bootstrapProvider,
-                bootstrapOverride,
-                storageProvider:
-                    storageProvider || new FileStorageProvider(backupPath),
+                storageProvider: storageProvider,
             });
 
         this.repository.on(UnleashEvents.Ready, () => {
@@ -163,36 +103,13 @@ export class Unleash extends EventEmitter {
         this.client.on(UnleashEvents.Warn, (msg) =>
             this.emit(UnleashEvents.Warn, msg),
         );
-
-        if (!disableAutoStart) {
-            process.nextTick(async () => this.start());
-        }
-    }
-
-    private cleanUnleashUrl(url: string): string {
-        let unleashUrl = url;
-        if (unleashUrl.endsWith('/features')) {
-            const oldUrl = unleashUrl;
-            process.nextTick(() =>
-                this.emit(
-                    UnleashEvents.Warn,
-                    `Unleash server URL "${oldUrl}" should no longer link directly to /features`,
-                ),
-            );
-            unleashUrl = unleashUrl.replace(/\/features$/, '');
-        }
-
-        if (!unleashUrl.endsWith('/')) {
-            unleashUrl += '/';
-        }
-        return unleashUrl;
     }
 
     async start(): Promise<void> {
         await Promise.all([this.repository.start()]);
     }
 
-    destroy() {
+    destroy(): void {
         this.repository.stop();
     }
 
@@ -211,8 +128,6 @@ export class Unleash extends EventEmitter {
         context: Context = {},
         fallback?: FallbackFunction | boolean,
     ): FeatureEvaluationResult {
-        // console.log('unleash.isEnabled');
-
         const enhancedContext = { ...this.staticContext, ...context };
         const fallbackFunc = createFallbackFunction(
             name,
@@ -238,7 +153,6 @@ export class Unleash extends EventEmitter {
         context: Context = {},
         fallbackVariant?: Variant,
     ): Variant {
-        // console.log('unleash.getVariant');
         const enhancedContext = { ...this.staticContext, ...context };
         let result;
         if (this.ready) {

@@ -4,7 +4,7 @@ import { Variant, getDefaultVariant } from './variant';
 import { Context } from './context';
 import { TagFilter } from './tags';
 import { UnleashEvents } from './events';
-import { ClientFeaturesResponse } from './feature';
+import { ClientFeaturesResponse, FeatureInterface } from './feature';
 import InMemStorageProvider from './repository/storage-provider-in-mem';
 import { FeatureEvaluationResult } from './client';
 
@@ -58,15 +58,17 @@ export function isEnabled(
     }
 }
 
-export function destroy() {
+export function destroy(): void {
     return instance && instance.destroy();
 }
 
-export function getFeatureToggleDefinition(toggleName: string) {
+export function getFeatureToggleDefinition(
+    toggleName: string,
+): FeatureInterface {
     return instance && instance.getFeatureToggleDefinition(toggleName);
 }
 
-export function getFeatureToggleDefinitions() {
+export function getFeatureToggleDefinitions(): FeatureInterface[] {
     return instance && instance.getFeatureToggleDefinitions();
 }
 

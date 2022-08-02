@@ -3,6 +3,7 @@ import { constraintSchemaBase } from './constraint-schema';
 import { parametersSchema } from './parameters-schema';
 
 const resultsSchema = {
+    description: 'Whether this was evaluated as true or false.',
     type: 'boolean',
 } as const;
 
@@ -28,14 +29,18 @@ export const playgroundSegmentSchema = {
     required: ['name', 'id', 'constraints', 'result'],
     properties: {
         id: {
-            type: 'number',
+            description: "The segment's id.",
+            type: 'integer',
         },
         name: {
+            description: 'The name of the segment.',
+            example: 'segment A',
             type: 'string',
         },
         result: resultsSchema,
         constraints: {
             type: 'array',
+            description: 'The list of constraints in this segment.',
             items: { $ref: playgroundConstraintSchema.$id },
         },
     },
@@ -64,12 +69,15 @@ export const playgroundStrategySchema = {
     required: ['name', 'result', 'segments', 'constraints', 'parameters'],
     properties: {
         name: {
+            description: "The strategy's name.",
             type: 'string',
         },
         id: {
+            description: "The strategy's id.",
             type: 'string',
         },
         result: {
+            description: "The strategy's evaluation result.",
             anyOf: [
                 {
                     type: 'object',
@@ -78,15 +86,21 @@ export const playgroundStrategySchema = {
                     properties: {
                         evaluationStatus: {
                             type: 'string',
+                            description:
+                                "Signals that this strategy could not be evaluated. This is most likely because you're using a custom strategy that Unleash doesn't know about.",
                             enum: [
                                 playgroundStrategyEvaluation.evaluationIncomplete,
                             ],
                         },
                         reason: {
                             type: 'string',
+                            description:
+                                'The reason why this strategy could not be evaluated.',
                             enum: playgroundStrategyEvaluation.incompleteEvaluationCauses,
                         },
                         enabled: {
+                            description:
+                                "Whether this strategy resolves to `false` or if it might resolve to `true`. Because Unleash can't evaluate the strategy, it can't say for certain whether it will be `true`, but if you have failing constraints or segments, it _can_ determine that your strategy would be `false`.",
                             anyOf: [
                                 { type: 'boolean', enum: [false] },
                                 {
@@ -105,27 +119,42 @@ export const playgroundStrategySchema = {
                     required: ['evaluationStatus', 'enabled'],
                     properties: {
                         evaluationStatus: {
+                            description:
+                                'Signals that this strategy was evaluated successfully.',
                             type: 'string',
                             enum: ['complete'],
                         },
-                        enabled: { type: 'boolean' },
+                        enabled: {
+                            type: 'boolean',
+                            description:
+                                'Whether this strategy evaluates to true or not.',
+                        },
                     },
                 },
             ],
         },
         segments: {
             type: 'array',
+            description:
+                "The strategy's segments and their evaluation results.",
             items: {
                 $ref: playgroundSegmentSchema.$id,
             },
         },
         constraints: {
             type: 'array',
+            description:
+                "The strategy's constraints and their evaluation results.",
             items: {
                 $ref: playgroundConstraintSchema.$id,
             },
         },
         parameters: {
+            description:
+                "The strategy's constraints and their evaluation results.",
+            example: {
+                myParam1: 'param value',
+            },
             $ref: parametersSchema.$id,
         },
     },
@@ -159,9 +188,18 @@ export const playgroundFeatureSchema = {
         'strategies',
     ],
     properties: {
-        name: { type: 'string', examples: ['my-feature'] },
-        projectId: { type: 'string', examples: ['my-project'] },
+        name: {
+            type: 'string',
+            examples: ['my-feature'],
+            description: "The feature's name.",
+        },
+        projectId: {
+            type: 'string',
+            examples: ['my-project'],
+            description: 'The ID of the project that contains this feature.',
+        },
         strategies: {
+            description: 'The strategies that apply to this feature.',
             type: 'array',
             items: {
                 $ref: playgroundStrategySchema.$id,
@@ -180,22 +218,39 @@ export const playgroundFeatureSchema = {
             ],
         },
         variant: {
+            description:
+                "The feature variant you receive based on the provided context or the _disabled variant_. If a feature is disabled or doesn't have any variants, you would get the _disabled variant_. Otherwise, you'll get one of the feature's defined variants.",
             type: 'object',
             additionalProperties: false,
             required: ['name', 'enabled'],
             properties: {
-                name: { type: 'string' },
-                enabled: { type: 'boolean' },
+                name: {
+                    type: 'string',
+                    description:
+                        "The variant's name. If there is no variant or if the toggle is disabled, this will be `disabled`",
+                    example: 'red-variant',
+                },
+                enabled: {
+                    type: 'boolean',
+                    description:
+                        "Whether the variant is enabled or not. If the feature is disabled or if it doesn't have variants, this property will be `false`",
+                },
                 payload: {
                     type: 'object',
                     additionalProperties: false,
                     required: ['type', 'value'],
+                    description: 'An optional payload attached to the variant.',
                     properties: {
                         type: {
+                            description: 'The format of the payload.',
                             type: 'string',
                             enum: ['json', 'csv', 'string'],
                         },
-                        value: { type: 'string' },
+                        value: {
+                            type: 'string',
+                            description: 'The payload value stringified.',
+                            example: '{"property": "value"}',
+                        },
                     },
                 },
             },

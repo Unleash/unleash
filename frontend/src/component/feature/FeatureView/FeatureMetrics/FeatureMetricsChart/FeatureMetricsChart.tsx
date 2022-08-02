@@ -67,3 +67,6 @@ ChartJS.register(
     Tooltip,
     Title
 );
+
+// Use a default export to lazy-load the charting library.
+export default FeatureMetricsChart;

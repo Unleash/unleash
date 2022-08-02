@@ -1,6 +1,5 @@
 import { EventEmitter } from 'events';
 import { ClientFeaturesResponse, FeatureInterface } from '../feature';
-import { TagFilter } from '../tags';
 import { BootstrapProvider } from './bootstrap-provider';
 import { StorageProvider } from './storage-provider';
 import { UnleashEvents } from '../events';
@@ -142,10 +141,6 @@ Message: ${err.message}`,
         );
 
         return obj;
-    }
-
-    mergeTagsToStringArray(tags: Array<TagFilter>): Array<string> {
-        return tags.map((tag) => `${tag.name}:${tag.value}`);
     }
 
     stop(): void {

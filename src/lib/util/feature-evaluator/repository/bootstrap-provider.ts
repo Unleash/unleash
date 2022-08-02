@@ -12,7 +12,9 @@ export interface BootstrapOptions {
 
 export class DefaultBootstrapProvider implements BootstrapProvider {
     private data?: FeatureInterface[];
+
     private segments?: Segment[];
+
     constructor(options: BootstrapOptions) {
         this.data = options.data;
         this.segments = options.segments;

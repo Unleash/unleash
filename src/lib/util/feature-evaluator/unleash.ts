@@ -7,7 +7,6 @@ import { Strategy, defaultStrategies } from './strategy';
 import { ClientFeaturesResponse, FeatureInterface } from './feature';
 import { Variant, getDefaultVariant } from './variant';
 import { FallbackFunction, createFallbackFunction } from './helpers';
-import { TagFilter } from './tags';
 import {
     BootstrapOptions,
     resolveBootstrapProvider,
@@ -23,7 +22,6 @@ export interface UnleashConfig {
     projectName?: string;
     strategies?: Strategy[];
     repository?: RepositoryInterface;
-    tags?: Array<TagFilter>;
     bootstrap?: BootstrapOptions;
     bootstrapOverride?: boolean;
     storageProvider?: StorageProvider<ClientFeaturesResponse>;

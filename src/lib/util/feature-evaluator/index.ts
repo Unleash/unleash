@@ -2,7 +2,6 @@ import { once } from 'events';
 import { Unleash, UnleashConfig } from './unleash';
 import { Variant, getDefaultVariant } from './variant';
 import { Context } from './context';
-import { TagFilter } from './tags';
 import { UnleashEvents } from './events';
 import { ClientFeaturesResponse, FeatureInterface } from './feature';
 import InMemStorageProvider from './repository/storage-provider-in-mem';
@@ -10,14 +9,7 @@ import { FeatureEvaluationResult } from './client';
 
 // exports
 export { Strategy } from './strategy/index';
-export {
-    Context,
-    Variant,
-    Unleash,
-    TagFilter,
-    InMemStorageProvider,
-    UnleashEvents,
-};
+export { Context, Variant, Unleash, InMemStorageProvider, UnleashEvents };
 export type { ClientFeaturesResponse, UnleashConfig };
 
 let instance: Unleash | undefined;

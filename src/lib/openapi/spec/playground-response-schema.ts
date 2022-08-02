@@ -18,10 +18,12 @@ export const playgroundResponseSchema = {
     required: ['features', 'input'],
     properties: {
         input: {
+            description: 'The given input used to evaluate the features.',
             $ref: playgroundRequestSchema.$id,
         },
         features: {
             type: 'array',
+            description: 'The list of features that have been evaluated.',
             items: {
                 $ref: playgroundFeatureSchema.$id,
             },

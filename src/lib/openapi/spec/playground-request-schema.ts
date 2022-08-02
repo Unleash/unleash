@@ -8,13 +8,17 @@ export const playgroundRequestSchema = {
     type: 'object',
     required: ['environment', 'context'],
     properties: {
-        environment: { type: 'string', examples: ['development'] },
+        environment: {
+            type: 'string',
+            example: 'development',
+            description: 'The environment to evaluate toggles in.',
+        },
         projects: {
             oneOf: [
                 {
                     type: 'array',
                     items: { type: 'string' },
-                    examples: ['my-project', 'my-other-project'],
+                    example: 'my-project',
                     description: 'A list of projects to check for toggles in.',
                 },
                 {
@@ -25,6 +29,7 @@ export const playgroundRequestSchema = {
             ],
         },
         context: {
+            description: 'The context to use when evaluating toggles',
             $ref: sdkContextSchema.$id,
         },
     },

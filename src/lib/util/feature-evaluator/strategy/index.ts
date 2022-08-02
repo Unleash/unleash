@@ -3,7 +3,7 @@ import GradualRolloutRandomStrategy from './gradual-rollout-random';
 import GradualRolloutUserIdStrategy from './gradual-rollout-user-id';
 import GradualRolloutSessionIdStrategy from './gradual-rollout-session-id';
 import UserWithIdStrategy from './user-with-id-strategy';
-import RemoteAddressStrategy from './remote-addresss-strategy';
+import RemoteAddressStrategy from './remote-address-strategy';
 import FlexibleRolloutStrategy from './flexible-rollout-strategy';
 import { Strategy } from './strategy';
 import UnknownStrategy from './unknown-strategy';

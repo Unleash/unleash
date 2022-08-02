@@ -34,8 +34,19 @@ export default class FlexibleRolloutStrategy extends Strategy {
         }
     }
 
-    isEnabled(parameters: any, context: Context): boolean {
-        const groupId = parameters.groupId || context.featureToggle || '';
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    isEnabled(
+        parameters: {
+            groupId?: string;
+            rollout: number | string;
+            stickiness?: string;
+        },
+        context: Context,
+    ): boolean {
+        const groupId: string =
+            parameters.groupId ||
+            (context.featureToggle && String(context.featureToggle)) ||
+            '';
         const percentage = Number(parameters.rollout);
         const stickiness: string = parameters.stickiness || STICKINESS.default;
         const stickinessId = this.resolveStickiness(stickiness, context);

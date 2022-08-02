@@ -6,7 +6,7 @@ export default class UserWithIdStrategy extends Strategy {
         super('userWithId');
     }
 
-    isEnabled(parameters: any, context: Context): boolean {
+    isEnabled(parameters: { userIds?: string }, context: Context): boolean {
         const userIdList = parameters.userIds
             ? parameters.userIds.split(/\s*,\s*/)
             : [];

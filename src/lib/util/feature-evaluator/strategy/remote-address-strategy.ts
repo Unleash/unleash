@@ -7,7 +7,7 @@ export default class RemoteAddressStrategy extends Strategy {
         super('remoteAddress');
     }
 
-    isEnabled(parameters: any, context: Context): boolean {
+    isEnabled(parameters: { IPs?: string }, context: Context): boolean {
         if (!parameters.IPs) {
             return false;
         }

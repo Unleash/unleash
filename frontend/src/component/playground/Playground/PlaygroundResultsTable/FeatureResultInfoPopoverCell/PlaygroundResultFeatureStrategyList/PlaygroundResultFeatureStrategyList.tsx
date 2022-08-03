@@ -21,7 +21,7 @@ export const PlaygroundResultFeatureStrategyList = ({
     return (
         <ConditionallyRender
             condition={
-                !feature.isEnabled && feature.isEnabledInCurrentEnvironment
+                !feature.isEnabledInCurrentEnvironment
             }
             show={
                 <WrappedPlaygroundResultStrategyList

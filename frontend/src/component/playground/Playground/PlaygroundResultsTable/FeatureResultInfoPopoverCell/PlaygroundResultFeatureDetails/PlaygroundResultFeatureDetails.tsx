@@ -35,10 +35,10 @@ export const PlaygroundResultFeatureDetails = ({
     const reason =
         feature.isEnabled === 'unevaluated'
             ? 'custom strategies are not evaluated yet'
+            : !feature.isEnabledInCurrentEnvironment
+            ? 'the environment is disabled'
             : feature.isEnabled
             ? 'at least one strategy is True'
-            : feature?.isEnabledInCurrentEnvironment
-            ? 'the environment is disabled'
             : 'all strategies are False';
 
     const color =

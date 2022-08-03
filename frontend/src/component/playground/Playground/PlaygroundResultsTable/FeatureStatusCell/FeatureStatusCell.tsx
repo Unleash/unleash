@@ -3,7 +3,7 @@ import { Box, styled } from '@mui/material';
 import { PlaygroundResultChip } from '../PlaygroundResultChip/PlaygroundResultChip';
 
 interface IFeatureStatusCellProps {
-    enabled: boolean;
+    enabled: boolean | 'unknown';
 }
 
 const StyledCellBox = styled(Box)(({ theme }) => ({

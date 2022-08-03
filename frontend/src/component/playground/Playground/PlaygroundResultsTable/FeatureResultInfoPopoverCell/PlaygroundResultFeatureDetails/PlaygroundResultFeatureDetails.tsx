@@ -23,8 +23,6 @@ export const PlaygroundResultFeatureDetails = ({
     const { classes: styles } = useStyles();
     const theme = useTheme();
 
-    console.log(feature);
-
     const description =
         feature.isEnabled === 'unevaluated'
             ? `This feature toggle is Unevaluated in ${input?.environment} because `

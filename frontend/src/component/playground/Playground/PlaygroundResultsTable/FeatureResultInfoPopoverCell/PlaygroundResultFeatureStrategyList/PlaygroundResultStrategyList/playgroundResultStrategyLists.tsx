@@ -35,7 +35,6 @@ export const PlaygroundResultStrategyLists = ({
     input,
     compact = false,
 }: PlaygroundResultStrategyListProps) => {
-    console.log(strategies);
     return (
         <ConditionallyRender
             condition={strategies.length > 0}

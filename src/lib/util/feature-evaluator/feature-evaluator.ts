@@ -5,7 +5,7 @@ import { Context } from './context';
 import { Strategy, defaultStrategies } from './strategy';
 
 import { ClientFeaturesResponse, FeatureInterface } from './feature';
-import { Variant, getDefaultVariant } from './variant';
+import { Variant } from './variant';
 import { FallbackFunction, createFallbackFunction } from './helpers';
 import {
     BootstrapOptions,
@@ -39,10 +39,6 @@ export class FeatureEvaluator extends EventEmitter {
 
     private staticContext: StaticContext;
 
-    private synchronized: boolean = false;
-
-    private ready: boolean = false;
-
     constructor({
         appName,
         environment = 'default',
@@ -66,7 +62,6 @@ export class FeatureEvaluator extends EventEmitter {
             });
 
         this.repository.on(UnleashEvents.Ready, () => {
-            this.ready = true;
             process.nextTick(() => {
                 this.emit(UnleashEvents.Ready);
             });
@@ -81,16 +76,6 @@ export class FeatureEvaluator extends EventEmitter {
         this.repository.on(UnleashEvents.Warn, (msg) =>
             this.emit(UnleashEvents.Warn, msg),
         );
-
-        this.repository.on(UnleashEvents.Changed, (data) => {
-            this.emit(UnleashEvents.Changed, data);
-
-            // Only emit the fully synchronized event the first time.
-            if (!this.synchronized) {
-                this.synchronized = true;
-                process.nextTick(() => this.emit(UnleashEvents.Synchronized));
-            }
-        });
 
         // setup client
         const supportedStrategies = strategies.concat(defaultStrategies);
@@ -133,17 +118,7 @@ export class FeatureEvaluator extends EventEmitter {
             fallback,
         );
 
-        let result;
-        if (this.ready) {
-            result = this.client.isEnabled(name, enhancedContext, fallbackFunc);
-        } else {
-            result = fallbackFunc();
-            this.emit(
-                UnleashEvents.Warn,
-                `Unleash has not been initialized yet. isEnabled(${name}) defaulted to ${result}`,
-            );
-        }
-        return result;
+        return this.client.isEnabled(name, enhancedContext, fallbackFunc);
     }
 
     getVariant(
@@ -152,25 +127,7 @@ export class FeatureEvaluator extends EventEmitter {
         fallbackVariant?: Variant,
     ): Variant {
         const enhancedContext = { ...this.staticContext, ...context };
-        let result;
-        if (this.ready) {
-            result = this.client.getVariant(
-                name,
-                enhancedContext,
-                fallbackVariant,
-            );
-        } else {
-            result =
-                typeof fallbackVariant !== 'undefined'
-                    ? fallbackVariant
-                    : getDefaultVariant();
-            this.emit(
-                UnleashEvents.Warn,
-                `Unleash has not been initialized yet. isEnabled(${name}) defaulted to ${result}`,
-            );
-        }
-
-        return result;
+        return this.client.getVariant(name, enhancedContext, fallbackVariant);
     }
 
     forceGetVariant(
@@ -179,25 +136,11 @@ export class FeatureEvaluator extends EventEmitter {
         fallbackVariant?: Variant,
     ): Variant {
         const enhancedContext = { ...this.staticContext, ...context };
-        let result;
-        if (this.ready) {
-            result = this.client.forceGetVariant(
-                name,
-                enhancedContext,
-                fallbackVariant,
-            );
-        } else {
-            result =
-                typeof fallbackVariant !== 'undefined'
-                    ? fallbackVariant
-                    : getDefaultVariant();
-            this.emit(
-                UnleashEvents.Warn,
-                `Unleash has not been initialized yet. isEnabled(${name}) defaulted to ${result}`,
-            );
-        }
-
-        return result;
+        return this.client.forceGetVariant(
+            name,
+            enhancedContext,
+            fallbackVariant,
+        );
     }
 
     getFeatureToggleDefinition(toggleName: string): FeatureInterface {

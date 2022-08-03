@@ -13,7 +13,7 @@ export const playgroundStrategySchema = {
     $id: '#/components/schemas/playgroundStrategySchema',
     type: 'object',
     additionalProperties: false,
-    required: ['name', 'result', 'segments', 'constraints', 'parameters'],
+    required: ['id', 'name', 'result', 'segments', 'constraints', 'parameters'],
     properties: {
         name: {
             description: "The strategy's name.",

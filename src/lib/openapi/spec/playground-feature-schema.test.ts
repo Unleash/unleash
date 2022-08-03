@@ -43,6 +43,7 @@ const playgroundStrategy = (
     parameters: Arbitrary<Record<string, string>>,
 ): Arbitrary<PlaygroundStrategySchema> =>
     fc.record({
+        id: fc.uuid(),
         name: fc.constant(name),
         result: fc.oneof(
             fc.record({

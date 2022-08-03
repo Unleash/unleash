@@ -1,24 +1,5 @@
-import { VariantSchema } from '../../../../openapi';
-
-export const PlaygroundConstraintSchemaOperatorEnum = {
-    NotIn: 'NOT_IN',
-    In: 'IN',
-    StrEndsWith: 'STR_ENDS_WITH',
-    StrStartsWith: 'STR_STARTS_WITH',
-    StrContains: 'STR_CONTAINS',
-    NumEq: 'NUM_EQ',
-    NumGt: 'NUM_GT',
-    NumGte: 'NUM_GTE',
-    NumLt: 'NUM_LT',
-    NumLte: 'NUM_LTE',
-    DateAfter: 'DATE_AFTER',
-    DateBefore: 'DATE_BEFORE',
-    SemverEq: 'SEMVER_EQ',
-    SemverGt: 'SEMVER_GT',
-    SemverLt: 'SEMVER_LT',
-} as const;
-export type PlaygroundConstraintSchemaOperatorEnum =
-    typeof PlaygroundConstraintSchemaOperatorEnum[keyof typeof PlaygroundConstraintSchemaOperatorEnum];
+import { VariantSchema } from 'openapi';
+import { Operator } from 'constants/operators';
 
 export interface PlaygroundConstraintSchema {
     /**
@@ -32,7 +13,7 @@ export interface PlaygroundConstraintSchema {
      * @type {string}
      * @memberof PlaygroundConstraintSchema
      */
-    operator: PlaygroundConstraintSchemaOperatorEnum;
+    operator: Operator;
     /**
      * Whether the operator should be case sensitive or not. Defaults to `false` (being case sensitive).
      * @type {boolean}
@@ -92,7 +73,7 @@ export interface PlaygroundFeatureSchema {
     isEnabledInCurrentEnvironment: boolean;
     /**
      *
-     * @type {PlaygroundFeatureSchemaIsEnabled}
+     * @type {boolean | 'unevaluated'}
      * @memberof PlaygroundFeatureSchema
      */
     isEnabled: boolean | 'unevaluated';
@@ -146,13 +127,13 @@ export interface PlaygroundFeatureSchemaVariantPayload {
     value: string;
 }
 
-export const PlaygroundFeatureSchemaVariantPayloadTypeEnum = {
+export const playgroundFeatureSchemaVariantPayloadTypeEnum = {
     Json: 'json',
     Csv: 'csv',
     String: 'string',
 } as const;
 export type PlaygroundFeatureSchemaVariantPayloadTypeEnum =
-    typeof PlaygroundFeatureSchemaVariantPayloadTypeEnum[keyof typeof PlaygroundFeatureSchemaVariantPayloadTypeEnum];
+    typeof playgroundFeatureSchemaVariantPayloadTypeEnum[keyof typeof playgroundFeatureSchemaVariantPayloadTypeEnum];
 
 export interface PlaygroundRequestSchema {
     /**
@@ -258,11 +239,10 @@ export interface PlaygroundStrategySchema {
     parameters: { [key: string]: string };
 }
 
-export const PlaygroundStrategySchemaResultEvaluationStatusEnum = {
-    Complete: 'complete',
-} as const;
-export type PlaygroundStrategySchemaResultEvaluationStatusEnum =
-    typeof PlaygroundStrategySchemaResultEvaluationStatusEnum[keyof typeof PlaygroundStrategySchemaResultEvaluationStatusEnum];
+export enum PlaygroundStrategyResultEvaluationStatusEnum {
+    complete = 'complete',
+    incomplete = 'incomplete',
+}
 
 export interface PlaygroundStrategySchemaResult {
     /**
@@ -270,7 +250,7 @@ export interface PlaygroundStrategySchemaResult {
      * @type {string}
      * @memberof PlaygroundStrategySchemaResult
      */
-    evaluationStatus?: PlaygroundStrategySchemaResultEvaluationStatusEnum;
+    evaluationStatus?: PlaygroundStrategyResultEvaluationStatusEnum;
     /**
      * Whether this strategy evaluates to true or not.
      * @type {boolean}

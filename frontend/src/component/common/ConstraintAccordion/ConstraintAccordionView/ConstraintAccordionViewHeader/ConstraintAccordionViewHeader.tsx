@@ -4,12 +4,12 @@ import { ConstraintAccordionViewHeaderInfo } from './ConstraintAccordionViewHead
 import { ConstraintAccordionHeaderActions } from '../../ConstraintAccordionHeaderActions/ConstraintAccordionHeaderActions';
 import { useStyles } from 'component/common/ConstraintAccordion/ConstraintAccordion.styles';
 import {
-    PlaygroundFeatureStrategyConstraintResult,
+    PlaygroundConstraintSchema,
     PlaygroundRequestSchema,
-} from '../../../../../hooks/api/actions/usePlayground/playground.model';
+} from 'hooks/api/actions/usePlayground/playground.model';
 
 interface IConstraintAccordionViewHeaderProps {
-    constraint: IConstraint | PlaygroundFeatureStrategyConstraintResult;
+    constraint: IConstraint | PlaygroundConstraintSchema;
     onDelete?: () => void;
     onEdit?: () => void;
     singleValue: boolean;

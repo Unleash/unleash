@@ -4,7 +4,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import classnames from 'classnames';
 import { IConstraint } from '../../../../../../interfaces/strategy';
 import { useStyles } from '../../../ConstraintAccordion.styles';
-import { PlaygroundFeatureStrategyConstraintResult } from '../../../../../../hooks/api/actions/usePlayground/playground.model';
+import { PlaygroundConstraintSchema } from 'hooks/api/actions/usePlayground/playground.model';
 
 const StyledValuesSpan = styled('span')(({ theme }) => ({
     display: '-webkit-box',
@@ -21,7 +21,7 @@ const StyledValuesSpan = styled('span')(({ theme }) => ({
 }));
 
 interface ConstraintSingleValueProps {
-    constraint: IConstraint | PlaygroundFeatureStrategyConstraintResult;
+    constraint: IConstraint | PlaygroundConstraintSchema;
     expanded: boolean;
     maxLength: number;
     allowExpand: (shouldExpand: boolean) => void;

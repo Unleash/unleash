@@ -19,9 +19,7 @@ import PercentageCircle from '../../../../../../../../common/PercentageCircle/Pe
 import StringTruncator from '../../../../../../../../common/StringTruncator/StringTruncator';
 import { useStrategies } from '../../../../../../../../../hooks/api/getters/useStrategies/useStrategies';
 import { PlaygroundConstraintItem } from '../PlaygroundConstraintItem/PlaygroundConstraintItem';
-import {
-    ConstraintItem
-} from "../../../../../../../../feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyExecution/ConstraintItem/ConstraintItem";
+import { ConstraintItem } from '../../../../../../../../feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyExecution/ConstraintItem/ConstraintItem';
 
 interface PlaygroundResultStrategyExecutionProps {
     strategyResult: PlaygroundStrategySchema;
@@ -217,8 +215,9 @@ export const PlaygroundResultStrategyExecution = ({
                             </p>
                             <ConditionallyRender
                                 condition={
-                                    typeof strategyResult.parameters[param.name] !==
-                                    'undefined'
+                                    typeof strategyResult.parameters[
+                                        param.name
+                                    ] !== 'undefined'
                                 }
                                 show={
                                     <ConditionallyRender

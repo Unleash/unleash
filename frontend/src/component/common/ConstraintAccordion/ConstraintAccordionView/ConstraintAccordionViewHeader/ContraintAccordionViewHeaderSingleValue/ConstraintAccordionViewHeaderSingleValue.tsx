@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { Chip, styled, Typography } from '@mui/material';
-import { formatConstraintValue } from '../../../../../../utils/formatConstraintValue';
+import { formatConstraintValue } from 'utils/formatConstraintValue';
 import { useStyles } from '../../../ConstraintAccordion.styles';
 import { IConstraint } from '../../../../../../interfaces/strategy';
-import { useLocationSettings } from '../../../../../../hooks/useLocationSettings';
-import { PlaygroundFeatureStrategyConstraintResult } from '../../../../../../hooks/api/actions/usePlayground/playground.model';
+import { useLocationSettings } from 'hooks/useLocationSettings';
+import { PlaygroundConstraintSchema } from 'hooks/api/actions/usePlayground/playground.model';
 import { ConditionallyRender } from '../../../../ConditionallyRender/ConditionallyRender';
 
 const StyledSingleValueChip = styled(Chip)(({ theme }) => ({
@@ -15,7 +15,7 @@ const StyledSingleValueChip = styled(Chip)(({ theme }) => ({
 }));
 
 interface ConstraintSingleValueProps {
-    constraint: IConstraint | PlaygroundFeatureStrategyConstraintResult;
+    constraint: IConstraint | PlaygroundConstraintSchema;
     allowExpand: (shouldExpand: boolean) => void;
 }
 

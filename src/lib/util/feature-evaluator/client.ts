@@ -108,88 +108,72 @@ export default class UnleashClient extends EventEmitter {
                 enabled: feature.enabled,
                 strategies: [],
             };
-        } else {
-            const strategies = feature.strategies.map(
-                (strategySelector): PlaygroundStrategySchema => {
-                    const strategy = this.getStrategy(strategySelector.name);
+        }
 
-                    const segments =
-                        strategySelector.segments
-                            ?.map(this.getSegment(this.repository))
-                            .filter(Boolean) ?? [];
+        const strategies = feature.strategies.map(
+            (strategySelector): PlaygroundStrategySchema => {
+                const strategy = this.getStrategy(strategySelector.name);
 
-                    if (!strategy) {
-                        this.warnOnce(
-                            strategySelector.name,
-                            feature.name,
-                            feature.strategies,
-                        );
+                const segments =
+                    strategySelector.segments
+                        ?.map(this.getSegment(this.repository))
+                        .filter(Boolean) ?? [];
 
-                        const unknownStrategy = this.getStrategy('unknown');
-                        const results =
-                            unknownStrategy.isEnabledWithConstraints(
-                                strategySelector.parameters,
-                                context,
-                                strategySelector.constraints,
-                                segments,
-                            );
-
-                        return {
-                            name: strategySelector.name,
-                            id: strategySelector.id,
-                            parameters: strategySelector.parameters,
-                            ...results,
-                        };
-                    }
-
-                    const results = strategy.isEnabledWithConstraints(
-                        strategySelector.parameters,
-                        context,
-                        strategySelector.constraints,
-                        segments,
-                    );
-
-                    const evalResult = {
+                const evaluateStrategy = (strategyToEvaluate: Strategy) => {
+                    return {
                         name: strategySelector.name,
                         id: strategySelector.id,
                         parameters: strategySelector.parameters,
-                        ...results,
+                        ...strategyToEvaluate.isEnabledWithConstraints(
+                            strategySelector.parameters,
+                            context,
+                            strategySelector.constraints,
+                            segments,
+                        ),
                     };
+                };
 
-                    return evalResult;
-                },
-            );
+                if (!strategy) {
+                    this.warnOnce(
+                        strategySelector.name,
+                        feature.name,
+                        feature.strategies,
+                    );
 
-            // Feature evaluation
-            const isEnabled = () => {
-                // if at least one strategy is enabled, then the feature is enabled
-                if (
-                    strategies.some(
-                        (strategy) => strategy.result.enabled === true,
-                    )
-                ) {
-                    return true;
+                    return evaluateStrategy(this.getStrategy('unknown'));
                 }
 
-                // if at least one strategy is unknown, then the feature _may_ be enabled
-                if (
-                    strategies.some(
-                        (strategy) => strategy.result.enabled === 'unknown',
-                    )
-                ) {
-                    return unknownFeatureEvaluationResult;
-                }
+                return evaluateStrategy(strategy);
+            },
+        );
 
-                return false;
-            };
+        // Feature evaluation
+        const isEnabled = () => {
+            // if at least one strategy is enabled, then the feature is enabled
+            if (
+                strategies.some((strategy) => strategy.result.enabled === true)
+            ) {
+                return true;
+            }
 
-            const evalResults: FeatureEvaluationResult = {
-                enabled: isEnabled(),
-                strategies,
-            };
+            // if at least one strategy is unknown, then the feature _may_ be enabled
+            if (
+                strategies.some(
+                    (strategy) => strategy.result.enabled === 'unknown',
+                )
+            ) {
+                return unknownFeatureEvaluationResult;
+            }
 
-            return evalResults;
-        }
+            return false;
+        };
+
+        const evalResults: FeatureEvaluationResult = {
+            enabled: isEnabled(),
+            strategies,
+        };
+
+        return evalResults;
     }
 
     getSegment(repo: RepositoryInterface) {

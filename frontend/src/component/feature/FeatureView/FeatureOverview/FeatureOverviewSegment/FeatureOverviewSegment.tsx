@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { DonutLarge } from '@mui/icons-material';
 import { useStyles } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewSegment/FeatureOverviewSegment.styles';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
-import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 
 interface IFeatureOverviewSegmentProps {
     strategyId: string;
@@ -32,7 +31,6 @@ export const FeatureOverviewSegment = ({
                             {segment.name}
                         </Link>
                     </div>
-                    <StrategySeparator text="AND" />
                 </Fragment>
             ))}
         </>

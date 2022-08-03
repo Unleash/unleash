@@ -19,7 +19,6 @@ import PercentageCircle from '../../../../../../../../common/PercentageCircle/Pe
 import StringTruncator from '../../../../../../../../common/StringTruncator/StringTruncator';
 import { useStrategies } from '../../../../../../../../../hooks/api/getters/useStrategies/useStrategies';
 import { PlaygroundConstraintItem } from '../PlaygroundConstraintItem/PlaygroundConstraintItem';
-import { ConstraintItem } from '../../../../../../../../feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyExecution/ConstraintItem/ConstraintItem';
 
 interface PlaygroundResultStrategyExecutionProps {
     strategyResult: PlaygroundStrategySchema;
@@ -30,6 +29,11 @@ interface PlaygroundResultStrategyExecutionProps {
 const StyledStrategyExecutionWrapper = styled('div')(({ theme }) => ({
     padding: theme.spacing(1),
 }));
+
+const StyledParamWrapper = styled('div')(({ theme }) => ({
+    padding: theme.spacing(2,1),
+}));
+
 
 export const PlaygroundResultStrategyExecution = ({
     strategyResult,
@@ -155,7 +159,7 @@ export const PlaygroundResultStrategyExecution = ({
         });
     };
 
-    const renderCustomStrategy = () => {
+    const renderCustomStrategyParameters = () => {
         if (!definition?.editable) return null;
         return definition?.parameters.map((param: any, index: number) => {
             const notLastItem = index !== definition?.parameters?.length - 1;
@@ -166,7 +170,7 @@ export const PlaygroundResultStrategyExecution = ({
                     );
                     return (
                         <Fragment key={param?.name}>
-                            <ConstraintItem value={values} text={param.name} />
+                            <PlaygroundConstraintItem value={values} text={param.name} />
                             <ConditionallyRender
                                 condition={notLastItem}
                                 show={<StrategySeparator text="AND" />}
@@ -352,8 +356,10 @@ export const PlaygroundResultStrategyExecution = ({
                     </Box>
                 }
             />
-            {renderParameters()}
-            {renderCustomStrategy()}
+            <StyledParamWrapper>
+                {renderParameters()}
+                {renderCustomStrategyParameters()}
+            </StyledParamWrapper>
         </StyledStrategyExecutionWrapper>
     );
 };

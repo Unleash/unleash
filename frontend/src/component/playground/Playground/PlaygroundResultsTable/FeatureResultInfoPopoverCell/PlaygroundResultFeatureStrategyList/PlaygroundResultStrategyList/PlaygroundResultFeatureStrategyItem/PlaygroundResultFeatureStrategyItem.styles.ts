@@ -29,6 +29,7 @@ export const useStyles = makeStyles()(theme => ({
             padding: '0.5rem',
         },
         width: '100%',
+        flexShrink: 0,
         paddingBottom: '1rem',
         borderRadius: theme.shape.borderRadiusMedium,
         background: theme.palette.background.default,

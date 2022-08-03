@@ -1,5 +1,5 @@
 import { once } from 'events';
-import { Unleash, UnleashConfig } from './unleash';
+import { Unleash, UnleashConfig } from './feature-evaluator';
 import { Variant, getDefaultVariant } from './variant';
 import { Context } from './context';
 import { UnleashEvents } from './events';

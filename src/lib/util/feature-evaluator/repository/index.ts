@@ -1,11 +1,9 @@
-import { EventEmitter } from 'events';
 import { ClientFeaturesResponse, FeatureInterface } from '../feature';
 import { BootstrapProvider } from './bootstrap-provider';
 import { StorageProvider } from './storage-provider';
-import { UnleashEvents } from '../events';
 import { Segment } from '../strategy/strategy';
 
-export interface RepositoryInterface extends EventEmitter {
+export interface RepositoryInterface {
     getToggle(name: string): FeatureInterface;
     getToggles(): FeatureInterface[];
     getSegment(id: number): Segment | undefined;
@@ -22,7 +20,7 @@ interface FeatureToggleData {
     [key: string]: FeatureInterface;
 }
 
-export default class Repository extends EventEmitter implements EventEmitter {
+export default class Repository {
     private timer: NodeJS.Timer | undefined;
 
     private appName: string;
@@ -30,8 +28,6 @@ export default class Repository extends EventEmitter implements EventEmitter {
     private bootstrapProvider: BootstrapProvider;
 
     private storageProvider: StorageProvider<ClientFeaturesResponse>;
-
-    private ready: boolean = false;
 
     private data: FeatureToggleData = {};
 
@@ -42,52 +38,14 @@ export default class Repository extends EventEmitter implements EventEmitter {
         bootstrapProvider,
         storageProvider,
     }: RepositoryOptions) {
-        super();
         this.appName = appName;
         this.bootstrapProvider = bootstrapProvider;
         this.storageProvider = storageProvider;
         this.segments = new Map();
     }
 
-    validateFeature(feature: FeatureInterface): void {
-        const errors: string[] = [];
-        if (!Array.isArray(feature.strategies)) {
-            errors.push(
-                `feature.strategies should be an array, but was ${typeof feature.strategies}`,
-            );
-        }
-
-        if (feature.variants && !Array.isArray(feature.variants)) {
-            errors.push(
-                `feature.variants should be an array, but was ${typeof feature.variants}`,
-            );
-        }
-
-        if (typeof feature.enabled !== 'boolean') {
-            errors.push(
-                `feature.enabled should be an boolean, but was ${typeof feature.enabled}`,
-            );
-        }
-
-        if (errors.length > 0) {
-            const err = new Error(errors.join(', '));
-            this.emit(UnleashEvents.Error, err);
-        }
-    }
-
     start(): Promise<void> {
         return this.loadBootstrap();
-    }
-
-    setReady(): void {
-        const doEmitReady = this.ready === false;
-        this.ready = true;
-
-        if (doEmitReady) {
-            process.nextTick(() => {
-                this.emit(UnleashEvents.Ready);
-            });
-        }
     }
 
     createSegmentLookup(segments: Segment[] | undefined): Map<number, Segment> {
@@ -101,8 +59,6 @@ export default class Repository extends EventEmitter implements EventEmitter {
         this.data = this.convertToMap(response.features);
         this.segments = this.createSegmentLookup(response.segments);
 
-        this.setReady();
-        this.emit(UnleashEvents.Changed, [...response.features]);
         await this.storageProvider.set(this.appName, response);
     }
 
@@ -118,11 +74,7 @@ export default class Repository extends EventEmitter implements EventEmitter {
                 await this.save(content);
             }
         } catch (err: any) {
-            this.emit(
-                UnleashEvents.Warn,
-                `Unleash SDK was unable to load bootstrap.
-Message: ${err.message}`,
-            );
+            // intentionally left empty
         }
     }
 
@@ -133,7 +85,6 @@ Message: ${err.message}`,
                 feature: FeatureInterface,
             ) => {
                 const a = { ...o };
-                this.validateFeature(feature);
                 a[feature.name] = feature;
                 return a;
             },
@@ -147,7 +98,6 @@ Message: ${err.message}`,
         if (this.timer) {
             clearTimeout(this.timer);
         }
-        this.removeAllListeners();
     }
 
     getSegment(segmentId: number): Segment | undefined {

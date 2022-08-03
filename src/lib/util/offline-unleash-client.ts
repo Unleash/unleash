@@ -2,7 +2,6 @@ import { SdkContextSchema } from 'lib/openapi/spec/sdk-context-schema';
 import { InMemStorageProvider, FeatureEvaluator } from './feature-evaluator';
 import { FeatureConfigurationClient } from 'lib/types/stores/feature-strategies-store';
 import { Segment } from './feature-evaluator/strategy/strategy';
-import { once } from 'events';
 import { ISegment } from 'lib/types/model';
 import { serializeDates } from '../../lib/types/serialize-dates';
 import { FeatureInterface } from './feature-evaluator/feature';
@@ -55,7 +54,6 @@ export type ClientInitOptions = {
 export const offlineUnleashClient = async ({
     features,
     context,
-    logError,
     segments,
 }: ClientInitOptions): Promise<FeatureEvaluator> => {
     const client = new FeatureEvaluator({
@@ -68,10 +66,7 @@ export const offlineUnleashClient = async ({
         },
     });
 
-    client.on('error', logError);
     client.start();
-
-    await once(client, 'ready');
 
     return client;
 };

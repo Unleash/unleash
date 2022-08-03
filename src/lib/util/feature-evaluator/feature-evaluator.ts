@@ -1,4 +1,3 @@
-import { EventEmitter } from 'events';
 import Client, { FeatureEvaluationResult } from './client';
 import Repository, { RepositoryInterface } from './repository';
 import { Context } from './context';
@@ -12,9 +11,8 @@ import {
     resolveBootstrapProvider,
 } from './repository/bootstrap-provider';
 import { StorageProvider } from './repository/storage-provider';
-import { UnleashEvents } from './events';
 
-export { Strategy, UnleashEvents };
+export { Strategy };
 
 export interface FeatureEvaluatorConfig {
     appName: string;
@@ -30,7 +28,7 @@ export interface StaticContext {
     environment: string;
 }
 
-export class FeatureEvaluator extends EventEmitter {
+export class FeatureEvaluator {
     private repository: RepositoryInterface;
 
     private client: Client;
@@ -45,8 +43,6 @@ export class FeatureEvaluator extends EventEmitter {
         bootstrap = { data: [] },
         storageProvider,
     }: FeatureEvaluatorConfig) {
-        super();
-
         this.staticContext = { appName, environment };
 
         const bootstrapProvider = resolveBootstrapProvider(bootstrap);
@@ -59,19 +55,13 @@ export class FeatureEvaluator extends EventEmitter {
                 storageProvider: storageProvider,
             });
 
-        this.repository.on(UnleashEvents.Ready, () => {
-            process.nextTick(() => {
-                this.emit(UnleashEvents.Ready);
-            });
-        });
-
         // setup client
         const supportedStrategies = strategies.concat(defaultStrategies);
         this.client = new Client(this.repository, supportedStrategies);
     }
 
     async start(): Promise<void> {
-        await Promise.all([this.repository.start()]);
+        return this.repository.start();
     }
 
     destroy(): void {

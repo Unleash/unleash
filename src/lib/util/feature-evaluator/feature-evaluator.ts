@@ -16,14 +16,12 @@ import { UnleashEvents } from './events';
 
 export { Strategy, UnleashEvents };
 
-export interface UnleashConfig {
+export interface FeatureEvaluatorConfig {
     appName: string;
     environment?: string;
-    projectName?: string;
     strategies?: Strategy[];
     repository?: RepositoryInterface;
     bootstrap?: BootstrapOptions;
-    bootstrapOverride?: boolean;
     storageProvider?: StorageProvider<ClientFeaturesResponse>;
 }
 
@@ -46,7 +44,7 @@ export class FeatureEvaluator extends EventEmitter {
         repository,
         bootstrap = { data: [] },
         storageProvider,
-    }: UnleashConfig) {
+    }: FeatureEvaluatorConfig) {
         super();
 
         this.staticContext = { appName, environment };

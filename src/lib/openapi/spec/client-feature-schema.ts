@@ -2,7 +2,8 @@ import { FromSchema } from 'json-schema-to-ts';
 import { constraintSchema } from './constraint-schema';
 import { parametersSchema } from './parameters-schema';
 import { featureStrategySchema } from './feature-strategy-schema';
-import { clientVariantSchema } from './client-variant-schema';
+import { variantSchema } from './variant-schema';
+import { overrideSchema } from './override-schema';
 
 export const clientFeatureSchema = {
     $id: '#/components/schemas/clientFeatureSchema',
@@ -52,7 +53,7 @@ export const clientFeatureSchema = {
         variants: {
             type: 'array',
             items: {
-                $ref: '#/components/schemas/clientVariantSchema',
+                $ref: '#/components/schemas/variantSchema',
             },
             nullable: true,
         },
@@ -62,7 +63,8 @@ export const clientFeatureSchema = {
             constraintSchema,
             parametersSchema,
             featureStrategySchema,
-            clientVariantSchema,
+            variantSchema,
+            overrideSchema,
         },
     },
 } as const;

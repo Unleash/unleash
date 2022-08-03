@@ -513,7 +513,7 @@ Object {
           },
           "variants": Object {
             "items": Object {
-              "$ref": "#/components/schemas/clientVariantSchema",
+              "$ref": "#/components/schemas/variantSchema",
             },
             "nullable": true,
             "type": "array",
@@ -636,43 +636,6 @@ Object {
         "required": Array [
           "appName",
           "bucket",
-        ],
-        "type": "object",
-      },
-      "clientVariantSchema": Object {
-        "additionalProperties": false,
-        "properties": Object {
-          "name": Object {
-            "type": "string",
-          },
-          "payload": Object {
-            "properties": Object {
-              "type": Object {
-                "type": "string",
-              },
-              "value": Object {
-                "type": "string",
-              },
-            },
-            "required": Array [
-              "type",
-              "value",
-            ],
-            "type": "object",
-          },
-          "stickiness": Object {
-            "type": "string",
-          },
-          "weight": Object {
-            "type": "number",
-          },
-          "weightType": Object {
-            "type": "string",
-          },
-        },
-        "required": Array [
-          "name",
-          "weight",
         ],
         "type": "object",
       },
@@ -2814,8 +2777,6 @@ Object {
         "required": Array [
           "name",
           "weight",
-          "weightType",
-          "stickiness",
         ],
         "type": "object",
       },

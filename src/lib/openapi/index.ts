@@ -1,5 +1,4 @@
 import { OpenAPIV3 } from 'openapi-types';
-
 import { addonParameterSchema } from './spec/addon-parameter-schema';
 import { addonSchema } from './spec/addon-schema';
 import { addonsSchema } from './spec/addons-schema';
@@ -15,7 +14,6 @@ import { clientFeatureSchema } from './spec/client-feature-schema';
 import { clientFeaturesQuerySchema } from './spec/client-features-query-schema';
 import { clientFeaturesSchema } from './spec/client-features-schema';
 import { clientMetricsSchema } from './spec/client-metrics-schema';
-import { clientVariantSchema } from './spec/client-variant-schema';
 import { cloneFeatureSchema } from './spec/clone-feature-schema';
 import { constraintSchema } from './spec/constraint-schema';
 import { contextFieldSchema } from './spec/context-field-schema';
@@ -98,7 +96,6 @@ import { validateTagTypeSchema } from './spec/validate-tag-type-schema';
 import { variantSchema } from './spec/variant-schema';
 import { variantsSchema } from './spec/variants-schema';
 import { versionSchema } from './spec/version-schema';
-
 import { IServerOption } from '../types';
 import { URL } from 'url';
 import { groupSchema } from './spec/group-schema';
@@ -123,7 +120,6 @@ export const schemas = {
     clientFeaturesQuerySchema,
     clientFeaturesSchema,
     clientMetricsSchema,
-    clientVariantSchema,
     cloneFeatureSchema,
     constraintSchema,
     contextFieldSchema,

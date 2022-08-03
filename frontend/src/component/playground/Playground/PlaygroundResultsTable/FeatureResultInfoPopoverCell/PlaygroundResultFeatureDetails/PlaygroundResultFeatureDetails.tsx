@@ -9,6 +9,7 @@ import { CloseOutlined } from '@mui/icons-material';
 import React from 'react';
 import { ConditionallyRender } from '../../../../../common/ConditionallyRender/ConditionallyRender';
 import { checkForEmptyValues } from './helpers';
+
 interface PlaygroundFeatureResultDetailsProps {
     feature: PlaygroundFeatureSchema;
     input?: PlaygroundRequestSchema;
@@ -22,22 +23,22 @@ export const PlaygroundResultFeatureDetails = ({
     const { classes: styles } = useStyles();
     const theme = useTheme();
 
-    const description = Boolean(feature.isEnabled)
+    const description = feature.isEnabled
         ? `This feature toggle is True in ${input?.environment} because `
         : `This feature toggle is False in ${input?.environment} because `;
 
-    const reason = Boolean(feature.isEnabled)
+    const reason = feature.isEnabled
         ? 'at least one strategy is True'
-        : !feature?.isEnabledInCurrentEnvironment
+        : feature?.isEnabledInCurrentEnvironment
         ? 'the environment is disabled'
         : 'all strategies are False';
 
-    const color = Boolean(feature.isEnabled)
+    const color = feature.isEnabled
         ? theme.palette.success.main
         : theme.palette.error.main;
 
     const noValueTxt = checkForEmptyValues(input?.context)
-        ? 'You did not provide a value for your context filed in step 2 of the configuration'
+        ? 'You did not provide a value for your context field in step 2 of the configuration'
         : undefined;
 
     const onCloseClick =

@@ -8,14 +8,14 @@ import {
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { PlaygroundResultChip } from '../../../../PlaygroundResultChip/PlaygroundResultChip';
 import {
-    PlaygroundFeatureStrategyResult,
+    PlaygroundStrategySchema,
     PlaygroundRequestSchema,
 } from 'hooks/api/actions/usePlayground/playground.model';
 import { PlaygroundResultStrategyExecution } from './PlaygroundResultStrategyExecution/PlaygroundResultStrategyExecution';
 import { useStyles } from './PlaygroundResultFeatureStrategyItem.styles';
 
 interface IPlaygroundResultFeatureStrategyItemProps {
-    strategy: PlaygroundFeatureStrategyResult;
+    strategy: PlaygroundStrategySchema;
     index: number;
     input?: PlaygroundRequestSchema;
     compact: boolean;
@@ -40,8 +40,12 @@ export const PlaygroundResultFeatureStrategyItem = ({
     const theme = useTheme();
     const Icon = getFeatureStrategyIcon(strategy.name);
     const label =
-        result === undefined ? 'Not found' : result ? 'True' : 'False';
-    const border = Boolean(result)
+        result.evaluationStatus !== 'complete'
+            ? 'Unevaluated'
+            : result.enabled
+            ? 'True'
+            : 'False';
+    const border = result.enabled
         ? `1px solid ${theme.palette.success.main}`
         : `1px solid ${theme.palette.divider}`;
 
@@ -71,7 +75,7 @@ export const PlaygroundResultFeatureStrategyItem = ({
                         </div>
                         <PlaygroundResultChip
                             showIcon={false}
-                            enabled={Boolean(result)}
+                            enabled={result.enabled}
                             label={label}
                         />
                     </div>

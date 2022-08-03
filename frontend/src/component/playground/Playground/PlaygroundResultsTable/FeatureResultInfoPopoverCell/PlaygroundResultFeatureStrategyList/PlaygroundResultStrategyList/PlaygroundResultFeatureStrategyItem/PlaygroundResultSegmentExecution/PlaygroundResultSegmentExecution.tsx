@@ -1,5 +1,5 @@
 import {
-    PlaygroundFeatureStrategySegmentResult,
+    PlaygroundSegmentSchema,
     PlaygroundRequestSchema,
 } from '../../../../../../../../../hooks/api/actions/usePlayground/playground.model';
 import { PlaygroundResultConstraintExecution } from '../PlaygroundResultConstraintExecution/PlaygroundResultConstraintExecution';
@@ -11,7 +11,7 @@ import { styled, Typography } from '@mui/material';
 import { ConditionallyRender } from '../../../../../../../../common/ConditionallyRender/ConditionallyRender';
 
 interface PlaygroundResultSegmentExecutionProps {
-    segments?: PlaygroundFeatureStrategySegmentResult[];
+    segments?: PlaygroundSegmentSchema[];
     input?: PlaygroundRequestSchema;
     hasConstraints: boolean;
 }

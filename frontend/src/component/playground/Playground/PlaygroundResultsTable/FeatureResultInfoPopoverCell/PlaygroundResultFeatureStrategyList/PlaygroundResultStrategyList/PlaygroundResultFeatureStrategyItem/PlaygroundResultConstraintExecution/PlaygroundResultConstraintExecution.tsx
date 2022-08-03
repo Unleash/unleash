@@ -1,5 +1,5 @@
 import {
-    PlaygroundFeatureStrategyConstraintResult,
+    PlaygroundConstraintSchema,
     PlaygroundRequestSchema,
 } from 'hooks/api/actions/usePlayground/playground.model';
 import React, { Fragment } from 'react';
@@ -10,7 +10,7 @@ import { ConstraintAccordionView } from '../../../../../../../../common/Constrai
 import { styled } from '@mui/material';
 
 interface PlaygroundResultConstraintExecutionProps {
-    constraints?: PlaygroundFeatureStrategyConstraintResult[];
+    constraints?: PlaygroundConstraintSchema[];
     compact: boolean;
     input?: PlaygroundRequestSchema;
 }

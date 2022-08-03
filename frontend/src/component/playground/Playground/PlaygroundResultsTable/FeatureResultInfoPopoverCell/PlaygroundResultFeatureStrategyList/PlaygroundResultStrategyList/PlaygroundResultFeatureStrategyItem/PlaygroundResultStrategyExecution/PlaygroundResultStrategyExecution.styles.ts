@@ -11,6 +11,7 @@ export const useStyles = makeStyles()(theme => ({
     },
     summary: {
         width: 'auto',
+        height: 'auto',
         padding: theme.spacing(2, 3),
         borderRadius: theme.shape.borderRadius,
         border: `1px solid ${theme.palette.divider}`,

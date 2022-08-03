@@ -1,6 +1,6 @@
 import {
     PlaygroundFeatureSchema,
-    PlaygroundFeatureStrategyResult,
+    PlaygroundStrategySchema,
     PlaygroundRequestSchema,
 } from '../../../../../../../hooks/api/actions/usePlayground/playground.model';
 import { ConditionallyRender } from '../../../../../../common/ConditionallyRender/ConditionallyRender';
@@ -12,7 +12,7 @@ const StyledAlertWrapper = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     borderRadius: theme.shape.borderRadiusMedium,
-    border: `1px solid ${theme.palette.info.main}`,
+    border: `1px solid ${theme.palette.info.border}`,
 }));
 
 const StyledListWrapper = styled('div')(({ theme }) => ({
@@ -25,7 +25,7 @@ const StyledAlert = styled(Alert)(({ theme }) => ({
 }));
 
 interface PlaygroundResultStrategyListProps {
-    strategies: PlaygroundFeatureStrategyResult[];
+    strategies: PlaygroundStrategySchema[];
     input?: PlaygroundRequestSchema;
     compact?: boolean;
 }
@@ -35,6 +35,7 @@ export const PlaygroundResultStrategyLists = ({
     input,
     compact = false,
 }: PlaygroundResultStrategyListProps) => {
+    console.log(strategies);
     return (
         <ConditionallyRender
             condition={strategies.length > 0}

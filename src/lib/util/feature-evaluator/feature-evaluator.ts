@@ -32,7 +32,7 @@ export interface StaticContext {
     environment: string;
 }
 
-export class Unleash extends EventEmitter {
+export class FeatureEvaluator extends EventEmitter {
     private repository: RepositoryInterface;
 
     private client: Client;

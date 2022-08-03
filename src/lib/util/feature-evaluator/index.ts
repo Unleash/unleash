@@ -1,5 +1,5 @@
 import { once } from 'events';
-import { Unleash, UnleashConfig } from './feature-evaluator';
+import { FeatureEvaluator, UnleashConfig } from './feature-evaluator';
 import { Variant, getDefaultVariant } from './variant';
 import { Context } from './context';
 import { UnleashEvents } from './events';
@@ -9,23 +9,31 @@ import { FeatureEvaluationResult } from './client';
 
 // exports
 export { Strategy } from './strategy/index';
-export { Context, Variant, Unleash, InMemStorageProvider, UnleashEvents };
+export {
+    Context,
+    Variant,
+    FeatureEvaluator,
+    InMemStorageProvider,
+    UnleashEvents,
+};
 export type { ClientFeaturesResponse, UnleashConfig };
 
-let instance: Unleash | undefined;
-export function initialize(options: UnleashConfig): Unleash {
+let instance: FeatureEvaluator | undefined;
+export function initialize(options: UnleashConfig): FeatureEvaluator {
     if (instance) {
         instance.emit(
             UnleashEvents.Warn,
             'This global unleash instance is initialized multiple times.',
         );
     }
-    instance = new Unleash(options);
+    instance = new FeatureEvaluator(options);
     instance.on('error', () => {});
     return instance;
 }
 
-export async function startUnleash(options: UnleashConfig): Promise<Unleash> {
+export async function startUnleash(
+    options: UnleashConfig,
+): Promise<FeatureEvaluator> {
     const unleash = initialize(options);
     await once(unleash, 'synchronized');
     return unleash;

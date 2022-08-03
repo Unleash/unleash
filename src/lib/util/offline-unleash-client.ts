@@ -1,8 +1,5 @@
 import { SdkContextSchema } from 'lib/openapi/spec/sdk-context-schema';
-import {
-    InMemStorageProvider,
-    Unleash as UnleashClient,
-} from './feature-evaluator';
+import { InMemStorageProvider, FeatureEvaluator } from './feature-evaluator';
 import { FeatureConfigurationClient } from 'lib/types/stores/feature-strategies-store';
 import { Segment } from './feature-evaluator/strategy/strategy';
 import { once } from 'events';
@@ -60,8 +57,8 @@ export const offlineUnleashClient = async ({
     context,
     logError,
     segments,
-}: ClientInitOptions): Promise<UnleashClient> => {
-    const client = new UnleashClient({
+}: ClientInitOptions): Promise<FeatureEvaluator> => {
+    const client = new FeatureEvaluator({
         ...context,
         appName: context.appName,
         storageProvider: new InMemStorageProvider(),

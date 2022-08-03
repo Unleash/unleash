@@ -2,7 +2,10 @@ import { FromSchema } from 'json-schema-to-ts';
 import { parametersSchema } from './parameters-schema';
 import { variantSchema } from './variant-schema';
 import { overrideSchema } from './override-schema';
-import { playgroundStrategySchema } from './playground-strategy-schema';
+import {
+    playgroundStrategyEvaluation,
+    playgroundStrategySchema,
+} from './playground-strategy-schema';
 import { playgroundConstraintSchema } from './playground-constraint-schema';
 import { playgroundSegmentSchema } from './playground-segment-schema';
 
@@ -35,10 +38,27 @@ export const playgroundFeatureSchema = {
             description: 'The ID of the project that contains this feature.',
         },
         strategies: {
-            description: 'The strategies that apply to this feature.',
-            type: 'array',
-            items: {
-                $ref: playgroundStrategySchema.$id,
+            type: 'object',
+            additionalProperties: false,
+            required: ['result', 'data'],
+            properties: {
+                result: {
+                    description: `The cumulative results of all the feature's strategies. Can be \`true\`, \`false\`, or \`${playgroundStrategyEvaluation.unknownResult}\`. This property will only be \`${playgroundStrategyEvaluation.unknownResult}\` if one or more of the strategies can't be fully evaluated and the rest of the strategies all resolve to \`false\`.`,
+                    anyOf: [
+                        { type: 'boolean' },
+                        {
+                            type: 'string',
+                            enum: [playgroundStrategyEvaluation.unknownResult],
+                        },
+                    ],
+                },
+                data: {
+                    description: 'The strategies that apply to this feature.',
+                    type: 'array',
+                    items: {
+                        $ref: playgroundStrategySchema.$id,
+                    },
+                },
             },
         },
         isEnabledInCurrentEnvironment: {
@@ -47,11 +67,9 @@ export const playgroundFeatureSchema = {
                 'Whether the feature is active and would be evaluated in the provided environment in a normal SDK context.',
         },
         isEnabled: {
-            description: `Whether this feature is enabled or not given the current strategies. Can be \`true\`, \`false\`, or \`${unknownFeatureEvaluationResult}\`. A feature will only be \`${unknownFeatureEvaluationResult}\` if Unleash does not recognize the strategy it uses (i.e. it's a custom strategy that Unleash doesn't have an implementation for) and all the strategy's constraints and segments (if any) are satisfied. Note that a strategy that Unleash doesn't have an implementation for can still be deemed false if it doesn't satisfy its constraints.`,
-            anyOf: [
-                { type: 'boolean', example: true },
-                { type: 'string', enum: [unknownFeatureEvaluationResult] },
-            ],
+            description: `Whether this feature is enabled or not in the current environment. If a feature can't be fully evaluated (that is, \`strategies.result\` is \`${playgroundStrategyEvaluation.unknownResult}\`), this will be \`false\` to align with how client SDKs treat unresolved feature states.`,
+            type: 'boolean',
+            example: true,
         },
         variant: {
             description:

@@ -9,7 +9,6 @@ import { PlaygroundConstraintSchema } from './playground-constraint-schema';
 import {
     playgroundFeatureSchema,
     PlaygroundFeatureSchema,
-    unknownFeatureEvaluationResult,
 } from './playground-feature-schema';
 import { PlaygroundSegmentSchema } from './playground-segment-schema';
 import {
@@ -115,10 +114,6 @@ export const generate = (): Arbitrary<PlaygroundFeatureSchema> =>
             variants(),
             fc.nat(),
             fc.record({
-                isEnabled: fc.oneof(
-                    fc.boolean(),
-                    fc.constant(unknownFeatureEvaluationResult),
-                ),
                 isEnabledInCurrentEnvironment: fc.boolean(),
                 projectId: urlFriendlyString(),
                 name: urlFriendlyString(),
@@ -126,6 +121,30 @@ export const generate = (): Arbitrary<PlaygroundFeatureSchema> =>
             }),
         )
         .map(([generatedVariants, activeVariantIndex, feature]) => {
+            const strategyResult = () => {
+                const { strategies } = feature;
+
+                if (
+                    strategies.some(
+                        (strategy) => strategy.result.enabled === true,
+                    )
+                ) {
+                    return true;
+                }
+                if (
+                    strategies.some(
+                        (strategy) => strategy.result.enabled === 'unknown',
+                    )
+                ) {
+                    return 'unknown';
+                }
+                return false;
+            };
+
+            const isEnabled =
+                feature.isEnabledInCurrentEnvironment &&
+                strategyResult() === true;
+
             // the active variant is the disabled variant if the feature is
             // disabled or has no variants.
             let activeVariant = { name: 'disabled', enabled: false } as {
@@ -137,7 +156,7 @@ export const generate = (): Arbitrary<PlaygroundFeatureSchema> =>
                 };
             };
 
-            if (generatedVariants.length && feature.isEnabled) {
+            if (generatedVariants.length && isEnabled) {
                 const targetVariant =
                     generatedVariants[
                         activeVariantIndex % generatedVariants.length
@@ -158,6 +177,11 @@ export const generate = (): Arbitrary<PlaygroundFeatureSchema> =>
 
             return {
                 ...feature,
+                isEnabled,
+                strategies: {
+                    result: strategyResult(),
+                    data: feature.strategies,
+                },
                 variants: generatedVariants,
                 variant: activeVariant,
             };

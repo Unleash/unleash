@@ -9,6 +9,7 @@ import {
     InMemStorageProvider as InMemStorageProviderNode,
 } from 'unleash-client';
 import { once } from 'events';
+import { playgroundStrategyEvaluation } from '../openapi/spec/playground-strategy-schema';
 
 export const offlineUnleashClientNode = async ({
     features,
@@ -55,7 +56,7 @@ describe('offline client', () => {
             logError: console.log,
         });
 
-        expect(client.isEnabled(name).enabled).toBeTruthy();
+        expect(client.isEnabled(name).result).toBeTruthy();
     });
 
     it('constrains on appName', async () => {
@@ -107,8 +108,8 @@ describe('offline client', () => {
             logError: console.log,
         });
 
-        expect(client.isEnabled(enabledFeature).enabled).toBeTruthy();
-        expect(client.isEnabled(disabledFeature).enabled).toBeFalsy();
+        expect(client.isEnabled(enabledFeature).result).toBeTruthy();
+        expect(client.isEnabled(disabledFeature).result).toBeFalsy();
     });
 
     it('considers disabled features with a default strategy to be enabled', async () => {
@@ -135,7 +136,7 @@ describe('offline client', () => {
 
         const result = client.isEnabled(name, context);
 
-        expect(result.enabled).toBe(true);
+        expect(result.result).toBe(true);
     });
 
     it('considers disabled variants with a default strategy and variants to be on', async () => {
@@ -174,7 +175,7 @@ describe('offline client', () => {
             logError: console.log,
         });
 
-        expect(client.isEnabled(name).enabled).toBe(true);
+        expect(client.isEnabled(name).result).toBe(true);
     });
 
     it("returns variant {name: 'disabled', enabled: false } if the toggle isn't enabled", async () => {
@@ -209,7 +210,7 @@ describe('offline client', () => {
             logError: console.log,
         });
 
-        expect(client.isEnabled(name).enabled).toBeFalsy();
+        expect(client.isEnabled(name).result).toBeFalsy();
         expect(client.getVariant(name).name).toEqual('disabled');
         expect(client.getVariant(name).enabled).toBeFalsy();
     });
@@ -238,10 +239,10 @@ describe('offline client', () => {
 
         expect(client.getVariant(name, {}).name).toEqual('disabled');
         expect(client.getVariant(name, {}).enabled).toBeFalsy();
-        expect(client.isEnabled(name, {}).enabled).toBeTruthy();
+        expect(client.isEnabled(name, {}).result).toBeTruthy();
     });
 
-    it("returns 'unevaluated' if it can't evaluate a feature", async () => {
+    it(`returns '${playgroundStrategyEvaluation.unknownResult}' if it can't evaluate a feature`, async () => {
         const name = 'toggle-name';
         const context = { appName: 'client-test' };
 
@@ -268,9 +269,13 @@ describe('offline client', () => {
         const result = client.isEnabled(name, context);
 
         result.strategies.forEach((strategy) =>
-            expect(strategy.result.enabled).toBe('unknown'),
+            expect(strategy.result.enabled).toEqual(
+                playgroundStrategyEvaluation.unknownResult,
+            ),
         );
-        expect(result.enabled).toEqual('unevaluated');
+        expect(result.result).toEqual(
+            playgroundStrategyEvaluation.unknownResult,
+        );
     });
 
     it('returns strategies in the order they are provided', async () => {

@@ -7,7 +7,7 @@ import { Logger } from '../logger';
 import { IUnleashConfig } from 'lib/types';
 import { offlineUnleashClient } from '../util/offline-unleash-client';
 import { FeatureInterface } from 'lib/util/feature-evaluator/feature';
-import { FeatureEvaluationResult } from 'lib/util/feature-evaluator/client';
+import { FeatureStrategiesEvaluationResult } from 'lib/util/feature-evaluator/client';
 import { SegmentService } from './segment-service';
 
 export class PlaygroundService {
@@ -71,13 +71,20 @@ export class PlaygroundService {
                 client
                     .getFeatureToggleDefinitions()
                     .map(async (feature: FeatureInterface) => {
-                        const enabledStatus: FeatureEvaluationResult =
+                        const strategyEvaluationResult: FeatureStrategiesEvaluationResult =
                             client.isEnabled(feature.name, clientContext);
 
+                        const isEnabled =
+                            strategyEvaluationResult.result === true &&
+                            feature.enabled;
+
                         return {
-                            isEnabled: enabledStatus.enabled,
+                            isEnabled,
                             isEnabledInCurrentEnvironment: feature.enabled,
-                            strategies: enabledStatus.strategies,
+                            strategies: {
+                                result: strategyEvaluationResult.result,
+                                data: strategyEvaluationResult.strategies,
+                            },
                             projectId:
                                 await this.featureToggleService.getProjectId(
                                     feature.name,

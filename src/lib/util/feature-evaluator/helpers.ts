@@ -1,4 +1,4 @@
-import { FeatureEvaluationResult } from './client';
+import { FeatureStrategiesEvaluationResult } from './client';
 import { Context } from './context';
 
 export type FallbackFunction = (name: string, context: Context) => boolean;
@@ -7,9 +7,9 @@ export function createFallbackFunction(
     name: string,
     context: Context,
     fallback?: FallbackFunction | boolean,
-): () => FeatureEvaluationResult {
+): () => FeatureStrategiesEvaluationResult {
     const createEvalResult = (enabled: boolean) => ({
-        enabled,
+        result: enabled,
         strategies: [],
     });
 

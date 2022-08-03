@@ -1879,19 +1879,9 @@ Object {
         "description": "A simplified feature toggle model intended for the Unleash playground.",
         "properties": Object {
           "isEnabled": Object {
-            "anyOf": Array [
-              Object {
-                "example": true,
-                "type": "boolean",
-              },
-              Object {
-                "enum": Array [
-                  "unevaluated",
-                ],
-                "type": "string",
-              },
-            ],
-            "description": "Whether this feature is enabled or not given the current strategies. Can be \`true\`, \`false\`, or \`unevaluated\`. A feature will only be \`unevaluated\` if Unleash does not recognize the strategy it uses (i.e. it's a custom strategy that Unleash doesn't have an implementation for) and all the strategy's constraints and segments (if any) are satisfied. Note that a strategy that Unleash doesn't have an implementation for can still be deemed false if it doesn't satisfy its constraints.",
+            "description": "Whether this feature is enabled or not in the current environment. If a feature can't be fully evaluated (that is, \`strategies.result\` is \`unknown\`), this will be \`false\` to align with how client SDKs treat unresolved feature states.",
+            "example": true,
+            "type": "boolean",
           },
           "isEnabledInCurrentEnvironment": Object {
             "description": "Whether the feature is active and would be evaluated in the provided environment in a normal SDK context.",
@@ -1908,11 +1898,35 @@ Object {
             "type": "string",
           },
           "strategies": Object {
-            "description": "The strategies that apply to this feature.",
-            "items": Object {
-              "$ref": "#/components/schemas/playgroundStrategySchema",
+            "additionalProperties": false,
+            "properties": Object {
+              "data": Object {
+                "description": "The strategies that apply to this feature.",
+                "items": Object {
+                  "$ref": "#/components/schemas/playgroundStrategySchema",
+                },
+                "type": "array",
+              },
+              "result": Object {
+                "anyOf": Array [
+                  Object {
+                    "type": "boolean",
+                  },
+                  Object {
+                    "enum": Array [
+                      "unknown",
+                    ],
+                    "type": "string",
+                  },
+                ],
+                "description": "The cumulative results of all the feature's strategies. Can be \`true\`, \`false\`, or \`unknown\`. This property will only be \`unknown\` if one or more of the strategies can't be fully evaluated and the rest of the strategies all resolve to \`false\`.",
+              },
             },
-            "type": "array",
+            "required": Array [
+              "result",
+              "data",
+            ],
+            "type": "object",
           },
           "variant": Object {
             "additionalProperties": false,
@@ -2159,7 +2173,7 @@ Object {
                 "type": "object",
               },
             ],
-            "description": "The strategy's evaluation result.",
+            "description": "The strategy's evaluation result. If the strategy is a custom strategy that Unleash can't evaluate, \`evaluationStatus\` will be \`unknown\`. Otherwise, it will be \`true\` or \`false\`",
           },
           "segments": Object {
             "description": "The strategy's segments and their evaluation results.",

@@ -1,4 +1,4 @@
-import Client, { FeatureEvaluationResult } from './client';
+import Client, { FeatureStrategiesEvaluationResult } from './client';
 import Repository, { RepositoryInterface } from './repository';
 import { Context } from './context';
 import { Strategy, defaultStrategies } from './strategy';
@@ -72,17 +72,17 @@ export class FeatureEvaluator {
         name: string,
         context?: Context,
         fallbackFunction?: FallbackFunction,
-    ): FeatureEvaluationResult;
+    ): FeatureStrategiesEvaluationResult;
     isEnabled(
         name: string,
         context?: Context,
         fallbackValue?: boolean,
-    ): FeatureEvaluationResult;
+    ): FeatureStrategiesEvaluationResult;
     isEnabled(
         name: string,
         context: Context = {},
         fallback?: FallbackFunction | boolean,
-    ): FeatureEvaluationResult {
+    ): FeatureStrategiesEvaluationResult {
         const enhancedContext = { ...this.staticContext, ...context };
         const fallbackFunc = createFallbackFunction(
             name,

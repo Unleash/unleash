@@ -8,17 +8,17 @@ import {
     selectVariant,
 } from './variant';
 import { Context } from './context';
-import { unknownFeatureEvaluationResult } from '../../openapi/spec/playground-feature-schema';
 import { SegmentForEvaluation } from './strategy/strategy';
 import { PlaygroundStrategySchema } from 'lib/openapi/spec/playground-strategy-schema';
+import { playgroundStrategyEvaluation } from '../../openapi/spec/playground-strategy-schema';
 
 export type StrategyEvaluationResult = Pick<
     PlaygroundStrategySchema,
     'result' | 'segments' | 'constraints'
 >;
 
-export type FeatureEvaluationResult = {
-    enabled: boolean | 'unevaluated';
+export type FeatureStrategiesEvaluationResult = {
+    result: boolean | typeof playgroundStrategyEvaluation.unknownResult;
     strategies: PlaygroundStrategySchema[];
 };
 
@@ -54,7 +54,7 @@ export default class UnleashClient {
         name: string,
         context: Context,
         fallback: Function,
-    ): FeatureEvaluationResult {
+    ): FeatureStrategiesEvaluationResult {
         const feature = this.repository.getToggle(name);
         return this.isFeatureEnabled(feature, context, fallback);
     }
@@ -63,21 +63,21 @@ export default class UnleashClient {
         feature: FeatureInterface,
         context: Context,
         fallback: Function,
-    ): FeatureEvaluationResult {
+    ): FeatureStrategiesEvaluationResult {
         if (!feature) {
             return fallback();
         }
 
         if (!Array.isArray(feature.strategies)) {
             return {
-                enabled: false,
+                result: false,
                 strategies: [],
             };
         }
 
         if (feature.strategies.length === 0) {
             return {
-                enabled: feature.enabled,
+                result: feature.enabled,
                 strategies: [],
             };
         }
@@ -108,7 +108,7 @@ export default class UnleashClient {
         );
 
         // Feature evaluation
-        const isEnabled = () => {
+        const overallStrategyResult = () => {
             // if at least one strategy is enabled, then the feature is enabled
             if (
                 strategies.some((strategy) => strategy.result.enabled === true)
@@ -122,14 +122,14 @@ export default class UnleashClient {
                     (strategy) => strategy.result.enabled === 'unknown',
                 )
             ) {
-                return unknownFeatureEvaluationResult;
+                return playgroundStrategyEvaluation.unknownResult;
             }
 
             return false;
         };
 
-        const evalResults: FeatureEvaluationResult = {
-            enabled: isEnabled(),
+        const evalResults: FeatureStrategiesEvaluationResult = {
+            result: overallStrategyResult(),
             strategies,
         };
 
@@ -181,7 +181,8 @@ export default class UnleashClient {
             typeof feature === 'undefined' ||
             !feature.variants ||
             !Array.isArray(feature.variants) ||
-            feature.variants.length === 0
+            feature.variants.length === 0 ||
+            !feature.enabled
         ) {
             return fallback;
         }
@@ -191,7 +192,7 @@ export default class UnleashClient {
             enabled =
                 this.isFeatureEnabled(feature, context, () =>
                     fallbackVariant ? fallbackVariant.enabled : false,
-                ).enabled !== false;
+                ).result === true;
             if (!enabled) {
                 return fallback;
             }

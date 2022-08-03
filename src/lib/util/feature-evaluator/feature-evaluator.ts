@@ -78,12 +78,6 @@ export class FeatureEvaluator extends EventEmitter {
         // setup client
         const supportedStrategies = strategies.concat(defaultStrategies);
         this.client = new Client(this.repository, supportedStrategies);
-        this.client.on(UnleashEvents.Error, (err) =>
-            this.emit(UnleashEvents.Error, err),
-        );
-        this.client.on(UnleashEvents.Warn, (msg) =>
-            this.emit(UnleashEvents.Warn, msg),
-        );
     }
 
     async start(): Promise<void> {

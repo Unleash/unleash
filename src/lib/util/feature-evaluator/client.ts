@@ -1,5 +1,4 @@
-import { EventEmitter } from 'events';
-import { Strategy, StrategyTransportInterface } from './strategy';
+import { Strategy } from './strategy';
 import { FeatureInterface } from './feature';
 import { RepositoryInterface } from './repository';
 import {
@@ -13,10 +12,6 @@ import { unknownFeatureEvaluationResult } from '../../openapi/spec/playground-fe
 import { SegmentForEvaluation } from './strategy/strategy';
 import { PlaygroundStrategySchema } from 'lib/openapi/spec/playground-strategy-schema';
 
-interface BooleanMap {
-    [key: string]: boolean;
-}
-
 export type StrategyEvaluationResult = Pick<
     PlaygroundStrategySchema,
     'result' | 'segments' | 'constraints'
@@ -27,18 +22,14 @@ export type FeatureEvaluationResult = {
     strategies: PlaygroundStrategySchema[];
 };
 
-export default class UnleashClient extends EventEmitter {
+export default class UnleashClient {
     private repository: RepositoryInterface;
 
     private strategies: Strategy[];
 
-    private warned: BooleanMap;
-
     constructor(repository: RepositoryInterface, strategies: Strategy[]) {
-        super();
         this.repository = repository;
         this.strategies = strategies || [];
-        this.warned = {};
 
         this.strategies.forEach((strategy: Strategy) => {
             if (
@@ -57,22 +48,6 @@ export default class UnleashClient extends EventEmitter {
         return this.strategies.find(
             (strategy: Strategy): boolean => strategy.name === name,
         );
-    }
-
-    warnOnce(
-        missingStrategy: string,
-        name: string,
-        strategies: StrategyTransportInterface[],
-    ): void {
-        if (!this.warned[missingStrategy + name]) {
-            this.warned[missingStrategy + name] = true;
-            this.emit(
-                'warn',
-                `Missing strategy "${missingStrategy}" for toggle "${name}". Ensure that "${strategies
-                    .map(({ name: n }) => n)
-                    .join(', ')}" are supported before using this toggle`,
-            );
-        }
     }
 
     isEnabled(
@@ -94,9 +69,6 @@ export default class UnleashClient extends EventEmitter {
         }
 
         if (!Array.isArray(feature.strategies)) {
-            const errorMsg = `Malformed feature, strategies not an array, is a ${typeof feature.strategies}`;
-
-            this.emit('error', new Error(errorMsg));
             return {
                 enabled: false,
                 strategies: [],
@@ -112,38 +84,26 @@ export default class UnleashClient extends EventEmitter {
 
         const strategies = feature.strategies.map(
             (strategySelector): PlaygroundStrategySchema => {
-                const strategy = this.getStrategy(strategySelector.name);
+                const strategy =
+                    this.getStrategy(strategySelector.name) ??
+                    this.getStrategy('unknown');
 
                 const segments =
                     strategySelector.segments
                         ?.map(this.getSegment(this.repository))
                         .filter(Boolean) ?? [];
 
-                const evaluateStrategy = (strategyToEvaluate: Strategy) => {
-                    return {
-                        name: strategySelector.name,
-                        id: strategySelector.id,
-                        parameters: strategySelector.parameters,
-                        ...strategyToEvaluate.isEnabledWithConstraints(
-                            strategySelector.parameters,
-                            context,
-                            strategySelector.constraints,
-                            segments,
-                        ),
-                    };
+                return {
+                    name: strategySelector.name,
+                    id: strategySelector.id,
+                    parameters: strategySelector.parameters,
+                    ...strategy.isEnabledWithConstraints(
+                        strategySelector.parameters,
+                        context,
+                        strategySelector.constraints,
+                        segments,
+                    ),
                 };
-
-                if (!strategy) {
-                    this.warnOnce(
-                        strategySelector.name,
-                        feature.name,
-                        feature.strategies,
-                    );
-
-                    return evaluateStrategy(this.getStrategy('unknown'));
-                }
-
-                return evaluateStrategy(strategy);
             },
         );
 

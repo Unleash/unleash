@@ -66,16 +66,13 @@ export const PlaygroundResultFeatureDetails = ({
                     </Typography>
                     <span>
                         <PlaygroundResultChip
-                            enabled={
+                            enabled={feature.isEnabled}
+                            label={
                                 feature.isEnabled === 'unevaluated'
-                                    ? 'unknown'
-                                    : feature.isEnabled
-                            }
-                            label={String(feature.isEnabled)}
-                            size={
-                                feature.isEnabled === 'unevaluated'
-                                    ? 'large'
-                                    : 'default'
+                                    ? '?'
+                                    : Boolean(feature.isEnabled)
+                                        ? 'True'
+                                        : 'False'
                             }
                         />
                     </span>

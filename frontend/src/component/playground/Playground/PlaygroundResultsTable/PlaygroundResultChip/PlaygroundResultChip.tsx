@@ -4,12 +4,13 @@ import { ConditionallyRender } from '../../../../common/ConditionallyRender/Cond
 import React from 'react';
 import { ReactComponent as FeatureEnabledIcon } from '../../../../../assets/icons/isenabled-true.svg';
 import { ReactComponent as FeatureDisabledIcon } from '../../../../../assets/icons/isenabled-false.svg';
+import { WarningOutlined } from "@mui/icons-material";
 
 interface IResultChipProps {
-    enabled: boolean | 'unknown';
+    enabled: boolean | 'unevaluated' | 'unknown'
+    label: string;
     // Result icon - defaults to true
     showIcon?: boolean;
-    label?: string;
     size?: 'default' | 'medium' | 'large';
 }
 
@@ -61,68 +62,68 @@ export const StyledUnknownChip = styled(StyledChip)(({ theme }) => ({
 
 export const PlaygroundResultChip = ({
     enabled,
-    showIcon = true,
     label,
+    showIcon = true,
     size = 'default',
 }: IResultChipProps) => {
     const theme = useTheme();
     const icon = (
         <ConditionallyRender
-            condition={enabled !== 'unknown' && enabled}
-            show={
-                <FeatureEnabledIcon
-                    color={theme.palette.success.main}
-                    strokeWidth="0.25"
-                />
-            }
+            condition={enabled === 'unknown' || enabled === 'unevaluated' }
+            show={<WarningOutlined color={'warning'} fontSize='inherit' /> }
             elseShow={
-                <FeatureDisabledIcon
-                    color={theme.palette.error.main}
-                    strokeWidth="0.25"
+                <ConditionallyRender
+                    condition={typeof enabled === 'boolean' && Boolean(enabled)}
+                    show={
+                        <FeatureEnabledIcon
+                            color={theme.palette.success.main}
+                            strokeWidth="0.25"
+                        />
+                    }
+                    elseShow={
+                        <FeatureDisabledIcon
+                            color={theme.palette.error.main}
+                            strokeWidth="0.25"
+                        />
+                    }
                 />
             }
         />
     );
 
-    const defaultLabel = enabled ? 'True' : 'False';
-
-    let chipWidth = 60;
-    if (size === 'medium') {
-        chipWidth = 72;
-    }
-
-    if (size === 'large') {
-        chipWidth = 100;
-    }
+    let  chipWidth = 60;
+    if (size === 'medium') chipWidth = 72;
+    if (size === 'large') chipWidth = 100;
 
     return (
         <ConditionallyRender
-            condition={enabled !== 'unknown' && enabled}
+            condition={enabled === 'unknown' || enabled === 'unevaluated' }
             show={
-                <StyledTrueChip
+                <StyledUnknownChip
                     icon={showIcon ? icon : undefined}
-                    label={label || defaultLabel}
+                    label={label}
                     width={chipWidth}
                 />
             }
             elseShow={
                 <ConditionallyRender
-                    condition={enabled === 'unknown'}
+                    condition={typeof enabled === 'boolean' && Boolean(enabled)}
                     show={
-                        <StyledUnknownChip
-                            label={label || 'Unknown'}
+                        <StyledTrueChip
+                            icon={showIcon ? icon : undefined}
+                            label={label}
                             width={chipWidth}
                         />
                     }
                     elseShow={
                         <StyledFalseChip
                             icon={showIcon ? icon : undefined}
-                            label={label || defaultLabel}
+                            label={label}
                             width={chipWidth}
                         />
                     }
                 />
             }
         />
-    );
+    )
 };

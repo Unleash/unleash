@@ -17,15 +17,14 @@ interface BooleanMap {
     [key: string]: boolean;
 }
 
-export type NamedStrategyEvaluationResult = PlaygroundStrategySchema;
 export type StrategyEvaluationResult = Pick<
-    NamedStrategyEvaluationResult,
+    PlaygroundStrategySchema,
     'result' | 'segments' | 'constraints'
 >;
 
 export type FeatureEvaluationResult = {
     enabled: boolean | 'unevaluated';
-    strategies: NamedStrategyEvaluationResult[];
+    strategies: PlaygroundStrategySchema[];
 };
 
 export default class UnleashClient extends EventEmitter {
@@ -118,7 +117,7 @@ export default class UnleashClient extends EventEmitter {
             };
         } else {
             const strategies = feature.strategies.map(
-                (strategySelector): NamedStrategyEvaluationResult => {
+                (strategySelector): PlaygroundStrategySchema => {
                     const strategy = this.getStrategy(strategySelector.name);
 
                     const segments =

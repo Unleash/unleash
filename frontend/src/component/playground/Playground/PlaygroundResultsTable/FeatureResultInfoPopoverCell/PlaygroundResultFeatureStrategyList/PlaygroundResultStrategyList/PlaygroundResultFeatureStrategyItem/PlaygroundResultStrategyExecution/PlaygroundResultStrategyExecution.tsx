@@ -31,9 +31,8 @@ const StyledStrategyExecutionWrapper = styled('div')(({ theme }) => ({
 }));
 
 const StyledParamWrapper = styled('div')(({ theme }) => ({
-    padding: theme.spacing(2,1),
+    padding: theme.spacing(2, 1),
 }));
-
 
 export const PlaygroundResultStrategyExecution = ({
     strategyResult,
@@ -170,7 +169,10 @@ export const PlaygroundResultStrategyExecution = ({
                     );
                     return (
                         <Fragment key={param?.name}>
-                            <PlaygroundConstraintItem value={values} text={param.name} />
+                            <PlaygroundConstraintItem
+                                value={values}
+                                text={param.name}
+                            />
                             <ConditionallyRender
                                 condition={notLastItem}
                                 show={<StrategySeparator text="AND" />}

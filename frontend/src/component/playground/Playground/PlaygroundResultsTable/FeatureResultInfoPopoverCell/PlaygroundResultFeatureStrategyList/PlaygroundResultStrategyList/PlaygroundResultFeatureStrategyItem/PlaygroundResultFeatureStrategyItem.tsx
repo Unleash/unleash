@@ -56,7 +56,7 @@ export const PlaygroundResultFeatureStrategyItem = ({
                 width: '100%',
                 position: 'relative',
                 paddingRight: compact ? '12px' : 0,
-                ml: '-12px'
+                ml: '-12px',
             }}
         >
             <ConditionallyRender
@@ -64,7 +64,9 @@ export const PlaygroundResultFeatureStrategyItem = ({
                 show={<StrategySeparator text="OR" />}
             />
             <StyledItemWrapper>
-                <Typography variant={'subtitle1'} color={'text.secondary'}>{index + 1}</Typography>
+                <Typography variant={'subtitle1'} color={'text.secondary'}>
+                    {index + 1}
+                </Typography>
                 <Box className={styles.innerContainer} sx={{ border }}>
                     <div className={styles.header}>
                         <div className={styles.headerName}>

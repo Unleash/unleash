@@ -4,10 +4,10 @@ import { ConditionallyRender } from '../../../../common/ConditionallyRender/Cond
 import React from 'react';
 import { ReactComponent as FeatureEnabledIcon } from '../../../../../assets/icons/isenabled-true.svg';
 import { ReactComponent as FeatureDisabledIcon } from '../../../../../assets/icons/isenabled-false.svg';
-import { WarningOutlined } from "@mui/icons-material";
+import { WarningOutlined } from '@mui/icons-material';
 
 interface IResultChipProps {
-    enabled: boolean | 'unevaluated' | 'unknown'
+    enabled: boolean | 'unevaluated' | 'unknown';
     label: string;
     // Result icon - defaults to true
     showIcon?: boolean;
@@ -69,8 +69,8 @@ export const PlaygroundResultChip = ({
     const theme = useTheme();
     const icon = (
         <ConditionallyRender
-            condition={enabled === 'unknown' || enabled === 'unevaluated' }
-            show={<WarningOutlined color={'warning'} fontSize='inherit' /> }
+            condition={enabled === 'unknown' || enabled === 'unevaluated'}
+            show={<WarningOutlined color={'warning'} fontSize="inherit" />}
             elseShow={
                 <ConditionallyRender
                     condition={typeof enabled === 'boolean' && Boolean(enabled)}
@@ -91,13 +91,13 @@ export const PlaygroundResultChip = ({
         />
     );
 
-    let  chipWidth = 60;
+    let chipWidth = 60;
     if (size === 'medium') chipWidth = 72;
     if (size === 'large') chipWidth = 100;
 
     return (
         <ConditionallyRender
-            condition={enabled === 'unknown' || enabled === 'unevaluated' }
+            condition={enabled === 'unknown' || enabled === 'unevaluated'}
             show={
                 <StyledUnknownChip
                     icon={showIcon ? icon : undefined}
@@ -125,5 +125,5 @@ export const PlaygroundResultChip = ({
                 />
             }
         />
-    )
+    );
 };

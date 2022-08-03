@@ -71,8 +71,8 @@ export const PlaygroundResultFeatureDetails = ({
                                 feature.isEnabled === 'unevaluated'
                                     ? '?'
                                     : Boolean(feature.isEnabled)
-                                        ? 'True'
-                                        : 'False'
+                                    ? 'True'
+                                    : 'False'
                             }
                         />
                     </span>

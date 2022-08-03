@@ -1,4 +1,5 @@
 import { userInfo, hostname } from 'os';
+import { FeatureEvaluationResult } from './client';
 import { Context } from './context';
 
 export type FallbackFunction = (name: string, context: Context) => boolean;
@@ -7,14 +8,19 @@ export function createFallbackFunction(
     name: string,
     context: Context,
     fallback?: FallbackFunction | boolean,
-): Function {
+): () => FeatureEvaluationResult {
+    const createEvalResult = (enabled: boolean) => ({
+        enabled,
+        strategies: [],
+    });
+
     if (typeof fallback === 'function') {
-        return () => fallback(name, context);
+        return () => createEvalResult(fallback(name, context));
     }
     if (typeof fallback === 'boolean') {
-        return () => fallback;
+        return () => createEvalResult(fallback);
     }
-    return () => false;
+    return () => createEvalResult(false);
 }
 
 export function resolveContextValue(

@@ -93,13 +93,6 @@ export default class UnleashClient extends EventEmitter {
             return fallback();
         }
 
-        if (!feature) {
-            return {
-                enabled: false,
-                strategies: [],
-            };
-        }
-
         if (!Array.isArray(feature.strategies)) {
             const errorMsg = `Malformed feature, strategies not an array, is a ${typeof feature.strategies}`;
 

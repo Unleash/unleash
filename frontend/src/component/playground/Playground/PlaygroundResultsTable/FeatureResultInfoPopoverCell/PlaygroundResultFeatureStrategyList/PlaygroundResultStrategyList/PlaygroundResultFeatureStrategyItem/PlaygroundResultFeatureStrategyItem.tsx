@@ -40,14 +40,15 @@ export const PlaygroundResultFeatureStrategyItem = ({
     const theme = useTheme();
     const Icon = getFeatureStrategyIcon(strategy.name);
     const label =
-        result.evaluationStatus !== 'complete'
-            ? 'Unevaluated'
+        result.evaluationStatus === 'incomplete'
+            ? 'Unknown'
             : result.enabled
             ? 'True'
             : 'False';
-    const border = result.enabled
-        ? `1px solid ${theme.palette.success.main}`
-        : `1px solid ${theme.palette.divider}`;
+    const border =
+        result.enabled && result.evaluationStatus === 'complete'
+            ? `1px solid ${theme.palette.success.main}`
+            : `1px solid ${theme.palette.divider}`;
 
     return (
         <Box
@@ -77,6 +78,11 @@ export const PlaygroundResultFeatureStrategyItem = ({
                             showIcon={false}
                             enabled={result.enabled}
                             label={label}
+                            size={
+                                result.evaluationStatus === 'incomplete'
+                                    ? 'medium'
+                                    : 'default'
+                            }
                         />
                     </div>
                     <div className={styles.body}>

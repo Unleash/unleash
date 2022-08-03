@@ -12,6 +12,10 @@ export const useStyles = makeStyles()(theme => ({
         justifyContent: 'space-between',
         gap: theme.spacing(2),
     },
+    disabled: {
+        backgroundColor: theme.palette.neutral.light,
+        opacity: '90%',
+    },
     chip: {
         margin: '0.25rem',
     },

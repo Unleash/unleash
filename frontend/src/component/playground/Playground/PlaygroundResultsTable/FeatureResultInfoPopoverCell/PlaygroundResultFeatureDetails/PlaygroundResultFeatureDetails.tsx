@@ -23,19 +23,30 @@ export const PlaygroundResultFeatureDetails = ({
     const { classes: styles } = useStyles();
     const theme = useTheme();
 
-    const description = feature.isEnabled
-        ? `This feature toggle is True in ${input?.environment} because `
-        : `This feature toggle is False in ${input?.environment} because `;
+    console.log(feature);
 
-    const reason = feature.isEnabled
-        ? 'at least one strategy is True'
-        : feature?.isEnabledInCurrentEnvironment
-        ? 'the environment is disabled'
-        : 'all strategies are False';
+    const description =
+        feature.isEnabled === 'unevaluated'
+            ? `This feature toggle is Unevaluated in ${input?.environment} because `
+            : feature.isEnabled
+            ? `This feature toggle is True in ${input?.environment} because `
+            : `This feature toggle is False in ${input?.environment} because `;
 
-    const color = feature.isEnabled
-        ? theme.palette.success.main
-        : theme.palette.error.main;
+    const reason =
+        feature.isEnabled === 'unevaluated'
+            ? 'custom strategies are not evaluated yet'
+            : feature.isEnabled
+            ? 'at least one strategy is True'
+            : feature?.isEnabledInCurrentEnvironment
+            ? 'the environment is disabled'
+            : 'all strategies are False';
+
+    const color =
+        feature.isEnabled === 'unevaluated'
+            ? theme.palette.warning.main
+            : feature.isEnabled
+            ? theme.palette.success.main
+            : theme.palette.error.main;
 
     const noValueTxt = checkForEmptyValues(input?.context)
         ? 'You did not provide a value for your context field in step 2 of the configuration'
@@ -56,7 +67,19 @@ export const PlaygroundResultFeatureDetails = ({
                         {feature.name}
                     </Typography>
                     <span>
-                        <PlaygroundResultChip enabled={feature.isEnabled} />
+                        <PlaygroundResultChip
+                            enabled={
+                                feature.isEnabled === 'unevaluated'
+                                    ? 'unknown'
+                                    : feature.isEnabled
+                            }
+                            label={String(feature.isEnabled)}
+                            size={
+                                feature.isEnabled === 'unevaluated'
+                                    ? 'large'
+                                    : 'default'
+                            }
+                        />
                     </span>
                 </div>
                 <IconButton onClick={onCloseClick} className={styles.icon}>

@@ -3,6 +3,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { useStyles } from './PlaygroundConstraintItem.styles';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { CancelOutlined } from '@mui/icons-material';
+import classnames from 'classnames';
 
 interface IConstraintItemProps {
     value: string[];
@@ -23,10 +24,13 @@ export const PlaygroundConstraintItem = ({
     const color = input === 'no value' ? 'error' : 'neutral';
     const reason = `value does not match any ${text}`;
 
-    console.log(value, text, input, showReason);
-
     return (
-        <div className={styles.container}>
+        <div
+            className={classnames(
+                styles.container,
+                showReason ? styles.disabled : ''
+            )}
+        >
             <Typography variant="subtitle1" color={theme.palette[color].main}>
                 {input}
             </Typography>
@@ -72,6 +76,7 @@ export const PlaygroundConstraintItem = ({
             <ConditionallyRender
                 condition={Boolean(showReason)}
                 show={<CancelOutlined color={'error'} />}
+                elseShow={<div />}
             />
         </div>
     );

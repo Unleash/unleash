@@ -5,6 +5,7 @@ import {
     AccordionDetails,
     SxProps,
     Theme,
+    useTheme,
 } from '@mui/material';
 import { IConstraint } from 'interfaces/strategy';
 import { ConstraintAccordionViewBody } from './ConstraintAccordionViewBody/ConstraintAccordionViewBody';
@@ -17,12 +18,12 @@ import {
 } from 'constants/operators';
 import { useStyles } from '../ConstraintAccordion.styles';
 import {
-    PlaygroundFeatureStrategyConstraintResult,
+    PlaygroundConstraintSchema,
     PlaygroundRequestSchema,
 } from '../../../../hooks/api/actions/usePlayground/playground.model';
 
 interface IConstraintAccordionViewProps {
-    constraint: IConstraint | PlaygroundFeatureStrategyConstraintResult;
+    constraint: IConstraint | PlaygroundConstraintSchema;
     onDelete?: () => void;
     onEdit?: () => void;
     playgroundInput?: PlaygroundRequestSchema;
@@ -41,6 +42,7 @@ export const ConstraintAccordionView = ({
     const { classes: styles } = useStyles();
     const [expandable, setExpandable] = useState(true);
     const [expanded, setExpanded] = useState(false);
+    const theme = useTheme();
 
     const singleValue = oneOf(
         [...semVerOperators, ...numOperators, ...dateOperators],
@@ -51,6 +53,11 @@ export const ConstraintAccordionView = ({
             setExpanded(!expanded);
         }
     };
+    const backgroundColor = Boolean(playgroundInput)
+        ? !Boolean((constraint as PlaygroundConstraintSchema).result)
+            ? theme.palette.neutral.light
+            : 'inherit'
+        : 'inherit';
 
     return (
         <Accordion
@@ -68,6 +75,7 @@ export const ConstraintAccordionView = ({
                     '&:hover': {
                         cursor: expandable ? 'pointer' : 'default!important',
                     },
+                    backgroundColor: backgroundColor,
                 }}
             >
                 <ConstraintAccordionViewHeader

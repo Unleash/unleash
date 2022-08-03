@@ -6,22 +6,25 @@ import { ReactComponent as FeatureEnabledIcon } from '../../../../../assets/icon
 import { ReactComponent as FeatureDisabledIcon } from '../../../../../assets/icons/isenabled-false.svg';
 
 interface IResultChipProps {
-    enabled: boolean | 'unevaluated';
+    enabled: boolean | 'unknown';
     // Result icon - defaults to true
     showIcon?: boolean;
     label?: string;
+    size?: 'default' | 'medium' | 'large';
 }
 
-export const StyledChip = styled(Chip)(({ theme }) => ({
-    width: 60,
-    height: 24,
-    borderRadius: theme.shape.borderRadius,
-    fontWeight: theme.typography.fontWeightMedium,
-    ['& .MuiChip-label']: {
-        padding: 0,
-        paddingLeft: theme.spacing(0.5),
-    },
-}));
+export const StyledChip = styled(Chip)<{ width?: number }>(
+    ({ theme, width }) => ({
+        width: width ?? 60,
+        height: 24,
+        borderRadius: theme.shape.borderRadius,
+        fontWeight: theme.typography.fontWeightMedium,
+        ['& .MuiChip-label']: {
+            padding: 0,
+            paddingLeft: theme.spacing(0.5),
+        },
+    })
+);
 
 export const StyledFalseChip = styled(StyledChip)(({ theme }) => ({
     border: `1px solid ${theme.palette.error.main}`,
@@ -45,15 +48,27 @@ export const StyledTrueChip = styled(StyledChip)(({ theme }) => ({
     },
 }));
 
+export const StyledUnknownChip = styled(StyledChip)(({ theme }) => ({
+    border: `1px solid ${theme.palette.warning.main}`,
+    backgroundColor: colors.orange['100'],
+    ['& .MuiChip-label']: {
+        color: theme.palette.warning.main,
+    },
+    ['& .MuiChip-icon']: {
+        color: theme.palette.warning.main,
+    },
+}));
+
 export const PlaygroundResultChip = ({
     enabled,
     showIcon = true,
     label,
+    size = 'default',
 }: IResultChipProps) => {
     const theme = useTheme();
     const icon = (
         <ConditionallyRender
-            condition={Boolean(enabled)}
+            condition={enabled !== 'unknown' && enabled}
             show={
                 <FeatureEnabledIcon
                     color={theme.palette.success.main}
@@ -71,19 +86,41 @@ export const PlaygroundResultChip = ({
 
     const defaultLabel = enabled ? 'True' : 'False';
 
+    let chipWidth = 60;
+    if (size === 'medium') {
+        chipWidth = 72;
+    }
+
+    if (size === 'large') {
+        chipWidth = 100;
+    }
+
     return (
         <ConditionallyRender
-            condition={Boolean(enabled)}
+            condition={enabled !== 'unknown' && enabled}
             show={
                 <StyledTrueChip
                     icon={showIcon ? icon : undefined}
                     label={label || defaultLabel}
+                    width={chipWidth}
                 />
             }
             elseShow={
-                <StyledFalseChip
-                    icon={showIcon ? icon : undefined}
-                    label={label || defaultLabel}
+                <ConditionallyRender
+                    condition={enabled === 'unknown'}
+                    show={
+                        <StyledUnknownChip
+                            label={label || 'Unknown'}
+                            width={chipWidth}
+                        />
+                    }
+                    elseShow={
+                        <StyledFalseChip
+                            icon={showIcon ? icon : undefined}
+                            label={label || defaultLabel}
+                            width={chipWidth}
+                        />
+                    }
                 />
             }
         />

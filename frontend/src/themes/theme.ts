@@ -309,6 +309,11 @@ export default createTheme({
                             ...(ownerState.color === 'default' && {
                                 color: theme.palette.text.secondary,
                             }),
+                            ...(ownerState.color === 'error' && {
+                                color: theme.palette.error.dark,
+                                background: theme.palette.error.light,
+                                borderColor: theme.palette.error.border,
+                            }),
                         }),
                 }),
             },

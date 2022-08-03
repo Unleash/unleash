@@ -65,16 +65,6 @@ export class FeatureEvaluator extends EventEmitter {
             });
         });
 
-        this.repository.on(UnleashEvents.Error, (err) => {
-            // eslint-disable-next-line no-param-reassign
-            err.message = `Unleash Repository error: ${err.message}`;
-            this.emit(UnleashEvents.Error, err);
-        });
-
-        this.repository.on(UnleashEvents.Warn, (msg) =>
-            this.emit(UnleashEvents.Warn, msg),
-        );
-
         // setup client
         const supportedStrategies = strategies.concat(defaultStrategies);
         this.client = new Client(this.repository, supportedStrategies);

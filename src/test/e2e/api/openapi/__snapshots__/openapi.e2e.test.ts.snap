@@ -905,6 +905,28 @@ Object {
         ],
         "type": "object",
       },
+      "environmentCreateSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "enabled": Object {
+            "type": "boolean",
+          },
+          "name": Object {
+            "type": "string",
+          },
+          "sortOrder": Object {
+            "type": "number",
+          },
+          "type": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "name",
+          "type",
+        ],
+        "type": "object",
+      },
       "environmentSchema": Object {
         "additionalProperties": false,
         "properties": Object {

@@ -124,6 +124,9 @@ export interface IEnvironment {
     protected: boolean;
 }
 
+/*
+ * @deprecated prefer EnvironmentCreateSchema type instead
+ */
 export interface IEnvironmentCreate {
     name: string;
     type: string;

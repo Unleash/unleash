@@ -27,6 +27,7 @@ import { createUserSchema } from './spec/create-user-schema';
 import { dateSchema } from './spec/date-schema';
 import { emailSchema } from './spec/email-schema';
 import { environmentSchema } from './spec/environment-schema';
+import { environmentCreateSchema } from './spec/environment-create-schema';
 import { environmentsSchema } from './spec/environments-schema';
 import { eventSchema } from './spec/event-schema';
 import { eventsSchema } from './spec/events-schema';
@@ -135,6 +136,7 @@ export const schemas = {
     dateSchema,
     emailSchema,
     environmentSchema,
+    environmentCreateSchema,
     environmentsSchema,
     eventSchema,
     eventsSchema,

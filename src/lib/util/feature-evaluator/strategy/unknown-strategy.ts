@@ -1,7 +1,8 @@
 import { playgroundStrategyEvaluation } from '../../../openapi/spec/playground-strategy-schema';
 import { StrategyEvaluationResult } from '../client';
+import { Constraint } from '../constraint';
 import { Context } from '../context';
-import { Constraint, SegmentForEvaluation, Strategy } from './strategy';
+import { SegmentForEvaluation, Strategy } from './strategy';
 
 export default class UnknownStrategy extends Strategy {
     constructor() {

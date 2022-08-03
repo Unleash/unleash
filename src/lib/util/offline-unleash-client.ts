@@ -4,11 +4,12 @@ import {
     Unleash as UnleashClient,
 } from './feature-evaluator';
 import { FeatureConfigurationClient } from 'lib/types/stores/feature-strategies-store';
-import { Operator, Segment } from './feature-evaluator/strategy/strategy';
+import { Segment } from './feature-evaluator/strategy/strategy';
 import { once } from 'events';
 import { ISegment } from 'lib/types/model';
 import { serializeDates } from '../../lib/types/serialize-dates';
 import { FeatureInterface } from './feature-evaluator/feature';
+import { Operator } from './feature-evaluator/constraint';
 
 enum PayloadType {
     STRING = 'string',

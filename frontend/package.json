@@ -103,7 +103,7 @@
     "vitest": "0.20.3",
     "whatwg-fetch": "^3.6.2",
     "@codemirror/lang-json": "6.0.0",
-    "@codemirror/state": "6.1.0",
+    "@codemirror/state": "6.1.1",
     "@uiw/react-codemirror": "^4.11.4",
     "codemirror": "^6.0.1"
   },

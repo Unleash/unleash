@@ -11,6 +11,7 @@ import theme from 'themes/theme';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { TablePlaceholder } from 'component/common/Table';
 import { GroupCard } from './GroupCard/GroupCard';
+import { GroupEmpty } from './GroupEmpty/GroupEmpty';
 
 type PageQueryType = Partial<Record<'search', string>>;
 
@@ -123,12 +124,7 @@ export const GroupsList: VFC = () => {
                                 &rdquo;
                             </TablePlaceholder>
                         }
-                        elseShow={
-                            <TablePlaceholder>
-                                No groups available. Get started by adding a new
-                                group.
-                            </TablePlaceholder>
-                        }
+                        elseShow={<GroupEmpty />}
                     />
                 }
             />

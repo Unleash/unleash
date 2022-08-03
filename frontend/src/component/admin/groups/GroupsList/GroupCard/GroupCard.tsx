@@ -1,6 +1,6 @@
 import { styled, Tooltip } from '@mui/material';
 import { IGroup } from 'interfaces/group';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { GroupCardAvatars } from './GroupCardAvatars/GroupCardAvatars';
 import { Badge } from 'component/common/Badge/Badge';
@@ -20,8 +20,14 @@ const StyledGroupCard = styled('aside')(({ theme }) => ({
     border: `1px solid ${theme.palette.dividerAlternative}`,
     borderRadius: theme.shape.borderRadiusLarge,
     boxShadow: theme.boxShadows.card,
+    display: 'flex',
+    flexDirection: 'column',
     [theme.breakpoints.up('md')]: {
         padding: theme.spacing(4),
+    },
+    '&:hover': {
+        transition: 'background-color 0.2s ease-in-out',
+        backgroundColor: theme.palette.neutral.light,
     },
 }));
 
@@ -29,6 +35,14 @@ const StyledRow = styled('div')(() => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
+}));
+
+const StyledTitleRow = styled(StyledRow)(() => ({
+    alignItems: 'flex-start',
+}));
+
+const StyledBottomRow = styled(StyledRow)(() => ({
+    marginTop: 'auto',
 }));
 
 const StyledHeaderTitle = styled('h2')(({ theme }) => ({
@@ -55,7 +69,13 @@ const StyledCounterDescription = styled('span')(({ theme }) => ({
     marginLeft: theme.spacing(1),
 }));
 
-const ProjectBadgeContainer = styled('div')(() => ({}));
+const ProjectBadgeContainer = styled('div')(() => ({
+    maxWidth: '50%',
+}));
+
+const StyledBadge = styled(Badge)(() => ({
+    marginRight: 0.5,
+}));
 
 interface IGroupCardProps {
     group: IGroup;
@@ -63,12 +83,12 @@ interface IGroupCardProps {
 
 export const GroupCard = ({ group }: IGroupCardProps) => {
     const [removeOpen, setRemoveOpen] = useState(false);
-
+    const navigate = useNavigate();
     return (
         <>
             <StyledLink key={group.id} to={`/admin/groups/${group.id}`}>
                 <StyledGroupCard>
-                    <StyledRow>
+                    <StyledTitleRow>
                         <StyledHeaderTitle>{group.name}</StyledHeaderTitle>
                         <StyledHeaderActions>
                             <GroupCardActions
@@ -76,9 +96,9 @@ export const GroupCard = ({ group }: IGroupCardProps) => {
                                 onRemove={() => setRemoveOpen(true)}
                             />
                         </StyledHeaderActions>
-                    </StyledRow>
+                    </StyledTitleRow>
                     <StyledDescription>{group.description}</StyledDescription>
-                    <StyledRow>
+                    <StyledBottomRow>
                         <ConditionallyRender
                             condition={group.users?.length > 0}
                             show={<GroupCardAvatars users={group.users} />}
@@ -92,13 +112,26 @@ export const GroupCard = ({ group }: IGroupCardProps) => {
                             <ConditionallyRender
                                 condition={group.projects.length > 0}
                                 show={group.projects.map(project => (
-                                    <Badge
-                                        color="secondary"
-                                        icon={<TopicOutlinedIcon />}
-                                        sx={{ marginRight: 0.5 }}
+                                    <Tooltip
+                                        key={project}
+                                        title="View project"
+                                        arrow
+                                        placement="bottom-end"
+                                        describeChild
                                     >
-                                        {project}
-                                    </Badge>
+                                        <StyledBadge
+                                            onClick={e => {
+                                                e.preventDefault();
+                                                navigate(
+                                                    `/projects/${project}/access`
+                                                );
+                                            }}
+                                            color="secondary"
+                                            icon={<TopicOutlinedIcon />}
+                                        >
+                                            {project}
+                                        </StyledBadge>
+                                    </Tooltip>
                                 ))}
                                 elseShow={
                                     <Tooltip
@@ -111,7 +144,7 @@ export const GroupCard = ({ group }: IGroupCardProps) => {
                                 }
                             />
                         </ProjectBadgeContainer>
-                    </StyledRow>
+                    </StyledBottomRow>
                 </StyledGroupCard>
             </StyledLink>
             <RemoveGroup

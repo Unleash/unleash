@@ -81,6 +81,7 @@ export const GroupForm: FC<IGroupForm> = ({
                 value={name}
                 onChange={e => setName(e.target.value)}
                 data-testid={UG_NAME_ID}
+                required
             />
             <StyledInputDescription>
                 How would you describe your group?

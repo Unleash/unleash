@@ -44,27 +44,44 @@ export const ProjectRoleDescription: VFC<IProjectRoleDescriptionProps> = ({
     const environments = useMemo(() => {
         const environments = new Set<string>();
         role.permissions
-            ?.filter((permission: any) => permission.environment !== '')
+            ?.filter((permission: any) => permission.environment)
             .forEach((permission: any) => {
                 environments.add(permission.environment);
             });
         return [...environments].sort();
     }, [role]);
 
+    const projectPermissions = useMemo(() => {
+        return role.permissions?.filter(
+            (permission: any) => !permission.environment
+        );
+    }, [role]);
+
     return (
         <StyledDescription>
-            <StyledDescriptionHeader>
-                Project permissions
-            </StyledDescriptionHeader>
-            <StyledDescriptionBlock>
-                {role.permissions
-                    ?.filter((permission: any) => permission.environment === '')
-                    .map((permission: any) => permission.displayName)
-                    .sort()
-                    .map((permission: any) => (
-                        <p key={permission}>{permission}</p>
-                    ))}
-            </StyledDescriptionBlock>
+            <ConditionallyRender
+                condition={Boolean(projectPermissions?.length)}
+                show={
+                    <>
+                        <StyledDescriptionHeader>
+                            Project permissions
+                        </StyledDescriptionHeader>
+                        <StyledDescriptionBlock>
+                            {role.permissions
+                                ?.filter(
+                                    (permission: any) => !permission.environment
+                                )
+                                .map(
+                                    (permission: any) => permission.displayName
+                                )
+                                .sort()
+                                .map((permission: any) => (
+                                    <p key={permission}>{permission}</p>
+                                ))}
+                        </StyledDescriptionBlock>
+                    </>
+                }
+            />
             <ConditionallyRender
                 condition={Boolean(environments.length)}
                 show={

@@ -2,25 +2,11 @@ import { capitalize, MenuItem, Select, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { Role } from 'interfaces/group';
+import { Badge } from 'component/common/Badge/Badge';
+import { StarRounded } from '@mui/icons-material';
 
-const StyledBadge = styled('div')(({ theme }) => ({
-    padding: theme.spacing(0.5, 1),
-    textDecoration: 'none',
-    color: theme.palette.text.secondary,
-    border: `1px solid ${theme.palette.dividerAlternative}`,
-    background: theme.palette.activityIndicators.unknown,
-    display: 'inline-block',
-    borderRadius: theme.shape.borderRadius,
-    marginLeft: theme.spacing(1.5),
-    fontSize: theme.fontSizes.smallerBody,
-    fontWeight: theme.fontWeight.bold,
-    lineHeight: 1,
-}));
-
-const StyledOwnerBadge = styled(StyledBadge)(({ theme }) => ({
-    color: theme.palette.success.dark,
-    border: `1px solid ${theme.palette.success.border}`,
-    background: theme.palette.success.light,
+const StyledPopupStar = styled(StarRounded)(({ theme }) => ({
+    color: theme.palette.warning.main,
 }));
 
 interface IGroupUserRoleCellProps {
@@ -35,8 +21,12 @@ export const GroupUserRoleCell = ({
     const renderBadge = () => (
         <ConditionallyRender
             condition={value === Role.Member}
-            show={<StyledBadge>{capitalize(value)}</StyledBadge>}
-            elseShow={<StyledOwnerBadge>{capitalize(value)}</StyledOwnerBadge>}
+            show={<Badge>{capitalize(value)}</Badge>}
+            elseShow={
+                <Badge color="success" icon={<StyledPopupStar />}>
+                    {capitalize(value)}
+                </Badge>
+            }
         />
     );
 

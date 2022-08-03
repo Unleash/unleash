@@ -255,7 +255,7 @@ export const Group: VFC = () => {
                                     onClick={() => setRemoveOpen(true)}
                                     permission={ADMIN}
                                     tooltipProps={{
-                                        title: 'Remove group',
+                                        title: 'Delete group',
                                     }}
                                 >
                                     <StyledDelete />

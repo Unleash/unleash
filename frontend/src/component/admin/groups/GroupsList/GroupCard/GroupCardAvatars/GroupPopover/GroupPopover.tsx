@@ -1,21 +1,18 @@
-import { Badge, Popover, styled } from '@mui/material';
+import { Popover, styled } from '@mui/material';
 import { IGroupUser, Role } from 'interfaces/group';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { Badge as StyledBadge } from 'component/common/Badge/Badge';
-import StarIcon from '@mui/icons-material/Star';
+import { Badge } from 'component/common/Badge/Badge';
+import { StarRounded } from '@mui/icons-material';
 
 const StyledPopover = styled(Popover)(({ theme }) => ({
     pointerEvents: 'none',
     '.MuiPaper-root': {
-        padding: '12px',
+        padding: theme.spacing(2),
     },
 }));
 
-const StyledPopupStar = styled(StarIcon)(({ theme }) => ({
+const StyledPopupStar = styled(StarRounded)(({ theme }) => ({
     color: theme.palette.warning.main,
-    fontSize: theme.fontSizes.smallBody,
-    marginLeft: theme.spacing(0.1),
-    marginTop: theme.spacing(2),
 }));
 
 const StyledName = styled('div')(({ theme }) => ({
@@ -55,22 +52,10 @@ export const GroupPopover = ({
         >
             <ConditionallyRender
                 condition={user?.role === Role.Member}
-                show={<StyledBadge color="success">{user?.role}</StyledBadge>}
+                show={<Badge>{user?.role}</Badge>}
                 elseShow={
-                    <Badge
-                        overlap="circular"
-                        anchorOrigin={{
-                            vertical: 'top',
-                            horizontal: 'left',
-                        }}
-                        badgeContent={<StyledPopupStar />}
-                    >
-                        <StyledBadge
-                            color="success"
-                            sx={{ paddingLeft: '16px' }}
-                        >
-                            {user?.role}
-                        </StyledBadge>
+                    <Badge color="success" icon={<StyledPopupStar />}>
+                        {user?.role}
                     </Badge>
                 }
             />

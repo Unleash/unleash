@@ -2170,6 +2170,7 @@ Object {
           },
         },
         "required": Array [
+          "id",
           "name",
           "result",
           "segments",

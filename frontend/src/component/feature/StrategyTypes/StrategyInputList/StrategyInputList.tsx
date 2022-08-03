@@ -1,5 +1,12 @@
 import React, { ChangeEvent, useState } from 'react';
-import { Button, Chip, TextField, Typography } from '@mui/material';
+import {
+    Button,
+    Chip,
+    TextField,
+    Typography,
+    styled,
+    TextFieldProps,
+} from '@mui/material';
 import { Add } from '@mui/icons-material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ADD_TO_STRATEGY_INPUT_LIST, STRATEGY_INPUT_LIST } from 'utils/testIds';
@@ -11,6 +18,21 @@ interface IStrategyInputList {
     setConfig: (field: string, value: string) => void;
     disabled: boolean;
 }
+
+const Container = styled('div')(({ theme }) => ({
+    display: 'grid',
+    gap: theme.spacing(1),
+}));
+
+const ChipsList = styled('div')(({ theme }) => ({
+    display: 'flex',
+    gap: theme.spacing(1),
+}));
+
+const InputContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    gap: theme.spacing(1),
+}));
 
 const StrategyInputList = ({
     name,
@@ -61,49 +83,42 @@ const StrategyInputList = ({
         );
     };
 
-    // @ts-expect-error
-    const onChange = e => {
-        setInput(e.currentTarget.value);
+    const onChange: TextFieldProps['onChange'] = event => {
+        setInput(event.currentTarget.value);
     };
 
     return (
-        <div>
+        <Container>
             <Typography variant="subtitle2" component="h2">
                 List of {name}
             </Typography>
-            <div
-                style={{
-                    display: 'flex',
-                    flexWrap: 'wrap',
-                    margin: '10px 0',
-                }}
-            >
-                {list.map((entryValue, index) => (
-                    <Chip
-                        key={index + entryValue}
-                        label={
-                            <StringTruncator
-                                maxWidth="300"
-                                text={entryValue}
-                                maxLength={50}
+            <ConditionallyRender
+                condition={list.length > 0}
+                show={
+                    <ChipsList>
+                        {list.map((entryValue, index) => (
+                            <Chip
+                                key={index + entryValue}
+                                label={
+                                    <StringTruncator
+                                        maxWidth="300"
+                                        text={entryValue}
+                                        maxLength={50}
+                                    />
+                                }
+                                onDelete={
+                                    disabled ? undefined : () => onClose(index)
+                                }
+                                title="Remove value"
                             />
-                        }
-                        style={{ marginRight: '3px' }}
-                        onDelete={disabled ? undefined : () => onClose(index)}
-                        title="Remove value"
-                    />
-                ))}
-            </div>
+                        ))}
+                    </ChipsList>
+                }
+            />
             <ConditionallyRender
                 condition={!disabled}
                 show={
-                    <div
-                        style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '1rem',
-                        }}
-                    >
+                    <InputContainer>
                         <TextField
                             name={`input_field`}
                             variant="outlined"
@@ -128,10 +143,10 @@ const StrategyInputList = ({
                         >
                             Add
                         </Button>
-                    </div>
+                    </InputContainer>
                 }
             />
-        </div>
+        </Container>
     );
 };
 

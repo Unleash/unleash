@@ -53,14 +53,13 @@ const GeneralStrategy = ({
     }
 
     return (
-        <>
+        <div className={styles.container}>
             {strategyDefinition.parameters.map(
                 ({ name, type, description, required }) => {
                     if (type === 'percentage') {
                         const value = parseParameterNumber(parameters[name]);
                         return (
                             <div key={name}>
-                                <br />
                                 <RolloutSlider
                                     name={name}
                                     onChange={onChangePercentage.bind(
@@ -103,7 +102,7 @@ const GeneralStrategy = ({
                             value.length > 0 ? !regex.test(value) : false;
 
                         return (
-                            <div key={name} className={styles.generalSection}>
+                            <div key={name}>
                                 <TextField
                                     error={error}
                                     helperText={
@@ -132,7 +131,7 @@ const GeneralStrategy = ({
                     } else if (type === 'boolean') {
                         const value = parseParameterString(parameters[name]);
                         return (
-                            <div key={name} style={{ padding: '20px 0' }}>
+                            <div key={name}>
                                 <Tooltip
                                     title={description}
                                     placement="right-end"
@@ -158,7 +157,7 @@ const GeneralStrategy = ({
                     } else {
                         const value = parseParameterString(parameters[name]);
                         return (
-                            <div key={name} className={styles.generalSection}>
+                            <div key={name}>
                                 <TextField
                                     rows={1}
                                     placeholder=""
@@ -185,7 +184,7 @@ const GeneralStrategy = ({
                     }
                 }
             )}
-        </>
+        </div>
     );
 };
 

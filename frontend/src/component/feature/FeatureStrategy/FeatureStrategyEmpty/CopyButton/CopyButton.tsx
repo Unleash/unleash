@@ -1,90 +1,44 @@
 import { MouseEvent, useContext, useState, VFC } from 'react';
 import {
-    IconButton,
+    Button,
     ListItemIcon,
     ListItemText,
     Menu,
     MenuItem,
     Tooltip,
 } from '@mui/material';
-import { AddToPhotos as CopyIcon, Lock } from '@mui/icons-material';
-import { IFeatureStrategy } from 'interfaces/strategy';
+import { Lock } from '@mui/icons-material';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { IFeatureEnvironment } from 'interfaces/featureToggle';
 import AccessContext from 'contexts/AccessContext';
 import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
-import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFeatureStrategyApi';
-import useToast from 'hooks/useToast';
-import { useFeatureImmutable } from 'hooks/api/getters/useFeature/useFeatureImmutable';
-import { formatUnknownError } from 'utils/formatUnknownError';
 
-interface ICopyStrategyIconMenuProps {
+interface ICopyButtonProps {
+    environmentId: IFeatureEnvironment['name'];
     environments: IFeatureEnvironment['name'][];
-    strategy: IFeatureStrategy;
+    onClick: (environmentId: string) => void;
 }
 
-export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
+export const CopyButton: VFC<ICopyButtonProps> = ({
+    environmentId,
     environments,
-    strategy,
+    onClick,
 }) => {
     const projectId = useRequiredPathParam('projectId');
-    const featureId = useRequiredPathParam('featureId');
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
-    const { addStrategyToFeature } = useFeatureStrategyApi();
-    const { setToastData, setToastApiError } = useToast();
-    const { refetchFeature } = useFeature(projectId, featureId);
-    const { refetchFeature: refetchFeatureImmutable } = useFeatureImmutable(
-        projectId,
-        featureId
-    );
-    const onClose = () => {
-        setAnchorEl(null);
-    };
     const { hasAccess } = useContext(AccessContext);
-    const onClick = async (environmentId: string) => {
-        const { id, ...strategyCopy } = {
-            ...strategy,
-            environment: environmentId,
-        };
-
-        try {
-            await addStrategyToFeature(
-                projectId,
-                featureId,
-                environmentId,
-                strategyCopy
-            );
-            refetchFeature();
-            refetchFeatureImmutable();
-            setToastData({
-                title: `Strategy created`,
-                text: `Successfully copied a strategy to ${environmentId}`,
-                type: 'success',
-            });
-        } catch (error) {
-            setToastApiError(formatUnknownError(error));
-        }
-        onClose();
-    };
-
     const enabled = environments.some(environment =>
         hasAccess(CREATE_FEATURE_STRATEGY, projectId, environment)
     );
 
     return (
         <div>
-            <Tooltip
-                title={`Copy to another environment${
-                    enabled ? '' : ' (Access denied)'
-                }`}
-            >
+            <Tooltip title={enabled ? '' : '(Access denied)'}>
                 <div>
-                    <IconButton
-                        size="large"
-                        id={`copy-strategy-icon-menu-${strategy.id}`}
+                    <Button
+                        id={`copy-all-strategies-${environmentId}`}
                         aria-controls={open ? 'basic-menu' : undefined}
                         aria-haspopup="true"
                         aria-expanded={open ? 'true' : undefined}
@@ -92,18 +46,21 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
                             setAnchorEl(event.currentTarget);
                         }}
                         disabled={!enabled}
+                        variant="outlined"
                     >
-                        <CopyIcon />
-                    </IconButton>
+                        Copy from another environment
+                    </Button>
                 </div>
             </Tooltip>
             <Menu
                 id="basic-menu"
                 anchorEl={anchorEl}
                 open={open}
-                onClose={onClose}
+                onClose={() => {
+                    setAnchorEl(null);
+                }}
                 MenuListProps={{
-                    'aria-labelledby': `copy-strategy-icon-menu-${strategy.id}`,
+                    'aria-labelledby': `copy-all-strategies-${environmentId}`,
                 }}
             >
                 {environments.map(environment => {
@@ -136,7 +93,7 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
                                         }
                                     />
                                     <ListItemText>
-                                        Copy to {environment}
+                                        Copy from {environment}
                                     </ListItemText>
                                 </MenuItem>
                             </div>

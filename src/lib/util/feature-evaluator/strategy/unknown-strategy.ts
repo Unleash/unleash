@@ -13,8 +13,7 @@ export default class UnknownStrategy extends Strategy {
     }
 
     isEnabledWithConstraints(
-        // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-        parameters: any,
+        parameters: unknown,
         context: Context,
         constraints: Iterable<Constraint>,
         segments: SegmentForEvaluation[],

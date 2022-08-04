@@ -278,6 +278,42 @@ describe('offline client', () => {
         );
     });
 
+    it(`returns '${playgroundStrategyEvaluation.unknownResult}' for the application hostname strategy`, async () => {
+        const name = 'toggle-name';
+        const context = { appName: 'client-test' };
+
+        const client = await offlineUnleashClient({
+            features: [
+                {
+                    strategies: [
+                        {
+                            name: 'applicationHostname',
+                            constraints: [],
+                        },
+                    ],
+                    stale: false,
+                    enabled: true,
+                    name,
+                    type: 'experiment',
+                    variants: [],
+                },
+            ],
+            context,
+            logError: console.log,
+        });
+
+        const result = client.isEnabled(name, context);
+
+        result.strategies.forEach((strategy) =>
+            expect(strategy.result.enabled).toEqual(
+                playgroundStrategyEvaluation.unknownResult,
+            ),
+        );
+        expect(result.result).toEqual(
+            playgroundStrategyEvaluation.unknownResult,
+        );
+    });
+
     it('returns strategies in the order they are provided', async () => {
         const featureName = 'featureName';
         const strategies = [

@@ -101,8 +101,8 @@ export const PlaygroundResultSegmentExecution = ({
                     <SegmentExecutionConstraintWrapper>
                         <PlaygroundResultConstraintExecution
                             constraints={segment.constraints}
-                            compact={true}
                             input={input}
+                            compact
                         />
                     </SegmentExecutionConstraintWrapper>
                     <ConditionallyRender

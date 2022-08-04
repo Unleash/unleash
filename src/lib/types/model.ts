@@ -3,7 +3,7 @@ import { LogProvider } from '../logger';
 import { IRole } from './stores/access-store';
 import { IUser } from './user';
 import { ALL_OPERATORS } from '../util/constants';
-
+import { EnvironmentCreateSchema } from '../openapi/spec/environment-create-schema';
 export type Operator = typeof ALL_OPERATORS[number];
 
 export interface IConstraint {
@@ -127,12 +127,7 @@ export interface IEnvironment {
 /*
  * @deprecated prefer EnvironmentCreateSchema type instead
  */
-export interface IEnvironmentCreate {
-    name: string;
-    type: string;
-    sortOrder?: number;
-    enabled?: boolean;
-}
+export interface IEnvironmentCreate extends EnvironmentCreateSchema {}
 
 export interface IEnvironmentOverview {
     name: string;

@@ -3,7 +3,7 @@ import { ISegment } from 'interfaces/segment';
 import { useStyles } from 'component/feature/FeatureStrategy/FeatureStrategySegment/FeatureStrategySegmentList.styles';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { FeatureStrategySegmentChip } from 'component/feature/FeatureStrategy/FeatureStrategySegment/FeatureStrategySegmentChip';
-import { ConstraintAccordionList } from 'component/common/ConstraintAccordion/ConstraintAccordionList/ConstraintAccordionList';
+import { SegmentItem } from 'component/common/SegmentItem/SegmentItem';
 
 interface IFeatureStrategySegmentListProps {
     segments: ISegment[];
@@ -49,15 +49,9 @@ export const FeatureStrategySegmentList = ({
                 ))}
             </div>
             <ConditionallyRender
-                condition={Boolean(preview && preview.constraints.length === 0)}
-                show={() => <p>This segment has no constraints.</p>}
-            />
-            <ConditionallyRender
                 condition={Boolean(preview)}
                 show={() => (
-                    <ConstraintAccordionList
-                        constraints={preview!.constraints}
-                    />
+                    <SegmentItem segment={preview as ISegment} isExpanded />
                 )}
             />
         </>

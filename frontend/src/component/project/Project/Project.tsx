@@ -80,21 +80,6 @@ const Project = () => {
         /* eslint-disable-next-line */
     }, []);
 
-    const renderTabs = () => {
-        return tabs.map(tab => {
-            return (
-                <Tab
-                    data-loading
-                    key={tab.title}
-                    label={tab.title}
-                    value={tab.path}
-                    onClick={() => navigate(tab.path)}
-                    className={styles.tabButton}
-                />
-            );
-        });
-    };
-
     return (
         <div ref={ref}>
             <div className={styles.header}>
@@ -135,7 +120,15 @@ const Project = () => {
                         indicatorColor="primary"
                         textColor="primary"
                     >
-                        {renderTabs()}
+                        {tabs.map(tab => (
+                            <Tab
+                                key={tab.title}
+                                label={tab.title}
+                                value={tab.path}
+                                onClick={() => navigate(tab.path)}
+                                className={styles.tabButton}
+                            />
+                        ))}
                     </Tabs>
                 </div>
             </div>

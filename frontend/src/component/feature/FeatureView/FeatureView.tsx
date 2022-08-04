@@ -76,21 +76,6 @@ export const FeatureView = () => {
 
     const activeTab = tabData.find(tab => tab.path === pathname) ?? tabData[0];
 
-    const renderTabs = () => {
-        return tabData.map((tab, index) => {
-            return (
-                <Tab
-                    data-loading
-                    key={tab.title}
-                    label={tab.title}
-                    value={tab.path}
-                    onClick={() => navigate(tab.path)}
-                    className={styles.tabButton}
-                />
-            );
-        });
-    };
-
     if (status === 404) {
         return <FeatureNotFound />;
     }
@@ -168,7 +153,15 @@ export const FeatureView = () => {
                                 indicatorColor="primary"
                                 textColor="primary"
                             >
-                                {renderTabs()}
+                                {tabData.map(tab => (
+                                    <Tab
+                                        key={tab.title}
+                                        label={tab.title}
+                                        value={tab.path}
+                                        onClick={() => navigate(tab.path)}
+                                        className={styles.tabButton}
+                                    />
+                                ))}
                             </Tabs>
                         </div>
                     </div>

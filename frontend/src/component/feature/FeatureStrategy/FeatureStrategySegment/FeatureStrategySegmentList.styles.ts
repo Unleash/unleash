@@ -12,10 +12,7 @@ export const useStyles = makeStyles()(theme => ({
         gap: '0.5rem',
     },
     and: {
-        color: theme.palette.grey[600],
         fontSize: theme.fontSizes.smallerBody,
-        border: '1px solid',
-        borderColor: theme.palette.grey[300],
         padding: theme.spacing(0.75, 1),
         display: 'block',
         marginTop: 'auto',
@@ -23,6 +20,8 @@ export const useStyles = makeStyles()(theme => ({
         alignItems: 'center',
         borderRadius: theme.shape.borderRadius,
         lineHeight: 1,
+        color: theme.palette.text.primary,
+        backgroundColor: theme.palette.secondaryContainer,
     },
     selectedSegmentsLabel: {
         color: theme.palette.text.secondary,

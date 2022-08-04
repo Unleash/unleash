@@ -1,10 +1,8 @@
 import { Fragment } from 'react';
-import { Link } from 'react-router-dom';
-import { DonutLarge } from '@mui/icons-material';
-import { useStyles } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewSegment/FeatureOverviewSegment.styles';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
+import { SegmentItem } from '../../../../common/SegmentItem/SegmentItem';
 
 interface IFeatureOverviewSegmentProps {
     strategyId: string;
@@ -13,7 +11,6 @@ interface IFeatureOverviewSegmentProps {
 export const FeatureOverviewSegment = ({
     strategyId,
 }: IFeatureOverviewSegmentProps) => {
-    const { classes: styles } = useStyles();
     const { segments } = useSegments(strategyId);
 
     if (!segments || segments.length === 0) {
@@ -28,21 +25,9 @@ export const FeatureOverviewSegment = ({
                         condition={index > 0}
                         show={<StrategySeparator text="AND" />}
                     />
-                    <div className={styles.container}>
-                        <DonutLarge color="secondary" sx={{ mr: 1 }} /> Segment:{' '}
-                        <Link
-                            to={segmentPath(segment.id)}
-                            className={styles.link}
-                        >
-                            {segment.name}
-                        </Link>
-                    </div>
+                    <SegmentItem segment={segment} />
                 </Fragment>
             ))}
         </>
     );
-};
-
-const segmentPath = (segmentId: number): string => {
-    return `/segments/edit/${segmentId}`;
 };

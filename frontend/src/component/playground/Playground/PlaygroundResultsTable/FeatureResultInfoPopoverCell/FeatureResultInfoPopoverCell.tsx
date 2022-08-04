@@ -26,7 +26,7 @@ export const FeatureResultInfoPopoverCell = ({
     const [open, setOpen] = useState(false);
     const { classes: styles } = useStyles();
     const ref = useRef(null);
-    
+
     const togglePopover = () => {
         setOpen(!open);
     };

@@ -31,7 +31,7 @@ const StyledHeaderWrapper = styled('div')(({ theme }) => ({
     display: 'flex',
     width: '100%',
     justifyContent: 'space-between',
-    borderRadius: '8px',
+    borderRadius: theme.spacing(1),
 }));
 
 interface ConstraintAccordionViewHeaderMetaInfoProps {

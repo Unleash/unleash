@@ -1879,7 +1879,9 @@ Object {
         "description": "A simplified feature toggle model intended for the Unleash playground.",
         "properties": Object {
           "isEnabled": Object {
-            "description": "Whether this feature is enabled or not in the current environment. If a feature can't be fully evaluated (that is, \`strategies.result\` is \`unknown\`), this will be \`false\` to align with how client SDKs treat unresolved feature states.",
+            "description": "Whether this feature is enabled or not in the current environment.
+                          If a feature can't be fully evaluated (that is, \`strategies.result\` is \`unknown\`),
+                          this will be \`false\` to align with how client SDKs treat unresolved feature states.",
             "example": true,
             "type": "boolean",
           },
@@ -1919,7 +1921,11 @@ Object {
                     "type": "string",
                   },
                 ],
-                "description": "The cumulative results of all the feature's strategies. Can be \`true\`, \`false\`, or \`unknown\`. This property will only be \`unknown\` if one or more of the strategies can't be fully evaluated and the rest of the strategies all resolve to \`false\`.",
+                "description": "The cumulative results of all the feature's strategies. Can be \`true\`,
+                                  \`false\`, or \`unknown\`.
+                                  This property will only be \`unknown\`
+                                  if one or more of the strategies can't be fully evaluated and the rest of the strategies
+                                  all resolve to \`false\`.",
               },
             },
             "required": Array [
@@ -1930,7 +1936,10 @@ Object {
           },
           "variant": Object {
             "additionalProperties": false,
-            "description": "The feature variant you receive based on the provided context or the _disabled variant_. If a feature is disabled or doesn't have any variants, you would get the _disabled variant_. Otherwise, you'll get one of the feature's defined variants.",
+            "description": "The feature variant you receive based on the provided context or the _disabled
+                          variant_. If a feature is disabled or doesn't have any
+                          variants, you would get the _disabled variant_.
+                          Otherwise, you'll get one of thefeature's defined variants.",
             "example": Object {
               "enabled": true,
               "name": "green",

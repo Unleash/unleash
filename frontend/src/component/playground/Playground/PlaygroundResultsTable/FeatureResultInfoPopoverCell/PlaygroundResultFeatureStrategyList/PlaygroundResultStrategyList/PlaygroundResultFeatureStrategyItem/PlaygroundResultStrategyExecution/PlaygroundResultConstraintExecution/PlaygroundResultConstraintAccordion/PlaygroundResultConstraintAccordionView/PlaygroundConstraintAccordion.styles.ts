@@ -18,7 +18,7 @@ export const useStyles = makeStyles()(theme => ({
     },
     accordion: {
         border: `1px solid ${theme.palette.grey[400]}`,
-        borderRadius: '8px',
+        borderRadius: theme.spacing(1),
         backgroundColor: '#fff',
         boxShadow: 'none',
         margin: 0,
@@ -28,9 +28,6 @@ export const useStyles = makeStyles()(theme => ({
             opacity: '0 !important',
         },
     },
-    accordionEdit: {
-        backgroundColor: '#F6F6FA',
-    },
     headerMetaInfo: {
         display: 'flex',
         alignItems: 'stretch',
@@ -39,7 +36,6 @@ export const useStyles = makeStyles()(theme => ({
     headerContainer: {
         display: 'flex',
         alignItems: 'center',
-        width: '100%',
         [theme.breakpoints.down(710)]: {
             flexDirection: 'column',
             alignItems: 'center',
@@ -77,19 +73,6 @@ export const useStyles = makeStyles()(theme => ({
             paddingRight: '0.5rem',
         },
     },
-    editingBadge: {
-        borderRadius: theme.shape.borderRadiusExtraLarge,
-        padding: '0.25rem 0.5rem',
-        backgroundColor: '#635DC5',
-        color: '#fff',
-        marginLeft: 'auto',
-        fontSize: '0.9rem',
-        [theme.breakpoints.down(650)]: {
-            position: 'absolute',
-            right: 0,
-            top: '-10px',
-        },
-    },
     headerText: {
         maxWidth: '400px',
         fontSize: theme.fontSizes.smallBody,
@@ -97,39 +80,11 @@ export const useStyles = makeStyles()(theme => ({
             display: 'none',
         },
     },
-    selectContainer: {
-        display: 'flex',
-        alignItems: 'center',
-        [theme.breakpoints.down(770)]: {
-            flexDirection: 'column',
-        },
-    },
-    bottomSelect: {
-        [theme.breakpoints.down(770)]: {
-            marginTop: '1rem',
-        },
-        display: 'inline-flex',
-    },
-    headerSelect: {
-        marginRight: '1rem',
-        width: '200px',
-        [theme.breakpoints.between(1101, 1365)]: {
-            width: '170px',
-            marginRight: '8px',
-        },
-    },
     chip: {
         margin: '0 0.5rem 0.5rem 0',
     },
     chipValue: {
         whiteSpace: 'pre',
-    },
-    headerActions: {
-        marginLeft: 'auto',
-        whiteSpace: 'nowrap',
-        [theme.breakpoints.down(710)]: {
-            display: 'none',
-        },
     },
     accordionDetails: {
         borderTop: `1px dashed ${theme.palette.grey[300]}`,
@@ -148,11 +103,4 @@ export const useStyles = makeStyles()(theme => ({
             textDecoration: 'underline',
         },
     },
-    settingsIcon: {
-        height: '32.5px',
-        width: '32.5px',
-        marginRight: '0.5rem',
-        fill: theme.palette.inactiveIcon,
-    },
-    form: { padding: 0, margin: 0, width: '100%' },
 }));

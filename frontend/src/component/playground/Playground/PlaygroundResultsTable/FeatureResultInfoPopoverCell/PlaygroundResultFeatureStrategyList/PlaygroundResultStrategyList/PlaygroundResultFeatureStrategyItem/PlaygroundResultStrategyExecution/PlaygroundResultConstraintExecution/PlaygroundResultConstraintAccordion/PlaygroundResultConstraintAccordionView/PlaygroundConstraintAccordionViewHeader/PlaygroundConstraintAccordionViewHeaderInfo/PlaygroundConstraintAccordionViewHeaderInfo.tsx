@@ -1,7 +1,7 @@
 import { styled, Tooltip, Typography, useTheme } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { PlaygroundConstraintAccordionViewHeaderSingleValue } from '../PlaygroundContraintAccordionViewHeaderSingleValue/PlaygroundConstraintAccordionViewHeaderSingleValue';
-import { PLaygroundConstraintAccordionViewHeaderMultipleValues } from '../PlaygroundContraintAccordionViewHeaderMultipleValues/PLaygroundConstraintAccordionViewHeaderMultipleValues';
+import { PlaygroundConstraintAccordionViewHeaderSingleValue } from './PlaygroundContraintAccordionViewHeaderSingleValue/PlaygroundConstraintAccordionViewHeaderSingleValue';
+import { PLaygroundConstraintAccordionViewHeaderMultipleValues } from './PlaygroundContraintAccordionViewHeaderMultipleValues/PLaygroundConstraintAccordionViewHeaderMultipleValues';
 import React from 'react';
 import { useStyles } from '../../PlaygroundConstraintAccordion.styles';
 import { CancelOutlined } from '@mui/icons-material';

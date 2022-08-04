@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Chip, styled, Typography } from '@mui/material';
 import { formatConstraintValue } from 'utils/formatConstraintValue';
-import { useStyles } from '../../PlaygroundConstraintAccordion.styles';
+import { useStyles } from '../../../PlaygroundConstraintAccordion.styles';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { PlaygroundConstraintSchema } from 'hooks/api/actions/usePlayground/playground.model';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';

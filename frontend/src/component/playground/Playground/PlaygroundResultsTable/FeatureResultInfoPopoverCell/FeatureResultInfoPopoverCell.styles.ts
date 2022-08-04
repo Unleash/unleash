@@ -6,7 +6,7 @@ export const useStyles = makeStyles()(theme => ({
         flexDirection: 'column',
         alignItems: 'flex-start',
         padding: theme.spacing(6),
-        width: '728px',
+        maxWidth: '728px',
         height: 'auto',
         overflowY: 'scroll',
         backgroundColor: theme.palette.tertiary.light,

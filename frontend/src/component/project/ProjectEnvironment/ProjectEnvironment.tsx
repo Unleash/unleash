@@ -8,7 +8,9 @@ import ApiError from 'component/common/ApiError/ApiError';
 import useToast from 'hooks/useToast';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
-import useProject from 'hooks/api/getters/useProject/useProject';
+import useProject, {
+    useProjectNameOrId,
+} from 'hooks/api/getters/useProject/useProject';
 import { FormControlLabel, FormGroup, Alert } from '@mui/material';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import EnvironmentDisableConfirm from './EnvironmentDisableConfirm/EnvironmentDisableConfirm';
@@ -19,17 +21,13 @@ import { getEnabledEnvs } from './helpers';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { useThemeStyles } from 'themes/themeStyles';
 import { usePageTitle } from 'hooks/usePageTitle';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
-interface IProjectEnvironmentListProps {
-    projectId: string;
-    projectName: string;
-}
-
-const ProjectEnvironmentList = ({
-    projectId,
-    projectName,
-}: IProjectEnvironmentListProps) => {
+const ProjectEnvironmentList = () => {
+    const projectId = useRequiredPathParam('projectId');
+    const projectName = useProjectNameOrId(projectId);
     usePageTitle(`Project environments – ${projectName}`);
+
     // api state
     const [envs, setEnvs] = useState<IProjectEnvironment[]>([]);
     const { setToastData, setToastApiError } = useToast();

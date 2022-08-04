@@ -11,6 +11,7 @@ import EnvironmentForm from '../EnvironmentForm/EnvironmentForm';
 import useEnvironmentForm from '../hooks/useEnvironmentForm';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import { GO_BACK } from 'constants/navigate';
 
 const EditEnvironment = () => {
     const { uiConfig } = useUiConfig();
@@ -56,7 +57,7 @@ const EditEnvironment = () => {
     };
 
     const handleCancel = () => {
-        navigate(-1);
+        navigate(GO_BACK);
     };
 
     return (

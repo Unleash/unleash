@@ -11,6 +11,7 @@ import { scrollToTop } from 'component/common/util';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { GO_BACK } from 'constants/navigate';
 
 const CreateUser = () => {
     const { setToastApiError } = useToast();
@@ -72,7 +73,7 @@ const CreateUser = () => {
     };
 
     const handleCancel = () => {
-        navigate(-1);
+        navigate(GO_BACK);
     };
 
     return (

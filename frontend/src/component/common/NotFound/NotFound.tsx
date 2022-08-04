@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router';
 import { ReactComponent as LogoIcon } from 'assets/icons/logoBg.svg';
 
 import { useStyles } from './NotFound.styles';
+import { GO_BACK } from 'constants/navigate';
 
 const NotFound = () => {
     const navigate = useNavigate();
@@ -14,7 +15,7 @@ const NotFound = () => {
     };
 
     const onClickBack = () => {
-        navigate(-1);
+        navigate(GO_BACK);
     };
 
     return (

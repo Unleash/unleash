@@ -10,6 +10,7 @@ import { FC, FormEvent, useEffect, useMemo, useState } from 'react';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { GroupFormUsersSelect } from 'component/admin/groups/GroupForm/GroupFormUsersSelect/GroupFormUsersSelect';
 import { GroupFormUsersTable } from 'component/admin/groups/GroupForm/GroupFormUsersTable/GroupFormUsersTable';
+import { UG_SAVE_BTN_ID } from 'utils/testIds';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',
@@ -142,6 +143,7 @@ export const AddGroupUser: FC<IAddGroupUserProps> = ({
                             type="submit"
                             variant="contained"
                             color="primary"
+                            data-testid={UG_SAVE_BTN_ID}
                         >
                             Save
                         </Button>

@@ -136,16 +136,7 @@ export const routes: IRoute[] = [
         menu: {},
     },
     {
-        path: '/projects/:projectId/:activeTab',
-        parent: '/projects',
-        title: ':projectId',
-        component: Project,
-        flag: P,
-        type: 'protected',
-        menu: {},
-    },
-    {
-        path: '/projects/:projectId',
+        path: '/projects/:projectId/*',
         parent: '/projects',
         title: ':projectId',
         component: Project,

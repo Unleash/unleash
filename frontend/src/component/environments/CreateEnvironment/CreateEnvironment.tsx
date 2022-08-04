@@ -15,6 +15,7 @@ import { PageContent } from 'component/common/PageContent/PageContent';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { GO_BACK } from 'constants/navigate';
 
 const CreateEnvironment = () => {
     const { setToastApiError, setToastData } = useToast();
@@ -66,7 +67,7 @@ const CreateEnvironment = () => {
     };
 
     const handleCancel = () => {
-        navigate(-1);
+        navigate(GO_BACK);
     };
 
     return (

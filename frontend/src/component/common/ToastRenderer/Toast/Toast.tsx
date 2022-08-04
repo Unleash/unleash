@@ -7,6 +7,7 @@ import UIContext from 'contexts/UIContext';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import Close from '@mui/icons-material/Close';
 import { IToast } from 'interfaces/toast';
+import { TOAST_TEXT } from 'utils/testIds';
 
 const Toast = ({ title, text, type, confetti }: IToast) => {
     const { setToast } = useContext(UIContext);
@@ -72,7 +73,9 @@ const Toast = ({ title, text, type, confetti }: IToast) => {
 
                                 <ConditionallyRender
                                     condition={Boolean(text)}
-                                    show={<p>{text}</p>}
+                                    show={
+                                        <p data-testid={TOAST_TEXT}>{text}</p>
+                                    }
                                 />
                             </div>
                         </div>

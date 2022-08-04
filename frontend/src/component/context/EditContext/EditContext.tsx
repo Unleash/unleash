@@ -12,6 +12,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { ContextForm } from '../ContextForm/ContextForm';
 import { useContextForm } from '../hooks/useContextForm';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import { GO_BACK } from 'constants/navigate';
 
 export const EditContext = () => {
     useEffect(() => {
@@ -71,7 +72,7 @@ export const EditContext = () => {
     };
 
     const onCancel = () => {
-        navigate(-1);
+        navigate(GO_BACK);
     };
 
     return (

@@ -29,4 +29,8 @@ const useProject = (id: string, options: SWRConfiguration = {}) => {
     };
 };
 
+export const useProjectNameOrId = (id: string): string => {
+    return useProject(id).project.name || id;
+};
+
 export default useProject;

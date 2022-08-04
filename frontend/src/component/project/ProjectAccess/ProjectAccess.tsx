@@ -1,4 +1,4 @@
-import { useContext, VFC } from 'react';
+import { useContext } from 'react';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { Alert } from '@mui/material';
@@ -8,14 +8,11 @@ import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { ProjectAccessTable } from 'component/project/ProjectAccess/ProjectAccessTable/ProjectAccessTable';
+import { useProjectNameOrId } from 'hooks/api/getters/useProject/useProject';
 
-interface IProjectAccess {
-    projectName: string;
-}
-
-export const ProjectAccess: VFC<IProjectAccess> = ({ projectName }) => {
+export const ProjectAccess = () => {
     const projectId = useRequiredPathParam('projectId');
-
+    const projectName = useProjectNameOrId(projectId);
     const { hasAccess } = useContext(AccessContext);
     const { isOss } = useUiConfig();
     usePageTitle(`Project access – ${projectName}`);

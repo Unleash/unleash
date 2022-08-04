@@ -1,18 +1,18 @@
-import useProject from 'hooks/api/getters/useProject/useProject';
+import useProject, {
+    useProjectNameOrId,
+} from 'hooks/api/getters/useProject/useProject';
 import { ProjectFeatureToggles } from './ProjectFeatureToggles/ProjectFeatureToggles';
 import ProjectInfo from './ProjectInfo/ProjectInfo';
 import { useStyles } from './Project.styles';
 import { usePageTitle } from 'hooks/usePageTitle';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
-interface IProjectOverviewProps {
-    projectName: string;
-    projectId: string;
-}
+const refreshInterval = 15 * 1000;
 
-const ProjectOverview = ({ projectId, projectName }: IProjectOverviewProps) => {
-    const { project, loading } = useProject(projectId, {
-        refreshInterval: 15 * 1000, // ms
-    });
+const ProjectOverview = () => {
+    const projectId = useRequiredPathParam('projectId');
+    const projectName = useProjectNameOrId(projectId);
+    const { project, loading } = useProject(projectId, { refreshInterval });
     const { members, features, health, description, environments } = project;
     const { classes: styles } = useStyles();
     usePageTitle(`Project overview – ${projectName}`);

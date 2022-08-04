@@ -13,6 +13,7 @@ import useUserInfo from 'hooks/api/getters/useUserInfo/useUserInfo';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import { GO_BACK } from 'constants/navigate';
 
 const EditUser = () => {
     useEffect(() => {
@@ -69,7 +70,7 @@ const EditUser = () => {
     };
 
     const handleCancel = () => {
-        navigate(-1);
+        navigate(GO_BACK);
     };
 
     return (

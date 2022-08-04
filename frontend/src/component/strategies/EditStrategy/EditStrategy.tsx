@@ -11,6 +11,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import useStrategy from 'hooks/api/getters/useStrategy/useStrategy';
 import { UpdateButton } from 'component/common/UpdateButton/UpdateButton';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import { GO_BACK } from 'constants/navigate';
 
 export const EditStrategy = () => {
     const { setToastData, setToastApiError } = useToast();
@@ -68,7 +69,7 @@ export const EditStrategy = () => {
     };
 
     const handleCancel = () => {
-        navigate(-1);
+        navigate(GO_BACK);
     };
 
     return (

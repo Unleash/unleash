@@ -11,6 +11,7 @@ import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import UIContext from 'contexts/UIContext';
 import { CF_CREATE_BTN_ID } from 'utils/testIds';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { GO_BACK } from 'constants/navigate';
 
 const CreateFeature = () => {
     const { setToastData, setToastApiError } = useToast();
@@ -70,7 +71,7 @@ const CreateFeature = () => {
     };
 
     const handleCancel = () => {
-        navigate(-1);
+        navigate(GO_BACK);
     };
 
     return (

@@ -9,6 +9,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { UG_CREATE_BTN_ID } from 'utils/testIds';
 import { Button } from '@mui/material';
 import { CREATE } from 'constants/misc';
+import { GO_BACK } from 'constants/navigate';
 
 export const CreateGroup = () => {
     const { setToastData, setToastApiError } = useToast();
@@ -58,7 +59,7 @@ export const CreateGroup = () => {
     };
 
     const handleCancel = () => {
-        navigate(-1);
+        navigate(GO_BACK);
     };
 
     return (

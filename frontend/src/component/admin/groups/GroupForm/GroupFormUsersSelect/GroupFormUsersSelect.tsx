@@ -11,6 +11,7 @@ import { IUser } from 'interfaces/user';
 import { useMemo, useState, VFC } from 'react';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
 import { IGroupUser, Role } from 'interfaces/group';
+import { UG_USERS_ADD_ID, UG_USERS_ID } from 'utils/testIds';
 
 const StyledOption = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -83,6 +84,7 @@ export const GroupFormUsersSelect: VFC<IGroupFormUsersSelectProps> = ({
     return (
         <StyledGroupFormUsersSelect>
             <Autocomplete
+                data-testid={UG_USERS_ID}
                 size="small"
                 multiple
                 limitTags={10}
@@ -113,7 +115,11 @@ export const GroupFormUsersSelect: VFC<IGroupFormUsersSelectProps> = ({
                     <TextField {...params} label="Select users" />
                 )}
             />
-            <Button variant="outlined" onClick={onAdd}>
+            <Button
+                variant="outlined"
+                onClick={onAdd}
+                data-testid={UG_USERS_ADD_ID}
+            >
                 Add
             </Button>
         </StyledGroupFormUsersSelect>

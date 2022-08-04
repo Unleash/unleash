@@ -8,6 +8,7 @@ import useTagTypesApi from 'hooks/api/actions/useTagTypesApi/useTagTypesApi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { GO_BACK } from 'constants/navigate';
 
 const CreateTagType = () => {
     const { setToastData, setToastApiError } = useToast();
@@ -55,7 +56,7 @@ const CreateTagType = () => {
     };
 
     const handleCancel = () => {
-        navigate(-1);
+        navigate(GO_BACK);
     };
 
     return (

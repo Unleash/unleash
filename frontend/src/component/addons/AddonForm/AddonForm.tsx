@@ -33,6 +33,7 @@ import {
     StyledButtonSection,
 } from './AddonForm.styles';
 import { useTheme } from '@mui/system';
+import { GO_BACK } from 'constants/navigate';
 
 interface IAddonFormProps {
     provider?: IAddonProvider;
@@ -168,7 +169,7 @@ export const AddonForm: VFC<IAddonFormProps> = ({
     };
 
     const onCancel = () => {
-        navigate(-1);
+        navigate(GO_BACK);
     };
 
     const onSubmit: FormEventHandler<HTMLFormElement> = async event => {

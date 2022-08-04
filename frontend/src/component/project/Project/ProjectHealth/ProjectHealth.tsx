@@ -4,13 +4,12 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { usePageTitle } from 'hooks/usePageTitle';
 import { ReportCard } from './ReportTable/ReportCard/ReportCard';
 import { ReportTable } from './ReportTable/ReportTable';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import { useProjectNameOrId } from 'hooks/api/getters/useProject/useProject';
 
-interface IProjectHealthProps {
-    projectId: string;
-    projectName: string;
-}
-
-const ProjectHealth = ({ projectId, projectName }: IProjectHealthProps) => {
+const ProjectHealth = () => {
+    const projectId = useRequiredPathParam('projectId');
+    const projectName = useProjectNameOrId(projectId);
     usePageTitle(`Project health – ${projectName}`);
 
     const { healthReport, refetchHealthReport, error } = useHealthReport(

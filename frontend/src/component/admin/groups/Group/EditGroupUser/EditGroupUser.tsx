@@ -8,6 +8,7 @@ import useToast from 'hooks/useToast';
 import { IGroup, IGroupUser, Role } from 'interfaces/group';
 import { FC, FormEvent, useEffect, useMemo, useState } from 'react';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { UG_SAVE_BTN_ID, UG_USERS_ROLE_ID } from 'utils/testIds';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',
@@ -143,6 +144,7 @@ export const EditGroupUser: FC<IEditGroupUserProps> = ({
                             Assign the role the user should have in this group
                         </StyledInputDescription>
                         <StyledSelect
+                            data-testid={UG_USERS_ROLE_ID}
                             size="small"
                             value={role}
                             onChange={event =>
@@ -159,6 +161,7 @@ export const EditGroupUser: FC<IEditGroupUserProps> = ({
 
                     <StyledButtonContainer>
                         <Button
+                            data-testid={UG_SAVE_BTN_ID}
                             type="submit"
                             variant="contained"
                             color="primary"

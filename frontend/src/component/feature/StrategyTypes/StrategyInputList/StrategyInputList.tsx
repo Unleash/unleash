@@ -11,12 +11,14 @@ import { Add } from '@mui/icons-material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ADD_TO_STRATEGY_INPUT_LIST, STRATEGY_INPUT_LIST } from 'utils/testIds';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
+import { IFormErrors } from 'hooks/useFormErrors';
 
 interface IStrategyInputList {
     name: string;
     list: string[];
     setConfig: (field: string, value: string) => void;
     disabled: boolean;
+    errors: IFormErrors;
 }
 
 const Container = styled('div')(({ theme }) => ({
@@ -32,6 +34,7 @@ const ChipsList = styled('div')(({ theme }) => ({
 const InputContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(1),
+    alignItems: 'start',
 }));
 
 const StrategyInputList = ({
@@ -39,6 +42,7 @@ const StrategyInputList = ({
     list,
     setConfig,
     disabled,
+    errors,
 }: IStrategyInputList) => {
     const [input, setInput] = useState('');
     const ENTERKEY = 'Enter';
@@ -120,6 +124,8 @@ const StrategyInputList = ({
                 show={
                     <InputContainer>
                         <TextField
+                            error={Boolean(errors.getFormError(name))}
+                            helperText={errors.getFormError(name)}
                             name={`input_field`}
                             variant="outlined"
                             label="Add items"

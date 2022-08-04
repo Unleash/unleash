@@ -1,5 +1,9 @@
 import React, { useState, useContext } from 'react';
-import { IFeatureStrategy } from 'interfaces/strategy';
+import {
+    IFeatureStrategy,
+    IFeatureStrategyParameters,
+    IStrategyParameter,
+} from 'interfaces/strategy';
 import { FeatureStrategyType } from '../FeatureStrategyType/FeatureStrategyType';
 import { FeatureStrategyEnabled } from '../FeatureStrategyEnabled/FeatureStrategyEnabled';
 import { FeatureStrategyConstraints } from '../FeatureStrategyConstraints/FeatureStrategyConstraints';
@@ -20,6 +24,9 @@ import AccessContext from 'contexts/AccessContext';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { FeatureStrategySegment } from 'component/feature/FeatureStrategy/FeatureStrategySegment/FeatureStrategySegment';
 import { ISegment } from 'interfaces/segment';
+import { IFormErrors } from 'hooks/useFormErrors';
+import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
+import { validateParameterValue } from 'utils/validateParameterValue';
 
 interface IFeatureStrategyFormProps {
     feature: IFeatureToggle;
@@ -33,6 +40,7 @@ interface IFeatureStrategyFormProps {
     >;
     segments: ISegment[];
     setSegments: React.Dispatch<React.SetStateAction<ISegment[]>>;
+    errors: IFormErrors;
 }
 
 export const FeatureStrategyForm = ({
@@ -45,13 +53,19 @@ export const FeatureStrategyForm = ({
     setStrategy,
     segments,
     setSegments,
+    errors,
 }: IFeatureStrategyFormProps) => {
     const { classes: styles } = useStyles();
     const [showProdGuard, setShowProdGuard] = useState(false);
     const hasValidConstraints = useConstraintsValidation(strategy.constraints);
     const enableProdGuard = useFeatureStrategyProdGuard(feature, environmentId);
     const { hasAccess } = useContext(AccessContext);
+    const { strategies } = useStrategies();
     const navigate = useNavigate();
+
+    const strategyDefinition = strategies.find(definition => {
+        return definition.name === strategy.name;
+    });
 
     const {
         uiConfig,
@@ -59,30 +73,61 @@ export const FeatureStrategyForm = ({
         loading: uiConfigLoading,
     } = useUiConfig();
 
+    if (uiConfigError) {
+        throw uiConfigError;
+    }
+
+    if (uiConfigLoading || !strategyDefinition) {
+        return null;
+    }
+
+    const findParameterDefinition = (name: string): IStrategyParameter => {
+        return strategyDefinition.parameters.find(parameterDefinition => {
+            return parameterDefinition.name === name;
+        })!;
+    };
+
+    const validateParameter = (
+        name: string,
+        value: IFeatureStrategyParameters[string]
+    ): boolean => {
+        const parameterValueError = validateParameterValue(
+            findParameterDefinition(name),
+            value
+        );
+        if (parameterValueError) {
+            errors.setFormError(name, parameterValueError);
+            return false;
+        } else {
+            errors.removeFormError(name);
+            return true;
+        }
+    };
+
+    const validateAllParameters = (): boolean => {
+        return strategyDefinition.parameters
+            .map(parameter => parameter.name)
+            .map(name => validateParameter(name, strategy.parameters?.[name]))
+            .every(Boolean);
+    };
+
     const onCancel = () => {
         navigate(formatFeaturePath(feature.project, feature.name));
     };
 
-    const onSubmitOrProdGuard = async (event: React.FormEvent) => {
+    const onSubmitWithValidation = async (event: React.FormEvent) => {
         event.preventDefault();
-        if (enableProdGuard) {
+        if (!validateAllParameters()) {
+            return;
+        } else if (enableProdGuard) {
             setShowProdGuard(true);
         } else {
             onSubmit();
         }
     };
 
-    if (uiConfigError) {
-        throw uiConfigError;
-    }
-
-    // Wait for uiConfig to load to get the correct flags.
-    if (uiConfigLoading) {
-        return null;
-    }
-
     return (
-        <form className={styles.form} onSubmit={onSubmitOrProdGuard}>
+        <form className={styles.form} onSubmit={onSubmitWithValidation}>
             <div>
                 <FeatureStrategyEnabled
                     feature={feature}
@@ -118,7 +163,10 @@ export const FeatureStrategyForm = ({
             />
             <FeatureStrategyType
                 strategy={strategy}
+                strategyDefinition={strategyDefinition}
                 setStrategy={setStrategy}
+                validateParameter={validateParameter}
+                errors={errors}
                 hasAccess={hasAccess(
                     permission,
                     feature.project,
@@ -134,7 +182,11 @@ export const FeatureStrategyForm = ({
                     variant="contained"
                     color="primary"
                     type="submit"
-                    disabled={loading || !hasValidConstraints}
+                    disabled={
+                        loading ||
+                        !hasValidConstraints ||
+                        errors.hasFormErrors()
+                    }
                     data-testid={STRATEGY_FORM_SUBMIT_ID}
                 >
                     Save strategy
@@ -147,7 +199,6 @@ export const FeatureStrategyForm = ({
                 >
                     Cancel
                 </Button>
-
                 <FeatureStrategyProdGuard
                     open={showProdGuard}
                     onClose={() => setShowProdGuard(false)}

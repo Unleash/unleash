@@ -1,10 +1,9 @@
 import { ConditionallyRender } from '../../../../ConditionallyRender/ConditionallyRender';
-import { styled, Typography } from '@mui/material';
+import { styled } from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react';
 import classnames from 'classnames';
 import { IConstraint } from '../../../../../../interfaces/strategy';
 import { useStyles } from '../../../ConstraintAccordion.styles';
-import { PlaygroundConstraintSchema } from 'hooks/api/actions/usePlayground/playground.model';
 
 const StyledValuesSpan = styled('span')(({ theme }) => ({
     display: '-webkit-box',
@@ -21,7 +20,7 @@ const StyledValuesSpan = styled('span')(({ theme }) => ({
 }));
 
 interface ConstraintSingleValueProps {
-    constraint: IConstraint | PlaygroundConstraintSchema;
+    constraint: IConstraint;
     expanded: boolean;
     maxLength: number;
     allowExpand: (shouldExpand: boolean) => void;
@@ -51,21 +50,6 @@ export const ConstraintAccordionViewHeaderMultipleValues = ({
     return (
         <div className={styles.headerValuesContainerWrapper}>
             <div className={styles.headerValuesContainer}>
-                <ConditionallyRender
-                    condition={
-                        'result' in constraint && !Boolean(constraint.result)
-                    }
-                    show={
-                        <Typography
-                            variant={'body2'}
-                            color={'error'}
-                            noWrap={true}
-                            sx={{ mr: 1 }}
-                        >
-                            does not match any values{' '}
-                        </Typography>
-                    }
-                />
                 <StyledValuesSpan>{text}</StyledValuesSpan>
                 <ConditionallyRender
                     condition={expandable}

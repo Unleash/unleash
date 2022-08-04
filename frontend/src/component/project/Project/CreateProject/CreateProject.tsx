@@ -9,6 +9,7 @@ import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { GO_BACK } from 'constants/navigate';
 
 const CreateProject = () => {
     const { setToastData, setToastApiError } = useToast();
@@ -65,7 +66,7 @@ const CreateProject = () => {
     };
 
     const handleCancel = () => {
-        navigate(-1);
+        navigate(GO_BACK);
     };
 
     return (

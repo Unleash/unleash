@@ -9,6 +9,7 @@ import useStrategiesApi from 'hooks/api/actions/useStrategiesApi/useStrategiesAp
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
+import { GO_BACK } from 'constants/navigate';
 
 export const CreateStrategy = () => {
     const { setToastData, setToastApiError } = useToast();
@@ -64,7 +65,7 @@ export const CreateStrategy = () => {
     };
 
     const handleCancel = () => {
-        navigate(-1);
+        navigate(GO_BACK);
     };
 
     return (

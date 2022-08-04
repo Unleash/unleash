@@ -12,6 +12,7 @@ import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightC
 import { TablePlaceholder } from 'component/common/Table';
 import { GroupCard } from './GroupCard/GroupCard';
 import { GroupEmpty } from './GroupEmpty/GroupEmpty';
+import { NAVIGATE_TO_CREATE_GROUP } from 'utils/testIds';
 
 type PageQueryType = Partial<Record<'search', string>>;
 
@@ -85,6 +86,7 @@ export const GroupsList: VFC = () => {
                                 component={Link}
                                 variant="contained"
                                 color="primary"
+                                data-testid={NAVIGATE_TO_CREATE_GROUP}
                             >
                                 New group
                             </Button>

@@ -4,6 +4,7 @@ import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { Role } from 'interfaces/group';
 import { Badge } from 'component/common/Badge/Badge';
 import { StarRounded } from '@mui/icons-material';
+import { UG_USERS_TABLE_ROLE_ID } from 'utils/testIds';
 
 const StyledPopupStar = styled(StarRounded)(({ theme }) => ({
     color: theme.palette.warning.main,
@@ -36,6 +37,7 @@ export const GroupUserRoleCell = ({
                 condition={Boolean(onChange)}
                 show={
                     <Select
+                        data-testid={UG_USERS_TABLE_ROLE_ID}
                         size="small"
                         value={value}
                         onChange={event =>

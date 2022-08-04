@@ -12,6 +12,7 @@ import { useState } from 'react';
 import { scrollToTop } from 'component/common/util';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { usePageTitle } from 'hooks/usePageTitle';
+import { GO_BACK } from 'constants/navigate';
 
 const pageTitle = 'Create API token';
 
@@ -75,7 +76,7 @@ export const CreateApiToken = () => {
     };
 
     const handleCancel = () => {
-        navigate(-1);
+        navigate(GO_BACK);
     };
 
     return (

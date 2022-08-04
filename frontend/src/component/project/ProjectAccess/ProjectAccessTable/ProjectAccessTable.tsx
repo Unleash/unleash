@@ -15,14 +15,19 @@ import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useSearch } from 'hooks/useSearch';
-import { useSearchParams } from 'react-router-dom';
+import {
+    Link,
+    Route,
+    Routes,
+    useNavigate,
+    useSearchParams,
+} from 'react-router-dom';
 import { createLocalStorage } from 'utils/createLocalStorage';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { Search } from 'component/common/Search/Search';
-import { ProjectAccessAssign } from 'component/project/ProjectAccess/ProjectAccessAssign/ProjectAccessAssign';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import useToast from 'hooks/useToast';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
@@ -33,6 +38,9 @@ import { IUser } from 'interfaces/user';
 import { IGroup } from 'interfaces/group';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
+import { ProjectAccessCreate } from 'component/project/ProjectAccess/ProjectAccessCreate/ProjectAccessCreate';
+import { ProjectAccessEditUser } from 'component/project/ProjectAccess/ProjectAccessEditUser/ProjectAccessEditUser';
+import { ProjectAccessEditGroup } from 'component/project/ProjectAccess/ProjectAccessEditGroup/ProjectAccessEditGroup';
 
 export type PageQueryType = Partial<
     Record<'sort' | 'order' | 'search', string>
@@ -52,43 +60,16 @@ export const ProjectAccessTable: VFC = () => {
     const { flags } = uiConfig;
     const entityType = flags.UG ? 'user / group' : 'user';
 
+    const navigate = useNavigate();
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const { setToastData } = useToast();
 
     const { access, refetchProjectAccess } = useProjectAccess(projectId);
     const { removeUserFromRole, removeGroupFromRole } = useProjectApi();
-    const [assignOpen, setAssignOpen] = useState(false);
     const [removeOpen, setRemoveOpen] = useState(false);
     const [groupOpen, setGroupOpen] = useState(false);
     const [selectedRow, setSelectedRow] = useState<IProjectAccess>();
-
-    useEffect(() => {
-        if (!assignOpen && !groupOpen) {
-            setSelectedRow(undefined);
-        }
-    }, [assignOpen, groupOpen]);
-
-    const roles = useMemo(
-        () => access.roles || [],
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [JSON.stringify(access.roles)]
-    );
-
-    const mappedData: IProjectAccess[] = useMemo(() => {
-        const users = access.users || [];
-        const groups = access.groups || [];
-        return [
-            ...users.map(user => ({
-                entity: user,
-                type: ENTITY_TYPE.USER,
-            })),
-            ...groups.map(group => ({
-                entity: group,
-                type: ENTITY_TYPE.GROUP,
-            })),
-        ];
-    }, [access]);
 
     const columns = useMemo(
         () => [
@@ -145,7 +126,8 @@ export const ProjectAccessTable: VFC = () => {
             {
                 Header: 'Role',
                 accessor: (row: IProjectAccess) =>
-                    roles.find(({ id }) => id === row.entity.roleId)?.name,
+                    access?.roles.find(({ id }) => id === row.entity.roleId)
+                        ?.name,
                 minWidth: 120,
                 filterName: 'role',
             },
@@ -187,19 +169,23 @@ export const ProjectAccessTable: VFC = () => {
                 disableSortBy: true,
                 align: 'center',
                 maxWidth: 200,
-                Cell: ({ row: { original: row } }: any) => (
+                Cell: ({
+                    row: { original: row },
+                }: {
+                    row: { original: IProjectAccess };
+                }) => (
                     <ActionCell>
                         <PermissionIconButton
+                            component={Link}
                             permission={UPDATE_PROJECT}
                             projectId={projectId}
-                            onClick={() => {
-                                setSelectedRow(row);
-                                setAssignOpen(true);
-                            }}
-                            disabled={mappedData.length === 1}
+                            to={`edit/${
+                                row.type === ENTITY_TYPE.USER ? 'user' : 'group'
+                            }/${row.entity.id}`}
+                            disabled={access?.rows.length === 1}
                             tooltipProps={{
                                 title:
-                                    mappedData.length === 1
+                                    access?.rows.length === 1
                                         ? 'Cannot edit access. A project must have at least one owner'
                                         : 'Edit access',
                             }}
@@ -213,10 +199,10 @@ export const ProjectAccessTable: VFC = () => {
                                 setSelectedRow(row);
                                 setRemoveOpen(true);
                             }}
-                            disabled={mappedData.length === 1}
+                            disabled={access?.rows.length === 1}
                             tooltipProps={{
                                 title:
-                                    mappedData.length === 1
+                                    access?.rows.length === 1
                                         ? 'Cannot remove access. A project must have at least one owner'
                                         : 'Remove access',
                             }}
@@ -227,7 +213,7 @@ export const ProjectAccessTable: VFC = () => {
                 ),
             },
         ],
-        [roles, mappedData.length, projectId]
+        [access, projectId]
     );
 
     const [searchParams, setSearchParams] = useSearchParams();
@@ -247,7 +233,7 @@ export const ProjectAccessTable: VFC = () => {
     const { data, getSearchText, getSearchContext } = useSearch(
         columns,
         searchValue,
-        mappedData ?? []
+        access?.rows ?? []
     );
 
     const {
@@ -319,7 +305,6 @@ export const ProjectAccessTable: VFC = () => {
             });
         }
         setRemoveOpen(false);
-        setSelectedRow(undefined);
     };
     return (
         <PageContent
@@ -348,9 +333,10 @@ export const ProjectAccessTable: VFC = () => {
                                 }
                             />
                             <Button
+                                component={Link}
+                                to={`create`}
                                 variant="contained"
                                 color="primary"
-                                onClick={() => setAssignOpen(true)}
                             >
                                 Assign {entityType}
                             </Button>
@@ -399,19 +385,21 @@ export const ProjectAccessTable: VFC = () => {
                     />
                 }
             />
-            <ProjectAccessAssign
-                open={assignOpen}
-                setOpen={setAssignOpen}
-                selected={selectedRow}
-                accesses={mappedData}
-                roles={roles}
-                entityType={entityType}
-            />
+            <Routes>
+                <Route path="create" element={<ProjectAccessCreate />} />
+                <Route
+                    path="edit/group/:groupId"
+                    element={<ProjectAccessEditGroup />}
+                />
+                <Route
+                    path="edit/user/:userId"
+                    element={<ProjectAccessEditUser />}
+                />
+            </Routes>
             <Dialogue
                 open={removeOpen}
                 onClick={() => removeAccess(selectedRow)}
                 onClose={() => {
-                    setSelectedRow(undefined);
                     setRemoveOpen(false);
                 }}
                 title={`Really remove ${entityType} from this project?`}
@@ -422,12 +410,12 @@ export const ProjectAccessTable: VFC = () => {
                 group={selectedRow?.entity as IGroup}
                 projectId={projectId}
                 subtitle={`Role: ${
-                    roles.find(({ id }) => id === selectedRow?.entity.roleId)
-                        ?.name
+                    access?.roles.find(
+                        ({ id }) => id === selectedRow?.entity.roleId
+                    )?.name
                 }`}
                 onEdit={() => {
-                    setAssignOpen(true);
-                    console.log('Assign Open true');
+                    navigate(`edit/group/${selectedRow?.entity.id}`);
                 }}
                 onRemove={() => {
                     setGroupOpen(false);

@@ -8,6 +8,7 @@ import useToast from 'hooks/useToast';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { GO_BACK } from 'constants/navigate';
 
 const CreateProjectRole = () => {
     const { setToastData, setToastApiError } = useToast();
@@ -66,7 +67,7 @@ const CreateProjectRole = () => {
     };
 
     const handleCancel = () => {
-        navigate(-1);
+        navigate(GO_BACK);
     };
 
     return (

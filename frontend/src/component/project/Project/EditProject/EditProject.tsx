@@ -13,6 +13,7 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useContext } from 'react';
 import AccessContext from 'contexts/AccessContext';
 import { Alert } from '@mui/material';
+import { GO_BACK } from 'constants/navigate';
 
 const EditProject = () => {
     const { uiConfig } = useUiConfig();
@@ -70,7 +71,7 @@ const EditProject = () => {
     };
 
     const handleCancel = () => {
-        navigate(-1);
+        navigate(GO_BACK);
     };
 
     const accessDeniedAlert = !hasAccess(UPDATE_PROJECT, projectId) && (

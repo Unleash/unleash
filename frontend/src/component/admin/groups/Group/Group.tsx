@@ -37,6 +37,13 @@ import { AddGroupUser } from './AddGroupUser/AddGroupUser';
 import { EditGroupUser } from './EditGroupUser/EditGroupUser';
 import { RemoveGroupUser } from './RemoveGroupUser/RemoveGroupUser';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
+import {
+    UG_EDIT_BTN_ID,
+    UG_DELETE_BTN_ID,
+    UG_ADD_USER_BTN_ID,
+    UG_EDIT_USER_BTN_ID,
+    UG_REMOVE_USER_BTN_ID,
+} from 'utils/testIds';
 
 const StyledEdit = styled(Edit)(({ theme }) => ({
     fontSize: theme.fontSizes.mainHeader,
@@ -134,6 +141,7 @@ export const Group: VFC = () => {
                     <ActionCell>
                         <Tooltip title="Edit user" arrow describeChild>
                             <IconButton
+                                data-testid={`${UG_EDIT_USER_BTN_ID}-${rowUser.id}`}
                                 onClick={() => {
                                     setSelectedUser(rowUser);
                                     setEditUserOpen(true);
@@ -148,6 +156,7 @@ export const Group: VFC = () => {
                             describeChild
                         >
                             <IconButton
+                                data-testid={`${UG_REMOVE_USER_BTN_ID}-${rowUser.id}`}
                                 onClick={() => {
                                     setSelectedUser(rowUser);
                                     setRemoveUserOpen(true);
@@ -240,6 +249,7 @@ export const Group: VFC = () => {
                         actions={
                             <>
                                 <PermissionIconButton
+                                    data-testid={UG_EDIT_BTN_ID}
                                     to={`/admin/groups/${groupId}/edit`}
                                     component={Link}
                                     data-loading
@@ -251,6 +261,7 @@ export const Group: VFC = () => {
                                     <StyledEdit />
                                 </PermissionIconButton>
                                 <PermissionIconButton
+                                    data-testid={UG_DELETE_BTN_ID}
                                     data-loading
                                     onClick={() => setRemoveOpen(true)}
                                     permission={ADMIN}
@@ -296,6 +307,7 @@ export const Group: VFC = () => {
                                             }
                                         />
                                         <Button
+                                            data-testid={UG_ADD_USER_BTN_ID}
                                             variant="contained"
                                             color="primary"
                                             onClick={() => {

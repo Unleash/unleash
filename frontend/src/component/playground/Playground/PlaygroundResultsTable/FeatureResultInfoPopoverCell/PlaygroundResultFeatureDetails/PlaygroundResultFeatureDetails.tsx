@@ -8,7 +8,7 @@ import { useStyles } from './PlaygroundResultFeatureDetails.styles';
 import { CloseOutlined } from '@mui/icons-material';
 import React from 'react';
 import { ConditionallyRender } from '../../../../../common/ConditionallyRender/ConditionallyRender';
-import { checkForEmptyValues } from './helpers';
+import { checkForEmptyValues, hasCustomStrategies } from './helpers';
 
 interface PlaygroundFeatureResultDetailsProps {
     feature: PlaygroundFeatureSchema;
@@ -39,6 +39,10 @@ export const PlaygroundResultFeatureDetails = ({
 
     const noValueTxt = checkForEmptyValues(input?.context)
         ? 'You did not provide a value for your context field in step 2 of the configuration'
+        : undefined;
+
+    const customStrategiesTxt = hasCustomStrategies(feature)
+        ? `You have custom strategies. Custom strategies can't be evaluated and they will be set as Unevaluated`
         : undefined;
 
     const onCloseClick =
@@ -79,6 +83,14 @@ export const PlaygroundResultFeatureDetails = ({
                 show={
                     <div className={styles.alertRow}>
                         <Alert color={'info'}>{noValueTxt}</Alert>
+                    </div>
+                }
+            />
+            <ConditionallyRender
+                condition={Boolean(customStrategiesTxt)}
+                show={
+                    <div className={styles.alertRow}>
+                        <Alert color={'info'}>{customStrategiesTxt}</Alert>
                     </div>
                 }
             />

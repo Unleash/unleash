@@ -20,7 +20,7 @@ interface PlaygroundResultStrategyExecutionProps {
 }
 
 const StyledStrategyExecutionWrapper = styled('div')(({ theme }) => ({
-    padding: theme.spacing(1),
+    padding: theme.spacing(0),
 }));
 
 const StyledParamWrapper = styled('div')(({ theme }) => ({

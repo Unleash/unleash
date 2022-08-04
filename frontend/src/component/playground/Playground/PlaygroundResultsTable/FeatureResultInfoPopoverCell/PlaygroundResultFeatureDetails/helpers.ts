@@ -1,3 +1,16 @@
+import { PlaygroundFeatureSchema } from '../../../../../../hooks/api/actions/usePlayground/playground.model';
+
+export const DEFAULT_STRATEGIES = [
+    'default',
+    'applicationHostname',
+    'flexibleRollout',
+    'gradualRolloutRandom',
+    'gradualRolloutSessionId',
+    'gradualRolloutUserId',
+    'remoteAddress',
+    'userWithId',
+];
+
 export function checkForEmptyValues(object?: Object): boolean {
     if (object === undefined) {
         return true;
@@ -6,3 +19,9 @@ export function checkForEmptyValues(object?: Object): boolean {
         v && typeof v === 'object' ? checkForEmptyValues(v) : v === null
     );
 }
+
+export const hasCustomStrategies = (feature: PlaygroundFeatureSchema) => {
+    return feature.strategies?.data?.find(strategy =>
+        DEFAULT_STRATEGIES.includes(strategy.name)
+    );
+};

@@ -25,7 +25,7 @@ const StyledItemWrapper = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    margin: theme.spacing(0.5),
+    margin: theme.spacing(0.5, 0),
     gap: theme.spacing(1),
 }));
 
@@ -41,7 +41,7 @@ export const PlaygroundResultFeatureStrategyItem = ({
     const Icon = getFeatureStrategyIcon(strategy.name);
     const label =
         result.evaluationStatus === 'incomplete'
-            ? 'Unknown'
+            ? 'Unevaluated'
             : result.enabled
             ? 'True'
             : 'False';
@@ -87,7 +87,7 @@ export const PlaygroundResultFeatureStrategyItem = ({
                             label={label}
                             size={
                                 result.evaluationStatus === 'incomplete'
-                                    ? 'medium'
+                                    ? 'large'
                                     : 'default'
                             }
                         />

@@ -23,22 +23,19 @@ export const PlaygroundResultFeatureDetails = ({
     const { classes: styles } = useStyles();
     const theme = useTheme();
 
-    const description =
-        feature.isEnabled
-            ? `This feature toggle is True in ${input?.environment} because `
-            : `This feature toggle is False in ${input?.environment} because `;
+    const description = feature.isEnabled
+        ? `This feature toggle is True in ${input?.environment} because `
+        : `This feature toggle is False in ${input?.environment} because `;
 
-    const reason =
-        feature.isEnabled
-            ? 'at least one strategy is True'
-            : !feature.isEnabledInCurrentEnvironment
-            ? 'the environment is disabled'
-            : 'all strategies are False';
+    const reason = feature.isEnabled
+        ? 'at least one strategy is True'
+        : !feature.isEnabledInCurrentEnvironment
+        ? 'the environment is disabled'
+        : 'all strategies are False';
 
-    const color =
-        feature.isEnabled
-            ? theme.palette.success.main
-            : theme.palette.error.main;
+    const color = feature.isEnabled
+        ? theme.palette.success.main
+        : theme.palette.error.main;
 
     const noValueTxt = checkForEmptyValues(input?.context)
         ? 'You did not provide a value for your context field in step 2 of the configuration'
@@ -61,10 +58,7 @@ export const PlaygroundResultFeatureDetails = ({
                     <span>
                         <PlaygroundResultChip
                             enabled={feature.isEnabled}
-                            label={feature.isEnabled
-                                    ? 'True'
-                                    : 'False'
-                            }
+                            label={feature.isEnabled ? 'True' : 'False'}
                         />
                     </span>
                 </div>

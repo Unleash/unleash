@@ -7,9 +7,7 @@ import { objectId } from '../../../../../../../../../../utils/objectId';
 import { ConditionallyRender } from '../../../../../../../../../common/ConditionallyRender/ConditionallyRender';
 import { StrategySeparator } from '../../../../../../../../../common/StrategySeparator/StrategySeparator';
 import { styled } from '@mui/material';
-import {
-    PlaygroundResultConstraintAccordionView
-} from "./PlaygroundResultConstraintAccordion/PlaygroundResultConstraintAccordionView/PlaygroundResultConstraintAccordionView";
+import { PlaygroundResultConstraintAccordionView } from './PlaygroundResultConstraintAccordion/PlaygroundResultConstraintAccordionView/PlaygroundResultConstraintAccordionView';
 
 interface PlaygroundResultConstraintExecutionProps {
     constraints?: PlaygroundConstraintSchema[];
@@ -17,13 +15,11 @@ interface PlaygroundResultConstraintExecutionProps {
     input?: PlaygroundRequestSchema;
 }
 
-export const PlaygroundResultConstraintExecutionWrapper = styled('div')(
-    () => ({
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-    })
-);
+export const PlaygroundResultConstraintExecutionWrapper = styled('div')(() => ({
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+}));
 
 export const PlaygroundResultConstraintExecution = ({
     constraints,

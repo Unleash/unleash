@@ -43,10 +43,10 @@ const SegmentExecutionWrapper = styled('div')(({ theme }) => ({
         marginTop: theme.spacing(2),
     },
     background: theme.palette.neutral.light,
-    marginBottom:  theme.spacing(1),
+    marginBottom: theme.spacing(1),
 }));
 
-const SegmentExecutionConstraintWrapper = styled('div')(({ theme }) => ({
+const SegmentExecutionConstraintWrapper = styled('div')(() => ({
     padding: '12px',
 }));
 
@@ -55,7 +55,7 @@ const SegmentResultTextWrapper = styled('div')(({ theme }) => ({
     display: 'inline-flex',
     justifyContent: 'center',
     marginRight: '12px',
-    gap:  theme.spacing(1),
+    gap: theme.spacing(1),
 }));
 
 export const PlaygroundResultSegmentExecution = ({
@@ -109,7 +109,7 @@ export const PlaygroundResultSegmentExecution = ({
                         condition={
                             index === segments?.length - 1 && hasConstraints
                         }
-                        show={<StrategySeparator text="AND" sx={{ pt: 1 }} />}
+                        show={<StrategySeparator text="AND" />}
                     />
                 </SegmentExecutionWrapper>
             ))}

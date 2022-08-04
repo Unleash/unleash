@@ -5,7 +5,6 @@ import {
     AccordionDetails,
     SxProps,
     Theme,
-    useTheme,
 } from '@mui/material';
 import { IConstraint } from 'interfaces/strategy';
 import { ConstraintAccordionViewBody } from './ConstraintAccordionViewBody/ConstraintAccordionViewBody';
@@ -34,7 +33,6 @@ export const ConstraintAccordionView = ({
     const { classes: styles } = useStyles();
     const [expandable, setExpandable] = useState(true);
     const [expanded, setExpanded] = useState(false);
-    const theme = useTheme();
 
     const singleValue = oneOf(
         [...semVerOperators, ...numOperators, ...dateOperators],

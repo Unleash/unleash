@@ -19,7 +19,7 @@ const StyledListWrapper = styled('div')(({ theme }) => ({
     padding: theme.spacing(1, 0.5),
 }));
 
-const StyledAlert = styled(Alert)(({ theme }) => ({
+const StyledAlert = styled(Alert)(() => ({
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
 }));
@@ -70,11 +70,11 @@ export const WrappedPlaygroundResultStrategyList = ({
     input,
 }: WrappedPlaygroundResultStrategyListProps) => {
     return (
-        <StyledAlertWrapper sx={{pb: 1}}>
+        <StyledAlertWrapper sx={{ pb: 1 }}>
             <StyledAlert severity={'info'} color={'info'}>
                 If environment would be enabled then this feature would be{' '}
-                {feature.strategies.result ? 'TRUE' : 'FALSE'} and the strategies would
-                evaluate like this:{' '}
+                {feature.strategies.result ? 'TRUE' : 'FALSE'} and the
+                strategies would evaluate like this:{' '}
             </StyledAlert>
             <StyledListWrapper>
                 <PlaygroundResultStrategyLists

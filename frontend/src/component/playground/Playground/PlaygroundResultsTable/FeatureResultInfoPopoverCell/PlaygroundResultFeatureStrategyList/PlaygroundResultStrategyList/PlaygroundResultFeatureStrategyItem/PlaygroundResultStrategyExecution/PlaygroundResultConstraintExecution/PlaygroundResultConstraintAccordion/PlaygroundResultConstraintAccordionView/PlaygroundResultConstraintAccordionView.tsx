@@ -19,9 +19,7 @@ import {
     PlaygroundConstraintSchema,
     PlaygroundRequestSchema,
 } from 'hooks/api/actions/usePlayground/playground.model';
-import {
-    ConstraintAccordionViewBody
-} from "component/common/ConstraintAccordion/ConstraintAccordionView/ConstraintAccordionViewBody/ConstraintAccordionViewBody";
+import { ConstraintAccordionViewBody } from 'component/common/ConstraintAccordion/ConstraintAccordionView/ConstraintAccordionViewBody/ConstraintAccordionViewBody';
 
 interface IConstraintAccordionViewProps {
     constraint: PlaygroundConstraintSchema;

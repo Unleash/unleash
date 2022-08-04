@@ -1,9 +1,10 @@
-import {ConstraintIcon} from 'component/common/ConstraintAccordion/ConstraintIcon';
+import { ConstraintIcon } from 'component/common/ConstraintAccordion/ConstraintIcon';
+import { PlaygroundConstraintAccordionViewHeaderInfo } from './PlaygroundConstraintAccordionViewHeaderInfo/PlaygroundConstraintAccordionViewHeaderInfo';
+import { useStyles } from 'component/common/ConstraintAccordion/ConstraintAccordion.styles';
 import {
-    PlaygroundConstraintAccordionViewHeaderInfo
-} from './PlaygroundConstraintAccordionViewHeaderInfo/PlaygroundConstraintAccordionViewHeaderInfo';
-import {useStyles} from 'component/common/ConstraintAccordion/ConstraintAccordion.styles';
-import {PlaygroundConstraintSchema, PlaygroundRequestSchema,} from 'hooks/api/actions/usePlayground/playground.model';
+    PlaygroundConstraintSchema,
+    PlaygroundRequestSchema,
+} from 'hooks/api/actions/usePlayground/playground.model';
 
 interface PlaygroundConstraintAccordionViewHeaderProps {
     constraint: PlaygroundConstraintSchema;

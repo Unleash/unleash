@@ -96,7 +96,7 @@ export const PlaygroundResultStrategyExecution = ({
                     constraints={constraints}
                     input={input}
                 />
-                <StyledParamWrapper sx={{ pt: 2}}>
+                <StyledParamWrapper sx={{ pt: 2 }}>
                     <PlaygroundResultStrategyExecutionCustomStrategyParams
                         strategyName={strategyResult.name}
                         parameters={parameters}

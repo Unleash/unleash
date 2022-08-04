@@ -63,8 +63,12 @@ export const PlaygroundResultFeatureStrategyItem = ({
                 condition={index > 0}
                 show={<StrategySeparator text="OR" />}
             />
-            <StyledItemWrapper sx={{mr: 2}}>
-                <Typography variant={'subtitle1'} color={'text.secondary'} sx={{ml: 1}}>
+            <StyledItemWrapper sx={{ mr: 2 }}>
+                <Typography
+                    variant={'subtitle1'}
+                    color={'text.secondary'}
+                    sx={{ ml: 1 }}
+                >
                     {index + 1}
                 </Typography>
                 <Box className={styles.innerContainer} sx={{ border }}>

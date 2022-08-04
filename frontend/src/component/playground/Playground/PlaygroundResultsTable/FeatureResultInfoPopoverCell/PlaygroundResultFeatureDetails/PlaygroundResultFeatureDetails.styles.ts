@@ -14,7 +14,7 @@ export const useStyles = makeStyles()(theme => ({
         marginTop: '12px',
     },
     alertRow: {
-        margin:  theme.spacing(1,0),
+        margin: theme.spacing(1, 0),
     },
     descriptionRow: {
         marginBottom: theme.spacing(2),

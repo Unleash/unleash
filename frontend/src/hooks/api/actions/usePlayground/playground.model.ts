@@ -201,8 +201,8 @@ export interface PlaygroundSegmentSchema {
 }
 
 export interface PlaygroundStrategyResultSchema {
-    result: boolean | "unknown";
-    data?: Array<PlaygroundStrategySchema>
+    result: boolean | 'unknown';
+    data?: Array<PlaygroundStrategySchema>;
 }
 
 export interface PlaygroundStrategySchema {

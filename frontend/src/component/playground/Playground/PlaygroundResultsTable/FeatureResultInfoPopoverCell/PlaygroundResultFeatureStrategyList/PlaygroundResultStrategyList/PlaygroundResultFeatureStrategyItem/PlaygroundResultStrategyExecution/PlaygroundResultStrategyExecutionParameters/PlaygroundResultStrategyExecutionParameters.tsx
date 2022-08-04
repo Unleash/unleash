@@ -11,7 +11,7 @@ import {
     PlaygroundConstraintSchema,
     PlaygroundRequestSchema,
 } from 'hooks/api/actions/usePlayground/playground.model';
-import {getMappedParam} from "../helepers";
+import { getMappedParam } from '../helepers';
 
 export interface PlaygroundResultStrategyExecutionParametersProps {
     parameters: { [key: string]: string };
@@ -73,7 +73,9 @@ export const PlaygroundResultStrategyExecutionParameters = ({
                             }
                             showReason={
                                 Boolean(input?.context?.[getMappedParam(key)])
-                                    ? !users.includes(input?.context?.[getMappedParam(key)])
+                                    ? !users.includes(
+                                          input?.context?.[getMappedParam(key)]
+                                      )
                                     : undefined
                             }
                         />
@@ -93,7 +95,9 @@ export const PlaygroundResultStrategyExecutionParameters = ({
                             }
                             showReason={
                                 Boolean(input?.context?.[getMappedParam(key)])
-                                    ? !hosts.includes(input?.context?.[getMappedParam(key)])
+                                    ? !hosts.includes(
+                                          input?.context?.[getMappedParam(key)]
+                                      )
                                     : undefined
                             }
                         />
@@ -112,7 +116,9 @@ export const PlaygroundResultStrategyExecutionParameters = ({
                             }
                             showReason={
                                 Boolean(input?.context?.[getMappedParam(key)])
-                                    ? !IPs.includes(input?.context?.[getMappedParam(key)])
+                                    ? !IPs.includes(
+                                          input?.context?.[getMappedParam(key)]
+                                      )
                                     : undefined
                             }
                         />

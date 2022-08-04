@@ -5,10 +5,11 @@ import { PLaygroundConstraintAccordionViewHeaderMultipleValues } from '../Playgr
 import React from 'react';
 import { useStyles } from '../../PlaygroundConstraintAccordion.styles';
 import { CancelOutlined } from '@mui/icons-material';
-import {PlaygroundConstraintSchema, PlaygroundRequestSchema} from 'hooks/api/actions/usePlayground/playground.model';
 import {
-    ConstraintViewHeaderOperator
-} from "component/common/ConstraintAccordion/ConstraintAccordionView/ConstraintAccordionViewHeader/ConstraintViewHeaderOperator/ConstraintViewHeaderOperator";
+    PlaygroundConstraintSchema,
+    PlaygroundRequestSchema,
+} from 'hooks/api/actions/usePlayground/playground.model';
+import { ConstraintViewHeaderOperator } from 'component/common/ConstraintAccordion/ConstraintAccordionView/ConstraintAccordionViewHeader/ConstraintViewHeaderOperator/ConstraintViewHeaderOperator';
 
 const StyledHeaderText = styled('span')(({ theme }) => ({
     display: '-webkit-box',
@@ -59,8 +60,9 @@ export const PlaygroundConstraintAccordionViewHeaderInfo = ({
     const { classes: styles } = useStyles();
     const theme = useTheme();
 
-    const constraintExistsInContext =
-        Boolean(playgroundInput?.context[constraint.contextName]);
+    const constraintExistsInContext = Boolean(
+        playgroundInput?.context[constraint.contextName]
+    );
 
     return (
         <StyledHeaderWrapper>
@@ -76,9 +78,8 @@ export const PlaygroundConstraintAccordionViewHeaderInfo = ({
                                     : theme.palette.error.main
                             }
                         >
-                            {playgroundInput?.context[
-                                constraint.contextName
-                                ] || 'no value'}
+                            {playgroundInput?.context[constraint.contextName] ||
+                                'no value'}
                         </Typography>
                     </StyledHeaderText>
                 </Tooltip>

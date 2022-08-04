@@ -1,9 +1,9 @@
-import {ConditionallyRender} from 'component/common/ConditionallyRender/ConditionallyRender';
-import {styled, Typography} from '@mui/material';
-import React, {useEffect, useMemo, useState} from 'react';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { styled, Typography } from '@mui/material';
+import React, { useEffect, useMemo, useState } from 'react';
 import classnames from 'classnames';
-import {useStyles} from '../../PlaygroundConstraintAccordion.styles';
-import {PlaygroundConstraintSchema} from 'hooks/api/actions/usePlayground/playground.model';
+import { useStyles } from '../../PlaygroundConstraintAccordion.styles';
+import { PlaygroundConstraintSchema } from 'hooks/api/actions/usePlayground/playground.model';
 
 const StyledValuesSpan = styled('span')(({ theme }) => ({
     display: '-webkit-box',

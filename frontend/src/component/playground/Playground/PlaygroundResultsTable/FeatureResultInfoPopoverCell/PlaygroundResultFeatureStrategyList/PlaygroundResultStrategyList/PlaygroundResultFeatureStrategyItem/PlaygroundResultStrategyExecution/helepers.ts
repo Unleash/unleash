@@ -7,8 +7,8 @@ export const getMappedParam = (key: string) => {
         case 'HostNames':
             return 'hostname';
         case 'IPs':
-            return 'remoteAddress'
+            return 'remoteAddress';
         default:
             return key;
     }
-}
+};

@@ -22,10 +22,7 @@ export const FeatureStatusCell = ({ enabled }: IFeatureStatusCellProps) => {
             <StyledChipWrapper data-loading>
                 <PlaygroundResultChip
                     enabled={enabled}
-                    label={enabled
-                            ? 'True'
-                            : 'False'
-                    }
+                    label={enabled ? 'True' : 'False'}
                 />
             </StyledChipWrapper>
         </StyledCellBox>

@@ -10,10 +10,9 @@ import { StrategySeparator } from 'component/common/StrategySeparator/StrategySe
 import { Chip } from '@mui/material';
 import PercentageCircle from 'component/common/PercentageCircle/PercentageCircle';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
-import { IStrategy } from 'interfaces/strategy';
 import { PlaygroundConstraintSchema } from 'hooks/api/actions/usePlayground/playground.model';
 import { useStyles } from '../PlaygroundResultStrategyExecution.styles';
-import { useStrategies } from '../../../../../../../../../../hooks/api/getters/useStrategies/useStrategies';
+import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 
 interface PlaygroundResultStrategyExecutionCustomStrategyProps {
     parameters: { [key: string]: string };

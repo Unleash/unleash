@@ -19,7 +19,7 @@ const SeparatorContainer = styled('div')(({ theme }) => ({
 }));
 
 const SeparatorContent = styled('span')(({ theme }) => ({
-    fontSize: theme.fontSizes.subHeader,
+    fontSize: theme.fontSizes.bodySize,
     textAlign: 'center',
     padding: '0 1rem',
     background: theme.palette.secondaryContainer,

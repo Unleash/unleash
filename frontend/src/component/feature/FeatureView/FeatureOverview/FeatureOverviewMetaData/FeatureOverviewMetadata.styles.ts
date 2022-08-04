@@ -28,7 +28,7 @@ export const useStyles = makeStyles()(theme => ({
         alignItems: 'center',
     },
     header: {
-        fontSize: theme.fontSizes.subHeader,
+        fontSize: theme.fontSizes.bodySize,
         fontWeight: 'normal',
         margin: 0,
     },

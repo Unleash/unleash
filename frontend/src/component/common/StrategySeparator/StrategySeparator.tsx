@@ -26,6 +26,7 @@ const StyledCenteredContent = styled(StyledContent)(({ theme }) => ({
     backgroundColor: theme.palette.activityIndicators.primary,
     border: `1px solid ${theme.palette.primary.border}`,
     borderRadius: theme.shape.borderRadiusLarge,
+    padding: theme.spacing(0.75, 1.5),
 }));
 
 export const StrategySeparator = ({ text }: IStrategySeparatorProps) => {

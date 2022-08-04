@@ -26,9 +26,6 @@ export const useStyles = makeStyles()(theme => ({
         '&:before': {
             opacity: '0 !important',
         },
-        '&:first-of-type, &:last-of-type': {
-            borderRadius: theme.shape.borderRadiusMedium,
-        },
     },
     accordionEdit: {
         backgroundColor: '#F6F6FA',

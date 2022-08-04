@@ -5,7 +5,6 @@ declare module '@mui/material/styles' {
          */
         fontSizes: {
             mainHeader: string;
-            subHeader: string;
             bodySize: string;
             smallBody: string;
             smallerBody: string;

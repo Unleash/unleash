@@ -19,7 +19,7 @@ export const useStyles = makeStyles()(theme => ({
         },
     },
     header: {
-        fontSize: theme.fontSizes.subHeader,
+        fontSize: theme.fontSizes.bodySize,
         fontWeight: 'normal',
         margin: 0,
         marginBottom: '0.5rem',

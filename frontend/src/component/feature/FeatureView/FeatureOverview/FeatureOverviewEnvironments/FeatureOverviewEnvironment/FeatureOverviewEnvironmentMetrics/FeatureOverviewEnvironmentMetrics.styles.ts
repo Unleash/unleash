@@ -31,7 +31,7 @@ export const useStyles = makeStyles()(theme => ({
     percentage: {
         color: theme.palette.primary.main,
         textAlign: 'right',
-        fontSize: theme.fontSizes.subHeader,
+        fontSize: theme.fontSizes.bodySize,
     },
     percentageCircle: {
         margin: '0 1rem',

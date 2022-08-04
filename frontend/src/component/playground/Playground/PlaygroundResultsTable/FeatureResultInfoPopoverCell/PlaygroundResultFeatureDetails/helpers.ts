@@ -25,3 +25,9 @@ export const hasCustomStrategies = (feature: PlaygroundFeatureSchema) => {
         strategy => !DEFAULT_STRATEGIES.includes(strategy.name)
     );
 };
+
+export const hasOnlyCustomStrategies = (feature: PlaygroundFeatureSchema) => {
+    return !feature.strategies?.data?.find(strategy =>
+        DEFAULT_STRATEGIES.includes(strategy.name)
+    );
+};

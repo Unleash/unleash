@@ -8,7 +8,11 @@ import { useStyles } from './PlaygroundResultFeatureDetails.styles';
 import { CloseOutlined } from '@mui/icons-material';
 import React from 'react';
 import { ConditionallyRender } from '../../../../../common/ConditionallyRender/ConditionallyRender';
-import { checkForEmptyValues, hasCustomStrategies } from './helpers';
+import {
+    checkForEmptyValues,
+    hasCustomStrategies,
+    hasOnlyCustomStrategies,
+} from './helpers';
 
 interface PlaygroundFeatureResultDetailsProps {
     feature: PlaygroundFeatureSchema;
@@ -31,7 +35,9 @@ export const PlaygroundResultFeatureDetails = ({
         ? 'at least one strategy is True'
         : !feature.isEnabledInCurrentEnvironment
         ? 'the environment is disabled'
-        : 'all strategies are False';
+        : hasOnlyCustomStrategies(feature)
+        ? 'all strategies are Unevaluated'
+        : 'all strategies are False or Uneavaluated';
 
     const color = feature.isEnabled
         ? theme.palette.success.main

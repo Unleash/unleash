@@ -43,7 +43,11 @@ export const playgroundFeatureSchema = {
             required: ['result', 'data'],
             properties: {
                 result: {
-                    description: `The cumulative results of all the feature's strategies. Can be \`true\`, \`false\`, or \`${playgroundStrategyEvaluation.unknownResult}\`. This property will only be \`${playgroundStrategyEvaluation.unknownResult}\` if one or more of the strategies can't be fully evaluated and the rest of the strategies all resolve to \`false\`.`,
+                    description: `The cumulative results of all the feature's strategies. Can be \`true\`,
+                                  \`false\`, or \`${playgroundStrategyEvaluation.unknownResult}\`.
+                                  This property will only be \`${playgroundStrategyEvaluation.unknownResult}\`
+                                  if one or more of the strategies can't be fully evaluated and the rest of the strategies
+                                  all resolve to \`false\`.`,
                     anyOf: [
                         { type: 'boolean' },
                         {
@@ -67,13 +71,17 @@ export const playgroundFeatureSchema = {
                 'Whether the feature is active and would be evaluated in the provided environment in a normal SDK context.',
         },
         isEnabled: {
-            description: `Whether this feature is enabled or not in the current environment. If a feature can't be fully evaluated (that is, \`strategies.result\` is \`${playgroundStrategyEvaluation.unknownResult}\`), this will be \`false\` to align with how client SDKs treat unresolved feature states.`,
+            description: `Whether this feature is enabled or not in the current environment.
+                          If a feature can't be fully evaluated (that is, \`strategies.result\` is \`${playgroundStrategyEvaluation.unknownResult}\`),
+                          this will be \`false\` to align with how client SDKs treat unresolved feature states.`,
             type: 'boolean',
             example: true,
         },
         variant: {
-            description:
-                "The feature variant you receive based on the provided context or the _disabled variant_. If a feature is disabled or doesn't have any variants, you would get the _disabled variant_. Otherwise, you'll get one of the feature's defined variants.",
+            description: `The feature variant you receive based on the provided context or the _disabled
+                          variant_. If a feature is disabled or doesn't have any
+                          variants, you would get the _disabled variant_.
+                          Otherwise, you'll get one of thefeature's defined variants.`,
             type: 'object',
             additionalProperties: false,
             required: ['name', 'enabled'],

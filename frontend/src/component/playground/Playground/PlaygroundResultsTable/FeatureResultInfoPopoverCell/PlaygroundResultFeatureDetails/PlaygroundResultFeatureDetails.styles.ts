@@ -17,7 +17,7 @@ export const useStyles = makeStyles()(theme => ({
         margin: theme.spacing(1, 0),
     },
     descriptionRow: {
-        marginBottom: theme.spacing(2),
+        margin: theme.spacing(1, 0.5),
     },
     name: {
         fontWeight: 600,

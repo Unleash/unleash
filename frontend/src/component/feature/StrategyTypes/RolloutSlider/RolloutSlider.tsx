@@ -87,7 +87,6 @@ const RolloutSlider = ({
             >
                 {name}
             </Typography>
-            <br />
             <StyledSlider
                 min={0}
                 max={100}

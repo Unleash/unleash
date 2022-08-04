@@ -15,6 +15,7 @@ import { useSegmentsApi } from 'hooks/api/actions/useSegmentsApi/useSegmentsApi'
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { formatStrategyName } from 'utils/strategyNames';
 import { useFeatureImmutable } from 'hooks/api/getters/useFeature/useFeatureImmutable';
+import { useFormErrors } from 'hooks/useFormErrors';
 
 export const FeatureStrategyEdit = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -27,6 +28,7 @@ export const FeatureStrategyEdit = () => {
     const { updateStrategyOnFeature, loading } = useFeatureStrategyApi();
     const { setStrategySegments } = useSegmentsApi();
     const { setToastData, setToastApiError } = useToast();
+    const errors = useFormErrors();
     const { uiConfig } = useUiConfig();
     const { unleashUrl } = uiConfig;
     const navigate = useNavigate();
@@ -115,6 +117,7 @@ export const FeatureStrategyEdit = () => {
                 onSubmit={onSubmit}
                 loading={loading}
                 permission={UPDATE_FEATURE_STRATEGY}
+                errors={errors}
             />
         </FormTemplate>
     );

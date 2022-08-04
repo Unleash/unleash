@@ -16,7 +16,7 @@ export const FeatureStrategyIcons = ({
     return (
         <StyledList aria-label="Feature strategies">
             {strategies.map(strategy => (
-                <StyledListItem key={strategy.name}>
+                <StyledListItem key={strategy.id}>
                     <FeatureStrategyIcon strategyName={strategy.name} />
                 </StyledListItem>
             ))}

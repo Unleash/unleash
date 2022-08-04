@@ -5,6 +5,7 @@ import { ClientFeatureSchema } from '../lib/openapi/spec/client-feature-schema';
 import { IVariant, WeightType } from '../lib/types/model';
 import { FeatureStrategySchema } from '../lib/openapi/spec/feature-strategy-schema';
 import { ConstraintSchema } from 'lib/openapi/spec/constraint-schema';
+import { SegmentSchema } from 'lib/openapi/spec/segment-schema';
 
 export const urlFriendlyString = (): Arbitrary<string> =>
     fc
@@ -28,32 +29,55 @@ export const commonISOTimestamp = (): Arbitrary<string> =>
         })
         .map((timestamp) => timestamp.toISOString());
 
+export const strategyConstraint = (): Arbitrary<ConstraintSchema> =>
+    fc.record({
+        contextName: urlFriendlyString(),
+        operator: fc.constantFrom(...ALL_OPERATORS),
+        caseInsensitive: fc.boolean(),
+        inverted: fc.boolean(),
+        values: fc.array(fc.string()),
+        value: fc.string(),
+    });
+
 const strategyConstraints = (): Arbitrary<ConstraintSchema[]> =>
-    fc.array(
-        fc.record({
-            contextName: urlFriendlyString(),
-            operator: fc.constantFrom(...ALL_OPERATORS),
-            caseInsensitive: fc.boolean(),
-            inverted: fc.boolean(),
-            values: fc.array(fc.string()),
-            value: fc.string(),
-        }),
-    );
+    fc.array(strategyConstraint());
 
 export const strategy = (
     name: string,
-    parameters: Arbitrary<Record<string, string>>,
+    parameters?: Arbitrary<Record<string, string>>,
 ): Arbitrary<FeatureStrategySchema> =>
+    parameters
+        ? fc.record(
+              {
+                  name: fc.constant(name),
+                  id: fc.uuid(),
+                  parameters,
+                  segments: fc.uniqueArray(fc.integer({ min: 1 })),
+                  constraints: strategyConstraints(),
+              },
+              { requiredKeys: ['name', 'parameters', 'id'] },
+          )
+        : fc.record(
+              {
+                  id: fc.uuid(),
+                  name: fc.constant(name),
+                  segments: fc.uniqueArray(fc.integer({ min: 1 })),
+                  constraints: strategyConstraints(),
+              },
+              { requiredKeys: ['name', 'id'] },
+          );
+
+export const segment = (): Arbitrary<SegmentSchema> =>
     fc.record({
-        name: fc.constant(name),
-        parameters,
+        id: fc.integer({ min: 1 }),
+        name: urlFriendlyString(),
         constraints: strategyConstraints(),
     });
 
 export const strategies = (): Arbitrary<FeatureStrategySchema[]> =>
-    fc.array(
+    fc.uniqueArray(
         fc.oneof(
-            strategy('default', fc.constant({})),
+            strategy('default'),
             strategy(
                 'flexibleRollout',
                 fc.record({
@@ -89,7 +113,16 @@ export const strategies = (): Arbitrary<FeatureStrategySchema[]> =>
                     IPs: fc.uniqueArray(fc.ipV4()).map((ips) => ips.join(',')),
                 }),
             ),
+            strategy(
+                'custom-strategy',
+                fc.record({
+                    customParam: fc
+                        .uniqueArray(fc.lorem())
+                        .map((words) => words.join(',')),
+                }),
+            ),
         ),
+        { selector: (generatedStrategy) => generatedStrategy.id },
     );
 
 export const variant = (): Arbitrary<IVariant> =>
@@ -166,6 +199,64 @@ export const clientFeatures = (constraints?: {
         ...constraints,
         selector: (v) => v.name,
     });
+
+export const clientFeaturesAndSegments = (featureConstraints?: {
+    minLength?: number;
+}): Arbitrary<{
+    features: ClientFeatureSchema[];
+    segments: SegmentSchema[];
+}> => {
+    const segments = () =>
+        fc.uniqueArray(segment(), {
+            selector: (generatedSegment) => generatedSegment.id,
+        });
+
+    // create segments and make sure that all strategies reference segments that
+    // exist
+    return fc
+        .tuple(segments(), clientFeatures(featureConstraints))
+        .map(([generatedSegments, generatedFeatures]) => {
+            const renumberedSegments = generatedSegments.map(
+                (generatedSegment, index) => ({
+                    ...generatedSegment,
+                    id: index + 1,
+                }),
+            );
+
+            const features: ClientFeatureSchema[] = generatedFeatures.map(
+                (feature) => ({
+                    ...feature,
+                    ...(feature.strategies && {
+                        strategies: feature.strategies.map(
+                            (generatedStrategy) => ({
+                                ...generatedStrategy,
+                                ...(generatedStrategy.segments && {
+                                    segments:
+                                        renumberedSegments.length > 0
+                                            ? [
+                                                  ...new Set(
+                                                      generatedStrategy.segments.map(
+                                                          (generatedSegment) =>
+                                                              (generatedSegment %
+                                                                  renumberedSegments.length) +
+                                                              1,
+                                                      ),
+                                                  ),
+                                              ]
+                                            : [],
+                                }),
+                            }),
+                        ),
+                    }),
+                }),
+            );
+
+            return {
+                features,
+                segments: renumberedSegments,
+            };
+        });
+};
 
 // TEST ARBITRARIES
 

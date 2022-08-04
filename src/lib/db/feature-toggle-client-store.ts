@@ -57,6 +57,7 @@ export default class FeatureToggleClientStore
         featureQuery?: IFeatureToggleQuery,
         archived: boolean = false,
         isAdmin: boolean = true,
+        includeStrategyIds?: boolean,
     ): Promise<IFeatureToggleClient[]> {
         const environment = featureQuery?.environment || DEFAULT_ENV;
         const stopTimer = this.timer('getFeatureAdmin');
@@ -166,7 +167,7 @@ export default class FeatureToggleClientStore
 
         const features: IFeatureToggleClient[] = Object.values(featureToggles);
 
-        if (!isAdmin) {
+        if (!isAdmin && !includeStrategyIds) {
             // We should not send strategy IDs from the client API,
             // as this breaks old versions of the Go SDK (at least).
             FeatureToggleClientStore.removeIdsFromStrategies(features);
@@ -229,8 +230,9 @@ export default class FeatureToggleClientStore
 
     async getClient(
         featureQuery?: IFeatureToggleQuery,
+        includeStrategyIds?: boolean,
     ): Promise<IFeatureToggleClient[]> {
-        return this.getAll(featureQuery, false, false);
+        return this.getAll(featureQuery, false, false, includeStrategyIds);
     }
 
     async getAdmin(

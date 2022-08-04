@@ -38,6 +38,7 @@ afterAll(async () => {
 
 const reset = (database: ITestDb) => async () => {
     await database.stores.featureToggleStore.deleteAll();
+    await database.stores.featureStrategiesStore.deleteAll();
     await database.stores.environmentStore.deleteAll();
 };
 
@@ -263,6 +264,51 @@ describe('Playground API E2E', () => {
                                 feature.project === mapped.projectId
                             );
                         });
+                    },
+                )
+                .afterEach(reset(db)),
+            testParams,
+        );
+    });
+
+    test('isEnabledInCurrentEnvironment should always match feature.enabled', async () => {
+        await fc.assert(
+            fc
+                .asyncProperty(
+                    clientFeatures(),
+                    fc.context(),
+                    async (features, ctx) => {
+                        await seedDatabase(db, features, 'default');
+
+                        const body = await playgroundRequest(
+                            app,
+                            token.secret,
+                            {
+                                projects: ALL,
+                                environment: 'default',
+                                context: {
+                                    appName: 'playground-test',
+                                },
+                            },
+                        );
+
+                        const createDict = (xs: { name: string }[]) =>
+                            xs.reduce(
+                                (acc, next) => ({ ...acc, [next.name]: next }),
+                                {},
+                            );
+
+                        const mappedToggles = createDict(body.features);
+
+                        ctx.log(JSON.stringify(features));
+                        ctx.log(JSON.stringify(mappedToggles));
+
+                        return features.every(
+                            (feature) =>
+                                feature.enabled ===
+                                mappedToggles[feature.name]
+                                    .isEnabledInCurrentEnvironment,
+                        );
                     },
                 )
                 .afterEach(reset(db)),

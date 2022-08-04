@@ -11,12 +11,22 @@ const badRequestResponse = {
     description: 'The request data does not match what we expect.',
 } as const;
 
+const notFoundResponse = {
+    description: 'The resource was not found.',
+} as const;
+
+const conflictResponse = {
+    description: 'The resource is in conflict with an existing one.',
+} as const;
+
 const standardResponses = {
     400: badRequestResponse,
     401: unauthorizedResponse,
+    404: notFoundResponse,
+    409: conflictResponse,
 } as const;
 
-type StandardResponses = typeof standardResponses;
+export type StandardResponses = typeof standardResponses;
 
 export const getStandardResponses = (
     ...statusCodes: (keyof StandardResponses)[]

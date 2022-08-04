@@ -21,7 +21,7 @@ export function checkForEmptyValues(object?: Object): boolean {
 }
 
 export const hasCustomStrategies = (feature: PlaygroundFeatureSchema) => {
-    return feature.strategies?.data?.find(strategy =>
-        !DEFAULT_STRATEGIES.includes(strategy.name)
+    return feature.strategies?.data?.find(
+        strategy => !DEFAULT_STRATEGIES.includes(strategy.name)
     );
 };

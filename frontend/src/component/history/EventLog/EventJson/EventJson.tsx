@@ -1,8 +1,12 @@
 import PropTypes from 'prop-types';
-
 import { useStyles } from './EventJson.styles';
+import { IEvent } from 'interfaces/event';
 
-const EventJson = ({ entry }) => {
+interface IEventJsonProps {
+    entry: IEvent;
+}
+
+const EventJson = ({ entry }: IEventJsonProps) => {
     const { classes: styles } = useStyles();
 
     const localEventData = JSON.parse(JSON.stringify(entry));
@@ -15,7 +19,7 @@ const EventJson = ({ entry }) => {
     return (
         <li className={styles.historyItem}>
             <div>
-                <code className="JSON smalltext man">{prettyPrinted}</code>
+                <code>{prettyPrinted}</code>
             </div>
         </li>
     );

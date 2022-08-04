@@ -1,6 +1,7 @@
 import { DragIndicator, Edit } from '@mui/icons-material';
 import { styled, useTheme, IconButton } from '@mui/material';
 import { Link } from 'react-router-dom';
+import classNames from 'classnames';
 import { IFeatureEnvironment } from 'interfaces/featureToggle';
 import { IFeatureStrategy } from 'interfaces/strategy';
 import {
@@ -52,7 +53,11 @@ export const StrategyItem = ({
 
     return (
         <div className={styles.container}>
-            <div className={styles.header}>
+            <div
+                className={classNames(styles.header, {
+                    [styles.headerDraggable]: isDraggable,
+                })}
+            >
                 <ConditionallyRender
                     condition={Boolean(isDraggable)}
                     show={() => (
@@ -60,6 +65,7 @@ export const StrategyItem = ({
                             <DragIndicator
                                 titleAccess="Drag to reorder"
                                 cursor="grab"
+                                sx={{ color: 'neutral.main' }}
                             />
                         </DragIcon>
                     )}

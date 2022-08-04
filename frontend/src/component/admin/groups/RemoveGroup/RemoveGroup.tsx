@@ -48,10 +48,10 @@ export const RemoveGroup: FC<IRemoveGroupProps> = ({
             onClose={() => {
                 setOpen(false);
             }}
-            title="Remove group"
+            title="Delete group"
         >
             <Typography>
-                Are you sure you wish to remove <strong>{group.name}</strong>?
+                Are you sure you wish to delete <strong>{group.name}</strong>?
                 If this group is currently assigned to one or more projects then
                 users belonging to this group may lose access to those projects.
             </Typography>

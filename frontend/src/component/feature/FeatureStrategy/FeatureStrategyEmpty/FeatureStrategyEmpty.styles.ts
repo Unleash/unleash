@@ -6,6 +6,7 @@ export const useStyles = makeStyles()(theme => ({
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
+        paddingTop: theme.spacing(2),
     },
     title: {
         fontSize: theme.fontSizes.bodySize,

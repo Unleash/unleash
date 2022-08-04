@@ -9,7 +9,7 @@ import { FeatureStrategySegmentList } from 'component/feature/FeatureStrategy/Fe
 import { useStyles } from 'component/feature/FeatureStrategy/FeatureStrategySegment/FeatureStrategySegment.styles';
 import { SegmentDocsStrategyWarning } from 'component/segments/SegmentDocs/SegmentDocs';
 import { useSegmentLimits } from 'hooks/api/getters/useSegmentLimits/useSegmentLimits';
-import { Divider } from '@mui/material';
+import { Divider, Typography } from '@mui/material';
 
 interface IFeatureStrategySegmentProps {
     segments: ISegment[];
@@ -53,7 +53,9 @@ export const FeatureStrategySegment = ({
 
     return (
         <>
-            <h3 className={styles.title}>Segmentation</h3>
+            <Typography component="h3" sx={{ m: 0 }} variant="h3">
+                Segmentation
+            </Typography>
             {atStrategySegmentsLimit && <SegmentDocsStrategyWarning />}
             <p>Add a predefined segment to constrain this feature toggle:</p>
             <AutocompleteBox

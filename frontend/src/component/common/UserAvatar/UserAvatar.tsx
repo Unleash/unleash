@@ -9,11 +9,11 @@ import {
 import { IUser } from 'interfaces/user';
 import { FC } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import StarIcon from '@mui/icons-material/Star';
+import { StarRounded } from '@mui/icons-material';
 
 const StyledAvatar = styled(Avatar)(({ theme }) => ({
-    width: theme.spacing(4),
-    height: theme.spacing(4),
+    width: theme.spacing(3.5),
+    height: theme.spacing(3.5),
     margin: 'auto',
     backgroundColor: theme.palette.secondary.light,
     color: theme.palette.text.primary,
@@ -21,7 +21,7 @@ const StyledAvatar = styled(Avatar)(({ theme }) => ({
     fontWeight: theme.fontWeight.bold,
 }));
 
-const StyledStar = styled(StarIcon)(({ theme }) => ({
+const StyledStar = styled(StarRounded)(({ theme }) => ({
     color: theme.palette.warning.main,
     backgroundColor: theme.palette.background.paper,
     borderRadius: theme.shape.borderRadiusExtraLarge,

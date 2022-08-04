@@ -17,6 +17,9 @@ export const useStyles = makeStyles()(theme => ({
         borderBottom: `1px solid ${theme.palette.divider}`,
         fontWeight: theme.typography.fontWeightMedium,
     },
+    headerDraggable: {
+        paddingLeft: theme.spacing(1),
+    },
     icon: {
         fill: theme.palette.inactiveIcon,
     },

@@ -1,7 +1,6 @@
-import PropTypes from 'prop-types';
 import { diff } from 'deep-diff';
-
 import { useStyles } from './EventDiff.styles';
+import { IEvent } from 'interfaces/event';
 
 const DIFF_PREFIXES = {
     A: ' ',
@@ -10,7 +9,11 @@ const DIFF_PREFIXES = {
     N: '+',
 };
 
-const EventDiff = ({ entry }) => {
+interface IEventDiffProps {
+    entry: IEvent;
+}
+
+const EventDiff = ({ entry }: IEventDiffProps) => {
     const { classes: styles } = useStyles();
 
     const KLASSES = {
@@ -25,7 +28,7 @@ const EventDiff = ({ entry }) => {
             ? diff(entry.preData, entry.data)
             : undefined;
 
-    const buildItemDiff = (diff, key) => {
+    const buildItemDiff = (diff: any, key: string) => {
         let change;
         if (diff.lhs !== undefined) {
             change = (
@@ -48,7 +51,7 @@ const EventDiff = ({ entry }) => {
         return change;
     };
 
-    const buildDiff = (diff, idx) => {
+    const buildDiff = (diff: any, idx: number) => {
         let change;
         const key = diff.path.join('.');
 
@@ -66,7 +69,9 @@ const EventDiff = ({ entry }) => {
                 </div>
             );
         } else {
+            // @ts-expect-error
             const spadenClass = KLASSES[diff.kind];
+            // @ts-expect-error
             const prefix = DIFF_PREFIXES[diff.kind];
 
             change = (
@@ -95,15 +100,10 @@ const EventDiff = ({ entry }) => {
 
     return (
         <pre style={{ overflowX: 'auto', overflowY: 'hidden' }} tabIndex={0}>
-            <code className="smalltext man">
-                {changes.length === 0 ? '(no changes)' : changes}
-            </code>
+            {/* @ts-expect-error */}
+            <code>{changes.length === 0 ? '(no changes)' : changes}</code>
         </pre>
     );
-};
-
-EventDiff.propTypes = {
-    entry: PropTypes.object,
 };
 
 export default EventDiff;

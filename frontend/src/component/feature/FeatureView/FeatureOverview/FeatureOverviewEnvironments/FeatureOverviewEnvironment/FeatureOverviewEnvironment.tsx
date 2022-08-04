@@ -85,18 +85,18 @@ const FeatureOverviewEnvironment = ({
                                     maxWidth="100"
                                     maxLength={15}
                                 />
-                                <ConditionallyRender
-                                    condition={!env.enabled}
-                                    show={
-                                        <Chip
-                                            size="small"
-                                            variant="outlined"
-                                            label="Disabled"
-                                            sx={{ ml: 1 }}
-                                        />
-                                    }
-                                />
                             </div>
+                            <ConditionallyRender
+                                condition={!env.enabled}
+                                show={
+                                    <Chip
+                                        size="small"
+                                        variant="outlined"
+                                        label="Disabled"
+                                        sx={{ ml: 1 }}
+                                    />
+                                }
+                            />
                         </div>
                         <div className={styles.container}>
                             <FeatureStrategyMenu

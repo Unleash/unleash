@@ -1,6 +1,7 @@
 import { Paper, styled } from '@mui/material';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { ReactNode } from 'react';
+import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
 
 const StyledMainHeader = styled(Paper)(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
@@ -49,7 +50,15 @@ export const MainHeader = ({
                 <StyledTitle>{title}</StyledTitle>
                 <StyledActions>{actions}</StyledActions>
             </StyledTitleHeader>
-            Description:<StyledDescription>{description}</StyledDescription>
+            <ConditionallyRender
+                condition={Boolean(description?.length)}
+                show={
+                    <>
+                        Description:
+                        <StyledDescription>{description}</StyledDescription>
+                    </>
+                }
+            />
         </StyledMainHeader>
     );
 };

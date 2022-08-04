@@ -15,6 +15,9 @@ const StyledAvatars = styled('div')(({ theme }) => ({
 const StyledAvatar = styled(UserAvatar)(({ theme }) => ({
     outline: `${theme.spacing(0.25)} solid ${theme.palette.background.paper}`,
     marginLeft: theme.spacing(-1),
+    '&:hover': {
+        outlineColor: theme.palette.primary.main,
+    },
 }));
 
 interface IGroupCardAvatarsProps {
@@ -44,6 +47,7 @@ export const GroupCardAvatars = ({ users }: IGroupCardAvatarsProps) => {
         <StyledAvatars>
             {shownUsers.map(user => (
                 <StyledAvatar
+                    key={user.id}
                     user={user}
                     star={user.role === Role.Owner}
                     onMouseEnter={event => {

@@ -5,7 +5,11 @@ title: /api/admin/events
 
 import ApiRequest from '@site/src/components/ApiRequest'
 
-:::note In order to access the admin API endpoints you need to identify yourself. Unless you're using the `none` authentication method, you'll need to [create an ADMIN token](/user_guide/api-token) and add an Authorization header using the token. :::
+:::note
+
+In order to access the admin API endpoints you need to identify yourself. Unless you're using the `none` authentication method, you'll need to [create an ADMIN token](/user_guide/api-token) and add an Authorization header using the token.
+
+:::
 
 The Events API lets you retrieve events from your Unleash instance.
 
@@ -191,7 +195,11 @@ This event fires when you create a feature. The `data` property contains the det
 
 ### `feature-updated`
 
-:::caution Deprecation notice This event type was replaced by more granular event types in Unleash 4.3. From Unleash 4.3 onwards, you'll need to use the events listed later in this section instead. :::
+:::caution Deprecation notice
+
+This event type was replaced by more granular event types in Unleash 4.3. From Unleash 4.3 onwards, you'll need to use the events listed later in this section instead.
+
+:::
 
 This event fires when a feature gets updated in some way. The `data` property contains the new state of the toggle. This is a legacy event, so it does not populate `preData` property.
 

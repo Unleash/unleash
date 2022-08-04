@@ -1,35 +1,47 @@
 import { List, Switch, FormControlLabel } from '@mui/material';
-import PropTypes from 'prop-types';
-import EventJson from './EventJson/EventJson';
+import EventJson from 'component/history/EventLog/EventJson/EventJson';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
-import EventCard from './EventCard/EventCard';
+import EventCard from 'component/history/EventLog/EventCard/EventCard';
 import { useStyles } from './EventLog.styles';
 import { formatDateYMDHMS } from 'utils/formatDate';
+import { IEventSettings } from 'hooks/useEventSettings';
+import { IEvent } from 'interfaces/event';
+import React from 'react';
+import { ILocationSettings } from 'hooks/useLocationSettings';
+
+interface IEventLogProps {
+    title: string;
+    events: IEvent[];
+    eventSettings: IEventSettings;
+    setEventSettings: React.Dispatch<React.SetStateAction<IEventSettings>>;
+    locationSettings: ILocationSettings;
+    displayInline?: boolean;
+}
 
 const EventLog = ({
     title,
-    history,
+    events,
     eventSettings,
     setEventSettings,
     locationSettings,
     displayInline,
-}) => {
+}: IEventLogProps) => {
     const { classes: styles } = useStyles();
     const toggleShowDiff = () => {
         setEventSettings({ showData: !eventSettings.showData });
     };
-    const formatFulldateTime = v => {
+    const formatFulldateTime = (v: string) => {
         return formatDateYMDHMS(v, locationSettings.locale);
     };
 
-    if (!history || history.length < 0) {
+    if (!events || events.length < 0) {
         return null;
     }
 
     let entries;
 
-    const renderListItemCards = entry => (
+    const renderListItemCards = (entry: IEvent) => (
         <li key={entry.id} className={styles.eventEntry}>
             <EventCard
                 entry={entry}
@@ -39,11 +51,11 @@ const EventLog = ({
     );
 
     if (eventSettings.showData) {
-        entries = history.map(entry => (
+        entries = events.map(entry => (
             <EventJson key={`log${entry.id}`} entry={entry} />
         ));
     } else {
-        entries = history.map(renderListItemCards);
+        entries = events.map(renderListItemCards);
     }
 
     return (
@@ -73,15 +85,6 @@ const EventLog = ({
             </div>
         </PageContent>
     );
-};
-
-EventLog.propTypes = {
-    history: PropTypes.array,
-    eventSettings: PropTypes.object.isRequired,
-    setEventSettings: PropTypes.func.isRequired,
-    locationSettings: PropTypes.object.isRequired,
-    title: PropTypes.string,
-    displayInline: PropTypes.bool,
 };
 
 export default EventLog;

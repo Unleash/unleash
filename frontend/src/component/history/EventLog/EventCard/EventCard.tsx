@@ -1,9 +1,14 @@
-import EventDiff from './EventDiff/EventDiff';
-
+import EventDiff from 'component/history/EventLog/EventCard/EventDiff/EventDiff';
 import { useStyles } from './EventCard.styles';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { IEvent } from 'interfaces/event';
 
-const EventCard = ({ entry, timeFormatted }) => {
+interface IEventCardProps {
+    entry: IEvent;
+    timeFormatted: string;
+}
+
+const EventCard = ({ entry, timeFormatted }: IEventCardProps) => {
     const { classes: styles } = useStyles();
 
     return (
@@ -18,7 +23,7 @@ const EventCard = ({ entry, timeFormatted }) => {
                 <dt className={styles.eventLogHeader}>Changed by: </dt>
                 <dd title={entry.createdBy}>{entry.createdBy}</dd>
                 <ConditionallyRender
-                    condition={entry.project}
+                    condition={Boolean(entry.project)}
                     show={
                         <>
                             <dt className={styles.eventLogHeader}>Project: </dt>
@@ -27,7 +32,7 @@ const EventCard = ({ entry, timeFormatted }) => {
                     }
                 />
                 <ConditionallyRender
-                    condition={entry.featureName}
+                    condition={Boolean(entry.featureName)}
                     show={
                         <>
                             <dt className={styles.eventLogHeader}>Feature: </dt>

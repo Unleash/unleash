@@ -15,7 +15,7 @@ const FeatureLog = () => {
 
     return (
         <div className={styles.container}>
-            <FeatureEventHistory toggleName={feature.name} />
+            <FeatureEventHistory featureId={feature.name} />
         </div>
     );
 };

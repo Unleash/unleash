@@ -1,5 +1,5 @@
 import { Fragment, useMemo, VFC } from 'react';
-import { Box, Chip, Tooltip } from '@mui/material';
+import { Box, Chip } from '@mui/material';
 import { IFeatureStrategy } from 'interfaces/strategy';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import PercentageCircle from 'component/common/PercentageCircle/PercentageCircle';

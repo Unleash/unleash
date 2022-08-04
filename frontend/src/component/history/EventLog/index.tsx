@@ -1,10 +1,11 @@
-import EventLog from './EventLog';
+import EventLog from 'component/history/EventLog/EventLog';
 import { useEventSettings } from 'hooks/useEventSettings';
 import { useLocationSettings } from 'hooks/useLocationSettings';
+import { IEvent } from 'interfaces/event';
 
 interface IEventLogContainerProps {
     title: string;
-    history: unknown[];
+    events: IEvent[];
     displayInline?: boolean;
 }
 
@@ -15,7 +16,7 @@ const EventLogContainer = (props: IEventLogContainerProps) => {
     return (
         <EventLog
             title={props.title}
-            history={props.history}
+            events={props.events}
             eventSettings={eventSettings}
             setEventSettings={setEventSettings}
             locationSettings={locationSettings}

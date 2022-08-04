@@ -8,8 +8,8 @@ import { Alert, styled, Typography } from '@mui/material';
 import { PlaygroundResultFeatureStrategyItem } from './PlaygroundResultFeatureStrategyItem/PlaygroundResultFeatureStrategyItem';
 
 const StyledAlertWrapper = styled('div')(({ theme }) => ({
-    width: '100%',
     display: 'flex',
+    padding: `0, 4px`,
     flexDirection: 'column',
     borderRadius: theme.shape.borderRadiusMedium,
     border: `1px solid ${theme.palette.info.border}`,
@@ -70,10 +70,10 @@ export const WrappedPlaygroundResultStrategyList = ({
     input,
 }: WrappedPlaygroundResultStrategyListProps) => {
     return (
-        <StyledAlertWrapper>
+        <StyledAlertWrapper sx={{pb: 1}}>
             <StyledAlert severity={'info'} color={'info'}>
                 If environment would be enabled then this feature would be{' '}
-                {feature.isEnabled ? 'TRUE' : 'FALSE'} and the strategies would
+                {feature.strategies.result ? 'TRUE' : 'FALSE'} and the strategies would
                 evaluate like this:{' '}
             </StyledAlert>
             <StyledListWrapper>

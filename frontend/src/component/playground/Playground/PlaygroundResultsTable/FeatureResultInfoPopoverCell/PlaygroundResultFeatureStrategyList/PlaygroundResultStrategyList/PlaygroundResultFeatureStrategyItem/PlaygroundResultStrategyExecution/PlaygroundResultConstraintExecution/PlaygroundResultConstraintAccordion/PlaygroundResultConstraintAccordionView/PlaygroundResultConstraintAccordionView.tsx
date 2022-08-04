@@ -7,29 +7,34 @@ import {
     Theme,
     useTheme,
 } from '@mui/material';
-import { IConstraint } from 'interfaces/strategy';
-import { ConstraintAccordionViewBody } from './ConstraintAccordionViewBody/ConstraintAccordionViewBody';
-import { ConstraintAccordionViewHeader } from './ConstraintAccordionViewHeader/ConstraintAccordionViewHeader';
+import { PlaygroundConstraintAccordionViewHeader } from './PlaygroundConstraintAccordionViewHeader/PlaygroundConstraintAccordionViewHeader';
 import { oneOf } from 'utils/oneOf';
 import {
     dateOperators,
     numOperators,
     semVerOperators,
 } from 'constants/operators';
-import { useStyles } from '../ConstraintAccordion.styles';
+import { useStyles } from './PlaygroundConstraintAccordion.styles';
+import {
+    PlaygroundConstraintSchema,
+    PlaygroundRequestSchema,
+} from 'hooks/api/actions/usePlayground/playground.model';
+import {
+    ConstraintAccordionViewBody
+} from "component/common/ConstraintAccordion/ConstraintAccordionView/ConstraintAccordionViewBody/ConstraintAccordionViewBody";
 
 interface IConstraintAccordionViewProps {
-    constraint: IConstraint;
-    onDelete?: () => void;
-    onEdit?: () => void;
+    constraint: PlaygroundConstraintSchema;
+    playgroundInput?: PlaygroundRequestSchema;
+    maxLength?: number;
     sx?: SxProps<Theme>;
 }
 
-export const ConstraintAccordionView = ({
+export const PlaygroundResultConstraintAccordionView = ({
     constraint,
-    onEdit,
-    onDelete,
     sx = undefined,
+    maxLength,
+    playgroundInput,
 }: IConstraintAccordionViewProps) => {
     const { classes: styles } = useStyles();
     const [expandable, setExpandable] = useState(true);
@@ -45,6 +50,11 @@ export const ConstraintAccordionView = ({
             setExpanded(!expanded);
         }
     };
+    const backgroundColor = Boolean(playgroundInput)
+        ? !Boolean((constraint as PlaygroundConstraintSchema).result)
+            ? theme.palette.neutral.light
+            : 'inherit'
+        : 'inherit';
 
     return (
         <Accordion
@@ -62,15 +72,16 @@ export const ConstraintAccordionView = ({
                     '&:hover': {
                         cursor: expandable ? 'pointer' : 'default!important',
                     },
+                    backgroundColor: backgroundColor,
                 }}
             >
-                <ConstraintAccordionViewHeader
+                <PlaygroundConstraintAccordionViewHeader
                     constraint={constraint}
-                    onEdit={onEdit}
-                    onDelete={onDelete}
                     singleValue={singleValue}
                     allowExpand={setExpandable}
                     expanded={expanded}
+                    maxLength={maxLength ?? 112}
+                    playgroundInput={playgroundInput}
                 />
             </AccordionSummary>
 

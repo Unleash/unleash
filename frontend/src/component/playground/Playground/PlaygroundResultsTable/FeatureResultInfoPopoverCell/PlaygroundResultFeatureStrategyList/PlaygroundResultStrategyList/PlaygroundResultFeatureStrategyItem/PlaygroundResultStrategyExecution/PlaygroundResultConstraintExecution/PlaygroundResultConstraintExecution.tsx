@@ -3,11 +3,13 @@ import {
     PlaygroundRequestSchema,
 } from 'hooks/api/actions/usePlayground/playground.model';
 import React, { Fragment } from 'react';
-import { objectId } from '../../../../../../../../../utils/objectId';
-import { ConditionallyRender } from '../../../../../../../../common/ConditionallyRender/ConditionallyRender';
-import { StrategySeparator } from '../../../../../../../../common/StrategySeparator/StrategySeparator';
-import { ConstraintAccordionView } from '../../../../../../../../common/ConstraintAccordion/ConstraintAccordionView/ConstraintAccordionView';
+import { objectId } from '../../../../../../../../../../utils/objectId';
+import { ConditionallyRender } from '../../../../../../../../../common/ConditionallyRender/ConditionallyRender';
+import { StrategySeparator } from '../../../../../../../../../common/StrategySeparator/StrategySeparator';
 import { styled } from '@mui/material';
+import {
+    PlaygroundResultConstraintAccordionView
+} from "./PlaygroundResultConstraintAccordion/PlaygroundResultConstraintAccordionView/PlaygroundResultConstraintAccordionView";
 
 interface PlaygroundResultConstraintExecutionProps {
     constraints?: PlaygroundConstraintSchema[];
@@ -16,7 +18,7 @@ interface PlaygroundResultConstraintExecutionProps {
 }
 
 export const PlaygroundResultConstraintExecutionWrapper = styled('div')(
-    ({ theme }) => ({
+    () => ({
         width: '100%',
         display: 'flex',
         flexDirection: 'column',
@@ -38,7 +40,7 @@ export const PlaygroundResultConstraintExecution = ({
                         condition={index > 0}
                         show={<StrategySeparator text="AND" />}
                     />
-                    <ConstraintAccordionView
+                    <PlaygroundResultConstraintAccordionView
                         constraint={constraint}
                         playgroundInput={input}
                         maxLength={compact ? 25 : 50}

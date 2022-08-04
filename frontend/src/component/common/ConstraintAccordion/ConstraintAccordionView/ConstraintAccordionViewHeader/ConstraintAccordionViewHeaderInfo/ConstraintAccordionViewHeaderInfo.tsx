@@ -1,13 +1,11 @@
-import { styled, Tooltip, Typography, useTheme } from '@mui/material';
+import { styled, Tooltip } from '@mui/material';
 import { ConstraintViewHeaderOperator } from '../ConstraintViewHeaderOperator/ConstraintViewHeaderOperator';
-import { ConditionallyRender } from '../../../../ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ConstraintAccordionViewHeaderSingleValue } from '../ContraintAccordionViewHeaderSingleValue/ConstraintAccordionViewHeaderSingleValue';
 import { ConstraintAccordionViewHeaderMultipleValues } from '../ContraintAccordionViewHeaderMultipleValues/ConstraintAccordionViewHeaderMultipleValues';
 import React from 'react';
 import { IConstraint } from '../../../../../../interfaces/strategy';
 import { useStyles } from '../../../ConstraintAccordion.styles';
-import { CancelOutlined } from '@mui/icons-material';
-import { PlaygroundRequestSchema } from '../../../../../../hooks/api/actions/usePlayground/playground.model';
 
 const StyledHeaderText = styled('span')(({ theme }) => ({
     display: '-webkit-box',
@@ -41,9 +39,7 @@ interface ConstraintAccordionViewHeaderMetaInfoProps {
     singleValue: boolean;
     expanded: boolean;
     allowExpand: (shouldExpand: boolean) => void;
-    result?: boolean;
     maxLength?: number;
-    playgroundInput?: PlaygroundRequestSchema;
 }
 
 export const ConstraintAccordionViewHeaderInfo = ({
@@ -51,17 +47,9 @@ export const ConstraintAccordionViewHeaderInfo = ({
     singleValue,
     allowExpand,
     expanded,
-    result,
-    playgroundInput,
     maxLength = 112,
 }: ConstraintAccordionViewHeaderMetaInfoProps) => {
     const { classes: styles } = useStyles();
-    const theme = useTheme();
-
-    const isPlayground = Boolean(playgroundInput);
-    const constrainExistsInContext =
-        isPlayground &&
-        Boolean(playgroundInput?.context[constraint.contextName]);
 
     return (
         <StyledHeaderWrapper>
@@ -69,23 +57,6 @@ export const ConstraintAccordionViewHeaderInfo = ({
                 <Tooltip title={constraint.contextName} arrow>
                     <StyledHeaderText>
                         {constraint.contextName}
-                        <ConditionallyRender
-                            condition={isPlayground}
-                            show={
-                                <Typography
-                                    variant={'body1'}
-                                    color={
-                                        constrainExistsInContext
-                                            ? theme.palette.neutral.dark
-                                            : theme.palette.error.main
-                                    }
-                                >
-                                    {playgroundInput?.context[
-                                        constraint.contextName
-                                    ] || 'no value'}
-                                </Typography>
-                            }
-                        />
                     </StyledHeaderText>
                 </Tooltip>
                 <ConstraintViewHeaderOperator constraint={constraint} />
@@ -107,10 +78,6 @@ export const ConstraintAccordionViewHeaderInfo = ({
                     }
                 />
             </div>
-            <ConditionallyRender
-                condition={result !== undefined && !Boolean(result)}
-                show={<CancelOutlined color="error" sx={{ mt: 1 }} />}
-            />
         </StyledHeaderWrapper>
     );
 };

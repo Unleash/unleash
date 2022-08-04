@@ -24,25 +24,19 @@ export const PlaygroundResultFeatureDetails = ({
     const theme = useTheme();
 
     const description =
-        feature.isEnabled === 'unevaluated'
-            ? `This feature toggle is Unevaluated in ${input?.environment} because `
-            : feature.isEnabled
+        feature.isEnabled
             ? `This feature toggle is True in ${input?.environment} because `
             : `This feature toggle is False in ${input?.environment} because `;
 
     const reason =
-        feature.isEnabled === 'unevaluated'
-            ? 'custom strategies are not evaluated yet'
+        feature.isEnabled
+            ? 'at least one strategy is True'
             : !feature.isEnabledInCurrentEnvironment
             ? 'the environment is disabled'
-            : feature.isEnabled
-            ? 'at least one strategy is True'
             : 'all strategies are False';
 
     const color =
-        feature.isEnabled === 'unevaluated'
-            ? theme.palette.warning.main
-            : feature.isEnabled
+        feature.isEnabled
             ? theme.palette.success.main
             : theme.palette.error.main;
 
@@ -67,10 +61,7 @@ export const PlaygroundResultFeatureDetails = ({
                     <span>
                         <PlaygroundResultChip
                             enabled={feature.isEnabled}
-                            label={
-                                feature.isEnabled === 'unevaluated'
-                                    ? '?'
-                                    : Boolean(feature.isEnabled)
+                            label={feature.isEnabled
                                     ? 'True'
                                     : 'False'
                             }

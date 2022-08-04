@@ -27,7 +27,9 @@ export const FeatureResultInfoPopoverCell = ({
     const { classes: styles } = useStyles();
     const ref = useRef(null);
 
-    const togglePopover = (event: React.SyntheticEvent) => {
+    console.log(feature)
+
+    const togglePopover = () => {
         setOpen(!open);
     };
 

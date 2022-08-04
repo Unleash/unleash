@@ -3,7 +3,7 @@ import { Box, styled } from '@mui/material';
 import { PlaygroundResultChip } from '../PlaygroundResultChip/PlaygroundResultChip';
 
 interface IFeatureStatusCellProps {
-    enabled: boolean | 'unevaluated';
+    enabled: boolean;
 }
 
 const StyledCellBox = styled(Box)(({ theme }) => ({
@@ -22,10 +22,7 @@ export const FeatureStatusCell = ({ enabled }: IFeatureStatusCellProps) => {
             <StyledChipWrapper data-loading>
                 <PlaygroundResultChip
                     enabled={enabled}
-                    label={
-                        enabled === 'unevaluated'
-                            ? '?'
-                            : Boolean(enabled)
+                    label={enabled
                             ? 'True'
                             : 'False'
                     }

@@ -25,8 +25,8 @@ const StyledItemWrapper = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: '4px',
-    gap: '8px',
+    margin: theme.spacing(0.5),
+    gap: theme.spacing(1),
 }));
 
 export const PlaygroundResultFeatureStrategyItem = ({
@@ -63,8 +63,8 @@ export const PlaygroundResultFeatureStrategyItem = ({
                 condition={index > 0}
                 show={<StrategySeparator text="OR" />}
             />
-            <StyledItemWrapper>
-                <Typography variant={'subtitle1'} color={'text.secondary'}>
+            <StyledItemWrapper sx={{mr: 2}}>
+                <Typography variant={'subtitle1'} color={'text.secondary'} sx={{ml: 1}}>
                     {index + 1}
                 </Typography>
                 <Box className={styles.innerContainer} sx={{ border }}>

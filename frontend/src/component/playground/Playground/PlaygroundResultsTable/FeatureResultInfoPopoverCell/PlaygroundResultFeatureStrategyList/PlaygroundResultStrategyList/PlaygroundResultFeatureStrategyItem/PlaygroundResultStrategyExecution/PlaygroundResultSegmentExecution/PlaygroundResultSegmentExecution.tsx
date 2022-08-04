@@ -1,14 +1,14 @@
 import {
     PlaygroundSegmentSchema,
     PlaygroundRequestSchema,
-} from '../../../../../../../../../hooks/api/actions/usePlayground/playground.model';
+} from '../../../../../../../../../../hooks/api/actions/usePlayground/playground.model';
 import { PlaygroundResultConstraintExecution } from '../PlaygroundResultConstraintExecution/PlaygroundResultConstraintExecution';
 import { CancelOutlined, DonutLarge } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
-import { StrategySeparator } from '../../../../../../../../common/StrategySeparator/StrategySeparator';
+import { StrategySeparator } from '../../../../../../../../../common/StrategySeparator/StrategySeparator';
 import { useStyles } from './PlaygroundResultSegmentExecution.styles';
 import { styled, Typography } from '@mui/material';
-import { ConditionallyRender } from '../../../../../../../../common/ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from '../../../../../../../../../common/ConditionallyRender/ConditionallyRender';
 
 interface PlaygroundResultSegmentExecutionProps {
     segments?: PlaygroundSegmentSchema[];
@@ -43,7 +43,7 @@ const SegmentExecutionWrapper = styled('div')(({ theme }) => ({
         marginTop: theme.spacing(2),
     },
     background: theme.palette.neutral.light,
-    marginBottom: '8px',
+    marginBottom:  theme.spacing(1),
 }));
 
 const SegmentExecutionConstraintWrapper = styled('div')(({ theme }) => ({
@@ -55,7 +55,7 @@ const SegmentResultTextWrapper = styled('div')(({ theme }) => ({
     display: 'inline-flex',
     justifyContent: 'center',
     marginRight: '12px',
-    gap: '8px',
+    gap:  theme.spacing(1),
 }));
 
 export const PlaygroundResultSegmentExecution = ({

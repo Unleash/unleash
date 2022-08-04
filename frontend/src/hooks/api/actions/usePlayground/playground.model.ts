@@ -15,7 +15,7 @@ export interface PlaygroundConstraintSchema {
      */
     operator: Operator;
     /**
-     * Whether the operator should be case sensitive or not. Defaults to `false` (being case sensitive).
+     * Whether the operator should be case-sensitive or not. Defaults to `false` (being case-sensitive).
      * @type {boolean}
      * @memberof PlaygroundConstraintSchema
      */
@@ -64,7 +64,7 @@ export interface PlaygroundFeatureSchema {
      * @type {Array<PlaygroundStrategySchema>}
      * @memberof PlaygroundFeatureSchema
      */
-    strategies: Array<PlaygroundStrategySchema>;
+    strategies: PlaygroundStrategyResultSchema;
     /**
      * Whether the feature is active and would be evaluated in the provided environment in a normal SDK context.
      * @type {boolean}
@@ -76,7 +76,7 @@ export interface PlaygroundFeatureSchema {
      * @type {boolean | 'unevaluated'}
      * @memberof PlaygroundFeatureSchema
      */
-    isEnabled: boolean | 'unevaluated';
+    isEnabled: boolean;
     /**
      *
      * @type {PlaygroundFeatureSchemaVariant}
@@ -198,6 +198,11 @@ export interface PlaygroundSegmentSchema {
      * @memberof PlaygroundSegmentSchema
      */
     constraints: Array<PlaygroundConstraintSchema>;
+}
+
+export interface PlaygroundStrategyResultSchema {
+    result: boolean | "unknown";
+    data?: Array<PlaygroundStrategySchema>
 }
 
 export interface PlaygroundStrategySchema {

@@ -81,9 +81,9 @@ const RolloutSlider = ({
         <div className={classes.slider}>
             <Typography
                 id="discrete-slider-always"
-                variant="subtitle2"
+                variant="h3"
                 gutterBottom
-                component="h2"
+                component="h3"
             >
                 {name}
             </Typography>

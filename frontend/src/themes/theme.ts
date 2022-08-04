@@ -26,6 +26,10 @@ export default createTheme({
             fontSize: '1.5rem',
             lineHeight: 1.875,
         },
+        h3: {
+            fontSize: '1rem',
+            fontWeight: '700',
+        },
         caption: {
             fontSize: `${12 / 16}rem`,
         },
@@ -128,6 +132,7 @@ export default createTheme({
             recent: colors.green[100],
             inactive: colors.orange[200],
             abandoned: colors.red[200],
+            primary: colors.purple[100],
         },
         inactiveIcon: colors.grey[600],
     },

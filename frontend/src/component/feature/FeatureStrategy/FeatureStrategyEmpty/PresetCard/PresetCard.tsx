@@ -40,7 +40,14 @@ export const PresetCard: FC<IPresetCardProps> = ({
                 {children}
             </Typography>
 
-            <Box sx={{ ml: 'auto', mt: 'auto', pt: 1 }}>
+            <Box
+                sx={{
+                    ml: 'auto',
+                    mt: 'auto',
+                    pt: 1,
+                    mr: { xs: 'auto', sm: 0 },
+                }}
+            >
                 <PermissionButton
                     permission={CREATE_FEATURE_STRATEGY}
                     projectId={projectId}

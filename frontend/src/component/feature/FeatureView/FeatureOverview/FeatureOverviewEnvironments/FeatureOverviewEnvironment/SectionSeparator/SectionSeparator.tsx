@@ -14,7 +14,7 @@ const SeparatorContainer = styled('div')(({ theme }) => ({
         transform: 'translateY(-50%)',
         height: 2,
         width: '100%',
-        backgroundColor: theme.palette.divider,
+        backgroundColor: theme.palette.dividerAlternative,
     },
 }));
 
@@ -25,7 +25,7 @@ const SeparatorContent = styled('span')(({ theme }) => ({
     background: theme.palette.secondaryContainer,
     position: 'relative',
     maxWidth: '80%',
-    color: theme.palette.text.secondary,
+    color: theme.palette.text.primary,
 }));
 
 export const SectionSeparator: FC = ({ children }) => (

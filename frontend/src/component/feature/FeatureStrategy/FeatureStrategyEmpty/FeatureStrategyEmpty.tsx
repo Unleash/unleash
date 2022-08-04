@@ -161,7 +161,7 @@ export const FeatureStrategyEmpty = ({
                     display: 'grid',
                     width: '100%',
                     gap: 2,
-                    gridTemplateColumns: '1fr 1fr',
+                    gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' },
                 }}
             >
                 <PresetCard

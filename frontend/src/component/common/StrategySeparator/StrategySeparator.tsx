@@ -1,18 +1,12 @@
-import { styled } from '@mui/material';
+import { Box, styled, useTheme } from '@mui/material';
 import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
 
 interface IStrategySeparatorProps {
     text: 'AND' | 'OR';
 }
 
-const StyledContainer = styled('div')(({ theme }) => ({
-    height: theme.spacing(1),
-    position: 'relative',
-    width: '100%',
-}));
-
 const StyledContent = styled('div')(({ theme }) => ({
-    padding: theme.spacing(0.75, 1.5),
+    padding: theme.spacing(0.75, 1),
     color: theme.palette.text.primary,
     fontSize: theme.fontSizes.smallerBody,
     backgroundColor: theme.palette.secondaryContainer,
@@ -20,26 +14,38 @@ const StyledContent = styled('div')(({ theme }) => ({
     position: 'absolute',
     zIndex: theme.zIndex.fab,
     top: '50%',
-    left: theme.spacing(3),
+    left: theme.spacing(2),
     transform: 'translateY(-50%)',
+    lineHeight: 1,
 }));
 
 const StyledCenteredContent = styled(StyledContent)(({ theme }) => ({
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    backgroundColor: theme.palette.secondary.light,
+    backgroundColor: theme.palette.activityIndicators.primary,
     border: `1px solid ${theme.palette.primary.border}`,
+    borderRadius: theme.shape.borderRadiusLarge,
 }));
 
-export const StrategySeparator = ({ text }: IStrategySeparatorProps) => (
-    <StyledContainer>
-        <ConditionallyRender
-            condition={text === 'AND'}
-            show={() => <StyledContent>{text}</StyledContent>}
-            elseShow={() => (
-                <StyledCenteredContent>{text}</StyledCenteredContent>
-            )}
-        />
-    </StyledContainer>
-);
+export const StrategySeparator = ({ text }: IStrategySeparatorProps) => {
+    const theme = useTheme();
+
+    return (
+        <Box
+            sx={{
+                height: theme.spacing(text === 'AND' ? 1 : 1.5),
+                position: 'relative',
+                width: '100%',
+            }}
+        >
+            <ConditionallyRender
+                condition={text === 'AND'}
+                show={() => <StyledContent>{text}</StyledContent>}
+                elseShow={() => (
+                    <StyledCenteredContent>{text}</StyledCenteredContent>
+                )}
+            />
+        </Box>
+    );
+};

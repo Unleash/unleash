@@ -1,3 +1,4 @@
+import { Box, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 import { MoveListItem, useDragItem } from 'hooks/useDragItem';
@@ -13,6 +14,18 @@ interface IStrategyDraggableItemProps {
     onDragAndDrop: MoveListItem;
 }
 
+const StyledIndexLabel = styled('div')(({ theme }) => ({
+    fontSize: theme.typography.fontSize,
+    color: theme.palette.text.secondary,
+    position: 'absolute',
+    display: 'none',
+    right: 'calc(100% + 6px)',
+    top: theme.spacing(2.5),
+    [theme.breakpoints.up('md')]: {
+        display: 'block',
+    },
+}));
+
 export const StrategyDraggableItem = ({
     strategy,
     index,
@@ -23,17 +36,20 @@ export const StrategyDraggableItem = ({
     const ref = useDragItem(index, onDragAndDrop);
 
     return (
-        <div key={strategy.id} ref={ref}>
+        <Box key={strategy.id} ref={ref}>
             <ConditionallyRender
                 condition={index > 0}
                 show={<StrategySeparator text="OR" />}
             />
-            <StrategyItem
-                strategy={strategy}
-                environmentId={environmentName}
-                otherEnvironments={otherEnvironments}
-                isDraggable
-            />
-        </div>
+            <Box sx={{ position: 'relative' }}>
+                <StyledIndexLabel>{index + 1}</StyledIndexLabel>
+                <StrategyItem
+                    strategy={strategy}
+                    environmentId={environmentName}
+                    otherEnvironments={otherEnvironments}
+                    isDraggable
+                />
+            </Box>
+        </Box>
     );
 };

@@ -46,13 +46,14 @@ declare module '@mui/material/styles' {
             background: string;
         };
         /**
-         * For 'Seen' column on feature toggles list.
+         * For 'Seen' column on feature toggles list and other.
          */
         activityIndicators: {
             unknown: string;
             recent: string;
             inactive: string;
             abandoned: string;
+            primary: string;
         };
         dividerAlternative: string;
         /**

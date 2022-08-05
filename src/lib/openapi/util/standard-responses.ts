@@ -11,9 +11,20 @@ const badRequestResponse = {
     description: 'The request data does not match what we expect.',
 } as const;
 
+const notFoundResponse = {
+    description: 'The requested resource was not found.',
+} as const;
+
+const conflictResponse = {
+    description:
+        'The provided resource can not be created or updated because it would conflict with the current state of the resource or with an already existing resource, respectively.',
+} as const;
+
 const standardResponses = {
     400: badRequestResponse,
     401: unauthorizedResponse,
+    404: notFoundResponse,
+    409: conflictResponse,
 } as const;
 
 type StandardResponses = typeof standardResponses;

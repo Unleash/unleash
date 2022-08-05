@@ -84,9 +84,21 @@ export default class UnleashClient {
 
         const strategies = feature.strategies.map(
             (strategySelector): PlaygroundStrategySchema => {
-                const strategy =
-                    this.getStrategy(strategySelector.name) ??
-                    this.getStrategy('unknown');
+                const getStrategy = () => {
+                    // the application hostname strategy relies on external
+                    // variables to calculate its result. As such, we can't
+                    // evaluate it in a way that makes sense. So we'll
+                    // use the 'unknown' strategy instead.
+                    if (strategySelector.name === 'applicationHostname') {
+                        return this.getStrategy('unknown');
+                    }
+                    return (
+                        this.getStrategy(strategySelector.name) ??
+                        this.getStrategy('unknown')
+                    );
+                };
+
+                const strategy = getStrategy();
 
                 const segments =
                     strategySelector.segments

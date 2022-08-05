@@ -26,7 +26,7 @@ const standardResponses = {
     409: conflictResponse,
 } as const;
 
-export type StandardResponses = typeof standardResponses;
+type StandardResponses = typeof standardResponses;
 
 export const getStandardResponses = (
     ...statusCodes: (keyof StandardResponses)[]

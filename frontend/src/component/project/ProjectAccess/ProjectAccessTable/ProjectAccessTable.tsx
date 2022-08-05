@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState, VFC } from 'react';
 import { SortingRule, useFlexLayout, useSortBy, useTable } from 'react-table';
 import { VirtualizedTable, TablePlaceholder } from 'component/common/Table';
-import { Button, useMediaQuery, useTheme } from '@mui/material';
-import { Delete, Edit } from '@mui/icons-material';
+import { styled, useMediaQuery, useTheme } from '@mui/material';
+import { Add, Delete, Edit } from '@mui/icons-material';
 import { sortTypes } from 'utils/sortTypes';
 import useProjectAccess, {
     ENTITY_TYPE,
@@ -38,9 +38,11 @@ import { IUser } from 'interfaces/user';
 import { IGroup } from 'interfaces/group';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
+import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
 import { ProjectAccessCreate } from 'component/project/ProjectAccess/ProjectAccessCreate/ProjectAccessCreate';
 import { ProjectAccessEditUser } from 'component/project/ProjectAccess/ProjectAccessEditUser/ProjectAccessEditUser';
 import { ProjectAccessEditGroup } from 'component/project/ProjectAccess/ProjectAccessEditGroup/ProjectAccessEditGroup';
+import useHiddenColumns from 'hooks/useHiddenColumns';
 
 export type PageQueryType = Partial<
     Record<'sort' | 'order' | 'search', string>
@@ -52,6 +54,20 @@ const { value: storedParams, setValue: setStoredParams } = createLocalStorage(
     'ProjectAccess:v1',
     defaultSort
 );
+
+const StyledUserAvatars = styled('div')(({ theme }) => ({
+    display: 'inline-flex',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    marginLeft: theme.spacing(1),
+}));
+
+const StyledEmptyAvatar = styled(UserAvatar)(({ theme }) => ({
+    marginRight: theme.spacing(-3.5),
+}));
+const StyledGroupAvatar = styled(UserAvatar)(({ theme }) => ({
+    outline: `${theme.spacing(0.25)} solid ${theme.palette.background.paper}`,
+}));
 
 export const ProjectAccessTable: VFC = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -77,11 +93,15 @@ export const ProjectAccessTable: VFC = () => {
                 Header: 'Avatar',
                 accessor: 'imageUrl',
                 Cell: ({ row: { original: row } }: any) => (
-                    <TextCell>
-                        <UserAvatar user={row.entity}>
+                    <StyledUserAvatars>
+                        <ConditionallyRender
+                            condition={row.type === ENTITY_TYPE.GROUP}
+                            show={<StyledEmptyAvatar />}
+                        />
+                        <StyledGroupAvatar user={row.entity}>
                             {row.entity.users?.length}
-                        </UserAvatar>
-                    </TextCell>
+                        </StyledGroupAvatar>
+                    </StyledUserAvatars>
                 ),
                 maxWidth: 85,
                 disableSortBy: true,
@@ -124,6 +144,7 @@ export const ProjectAccessTable: VFC = () => {
                 searchable: true,
             },
             {
+                id: 'role',
                 Header: 'Role',
                 accessor: (row: IProjectAccess) =>
                     access?.roles.find(({ id }) => id === row.entity.roleId)
@@ -145,6 +166,7 @@ export const ProjectAccessTable: VFC = () => {
                 maxWidth: 150,
             },
             {
+                id: 'lastLogin',
                 Header: 'Last login',
                 accessor: (row: IProjectAccess) => {
                     if (row.type === ENTITY_TYPE.USER) {
@@ -240,6 +262,7 @@ export const ProjectAccessTable: VFC = () => {
         headerGroups,
         rows,
         prepareRow,
+        setHiddenColumns,
         state: { sortBy },
     } = useTable(
         {
@@ -256,6 +279,12 @@ export const ProjectAccessTable: VFC = () => {
         },
         useSortBy,
         useFlexLayout
+    );
+
+    useHiddenColumns(
+        setHiddenColumns,
+        ['imageUrl', 'username', 'role', 'added', 'lastLogin'],
+        isSmallScreen
     );
 
     useEffect(() => {
@@ -332,14 +361,15 @@ export const ProjectAccessTable: VFC = () => {
                                     </>
                                 }
                             />
-                            <Button
-                                component={Link}
-                                to={`create`}
-                                variant="contained"
-                                color="primary"
+                            <ResponsiveButton
+                                onClick={() => navigate('create')}
+                                maxWidth="700px"
+                                Icon={Add}
+                                permission={UPDATE_PROJECT}
+                                projectId={projectId}
                             >
                                 Assign {entityType}
-                            </Button>
+                            </ResponsiveButton>
                         </>
                     }
                 >

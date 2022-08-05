@@ -9,7 +9,7 @@ const StyledDescription = styled('div')(({ theme }) => ({
     padding: theme.spacing(3),
     backgroundColor: theme.palette.neutral.light,
     color: theme.palette.text.secondary,
-    fontSize: theme.fontSizes.smallerBody,
+    fontSize: theme.fontSizes.smallBody,
     borderRadius: theme.shape.borderRadiusMedium,
 }));
 

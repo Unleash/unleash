@@ -50,9 +50,7 @@ export const FeatureStrategySegmentList = ({
             </div>
             <ConditionallyRender
                 condition={Boolean(preview)}
-                show={() => (
-                    <SegmentItem segment={preview as ISegment} isExpanded />
-                )}
+                show={() => <SegmentItem segment={preview!} isExpanded />}
             />
         </>
     );

@@ -1,3 +1,4 @@
+import { DragEventHandler } from 'react';
 import { DragIndicator, Edit } from '@mui/icons-material';
 import { styled, useTheme, IconButton } from '@mui/material';
 import { Link } from 'react-router-dom';
@@ -22,7 +23,8 @@ import { useStyles } from './StrategyItem.styles';
 interface IStrategyItemProps {
     environmentId: string;
     strategy: IFeatureStrategy;
-    isDraggable?: boolean;
+    onDragStart?: DragEventHandler<HTMLButtonElement>;
+    onDragEnd?: DragEventHandler<HTMLButtonElement>;
     otherEnvironments?: IFeatureEnvironment['name'][];
 }
 
@@ -35,7 +37,8 @@ const DragIcon = styled(IconButton)(({ theme }) => ({
 export const StrategyItem = ({
     environmentId,
     strategy,
-    isDraggable,
+    onDragStart,
+    onDragEnd,
     otherEnvironments,
 }: IStrategyItemProps) => {
     const projectId = useRequiredPathParam('projectId');
@@ -55,13 +58,20 @@ export const StrategyItem = ({
         <div className={styles.container}>
             <div
                 className={classNames(styles.header, {
-                    [styles.headerDraggable]: isDraggable,
+                    [styles.headerDraggable]: Boolean(onDragStart),
                 })}
             >
                 <ConditionallyRender
-                    condition={Boolean(isDraggable)}
+                    condition={Boolean(onDragStart)}
                     show={() => (
-                        <DragIcon disableRipple disabled size="small">
+                        <DragIcon
+                            draggable
+                            disableRipple
+                            size="small"
+                            onDragStart={onDragStart}
+                            onDragEnd={onDragEnd}
+                            sx={{ cursor: 'move' }}
+                        >
                             <DragIndicator
                                 titleAccess="Drag to reorder"
                                 cursor="grab"

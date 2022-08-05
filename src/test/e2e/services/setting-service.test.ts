@@ -32,9 +32,9 @@ test('Can create new setting', async () => {
 
     expect(actual).toStrictEqual(someData);
     const { eventStore } = stores;
-    const createdEvents = await eventStore.getEventsFilterByType(
-        SETTING_CREATED,
-    );
+    const createdEvents = await eventStore.searchEvents({
+        type: SETTING_CREATED,
+    });
     expect(createdEvents).toHaveLength(1);
 });
 
@@ -46,9 +46,9 @@ test('Can delete setting', async () => {
     const actual = await service.get('some-setting');
     expect(actual).toBeUndefined();
     const { eventStore } = stores;
-    const createdEvents = await eventStore.getEventsFilterByType(
-        SETTING_DELETED,
-    );
+    const createdEvents = await eventStore.searchEvents({
+        type: SETTING_DELETED,
+    });
     expect(createdEvents).toHaveLength(1);
 });
 
@@ -61,8 +61,8 @@ test('Can update setting', async () => {
         { ...someData, test: 'fun' },
         'test-user',
     );
-    const updatedEvents = await eventStore.getEventsFilterByType(
-        SETTING_UPDATED,
-    );
+    const updatedEvents = await eventStore.searchEvents({
+        type: SETTING_UPDATED,
+    });
     expect(updatedEvents).toHaveLength(1);
 });

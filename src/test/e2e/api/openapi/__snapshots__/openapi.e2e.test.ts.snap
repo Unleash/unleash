@@ -1010,7 +1010,6 @@ Object {
           },
         },
         "required": Array [
-          "toggleName",
           "events",
         ],
         "type": "object",
@@ -2216,6 +2215,29 @@ Object {
         "required": Array [
           "appName",
         ],
+        "type": "object",
+      },
+      "searchEventsSchema": Object {
+        "properties": Object {
+          "feature": Object {
+            "type": "string",
+          },
+          "limit": Object {
+            "type": "number",
+          },
+          "offset": Object {
+            "type": "number",
+          },
+          "project": Object {
+            "type": "string",
+          },
+          "query": Object {
+            "type": "string",
+          },
+          "type": Object {
+            "type": "string",
+          },
+        },
         "type": "object",
       },
       "segmentSchema": Object {
@@ -3731,6 +3753,37 @@ If the provided project does not exist, the list of events will be empty.",
           },
         },
         "summary": "Get the most recent events from the Unleash instance or all events related to a project.",
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/events/search": Object {
+      "post": Object {
+        "operationId": "searchEvents",
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/searchEventsSchema",
+              },
+            },
+          },
+          "description": "searchEventsSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/eventsSchema",
+                },
+              },
+            },
+            "description": "eventsSchema",
+          },
+        },
         "tags": Array [
           "admin",
         ],

@@ -15,6 +15,7 @@ export interface IGroupUser {
     userId: number;
     role: string;
     joinedAt: Date;
+    seenAt?: Date;
 }
 
 export interface IGroupRole {

@@ -47,7 +47,7 @@ export const ConstraintAccordionViewHeaderInfo = ({
     singleValue,
     allowExpand,
     expanded,
-    maxLength = 112,
+    maxLength = 112, //The max number of characters in the values text for NOT allowing expansion
 }: ConstraintAccordionViewHeaderMetaInfoProps) => {
     const { classes: styles } = useStyles();
 

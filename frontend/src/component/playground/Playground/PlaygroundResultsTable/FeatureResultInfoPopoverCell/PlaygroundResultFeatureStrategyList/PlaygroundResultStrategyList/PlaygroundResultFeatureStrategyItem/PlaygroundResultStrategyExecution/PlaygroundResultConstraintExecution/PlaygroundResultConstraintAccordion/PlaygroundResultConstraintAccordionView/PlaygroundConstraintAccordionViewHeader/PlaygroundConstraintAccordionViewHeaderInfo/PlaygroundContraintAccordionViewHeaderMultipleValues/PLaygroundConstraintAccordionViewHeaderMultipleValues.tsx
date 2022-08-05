@@ -19,7 +19,7 @@ const StyledValuesSpan = styled('span')(({ theme }) => ({
     },
 }));
 
-interface ConstraintSingleValueProps {
+interface PLaygroundConstraintAccordionViewHeaderMultipleValueProps {
     constraint: PlaygroundConstraintSchema;
     expanded: boolean;
     maxLength: number;
@@ -31,7 +31,7 @@ export const PLaygroundConstraintAccordionViewHeaderMultipleValues = ({
     expanded,
     allowExpand,
     maxLength,
-}: ConstraintSingleValueProps) => {
+}: PLaygroundConstraintAccordionViewHeaderMultipleValueProps) => {
     const { classes: styles } = useStyles();
 
     const [expandable, setExpandable] = useState(false);

@@ -10,8 +10,8 @@ export const useStyles = makeStyles()(theme => ({
         display: 'inline-flex',
         alignItems: 'flex-start',
         justifyContent: 'center',
-        gap: '12px',
-        marginTop: '12px',
+        gap: theme.spacing(1.5),
+        marginTop: theme.spacing(1.5),
     },
     alertRow: {
         margin: theme.spacing(1, 0),
@@ -21,7 +21,7 @@ export const useStyles = makeStyles()(theme => ({
     },
     name: {
         fontWeight: 600,
-        padding: '4px',
+        padding: theme.spacing(0.5),
     },
     icon: {
         textAlign: 'right',

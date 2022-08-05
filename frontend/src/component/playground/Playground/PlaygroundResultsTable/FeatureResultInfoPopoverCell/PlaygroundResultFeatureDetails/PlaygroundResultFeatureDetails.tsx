@@ -36,8 +36,8 @@ export const PlaygroundResultFeatureDetails = ({
         : !feature.isEnabledInCurrentEnvironment
         ? 'the environment is disabled'
         : hasOnlyCustomStrategies(feature)
-        ? 'all strategies are Unevaluated'
-        : 'all strategies are False or Uneavaluated';
+        ? 'no strategies could be fully evaluated'
+        : 'all strategies are either False or could not be fully evaluated';
 
     const color = feature.isEnabled
         ? theme.palette.success.main

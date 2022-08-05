@@ -13,7 +13,7 @@ const StyledSingleValueChip = styled(Chip)(({ theme }) => ({
     },
 }));
 
-interface ConstraintSingleValueProps {
+interface PlaygroundConstraintAccordionViewHeaderSingleValueProps {
     constraint: PlaygroundConstraintSchema;
     allowExpand: (shouldExpand: boolean) => void;
 }
@@ -21,7 +21,7 @@ interface ConstraintSingleValueProps {
 export const PlaygroundConstraintAccordionViewHeaderSingleValue = ({
     constraint,
     allowExpand,
-}: ConstraintSingleValueProps) => {
+}: PlaygroundConstraintAccordionViewHeaderSingleValueProps) => {
     const { locationSettings } = useLocationSettings();
     const { classes: styles } = useStyles();
 

@@ -1,13 +1,10 @@
 export const getMappedParam = (key: string) => {
-    switch (key) {
-        case 'userIds':
-        case 'UserIds':
+    switch (key.toUpperCase()) {
+        case 'USERIDS':
             return 'userId';
-        case 'hostNames':
-        case 'HostNames':
-            return 'hostname';
-        case 'IPs':
+        case 'IPS':
             return 'remoteAddress';
+        case 'HOSTNAMES':
         default:
             return key;
     }

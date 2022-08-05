@@ -16,7 +16,8 @@ const notFoundResponse = {
 } as const;
 
 const conflictResponse = {
-    description: 'The provided resource can not be created or updated because it would conflict with the current state of the resource or with an already existing resource, respectively .',
+    description:
+        'The provided resource can not be created or updated because it would conflict with the current state of the resource or with an already existing resource, respectively .',
 } as const;
 
 const standardResponses = {

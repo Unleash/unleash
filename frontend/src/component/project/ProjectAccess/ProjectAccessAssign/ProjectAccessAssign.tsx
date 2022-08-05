@@ -321,6 +321,10 @@ export const ProjectAccessAssign = ({
                                         return option.entity.name;
                                     }
                                 }}
+                                isOptionEqualToValue={(option, value) =>
+                                    option.type === value.type &&
+                                    option.entity.id === value.entity.id
+                                }
                                 renderInput={params => (
                                     <TextField
                                         {...params}

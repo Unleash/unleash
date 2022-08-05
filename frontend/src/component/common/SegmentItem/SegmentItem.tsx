@@ -65,7 +65,7 @@ export const SegmentItem: VFC<ISegmentItemProps> = ({
                     condition={segment!.constraints?.length > 0}
                     show={
                         <ConstraintAccordionList
-                            constraints={segment!.constraints}
+                            constraints={segment.constraints}
                             showLabel={false}
                         />
                     }

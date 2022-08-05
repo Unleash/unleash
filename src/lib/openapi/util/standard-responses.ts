@@ -12,7 +12,7 @@ const badRequestResponse = {
 } as const;
 
 const notFoundResponse = {
-    description: 'The resource was not found.',
+    description: 'The requested resource was not found.',
 } as const;
 
 const conflictResponse = {

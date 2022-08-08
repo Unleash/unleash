@@ -32,6 +32,7 @@ export const useStyles = makeStyles()(theme => ({
         boxOrient: 'vertical',
         textOverflow: 'ellipsis',
         overflow: 'hidden',
+        alignItems: 'flex-start',
     },
 
     projectIcon: {

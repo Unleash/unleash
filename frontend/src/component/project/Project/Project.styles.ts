@@ -18,7 +18,7 @@ export const useStyles = makeStyles()(theme => ({
         marginBottom: '1rem',
     },
     innerContainer: {
-        padding: '1rem 2rem',
+        padding: '1.25rem 2rem',
         display: 'flex',
         alignItems: 'center',
     },

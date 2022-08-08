@@ -1,5 +1,5 @@
 import { ConstraintIcon } from 'component/common/ConstraintAccordion/ConstraintIcon';
-import { PlaygroundConstraintAccordionViewHeaderInfo } from './PlaygroundConstraintAccordionViewHeaderInfo/PlaygroundConstraintAccordionViewHeaderInfo';
+import { ConstraintAccordionViewHeaderInfo } from './ConstraintAccordionViewHeaderInfo/ConstraintAccordionViewHeaderInfo';
 import { useStyles } from 'component/common/ConstraintAccordion/ConstraintAccordion.styles';
 import {
     PlaygroundConstraintSchema,
@@ -15,7 +15,7 @@ interface PlaygroundConstraintAccordionViewHeaderProps {
     maxLength?: number;
 }
 
-export const PlaygroundConstraintAccordionViewHeader = ({
+export const ConstraintAccordionViewHeader = ({
     constraint,
     singleValue,
     allowExpand,
@@ -28,7 +28,7 @@ export const PlaygroundConstraintAccordionViewHeader = ({
     return (
         <div className={styles.headerContainer}>
             <ConstraintIcon />
-            <PlaygroundConstraintAccordionViewHeaderInfo
+            <ConstraintAccordionViewHeaderInfo
                 constraint={constraint}
                 singleValue={singleValue}
                 allowExpand={allowExpand}

@@ -18,7 +18,7 @@ interface PlaygroundConstraintAccordionViewHeaderSingleValueProps {
     allowExpand: (shouldExpand: boolean) => void;
 }
 
-export const PlaygroundConstraintAccordionViewHeaderSingleValue = ({
+export const PlaygroundSingleValue = ({
     constraint,
     allowExpand,
 }: PlaygroundConstraintAccordionViewHeaderSingleValueProps) => {

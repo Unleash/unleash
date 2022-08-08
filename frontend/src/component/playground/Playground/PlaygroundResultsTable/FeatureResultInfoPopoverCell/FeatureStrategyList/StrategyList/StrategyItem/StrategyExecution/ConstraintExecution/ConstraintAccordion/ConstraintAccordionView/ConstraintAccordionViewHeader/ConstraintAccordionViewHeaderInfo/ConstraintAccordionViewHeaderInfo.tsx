@@ -1,7 +1,7 @@
 import { styled, Tooltip, Typography, useTheme } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { PlaygroundConstraintAccordionViewHeaderSingleValue } from './PlaygroundContraintAccordionViewHeaderSingleValue/PlaygroundConstraintAccordionViewHeaderSingleValue';
-import { PLaygroundConstraintAccordionViewHeaderMultipleValues } from './PlaygroundContraintAccordionViewHeaderMultipleValues/PLaygroundConstraintAccordionViewHeaderMultipleValues';
+import { PlaygroundSingleValue } from './PlaygroundSingleValue/PlaygroundSingleValue';
+import { PLaygroundMultipleValues } from './PlaygroundMultipleValues/PLaygroundMultipleValues';
 import React from 'react';
 import { useStyles } from '../../ConstraintAccordion.styles';
 import { CancelOutlined } from '@mui/icons-material';
@@ -48,7 +48,7 @@ interface PlaygroundConstraintAccordionViewHeaderInfoProps {
     playgroundInput?: PlaygroundRequestSchema;
 }
 
-export const PlaygroundConstraintAccordionViewHeaderInfo = ({
+export const ConstraintAccordionViewHeaderInfo = ({
     constraint,
     singleValue,
     allowExpand,
@@ -87,13 +87,13 @@ export const PlaygroundConstraintAccordionViewHeaderInfo = ({
                 <ConditionallyRender
                     condition={singleValue}
                     show={
-                        <PlaygroundConstraintAccordionViewHeaderSingleValue
+                        <PlaygroundSingleValue
                             constraint={constraint}
                             allowExpand={allowExpand}
                         />
                     }
                     elseShow={
-                        <PLaygroundConstraintAccordionViewHeaderMultipleValues
+                        <PLaygroundMultipleValues
                             constraint={constraint}
                             expanded={expanded}
                             allowExpand={allowExpand}

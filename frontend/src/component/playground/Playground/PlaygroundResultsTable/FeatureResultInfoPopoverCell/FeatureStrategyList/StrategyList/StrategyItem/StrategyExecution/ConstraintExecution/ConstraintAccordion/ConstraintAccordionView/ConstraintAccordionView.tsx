@@ -7,7 +7,7 @@ import {
     Theme,
     useTheme,
 } from '@mui/material';
-import { PlaygroundConstraintAccordionViewHeader } from './PlaygroundConstraintAccordionViewHeader/PlaygroundConstraintAccordionViewHeader';
+import { ConstraintAccordionViewHeader } from './ConstraintAccordionViewHeader/ConstraintAccordionViewHeader';
 import { oneOf } from 'utils/oneOf';
 import {
     dateOperators,
@@ -73,7 +73,7 @@ export const ConstraintAccordionView: VFC<IConstraintAccordionViewProps> = ({
                     backgroundColor: backgroundColor,
                 }}
             >
-                <PlaygroundConstraintAccordionViewHeader
+                <ConstraintAccordionViewHeader
                     constraint={constraint}
                     singleValue={singleValue}
                     allowExpand={setExpandable}

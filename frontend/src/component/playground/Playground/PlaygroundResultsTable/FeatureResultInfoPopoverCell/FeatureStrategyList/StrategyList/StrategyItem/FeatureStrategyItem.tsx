@@ -13,14 +13,12 @@ interface IFeatureStrategyItemProps {
     strategy: PlaygroundStrategySchema;
     index: number;
     input?: PlaygroundRequestSchema;
-    compact: boolean;
 }
 
 export const FeatureStrategyItem = ({
     strategy,
     input,
     index,
-    compact,
 }: IFeatureStrategyItemProps) => {
     const { result } = strategy;
     const { classes: styles } = useStyles();

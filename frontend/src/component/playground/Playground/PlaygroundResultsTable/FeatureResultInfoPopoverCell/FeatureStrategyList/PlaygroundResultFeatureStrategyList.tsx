@@ -1,4 +1,4 @@
-import { PlaygroundResultStrategyLists } from './PlaygroundResultStrategyList/playgroundResultStrategyLists';
+import { PlaygroundResultStrategyLists } from './StrategyList/playgroundResultStrategyLists';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
     PlaygroundFeatureSchema,

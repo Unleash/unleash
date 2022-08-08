@@ -26,7 +26,7 @@ interface PLaygroundConstraintAccordionViewHeaderMultipleValueProps {
     allowExpand: (shouldExpand: boolean) => void;
 }
 
-export const PLaygroundConstraintAccordionViewHeaderMultipleValues = ({
+export const PLaygroundMultipleValues = ({
     constraint,
     expanded,
     allowExpand,

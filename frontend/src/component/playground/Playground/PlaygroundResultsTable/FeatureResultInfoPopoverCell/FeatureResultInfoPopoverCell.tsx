@@ -6,8 +6,8 @@ import { IconButton, Popover, styled } from '@mui/material';
 import { InfoOutlined } from '@mui/icons-material';
 import React, { useRef, useState } from 'react';
 import { useStyles } from './FeatureResultInfoPopoverCell.styles';
-import { PlaygroundResultFeatureDetails } from './PlaygroundResultFeatureDetails/PlaygroundResultFeatureDetails';
-import { PlaygroundResultFeatureStrategyList } from './PlaygroundResultFeatureStrategyList/PlaygroundResultFeatureStrategyList';
+import { FeatureDetails } from './FeatureDetails/FeatureDetails';
+import { PlaygroundResultFeatureStrategyList } from './FeatureStrategyList/PlaygroundResultFeatureStrategyList';
 
 interface FeatureResultInfoPopoverCellProps {
     feature: PlaygroundFeatureSchema;
@@ -54,7 +54,7 @@ export const FeatureResultInfoPopoverCell = ({
                 }}
                 classes={{ paper: styles.popoverPaper }}
             >
-                <PlaygroundResultFeatureDetails
+                <FeatureDetails
                     feature={feature}
                     input={input}
                     onClose={() => setOpen(false)}

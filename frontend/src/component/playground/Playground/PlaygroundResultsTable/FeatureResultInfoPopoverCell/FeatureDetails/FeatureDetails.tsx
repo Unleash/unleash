@@ -4,7 +4,7 @@ import {
 } from '../../../../../../hooks/api/actions/usePlayground/playground.model';
 import { Alert, IconButton, Typography, useTheme } from '@mui/material';
 import { PlaygroundResultChip } from '../../PlaygroundResultChip/PlaygroundResultChip';
-import { useStyles } from './PlaygroundResultFeatureDetails.styles';
+import { useStyles } from './FeatureDetails.styles';
 import { CloseOutlined } from '@mui/icons-material';
 import React from 'react';
 import { ConditionallyRender } from '../../../../../common/ConditionallyRender/ConditionallyRender';
@@ -19,7 +19,7 @@ interface PlaygroundFeatureResultDetailsProps {
     input?: PlaygroundRequestSchema;
     onClose: () => void;
 }
-export const PlaygroundResultFeatureDetails = ({
+export const FeatureDetails = ({
     feature,
     input,
     onClose,

@@ -8,13 +8,47 @@ Version 1 of the Unleash playground is available from Unleash v4.14 onwards. Ver
 
 :::
 
-The unleash playground is a place for you to learn about
+The unleash playground is a part of the Unleash Admin UI and an accompanying API. The playground lets you see which of your instance's feature toggles would be enabled for a given Unleash context. It has multiple uses, such as:
 
-## Use cases and background
+-   Understanding how Unleash evaluates strategies, constraints, and segments.
+-   Debugging Unleash contexts and toggles behaving differently from what you expect.
+-   Tailoring a set of strategies for given contexts.
 
-## As a debugging tool
+## Configuring the context
+
+### Access configuration
+
+While technically not part of the Unleash context proper, the playground needs to know what environment to evaluate the toggles against, and it also requires a list of projects to evaluate feature toggles from.
+
+You can only evaluate features for a single environment at a time, but you can choose as many projects as you want.
+
+### The Unleash context
+
+Link to the Unleash context.
+
+#### Required fields
+
+The appName field is required when evaluating Unleash contexts. If you do not provide one, the playground will assign a default value to this property instead.
+
+#### Implicit fields
+
+Also, the currentTime property will get populated with the current time upon evaluation if you do not assign a time to it.
 
 ## Unknown strategies
+
+Not all strategies can be correctly evaluated by the playground. Strategies that cannot be evaluated fully will be given an evaluation result status of 'incomplete'. Note that even if the playground can't evaluate the strategy, there may still be constraints or segments that fail and that give the strategy a result of false.
+
+There's currently two cases where the playground can't evaluate the strategy:
+- The strategy is a custom strategy and the playground doesn't have an implementation for the strategy.
+- The strategy is the 'Application Hostname' strategy.
+
+Note that even ....
+
+### Custom Strategies
+
+The playground does not have any implementations for custom strategies, so it can't evaluate them. Strategies that the playground
+
+### The Application Hostname strategy
 
 ## Strategies that can't be evaluated
 

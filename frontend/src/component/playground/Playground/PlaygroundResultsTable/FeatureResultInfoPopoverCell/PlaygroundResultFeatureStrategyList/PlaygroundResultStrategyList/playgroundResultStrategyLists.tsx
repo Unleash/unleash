@@ -1,3 +1,4 @@
+import { Fragment } from 'react';
 import { Alert, Box, styled, Typography } from '@mui/material';
 import {
     PlaygroundFeatureSchema,
@@ -46,7 +47,7 @@ export const PlaygroundResultStrategyLists = ({
                 >{`Strategies (${strategies.length})`}</Typography>
                 <Box sx={{ width: '100%' }}>
                     {strategies.map((strategy, index) => (
-                        <>
+                        <Fragment key={strategy.id}>
                             <ConditionallyRender
                                 condition={index > 0}
                                 show={<StrategySeparator text="OR" />}
@@ -58,7 +59,7 @@ export const PlaygroundResultStrategyLists = ({
                                 compact={compact}
                                 input={input}
                             />
-                        </>
+                        </Fragment>
                     ))}
                 </Box>
             </>

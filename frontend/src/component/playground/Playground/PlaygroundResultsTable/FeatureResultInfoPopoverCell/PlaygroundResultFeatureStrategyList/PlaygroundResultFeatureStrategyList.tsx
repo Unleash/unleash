@@ -25,7 +25,7 @@ export const PlaygroundResultFeatureStrategyList = ({
                 show={
                     <Alert severity={'info'} color={'info'}>
                         If environment would be enabled then this feature would
-                        be {feature.strategies.result ? 'TRUE' : 'FALSE'} and
+                        be {feature.strategies?.result ? 'TRUE' : 'FALSE'} and
                         the strategies would evaluate like this:{' '}
                     </Alert>
                 }

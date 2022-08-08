@@ -4,14 +4,14 @@ import {
 } from 'utils/parseParameter';
 import { Box, Chip } from '@mui/material';
 import PercentageCircle from 'component/common/PercentageCircle/PercentageCircle';
-import { PlaygroundConstraintItem } from '../PlaygroundConstraintItem/PlaygroundConstraintItem';
+import { PlaygroundParameterItem } from '../PlaygroundParamteterItem/PlaygroundParameterItem';
 import React from 'react';
 import { useStyles } from '../PlaygroundResultStrategyExecution.styles';
 import {
     PlaygroundConstraintSchema,
     PlaygroundRequestSchema,
 } from 'hooks/api/actions/usePlayground/playground.model';
-import { getMappedParam } from '../helepers';
+import { getMappedParam } from '../helpers';
 
 export interface PlaygroundResultStrategyExecutionParametersProps {
     parameters: { [key: string]: string };
@@ -62,7 +62,7 @@ export const PlaygroundResultStrategyExecutionParameters = ({
                 case 'UserIds':
                     const users = parseParameterStrings(parameters[key]);
                     return (
-                        <PlaygroundConstraintItem
+                        <PlaygroundParameterItem
                             key={key}
                             value={users}
                             text="user"
@@ -84,7 +84,7 @@ export const PlaygroundResultStrategyExecutionParameters = ({
                 case 'HostNames':
                     const hosts = parseParameterStrings(parameters[key]);
                     return (
-                        <PlaygroundConstraintItem
+                        <PlaygroundParameterItem
                             key={key}
                             value={hosts}
                             text={'host'}
@@ -105,7 +105,7 @@ export const PlaygroundResultStrategyExecutionParameters = ({
                 case 'IPs':
                     const IPs = parseParameterStrings(parameters[key]);
                     return (
-                        <PlaygroundConstraintItem
+                        <PlaygroundParameterItem
                             key={key}
                             value={IPs}
                             text={'IP'}

@@ -1,18 +1,18 @@
 import { Chip, Typography, useTheme } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useStyles } from './PlaygroundConstraintItem.styles';
+import { useStyles } from './PlaygroundParametertem.styles';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { CancelOutlined } from '@mui/icons-material';
 import classnames from 'classnames';
 
 interface IConstraintItemProps {
-    value: string[];
+    value: Array<string | number>;
     text: string;
     input?: string | number | boolean | 'no value';
     showReason?: boolean;
 }
 
-export const PlaygroundConstraintItem = ({
+export const PlaygroundParameterItem = ({
     value,
     text,
     input,
@@ -56,13 +56,13 @@ export const PlaygroundConstraintItem = ({
                                 {value.length > 1 ? `${text}s` : text} will get
                                 access.
                             </p>
-                            {value.map((v: string) => (
+                            {value.map((v: string | number) => (
                                 <Chip
                                     key={v}
                                     label={
                                         <StringTruncator
                                             maxWidth="300"
-                                            text={v}
+                                            text={v.toString()}
                                             maxLength={50}
                                         />
                                     }

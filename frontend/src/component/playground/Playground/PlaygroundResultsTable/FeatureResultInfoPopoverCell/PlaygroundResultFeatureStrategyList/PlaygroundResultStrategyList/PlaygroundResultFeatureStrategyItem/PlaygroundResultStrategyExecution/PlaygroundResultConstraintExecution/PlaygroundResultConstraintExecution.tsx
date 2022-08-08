@@ -33,7 +33,7 @@ export const PlaygroundResultConstraintExecution = ({
             {constraints?.map((constraint, index) => (
                 <Fragment key={objectId(constraint)}>
                     <ConditionallyRender
-                        condition={index > 0}
+                        condition={index > 0 && constraints?.length > 1}
                         show={<StrategySeparator text="AND" />}
                     />
                     <PlaygroundResultConstraintAccordionView

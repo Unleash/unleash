@@ -302,14 +302,13 @@ module.exports = {
             items: ['topics/a-b-testing', 'topics/proxy-hosting'],
         },
         {
-            label: 'API operations',
+            label: 'OpenAPI',
             collapsed: true,
             type: 'category',
             link: {
                 type: 'generated-index',
                 title: 'API docs',
                 description: 'Generated API docs for the OpenAPI spec',
-                slug: '/openapi',
             },
             items: [
                 {

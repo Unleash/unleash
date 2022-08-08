@@ -6,7 +6,7 @@
     "rules": {},
     "settings": {},
     "parserOptions": {
-        "project": "../../tsconfig.json"
+        "project": "tsconfig.json"
     },
     "overrides": [
         {

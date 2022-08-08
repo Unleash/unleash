@@ -1,16 +1,17 @@
+import { VFC } from 'react';
 import {
     PlaygroundSegmentSchema,
     PlaygroundRequestSchema,
-} from '../../../../../../../../../../hooks/api/actions/usePlayground/playground.model';
-import { PlaygroundResultConstraintExecution } from '../PlaygroundResultConstraintExecution/PlaygroundResultConstraintExecution';
+} from 'hooks/api/actions/usePlayground/playground.model';
+import { ConstraintExecution } from '../ConstraintExecution/ConstraintExecution';
 import { CancelOutlined, DonutLarge } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
-import { StrategySeparator } from '../../../../../../../../../common/StrategySeparator/StrategySeparator';
-import { useStyles } from './PlaygroundResultSegmentExecution.styles';
+import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
+import { useStyles } from './SegmentExecution.styles';
 import { styled, Typography } from '@mui/material';
-import { ConditionallyRender } from '../../../../../../../../../common/ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
-interface PlaygroundResultSegmentExecutionProps {
+interface ISegmentExecutionProps {
     segments?: PlaygroundSegmentSchema[];
     input?: PlaygroundRequestSchema;
     hasConstraints: boolean;
@@ -58,11 +59,11 @@ const SegmentResultTextWrapper = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
-export const PlaygroundResultSegmentExecution = ({
+export const SegmentExecution: VFC<ISegmentExecutionProps> = ({
     segments,
     input,
     hasConstraints,
-}: PlaygroundResultSegmentExecutionProps) => {
+}) => {
     const { classes: styles } = useStyles();
 
     if (!segments) return null;
@@ -99,7 +100,7 @@ export const PlaygroundResultSegmentExecution = ({
                         />
                     </SegmentExecutionHeader>
                     <SegmentExecutionConstraintWrapper>
-                        <PlaygroundResultConstraintExecution
+                        <ConstraintExecution
                             constraints={segment.constraints}
                             input={input}
                             compact

@@ -1,10 +1,10 @@
+import React, { Fragment, VFC } from 'react';
 import {
     parseParameterNumber,
     parseParameterString,
     parseParameterStrings,
 } from 'utils/parseParameter';
-import React, { Fragment } from 'react';
-import { PlaygroundParameterItem } from '../PlaygroundParamteterItem/PlaygroundParameterItem';
+import { PlaygroundParameterItem } from '../PlaygroundParameterItem/PlaygroundParameterItem';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 import { Chip } from '@mui/material';
@@ -12,17 +12,17 @@ import PercentageCircle from 'component/common/PercentageCircle/PercentageCircle
 import { PlaygroundConstraintSchema } from 'hooks/api/actions/usePlayground/playground.model';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 
-interface PlaygroundResultStrategyExecutionCustomStrategyProps {
+interface ICustomStrategyProps {
     parameters: { [key: string]: string };
     strategyName: string;
     constraints: PlaygroundConstraintSchema[];
 }
 
-export const PlaygroundResultStrategyExecutionCustomStrategyParams = ({
+export const CustomStrategyParams: VFC<ICustomStrategyProps> = ({
     strategyName,
     constraints,
     parameters,
-}: PlaygroundResultStrategyExecutionCustomStrategyProps) => {
+}) => {
     const { strategies } = useStrategies();
     const definition = strategies.find(strategyDefinition => {
         return strategyDefinition.name === strategyName;

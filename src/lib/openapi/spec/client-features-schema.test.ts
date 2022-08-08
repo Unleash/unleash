@@ -22,6 +22,16 @@ test('clientFeaturesSchema required fields', () => {
                         weight: 1,
                         weightType: 'b',
                         stickiness: 'c',
+                        payload: {
+                            type: 'a',
+                            value: 'b',
+                        },
+                        overrides: [
+                            {
+                                contextName: 'a',
+                                values: ['b'],
+                            },
+                        ],
                     },
                 ],
             },

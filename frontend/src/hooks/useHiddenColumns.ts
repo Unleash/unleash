@@ -9,7 +9,7 @@ const useHiddenColumns = (
     useEffect(() => {
         const hidden = condition ? hiddenColumns : [];
         setHiddenColumns(hidden);
-    }, [setHiddenColumns, condition]);
+    }, [setHiddenColumns, hiddenColumns, condition]);
 };
 
 export default useHiddenColumns;

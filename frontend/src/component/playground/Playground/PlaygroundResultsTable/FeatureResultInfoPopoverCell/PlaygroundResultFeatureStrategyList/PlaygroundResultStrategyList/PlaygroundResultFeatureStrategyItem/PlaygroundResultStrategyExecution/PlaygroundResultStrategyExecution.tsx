@@ -36,7 +36,7 @@ export const PlaygroundResultStrategyExecution = ({
     const { uiConfig } = useUiConfig();
     const { classes: styles } = useStyles();
 
-    const hasConstraints = Boolean(constraints && constraints.length > 0);
+    const hasConstraints = Boolean(constraints && constraints?.length > 0);
     const hasParameters = Object.keys(parameters).length === 0;
 
     if (!parameters) {

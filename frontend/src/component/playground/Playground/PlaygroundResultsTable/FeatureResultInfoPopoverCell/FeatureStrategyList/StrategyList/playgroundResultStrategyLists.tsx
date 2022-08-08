@@ -29,13 +29,11 @@ const StyledAlert = styled(Alert)(() => ({
 interface PlaygroundResultStrategyListProps {
     strategies: PlaygroundStrategySchema[];
     input?: PlaygroundRequestSchema;
-    compact?: boolean;
 }
 
 export const PlaygroundResultStrategyLists = ({
     strategies,
     input,
-    compact = false,
 }: PlaygroundResultStrategyListProps) => (
     <ConditionallyRender
         condition={strategies.length > 0}
@@ -87,7 +85,6 @@ export const WrappedPlaygroundResultStrategyList = ({
                 <PlaygroundResultStrategyLists
                     strategies={strategies}
                     input={input}
-                    compact
                 />
             </StyledListWrapper>
         </StyledAlertWrapper>

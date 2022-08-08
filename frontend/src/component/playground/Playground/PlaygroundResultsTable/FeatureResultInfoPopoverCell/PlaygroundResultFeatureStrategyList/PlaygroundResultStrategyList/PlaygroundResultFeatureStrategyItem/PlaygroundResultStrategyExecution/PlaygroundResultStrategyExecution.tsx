@@ -69,7 +69,9 @@ export const PlaygroundResultStrategyExecution = ({
                         />
                         <ConditionallyRender
                             condition={Boolean(
-                                constraints && constraints.length > 0 && !hasParameters
+                                constraints &&
+                                    constraints.length > 0 &&
+                                    !hasParameters
                             )}
                             show={<StrategySeparator text="AND" />}
                         />

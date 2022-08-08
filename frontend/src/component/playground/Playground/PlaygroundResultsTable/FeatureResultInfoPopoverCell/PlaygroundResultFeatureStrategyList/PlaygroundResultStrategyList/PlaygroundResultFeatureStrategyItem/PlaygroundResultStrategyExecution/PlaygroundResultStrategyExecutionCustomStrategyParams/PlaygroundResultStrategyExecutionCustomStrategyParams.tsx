@@ -7,7 +7,7 @@ import React, { Fragment } from 'react';
 import { PlaygroundParameterItem } from '../PlaygroundParamteterItem/PlaygroundParameterItem';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
-import {Chip} from '@mui/material';
+import { Chip } from '@mui/material';
 import PercentageCircle from 'component/common/PercentageCircle/PercentageCircle';
 import { PlaygroundConstraintSchema } from 'hooks/api/actions/usePlayground/playground.model';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
@@ -96,7 +96,9 @@ export const PlaygroundResultStrategyExecutionCustomStrategyParams = ({
                         </Fragment>
                     );
                 case 'string':
-                    const value = parseParameterString(parameters[param.name]) ?? 'no value';
+                    const value =
+                        parseParameterString(parameters[param.name]) ??
+                        'no value';
                     return (
                         <Fragment key={param?.name}>
                             <PlaygroundParameterItem

@@ -1,7 +1,7 @@
 import {
     PlaygroundFeatureSchema,
     PlaygroundRequestSchema,
-} from '../../../../../../hooks/api/actions/usePlayground/playground.model';
+} from 'hooks/api/actions/usePlayground/playground.model';
 import { Alert, IconButton, Typography, useTheme } from '@mui/material';
 import { PlaygroundResultChip } from '../../PlaygroundResultChip/PlaygroundResultChip';
 import { useStyles } from './FeatureDetails.styles';
@@ -32,17 +32,16 @@ export const FeatureDetails = ({
         : `This feature toggle is False in ${input?.environment} because `;
 
     const reason = (() => {
-        if (feature.isEnabled)
-            return 'at least one strategy is True';
+        if (feature.isEnabled) return 'at least one strategy is True';
 
         if (!feature.isEnabledInCurrentEnvironment)
             return 'the environment is disabled';
 
         if (hasOnlyCustomStrategies(feature))
-            return  'no strategies could be fully evaluated'
+            return 'no strategies could be fully evaluated';
 
         return 'all strategies are either False or could not be fully evaluated';
-    })()
+    })();
 
     const color = feature.isEnabled
         ? theme.palette.success.main

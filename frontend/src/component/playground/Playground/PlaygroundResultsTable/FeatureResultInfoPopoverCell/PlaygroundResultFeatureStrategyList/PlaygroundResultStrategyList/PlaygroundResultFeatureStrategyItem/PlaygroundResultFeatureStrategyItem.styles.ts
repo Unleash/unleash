@@ -34,4 +34,7 @@ export const useStyles = makeStyles()(theme => ({
         borderRadius: theme.shape.borderRadiusMedium,
         background: theme.palette.background.default,
     },
+    successBorder: {
+        border: `1px solid ${theme.palette.success.main}`,
+    },
 }));

@@ -4,11 +4,13 @@ export const useStyles = makeStyles()(theme => ({
     popoverPaper: {
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'flex-start',
+        // alignItems: 'flex-start',
         padding: theme.spacing(6),
-        maxWidth: '728px',
+        // maxWidth: '728px',
+        width: 728,
+        maxWidth: '100%',
         height: 'auto',
-        overflowY: 'scroll',
+        overflowY: 'auto',
         backgroundColor: theme.palette.tertiary.light,
     },
 }));

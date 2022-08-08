@@ -1,11 +1,12 @@
+import { Alert, Box, styled, Typography } from '@mui/material';
 import {
     PlaygroundFeatureSchema,
     PlaygroundStrategySchema,
     PlaygroundRequestSchema,
-} from '../../../../../../../hooks/api/actions/usePlayground/playground.model';
-import { ConditionallyRender } from '../../../../../../common/ConditionallyRender/ConditionallyRender';
-import { Alert, styled, Typography } from '@mui/material';
+} from 'hooks/api/actions/usePlayground/playground.model';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PlaygroundResultFeatureStrategyItem } from './PlaygroundResultFeatureStrategyItem/PlaygroundResultFeatureStrategyItem';
+import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 
 const StyledAlertWrapper = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -34,30 +35,36 @@ export const PlaygroundResultStrategyLists = ({
     strategies,
     input,
     compact = false,
-}: PlaygroundResultStrategyListProps) => {
-    return (
-        <ConditionallyRender
-            condition={strategies.length > 0}
-            show={
-                <>
-                    <Typography
-                        variant={'subtitle1'}
-                        sx={{ mt: 2, ml: 1, mb: 2, color: 'text.secondary' }}
-                    >{`Strategies (${strategies.length})`}</Typography>
+}: PlaygroundResultStrategyListProps) => (
+    <ConditionallyRender
+        condition={strategies.length > 0}
+        show={
+            <>
+                <Typography
+                    variant={'subtitle1'}
+                    sx={{ mt: 2, ml: 1, mb: 2, color: 'text.secondary' }}
+                >{`Strategies (${strategies.length})`}</Typography>
+                <Box sx={{ width: '100%' }}>
                     {strategies.map((strategy, index) => (
-                        <PlaygroundResultFeatureStrategyItem
-                            key={strategy.id}
-                            strategy={strategy}
-                            index={index}
-                            compact={compact}
-                            input={input}
-                        />
+                        <>
+                            <ConditionallyRender
+                                condition={index > 0}
+                                show={<StrategySeparator text="OR" />}
+                            />
+                            <PlaygroundResultFeatureStrategyItem
+                                key={strategy.id}
+                                strategy={strategy}
+                                index={index}
+                                compact={compact}
+                                input={input}
+                            />
+                        </>
                     ))}
-                </>
-            }
-        />
-    );
-};
+                </Box>
+            </>
+        }
+    />
+);
 
 interface WrappedPlaygroundResultStrategyListProps
     extends PlaygroundResultStrategyListProps {

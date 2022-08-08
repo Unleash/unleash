@@ -17,6 +17,7 @@ interface IStrategyItemContainerProps {
     onDragEnd?: DragEventHandler<HTMLButtonElement>;
     actions?: ReactNode;
     orderNumber?: number;
+    className?: string;
 }
 
 const DragIcon = styled(IconButton)(({ theme }) => ({
@@ -44,6 +45,7 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
     actions,
     children,
     orderNumber,
+    className,
 }) => {
     const { classes: styles } = useStyles();
     const Icon = getFeatureStrategyIcon(strategy.name);
@@ -54,8 +56,7 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
                 condition={orderNumber !== undefined}
                 show={<StyledIndexLabel>{orderNumber}</StyledIndexLabel>}
             />
-
-            <div className={styles.container}>
+            <Box className={classNames(styles.container, className)}>
                 <div
                     className={classNames(styles.header, {
                         [styles.headerDraggable]: Boolean(onDragStart),
@@ -89,7 +90,7 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
                     <div className={styles.actions}>{actions}</div>
                 </div>
                 <div className={styles.body}>{children}</div>
-            </div>
+            </Box>
         </Box>
     );
 };

@@ -56,7 +56,6 @@ export const PlaygroundResultStrategyLists = ({
                                 key={strategy.id}
                                 strategy={strategy}
                                 index={index}
-                                compact={compact}
                                 input={input}
                             />
                         </Fragment>

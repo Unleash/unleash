@@ -4,21 +4,44 @@ import useLoading from 'hooks/useLoading';
 import ApiError from 'component/common/ApiError/ApiError';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useStyles } from './Project.styles';
-import { Tab, Tabs } from '@mui/material';
-import { Edit } from '@mui/icons-material';
+import { styled, Tab, Tabs } from '@mui/material';
+import { Delete, Edit } from '@mui/icons-material';
 import useToast from 'hooks/useToast';
 import useQueryParams from 'hooks/useQueryParams';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { ProjectAccess } from '../ProjectAccess/ProjectAccess';
 import ProjectEnvironment from '../ProjectEnvironment/ProjectEnvironment';
 import { ProjectFeaturesArchive } from './ProjectFeaturesArchive/ProjectFeaturesArchive';
 import ProjectOverview from './ProjectOverview';
 import ProjectHealth from './ProjectHealth/ProjectHealth';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
-import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
+import {
+    DELETE_PROJECT,
+    UPDATE_PROJECT,
+} from 'component/providers/AccessProvider/permissions';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { Routes, Route, useLocation } from 'react-router-dom';
+import { DeleteProjectDialogue } from './DeleteProject/DeleteProjectDialogue';
+
+const StyledDiv = styled('div')(() => ({
+    display: 'flex',
+}));
+
+const StyledName = styled('div')(({ theme }) => ({
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    paddingBottom: theme.spacing(2),
+}));
+
+const StyledTitle = styled('span')(({ theme }) => ({
+    fontSize: theme.fontSizes.smallBody,
+    fontWeight: 'normal',
+}));
+const StyledText = styled(StyledTitle)(({ theme }) => ({
+    color: theme.palette.grey[800],
+}));
 
 const Project = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -32,6 +55,8 @@ const Project = () => {
     const { isOss } = useUiConfig();
     const basePath = `/projects/${projectId}`;
     const projectName = project?.name || projectId;
+
+    const [showDelDialog, setShowDelDialog] = useState(false);
 
     const tabs = [
         {
@@ -85,21 +110,60 @@ const Project = () => {
             <div className={styles.header}>
                 <div className={styles.innerContainer}>
                     <h2 className={styles.title}>
-                        <div className={styles.titleText} data-loading>
-                            {projectName}
+                        <div>
+                            <StyledName data-loading>{projectName}</StyledName>
+                            <ConditionallyRender
+                                condition={Boolean(project.description)}
+                                show={
+                                    <StyledDiv>
+                                        <StyledTitle data-loading>
+                                            Description:&nbsp;
+                                        </StyledTitle>
+                                        <StyledText data-loading>
+                                            {project.description}
+                                        </StyledText>
+                                    </StyledDiv>
+                                }
+                            />
+                            <StyledDiv>
+                                <StyledTitle data-loading>
+                                    projectId:&nbsp;
+                                </StyledTitle>
+                                <StyledText data-loading>
+                                    {projectId}
+                                </StyledText>
+                            </StyledDiv>
                         </div>
-                        <PermissionIconButton
-                            permission={UPDATE_PROJECT}
-                            projectId={projectId}
-                            sx={{ visibility: isOss() ? 'hidden' : 'visible' }}
-                            onClick={() =>
-                                navigate(`/projects/${projectId}/edit`)
-                            }
-                            tooltipProps={{ title: 'Edit project' }}
-                            data-loading
-                        >
-                            <Edit />
-                        </PermissionIconButton>
+                        <StyledDiv>
+                            <PermissionIconButton
+                                permission={UPDATE_PROJECT}
+                                projectId={projectId}
+                                sx={{
+                                    visibility: isOss() ? 'hidden' : 'visible',
+                                }}
+                                onClick={() =>
+                                    navigate(`/projects/${projectId}/edit`)
+                                }
+                                tooltipProps={{ title: 'Edit project' }}
+                                data-loading
+                            >
+                                <Edit />
+                            </PermissionIconButton>
+                            <PermissionIconButton
+                                permission={DELETE_PROJECT}
+                                projectId={projectId}
+                                sx={{
+                                    visibility: isOss() ? 'hidden' : 'visible',
+                                }}
+                                onClick={() => {
+                                    setShowDelDialog(true);
+                                }}
+                                tooltipProps={{ title: 'Delete project' }}
+                                data-loading
+                            >
+                                <Delete />
+                            </PermissionIconButton>
+                        </StyledDiv>
                     </h2>
                 </div>
                 <ConditionallyRender
@@ -132,6 +196,16 @@ const Project = () => {
                     </Tabs>
                 </div>
             </div>
+            <DeleteProjectDialogue
+                project={projectId}
+                open={showDelDialog}
+                onClose={() => {
+                    setShowDelDialog(false);
+                }}
+                onSuccess={() => {
+                    navigate('/projects');
+                }}
+            />
             <Routes>
                 <Route path="health" element={<ProjectHealth />} />
                 <Route path="access/*" element={<ProjectAccess />} />

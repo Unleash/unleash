@@ -42,18 +42,18 @@ export const RemoveGroup: FC<IRemoveGroupProps> = ({
     return (
         <Dialogue
             open={open}
-            primaryButtonText="Remove"
+            primaryButtonText="Delete group"
             secondaryButtonText="Cancel"
             onClick={onRemoveClick}
             onClose={() => {
                 setOpen(false);
             }}
-            title="Delete group"
+            title="Delete group?"
         >
             <Typography>
-                Are you sure you wish to delete <strong>{group.name}</strong>?
-                If this group is currently assigned to one or more projects then
-                users belonging to this group may lose access to those projects.
+                Do you really want to delete <strong>{group.name}</strong>?
+                Users who are granted access to projects only via this group
+                will lose access to those projects.
             </Typography>
         </Dialogue>
     );

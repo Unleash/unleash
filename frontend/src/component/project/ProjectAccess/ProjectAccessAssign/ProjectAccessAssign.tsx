@@ -47,8 +47,8 @@ const StyledAutocompleteWrapper = styled('div')(({ theme }) => ({
     },
 }));
 
-const StyledButtonContainer = styled('div')(() => ({
-    marginTop: 'auto',
+const StyledButtonContainer = styled('div')(({ theme }) => ({
+    marginTop: theme.spacing(6),
     display: 'flex',
     justifyContent: 'flex-end',
 }));

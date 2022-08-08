@@ -7,7 +7,6 @@ import {
     PlaygroundStrategySchema,
 } from 'hooks/api/actions/usePlayground/playground.model';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import React from 'react';
 import { PlaygroundResultConstraintExecution } from './PlaygroundResultConstraintExecution/PlaygroundResultConstraintExecution';
 import { PlaygroundResultSegmentExecution } from './PlaygroundResultSegmentExecution/PlaygroundResultSegmentExecution';
 import { PlaygroundResultStrategyExecutionParameters } from './PlaygroundResultStrategyExecutionParameters/PlaygroundResultStrategyExecutionParameters';

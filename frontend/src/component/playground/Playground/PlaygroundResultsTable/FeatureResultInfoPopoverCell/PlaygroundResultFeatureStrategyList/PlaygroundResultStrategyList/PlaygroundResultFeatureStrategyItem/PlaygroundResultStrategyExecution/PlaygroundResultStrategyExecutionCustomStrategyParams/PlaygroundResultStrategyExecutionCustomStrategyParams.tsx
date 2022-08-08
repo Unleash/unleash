@@ -4,12 +4,14 @@ import {
     parseParameterStrings,
 } from 'utils/parseParameter';
 import React, { Fragment } from 'react';
-import { PlaygroundParameterItem } from '../PlaygroundParamteterItem/PlaygroundParameterItem';
+import { PlaygroundConstraintItem } from '../PlaygroundConstraintItem/PlaygroundConstraintItem';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 import { Chip } from '@mui/material';
 import PercentageCircle from 'component/common/PercentageCircle/PercentageCircle';
+import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { PlaygroundConstraintSchema } from 'hooks/api/actions/usePlayground/playground.model';
+import { useStyles } from '../PlaygroundResultStrategyExecution.styles';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 
 interface PlaygroundResultStrategyExecutionCustomStrategyProps {
@@ -23,16 +25,15 @@ export const PlaygroundResultStrategyExecutionCustomStrategyParams = ({
     constraints,
     parameters,
 }: PlaygroundResultStrategyExecutionCustomStrategyProps) => {
+    const { classes: styles } = useStyles();
     const { strategies } = useStrategies();
+
     const definition = strategies.find(strategyDefinition => {
         return strategyDefinition.name === strategyName;
     });
 
-    if (!definition?.editable) {
-        return null;
-    }
-
     const renderCustomStrategyParameters = () => {
+        if (!definition?.editable) return null;
         return definition?.parameters.map((param: any, index: number) => {
             const notLastItem = index !== definition?.parameters?.length - 1;
             switch (param?.type) {
@@ -42,7 +43,7 @@ export const PlaygroundResultStrategyExecutionCustomStrategyParams = ({
                     );
                     return (
                         <Fragment key={param?.name}>
-                            <PlaygroundParameterItem
+                            <PlaygroundConstraintItem
                                 value={values}
                                 text={param.name}
                             />
@@ -80,54 +81,93 @@ export const PlaygroundResultStrategyExecutionCustomStrategyParams = ({
                         </Fragment>
                     );
                 case 'boolean':
-                    const bool = Boolean(parameters[param?.name]);
                     return (
-                        <Fragment key={param?.name}>
-                            <PlaygroundParameterItem
-                                value={bool ? ['True'] : []}
-                                text={param.name}
-                                showReason={!bool}
-                                input={bool ? bool : 'no value'}
-                            />
+                        <Fragment key={param.name}>
+                            <p key={param.name}>
+                                <StringTruncator
+                                    maxLength={15}
+                                    maxWidth="150"
+                                    text={param.name}
+                                />{' '}
+                                {parameters[param.name]}
+                            </p>
                             <ConditionallyRender
-                                condition={notLastItem}
-                                show={<StrategySeparator text="AND" />}
+                                condition={
+                                    typeof parameters[param.name] !==
+                                    'undefined'
+                                }
+                                show={
+                                    <ConditionallyRender
+                                        condition={notLastItem}
+                                        show={<StrategySeparator text="AND" />}
+                                    />
+                                }
                             />
                         </Fragment>
                     );
                 case 'string':
-                    const value =
-                        parseParameterString(parameters[param.name]) ??
-                        'no value';
+                    const value = parseParameterString(parameters[param.name]);
                     return (
-                        <Fragment key={param?.name}>
-                            <PlaygroundParameterItem
-                                value={value !== '' ? [value] : []}
-                                text={param.name}
-                                showReason={value === ''}
-                                input={value !== '' ? value : 'no value'}
-                            />
-                            <ConditionallyRender
-                                condition={notLastItem}
-                                show={<StrategySeparator text="AND" />}
-                            />
-                        </Fragment>
+                        <ConditionallyRender
+                            condition={
+                                typeof parameters[param.name] !== 'undefined'
+                            }
+                            key={param.name}
+                            show={
+                                <>
+                                    <p className={styles.valueContainer}>
+                                        <StringTruncator
+                                            maxWidth="150"
+                                            maxLength={15}
+                                            text={param.name}
+                                        />
+                                        <span className={styles.valueSeparator}>
+                                            is set to
+                                        </span>
+                                        <StringTruncator
+                                            maxWidth="300"
+                                            text={value}
+                                            maxLength={50}
+                                        />
+                                    </p>
+                                    <ConditionallyRender
+                                        condition={notLastItem}
+                                        show={<StrategySeparator text="AND" />}
+                                    />
+                                </>
+                            }
+                        />
                     );
                 case 'number':
                     const number = parseParameterNumber(parameters[param.name]);
                     return (
-                        <Fragment key={param?.name}>
-                            <PlaygroundParameterItem
-                                value={Boolean(number) ? [number] : []}
-                                text={param.name}
-                                showReason={Boolean(number)}
-                                input={Boolean(number) ? number : 'no value'}
-                            />
-                            <ConditionallyRender
-                                condition={notLastItem}
-                                show={<StrategySeparator text="AND" />}
-                            />
-                        </Fragment>
+                        <ConditionallyRender
+                            condition={number !== undefined}
+                            key={param.name}
+                            show={
+                                <>
+                                    <p className={styles.valueContainer}>
+                                        <StringTruncator
+                                            maxLength={15}
+                                            maxWidth="150"
+                                            text={param.name}
+                                        />
+                                        <span className={styles.valueSeparator}>
+                                            is set to
+                                        </span>
+                                        <StringTruncator
+                                            maxWidth="300"
+                                            text={String(number)}
+                                            maxLength={50}
+                                        />
+                                    </p>
+                                    <ConditionallyRender
+                                        condition={notLastItem}
+                                        show={<StrategySeparator text="AND" />}
+                                    />
+                                </>
+                            }
+                        />
                     );
                 case 'default':
                     return null;

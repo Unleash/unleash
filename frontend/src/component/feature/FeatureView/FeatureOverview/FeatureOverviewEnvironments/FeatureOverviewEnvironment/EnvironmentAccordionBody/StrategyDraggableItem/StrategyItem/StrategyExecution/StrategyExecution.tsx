@@ -20,7 +20,6 @@ import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 
 interface IStrategyExecutionProps {
     strategy: IFeatureStrategy;
-    percentageFill?: string;
 }
 
 const NoItems: VFC = () => (

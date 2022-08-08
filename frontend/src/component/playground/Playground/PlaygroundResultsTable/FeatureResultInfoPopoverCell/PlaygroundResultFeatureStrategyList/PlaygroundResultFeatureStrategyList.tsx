@@ -1,13 +1,10 @@
-import {
-    PlaygroundResultStrategyLists,
-    WrappedPlaygroundResultStrategyList,
-} from './PlaygroundResultStrategyList/playgroundResultStrategyLists';
-import { ConditionallyRender } from '../../../../../common/ConditionallyRender/ConditionallyRender';
-import React from 'react';
+import { PlaygroundResultStrategyLists } from './PlaygroundResultStrategyList/playgroundResultStrategyLists';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
     PlaygroundFeatureSchema,
     PlaygroundRequestSchema,
-} from '../../../../../../hooks/api/actions/usePlayground/playground.model';
+} from 'hooks/api/actions/usePlayground/playground.model';
+import { Alert } from '@mui/material';
 
 interface PlaygroundResultFeatureStrategyListProps {
     feature: PlaygroundFeatureSchema;
@@ -19,24 +16,24 @@ export const PlaygroundResultFeatureStrategyList = ({
     input,
 }: PlaygroundResultFeatureStrategyListProps) => {
     return (
-        <ConditionallyRender
-            condition={
-                !feature.isEnabledInCurrentEnvironment &&
-                Boolean(feature?.strategies?.data)
-            }
-            show={
-                <WrappedPlaygroundResultStrategyList
-                    strategies={feature?.strategies?.data!}
-                    feature={feature}
-                    input={input}
-                />
-            }
-            elseShow={
-                <PlaygroundResultStrategyLists
-                    strategies={feature?.strategies?.data!}
-                    input={input}
-                />
-            }
-        />
+        <>
+            <ConditionallyRender
+                condition={
+                    !feature.isEnabledInCurrentEnvironment &&
+                    Boolean(feature?.strategies?.data)
+                }
+                show={
+                    <Alert severity={'info'} color={'info'}>
+                        If environment would be enabled then this feature would
+                        be {feature.strategies?.result ? 'TRUE' : 'FALSE'} and
+                        the strategies would evaluate like this:{' '}
+                    </Alert>
+                }
+            />
+            <PlaygroundResultStrategyLists
+                strategies={feature?.strategies?.data || []}
+                input={input}
+            />
+        </>
     );
 };

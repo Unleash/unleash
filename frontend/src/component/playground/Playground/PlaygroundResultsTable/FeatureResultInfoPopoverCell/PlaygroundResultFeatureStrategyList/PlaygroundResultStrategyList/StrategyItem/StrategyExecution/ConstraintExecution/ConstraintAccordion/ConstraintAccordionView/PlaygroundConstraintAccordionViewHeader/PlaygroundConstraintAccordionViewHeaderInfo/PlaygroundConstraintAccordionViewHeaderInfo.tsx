@@ -3,7 +3,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { PlaygroundConstraintAccordionViewHeaderSingleValue } from './PlaygroundContraintAccordionViewHeaderSingleValue/PlaygroundConstraintAccordionViewHeaderSingleValue';
 import { PLaygroundConstraintAccordionViewHeaderMultipleValues } from './PlaygroundContraintAccordionViewHeaderMultipleValues/PLaygroundConstraintAccordionViewHeaderMultipleValues';
 import React from 'react';
-import { useStyles } from '../../PlaygroundConstraintAccordion.styles';
+import { useStyles } from '../../ConstraintAccordion.styles';
 import { CancelOutlined } from '@mui/icons-material';
 import {
     PlaygroundConstraintSchema,

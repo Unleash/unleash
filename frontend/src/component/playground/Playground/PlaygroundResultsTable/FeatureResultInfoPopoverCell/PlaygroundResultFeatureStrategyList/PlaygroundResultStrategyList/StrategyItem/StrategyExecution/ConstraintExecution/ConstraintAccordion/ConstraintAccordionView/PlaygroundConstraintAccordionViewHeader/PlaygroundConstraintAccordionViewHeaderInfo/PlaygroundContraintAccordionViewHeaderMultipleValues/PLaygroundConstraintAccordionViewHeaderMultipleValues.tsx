@@ -2,7 +2,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { styled, Typography } from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react';
 import classnames from 'classnames';
-import { useStyles } from '../../../PlaygroundConstraintAccordion.styles';
+import { useStyles } from '../../../ConstraintAccordion.styles';
 import { PlaygroundConstraintSchema } from 'hooks/api/actions/usePlayground/playground.model';
 
 const StyledValuesSpan = styled('span')(({ theme }) => ({

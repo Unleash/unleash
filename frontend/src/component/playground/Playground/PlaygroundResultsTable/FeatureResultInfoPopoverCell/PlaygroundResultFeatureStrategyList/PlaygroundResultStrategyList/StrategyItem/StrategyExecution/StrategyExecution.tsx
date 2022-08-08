@@ -1,19 +1,19 @@
+import { VFC } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 import { Box, Chip, styled } from '@mui/material';
-import { useStyles } from './PlaygroundResultStrategyExecution.styles';
+import { useStyles } from './StrategyExecution.styles';
 import {
     PlaygroundRequestSchema,
     PlaygroundStrategySchema,
 } from 'hooks/api/actions/usePlayground/playground.model';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import React from 'react';
-import { PlaygroundResultConstraintExecution } from './PlaygroundResultConstraintExecution/PlaygroundResultConstraintExecution';
-import { PlaygroundResultSegmentExecution } from './PlaygroundResultSegmentExecution/PlaygroundResultSegmentExecution';
-import { PlaygroundResultStrategyExecutionParameters } from './PlaygroundResultStrategyExecutionParameters/PlaygroundResultStrategyExecutionParameters';
-import { PlaygroundResultStrategyExecutionCustomStrategyParams } from './PlaygroundResultStrategyExecutionCustomStrategyParams/PlaygroundResultStrategyExecutionCustomStrategyParams';
+import { ConstraintExecution } from './ConstraintExecution/ConstraintExecution';
+import { SegmentExecution } from './SegmentExecution/SegmentExecution';
+import { PlaygroundResultStrategyExecutionParameters } from './StrategyExecutionParameters/StrategyExecutionParameters';
+import { CustomStrategyParams } from './CustomStrategyParams/CustomStrategyParams';
 
-interface PlaygroundResultStrategyExecutionProps {
+interface IStrategyExecutionProps {
     strategyResult: PlaygroundStrategySchema;
     percentageFill?: string;
     input?: PlaygroundRequestSchema;
@@ -27,10 +27,10 @@ const StyledParamWrapper = styled('div')(({ theme }) => ({
     padding: theme.spacing(0, 0),
 }));
 
-export const PlaygroundResultStrategyExecution = ({
+export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
     strategyResult,
     input,
-}: PlaygroundResultStrategyExecutionProps) => {
+}) => {
     const { name, constraints, segments, parameters } = strategyResult;
 
     const { uiConfig } = useUiConfig();
@@ -51,7 +51,7 @@ export const PlaygroundResultStrategyExecution = ({
                     Boolean(segments && segments.length > 0)
                 }
                 show={
-                    <PlaygroundResultSegmentExecution
+                    <SegmentExecution
                         segments={segments}
                         hasConstraints={hasConstraints}
                         input={input}
@@ -62,7 +62,7 @@ export const PlaygroundResultStrategyExecution = ({
                 condition={Boolean(constraints && constraints.length > 0)}
                 show={
                     <>
-                        <PlaygroundResultConstraintExecution
+                        <ConstraintExecution
                             constraints={constraints}
                             compact={true}
                             input={input}
@@ -100,7 +100,7 @@ export const PlaygroundResultStrategyExecution = ({
                     input={input}
                 />
                 <StyledParamWrapper sx={{ pt: 2 }}>
-                    <PlaygroundResultStrategyExecutionCustomStrategyParams
+                    <CustomStrategyParams
                         strategyName={strategyResult.name}
                         parameters={parameters}
                         constraints={constraints}

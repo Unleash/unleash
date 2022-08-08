@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, VFC } from 'react';
 import {
     Accordion,
     AccordionSummary,
@@ -14,7 +14,7 @@ import {
     numOperators,
     semVerOperators,
 } from 'constants/operators';
-import { useStyles } from './PlaygroundConstraintAccordion.styles';
+import { useStyles } from './ConstraintAccordion.styles';
 import {
     PlaygroundConstraintSchema,
     PlaygroundRequestSchema,
@@ -28,12 +28,12 @@ interface IConstraintAccordionViewProps {
     sx?: SxProps<Theme>;
 }
 
-export const PlaygroundResultConstraintAccordionView = ({
+export const ConstraintAccordionView: VFC<IConstraintAccordionViewProps> = ({
     constraint,
     sx = undefined,
     maxLength,
     playgroundInput,
-}: IConstraintAccordionViewProps) => {
+}) => {
     const { classes: styles } = useStyles();
     const [expandable, setExpandable] = useState(true);
     const [expanded, setExpanded] = useState(false);

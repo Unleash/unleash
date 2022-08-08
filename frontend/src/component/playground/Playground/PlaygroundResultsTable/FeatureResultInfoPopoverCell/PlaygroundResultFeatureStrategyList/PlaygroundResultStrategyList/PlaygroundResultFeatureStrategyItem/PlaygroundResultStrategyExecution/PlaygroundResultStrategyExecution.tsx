@@ -11,7 +11,7 @@ import React from 'react';
 import { PlaygroundResultConstraintExecution } from './PlaygroundResultConstraintExecution/PlaygroundResultConstraintExecution';
 import { PlaygroundResultSegmentExecution } from './PlaygroundResultSegmentExecution/PlaygroundResultSegmentExecution';
 import { PlaygroundResultStrategyExecutionParameters } from './PlaygroundResultStrategyExecutionParameters/PlaygroundResultStrategyExecutionParameters';
-import { PlaygroundResultStrategyExecutionCustomStrategyParams } from './PlaygroundResultStrategyExecutionCustomStrategyParams./PlaygroundResultStrategyExecutionCustomStrategyParams';
+import { PlaygroundResultStrategyExecutionCustomStrategyParams } from './PlaygroundResultStrategyExecutionCustomStrategyParams/PlaygroundResultStrategyExecutionCustomStrategyParams';
 
 interface PlaygroundResultStrategyExecutionProps {
     strategyResult: PlaygroundStrategySchema;

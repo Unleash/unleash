@@ -59,7 +59,7 @@ export class OpenApiService {
                     validation: err.validationErrors,
                 });
             } else {
-                next();
+                next(err);
             }
         });
     }

@@ -340,6 +340,15 @@ test('require new feature toggle to have a name', async () => {
         .expect(400);
 });
 
+test('should return 400 on invalid JSON data', async () => {
+    expect.assertions(0);
+    return app.request
+        .post('/api/admin/features')
+        .send(`{ invalid-json }`)
+        .set('Content-Type', 'application/json')
+        .expect(400);
+});
+
 test('can not change status of feature toggle that does not exist', async () => {
     expect.assertions(0);
     return app.request

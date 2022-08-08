@@ -274,6 +274,7 @@ module.exports = {
                         'reference/feature-toggles',
                         'advanced/feature_toggle_types',
                         'advanced/toggle_variants',
+                        'reference/playground',
                         'user_guide/projects',
                         'user_guide/rbac',
                         'reference/segments',

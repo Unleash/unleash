@@ -5,7 +5,7 @@ import {
     PlaygroundRequestSchema,
 } from 'hooks/api/actions/usePlayground/playground.model';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { PlaygroundResultFeatureStrategyItem } from './PlaygroundResultFeatureStrategyItem/PlaygroundResultFeatureStrategyItem';
+import { FeatureStrategyItem } from './StrategyItem/FeatureStrategyItem';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 
 const StyledAlertWrapper = styled('div')(({ theme }) => ({
@@ -51,7 +51,7 @@ export const PlaygroundResultStrategyLists = ({
                                 condition={index > 0}
                                 show={<StrategySeparator text="OR" />}
                             />
-                            <PlaygroundResultFeatureStrategyItem
+                            <FeatureStrategyItem
                                 key={strategy.id}
                                 strategy={strategy}
                                 index={index}

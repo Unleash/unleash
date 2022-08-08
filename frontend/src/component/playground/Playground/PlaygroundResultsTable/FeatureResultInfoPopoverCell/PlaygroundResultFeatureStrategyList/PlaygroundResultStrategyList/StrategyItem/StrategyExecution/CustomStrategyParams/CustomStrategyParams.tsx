@@ -1,30 +1,30 @@
+import React, { Fragment, VFC } from 'react';
 import {
     parseParameterNumber,
     parseParameterString,
     parseParameterStrings,
 } from 'utils/parseParameter';
-import React, { Fragment } from 'react';
-import { PlaygroundConstraintItem } from '../PlaygroundConstraintItem/PlaygroundConstraintItem';
+import { PlaygroundParameterItem } from '../PlaygroundParameterItem/PlaygroundParameterItem';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 import { Chip } from '@mui/material';
 import PercentageCircle from 'component/common/PercentageCircle/PercentageCircle';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { PlaygroundConstraintSchema } from 'hooks/api/actions/usePlayground/playground.model';
-import { useStyles } from '../PlaygroundResultStrategyExecution.styles';
+import { useStyles } from '../StrategyExecution.styles';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 
-interface PlaygroundResultStrategyExecutionCustomStrategyProps {
+interface ICustomStrategyProps {
     parameters: { [key: string]: string };
     strategyName: string;
     constraints: PlaygroundConstraintSchema[];
 }
 
-export const PlaygroundResultStrategyExecutionCustomStrategyParams = ({
+export const CustomStrategyParams: VFC<ICustomStrategyProps> = ({
     strategyName,
     constraints,
     parameters,
-}: PlaygroundResultStrategyExecutionCustomStrategyProps) => {
+}) => {
     const { classes: styles } = useStyles();
     const { strategies } = useStrategies();
 
@@ -43,7 +43,7 @@ export const PlaygroundResultStrategyExecutionCustomStrategyParams = ({
                     );
                     return (
                         <Fragment key={param?.name}>
-                            <PlaygroundConstraintItem
+                            <PlaygroundParameterItem
                                 value={values}
                                 text={param.name}
                             />

@@ -4,24 +4,24 @@ import {
     PlaygroundStrategySchema,
     PlaygroundRequestSchema,
 } from 'hooks/api/actions/usePlayground/playground.model';
-import { PlaygroundResultStrategyExecution } from './PlaygroundResultStrategyExecution/PlaygroundResultStrategyExecution';
-import { useStyles } from './PlaygroundResultFeatureStrategyItem.styles';
+import { StrategyExecution } from './StrategyExecution/StrategyExecution';
+import { useStyles } from './FeatureStrategyItem.styles';
 import { StrategyItemContainer } from 'component/common/StrategyItemContainer/StrategyItemContainer';
 import { objectId } from 'utils/objectId';
 
-interface IPlaygroundResultFeatureStrategyItemProps {
+interface IFeatureStrategyItemProps {
     strategy: PlaygroundStrategySchema;
     index: number;
     input?: PlaygroundRequestSchema;
     compact: boolean;
 }
 
-export const PlaygroundResultFeatureStrategyItem = ({
+export const FeatureStrategyItem = ({
     strategy,
     input,
     index,
     compact,
-}: IPlaygroundResultFeatureStrategyItemProps) => {
+}: IFeatureStrategyItemProps) => {
     const { result } = strategy;
     const { classes: styles } = useStyles();
     const theme = useTheme();
@@ -54,7 +54,7 @@ export const PlaygroundResultFeatureStrategyItem = ({
                 />
             }
         >
-            <PlaygroundResultStrategyExecution
+            <StrategyExecution
                 strategyResult={strategy}
                 input={input}
                 percentageFill={theme.palette.tertiary.light}

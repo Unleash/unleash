@@ -4,9 +4,9 @@ import {
 } from 'utils/parseParameter';
 import { Box, Chip } from '@mui/material';
 import PercentageCircle from 'component/common/PercentageCircle/PercentageCircle';
-import { PlaygroundParameterItem } from '../PlaygroundParamteterItem/PlaygroundParameterItem';
+import { PlaygroundParameterItem } from '../PlaygroundParameterItem/PlaygroundParameterItem';
 import React from 'react';
-import { useStyles } from '../PlaygroundResultStrategyExecution.styles';
+import { useStyles } from '../StrategyExecution.styles';
 import {
     PlaygroundConstraintSchema,
     PlaygroundRequestSchema,

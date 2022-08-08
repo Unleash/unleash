@@ -1,42 +1,42 @@
+import { Fragment, VFC } from 'react';
 import {
     PlaygroundConstraintSchema,
     PlaygroundRequestSchema,
 } from 'hooks/api/actions/usePlayground/playground.model';
-import React, { Fragment } from 'react';
-import { objectId } from '../../../../../../../../../../utils/objectId';
-import { ConditionallyRender } from '../../../../../../../../../common/ConditionallyRender/ConditionallyRender';
-import { StrategySeparator } from '../../../../../../../../../common/StrategySeparator/StrategySeparator';
+import { objectId } from 'utils/objectId';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 import { styled } from '@mui/material';
-import { PlaygroundResultConstraintAccordionView } from './PlaygroundResultConstraintAccordion/PlaygroundResultConstraintAccordionView/PlaygroundResultConstraintAccordionView';
+import { ConstraintAccordionView } from './ConstraintAccordion/ConstraintAccordionView/ConstraintAccordionView';
 
-interface PlaygroundResultConstraintExecutionProps {
+interface IConstraintExecutionProps {
     constraints?: PlaygroundConstraintSchema[];
     compact: boolean;
     input?: PlaygroundRequestSchema;
 }
 
-export const PlaygroundResultConstraintExecutionWrapper = styled('div')(() => ({
+export const ConstraintExecutionWrapper = styled('div')(() => ({
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
 }));
 
-export const PlaygroundResultConstraintExecution = ({
+export const ConstraintExecution: VFC<IConstraintExecutionProps> = ({
     constraints,
     compact,
     input,
-}: PlaygroundResultConstraintExecutionProps) => {
+}) => {
     if (!constraints) return null;
 
     return (
-        <PlaygroundResultConstraintExecutionWrapper>
+        <ConstraintExecutionWrapper>
             {constraints?.map((constraint, index) => (
                 <Fragment key={objectId(constraint)}>
                     <ConditionallyRender
                         condition={index > 0 && constraints?.length > 1}
                         show={<StrategySeparator text="AND" />}
                     />
-                    <PlaygroundResultConstraintAccordionView
+                    <ConstraintAccordionView
                         constraint={constraint}
                         playgroundInput={input}
                         maxLength={compact ? 25 : 50}
@@ -46,6 +46,6 @@ export const PlaygroundResultConstraintExecution = ({
                     />
                 </Fragment>
             ))}
-        </PlaygroundResultConstraintExecutionWrapper>
+        </ConstraintExecutionWrapper>
     );
 };

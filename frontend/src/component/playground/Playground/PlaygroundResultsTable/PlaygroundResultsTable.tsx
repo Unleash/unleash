@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { SortingRule, useGlobalFilter, useSortBy, useTable } from 'react-table';
+import {SortingRule, useFlexLayout, useGlobalFilter, useSortBy, useTable} from 'react-table';
 
 import {
     SortableTableHeader,
@@ -8,7 +8,7 @@ import {
     TableBody,
     TableCell,
     TablePlaceholder,
-    TableRow,
+    TableRow, VirtualizedTable,
 } from 'component/common/Table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { sortTypes } from 'utils/sortTypes';
@@ -27,6 +27,8 @@ import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
 import useLoading from 'hooks/useLoading';
 import { VariantCell } from './VariantCell/VariantCell';
 import { FeatureResultInfoPopoverCell } from './FeatureResultInfoPopoverCell/FeatureResultInfoPopoverCell';
+import {PageHeader} from "../../../common/PageHeader/PageHeader";
+import {PageContent} from "../../../common/PageContent/PageContent";
 
 const defaultSort: SortingRule<string> = { id: 'name' };
 const { value, setValue } = createLocalStorage(
@@ -152,11 +154,9 @@ export const PlaygroundResultsTable = ({
     }));
 
     const {
-        getTableProps,
-        getTableBodyProps,
         headerGroups,
-        state: { sortBy },
         rows,
+        state: { sortBy },
         prepareRow,
         setHiddenColumns,
     } = useTable(
@@ -168,11 +168,13 @@ export const PlaygroundResultsTable = ({
             autoResetGlobalFilter: false,
             autoResetSortBy: false,
             disableSortRemove: true,
+            disableMultiSort: true,
             defaultColumn: {
                 Cell: HighlightCell,
             },
         },
         useGlobalFilter,
+        useFlexLayout,
         useSortBy
     );
 
@@ -213,35 +215,29 @@ export const PlaygroundResultsTable = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps -- don't re-render after search params change
     }, [loading, sortBy, searchValue]);
 
-    return (
-        <>
-            <Box
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    mb: 3,
-                }}
-            >
-                <Typography variant="subtitle1" sx={{ ml: 1 }}>
-                    {features !== undefined && !loading
-                        ? `Results (${
-                              rows.length < data.length
-                                  ? `${rows.length} of ${data.length}`
-                                  : data.length
-                          })`
-                        : 'Results'}
-                </Typography>
 
-                <Search
-                    initialValue={searchValue}
-                    onChange={setSearchValue}
-                    hasFilters
-                    getSearchContext={getSearchContext}
-                    disabled={loading}
-                    containerStyles={{ marginLeft: '1rem', maxWidth: '400px' }}
+
+    return (
+        <PageContent
+            isLoading={loading}
+            header={
+                <PageHeader
+                    titleElement={`Results (${
+                        rows.length < data.length
+                            ? `${rows.length} of ${data.length}`
+                            : data.length
+                    })`}
+                    actions={
+                        <Search
+                            initialValue={searchValue}
+                            onChange={setSearchValue}
+                            hasFilters
+                            getSearchContext={getSearchContext}
+                        />
+                    }
                 />
-            </Box>
+            }
+        >
 
             <ConditionallyRender
                 condition={!loading && !data}
@@ -254,33 +250,12 @@ export const PlaygroundResultsTable = ({
                 )}
                 elseShow={() => (
                     <Box ref={ref}>
-                        <SearchHighlightProvider
-                            value={getSearchText(searchValue)}
-                        >
-                            <Table {...getTableProps()} rowHeight="standard">
-                                <SortableTableHeader
-                                    headerGroups={headerGroups as any}
-                                />
-                                <TableBody {...getTableBodyProps()}>
-                                    {rows.map(row => {
-                                        prepareRow(row);
-                                        return (
-                                            <TableRow
-                                                hover
-                                                {...row.getRowProps()}
-                                            >
-                                                {row.cells.map(cell => (
-                                                    <TableCell
-                                                        {...cell.getCellProps()}
-                                                    >
-                                                        {cell.render('Cell')}
-                                                    </TableCell>
-                                                ))}
-                                            </TableRow>
-                                        );
-                                    })}
-                                </TableBody>
-                            </Table>
+                        <SearchHighlightProvider value={getSearchText(searchValue)}>
+                            <VirtualizedTable
+                                rows={rows}
+                                headerGroups={headerGroups}
+                                prepareRow={prepareRow}
+                            />
                         </SearchHighlightProvider>
                         <ConditionallyRender
                             condition={
@@ -307,6 +282,6 @@ export const PlaygroundResultsTable = ({
                     </Box>
                 )}
             />
-        </>
+        </PageContent>
     );
 };

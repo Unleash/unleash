@@ -47,23 +47,22 @@ export const RemoveGroupUser: FC<IRemoveGroupUserProps> = ({
         }
     };
 
+    const userName = user?.name || user?.username || user?.email;
     return (
         <Dialogue
             open={open && Boolean(user)}
-            primaryButtonText="Remove"
+            primaryButtonText="Remove user"
             secondaryButtonText="Cancel"
             onClick={onRemoveClick}
             onClose={() => {
                 setOpen(false);
             }}
-            title="Remove user from group"
+            title="Remove user from group?"
         >
             <Typography>
-                Are you sure you wish to remove{' '}
-                <strong>{user?.name || user?.username || user?.email}</strong>{' '}
-                from <strong>{group.name}</strong>? Removing the user from this
-                group may also remove their access from projects this group is
-                assigned to.
+                Do you really want to remove <strong>{userName}</strong> from{' '}
+                <strong>{group.name}</strong>? <strong>{userName}</strong> will
+                lose all access rights granted by this group.
             </Typography>
         </Dialogue>
     );

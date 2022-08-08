@@ -1,13 +1,12 @@
 import { useEffect, useMemo, useState, VFC } from 'react';
 import {
-    Button,
     IconButton,
     styled,
     Tooltip,
     useMediaQuery,
     useTheme,
 } from '@mui/material';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, Link } from 'react-router-dom';
 import { SortingRule, useFlexLayout, useSortBy, useTable } from 'react-table';
 import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
 import { useGroup } from 'hooks/api/getters/useGroup/useGroup';
@@ -26,17 +25,17 @@ import { HighlightCell } from 'component/common/Table/cells/HighlightCell/Highli
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
 import { GroupUserRoleCell } from 'component/admin/groups/GroupUserRoleCell/GroupUserRoleCell';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
-import { Delete, Edit } from '@mui/icons-material';
+import { Add, Delete, Edit } from '@mui/icons-material';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { MainHeader } from 'component/common/MainHeader/MainHeader';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { RemoveGroup } from 'component/admin/groups/RemoveGroup/RemoveGroup';
-import { Link } from 'react-router-dom';
 import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 import { AddGroupUser } from './AddGroupUser/AddGroupUser';
 import { EditGroupUser } from './EditGroupUser/EditGroupUser';
 import { RemoveGroupUser } from './RemoveGroupUser/RemoveGroupUser';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
+import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
 import {
     UG_EDIT_BTN_ID,
     UG_DELETE_BTN_ID,
@@ -140,30 +139,36 @@ export const Group: VFC = () => {
                 Cell: ({ row: { original: rowUser } }: any) => (
                     <ActionCell>
                         <Tooltip title="Edit user" arrow describeChild>
-                            <IconButton
-                                data-testid={`${UG_EDIT_USER_BTN_ID}-${rowUser.id}`}
-                                onClick={() => {
-                                    setSelectedUser(rowUser);
-                                    setEditUserOpen(true);
-                                }}
-                            >
-                                <Edit />
-                            </IconButton>
+                            <span>
+                                <IconButton
+                                    data-testid={`${UG_EDIT_USER_BTN_ID}-${rowUser.id}`}
+                                    disabled={group?.users.length === 1}
+                                    onClick={() => {
+                                        setSelectedUser(rowUser);
+                                        setEditUserOpen(true);
+                                    }}
+                                >
+                                    <Edit />
+                                </IconButton>
+                            </span>
                         </Tooltip>
                         <Tooltip
                             title="Remove user from group"
                             arrow
                             describeChild
                         >
-                            <IconButton
-                                data-testid={`${UG_REMOVE_USER_BTN_ID}-${rowUser.id}`}
-                                onClick={() => {
-                                    setSelectedUser(rowUser);
-                                    setRemoveUserOpen(true);
-                                }}
-                            >
-                                <Delete />
-                            </IconButton>
+                            <span>
+                                <IconButton
+                                    data-testid={`${UG_REMOVE_USER_BTN_ID}-${rowUser.id}`}
+                                    disabled={group?.users.length === 1}
+                                    onClick={() => {
+                                        setSelectedUser(rowUser);
+                                        setRemoveUserOpen(true);
+                                    }}
+                                >
+                                    <Delete />
+                                </IconButton>
+                            </span>
                         </Tooltip>
                     </ActionCell>
                 ),
@@ -171,7 +176,7 @@ export const Group: VFC = () => {
                 disableSortBy: true,
             },
         ],
-        [setSelectedUser, setRemoveUserOpen]
+        [setSelectedUser, setRemoveUserOpen, group?.users.length]
     );
 
     const [searchParams, setSearchParams] = useSearchParams();
@@ -306,16 +311,17 @@ export const Group: VFC = () => {
                                                 </>
                                             }
                                         />
-                                        <Button
+                                        <ResponsiveButton
                                             data-testid={UG_ADD_USER_BTN_ID}
-                                            variant="contained"
-                                            color="primary"
                                             onClick={() => {
                                                 setAddUserOpen(true);
                                             }}
+                                            maxWidth="700px"
+                                            Icon={Add}
+                                            permission={ADMIN}
                                         >
                                             Add user
-                                        </Button>
+                                        </ResponsiveButton>
                                     </>
                                 }
                             >
@@ -376,13 +382,13 @@ export const Group: VFC = () => {
                         <EditGroupUser
                             open={editUserOpen}
                             setOpen={setEditUserOpen}
-                            user={selectedUser!}
+                            user={selectedUser}
                             group={group!}
                         />
                         <RemoveGroupUser
                             open={removeUserOpen}
                             setOpen={setRemoveUserOpen}
-                            user={selectedUser!}
+                            user={selectedUser}
                             group={group!}
                         />
                     </PageContent>

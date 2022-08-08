@@ -1,5 +1,5 @@
 import { useMemo, VFC } from 'react';
-import { IconButton, Tooltip } from '@mui/material';
+import { IconButton, Tooltip, useMediaQuery } from '@mui/material';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { IGroupUser } from 'interfaces/group';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
@@ -11,6 +11,8 @@ import { VirtualizedTable } from 'component/common/Table';
 import { useFlexLayout, useSortBy, useTable } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
+import theme from 'themes/theme';
+import useHiddenColumns from 'hooks/useHiddenColumns';
 
 interface IGroupFormUsersTableProps {
     users: IGroupUser[];
@@ -106,7 +108,7 @@ export const GroupFormUsersTable: VFC<IGroupFormUsersTableProps> = ({
         [setUsers]
     );
 
-    const { headerGroups, rows, prepareRow } = useTable(
+    const { headerGroups, rows, prepareRow, setHiddenColumns } = useTable(
         {
             columns: columns as any[],
             data: users as any[],
@@ -117,6 +119,12 @@ export const GroupFormUsersTable: VFC<IGroupFormUsersTableProps> = ({
         },
         useSortBy,
         useFlexLayout
+    );
+
+    useHiddenColumns(
+        setHiddenColumns,
+        ['imageUrl', 'name'],
+        useMediaQuery(theme.breakpoints.down('md'))
     );
 
     return (

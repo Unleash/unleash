@@ -20,17 +20,22 @@ import { IGroup, IGroupUser } from 'interfaces/group';
 import { VFC, useState } from 'react';
 import { SortingRule, useFlexLayout, useSortBy, useTable } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
+import useHiddenColumns from 'hooks/useHiddenColumns';
 
 const StyledPageContent = styled(PageContent)(({ theme }) => ({
     height: '100vh',
     overflow: 'auto',
     padding: theme.spacing(7.5, 6),
+    [theme.breakpoints.down('md')]: {
+        padding: theme.spacing(4, 2),
+    },
     '& .header': {
         padding: theme.spacing(0, 0, 2, 0),
     },
     '& .body': {
         padding: theme.spacing(3, 0, 0, 0),
     },
+    borderRadius: `${theme.spacing(1.5, 0, 0, 1.5)} !important`,
 }));
 
 const StyledTitle = styled('div')(({ theme }) => ({
@@ -38,7 +43,7 @@ const StyledTitle = styled('div')(({ theme }) => ({
     flexDirection: 'column',
     '& > span': {
         color: theme.palette.text.secondary,
-        fontSize: theme.fontSizes.smallBody,
+        fontSize: theme.fontSizes.bodySize,
     },
 }));
 
@@ -80,6 +85,7 @@ const columns = [
         filterName: 'type',
     },
     {
+        id: 'joined',
         Header: 'Joined',
         accessor: 'joinedAt',
         Cell: DateCell,
@@ -87,6 +93,7 @@ const columns = [
         maxWidth: 150,
     },
     {
+        id: 'lastLogin',
         Header: 'Last login',
         accessor: (row: IGroupUser) => row.seenAt || '',
         Cell: ({ row: { original: user } }: any) => (
@@ -135,7 +142,7 @@ export const ProjectGroupView: VFC<IProjectGroupViewProps> = ({
         group?.users ?? []
     );
 
-    const { headerGroups, rows, prepareRow } = useTable(
+    const { headerGroups, rows, prepareRow, setHiddenColumns } = useTable(
         {
             columns: columns as any[],
             data,
@@ -147,6 +154,12 @@ export const ProjectGroupView: VFC<IProjectGroupViewProps> = ({
         },
         useSortBy,
         useFlexLayout
+    );
+
+    useHiddenColumns(
+        setHiddenColumns,
+        ['imageUrl', 'name', 'joined', 'lastLogin'],
+        useMediaQuery(theme.breakpoints.down('md'))
     );
 
     return (

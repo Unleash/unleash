@@ -18,18 +18,19 @@ import { CopyApiTokenButton } from 'component/admin/apiToken/CopyApiTokenButton/
 import { RemoveApiTokenButton } from 'component/admin/apiToken/RemoveApiTokenButton/RemoveApiTokenButton';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { sortTypes } from 'utils/sortTypes';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import theme from 'themes/theme';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ProjectsList } from 'component/admin/apiToken/ProjectsList/ProjectsList';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { Search } from 'component/common/Search/Search';
+import useHiddenColumns from 'hooks/useHiddenColumns';
 
 export const ApiTokenTable = () => {
     const { tokens, loading } = useApiTokens();
-    const hiddenColumns = useHiddenColumns();
     const initialState = useMemo(() => ({ sortBy: [{ id: 'createdAt' }] }), []);
+    const { uiConfig } = useUiConfig();
 
     const {
         getTableProps,
@@ -52,9 +53,16 @@ export const ApiTokenTable = () => {
         useSortBy
     );
 
-    useEffect(() => {
-        setHiddenColumns(hiddenColumns);
-    }, [setHiddenColumns, hiddenColumns]);
+    useHiddenColumns(
+        setHiddenColumns,
+        ['Icon', 'createdAt'],
+        useMediaQuery(theme.breakpoints.down('md'))
+    );
+    useHiddenColumns(
+        setHiddenColumns,
+        ['projects', 'environment'],
+        !uiConfig.flags.E
+    );
 
     return (
         <PageContent
@@ -122,27 +130,6 @@ export const ApiTokenTable = () => {
             />
         </PageContent>
     );
-};
-
-const useHiddenColumns = (): string[] => {
-    const { uiConfig } = useUiConfig();
-    const isMediumScreen = useMediaQuery(theme.breakpoints.down('md'));
-
-    return useMemo(() => {
-        const hidden: string[] = [];
-
-        if (!uiConfig.flags.E) {
-            hidden.push('projects');
-            hidden.push('environment');
-        }
-
-        if (isMediumScreen) {
-            hidden.push('Icon');
-            hidden.push('createdAt');
-        }
-
-        return hidden;
-    }, [uiConfig, isMediumScreen]);
 };
 
 const COLUMNS = [

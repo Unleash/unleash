@@ -117,7 +117,7 @@ class EventStore extends EventEmitter implements IEventStore {
     }
 
     async searchEvents(search: SearchEventsSchema = {}): Promise<IEvent[]> {
-        let q = this.db
+        let query = this.db
             .select(EVENT_COLUMNS)
             .from(TABLE)
             .limit(search.limit ?? 100)
@@ -125,26 +125,26 @@ class EventStore extends EventEmitter implements IEventStore {
             .orderBy('created_at', 'desc');
 
         if (search.type) {
-            q = q.andWhere({
+            query = query.andWhere({
                 type: search.type,
             });
         }
 
         if (search.project) {
-            q = q.andWhere({
+            query = query.andWhere({
                 project: search.project,
             });
         }
 
         if (search.feature) {
-            q = q.andWhere({
+            query = query.andWhere({
                 feature_name: search.feature,
             });
         }
 
         if (search.query) {
-            q = q.where((w) =>
-                w
+            query = query.where((where) =>
+                where
                     .orWhereRaw('type::text ILIKE ?', `%${search.query}%`)
                     .orWhereRaw('created_by::text ILIKE ?', `%${search.query}%`)
                     .orWhereRaw('data::text ILIKE ?', `%${search.query}%`)
@@ -153,7 +153,7 @@ class EventStore extends EventEmitter implements IEventStore {
         }
 
         try {
-            return (await q).map(this.rowToEvent);
+            return (await query).map(this.rowToEvent);
         } catch (err) {
             return [];
         }

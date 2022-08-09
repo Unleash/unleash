@@ -1,13 +1,12 @@
-import { useState } from 'react';
+import { useState, VFC } from 'react';
 import {
     Accordion,
     AccordionSummary,
     AccordionDetails,
     SxProps,
     Theme,
+    useTheme,
 } from '@mui/material';
-import { IConstraint } from 'interfaces/strategy';
-import { ConstraintAccordionViewBody } from './ConstraintAccordionViewBody/ConstraintAccordionViewBody';
 import { ConstraintAccordionViewHeader } from './ConstraintAccordionViewHeader/ConstraintAccordionViewHeader';
 import { oneOf } from 'utils/oneOf';
 import {
@@ -15,24 +14,30 @@ import {
     numOperators,
     semVerOperators,
 } from 'constants/operators';
-import { useStyles } from '../ConstraintAccordion.styles';
+import { useStyles } from './ConstraintAccordion.styles';
+import {
+    PlaygroundConstraintSchema,
+    PlaygroundRequestSchema,
+} from 'component/playground/Playground/interfaces/playground.model';
+import { ConstraintAccordionViewBody } from 'component/common/ConstraintAccordion/ConstraintAccordionView/ConstraintAccordionViewBody/ConstraintAccordionViewBody';
 
 interface IConstraintAccordionViewProps {
-    constraint: IConstraint;
-    onDelete?: () => void;
-    onEdit?: () => void;
+    constraint: PlaygroundConstraintSchema;
+    playgroundInput?: PlaygroundRequestSchema;
+    maxLength?: number;
     sx?: SxProps<Theme>;
 }
 
-export const ConstraintAccordionView = ({
+export const ConstraintAccordionView: VFC<IConstraintAccordionViewProps> = ({
     constraint,
-    onEdit,
-    onDelete,
     sx = undefined,
-}: IConstraintAccordionViewProps) => {
+    maxLength,
+    playgroundInput,
+}) => {
     const { classes: styles } = useStyles();
     const [expandable, setExpandable] = useState(true);
     const [expanded, setExpanded] = useState(false);
+    const theme = useTheme();
 
     const singleValue = oneOf(
         [...semVerOperators, ...numOperators, ...dateOperators],
@@ -43,6 +48,11 @@ export const ConstraintAccordionView = ({
             setExpanded(!expanded);
         }
     };
+    const backgroundColor = Boolean(playgroundInput)
+        ? !Boolean((constraint as PlaygroundConstraintSchema).result)
+            ? theme.palette.neutral.light
+            : 'inherit'
+        : 'inherit';
 
     return (
         <Accordion
@@ -60,15 +70,16 @@ export const ConstraintAccordionView = ({
                     '&:hover': {
                         cursor: expandable ? 'pointer' : 'default!important',
                     },
+                    backgroundColor: backgroundColor,
                 }}
             >
                 <ConstraintAccordionViewHeader
                     constraint={constraint}
-                    onEdit={onEdit}
-                    onDelete={onDelete}
                     singleValue={singleValue}
                     allowExpand={setExpandable}
                     expanded={expanded}
+                    maxLength={maxLength ?? 112}
+                    playgroundInput={playgroundInput}
                 />
             </AccordionSummary>
 

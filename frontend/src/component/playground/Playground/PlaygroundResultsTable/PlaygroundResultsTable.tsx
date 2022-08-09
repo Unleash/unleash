@@ -19,10 +19,14 @@ import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { useSearch } from 'hooks/useSearch';
 import { createLocalStorage } from 'utils/createLocalStorage';
 import { FeatureStatusCell } from './FeatureStatusCell/FeatureStatusCell';
-import { PlaygroundFeatureSchema } from 'hooks/api/actions/usePlayground/playground.model';
+import {
+    PlaygroundFeatureSchema,
+    PlaygroundRequestSchema,
+} from 'component/playground/Playground/interfaces/playground.model';
 import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
 import useLoading from 'hooks/useLoading';
 import { VariantCell } from './VariantCell/VariantCell';
+import { FeatureResultInfoPopoverCell } from './FeatureResultInfoPopoverCell/FeatureResultInfoPopoverCell';
 
 const defaultSort: SortingRule<string> = { id: 'name' };
 const { value, setValue } = createLocalStorage(
@@ -32,11 +36,13 @@ const { value, setValue } = createLocalStorage(
 
 interface IPlaygroundResultsTableProps {
     features?: PlaygroundFeatureSchema[];
+    input?: PlaygroundRequestSchema;
     loading: boolean;
 }
 
 export const PlaygroundResultsTable = ({
     features,
+    input,
     loading,
 }: IPlaygroundResultsTableProps) => {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -47,6 +53,77 @@ export const PlaygroundResultsTable = ({
     const theme = useTheme();
     const isExtraSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
+
+    const COLUMNS = useMemo(() => {
+        return [
+            {
+                Header: 'Name',
+                accessor: 'name',
+                searchable: true,
+                minWidth: 160,
+                Cell: ({ value, row: { original } }: any) => (
+                    <LinkCell
+                        title={value}
+                        to={`/projects/${original?.projectId}/features/${value}`}
+                    />
+                ),
+            },
+            {
+                Header: 'Project ID',
+                accessor: 'projectId',
+                sortType: 'alphanumeric',
+                filterName: 'projectId',
+                searchable: true,
+                maxWidth: 170,
+                Cell: ({ value }: any) => (
+                    <LinkCell title={value} to={`/projects/${value}`} />
+                ),
+            },
+            {
+                Header: 'Variant',
+                id: 'variant',
+                accessor: 'variant.name',
+                sortType: 'alphanumeric',
+                filterName: 'variant',
+                searchable: true,
+                width: 200,
+                Cell: ({
+                    value,
+                    row: {
+                        original: { variant, feature, variants, isEnabled },
+                    },
+                }: any) => (
+                    <VariantCell
+                        variant={variant?.enabled ? value : ''}
+                        variants={variants}
+                        feature={feature}
+                        isEnabled={isEnabled}
+                    />
+                ),
+            },
+            {
+                Header: 'isEnabled',
+                accessor: 'isEnabled',
+                filterName: 'isEnabled',
+                filterParsing: (value: boolean) => (value ? 'true' : 'false'),
+                Cell: ({ row }: any) => (
+                    <FeatureStatusCell feature={row.original} />
+                ),
+                sortType: 'boolean',
+                sortInverted: true,
+            },
+            {
+                Header: '',
+                id: 'info',
+                Cell: ({ row }: any) => (
+                    <FeatureResultInfoPopoverCell
+                        feature={row.original}
+                        input={input}
+                    />
+                ),
+            },
+        ];
+    }, [input]);
 
     const {
         data: searchedData,
@@ -235,60 +312,3 @@ export const PlaygroundResultsTable = ({
         </>
     );
 };
-
-const COLUMNS = [
-    {
-        Header: 'Name',
-        accessor: 'name',
-        searchable: true,
-        minWidth: 160,
-        Cell: ({ value, row: { original } }: any) => (
-            <LinkCell
-                title={value}
-                to={`/projects/${original?.projectId}/features/${value}`}
-            />
-        ),
-    },
-    {
-        Header: 'Project ID',
-        accessor: 'projectId',
-        sortType: 'alphanumeric',
-        filterName: 'projectId',
-        searchable: true,
-        maxWidth: 170,
-        Cell: ({ value }: any) => (
-            <LinkCell title={value} to={`/projects/${value}`} />
-        ),
-    },
-    {
-        Header: 'Variant',
-        id: 'variant',
-        accessor: 'variant.name',
-        sortType: 'alphanumeric',
-        filterName: 'variant',
-        searchable: true,
-        width: 200,
-        Cell: ({
-            value,
-            row: {
-                original: { variant, feature, variants, isEnabled },
-            },
-        }: any) => (
-            <VariantCell
-                variant={variant?.enabled ? value : ''}
-                variants={variants}
-                feature={feature}
-                isEnabled={isEnabled}
-            />
-        ),
-    },
-    {
-        Header: 'isEnabled',
-        accessor: 'isEnabled',
-        filterName: 'isEnabled',
-        filterParsing: (value: boolean) => (value ? 'true' : 'false'),
-        Cell: ({ value }: any) => <FeatureStatusCell enabled={value} />,
-        sortType: 'boolean',
-        sortInverted: true,
-    },
-];

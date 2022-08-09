@@ -2,7 +2,7 @@ import useAPI from '../useApi/useApi';
 import {
     PlaygroundRequestSchema,
     PlaygroundResponseSchema,
-} from './playground.model';
+} from '../../../../component/playground/Playground/interfaces/playground.model';
 
 export const usePlaygroundApi = () => {
     const { makeRequest, createRequest, errors, loading } = useAPI({

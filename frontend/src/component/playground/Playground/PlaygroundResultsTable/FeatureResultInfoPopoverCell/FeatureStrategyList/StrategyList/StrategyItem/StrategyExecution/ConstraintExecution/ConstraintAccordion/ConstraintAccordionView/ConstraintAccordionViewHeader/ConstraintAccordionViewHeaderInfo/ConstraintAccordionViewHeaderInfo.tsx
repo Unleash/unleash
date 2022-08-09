@@ -1,11 +1,15 @@
-import { styled, Tooltip } from '@mui/material';
-import { ConstraintViewHeaderOperator } from '../ConstraintViewHeaderOperator/ConstraintViewHeaderOperator';
+import { styled, Tooltip, Typography, useTheme } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { ConstraintAccordionViewHeaderSingleValue } from '../ContraintAccordionViewHeaderSingleValue/ConstraintAccordionViewHeaderSingleValue';
-import { ConstraintAccordionViewHeaderMultipleValues } from '../ContraintAccordionViewHeaderMultipleValues/ConstraintAccordionViewHeaderMultipleValues';
+import { PlaygroundSingleValue } from './PlaygroundSingleValue/PlaygroundSingleValue';
+import { PLaygroundMultipleValues } from './PlaygroundMultipleValues/PLaygroundMultipleValues';
 import React from 'react';
-import { IConstraint } from '../../../../../../interfaces/strategy';
-import { useStyles } from '../../../ConstraintAccordion.styles';
+import { useStyles } from '../../ConstraintAccordion.styles';
+import { CancelOutlined } from '@mui/icons-material';
+import {
+    PlaygroundConstraintSchema,
+    PlaygroundRequestSchema,
+} from 'component/playground/Playground/interfaces/playground.model';
+import { ConstraintViewHeaderOperator } from 'component/common/ConstraintAccordion/ConstraintAccordionView/ConstraintAccordionViewHeader/ConstraintViewHeaderOperator/ConstraintViewHeaderOperator';
 
 const StyledHeaderText = styled('span')(({ theme }) => ({
     display: '-webkit-box',
@@ -34,12 +38,14 @@ const StyledHeaderWrapper = styled('div')(({ theme }) => ({
     borderRadius: theme.spacing(1),
 }));
 
-interface ConstraintAccordionViewHeaderMetaInfoProps {
-    constraint: IConstraint;
+interface PlaygroundConstraintAccordionViewHeaderInfoProps {
+    constraint: PlaygroundConstraintSchema;
     singleValue: boolean;
     expanded: boolean;
     allowExpand: (shouldExpand: boolean) => void;
+    result?: boolean;
     maxLength?: number;
+    playgroundInput?: PlaygroundRequestSchema;
 }
 
 export const ConstraintAccordionViewHeaderInfo = ({
@@ -47,9 +53,16 @@ export const ConstraintAccordionViewHeaderInfo = ({
     singleValue,
     allowExpand,
     expanded,
-    maxLength = 112, //The max number of characters in the values text for NOT allowing expansion
-}: ConstraintAccordionViewHeaderMetaInfoProps) => {
+    result,
+    playgroundInput,
+    maxLength = 112,
+}: PlaygroundConstraintAccordionViewHeaderInfoProps) => {
     const { classes: styles } = useStyles();
+    const theme = useTheme();
+
+    const constraintExistsInContext = Boolean(
+        playgroundInput?.context[constraint.contextName]
+    );
 
     return (
         <StyledHeaderWrapper>
@@ -57,19 +70,30 @@ export const ConstraintAccordionViewHeaderInfo = ({
                 <Tooltip title={constraint.contextName} arrow>
                     <StyledHeaderText>
                         {constraint.contextName}
+                        <Typography
+                            variant={'body1'}
+                            color={
+                                constraintExistsInContext
+                                    ? theme.palette.neutral.dark
+                                    : theme.palette.error.main
+                            }
+                        >
+                            {playgroundInput?.context[constraint.contextName] ||
+                                'no value'}
+                        </Typography>
                     </StyledHeaderText>
                 </Tooltip>
                 <ConstraintViewHeaderOperator constraint={constraint} />
                 <ConditionallyRender
                     condition={singleValue}
                     show={
-                        <ConstraintAccordionViewHeaderSingleValue
+                        <PlaygroundSingleValue
                             constraint={constraint}
                             allowExpand={allowExpand}
                         />
                     }
                     elseShow={
-                        <ConstraintAccordionViewHeaderMultipleValues
+                        <PLaygroundMultipleValues
                             constraint={constraint}
                             expanded={expanded}
                             allowExpand={allowExpand}
@@ -78,6 +102,10 @@ export const ConstraintAccordionViewHeaderInfo = ({
                     }
                 />
             </div>
+            <ConditionallyRender
+                condition={result !== undefined && !Boolean(result)}
+                show={<CancelOutlined color="error" sx={{ mt: 1 }} />}
+            />
         </StyledHeaderWrapper>
     );
 };

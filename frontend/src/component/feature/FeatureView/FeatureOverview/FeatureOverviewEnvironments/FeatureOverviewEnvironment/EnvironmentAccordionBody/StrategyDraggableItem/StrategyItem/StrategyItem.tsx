@@ -1,24 +1,17 @@
-import { DragEventHandler } from 'react';
-import { DragIndicator, Edit } from '@mui/icons-material';
-import { styled, useTheme, IconButton } from '@mui/material';
+import { DragEventHandler, VFC } from 'react';
+import { Edit } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
-import classNames from 'classnames';
 import { IFeatureEnvironment } from 'interfaces/featureToggle';
 import { IFeatureStrategy } from 'interfaces/strategy';
-import {
-    getFeatureStrategyIcon,
-    formatStrategyName,
-} from 'utils/strategyNames';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { formatEditStrategyPath } from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
 import { FeatureStrategyRemove } from 'component/feature/FeatureStrategy/FeatureStrategyRemove/FeatureStrategyRemove';
-import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { StrategyExecution } from './StrategyExecution/StrategyExecution';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { CopyStrategyIconMenu } from './CopyStrategyIconMenu/CopyStrategyIconMenu';
-import { useStyles } from './StrategyItem.styles';
+import { StrategyItemContainer } from 'component/common/StrategyItemContainer/StrategyItemContainer';
 
 interface IStrategyItemProps {
     environmentId: string;
@@ -26,26 +19,19 @@ interface IStrategyItemProps {
     onDragStart?: DragEventHandler<HTMLButtonElement>;
     onDragEnd?: DragEventHandler<HTMLButtonElement>;
     otherEnvironments?: IFeatureEnvironment['name'][];
+    orderNumber?: number;
 }
 
-const DragIcon = styled(IconButton)(({ theme }) => ({
-    padding: 0,
-    cursor: 'inherit',
-    transition: 'color 0.2s ease-in-out',
-}));
-
-export const StrategyItem = ({
+export const StrategyItem: VFC<IStrategyItemProps> = ({
     environmentId,
     strategy,
     onDragStart,
     onDragEnd,
     otherEnvironments,
-}: IStrategyItemProps) => {
+    orderNumber,
+}) => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
-    const theme = useTheme();
-    const { classes: styles } = useStyles();
-    const Icon = getFeatureStrategyIcon(strategy.name);
 
     const editStrategyPath = formatEditStrategyPath(
         projectId,
@@ -55,38 +41,13 @@ export const StrategyItem = ({
     );
 
     return (
-        <div className={styles.container}>
-            <div
-                className={classNames(styles.header, {
-                    [styles.headerDraggable]: Boolean(onDragStart),
-                })}
-            >
-                <ConditionallyRender
-                    condition={Boolean(onDragStart)}
-                    show={() => (
-                        <DragIcon
-                            draggable
-                            disableRipple
-                            size="small"
-                            onDragStart={onDragStart}
-                            onDragEnd={onDragEnd}
-                            sx={{ cursor: 'move' }}
-                        >
-                            <DragIndicator
-                                titleAccess="Drag to reorder"
-                                cursor="grab"
-                                sx={{ color: 'neutral.main' }}
-                            />
-                        </DragIcon>
-                    )}
-                />
-                <Icon className={styles.icon} />
-                <StringTruncator
-                    maxWidth="150"
-                    maxLength={15}
-                    text={formatStrategyName(strategy.name)}
-                />
-                <div className={styles.actions}>
+        <StrategyItemContainer
+            strategy={strategy}
+            onDragStart={onDragStart}
+            onDragEnd={onDragEnd}
+            orderNumber={orderNumber}
+            actions={
+                <>
                     <ConditionallyRender
                         condition={Boolean(
                             otherEnvironments && otherEnvironments?.length > 0
@@ -115,14 +76,10 @@ export const StrategyItem = ({
                         strategyId={strategy.id}
                         icon
                     />
-                </div>
-            </div>
-            <div className={styles.body}>
-                <StrategyExecution
-                    strategy={strategy}
-                    percentageFill={theme.palette.grey[200]}
-                />
-            </div>
-        </div>
+                </>
+            }
+        >
+            <StrategyExecution strategy={strategy} />
+        </StrategyItemContainer>
     );
 };

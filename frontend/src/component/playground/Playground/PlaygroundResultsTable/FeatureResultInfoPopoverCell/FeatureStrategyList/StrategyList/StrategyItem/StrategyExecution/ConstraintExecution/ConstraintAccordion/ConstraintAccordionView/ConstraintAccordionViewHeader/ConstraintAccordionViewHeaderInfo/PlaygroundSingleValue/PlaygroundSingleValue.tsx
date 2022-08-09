@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
-import { Chip, styled } from '@mui/material';
+import { Chip, styled, Typography } from '@mui/material';
 import { formatConstraintValue } from 'utils/formatConstraintValue';
 import { useStyles } from '../../../ConstraintAccordion.styles';
-import { IConstraint } from '../../../../../../interfaces/strategy';
 import { useLocationSettings } from 'hooks/useLocationSettings';
+import { PlaygroundConstraintSchema } from 'component/playground/Playground/interfaces/playground.model';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledSingleValueChip = styled(Chip)(({ theme }) => ({
     margin: 'auto 0',
@@ -12,15 +13,15 @@ const StyledSingleValueChip = styled(Chip)(({ theme }) => ({
     },
 }));
 
-interface ConstraintSingleValueProps {
-    constraint: IConstraint;
+interface PlaygroundConstraintAccordionViewHeaderSingleValueProps {
+    constraint: PlaygroundConstraintSchema;
     allowExpand: (shouldExpand: boolean) => void;
 }
 
-export const ConstraintAccordionViewHeaderSingleValue = ({
+export const PlaygroundSingleValue = ({
     constraint,
     allowExpand,
-}: ConstraintSingleValueProps) => {
+}: PlaygroundConstraintAccordionViewHeaderSingleValueProps) => {
     const { locationSettings } = useLocationSettings();
     const { classes: styles } = useStyles();
 
@@ -30,6 +31,14 @@ export const ConstraintAccordionViewHeaderSingleValue = ({
 
     return (
         <div className={styles.headerValuesContainerWrapper}>
+            <ConditionallyRender
+                condition={!Boolean(constraint.result)}
+                show={
+                    <Typography variant={'body1'} color={'error'}>
+                        does not match any values{' '}
+                    </Typography>
+                }
+            />
             <StyledSingleValueChip
                 label={formatConstraintValue(constraint, locationSettings)}
             />

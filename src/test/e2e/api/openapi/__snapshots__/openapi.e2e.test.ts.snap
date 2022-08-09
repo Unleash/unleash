@@ -305,111 +305,6 @@ Object {
         },
         "type": "object",
       },
-      "bootstrapUiSchema": Object {
-        "additionalProperties": false,
-        "properties": Object {
-          "context": Object {
-            "items": Object {
-              "$ref": "#/components/schemas/contextFieldSchema",
-            },
-            "type": "array",
-          },
-          "email": Object {
-            "type": "boolean",
-          },
-          "featureTypes": Object {
-            "items": Object {
-              "$ref": "#/components/schemas/featureTypeSchema",
-            },
-            "type": "array",
-          },
-          "projects": Object {
-            "items": Object {
-              "$ref": "#/components/schemas/projectSchema",
-            },
-            "type": "array",
-          },
-          "strategies": Object {
-            "items": Object {
-              "$ref": "#/components/schemas/strategySchema",
-            },
-            "type": "array",
-          },
-          "tagTypes": Object {
-            "items": Object {
-              "$ref": "#/components/schemas/tagTypeSchema",
-            },
-            "type": "array",
-          },
-          "uiConfig": Object {
-            "$ref": "#/components/schemas/uiConfigSchema",
-          },
-          "user": Object {
-            "properties": Object {
-              "createdAt": Object {
-                "format": "date-time",
-                "type": "string",
-              },
-              "email": Object {
-                "type": "string",
-              },
-              "emailSent": Object {
-                "type": "boolean",
-              },
-              "id": Object {
-                "type": "number",
-              },
-              "imageUrl": Object {
-                "type": "string",
-              },
-              "inviteLink": Object {
-                "type": "string",
-              },
-              "isAPI": Object {
-                "type": "boolean",
-              },
-              "loginAttempts": Object {
-                "type": "number",
-              },
-              "name": Object {
-                "type": "string",
-              },
-              "permissions": Object {
-                "items": Object {
-                  "$ref": "#/components/schemas/permissionSchema",
-                },
-                "type": "array",
-              },
-              "rootRole": Object {
-                "type": "number",
-              },
-              "seenAt": Object {
-                "format": "date-time",
-                "nullable": true,
-                "type": "string",
-              },
-              "username": Object {
-                "type": "string",
-              },
-            },
-            "required": Array [
-              "id",
-            ],
-            "type": "object",
-          },
-        },
-        "required": Array [
-          "uiConfig",
-          "user",
-          "email",
-          "context",
-          "featureTypes",
-          "tagTypes",
-          "strategies",
-          "projects",
-        ],
-        "type": "object",
-      },
       "changePasswordSchema": Object {
         "additionalProperties": false,
         "properties": Object {
@@ -2682,6 +2577,9 @@ Object {
             "type": "string",
           },
           "disablePasswordAuth": Object {
+            "type": "boolean",
+          },
+          "emailEnabled": Object {
             "type": "boolean",
           },
           "environment": Object {
@@ -6000,26 +5898,6 @@ If the provided project does not exist, the list of events will be empty.",
         },
         "tags": Array [
           "admin",
-        ],
-      },
-    },
-    "/api/admin/ui-bootstrap": Object {
-      "get": Object {
-        "operationId": "getBootstrapUiData",
-        "responses": Object {
-          "202": Object {
-            "content": Object {
-              "application/json": Object {
-                "schema": Object {
-                  "$ref": "#/components/schemas/bootstrapUiSchema",
-                },
-              },
-            },
-            "description": "bootstrapUiSchema",
-          },
-        },
-        "tags": Array [
-          "other",
         ],
       },
     },

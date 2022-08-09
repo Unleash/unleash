@@ -13,7 +13,6 @@ import UserController from './user';
 import ConfigController from './config';
 import { ContextController } from './context';
 import ClientMetricsController from './client-metrics';
-import BootstrapUIController from './bootstrap-ui';
 import StateController from './state';
 import TagController from './tag';
 import TagTypeController from './tag-type';
@@ -67,10 +66,6 @@ class AdminApi extends Controller {
         this.app.use(
             '/ui-config',
             new ConfigController(config, services).router,
-        );
-        this.app.use(
-            '/ui-bootstrap',
-            new BootstrapUIController(config, services).router,
         );
         this.app.use(
             '/context',

@@ -16,7 +16,7 @@ afterAll(async () => {
     await db.destroy();
 });
 
-test('gets ui config', async () => {
+test('gets ui config fields', async () => {
     const { body } = await app.request
         .get('/api/admin/ui-config')
         .expect('Content-Type', /json/)
@@ -24,10 +24,12 @@ test('gets ui config', async () => {
 
     expect(body.unleashUrl).toBe('http://localhost:4242');
     expect(body.version).toBeDefined();
+    expect(body.emailEnabled).toBe(false);
 });
 
 test('gets ui config with disablePasswordAuth', async () => {
     await db.stores.settingStore.insert(simpleAuthKey, { disabled: true });
+
     const { body } = await app.request
         .get('/api/admin/ui-config')
         .expect('Content-Type', /json/)

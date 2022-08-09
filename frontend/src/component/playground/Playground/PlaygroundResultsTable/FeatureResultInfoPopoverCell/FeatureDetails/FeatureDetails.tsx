@@ -52,7 +52,7 @@ export const FeatureDetails = ({
         : undefined;
 
     const customStrategiesTxt = hasCustomStrategies(feature)
-        ? `You have custom strategies. Custom strategies can't be evaluated and they will be set as Unevaluated`
+        ? `This feature uses custom strategies. Custom strategies can't be evaluated, so they will be marked as Unevaluated`
         : undefined;
 
     const onCloseClick =

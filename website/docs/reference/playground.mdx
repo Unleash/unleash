@@ -8,6 +8,8 @@ The Unleash playground is available from Unleash 4.14 onwards. The playground is
 
 :::
 
+![The Unleash Playground form and an indication of where in the nav menu it is located.](/img/playground-form.png)
+
 The unleash playground is a part of the Unleash Admin UI and an accompanying API. The playground lets you see which of your instance's feature toggles would be enabled for a given Unleash context. It has multiple uses, such as:
 
 -   Understanding how Unleash evaluates strategies, constraints, and segments.
@@ -41,6 +43,8 @@ Unleash clients all require an `appName` to start up. If you do not provide an `
 The `currentTime` property of the [Unleash context](../user_guide/unleash-context.md) gets auto-populated with the current time. You can override this manually.
 
 ## The response
+
+![Playground results: a table of feature names and whether they're enabled or not.](/img/playground-results.png)
 
 The playground's response contains a list of all the feature toggles that have been evaluated based on your configured [environments and projects](#environments-and-projects). In the UI, the playground displays the features in a table. Each feature indicates whether its considered _enabled_ or _disabled_ and which [variant](../advanced/feature-toggle-variants.md) was assigned to it, if any.
 

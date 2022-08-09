@@ -7,7 +7,6 @@
  * https://github.com/OpenAPITools/openapi-generator/issues/12256
  */
 
-
 import { VariantSchema } from 'openapi';
 import { Operator } from 'constants/operators';
 

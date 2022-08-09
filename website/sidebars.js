@@ -299,7 +299,11 @@ module.exports = {
                     'Discussions, explanations, and explorations regarding topics related to Unleash.',
                 slug: '/topics',
             },
-            items: ['topics/a-b-testing', 'topics/proxy-hosting'],
+            items: [
+                'topics/a-b-testing',
+                'topics/proxy-hosting',
+                'topics/joining-an-existing-instance',
+            ],
         },
     ],
 };

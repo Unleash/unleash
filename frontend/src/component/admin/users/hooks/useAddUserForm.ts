@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
-import useUiBootstrap from 'hooks/api/getters/useUiBootstrap/useUiBootstrap';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const useCreateUserForm = (
     initialName = '',
     initialEmail = '',
     initialRootRole = 1
 ) => {
-    const { bootstrap } = useUiBootstrap();
+    const { uiConfig } = useUiConfig();
     const [name, setName] = useState(initialName);
     const [email, setEmail] = useState(initialEmail);
     const [sendEmail, setSendEmail] = useState(false);
@@ -25,8 +25,8 @@ const useCreateUserForm = (
     }, [initialEmail]);
 
     useEffect(() => {
-        setSendEmail(bootstrap?.email || false);
-    }, [bootstrap?.email]);
+        setSendEmail(uiConfig?.emailEnabled || false);
+    }, [uiConfig?.emailEnabled]);
 
     useEffect(() => {
         setRootRole(initialRootRole);

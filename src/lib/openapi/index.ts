@@ -7,7 +7,6 @@ import { apiTokenSchema } from './spec/api-token-schema';
 import { apiTokensSchema } from './spec/api-tokens-schema';
 import { applicationSchema } from './spec/application-schema';
 import { applicationsSchema } from './spec/applications-schema';
-import { bootstrapUiSchema } from './spec/bootstrap-ui-schema';
 import { changePasswordSchema } from './spec/change-password-schema';
 import { clientApplicationSchema } from './spec/client-application-schema';
 import { clientFeatureSchema } from './spec/client-feature-schema';
@@ -116,7 +115,6 @@ export const schemas = {
     apiTokensSchema,
     applicationSchema,
     applicationsSchema,
-    bootstrapUiSchema,
     changePasswordSchema,
     clientApplicationSchema,
     clientFeatureSchema,

@@ -33,9 +33,9 @@ export const getStandardResponses = (
     ...statusCodes: (keyof StandardResponses)[]
 ): Partial<StandardResponses> =>
     statusCodes.reduce(
-        (acc, n) => ({
+        (acc, statusCode) => ({
             ...acc,
-            [n]: standardResponses[n],
+            [statusCode]: standardResponses[statusCode],
         }),
         {} as Partial<StandardResponses>,
     );

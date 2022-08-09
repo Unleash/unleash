@@ -275,5 +275,11 @@ export const createOpenApiSchema = ({
             },
             schemas: mapValues(schemas, removeJsonSchemaProps),
         },
+        tags: [
+            { name: 'admin' },
+            { name: 'client' },
+            { name: 'auth' },
+            { name: 'other' },
+        ],
     };
 };

@@ -189,9 +189,10 @@ module.exports = {
                 config: {
                     server: {
                         specPath: 'http://localhost:4242/docs/openapi.json',
-                        outputDir: 'docs/openapi/server',
+                        outputDir: 'docs/generated/openapi/server',
                         sidebarOptions: {
                             groupPathsBy: 'tag',
+                            categoryLinkSource: 'tag'
                         },
                     },
                 },

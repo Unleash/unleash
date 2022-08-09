@@ -17,10 +17,15 @@ export const searchEventsSchema = {
             type: 'string',
         },
         limit: {
-            type: 'number',
+            type: 'integer',
+            minimum: 1,
+            maximum: 100,
+            default: 100,
         },
         offset: {
-            type: 'number',
+            type: 'integer',
+            minimum: 0,
+            default: 0,
         },
     },
     components: {},

@@ -282,7 +282,7 @@ Follow steps outlined in the [Run Unleash with Docker](#run-unleash-with-docker)
 
    ```sh
    docker run \
-     -e UNLEASH_PROXY_SECRETS=some-secret \
+     -e UNLEASH_PROXY_CLIENT_KEYS=some-secret \
      -e UNLEASH_URL='http://unleash:4242/api/' \
      -e UNLEASH_API_TOKEN='${API_KEY}' \
      -p 3000:3000 \

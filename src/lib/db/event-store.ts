@@ -119,7 +119,7 @@ class EventStore extends EventEmitter implements IEventStore {
     async searchEvents(search: SearchEventsSchema = {}): Promise<IEvent[]> {
         let query = this.db
             .select(EVENT_COLUMNS)
-            .from(TABLE)
+            .from<IEventTable>(TABLE)
             .limit(search.limit ?? 100)
             .offset(search.offset ?? 0)
             .orderBy('created_at', 'desc');

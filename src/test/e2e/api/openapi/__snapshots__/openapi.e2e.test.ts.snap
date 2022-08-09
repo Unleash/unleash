@@ -1010,7 +1010,6 @@ Object {
           },
         },
         "required": Array [
-          "toggleName",
           "events",
         ],
         "type": "object",
@@ -2216,6 +2215,47 @@ Object {
         "required": Array [
           "appName",
         ],
+        "type": "object",
+      },
+      "searchEventsSchema": Object {
+        "description": "
+        Search for events by type, project, feature, free-text query,
+        or a combination thereof. Pass an empty object to fetch all events.
+    ",
+        "properties": Object {
+          "feature": Object {
+            "description": "Find events by feature toggle name (case-sensitive).",
+            "type": "string",
+          },
+          "limit": Object {
+            "default": 100,
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer",
+          },
+          "offset": Object {
+            "default": 0,
+            "minimum": 0,
+            "type": "integer",
+          },
+          "project": Object {
+            "description": "Find events by project ID (case-sensitive).",
+            "type": "string",
+          },
+          "query": Object {
+            "description": "
+                Find events by a free-text search query.
+                The query will be matched against the event type,
+                the username or email that created the event (if any),
+                and the event data payload (if any).
+            ",
+            "type": "string",
+          },
+          "type": Object {
+            "description": "Find events by event type (case-sensitive).",
+            "type": "string",
+          },
+        },
         "type": "object",
       },
       "segmentSchema": Object {
@@ -3731,6 +3771,37 @@ If the provided project does not exist, the list of events will be empty.",
           },
         },
         "summary": "Get the most recent events from the Unleash instance or all events related to a project.",
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/events/search": Object {
+      "post": Object {
+        "operationId": "searchEvents",
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/searchEventsSchema",
+              },
+            },
+          },
+          "description": "searchEventsSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/eventsSchema",
+                },
+              },
+            },
+            "description": "eventsSchema",
+          },
+        },
         "tags": Array [
           "admin",
         ],

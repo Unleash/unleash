@@ -3,7 +3,7 @@ import { Chip, styled, Typography } from '@mui/material';
 import { formatConstraintValue } from 'utils/formatConstraintValue';
 import { useStyles } from '../../../ConstraintAccordion.styles';
 import { useLocationSettings } from 'hooks/useLocationSettings';
-import { PlaygroundConstraintSchema } from 'hooks/api/actions/usePlayground/playground.model';
+import { PlaygroundConstraintSchema } from 'component/playground/Playground/interfaces/playground.model';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledSingleValueChip = styled(Chip)(({ theme }) => ({

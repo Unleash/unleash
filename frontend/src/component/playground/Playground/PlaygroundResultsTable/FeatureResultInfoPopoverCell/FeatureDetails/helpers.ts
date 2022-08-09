@@ -1,4 +1,4 @@
-import { PlaygroundFeatureSchema } from 'hooks/api/actions/usePlayground/playground.model';
+import { PlaygroundFeatureSchema } from 'component/playground/Playground/interfaces/playground.model';
 
 export const DEFAULT_STRATEGIES = [
     'default',

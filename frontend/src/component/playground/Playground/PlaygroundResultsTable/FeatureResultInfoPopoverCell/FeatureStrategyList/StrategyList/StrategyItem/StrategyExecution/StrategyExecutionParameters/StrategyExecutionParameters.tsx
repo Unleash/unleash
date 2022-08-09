@@ -10,7 +10,7 @@ import { useStyles } from '../StrategyExecution.styles';
 import {
     PlaygroundConstraintSchema,
     PlaygroundRequestSchema,
-} from 'hooks/api/actions/usePlayground/playground.model';
+} from 'component/playground/Playground/interfaces/playground.model';
 import { getMappedParam } from '../helpers';
 
 export interface PlaygroundResultStrategyExecutionParametersProps {

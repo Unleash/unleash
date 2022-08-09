@@ -1,7 +1,7 @@
 import {
     PlaygroundFeatureSchema,
     PlaygroundRequestSchema,
-} from 'hooks/api/actions/usePlayground/playground.model';
+} from 'component/playground/Playground/interfaces/playground.model';
 import { Alert, IconButton, Typography, useTheme } from '@mui/material';
 import { PlaygroundResultChip } from '../../PlaygroundResultChip/PlaygroundResultChip';
 import { useStyles } from './FeatureDetails.styles';

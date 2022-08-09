@@ -1,6 +1,6 @@
 import { colors } from 'themes/colors';
 import { Alert, styled } from '@mui/material';
-import { SdkContextSchema } from 'hooks/api/actions/usePlayground/playground.model';
+import { SdkContextSchema } from 'component/playground/Playground/interfaces/playground.model';
 
 interface IContextBannerProps {
     environment: string;

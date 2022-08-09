@@ -9,7 +9,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 import { Chip } from '@mui/material';
 import PercentageCircle from 'component/common/PercentageCircle/PercentageCircle';
-import { PlaygroundConstraintSchema } from 'hooks/api/actions/usePlayground/playground.model';
+import { PlaygroundConstraintSchema } from 'component/playground/Playground/interfaces/playground.model';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 
 interface ICustomStrategyProps {

@@ -18,7 +18,7 @@ import { useStyles } from './ConstraintAccordion.styles';
 import {
     PlaygroundConstraintSchema,
     PlaygroundRequestSchema,
-} from 'hooks/api/actions/usePlayground/playground.model';
+} from 'component/playground/Playground/interfaces/playground.model';
 import { ConstraintAccordionViewBody } from 'component/common/ConstraintAccordion/ConstraintAccordionView/ConstraintAccordionViewBody/ConstraintAccordionViewBody';
 
 interface IConstraintAccordionViewProps {

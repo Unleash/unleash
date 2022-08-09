@@ -8,7 +8,7 @@ import { CancelOutlined } from '@mui/icons-material';
 import {
     PlaygroundConstraintSchema,
     PlaygroundRequestSchema,
-} from 'hooks/api/actions/usePlayground/playground.model';
+} from 'component/playground/Playground/interfaces/playground.model';
 import { ConstraintViewHeaderOperator } from 'component/common/ConstraintAccordion/ConstraintAccordionView/ConstraintAccordionViewHeader/ConstraintViewHeaderOperator/ConstraintViewHeaderOperator';
 
 const StyledHeaderText = styled('span')(({ theme }) => ({

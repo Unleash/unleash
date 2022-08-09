@@ -3,7 +3,7 @@ import { styled, Typography } from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react';
 import classnames from 'classnames';
 import { useStyles } from '../../../ConstraintAccordion.styles';
-import { PlaygroundConstraintSchema } from 'hooks/api/actions/usePlayground/playground.model';
+import { PlaygroundConstraintSchema } from 'component/playground/Playground/interfaces/playground.model';
 
 const StyledValuesSpan = styled('span')(({ theme }) => ({
     display: '-webkit-box',

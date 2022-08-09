@@ -22,7 +22,7 @@ import { FeatureStatusCell } from './FeatureStatusCell/FeatureStatusCell';
 import {
     PlaygroundFeatureSchema,
     PlaygroundRequestSchema,
-} from 'hooks/api/actions/usePlayground/playground.model';
+} from 'component/playground/Playground/interfaces/playground.model';
 import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
 import useLoading from 'hooks/useLoading';
 import { VariantCell } from './VariantCell/VariantCell';
@@ -106,7 +106,9 @@ export const PlaygroundResultsTable = ({
                 accessor: 'isEnabled',
                 filterName: 'isEnabled',
                 filterParsing: (value: boolean) => (value ? 'true' : 'false'),
-                Cell: ({ value }: any) => <FeatureStatusCell enabled={value} />,
+                Cell: ({ row }: any) => (
+                    <FeatureStatusCell feature={row.original} />
+                ),
                 sortType: 'boolean',
                 sortInverted: true,
             },

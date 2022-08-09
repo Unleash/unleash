@@ -1,7 +1,7 @@
 import {
     PlaygroundFeatureSchema,
     PlaygroundRequestSchema,
-} from 'hooks/api/actions/usePlayground/playground.model';
+} from 'component/playground/Playground/interfaces/playground.model';
 import { IconButton, Popover, styled } from '@mui/material';
 import { InfoOutlined } from '@mui/icons-material';
 import React, { useRef, useState } from 'react';

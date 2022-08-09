@@ -88,18 +88,8 @@ export const PlaygroundResultStrategyExecutionParameters = ({
                             key={key}
                             value={hosts}
                             text={'host'}
-                            input={
-                                Boolean(input?.context?.[getMappedParam(key)])
-                                    ? input?.context?.[getMappedParam(key)]
-                                    : 'no value'
-                            }
-                            showReason={
-                                Boolean(input?.context?.[getMappedParam(key)])
-                                    ? !hosts.includes(
-                                          input?.context?.[getMappedParam(key)]
-                                      )
-                                    : undefined
-                            }
+                            input={'no value'}
+                            showReason={undefined}
                         />
                     );
                 case 'IPs':

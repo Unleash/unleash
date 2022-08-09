@@ -42,7 +42,6 @@ declare module '@mui/material/styles' {
             diffSub: string;
             diffNeutral: string;
             edited: string;
-            background: string;
         };
         /**
          * For 'Seen' column on feature toggles list and other.

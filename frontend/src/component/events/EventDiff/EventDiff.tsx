@@ -1,8 +1,9 @@
 import { diff } from 'deep-diff';
-import { useStyles } from './EventDiff.styles';
 import { IEvent } from 'interfaces/event';
+import { useTheme } from '@mui/system';
+import { CSSProperties } from 'react';
 
-const DIFF_PREFIXES = {
+const DIFF_PREFIXES: Record<string, string> = {
     A: ' ',
     E: ' ',
     D: '-',
@@ -14,13 +15,13 @@ interface IEventDiffProps {
 }
 
 const EventDiff = ({ entry }: IEventDiffProps) => {
-    const { classes: styles } = useStyles();
+    const theme = useTheme();
 
-    const KLASSES = {
-        A: styles.blue, // array edited
-        E: styles.blue, // edited
-        D: styles.negative, // deleted
-        N: styles.positive, // added
+    const styles: Record<string, CSSProperties> = {
+        A: { color: theme.palette.code.edited }, // array edited
+        E: { color: theme.palette.code.edited }, // edited
+        D: { color: theme.palette.code.diffSub }, // deleted
+        N: { color: theme.palette.code.diffAdd }, // added
     };
 
     const diffs =
@@ -32,18 +33,14 @@ const EventDiff = ({ entry }: IEventDiffProps) => {
         let change;
         if (diff.lhs !== undefined) {
             change = (
-                <div>
-                    <div className={KLASSES.D}>
-                        - {key}: {JSON.stringify(diff.lhs)}
-                    </div>
+                <div style={styles.D}>
+                    - {key}: {JSON.stringify(diff.lhs)}
                 </div>
             );
         } else if (diff.rhs !== undefined) {
             change = (
-                <div>
-                    <div className={KLASSES.N}>
-                        + {key}: {JSON.stringify(diff.rhs)}
-                    </div>
+                <div style={styles.N}>
+                    + {key}: {JSON.stringify(diff.rhs)}
                 </div>
             );
         }
@@ -60,23 +57,19 @@ const EventDiff = ({ entry }: IEventDiffProps) => {
         } else if (diff.lhs !== undefined && diff.rhs !== undefined) {
             change = (
                 <div>
-                    <div className={KLASSES.D}>
+                    <div style={styles.D}>
                         - {key}: {JSON.stringify(diff.lhs)}
                     </div>
-                    <div className={KLASSES.N}>
+                    <div style={styles.N}>
                         + {key}: {JSON.stringify(diff.rhs)}
                     </div>
                 </div>
             );
         } else {
-            // @ts-expect-error
-            const spadenClass = KLASSES[diff.kind];
-            // @ts-expect-error
-            const prefix = DIFF_PREFIXES[diff.kind];
-
             change = (
-                <div className={spadenClass}>
-                    {prefix} {key}: {JSON.stringify(diff.rhs || diff.item)}
+                <div style={styles[diff.kind]}>
+                    {DIFF_PREFIXES[diff.kind]} {key}:{' '}
+                    {JSON.stringify(diff.rhs || diff.item)}
                 </div>
             );
         }
@@ -91,16 +84,15 @@ const EventDiff = ({ entry }: IEventDiffProps) => {
     } else {
         // Just show the data if there is no diff yet.
         const data = entry.data || entry.preData;
-        changes = (
-            <div className={entry.data ? KLASSES.N : KLASSES.D}>
+        changes = [
+            <div style={entry.data ? styles.N : styles.D}>
                 {JSON.stringify(data, null, 2)}
-            </div>
-        );
+            </div>,
+        ];
     }
 
     return (
         <pre style={{ overflowX: 'auto', overflowY: 'hidden' }} tabIndex={0}>
-            {/* @ts-expect-error */}
             <code>{changes.length === 0 ? '(no changes)' : changes}</code>
         </pre>
     );

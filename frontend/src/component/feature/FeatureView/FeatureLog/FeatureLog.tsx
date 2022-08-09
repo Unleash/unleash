@@ -1,7 +1,7 @@
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { useStyles } from './FeatureLog.styles';
-import { FeatureEventHistory } from 'component/history/FeatureEventHistory/FeatureEventHistory';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import { EventLog } from 'component/events/EventLog/EventLog';
 
 const FeatureLog = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -15,7 +15,12 @@ const FeatureLog = () => {
 
     return (
         <div className={styles.container}>
-            <FeatureEventHistory featureId={feature.name} />
+            <EventLog
+                title="Event log"
+                project={projectId}
+                feature={featureId}
+                displayInline
+            />
         </div>
     );
 };

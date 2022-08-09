@@ -39,8 +39,7 @@ import RedirectFeatureView from 'component/feature/RedirectFeatureView/RedirectF
 import { CreateAddon } from 'component/addons/CreateAddon/CreateAddon';
 import { EditAddon } from 'component/addons/EditAddon/EditAddon';
 import { CopyFeatureToggle } from 'component/feature/CopyFeature/CopyFeature';
-import { EventHistoryPage } from 'component/history/EventHistoryPage/EventHistoryPage';
-import { FeatureEventHistoryPage } from 'component/history/FeatureEventHistoryPage/FeatureEventHistoryPage';
+import { EventPage } from 'component/events/EventPage/EventPage';
 import { CreateStrategy } from 'component/strategies/CreateStrategy/CreateStrategy';
 import { EditStrategy } from 'component/strategies/EditStrategy/EditStrategy';
 import { SplashPage } from 'component/splash/SplashPage/SplashPage';
@@ -364,17 +363,9 @@ export const routes: IRoute[] = [
 
     // History
     {
-        path: '/history/:toggleName',
-        title: ':toggleName',
-        parent: '/history',
-        component: FeatureEventHistoryPage,
-        type: 'protected',
-        menu: {},
-    },
-    {
         path: '/history',
         title: 'Event log',
-        component: EventHistoryPage,
+        component: EventPage,
         type: 'protected',
         menu: { adminSettings: true },
     },

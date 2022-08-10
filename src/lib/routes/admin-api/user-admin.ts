@@ -99,7 +99,7 @@ export default class UserAdminController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Users'],
                     operationId: 'validateUserPassword',
                     requestBody: createRequestSchema('passwordSchema'),
                     responses: { 200: emptyResponse },
@@ -114,7 +114,7 @@ export default class UserAdminController extends Controller {
             permission: ADMIN,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Users'],
                     operationId: 'changeUserPassword',
                     requestBody: createRequestSchema('passwordSchema'),
                     responses: { 200: emptyResponse },
@@ -129,7 +129,7 @@ export default class UserAdminController extends Controller {
             permission: ADMIN,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Users'],
                     operationId: 'resetUserPassword',
                     requestBody: createRequestSchema('idSchema'),
                     responses: {
@@ -146,7 +146,7 @@ export default class UserAdminController extends Controller {
             permission: ADMIN,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Users'],
                     operationId: 'getUsers',
                     responses: { 200: createResponseSchema('usersSchema') },
                 }),
@@ -160,7 +160,7 @@ export default class UserAdminController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Users'],
                     operationId: 'searchUsers',
                     responses: { 200: createResponseSchema('usersSchema') },
                 }),
@@ -174,7 +174,7 @@ export default class UserAdminController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Users'],
                     operationId: 'getBaseUsersAndGroups',
                     responses: {
                         200: createResponseSchema('usersGroupsBaseSchema'),
@@ -190,7 +190,7 @@ export default class UserAdminController extends Controller {
             permission: ADMIN,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Users'],
                     operationId: 'createUser',
                     requestBody: createRequestSchema('createUserSchema'),
                     responses: { 200: createResponseSchema('userSchema') },
@@ -205,7 +205,7 @@ export default class UserAdminController extends Controller {
             permission: ADMIN,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Users'],
                     operationId: 'getUser',
                     responses: { 200: createResponseSchema('userSchema') },
                 }),
@@ -219,7 +219,7 @@ export default class UserAdminController extends Controller {
             permission: ADMIN,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Users'],
                     operationId: 'updateUser',
                     requestBody: createRequestSchema('updateUserSchema'),
                     responses: { 200: createResponseSchema('userSchema') },
@@ -235,7 +235,7 @@ export default class UserAdminController extends Controller {
             permission: ADMIN,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Users'],
                     operationId: 'deleteUser',
                     responses: { 200: emptyResponse },
                 }),

@@ -58,7 +58,7 @@ class StateController extends Controller {
             handler: this.import,
             middleware: [
                 this.openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Import/Export'],
                     operationId: 'import',
                     responses: {
                         202: emptyResponse,
@@ -74,7 +74,7 @@ class StateController extends Controller {
             handler: this.export,
             middleware: [
                 this.openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Import/Export'],
                     operationId: 'export',
                     responses: {
                         200: createResponseSchema('stateSchema'),

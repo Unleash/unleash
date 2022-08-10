@@ -48,7 +48,7 @@ export default class EventController extends Controller {
             middleware: [
                 openApiService.validPath({
                     operationId: 'getEvents',
-                    tags: ['admin'],
+                    tags: ['Events'],
                     responses: {
                         ...getStandardResponses(401),
                         200: createResponseSchema('eventsSchema'),
@@ -77,7 +77,7 @@ export default class EventController extends Controller {
             middleware: [
                 openApiService.validPath({
                     operationId: 'getEventsForToggle',
-                    tags: ['admin'],
+                    tags: ['Events'],
                     responses: {
                         ...getStandardResponses(401),
                         200: createResponseSchema('featureEventsSchema'),

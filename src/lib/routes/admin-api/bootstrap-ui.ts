@@ -97,7 +97,7 @@ class BootstrapUIController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['other'],
+                    tags: ['Admin UI'],
                     operationId: 'getBootstrapUiData',
                     responses: {
                         202: createResponseSchema('bootstrapUiSchema'),

@@ -41,7 +41,7 @@ class MetricsController extends Controller {
             permission: UPDATE_APPLICATION,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Metrics'],
                     operationId: 'createApplication',
                     responses: {
                         202: emptyResponse,
@@ -58,7 +58,7 @@ class MetricsController extends Controller {
             acceptAnyContentType: true,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Metrics'],
                     operationId: 'deleteApplication',
                     responses: {
                         200: emptyResponse,
@@ -73,7 +73,7 @@ class MetricsController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Metrics'],
                     operationId: 'getApplications',
                     responses: {
                         200: createResponseSchema('applicationsSchema'),
@@ -88,7 +88,7 @@ class MetricsController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Metrics'],
                     operationId: 'getApplication',
                     responses: {
                         200: createResponseSchema('applicationSchema'),

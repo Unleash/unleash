@@ -48,7 +48,7 @@ class TagController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Tags'],
                     operationId: 'getTags',
                     responses: { 200: createResponseSchema('tagsSchema') },
                 }),
@@ -61,7 +61,7 @@ class TagController extends Controller {
             permission: UPDATE_FEATURE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Tags'],
                     operationId: 'createTag',
                     responses: {
                         201: emptyResponse,
@@ -77,7 +77,7 @@ class TagController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Tags'],
                     operationId: 'getTagsByType',
                     responses: {
                         200: createResponseSchema('tagsSchema'),
@@ -92,7 +92,7 @@ class TagController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Tags'],
                     operationId: 'getTag',
                     responses: {
                         200: createResponseSchema('tagWithVersionSchema'),
@@ -108,7 +108,7 @@ class TagController extends Controller {
             permission: UPDATE_FEATURE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Tags'],
                     operationId: 'deleteTag',
                     responses: {
                         200: emptyResponse,

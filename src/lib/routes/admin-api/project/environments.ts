@@ -40,7 +40,7 @@ export default class EnvironmentsController extends Controller {
             permission: UPDATE_PROJECT,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Projects'],
                     operationId: 'addEnvironmentToProject',
                     requestBody: createRequestSchema(
                         'projectEnvironmentSchema',
@@ -58,7 +58,7 @@ export default class EnvironmentsController extends Controller {
             permission: UPDATE_PROJECT,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Projects'],
                     operationId: 'removeEnvironmentFromProject',
                     responses: { 200: emptyResponse },
                 }),

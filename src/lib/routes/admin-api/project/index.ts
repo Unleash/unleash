@@ -33,7 +33,7 @@ export default class ProjectApi extends Controller {
             permission: NONE,
             middleware: [
                 services.openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Projects'],
                     operationId: 'getProjects',
                     responses: {
                         200: createResponseSchema('projectsSchema'),

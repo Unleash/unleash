@@ -225,12 +225,12 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 'feature_strategies.constraints as constraints',
                 'feature_strategies.sort_order as sort_order',
             )
-            .fullOuterJoin(
+            .leftJoin(
                 'feature_environments',
                 'feature_environments.feature_name',
                 'features.name',
             )
-            .fullOuterJoin('feature_strategies', function () {
+            .leftJoin('feature_strategies', function () {
                 this.on(
                     'feature_strategies.feature_name',
                     '=',
@@ -241,7 +241,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                     'feature_environments.environment',
                 );
             })
-            .fullOuterJoin(
+            .leftJoin(
                 'environments',
                 'feature_environments.environment',
                 'environments.name',

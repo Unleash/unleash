@@ -34,13 +34,12 @@ The playground will only evaluate features belonging to the projects you specify
 
 The [Unleash context](../user_guide/unleash-context.md) represents a client SDK's configuration and used for evaluating your features. You can construct your own context or use a JSON version of a context from a client.
 
-#### Required fields
+#### Implicit context fields
 
-Unleash clients all require an `appName` to start up. If you do not provide an `appName`, the playground will assign a default value to this property instead.
+You can add any fields you want to the context used for the evaluation, and you can also leave out any fields you want. However, there are some fields that will be set for you if don't provide them:
 
-#### Implicit fields
-
-The `currentTime` property of the [Unleash context](../user_guide/unleash-context.md) gets auto-populated with the current time. You can override this manually.
+-   **`appName`**: Unleash clients all require an `appName` to start up. If you do not provide an `appName`, the playground will assign a default value to this property instead.
+-   **`currentTime`**: The `currentTime` property of the [Unleash context](../user_guide/unleash-context.md) gets auto-populated with the current time. You can override this manually by providing a value of your own.
 
 ## The response
 

@@ -20,12 +20,12 @@ const StyledChipWrapper = styled(Box)(() => ({
 export const FeatureStatusCell = ({ feature }: IFeatureStatusCellProps) => {
     const enabled = feature.isEnabled
         ? true
-        : feature.strategies.result === false
+        : feature.strategies?.result === false
         ? false
         : 'unknown';
     const label = feature.isEnabled
         ? 'True'
-        : feature.strategies.result === false
+        : feature.strategies?.result === false
         ? 'False'
         : 'Unknown';
     return (

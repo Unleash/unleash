@@ -219,26 +219,34 @@ export const PlaygroundResultsTable = ({
     }, [loading, sortBy, searchValue]);
 
     return (
-        <PageContent
-            isLoading={loading}
-            header={
-                <PageHeader
-                    titleElement={`Results (${
-                        rows.length < data.length
-                            ? `${rows.length} of ${data.length}`
-                            : data.length
-                    })`}
-                    actions={
-                        <Search
-                            initialValue={searchValue}
-                            onChange={setSearchValue}
-                            hasFilters
-                            getSearchContext={getSearchContext}
-                        />
-                    }
+        <>
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    mb: 3,
+                }}
+            >
+                <Typography variant="subtitle1" sx={{ ml: 1 }}>
+                    {features !== undefined && !loading
+                        ? `Results (${
+                              rows.length < data.length
+                                  ? `${rows.length} of ${data.length}`
+                                  : data.length
+                          })`
+                        : 'Results'}
+                </Typography>
+
+                <Search
+                    initialValue={searchValue}
+                    onChange={setSearchValue}
+                    hasFilters
+                    getSearchContext={getSearchContext}
+                    disabled={loading}
+                    containerStyles={{ marginLeft: '1rem', maxWidth: '400px' }}
                 />
-            }
-        >
+            </Box>
             <ConditionallyRender
                 condition={!loading && !data}
                 show={() => (
@@ -284,6 +292,6 @@ export const PlaygroundResultsTable = ({
                     </Box>
                 )}
             />
-        </PageContent>
+        </>
     );
 };

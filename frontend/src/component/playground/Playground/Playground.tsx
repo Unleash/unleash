@@ -18,6 +18,7 @@ import {
 } from './playground.utils';
 import { PlaygroundGuidance } from './PlaygroundGuidance/PlaygroundGuidance';
 import { PlaygroundGuidancePopper } from './PlaygroundGuidancePopper/PlaygroundGuidancePopper';
+import Loader from '../../common/Loader/Loader';
 
 export const Playground: VFC<{}> = () => {
     const { environments } = useEnvironments();
@@ -101,7 +102,6 @@ export const Playground: VFC<{}> = () => {
             if (action && typeof action === 'function') {
                 action();
             }
-
             setResults(response);
         } catch (error: unknown) {
             setToastData({
@@ -198,15 +198,21 @@ export const Playground: VFC<{}> = () => {
                     })}
                 >
                     <ConditionallyRender
-                        condition={Boolean(results)}
-                        show={
-                            <PlaygroundResultsTable
-                                loading={loading}
-                                features={results?.features}
-                                input={results?.input}
+                        condition={loading}
+                        show={<Loader />}
+                        elseShow={
+                            <ConditionallyRender
+                                condition={Boolean(results)}
+                                show={
+                                    <PlaygroundResultsTable
+                                        loading={loading}
+                                        features={results?.features}
+                                        input={results?.input}
+                                    />
+                                }
+                                elseShow={<PlaygroundGuidance />}
                             />
                         }
-                        elseShow={<PlaygroundGuidance />}
                     />
                 </Box>
             </Box>

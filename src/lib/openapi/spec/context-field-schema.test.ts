@@ -8,7 +8,11 @@ test('contextFieldSchema', () => {
         stickiness: false,
         sortOrder: 0,
         createdAt: '2022-01-01T00:00:00.000Z',
-        legalValues: [],
+        legalValues: [
+            { value: 'a' },
+            { value: 'b', description: '' },
+            { value: 'c', description: 'd' },
+        ],
     };
 
     expect(

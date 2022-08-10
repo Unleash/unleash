@@ -209,12 +209,12 @@ test('Should get all events of type', async () => {
             return eventStore.store(event);
         }),
     );
-    const featureCreatedEvents = await eventStore.getEventsFilterByType(
-        FEATURE_CREATED,
-    );
+    const featureCreatedEvents = await eventStore.searchEvents({
+        type: FEATURE_CREATED,
+    });
     expect(featureCreatedEvents).toHaveLength(3);
-    const featureDeletedEvents = await eventStore.getEventsFilterByType(
-        FEATURE_DELETED,
-    );
+    const featureDeletedEvents = await eventStore.searchEvents({
+        type: FEATURE_DELETED,
+    });
     expect(featureDeletedEvents).toHaveLength(3);
 });

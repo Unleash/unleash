@@ -3,6 +3,7 @@ import { IUnleashStores } from '../types/stores';
 import { Logger } from '../logger';
 import { IEventStore } from '../types/stores/event-store';
 import { IEvent } from '../types/events';
+import { SearchEventsSchema } from '../openapi/spec/search-events-schema';
 
 export default class EventService {
     private logger: Logger;
@@ -21,12 +22,8 @@ export default class EventService {
         return this.eventStore.getEvents();
     }
 
-    async getEventsForToggle(name: string): Promise<IEvent[]> {
-        return this.eventStore.getEventsForFeature(name);
-    }
-
-    async getEventsForProject(project: string): Promise<IEvent[]> {
-        return this.eventStore.getEventsFilterByProject(project);
+    async searchEvents(search: SearchEventsSchema): Promise<IEvent[]> {
+        return this.eventStore.searchEvents(search);
     }
 }
 

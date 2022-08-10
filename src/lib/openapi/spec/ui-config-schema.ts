@@ -28,6 +28,9 @@ export const uiConfigSchema = {
         disablePasswordAuth: {
             type: 'boolean',
         },
+        emailEnabled: {
+            type: 'boolean',
+        },
         segmentValuesLimit: {
             type: 'number',
         },

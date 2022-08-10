@@ -85,7 +85,7 @@ export default class FeatureToggleClientStore
         let query = this.db('features')
             .select(selectColumns)
             .modify(FeatureToggleStore.filterByArchived, archived)
-            .fullOuterJoin(
+            .leftJoin(
                 this.db('feature_strategies')
                     .select('*')
                     .where({ environment })
@@ -93,7 +93,7 @@ export default class FeatureToggleClientStore
                 'fs.feature_name',
                 'features.name',
             )
-            .fullOuterJoin(
+            .leftJoin(
                 this.db('feature_environments')
                     .select('feature_name', 'enabled', 'environment')
                     .where({ environment })

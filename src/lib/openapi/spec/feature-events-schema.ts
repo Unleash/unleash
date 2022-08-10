@@ -6,7 +6,7 @@ export const featureEventsSchema = {
     $id: '#/components/schemas/featureEventsSchema',
     type: 'object',
     additionalProperties: false,
-    required: ['toggleName', 'events'],
+    required: ['events'],
     properties: {
         version: { type: 'number' },
         toggleName: {

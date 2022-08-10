@@ -179,24 +179,6 @@ export default class GroupStore implements IGroupStore {
         return (transaction || this.db).batchInsert(T.GROUP_USER, rows);
     }
 
-    async updateExistingUsersInGroup(
-        groupId: number,
-        existingUsers: IGroupUserModel[],
-        transaction?: Transaction,
-    ): Promise<void> {
-        const queries = [];
-
-        existingUsers.forEach((user) => {
-            queries.push(
-                (transaction || this.db)(T.GROUP_USER)
-                    .where({ group_id: groupId, user_id: user.user.id })
-                    .transacting(transaction),
-            );
-        });
-
-        await Promise.all(queries);
-    }
-
     async deleteOldUsersFromGroup(
         deletableUsers: IGroupUser[],
         transaction?: Transaction,
@@ -218,7 +200,6 @@ export default class GroupStore implements IGroupStore {
     ): Promise<void> {
         await this.db.transaction(async (tx) => {
             await this.addNewUsersToGroup(groupId, newUsers, userName, tx);
-            await this.updateExistingUsersInGroup(groupId, existingUsers, tx);
             await this.deleteOldUsersFromGroup(deletableUsers, tx);
         });
     }

@@ -1,15 +1,14 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import {SortingRule, useFlexLayout, useGlobalFilter, useSortBy, useTable} from 'react-table';
-
 import {
-    SortableTableHeader,
-    Table,
-    TableBody,
-    TableCell,
-    TablePlaceholder,
-    TableRow, VirtualizedTable,
-} from 'component/common/Table';
+    SortingRule,
+    useFlexLayout,
+    useGlobalFilter,
+    useSortBy,
+    useTable,
+} from 'react-table';
+
+import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { sortTypes } from 'utils/sortTypes';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
@@ -27,8 +26,8 @@ import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
 import useLoading from 'hooks/useLoading';
 import { VariantCell } from './VariantCell/VariantCell';
 import { FeatureResultInfoPopoverCell } from './FeatureResultInfoPopoverCell/FeatureResultInfoPopoverCell';
-import {PageHeader} from "../../../common/PageHeader/PageHeader";
-import {PageContent} from "../../../common/PageContent/PageContent";
+import { PageHeader } from '../../../common/PageHeader/PageHeader';
+import { PageContent } from '../../../common/PageContent/PageContent';
 
 const defaultSort: SortingRule<string> = { id: 'name' };
 const { value, setValue } = createLocalStorage(
@@ -88,7 +87,7 @@ export const PlaygroundResultsTable = ({
                 sortType: 'alphanumeric',
                 filterName: 'variant',
                 searchable: true,
-                width: 200,
+                maxWidth: 200,
                 Cell: ({
                     value,
                     row: {
@@ -112,10 +111,12 @@ export const PlaygroundResultsTable = ({
                     <FeatureStatusCell feature={row.original} />
                 ),
                 sortType: 'boolean',
+                maxWidth: 100,
                 sortInverted: true,
             },
             {
                 Header: '',
+                maxWidth: 70,
                 id: 'info',
                 Cell: ({ row }: any) => (
                     <FeatureResultInfoPopoverCell
@@ -217,8 +218,6 @@ export const PlaygroundResultsTable = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps -- don't re-render after search params change
     }, [loading, sortBy, searchValue]);
 
-
-
     return (
         <PageContent
             isLoading={loading}
@@ -240,7 +239,6 @@ export const PlaygroundResultsTable = ({
                 />
             }
         >
-
             <ConditionallyRender
                 condition={!loading && !data}
                 show={() => (
@@ -252,7 +250,9 @@ export const PlaygroundResultsTable = ({
                 )}
                 elseShow={() => (
                     <Box ref={ref}>
-                        <SearchHighlightProvider value={getSearchText(searchValue)}>
+                        <SearchHighlightProvider
+                            value={getSearchText(searchValue)}
+                        >
                             <VirtualizedTable
                                 rows={rows}
                                 headerGroups={headerGroups}

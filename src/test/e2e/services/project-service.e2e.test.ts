@@ -834,7 +834,11 @@ test('should not update role for user on project when she is the owner', async (
 });
 
 test('Should allow bulk update of group permissions', async () => {
-    const project = 'bulk-update-project';
+    const project = {
+        id: 'bulk-update-project',
+        name: 'bulk-update-project',
+    };
+    await projectService.createProject(project, user.id);
     const groupStore = stores.groupStore;
 
     const user1 = await stores.userStore.insert({
@@ -862,7 +866,7 @@ test('Should allow bulk update of group permissions', async () => {
     });
 
     await projectService.addAccess(
-        project,
+        project.id,
         createFeatureRole.id,
         {
             users: [{ id: user1.id }],
@@ -906,8 +910,13 @@ test('Should bulk update of only users', async () => {
 });
 
 test('Should allow bulk update of only groups', async () => {
-    const project = 'bulk-update-project';
+    const project = {
+        id: 'bulk-update-project-only',
+        name: 'bulk-update-project-only',
+    };
     const groupStore = stores.groupStore;
+
+    await projectService.createProject(project, user.id);
 
     const group1 = await groupStore.create({
         name: 'ViewersOnly',
@@ -929,7 +938,7 @@ test('Should allow bulk update of only groups', async () => {
     });
 
     await projectService.addAccess(
-        project,
+        project.id,
         createFeatureRole.id,
         {
             users: [],

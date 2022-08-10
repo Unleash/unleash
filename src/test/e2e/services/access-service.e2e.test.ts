@@ -170,7 +170,7 @@ const hasCommonProjectAccess = async (user, projectName, condition) => {
     ).toBe(condition);
 };
 
-const hasFullProjectAccess = async (user, projectName, condition) => {
+const hasFullProjectAccess = async (user, projectName: string, condition) => {
     const { DELETE_PROJECT, UPDATE_PROJECT, MOVE_FEATURE_TOGGLE } = permissions;
 
     expect(
@@ -862,12 +862,18 @@ test('Should not be allowed to delete a project role', async () => {
 });
 
 test('Should be allowed move feature toggle to project when given access through group', async () => {
-    const project = 'yet-another-project';
+    const project = {
+        id: 'yet-another-project1',
+        name: 'yet-another-project1',
+    };
+
     const groupStore = stores.groupStore;
     const viewerUser = await createUserViewerAccess(
         'Victoria Viewer',
         'vickyv@getunleash.io',
     );
+
+    await projectService.createProject(project, editorUser);
 
     const groupWithProjectAccess = await groupStore.create({
         name: 'Project Editors',
@@ -882,24 +888,29 @@ test('Should be allowed move feature toggle to project when given access through
 
     const projectRole = await accessService.getRoleByName(RoleName.MEMBER);
 
-    await hasCommonProjectAccess(viewerUser, project, false);
+    await hasCommonProjectAccess(viewerUser, project.id, false);
 
     await accessService.addGroupToRole(
         groupWithProjectAccess.id,
         projectRole.id,
         'SomeAdminUser',
-        project,
+        project.id,
     );
 
-    await hasCommonProjectAccess(viewerUser, project, true);
+    await hasCommonProjectAccess(viewerUser, project.id, true);
 });
 
 test('Should not lose user role access when given permissions from a group', async () => {
-    const project = 'yet-another-project';
+    const project = {
+        id: 'yet-another-project-lose',
+        name: 'yet-another-project-lose',
+    };
     const user = editorUser;
     const groupStore = stores.groupStore;
 
-    await accessService.createDefaultProjectRoles(user, project);
+    await projectService.createProject(project, user);
+
+    // await accessService.createDefaultProjectRoles(user, project.id);
 
     const groupWithNoAccess = await groupStore.create({
         name: 'ViewersOnly',
@@ -908,7 +919,7 @@ test('Should not lose user role access when given permissions from a group', asy
 
     await groupStore.addNewUsersToGroup(
         groupWithNoAccess.id,
-        [{ user: editorUser, role: 'Owner' }],
+        [{ user: user, role: 'Owner' }],
         'Admin',
     );
 
@@ -918,22 +929,32 @@ test('Should not lose user role access when given permissions from a group', asy
         groupWithNoAccess.id,
         viewerRole.id,
         'SomeAdminUser',
-        project,
+        project.id,
     );
 
-    await hasFullProjectAccess(editorUser, project, true);
+    await hasFullProjectAccess(user, project.id, true);
 });
 
 test('Should allow user to take multiple group roles and have expected permissions on each project', async () => {
-    const projectForCreate =
-        'project-that-should-have-create-toggle-permission';
-    const projectForDelete =
-        'project-that-should-have-delete-toggle-permission';
+    const projectForCreate = {
+        id: 'project-that-should-have-create-toggle-permission',
+        name: 'project-that-should-have-create-toggle-permission',
+        description: 'Blah',
+    };
+    const projectForDelete = {
+        id: 'project-that-should-have-delete-toggle-permission',
+        name: 'project-that-should-have-delete-toggle-permission',
+        description: 'Blah',
+    };
+
     const groupStore = stores.groupStore;
     const viewerUser = await createUserViewerAccess(
         'Victor Viewer',
         'victore@getunleash.io',
     );
+
+    await projectService.createProject(projectForCreate, editorUser);
+    await projectService.createProject(projectForDelete, editorUser);
 
     const groupWithCreateAccess = await groupStore.create({
         name: 'ViewersOnly',
@@ -989,28 +1010,28 @@ test('Should allow user to take multiple group roles and have expected permissio
         groupWithCreateAccess.id,
         deleteFeatureRole.id,
         'SomeAdminUser',
-        projectForDelete,
+        projectForDelete.id,
     );
 
     await accessService.addGroupToRole(
         groupWithDeleteAccess.id,
         createFeatureRole.id,
         'SomeAdminUser',
-        projectForCreate,
+        projectForCreate.id,
     );
 
     expect(
         await accessService.hasPermission(
             viewerUser,
             permissions.CREATE_FEATURE,
-            projectForCreate,
+            projectForCreate.id,
         ),
     ).toBe(true);
     expect(
         await accessService.hasPermission(
             viewerUser,
             permissions.DELETE_FEATURE,
-            projectForCreate,
+            projectForCreate.id,
         ),
     ).toBe(false);
 
@@ -1018,14 +1039,14 @@ test('Should allow user to take multiple group roles and have expected permissio
         await accessService.hasPermission(
             viewerUser,
             permissions.CREATE_FEATURE,
-            projectForDelete,
+            projectForDelete.id,
         ),
     ).toBe(false);
     expect(
         await accessService.hasPermission(
             viewerUser,
             permissions.DELETE_FEATURE,
-            projectForDelete,
+            projectForDelete.id,
         ),
     ).toBe(true);
 });

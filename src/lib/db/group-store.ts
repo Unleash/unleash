@@ -42,7 +42,6 @@ const rowToGroupUser = (row) => {
     return {
         userId: row.user_id,
         groupId: row.group_id,
-        role: row.role,
         joinedAt: row.created_at,
     };
 };
@@ -112,7 +111,7 @@ export default class GroupStore implements IGroupStore {
 
     async getAllUsersByGroups(groupIds: number[]): Promise<IGroupUser[]> {
         const rows = await this.db
-            .select('gu.group_id', 'u.id as user_id', 'role', 'gu.created_at')
+            .select('gu.group_id', 'u.id as user_id', 'gu.created_at')
             .from(`${T.GROUP_USER} AS gu`)
             .join(`${T.USERS} AS u`, 'u.id', 'gu.user_id')
             .whereIn('gu.group_id', groupIds);
@@ -174,7 +173,6 @@ export default class GroupStore implements IGroupStore {
             return {
                 group_id: groupId,
                 user_id: user.user.id,
-                role: user.role,
                 created_by: userName,
             };
         });
@@ -192,7 +190,6 @@ export default class GroupStore implements IGroupStore {
             queries.push(
                 (transaction || this.db)(T.GROUP_USER)
                     .where({ group_id: groupId, user_id: user.user.id })
-                    .update({ role: user.role })
                     .transacting(transaction),
             );
         });

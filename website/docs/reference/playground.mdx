@@ -18,13 +18,13 @@ The unleash playground is a part of the Unleash Admin UI and an accompanying API
 
 Each feature toggle will contain info on whether it was enabled or not and which variant it was assigned. Later versions of the playground also contain [detailed evaluation results](#detailed-evaluation-results) to help you understand exactly why the feature was enabled or disabled.
 
-## Configuring the context
+## Configuring the query
 
-This section describes what information the playground needs to evaluate the context against your existing features.
+This section describes what information the playground needs to evaluate your Unleash context against your existing features.
 
 ### Environment and projects
 
-While technically not part of the Unleash context proper, the playground needs to know what environment to evaluate the toggles against, and it also requires a list of projects to evaluate feature toggles from.
+In addition the actual Unleash context, the playground also needs to know about environments and projects. In addition to the Unleash context, you must also select an environment and one or more projects for the query.
 
 Features can only be evaluated against a single environment at a time. The environment should be one of the environments configured for your Unleash instance.
 

@@ -22,12 +22,10 @@ import {
     PlaygroundFeatureSchema,
     PlaygroundRequestSchema,
 } from 'component/playground/Playground/interfaces/playground.model';
-import { Box, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
 import useLoading from 'hooks/useLoading';
 import { VariantCell } from './VariantCell/VariantCell';
 import { FeatureResultInfoPopoverCell } from './FeatureResultInfoPopoverCell/FeatureResultInfoPopoverCell';
-import { PageHeader } from '../../../common/PageHeader/PageHeader';
-import { PageContent } from '../../../common/PageContent/PageContent';
 
 const defaultSort: SortingRule<string> = { id: 'name' };
 const { value, setValue } = createLocalStorage(

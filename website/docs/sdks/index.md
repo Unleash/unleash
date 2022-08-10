@@ -60,8 +60,8 @@ If you see an item marked with a ❌ that you would find useful, feel free to re
 | Default metrics interval | 60s | 60s | 60s | 60s | 60s | 60s | 30s | 15s | 30s |
 | Context provider | ✅ | N/A | N/A | N/A | N/A | ✅ | ✅ | N/A | N/A |
 | Global fallback function | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | N/A |
-| Toggle Query: `namePrefix` | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
-| Toggle Query: `tags` | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
+| Toggle Query: `namePrefix` | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ✅ |
+| Toggle Query: `tags` | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ✅ |
 | Toggle Query: `project_name` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | N/A | ⭕ | ✅ |
 | **Category: Custom Headers** |  |  |  |  |  |  |  |  |  |
 | static | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ | N/A |
@@ -72,7 +72,7 @@ If you see an item marked with a ❌ that you would find useful, feel free to re
 | [Gradual rollout: custom stickiness](../user_guide/activation_strategy#customize-stickiness-beta) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ | ✅ |
 | [UserID](../user_guide/activation_strategy#userids) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | [IP](../user_guide/activation_strategy#ips) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| [IP](../user_guide/activation_strategy#ips): CIDR syntax | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ | ⭕ | ✅ | ✅ |
+| [IP](../user_guide/activation_strategy#ips): CIDR syntax | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ | ✅ | ✅ | ✅ |
 | [Hostname](../user_guide/activation_strategy#hostnames) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | **Category: [Custom strategies](../advanced/custom_activation_strategy)** |  |  |  |  |  |  |  |  |  |
 | Basic support | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
@@ -98,7 +98,7 @@ If you see an item marked with a ❌ that you would find useful, feel free to re
 | Can disable metrics | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Client registration | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Basic usage metrics (yes/no) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| [Impression data](../advanced/impression-data.md) | ⭕ | ⭕ | ⭕ | ⭕ | ⭕ | ⭕ | ⭕ | ⭕ | N/A |
+| [Impression data](../advanced/impression-data.md) | ⭕ | ⭕ | ⭕ | ⭕ | ⭕ | ⭕ | ✅ | ⭕ | N/A |
 | **Category: Bootstrap (beta)** |  |  |  |  |  |  |  |  |  |
 | Bootstrap from file | ✅ | ✅ | ✅ | ⭕ | ✅ | ⭕ | ✅ | ⭕ | ✅ |
 | Custom Bootstrap implementation | ✅ | ✅ | ✅ | ⭕ | ✅ | ⭕ | ✅ | ⭕ | ✅ |

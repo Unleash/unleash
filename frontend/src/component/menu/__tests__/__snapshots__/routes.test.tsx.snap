@@ -321,14 +321,6 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
-    "menu": {},
-    "parent": "/history",
-    "path": "/history/:toggleName",
-    "title": ":toggleName",
-    "type": "protected",
-  },
-  {
-    "component": [Function],
     "menu": {
       "adminSettings": true,
     },

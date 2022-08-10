@@ -1,4 +1,4 @@
-import { PlaygroundResponseSchema } from 'hooks/api/actions/usePlayground/playground.model';
+import { PlaygroundResponseSchema } from 'component/playground/Playground/interfaces/playground.model';
 import { IEnvironment } from 'interfaces/environments';
 
 export const resolveProjects = (

@@ -12,6 +12,7 @@ export interface IUiConfig {
     versionInfo?: IVersionInfo;
     links: ILinks[];
     disablePasswordAuth?: boolean;
+    emailEnabled?: boolean;
     toast?: IProclamationToast;
     segmentValuesLimit?: number;
     strategySegmentsLimit?: number;

@@ -4,7 +4,7 @@ import { useStyles } from 'component/common/ConstraintAccordion/ConstraintAccord
 import {
     PlaygroundConstraintSchema,
     PlaygroundRequestSchema,
-} from 'hooks/api/actions/usePlayground/playground.model';
+} from 'component/playground/Playground/interfaces/playground.model';
 
 interface PlaygroundConstraintAccordionViewHeaderProps {
     constraint: PlaygroundConstraintSchema;

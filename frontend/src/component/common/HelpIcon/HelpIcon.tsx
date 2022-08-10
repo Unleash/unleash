@@ -1,24 +1,19 @@
-import { Tooltip } from '@mui/material';
+import { Tooltip, TooltipProps } from '@mui/material';
 import { Info } from '@mui/icons-material';
 import { useStyles } from 'component/common/HelpIcon/HelpIcon.styles';
 import React from 'react';
 
 interface IHelpIconProps {
     tooltip: string;
-    style?: React.CSSProperties;
+    placement?: TooltipProps['placement'];
 }
 
-export const HelpIcon = ({ tooltip, style }: IHelpIconProps) => {
+export const HelpIcon = ({ tooltip, placement }: IHelpIconProps) => {
     const { classes: styles } = useStyles();
 
     return (
-        <Tooltip title={tooltip} arrow>
-            <span
-                className={styles.container}
-                style={style}
-                tabIndex={0}
-                aria-label="Help"
-            >
+        <Tooltip title={tooltip} placement={placement} arrow>
+            <span className={styles.container} tabIndex={0} aria-label="Help">
                 <Info className={styles.icon} />
             </span>
         </Tooltip>

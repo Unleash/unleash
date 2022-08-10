@@ -1,13 +1,13 @@
 import {
     PlaygroundFeatureSchema,
     PlaygroundRequestSchema,
-} from '../../../../../../hooks/api/actions/usePlayground/playground.model';
+} from 'component/playground/Playground/interfaces/playground.model';
 import { Alert, IconButton, Typography, useTheme } from '@mui/material';
 import { PlaygroundResultChip } from '../../PlaygroundResultChip/PlaygroundResultChip';
 import { useStyles } from './FeatureDetails.styles';
 import { CloseOutlined } from '@mui/icons-material';
 import React from 'react';
-import { ConditionallyRender } from '../../../../../common/ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
     checkForEmptyValues,
     hasCustomStrategies,
@@ -31,13 +31,17 @@ export const FeatureDetails = ({
         ? `This feature toggle is True in ${input?.environment} because `
         : `This feature toggle is False in ${input?.environment} because `;
 
-    const reason = feature.isEnabled
-        ? 'at least one strategy is True'
-        : !feature.isEnabledInCurrentEnvironment
-        ? 'the environment is disabled'
-        : hasOnlyCustomStrategies(feature)
-        ? 'no strategies could be fully evaluated'
-        : 'all strategies are either False or could not be fully evaluated';
+    const reason = (() => {
+        if (feature.isEnabled) return 'at least one strategy is True';
+
+        if (!feature.isEnabledInCurrentEnvironment)
+            return 'the environment is disabled';
+
+        if (hasOnlyCustomStrategies(feature))
+            return 'no strategies could be fully evaluated';
+
+        return 'all strategies are either False or could not be fully evaluated';
+    })();
 
     const color = feature.isEnabled
         ? theme.palette.success.main
@@ -48,7 +52,7 @@ export const FeatureDetails = ({
         : undefined;
 
     const customStrategiesTxt = hasCustomStrategies(feature)
-        ? `You have custom strategies. Custom strategies can't be evaluated and they will be set as Unevaluated`
+        ? `This feature uses custom strategies. Custom strategies can't be evaluated, so they will be marked as Unevaluated`
         : undefined;
 
     const onCloseClick =

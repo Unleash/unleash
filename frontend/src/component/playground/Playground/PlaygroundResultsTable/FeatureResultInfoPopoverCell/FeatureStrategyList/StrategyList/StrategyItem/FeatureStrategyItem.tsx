@@ -3,7 +3,7 @@ import { PlaygroundResultChip } from '../../../../PlaygroundResultChip/Playgroun
 import {
     PlaygroundStrategySchema,
     PlaygroundRequestSchema,
-} from 'hooks/api/actions/usePlayground/playground.model';
+} from 'component/playground/Playground/interfaces/playground.model';
 import { StrategyExecution } from './StrategyExecution/StrategyExecution';
 import { useStyles } from './FeatureStrategyItem.styles';
 import { StrategyItemContainer } from 'component/common/StrategyItemContainer/StrategyItemContainer';

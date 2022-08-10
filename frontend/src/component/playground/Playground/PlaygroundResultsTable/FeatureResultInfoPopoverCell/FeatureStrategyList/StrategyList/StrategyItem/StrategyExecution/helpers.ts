@@ -4,7 +4,6 @@ export const getMappedParam = (key: string) => {
             return 'userId';
         case 'IPS':
             return 'remoteAddress';
-        case 'HOSTNAMES':
         default:
             return key;
     }

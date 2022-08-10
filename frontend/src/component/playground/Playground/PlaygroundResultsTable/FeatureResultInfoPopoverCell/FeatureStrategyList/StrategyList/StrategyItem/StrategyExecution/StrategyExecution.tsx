@@ -6,7 +6,7 @@ import { useStyles } from './StrategyExecution.styles';
 import {
     PlaygroundRequestSchema,
     PlaygroundStrategySchema,
-} from 'hooks/api/actions/usePlayground/playground.model';
+} from 'component/playground/Playground/interfaces/playground.model';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ConstraintExecution } from './ConstraintExecution/ConstraintExecution';
 import { SegmentExecution } from './SegmentExecution/SegmentExecution';

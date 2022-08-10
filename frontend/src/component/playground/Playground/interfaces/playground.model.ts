@@ -1,3 +1,12 @@
+/**
+ *
+ * 09/08/2022
+ * This was copied from the openapi-generator generated files and slightly modified
+ * because of malformed generation of `anyOf`, `oneOf`
+ *
+ * https://github.com/OpenAPITools/openapi-generator/issues/12256
+ */
+
 import { VariantSchema } from 'openapi';
 import { Operator } from 'constants/operators';
 

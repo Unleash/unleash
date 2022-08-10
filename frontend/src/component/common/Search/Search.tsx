@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { IconButton, InputBase, Tooltip } from '@mui/material';
 import { Search as SearchIcon, Close } from '@mui/icons-material';
 import classnames from 'classnames';
@@ -18,6 +18,7 @@ interface ISearchProps {
     disabled?: boolean;
     getSearchContext?: () => IGetSearchContextOutput;
     containerStyles?: React.CSSProperties;
+    debounceTime?: number;
 }
 
 export const Search = ({
@@ -29,14 +30,14 @@ export const Search = ({
     disabled,
     getSearchContext,
     containerStyles,
+    debounceTime = 200,
 }: ISearchProps) => {
     const ref = useRef<HTMLInputElement>();
     const { classes: styles } = useStyles();
     const [showSuggestions, setShowSuggestions] = useState(false);
 
     const [value, setValue] = useState(initialValue);
-
-    const debouncedOnChange = useAsyncDebounce(onChange, 200);
+    const debouncedOnChange = useAsyncDebounce(onChange, debounceTime);
 
     const onSearchChange = (value: string) => {
         debouncedOnChange(value);

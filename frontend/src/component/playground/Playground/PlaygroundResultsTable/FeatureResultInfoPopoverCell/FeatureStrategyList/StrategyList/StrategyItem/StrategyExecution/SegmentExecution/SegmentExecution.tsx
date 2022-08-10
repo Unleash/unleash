@@ -2,7 +2,7 @@ import { VFC } from 'react';
 import {
     PlaygroundSegmentSchema,
     PlaygroundRequestSchema,
-} from 'hooks/api/actions/usePlayground/playground.model';
+} from 'component/playground/Playground/interfaces/playground.model';
 import { ConstraintExecution } from '../ConstraintExecution/ConstraintExecution';
 import { CancelOutlined, DonutLarge } from '@mui/icons-material';
 import { Link } from 'react-router-dom';

@@ -3,7 +3,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import {
     PlaygroundFeatureSchema,
     PlaygroundRequestSchema,
-} from 'hooks/api/actions/usePlayground/playground.model';
+} from 'component/playground/Playground/interfaces/playground.model';
 import { Alert } from '@mui/material';
 
 interface PlaygroundResultFeatureStrategyListProps {

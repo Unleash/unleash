@@ -32,7 +32,7 @@ export const PlaygroundParameterItem = ({
             )}
         >
             <Typography variant="subtitle1" color={theme.palette[color].main}>
-                {input}
+                {`${input}`}
             </Typography>
             <div className={styles.column}>
                 <ConditionallyRender

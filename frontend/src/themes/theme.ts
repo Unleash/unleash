@@ -120,11 +120,10 @@ export default createTheme({
         },
         code: {
             main: '#0b8c8f',
-            diffAdd: 'green',
-            diffSub: 'red',
+            diffAdd: '#3b6600',
+            diffSub: '#d11525',
             diffNeutral: 'black',
-            edited: 'blue',
-            background: '#efefef',
+            edited: 'black',
         },
         activityIndicators: {
             unknown: colors.grey[100],

@@ -17,7 +17,7 @@ export const useStyles = makeStyles()(theme => ({
         fill: '#fff',
     },
     accordion: {
-        border: `1px solid ${theme.palette.grey[400]}`,
+        border: `1px solid ${theme.palette.dividerAlternative}`,
         borderRadius: theme.spacing(1),
         backgroundColor: '#fff',
         boxShadow: 'none',

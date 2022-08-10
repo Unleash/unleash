@@ -47,7 +47,7 @@ You can add any fields you want to the context used for the evaluation, and you 
 
 The playground's response contains a list of all the feature toggles that have been evaluated based on your configured [environments and projects](#environments-and-projects). In the UI, the playground displays the features in a table. Each feature indicates whether its considered _enabled_ or _disabled_ and which [variant](../advanced/feature-toggle-variants.md) was assigned to it, if any.
 
-As with all of Unleash's client SDKs, the playground respects [stickiness](../advanced/stickiness.md). This guarantees that you'll always get the same variants and the same gradual rollout results if you provide the same context, as long as you provide the context field used for calculating stickiness.
+As with all of Unleash's client SDKs, the playground respects [stickiness](../advanced/stickiness.md). The [stickiness algorithm](../advanced/stickiness.md#calculation) guarantees that you'll always get the same variants and the same gradual rollout results if you provide the same context, as long as you provide the context field used for calculating stickiness.
 
 ### Detailed evaluation results
 

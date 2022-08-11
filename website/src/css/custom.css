@@ -222,7 +222,7 @@ https://github.com/PaloAltoNetworks/docusaurus-openapi-docs/issues/177
 
 .patch > .menu__link::before {
     content: 'patch';
-    background-color: var(--openapi-code-blue);
+    background-color: var(--openapi-code-green);
 }
 
 .head > .menu__link::before {

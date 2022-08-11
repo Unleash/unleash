@@ -25,7 +25,7 @@ Since v4.0.0 all operations require an [API token](/user_guide/api-token) with `
 With versions earlier than v4.0.0 and `insecure` authentication no authentication is required.
 
 - [Feature Toggles API](/api/client/features) (**OpenAPI**: [get a single feature](/reference/api/unleash/get-client-feature) and [get all features](/reference/api/unleash/get-all-client-features))
-- [Register API](/api/client/register) (**OpenAPI**: [register a client application](/reference/api/unleash/register-client-application)))
+- [Register API](/api/client/register) (**OpenAPI**: [register a client application](/reference/api/unleash/register-client-application))
 - [Metrics API](/api/client/metrics) (**OpenAPI**: [register client metrics](/reference/api/unleash/register-client-metrics))
 
 ## Admin API (internal) {#admin-api-internal}

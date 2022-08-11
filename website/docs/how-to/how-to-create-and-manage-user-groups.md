@@ -50,13 +50,13 @@ This guide takes you through how to use user groups to manage permissions on you
 
 ![The groups page shown with the add user button highlighted.](/img/add-user-to-group-step-1.png)
 
-6. Find the user you'd like to add to the group add them.
+6. Find the user you'd like to add to the group and select them.
 
 ![The groups page shown with a user selected.](/img/add-user-to-group-step-2.png)
 
-7. Assign the user a role in the group and save the group. Remember that every group needs to have _at least_ one owner.
+7. Review the group users and save when you're happy.
 
-![The groups page shown with the user role highlighted.](/img/add-user-to-group-step-3.png)
+![The edit groups page shown with the save button highlighted.](/img/add-user-to-group-step-3.png)
 
 ## Assigning groups to projects
 

@@ -24,9 +24,9 @@ Since v4.0.0 all operations require an [API token](/user_guide/api-token) with `
 
 With versions earlier than v4.0.0 and `insecure` authentication no authentication is required.
 
-- [Feature Toggles API](/api/client/features) (**OpenAPI**: [get a single feature](/reference/api/unleash/get-client-feature) and [get all features](/reference/api/unleash/get-all-client-features))
-- [Register API](/api/client/register) (**OpenAPI**: [register a client application](/reference/api/unleash/register-client-application))
-- [Metrics API](/api/client/metrics) (**OpenAPI**: [register client metrics](/reference/api/unleash/register-client-metrics))
+- [Feature Toggles API](/api/client/features) (OpenAPI versions: [get a single feature](/reference/api/unleash/get-client-feature 'OpenAPI version') and [get all features](/reference/api/unleash/get-all-client-features 'OpenAPI version'))
+- [Register API](/api/client/register) ([OpenAPI version](/reference/api/unleash/register-client-application 'register a client application'))
+- [Metrics API](/api/client/metrics) ([OpenAPI version](/reference/api/unleash/register-client-metrics 'register client metrics'))
 
 ## Admin API (internal) {#admin-api-internal}
 
@@ -40,12 +40,12 @@ The internal API used by the Admin UI (unleash-frontend). Since v4.0.0 all opera
 
 With versions earlier than v4.0.0 and `insecure` authentication Basic Auth (with curl `-u myemail@test.com:`) is enough.
 
-- [Events API](/api/admin/events) (**OpenAPI**: [Events operations](/reference/api/unleash/Events))
-- [Feature Toggles API](/api/admin/features) (**OpenAPI**: [Feature operations](/reference/api/unleash/Features))
-- [Metrics API](/api/admin/metrics) (**OpenAPI**: [Metrics operations](/reference/api/unleash/Metrics))
-- [Project API](/api/admin/project.md) (**OpenAPI**: [Project operations](/reference/api/unleash/Projects))
-- [Strategies API](/api/admin/strategies) (**OpenAPI**: [Strategies operations](/reference/api/unleash/Strategies))
-- [Tags API](/api/admin/tags) (**OpenAPI**: [Tags operations](/reference/api/unleash/Tags))
+- [Events API](/api/admin/events) ([OpenAPI version](/reference/api/unleash/Events 'Events operations'))
+- [Feature Toggles API](/api/admin/features) ([OpenAPI version](/reference/api/unleash/Features 'Feature operations'))
+- [Metrics API](/api/admin/metrics) ([OpenAPI version](/reference/api/unleash/Metrics 'Metrics operations'))
+- [Project API](/api/admin/project.md) ([OpenAPI version](/reference/api/unleash/Projects 'Project operations'))
+- [Strategies API](/api/admin/strategies) ([OpenAPI version](/reference/api/unleash/Strategies 'Strategies operations'))
+- [Tags API](/api/admin/tags) ([OpenAPI version](/reference/api/unleash/Tags 'Tags operations'))
 
 ## System API's {#system-apis}
 

@@ -189,10 +189,13 @@ module.exports = {
                 config: {
                     server: {
                         specPath: 'http://localhost:4242/docs/openapi.json',
-                        outputDir: 'docs/generated/openapi/server',
+                        outputDir: 'docs/reference/api/unleash',
                         sidebarOptions: {
                             groupPathsBy: 'tag',
-                            categoryLinkSource: 'tag'
+                            categoryLinkSource: 'tag',
+                            customProps: {
+                                slug: '/test/',
+                            },
                         },
                     },
                 },

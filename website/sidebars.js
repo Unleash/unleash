@@ -172,7 +172,19 @@ module.exports = {
                                 'api/internal/health',
                             ],
                         },
-                        'api/open_api',
+                        {
+                            label: 'OpenAPI docs',
+                            collapsed: true,
+                            type: 'category',
+                            link: {
+                                title: 'Unleash Server APIs',
+                                type: 'generated-index',
+                                description:
+                                    'Generated API docs based on the Unleash OpenAPI schema. For the time being, some additional info can also be found in the older API docs.',
+                                slug: '/reference/api/unleash',
+                            },
+                            items: require('./docs/reference/api/unleash/sidebar.js'),
+                        },
                     ],
                 },
                 {
@@ -300,18 +312,6 @@ module.exports = {
                 slug: '/topics',
             },
             items: ['topics/a-b-testing', 'topics/proxy-hosting'],
-        },
-        {
-            label: 'OpenAPI',
-            collapsed: true,
-            type: 'category',
-            link: {
-                type: 'generated-index',
-                title: 'API docs',
-                description: 'Generated API docs for the OpenAPI spec',
-                slug: '/openapi',
-            },
-            items: require('./docs/generated/openapi/server/sidebar.js'),
         },
     ],
 };

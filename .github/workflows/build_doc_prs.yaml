@@ -32,7 +32,7 @@ jobs:
         uses: lycheeverse/lychee-action@v1.5.0
         with:
           fail: true
-          args: ./website/**/*.md ./website/**/*.html
+          args: --cache --exclude-path *dns.algolia.net* ./website/**/*.md ./website/**/*.html
           output: ${{ env.issue-content }}
 
       # Permissions (issues: read)

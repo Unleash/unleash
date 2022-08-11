@@ -1,15 +1,14 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { SortingRule, useGlobalFilter, useSortBy, useTable } from 'react-table';
-
 import {
-    SortableTableHeader,
-    Table,
-    TableBody,
-    TableCell,
-    TablePlaceholder,
-    TableRow,
-} from 'component/common/Table';
+    SortingRule,
+    useFlexLayout,
+    useGlobalFilter,
+    useSortBy,
+    useTable,
+} from 'react-table';
+
+import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { sortTypes } from 'utils/sortTypes';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
@@ -86,7 +85,7 @@ export const PlaygroundResultsTable = ({
                 sortType: 'alphanumeric',
                 filterName: 'variant',
                 searchable: true,
-                width: 200,
+                maxWidth: 200,
                 Cell: ({
                     value,
                     row: {
@@ -110,10 +109,12 @@ export const PlaygroundResultsTable = ({
                     <FeatureStatusCell feature={row.original} />
                 ),
                 sortType: 'boolean',
+                maxWidth: 120,
                 sortInverted: true,
             },
             {
                 Header: '',
+                maxWidth: 70,
                 id: 'info',
                 Cell: ({ row }: any) => (
                     <FeatureResultInfoPopoverCell
@@ -154,11 +155,9 @@ export const PlaygroundResultsTable = ({
     }));
 
     const {
-        getTableProps,
-        getTableBodyProps,
         headerGroups,
-        state: { sortBy },
         rows,
+        state: { sortBy },
         prepareRow,
         setHiddenColumns,
     } = useTable(
@@ -170,11 +169,13 @@ export const PlaygroundResultsTable = ({
             autoResetGlobalFilter: false,
             autoResetSortBy: false,
             disableSortRemove: true,
+            disableMultiSort: true,
             defaultColumn: {
                 Cell: HighlightCell,
             },
         },
         useGlobalFilter,
+        useFlexLayout,
         useSortBy
     );
 
@@ -244,7 +245,6 @@ export const PlaygroundResultsTable = ({
                     containerStyles={{ marginLeft: '1rem', maxWidth: '400px' }}
                 />
             </Box>
-
             <ConditionallyRender
                 condition={!loading && !data}
                 show={() => (
@@ -259,30 +259,11 @@ export const PlaygroundResultsTable = ({
                         <SearchHighlightProvider
                             value={getSearchText(searchValue)}
                         >
-                            <Table {...getTableProps()} rowHeight="standard">
-                                <SortableTableHeader
-                                    headerGroups={headerGroups as any}
-                                />
-                                <TableBody {...getTableBodyProps()}>
-                                    {rows.map(row => {
-                                        prepareRow(row);
-                                        return (
-                                            <TableRow
-                                                hover
-                                                {...row.getRowProps()}
-                                            >
-                                                {row.cells.map(cell => (
-                                                    <TableCell
-                                                        {...cell.getCellProps()}
-                                                    >
-                                                        {cell.render('Cell')}
-                                                    </TableCell>
-                                                ))}
-                                            </TableRow>
-                                        );
-                                    })}
-                                </TableBody>
-                            </Table>
+                            <VirtualizedTable
+                                rows={rows}
+                                headerGroups={headerGroups}
+                                prepareRow={prepareRow}
+                            />
                         </SearchHighlightProvider>
                         <ConditionallyRender
                             condition={

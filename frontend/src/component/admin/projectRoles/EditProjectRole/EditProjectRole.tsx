@@ -6,7 +6,7 @@ import useProjectRolesApi from 'hooks/api/actions/useProjectRolesApi/useProjectR
 import useProjectRole from 'hooks/api/getters/useProjectRole/useProjectRole';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
-import { IPermission } from 'interfaces/user';
+import { IPermission } from 'interfaces/project';
 import { useNavigate } from 'react-router-dom';
 import useProjectRoleForm from '../hooks/useProjectRoleForm';
 import ProjectRoleForm from '../ProjectRoleForm/ProjectRoleForm';
@@ -43,7 +43,6 @@ const EditProjectRole = () => {
     useEffect(() => {
         const initialCheckedPermissions = role?.permissions?.reduce(
             (acc: { [key: string]: IPermission }, curr: IPermission) => {
-                // @ts-expect-error
                 acc[getRoleKey(curr)] = curr;
                 return acc;
             },

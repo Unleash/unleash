@@ -36,13 +36,13 @@ export const ProjectCard = ({
     const { classes } = useStyles();
     const { hasAccess } = useContext(AccessContext);
     const { isOss } = useUiConfig();
-    const [anchorEl, setAnchorEl] = useState(null);
+    const [anchorEl, setAnchorEl] = useState<Element | null>(null);
     const [showDelDialog, setShowDelDialog] = useState(false);
     const navigate = useNavigate();
-    // @ts-expect-error
-    const handleClick = e => {
-        e.preventDefault();
-        setAnchorEl(e.currentTarget);
+
+    const handleClick = (event: React.SyntheticEvent) => {
+        event.preventDefault();
+        setAnchorEl(event.currentTarget);
     };
 
     const canDeleteProject =

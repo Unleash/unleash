@@ -18,7 +18,7 @@ import AccessContext from 'contexts/AccessContext';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
-interface IFeatureOverviewTagsProps extends React.HTMLProps<HTMLButtonElement> {
+interface IFeatureOverviewTagsProps extends React.HTMLProps<HTMLDivElement> {
     projectId: string;
 }
 
@@ -119,32 +119,29 @@ const FeatureOverviewTags: React.FC<IFeatureOverviewTagsProps> = ({
     );
 
     return (
-        <>
-            {/* @ts-expect-error */}
-            <div className={styles.container} {...rest}>
-                <Dialogue
-                    open={showDelDialog}
-                    onClose={() => {
-                        setShowDelDialog(false);
-                        setSelectedTag({ type: '', value: '' });
-                    }}
-                    onClick={() => {
-                        setShowDelDialog(false);
-                        handleDelete();
-                        setSelectedTag({ type: '', value: '' });
-                    }}
-                    title="Are you sure you want to delete this tag?"
-                />
+        <div className={styles.container} {...rest}>
+            <Dialogue
+                open={showDelDialog}
+                onClose={() => {
+                    setShowDelDialog(false);
+                    setSelectedTag({ type: '', value: '' });
+                }}
+                onClick={() => {
+                    setShowDelDialog(false);
+                    handleDelete();
+                    setSelectedTag({ type: '', value: '' });
+                }}
+                title="Are you sure you want to delete this tag?"
+            />
 
-                <div>
-                    <ConditionallyRender
-                        condition={tags.length > 0}
-                        show={tags.map(renderTag)}
-                        elseShow={<p data-loading>No tags to display</p>}
-                    />
-                </div>
+            <div>
+                <ConditionallyRender
+                    condition={tags.length > 0}
+                    show={tags.map(renderTag)}
+                    elseShow={<p data-loading>No tags to display</p>}
+                />
             </div>
-        </>
+        </div>
     );
 };
 

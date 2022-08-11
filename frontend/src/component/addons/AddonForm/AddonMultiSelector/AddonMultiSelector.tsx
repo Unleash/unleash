@@ -7,7 +7,13 @@ import {
     AutocompleteRenderOptionState,
 } from '@mui/material/Autocomplete';
 import { styled } from '@mui/system';
-import { capitalize, Checkbox, Paper, TextField } from '@mui/material';
+import {
+    capitalize,
+    Checkbox,
+    Paper,
+    TextField,
+    Autocomplete,
+} from '@mui/material';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';
@@ -16,7 +22,6 @@ import {
     StyledHelpText,
     StyledSelectAllFormControlLabel,
     StyledTitle,
-    StyledAutocomplete,
 } from '../AddonForm.styles';
 
 export interface IAddonMultiSelectorProps {
@@ -153,19 +158,18 @@ export const AddonMultiSelector: VFC<IAddonMultiSelectorProps> = ({
                 condition={selectAllEnabled}
                 show={<SelectAllFormControl />}
             />
-            <StyledAutocomplete
+            <Autocomplete
+                sx={{ mb: 8 }}
                 disabled={isWildcardSelected}
                 multiple
                 limitTags={2}
                 options={options}
                 disableCloseOnSelect
-                //@ts-expect-error
                 getOptionLabel={({ label }) => label}
                 fullWidth
                 groupBy={() => 'Select/Deselect all'}
                 renderGroup={renderGroup}
                 PaperComponent={CustomPaper}
-                //@ts-expect-error
                 renderOption={renderOption}
                 renderInput={renderInput}
                 value={
@@ -176,7 +180,6 @@ export const AddonMultiSelector: VFC<IAddonMultiSelectorProps> = ({
                           )
                 }
                 onChange={(_, input) => {
-                    //@ts-expect-error
                     const state = input.map(({ value }) => value);
                     onChange(state);
                 }}

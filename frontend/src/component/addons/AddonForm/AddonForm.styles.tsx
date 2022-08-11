@@ -1,6 +1,5 @@
 import { styled } from '@mui/system';
 import { FormControlLabel, TextField } from '@mui/material';
-import Autocomplete from '@mui/material/Autocomplete';
 
 export const StyledForm = styled('form')({
     display: 'flex',
@@ -9,10 +8,6 @@ export const StyledForm = styled('form')({
     gap: '1rem',
 });
 
-export const StyledAutocomplete = styled(Autocomplete)({
-    paddingBottom: '36px',
-    marginTop: '0px',
-});
 export const StyledFormSection = styled('section')({
     marginBottom: '36px',
 });

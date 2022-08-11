@@ -1359,15 +1359,11 @@ Object {
             "format": "date-time",
             "type": "string",
           },
-          "role": Object {
-            "type": "string",
-          },
           "user": Object {
             "$ref": "#/components/schemas/userSchema",
           },
         },
         "required": Array [
-          "role",
           "user",
         ],
         "type": "object",

@@ -40,11 +40,6 @@ export interface IGroupStore extends Store<IGroup, number> {
         userName: string,
     ): Promise<void>;
 
-    updateExistingUsersInGroup(
-        groupId: number,
-        users: IGroupUserModel[],
-    ): Promise<void>;
-
     existsWithName(name: string): Promise<boolean>;
 
     create(group: IStoreGroup): Promise<IGroup>;

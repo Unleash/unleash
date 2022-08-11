@@ -5,14 +5,11 @@ export const groupUserModelSchema = {
     $id: '#/components/schemas/groupUserModelSchema',
     type: 'object',
     additionalProperties: false,
-    required: ['role', 'user'],
+    required: ['user'],
     properties: {
         joinedAt: {
             type: 'string',
             format: 'date-time',
-        },
-        role: {
-            type: 'string',
         },
         user: {
             $ref: '#/components/schemas/userSchema',

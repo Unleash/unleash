@@ -13,7 +13,6 @@ export interface IGroup {
 export interface IGroupUser {
     groupId: number;
     userId: number;
-    role: string;
     joinedAt: Date;
     seenAt?: Date;
 }
@@ -37,7 +36,6 @@ export interface IGroupProject {
 
 export interface IGroupUserModel {
     user: IUser;
-    role: string;
     joinedAt?: Date;
 }
 

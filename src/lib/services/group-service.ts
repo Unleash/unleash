@@ -176,7 +176,7 @@ export class GroupService {
     }
 
     async validateGroup(
-        { name, users }: IGroupModel,
+        { name }: IGroupModel,
         existingGroup?: IGroup,
     ): Promise<void> {
         if (!name) {
@@ -187,10 +187,6 @@ export class GroupService {
             if (await this.groupStore.existsWithName(name)) {
                 throw new NameExistsError('Group name already exists');
             }
-        }
-
-        if (users.length == 0 || !users.some((u) => u.role == 'Owner')) {
-            throw new BadDataError('Group needs to have at least one Owner');
         }
     }
 
@@ -215,7 +211,6 @@ export class GroupService {
             return {
                 user: user,
                 joinedAt: roleUser.joinedAt,
-                role: roleUser.role,
             };
         });
         return { ...group, users: finalUsers };

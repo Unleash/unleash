@@ -1,16 +1,15 @@
-import { Request, Response } from 'express';
 import { BackstageController } from './backstage';
 import ResetPasswordController from './auth/reset-password-controller';
 import { SimplePasswordProvider } from './auth/simple-password-provider';
 import { IUnleashConfig } from '../types/option';
 import { IUnleashServices } from '../types/services';
-import { api } from './api-def';
 import LogoutController from './logout';
 
 const AdminApi = require('./admin-api');
 const ClientApi = require('./client-api');
 const Controller = require('./controller');
 import { HealthCheckController } from './health-check';
+import ProxyController from './proxy-api';
 class IndexRouter extends Controller {
     constructor(config: IUnleashConfig, services: IUnleashServices) {
         super(config);
@@ -25,13 +24,9 @@ class IndexRouter extends Controller {
             '/auth/reset',
             new ResetPasswordController(config, services).router,
         );
-        this.get(api.uri, this.index);
-        this.use(api.links.admin.uri, new AdminApi(config, services).router);
-        this.use(api.links.client.uri, new ClientApi(config, services).router);
-    }
-
-    async index(req: Request, res: Response): Promise<void> {
-        res.json(api);
+        this.use('/api/admin', new AdminApi(config, services).router);
+        this.use('/api/client', new ClientApi(config, services).router);
+        this.use('/api/frontend', new ProxyController(config, services).router);
     }
 }
 

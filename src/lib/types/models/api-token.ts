@@ -6,6 +6,7 @@ export const ALL = '*';
 export enum ApiTokenType {
     CLIENT = 'client',
     ADMIN = 'admin',
+    PROXY = 'proxy',
 }
 
 export interface ILegacyApiTokenCreate {

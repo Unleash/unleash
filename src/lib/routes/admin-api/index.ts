@@ -1,4 +1,3 @@
-import apiDef from './api-def.json';
 import Controller from '../controller';
 import { IUnleashServices } from '../../types/services';
 import { IUnleashConfig } from '../../types/option';
@@ -29,8 +28,6 @@ import ConstraintsController from './constraints';
 class AdminApi extends Controller {
     constructor(config: IUnleashConfig, services: IUnleashServices) {
         super(config);
-
-        this.app.get('/', this.index);
 
         this.app.use(
             '/features',
@@ -104,10 +101,6 @@ class AdminApi extends Controller {
             '/constraints',
             new ConstraintsController(config, services).router,
         );
-    }
-
-    index(req, res) {
-        res.json(apiDef);
     }
 }
 

@@ -42,14 +42,13 @@ interface IGroupForm {
     name: string;
     description: string;
     users: IGroupUser[];
-    setName: React.Dispatch<React.SetStateAction<string>>;
+    setName: (name: string) => void;
     setDescription: React.Dispatch<React.SetStateAction<string>>;
     setUsers: React.Dispatch<React.SetStateAction<IGroupUser[]>>;
     handleSubmit: (e: any) => void;
     handleCancel: () => void;
     errors: { [key: string]: string };
     mode: 'Create' | 'Edit';
-    clearErrors: () => void;
 }
 
 export const GroupForm: FC<IGroupForm> = ({
@@ -63,7 +62,6 @@ export const GroupForm: FC<IGroupForm> = ({
     handleCancel,
     errors,
     mode,
-    clearErrors,
     children,
 }) => (
     <StyledForm onSubmit={handleSubmit}>
@@ -77,7 +75,6 @@ export const GroupForm: FC<IGroupForm> = ({
                 id="group-name"
                 error={Boolean(errors.name)}
                 errorText={errors.name}
-                onFocus={() => clearErrors()}
                 value={name}
                 onChange={e => setName(e.target.value)}
                 data-testid={UG_NAME_ID}

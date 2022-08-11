@@ -1,6 +1,5 @@
 import { Delete, Edit } from '@mui/icons-material';
 import { styled, useMediaQuery, useTheme } from '@mui/material';
-import { GroupUserRoleCell } from 'component/admin/groups/GroupUserRoleCell/GroupUserRoleCell';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
@@ -47,7 +46,7 @@ const StyledTitle = styled('div')(({ theme }) => ({
     },
 }));
 
-const defaultSort: SortingRule<string> = { id: 'role', desc: true };
+const defaultSort: SortingRule<string> = { id: 'joinedAt' };
 
 const columns = [
     {
@@ -78,13 +77,6 @@ const columns = [
         searchable: true,
     },
     {
-        Header: 'User type',
-        accessor: 'role',
-        Cell: GroupUserRoleCell,
-        maxWidth: 150,
-        filterName: 'type',
-    },
-    {
         id: 'joined',
         Header: 'Joined',
         accessor: 'joinedAt',
@@ -103,6 +95,8 @@ const columns = [
         maxWidth: 150,
     },
 ];
+
+const hiddenColumnsSmall = ['imageUrl', 'name', 'joined', 'lastLogin'];
 
 interface IProjectGroupViewProps {
     open: boolean;
@@ -156,11 +150,7 @@ export const ProjectGroupView: VFC<IProjectGroupViewProps> = ({
         useFlexLayout
     );
 
-    useHiddenColumns(
-        setHiddenColumns,
-        ['imageUrl', 'name', 'joined', 'lastLogin'],
-        useMediaQuery(theme.breakpoints.down('md'))
-    );
+    useHiddenColumns(setHiddenColumns, hiddenColumnsSmall, isSmallScreen);
 
     return (
         <SidebarModal

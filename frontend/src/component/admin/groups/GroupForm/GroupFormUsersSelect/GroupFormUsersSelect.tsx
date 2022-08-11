@@ -1,17 +1,11 @@
-import {
-    Autocomplete,
-    Button,
-    Checkbox,
-    styled,
-    TextField,
-} from '@mui/material';
+import { Autocomplete, Checkbox, styled, TextField } from '@mui/material';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { IUser } from 'interfaces/user';
-import { useMemo, useState, VFC } from 'react';
+import { VFC } from 'react';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
-import { IGroupUser, Role } from 'interfaces/group';
-import { UG_USERS_ADD_ID, UG_USERS_ID } from 'utils/testIds';
+import { IGroupUser } from 'interfaces/group';
+import { UG_USERS_ID } from 'utils/testIds';
 
 const StyledOption = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -19,6 +13,10 @@ const StyledOption = styled('div')(({ theme }) => ({
     '& > span:first-of-type': {
         color: theme.palette.text.secondary,
     },
+}));
+
+const StyledTags = styled('div')(({ theme }) => ({
+    paddingLeft: theme.spacing(1),
 }));
 
 const StyledGroupFormUsersSelect = styled('div')(({ theme }) => ({
@@ -50,6 +48,14 @@ const renderOption = (
     </li>
 );
 
+const renderTags = (value: IGroupUser[]) => (
+    <StyledTags>
+        {value.length > 1
+            ? `${value.length} users selected`
+            : value[0].name || value[0].username || value[0].email}
+    </StyledTags>
+);
+
 interface IGroupFormUsersSelectProps {
     users: IGroupUser[];
     setUsers: React.Dispatch<React.SetStateAction<IGroupUser[]>>;
@@ -60,26 +66,6 @@ export const GroupFormUsersSelect: VFC<IGroupFormUsersSelectProps> = ({
     setUsers,
 }) => {
     const { users: usersAll } = useUsers();
-    const [selectedUsers, setSelectedUsers] = useState<IUser[]>([]);
-
-    const usersOptions = useMemo(
-        () =>
-            usersAll.filter(
-                (user: IUser) => !users?.map(({ id }) => id).includes(user.id)
-            ),
-        [usersAll, users]
-    );
-
-    const onAdd = () => {
-        const usersToBeAdded = selectedUsers.map(
-            (user: IUser): IGroupUser => ({
-                ...user,
-                role: Role.Member,
-            })
-        );
-        setUsers((users: IGroupUser[]) => [...users, ...usersToBeAdded]);
-        setSelectedUsers([]);
-    };
 
     return (
         <StyledGroupFormUsersSelect>
@@ -87,9 +73,10 @@ export const GroupFormUsersSelect: VFC<IGroupFormUsersSelectProps> = ({
                 data-testid={UG_USERS_ID}
                 size="small"
                 multiple
-                limitTags={10}
+                limitTags={1}
+                openOnFocus
                 disableCloseOnSelect
-                value={selectedUsers}
+                value={users}
                 onChange={(event, newValue, reason) => {
                     if (
                         event.type === 'keydown' &&
@@ -98,9 +85,9 @@ export const GroupFormUsersSelect: VFC<IGroupFormUsersSelectProps> = ({
                     ) {
                         return;
                     }
-                    setSelectedUsers(newValue);
+                    setUsers(newValue);
                 }}
-                options={[...usersOptions].sort((a, b) => {
+                options={[...usersAll].sort((a, b) => {
                     const aName = a.name || a.username || '';
                     const bName = b.name || b.username || '';
                     return aName.localeCompare(bName);
@@ -108,20 +95,15 @@ export const GroupFormUsersSelect: VFC<IGroupFormUsersSelectProps> = ({
                 renderOption={(props, option, { selected }) =>
                     renderOption(props, option as IUser, selected)
                 }
+                isOptionEqualToValue={(option, value) => option.id === value.id}
                 getOptionLabel={(option: IUser) =>
                     option.email || option.name || option.username || ''
                 }
                 renderInput={params => (
                     <TextField {...params} label="Select users" />
                 )}
+                renderTags={value => renderTags(value)}
             />
-            <Button
-                variant="outlined"
-                onClick={onAdd}
-                data-testid={UG_USERS_ADD_ID}
-            >
-                Add
-            </Button>
         </StyledGroupFormUsersSelect>
     );
 };

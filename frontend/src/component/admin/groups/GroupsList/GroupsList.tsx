@@ -121,7 +121,7 @@ export const GroupsList: VFC = () => {
                 </Grid>
             </SearchHighlightProvider>
             <ConditionallyRender
-                condition={data.length === 0}
+                condition={!loading && data.length === 0}
                 show={
                     <ConditionallyRender
                         condition={searchValue?.length > 0}

@@ -15,15 +15,12 @@ export const UG_NAME_ID = 'UG_NAME_ID';
 export const UG_DESC_ID = 'UG_DESC_ID';
 export const UG_USERS_ID = 'UG_USERS_ID';
 export const UG_USERS_ADD_ID = 'UG_USERS_ADD_ID';
-export const UG_USERS_TABLE_ROLE_ID = 'UG_USERS_TABLE_ROLE_ID';
 export const UG_CREATE_BTN_ID = 'UG_CREATE_BTN_ID';
 export const UG_SAVE_BTN_ID = 'UG_SAVE_BTN_ID';
 export const UG_EDIT_BTN_ID = 'UG_EDIT_BTN_ID';
 export const UG_DELETE_BTN_ID = 'UG_DELETE_BTN_ID';
-export const UG_ADD_USER_BTN_ID = 'UG_ADD_USER_BTN_ID';
-export const UG_EDIT_USER_BTN_ID = 'UG_EDIT_USER_BTN_ID';
+export const UG_EDIT_USERS_BTN_ID = 'UG_EDIT_USERS_BTN_ID';
 export const UG_REMOVE_USER_BTN_ID = 'UG_REMOVE_USER_BTN_ID';
-export const UG_USERS_ROLE_ID = 'UG_USERS_ROLE_ID';
 
 /* SEGMENT */
 export const SEGMENT_NAME_ID = 'SEGMENT_NAME_ID';

@@ -8,6 +8,7 @@ import { GroupCardActions } from './GroupCardActions/GroupCardActions';
 import { RemoveGroup } from 'component/admin/groups/RemoveGroup/RemoveGroup';
 import { useState } from 'react';
 import TopicOutlinedIcon from '@mui/icons-material/TopicOutlined';
+import { EditGroupUsers } from 'component/admin/groups/Group/EditGroupUsers/EditGroupUsers';
 
 const StyledLink = styled(Link)(({ theme }) => ({
     textDecoration: 'none',
@@ -82,6 +83,7 @@ interface IGroupCardProps {
 }
 
 export const GroupCard = ({ group }: IGroupCardProps) => {
+    const [editUsersOpen, setEditUsersOpen] = useState(false);
     const [removeOpen, setRemoveOpen] = useState(false);
     const navigate = useNavigate();
     return (
@@ -93,6 +95,7 @@ export const GroupCard = ({ group }: IGroupCardProps) => {
                         <StyledHeaderActions>
                             <GroupCardActions
                                 groupId={group.id}
+                                onEditUsers={() => setEditUsersOpen(true)}
                                 onRemove={() => setRemoveOpen(true)}
                             />
                         </StyledHeaderActions>
@@ -147,6 +150,11 @@ export const GroupCard = ({ group }: IGroupCardProps) => {
                     </StyledBottomRow>
                 </StyledGroupCard>
             </StyledLink>
+            <EditGroupUsers
+                open={editUsersOpen}
+                setOpen={setEditUsersOpen}
+                group={group}
+            />
             <RemoveGroup
                 open={removeOpen}
                 setOpen={setRemoveOpen}

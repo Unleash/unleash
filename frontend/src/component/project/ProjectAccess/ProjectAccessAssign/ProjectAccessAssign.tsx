@@ -170,7 +170,7 @@ export const ProjectAccessAssign = ({
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if (!role) return;
+        if (!isValid) return;
 
         try {
             if (!edit) {
@@ -263,6 +263,8 @@ export const ProjectAccessAssign = ({
         </li>
     );
 
+    const isValid = selectedOptions.length > 0 && role;
+
     return (
         <SidebarModal
             open
@@ -287,6 +289,7 @@ export const ProjectAccessAssign = ({
                             <Autocomplete
                                 size="small"
                                 multiple
+                                openOnFocus
                                 limitTags={10}
                                 disableCloseOnSelect
                                 disabled={edit}
@@ -339,6 +342,7 @@ export const ProjectAccessAssign = ({
                         <StyledAutocompleteWrapper>
                             <Autocomplete
                                 size="small"
+                                openOnFocus
                                 value={role}
                                 onChange={(_, newValue) => setRole(newValue)}
                                 options={roles}
@@ -360,6 +364,7 @@ export const ProjectAccessAssign = ({
                             type="submit"
                             variant="contained"
                             color="primary"
+                            disabled={!isValid}
                         >
                             Assign {entityType}
                         </Button>

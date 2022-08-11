@@ -30,9 +30,8 @@ export const RemoveGroupUser: FC<IRemoveGroupUserProps> = ({
                 ...group,
                 users: group.users
                     .filter(({ id }) => id !== user?.id)
-                    .map(({ id, role }) => ({
+                    .map(({ id }) => ({
                         user: { id },
-                        role,
                     })),
             };
             await updateGroup(group.id, groupPayload);

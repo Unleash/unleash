@@ -27,10 +27,14 @@ import { HighlightCell } from 'component/common/Table/cells/HighlightCell/Highli
 import { Search } from 'component/common/Search/Search';
 import useHiddenColumns from 'hooks/useHiddenColumns';
 
+const hiddenColumnsSmall = ['Icon', 'createdAt'];
+const hiddenColumnsFlagE = ['projects', 'environment'];
+
 export const ApiTokenTable = () => {
     const { tokens, loading } = useApiTokens();
     const initialState = useMemo(() => ({ sortBy: [{ id: 'createdAt' }] }), []);
     const { uiConfig } = useUiConfig();
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
     const {
         getTableProps,
@@ -53,16 +57,8 @@ export const ApiTokenTable = () => {
         useSortBy
     );
 
-    useHiddenColumns(
-        setHiddenColumns,
-        ['Icon', 'createdAt'],
-        useMediaQuery(theme.breakpoints.down('md'))
-    );
-    useHiddenColumns(
-        setHiddenColumns,
-        ['projects', 'environment'],
-        !uiConfig.flags.E
-    );
+    useHiddenColumns(setHiddenColumns, hiddenColumnsSmall, isSmallScreen);
+    useHiddenColumns(setHiddenColumns, hiddenColumnsFlagE, !uiConfig.flags.E);
 
     return (
         <PageContent

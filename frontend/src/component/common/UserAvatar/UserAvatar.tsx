@@ -1,15 +1,7 @@
-import {
-    Avatar,
-    AvatarProps,
-    Badge,
-    styled,
-    SxProps,
-    Theme,
-} from '@mui/material';
+import { Avatar, AvatarProps, styled, SxProps, Theme } from '@mui/material';
 import { IUser } from 'interfaces/user';
 import { FC } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { StarRounded } from '@mui/icons-material';
 
 const StyledAvatar = styled(Avatar)(({ theme }) => ({
     width: theme.spacing(3.5),
@@ -21,17 +13,8 @@ const StyledAvatar = styled(Avatar)(({ theme }) => ({
     fontWeight: theme.fontWeight.bold,
 }));
 
-const StyledStar = styled(StarRounded)(({ theme }) => ({
-    color: theme.palette.warning.main,
-    backgroundColor: theme.palette.background.paper,
-    borderRadius: theme.shape.borderRadiusExtraLarge,
-    fontSize: theme.fontSizes.smallBody,
-    marginLeft: theme.spacing(-1),
-}));
-
 interface IUserAvatarProps extends AvatarProps {
     user?: IUser;
-    star?: boolean;
     src?: string;
     title?: string;
     onMouseEnter?: (event: any) => void;
@@ -42,7 +25,6 @@ interface IUserAvatarProps extends AvatarProps {
 
 export const UserAvatar: FC<IUserAvatarProps> = ({
     user,
-    star,
     src,
     title,
     onMouseEnter,
@@ -74,7 +56,7 @@ export const UserAvatar: FC<IUserAvatarProps> = ({
         }
     }
 
-    const avatar = (
+    return (
         <StyledAvatar
             className={className}
             sx={sx}
@@ -92,24 +74,5 @@ export const UserAvatar: FC<IUserAvatarProps> = ({
                 elseShow={children}
             />
         </StyledAvatar>
-    );
-
-    return (
-        <ConditionallyRender
-            condition={Boolean(star)}
-            show={
-                <Badge
-                    overlap="circular"
-                    anchorOrigin={{
-                        vertical: 'top',
-                        horizontal: 'left',
-                    }}
-                    badgeContent={<StyledStar />}
-                >
-                    {avatar}
-                </Badge>
-            }
-            elseShow={avatar}
-        />
     );
 };

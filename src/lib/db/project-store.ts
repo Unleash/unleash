@@ -258,11 +258,9 @@ class ProjectStore implements IProjectStore {
             .whereIn('role_id', rolesFromProject)
             .first();
         const { members } = numbers;
-
         if (typeof members === 'string') {
             return parseInt(members, 10);
         }
-
         return members;
     }
 

@@ -1,7 +1,7 @@
 import { styled, Tooltip, Typography, useTheme } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PlaygroundSingleValue } from './PlaygroundSingleValue/PlaygroundSingleValue';
-import { PLaygroundMultipleValues } from './PlaygroundMultipleValues/PLaygroundMultipleValues';
+import { PLaygroundMultipleValues } from './PlaygroundMultipleValues/PlaygroundMultipleValues';
 import React from 'react';
 import { useStyles } from '../../ConstraintAccordion.styles';
 import { CancelOutlined } from '@mui/icons-material';

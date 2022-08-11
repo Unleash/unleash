@@ -4,23 +4,18 @@ import {
     parseParameterString,
     parseParameterStrings,
 } from 'utils/parseParameter';
-import { PlaygroundParameterItem } from '../PlaygroundParameterItem/PlaygroundParameterItem';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
-import { Chip } from '@mui/material';
-import PercentageCircle from 'component/common/PercentageCircle/PercentageCircle';
-import { PlaygroundConstraintSchema } from 'component/playground/Playground/interfaces/playground.model';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
+import { CustomParameterItem } from './CustomParameterItem/CustomParameterItem';
 
 interface ICustomStrategyProps {
     parameters: { [key: string]: string };
     strategyName: string;
-    constraints: PlaygroundConstraintSchema[];
 }
 
 export const CustomStrategyParams: VFC<ICustomStrategyProps> = ({
     strategyName,
-    constraints,
     parameters,
 }) => {
     const { strategies } = useStrategies();
@@ -32,109 +27,84 @@ export const CustomStrategyParams: VFC<ICustomStrategyProps> = ({
         return null;
     }
 
-    const renderCustomStrategyParameters = () => {
-        return definition?.parameters.map((param: any, index: number) => {
-            const notLastItem = index !== definition?.parameters?.length - 1;
-            switch (param?.type) {
-                case 'list':
-                    const values = parseParameterStrings(
-                        parameters[param.name]
-                    );
-                    return (
-                        <Fragment key={param?.name}>
-                            <PlaygroundParameterItem
-                                value={values}
-                                text={param.name}
-                            />
-                            <ConditionallyRender
-                                condition={notLastItem}
-                                show={<StrategySeparator text="AND" />}
-                            />
-                        </Fragment>
-                    );
-                case 'percentage':
-                    return (
-                        <Fragment key={param?.name}>
-                            <div>
-                                <Chip
-                                    size="small"
-                                    variant="outlined"
-                                    color="success"
-                                    label={`${parameters[param.name]}%`}
-                                />{' '}
-                                of your base{' '}
-                                {constraints?.length > 0
-                                    ? 'who match constraints'
-                                    : ''}{' '}
-                                is included.
-                            </div>
-                            <PercentageCircle
-                                percentage={parseParameterNumber(
-                                    parameters[param.name]
-                                )}
-                            />
-                            <ConditionallyRender
-                                condition={notLastItem}
-                                show={<StrategySeparator text="AND" />}
-                            />
-                        </Fragment>
-                    );
-                case 'boolean':
-                    const bool = Boolean(parameters[param?.name]);
-                    return (
-                        <Fragment key={param?.name}>
-                            <PlaygroundParameterItem
-                                value={bool ? ['True'] : []}
-                                text={param.name}
-                                showReason={!bool}
-                                input={bool ? bool : 'no value'}
-                            />
-                            <ConditionallyRender
-                                condition={notLastItem}
-                                show={<StrategySeparator text="AND" />}
-                            />
-                        </Fragment>
-                    );
-                case 'string':
-                    const value =
-                        parseParameterString(parameters[param.name]) ??
-                        'no value';
-                    return (
-                        <Fragment key={param?.name}>
-                            <PlaygroundParameterItem
-                                value={value !== '' ? [value] : []}
-                                text={param.name}
-                                showReason={value === ''}
-                                input={value !== '' ? value : 'no value'}
-                            />
-                            <ConditionallyRender
-                                condition={notLastItem}
-                                show={<StrategySeparator text="AND" />}
-                            />
-                        </Fragment>
-                    );
-                case 'number':
-                    const number = parseParameterNumber(parameters[param.name]);
-                    return (
-                        <Fragment key={param?.name}>
-                            <PlaygroundParameterItem
-                                value={Boolean(number) ? [number] : []}
-                                text={param.name}
-                                showReason={Boolean(number)}
-                                input={Boolean(number) ? number : 'no value'}
-                            />
-                            <ConditionallyRender
-                                condition={notLastItem}
-                                show={<StrategySeparator text="AND" />}
-                            />
-                        </Fragment>
-                    );
-                case 'default':
-                    return null;
-            }
-            return null;
-        });
-    };
+    const items = definition?.parameters.map(param => {
+        const paramValue = parameters[param.name];
+        const isRequired = param.required;
 
-    return <>{renderCustomStrategyParameters()}</>;
+        switch (param?.type) {
+            case 'list':
+                const values = parseParameterStrings(paramValue);
+                return (
+                    <CustomParameterItem
+                        isRequired={isRequired}
+                        text={param.name}
+                        input={values?.length > 0 ? values.join(', ') : null}
+                    />
+                );
+            case 'percentage':
+                const percentage = parseParameterNumber(paramValue);
+                const correctPercentage = !(
+                    paramValue === undefined ||
+                    paramValue === '' ||
+                    percentage < 0 ||
+                    percentage > 100
+                );
+                return (
+                    <CustomParameterItem
+                        text={param.name}
+                        isRequired={isRequired}
+                        input={correctPercentage ? `${percentage}%` : undefined}
+                    />
+                );
+            case 'boolean':
+                const bool = ['true', 'false'].includes(paramValue)
+                    ? paramValue
+                    : undefined;
+                return (
+                    <CustomParameterItem
+                        isRequired={isRequired}
+                        text={param.name}
+                        input={paramValue !== undefined ? bool : undefined}
+                    />
+                );
+            case 'string':
+                const value = parseParameterString(paramValue);
+                return (
+                    <CustomParameterItem
+                        text={param.name}
+                        isRequired={isRequired}
+                        input={value !== undefined ? value : undefined}
+                    />
+                );
+            case 'number':
+                const isCorrect = !(
+                    paramValue === undefined || paramValue === ''
+                );
+                const number = parseParameterNumber(paramValue);
+                return (
+                    <CustomParameterItem
+                        text={param.name}
+                        isRequired={isRequired}
+                        input={isCorrect ? `${number}` : undefined}
+                    />
+                );
+            case 'default':
+                return null;
+        }
+        return null;
+    });
+
+    return (
+        <>
+            {items.map((item, index) => (
+                <Fragment key={index}>
+                    <ConditionallyRender
+                        condition={index > 0}
+                        show={<StrategySeparator text="AND" />}
+                    />
+                    {item}
+                </Fragment>
+            ))}
+        </>
+    );
 };

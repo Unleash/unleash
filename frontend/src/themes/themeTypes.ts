@@ -120,9 +120,9 @@ declare module '@mui/material/styles' {
 
 declare module '@mui/system/createTheme/shape' {
     interface Shape {
-        borderRadiusMedium: string;
-        borderRadiusLarge: string;
-        borderRadiusExtraLarge: string;
+        borderRadiusMedium: number;
+        borderRadiusLarge: number;
+        borderRadiusExtraLarge: number;
         tableRowHeight: number;
         tableRowHeightCompact: number;
         tableRowHeightDense: number;

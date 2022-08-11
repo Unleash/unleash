@@ -69,12 +69,22 @@ export const FeatureDetails = ({
                     <Typography variant={'subtitle1'} className={styles.name}>
                         {feature.name}
                     </Typography>
-                    <span>
-                        <PlaygroundResultChip
-                            enabled={feature.isEnabled}
-                            label={feature.isEnabled ? 'True' : 'False'}
-                        />
-                    </span>
+                    <ConditionallyRender
+                        condition={feature?.strategies?.result !== 'unknown'}
+                        show={() => (
+                            <PlaygroundResultChip
+                                enabled={feature.isEnabled}
+                                label={feature.isEnabled ? 'True' : 'False'}
+                            />
+                        )}
+                        elseShow={() => (
+                            <PlaygroundResultChip
+                                enabled="unknown"
+                                label={'Unknown'}
+                                showIcon={false}
+                            />
+                        )}
+                    />
                 </div>
                 <IconButton onClick={onCloseClick} className={styles.icon}>
                     <CloseOutlined />

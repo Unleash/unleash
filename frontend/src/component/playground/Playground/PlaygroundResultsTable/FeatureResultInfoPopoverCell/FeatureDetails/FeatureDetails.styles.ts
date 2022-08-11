@@ -8,8 +8,7 @@ export const useStyles = makeStyles()(theme => ({
     },
     titleRow: {
         display: 'inline-flex',
-        alignItems: 'flex-start',
-        justifyContent: 'center',
+        alignItems: 'center',
         gap: theme.spacing(1.5),
         marginTop: theme.spacing(1.5),
     },

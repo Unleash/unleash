@@ -18,16 +18,16 @@ const StyledChipWrapper = styled(Box)(() => ({
 }));
 
 export const FeatureStatusCell = ({ feature }: IFeatureStatusCellProps) => {
-    const enabled = feature.isEnabled
-        ? true
-        : feature.strategies?.result === false
-        ? false
-        : 'unknown';
-    const label = feature.isEnabled
-        ? 'True'
-        : feature.strategies?.result === false
-        ? 'False'
-        : 'Unknown';
+    const [enabled, label]: [boolean | 'unknown', string] = (() => {
+        if (feature?.isEnabled) {
+            return [true, 'True'];
+        }
+        if (feature?.strategies?.result === false) {
+            return [false, 'False'];
+        }
+        return ['unknown', 'Unknown'];
+    })();
+
     return (
         <StyledCellBox>
             <StyledChipWrapper data-loading>
@@ -35,7 +35,6 @@ export const FeatureStatusCell = ({ feature }: IFeatureStatusCellProps) => {
                     enabled={enabled}
                     label={label}
                     showIcon={enabled !== 'unknown'}
-                    size={'medium'}
                 />
             </StyledChipWrapper>
         </StyledCellBox>

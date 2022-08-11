@@ -44,11 +44,6 @@ export const FeatureStrategyItem = ({
                     showIcon={false}
                     enabled={result.enabled}
                     label={label}
-                    size={
-                        result.evaluationStatus === 'incomplete'
-                            ? 'large'
-                            : 'default'
-                    }
                 />
             }
         >

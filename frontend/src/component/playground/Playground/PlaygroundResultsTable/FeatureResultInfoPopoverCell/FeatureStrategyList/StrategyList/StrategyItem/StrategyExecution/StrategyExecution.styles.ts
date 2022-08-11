@@ -13,7 +13,7 @@ export const useStyles = makeStyles()(theme => ({
         width: 'auto',
         height: 'auto',
         padding: theme.spacing(2, 3),
-        borderRadius: theme.shape.borderRadius,
-        border: `1px solid ${theme.palette.divider}`,
+        borderRadius: theme.shape.borderRadiusMedium,
+        border: `1px solid ${theme.palette.dividerAlternative}`,
     },
 }));

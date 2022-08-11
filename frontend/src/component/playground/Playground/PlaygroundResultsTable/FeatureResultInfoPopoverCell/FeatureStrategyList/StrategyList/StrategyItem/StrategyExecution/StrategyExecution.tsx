@@ -23,10 +23,6 @@ const StyledStrategyExecutionWrapper = styled('div')(({ theme }) => ({
     padding: theme.spacing(0),
 }));
 
-const StyledParamWrapper = styled('div')(({ theme }) => ({
-    padding: theme.spacing(0, 0),
-}));
-
 export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
     strategyResult,
     input,
@@ -93,20 +89,15 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
                     </Box>
                 }
             />
-            <StyledParamWrapper>
-                <PlaygroundResultStrategyExecutionParameters
-                    parameters={parameters}
-                    constraints={constraints}
-                    input={input}
-                />
-                <StyledParamWrapper sx={{ pt: 2 }}>
-                    <CustomStrategyParams
-                        strategyName={strategyResult.name}
-                        parameters={parameters}
-                        constraints={constraints}
-                    />
-                </StyledParamWrapper>
-            </StyledParamWrapper>
+            <PlaygroundResultStrategyExecutionParameters
+                parameters={parameters}
+                constraints={constraints}
+                input={input}
+            />
+            <CustomStrategyParams
+                strategyName={strategyResult.name}
+                parameters={parameters}
+            />
         </StyledStrategyExecutionWrapper>
     );
 };

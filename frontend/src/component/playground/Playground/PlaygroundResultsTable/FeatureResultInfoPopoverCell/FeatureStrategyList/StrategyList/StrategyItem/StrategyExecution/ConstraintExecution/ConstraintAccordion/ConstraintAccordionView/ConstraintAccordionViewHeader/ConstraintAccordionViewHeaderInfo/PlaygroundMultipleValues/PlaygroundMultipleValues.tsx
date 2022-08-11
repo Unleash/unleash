@@ -59,7 +59,7 @@ export const PLaygroundMultipleValues = ({
                             noWrap={true}
                             sx={{ mr: 1 }}
                         >
-                            does not match any values{' '}
+                            does not match values{' '}
                         </Typography>
                     }
                 />

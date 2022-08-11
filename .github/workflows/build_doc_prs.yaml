@@ -4,6 +4,8 @@ on:
   pull_request:
     paths:
       - website/**
+      - .github/workflows/build_doc_prs.yaml
+      - .github/workflows/generate-docs.yaml
 
 jobs:
   validate:

@@ -68,7 +68,7 @@ export class ApiTokenController extends Controller {
             permission: READ_API_TOKEN,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['API tokens'],
                     operationId: 'getAllApiTokens',
                     responses: {
                         200: createResponseSchema('apiTokensSchema'),
@@ -84,7 +84,7 @@ export class ApiTokenController extends Controller {
             permission: CREATE_API_TOKEN,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['API tokens'],
                     operationId: 'createApiToken',
                     requestBody: createRequestSchema('createApiTokenSchema'),
                     responses: {
@@ -101,7 +101,7 @@ export class ApiTokenController extends Controller {
             permission: UPDATE_API_TOKEN,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['API tokens'],
                     operationId: 'updateApiToken',
                     requestBody: createRequestSchema('updateApiTokenSchema'),
                     responses: {
@@ -119,7 +119,7 @@ export class ApiTokenController extends Controller {
             permission: DELETE_API_TOKEN,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['API tokens'],
                     operationId: 'deleteApiToken',
                     responses: {
                         200: emptyResponse,

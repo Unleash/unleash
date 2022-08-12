@@ -57,7 +57,7 @@ class ClientMetricsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     operationId: 'getRawFeatureMetrics',
-                    tags: ['admin'],
+                    tags: ['Metrics'],
                     responses: {
                         200: createResponseSchema('featureMetricsSchema'),
                     },
@@ -73,7 +73,7 @@ class ClientMetricsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     operationId: 'getFeatureUsageSummary',
-                    tags: ['admin'],
+                    tags: ['Metrics'],
                     responses: {
                         200: createResponseSchema('featureUsageSchema'),
                     },

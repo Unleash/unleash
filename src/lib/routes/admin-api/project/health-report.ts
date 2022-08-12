@@ -44,7 +44,7 @@ export default class ProjectHealthReport extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Projects'],
                     operationId: 'getProjectHealthOverview',
                     responses: {
                         200: createResponseSchema('healthOverviewSchema'),
@@ -60,7 +60,7 @@ export default class ProjectHealthReport extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Projects'],
                     operationId: 'getProjectHealthReport',
                     responses: {
                         200: createResponseSchema('healthReportSchema'),

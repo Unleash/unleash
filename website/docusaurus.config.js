@@ -119,6 +119,8 @@ module.exports = {
                             { sync: true },
                         ],
                     ],
+                    docLayoutComponent: '@theme/DocPage',
+                    docItemComponent: '@theme/ApiItem',
                 },
                 theme: {
                     customCss: require.resolve('./src/css/custom.css'),
@@ -179,5 +181,28 @@ module.exports = {
                 },
             },
         ],
+        // NOTE: activate this when we sort out the enterprise / open
+        // source API situation
+        //
+        // [
+        //     'docusaurus-plugin-openapi-docs',
+        //     {
+        //         id: 'api-operations',
+        //         docsPluginId: 'classic',
+        //         config: {
+        //             server: {
+        //                 specPath: process.env.NODE_ENV === 'development'  ?
+        //                     'http://localhost:4242/docs/openapi.json'
+        //                     : './openapi-spec.generated.json',
+        //                 outputDir: 'docs/reference/apis/unleash',
+        //                 sidebarOptions: {
+        //                     groupPathsBy: 'tag',
+        //                     categoryLinkSource: 'tag',
+        //                 },
+        //             },
+        //         },
+        //     },
+        // ],
     ],
+    themes: ['docusaurus-theme-openapi-docs'], // Allows use of @theme/ApiItem and other components
 };

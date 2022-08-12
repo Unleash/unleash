@@ -39,7 +39,7 @@ export class SimplePasswordProvider extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['auth'],
+                    tags: ['Auth'],
                     operationId: 'login',
                     requestBody: createRequestSchema('loginSchema'),
                     responses: {

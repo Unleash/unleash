@@ -79,7 +79,7 @@ export default class FeatureController extends Controller {
             middleware: [
                 openApiService.validPath({
                     operationId: 'getClientFeature',
-                    tags: ['client'],
+                    tags: ['Client'],
                     responses: {
                         200: createResponseSchema('clientFeaturesSchema'),
                     },
@@ -95,7 +95,7 @@ export default class FeatureController extends Controller {
             middleware: [
                 openApiService.validPath({
                     operationId: 'getAllClientFeatures',
-                    tags: ['client'],
+                    tags: ['Client'],
                     responses: {
                         200: createResponseSchema('clientFeaturesSchema'),
                     },

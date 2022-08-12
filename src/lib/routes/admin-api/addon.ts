@@ -47,7 +47,7 @@ class AddonController extends Controller {
             handler: this.getAddons,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Addons'],
                     operationId: 'getAddons',
                     responses: {
                         200: createResponseSchema('addonsSchema'),
@@ -63,7 +63,7 @@ class AddonController extends Controller {
             permission: CREATE_ADDON,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Addons'],
                     operationId: 'createAddon',
                     requestBody: createRequestSchema('addonSchema'),
                     responses: { 200: createResponseSchema('addonSchema') },
@@ -78,7 +78,7 @@ class AddonController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Addons'],
                     operationId: 'getAddon',
                     responses: { 200: createResponseSchema('addonSchema') },
                 }),
@@ -92,7 +92,7 @@ class AddonController extends Controller {
             permission: UPDATE_ADDON,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Addons'],
                     operationId: 'updateAddon',
                     requestBody: createRequestSchema('addonSchema'),
                     responses: { 200: createResponseSchema('addonSchema') },
@@ -108,7 +108,7 @@ class AddonController extends Controller {
             permission: DELETE_ADDON,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Addons'],
                     operationId: 'deleteAddon',
                     responses: { 200: emptyResponse },
                 }),

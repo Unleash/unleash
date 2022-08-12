@@ -37,7 +37,7 @@ export class FeatureTypeController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Features'],
                     operationId: 'getAllFeatureTypes',
                     responses: {
                         200: createResponseSchema('featureTypesSchema'),

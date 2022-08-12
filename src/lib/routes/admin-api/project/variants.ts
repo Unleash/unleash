@@ -44,7 +44,7 @@ export default class VariantsController extends Controller {
             handler: this.getVariants,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Features'],
                     operationId: 'getFeatureVariants',
                     responses: {
                         200: createResponseSchema('featureVariantsSchema'),
@@ -59,7 +59,7 @@ export default class VariantsController extends Controller {
             handler: this.patchVariants,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Features'],
                     operationId: 'patchFeatureVariants',
                     requestBody: createRequestSchema('patchesSchema'),
                     responses: {
@@ -75,7 +75,7 @@ export default class VariantsController extends Controller {
             handler: this.overwriteVariants,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Features'],
                     operationId: 'overwriteFeatureVariants',
                     requestBody: createRequestSchema('variantsSchema'),
                     responses: {

@@ -40,7 +40,7 @@ export default class RegisterController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['client'],
+                    tags: ['Client'],
                     operationId: 'registerClientApplication',
                     requestBody: createRequestSchema('clientApplicationSchema'),
                     responses: { 202: emptyResponse },

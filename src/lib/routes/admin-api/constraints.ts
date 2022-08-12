@@ -35,7 +35,7 @@ export default class ConstraintController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Features'],
                     operationId: 'validateConstraint',
                     requestBody: createRequestSchema('constraintSchema'),
                     responses: {

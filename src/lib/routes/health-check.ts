@@ -29,7 +29,7 @@ export class HealthCheckController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['other'],
+                    tags: ['Operational'],
                     operationId: 'getHealth',
                     responses: {
                         200: createResponseSchema('healthCheckSchema'),

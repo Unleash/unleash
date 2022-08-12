@@ -56,7 +56,7 @@ class ResetPasswordController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['auth'],
+                    tags: ['Auth'],
                     operationId: 'validateToken',
                     responses: { 200: createResponseSchema('tokenUserSchema') },
                 }),
@@ -69,7 +69,7 @@ class ResetPasswordController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['other'],
+                    tags: ['Auth'],
                     operationId: 'changePassword',
                     requestBody: createRequestSchema('changePasswordSchema'),
                     responses: { 200: emptyResponse },
@@ -83,7 +83,7 @@ class ResetPasswordController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['other'],
+                    tags: ['Auth'],
                     operationId: 'validatePassword',
                     requestBody: createRequestSchema('validatePasswordSchema'),
                     responses: { 200: emptyResponse },
@@ -97,7 +97,7 @@ class ResetPasswordController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['other'],
+                    tags: ['Auth'],
                     operationId: 'sendResetPasswordEmail',
                     requestBody: createRequestSchema('emailSchema'),
                     responses: { 200: emptyResponse },

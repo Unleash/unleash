@@ -54,7 +54,7 @@ export default class ClientMetricsController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['client'],
+                    tags: ['Client'],
                     operationId: 'registerClientMetrics',
                     requestBody: createRequestSchema('clientMetricsSchema'),
                     responses: {

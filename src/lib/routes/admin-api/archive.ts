@@ -42,7 +42,7 @@ export default class ArchiveController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Archive'],
                     operationId: 'getArchivedFeatures',
                     responses: { 200: createResponseSchema('featuresSchema') },
                     deprecated: true,
@@ -57,7 +57,7 @@ export default class ArchiveController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Archive'],
                     operationId: 'getArchivedFeaturesByProjectId',
                     responses: { 200: createResponseSchema('featuresSchema') },
                     deprecated: true,
@@ -73,7 +73,7 @@ export default class ArchiveController extends Controller {
             permission: DELETE_FEATURE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Archive'],
                     operationId: 'deleteFeature',
                     responses: { 200: emptyResponse },
                 }),
@@ -88,7 +88,7 @@ export default class ArchiveController extends Controller {
             permission: UPDATE_FEATURE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Archive'],
                     operationId: 'reviveFeature',
                     responses: { 200: emptyResponse },
                 }),

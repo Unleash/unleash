@@ -94,7 +94,7 @@ export default class ProjectFeaturesController extends Controller {
             handler: this.getFeatureEnvironment,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Features'],
                     operationId: 'getFeatureEnvironment',
                     responses: {
                         200: createResponseSchema('featureEnvironmentSchema'),
@@ -111,7 +111,7 @@ export default class ProjectFeaturesController extends Controller {
             permission: UPDATE_FEATURE_ENVIRONMENT,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Features'],
                     operationId: 'toggleFeatureEnvironmentOff',
                     responses: { 200: createResponseSchema('featureSchema') },
                 }),
@@ -126,7 +126,7 @@ export default class ProjectFeaturesController extends Controller {
             permission: UPDATE_FEATURE_ENVIRONMENT,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Features'],
                     operationId: 'toggleFeatureEnvironmentOn',
                     responses: { 200: createResponseSchema('featureSchema') },
                 }),
@@ -140,7 +140,7 @@ export default class ProjectFeaturesController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Features'],
                     operationId: 'getFeatureStrategies',
                     responses: {
                         200: createResponseSchema('featureStrategySchema'),
@@ -156,7 +156,7 @@ export default class ProjectFeaturesController extends Controller {
             permission: CREATE_FEATURE_STRATEGY,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Features'],
                     operationId: 'addFeatureStrategy',
                     requestBody: createRequestSchema(
                         'createFeatureStrategySchema',
@@ -175,7 +175,7 @@ export default class ProjectFeaturesController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Features'],
                     operationId: 'getFeatureStrategy',
                     responses: {
                         200: createResponseSchema('featureStrategySchema'),
@@ -191,7 +191,7 @@ export default class ProjectFeaturesController extends Controller {
             permission: UPDATE_FEATURE_STRATEGY,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Features'],
                     operationId: 'setStrategySortOrder',
                     requestBody: createRequestSchema(
                         'setStrategySortOrderSchema',
@@ -210,7 +210,7 @@ export default class ProjectFeaturesController extends Controller {
             permission: UPDATE_FEATURE_STRATEGY,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Features'],
                     operationId: 'updateFeatureStrategy',
                     requestBody: createRequestSchema(
                         'updateFeatureStrategySchema',
@@ -229,7 +229,7 @@ export default class ProjectFeaturesController extends Controller {
             permission: UPDATE_FEATURE_STRATEGY,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Features'],
                     operationId: 'patchFeatureStrategy',
                     requestBody: createRequestSchema('patchesSchema'),
                     responses: {
@@ -248,7 +248,7 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     operationId: 'deleteFeatureStrategy',
-                    tags: ['admin'],
+                    tags: ['Features'],
                     responses: { 200: emptyResponse },
                 }),
             ],
@@ -261,7 +261,7 @@ export default class ProjectFeaturesController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Features'],
                     operationId: 'getFeatures',
                     responses: { 200: createResponseSchema('featuresSchema') },
                 }),
@@ -275,7 +275,7 @@ export default class ProjectFeaturesController extends Controller {
             permission: CREATE_FEATURE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Features'],
                     operationId: 'createFeature',
                     requestBody: createRequestSchema('createFeatureSchema'),
                     responses: { 200: createResponseSchema('featureSchema') },
@@ -291,7 +291,7 @@ export default class ProjectFeaturesController extends Controller {
             permission: CREATE_FEATURE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Features'],
                     operationId: 'cloneFeature',
                     requestBody: createRequestSchema('cloneFeatureSchema'),
                     responses: { 200: createResponseSchema('featureSchema') },
@@ -307,7 +307,7 @@ export default class ProjectFeaturesController extends Controller {
             middleware: [
                 openApiService.validPath({
                     operationId: 'getFeature',
-                    tags: ['admin'],
+                    tags: ['Features'],
                     responses: { 200: createResponseSchema('featureSchema') },
                 }),
             ],
@@ -320,7 +320,7 @@ export default class ProjectFeaturesController extends Controller {
             permission: UPDATE_FEATURE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Features'],
                     operationId: 'updateFeature',
                     requestBody: createRequestSchema('updateFeatureSchema'),
                     responses: { 200: createResponseSchema('featureSchema') },
@@ -335,7 +335,7 @@ export default class ProjectFeaturesController extends Controller {
             permission: UPDATE_FEATURE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Features'],
                     operationId: 'patchFeature',
                     requestBody: createRequestSchema('patchesSchema'),
                     responses: { 200: createResponseSchema('featureSchema') },
@@ -351,7 +351,7 @@ export default class ProjectFeaturesController extends Controller {
             permission: DELETE_FEATURE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Features'],
                     operationId: 'archiveFeature',
                     responses: { 200: emptyResponse },
                 }),

@@ -2129,6 +2129,76 @@ Object {
         ],
         "type": "object",
       },
+      "proxyFeatureSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "enabled": Object {
+            "type": "boolean",
+          },
+          "impressionData": Object {
+            "type": "boolean",
+          },
+          "name": Object {
+            "type": "string",
+          },
+          "variant": Object {
+            "additionalProperties": false,
+            "properties": Object {
+              "enabled": Object {
+                "type": "boolean",
+              },
+              "name": Object {
+                "type": "string",
+              },
+              "payload": Object {
+                "additionalProperties": false,
+                "properties": Object {
+                  "type": Object {
+                    "enum": Array [
+                      "string",
+                    ],
+                    "type": "string",
+                  },
+                  "value": Object {
+                    "type": "string",
+                  },
+                },
+                "required": Array [
+                  "type",
+                  "value",
+                ],
+                "type": "object",
+              },
+            },
+            "required": Array [
+              "name",
+              "enabled",
+            ],
+            "type": "object",
+          },
+        },
+        "required": Array [
+          "name",
+          "enabled",
+          "impressionData",
+        ],
+        "type": "object",
+      },
+      "proxyFeaturesSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "toggles": Object {
+            "items": Object {
+              "$ref": "#/components/schemas/proxyFeatureSchema",
+            },
+            "type": "array",
+          },
+        },
+        "required": Array [
+          "toggles",
+        ],
+        "type": "object",
+      },
       "resetPasswordSchema": Object {
         "additionalProperties": false,
         "properties": Object {

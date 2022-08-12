@@ -1,32 +1,35 @@
-import { Response } from 'express';
+import { Response, Request } from 'express';
 import Controller from '../controller';
 import { IUnleashConfig, IUnleashServices } from '../../types';
-import FeatureToggleService from '../../services/feature-toggle-service';
 import { Logger } from '../../logger';
-
 import { OpenApiService } from '../../services/openapi-service';
 import { NONE } from '../../types/permissions';
-import { IAuthRequest } from 'lib/server-impl';
+import { ProxyService } from '../../services/proxy-service';
+import ApiUser from '../../types/api-user';
+import { ProxyFeaturesSchema } from '../../openapi/spec/proxy-features-schema';
+
+interface ApiUserRequest extends Request {
+    user: ApiUser;
+}
 
 export default class ProxyController extends Controller {
     private readonly logger: Logger;
 
-    private featureToggleServiceV2: FeatureToggleService;
+    private proxyService: ProxyService;
 
     private openApiService: OpenApiService;
 
     constructor(
         config: IUnleashConfig,
         {
-            featureToggleServiceV2,
+            proxyService,
             openApiService,
-        }: Pick<IUnleashServices, 'featureToggleServiceV2' | 'openApiService'>,
+        }: Pick<IUnleashServices, 'proxyService' | 'openApiService'>,
     ) {
         super(config);
-        this.featureToggleServiceV2 = featureToggleServiceV2;
-
-        this.openApiService = openApiService;
         this.logger = config.getLogger('client-api/feature.js');
+        this.proxyService = proxyService;
+        this.openApiService = openApiService;
 
         this.route({
             method: 'get',
@@ -37,15 +40,12 @@ export default class ProxyController extends Controller {
         });
     }
 
-    private getProxyFeatures(req: IAuthRequest, res: Response) {
-        const key = req.header('Authorization');
-        console.log(key);
-        console.log(req.user);
-
-        res.json([
-            { name: 'feature1', enabled: true },
-            { name: 'feature2', enabled: false },
-        ]);
-        // Get all the features here
+    private async getProxyFeatures(
+        req: ApiUserRequest,
+        res: Response<ProxyFeaturesSchema>,
+    ) {
+        res.json({
+            toggles: await this.proxyService.getProxyFeatures(req.user),
+        });
     }
 }

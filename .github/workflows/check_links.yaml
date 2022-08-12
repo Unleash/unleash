@@ -1,4 +1,4 @@
-name: PR -> Build Docs
+name: Check links
 
 on:
   workflow_dispatch:

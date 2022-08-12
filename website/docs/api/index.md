@@ -22,12 +22,12 @@ The internal API used by the Admin UI (unleash-frontend). Since v4.0.0 all opera
 
 With versions earlier than v4.0.0 and `insecure` authentication Basic Auth (with curl `-u myemail@test.com:`) is enough.
 
-- [Events API](/api/admin/events)
-- [Feature Toggles API](/api/admin/features)
-- [Metrics API](/api/admin/metrics)
+- [Events API](/api/admin/events-api.md)
+- [Feature Toggles API](/api/admin/feature-toggles-api.md)
+- [Metrics API](/api/admin/metrics-api.md)
 - [Project API](/api/admin/project.md)
-- [Strategies API](/api/admin/strategies)
-- [Tags API](/api/admin/tags)
+- [Strategies API](/api/admin/strategies-api.md)
+- [Tags API](/api/admin/tags-api.md)
 
 ## System API's {#system-apis}
 

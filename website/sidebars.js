@@ -160,6 +160,7 @@ module.exports = {
                                 'api/admin/segments',
                                 'api/admin/state',
                                 'api/admin/strategies',
+                                'api/admin/tags',
                                 'api/admin/user-admin',
                             ],
                             'Client API': [

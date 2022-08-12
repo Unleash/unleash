@@ -17,11 +17,11 @@ const StyledSlider = withStyles(Slider, theme => ({
     valueLabel: {},
     track: {
         height: 8,
-        borderRadius: 4,
+        borderRadius: theme.shape.borderRadius,
     },
     rail: {
         height: 8,
-        borderRadius: 4,
+        borderRadius: theme.shape.borderRadius,
     },
 }));
 

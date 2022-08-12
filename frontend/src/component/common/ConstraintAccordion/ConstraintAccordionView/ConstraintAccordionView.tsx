@@ -22,6 +22,8 @@ interface IConstraintAccordionViewProps {
     onDelete?: () => void;
     onEdit?: () => void;
     sx?: SxProps<Theme>;
+    compact?: boolean;
+    renderAfter?: JSX.Element;
 }
 
 export const ConstraintAccordionView = ({
@@ -29,6 +31,8 @@ export const ConstraintAccordionView = ({
     onEdit,
     onDelete,
     sx = undefined,
+    compact = false,
+    renderAfter,
 }: IConstraintAccordionViewProps) => {
     const { classes: styles } = useStyles();
     const [expandable, setExpandable] = useState(true);
@@ -62,14 +66,24 @@ export const ConstraintAccordionView = ({
                     },
                 }}
             >
-                <ConstraintAccordionViewHeader
-                    constraint={constraint}
-                    onEdit={onEdit}
-                    onDelete={onDelete}
-                    singleValue={singleValue}
-                    allowExpand={setExpandable}
-                    expanded={expanded}
-                />
+                <div
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        width: '100%',
+                    }}
+                >
+                    <ConstraintAccordionViewHeader
+                        constraint={constraint}
+                        onEdit={onEdit}
+                        onDelete={onDelete}
+                        singleValue={singleValue}
+                        allowExpand={setExpandable}
+                        expanded={expanded}
+                        compact={compact}
+                    />
+                    {renderAfter}
+                </div>
             </AccordionSummary>
 
             <AccordionDetails className={styles.accordionDetails}>

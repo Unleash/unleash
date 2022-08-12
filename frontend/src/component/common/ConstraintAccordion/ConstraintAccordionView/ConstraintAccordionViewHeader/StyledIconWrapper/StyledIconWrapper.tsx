@@ -12,12 +12,12 @@ export const StyledIconWrapperBase = styled('div')<{
     justifyContent: 'center',
     alignSelf: 'stretch',
     color: theme.palette.primary.main,
-    marginRight: theme.spacing(1),
+    marginLeft: theme.spacing(1),
     borderRadius: theme.shape.borderRadius,
 }));
 
 const StyledPrefixIconWrapper = styled(StyledIconWrapperBase)(() => ({
-    marginRight: 0,
+    marginLeft: 0,
     borderTopRightRadius: 0,
     borderBottomRightRadius: 0,
 }));

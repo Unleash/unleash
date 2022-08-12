@@ -18,15 +18,24 @@ export const PlaygroundResultFeatureStrategyList = ({
     return (
         <>
             <ConditionallyRender
+                condition={feature?.strategies?.data?.length === 0}
+                show={
+                    <Alert severity="warning" sx={{ mt: 2 }}>
+                        There are no strategies added to this feature toggle in
+                        selected environment.
+                    </Alert>
+                }
+            />
+            <ConditionallyRender
                 condition={
                     !feature.isEnabledInCurrentEnvironment &&
-                    Boolean(feature?.strategies?.data)
+                    (feature?.strategies?.data?.length || 0) > 0
                 }
                 show={
-                    <Alert severity={'info'} color={'info'}>
-                        If environment would be enabled then this feature would
-                        be {feature.strategies?.result ? 'TRUE' : 'FALSE'} and
-                        the strategies would evaluate like this:{' '}
+                    <Alert severity="info" color="warning">
+                        If environment was enabled, then this feature toggle
+                        would be {feature.strategies?.result ? 'TRUE' : 'FALSE'}{' '}
+                        with strategies evaluated like so:{' '}
                     </Alert>
                 }
             />

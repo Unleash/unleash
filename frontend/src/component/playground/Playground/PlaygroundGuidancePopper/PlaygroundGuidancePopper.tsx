@@ -32,7 +32,7 @@ export const PlaygroundGuidancePopper = () => {
                     sx={theme => ({
                         padding: theme.spacing(8, 4),
                         maxWidth: '500px',
-                        borderRadius: theme.shape.borderRadiusExtraLarge,
+                        borderRadius: `${theme.shape.borderRadiusExtraLarge}px`,
                     })}
                 >
                     <IconButton

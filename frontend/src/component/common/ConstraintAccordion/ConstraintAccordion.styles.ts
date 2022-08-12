@@ -1,20 +1,6 @@
 import { makeStyles } from 'tss-react/mui';
 
 export const useStyles = makeStyles()(theme => ({
-    constraintIconContainer: {
-        backgroundColor: theme.palette.primary.main,
-        borderRadius: '50%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginRight: theme.spacing(1),
-        [theme.breakpoints.down(710)]: {
-            marginRight: 0,
-        },
-    },
-    constraintIcon: {
-        fill: '#fff',
-    },
     accordion: {
         border: `1px solid ${theme.palette.dividerAlternative}`,
         borderRadius: theme.shape.borderRadiusMedium,
@@ -33,9 +19,12 @@ export const useStyles = makeStyles()(theme => ({
     headerMetaInfo: {
         display: 'flex',
         alignItems: 'stretch',
+        marginLeft: theme.spacing(1),
         [theme.breakpoints.down(710)]: {
+            marginLeft: 0,
             flexDirection: 'column',
             alignItems: 'center',
+            width: '100%',
         },
     },
     headerContainer: {
@@ -58,6 +47,10 @@ export const useStyles = makeStyles()(theme => ({
         justifyContent: 'stretch',
         margin: 'auto 0',
         flexDirection: 'column',
+        marginLeft: theme.spacing(1),
+        [theme.breakpoints.down(710)]: {
+            marginLeft: 0,
+        },
     },
     headerValues: {
         fontSize: theme.fontSizes.smallBody,
@@ -71,13 +64,8 @@ export const useStyles = makeStyles()(theme => ({
         },
     },
     headerConstraintContainer: {
-        minWidth: '220px',
+        minWidth: '152px',
         position: 'relative',
-        paddingRight: '1rem',
-        [theme.breakpoints.between(1101, 1365)]: {
-            minWidth: '152px',
-            paddingRight: '0.5rem',
-        },
         [theme.breakpoints.down(710)]: {
             paddingRight: 0,
         },

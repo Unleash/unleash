@@ -101,14 +101,19 @@ export const PlaygroundResultsTable = ({
                 ),
             },
             {
+                id: 'isEnabled',
                 Header: 'isEnabled',
-                accessor: 'isEnabled',
                 filterName: 'isEnabled',
-                filterParsing: (value: boolean) => (value ? 'true' : 'false'),
+                accessor: (row: PlaygroundFeatureSchema) =>
+                    row?.isEnabled
+                        ? 'true'
+                        : row?.strategies?.result === 'unknown'
+                        ? 'unknown'
+                        : 'false',
                 Cell: ({ row }: any) => (
                     <FeatureStatusCell feature={row.original} />
                 ),
-                sortType: 'boolean',
+                sortType: 'playgroundResultState',
                 maxWidth: 120,
                 sortInverted: true,
             },

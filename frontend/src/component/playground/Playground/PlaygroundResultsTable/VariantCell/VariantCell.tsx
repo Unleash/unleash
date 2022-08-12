@@ -53,8 +53,7 @@ export const VariantCell: VFC<IVariantCellProps> = ({
                             id={`${feature}-result-variants`}
                             PaperProps={{
                                 sx: {
-                                    borderRadius:
-                                        theme.shape.borderRadiusExtraLarge,
+                                    borderRadius: `${theme.shape.borderRadiusLarge}px`,
                                 },
                             }}
                             onClose={onClose}

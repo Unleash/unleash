@@ -1,8 +1,8 @@
-import { ConditionallyRender } from '../../../../ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { styled } from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react';
 import classnames from 'classnames';
-import { IConstraint } from '../../../../../../interfaces/strategy';
+import { IConstraint } from 'interfaces/strategy';
 import { useStyles } from '../../../ConstraintAccordion.styles';
 
 const StyledValuesSpan = styled('span')(({ theme }) => ({

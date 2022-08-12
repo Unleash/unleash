@@ -10,5 +10,6 @@ export const useStyles = makeStyles()(theme => ({
         height: 'auto',
         overflowY: 'auto',
         backgroundColor: theme.palette.tertiary.light,
+        borderRadius: theme.shape.borderRadiusLarge,
     },
 }));

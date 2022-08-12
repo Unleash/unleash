@@ -18,4 +18,14 @@ export const sortTypes = {
         (a?.values?.[id] || '')
             ?.toLowerCase()
             .localeCompare(b?.values?.[id]?.toLowerCase() || ''),
+    playgroundResultState: (v1: any, v2: any, id: string) => {
+        const a = v1?.values?.[id];
+        const b = v2?.values?.[id];
+        if (a === b) return 0;
+        if (a === 'true') return 1;
+        if (b === 'true') return -1;
+        if (a === 'false') return -1;
+        if (b === 'false') return 1;
+        return 0;
+    },
 };

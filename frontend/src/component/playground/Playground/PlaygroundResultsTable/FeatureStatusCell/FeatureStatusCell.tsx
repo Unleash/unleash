@@ -22,10 +22,10 @@ export const FeatureStatusCell = ({ feature }: IFeatureStatusCellProps) => {
         if (feature?.isEnabled) {
             return [true, 'True'];
         }
-        if (feature?.strategies?.result === false) {
-            return [false, 'False'];
+        if (feature?.strategies?.result === 'unknown') {
+            return ['unknown', 'Unknown'];
         }
-        return ['unknown', 'Unknown'];
+        return [false, 'False'];
     })();
 
     return (

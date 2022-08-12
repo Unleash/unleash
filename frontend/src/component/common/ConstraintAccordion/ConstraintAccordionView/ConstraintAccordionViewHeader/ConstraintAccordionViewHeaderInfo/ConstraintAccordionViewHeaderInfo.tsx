@@ -4,7 +4,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { ConstraintAccordionViewHeaderSingleValue } from '../ContraintAccordionViewHeaderSingleValue/ConstraintAccordionViewHeaderSingleValue';
 import { ConstraintAccordionViewHeaderMultipleValues } from '../ContraintAccordionViewHeaderMultipleValues/ConstraintAccordionViewHeaderMultipleValues';
 import React from 'react';
-import { IConstraint } from '../../../../../../interfaces/strategy';
+import { IConstraint } from 'interfaces/strategy';
 import { useStyles } from '../../../ConstraintAccordion.styles';
 
 const StyledHeaderText = styled('span')(({ theme }) => ({

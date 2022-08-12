@@ -36,7 +36,7 @@ export const getFeatureStrategyIcon = (strategyName: string): ElementType => {
     }
 };
 
-const formattedStrategyNames: Record<string, string> = {
+export const formattedStrategyNames: Record<string, string> = {
     applicationHostname: 'Hosts',
     default: 'Standard',
     flexibleRollout: 'Gradual rollout',

@@ -7,11 +7,12 @@ import { objectId } from 'utils/objectId';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 import { styled } from '@mui/material';
-import { ConstraintAccordionView } from './ConstraintAccordion/ConstraintAccordionView/ConstraintAccordionView';
+import { ConstraintAccordionView } from 'component/common/ConstraintAccordion/ConstraintAccordionView/ConstraintAccordionView';
+import { ConstraintError } from './ConstraintError/ConstraintError';
+import { ConstraintOk } from './ConstraintOk/ConstraintOk';
 
 interface IConstraintExecutionProps {
     constraints?: PlaygroundConstraintSchema[];
-    compact: boolean;
     input?: PlaygroundRequestSchema;
 }
 
@@ -23,7 +24,6 @@ export const ConstraintExecutionWrapper = styled('div')(() => ({
 
 export const ConstraintExecution: VFC<IConstraintExecutionProps> = ({
     constraints,
-    compact,
     input,
 }) => {
     if (!constraints) return null;
@@ -33,16 +33,24 @@ export const ConstraintExecution: VFC<IConstraintExecutionProps> = ({
             {constraints?.map((constraint, index) => (
                 <Fragment key={objectId(constraint)}>
                     <ConditionallyRender
-                        condition={index > 0 && constraints?.length > 1}
+                        condition={index > 0}
                         show={<StrategySeparator text="AND" />}
                     />
                     <ConstraintAccordionView
                         constraint={constraint}
-                        playgroundInput={input}
-                        maxLength={compact ? 25 : 50}
-                        sx={{
-                            backgroundColor: 'transparent!important',
-                        }}
+                        compact
+                        renderAfter={
+                            <ConditionallyRender
+                                condition={constraint.result}
+                                show={<ConstraintOk />}
+                                elseShow={
+                                    <ConstraintError
+                                        input={input}
+                                        constraint={constraint}
+                                    />
+                                }
+                            />
+                        }
                     />
                 </Fragment>
             ))}

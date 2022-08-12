@@ -55,7 +55,7 @@ export default class PlaygroundController extends Controller {
         req: Request<any, any, PlaygroundRequestSchema>,
         res: Response<PlaygroundResponseSchema>,
     ): Promise<void> {
-        const response: PlaygroundResponseSchema = {
+        const response = {
             input: req.body,
             features: await this.playgroundService.evaluateQuery(
                 req.body.projects,

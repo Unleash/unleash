@@ -89,6 +89,7 @@ export const createServices = (
     const clientSpecService = new ClientSpecService(config);
     const playgroundService = new PlaygroundService(config, {
         featureToggleServiceV2,
+        segmentService,
     });
 
     return {

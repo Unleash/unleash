@@ -305,111 +305,6 @@ Object {
         },
         "type": "object",
       },
-      "bootstrapUiSchema": Object {
-        "additionalProperties": false,
-        "properties": Object {
-          "context": Object {
-            "items": Object {
-              "$ref": "#/components/schemas/contextFieldSchema",
-            },
-            "type": "array",
-          },
-          "email": Object {
-            "type": "boolean",
-          },
-          "featureTypes": Object {
-            "items": Object {
-              "$ref": "#/components/schemas/featureTypeSchema",
-            },
-            "type": "array",
-          },
-          "projects": Object {
-            "items": Object {
-              "$ref": "#/components/schemas/projectSchema",
-            },
-            "type": "array",
-          },
-          "strategies": Object {
-            "items": Object {
-              "$ref": "#/components/schemas/strategySchema",
-            },
-            "type": "array",
-          },
-          "tagTypes": Object {
-            "items": Object {
-              "$ref": "#/components/schemas/tagTypeSchema",
-            },
-            "type": "array",
-          },
-          "uiConfig": Object {
-            "$ref": "#/components/schemas/uiConfigSchema",
-          },
-          "user": Object {
-            "properties": Object {
-              "createdAt": Object {
-                "format": "date-time",
-                "type": "string",
-              },
-              "email": Object {
-                "type": "string",
-              },
-              "emailSent": Object {
-                "type": "boolean",
-              },
-              "id": Object {
-                "type": "number",
-              },
-              "imageUrl": Object {
-                "type": "string",
-              },
-              "inviteLink": Object {
-                "type": "string",
-              },
-              "isAPI": Object {
-                "type": "boolean",
-              },
-              "loginAttempts": Object {
-                "type": "number",
-              },
-              "name": Object {
-                "type": "string",
-              },
-              "permissions": Object {
-                "items": Object {
-                  "$ref": "#/components/schemas/permissionSchema",
-                },
-                "type": "array",
-              },
-              "rootRole": Object {
-                "type": "number",
-              },
-              "seenAt": Object {
-                "format": "date-time",
-                "nullable": true,
-                "type": "string",
-              },
-              "username": Object {
-                "type": "string",
-              },
-            },
-            "required": Array [
-              "id",
-            ],
-            "type": "object",
-          },
-        },
-        "required": Array [
-          "uiConfig",
-          "user",
-          "email",
-          "context",
-          "featureTypes",
-          "tagTypes",
-          "strategies",
-          "projects",
-        ],
-        "type": "object",
-      },
       "changePasswordSchema": Object {
         "additionalProperties": false,
         "properties": Object {
@@ -513,7 +408,7 @@ Object {
           },
           "variants": Object {
             "items": Object {
-              "$ref": "#/components/schemas/clientVariantSchema",
+              "$ref": "#/components/schemas/variantSchema",
             },
             "nullable": true,
             "type": "array",
@@ -639,43 +534,6 @@ Object {
         ],
         "type": "object",
       },
-      "clientVariantSchema": Object {
-        "additionalProperties": false,
-        "properties": Object {
-          "name": Object {
-            "type": "string",
-          },
-          "payload": Object {
-            "properties": Object {
-              "type": Object {
-                "type": "string",
-              },
-              "value": Object {
-                "type": "string",
-              },
-            },
-            "required": Array [
-              "type",
-              "value",
-            ],
-            "type": "object",
-          },
-          "stickiness": Object {
-            "type": "string",
-          },
-          "weight": Object {
-            "type": "number",
-          },
-          "weightType": Object {
-            "type": "string",
-          },
-        },
-        "required": Array [
-          "name",
-          "weight",
-        ],
-        "type": "object",
-      },
       "cloneFeatureSchema": Object {
         "properties": Object {
           "name": Object {
@@ -692,17 +550,25 @@ Object {
       },
       "constraintSchema": Object {
         "additionalProperties": false,
+        "description": "A strategy constraint. For more information, refer to [the strategy constraint reference documentation](https://docs.getunleash.io/advanced/strategy_constraints)",
         "properties": Object {
           "caseInsensitive": Object {
+            "default": false,
+            "description": "Whether the operator should be case sensitive or not. Defaults to \`false\` (being case sensitive).",
             "type": "boolean",
           },
           "contextName": Object {
+            "description": "The name of the context field that this constraint should apply to.",
+            "example": "appName",
             "type": "string",
           },
           "inverted": Object {
+            "default": false,
+            "description": "Whether the result should be negated or not. If \`true\`, will turn a \`true\` result into a \`false\` result and vice versa.",
             "type": "boolean",
           },
           "operator": Object {
+            "description": "The operator to use when evaluating this constraint. For more information about the various operators, refer to [the strategy constraint operator documentation](https://docs.getunleash.io/advanced/strategy_constraints#strategy-constraint-operators).",
             "enum": Array [
               "NOT_IN",
               "IN",
@@ -723,9 +589,11 @@ Object {
             "type": "string",
           },
           "value": Object {
+            "description": "The context value that should be used for constraint evaluation. Use this property instead of \`values\` for properties that only accept single values.",
             "type": "string",
           },
           "values": Object {
+            "description": "The context values that should be used for constraint evaluation. Use this property instead of \`value\` for properties that accept multiple values.",
             "items": Object {
               "type": "string",
             },
@@ -1142,7 +1010,6 @@ Object {
           },
         },
         "required": Array [
-          "toggleName",
           "events",
         ],
         "type": "object",
@@ -1492,15 +1359,11 @@ Object {
             "format": "date-time",
             "type": "string",
           },
-          "role": Object {
-            "type": "string",
-          },
           "user": Object {
             "$ref": "#/components/schemas/userSchema",
           },
         },
         "required": Array [
-          "role",
           "user",
         ],
         "type": "object",
@@ -1807,24 +1670,135 @@ Object {
         ],
         "type": "object",
       },
+      "playgroundConstraintSchema": Object {
+        "additionalProperties": false,
+        "description": "A strategy constraint. For more information, refer to [the strategy constraint reference documentation](https://docs.getunleash.io/advanced/strategy_constraints)",
+        "properties": Object {
+          "caseInsensitive": Object {
+            "default": false,
+            "description": "Whether the operator should be case sensitive or not. Defaults to \`false\` (being case sensitive).",
+            "type": "boolean",
+          },
+          "contextName": Object {
+            "description": "The name of the context field that this constraint should apply to.",
+            "example": "appName",
+            "type": "string",
+          },
+          "inverted": Object {
+            "default": false,
+            "description": "Whether the result should be negated or not. If \`true\`, will turn a \`true\` result into a \`false\` result and vice versa.",
+            "type": "boolean",
+          },
+          "operator": Object {
+            "description": "The operator to use when evaluating this constraint. For more information about the various operators, refer to [the strategy constraint operator documentation](https://docs.getunleash.io/advanced/strategy_constraints#strategy-constraint-operators).",
+            "enum": Array [
+              "NOT_IN",
+              "IN",
+              "STR_ENDS_WITH",
+              "STR_STARTS_WITH",
+              "STR_CONTAINS",
+              "NUM_EQ",
+              "NUM_GT",
+              "NUM_GTE",
+              "NUM_LT",
+              "NUM_LTE",
+              "DATE_AFTER",
+              "DATE_BEFORE",
+              "SEMVER_EQ",
+              "SEMVER_GT",
+              "SEMVER_LT",
+            ],
+            "type": "string",
+          },
+          "result": Object {
+            "description": "Whether this was evaluated as true or false.",
+            "type": "boolean",
+          },
+          "value": Object {
+            "description": "The context value that should be used for constraint evaluation. Use this property instead of \`values\` for properties that only accept single values.",
+            "type": "string",
+          },
+          "values": Object {
+            "description": "The context values that should be used for constraint evaluation. Use this property instead of \`value\` for properties that accept multiple values.",
+            "items": Object {
+              "type": "string",
+            },
+            "type": "array",
+          },
+        },
+        "required": Array [
+          "contextName",
+          "operator",
+          "result",
+        ],
+        "type": "object",
+      },
       "playgroundFeatureSchema": Object {
         "additionalProperties": false,
         "description": "A simplified feature toggle model intended for the Unleash playground.",
         "properties": Object {
           "isEnabled": Object {
+            "description": "Whether this feature is enabled or not in the current environment.
+                          If a feature can't be fully evaluated (that is, \`strategies.result\` is \`unknown\`),
+                          this will be \`false\` to align with how client SDKs treat unresolved feature states.",
             "example": true,
             "type": "boolean",
           },
+          "isEnabledInCurrentEnvironment": Object {
+            "description": "Whether the feature is active and would be evaluated in the provided environment in a normal SDK context.",
+            "type": "boolean",
+          },
           "name": Object {
+            "description": "The feature's name.",
             "example": "my-feature",
             "type": "string",
           },
           "projectId": Object {
+            "description": "The ID of the project that contains this feature.",
             "example": "my-project",
             "type": "string",
           },
+          "strategies": Object {
+            "additionalProperties": false,
+            "properties": Object {
+              "data": Object {
+                "description": "The strategies that apply to this feature.",
+                "items": Object {
+                  "$ref": "#/components/schemas/playgroundStrategySchema",
+                },
+                "type": "array",
+              },
+              "result": Object {
+                "anyOf": Array [
+                  Object {
+                    "type": "boolean",
+                  },
+                  Object {
+                    "enum": Array [
+                      "unknown",
+                    ],
+                    "type": "string",
+                  },
+                ],
+                "description": "The cumulative results of all the feature's strategies. Can be \`true\`,
+                                  \`false\`, or \`unknown\`.
+                                  This property will only be \`unknown\`
+                                  if one or more of the strategies can't be fully evaluated and the rest of the strategies
+                                  all resolve to \`false\`.",
+              },
+            },
+            "required": Array [
+              "result",
+              "data",
+            ],
+            "type": "object",
+          },
           "variant": Object {
             "additionalProperties": false,
+            "description": "The feature variant you receive based on the provided context or the _disabled
+                          variant_. If a feature is disabled or doesn't have any
+                          variants, you would get the _disabled variant_.
+                          Otherwise, you'll get one of thefeature's defined variants.",
             "example": Object {
               "enabled": true,
               "name": "green",
@@ -1832,15 +1806,20 @@ Object {
             "nullable": true,
             "properties": Object {
               "enabled": Object {
+                "description": "Whether the variant is enabled or not. If the feature is disabled or if it doesn't have variants, this property will be \`false\`",
                 "type": "boolean",
               },
               "name": Object {
+                "description": "The variant's name. If there is no variant or if the toggle is disabled, this will be \`disabled\`",
+                "example": "red-variant",
                 "type": "string",
               },
               "payload": Object {
                 "additionalProperties": false,
+                "description": "An optional payload attached to the variant.",
                 "properties": Object {
                   "type": Object {
+                    "description": "The format of the payload.",
                     "enum": Array [
                       "json",
                       "csv",
@@ -1849,6 +1828,8 @@ Object {
                     "type": "string",
                   },
                   "value": Object {
+                    "description": "The payload value stringified.",
+                    "example": "{\\"property\\": \\"value\\"}",
                     "type": "string",
                   },
                 },
@@ -1876,8 +1857,10 @@ Object {
           "name",
           "projectId",
           "isEnabled",
+          "isEnabledInCurrentEnvironment",
           "variant",
           "variants",
+          "strategies",
         ],
         "type": "object",
       },
@@ -1886,8 +1869,10 @@ Object {
         "properties": Object {
           "context": Object {
             "$ref": "#/components/schemas/sdkContextSchema",
+            "description": "The context to use when evaluating toggles",
           },
           "environment": Object {
+            "description": "The environment to evaluate toggles in.",
             "example": "development",
             "type": "string",
           },
@@ -1924,6 +1909,7 @@ Object {
         "description": "The state of all features given the provided input.",
         "properties": Object {
           "features": Object {
+            "description": "The list of features that have been evaluated.",
             "items": Object {
               "$ref": "#/components/schemas/playgroundFeatureSchema",
             },
@@ -1931,11 +1917,147 @@ Object {
           },
           "input": Object {
             "$ref": "#/components/schemas/playgroundRequestSchema",
+            "description": "The given input used to evaluate the features.",
           },
         },
         "required": Array [
           "features",
           "input",
+        ],
+        "type": "object",
+      },
+      "playgroundSegmentSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "constraints": Object {
+            "description": "The list of constraints in this segment.",
+            "items": Object {
+              "$ref": "#/components/schemas/playgroundConstraintSchema",
+            },
+            "type": "array",
+          },
+          "id": Object {
+            "description": "The segment's id.",
+            "type": "integer",
+          },
+          "name": Object {
+            "description": "The name of the segment.",
+            "example": "segment A",
+            "type": "string",
+          },
+          "result": Object {
+            "description": "Whether this was evaluated as true or false.",
+            "type": "boolean",
+          },
+        },
+        "required": Array [
+          "name",
+          "id",
+          "constraints",
+          "result",
+        ],
+        "type": "object",
+      },
+      "playgroundStrategySchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "constraints": Object {
+            "description": "The strategy's constraints and their evaluation results.",
+            "items": Object {
+              "$ref": "#/components/schemas/playgroundConstraintSchema",
+            },
+            "type": "array",
+          },
+          "id": Object {
+            "description": "The strategy's id.",
+            "type": "string",
+          },
+          "name": Object {
+            "description": "The strategy's name.",
+            "type": "string",
+          },
+          "parameters": Object {
+            "$ref": "#/components/schemas/parametersSchema",
+            "description": "The strategy's constraints and their evaluation results.",
+            "example": Object {
+              "myParam1": "param value",
+            },
+          },
+          "result": Object {
+            "anyOf": Array [
+              Object {
+                "additionalProperties": false,
+                "properties": Object {
+                  "enabled": Object {
+                    "anyOf": Array [
+                      Object {
+                        "enum": Array [
+                          false,
+                        ],
+                        "type": "boolean",
+                      },
+                      Object {
+                        "enum": Array [
+                          "unknown",
+                        ],
+                        "type": "string",
+                      },
+                    ],
+                    "description": "Whether this strategy resolves to \`false\` or if it might resolve to \`true\`. Because Unleash can't evaluate the strategy, it can't say for certain whether it will be \`true\`, but if you have failing constraints or segments, it _can_ determine that your strategy would be \`false\`.",
+                  },
+                  "evaluationStatus": Object {
+                    "description": "Signals that this strategy could not be evaluated. This is most likely because you're using a custom strategy that Unleash doesn't know about.",
+                    "enum": Array [
+                      "incomplete",
+                    ],
+                    "type": "string",
+                  },
+                },
+                "required": Array [
+                  "evaluationStatus",
+                  "enabled",
+                ],
+                "type": "object",
+              },
+              Object {
+                "additionalProperties": false,
+                "properties": Object {
+                  "enabled": Object {
+                    "description": "Whether this strategy evaluates to true or not.",
+                    "type": "boolean",
+                  },
+                  "evaluationStatus": Object {
+                    "description": "Signals that this strategy was evaluated successfully.",
+                    "enum": Array [
+                      "complete",
+                    ],
+                    "type": "string",
+                  },
+                },
+                "required": Array [
+                  "evaluationStatus",
+                  "enabled",
+                ],
+                "type": "object",
+              },
+            ],
+            "description": "The strategy's evaluation result. If the strategy is a custom strategy that Unleash can't evaluate, \`evaluationStatus\` will be \`unknown\`. Otherwise, it will be \`true\` or \`false\`",
+          },
+          "segments": Object {
+            "description": "The strategy's segments and their evaluation results.",
+            "items": Object {
+              "$ref": "#/components/schemas/playgroundSegmentSchema",
+            },
+            "type": "array",
+          },
+        },
+        "required": Array [
+          "id",
+          "name",
+          "result",
+          "segments",
+          "constraints",
+          "parameters",
         ],
         "type": "object",
       },
@@ -2089,6 +2211,47 @@ Object {
         "required": Array [
           "appName",
         ],
+        "type": "object",
+      },
+      "searchEventsSchema": Object {
+        "description": "
+        Search for events by type, project, feature, free-text query,
+        or a combination thereof. Pass an empty object to fetch all events.
+    ",
+        "properties": Object {
+          "feature": Object {
+            "description": "Find events by feature toggle name (case-sensitive).",
+            "type": "string",
+          },
+          "limit": Object {
+            "default": 100,
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer",
+          },
+          "offset": Object {
+            "default": 0,
+            "minimum": 0,
+            "type": "integer",
+          },
+          "project": Object {
+            "description": "Find events by project ID (case-sensitive).",
+            "type": "string",
+          },
+          "query": Object {
+            "description": "
+                Find events by a free-text search query.
+                The query will be matched against the event type,
+                the username or email that created the event (if any),
+                and the event data payload (if any).
+            ",
+            "type": "string",
+          },
+          "type": Object {
+            "description": "Find events by event type (case-sensitive).",
+            "type": "string",
+          },
+        },
         "type": "object",
       },
       "segmentSchema": Object {
@@ -2450,6 +2613,9 @@ Object {
             "type": "string",
           },
           "disablePasswordAuth": Object {
+            "type": "boolean",
+          },
+          "emailEnabled": Object {
             "type": "boolean",
           },
           "environment": Object {
@@ -2814,8 +2980,6 @@ Object {
         "required": Array [
           "name",
           "weight",
-          "weightType",
-          "stickiness",
         ],
         "type": "object",
       },
@@ -3603,6 +3767,37 @@ If the provided project does not exist, the list of events will be empty.",
           },
         },
         "summary": "Get the most recent events from the Unleash instance or all events related to a project.",
+        "tags": Array [
+          "admin",
+        ],
+      },
+    },
+    "/api/admin/events/search": Object {
+      "post": Object {
+        "operationId": "searchEvents",
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/searchEventsSchema",
+              },
+            },
+          },
+          "description": "searchEventsSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/eventsSchema",
+                },
+              },
+            },
+            "description": "eventsSchema",
+          },
+        },
         "tags": Array [
           "admin",
         ],
@@ -5770,26 +5965,6 @@ If the provided project does not exist, the list of events will be empty.",
         },
         "tags": Array [
           "admin",
-        ],
-      },
-    },
-    "/api/admin/ui-bootstrap": Object {
-      "get": Object {
-        "operationId": "getBootstrapUiData",
-        "responses": Object {
-          "202": Object {
-            "content": Object {
-              "application/json": Object {
-                "schema": Object {
-                  "$ref": "#/components/schemas/bootstrapUiSchema",
-                },
-              },
-            },
-            "description": "bootstrapUiSchema",
-          },
-        },
-        "tags": Array [
-          "other",
         ],
       },
     },

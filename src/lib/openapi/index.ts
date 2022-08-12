@@ -1,5 +1,4 @@
 import { OpenAPIV3 } from 'openapi-types';
-
 import { addonParameterSchema } from './spec/addon-parameter-schema';
 import { addonSchema } from './spec/addon-schema';
 import { addonsSchema } from './spec/addons-schema';
@@ -8,14 +7,12 @@ import { apiTokenSchema } from './spec/api-token-schema';
 import { apiTokensSchema } from './spec/api-tokens-schema';
 import { applicationSchema } from './spec/application-schema';
 import { applicationsSchema } from './spec/applications-schema';
-import { bootstrapUiSchema } from './spec/bootstrap-ui-schema';
 import { changePasswordSchema } from './spec/change-password-schema';
 import { clientApplicationSchema } from './spec/client-application-schema';
 import { clientFeatureSchema } from './spec/client-feature-schema';
 import { clientFeaturesQuerySchema } from './spec/client-features-query-schema';
 import { clientFeaturesSchema } from './spec/client-features-schema';
 import { clientMetricsSchema } from './spec/client-metrics-schema';
-import { clientVariantSchema } from './spec/client-variant-schema';
 import { cloneFeatureSchema } from './spec/clone-feature-schema';
 import { constraintSchema } from './spec/constraint-schema';
 import { contextFieldSchema } from './spec/context-field-schema';
@@ -61,6 +58,9 @@ import { patchesSchema } from './spec/patches-schema';
 import { patchSchema } from './spec/patch-schema';
 import { permissionSchema } from './spec/permission-schema';
 import { playgroundFeatureSchema } from './spec/playground-feature-schema';
+import { playgroundStrategySchema } from './spec/playground-strategy-schema';
+import { playgroundConstraintSchema } from './spec/playground-constraint-schema';
+import { playgroundSegmentSchema } from './spec/playground-segment-schema';
 import { playgroundRequestSchema } from './spec/playground-request-schema';
 import { playgroundResponseSchema } from './spec/playground-response-schema';
 import { projectEnvironmentSchema } from './spec/project-environment-schema';
@@ -98,13 +98,13 @@ import { validateTagTypeSchema } from './spec/validate-tag-type-schema';
 import { variantSchema } from './spec/variant-schema';
 import { variantsSchema } from './spec/variants-schema';
 import { versionSchema } from './spec/version-schema';
-
 import { IServerOption } from '../types';
 import { URL } from 'url';
 import { groupSchema } from './spec/group-schema';
 import { groupsSchema } from './spec/groups-schema';
 import { groupUserModelSchema } from './spec/group-user-model-schema';
 import { usersGroupsBaseSchema } from './spec/users-groups-base-schema';
+import { searchEventsSchema } from './spec/search-events-schema';
 
 // All schemas in `openapi/spec` should be listed here.
 export const schemas = {
@@ -116,14 +116,12 @@ export const schemas = {
     apiTokensSchema,
     applicationSchema,
     applicationsSchema,
-    bootstrapUiSchema,
     changePasswordSchema,
     clientApplicationSchema,
     clientFeatureSchema,
     clientFeaturesQuerySchema,
     clientFeaturesSchema,
     clientMetricsSchema,
-    clientVariantSchema,
     cloneFeatureSchema,
     constraintSchema,
     contextFieldSchema,
@@ -170,6 +168,9 @@ export const schemas = {
     patchSchema,
     permissionSchema,
     playgroundFeatureSchema,
+    playgroundStrategySchema,
+    playgroundConstraintSchema,
+    playgroundSegmentSchema,
     playgroundRequestSchema,
     playgroundResponseSchema,
     projectEnvironmentSchema,
@@ -178,6 +179,7 @@ export const schemas = {
     resetPasswordSchema,
     roleSchema,
     sdkContextSchema,
+    searchEventsSchema,
     segmentSchema,
     setStrategySortOrderSchema,
     sortOrderSchema,

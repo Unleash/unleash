@@ -1,9 +1,10 @@
 import { EventEmitter } from 'events';
 import { Knex } from 'knex';
-import { DROP_FEATURES, IEvent, IBaseEvent } from '../types/events';
+import { IEvent, IBaseEvent } from '../types/events';
 import { LogProvider, Logger } from '../logger';
 import { IEventStore } from '../types/stores/event-store';
 import { ITag } from '../types/model';
+import { SearchEventsSchema } from '../openapi/spec/search-events-schema';
 
 const EVENT_COLUMNS = [
     'id',
@@ -115,50 +116,44 @@ class EventStore extends EventEmitter implements IEventStore {
         }
     }
 
-    async getEventsFilterByType(name: string): Promise<IEvent[]> {
-        try {
-            const rows = await this.db
-                .select(EVENT_COLUMNS)
-                .from(TABLE)
-                .limit(100)
-                .where('type', name)
-                .andWhere(
-                    'id',
-                    '>=',
-                    this.db
-                        .select(this.db.raw('coalesce(max(id),0) as id'))
-                        .from(TABLE)
-                        .where({ type: DROP_FEATURES }),
-                )
-                .orderBy('created_at', 'desc');
-            return rows.map(this.rowToEvent);
-        } catch (err) {
-            this.logger.error(err);
-            return [];
-        }
-    }
+    async searchEvents(search: SearchEventsSchema = {}): Promise<IEvent[]> {
+        let query = this.db
+            .select(EVENT_COLUMNS)
+            .from<IEventTable>(TABLE)
+            .limit(search.limit ?? 100)
+            .offset(search.offset ?? 0)
+            .orderBy('created_at', 'desc');
 
-    async getEventsFilterByProject(project: string): Promise<IEvent[]> {
-        try {
-            const rows = await this.db
-                .select(EVENT_COLUMNS)
-                .from(TABLE)
-                .where({ project })
-                .orderBy('created_at', 'desc');
-            return rows.map(this.rowToEvent);
-        } catch (err) {
-            return [];
+        if (search.type) {
+            query = query.andWhere({
+                type: search.type,
+            });
         }
-    }
 
-    async getEventsForFeature(featureName: string): Promise<IEvent[]> {
+        if (search.project) {
+            query = query.andWhere({
+                project: search.project,
+            });
+        }
+
+        if (search.feature) {
+            query = query.andWhere({
+                feature_name: search.feature,
+            });
+        }
+
+        if (search.query) {
+            query = query.where((where) =>
+                where
+                    .orWhereRaw('type::text ILIKE ?', `%${search.query}%`)
+                    .orWhereRaw('created_by::text ILIKE ?', `%${search.query}%`)
+                    .orWhereRaw('data::text ILIKE ?', `%${search.query}%`)
+                    .orWhereRaw('pre_data::text ILIKE ?', `%${search.query}%`),
+            );
+        }
+
         try {
-            const rows = await this.db
-                .select(EVENT_COLUMNS)
-                .from(TABLE)
-                .where({ feature_name: featureName })
-                .orderBy('created_at', 'desc');
-            return rows.map(this.rowToEvent);
+            return (await query).map(this.rowToEvent);
         } catch (err) {
             return [];
         }

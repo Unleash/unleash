@@ -5,7 +5,7 @@ export const variantSchema = {
     $id: '#/components/schemas/variantSchema',
     type: 'object',
     additionalProperties: false,
-    required: ['name', 'weight', 'weightType', 'stickiness'],
+    required: ['name', 'weight'],
     properties: {
         name: {
             type: 'string',

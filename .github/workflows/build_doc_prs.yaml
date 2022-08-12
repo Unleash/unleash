@@ -38,6 +38,7 @@ jobs:
         uses: lycheeverse/lychee-action@v1.5.0
         with:
           fail: true
+          debug: true
           args: '"./website/build/**/*.md" "./website/build/**/*.html" --cache --max-cache-age 1d --exclude-mail --verbose' # other excludes are in .lycheeignore
           output: ${{ env.issue-content }}
 

@@ -230,7 +230,7 @@ Object {
             "type": "string",
           },
           "type": Object {
-            "description": "client, admin.",
+            "description": "client, admin, proxy.",
             "type": "string",
           },
           "username": Object {
@@ -667,7 +667,7 @@ Object {
             "type": "string",
           },
           "type": Object {
-            "description": "client, admin.",
+            "description": "client, admin, proxy.",
             "type": "string",
           },
           "username": Object {

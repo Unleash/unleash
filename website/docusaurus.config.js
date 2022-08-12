@@ -188,14 +188,13 @@ module.exports = {
                 docsPluginId: 'classic',
                 config: {
                     server: {
-                        specPath: 'http://localhost:4242/docs/openapi.json',
+                        specPath: process.env.NODE_ENV === 'development'  ?
+                            'http://localhost:4242/docs/openapi.json'
+                            : './openapi-spec.generated.json',
                         outputDir: 'docs/reference/apis/unleash',
                         sidebarOptions: {
                             groupPathsBy: 'tag',
                             categoryLinkSource: 'tag',
-                            customProps: {
-                                slug: '/test/',
-                            },
                         },
                     },
                 },

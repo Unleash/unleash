@@ -21,15 +21,6 @@ jobs:
       issue-content: ./lychee-out.md
     steps:
       - uses: actions/checkout@v3
-      - name: Build docs
-        env:
-          UNLEASH_FEEDBACK_TARGET_URL: ${{ secrets.DOCS_FEEDBACK_TARGET_URL }}
-          UNLEASH_PROXY_CLIENT_KEY: ${{ secrets.UNLEASH_PROXY_CLIENT_KEY_DEVELOPMENT }}
-          UNLEASH_PROXY_URL: ${{ secrets.UNLEASH_PROXY_URL_DEVELOPMENT }}
-        run: |
-          # Build the site
-          cd website && yarn && yarn build
-
       - name: Restore lychee cache
         uses: actions/cache@v3
         with:
@@ -41,7 +32,7 @@ jobs:
         uses: lycheeverse/lychee-action@v1.5.0
         with:
           fail: true
-          args: '"./website/build/**/*.md" "./website/build/**/*.html" --cache --max-cache-age 1d --exclude-mail --verbose' # other excludes are in .lycheeignore
+          args: '"./website/docs/**/*.md" --cache --max-cache-age 1d --exclude-mail --verbose' # other excludes are in .lycheeignore
           output: ${{ env.issue-content }}
 
       # Permissions (issues: read)

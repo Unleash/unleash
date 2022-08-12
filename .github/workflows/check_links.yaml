@@ -32,7 +32,7 @@ jobs:
         uses: lycheeverse/lychee-action@v1.5.0
         with:
           fail: true
-          args: '"./website/docs/**/*.md" --cache --max-cache-age 1d --exclude-mail --verbose' # other excludes are in .lycheeignore
+          args: '"./website/docs/**/*.md" --scheme http --scheme https --cache --max-cache-age 1d --exclude-mail --verbose' # other excludes are in .lycheeignore
           output: ${{ env.issue-content }}
 
       # Permissions (issues: read)

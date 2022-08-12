@@ -305,15 +305,6 @@ class ProjectStore implements IProjectStore {
         return Number(members.count);
     }
 
-    // static filterByProject: Knex.QueryCallbackWithArgs = (
-    //     queryBuilder: Knex.QueryBuilder,
-    //     project: boolean,
-    // ) => {
-    //     return archived
-    //         ? queryBuilder.whereNotNull('archived_at')
-    //         : queryBuilder.whereNull('archived_at');
-    // };
-
     async count(): Promise<number> {
         return this.db
             .from(TABLE)

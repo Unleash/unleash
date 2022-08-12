@@ -16,7 +16,6 @@ import {
     createStrategyPayload,
     featureStrategyDocsLinkLabel,
 } from '../FeatureStrategyEdit/FeatureStrategyEdit';
-import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { ISegment } from 'interfaces/segment';
 import { useSegmentsApi } from 'hooks/api/actions/useSegmentsApi/useSegmentsApi';
@@ -24,6 +23,7 @@ import { formatStrategyName } from 'utils/strategyNames';
 import { useFeatureImmutable } from 'hooks/api/getters/useFeature/useFeatureImmutable';
 import { useFormErrors } from 'hooks/useFormErrors';
 import { createFeatureStrategy } from 'utils/createFeatureStrategy';
+import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
 
 export const FeatureStrategyCreate = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -32,7 +32,7 @@ export const FeatureStrategyCreate = () => {
     const strategyName = useRequiredQueryParam('strategyName');
     const [strategy, setStrategy] = useState<Partial<IFeatureStrategy>>({});
     const [segments, setSegments] = useState<ISegment[]>([]);
-    const { strategies } = useStrategies();
+    const { strategyDefinition } = useStrategy(strategyName);
     const errors = useFormErrors();
 
     const { addStrategyToFeature, loading } = useFeatureStrategyApi();
@@ -46,10 +46,6 @@ export const FeatureStrategyCreate = () => {
         projectId,
         featureId
     );
-
-    const strategyDefinition = strategies.find(strategy => {
-        return strategy.name === strategyName;
-    });
 
     useEffect(() => {
         if (strategyDefinition) {

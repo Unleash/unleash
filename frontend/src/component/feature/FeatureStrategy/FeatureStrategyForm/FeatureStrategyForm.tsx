@@ -25,8 +25,8 @@ import PermissionButton from 'component/common/PermissionButton/PermissionButton
 import { FeatureStrategySegment } from 'component/feature/FeatureStrategy/FeatureStrategySegment/FeatureStrategySegment';
 import { ISegment } from 'interfaces/segment';
 import { IFormErrors } from 'hooks/useFormErrors';
-import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import { validateParameterValue } from 'utils/validateParameterValue';
+import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
 
 interface IFeatureStrategyFormProps {
     feature: IFeatureToggle;
@@ -60,12 +60,8 @@ export const FeatureStrategyForm = ({
     const hasValidConstraints = useConstraintsValidation(strategy.constraints);
     const enableProdGuard = useFeatureStrategyProdGuard(feature, environmentId);
     const { hasAccess } = useContext(AccessContext);
-    const { strategies } = useStrategies();
+    const { strategyDefinition } = useStrategy(strategy?.name);
     const navigate = useNavigate();
-
-    const strategyDefinition = strategies.find(definition => {
-        return definition.name === strategy.name;
-    });
 
     const {
         uiConfig,

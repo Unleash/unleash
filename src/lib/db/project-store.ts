@@ -250,11 +250,11 @@ class ProjectStore implements IProjectStore {
     async getMembers(projectId: string): Promise<number> {
         const rolesFromProject = this.db('role_permission')
             .select('role_id')
-            .distinct()
-            .where({ project: projectId });
+            .distinct();
 
         const numbers = await this.db('role_user')
             .countDistinct('user_id as members')
+            .where('project', projectId)
             .whereIn('role_id', rolesFromProject)
             .first();
         const { members } = numbers;

@@ -7224,10 +7224,10 @@ unleash-client@3.15.0:
     murmurhash3js "^3.0.1"
     semver "^7.3.5"
 
-unleash-frontend@4.15.0-beta.0:
-  version "4.15.0-beta.0"
-  resolved "https://registry.yarnpkg.com/unleash-frontend/-/unleash-frontend-4.15.0-beta.0.tgz#be5df76a6ed5d12491c0eae1586e6667182a3295"
-  integrity sha512-BOod8Twm+uJSG1yfu6IaKeQ/dgpRJGVMX/tAmym6NwVl9XuaU7cwXvv1nPA2TKNDD67nZhGVuhDMLvRAjCaqhA==
+unleash-frontend@4.14.4-beta.0:
+  version "4.14.4-beta.0"
+  resolved "https://registry.yarnpkg.com/unleash-frontend/-/unleash-frontend-4.14.4-beta.0.tgz#b23c9aa9524cf5e7e40a845b603ba1429621ffba"
+  integrity sha512-XG19FZiYkLZSOR5CcfZGz3o/z9ihQUfXwOADqKXcYCjKPj/vJzfVJv1l79yGcGlg1ujNF5Ab6KW/GNf64VXfqw==
 
 unpipe@1.0.0, unpipe@~1.0.0:
   version "1.0.0"

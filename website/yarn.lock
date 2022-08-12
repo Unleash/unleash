@@ -6328,10 +6328,10 @@ doctrine@^3.0.0:
   dependencies:
     esutils "^2.0.2"
 
-docusaurus-plugin-openapi-docs@0.0.0-420:
-  version "0.0.0-420"
-  resolved "https://registry.yarnpkg.com/docusaurus-plugin-openapi-docs/-/docusaurus-plugin-openapi-docs-0.0.0-420.tgz#950248800b5ce3b36149d23e03383e2b9c3f689f"
-  integrity sha512-zY34/XLpOp47Iw2EvIsRj6I4SXlQuptofeEUN+GKsQ1vilXqSDoNaJuSjTWYi1lMP8cNbYJOpK2Ai925M5yVKQ==
+docusaurus-plugin-openapi-docs@1.1.5, docusaurus-plugin-openapi-docs@^1.1.5:
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/docusaurus-plugin-openapi-docs/-/docusaurus-plugin-openapi-docs-1.1.5.tgz#7c52c5be83d131e3f51587723215761389a2e529"
+  integrity sha512-kezDKzzlTkbhPfXbPPo9ZIB9wIk5Nm6z1KGEpGRRDwC5KWoJ7TyjY1kRN08P+Bdh0wq/6exXDRNfmL8Gn7iXVg==
   dependencies:
     "@apidevtools/json-schema-ref-parser" "^9.0.9"
     "@docusaurus/mdx-loader" "2.0.1"
@@ -6355,10 +6355,10 @@ docusaurus-plugin-openapi-docs@0.0.0-420:
     url-template "^3.0.0"
     webpack "^5.61.0"
 
-docusaurus-theme-openapi-docs@0.0.0-420:
-  version "0.0.0-420"
-  resolved "https://registry.yarnpkg.com/docusaurus-theme-openapi-docs/-/docusaurus-theme-openapi-docs-0.0.0-420.tgz#e5401ec371a93d0863fb45ccfbe44441710d40bb"
-  integrity sha512-ZbyjjhM4xtjpNYCWiea92gj1B7J4SVzx20Efa7vnvWc870UQ7mGPK/1GFRRSWyH/mhiSSCSiIlkYjJJztOAPew==
+docusaurus-theme-openapi-docs@1.1.5:
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/docusaurus-theme-openapi-docs/-/docusaurus-theme-openapi-docs-1.1.5.tgz#561ec3e473f27d60b35ccea5df361872ae6d44dd"
+  integrity sha512-n9SLOpiWex+/Wi62UQFr5hs49sukFcM28ctRwQRg/fjCuBcB6gOObtfJYi34KmUptzw1uI2eOwX6gVtjS716UQ==
   dependencies:
     "@docusaurus/theme-common" "2.0.1"
     "@mdx-js/react" "^1.6.21"
@@ -6368,7 +6368,7 @@ docusaurus-theme-openapi-docs@0.0.0-420:
     buffer "^6.0.3"
     clsx "^1.1.1"
     crypto-js "^4.1.1"
-    docusaurus-plugin-openapi-docs "0.0.0-420"
+    docusaurus-plugin-openapi-docs "^1.1.5"
     immer "^9.0.7"
     lodash "^4.17.20"
     process "^0.11.10"

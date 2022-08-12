@@ -27,6 +27,12 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { ProjectRoleDescription } from './ProjectRoleDescription/ProjectRoleDescription';
 import { useNavigate } from 'react-router-dom';
 import { GO_BACK } from 'constants/navigate';
+import {
+    PA_ASSIGN_CREATE_ID,
+    PA_ROLE_ID,
+    PA_USERS_GROUPS_ID,
+    PA_USERS_GROUPS_TITLE_ID,
+} from 'utils/testIds';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',
@@ -282,11 +288,14 @@ export const ProjectAccessAssign = ({
             >
                 <StyledForm onSubmit={handleSubmit}>
                     <div>
-                        <StyledInputDescription>
+                        <StyledInputDescription
+                            data-testid={PA_USERS_GROUPS_TITLE_ID}
+                        >
                             Select the {entityType}
                         </StyledInputDescription>
                         <StyledAutocompleteWrapper>
                             <Autocomplete
+                                data-testid={PA_USERS_GROUPS_ID}
                                 size="small"
                                 multiple
                                 openOnFocus
@@ -341,6 +350,7 @@ export const ProjectAccessAssign = ({
                         </StyledInputDescription>
                         <StyledAutocompleteWrapper>
                             <Autocomplete
+                                data-testid={PA_ROLE_ID}
                                 size="small"
                                 openOnFocus
                                 value={role}
@@ -361,6 +371,7 @@ export const ProjectAccessAssign = ({
 
                     <StyledButtonContainer>
                         <Button
+                            data-testid={PA_ASSIGN_CREATE_ID}
                             type="submit"
                             variant="contained"
                             color="primary"

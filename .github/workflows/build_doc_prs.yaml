@@ -32,7 +32,7 @@ jobs:
         uses: lycheeverse/lychee-action@v1.5.0
         with:
           fail: true
-          args: '"./website/build/**/*.md" "./website/build/**/*.html" --cache --exclude "(.*-dsn.algolia.net|localhost|changeme|hostname|unleash:4242|user:password@url|your.heroku.instance.com|your-api-url|unleash.*.com/api/|version.unleash.run|unleash.host.com|secure-unleash.herokuapp.com|datadog.*/api/v1/events|ddog.*/api/v1/events|github.com|api.slack.com|stackoverflow.com|api.datadoghq.com)"'
+          args: '"./website/build/**/*.md" "./website/build/**/*.html" --cache --exclude-mail --exclude "(.*-dsn.algolia.net|localhost|changeme|hostname|unleash:4242|user:password@url|your.heroku.instance.com|your-api-url|unleash.*.com/api/|version.unleash.run|unleash.host.com|secure-unleash.herokuapp.com|datadog.*/api/v1/events|ddog.*/api/v1/events|github.com|api.slack.com|stackoverflow.com|api.datadoghq.com)"'
           output: ${{ env.issue-content }}
 
       # Permissions (issues: read)

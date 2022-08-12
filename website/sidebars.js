@@ -181,9 +181,9 @@ module.exports = {
                                 type: 'generated-index',
                                 description:
                                     'Generated API docs based on the Unleash OpenAPI schema. For the time being, some additional info can also be found in the older API docs.',
-                                slug: '/reference/api/unleash',
+                                slug: '/reference/apis/unleash',
                             },
-                            items: require('./docs/reference/api/unleash/sidebar.js'),
+                            items: require('./docs/reference/apis/unleash/sidebar.js'),
                         },
                     ],
                 },

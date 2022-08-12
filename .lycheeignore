@@ -1,10 +1,8 @@
 dev-example-okta.com
 .*-dsn.algolia.net
 
-app.unleash-hosted.com
-eu.unleash-hosted.com
+.*.unleash.host.*.com.*
 unleash.*.com/api/
-unleash.host.com
 secure-unleash.herokuapp.com
 
 localhost

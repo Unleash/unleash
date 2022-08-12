@@ -67,7 +67,9 @@ export default class ProjectHealthService {
             projectId,
             archived,
         );
-        const members = await this.projectStore.getMembers(projectId);
+        const members = await this.projectStore.getMembersCountByProject(
+            projectId,
+        );
         return {
             name: project.name,
             description: project.description,

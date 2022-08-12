@@ -29,6 +29,11 @@ export interface IEnvironmentProjectLink {
     projectId: string;
 }
 
+export interface IProjectMembersCount {
+    count: number;
+    project: string;
+}
+
 class ProjectStore implements IProjectStore {
     private db: Knex;
 
@@ -89,12 +94,11 @@ class ProjectStore implements IProjectStore {
         );
         projectTimer();
         const memberTimer = this.timer('getMemberCount');
-        const memberCount = await this.db.raw(
-            `SELECT count(role_id) as member_count, project FROM role_user GROUP BY project`,
-        );
+
+        const memberCount = await this.getMembersCount();
         memberTimer();
         const memberMap = new Map<string, number>(
-            memberCount.rows.map((c) => [c.project, Number(c.member_count)]),
+            memberCount.map((c) => [c.project, Number(c.count)]),
         );
         return projectsWithFeatureCount.map((r) => {
             return { ...r, memberCount: memberMap.get(r.id) };
@@ -247,22 +251,68 @@ class ProjectStore implements IProjectStore {
             .pluck('project_environments.environment_name');
     }
 
-    async getMembers(projectId: string): Promise<number> {
-        const rolesFromProject = this.db('role_permission')
-            .select('role_id')
-            .distinct()
-            .where({ project: projectId });
-
-        const numbers = await this.db('role_user')
-            .countDistinct('user_id as members')
-            .whereIn('role_id', rolesFromProject)
-            .first();
-        const { members } = numbers;
-        if (typeof members === 'string') {
-            return parseInt(members, 10);
-        }
+    async getMembersCount(): Promise<IProjectMembersCount[]> {
+        const members = await this.db
+            .select('project')
+            .from((db) => {
+                db.select('user_id', 'project')
+                    .from('role_user')
+                    .leftJoin('roles', 'role_user.role_id', 'roles.id')
+                    .where((builder) => builder.whereNot('type', 'root'))
+                    .union((queryBuilder) => {
+                        queryBuilder
+                            .select('user_id', 'project')
+                            .from('group_role')
+                            .leftJoin(
+                                'group_user',
+                                'group_user.group_id',
+                                'group_role.group_id',
+                            );
+                    })
+                    .as('query');
+            })
+            .groupBy('project')
+            .count('user_id');
         return members;
     }
+
+    async getMembersCountByProject(projectId?: string): Promise<number> {
+        const members = await this.db
+            .from((db) => {
+                db.select('user_id')
+                    .from('role_user')
+                    .leftJoin('roles', 'role_user.role_id', 'roles.id')
+                    .where((builder) =>
+                        builder
+                            .where('project', projectId)
+                            .whereNot('type', 'root'),
+                    )
+                    .union((queryBuilder) => {
+                        queryBuilder
+                            .select('user_id')
+                            .from('group_role')
+                            .leftJoin(
+                                'group_user',
+                                'group_user.group_id',
+                                'group_role.group_id',
+                            )
+                            .where('project', projectId);
+                    })
+                    .as('query');
+            })
+            .count()
+            .first();
+        return Number(members.count);
+    }
+
+    // static filterByProject: Knex.QueryCallbackWithArgs = (
+    //     queryBuilder: Knex.QueryBuilder,
+    //     project: boolean,
+    // ) => {
+    //     return archived
+    //         ? queryBuilder.whereNotNull('archived_at')
+    //         : queryBuilder.whereNull('archived_at');
+    // };
 
     async count(): Promise<number> {
         return this.db

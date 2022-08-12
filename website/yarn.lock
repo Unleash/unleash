@@ -6328,7 +6328,34 @@ doctrine@^3.0.0:
   dependencies:
     esutils "^2.0.2"
 
-docusaurus-plugin-openapi-docs@1.1.5, docusaurus-plugin-openapi-docs@^1.1.5:
+docusaurus-plugin-openapi-docs@1.1.6:
+  version "1.1.6"
+  resolved "https://registry.yarnpkg.com/docusaurus-plugin-openapi-docs/-/docusaurus-plugin-openapi-docs-1.1.6.tgz#329b46ea8896771aee672182f097fd4dca1135c6"
+  integrity sha512-zVACWYkb3htqvdR8W5h1GwhYM6Ii1aNxNzUinZCIXNt0sYk4Vcy8QbI4kd5FtZaV+KZ4Jq6xRB0i7u6i/eJh5g==
+  dependencies:
+    "@apidevtools/json-schema-ref-parser" "^9.0.9"
+    "@docusaurus/mdx-loader" "2.0.1"
+    "@docusaurus/plugin-content-docs" "2.0.1"
+    "@docusaurus/utils" "2.0.1"
+    "@docusaurus/utils-validation" "2.0.1"
+    "@paloaltonetworks/openapi-to-postmanv2" "3.1.0-hotfix.1"
+    "@paloaltonetworks/postman-collection" "^4.1.0"
+    "@redocly/openapi-core" "^1.0.0-beta.103"
+    chalk "^4.1.2"
+    clsx "^1.1.1"
+    fs-extra "^9.0.1"
+    js-yaml "^4.1.0"
+    json-pointer "^0.6.2"
+    json-refs "^3.0.15"
+    json-schema-merge-allof "^0.8.1"
+    lodash "^4.17.20"
+    mustache "^4.2.0"
+    slugify "^1.6.5"
+    swagger2openapi "^7.0.8"
+    url-template "^3.0.0"
+    webpack "^5.61.0"
+
+docusaurus-plugin-openapi-docs@^1.1.5:
   version "1.1.5"
   resolved "https://registry.yarnpkg.com/docusaurus-plugin-openapi-docs/-/docusaurus-plugin-openapi-docs-1.1.5.tgz#7c52c5be83d131e3f51587723215761389a2e529"
   integrity sha512-kezDKzzlTkbhPfXbPPo9ZIB9wIk5Nm6z1KGEpGRRDwC5KWoJ7TyjY1kRN08P+Bdh0wq/6exXDRNfmL8Gn7iXVg==
@@ -13877,10 +13904,10 @@ universalify@^2.0.0:
   resolved "https://registry.yarnpkg.com/universalify/-/universalify-2.0.0.tgz#75a4984efedc4b08975c5aeb73f530d02df25717"
   integrity sha512-hAZsKq7Yy11Zu1DE0OzWjw7nnLZmJZYTDZZyEFHZdUhV8FkH5MCfoU1XMaxXovpyW5nq5scPqq0ZDP9Zyl04oQ==
 
-unleash-proxy-client@2.0.3:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/unleash-proxy-client/-/unleash-proxy-client-2.0.3.tgz#7260480969b5f61cadd543c2a3e2b0acabd535d6"
-  integrity sha512-HIf7+rmPBNV6lXTmQ+cuvp7H5xxc7NKZva1YTokjLIGJkqDudgFFBwPsEgoCtiYxXOTG4xoStWj3pPaPPvcUZA==
+unleash-proxy-client@2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/unleash-proxy-client/-/unleash-proxy-client-2.1.0.tgz#cae933793d5de3a12fe71bfaf3ead8fe8eaa93db"
+  integrity sha512-BzpVO8A5nSOBIHpNpCpgYK6kjcsi5XvR1IVj8etl5U8TAhP6E6dr2/o+vJvESEU7+7UJpNYv40D05YH7QANpGQ==
   dependencies:
     tiny-emitter "^2.1.0"
     uuid "^8.3.2"

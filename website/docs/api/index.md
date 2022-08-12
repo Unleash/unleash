@@ -4,19 +4,7 @@ title: API Documentation
 slug: /api
 ---
 
-:::caution Deprecation notice & switchover
-
-These docs are currently in the process of being deprecated in favor of auto-generated [docs based on the Unleash OpenAPI schema](/reference/apis/unleash). In the interim, some information may still only be available here.
-
-:::
-
 ## Client API {#client-api}
-
-:::info OpenAPI docs
-
-You can also find the operation descriptions at [OpenAPI client operations](/reference/apis/unleash/client).
-
-:::
 
 This describes the API provided to unleash-clients.
 
@@ -24,28 +12,22 @@ Since v4.0.0 all operations require an [API token](/user_guide/api-token) with `
 
 With versions earlier than v4.0.0 and `insecure` authentication no authentication is required.
 
-- [Feature Toggles API](/api/client/features) (OpenAPI versions: [get a single feature](/reference/apis/unleash/get-client-feature 'OpenAPI version') and [get all features](/reference/apis/unleash/get-all-client-features 'OpenAPI version'))
-- [Register API](/api/client/register) ([OpenAPI version](/reference/apis/unleash/register-client-application 'register a client application'))
-- [Metrics API](/api/client/metrics) ([OpenAPI version](/reference/apis/unleash/register-client-metrics 'register client metrics'))
+- [Feature Toggles API](/api/client/features)
+- [Register API](/api/client/register)
+- [Metrics API](/api/client/metrics)
 
 ## Admin API (internal) {#admin-api-internal}
-
-:::info OpenAPI docs
-
-The various admin API operations have been given their own sections under the OpenAPI docs. Some endpoints are located slightly differently than in this doc.
-
-:::
 
 The internal API used by the Admin UI (unleash-frontend). Since v4.0.0 all operations require an [API token](/user_guide/api-token) with `Admin` level access:
 
 With versions earlier than v4.0.0 and `insecure` authentication Basic Auth (with curl `-u myemail@test.com:`) is enough.
 
-- [Events API](/api/admin/events) ([OpenAPI version](/reference/apis/unleash/Events 'Events operations'))
-- [Feature Toggles API](/api/admin/features) ([OpenAPI version](/reference/apis/unleash/Features 'Feature operations'))
-- [Metrics API](/api/admin/metrics) ([OpenAPI version](/reference/apis/unleash/Metrics 'Metrics operations'))
-- [Project API](/api/admin/project.md) ([OpenAPI version](/reference/apis/unleash/Projects 'Project operations'))
-- [Strategies API](/api/admin/strategies) ([OpenAPI version](/reference/apis/unleash/Strategies 'Strategies operations'))
-- [Tags API](/api/admin/tags) ([OpenAPI version](/reference/apis/unleash/Tags 'Tags operations'))
+- [Events API](/api/admin/events)
+- [Feature Toggles API](/api/admin/features)
+- [Metrics API](/api/admin/metrics)
+- [Project API](/api/admin/project.md)
+- [Strategies API](/api/admin/strategies)
+- [Tags API](/api/admin/tags)
 
 ## System API's {#system-apis}
 

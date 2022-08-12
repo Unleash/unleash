@@ -15,7 +15,7 @@ jobs:
       issues: write
     env:
       issue-lookup-label: automated-link-issue
-      issue-content: ./lychee/out.md
+      issue-content: ./lychee-out.md
     steps:
       - uses: actions/checkout@v3
       - name: Build docs
@@ -32,7 +32,7 @@ jobs:
         uses: lycheeverse/lychee-action@v1.5.0
         with:
           fail: true
-          args: '"./website/build/**/*.md" "./website/build/**/*.html" --cache --exclude-mail' # other excludes are in .lycheeignore
+          args: '"./website/build/**/*.md" "./website/build/**/*.html" --cache --exclude-mail --verbose' # other excludes are in .lycheeignore
           output: ${{ env.issue-content }}
 
       # Permissions (issues: read)

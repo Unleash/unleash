@@ -1,5 +1,6 @@
 dev-example-okta.com
 .*-dsn.algolia.net
+www.linkedin.com/company/getunleash
 
 .*.unleash.host.*.com.*
 unleash.*.com/api/

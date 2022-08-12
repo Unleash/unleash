@@ -27,25 +27,41 @@ export const FeatureDetails = ({
     const { classes: styles } = useStyles();
     const theme = useTheme();
 
-    const description = feature.isEnabled
-        ? `This feature toggle is True in ${input?.environment} because `
-        : `This feature toggle is False in ${input?.environment} because `;
-
-    const reason = (() => {
-        if (feature.isEnabled) return 'at least one strategy is True';
+    const [description, reason, color] = (() => {
+        if (feature.isEnabled)
+            return [
+                `This feature toggle is True in ${input?.environment} because `,
+                'at least one strategy is True',
+                theme.palette.success.main,
+            ];
 
         if (!feature.isEnabledInCurrentEnvironment)
-            return 'the environment is disabled';
+            return [
+                `This feature toggle is False in ${input?.environment} because `,
+                'the environment is disabled',
+                theme.palette.error.main,
+            ];
 
         if (hasOnlyCustomStrategies(feature))
-            return 'no strategies could be fully evaluated';
+            return [
+                `This feature toggle is Unknown in ${input?.environment} because `,
+                'no strategies could be fully evaluated',
+                theme.palette.warning.main,
+            ];
 
-        return 'all strategies are either False or could not be fully evaluated';
+        if (hasCustomStrategies(feature))
+            return [
+                `This feature toggle is Unknown in ${input?.environment} because `,
+                'not all strategies could be fully evaluated',
+                theme.palette.warning.main,
+            ];
+
+        return [
+            `This feature toggle is False in ${input?.environment} because `,
+            'all strategies are either False or could not be fully evaluated',
+            theme.palette.error.main,
+        ];
     })();
-
-    const color = feature.isEnabled
-        ? theme.palette.success.main
-        : theme.palette.error.main;
 
     const noValueTxt = checkForEmptyValues(input?.context)
         ? 'You did not provide a value for your context field in step 2 of the configuration'

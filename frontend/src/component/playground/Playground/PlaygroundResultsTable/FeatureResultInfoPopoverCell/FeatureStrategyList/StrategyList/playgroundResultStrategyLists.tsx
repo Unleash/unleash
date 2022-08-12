@@ -1,9 +1,9 @@
 import { Fragment } from 'react';
 import { Alert, Box, styled, Typography } from '@mui/material';
 import {
-    PlaygroundFeatureSchema,
     PlaygroundStrategySchema,
     PlaygroundRequestSchema,
+    PlaygroundStrategyResultSchema,
 } from 'component/playground/Playground/interfaces/playground.model';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { FeatureStrategyItem } from './StrategyItem/FeatureStrategyItem';
@@ -14,16 +14,18 @@ const StyledAlertWrapper = styled('div')(({ theme }) => ({
     padding: `0, 4px`,
     flexDirection: 'column',
     borderRadius: theme.shape.borderRadiusMedium,
-    border: `1px solid ${theme.palette.info.border}`,
+    border: `1px solid ${theme.palette.warning.border}`,
 }));
 
 const StyledListWrapper = styled('div')(({ theme }) => ({
     padding: theme.spacing(1, 0.5),
 }));
 
-const StyledAlert = styled(Alert)(() => ({
+const StyledAlert = styled(Alert)(({ theme }) => ({
+    border: '0!important',
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
+    borderBottom: `1px solid ${theme.palette.warning.border}!important`,
 }));
 
 interface PlaygroundResultStrategyListProps {
@@ -42,9 +44,9 @@ export const PlaygroundResultStrategyLists = ({
                 <Typography
                     variant={'subtitle1'}
                     sx={{ mt: 2, ml: 1, mb: 2, color: 'text.secondary' }}
-                >{`Strategies (${strategies.length})`}</Typography>
+                >{`Strategies (${strategies?.length})`}</Typography>
                 <Box sx={{ width: '100%' }}>
-                    {strategies.map((strategy, index) => (
+                    {strategies?.map((strategy, index) => (
                         <Fragment key={strategy.id}>
                             <ConditionallyRender
                                 condition={index > 0}
@@ -64,26 +66,25 @@ export const PlaygroundResultStrategyLists = ({
     />
 );
 
-interface WrappedPlaygroundResultStrategyListProps
-    extends PlaygroundResultStrategyListProps {
-    feature: PlaygroundFeatureSchema;
+interface IWrappedPlaygroundResultStrategyListProps {
+    strategies: PlaygroundStrategyResultSchema;
+    input?: PlaygroundRequestSchema;
 }
 
 export const WrappedPlaygroundResultStrategyList = ({
     strategies,
-    feature,
     input,
-}: WrappedPlaygroundResultStrategyListProps) => {
+}: IWrappedPlaygroundResultStrategyListProps) => {
     return (
-        <StyledAlertWrapper sx={{ pb: 1 }}>
-            <StyledAlert severity={'info'} color={'info'}>
-                If environment would be enabled then this feature would be{' '}
-                {feature.strategies.result ? 'TRUE' : 'FALSE'} and the
-                strategies would evaluate like this:{' '}
+        <StyledAlertWrapper sx={{ pb: 1, mt: 2 }}>
+            <StyledAlert severity={'info'} color={'warning'}>
+                If environment was enabled, then this feature toggle would be{' '}
+                {strategies?.result ? 'TRUE' : 'FALSE'} with strategies
+                evaluated like so:{' '}
             </StyledAlert>
-            <StyledListWrapper>
+            <StyledListWrapper sx={{ p: 2.5 }}>
                 <PlaygroundResultStrategyLists
-                    strategies={strategies}
+                    strategies={strategies?.data || []}
                     input={input}
                 />
             </StyledListWrapper>

@@ -1,4 +1,7 @@
-import { PlaygroundResultStrategyLists } from './StrategyList/playgroundResultStrategyLists';
+import {
+    PlaygroundResultStrategyLists,
+    WrappedPlaygroundResultStrategyList,
+} from './StrategyList/playgroundResultStrategyLists';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
     PlaygroundFeatureSchema,
@@ -29,19 +32,20 @@ export const PlaygroundResultFeatureStrategyList = ({
             <ConditionallyRender
                 condition={
                     !feature.isEnabledInCurrentEnvironment &&
-                    (feature?.strategies?.data?.length || 0) > 0
+                    Boolean(feature?.strategies?.data)
                 }
                 show={
-                    <Alert severity="info" color="warning">
-                        If environment was enabled, then this feature toggle
-                        would be {feature.strategies?.result ? 'TRUE' : 'FALSE'}{' '}
-                        with strategies evaluated like so:{' '}
-                    </Alert>
+                    <WrappedPlaygroundResultStrategyList
+                        strategies={feature?.strategies}
+                        input={input}
+                    />
                 }
-            />
-            <PlaygroundResultStrategyLists
-                strategies={feature?.strategies?.data || []}
-                input={input}
+                elseShow={
+                    <PlaygroundResultStrategyLists
+                        strategies={feature?.strategies?.data || []}
+                        input={input}
+                    />
+                }
             />
         </>
     );

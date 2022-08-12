@@ -103,6 +103,12 @@ export const validateApiToken = ({
             'Client token cannot be scoped to all environments',
         );
     }
+
+    if (type === ApiTokenType.PROXY && environment === ALL) {
+        throw new BadDataError(
+            'Proxy token cannot be scoped to all environments',
+        );
+    }
 };
 
 export const validateApiTokenEnvironment = (

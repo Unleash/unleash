@@ -93,7 +93,8 @@ export const createServices = (
         segmentService,
     });
     const proxyService = new ProxyService(config, stores, {
-        featureToggleService: featureToggleServiceV2,
+        featureToggleServiceV2,
+        clientMetricsServiceV2,
         segmentService,
     });
 

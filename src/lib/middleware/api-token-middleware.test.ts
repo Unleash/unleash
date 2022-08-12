@@ -65,6 +65,7 @@ test('should add user if known token', async () => {
         project: ALL,
         environment: ALL,
         type: ApiTokenType.CLIENT,
+        secret: 'a',
     });
     const apiTokenService = {
         getUserForToken: jest.fn().mockReturnValue(apiUser),
@@ -96,6 +97,7 @@ test('should not add user if not /api/client', async () => {
         project: ALL,
         environment: ALL,
         type: ApiTokenType.CLIENT,
+        secret: 'a',
     });
 
     const apiTokenService = {
@@ -134,6 +136,7 @@ test('should not add user if disabled', async () => {
         project: ALL,
         environment: ALL,
         type: ApiTokenType.CLIENT,
+        secret: 'a',
     });
     const apiTokenService = {
         getUserForToken: jest.fn().mockReturnValue(apiUser),

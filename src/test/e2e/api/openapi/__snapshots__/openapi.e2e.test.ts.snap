@@ -2129,6 +2129,56 @@ Object {
         ],
         "type": "object",
       },
+      "proxyClientSchema": Object {
+        "properties": Object {
+          "appName": Object {
+            "description": "Name of the application using Unleash",
+            "type": "string",
+          },
+          "environment": Object {
+            "deprecated": true,
+            "type": "string",
+          },
+          "instanceId": Object {
+            "description": "Instance id for this application (typically hostname, podId or similar)",
+            "type": "string",
+          },
+          "interval": Object {
+            "description": "At which interval, in milliseconds, will this client be expected to send metrics",
+            "type": "number",
+          },
+          "sdkVersion": Object {
+            "description": "Optional field that describes the sdk version (name:version)",
+            "type": "string",
+          },
+          "started": Object {
+            "description": "When this client started. Should be reported as ISO8601 time.",
+            "oneOf": Array [
+              Object {
+                "format": "date-time",
+                "type": "string",
+              },
+              Object {
+                "type": "number",
+              },
+            ],
+          },
+          "strategies": Object {
+            "description": "List of strategies implemented by this application",
+            "items": Object {
+              "type": "string",
+            },
+            "type": "array",
+          },
+        },
+        "required": Array [
+          "appName",
+          "interval",
+          "started",
+          "strategies",
+        ],
+        "type": "object",
+      },
       "proxyFeatureSchema": Object {
         "additionalProperties": false,
         "properties": Object {
@@ -2196,6 +2246,81 @@ Object {
         },
         "required": Array [
           "toggles",
+        ],
+        "type": "object",
+      },
+      "proxyMetricsSchema": Object {
+        "properties": Object {
+          "appName": Object {
+            "type": "string",
+          },
+          "bucket": Object {
+            "properties": Object {
+              "start": Object {
+                "format": "date-time",
+                "type": "string",
+              },
+              "stop": Object {
+                "format": "date-time",
+                "type": "string",
+              },
+              "toggles": Object {
+                "additionalProperties": Object {
+                  "properties": Object {
+                    "no": Object {
+                      "minimum": 0,
+                      "type": "integer",
+                    },
+                    "variants": Object {
+                      "additionalProperties": Object {
+                        "minimum": 0,
+                        "type": "integer",
+                      },
+                      "type": "object",
+                    },
+                    "yes": Object {
+                      "minimum": 0,
+                      "type": "integer",
+                    },
+                  },
+                  "type": "object",
+                },
+                "example": Object {
+                  "myCoolToggle": Object {
+                    "no": 42,
+                    "variants": Object {
+                      "blue": 6,
+                      "green": 15,
+                      "red": 46,
+                    },
+                    "yes": 25,
+                  },
+                  "myOtherToggle": Object {
+                    "no": 100,
+                    "yes": 0,
+                  },
+                },
+                "type": "object",
+              },
+            },
+            "required": Array [
+              "start",
+              "stop",
+              "toggles",
+            ],
+            "type": "object",
+          },
+          "environment": Object {
+            "type": "string",
+          },
+          "instanceId": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "appName",
+          "instanceId",
+          "bucket",
         ],
         "type": "object",
       },
@@ -6471,6 +6596,74 @@ If the provided project does not exist, the list of events will be empty.",
         },
         "tags": Array [
           "client",
+        ],
+      },
+    },
+    "/api/frontend": Object {
+      "get": Object {
+        "operationId": "getFrontendFeatures",
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/proxyFeaturesSchema",
+                },
+              },
+            },
+            "description": "proxyFeaturesSchema",
+          },
+        },
+        "tags": Array [
+          "frontend",
+        ],
+      },
+    },
+    "/api/frontend/client/metrics": Object {
+      "post": Object {
+        "operationId": "registerFrontendMetrics",
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/proxyMetricsSchema",
+              },
+            },
+          },
+          "description": "proxyMetricsSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "200": Object {
+            "description": "This response has no body.",
+          },
+        },
+        "tags": Array [
+          "frontend",
+        ],
+      },
+    },
+    "/api/frontend/client/register": Object {
+      "post": Object {
+        "operationId": "registerFrontendClient",
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/proxyClientSchema",
+              },
+            },
+          },
+          "description": "proxyClientSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "200": Object {
+            "description": "This response has no body.",
+          },
+        },
+        "tags": Array [
+          "frontend",
         ],
       },
     },

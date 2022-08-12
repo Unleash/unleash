@@ -1862,6 +1862,7 @@ test('Should not allow changing project to target project without the same enabl
         project: '*',
         type: ApiTokenType.ADMIN,
         environment: '*',
+        secret: 'a',
     });
     await expect(async () =>
         app.services.projectService.changeProject(
@@ -1945,6 +1946,7 @@ test('Should allow changing project to target project with the same enabled envi
         project: '*',
         type: ApiTokenType.ADMIN,
         environment: '*',
+        secret: 'a',
     });
     await expect(async () =>
         app.services.projectService.changeProject(

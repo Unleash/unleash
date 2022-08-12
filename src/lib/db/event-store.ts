@@ -1,10 +1,10 @@
-import { EventEmitter } from 'events';
 import { Knex } from 'knex';
 import { IEvent, IBaseEvent } from '../types/events';
 import { LogProvider, Logger } from '../logger';
 import { IEventStore } from '../types/stores/event-store';
 import { ITag } from '../types/model';
 import { SearchEventsSchema } from '../openapi/spec/search-events-schema';
+import { AnyEventEmitter } from '../util/anyEventEmitter';
 
 const EVENT_COLUMNS = [
     'id',
@@ -34,7 +34,7 @@ export interface IEventTable {
 
 const TABLE = 'events';
 
-class EventStore extends EventEmitter implements IEventStore {
+class EventStore extends AnyEventEmitter implements IEventStore {
     private db: Knex;
 
     private logger: Logger;

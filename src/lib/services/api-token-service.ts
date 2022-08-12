@@ -110,6 +110,7 @@ export class ApiTokenService {
                 projects: token.projects,
                 environment: token.environment,
                 type: token.type,
+                secret: token.secret,
             });
         }
         return undefined;

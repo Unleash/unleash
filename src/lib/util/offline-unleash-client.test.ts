@@ -1,7 +1,7 @@
 import {
     ClientInitOptions,
-    mapFeaturesForBootstrap,
-    mapSegmentsForBootstrap,
+    mapFeaturesForClient,
+    mapSegmentsForClient,
     offlineUnleashClient,
 } from './offline-unleash-client';
 import {
@@ -25,8 +25,8 @@ export const offlineUnleashClientNode = async ({
         url: 'not-needed',
         storageProvider: new InMemStorageProviderNode(),
         bootstrap: {
-            data: mapFeaturesForBootstrap(features),
-            segments: mapSegmentsForBootstrap(segments),
+            data: mapFeaturesForClient(features),
+            segments: mapSegmentsForClient(segments),
         },
     });
 

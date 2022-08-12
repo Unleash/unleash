@@ -8,6 +8,7 @@ interface IApiUserData {
     project?: string;
     environment: string;
     type: ApiTokenType;
+    secret: string;
 }
 
 export default class ApiUser {
@@ -23,6 +24,8 @@ export default class ApiUser {
 
     readonly type: ApiTokenType;
 
+    readonly secret: string;
+
     constructor({
         username,
         permissions = [CLIENT],
@@ -30,6 +33,7 @@ export default class ApiUser {
         project,
         environment,
         type,
+        secret,
     }: IApiUserData) {
         if (!username) {
             throw new TypeError('username is required');
@@ -38,6 +42,7 @@ export default class ApiUser {
         this.permissions = permissions;
         this.environment = environment;
         this.type = type;
+        this.secret = secret;
         if (projects && projects.length > 0) {
             this.projects = projects;
         } else {

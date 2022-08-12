@@ -25,7 +25,14 @@ const USER_COLUMNS = [
     'created_at',
 ];
 
-const USER_COLUMNS_PUBLIC = ['id', 'name', 'username', 'email', 'image_url'];
+const USER_COLUMNS_PUBLIC = [
+    'id',
+    'name',
+    'username',
+    'email',
+    'image_url',
+    'seen_at',
+];
 
 const emptify = (value) => {
     if (!value) {

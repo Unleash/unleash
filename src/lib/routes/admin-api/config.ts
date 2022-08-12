@@ -16,11 +16,14 @@ import {
     UiConfigSchema,
 } from '../../openapi/spec/ui-config-schema';
 import { OpenApiService } from '../../services/openapi-service';
+import { EmailService } from '../../services/email-service';
 
 class ConfigController extends Controller {
     private versionService: VersionService;
 
     private settingService: SettingService;
+
+    private emailService: EmailService;
 
     private readonly openApiService: OpenApiService;
 
@@ -29,15 +32,20 @@ class ConfigController extends Controller {
         {
             versionService,
             settingService,
+            emailService,
             openApiService,
         }: Pick<
             IUnleashServices,
-            'versionService' | 'settingService' | 'openApiService'
+            | 'versionService'
+            | 'settingService'
+            | 'emailService'
+            | 'openApiService'
         >,
     ) {
         super(config);
         this.versionService = versionService;
         this.settingService = settingService;
+        this.emailService = emailService;
         this.openApiService = openApiService;
 
         this.route({
@@ -71,6 +79,7 @@ class ConfigController extends Controller {
         const response: UiConfigSchema = {
             ...this.config.ui,
             version,
+            emailEnabled: this.emailService.isEnabled(),
             unleashUrl: this.config.server.unleashUrl,
             baseUriPath: this.config.server.baseUriPath,
             authenticationType: this.config.authentication?.type,

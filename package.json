@@ -1,7 +1,7 @@
 {
   "name": "unleash-server",
   "description": "Unleash is an enterprise ready feature toggles service. It provides different strategies for handling feature toggles.",
-  "version": "4.14.0",
+  "version": "4.15.0-beta.0",
   "keywords": [
     "unleash",
     "feature toggle",
@@ -124,7 +124,7 @@
     "stoppable": "^1.1.0",
     "ts-toolbelt": "^9.6.0",
     "type-is": "^1.6.18",
-    "unleash-frontend": "4.14.3",
+    "unleash-frontend": "4.15.0-beta.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
@@ -140,15 +140,15 @@
     "@types/memoizee": "0.4.8",
     "@types/mime": "3.0.1",
     "@types/node": "16.6.1",
-    "@types/nodemailer": "6.4.4",
+    "@types/nodemailer": "6.4.5",
     "@types/owasp-password-strength-test": "1.3.0",
-    "@types/semver": "7.3.10",
+    "@types/semver": "7.3.12",
     "@types/stoppable": "1.1.1",
     "@types/supertest": "2.0.12",
     "@types/type-is": "1.6.3",
     "@types/uuid": "8.3.4",
-    "@typescript-eslint/eslint-plugin": "5.30.0",
-    "@typescript-eslint/parser": "5.30.0",
+    "@typescript-eslint/eslint-plugin": "5.33.0",
+    "@typescript-eslint/parser": "5.33.0",
     "copyfiles": "2.4.1",
     "coveralls": "3.1.1",
     "del-cli": "5.0.0",
@@ -174,7 +174,7 @@
     "ts-node": "10.9.1",
     "tsc-watch": "5.0.3",
     "typescript": "4.7.4",
-    "unleash-client": "^3.15.0"
+    "unleash-client": "3.15.0"
   },
   "resolutions": {
     "async": "^3.2.3",

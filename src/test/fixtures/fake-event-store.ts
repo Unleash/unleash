@@ -11,10 +11,6 @@ class FakeEventStore extends EventEmitter implements IEventStore {
         this.events = [];
     }
 
-    async getEventsForFeature(featureName: string): Promise<IEvent[]> {
-        return this.events.filter((e) => e.featureName === featureName);
-    }
-
     store(event: IEvent): Promise<void> {
         this.events.push(event);
         this.emit(event.type, event);
@@ -58,12 +54,8 @@ class FakeEventStore extends EventEmitter implements IEventStore {
         return this.events;
     }
 
-    async getEventsFilterByType(type: string): Promise<IEvent[]> {
-        return this.events.filter((e) => e.type === type);
-    }
-
-    async getEventsFilterByProject(project: string): Promise<IEvent[]> {
-        return this.events.filter((e) => e.project === project);
+    async searchEvents(): Promise<IEvent[]> {
+        throw new Error('Method not implemented.');
     }
 }
 

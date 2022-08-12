@@ -59,7 +59,7 @@ export class OpenApiService {
                     validation: err.validationErrors,
                 });
             } else {
-                next();
+                next(err);
             }
         });
     }
@@ -73,7 +73,7 @@ export class OpenApiService {
         const errors = validateSchema(schema, data);
 
         if (errors) {
-            this.logger.warn('Invalid response:', errors);
+            this.logger.debug('Invalid response:', errors);
         }
 
         res.status(status).json(data);

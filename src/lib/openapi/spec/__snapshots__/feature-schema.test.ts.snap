@@ -17,7 +17,7 @@ Object {
 }
 `;
 
-exports[`featureSchema overrides 1`] = `
+exports[`featureSchema variant override values must be an array 1`] = `
 Object {
   "errors": Array [
     Object {

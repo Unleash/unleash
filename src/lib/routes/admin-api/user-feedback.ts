@@ -43,7 +43,7 @@ class UserFeedbackController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Admin UI'],
                     operationId: 'createFeedback',
                     requestBody: createRequestSchema('feedbackSchema'),
                     responses: { 200: createResponseSchema('feedbackSchema') },
@@ -58,7 +58,7 @@ class UserFeedbackController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Admin UI'],
                     operationId: 'updateFeedback',
                     requestBody: createRequestSchema('feedbackSchema'),
                     responses: { 200: createResponseSchema('feedbackSchema') },

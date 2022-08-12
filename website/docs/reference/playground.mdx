@@ -1,0 +1,89 @@
+---
+title: The Playground
+---
+
+:::info Availability
+
+The Unleash playground is available from Unleash 4.14 onwards. The playground is available in all Unleash versions.
+
+:::
+
+![The Unleash Playground form and an indication of where in the nav menu it is located.](/img/playground-form.png)
+
+The unleash playground is a part of the Unleash Admin UI and an accompanying API. The playground lets you see which of your instance's feature toggles would be enabled for a given Unleash context. It has multiple uses, such as:
+
+-   Understanding how Unleash evaluates strategies, constraints, and segments.
+-   Debugging Unleash contexts and toggles behaving differently from what you expect.
+-   Tailoring a set of strategies for given contexts.
+
+Each feature toggle will contain info on whether it was enabled or not and which variant it was assigned. Later versions of the playground also contain [detailed evaluation results](#detailed-evaluation-results) to help you understand exactly why the feature was enabled or disabled.
+
+## Configuring the query
+
+This section describes what information the playground needs to evaluate your Unleash context against your existing features.
+
+### Environment and projects
+
+The playground needs to know which environment and which projects to use when evaluating features. The playground UI will default to using the first environment in your list of instance environments and all projects.
+
+Features can only be evaluated against a single environment at a time. The environment should be one of the environments configured for your Unleash instance.
+
+The playground will only evaluate features belonging to the projects you specify. The projects parameter can either be a list of projects **or** _all_ projects.
+
+### The Unleash context
+
+The [Unleash context](../user_guide/unleash-context.md) represents a client SDK's configuration and used for evaluating your features. You can construct your own context or use a JSON version of a context from a client.
+
+#### Implicit context fields
+
+You can add any fields you want to the context used for the evaluation, and you can also leave out any fields you want. However, there are some fields that will be set for you if don't provide them:
+
+-   **`appName`**: Unleash clients all require an `appName` to start up. If you do not provide an `appName`, the playground will assign a default value to this property instead.
+-   **`currentTime`**: The `currentTime` property of the [Unleash context](../user_guide/unleash-context.md) gets auto-populated with the current time. You can override this manually by providing a value of your own.
+
+## The response
+
+![Playground results: a table of feature names and whether they're enabled or not.](/img/playground-results.png)
+
+The playground's response contains a list of all the feature toggles that have been evaluated based on your configured [environments and projects](#environments-and-projects). In the UI, the playground displays the features in a table. Each feature indicates whether its considered _enabled_ or _disabled_ and which [variant](../advanced/feature-toggle-variants.md) was assigned to it, if any.
+
+As with all of Unleash's client SDKs, the playground respects [stickiness](../advanced/stickiness.md). The [stickiness algorithm](../advanced/stickiness.md#calculation) guarantees that you'll always get the same variants and the same gradual rollout results if you provide the same context, as long as you provide the context field used for calculating stickiness.
+
+### Detailed evaluation results
+
+:::info Availability
+
+Detailed evaluation results were added to the playground in Unleash 4.15.
+
+:::
+
+![Detailed strategy evaluation results. A list of strategies and their constraints along with indicators of whether each one is `true` or `false`.](/img/playground-detailed-results.png)
+
+Each feature in the response contains information about all of its evaluated strategies. Each of a feature's strategies lists all of the strategies constraints and segments and how it all evaluated (as best as the playground can, as mentioned in the [unknown strategies](#unknown-strategies) section).
+
+In addition to the results of individual strategies, each strategy is also assigned an overall strategy evaluation result: one of `true`, `false`, and _unknown_. The rules for the overall result are:
+
+-   If _at least one_ strategy evaluates to `true`, then the overall result is `true`.
+-   If _all_ strategies evaluate to `false`, the overall result is `false`.
+-   If _one or more_ strategies evaluate to _unknown_ and _all other strategies evaluate to `false`_, then the overall result is `unknown`.
+
+## Unknown strategies
+
+Not all strategies can be correctly evaluated by the playground. Strategies that cannot be fully evaluated will be given an evaluation result status of 'unknown'.
+
+There's currently two cases where the playground can't evaluate the strategy:
+
+1. The [strategy is a custom strategy](#custom-strategies) and the playground doesn't have an implementation for the strategy.
+2. The [strategy is the 'Application Hostname' strategy](#application-hostname).
+
+Even if the playground doesn't recognize or otherwise can't evaluate a specific strategy, it _may_ still evaluate the overall strategy result to `false` (and be certain that it is the right result). If a strategy has [constraints](../advanced/strategy-constraints.md) or [segments](segments.mdx) that are not satisfied, the playground knows that the strategy result wouldn't be `true`, regardless of the actual strategy implementation. As such, if a strategy can't be evaluated, it can be **either** _unknown_ or _`false`_.
+
+### Custom Strategies
+
+The playground does not have any implementations for [custom strategies](../advanced/custom-activation-strategy.md) and adding custom strategy implementations to Unleash is not currently supported. Because of this, custom strategies will never be evaluated as `true`.
+
+### The Application Hostname strategy {#application-hostname}
+
+The [application hostname strategy](../user_guide/activation-strategies.md#hostnames) is a little different from the other built-in strategies: it depends on external state and _not_ on the Unleash context to evaluate. In short, the strategy checks its application environment to get the hostname, so the Unleash context has no effect on the result of this strategy.
+
+Because the application hostname strategy depends on external state, the playground can't guarantee whether the strategy would be true or false in a client. Further, the result in the playground would most likely be different from what you'd see in a client. Because of this, the playground does not evaluate this strategy.

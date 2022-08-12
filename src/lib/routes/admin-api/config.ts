@@ -55,7 +55,7 @@ class ConfigController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Admin UI'],
                     operationId: 'getUIConfig',
                     responses: {
                         200: createResponseSchema('uiConfigSchema'),

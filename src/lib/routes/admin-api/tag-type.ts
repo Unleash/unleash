@@ -51,7 +51,7 @@ class TagTypeController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Tags'],
                     operationId: 'getTagTypes',
                     responses: { 200: createResponseSchema('tagTypesSchema') },
                 }),
@@ -64,7 +64,7 @@ class TagTypeController extends Controller {
             permission: UPDATE_TAG_TYPE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Tags'],
                     operationId: 'createTagType',
                     responses: { 201: createResponseSchema('tagTypeSchema') },
                     requestBody: createRequestSchema('tagTypeSchema'),
@@ -78,7 +78,7 @@ class TagTypeController extends Controller {
             permission: UPDATE_TAG_TYPE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Tags'],
                     operationId: 'validateTagType',
                     responses: {
                         200: createResponseSchema('validateTagTypeSchema'),
@@ -94,7 +94,7 @@ class TagTypeController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Tags'],
                     operationId: 'getTagType',
                     responses: {
                         200: createResponseSchema('tagTypeSchema'),
@@ -109,7 +109,7 @@ class TagTypeController extends Controller {
             permission: UPDATE_TAG_TYPE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Tags'],
                     operationId: 'updateTagType',
                     responses: {
                         200: emptyResponse,
@@ -126,7 +126,7 @@ class TagTypeController extends Controller {
             permission: DELETE_TAG_TYPE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Tags'],
                     operationId: 'deleteTagType',
                     responses: {
                         200: emptyResponse,

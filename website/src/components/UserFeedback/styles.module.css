@@ -121,7 +121,7 @@
     margin-top: var(--row-gap);
     display: flex;
     flex-direction: row-reverse;
-    justify-content: end;
+    justify-content: flex-end;
     gap: var(--element-horizontal-gap);
 }
 
@@ -145,7 +145,7 @@ button.close-button {
 
 .close-button-row {
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
 }
 
 .close-button svg {

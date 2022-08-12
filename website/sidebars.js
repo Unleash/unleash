@@ -160,6 +160,7 @@ module.exports = {
                                 'api/admin/segments',
                                 'api/admin/state',
                                 'api/admin/strategies',
+                                'api/admin/tags',
                                 'api/admin/user-admin',
                             ],
                             'Client API': [
@@ -172,7 +173,21 @@ module.exports = {
                                 'api/internal/health',
                             ],
                         },
-                        'api/open_api',
+                        // NOTE: activate this when we're ready to integrate generated OpenAPI docs
+                        //
+                        // {
+                        //     label: 'OpenAPI docs',
+                        //     collapsed: true,
+                        //     type: 'category',
+                        //     link: {
+                        //         title: 'Unleash Server APIs',
+                        //         type: 'generated-index',
+                        //         description:
+                        //             'Generated API docs based on the Unleash OpenAPI schema. For the time being, some additional info can also be found in the older API docs.',
+                        //         slug: '/reference/apis/unleash',
+                        //     },
+                        //     items: require('./docs/reference/apis/unleash/sidebar.js'),
+                        // },
                     ],
                 },
                 {
@@ -274,6 +289,7 @@ module.exports = {
                         'reference/feature-toggles',
                         'advanced/feature_toggle_types',
                         'advanced/toggle_variants',
+                        'reference/playground',
                         'user_guide/projects',
                         'user_guide/rbac',
                         'reference/segments',

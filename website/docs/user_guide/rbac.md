@@ -66,7 +66,7 @@ A user group consists of the following:
 
 - a **name** (required)
 - a **description** (optional)
-- one or more users. At least one user must have the owner role
+- a list of users (optional)
 
 Groups do nothing on their own. They must be given a role on a project to assign permissions.
 

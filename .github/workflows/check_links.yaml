@@ -2,6 +2,7 @@ name: Check links
 
 on:
   workflow_dispatch:
+  push:
   pull_request:
     branches: [docs/find-broken-links]
     paths:

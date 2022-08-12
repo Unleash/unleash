@@ -17,7 +17,4 @@ version.unleash.run
 
 datadog.*/api/v1/events
 ddog.*/api/v1/events
-github.com
-api.slack.com
-stackoverflow.com
 api.datadoghq.com

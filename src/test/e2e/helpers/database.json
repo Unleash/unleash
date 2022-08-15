@@ -19,7 +19,7 @@
   "contextFields": [
     { "name": "environment" },
     { "name": "userId" },
-    { "name": "appNam" }
+    { "name": "appName" }
   ],
   "projects": [
     {

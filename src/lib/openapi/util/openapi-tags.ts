@@ -72,6 +72,11 @@ const OPENAPI_TAGS = [
             'Create, update, and delete [tags and tag types](https://docs.getunleash.io/advanced/tags).',
     },
     { name: 'Users', description: 'Manage users and passwords.' },
+    {
+        name: 'Unstable',
+        description:
+            'Experimental endpoints that may change or disappear at any time.',
+    },
 ] as const;
 
 // make the export mutable, so it can be used in a schema

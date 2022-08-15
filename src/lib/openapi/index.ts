@@ -106,6 +106,10 @@ import { groupUserModelSchema } from './spec/group-user-model-schema';
 import { usersGroupsBaseSchema } from './spec/users-groups-base-schema';
 import { openApiTags } from './util/openapi-tags';
 import { searchEventsSchema } from './spec/search-events-schema';
+import { proxyFeaturesSchema } from './spec/proxy-features-schema';
+import { proxyFeatureSchema } from './spec/proxy-feature-schema';
+import { proxyClientSchema } from './spec/proxy-client-schema';
+import { proxyMetricsSchema } from './spec/proxy-metrics-schema';
 
 // All schemas in `openapi/spec` should be listed here.
 export const schemas = {
@@ -211,6 +215,10 @@ export const schemas = {
     variantSchema,
     variantsSchema,
     versionSchema,
+    proxyClientSchema,
+    proxyFeaturesSchema,
+    proxyFeatureSchema,
+    proxyMetricsSchema,
 };
 
 // Schemas must have an $id property on the form "#/components/schemas/mySchema".

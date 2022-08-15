@@ -1,4 +1,4 @@
-import User from '../types/user';
+import User, { IUser } from '../types/user';
 import { AccessService } from './access-service';
 import NameExistsError from '../error/name-exists-error';
 import InvalidOperationError from '../error/invalid-operation-error';
@@ -48,7 +48,7 @@ import { arraysHaveSameItems } from '../util/arraysHaveSameItems';
 import { GroupService } from './group-service';
 import { IGroupModelWithProjectRole, IGroupRole } from 'lib/types/group';
 
-const getCreatedBy = (user: User) => user.email || user.username;
+const getCreatedBy = (user: IUser) => user.email || user.username;
 
 export interface AccessWithRoles {
     users: IUserWithRole[];
@@ -130,8 +130,8 @@ export default class ProjectService {
     }
 
     async createProject(
-        newProject: Pick<IProject, 'id'>,
-        user: User,
+        newProject: Pick<IProject, 'id' | 'name'>,
+        user: IUser,
     ): Promise<IProject> {
         const data = await projectSchema.validateAsync(newProject);
         await this.validateUniqueId(data.id);

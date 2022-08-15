@@ -47,6 +47,7 @@ function demoAuthentication(
                 environment: 'default',
                 type: ApiTokenType.CLIENT,
                 project: '*',
+                secret: 'a',
             });
         }
         next();

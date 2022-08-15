@@ -6,8 +6,12 @@ const isClientApi = ({ path }) => {
     return path && path.startsWith('/api/client');
 };
 
+const isProxyApi = ({ path }) => {
+    return path && path.startsWith('/api/frontend');
+};
+
 export const TOKEN_TYPE_ERROR_MESSAGE =
-    'invalid token: expected an admin token but got a client token instead';
+    'invalid token: expected a different token type for this endpoint';
 
 const apiAccessMiddleware = (
     {
@@ -31,9 +35,13 @@ const apiAccessMiddleware = (
         try {
             const apiToken = req.header('authorization');
             const apiUser = apiTokenService.getUserForToken(apiToken);
+            const { CLIENT, PROXY } = ApiTokenType;
 
             if (apiUser) {
-                if (apiUser.type === ApiTokenType.CLIENT && !isClientApi(req)) {
+                if (
+                    (apiUser.type === CLIENT && !isClientApi(req)) ||
+                    (apiUser.type === PROXY && !isProxyApi(req))
+                ) {
                     res.status(403).send({ message: TOKEN_TYPE_ERROR_MESSAGE });
                     return;
                 }

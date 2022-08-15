@@ -50,6 +50,7 @@ test('should give api-user ADMIN permission', async () => {
             project: '*',
             environment: '*',
             type: ApiTokenType.ADMIN,
+            secret: 'a',
         }),
     };
 
@@ -75,6 +76,7 @@ test('should not give api-user ADMIN permission', async () => {
             project: '*',
             environment: '*',
             type: ApiTokenType.CLIENT,
+            secret: 'a',
         }),
     };
 

@@ -9,7 +9,10 @@ const AdminApi = require('./admin-api');
 const ClientApi = require('./client-api');
 const Controller = require('./controller');
 import { HealthCheckController } from './health-check';
+<<<<<<< HEAD
 import ProxyController from './proxy-api';
+=======
+>>>>>>> 1ba57014 (refactor: remove unused API definition routes)
 
 class IndexRouter extends Controller {
     constructor(config: IUnleashConfig, services: IUnleashServices) {
@@ -27,6 +30,7 @@ class IndexRouter extends Controller {
         );
         this.use('/api/admin', new AdminApi(config, services).router);
         this.use('/api/client', new ClientApi(config, services).router);
+<<<<<<< HEAD
 
         if (config.experimental.embedProxy) {
             this.use(
@@ -34,6 +38,8 @@ class IndexRouter extends Controller {
                 new ProxyController(config, services).router,
             );
         }
+=======
+>>>>>>> 1ba57014 (refactor: remove unused API definition routes)
     }
 }
 

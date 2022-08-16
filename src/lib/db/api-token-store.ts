@@ -126,6 +126,7 @@ export class ApiTokenStore implements IApiTokenStore {
                 'type',
                 'expires_at',
                 'created_at',
+                'metadata',
                 'seen_at',
                 'environment',
                 'token_project_link.project',

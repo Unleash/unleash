@@ -19,7 +19,7 @@ export const mapFeaturesForBootstrap = (
     features.map((feature) => ({
         impressionData: false,
         ...feature,
-        variants: feature.variants.map((variant) => ({
+        variants: (feature.variants || []).map((variant) => ({
             overrides: [],
             ...variant,
             payload: variant.payload && {

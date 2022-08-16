@@ -15,7 +15,7 @@ import { CLIENT_METRICS } from '../../types/events';
 import ApiUser from '../../types/api-user';
 import { ALL } from '../../types/models/api-token';
 import User from '../../types/user';
-import { collapseClientMetrics } from '../../util/collapseClientMetrics';
+import { collapseHourlyMetrics } from '../../util/collapseHourlyMetrics';
 
 export default class ClientMetricsServiceV2 {
     private timers: NodeJS.Timeout[] = [];
@@ -80,7 +80,7 @@ export default class ClientMetricsServiceV2 {
             }))
             .filter((item) => !(item.yes === 0 && item.no === 0));
 
-        this.unsavedMetrics = collapseClientMetrics([
+        this.unsavedMetrics = collapseHourlyMetrics([
             ...this.unsavedMetrics,
             ...clientMetrics,
         ]);

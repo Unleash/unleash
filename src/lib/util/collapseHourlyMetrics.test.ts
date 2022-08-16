@@ -1,14 +1,15 @@
-import { collapseClientMetrics } from './collapseClientMetrics';
+import { collapseHourlyMetrics } from './collapseHourlyMetrics';
 import { IClientMetricsEnv } from '../types/stores/client-metrics-store-v2';
+import { addMinutes, startOfHour } from 'date-fns';
 
-test('collapseClientMetrics', () => {
-    const timestamp = new Date();
+test('collapseHourlyMetrics', () => {
+    const timestamp = startOfHour(new Date());
 
     const metricAX1: IClientMetricsEnv = {
         featureName: 'a',
         appName: 'x',
         environment: 'x',
-        timestamp,
+        timestamp: addMinutes(timestamp, 1),
         yes: 1,
         no: 11,
     };
@@ -17,7 +18,7 @@ test('collapseClientMetrics', () => {
         featureName: 'a',
         appName: 'x',
         environment: 'x',
-        timestamp,
+        timestamp: addMinutes(timestamp, 2),
         yes: 2,
         no: 12,
     };
@@ -26,7 +27,7 @@ test('collapseClientMetrics', () => {
         featureName: 'b',
         appName: 'x',
         environment: 'x',
-        timestamp,
+        timestamp: addMinutes(timestamp, 3),
         yes: 101,
         no: 1001,
     };
@@ -35,13 +36,13 @@ test('collapseClientMetrics', () => {
         featureName: 'b',
         appName: 'y',
         environment: 'y',
-        timestamp,
+        timestamp: addMinutes(timestamp, 4),
         yes: 102,
         no: 1002,
     };
 
     expect(
-        collapseClientMetrics([metricAX1, metricAX2, metricBX, metricBY]),
+        collapseHourlyMetrics([metricAX1, metricAX2, metricBX, metricBY]),
     ).toEqual([
         {
             featureName: 'a',
@@ -70,7 +71,7 @@ test('collapseClientMetrics', () => {
     ]);
 
     expect(
-        collapseClientMetrics([
+        collapseHourlyMetrics([
             metricAX1,
             metricAX1,
             metricAX2,

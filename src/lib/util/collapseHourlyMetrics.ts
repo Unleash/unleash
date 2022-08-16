@@ -1,4 +1,5 @@
 import { IClientMetricsEnv } from '../types/stores/client-metrics-store-v2';
+import { startOfHour } from 'date-fns';
 
 const sum = (items: number[]): number => {
     return items.reduce((acc, item) => acc + item, 0);
@@ -24,10 +25,15 @@ const createMetricKey = (metric: IClientMetricsEnv): string => {
     ].join();
 };
 
-export const collapseClientMetrics = (
+export const collapseHourlyMetrics = (
     metrics: IClientMetricsEnv[],
 ): IClientMetricsEnv[] => {
-    return groupBy(metrics, createMetricKey).flatMap((group) => ({
+    const hourlyMetrics = metrics.map((metric) => ({
+        ...metric,
+        timestamp: startOfHour(metric.timestamp),
+    }));
+
+    return groupBy(hourlyMetrics, createMetricKey).flatMap((group) => ({
         ...group[0],
         yes: sum(group.map((metric) => metric.yes)),
         no: sum(group.map((metric) => metric.no)),

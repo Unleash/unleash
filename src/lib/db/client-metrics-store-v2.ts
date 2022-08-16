@@ -7,7 +7,7 @@ import {
 } from '../types/stores/client-metrics-store-v2';
 import NotFoundError from '../error/notfound-error';
 import { startOfHour } from 'date-fns';
-import { collapseClientMetrics } from '../util/collapseClientMetrics';
+import { collapseHourlyMetrics } from '../util/collapseHourlyMetrics';
 
 interface ClientMetricsEnvTable {
     feature_name: string;
@@ -104,7 +104,7 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
             return;
         }
 
-        const rows = collapseClientMetrics(metrics).map(toRow);
+        const rows = collapseHourlyMetrics(metrics).map(toRow);
 
         // Sort the rows to avoid deadlocks
         const sortedRows = rows.sort(

@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 import { Logger } from '../logger';
-import { ADMIN, CLIENT } from '../types/permissions';
+import { ADMIN, CLIENT, PROXY } from '../types/permissions';
 import { IUnleashStores } from '../types/stores';
 import { IUnleashConfig } from '../types/option';
 import ApiUser from '../types/api-user';
@@ -19,6 +19,22 @@ import { FOREIGN_KEY_VIOLATION } from '../error/db-error';
 import BadDataError from '../error/bad-data-error';
 import { minutesToMilliseconds } from 'date-fns';
 import { IEnvironmentStore } from 'lib/types/stores/environment-store';
+
+const resolveTokenPermissions = (tokenType: string) => {
+    if (tokenType === ApiTokenType.ADMIN) {
+        return [ADMIN];
+    }
+
+    if (tokenType === ApiTokenType.CLIENT) {
+        return [CLIENT];
+    }
+
+    if (tokenType === ApiTokenType.PROXY) {
+        return [PROXY];
+    }
+
+    return [];
+};
 
 export class ApiTokenService {
     private store: IApiTokenStore;
@@ -88,15 +104,13 @@ export class ApiTokenService {
     public getUserForToken(secret: string): ApiUser | undefined {
         const token = this.activeTokens.find((t) => t.secret === secret);
         if (token) {
-            const permissions =
-                token.type === ApiTokenType.ADMIN ? [ADMIN] : [CLIENT];
-
             return new ApiUser({
                 username: token.username,
-                permissions,
+                permissions: resolveTokenPermissions(token.type),
                 projects: token.projects,
                 environment: token.environment,
                 type: token.type,
+                secret: token.secret,
             });
         }
         return undefined;

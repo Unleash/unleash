@@ -1,8 +1,8 @@
-import EventEmitter from 'events';
 import { IEventStore } from '../../lib/types/stores/event-store';
 import { IEvent } from '../../lib/types/events';
+import { AnyEventEmitter } from '../../lib/util/anyEventEmitter';
 
-class FakeEventStore extends EventEmitter implements IEventStore {
+class FakeEventStore extends AnyEventEmitter implements IEventStore {
     events: IEvent[];
 
     constructor() {

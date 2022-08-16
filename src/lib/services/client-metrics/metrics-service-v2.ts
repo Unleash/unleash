@@ -12,6 +12,9 @@ import { hoursToMilliseconds, minutesToMilliseconds } from 'date-fns';
 import { IFeatureToggleStore } from '../../types/stores/feature-toggle-store';
 import EventEmitter from 'events';
 import { CLIENT_METRICS } from '../../types/events';
+import ApiUser from '../../types/api-user';
+import { ALL } from '../../types/models/api-token';
+import User from '../../types/user';
 
 export default class ClientMetricsServiceV2 {
     private timer: NodeJS.Timeout;
@@ -120,6 +123,17 @@ export default class ClientMetricsServiceV2 {
             toggleName,
             hoursBack,
         );
+    }
+
+    resolveMetricsEnvironment(user: User | ApiUser, data: IClientApp): string {
+        if (user instanceof ApiUser) {
+            if (user.environment !== ALL) {
+                return user.environment;
+            } else if (user.environment === ALL && data.environment) {
+                return data.environment;
+            }
+        }
+        return 'default';
     }
 
     destroy(): void {

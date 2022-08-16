@@ -6382,10 +6382,10 @@ docusaurus-plugin-openapi-docs@^1.1.6:
     url-template "^3.0.0"
     webpack "^5.61.0"
 
-docusaurus-theme-openapi-docs@1.1.6:
-  version "1.1.6"
-  resolved "https://registry.yarnpkg.com/docusaurus-theme-openapi-docs/-/docusaurus-theme-openapi-docs-1.1.6.tgz#5ce6ac72719993ce9e8fdad9593fa5454ce8196a"
-  integrity sha512-k9V2GaR6Ul+0vPMnPGO/entXR/+0/T5pbIvCgX5d6keGUSEsP/3Te8b+78da2CZiBvAVlq3Pl53iuUAGlyedWA==
+docusaurus-theme-openapi-docs@1.1.7:
+  version "1.1.7"
+  resolved "https://registry.yarnpkg.com/docusaurus-theme-openapi-docs/-/docusaurus-theme-openapi-docs-1.1.7.tgz#4850e0c7c9ac1e9f6cb289e61b719c4a5e21935d"
+  integrity sha512-8UxAmH6SzMS1sQ4cbP1cCPRC1CEY3bhL5yWKqcRbrszOKknLpITdd+bLA5GvCCCqIt18elW8za+7zdzkMdObcg==
   dependencies:
     "@docusaurus/theme-common" "2.0.1"
     "@mdx-js/react" "^1.6.21"

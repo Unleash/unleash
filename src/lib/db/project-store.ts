@@ -269,6 +269,18 @@ class ProjectStore implements IProjectStore {
                                 'group_role.group_id',
                             );
                     })
+                    .union((queryBuilder) => {
+                        queryBuilder
+                            .select('user_id', 'projects.name as project')
+                            .from('role_user')
+                            .leftJoin('roles', 'role_user.role_id', 'roles.id')
+                            .crossJoin('projects')
+                            .where((builder) =>
+                                builder
+                                    .where('type', 'root')
+                                    .where('roles.name', 'Editor'),
+                            );
+                    })
                     .as('query');
             })
             .groupBy('project')
@@ -286,6 +298,9 @@ class ProjectStore implements IProjectStore {
                         builder
                             .where('project', projectId)
                             .whereNot('type', 'root'),
+                    )
+                    .orWhere((builder) =>
+                        builder.where('type', 'root').where('name', 'Editor'),
                     )
                     .union((queryBuilder) => {
                         queryBuilder

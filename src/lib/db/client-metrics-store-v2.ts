@@ -7,6 +7,7 @@ import {
 } from '../types/stores/client-metrics-store-v2';
 import NotFoundError from '../error/notfound-error';
 import { startOfHour } from 'date-fns';
+import { collapseClientMetrics } from '../util/collapseClientMetrics';
 
 interface ClientMetricsEnvTable {
     feature_name: string;
@@ -28,7 +29,7 @@ const fromRow = (row: ClientMetricsEnvTable) => ({
     no: Number(row.no),
 });
 
-const toRow = (metric: IClientMetricsEnv) => ({
+const toRow = (metric: IClientMetricsEnv): ClientMetricsEnvTable => ({
     feature_name: metric.featureName,
     app_name: metric.appName,
     environment: metric.environment,
@@ -102,22 +103,11 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
         if (!metrics || metrics.length == 0) {
             return;
         }
-        const rows = metrics.map(toRow);
 
-        const batch = rows.reduce((prev, curr) => {
-            // eslint-disable-next-line prettier/prettier
-            const key = `${curr.feature_name}_${curr.app_name}_${curr.environment}_${curr.timestamp.getTime()}`;
-            if (prev[key]) {
-                prev[key].yes += curr.yes;
-                prev[key].no += curr.no;
-            } else {
-                prev[key] = curr;
-            }
-            return prev;
-        }, {});
+        const rows = collapseClientMetrics(metrics).map(toRow);
 
         // Sort the rows to avoid deadlocks
-        const batchRow = Object.values<ClientMetricsEnvTable>(batch).sort(
+        const sortedRows = rows.sort(
             (a, b) =>
                 a.feature_name.localeCompare(b.feature_name) ||
                 a.app_name.localeCompare(b.app_name) ||
@@ -126,7 +116,7 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
 
         // Consider rewriting to SQL batch!
         const insert = this.db<ClientMetricsEnvTable>(TABLE)
-            .insert(batchRow)
+            .insert(sortedRows)
             .toQuery();
 
         const query = `${insert.toString()} ON CONFLICT (feature_name, app_name, environment, timestamp) DO UPDATE SET "yes" = "client_metrics_env"."yes" + EXCLUDED.yes, "no" = "client_metrics_env"."no" + EXCLUDED.no`;

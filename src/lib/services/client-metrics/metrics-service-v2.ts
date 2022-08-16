@@ -8,16 +8,19 @@ import {
     IClientMetricsStoreV2,
 } from '../../types/stores/client-metrics-store-v2';
 import { clientMetricsSchema } from './schema';
-import { hoursToMilliseconds, minutesToMilliseconds } from 'date-fns';
+import { hoursToMilliseconds, secondsToMilliseconds } from 'date-fns';
 import { IFeatureToggleStore } from '../../types/stores/feature-toggle-store';
 import EventEmitter from 'events';
 import { CLIENT_METRICS } from '../../types/events';
 import ApiUser from '../../types/api-user';
 import { ALL } from '../../types/models/api-token';
 import User from '../../types/user';
+import { collapseClientMetrics } from '../../util/collapseClientMetrics';
 
 export default class ClientMetricsServiceV2 {
-    private timer: NodeJS.Timeout;
+    private timers: NodeJS.Timeout[] = [];
+
+    private unsavedMetrics: IClientMetricsEnv[] = [];
 
     private clientMetricsStoreV2: IClientMetricsStoreV2;
 
@@ -27,15 +30,13 @@ export default class ClientMetricsServiceV2 {
 
     private logger: Logger;
 
-    private bulkInterval: number;
-
     constructor(
         {
             featureToggleStore,
             clientMetricsStoreV2,
         }: Pick<IUnleashStores, 'featureToggleStore' | 'clientMetricsStoreV2'>,
         { eventBus, getLogger }: Pick<IUnleashConfig, 'eventBus' | 'getLogger'>,
-        bulkInterval = minutesToMilliseconds(5),
+        bulkInterval = secondsToMilliseconds(5),
     ) {
         this.featureToggleStore = featureToggleStore;
         this.clientMetricsStoreV2 = clientMetricsStoreV2;
@@ -44,11 +45,16 @@ export default class ClientMetricsServiceV2 {
             '/services/client-metrics/client-metrics-service-v2.ts',
         );
 
-        this.bulkInterval = bulkInterval;
-        this.timer = setInterval(async () => {
-            await this.clientMetricsStoreV2.clearMetrics(48);
-        }, hoursToMilliseconds(12));
-        this.timer.unref();
+        this.timers.push(
+            setInterval(() => {
+                this.bulkAdd().catch(console.error);
+            }, bulkInterval).unref(),
+        );
+        this.timers.push(
+            setInterval(() => {
+                this.clientMetricsStoreV2.clearMetrics(48).catch(console.error);
+            }, hoursToMilliseconds(12)).unref(),
+        );
     }
 
     async registerClientMetrics(
@@ -74,9 +80,22 @@ export default class ClientMetricsServiceV2 {
             }))
             .filter((item) => !(item.yes === 0 && item.no === 0));
 
-        // TODO: should we aggregate for a few minutes (bulkInterval) before pushing to DB?
-        await this.clientMetricsStoreV2.batchInsertMetrics(clientMetrics);
+        this.unsavedMetrics = collapseClientMetrics([
+            ...this.unsavedMetrics,
+            ...clientMetrics,
+        ]);
+
         this.eventBus.emit(CLIENT_METRICS, value);
+    }
+
+    async bulkAdd(): Promise<void> {
+        if (this.unsavedMetrics.length > 0) {
+            // Make a copy of `unsavedMetrics` in case new metrics
+            // arrive while awaiting `batchInsertMetrics`.
+            const copy = [...this.unsavedMetrics];
+            this.unsavedMetrics = [];
+            await this.clientMetricsStoreV2.batchInsertMetrics(copy);
+        }
     }
 
     // Overview over usage last "hour" bucket and all applications using the toggle
@@ -137,7 +156,6 @@ export default class ClientMetricsServiceV2 {
     }
 
     destroy(): void {
-        clearInterval(this.timer);
-        this.timer = null;
+        this.timers.forEach(clearInterval);
     }
 }

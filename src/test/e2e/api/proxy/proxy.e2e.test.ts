@@ -284,6 +284,7 @@ test('should store proxy client metrics', async () => {
         })
         .expect(200)
         .expect((res) => expect(res.text).toEqual('OK'));
+    await app.services.clientMetricsServiceV2.bulkAdd();
     await app.request
         .get(`/api/admin/client-metrics/features/${featureName}`)
         .set('Authorization', adminToken.secret)

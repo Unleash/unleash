@@ -3,6 +3,7 @@ export interface IExperimentalOptions {
     clientFeatureMemoize?: IExperimentalToggle;
     userGroups?: boolean;
     anonymiseEventLog?: boolean;
+    embedProxy?: boolean;
 }
 
 export interface IExperimentalToggle {

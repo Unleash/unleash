@@ -34,6 +34,7 @@ process.nextTick(async () => {
                     metricsV2: { enabled: true },
                     anonymiseEventLog: false,
                     userGroups: true,
+                    embedProxy: true,
                 },
                 authentication: {
                     initApiTokens: [

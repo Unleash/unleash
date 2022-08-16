@@ -24,6 +24,7 @@ export function createTestConfig(config?: IUnleashOptions): IUnleashConfig {
         },
         experimental: {
             userGroups: true,
+            embedProxy: true,
         },
     };
     const options = mergeAll<IUnleashOptions>([testConfig, config]);

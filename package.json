@@ -80,7 +80,7 @@
     "@unleash/express-openapi": "^0.2.0",
     "ajv": "^8.11.0",
     "ajv-formats": "^2.1.1",
-    "async": "^3.2.3",
+    "async": "^3.2.4",
     "bcryptjs": "^2.4.3",
     "compression": "^1.7.4",
     "connect-session-knex": "^3.0.0",
@@ -177,7 +177,7 @@
     "typescript": "4.7.4"
   },
   "resolutions": {
-    "async": "^3.2.3",
+    "async": "^3.2.4",
     "db-migrate/rc/minimist": "^1.2.5",
     "es5-ext": "0.10.62",
     "knex/liftoff/object.map/**/kind-of": "^6.0.3",

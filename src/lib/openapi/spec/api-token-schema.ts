@@ -46,6 +46,7 @@ export const apiTokenSchema = {
         },
         metadata: {
             type: 'object',
+            additionalProperties: false,
             properties: {
                 corsOrigins: {
                     type: 'array',

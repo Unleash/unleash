@@ -42,3 +42,16 @@ test('should not have projects set if project is present', async () => {
     });
     expect(token.projects).not.toBeDefined();
 });
+
+test('should set metadata', async () => {
+    let token = await createApiToken.validateAsync({
+        username: 'test',
+        type: 'admin',
+        project: 'default',
+        metadata: {
+            corsOrigins: ['*'],
+            alias: 'secret',
+        },
+    });
+    expect(token.projects).toBeUndefined();
+});

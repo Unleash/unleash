@@ -13,7 +13,7 @@ export const StyledJsonListItem = styled('li')(({ theme }) => ({
 
     '& code': {
         wordWrap: 'break-word',
-        whiteSpace: 'pre',
+        whiteSpace: 'pre-wrap',
         fontFamily: 'monospace',
         lineHeight: '100%',
     },

@@ -13,7 +13,8 @@ export interface ILegacyApiTokenCreate {
     secret: string;
     username: string;
     type: ApiTokenType;
-    environment: string;
+    environment?: string;
+    environments?: string[];
     project?: string;
     projects?: string[];
     expiresAt?: Date;
@@ -23,7 +24,7 @@ export interface IApiTokenCreate {
     secret: string;
     username: string;
     type: ApiTokenType;
-    environment: string;
+    environments: string[];
     projects: string[];
     expiresAt?: Date;
 }
@@ -35,38 +36,48 @@ export interface IApiToken extends IApiTokenCreate {
     project: string;
 }
 
-export const isAllProjects = (projects: string[]): boolean => {
-    return projects && projects.length === 1 && projects[0] === ALL;
+export const isAll = (values: string[]): boolean => {
+    return values && values.length === 1 && values[0] === ALL;
 };
 
-export const mapLegacyProjects = (
-    project?: string,
-    projects?: string[],
+export const mapLegacy = (
+    error: string,
+    value?: string,
+    values?: string[],
 ): string[] => {
-    let cleanedProjects;
-    if (project) {
-        cleanedProjects = [project];
-    } else if (projects) {
-        cleanedProjects = projects;
-        if (cleanedProjects.includes('*')) {
-            cleanedProjects = ['*'];
+    let cleanedValues;
+    if (value) {
+        cleanedValues = [value];
+    } else if (values) {
+        cleanedValues = values;
+        if (cleanedValues.includes('*')) {
+            cleanedValues = ['*'];
         }
     } else {
         throw new BadDataError(
-            'API tokens must either contain a project or projects field',
+            'API tokens must either contain an environment or environments field',
         );
     }
-    return cleanedProjects;
+    return cleanedValues;
 };
 
 export const mapLegacyToken = (
     token: Omit<ILegacyApiTokenCreate, 'secret'>,
 ): Omit<IApiTokenCreate, 'secret'> => {
-    const cleanedProjects = mapLegacyProjects(token.project, token.projects);
+    const cleanedProjects = mapLegacy(
+        'API tokens must either contain a project or projects field',
+        token.project,
+        token.projects,
+    );
+    const cleanedEnvironments = mapLegacy(
+        'API tokens must either contain an environment or environments field',
+        token.environment,
+        token.environments,
+    );
     return {
         username: token.username,
         type: token.type,
-        environment: token.environment,
+        environments: cleanedEnvironments,
         projects: cleanedProjects,
         expiresAt: token.expiresAt,
     };
@@ -84,27 +95,27 @@ export const mapLegacyTokenWithSecret = (
 export const validateApiToken = ({
     type,
     projects,
-    environment,
+    environments,
 }: Omit<IApiTokenCreate, 'secret'>): void => {
-    if (type === ApiTokenType.ADMIN && !isAllProjects(projects)) {
+    if (type === ApiTokenType.ADMIN && !isAll(projects)) {
         throw new BadDataError(
             'Admin token cannot be scoped to single project',
         );
     }
 
-    if (type === ApiTokenType.ADMIN && environment !== ALL) {
+    if (type === ApiTokenType.ADMIN && !isAll(environments)) {
         throw new BadDataError(
             'Admin token cannot be scoped to single environment',
         );
     }
 
-    if (type === ApiTokenType.CLIENT && environment === ALL) {
+    if (type === ApiTokenType.CLIENT && isAll(environments)) {
         throw new BadDataError(
             'Client token cannot be scoped to all environments',
         );
     }
 
-    if (type === ApiTokenType.PROXY && environment === ALL) {
+    if (type === ApiTokenType.PROXY && isAll(environments)) {
         throw new BadDataError(
             'Proxy token cannot be scoped to all environments',
         );
@@ -112,24 +123,26 @@ export const validateApiToken = ({
 };
 
 export const validateApiTokenEnvironment = (
-    { environment }: Pick<IApiTokenCreate, 'environment'>,
-    environments: IEnvironment[],
+    { environments }: Pick<IApiTokenCreate, 'environments'>,
+    allEnvironments: IEnvironment[],
 ): void => {
-    if (environment === ALL) {
+    if (isAll(environments)) {
         return;
     }
 
-    const selectedEnvironment = environments.find(
-        (env) => env.name === environment,
+    const foundEnvironments = allEnvironments.filter((environment) =>
+        environments.includes(environment.name),
     );
 
-    if (!selectedEnvironment) {
-        throw new BadDataError(`Environment=${environment} does not exist`);
+    if (foundEnvironments.length !== environments.length) {
+        throw new BadDataError('One or more environments do not exist');
     }
 
-    if (!selectedEnvironment.enabled) {
+    if (
+        foundEnvironments.filter((environment) => !environment.enabled).length
+    ) {
         throw new BadDataError(
-            'Client token cannot be scoped to disabled environments',
+            'Token cannot be scoped to disabled environments',
         );
     }
 };

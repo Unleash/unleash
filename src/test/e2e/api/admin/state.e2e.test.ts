@@ -386,7 +386,7 @@ test(`should not delete api_tokens on import when drop-flag is set`, async () =>
     await app.services.apiTokenService.createApiTokenWithProjects({
         username: apiTokenName,
         type: ApiTokenType.CLIENT,
-        environment: environment,
+        environments: [environment],
         projects: [projectId],
     });
 
@@ -425,7 +425,7 @@ test(`should clean apitokens for not existing environment after import with drop
     await app.services.apiTokenService.createApiTokenWithProjects({
         username: apiTokenName,
         type: ApiTokenType.CLIENT,
-        environment: environment,
+        environments: [environment],
         projects: [projectId],
     });
 

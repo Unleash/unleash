@@ -55,3 +55,27 @@ test('should set metadata', async () => {
     });
     expect(token.projects).toBeUndefined();
 });
+
+test('should allow for embedded proxy (frontend) key', async () => {
+    let token = await createApiToken.validateAsync({
+        username: 'test',
+        type: 'proxy',
+        project: 'default',
+        metadata: {
+            corsOrigins: ['*'],
+        },
+    });
+    expect(token.error).toBeUndefined();
+});
+
+test('should set environment to default for proxy key', async () => {
+    let token = await createApiToken.validateAsync({
+        username: 'test',
+        type: 'proxy',
+        project: 'default',
+        metadata: {
+            corsOrigins: ['*'],
+        },
+    });
+    expect(token.environment).toEqual('default');
+});

@@ -7,7 +7,7 @@ import ClientInstanceService from '../../services/client-metrics/instance-servic
 import { IAuthRequest, User } from '../../server-impl';
 import { IClientApp } from '../../types/model';
 import ApiUser from '../../types/api-user';
-import { ALL } from '../../types/models/api-token';
+import { isAll } from '../../types/models/api-token';
 import { NONE } from '../../types/permissions';
 import { OpenApiService } from '../../services/openapi-service';
 import { emptyResponse } from '../../openapi/util/standard-responses';
@@ -51,9 +51,9 @@ export default class RegisterController extends Controller {
 
     private static resolveEnvironment(user: User, data: Partial<IClientApp>) {
         if (user instanceof ApiUser) {
-            if (user.environment !== ALL) {
-                return user.environment;
-            } else if (user.environment === ALL && data.environment) {
+            if (!isAll(user.environments)) {
+                return user.environments;
+            } else if (isAll(user.environments) && data.environment) {
                 return data.environment;
             }
         }
@@ -65,7 +65,7 @@ export default class RegisterController extends Controller {
         res: Response<void>,
     ): Promise<void> {
         const { body: data, ip: clientIp, user } = req;
-        data.environment = RegisterController.resolveEnvironment(user, data);
+        data.environments = RegisterController.resolveEnvironment(user, data);
         await this.clientInstanceService.registerClient(data, clientIp);
         return res.status(202).end();
     }

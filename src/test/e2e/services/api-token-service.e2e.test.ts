@@ -225,7 +225,7 @@ test('should not partially create token if projects are invalid', async () => {
             username: 'default-client',
             type: ApiTokenType.CLIENT,
             projects: ['non-existent-project'],
-            environment: DEFAULT_ENV,
+            environments: [DEFAULT_ENV],
         });
     } catch (e) {}
     const allTokens = await apiTokenService.getAllTokens();

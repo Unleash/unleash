@@ -1,7 +1,7 @@
 //Special
 export const ADMIN = 'ADMIN';
-export const CLIENT = 'CLIENT';
 export const PROXY = 'PROXY';
+export const CLIENT = 'CLIENT';
 export const NONE = 'NONE';
 
 export const CREATE_FEATURE = 'CREATE_FEATURE';

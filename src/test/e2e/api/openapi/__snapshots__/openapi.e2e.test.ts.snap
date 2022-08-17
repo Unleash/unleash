@@ -212,6 +212,22 @@ Object {
             "nullable": true,
             "type": "string",
           },
+          "metadata": Object {
+            "additionalProperties": false,
+            "nullable": true,
+            "properties": Object {
+              "alias": Object {
+                "type": "string",
+              },
+              "corsOrigins": Object {
+                "items": Object {
+                  "type": "string",
+                },
+                "type": "array",
+              },
+            },
+            "type": "object",
+          },
           "project": Object {
             "type": "string",
           },

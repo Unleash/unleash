@@ -102,7 +102,14 @@ export class ApiTokenService {
     }
 
     public getUserForToken(secret: string): ApiUser | undefined {
-        const token = this.activeTokens.find((t) => t.secret === secret);
+        let token = this.activeTokens.find((t) => t.secret === secret);
+
+        // If the token is not found, try to find it in the legacy format with the metadata alias
+        // This is to ensure that previous proxies we set up for our customers continue working
+        if (!token) {
+            token = this.activeTokens.find((t) => t.metadata.alias === secret);
+        }
+
         if (token) {
             return new ApiUser({
                 username: token.username,

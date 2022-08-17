@@ -42,3 +42,40 @@ test('should not have projects set if project is present', async () => {
     });
     expect(token.projects).not.toBeDefined();
 });
+
+test('should set metadata', async () => {
+    let token = await createApiToken.validateAsync({
+        username: 'test',
+        type: 'admin',
+        project: 'default',
+        metadata: {
+            corsOrigins: ['*'],
+            alias: 'secret',
+        },
+    });
+    expect(token.projects).toBeUndefined();
+});
+
+test('should allow for embedded proxy (frontend) key', async () => {
+    let token = await createApiToken.validateAsync({
+        username: 'test',
+        type: 'proxy',
+        project: 'default',
+        metadata: {
+            corsOrigins: ['*'],
+        },
+    });
+    expect(token.error).toBeUndefined();
+});
+
+test('should set environment to default for proxy key', async () => {
+    let token = await createApiToken.validateAsync({
+        username: 'test',
+        type: 'proxy',
+        project: 'default',
+        metadata: {
+            corsOrigins: ['*'],
+        },
+    });
+    expect(token.environment).toEqual('default');
+});

@@ -56,10 +56,10 @@ test('should set metadata', async () => {
     expect(token.projects).toBeUndefined();
 });
 
-test('should allow for embedded proxy (frontend) key', async () => {
+test('should allow for frontend key (embedded proxy)', async () => {
     let token = await createApiToken.validateAsync({
         username: 'test',
-        type: 'proxy',
+        type: 'frontend',
         project: 'default',
         metadata: {
             corsOrigins: ['*'],
@@ -68,10 +68,10 @@ test('should allow for embedded proxy (frontend) key', async () => {
     expect(token.error).toBeUndefined();
 });
 
-test('should set environment to default for proxy key', async () => {
+test('should set environment to default for frontend key', async () => {
     let token = await createApiToken.validateAsync({
         username: 'test',
-        type: 'proxy',
+        type: 'frontend',
         project: 'default',
         metadata: {
             corsOrigins: ['*'],

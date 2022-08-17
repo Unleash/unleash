@@ -110,7 +110,7 @@ export class ApiTokenService {
         // This is to ensure that previous proxies we set up for our customers continue working
         if (!token) {
             token = this.activeTokens.find(
-                (activeToken) => activeToken.metadata.alias === secret,
+                (activeToken) => activeToken.alias === secret,
             );
         }
 

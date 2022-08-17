@@ -22,23 +22,6 @@ test('apiTokenSchema', () => {
     ).toBeUndefined();
 });
 
-test('apiTokenSchema metadata - should allow empty object', () => {
-    const data: ApiTokenSchema = { ...defaultData, metadata: {} };
-
-    expect(
-        validateSchema('#/components/schemas/apiTokenSchema', data),
-    ).toBeUndefined();
-});
-
-test('apiTokenSchema metadata - does not allow custom metadata parameters', () => {
-    expect(
-        validateSchema('#/components/schemas/apiTokenSchema', {
-            ...defaultData,
-            metadata: { arbitraryParameter: true },
-        }),
-    ).toMatchSnapshot();
-});
-
 test('apiTokenSchema empty', () => {
     expect(
         validateSchema('#/components/schemas/apiTokenSchema', {}),

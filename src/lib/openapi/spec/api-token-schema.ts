@@ -44,14 +44,8 @@ export const apiTokenSchema = {
             format: 'date-time',
             nullable: true,
         },
-        metadata: {
-            type: 'object',
-            additionalProperties: false,
-            properties: {
-                alias: {
-                    type: 'string',
-                },
-            },
+        alias: {
+            type: 'string',
             nullable: true,
         },
     },

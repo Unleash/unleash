@@ -107,7 +107,7 @@ test('should not allow requests with a client token', async () => {
 test('Should find a token by alias', async () => {
     const tokenAlias = 'testclientkey';
     await createApiToken(ApiTokenType.PROXY, {
-        metadata: { alias: tokenAlias },
+        alias: tokenAlias,
     });
 
     await createFeatureToggle({

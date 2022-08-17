@@ -104,6 +104,37 @@ test('should not allow requests with a client token', async () => {
         .expect(403);
 });
 
+test('Should find a token by alias', async () => {
+    const tokenAlias = 'testclientkey';
+    await createApiToken(ApiTokenType.PROXY, {
+        metadata: { alias: tokenAlias },
+    });
+
+    await createFeatureToggle({
+        name: 'enabledFeature1',
+        enabled: true,
+        strategies: [{ name: 'default', constraints: [], parameters: {} }],
+    });
+
+    await app.request
+        .get('/api/frontend')
+        .set('Authorization', tokenAlias)
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect((res) => {
+            expect(res.body).toEqual({
+                toggles: [
+                    {
+                        name: 'enabledFeature1',
+                        enabled: true,
+                        impressionData: false,
+                        variant: { enabled: false, name: 'disabled' },
+                    },
+                ],
+            });
+        });
+});
+
 test('should allow requests with an admin token', async () => {
     const adminToken = await createApiToken(ApiTokenType.ADMIN, {
         projects: ['*'],

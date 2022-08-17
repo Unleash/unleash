@@ -573,7 +573,7 @@ export default class ProjectService {
     }
 
     async getMembers(projectId: string): Promise<number> {
-        return this.store.getMembers(projectId);
+        return this.store.getMembersCountByProject(projectId);
     }
 
     async getProjectOverview(
@@ -588,7 +588,7 @@ export default class ProjectService {
             projectId,
             archived,
         );
-        const members = await this.store.getMembers(projectId);
+        const members = await this.store.getMembersCountByProject(projectId);
         return {
             name: project.name,
             environments,

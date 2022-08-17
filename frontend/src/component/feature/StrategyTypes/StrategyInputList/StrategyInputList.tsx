@@ -29,6 +29,7 @@ const Container = styled('div')(({ theme }) => ({
 const ChipsList = styled('div')(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(1),
+    flexWrap: 'wrap',
 }));
 
 const InputContainer = styled('div')(({ theme }) => ({

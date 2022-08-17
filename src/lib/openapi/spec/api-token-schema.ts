@@ -48,12 +48,6 @@ export const apiTokenSchema = {
             type: 'object',
             additionalProperties: false,
             properties: {
-                corsOrigins: {
-                    type: 'array',
-                    items: {
-                        type: 'string',
-                    },
-                },
                 alias: {
                     type: 'string',
                 },

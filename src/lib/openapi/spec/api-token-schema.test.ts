@@ -30,27 +30,6 @@ test('apiTokenSchema metadata - should allow empty object', () => {
     ).toBeUndefined();
 });
 
-test('apiTokenSchema metadata - allows for corsOrigins and/or alias', () => {
-    expect(
-        validateSchema('#/components/schemas/apiTokenSchema', {
-            ...defaultData,
-            metadata: { corsOrigins: ['*'] },
-        }),
-    ).toBeUndefined();
-    expect(
-        validateSchema('#/components/schemas/apiTokenSchema', {
-            ...defaultData,
-            metadata: { alias: 'secret' },
-        }),
-    ).toBeUndefined();
-    expect(
-        validateSchema('#/components/schemas/apiTokenSchema', {
-            ...defaultData,
-            metadata: { corsOrigins: ['*'], alias: 'abc' },
-        }),
-    ).toBeUndefined();
-});
-
 test('apiTokenSchema metadata - does not allow custom metadata parameters', () => {
     expect(
         validateSchema('#/components/schemas/apiTokenSchema', {

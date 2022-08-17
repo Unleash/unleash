@@ -106,8 +106,8 @@ export class ApiTokenService {
             (activeToken) => activeToken.secret === secret,
         );
 
-        // If the token is not found, try to find it in the legacy format with the metadata alias
-        // This is to ensure that previous proxies we set up for our customers continue working
+        // If the token is not found, try to find it in the legacy format with alias.
+        // This allows us to support the old format of tokens migrating to the embedded proxy
         if (!token) {
             token = this.activeTokens.find(
                 (activeToken) => activeToken.alias === secret,

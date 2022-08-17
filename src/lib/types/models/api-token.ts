@@ -34,7 +34,7 @@ export interface IApiToken extends IApiTokenCreate {
     seenAt?: Date;
     environment: string;
     project: string;
-    alias: string;
+    alias: string | null;
 }
 
 export const isAllProjects = (projects: string[]): boolean => {

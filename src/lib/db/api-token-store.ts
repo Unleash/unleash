@@ -66,7 +66,7 @@ const toRow = (newToken: IApiTokenCreate) => ({
     environment:
         newToken.environment === ALL ? undefined : newToken.environment,
     expires_at: newToken.expiresAt,
-    alias: newToken.alias || '',
+    alias: newToken.alias || null,
 });
 
 const toTokens = (rows: any[]): IApiToken[] => {
@@ -153,7 +153,7 @@ export class ApiTokenStore implements IApiTokenStore {
             await Promise.all(updateProjectTasks);
             return {
                 ...newToken,
-                alias: newToken.alias || '',
+                alias: newToken.alias || null,
                 project: newToken.projects?.join(',') || '*',
                 createdAt: row.created_at,
             };

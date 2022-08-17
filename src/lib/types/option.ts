@@ -106,6 +106,7 @@ export interface IUnleashOptions {
     email?: Partial<IEmailOption>;
     secureHeaders?: boolean;
     additionalCspAllowedDomains?: ICspDomainOptions;
+    frontendApiOrigins?: string[];
     enableOAS?: boolean;
     preHook?: Function;
     preRouterHook?: Function;
@@ -179,6 +180,7 @@ export interface IUnleashConfig {
     email: IEmailOption;
     secureHeaders: boolean;
     additionalCspAllowedDomains: ICspDomainConfig;
+    frontendApiOrigins: string[];
     enableOAS: boolean;
     preHook?: Function;
     preRouterHook?: Function;

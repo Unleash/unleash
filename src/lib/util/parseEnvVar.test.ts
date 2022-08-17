@@ -1,4 +1,8 @@
-import { parseEnvVarBoolean, parseEnvVarNumber } from './env';
+import {
+    parseEnvVarBoolean,
+    parseEnvVarNumber,
+    parseEnvVarStrings,
+} from './parseEnvVar';
 
 test('parseEnvVarNumber', () => {
     expect(parseEnvVarNumber('', 1)).toEqual(1);
@@ -22,4 +26,14 @@ test('parseEnvVarBoolean', () => {
     expect(parseEnvVarBoolean('true', false)).toEqual(true);
     expect(parseEnvVarBoolean('false', false)).toEqual(false);
     expect(parseEnvVarBoolean('test', false)).toEqual(false);
+});
+
+test('parseEnvVarStringList', () => {
+    expect(parseEnvVarStrings('', [])).toEqual([]);
+    expect(parseEnvVarStrings('  ', [])).toEqual([]);
+    expect(parseEnvVarStrings('', ['*'])).toEqual(['*']);
+    expect(parseEnvVarStrings('a', ['*'])).toEqual(['a']);
+    expect(parseEnvVarStrings('a,b,c', [])).toEqual(['a', 'b', 'c']);
+    expect(parseEnvVarStrings('a,b,c', [])).toEqual(['a', 'b', 'c']);
+    expect(parseEnvVarStrings(' a,,,b,  c , ,', [])).toEqual(['a', 'b', 'c']);
 });

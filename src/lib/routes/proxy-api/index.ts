@@ -17,6 +17,7 @@ import { ProxyClientSchema } from '../../openapi/spec/proxy-client-schema';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import { emptyResponse } from '../../openapi/util/standard-responses';
+import { corsOriginMiddleware } from '../../middleware/cors-origin-middleware';
 
 interface ApiUserRequest<
     PARAM = any,
@@ -34,7 +35,6 @@ export default class ProxyController extends Controller {
 
     private openApiService: OpenApiService;
 
-    // TODO(olav): Add CORS config to all proxy endpoints.
     constructor(
         config: IUnleashConfig,
         {
@@ -46,6 +46,12 @@ export default class ProxyController extends Controller {
         this.logger = config.getLogger('client-api/feature.js');
         this.proxyService = proxyService;
         this.openApiService = openApiService;
+
+        if (config.frontendApiOrigins.length > 0) {
+            // Support CORS requests for the frontend endpoints.
+            // Preflight requests are handled in `app.ts`.
+            this.app.use(corsOriginMiddleware(config.frontendApiOrigins));
+        }
 
         this.route({
             method: 'get',

@@ -1,12 +1,12 @@
 import { publicFolder } from 'unleash-frontend';
 import express, { Application, RequestHandler } from 'express';
-import cors from 'cors';
 import compression from 'compression';
 import favicon from 'serve-favicon';
 import cookieParser from 'cookie-parser';
 import path from 'path';
 import errorHandler from 'errorhandler';
 import { responseTimeMetrics } from './middleware/response-time-metrics';
+import { corsOriginMiddleware } from './middleware/cors-origin-middleware';
 import rbacMiddleware from './middleware/rbac-middleware';
 import apiTokenMiddleware from './middleware/api-token-middleware';
 import { IUnleashServices } from './types/services';
@@ -49,10 +49,6 @@ export default async function getApp(
         config.preHook(app, config, services);
     }
 
-    if (process.env.NODE_ENV === 'development') {
-        app.use(cors());
-    }
-
     app.use(compression());
     app.use(cookieParser());
     app.use(express.json({ strict: false }));
@@ -71,6 +67,19 @@ export default async function getApp(
 
     if (config.enableOAS && services.openApiService) {
         services.openApiService.useDocs(app);
+    }
+
+    if (
+        config.experimental.embedProxy &&
+        config.frontendApiOrigins.length > 0
+    ) {
+        // Support CORS preflight requests for the frontend endpoints.
+        // Preflight requests should not have Authorization headers,
+        // so this must be handled before the API token middleware.
+        app.options(
+            '/api/frontend*',
+            corsOriginMiddleware(config.frontendApiOrigins),
+        );
     }
 
     switch (config.authentication.type) {

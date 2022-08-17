@@ -24,10 +24,15 @@ import UserSplashController from './user-splash';
 import ProjectApi from './project';
 import { EnvironmentsController } from './environments';
 import ConstraintsController from './constraints';
+import cors from 'cors';
 
 class AdminApi extends Controller {
     constructor(config: IUnleashConfig, services: IUnleashServices) {
         super(config);
+
+        if (process.env.NODE_ENV === 'development') {
+            this.app.use(cors());
+        }
 
         this.app.use(
             '/features',

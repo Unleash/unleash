@@ -29,7 +29,11 @@ import {
     mapLegacyToken,
     validateApiToken,
 } from './types/models/api-token';
-import { parseEnvVarBoolean, parseEnvVarNumber } from './util/env';
+import {
+    parseEnvVarBoolean,
+    parseEnvVarNumber,
+    parseEnvVarStrings,
+} from './util/parseEnvVar';
 import { IExperimentalOptions } from './experimental';
 import {
     DEFAULT_SEGMENT_VALUES_LIMIT,
@@ -402,6 +406,10 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         DEFAULT_STRATEGY_SEGMENTS_LIMIT,
     );
 
+    const frontendApiOrigins =
+        options.frontendApiOrigins ||
+        parseEnvVarStrings(process.env.UNLEASH_FRONTEND_API_ORIGINS, []);
+
     const clientFeatureCaching = loadClientCachingOptions(options);
 
     return {
@@ -426,6 +434,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         eventBus: new EventEmitter(),
         environmentEnableOverrides,
         additionalCspAllowedDomains,
+        frontendApiOrigins,
         inlineSegmentConstraints,
         segmentValuesLimit,
         strategySegmentsLimit,

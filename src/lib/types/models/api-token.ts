@@ -6,7 +6,7 @@ export const ALL = '*';
 export enum ApiTokenType {
     CLIENT = 'client',
     ADMIN = 'admin',
-    PROXY = 'proxy',
+    FRONTEND = 'frontend',
 }
 
 export interface ILegacyApiTokenCreate {
@@ -108,7 +108,7 @@ export const validateApiToken = ({
         );
     }
 
-    if (type === ApiTokenType.PROXY && environment === ALL) {
+    if (type === ApiTokenType.FRONTEND && environment === ALL) {
         throw new BadDataError(
             'Proxy token cannot be scoped to all environments',
         );

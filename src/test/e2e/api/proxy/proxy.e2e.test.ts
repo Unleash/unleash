@@ -118,7 +118,7 @@ test('should allow requests with an admin token', async () => {
 });
 
 test('should not allow admin requests with a proxy token', async () => {
-    const proxyToken = await createApiToken(ApiTokenType.PROXY);
+    const proxyToken = await createApiToken(ApiTokenType.FRONTEND);
     await app.request
         .get('/api/admin/features')
         .set('Authorization', proxyToken.secret)
@@ -127,7 +127,7 @@ test('should not allow admin requests with a proxy token', async () => {
 });
 
 test('should not allow client requests with a proxy token', async () => {
-    const proxyToken = await createApiToken(ApiTokenType.PROXY);
+    const proxyToken = await createApiToken(ApiTokenType.FRONTEND);
     await app.request
         .get('/api/client/features')
         .set('Authorization', proxyToken.secret)
@@ -136,7 +136,7 @@ test('should not allow client requests with a proxy token', async () => {
 });
 
 test('should not allow requests with an invalid proxy token', async () => {
-    const proxyToken = await createApiToken(ApiTokenType.PROXY);
+    const proxyToken = await createApiToken(ApiTokenType.FRONTEND);
     await app.request
         .get('/api/frontend')
         .set('Authorization', proxyToken.secret.slice(0, -1))
@@ -145,7 +145,7 @@ test('should not allow requests with an invalid proxy token', async () => {
 });
 
 test('should allow requests with a proxy token', async () => {
-    const proxyToken = await createApiToken(ApiTokenType.PROXY);
+    const proxyToken = await createApiToken(ApiTokenType.FRONTEND);
     await app.request
         .get('/api/frontend')
         .set('Authorization', proxyToken.secret)
@@ -155,7 +155,7 @@ test('should allow requests with a proxy token', async () => {
 });
 
 test('should return 405 from unimplemented endpoints', async () => {
-    const proxyToken = await createApiToken(ApiTokenType.PROXY);
+    const proxyToken = await createApiToken(ApiTokenType.FRONTEND);
     await app.request
         .post('/api/frontend')
         .send({})
@@ -183,7 +183,7 @@ test('should return 405 from unimplemented endpoints', async () => {
 test.todo('should enforce token CORS settings');
 
 test('should accept client registration requests', async () => {
-    const proxyToken = await createApiToken(ApiTokenType.PROXY);
+    const proxyToken = await createApiToken(ApiTokenType.FRONTEND);
     await app.request
         .post('/api/frontend/client/register')
         .set('Authorization', proxyToken.secret)
@@ -211,7 +211,7 @@ test('should store proxy client metrics', async () => {
     const appName = randomId();
     const instanceId = randomId();
     const featureName = randomId();
-    const proxyToken = await createApiToken(ApiTokenType.PROXY);
+    const proxyToken = await createApiToken(ApiTokenType.FRONTEND);
     const adminToken = await createApiToken(ApiTokenType.ADMIN, {
         projects: ['*'],
         environment: '*',
@@ -282,7 +282,7 @@ test('should store proxy client metrics', async () => {
 });
 
 test('should filter features by enabled/disabled', async () => {
-    const proxyToken = await createApiToken(ApiTokenType.PROXY);
+    const proxyToken = await createApiToken(ApiTokenType.FRONTEND);
     await createFeatureToggle({
         name: 'enabledFeature1',
         enabled: true,
@@ -324,7 +324,7 @@ test('should filter features by enabled/disabled', async () => {
 });
 
 test('should filter features by strategies', async () => {
-    const proxyToken = await createApiToken(ApiTokenType.PROXY);
+    const proxyToken = await createApiToken(ApiTokenType.FRONTEND);
     await createFeatureToggle({
         name: 'featureWithoutStrategies',
         enabled: false,
@@ -363,7 +363,7 @@ test('should filter features by strategies', async () => {
 });
 
 test('should filter features by constraints', async () => {
-    const proxyToken = await createApiToken(ApiTokenType.PROXY);
+    const proxyToken = await createApiToken(ApiTokenType.FRONTEND);
     await createFeatureToggle({
         name: 'featureWithAppNameA',
         enabled: true,
@@ -419,11 +419,11 @@ test('should filter features by project', async () => {
     const projectB = 'projectB';
     await createProject(projectA);
     await createProject(projectB);
-    const proxyTokenDefault = await createApiToken(ApiTokenType.PROXY);
-    const proxyTokenProjectA = await createApiToken(ApiTokenType.PROXY, {
+    const proxyTokenDefault = await createApiToken(ApiTokenType.FRONTEND);
+    const proxyTokenProjectA = await createApiToken(ApiTokenType.FRONTEND, {
         projects: [projectA],
     });
-    const proxyTokenProjectAB = await createApiToken(ApiTokenType.PROXY, {
+    const proxyTokenProjectAB = await createApiToken(ApiTokenType.FRONTEND, {
         projects: [projectA, projectB],
     });
     await createFeatureToggle({
@@ -522,12 +522,12 @@ test('should filter features by environment', async () => {
         'default',
     );
     const proxyTokenEnvironmentDefault = await createApiToken(
-        ApiTokenType.PROXY,
+        ApiTokenType.FRONTEND,
     );
-    const proxyTokenEnvironmentA = await createApiToken(ApiTokenType.PROXY, {
+    const proxyTokenEnvironmentA = await createApiToken(ApiTokenType.FRONTEND, {
         environment: environmentA,
     });
-    const proxyTokenEnvironmentB = await createApiToken(ApiTokenType.PROXY, {
+    const proxyTokenEnvironmentB = await createApiToken(ApiTokenType.FRONTEND, {
         environment: environmentB,
     });
     await createFeatureToggle({

@@ -29,7 +29,7 @@ const resolveTokenPermissions = (tokenType: string) => {
         return [CLIENT];
     }
 
-    if (tokenType === ApiTokenType.PROXY) {
+    if (tokenType === ApiTokenType.FRONTEND) {
         return [PROXY];
     }
 

@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 import { Logger } from '../logger';
-import { ADMIN, CLIENT, PROXY } from '../types/permissions';
+import { ADMIN, CLIENT, FRONTEND } from '../types/permissions';
 import { IUnleashStores } from '../types/stores';
 import { IUnleashConfig } from '../types/option';
 import ApiUser from '../types/api-user';
@@ -29,8 +29,8 @@ const resolveTokenPermissions = (tokenType: string) => {
         return [CLIENT];
     }
 
-    if (tokenType === ApiTokenType.PROXY) {
-        return [PROXY];
+    if (tokenType === ApiTokenType.FRONTEND) {
+        return [FRONTEND];
     }
 
     return [];
@@ -69,7 +69,7 @@ export class ApiTokenService {
         }
     }
 
-    private async fetchActiveTokens(): Promise<void> {
+    async fetchActiveTokens(): Promise<void> {
         try {
             this.activeTokens = await this.getAllActiveTokens();
         } finally {
@@ -102,12 +102,18 @@ export class ApiTokenService {
     }
 
     public getUserForToken(secret: string): ApiUser | undefined {
+        if (!secret) {
+            return undefined;
+        }
+
         let token = this.activeTokens.find((t) => t.secret === secret);
 
         // If the token is not found, try to find it in the legacy format with the metadata alias
         // This is to ensure that previous proxies we set up for our customers continue working
-        if (!token) {
-            token = this.activeTokens.find((t) => t.metadata.alias === secret);
+        if (!token && secret) {
+            token = this.activeTokens.find(
+                (t) => t.metadata.alias && t.metadata.alias === secret,
+            );
         }
 
         if (token) {

@@ -36,13 +36,13 @@ const apiAccessMiddleware = (
         try {
             const apiToken = req.header('authorization');
             const apiUser = apiTokenService.getUserForToken(apiToken);
-            const { CLIENT, PROXY } = ApiTokenType;
+            const { CLIENT, FRONTEND } = ApiTokenType;
 
             if (apiUser) {
                 if (
                     (apiUser.type === CLIENT && !isClientApi(req)) ||
-                    (apiUser.type === PROXY && !isProxyApi(req)) ||
-                    (apiUser.type === PROXY && !experimental.embedProxy)
+                    (apiUser.type === FRONTEND && !isProxyApi(req)) ||
+                    (apiUser.type === FRONTEND && !experimental.embedProxy)
                 ) {
                     res.status(403).send({ message: TOKEN_TYPE_ERROR_MESSAGE });
                     return;

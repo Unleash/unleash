@@ -103,7 +103,7 @@ export class ApiTokenService {
 
     public getUserForToken(secret: string): ApiUser | undefined {
         if (!secret) {
-            return;
+            return undefined;
         }
 
         let token = this.activeTokens.find((t) => t.secret === secret);

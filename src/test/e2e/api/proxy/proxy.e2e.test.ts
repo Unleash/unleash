@@ -104,35 +104,87 @@ test('should not allow requests with a client token', async () => {
         .expect(403);
 });
 
-test('Should find a token by alias', async () => {
-    const tokenAlias = 'testclientkey';
-    await createApiToken(ApiTokenType.FRONTEND, {
-        alias: tokenAlias,
-    });
-
+test('should allow requests with a token secret alias', async () => {
+    const featureA = randomId();
+    const featureB = randomId();
+    const envA = randomId();
+    const envB = randomId();
+    await db.stores.environmentStore.create({ name: envA, type: 'test' });
+    await db.stores.environmentStore.create({ name: envB, type: 'test' });
+    await db.stores.projectStore.addEnvironmentToProject('default', envA);
+    await db.stores.projectStore.addEnvironmentToProject('default', envB);
     await createFeatureToggle({
-        name: 'enabledFeature1',
+        name: featureA,
         enabled: true,
+        environment: envA,
         strategies: [{ name: 'default', constraints: [], parameters: {} }],
     });
-
+    await createFeatureToggle({
+        name: featureB,
+        enabled: true,
+        environment: envB,
+        strategies: [{ name: 'default', constraints: [], parameters: {} }],
+    });
+    const tokenA = await createApiToken(ApiTokenType.FRONTEND, {
+        alias: randomId(),
+        environment: envA,
+    });
+    const tokenB = await createApiToken(ApiTokenType.FRONTEND, {
+        alias: randomId(),
+        environment: envB,
+    });
     await app.request
         .get('/api/frontend')
-        .set('Authorization', tokenAlias)
+        .expect('Content-Type', /json/)
+        .expect(401);
+    await app.request
+        .get('/api/frontend')
+        .set('Authorization', '')
+        .expect('Content-Type', /json/)
+        .expect(401);
+    await app.request
+        .get('/api/frontend')
+        .set('Authorization', 'null')
+        .expect('Content-Type', /json/)
+        .expect(401);
+    await app.request
+        .get('/api/frontend')
+        .set('Authorization', randomId())
+        .expect('Content-Type', /json/)
+        .expect(401);
+    await app.request
+        .get('/api/frontend')
+        .set('Authorization', tokenA.secret.slice(0, -1))
+        .expect('Content-Type', /json/)
+        .expect(401);
+    await app.request
+        .get('/api/frontend')
+        .set('Authorization', tokenA.secret)
         .expect('Content-Type', /json/)
         .expect(200)
-        .expect((res) => {
-            expect(res.body).toEqual({
-                toggles: [
-                    {
-                        name: 'enabledFeature1',
-                        enabled: true,
-                        impressionData: false,
-                        variant: { enabled: false, name: 'disabled' },
-                    },
-                ],
-            });
-        });
+        .expect((res) => expect(res.body.toggles).toHaveLength(1))
+        .expect((res) => expect(res.body.toggles[0].name).toEqual(featureA));
+    await app.request
+        .get('/api/frontend')
+        .set('Authorization', tokenB.secret)
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect((res) => expect(res.body.toggles).toHaveLength(1))
+        .expect((res) => expect(res.body.toggles[0].name).toEqual(featureB));
+    await app.request
+        .get('/api/frontend')
+        .set('Authorization', tokenA.alias)
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect((res) => expect(res.body.toggles).toHaveLength(1))
+        .expect((res) => expect(res.body.toggles[0].name).toEqual(featureA));
+    await app.request
+        .get('/api/frontend')
+        .set('Authorization', tokenB.alias)
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect((res) => expect(res.body.toggles).toHaveLength(1))
+        .expect((res) => expect(res.body.toggles[0].name).toEqual(featureB));
 });
 
 test('should allow requests with an admin token', async () => {

@@ -9,15 +9,15 @@ export const ApiTokenDocs = () => {
             <p>
                 Read the{' '}
                 <a
-                    href="https://docs.getunleash.io/docs"
+                    href="https://docs.getunleash.io/sdks"
                     target="_blank"
                     rel="noreferrer"
                 >
-                    Getting started guide
+                    SDK overview
                 </a>{' '}
-                to learn how to connect to the Unleash API from your application
-                or programmatically. Please note it can take up to 1 minute
-                before a new API key is activated.
+                to connect Unleash to your application. Please note it can take
+                up to <strong>1 minute</strong> before a new API key is
+                activated.
             </p>
             <br />
             <strong>API URL: </strong>{' '}

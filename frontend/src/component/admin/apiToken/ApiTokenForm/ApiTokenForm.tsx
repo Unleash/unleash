@@ -1,13 +1,22 @@
-import { Button } from '@mui/material';
+import {
+    Button,
+    FormControl,
+    FormControlLabel,
+    Radio,
+    RadioGroup,
+    Typography,
+} from '@mui/material';
 import { KeyboardArrowDownOutlined } from '@mui/icons-material';
 import React from 'react';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import Input from 'component/common/Input/Input';
-import { useStyles } from './ApiTokenForm.styles';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { SelectProjectInput } from './SelectProjectInput/SelectProjectInput';
-import { ApiTokenFormErrorType } from 'component/admin/apiToken/ApiTokenForm/useApiTokenForm';
+import { ApiTokenFormErrorType } from './useApiTokenForm';
+import { useStyles } from './ApiTokenForm.styles';
+
 interface IApiTokenFormProps {
     username: string;
     type: string;
@@ -40,14 +49,31 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
     clearErrors,
 }) => {
     const TYPE_ADMIN = 'ADMIN';
+    const { uiConfig } = useUiConfig();
     const { classes: styles } = useStyles();
     const { environments } = useEnvironments();
     const { projects: availableProjects } = useProjects();
 
     const selectableTypes = [
-        { key: 'CLIENT', label: 'Client', title: 'Client SDK token' },
-        { key: 'ADMIN', label: 'Admin', title: 'Admin API token' },
+        {
+            key: 'CLIENT',
+            label: 'Server-side SDK (CLIENT)',
+            title: 'Connect server-side SDK or Unleash Proxy',
+        },
+        {
+            key: 'ADMIN',
+            label: 'ADMIN',
+            title: 'Full access for managing Unleash',
+        },
     ];
+
+    if (uiConfig.embedProxy) {
+        selectableTypes.splice(1, 0, {
+            key: 'FRONTEND',
+            label: 'Client-side SDK (FRONTEND)',
+            title: 'Connect web and mobile SDK directly to Unleash',
+        });
+    }
 
     const selectableProjects = availableProjects.map(project => ({
         value: project.id,
@@ -81,20 +107,38 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
                     onFocus={() => clearErrors('username')}
                     autoFocus
                 />
-                <p className={styles.inputDescription}>
-                    What is your token type?
-                </p>
-                <GeneralSelect
-                    options={selectableTypes}
-                    value={type}
-                    onChange={setTokenType}
-                    label="Token Type"
-                    id="api_key_type"
-                    name="type"
-                    IconComponent={KeyboardArrowDownOutlined}
-                    fullWidth
-                    className={styles.selectInput}
-                />
+                <FormControl className={styles.radioGroup}>
+                    <label id="token-type" className={styles.inputDescription}>
+                        What do you want to connect?
+                    </label>
+                    <RadioGroup
+                        aria-labelledby="token-type"
+                        defaultValue="CLIENT"
+                        name="radio-buttons-group"
+                        value={type}
+                        onChange={(event, value) => setTokenType(value)}
+                    >
+                        {selectableTypes.map(({ key, label, title }) => (
+                            <FormControlLabel
+                                key={key}
+                                value={key}
+                                className={styles.radioItem}
+                                control={<Radio className={styles.radio} />}
+                                label={
+                                    <>
+                                        <Typography>{label}</Typography>
+                                        <Typography
+                                            variant="body2"
+                                            color="text.secondary"
+                                        >
+                                            {title}
+                                        </Typography>
+                                    </>
+                                }
+                            />
+                        ))}
+                    </RadioGroup>
+                </FormControl>
                 <p className={styles.inputDescription}>
                     Which project do you want to give access to?
                 </p>

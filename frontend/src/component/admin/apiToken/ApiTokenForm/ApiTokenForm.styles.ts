@@ -17,6 +17,15 @@ export const useStyles = makeStyles()(theme => ({
             minWidth: '379px',
         },
     },
+    radioGroup: {
+        marginBottom: theme.spacing(2),
+    },
+    radioItem: {
+        marginBottom: theme.spacing(1),
+    },
+    radio: {
+        marginLeft: theme.spacing(1.5),
+    },
     label: {
         minWidth: '300px',
         [theme.breakpoints.down(600)]: {

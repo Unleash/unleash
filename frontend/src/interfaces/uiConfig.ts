@@ -16,6 +16,7 @@ export interface IUiConfig {
     toast?: IProclamationToast;
     segmentValuesLimit?: number;
     strategySegmentsLimit?: number;
+    embedProxy?: boolean;
 }
 
 export interface IProclamationToast {

@@ -19,6 +19,7 @@ import { FOREIGN_KEY_VIOLATION } from '../error/db-error';
 import BadDataError from '../error/bad-data-error';
 import { minutesToMilliseconds } from 'date-fns';
 import { IEnvironmentStore } from 'lib/types/stores/environment-store';
+import { constantTimeCompare } from '../util/constantTimeCompare';
 
 const resolveTokenPermissions = (tokenType: string) => {
     if (tokenType === ApiTokenType.ADMIN) {
@@ -107,7 +108,9 @@ export class ApiTokenService {
         }
 
         let token = this.activeTokens.find(
-            (activeToken) => activeToken.secret === secret,
+            (activeToken) =>
+                Boolean(activeToken.secret) &&
+                constantTimeCompare(activeToken.secret, secret),
         );
 
         // If the token is not found, try to find it in the legacy format with alias.
@@ -115,7 +118,8 @@ export class ApiTokenService {
         if (!token) {
             token = this.activeTokens.find(
                 (activeToken) =>
-                    activeToken.alias && activeToken.alias === secret,
+                    Boolean(activeToken.alias) &&
+                    constantTimeCompare(activeToken.alias, secret),
             );
         }
 

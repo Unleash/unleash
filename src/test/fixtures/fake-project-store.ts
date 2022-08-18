@@ -5,7 +5,10 @@ import {
 } from '../../lib/types/stores/project-store';
 import { IProject, IProjectWithCount } from '../../lib/types/model';
 import NotFoundError from '../../lib/error/notfound-error';
-import { IEnvironmentProjectLink } from 'lib/db/project-store';
+import {
+    IEnvironmentProjectLink,
+    IProjectMembersCount,
+} from 'lib/db/project-store';
 
 export default class FakeProjectStore implements IProjectStore {
     projects: IProject[] = [];
@@ -99,7 +102,7 @@ export default class FakeProjectStore implements IProjectStore {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async getMembers(projectId: string): Promise<number> {
+    async getMembersCountByProject(projectId: string): Promise<number> {
         return Promise.resolve(0);
     }
 
@@ -119,5 +122,9 @@ export default class FakeProjectStore implements IProjectStore {
     async updateHealth(healthUpdate: IProjectHealthUpdate): Promise<void> {
         this.projects.find((p) => p.id === healthUpdate.id).health =
             healthUpdate.health;
+    }
+
+    getMembersCount(): Promise<IProjectMembersCount[]> {
+        throw new Error('Method not implemented.');
     }
 }

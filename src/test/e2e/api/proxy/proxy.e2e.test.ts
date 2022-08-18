@@ -88,7 +88,7 @@ const createProject = async (id: string): Promise<void> => {
     await app.services.projectService.createProject({ id, name: id }, user);
 };
 
-test('should require a proxy token or an admin token', async () => {
+test('should require a frontend token or an admin token', async () => {
     await app.request
         .get('/api/frontend')
         .expect('Content-Type', /json/)
@@ -106,7 +106,7 @@ test('should not allow requests with a client token', async () => {
 
 test('Should find a token by alias', async () => {
     const tokenAlias = 'testclientkey';
-    await createApiToken(ApiTokenType.PROXY, {
+    await createApiToken(ApiTokenType.FRONTEND, {
         alias: tokenAlias,
     });
 
@@ -148,64 +148,64 @@ test('should allow requests with an admin token', async () => {
         .expect((res) => expect(res.body).toEqual({ toggles: [] }));
 });
 
-test('should not allow admin requests with a proxy token', async () => {
-    const proxyToken = await createApiToken(ApiTokenType.PROXY);
+test('should not allow admin requests with a frontend token', async () => {
+    const frontendToken = await createApiToken(ApiTokenType.FRONTEND);
     await app.request
         .get('/api/admin/features')
-        .set('Authorization', proxyToken.secret)
+        .set('Authorization', frontendToken.secret)
         .expect('Content-Type', /json/)
         .expect(403);
 });
 
-test('should not allow client requests with a proxy token', async () => {
-    const proxyToken = await createApiToken(ApiTokenType.PROXY);
+test('should not allow client requests with a frontend token', async () => {
+    const frontendToken = await createApiToken(ApiTokenType.FRONTEND);
     await app.request
         .get('/api/client/features')
-        .set('Authorization', proxyToken.secret)
+        .set('Authorization', frontendToken.secret)
         .expect('Content-Type', /json/)
         .expect(403);
 });
 
-test('should not allow requests with an invalid proxy token', async () => {
-    const proxyToken = await createApiToken(ApiTokenType.PROXY);
+test('should not allow requests with an invalid frontend token', async () => {
+    const frontendToken = await createApiToken(ApiTokenType.FRONTEND);
     await app.request
         .get('/api/frontend')
-        .set('Authorization', proxyToken.secret.slice(0, -1))
+        .set('Authorization', frontendToken.secret.slice(0, -1))
         .expect('Content-Type', /json/)
         .expect(401);
 });
 
-test('should allow requests with a proxy token', async () => {
-    const proxyToken = await createApiToken(ApiTokenType.PROXY);
+test('should allow requests with a frontend token', async () => {
+    const frontendToken = await createApiToken(ApiTokenType.FRONTEND);
     await app.request
         .get('/api/frontend')
-        .set('Authorization', proxyToken.secret)
+        .set('Authorization', frontendToken.secret)
         .expect('Content-Type', /json/)
         .expect(200)
         .expect((res) => expect(res.body).toEqual({ toggles: [] }));
 });
 
 test('should return 405 from unimplemented endpoints', async () => {
-    const proxyToken = await createApiToken(ApiTokenType.PROXY);
+    const frontendToken = await createApiToken(ApiTokenType.FRONTEND);
     await app.request
         .post('/api/frontend')
         .send({})
-        .set('Authorization', proxyToken.secret)
+        .set('Authorization', frontendToken.secret)
         .expect('Content-Type', /json/)
         .expect(405);
     await app.request
         .get('/api/frontend/client/features')
-        .set('Authorization', proxyToken.secret)
+        .set('Authorization', frontendToken.secret)
         .expect('Content-Type', /json/)
         .expect(405);
     await app.request
         .get('/api/frontend/health')
-        .set('Authorization', proxyToken.secret)
+        .set('Authorization', frontendToken.secret)
         .expect('Content-Type', /json/)
         .expect(405);
     await app.request
         .get('/api/frontend/internal-backstage/prometheus')
-        .set('Authorization', proxyToken.secret)
+        .set('Authorization', frontendToken.secret)
         .expect('Content-Type', /json/)
         .expect(405);
 });
@@ -214,16 +214,16 @@ test('should return 405 from unimplemented endpoints', async () => {
 test.todo('should enforce token CORS settings');
 
 test('should accept client registration requests', async () => {
-    const proxyToken = await createApiToken(ApiTokenType.PROXY);
+    const frontendToken = await createApiToken(ApiTokenType.FRONTEND);
     await app.request
         .post('/api/frontend/client/register')
-        .set('Authorization', proxyToken.secret)
+        .set('Authorization', frontendToken.secret)
         .send({})
         .expect('Content-Type', /json/)
         .expect(400);
     await app.request
         .post('/api/frontend/client/register')
-        .set('Authorization', proxyToken.secret)
+        .set('Authorization', frontendToken.secret)
         .send({
             appName: randomId(),
             instanceId: randomId(),
@@ -242,7 +242,7 @@ test('should store proxy client metrics', async () => {
     const appName = randomId();
     const instanceId = randomId();
     const featureName = randomId();
-    const proxyToken = await createApiToken(ApiTokenType.PROXY);
+    const frontendToken = await createApiToken(ApiTokenType.FRONTEND);
     const adminToken = await createApiToken(ApiTokenType.ADMIN, {
         projects: ['*'],
         environment: '*',
@@ -263,7 +263,7 @@ test('should store proxy client metrics', async () => {
         });
     await app.request
         .post('/api/frontend/client/metrics')
-        .set('Authorization', proxyToken.secret)
+        .set('Authorization', frontendToken.secret)
         .send({
             appName,
             instanceId,
@@ -277,7 +277,7 @@ test('should store proxy client metrics', async () => {
         .expect((res) => expect(res.text).toEqual('OK'));
     await app.request
         .post('/api/frontend/client/metrics')
-        .set('Authorization', proxyToken.secret)
+        .set('Authorization', frontendToken.secret)
         .send({
             appName,
             instanceId,
@@ -313,7 +313,7 @@ test('should store proxy client metrics', async () => {
 });
 
 test('should filter features by enabled/disabled', async () => {
-    const proxyToken = await createApiToken(ApiTokenType.PROXY);
+    const frontendToken = await createApiToken(ApiTokenType.FRONTEND);
     await createFeatureToggle({
         name: 'enabledFeature1',
         enabled: true,
@@ -331,7 +331,7 @@ test('should filter features by enabled/disabled', async () => {
     });
     await app.request
         .get('/api/frontend')
-        .set('Authorization', proxyToken.secret)
+        .set('Authorization', frontendToken.secret)
         .expect('Content-Type', /json/)
         .expect(200)
         .expect((res) => {
@@ -355,7 +355,7 @@ test('should filter features by enabled/disabled', async () => {
 });
 
 test('should filter features by strategies', async () => {
-    const proxyToken = await createApiToken(ApiTokenType.PROXY);
+    const frontendToken = await createApiToken(ApiTokenType.FRONTEND);
     await createFeatureToggle({
         name: 'featureWithoutStrategies',
         enabled: false,
@@ -376,7 +376,7 @@ test('should filter features by strategies', async () => {
     });
     await app.request
         .get('/api/frontend')
-        .set('Authorization', proxyToken.secret)
+        .set('Authorization', frontendToken.secret)
         .expect('Content-Type', /json/)
         .expect(200)
         .expect((res) => {
@@ -394,7 +394,7 @@ test('should filter features by strategies', async () => {
 });
 
 test('should filter features by constraints', async () => {
-    const proxyToken = await createApiToken(ApiTokenType.PROXY);
+    const frontendToken = await createApiToken(ApiTokenType.FRONTEND);
     await createFeatureToggle({
         name: 'featureWithAppNameA',
         enabled: true,
@@ -427,19 +427,19 @@ test('should filter features by constraints', async () => {
     });
     await app.request
         .get('/api/frontend?appName=a')
-        .set('Authorization', proxyToken.secret)
+        .set('Authorization', frontendToken.secret)
         .expect('Content-Type', /json/)
         .expect(200)
         .expect((res) => expect(res.body.toggles).toHaveLength(2));
     await app.request
         .get('/api/frontend?appName=b')
-        .set('Authorization', proxyToken.secret)
+        .set('Authorization', frontendToken.secret)
         .expect('Content-Type', /json/)
         .expect(200)
         .expect((res) => expect(res.body.toggles).toHaveLength(1));
     await app.request
         .get('/api/frontend?appName=c')
-        .set('Authorization', proxyToken.secret)
+        .set('Authorization', frontendToken.secret)
         .expect('Content-Type', /json/)
         .expect(200)
         .expect((res) => expect(res.body.toggles).toHaveLength(0));
@@ -450,11 +450,11 @@ test('should filter features by project', async () => {
     const projectB = 'projectB';
     await createProject(projectA);
     await createProject(projectB);
-    const proxyTokenDefault = await createApiToken(ApiTokenType.PROXY);
-    const proxyTokenProjectA = await createApiToken(ApiTokenType.PROXY, {
+    const frontendTokenDefault = await createApiToken(ApiTokenType.FRONTEND);
+    const frontendTokenProjectA = await createApiToken(ApiTokenType.FRONTEND, {
         projects: [projectA],
     });
-    const proxyTokenProjectAB = await createApiToken(ApiTokenType.PROXY, {
+    const frontendTokenProjectAB = await createApiToken(ApiTokenType.FRONTEND, {
         projects: [projectA, projectB],
     });
     await createFeatureToggle({
@@ -476,7 +476,7 @@ test('should filter features by project', async () => {
     });
     await app.request
         .get('/api/frontend')
-        .set('Authorization', proxyTokenDefault.secret)
+        .set('Authorization', frontendTokenDefault.secret)
         .expect('Content-Type', /json/)
         .expect(200)
         .expect((res) => {
@@ -493,7 +493,7 @@ test('should filter features by project', async () => {
         });
     await app.request
         .get('/api/frontend')
-        .set('Authorization', proxyTokenProjectA.secret)
+        .set('Authorization', frontendTokenProjectA.secret)
         .expect('Content-Type', /json/)
         .expect(200)
         .expect((res) => {
@@ -510,7 +510,7 @@ test('should filter features by project', async () => {
         });
     await app.request
         .get('/api/frontend')
-        .set('Authorization', proxyTokenProjectAB.secret)
+        .set('Authorization', frontendTokenProjectAB.secret)
         .expect('Content-Type', /json/)
         .expect(200)
         .expect((res) => {
@@ -552,15 +552,21 @@ test('should filter features by environment', async () => {
         environmentB,
         'default',
     );
-    const proxyTokenEnvironmentDefault = await createApiToken(
-        ApiTokenType.PROXY,
+    const frontendTokenEnvironmentDefault = await createApiToken(
+        ApiTokenType.FRONTEND,
     );
-    const proxyTokenEnvironmentA = await createApiToken(ApiTokenType.PROXY, {
-        environment: environmentA,
-    });
-    const proxyTokenEnvironmentB = await createApiToken(ApiTokenType.PROXY, {
-        environment: environmentB,
-    });
+    const frontendTokenEnvironmentA = await createApiToken(
+        ApiTokenType.FRONTEND,
+        {
+            environment: environmentA,
+        },
+    );
+    const frontendTokenEnvironmentB = await createApiToken(
+        ApiTokenType.FRONTEND,
+        {
+            environment: environmentB,
+        },
+    );
     await createFeatureToggle({
         name: 'featureInEnvironmentDefault',
         enabled: true,
@@ -580,7 +586,7 @@ test('should filter features by environment', async () => {
     });
     await app.request
         .get('/api/frontend')
-        .set('Authorization', proxyTokenEnvironmentDefault.secret)
+        .set('Authorization', frontendTokenEnvironmentDefault.secret)
         .expect('Content-Type', /json/)
         .expect(200)
         .expect((res) => {
@@ -597,7 +603,7 @@ test('should filter features by environment', async () => {
         });
     await app.request
         .get('/api/frontend')
-        .set('Authorization', proxyTokenEnvironmentA.secret)
+        .set('Authorization', frontendTokenEnvironmentA.secret)
         .expect('Content-Type', /json/)
         .expect(200)
         .expect((res) => {
@@ -614,7 +620,7 @@ test('should filter features by environment', async () => {
         });
     await app.request
         .get('/api/frontend')
-        .set('Authorization', proxyTokenEnvironmentB.secret)
+        .set('Authorization', frontendTokenEnvironmentB.secret)
         .expect('Content-Type', /json/)
         .expect(200)
         .expect((res) => {

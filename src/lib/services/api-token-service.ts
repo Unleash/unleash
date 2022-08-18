@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 import { Logger } from '../logger';
-import { ADMIN, CLIENT, PROXY } from '../types/permissions';
+import { ADMIN, CLIENT, FRONTEND } from '../types/permissions';
 import { IUnleashStores } from '../types/stores';
 import { IUnleashConfig } from '../types/option';
 import ApiUser from '../types/api-user';
@@ -29,8 +29,8 @@ const resolveTokenPermissions = (tokenType: string) => {
         return [CLIENT];
     }
 
-    if (tokenType === ApiTokenType.PROXY) {
-        return [PROXY];
+    if (tokenType === ApiTokenType.FRONTEND) {
+        return [FRONTEND];
     }
 
     return [];
@@ -69,7 +69,7 @@ export class ApiTokenService {
         }
     }
 
-    private async fetchActiveTokens(): Promise<void> {
+    async fetchActiveTokens(): Promise<void> {
         try {
             this.activeTokens = await this.getAllActiveTokens();
         } finally {
@@ -103,7 +103,7 @@ export class ApiTokenService {
 
     public getUserForToken(secret: string): ApiUser | undefined {
         if (!secret) {
-            return;
+            return undefined;
         }
 
         let token = this.activeTokens.find(
@@ -111,7 +111,7 @@ export class ApiTokenService {
         );
 
         // If the token is not found, try to find it in the legacy format with alias.
-        // This allows us to support the old format of tokens migrating to the embedded proxy
+        // This allows us to support the old format of tokens migrating to the embedded proxy.
         if (!token) {
             token = this.activeTokens.find(
                 (activeToken) =>
@@ -129,6 +129,7 @@ export class ApiTokenService {
                 secret: token.secret,
             });
         }
+
         return undefined;
     }
 

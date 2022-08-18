@@ -115,6 +115,6 @@ export class ProxyService {
     }
 
     private static assertExpectedTokenType({ type }: ApiUser) {
-        assert(type === ApiTokenType.PROXY || type === ApiTokenType.ADMIN);
+        assert(type === ApiTokenType.FRONTEND || type === ApiTokenType.ADMIN);
     }
 }

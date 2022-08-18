@@ -42,13 +42,13 @@ const PROJECT_ADMIN = [
     permissions.DELETE_FEATURE,
 ];
 
-interface IRoleCreation {
+export interface IRoleCreation {
     name: string;
     description: string;
     permissions?: IPermission[];
 }
 
-interface IRoleValidation {
+export interface IRoleValidation {
     name: string;
     description?: string;
     permissions?: Pick<IPermission, 'id' | 'environment'>[];

@@ -63,6 +63,9 @@ export const uiConfigSchema = {
         versionInfo: {
             $ref: '#/components/schemas/versionSchema',
         },
+        embedProxy: {
+            type: 'boolean',
+        },
     },
     components: {
         schemas: {

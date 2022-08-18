@@ -87,6 +87,7 @@ class ConfigController extends Controller {
             strategySegmentsLimit: this.config.strategySegmentsLimit,
             versionInfo: this.versionService.getVersionInfo(),
             disablePasswordAuth,
+            embedProxy: this.config.experimental.embedProxy,
         };
 
         this.openApiService.respondWithValidation(

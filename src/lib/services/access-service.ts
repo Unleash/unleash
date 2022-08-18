@@ -50,7 +50,7 @@ interface IRoleCreation {
 
 interface IRoleValidation {
     name: string;
-    description: string;
+    description?: string;
     permissions?: Pick<IPermission, 'id' | 'environment'>[];
 }
 

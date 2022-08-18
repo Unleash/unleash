@@ -47,7 +47,8 @@ test("Shouldn't return frontend token when secret is undefined", async () => {
     const config: IUnleashConfig = createTestConfig({});
     const apiTokenStore = new FakeApiTokenStore();
     const environmentStore = new FakeEnvironmentStore();
-    environmentStore.create({
+
+    await environmentStore.create({
         name: 'default',
         enabled: true,
         protected: true,
@@ -59,11 +60,10 @@ test("Shouldn't return frontend token when secret is undefined", async () => {
         { apiTokenStore, environmentStore },
         config,
     );
+
     await apiTokenService.createApiTokenWithProjects(token);
-    console.log({
-        // @ts-ignore
-        activeTokens: apiTokenService.activeTokens,
-    });
+    await apiTokenService.fetchActiveTokens();
+
     expect(apiTokenService.getUserForToken(undefined)).toEqual(undefined);
     expect(apiTokenService.getUserForToken('')).toEqual(undefined);
 });

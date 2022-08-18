@@ -69,7 +69,7 @@ export class ApiTokenService {
         }
     }
 
-    private async fetchActiveTokens(): Promise<void> {
+    async fetchActiveTokens(): Promise<void> {
         try {
             this.activeTokens = await this.getAllActiveTokens();
         } finally {
@@ -102,13 +102,18 @@ export class ApiTokenService {
     }
 
     public getUserForToken(secret: string): ApiUser | undefined {
+        if (!secret) {
+            return;
+        }
+
         let token = this.activeTokens.find((t) => t.secret === secret);
 
         // If the token is not found, try to find it in the legacy format with the metadata alias
         // This is to ensure that previous proxies we set up for our customers continue working
-        // FIXME: test - without checking for empty secret
-        if (!token && !!secret) {
-            token = this.activeTokens.find((t) => t.metadata.alias === secret);
+        if (!token && secret) {
+            token = this.activeTokens.find(
+                (t) => t.metadata.alias && t.metadata.alias === secret,
+            );
         }
 
         if (token) {

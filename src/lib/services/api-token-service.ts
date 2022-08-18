@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 import { Logger } from '../logger';
-import { ADMIN, CLIENT, PROXY } from '../types/permissions';
+import { ADMIN, CLIENT, FRONTEND } from '../types/permissions';
 import { IUnleashStores } from '../types/stores';
 import { IUnleashConfig } from '../types/option';
 import ApiUser from '../types/api-user';
@@ -30,7 +30,7 @@ const resolveTokenPermissions = (tokenType: string) => {
     }
 
     if (tokenType === ApiTokenType.FRONTEND) {
-        return [PROXY];
+        return [FRONTEND];
     }
 
     return [];
@@ -106,7 +106,8 @@ export class ApiTokenService {
 
         // If the token is not found, try to find it in the legacy format with the metadata alias
         // This is to ensure that previous proxies we set up for our customers continue working
-        if (!token) {
+        // FIXME: test - without checking for empty secret
+        if (!token && !!secret) {
             token = this.activeTokens.find((t) => t.metadata.alias === secret);
         }
 

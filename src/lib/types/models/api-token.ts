@@ -110,7 +110,7 @@ export const validateApiToken = ({
 
     if (type === ApiTokenType.FRONTEND && environment === ALL) {
         throw new BadDataError(
-            'Proxy token cannot be scoped to all environments',
+            'Frontend token cannot be scoped to all environments',
         );
     }
 };

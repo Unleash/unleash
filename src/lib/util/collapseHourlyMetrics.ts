@@ -1,10 +1,6 @@
 import { IClientMetricsEnv } from '../types/stores/client-metrics-store-v2';
 import { startOfHour } from 'date-fns';
 
-const sum = (items: number[]): number => {
-    return items.reduce((acc, item) => acc + item, 0);
-};
-
 const groupBy = <T>(list: T[], createKey: (item: T) => string): T[][] => {
     const groups = list.reduce((acc, item) => {
         const key = createKey(item);
@@ -25,6 +21,21 @@ const createMetricKey = (metric: IClientMetricsEnv): string => {
     ].join();
 };
 
+const sumYesNo = (
+    metrics: IClientMetricsEnv[],
+): Pick<IClientMetricsEnv, 'yes' | 'no'> => {
+    return metrics.reduce(
+        (acc, metric) => ({
+            yes: acc.yes + metric.yes,
+            no: acc.no + metric.no,
+        }),
+        {
+            yes: 0,
+            no: 0,
+        },
+    );
+};
+
 export const collapseHourlyMetrics = (
     metrics: IClientMetricsEnv[],
 ): IClientMetricsEnv[] => {
@@ -35,7 +46,6 @@ export const collapseHourlyMetrics = (
 
     return groupBy(hourlyMetrics, createMetricKey).flatMap((group) => ({
         ...group[0],
-        yes: sum(group.map((metric) => metric.yes)),
-        no: sum(group.map((metric) => metric.no)),
+        ...sumYesNo(group),
     }));
 };

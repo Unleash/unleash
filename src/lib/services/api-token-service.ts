@@ -102,6 +102,10 @@ export class ApiTokenService {
     }
 
     public getUserForToken(secret: string): ApiUser | undefined {
+        if (!secret) {
+            return;
+        }
+
         let token = this.activeTokens.find(
             (activeToken) => activeToken.secret === secret,
         );
@@ -110,7 +114,8 @@ export class ApiTokenService {
         // This allows us to support the old format of tokens migrating to the embedded proxy
         if (!token) {
             token = this.activeTokens.find(
-                (activeToken) => activeToken.alias === secret,
+                (activeToken) =>
+                    activeToken.alias && activeToken.alias === secret,
             );
         }
 

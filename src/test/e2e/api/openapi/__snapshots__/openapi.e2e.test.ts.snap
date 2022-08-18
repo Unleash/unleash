@@ -2829,6 +2829,9 @@ Object {
           "emailEnabled": Object {
             "type": "boolean",
           },
+          "embedProxy": Object {
+            "type": "boolean",
+          },
           "environment": Object {
             "type": "string",
           },

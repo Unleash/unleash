@@ -1,4 +1,3 @@
-import faker from 'faker';
 import dbInit, { ITestDb } from '../../helpers/database-init';
 import {
     IUnleashTest,
@@ -12,6 +11,7 @@ import {
     IStrategyConfig,
     IVariant,
 } from '../../../../lib/types/model';
+import { randomId } from '../../../../lib/util/random-id';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -580,7 +580,7 @@ test('tagging a feature with an already existing tag should be a noop', async ()
 
 test('can untag feature', async () => {
     expect.assertions(1);
-    const feature1Name = faker.datatype.uuid();
+    const feature1Name = randomId();
     await app.request.post('/api/admin/features').send({
         name: feature1Name,
         type: 'killswitch',
@@ -588,7 +588,7 @@ test('can untag feature', async () => {
         strategies: [{ name: 'default' }],
     });
     const tag = {
-        value: faker.lorem.word(),
+        value: randomId(),
         type: 'simple',
     };
     await app.request
@@ -611,8 +611,8 @@ test('can untag feature', async () => {
 
 test('Can get features tagged by tag', async () => {
     expect.assertions(2);
-    const feature1Name = faker.datatype.uuid();
-    const feature2Name = faker.datatype.uuid();
+    const feature1Name = randomId();
+    const feature2Name = randomId();
     await app.request.post('/api/admin/features').send({
         name: feature1Name,
         type: 'killswitch',
@@ -625,7 +625,7 @@ test('Can get features tagged by tag', async () => {
         enabled: true,
         strategies: [{ name: 'default' }],
     });
-    const tag = { value: faker.lorem.word(), type: 'simple' };
+    const tag = { value: randomId(), type: 'simple' };
     await app.request
         .post(`/api/admin/features/${feature1Name}/tags`)
         .send(tag)
@@ -641,8 +641,8 @@ test('Can get features tagged by tag', async () => {
 });
 test('Can query for multiple tags using OR', async () => {
     expect.assertions(3);
-    const feature1Name = faker.datatype.uuid();
-    const feature2Name = faker.datatype.uuid();
+    const feature1Name = randomId();
+    const feature2Name = randomId();
     await app.request.post('/api/admin/features').send({
         name: feature1Name,
         type: 'killswitch',
@@ -655,8 +655,8 @@ test('Can query for multiple tags using OR', async () => {
         enabled: true,
         strategies: [{ name: 'default' }],
     });
-    const tag = { value: faker.name.firstName(), type: 'simple' };
-    const tag2 = { value: faker.name.firstName(), type: 'simple' };
+    const tag = { value: randomId(), type: 'simple' };
+    const tag2 = { value: randomId(), type: 'simple' };
     await app.request
         .post(`/api/admin/features/${feature1Name}/tags`)
         .send(tag)
@@ -682,8 +682,9 @@ test('Can query for multiple tags using OR', async () => {
         });
 });
 test('Querying with multiple filters ANDs the filters', async () => {
-    const feature1Name = `test.${faker.datatype.uuid()}`;
-    const feature2Name = faker.datatype.uuid();
+    const feature1Name = `test.${randomId()}`;
+    const feature2Name = randomId();
+    const feature3Name = `notestprefix.${randomId()}`;
 
     await app.request.post('/api/admin/features').send({
         name: feature1Name,
@@ -698,13 +699,13 @@ test('Querying with multiple filters ANDs the filters', async () => {
         strategies: [{ name: 'default' }],
     });
     await app.request.post('/api/admin/features').send({
-        name: 'notestprefix.feature3',
+        name: feature3Name,
         type: 'release',
         enabled: true,
         strategies: [{ name: 'default' }],
     });
-    const tag = { value: faker.lorem.word(), type: 'simple' };
-    const tag2 = { value: faker.name.firstName(), type: 'simple' };
+    const tag = { value: randomId(), type: 'simple' };
+    const tag2 = { value: randomId(), type: 'simple' };
     await app.request
         .post(`/api/admin/features/${feature1Name}/tags`)
         .send(tag)
@@ -714,7 +715,7 @@ test('Querying with multiple filters ANDs the filters', async () => {
         .send(tag2)
         .expect(201);
     await app.request
-        .post('/api/admin/features/notestprefix.feature3/tags')
+        .post(`/api/admin/features/${feature3Name}/tags`)
         .send(tag)
         .expect(201);
     await app.request
@@ -733,7 +734,7 @@ test('Querying with multiple filters ANDs the filters', async () => {
 });
 
 test('Tagging a feature with a tag it already has should return 409', async () => {
-    const feature1Name = `test.${faker.datatype.uuid()}`;
+    const feature1Name = `test.${randomId()}`;
     await app.request.post('/api/admin/features').send({
         name: feature1Name,
         type: 'killswitch',
@@ -741,7 +742,7 @@ test('Tagging a feature with a tag it already has should return 409', async () =
         strategies: [{ name: 'default' }],
     });
 
-    const tag = { value: faker.lorem.word(), type: 'simple' };
+    const tag = { value: randomId(), type: 'simple' };
     await app.request
         .post(`/api/admin/features/${feature1Name}/tags`)
         .send(tag)

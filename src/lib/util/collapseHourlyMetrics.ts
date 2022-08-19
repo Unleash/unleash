@@ -21,9 +21,7 @@ export const collapseHourlyMetrics = (
         };
         const key = createMetricKey(hourlyMetric);
         if (!grouped[key]) {
-            grouped[key] = {
-                ...hourlyMetric,
-            };
+            grouped[key] = hourlyMetric;
         } else {
             grouped[key].yes = metric.yes + (grouped[key].yes || 0);
             grouped[key].no = metric.no + (grouped[key].no || 0);

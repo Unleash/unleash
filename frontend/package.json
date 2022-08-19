@@ -68,7 +68,7 @@
     "classnames": "2.3.1",
     "copy-to-clipboard": "3.3.2",
     "cypress": "9.7.0",
-    "date-fns": "2.29.1",
+    "date-fns": "2.29.2",
     "debounce": "1.2.1",
     "deep-diff": "1.0.2",
     "eslint": "8.22.0",

@@ -15,7 +15,9 @@ let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('proxy', getLogger);
-    app = await setupAppWithAuth(db.stores);
+    app = await setupAppWithAuth(db.stores, {
+        frontendApiOrigins: ['https://example.com'],
+    });
 });
 
 afterAll(async () => {
@@ -179,8 +181,32 @@ test('should return 405 from unimplemented endpoints', async () => {
         .expect(405);
 });
 
-// TODO(olav): Test CORS config for all proxy endpoints.
-test.todo('should enforce token CORS settings');
+test('should enforce frontend API CORS config', async () => {
+    const allowedOrigin = 'https://example.com';
+    const unknownOrigin = 'https://example.org';
+    const origin = 'access-control-allow-origin';
+    const frontendToken = await createApiToken(ApiTokenType.FRONTEND);
+    await app.request
+        .options('/api/frontend')
+        .set('Origin', unknownOrigin)
+        .set('Authorization', frontendToken.secret)
+        .expect((res) => expect(res.headers[origin]).toBeUndefined());
+    await app.request
+        .options('/api/frontend')
+        .set('Origin', allowedOrigin)
+        .set('Authorization', frontendToken.secret)
+        .expect((res) => expect(res.headers[origin]).toEqual(allowedOrigin));
+    await app.request
+        .get('/api/frontend')
+        .set('Origin', unknownOrigin)
+        .set('Authorization', frontendToken.secret)
+        .expect((res) => expect(res.headers[origin]).toBeUndefined());
+    await app.request
+        .get('/api/frontend')
+        .set('Origin', allowedOrigin)
+        .set('Authorization', frontendToken.secret)
+        .expect((res) => expect(res.headers[origin]).toEqual(allowedOrigin));
+});
 
 test('should accept client registration requests', async () => {
     const frontendToken = await createApiToken(ApiTokenType.FRONTEND);

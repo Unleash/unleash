@@ -18,3 +18,17 @@ export function parseEnvVarBoolean(
 
     return defaultVal;
 }
+
+export function parseEnvVarStrings(
+    envVar: string,
+    defaultVal: string[],
+): string[] {
+    if (envVar) {
+        return envVar
+            .split(',')
+            .map((item) => item.trim())
+            .filter(Boolean);
+    }
+
+    return defaultVal;
+}

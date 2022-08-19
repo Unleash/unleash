@@ -38,7 +38,7 @@ export const createApiToken = (
 ): Promise<IApiToken> => {
     return app.services.apiTokenService.createApiTokenWithProjects({
         type,
-        projects: ['default'],
+        projects: ['*'],
         environment: 'default',
         username: `${type}-token-${randomId()}`,
         ...overrides,
@@ -82,12 +82,12 @@ const createFeatureToggle = async ({
     );
 };
 
-const createProject = async (id: string): Promise<void> => {
+const createProject = async (id: string, name: string): Promise<void> => {
     const user = await db.stores.userStore.insert({
         name: randomId(),
         email: `${randomId()}@example.com`,
     });
-    await app.services.projectService.createProject({ id, name: id }, user);
+    await app.services.projectService.createProject({ id, name }, user);
 };
 
 test('should require a frontend token or an admin token', async () => {
@@ -527,9 +527,11 @@ test('should filter features by constraints', async () => {
 test('should filter features by project', async () => {
     const projectA = 'projectA';
     const projectB = 'projectB';
-    await createProject(projectA);
-    await createProject(projectB);
-    const frontendTokenDefault = await createApiToken(ApiTokenType.FRONTEND);
+    await createProject(projectA, randomId());
+    await createProject(projectB, randomId());
+    const frontendTokenDefault = await createApiToken(ApiTokenType.FRONTEND, {
+        projects: ['default'],
+    });
     const frontendTokenProjectA = await createApiToken(ApiTokenType.FRONTEND, {
         projects: [projectA],
     });

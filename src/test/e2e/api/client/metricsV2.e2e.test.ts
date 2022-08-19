@@ -94,6 +94,7 @@ test('should pick up environment from token', async () => {
         })
         .expect(202);
 
+    await app.services.clientMetricsServiceV2.bulkAdd();
     const metrics = await db.stores.clientMetricsStoreV2.getAll();
     expect(metrics[0].environment).toBe('test');
     expect(metrics[0].appName).toBe('some-fancy-app');

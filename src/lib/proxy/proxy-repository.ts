@@ -98,7 +98,7 @@ export class ProxyRepository
     private async featuresForToken(): Promise<FeatureInterface[]> {
         return mapFeaturesForClient(
             await this.services.featureToggleServiceV2.getClientFeatures({
-                project: await this.projectNamesForToken(),
+                project: await this.projectIdsForToken(),
                 environment: this.token.environment,
             }),
         );
@@ -110,10 +110,10 @@ export class ProxyRepository
         );
     }
 
-    private async projectNamesForToken(): Promise<string[]> {
+    private async projectIdsForToken(): Promise<string[]> {
         if (this.token.projects.includes(ALL_PROJECTS)) {
             const allProjects = await this.stores.projectStore.getAll();
-            return allProjects.map((project) => project.name);
+            return allProjects.map((project) => project.id);
         }
 
         return this.token.projects;

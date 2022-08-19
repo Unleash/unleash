@@ -19,6 +19,7 @@ import { FOREIGN_KEY_VIOLATION } from '../error/db-error';
 import BadDataError from '../error/bad-data-error';
 import { minutesToMilliseconds } from 'date-fns';
 import { IEnvironmentStore } from 'lib/types/stores/environment-store';
+import { constantTimeCompare } from '../util/constantTimeCompare';
 
 const resolveTokenPermissions = (tokenType: string) => {
     if (tokenType === ApiTokenType.ADMIN) {
@@ -106,13 +107,19 @@ export class ApiTokenService {
             return undefined;
         }
 
-        let token = this.activeTokens.find((t) => t.secret === secret);
+        let token = this.activeTokens.find(
+            (activeToken) =>
+                Boolean(activeToken.secret) &&
+                constantTimeCompare(activeToken.secret, secret),
+        );
 
-        // If the token is not found, try to find it in the legacy format with the metadata alias
-        // This is to ensure that previous proxies we set up for our customers continue working
-        if (!token && secret) {
+        // If the token is not found, try to find it in the legacy format with alias.
+        // This allows us to support the old format of tokens migrating to the embedded proxy.
+        if (!token) {
             token = this.activeTokens.find(
-                (t) => t.metadata.alias && t.metadata.alias === secret,
+                (activeToken) =>
+                    Boolean(activeToken.alias) &&
+                    constantTimeCompare(activeToken.alias, secret),
             );
         }
 
@@ -126,6 +133,7 @@ export class ApiTokenService {
                 secret: token.secret,
             });
         }
+
         return undefined;
     }
 

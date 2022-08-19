@@ -16,20 +16,3 @@ Object {
   "schema": "#/components/schemas/apiTokenSchema",
 }
 `;
-
-exports[`apiTokenSchema metadata - does not allow custom metadata parameters 1`] = `
-Object {
-  "errors": Array [
-    Object {
-      "instancePath": "/metadata",
-      "keyword": "additionalProperties",
-      "message": "must NOT have additional properties",
-      "params": Object {
-        "additionalProperty": "arbitraryParameter",
-      },
-      "schemaPath": "#/properties/metadata/additionalProperties",
-    },
-  ],
-  "schema": "#/components/schemas/apiTokenSchema",
-}
-`;

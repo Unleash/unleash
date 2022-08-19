@@ -44,20 +44,8 @@ export const apiTokenSchema = {
             format: 'date-time',
             nullable: true,
         },
-        metadata: {
-            type: 'object',
-            additionalProperties: false,
-            properties: {
-                corsOrigins: {
-                    type: 'array',
-                    items: {
-                        type: 'string',
-                    },
-                },
-                alias: {
-                    type: 'string',
-                },
-            },
+        alias: {
+            type: 'string',
             nullable: true,
         },
     },

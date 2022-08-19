@@ -53,8 +53,8 @@ export default class FakeApiTokenStore
         const apiToken = {
             createdAt: new Date(),
             project: newToken.projects?.join(',') || '*',
+            alias: null,
             ...newToken,
-            metadata: {},
         };
         this.tokens.push(apiToken);
         this.emit('insert');

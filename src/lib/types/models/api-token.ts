@@ -22,21 +22,19 @@ export interface ILegacyApiTokenCreate {
 export interface IApiTokenCreate {
     secret: string;
     username: string;
-    metadata?: Metadata;
+    alias?: string;
     type: ApiTokenType;
     environment: string;
     projects: string[];
     expiresAt?: Date;
 }
 
-type Metadata = { [key: string]: unknown };
-
 export interface IApiToken extends IApiTokenCreate {
     createdAt: Date;
     seenAt?: Date;
     environment: string;
     project: string;
-    metadata: Metadata;
+    alias: string | null;
 }
 
 export const isAllProjects = (projects: string[]): boolean => {

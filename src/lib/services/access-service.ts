@@ -48,6 +48,12 @@ interface IRoleCreation {
     permissions?: IPermission[];
 }
 
+export interface IRoleValidation {
+    name: string;
+    description?: string;
+    permissions?: Pick<IPermission, 'id' | 'environment'>[];
+}
+
 interface IRoleUpdate {
     id: number;
     name: string;
@@ -525,7 +531,7 @@ export class AccessService {
     }
 
     async validateRole(
-        role: IRoleCreation,
+        role: IRoleValidation,
         existingId?: number,
     ): Promise<IRoleCreation> {
         const cleanedRole = await roleSchema.validateAsync(role);

@@ -100,7 +100,7 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
         if (type === FEATURE_ARCHIVED) {
             return `${this.unleashUrl}/archive`;
         }
-        return `${this.unleashUrl}/projects/${project}/${featureName}`;
+        return `${this.unleashUrl}/projects/${project}/features/${featureName}`;
     }
 
     getAction(type: string): string {

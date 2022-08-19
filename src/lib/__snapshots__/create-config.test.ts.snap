@@ -61,7 +61,10 @@ Object {
     Symbol(kCapture): false,
   },
   "eventHook": undefined,
-  "experimental": Object {},
+  "experimental": Object {
+    "batchMetrics": false,
+    "embedProxy": false,
+  },
   "frontendApiOrigins": Array [],
   "getLogger": [Function],
   "import": Object {

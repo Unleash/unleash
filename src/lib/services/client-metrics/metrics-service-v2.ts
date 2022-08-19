@@ -16,6 +16,7 @@ import ApiUser from '../../types/api-user';
 import { ALL } from '../../types/models/api-token';
 import User from '../../types/user';
 import { collapseHourlyMetrics } from '../../util/collapseHourlyMetrics';
+import { IExperimentalOptions } from '../../experimental';
 
 export default class ClientMetricsServiceV2 {
     private timers: NodeJS.Timeout[] = [];
@@ -26,6 +27,8 @@ export default class ClientMetricsServiceV2 {
 
     private featureToggleStore: IFeatureToggleStore;
 
+    private experimental: IExperimentalOptions;
+
     private eventBus: EventEmitter;
 
     private logger: Logger;
@@ -35,21 +38,29 @@ export default class ClientMetricsServiceV2 {
             featureToggleStore,
             clientMetricsStoreV2,
         }: Pick<IUnleashStores, 'featureToggleStore' | 'clientMetricsStoreV2'>,
-        { eventBus, getLogger }: Pick<IUnleashConfig, 'eventBus' | 'getLogger'>,
+        {
+            experimental,
+            eventBus,
+            getLogger,
+        }: Pick<IUnleashConfig, 'eventBus' | 'getLogger' | 'experimental'>,
         bulkInterval = secondsToMilliseconds(5),
     ) {
         this.featureToggleStore = featureToggleStore;
         this.clientMetricsStoreV2 = clientMetricsStoreV2;
+        this.experimental = experimental;
         this.eventBus = eventBus;
         this.logger = getLogger(
             '/services/client-metrics/client-metrics-service-v2.ts',
         );
 
-        this.timers.push(
-            setInterval(() => {
-                this.bulkAdd().catch(console.error);
-            }, bulkInterval).unref(),
-        );
+        if (this.experimental.batchMetrics) {
+            this.timers.push(
+                setInterval(() => {
+                    this.bulkAdd().catch(console.error);
+                }, bulkInterval).unref(),
+            );
+        }
+
         this.timers.push(
             setInterval(() => {
                 this.clientMetricsStoreV2.clearMetrics(48).catch(console.error);
@@ -80,16 +91,20 @@ export default class ClientMetricsServiceV2 {
             }))
             .filter((item) => !(item.yes === 0 && item.no === 0));
 
-        this.unsavedMetrics = collapseHourlyMetrics([
-            ...this.unsavedMetrics,
-            ...clientMetrics,
-        ]);
+        if (this.experimental.batchMetrics) {
+            this.unsavedMetrics = collapseHourlyMetrics([
+                ...this.unsavedMetrics,
+                ...clientMetrics,
+            ]);
+        } else {
+            await this.clientMetricsStoreV2.batchInsertMetrics(clientMetrics);
+        }
 
         this.eventBus.emit(CLIENT_METRICS, value);
     }
 
     async bulkAdd(): Promise<void> {
-        if (this.unsavedMetrics.length > 0) {
+        if (this.experimental.batchMetrics && this.unsavedMetrics.length > 0) {
             // Make a copy of `unsavedMetrics` in case new metrics
             // arrive while awaiting `batchInsertMetrics`.
             const copy = [...this.unsavedMetrics];

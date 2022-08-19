@@ -35,6 +35,7 @@ process.nextTick(async () => {
                     anonymiseEventLog: false,
                     userGroups: true,
                     embedProxy: true,
+                    batchMetrics: true,
                 },
                 authentication: {
                     initApiTokens: [

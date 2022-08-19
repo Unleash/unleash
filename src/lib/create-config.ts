@@ -54,8 +54,19 @@ function mergeAll<T>(objects: Partial<T>[]): T {
 }
 
 function loadExperimental(options: IUnleashOptions): IExperimentalOptions {
-    return options.experimental || {};
+    return {
+        ...options.experimental,
+        embedProxy: parseEnvVarBoolean(
+            process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY,
+            Boolean(options.experimental?.embedProxy),
+        ),
+        batchMetrics: parseEnvVarBoolean(
+            process.env.UNLEASH_EXPERIMENTAL_BATCH_METRICS,
+            Boolean(options.experimental?.batchMetrics),
+        ),
+    };
 }
+
 const defaultClientCachingOptions: IClientCachingOption = {
     enabled: true,
     maxAge: 600,

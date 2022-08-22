@@ -8,7 +8,7 @@ import {
     mapFeaturesForClient,
     mapSegmentsForClient,
 } from '../util/offline-unleash-client';
-import { ALL_PROJECTS } from '../util/constants';
+import { ALL_ENVS, ALL_PROJECTS } from '../util/constants';
 import { UnleashEvents } from 'unleash-client';
 import { ANY_EVENT } from '../util/anyEventEmitter';
 import { Logger } from '../logger';
@@ -99,7 +99,7 @@ export class ProxyRepository
         return mapFeaturesForClient(
             await this.services.featureToggleServiceV2.getClientFeatures({
                 project: await this.projectIdsForToken(),
-                environment: this.token.environment,
+                environment: this.environmentNameForToken(),
             }),
         );
     }
@@ -117,5 +117,13 @@ export class ProxyRepository
         }
 
         return this.token.projects;
+    }
+
+    private environmentNameForToken(): string {
+        if (this.token.environment === ALL_ENVS) {
+            return 'default';
+        }
+
+        return this.token.environment;
     }
 }

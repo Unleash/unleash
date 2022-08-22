@@ -8,7 +8,7 @@ import {
     IApiTokenCreate,
 } from '../../../../lib/types/models/api-token';
 import { startOfHour } from 'date-fns';
-import { IStrategyConfig } from '../../../../lib/types/model';
+import { IConstraint, IStrategyConfig } from '../../../../lib/types/model';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -57,14 +57,15 @@ const createFeatureToggle = async ({
     environment?: string;
     strategies: IStrategyConfig[];
     enabled: boolean;
-}): Promise<void> => {
-    await app.services.featureToggleService.createFeatureToggle(
-        project,
-        { name },
-        'userName',
-        true,
-    );
-    await Promise.all(
+}) => {
+    const createdFeature =
+        await app.services.featureToggleService.createFeatureToggle(
+            project,
+            { name },
+            'userName',
+            true,
+        );
+    const createdStrategies = await Promise.all(
         (strategies ?? []).map(async (s) =>
             app.services.featureToggleService.createStrategy(
                 s,
@@ -80,6 +81,7 @@ const createFeatureToggle = async ({
         enabled,
         'userName',
     );
+    return [createdFeature, createdStrategies] as const;
 };
 
 const createProject = async (id: string, name: string): Promise<void> => {
@@ -723,4 +725,68 @@ test('should filter features by environment', async () => {
                 ],
             });
         });
+});
+
+test('should filter features by segment', async () => {
+    const [featureA, [strategyA]] = await createFeatureToggle({
+        name: randomId(),
+        enabled: true,
+        strategies: [{ name: 'default', parameters: {} }],
+    });
+    const [featureB, [strategyB]] = await createFeatureToggle({
+        name: randomId(),
+        enabled: true,
+        strategies: [{ name: 'default', parameters: {} }],
+    });
+    const constraintA: IConstraint = {
+        operator: 'IN',
+        contextName: 'appName',
+        values: ['a'],
+    };
+    const constraintB: IConstraint = {
+        operator: 'IN',
+        contextName: 'appName',
+        values: ['b'],
+    };
+    const segmentA = await app.services.segmentService.create(
+        { name: randomId(), constraints: [constraintA] },
+        { email: 'test@example.com' },
+    );
+    const segmentB = await app.services.segmentService.create(
+        { name: randomId(), constraints: [constraintB] },
+        { email: 'test@example.com' },
+    );
+    await app.services.segmentService.addToStrategy(segmentA.id, strategyA.id);
+    await app.services.segmentService.addToStrategy(segmentB.id, strategyB.id);
+    const frontendToken = await createApiToken(ApiTokenType.FRONTEND);
+    await app.request
+        .get('/api/frontend')
+        .set('Authorization', frontendToken.secret)
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect((res) => expect(res.body).toEqual({ toggles: [] }));
+    await app.request
+        .get('/api/frontend?appName=a')
+        .set('Authorization', frontendToken.secret)
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect((res) => expect(res.body.toggles).toHaveLength(1))
+        .expect((res) =>
+            expect(res.body.toggles[0].name).toEqual(featureA.name),
+        );
+    await app.request
+        .get('/api/frontend?appName=b')
+        .set('Authorization', frontendToken.secret)
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect((res) => expect(res.body.toggles).toHaveLength(1))
+        .expect((res) =>
+            expect(res.body.toggles[0].name).toEqual(featureB.name),
+        );
+    await app.request
+        .get('/api/frontend?appName=c')
+        .set('Authorization', frontendToken.secret)
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect((res) => expect(res.body).toEqual({ toggles: [] }));
 });

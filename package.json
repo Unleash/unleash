@@ -130,7 +130,7 @@
   },
   "devDependencies": {
     "@apidevtools/swagger-parser": "10.1.0",
-    "@babel/core": "7.18.10",
+    "@babel/core": "7.18.13",
     "@types/bcryptjs": "2.4.2",
     "@types/cors": "2.8.12",
     "@types/express": "4.17.13",

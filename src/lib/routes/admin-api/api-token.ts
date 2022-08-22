@@ -31,6 +31,7 @@ import {
 } from '../../openapi/spec/api-token-schema';
 import { UpdateApiTokenSchema } from '../../openapi/spec/update-api-token-schema';
 import { emptyResponse } from '../../openapi/util/standard-responses';
+import { ProxyService } from '../../services/proxy-service';
 
 interface TokenParam {
     token: string;
@@ -39,6 +40,8 @@ export class ApiTokenController extends Controller {
     private apiTokenService: ApiTokenService;
 
     private accessService: AccessService;
+
+    private proxyService: ProxyService;
 
     private openApiService: OpenApiService;
 
@@ -49,15 +52,20 @@ export class ApiTokenController extends Controller {
         {
             apiTokenService,
             accessService,
+            proxyService,
             openApiService,
         }: Pick<
             IUnleashServices,
-            'apiTokenService' | 'accessService' | 'openApiService'
+            | 'apiTokenService'
+            | 'accessService'
+            | 'proxyService'
+            | 'openApiService'
         >,
     ) {
         super(config);
         this.apiTokenService = apiTokenService;
         this.accessService = accessService;
+        this.proxyService = proxyService;
         this.openApiService = openApiService;
         this.logger = config.getLogger('api-token-controller.js');
 
@@ -180,6 +188,7 @@ export class ApiTokenController extends Controller {
         const { token } = req.params;
 
         await this.apiTokenService.delete(token);
+        this.proxyService.deleteClientForProxyToken(token);
         res.status(200).end();
     }
 

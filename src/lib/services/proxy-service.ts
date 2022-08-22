@@ -114,6 +114,10 @@ export class ProxyService {
         return client;
     }
 
+    deleteClientForProxyToken(secret: string): void {
+        this.clients.delete(secret);
+    }
+
     private static assertExpectedTokenType({ type }: ApiUser) {
         assert(type === ApiTokenType.FRONTEND || type === ApiTokenType.ADMIN);
     }

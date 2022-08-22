@@ -20,6 +20,7 @@ const StyledDeleteParagraph = styled('p')(({ theme }) => ({
 
 const StyledFormInput = styled(Input)(({ theme }) => ({
     marginTop: theme.spacing(2),
+    width: '100%',
 }));
 
 export const ArchivedFeatureDeleteConfirm = ({
@@ -41,7 +42,7 @@ export const ArchivedFeatureDeleteConfirm = ({
             await refetch();
             setToastData({
                 type: 'success',
-                title: 'Feature deleted',
+                title: 'Feature toggle deleted',
                 text: `You have successfully deleted the ${deletedFeature.name} feature toggle.`,
             });
         } catch (error: unknown) {
@@ -60,7 +61,7 @@ export const ArchivedFeatureDeleteConfirm = ({
 
     return (
         <Dialogue
-            title="Are you sure you want to delete this feature toggle?"
+            title="Delete feature toggle?"
             open={open}
             primaryButtonText="Delete feature toggle"
             secondaryButtonText="Cancel"
@@ -70,15 +71,16 @@ export const ArchivedFeatureDeleteConfirm = ({
             formId={formId}
         >
             <Alert severity="warning">
-                Warning! To safely delete a feature toggle you might want to
-                delete the related code in your application first. This ensures
-                you avoid any errors in case you create a new feature toggle
-                with the same name in the future.
+                <b>Warning!</b> Before you delete a feature toggle, make sure
+                all in-code references to that feature toggle have been removed.
+                Otherwise, a new feature toggle with the same name could
+                activate the old code paths.
             </Alert>
 
             <StyledDeleteParagraph>
-                In order to delete this feature toggle, please enter the name of
-                the toggle in the textfield below:{' '}
+                In order to delete this feature toggle, please enter its name in
+                the text field below:
+                <br />
                 <strong>{deletedFeature?.name}</strong>
             </StyledDeleteParagraph>
 
@@ -89,6 +91,7 @@ export const ArchivedFeatureDeleteConfirm = ({
                         setConfirmName(e.currentTarget.value);
                     }}
                     value={confirmName}
+                    placeholder="<feature toggle name>"
                     label="Feature toggle name"
                 />
             </form>

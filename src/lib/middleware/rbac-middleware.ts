@@ -54,6 +54,9 @@ const rbacMiddleware = (
                 projectId = await featureToggleStore.getProjectId(featureName);
             } else if (permission === CREATE_FEATURE) {
                 projectId = projectId || req.body.project || 'default';
+            } else if (permission.endsWith('FEATURE_STRATEGY')) {
+                projectId = projectId || req.body.projectId;
+                environment = environment || req.body.environmentId;
             }
 
             return accessService.hasPermission(

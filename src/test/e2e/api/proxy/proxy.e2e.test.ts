@@ -190,6 +190,12 @@ test('should allow requests with a token secret alias', async () => {
 });
 
 test('should allow requests with an admin token', async () => {
+    const featureA = randomId();
+    await createFeatureToggle({
+        name: featureA,
+        enabled: true,
+        strategies: [{ name: 'default', constraints: [], parameters: {} }],
+    });
     const adminToken = await createApiToken(ApiTokenType.ADMIN, {
         projects: ['*'],
         environment: '*',
@@ -199,7 +205,8 @@ test('should allow requests with an admin token', async () => {
         .set('Authorization', adminToken.secret)
         .expect('Content-Type', /json/)
         .expect(200)
-        .expect((res) => expect(res.body).toEqual({ toggles: [] }));
+        .expect((res) => expect(res.body.toggles).toHaveLength(1))
+        .expect((res) => expect(res.body.toggles[0].name).toEqual(featureA));
 });
 
 test('should not allow admin requests with a frontend token', async () => {

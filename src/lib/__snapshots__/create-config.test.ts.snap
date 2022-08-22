@@ -83,7 +83,9 @@ Object {
       "isEnabled": [Function],
     },
   },
-  "frontendApiOrigins": Array [],
+  "frontendApiOrigins": Array [
+    "*",
+  ],
   "getLogger": [Function],
   "import": Object {
     "dropBeforeImport": false,

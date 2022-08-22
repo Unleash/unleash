@@ -110,6 +110,7 @@ import { proxyFeaturesSchema } from './spec/proxy-features-schema';
 import { proxyFeatureSchema } from './spec/proxy-feature-schema';
 import { proxyClientSchema } from './spec/proxy-client-schema';
 import { proxyMetricsSchema } from './spec/proxy-metrics-schema';
+import { setUiConfigSchema } from './spec/set-ui-config-schema';
 
 // All schemas in `openapi/spec` should be listed here.
 export const schemas = {
@@ -187,6 +188,7 @@ export const schemas = {
     searchEventsSchema,
     segmentSchema,
     setStrategySortOrderSchema,
+    setUiConfigSchema,
     sortOrderSchema,
     splashSchema,
     stateSchema,

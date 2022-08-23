@@ -449,6 +449,17 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
+    "configFlag": "embedProxy",
+    "menu": {
+      "adminSettings": true,
+    },
+    "parent": "/admin",
+    "path": "/admin/cors",
+    "title": "CORS origins",
+    "type": "protected",
+  },
+  {
+    "component": [Function],
     "menu": {},
     "parent": "/admin",
     "path": "/admin/billing",

@@ -5,6 +5,7 @@ import {
     Radio,
     RadioGroup,
     Typography,
+    Box,
 } from '@mui/material';
 import { KeyboardArrowDownOutlined } from '@mui/icons-material';
 import React from 'react';
@@ -16,6 +17,9 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { SelectProjectInput } from './SelectProjectInput/SelectProjectInput';
 import { ApiTokenFormErrorType } from './useApiTokenForm';
 import { useStyles } from './ApiTokenForm.styles';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { TokenType } from 'interfaces/token';
+import { CorsTokenAlert } from 'component/admin/cors/CorsTokenAlert';
 
 interface IApiTokenFormProps {
     username: string;
@@ -48,7 +52,6 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
     errors,
     clearErrors,
 }) => {
-    const TYPE_ADMIN = 'ADMIN';
     const { uiConfig } = useUiConfig();
     const { classes: styles } = useStyles();
     const { environments } = useEnvironments();
@@ -56,21 +59,21 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
 
     const selectableTypes = [
         {
-            key: 'CLIENT',
-            label: 'Server-side SDK (CLIENT)',
+            key: TokenType.CLIENT,
+            label: `Server-side SDK (${TokenType.CLIENT})`,
             title: 'Connect server-side SDK or Unleash Proxy',
         },
         {
-            key: 'ADMIN',
-            label: 'ADMIN',
+            key: TokenType.ADMIN,
+            label: TokenType.ADMIN,
             title: 'Full access for managing Unleash',
         },
     ];
 
     if (uiConfig.embedProxy) {
         selectableTypes.splice(1, 0, {
-            key: 'FRONTEND',
-            label: 'Client-side SDK (FRONTEND)',
+            key: TokenType.FRONTEND,
+            label: `Client-side SDK (${TokenType.FRONTEND})`,
             title: 'Connect web and mobile SDK directly to Unleash',
         });
     }
@@ -81,7 +84,7 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
     }));
 
     const selectableEnvs =
-        type === TYPE_ADMIN
+        type === TokenType.ADMIN
             ? [{ key: '*', label: 'ALL' }]
             : environments.map(environment => ({
                   key: environment.name,
@@ -143,7 +146,7 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
                     Which project do you want to give access to?
                 </p>
                 <SelectProjectInput
-                    disabled={type === TYPE_ADMIN}
+                    disabled={type === TokenType.ADMIN}
                     options={selectableProjects}
                     defaultValue={projects}
                     onChange={setProjects}
@@ -154,7 +157,7 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
                     Which environment should the token have access to?
                 </p>
                 <GeneralSelect
-                    disabled={type === TYPE_ADMIN}
+                    disabled={type === TokenType.ADMIN}
                     options={selectableEnvs}
                     value={environment}
                     onChange={setEnvironment}
@@ -172,6 +175,14 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
                     Cancel
                 </Button>
             </div>
+            <ConditionallyRender
+                condition={type === TokenType.FRONTEND}
+                show={
+                    <Box sx={{ mt: 4 }}>
+                        <CorsTokenAlert />
+                    </Box>
+                }
+            />
         </form>
     );
 };

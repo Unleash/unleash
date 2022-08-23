@@ -18,7 +18,7 @@ import { IPermission } from 'interfaces/user';
 import { NavigationMenu } from './NavigationMenu/NavigationMenu';
 import { getRoutes } from 'component/menu/routes';
 import { KeyboardArrowDown } from '@mui/icons-material';
-import { filterByFlags } from 'component/common/util';
+import { filterByConfig } from 'component/common/util';
 import { useAuthPermissions } from 'hooks/api/getters/useAuth/useAuthPermissions';
 import { useStyles } from './Header.styles';
 import classNames from 'classnames';
@@ -34,10 +34,7 @@ const Header: VFC = () => {
 
     const [admin, setAdmin] = useState(false);
     const { permissions } = useAuthPermissions();
-    const {
-        uiConfig: { links, name, flags },
-        isOss,
-    } = useUiConfig();
+    const { uiConfig, isOss } = useUiConfig();
     const smallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const { classes: styles } = useStyles();
     const { classes: themeStyles } = useThemeStyles();
@@ -64,10 +61,10 @@ const Header: VFC = () => {
     };
 
     const filteredMainRoutes = {
-        mainNavRoutes: routes.mainNavRoutes.filter(filterByFlags(flags)),
-        mobileRoutes: routes.mobileRoutes.filter(filterByFlags(flags)),
+        mainNavRoutes: routes.mainNavRoutes.filter(filterByConfig(uiConfig)),
+        mobileRoutes: routes.mobileRoutes.filter(filterByConfig(uiConfig)),
         adminRoutes: routes.adminRoutes
-            .filter(filterByFlags(flags))
+            .filter(filterByConfig(uiConfig))
             .filter(filterByEnterprise),
     };
 
@@ -87,9 +84,9 @@ const Header: VFC = () => {
                         </IconButton>
                     </Tooltip>
                     <DrawerMenu
-                        title={name}
-                        flags={flags}
-                        links={links}
+                        title={uiConfig.name}
+                        flags={uiConfig.flags}
+                        links={uiConfig.links}
                         open={openDrawer}
                         toggleDrawer={toggleDrawer}
                         admin={admin}

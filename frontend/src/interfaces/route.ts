@@ -1,4 +1,5 @@
 import { VoidFunctionComponent } from 'react';
+import { IUiConfig } from 'interfaces/uiConfig';
 
 export interface IRoute {
     path: string;
@@ -7,6 +8,7 @@ export interface IRoute {
     layout?: string;
     parent?: string;
     flag?: string;
+    configFlag?: keyof IUiConfig;
     hidden?: boolean;
     enterprise?: boolean;
     component: VoidFunctionComponent;

@@ -172,7 +172,7 @@ http://CHANGEME/api/admin/features
 
 Next, find the navigation, open up the Admin panel and find the API Access tab. Click the "Add new api key" button and create a client key. This key can be used to connect to the instance with our [SDKs](sdks/index.md).
 
-You can find more [information about API keys here](token.md).
+You can find more [information about API keys here](token.mdx).
 
 Now that you have your API key created, you have what you need to connect to the SDK (NodeJS example):
 
@@ -333,7 +333,7 @@ http://CHANGEME/api/admin/features
 
 Find the navigation, open up the Admin panel and find the API Access tab. Click the "Add new api key" button and create a client key. This key can be used to connect to the instance with our [SDKs](sdks/index.md).
 
-You can find more [information about API keys here](token.md).
+You can find more [information about API keys here](token.mdx).
 
 Now that you have your API key created, you have what you need to connect to the SDK (NodeJS example):
 

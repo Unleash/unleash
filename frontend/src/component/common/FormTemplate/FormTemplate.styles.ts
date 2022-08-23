@@ -20,7 +20,7 @@ export const useStyles = makeStyles()(theme => ({
         borderRadius: 0,
     },
     sidebar: {
-        backgroundColor: theme.palette.primary.main,
+        backgroundColor: theme.palette.formSidebar,
         padding: '2rem',
         flexGrow: 0,
         flexShrink: 0,
@@ -42,7 +42,7 @@ export const useStyles = makeStyles()(theme => ({
         fontWeight: 'normal',
     },
     subtitle: {
-        color: '#fff',
+        color: theme.palette.formSidebarTextColor,
         marginBottom: '1rem',
         display: 'flex',
         justifyContent: 'space-between',
@@ -51,7 +51,7 @@ export const useStyles = makeStyles()(theme => ({
         fontSize: theme.fontSizes.bodySize,
     },
     description: {
-        color: '#fff',
+        color: theme.palette.formSidebarTextColor,
         zIndex: 1,
         position: 'relative',
     },
@@ -72,7 +72,7 @@ export const useStyles = makeStyles()(theme => ({
         },
     },
     formContent: {
-        backgroundColor: '#fff',
+        backgroundColor: theme.palette.formBackground,
         display: 'flex',
         flexDirection: 'column',
         padding: '3rem',

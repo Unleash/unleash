@@ -7,7 +7,7 @@ export const useStyles = makeStyles()(theme => ({
         display: 'flex',
     },
     header: {
-        backgroundColor: '#fff',
+        backgroundColor: theme.palette.background.paper,
         borderRadius: theme.shape.borderRadiusLarge,
         marginBottom: '1rem',
     },

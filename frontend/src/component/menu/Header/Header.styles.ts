@@ -2,8 +2,7 @@ import { makeStyles } from 'tss-react/mui';
 
 export const useStyles = makeStyles()(theme => ({
     header: {
-        backgroundColor: '#fff',
-        color: '#000',
+        backgroundColor: theme.palette.headerBackground,
         padding: '0.5rem',
         boxShadow: 'none',
         position: 'relative',
@@ -80,7 +79,6 @@ export const useStyles = makeStyles()(theme => ({
         textDecoration: 'none',
         alignItems: 'center',
         display: 'flex',
-        color: '#000',
     },
     icon: {
         color: theme.palette.grey[700],

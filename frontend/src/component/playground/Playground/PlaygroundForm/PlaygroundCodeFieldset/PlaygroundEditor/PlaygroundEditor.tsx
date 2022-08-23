@@ -1,10 +1,13 @@
 import CodeMirror from '@uiw/react-codemirror';
+import { useContext } from 'react';
 import { json } from '@codemirror/lang-json';
 import { Dispatch, SetStateAction, VFC, useCallback } from 'react';
 import { styled, useTheme, Box } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { duotoneDark, duotoneLight } from '@uiw/codemirror-theme-duotone';
 import Check from '@mui/icons-material/Check';
 import { Error } from '@mui/icons-material';
+import UIContext from 'contexts/UIContext';
 
 interface IPlaygroundEditorProps {
     context: string | undefined;
@@ -78,6 +81,7 @@ export const PlaygroundEditor: VFC<IPlaygroundEditorProps> = ({
     setContext,
     error,
 }) => {
+    const { themeMode } = useContext(UIContext);
     const theme = useTheme();
     const onCodeFieldChange = useCallback(
         context => {
@@ -109,6 +113,7 @@ export const PlaygroundEditor: VFC<IPlaygroundEditorProps> = ({
             <CodeMirror
                 value={context}
                 height="200px"
+                theme={themeMode === 'dark' ? duotoneDark : duotoneLight}
                 extensions={[json()]}
                 onChange={onCodeFieldChange}
                 style={{

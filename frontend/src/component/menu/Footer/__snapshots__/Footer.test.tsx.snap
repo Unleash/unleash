@@ -3,7 +3,7 @@
 exports[`should render DrawerMenu 1`] = `
 [
   <footer
-    className="tss-wd65c0-footer"
+    className="tss-16d7ppb-footer"
   >
     <div
       className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-10 mui-16chest-MuiGrid-root"
@@ -448,7 +448,7 @@ exports[`should render DrawerMenu 1`] = `
 exports[`should render DrawerMenu with "features" selected 1`] = `
 [
   <footer
-    className="tss-wd65c0-footer"
+    className="tss-16d7ppb-footer"
   >
     <div
       className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-10 mui-16chest-MuiGrid-root"

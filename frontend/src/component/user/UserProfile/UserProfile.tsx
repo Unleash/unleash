@@ -75,6 +75,7 @@ const UserProfile = ({
                     disableRipple
                 >
                     <Avatar
+                        style={{ backgroundColor: '#fff', padding: '0.15rem' }}
                         alt="Your Gravatar"
                         src={imageUrl}
                         data-testid={HEADER_USER_AVATAR}

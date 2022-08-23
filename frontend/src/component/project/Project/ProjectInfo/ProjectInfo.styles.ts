@@ -55,7 +55,7 @@ export const useStyles = makeStyles()(theme => ({
         margin: '0',
         textAlign: 'center',
         marginBottom: '1rem',
-        backgroundColor: '#fff',
+        backgroundColor: theme.palette.background.paper,
         borderRadius: theme.shape.borderRadiusLarge,
         width: '100%',
         padding: '1.5rem 1rem 1.5rem 1rem',

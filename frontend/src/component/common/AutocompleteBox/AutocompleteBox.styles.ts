@@ -10,7 +10,7 @@ export const useStyles = makeStyles()(theme => ({
         },
     },
     icon: {
-        background: theme.palette.primary.main,
+        background: theme.palette.featureSegmentSearchBackground,
         height: 48,
         width: 48,
         display: 'flex',

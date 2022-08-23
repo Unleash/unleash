@@ -17,8 +17,8 @@ const StandaloneBanner: FC<IStandaloneBannerProps> = ({ title, children }) => {
 
     return (
         <Gradient
-            from={theme.palette.primary.main}
-            to="#173341"
+            from={theme.palette.standaloneBannerGradient.from}
+            to={theme.palette.standaloneBannerGradient.to}
             className={styles.gradient}
         >
             <div className={styles.container}>

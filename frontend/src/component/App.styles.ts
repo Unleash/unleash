@@ -17,7 +17,7 @@ export const useStyles = makeStyles()(theme => ({
         margin: '0 auto',
         flex: 1,
         width: '100%',
-        backgroundColor: theme.palette.grey[300],
+        backgroundColor: theme.palette.contentWrapper,
     },
     content: {
         width: '1250px',

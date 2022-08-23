@@ -10,12 +10,12 @@ import { ScrollTop } from 'component/common/ScrollTop/ScrollTop';
 import { AccessProvider } from 'component/providers/AccessProvider/AccessProvider';
 import { basePath } from 'utils/formatPath';
 import { FeedbackCESProvider } from 'component/feedback/FeedbackCESContext/FeedbackCESProvider';
-import UIProvider from 'component/providers/UIProvider/UIProvider';
 import { AnnouncerProvider } from 'component/common/Announcer/AnnouncerProvider/AnnouncerProvider';
 import { InstanceStatus } from 'component/common/InstanceStatus/InstanceStatus';
+import { UIProviderContainer } from 'component/providers/UIProvider/UIProviderContainer';
 
 ReactDOM.render(
-    <UIProvider>
+    <UIProviderContainer>
         <AccessProvider>
             <BrowserRouter basename={basePath}>
                 <ThemeProvider>
@@ -30,6 +30,6 @@ ReactDOM.render(
                 </ThemeProvider>
             </BrowserRouter>
         </AccessProvider>
-    </UIProvider>,
+    </UIProviderContainer>,
     document.getElementById('app')
 );

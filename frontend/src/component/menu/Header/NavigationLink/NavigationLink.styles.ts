@@ -20,7 +20,7 @@ export const useStyles = makeStyles()(theme => ({
         textDecoration: 'none',
         alignItems: 'center',
         display: 'flex',
-        color: '#000',
+        color: 'inherit',
         height: '100%',
         width: '100%',
         '&&': {

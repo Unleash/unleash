@@ -6,6 +6,7 @@ export const useStyles = makeStyles()(theme => ({
         justifyContent: 'center',
         alignItems: 'center',
         height: '100%',
+        backgroundColor: theme.palette.background.paper,
     },
     img: {
         width: '100px',

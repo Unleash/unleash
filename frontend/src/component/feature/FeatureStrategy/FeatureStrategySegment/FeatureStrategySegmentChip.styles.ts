@@ -10,7 +10,7 @@ export const useStyles = makeStyles()(theme => ({
         paddingBlockStart: 4,
         paddingBlockEnd: 4,
         borderRadius: '100rem',
-        background: theme.palette.primary.main,
+        background: theme.palette.featureStrategySegmentChipBackground,
         color: 'white',
     },
     link: {

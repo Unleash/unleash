@@ -2,13 +2,21 @@ import { useEffect, useState, VFC } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
-import { AppBar, Container, IconButton, Tooltip } from '@mui/material';
+import {
+    AppBar,
+    Container,
+    FormControlLabel,
+    IconButton,
+    Tooltip,
+    Switch,
+} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import SettingsIcon from '@mui/icons-material/Settings';
 import UserProfile from 'component/user/UserProfile';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import { ReactComponent as UnleashLogo } from 'assets/img/logoDarkWithText.svg';
+import { ReactComponent as UnleashLogoWhite } from 'assets/img/logoWithWhiteText.svg';
 
 import { DrawerMenu } from './DrawerMenu/DrawerMenu';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -24,8 +32,11 @@ import { useStyles } from './Header.styles';
 import classNames from 'classnames';
 import { useId } from 'hooks/useId';
 import { IRoute } from 'interfaces/route';
+import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
+import { useThemeMode } from 'hooks/useThemeMode';
 
 const Header: VFC = () => {
+    const { onSetThemeMode, themeMode } = useThemeMode();
     const theme = useTheme();
     const adminId = useId();
     const configId = useId();
@@ -111,9 +122,19 @@ const Header: VFC = () => {
                     )}
                     aria-label="Home"
                 >
-                    <UnleashLogo
-                        className={styles.logo}
-                        aria-label="Unleash logo"
+                    <ThemeMode
+                        darkmode={
+                            <UnleashLogoWhite
+                                className={styles.logo}
+                                aria-label="Unleash logo"
+                            />
+                        }
+                        lightmode={
+                            <UnleashLogo
+                                className={styles.logo}
+                                aria-label="Unleash logo"
+                            />
+                        }
                     />
                 </Link>
                 <nav className={styles.nav}>
@@ -148,6 +169,22 @@ const Header: VFC = () => {
                         />
                     </div>
                     <div className={styles.userContainer}>
+                        <ConditionallyRender
+                            condition={Boolean(
+                                uiConfig.flags.ENABLE_DARK_MODE_SUPPORT
+                            )}
+                            show={
+                                <FormControlLabel
+                                    control={
+                                        <Switch
+                                            onChange={onSetThemeMode}
+                                            checked={themeMode === 'dark'}
+                                        />
+                                    }
+                                    label="darkmode"
+                                />
+                            }
+                        />
                         <Tooltip title="Documentation" arrow>
                             <IconButton
                                 href="https://docs.getunleash.io/"

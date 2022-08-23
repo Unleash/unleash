@@ -3,7 +3,7 @@ import { makeStyles } from 'tss-react/mui';
 export const useStyles = makeStyles()(theme => ({
     feedback: {
         borderRadius: '12.5px',
-        backgroundColor: '#fff',
+        backgroundColor: theme.palette.background.paper,
         zIndex: 9999,
         boxShadow: '2px 2px 4px 4px rgba(143,143,143, 0.25)',
         padding: '1.5rem',
@@ -21,7 +21,7 @@ export const useStyles = makeStyles()(theme => ({
         position: 'absolute',
         right: '-38px',
         top: '-47px',
-        backgroundColor: '#fff',
+        backgroundColor: theme.palette.background.paper,
         boxShadow: '2px 2px 4px 4px rgba(143,143,143, 0.25)',
         ['&:hover']: {
             backgroundColor: '#fff',

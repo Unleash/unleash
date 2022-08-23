@@ -16,7 +16,7 @@ export const useStyles = makeStyles()(theme => ({
         },
         '&:hover': {
             transition: 'background-color 0.2s ease-in-out',
-            backgroundColor: theme.palette.neutral.light,
+            backgroundColor: theme.palette.projectCard.hover,
         },
     },
     header: {
@@ -49,7 +49,7 @@ export const useStyles = makeStyles()(theme => ({
         textAlign: 'center',
     },
     infoStats: {
-        color: '#4A4599',
+        color: theme.palette.projectCard.textColor,
         fontWeight: 'bold',
     },
     actionsBtn: {

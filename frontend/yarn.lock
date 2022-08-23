@@ -2447,6 +2447,22 @@
     "@codemirror/state" "^6.0.0"
     "@codemirror/view" "^6.0.0"
 
+"@uiw/codemirror-theme-duotone@^4.11.5":
+  version "4.11.5"
+  resolved "https://registry.yarnpkg.com/@uiw/codemirror-theme-duotone/-/codemirror-theme-duotone-4.11.5.tgz#12df3666337f757253f810fc4e61c8bc887e40c6"
+  integrity sha512-5Ea9naIp/KM6jZjog7tChdOjEPQgeKwSDuCh+TY1lQyt5YJS5P3eZSZq68KNZlwuBHj2c53h069brMnhguTFag==
+  dependencies:
+    "@uiw/codemirror-themes" "4.11.5"
+
+"@uiw/codemirror-themes@4.11.5":
+  version "4.11.5"
+  resolved "https://registry.yarnpkg.com/@uiw/codemirror-themes/-/codemirror-themes-4.11.5.tgz#15926e65129b41c9ec607065416fc829970e122a"
+  integrity sha512-f2i3yGPzxmCsvx4t6HHykcEhAxbI4GDAMzdFtQfFYMuu1F5sQP43JQvBC8ESflYk05QmE9rCWWZZpvOathLzVw==
+  dependencies:
+    "@codemirror/language" "^6.0.0"
+    "@codemirror/state" "^6.0.0"
+    "@codemirror/view" "^6.0.0"
+
 "@uiw/react-codemirror@4.11.4":
   version "4.11.4"
   resolved "https://registry.yarnpkg.com/@uiw/react-codemirror/-/react-codemirror-4.11.4.tgz#76adc757baa0b8b1a9bd30d7081f5622b896d607"

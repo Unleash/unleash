@@ -3,7 +3,7 @@ import { makeStyles } from 'tss-react/mui';
 export const useStyles = makeStyles()(theme => ({
     container: {
         padding: '5.5rem',
-        background: '#EFF2F2',
+        background: theme.palette.standaloneBackground,
         display: 'flex',
         [theme.breakpoints.down('md')]: {
             flexDirection: 'column',
@@ -27,7 +27,7 @@ export const useStyles = makeStyles()(theme => ({
         flex: '1',
         borderTopRightRadius: '3px',
         borderBottomRightRadius: '3px',
-        backgroundColor: '#fff',
+        backgroundColor: theme.palette.background.paper,
         position: 'relative',
         [theme.breakpoints.down('md')]: {
             borderRadius: '0',

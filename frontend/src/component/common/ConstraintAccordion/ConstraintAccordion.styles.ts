@@ -1,10 +1,25 @@
 import { makeStyles } from 'tss-react/mui';
 
 export const useStyles = makeStyles()(theme => ({
+    constraintIconContainer: {
+        backgroundColor: theme.palette.background.paper,
+        borderRadius: '50%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginRight: theme.spacing(1),
+        [theme.breakpoints.down(650)]: {
+            marginBottom: '1rem',
+            marginRight: 0,
+        },
+    },
+    constraintIcon: {
+        fill: '#fff',
+    },
     accordion: {
         border: `1px solid ${theme.palette.dividerAlternative}`,
         borderRadius: theme.shape.borderRadiusMedium,
-        backgroundColor: '#fff',
+        backgroundColor: theme.palette.constraintAccordion.background,
         boxShadow: 'none',
         margin: 0,
     },
@@ -14,7 +29,7 @@ export const useStyles = makeStyles()(theme => ({
         },
     },
     accordionEdit: {
-        backgroundColor: '#F6F6FA',
+        backgroundColor: theme.palette.constraintAccordion.editBackground,
     },
     headerMetaInfo: {
         display: 'flex',

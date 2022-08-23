@@ -2,7 +2,7 @@ import { makeStyles } from 'tss-react/mui';
 
 export const useStyles = makeStyles()(theme => ({
     container: {
-        backgroundColor: theme.palette.sidebarContainer,
+        backgroundColor: theme.palette.codebox,
         padding: '1rem',
         borderRadius: theme.shape.borderRadiusMedium,
         position: 'relative',
@@ -13,7 +13,7 @@ export const useStyles = makeStyles()(theme => ({
         margin: 0,
         wordBreak: 'break-all',
         whiteSpace: 'pre-wrap',
-        color: '#fff',
+        color: theme.palette.formSidebarTextColor,
         fontSize: 14,
     },
     icon: {

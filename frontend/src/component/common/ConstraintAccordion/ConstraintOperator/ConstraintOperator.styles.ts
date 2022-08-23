@@ -4,7 +4,7 @@ export const useStyles = makeStyles()(theme => ({
     container: {
         padding: theme.spacing(0.5, 1.5),
         borderRadius: theme.shape.borderRadius,
-        backgroundColor: theme.palette.grey[200],
+        backgroundColor: theme.palette.constraintAccordion.operatorBackground,
         lineHeight: 1.25,
     },
     name: {

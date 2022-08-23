@@ -6,6 +6,7 @@ export const useStyles = makeStyles()(theme => ({
         flexGrow: 1,
         alignItems: 'center',
         position: 'relative',
+        backgroundColor: theme.palette.background.paper,
         maxWidth: '400px',
         [theme.breakpoints.down('md')]: {
             marginTop: theme.spacing(1),

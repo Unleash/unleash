@@ -17,10 +17,6 @@ button {
     font-family: 'Sen', sans-serif;
 }
 
-.MuiInputBase-root {
-    background-color: #fff;
-}
-
 .MuiAccordion-root.Mui-expanded {
     margin: 0;
 }

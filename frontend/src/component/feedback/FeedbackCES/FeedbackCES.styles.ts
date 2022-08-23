@@ -15,7 +15,7 @@ export const useStyles = makeStyles()(theme => ({
         pointerEvents: 'auto',
         position: 'relative',
         padding: '4rem',
-        background: 'white',
+        background: theme.palette.background.paper,
         boxShadow: '0 0 1rem rgba(0, 0, 0, 0.25)',
         borderRadius: '1rem',
         [theme.breakpoints.down('md')]: {

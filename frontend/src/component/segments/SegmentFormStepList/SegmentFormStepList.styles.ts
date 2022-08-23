@@ -17,7 +17,7 @@ export const useStyles = makeStyles()(theme => ({
     steps: {
         position: 'relative',
         borderRadius: 10,
-        background: '#fff',
+        background: theme.palette.background.paper,
         padding: '0.6rem 1.5rem',
         margin: 'auto',
         display: 'flex',

@@ -2,7 +2,7 @@ import { makeStyles } from 'tss-react/mui';
 
 export const useStyles = makeStyles()(theme => ({
     badge: {
-        backgroundColor: theme.palette.primary.main,
+        backgroundColor: theme.palette.checkmarkBadge,
         width: '75px',
         height: '75px',
         borderRadius: '50px',

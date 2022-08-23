@@ -5,7 +5,8 @@ export const useStyles = makeStyles()(theme => ({
         '& > th': {
             height: theme.shape.tableRowHeightCompact,
             border: 0,
-
+            backgroundColor: theme.palette.tableHeaderBackground,
+            color: theme.palette.tableHeaderColor,
             '&:first-of-type': {
                 borderTopLeftRadius: theme.shape.borderRadiusMedium,
                 borderBottomLeftRadius: theme.shape.borderRadiusMedium,

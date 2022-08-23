@@ -53,7 +53,7 @@ const FeatureOverviewEnvironment = ({
             style={{
                 background: !env.enabled
                     ? theme.palette.neutral.light
-                    : theme.palette.background.default,
+                    : theme.palette.background.paper,
             }}
         >
             <Accordion

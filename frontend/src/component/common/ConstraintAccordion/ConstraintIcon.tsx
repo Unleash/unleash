@@ -14,6 +14,7 @@ export const ConstraintIcon: VFC<IConstraintIconProps> = ({ compact }) => (
             borderRadius: '50%',
             width: compact ? '18px' : '24px',
             height: compact ? '18px' : '24px',
+            marginRight: '13px',
         }}
     >
         <TrackChanges

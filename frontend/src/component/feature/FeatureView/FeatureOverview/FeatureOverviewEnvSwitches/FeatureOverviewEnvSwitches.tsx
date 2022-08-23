@@ -9,7 +9,7 @@ import { styled } from '@mui/material';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
-    backgroundColor: '#fff',
+    backgroundColor: theme.palette.background.paper,
     display: 'flex',
     flexDirection: 'column',
     padding: '1.5rem',

@@ -20,6 +20,7 @@ import { basePath } from 'utils/formatPath';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { IUser } from 'interfaces/user';
 import { ILocationSettings } from 'hooks/useLocationSettings';
+import { useTheme } from '@mui/material/styles';
 
 interface IUserProfileContentProps {
     id: string;
@@ -45,6 +46,8 @@ const UserProfileContent = ({
     setLocationSettings,
 }: IUserProfileContentProps) => {
     const { classes: themeStyles } = useThemeStyles();
+    const theme = useTheme();
+
     const { uiConfig } = useUiConfig();
     const [updatedPassword, setUpdatedPassword] = useState(false);
     const [editingProfile, setEditingProfile] = useState(false);
@@ -121,7 +124,11 @@ const UserProfileContent = ({
                                     >
                                         <InputLabel
                                             htmlFor="locale-select"
-                                            style={{ backgroundColor: '#fff' }}
+                                            style={{
+                                                backgroundColor:
+                                                    theme.palette
+                                                        .inputLabelBackground,
+                                            }}
                                         >
                                             Date/Time formatting
                                         </InputLabel>

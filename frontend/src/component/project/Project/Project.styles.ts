@@ -13,7 +13,7 @@ export const useStyles = makeStyles()(theme => ({
         minWidth: 0,
     },
     header: {
-        backgroundColor: '#fff',
+        backgroundColor: theme.palette.background.paper,
         borderRadius: theme.shape.borderRadiusLarge,
         marginBottom: '1rem',
     },

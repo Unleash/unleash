@@ -7,7 +7,7 @@ export const useStyles = makeStyles()(theme => ({
         '& + &': {
             marginTop: theme.spacing(2),
         },
-        background: theme.palette.background.default,
+        background: theme.palette.background.paper,
     },
     header: {
         padding: theme.spacing(0.5, 2),

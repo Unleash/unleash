@@ -2447,7 +2447,7 @@
     "@codemirror/state" "^6.0.0"
     "@codemirror/view" "^6.0.0"
 
-"@uiw/codemirror-theme-duotone@^4.11.5":
+"@uiw/codemirror-theme-duotone@4.11.5":
   version "4.11.5"
   resolved "https://registry.yarnpkg.com/@uiw/codemirror-theme-duotone/-/codemirror-theme-duotone-4.11.5.tgz#12df3666337f757253f810fc4e61c8bc887e40c6"
   integrity sha512-5Ea9naIp/KM6jZjog7tChdOjEPQgeKwSDuCh+TY1lQyt5YJS5P3eZSZq68KNZlwuBHj2c53h069brMnhguTFag==

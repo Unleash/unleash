@@ -1,6 +1,6 @@
 ---
 id: index
-title: Client SDK overview
+title: SDK overview
 slug: /sdks
 ---
 
@@ -23,9 +23,11 @@ Server-side clients run on your server and communicate directly with your Unleas
 - [Rust SDK](https://github.com/unleash/unleash-client-rust)
 - [.NET SDK](/sdks/dot_net_sdk)
 
-### Front-end SDKs
+### Client-side SDKs
 
-For security and performance reasons, the front-end SDKs do not communicate directly with your Unleash instance. Instead, they go via the [Unleash Proxy](unleash-proxy.md).
+Before using frontend SDKs we recommend setting up [Unleash Proxy](unleash-proxy.md) for security, user privacy and performance reasons.
+
+:::info Direct connection U need at least _Unleash v4.15.x_ to be able to connect client-side SDK directly to your Unleash instance, without Proxy. Learn more about how to use Frontend API tokens. // FIXME: link :::
 
 - [Android SDK](/sdks/android_proxy_sdk)
 - [iOS Proxy SDK](/sdks/proxy-ios)

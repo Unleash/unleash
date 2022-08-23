@@ -192,7 +192,7 @@ module.exports = {
                 },
                 {
                     type: 'category',
-                    label: 'Client SDKs',
+                    label: 'SDKs (integrations)',
                     link: { type: 'doc', id: 'sdks/index' },
                     items: [
                         {

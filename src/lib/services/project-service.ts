@@ -294,12 +294,11 @@ export default class ProjectService {
         };
     }
 
-    // TODO: Remove the optional nature of createdBy - this in place to make sure enterprise is compatible
     async addUser(
         projectId: string,
         roleId: number,
         userId: number,
-        createdBy?: string,
+        createdBy: string,
     ): Promise<void> {
         const [roles, users] = await this.accessService.getProjectRoleAccess(
             projectId,
@@ -323,7 +322,7 @@ export default class ProjectService {
         await this.eventStore.store(
             new ProjectUserAddedEvent({
                 project: projectId,
-                createdBy,
+                createdBy: createdBy || 'system-user',
                 data: {
                     roleId,
                     userId,
@@ -334,12 +333,11 @@ export default class ProjectService {
         );
     }
 
-    // TODO: Remove the optional nature of createdBy - this in place to make sure enterprise is compatible
     async removeUser(
         projectId: string,
         roleId: number,
         userId: number,
-        createdBy?: string,
+        createdBy: string,
     ): Promise<void> {
         const role = await this.findProjectRole(projectId, roleId);
 
@@ -367,7 +365,7 @@ export default class ProjectService {
         projectId: string,
         roleId: number,
         groupId: number,
-        modifiedBy?: string,
+        modifiedBy: string,
     ): Promise<void> {
         const role = await this.accessService.getRole(roleId);
         const group = await this.groupService.getGroup(groupId);
@@ -397,7 +395,7 @@ export default class ProjectService {
         projectId: string,
         roleId: number,
         groupId: number,
-        modifiedBy?: string,
+        modifiedBy: string,
     ): Promise<void> {
         const group = await this.groupService.getGroup(groupId);
         const role = await this.accessService.getRole(roleId);

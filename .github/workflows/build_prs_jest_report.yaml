@@ -35,10 +35,11 @@ jobs:
       - name: Tests on ${{ matrix.node-version }}
         uses: ArtiomTr/jest-coverage-report-action@v2
         with:
+          skip-step: install
           annotations: none
           package-manager: yarn
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          test-script: yarn run test:coverage:jest
+          test-script: yarn install --frozen-lockfile --ignore-scripts && yarn build:backend && yarn run test:coverage:jest
           base-coverage-file: ./coverage/report.json
         env:
           CI: true

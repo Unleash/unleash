@@ -31,7 +31,6 @@ process.nextTick(async () => {
                     enable: false,
                 },
                 experimental: {
-                    metricsV2: { enabled: true },
                     anonymiseEventLog: false,
                     userGroups: true,
                     embedProxy: true,

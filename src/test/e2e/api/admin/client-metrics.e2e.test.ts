@@ -9,9 +9,7 @@ let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('client_metrics_serial', getLogger);
-    app = await setupAppWithCustomConfig(db.stores, {
-        experimental: { metricsV2: { enabled: true } },
-    });
+    app = await setupAppWithCustomConfig(db.stores, {});
 });
 
 afterAll(async () => {

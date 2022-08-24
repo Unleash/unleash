@@ -10,7 +10,8 @@
   ],
   "files": [
     "dist",
-    "docs"
+    "docs",
+    "frontend/build"
   ],
   "repository": {
     "type": "git",
@@ -32,12 +33,14 @@
     "copy-templates": "copyfiles -u 1 src/mailtemplates/**/*.mustache dist/",
     "db-migrate": "db-migrate --migrations-dir ./src/migrations",
     "lint": "eslint ./src",
-    "local:package": "del-cli --force build && mkdir build && cp -r dist docs CHANGELOG.md LICENSE README.md package.json build",
+    "local:package": "del-cli --force build && mkdir build && cp -r dist docs CHANGELOG.md LICENSE README.md package.json build && mkdir -p build/frontend && cp -r frontend/build build/frontend",
     "prebuild:watch": "yarn run clean",
     "build:watch": "tsc -w",
     "prebuild": "yarn run clean",
-    "build": "yarn run copy-templates && tsc --pretty",
-    "prepare": "node scripts/husky-install && yarn run build",
+    "build": "yarn build:frontend && yarn build:backend",
+    "build:backend": "yarn run copy-templates && tsc --pretty",
+    "build:frontend": "cd frontend && yarn build",
+    "prepare": "node scripts/husky-install && yarn run build && yarn build:frontend",
     "test": "NODE_ENV=test PORT=4243 jest",
     "test:unit": "NODE_ENV=test PORT=4243 jest --testPathIgnorePatterns=src/test/e2e/**",
     "test:docker": "./scripts/docker-postgres.sh",

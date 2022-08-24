@@ -7243,11 +7243,6 @@ unleash-client@3.15.0:
     murmurhash3js "^3.0.1"
     semver "^7.3.5"
 
-unleash-frontend@4.15.0-beta.1:
-  version "4.15.0-beta.1"
-  resolved "https://registry.yarnpkg.com/unleash-frontend/-/unleash-frontend-4.15.0-beta.1.tgz#c98255af5408c7cce3aa5f3a38fe2c634813a93b"
-  integrity sha512-6kHYetlytLVibTfi+QAweve7YWFmXdWzl6aDcYg2XMYj2Ago0gMHwTqtkG7JfZonG1vU5dkfk/KwBKTFKLJn/g==
-
 unpipe@1.0.0, unpipe@~1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/unpipe/-/unpipe-1.0.0.tgz"

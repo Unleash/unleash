@@ -39,7 +39,7 @@ jobs:
           annotations: none
           package-manager: yarn
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          test-script: yarn install --frozen-lockfile --ignore-scripts && yarn build:backend && yarn run test:coverage:jest
+          test-script: cd frontend && yarn install && yarn run test:coverage:jest
           base-coverage-file: ./coverage/report.json
         env:
           CI: true

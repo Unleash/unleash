@@ -1,0 +1,291 @@
+// Vitest Snapshot v1
+
+exports[`renders correctly with one feature 1`] = `
+[
+  <li
+    className="MuiListItem-root makeStyles-listItem-1 MuiListItem-gutters"
+    disabled={false}
+  >
+    <span
+      className="makeStyles-listItemMetric-2"
+    >
+      <div
+        aria-describedby={null}
+        className="makeStyles-container-8"
+        onBlur={[Function]}
+        onFocus={[Function]}
+        onMouseLeave={[Function]}
+        onMouseOver={[Function]}
+        onTouchEnd={[Function]}
+        onTouchStart={[Function]}
+        style={
+          {
+            "background": "#EDF0F1",
+            "fontSize": "0.8rem",
+          }
+        }
+        title="No usage reported from connected applications"
+      >
+        <span
+          style={
+            {
+              "fontSize": "1.4rem",
+            }
+          }
+        >
+          ⊕
+        </span>
+      </div>
+    </span>
+    <span
+      className="makeStyles-listItemType-3 _hideLt600_1yorl_42"
+    >
+      <svg
+        aria-describedby={null}
+        aria-hidden={true}
+        className="MuiSvgIcon-root makeStyles-icon-9"
+        data-loading={true}
+        focusable="false"
+        onBlur={[Function]}
+        onFocus={[Function]}
+        onMouseLeave={[Function]}
+        onMouseOver={[Function]}
+        onTouchEnd={[Function]}
+        onTouchStart={[Function]}
+        title="This is a \\"\\" toggle"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"
+        />
+      </svg>
+    </span>
+    <span
+      className="makeStyles-listItemLink-5"
+    >
+      <a
+        className="_listLink_1yorl_25 _truncate_1yorl_2"
+        href="/projects/default/features/Another"
+        onClick={[Function]}
+      >
+        <span
+          aria-describedby={null}
+          className="_toggleName_1yorl_84"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onMouseLeave={[Function]}
+          onMouseOver={[Function]}
+          onTouchEnd={[Function]}
+          onTouchStart={[Function]}
+          title="another's description"
+        >
+          Another
+           
+        </span>
+        <span />
+        <small>
+          <time
+            dateTime="2018-02-04T20:27:52.127Z"
+            title="2018-02-04T20:27:52.127Z"
+          >
+            4 years ago
+          </time>
+        </small>
+        <div>
+          <span
+            className="_truncate_1yorl_2"
+          >
+            <small>
+              another's description
+            </small>
+          </span>
+        </div>
+      </a>
+    </span>
+    <span
+      className="makeStyles-listItemStrategies-6 _hideLt920_1yorl_37"
+    >
+      <a
+        className="makeStyles-disabledLink-7"
+        href="/projects/default"
+        onClick={[Function]}
+        style={
+          {
+            "textDecoration": "none",
+          }
+        }
+      >
+        <div
+          className="MuiChip-root MuiChip-colorPrimary MuiChip-outlined MuiChip-outlinedPrimary"
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          style={
+            {
+              "cursor": "pointer",
+              "marginLeft": "8px",
+            }
+          }
+          title="Project: default"
+        >
+          <span
+            className="MuiChip-label"
+          >
+            default
+          </span>
+        </div>
+      </a>
+    </span>
+  </li>,
+  <div
+    aria-atomic={true}
+    aria-live="polite"
+    className="makeStyles-container-11"
+    data-testid="ANNOUNCER_ELEMENT_TEST_ID"
+    role="status"
+  />,
+]
+`;
+
+exports[`renders correctly with one feature without permission 1`] = `
+[
+  <li
+    className="MuiListItem-root makeStyles-listItem-1 MuiListItem-gutters"
+    disabled={false}
+  >
+    <span
+      className="makeStyles-listItemMetric-2"
+    >
+      <div
+        aria-describedby={null}
+        className="makeStyles-container-8"
+        onBlur={[Function]}
+        onFocus={[Function]}
+        onMouseLeave={[Function]}
+        onMouseOver={[Function]}
+        onTouchEnd={[Function]}
+        onTouchStart={[Function]}
+        style={
+          {
+            "background": "#EDF0F1",
+            "fontSize": "0.8rem",
+          }
+        }
+        title="No usage reported from connected applications"
+      >
+        <span
+          style={
+            {
+              "fontSize": "1.4rem",
+            }
+          }
+        >
+          ⊕
+        </span>
+      </div>
+    </span>
+    <span
+      className="makeStyles-listItemType-3 _hideLt600_1yorl_42"
+    >
+      <svg
+        aria-describedby={null}
+        aria-hidden={true}
+        className="MuiSvgIcon-root makeStyles-icon-9"
+        data-loading={true}
+        focusable="false"
+        onBlur={[Function]}
+        onFocus={[Function]}
+        onMouseLeave={[Function]}
+        onMouseOver={[Function]}
+        onTouchEnd={[Function]}
+        onTouchStart={[Function]}
+        title="This is a \\"\\" toggle"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"
+        />
+      </svg>
+    </span>
+    <span
+      className="makeStyles-listItemLink-5"
+    >
+      <a
+        className="_listLink_1yorl_25 _truncate_1yorl_2"
+        href="/projects/undefined/features/Another"
+        onClick={[Function]}
+      >
+        <span
+          aria-describedby={null}
+          className="_toggleName_1yorl_84"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onMouseLeave={[Function]}
+          onMouseOver={[Function]}
+          onTouchEnd={[Function]}
+          onTouchStart={[Function]}
+          title="another's description"
+        >
+          Another
+           
+        </span>
+        <span />
+        <small>
+          <time
+            dateTime="2018-02-04T20:27:52.127Z"
+            title="2018-02-04T20:27:52.127Z"
+          >
+            4 years ago
+          </time>
+        </small>
+        <div>
+          <span
+            className="_truncate_1yorl_2"
+          >
+            <small>
+              another's description
+            </small>
+          </span>
+        </div>
+      </a>
+    </span>
+    <span
+      className="makeStyles-listItemStrategies-6 _hideLt920_1yorl_37"
+    >
+      <a
+        className="makeStyles-disabledLink-7"
+        href="/projects/undefined"
+        onClick={[Function]}
+        style={
+          {
+            "textDecoration": "none",
+          }
+        }
+      >
+        <div
+          className="MuiChip-root MuiChip-colorPrimary MuiChip-outlined MuiChip-outlinedPrimary"
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          style={
+            {
+              "cursor": "pointer",
+              "marginLeft": "8px",
+            }
+          }
+          title="Project: undefined"
+        >
+          <span
+            className="MuiChip-label"
+          />
+        </div>
+      </a>
+    </span>
+  </li>,
+  <div
+    aria-atomic={true}
+    aria-live="polite"
+    className="makeStyles-container-11"
+    data-testid="ANNOUNCER_ELEMENT_TEST_ID"
+    role="status"
+  />,
+]
+`;

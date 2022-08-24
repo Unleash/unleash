@@ -1,0 +1,27 @@
+.header {
+    padding: var(--card-header-padding);
+    border: var(--default-border);
+}
+
+.header h1 {
+    font-size: var(--h1-size);
+}
+
+.content {
+    padding: var(--card-padding);
+}
+
+.content form {
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
+}
+
+.content > *,
+.content form > * {
+    margin: 1rem 0;
+}
+
+.text {
+    max-width: 400px;
+}

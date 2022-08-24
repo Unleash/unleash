@@ -39,7 +39,7 @@ import {
     DEFAULT_SEGMENT_VALUES_LIMIT,
     DEFAULT_STRATEGY_SEGMENTS_LIMIT,
 } from './util/segments';
-import FlagsResolver from './util/flag-resolver';
+import FlagResolver from './util/flag-resolver';
 
 const safeToUpper = (s: string) => (s ? s.toUpperCase() : s);
 
@@ -425,7 +425,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
 
     const clientFeatureCaching = loadClientCachingOptions(options);
 
-    const flagsResolver = new FlagsResolver(ui.flags, experimental);
+    const flagResolver = new FlagResolver(ui.flags, experimental);
 
     return {
         db,
@@ -438,7 +438,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         ui,
         import: importSetting,
         experimental,
-        flagsResolver,
+        flagResolver,
         email,
         secureHeaders,
         enableOAS,

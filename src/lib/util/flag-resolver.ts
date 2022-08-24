@@ -1,9 +1,9 @@
 import {
     IExperimentalOptions,
-    IExternalFlagsResolver,
+    IExternalFlagResolver,
     IFlagContext,
     IFlags,
-    IFlagsResolver,
+    IFlagResolver,
     IUIFlags,
 } from '../types/experimental';
 
@@ -11,14 +11,14 @@ const DEFAULT_DYNAMIC_FLAGS = ['ENABLE_DARK_MODE_SUPPORT'];
 
 const DEFAULT_EXT_RESOLVER = { isEnabled: () => false };
 
-export default class FlagsResolver implements IFlagsResolver {
+export default class FlagResolver implements IFlagResolver {
     private uiFlags: IFlags;
 
     private experiments: IFlags;
 
     private dynamicFlags: string[] = [];
 
-    private externalResolver: IExternalFlagsResolver;
+    private externalResolver: IExternalFlagResolver;
 
     constructor(uiFlags: IUIFlags, expOpt: IExperimentalOptions) {
         this.uiFlags = uiFlags || {};

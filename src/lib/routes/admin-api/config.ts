@@ -79,7 +79,7 @@ class ConfigController extends Controller {
 
         const response: UiConfigSchema = {
             ...this.config.ui,
-            flags: this.config.flagsResolver.getUIFlags({
+            flags: this.config.flagResolver.getUIFlags({
                 email: req.user.email,
             }),
             version,

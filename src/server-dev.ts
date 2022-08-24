@@ -2,6 +2,17 @@ import { start } from './lib/server-impl';
 import { createConfig } from './lib/create-config';
 import { LogLevel } from './lib/logger';
 import { ApiTokenType } from './lib/types/models/api-token';
+import { Unleash } from 'unleash-client';
+
+const unleash = new Unleash({
+    appName: 'unleash',
+    url: 'https://app.unleash-hosted.com/hosted/api/',
+    refreshInterval: 1000,
+    customHeaders: {
+        Authorization:
+            'unleash-cloud:development.f719679e65c7367b7c36b4f08f04237116b862897f0c2808c976a48c',
+    },
+});
 
 process.nextTick(async () => {
     try {
@@ -31,10 +42,13 @@ process.nextTick(async () => {
                     enable: false,
                 },
                 experimental: {
-                    anonymiseEventLog: false,
                     userGroups: true,
                     embedProxy: true,
                     batchMetrics: true,
+                    anonymiseEventLog: false,
+                    externalResolver: unleash,
+                    flags: {},
+                    dynamicFlags: [],
                 },
                 authentication: {
                     initApiTokens: [

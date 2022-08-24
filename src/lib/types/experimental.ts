@@ -10,7 +10,7 @@ export interface IExperimentalOptions {
     embedProxy?: boolean;
     batchMetrics?: boolean;
     dynamicFlags?: string[];
-    externalResolver?: IExternalFlagsResolver;
+    externalResolver?: IExternalFlagResolver;
 }
 
 export interface IUIFlags extends IFlags {
@@ -21,11 +21,11 @@ export interface IFlagContext {
     [key: string]: string;
 }
 
-export interface IFlagsResolver {
+export interface IFlagResolver {
     getUIFlags: (context?: IFlagContext) => IUIFlags;
     isExperimentEnabled: (flagName: string, context?: IFlagContext) => boolean;
 }
 
-export interface IExternalFlagsResolver {
+export interface IExternalFlagResolver {
     isEnabled: (flagName: string, context?: IFlagContext) => boolean;
 }

@@ -65,6 +65,19 @@ Object {
     "batchMetrics": false,
     "embedProxy": false,
   },
+  "flagResolver": FlagResolver {
+    "dynamicFlags": Array [
+      "ENABLE_DARK_MODE_SUPPORT",
+    ],
+    "experiments": Object {},
+    "externalResolver": Object {
+      "isEnabled": [Function],
+    },
+    "uiFlags": Object {
+      "E": true,
+      "ENABLE_DARK_MODE_SUPPORT": false,
+    },
+  },
   "frontendApiOrigins": Array [],
   "getLogger": [Function],
   "import": Object {
@@ -106,6 +119,7 @@ Object {
   "ui": Object {
     "flags": Object {
       "E": true,
+      "ENABLE_DARK_MODE_SUPPORT": false,
     },
   },
   "versionCheck": Object {

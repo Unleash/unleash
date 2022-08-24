@@ -9,28 +9,27 @@ export const validateParameterValue = (
 ): string | undefined => {
     const { type, required } = definition;
 
-    // The components for booleans and percentages can't yet show error messages.
-    // We should not enforce `required` until these errors can be shown in the UI.
-    const shouldValidateRequired =
-        type === 'string' || type === 'list' || type === 'number';
-    if (shouldValidateRequired && required && value === '') {
+    // Some input components in the feature strategy form can't show error messages.
+    // We should not validate those fields until their errors can be shown in the UI.
+    if (type !== 'string' && type !== 'list' && type !== 'number') {
+        return;
+    }
+
+    // If we're editing a feature strategy that has a newly added parameter,
+    // the value will be `undefined` until the field has been edited.
+    if (required && (typeof value === 'undefined' || value === '')) {
         return 'Field is required';
     }
 
-    const shouldValidateNumeric = type === 'percentage' || type === 'number';
-    if (shouldValidateNumeric && !isValidNumberOrEmpty(value)) {
+    if (type === 'number' && !isValidNumberOrEmpty(value)) {
         return 'Not a valid number.';
-    }
-
-    if (type === 'boolean' && !isValidBooleanOrEmpty(value)) {
-        return 'Not a valid boolean.';
     }
 };
 
 const isValidNumberOrEmpty = (value: string | number | undefined): boolean => {
-    return value === '' || /^\d+$/.test(String(value));
-};
-
-const isValidBooleanOrEmpty = (value: string | number | undefined): boolean => {
-    return value === '' || value === 'true' || value === 'false';
+    return (
+        typeof value === 'undefined' ||
+        value === '' ||
+        /^\d+$/.test(String(value))
+    );
 };

@@ -34,11 +34,12 @@ import {
     parseEnvVarNumber,
     parseEnvVarStrings,
 } from './util/parseEnvVar';
-import { IExperimentalOptions } from './experimental';
+import { IExperimentalOptions } from './types/experimental';
 import {
     DEFAULT_SEGMENT_VALUES_LIMIT,
     DEFAULT_STRATEGY_SEGMENTS_LIMIT,
 } from './util/segments';
+import FlagsResolver from './util/flag-resolver';
 
 const safeToUpper = (s: string) => (s ? s.toUpperCase() : s);
 
@@ -102,6 +103,7 @@ function loadUI(options: IUnleashOptions): IUIConfig {
 
     ui.flags = {
         E: true,
+        ENABLE_DARK_MODE_SUPPORT: false,
     };
     return mergeAll([uiO, ui]);
 }
@@ -423,6 +425,8 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
 
     const clientFeatureCaching = loadClientCachingOptions(options);
 
+    const flagsResolver = new FlagsResolver(ui.flags, experimental);
+
     return {
         db,
         session,
@@ -434,6 +438,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         ui,
         import: importSetting,
         experimental,
+        flagsResolver,
         email,
         secureHeaders,
         enableOAS,

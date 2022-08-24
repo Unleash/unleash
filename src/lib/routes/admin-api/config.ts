@@ -1,4 +1,5 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
+import { AuthedRequest } from '../../types/core';
 import { IUnleashServices } from '../../types/services';
 import { IAuthType, IUnleashConfig } from '../../types/option';
 import version from '../../util/version';
@@ -66,7 +67,7 @@ class ConfigController extends Controller {
     }
 
     async getUIConfig(
-        req: Request,
+        req: AuthedRequest,
         res: Response<UiConfigSchema>,
     ): Promise<void> {
         const simpleAuthSettings =
@@ -78,6 +79,9 @@ class ConfigController extends Controller {
 
         const response: UiConfigSchema = {
             ...this.config.ui,
+            flags: this.config.flagsResolver.getUIFlags({
+                email: req.user.email,
+            }),
             version,
             emailEnabled: this.emailService.isEnabled(),
             unleashUrl: this.config.server.unleashUrl,

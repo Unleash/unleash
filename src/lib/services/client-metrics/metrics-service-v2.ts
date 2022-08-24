@@ -16,7 +16,7 @@ import ApiUser from '../../types/api-user';
 import { ALL } from '../../types/models/api-token';
 import User from '../../types/user';
 import { collapseHourlyMetrics } from '../../util/collapseHourlyMetrics';
-import { IExperimentalOptions } from '../../experimental';
+import { IExperimentalOptions } from '../../types/experimental';
 
 export default class ClientMetricsServiceV2 {
     private timers: NodeJS.Timeout[] = [];

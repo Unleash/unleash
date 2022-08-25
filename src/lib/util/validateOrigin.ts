@@ -3,6 +3,10 @@ export const validateOrigin = (origin: string): boolean => {
         return true;
     }
 
+    if (origin?.includes('*')) {
+        return false;
+    }
+
     try {
         const parsed = new URL(origin);
         return parsed.origin && parsed.origin === origin;

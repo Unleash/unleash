@@ -1,12 +1,16 @@
 name: Build & Tests
 
+# TODO(olav): Revert test conditions.
+#on:
+#  push:
+#    branches:
+#      - main
+#    paths-ignore:
+#      - website/**
+#      - coverage/**
+
 on:
-  push:
-    branches:
-      - main
-    paths-ignore:
-      - website/**
-      - coverage/**
+  pull_request:
 
 jobs:
   build:

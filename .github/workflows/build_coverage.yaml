@@ -1,13 +1,17 @@
 name: Coverage
 
+# TODO(olav): Revert test conditions.
+#on:
+#  push:
+#    branches:
+#      - main
+#    paths-ignore:
+#      - website/**
+#      - frontend/**
+#      - coverage/**
+
 on:
-  push:
-    branches:
-      - main
-    paths-ignore:
-      - website/**
-      - frontend/**
-      - coverage/**
+  pull_request:
 
 jobs:
   coverage:
@@ -57,7 +61,8 @@ jobs:
       #      GH_NAME: 'ivarconr'
       #      GH_EMAIL: 'ivarconr@gmail.com'
       #      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Coveralls
-        uses: coverallsapp/github-action@master
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+# TODO(olav): Revert test conditions.
+#      - name: Coveralls
+#        uses: coverallsapp/github-action@master
+#        with:
+#          github-token: ${{ secrets.GITHUB_TOKEN }}

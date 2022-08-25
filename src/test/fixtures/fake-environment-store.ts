@@ -26,8 +26,12 @@ export default class FakeEnvironmentStore implements IEnvironmentStore {
         return Promise.resolve();
     }
 
+    count(): Promise<number> {
+        return Promise.resolve(this.environments.length);
+    }
+
     async getAll(): Promise<IEnvironment[]> {
-        return this.environments;
+        return Promise.resolve(this.environments);
     }
 
     async exists(name: string): Promise<boolean> {

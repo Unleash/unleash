@@ -40,8 +40,13 @@ export default class MetricsMonitor {
             return;
         }
 
-        const { eventStore, featureToggleStore, userStore, projectStore } =
-            stores;
+        const {
+            eventStore,
+            featureToggleStore,
+            userStore,
+            projectStore,
+            environmentStore,
+        } = stores;
 
         client.collectDefaultMetrics();
 
@@ -80,6 +85,10 @@ export default class MetricsMonitor {
             name: 'projects_total',
             help: 'Number of projects',
         });
+        const environmentsTotal = new client.Gauge({
+            name: 'environments_total',
+            help: 'Number of environments',
+        });
 
         const clientSdkVersionUsage = new client.Counter({
             name: 'client_sdk_versions',
@@ -91,12 +100,14 @@ export default class MetricsMonitor {
             let togglesCount: number = 0;
             let usersCount: number;
             let projectsCount: number;
+            let environmentsCount: number;
             try {
                 togglesCount = await featureToggleStore.count({
                     archived: false,
                 });
                 usersCount = await userStore.count();
                 projectsCount = await projectStore.count();
+                environmentsCount = await environmentStore.count();
                 // eslint-disable-next-line no-empty
             } catch (e) {}
 
@@ -109,6 +120,10 @@ export default class MetricsMonitor {
             if (projectsCount) {
                 projectsTotal.reset();
                 projectsTotal.set(projectsCount);
+            }
+            if (environmentsCount) {
+                environmentsTotal.reset();
+                environmentsTotal.set(environmentsCount);
             }
         }
 

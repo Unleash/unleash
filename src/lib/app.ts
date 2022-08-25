@@ -46,7 +46,7 @@ export default async function getApp(
     app.use(requestLogger(config));
 
     if (typeof config.preHook === 'function') {
-        await config.preHook(app, config, services);
+        config.preHook(app, config, services);
     }
 
     app.use(compression());

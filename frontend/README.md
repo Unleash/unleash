@@ -1,14 +1,14 @@
-# unleash-frontend
+# frontend
 
-This repo contains the Unleash Admin UI frontend app.
+This directory contains the Unleash Admin UI frontend app.
 
 ## Run with a local instance of the unleash-api
 
 First, start the unleash-api backend on port 4242.
-Then, start the unleash-frontend dev server:
+Then, start the frontend dev server:
 
 ```
-cd ~/unleash-frontend
+cd ~/frontend
 yarn install
 yarn run start
 ```
@@ -18,7 +18,7 @@ yarn run start
 Alternatively, instead of running unleash-api on localhost, use a remote instance:
 
 ```
-cd ~/unleash-frontend
+cd ~/frontend
 yarn install
 yarn run start:heroku
 ```

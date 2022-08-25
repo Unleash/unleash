@@ -3,9 +3,7 @@ id: proxy-react
 title: React Proxy SDK
 ---
 
-<!-- FIXME: Update Unleash version in the line below -->
-
-This library can be used with [unleash-proxy](https://github.com/Unleash/unleash-proxy) or with _Unleash v4.15.x_ and later. If you are connecting directly to the Unleash instance remember to use `/api/frontend` and not `/api`. Optional proxy layer can sit between Unleash instance and your client application providing performance and security benefits.
+This library can be used with [Unleash Proxy](https://github.com/Unleash/unleash-proxy) or directly (since _Unleash v4.16_). Optional [proxy layer](/sdks/unleash-proxy) can sit between Unleash instance and your client application providing performance and security benefits. If you are connecting directly to the Unleash instance remember to use `/api/frontend` URL.
 
 For more detailed information, check out the [React Proxy SDK on GitHub](https://github.com/Unleash/proxy-client-react).
 
@@ -25,7 +23,7 @@ The configuration variables are:
 
 - **`url`**
 
-  Your proxy's URL.
+  Your proxy's URL or Unleash frontend endpoint.
 
 - **`clientKey`**
 

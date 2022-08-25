@@ -8,7 +8,7 @@ title: Vue Proxy SDK
 </div>
 <br/>
 
-This library is meant to be used with the [unleash-proxy](https://github.com/Unleash/unleash-proxy). The proxy application layer will sit between your unleash instance and your client applications, and provides performance and security benefits. DO NOT TRY to connect this library directly to the unleash instance, as the datasets follow different formats because the proxy only returns evaluated toggle information.
+This library can be used with [Unleash Proxy](https://github.com/Unleash/unleash-proxy) or directly (since _Unleash v4.16_). Optional [proxy layer](/sdks/unleash-proxy) can sit between Unleash instance and your client application providing performance and security benefits. If you are connecting directly to the Unleash instance remember to use `/api/frontend` URL.
 
 For more detailed information, check out the [Vue Proxy SDK on GitHub](https://github.com/Unleash/proxy-client-vue).
 

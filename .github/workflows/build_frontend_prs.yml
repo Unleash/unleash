@@ -9,8 +9,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     defaults:
-        run:
-            working-directory: frontend
+      run:
+        working-directory: frontend
     strategy:
       matrix:
         node-version: [14.x]
@@ -20,7 +20,6 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-    - run: yarn install --frozen-lockfile
-    - run: yarn run build
+    - run: yarn --frozen-lockfile
     - run: yarn run test
     - run: yarn run fmt:check

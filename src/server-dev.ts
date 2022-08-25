@@ -3,19 +3,6 @@ import { createConfig } from './lib/create-config';
 import { LogLevel } from './lib/logger';
 import { ApiTokenType } from './lib/types/models/api-token';
 
-/*
-import { Unleash } from 'unleash-client';
-const unleash = new Unleash({
-    appName: 'unleash',
-    url: 'https://app.unleash-hosted.com/hosted/api/',
-    refreshInterval: 1000,
-    customHeaders: {
-        Authorization:
-            'TOKEN',
-    },
-});
-*/
-
 process.nextTick(async () => {
     try {
         await start(

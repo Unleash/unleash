@@ -1,28 +1,14 @@
 {
-  "name": "unleash-frontend",
-  "description": "unleash your features",
-  "version": "4.14.8",
-  "keywords": [
-    "unleash",
-    "feature toggle",
-    "feature",
-    "toggle"
-  ],
+  "name": "unleash-frontend-local",
+  "version": "0.0.0",
+  "private": true,
   "files": [
     "index.js",
     "build/"
   ],
-  "repository": {
-    "type": "git",
-    "url": "ssh://git@github.com:Unleash/unleash-frontend.git"
-  },
-  "bugs": {
-    "url": "https://github.com/Unleash/unleash-frontend"
-  },
   "engines": {
     "node": ">=14"
   },
-  "license": "Apache-2.0",
   "scripts": {
     "build": "tsc && vite build",
     "lint": "eslint src --max-warnings 0",
@@ -30,7 +16,8 @@
     "start:heroku": "UNLEASH_API=https://unleash.herokuapp.com yarn run start",
     "start:enterprise": "UNLEASH_API=https://unleash4.herokuapp.com yarn run start",
     "start:demo": "UNLEASH_BASE_PATH=/demo/ yarn start",
-    "test": "vitest",
+    "test": "vitest run",
+    "test:watch": "vitest watch",
     "fmt": "prettier src --write --loglevel warn",
     "fmt:check": "prettier src --check",
     "e2e": "yarn run cypress open --config baseUrl='http://localhost:3000' --env AUTH_USER=admin,AUTH_PASSWORD=unleash4all",

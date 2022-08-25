@@ -6,7 +6,6 @@ export const defaultExperimentalOptions = {
     flags: {
         ENABLE_DARK_MODE_SUPPORT: false,
         anonymiseEventLog: false,
-        userGroups: false,
         embedProxy: parseEnvVarBoolean(
             process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY,
             false,
@@ -26,7 +25,6 @@ export interface IExperimentalOptions {
         embedProxy?: boolean;
         batchMetrics?: boolean;
         anonymiseEventLog?: boolean;
-        userGroups?: boolean;
     };
     externalResolver: IExternalFlagResolver;
 }

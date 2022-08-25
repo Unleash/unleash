@@ -5,7 +5,9 @@ slug: /
 sidebar_position: 1
 ---
 
-:::note The docs are currently undergoing some heavy restructuring and development 👷‍♀️👷🏽 If something is unclear, don't hesitate to [let us know on Slack](https://slack.unleash.run/)! :::
+:::note
+The docs are currently undergoing some heavy restructuring and development 👷‍♀️👷🏽 If something is unclear, don't hesitate to [let us know on Slack](https://slack.unleash.run/)!
+:::
 
 Welcome to the Unleash documentation, your one-stop shop to everything Unleash. Whether you're just getting started or have been using Unleash for years, you should be able to find answers to all your questions here.
 

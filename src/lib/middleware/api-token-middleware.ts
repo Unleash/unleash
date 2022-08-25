@@ -7,7 +7,16 @@ const isClientApi = ({ path }) => {
 };
 
 const isProxyApi = ({ path }) => {
-    return path && path.startsWith('/api/frontend');
+    if (!path) {
+        return;
+    }
+
+    return (
+        (!path.startsWith('/api/client') &&
+            !path.startsWith('/api/admin') &&
+            path.includes('proxy')) ||
+        (path && path.startsWith('/api/frontend'))
+    );
 };
 
 export const TOKEN_TYPE_ERROR_MESSAGE =

@@ -44,13 +44,12 @@ process.nextTick(async () => {
                     enable: false,
                 },
                 experimental: {
-                    userGroups: true,
-                    embedProxy: true,
-                    batchMetrics: true,
-                    anonymiseEventLog: false,
                     // externalResolver: unleash,
-                    flags: {},
-                    dynamicFlags: [],
+                    flags: {
+                        embedProxy: true,
+                        batchMetrics: true,
+                        anonymiseEventLog: false,
+                    },
                 },
                 authentication: {
                     initApiTokens: [

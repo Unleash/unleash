@@ -1,20 +1,34 @@
-export interface IFlags {
-    [key: string]: boolean;
-}
-export interface IExperimentalOptions {
-    flags?: {
-        [key: string]: boolean;
-    };
-    anonymiseEventLog?: boolean;
-    userGroups?: boolean;
-    embedProxy?: boolean;
-    batchMetrics?: boolean;
-    dynamicFlags?: string[];
-    externalResolver?: IExternalFlagResolver;
-}
+import { parseEnvVarBoolean } from '../util/parseEnvVar';
 
-export interface IUIFlags extends IFlags {
-    ENABLE_DARK_MODE_SUPPORT?: boolean;
+export type IFlags = Partial<Record<string, boolean>>;
+
+export const defaultExperimentalOptions = {
+    flags: {
+        ENABLE_DARK_MODE_SUPPORT: false,
+        anonymiseEventLog: false,
+        userGroups: false,
+        embedProxy: parseEnvVarBoolean(
+            process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY,
+            false,
+        ),
+        batchMetrics: parseEnvVarBoolean(
+            process.env.UNLEASH_EXPERIMENTAL_BATCH_METRICS,
+            false,
+        ),
+    },
+    externalResolver: { isEnabled: (): boolean => false },
+};
+
+export interface IExperimentalOptions {
+    flags: {
+        [key: string]: boolean;
+        ENABLE_DARK_MODE_SUPPORT?: boolean;
+        embedProxy?: boolean;
+        batchMetrics?: boolean;
+        anonymiseEventLog?: boolean;
+        userGroups?: boolean;
+    };
+    externalResolver: IExternalFlagResolver;
 }
 
 export interface IFlagContext {
@@ -22,8 +36,8 @@ export interface IFlagContext {
 }
 
 export interface IFlagResolver {
-    getUIFlags: (context?: IFlagContext) => IUIFlags;
-    isExperimentEnabled: (flagName: string, context?: IFlagContext) => boolean;
+    getAll: (context?: IFlagContext) => IFlags;
+    isEnabled: (expName: string, context?: IFlagContext) => boolean;
 }
 
 export interface IExternalFlagResolver {

@@ -61,7 +61,7 @@ export const createStores = (
             db,
             eventBus,
             getLogger,
-            config?.experimental?.userGroups,
+            config?.experimental?.flags.userGroups,
         ),
         apiTokenStore: new ApiTokenStore(db, eventBus, getLogger),
         resetTokenStore: new ResetTokenStore(db, eventBus, getLogger),

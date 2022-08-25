@@ -34,7 +34,10 @@ import {
     parseEnvVarNumber,
     parseEnvVarStrings,
 } from './util/parseEnvVar';
-import { IExperimentalOptions } from './types/experimental';
+import {
+    defaultExperimentalOptions,
+    IExperimentalOptions,
+} from './types/experimental';
 import {
     DEFAULT_SEGMENT_VALUES_LIMIT,
     DEFAULT_STRATEGY_SEGMENTS_LIMIT,
@@ -56,15 +59,12 @@ function mergeAll<T>(objects: Partial<T>[]): T {
 
 function loadExperimental(options: IUnleashOptions): IExperimentalOptions {
     return {
+        ...defaultExperimentalOptions,
         ...options.experimental,
-        embedProxy: parseEnvVarBoolean(
-            process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY,
-            Boolean(options.experimental?.embedProxy),
-        ),
-        batchMetrics: parseEnvVarBoolean(
-            process.env.UNLEASH_EXPERIMENTAL_BATCH_METRICS,
-            Boolean(options.experimental?.batchMetrics),
-        ),
+        flags: {
+            ...defaultExperimentalOptions.flags,
+            ...options.experimental?.flags,
+        },
     };
 }
 
@@ -377,6 +377,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
     ]);
 
     const experimental = loadExperimental(options);
+    const flagResolver = new FlagResolver(experimental);
 
     const ui = loadUI(options);
 
@@ -424,8 +425,6 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         parseEnvVarStrings(process.env.UNLEASH_FRONTEND_API_ORIGINS, []);
 
     const clientFeatureCaching = loadClientCachingOptions(options);
-
-    const flagResolver = new FlagResolver(ui.flags, experimental);
 
     return {
         db,

@@ -37,9 +37,10 @@ import {
     usersGroupsBaseSchema,
 } from '../../openapi/spec/users-groups-base-schema';
 import { IGroup } from '../../types/group';
+import { IFlagResolver } from '../../types/experimental';
 
 export default class UserAdminController extends Controller {
-    private anonymise: boolean = false;
+    private flagResolver: IFlagResolver;
 
     private userService: UserService;
 
@@ -90,7 +91,7 @@ export default class UserAdminController extends Controller {
         this.groupService = groupService;
         this.logger = config.getLogger('routes/user-controller.ts');
         this.unleashUrl = config.server.unleashUrl;
-        this.anonymise = config.experimental?.anonymiseEventLog;
+        this.flagResolver = config.flagResolver;
 
         this.route({
             method: 'post',
@@ -294,7 +295,7 @@ export default class UserAdminController extends Controller {
             typeof q === 'string' && q.length > 1
                 ? await this.userService.search(q)
                 : [];
-        if (this.anonymise) {
+        if (this.flagResolver.isEnabled('anonymiseEventLog')) {
             users = this.anonymiseUsers(users);
         }
         this.openApiService.respondWithValidation(

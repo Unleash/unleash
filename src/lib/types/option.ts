@@ -1,7 +1,7 @@
 import EventEmitter from 'events';
 import { LogLevel, LogProvider } from '../logger';
 import { ILegacyApiTokenCreate } from './models/api-token';
-import { IFlagResolver, IExperimentalOptions, IUIFlags } from './experimental';
+import { IFlagResolver, IExperimentalOptions, IFlags } from './experimental';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 
 export type EventHook = (eventName: string, data: object) => void;
@@ -102,7 +102,7 @@ export interface IUnleashOptions {
     authentication?: Partial<IAuthOption>;
     ui?: object;
     import?: Partial<IImportOption>;
-    experimental?: IExperimentalOptions;
+    experimental?: Partial<IExperimentalOptions>;
     email?: Partial<IEmailOption>;
     secureHeaders?: boolean;
     additionalCspAllowedDomains?: ICspDomainOptions;
@@ -147,7 +147,7 @@ export interface IUIConfig {
             title: string;
         },
     ];
-    flags?: IUIFlags;
+    flags?: IFlags;
 }
 
 export interface ICspDomainOptions {

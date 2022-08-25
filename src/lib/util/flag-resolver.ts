@@ -4,50 +4,35 @@ import {
     IFlagContext,
     IFlags,
     IFlagResolver,
-    IUIFlags,
 } from '../types/experimental';
-
-const DEFAULT_DYNAMIC_FLAGS = ['ENABLE_DARK_MODE_SUPPORT'];
-
-const DEFAULT_EXT_RESOLVER = { isEnabled: () => false };
-
 export default class FlagResolver implements IFlagResolver {
-    private uiFlags: IFlags;
-
     private experiments: IFlags;
-
-    private dynamicFlags: string[] = [];
 
     private externalResolver: IExternalFlagResolver;
 
-    constructor(uiFlags: IUIFlags, expOpt: IExperimentalOptions) {
-        this.uiFlags = uiFlags || {};
-        this.experiments = expOpt.flags || {};
-        this.dynamicFlags = [
-            ...DEFAULT_DYNAMIC_FLAGS,
-            ...(expOpt.dynamicFlags || []),
-        ];
-        this.externalResolver = expOpt.externalResolver || DEFAULT_EXT_RESOLVER;
+    constructor(expOpt: IExperimentalOptions) {
+        this.experiments = expOpt.flags;
+        this.externalResolver = expOpt.externalResolver;
     }
 
-    getUIFlags(context?: IFlagContext): IFlags {
-        const flags = { ...this.uiFlags };
-        this.dynamicFlags.forEach((name: string) => {
-            //Only test external resolver if disabled
-            if (!flags[name]) {
-                flags[name] = this.externalResolver.isEnabled(name, context);
-            }
+    getAll(context?: IFlagContext): IFlags {
+        const flags: IFlags = { ...this.experiments };
+
+        Object.keys(flags).forEach((flagName) => {
+            if (!this.experiments[flagName])
+                flags[flagName] = this.externalResolver.isEnabled(
+                    flagName,
+                    context,
+                );
         });
+
         return flags;
     }
 
-    isExperimentEnabled(name: string, context?: IFlagContext): boolean {
-        if (this.experiments[name]) {
+    isEnabled(expName: string, context?: IFlagContext): boolean {
+        if (this.experiments[expName]) {
             return true;
         }
-        if (this.dynamicFlags.includes(name)) {
-            return this.externalResolver.isEnabled(name, context);
-        }
-        return false;
+        return this.externalResolver.isEnabled(expName, context);
     }
 }

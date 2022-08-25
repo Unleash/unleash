@@ -315,7 +315,7 @@ module.exports = {
                     'Discussions, explanations, and explorations regarding topics related to Unleash.',
                 slug: '/topics',
             },
-            items: ['topics/a-b-testing', 'topics/proxy-hosting', 'topics/frontend-api'],
+            items: ['topics/a-b-testing', 'topics/frontend-api', 'topics/proxy-hosting'],
         },
     ],
 };

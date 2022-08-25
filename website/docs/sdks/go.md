@@ -52,7 +52,7 @@ To shut down the client (turn off the polling) you can simply call the destroy-m
 
 unleash.Close()
 
-### Built in activation strategies {#built-in-activation-strategies}
+### Built-in activation strategies {#built-in-activation-strategies}
 
 The Go client comes with implementations for the built-in activation strategies provided by unleash.
 

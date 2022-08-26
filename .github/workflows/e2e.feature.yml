@@ -17,6 +17,7 @@ jobs:
       - name: Run Cypress
         uses: cypress-io/github-action@v2
         with:
+          project: ./frontend
           env: AUTH_USER=admin,AUTH_PASSWORD=unleash4all
           config: baseUrl=${{ github.event.deployment_status.target_url }}
           record: true

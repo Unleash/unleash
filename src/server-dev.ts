@@ -2,8 +2,18 @@ import { start } from './lib/server-impl';
 import { createConfig } from './lib/create-config';
 import { LogLevel } from './lib/logger';
 import { ApiTokenType } from './lib/types/models/api-token';
+import { startUnleash } from 'unleash-client';
 
 process.nextTick(async () => {
+    const unleash = await startUnleash({
+        appName: 'my-app-name',
+        url: 'http://unleash4.herokuapp.com/api/',
+        customHeaders: {
+            Authorization:
+                '*:development.621eccf01310389e1c2ea2409dfc5bdc4fd29543fb6355c0883e7af5',
+        },
+    });
+
     try {
         await start(
             createConfig({
@@ -31,10 +41,8 @@ process.nextTick(async () => {
                     enable: false,
                 },
                 experimental: {
-                    // externalResolver: unleash,
+                    externalResolver: unleash,
                     flags: {
-                        embedProxy: true,
-                        embedProxyFrontend: true,
                         batchMetrics: true,
                         anonymiseEventLog: false,
                     },

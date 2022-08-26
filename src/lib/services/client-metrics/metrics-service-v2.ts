@@ -16,7 +16,6 @@ import ApiUser from '../../types/api-user';
 import { ALL } from '../../types/models/api-token';
 import User from '../../types/user';
 import { collapseHourlyMetrics } from '../../util/collapseHourlyMetrics';
-import { IExperimentalOptions } from '../../experimental';
 
 export default class ClientMetricsServiceV2 {
     private timers: NodeJS.Timeout[] = [];
@@ -27,7 +26,7 @@ export default class ClientMetricsServiceV2 {
 
     private featureToggleStore: IFeatureToggleStore;
 
-    private experimental: IExperimentalOptions;
+    private batchMetricsEnabled: boolean;
 
     private eventBus: EventEmitter;
 
@@ -47,13 +46,13 @@ export default class ClientMetricsServiceV2 {
     ) {
         this.featureToggleStore = featureToggleStore;
         this.clientMetricsStoreV2 = clientMetricsStoreV2;
-        this.experimental = experimental;
+        this.batchMetricsEnabled = experimental.flags.batchMetrics;
         this.eventBus = eventBus;
         this.logger = getLogger(
             '/services/client-metrics/client-metrics-service-v2.ts',
         );
 
-        if (this.experimental.batchMetrics) {
+        if (this.batchMetricsEnabled) {
             this.timers.push(
                 setInterval(() => {
                     this.bulkAdd().catch(console.error);
@@ -91,7 +90,7 @@ export default class ClientMetricsServiceV2 {
             }))
             .filter((item) => !(item.yes === 0 && item.no === 0));
 
-        if (this.experimental.batchMetrics) {
+        if (this.batchMetricsEnabled) {
             this.unsavedMetrics = collapseHourlyMetrics([
                 ...this.unsavedMetrics,
                 ...clientMetrics,
@@ -104,7 +103,7 @@ export default class ClientMetricsServiceV2 {
     }
 
     async bulkAdd(): Promise<void> {
-        if (this.experimental.batchMetrics && this.unsavedMetrics.length > 0) {
+        if (this.batchMetricsEnabled && this.unsavedMetrics.length > 0) {
             // Make a copy of `unsavedMetrics` in case new metrics
             // arrive while awaiting `batchInsertMetrics`.
             const copy = [...this.unsavedMetrics];

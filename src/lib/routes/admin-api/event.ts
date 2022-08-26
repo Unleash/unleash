@@ -21,12 +21,13 @@ import {
 import { getStandardResponses } from '../../../lib/openapi/util/standard-responses';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import { SearchEventsSchema } from '../../openapi/spec/search-events-schema';
+import { IFlagResolver } from '../../types/experimental';
 
 const version = 1;
 export default class EventController extends Controller {
     private eventService: EventService;
 
-    private anonymise: boolean = false;
+    private flagResolver: IFlagResolver;
 
     private openApiService: OpenApiService;
 
@@ -39,7 +40,7 @@ export default class EventController extends Controller {
     ) {
         super(config);
         this.eventService = eventService;
-        this.anonymise = config.experimental?.anonymiseEventLog;
+        this.flagResolver = config.flagResolver;
         this.openApiService = openApiService;
 
         this.route({
@@ -106,7 +107,7 @@ export default class EventController extends Controller {
     }
 
     maybeAnonymiseEvents(events: IEvent[]): IEvent[] {
-        if (this.anonymise) {
+        if (this.flagResolver.isEnabled('anonymiseEventLog')) {
             return events.map((e: IEvent) => ({
                 ...e,
                 createdBy: anonymise(e.createdBy),

@@ -1,4 +1,5 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
+import { AuthedRequest } from '../../types/core';
 import { IUnleashServices } from '../../types/services';
 import { IAuthType, IUnleashConfig } from '../../types/option';
 import version from '../../util/version';
@@ -66,7 +67,7 @@ class ConfigController extends Controller {
     }
 
     async getUIConfig(
-        req: Request,
+        req: AuthedRequest,
         res: Response<UiConfigSchema>,
     ): Promise<void> {
         const simpleAuthSettings =
@@ -76,8 +77,14 @@ class ConfigController extends Controller {
             simpleAuthSettings?.disabled ||
             this.config.authentication.type == IAuthType.NONE;
 
+        const expFlags = this.config.flagResolver.getAll({
+            email: req.user.email,
+        });
+        const flags = { ...this.config.ui.flags, ...expFlags };
+
         const response: UiConfigSchema = {
             ...this.config.ui,
+            flags,
             version,
             emailEnabled: this.emailService.isEnabled(),
             unleashUrl: this.config.server.unleashUrl,
@@ -87,7 +94,7 @@ class ConfigController extends Controller {
             strategySegmentsLimit: this.config.strategySegmentsLimit,
             versionInfo: this.versionService.getVersionInfo(),
             disablePasswordAuth,
-            embedProxy: this.config.experimental.embedProxy,
+            embedProxy: this.config.experimental.flags.embedProxy,
         };
 
         this.openApiService.respondWithValidation(

@@ -12,7 +12,7 @@ async function getSetup(anonymise: boolean = false) {
     const stores = createStores();
     const config = createTestConfig({
         server: { baseUriPath: base },
-        experimental: { anonymiseEventLog: anonymise },
+        experimental: { flags: { anonymiseEventLog: anonymise } },
     });
     const services = createServices(stores, config);
     const app = await getApp(config, stores, services);

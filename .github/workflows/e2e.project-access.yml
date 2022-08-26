@@ -22,5 +22,4 @@ jobs:
           working-directory: frontend
           env: AUTH_USER=admin,AUTH_PASSWORD=unleash4all
           config: baseUrl=${{ github.event.deployment_status.target_url }}
-          record: true
           spec: cypress/integration/projects/access/project-access.spec.ts

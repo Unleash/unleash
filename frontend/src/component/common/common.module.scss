@@ -1,0 +1,132 @@
+/** Select **/
+
+.truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.fullwidth {
+    width: 100%;
+}
+
+.sectionPadding {
+    padding: 0 16px;
+}
+
+.horisontalScroll {
+    overflow-x: scroll;
+    -webkit-overflow-scrolling: touch;
+}
+
+.horisontalScroll::-webkit-scrollbar {
+    display: none;
+}
+
+.listLink {
+    color: #212121;
+    text-decoration: none;
+    font-weight: normal;
+    display: block;
+}
+
+.listLink:hover {
+    color: #000;
+}
+
+@media (max-width: 920px) {
+    .hideLt920 {
+        display: none;
+    }
+}
+
+@media (max-width: 600px) {
+    .hideLt600 {
+        display: none;
+    }
+}
+
+.dataTableHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .titleText {
+        margin: 0;
+        font-size: 20px;
+        line-height: 24px;
+    }
+
+    .actions {
+        flex-shrink: 0;
+    }
+}
+
+.switchWithLabel {
+    display: flex;
+
+    .label {
+        padding-right: 16px;
+        line-height: 24px;
+    }
+    .switch {
+        display: inline-block;
+        padding-right: 8px;
+    }
+}
+
+.emptyState {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 200px;
+}
+
+.toggleName {
+    color: #37474f !important;
+    font-weight: 700;
+}
+
+.toolbar {
+    position: relative;
+    padding: 0 24px 16px 24px;
+    text-align: center;
+}
+
+.toolbarButton {
+    position: absolute;
+    top: 56px;
+    right: 24px;
+    z-index: 2;
+}
+
+.error {
+    color: #d50000;
+}
+
+.headerTitle {
+    font-size: var(--h1-size);
+    margin: 0;
+}
+
+.listItem {
+    padding: 0;
+}
+
+.section {
+    padding: 8px 16px 8px 16px;
+}
+
+.contentPadding {
+    padding: var(--card-padding);
+}
+
+.contentSpacing > * {
+    margin: 0.5rem 0;
+}
+
+.searchField {
+    margin-bottom: 2rem;
+    max-width: 400px;
+}

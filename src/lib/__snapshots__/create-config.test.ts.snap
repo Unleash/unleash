@@ -62,10 +62,30 @@ Object {
   },
   "eventHook": undefined,
   "experimental": Object {
-    "batchMetrics": false,
-    "embedProxy": false,
+    "externalResolver": Object {
+      "isEnabled": [Function],
+    },
+    "flags": Object {
+      "ENABLE_DARK_MODE_SUPPORT": false,
+      "anonymiseEventLog": false,
+      "batchMetrics": false,
+      "embedProxy": false,
+    },
   },
-  "frontendApiOrigins": Array [],
+  "flagResolver": FlagResolver {
+    "experiments": Object {
+      "ENABLE_DARK_MODE_SUPPORT": false,
+      "anonymiseEventLog": false,
+      "batchMetrics": false,
+      "embedProxy": false,
+    },
+    "externalResolver": Object {
+      "isEnabled": [Function],
+    },
+  },
+  "frontendApiOrigins": Array [
+    "*",
+  ],
   "getLogger": [Function],
   "import": Object {
     "dropBeforeImport": false,
@@ -106,6 +126,7 @@ Object {
   "ui": Object {
     "flags": Object {
       "E": true,
+      "ENABLE_DARK_MODE_SUPPORT": false,
     },
   },
   "versionCheck": Object {

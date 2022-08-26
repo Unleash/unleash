@@ -82,9 +82,7 @@ test('should accept client metrics with yes/no', () => {
 });
 
 test('should accept client metrics with yes/no with metricsV2', async () => {
-    const testRunner = await getSetup({
-        experimental: { metricsV2: { enabled: true } },
-    });
+    const testRunner = await getSetup();
     await testRunner.request
         .post('/api/client/metrics')
         .send({

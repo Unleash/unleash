@@ -14,10 +14,12 @@ jobs:
           echo "$GITHUB_CONTEXT"
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Install root dependencies
+        uses: bahmutov/npm-install@v1
       - name: Run Cypress
         uses: cypress-io/github-action@v2
         with:
-          project: ./frontend
+          working-directory: frontend
           env: AUTH_USER=admin,AUTH_PASSWORD=unleash4all
           config: baseUrl=${{ github.event.deployment_status.target_url }}
           record: true

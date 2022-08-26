@@ -3,16 +3,17 @@ name: e2e:feature
 on: [deployment_status]
 jobs:
   e2e:
-    run: |
-      echo "$github.event_name"
-      echo "$github.event.deployment_status.state.url"
     # only runs this job on successful deploy
     if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success' && contains(github.event.deployment_status.url, 'unleash-monorepo-frontend')
     runs-on: ubuntu-latest
     steps:
+      - run: |
+          echo "$github.event.deployment_status.state.url"
       - name: Dump GitHub context
         env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
+           GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: |
+              echo "$GITHUB_CONTEXT"
       - name: Checkout
         uses: actions/checkout@v3
       - name: Install root dependencies

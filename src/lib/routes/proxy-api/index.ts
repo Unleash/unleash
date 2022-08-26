@@ -41,11 +41,9 @@ export default class ProxyController extends Controller {
         this.logger = config.getLogger('client-api/feature.js');
         this.services = services;
 
-        if (config.frontendApiOrigins.length > 0) {
-            // Support CORS requests for the frontend endpoints.
-            // Preflight requests are handled in `app.ts`.
-            this.app.use(corsOriginMiddleware(services));
-        }
+        // Support CORS requests for the frontend endpoints.
+        // Preflight requests are handled in `app.ts`.
+        this.app.use(corsOriginMiddleware(services));
 
         this.route({
             method: 'get',

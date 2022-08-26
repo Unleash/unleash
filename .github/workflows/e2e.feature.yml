@@ -7,8 +7,6 @@ jobs:
     if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success' && contains(github.event.deployment_status.url, 'unleash-monorepo-frontend')
     runs-on: ubuntu-latest
     steps:
-      - run: |
-          echo "$github.event.deployment_status.state.url"
       - name: Dump GitHub context
         env:
            GITHUB_CONTEXT: ${{ toJson(github) }}

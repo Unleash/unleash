@@ -1,4 +1,3 @@
-import { publicFolder } from 'unleash-frontend';
 import express, { Application, RequestHandler } from 'express';
 import compression from 'compression';
 import favicon from 'serve-favicon';
@@ -22,6 +21,7 @@ import noAuthentication from './middleware/no-authentication';
 import secureHeaders from './middleware/secure-headers';
 
 import { loadIndexHTML } from './util/load-index-html';
+import { findPublicFolder } from './util/findPublicFolder';
 
 export default async function getApp(
     config: IUnleashConfig,
@@ -32,7 +32,7 @@ export default async function getApp(
     const app = express();
 
     const baseUriPath = config.server.baseUriPath || '';
-
+    const publicFolder = findPublicFolder();
     let indexHTML = await loadIndexHTML(config, publicFolder);
 
     app.set('trust proxy', true);
@@ -70,16 +70,13 @@ export default async function getApp(
     }
 
     if (
-        config.experimental.embedProxy &&
+        config.experimental.flags.embedProxy &&
         config.frontendApiOrigins.length > 0
     ) {
         // Support CORS preflight requests for the frontend endpoints.
         // Preflight requests should not have Authorization headers,
         // so this must be handled before the API token middleware.
-        app.options(
-            '/api/frontend*',
-            corsOriginMiddleware(config.frontendApiOrigins),
-        );
+        app.options('/api/frontend*', corsOriginMiddleware(services));
     }
 
     switch (config.authentication.type) {

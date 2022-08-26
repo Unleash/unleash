@@ -28,7 +28,7 @@ class IndexRouter extends Controller {
         this.use('/api/admin', new AdminApi(config, services).router);
         this.use('/api/client', new ClientApi(config, services).router);
 
-        if (config.experimental.embedProxy) {
+        if (config.experimental.flags.embedProxy) {
             this.use(
                 '/api/frontend',
                 new ProxyController(config, services).router,

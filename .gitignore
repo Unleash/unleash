@@ -23,10 +23,6 @@ coverage/lcov-report
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 build/Release
 
-# webpack output
-packages/unleash-frontend/public/bundle.js
-packages/unleash-frontend/public/bundle.js.map
-
 # liquibase stuff
 /sql
 unleash-db.jar

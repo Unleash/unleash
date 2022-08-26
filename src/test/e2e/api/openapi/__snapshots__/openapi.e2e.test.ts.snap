@@ -2498,6 +2498,28 @@ Object {
         },
         "type": "array",
       },
+      "setUiConfigSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "frontendSettings": Object {
+            "additionalProperties": false,
+            "properties": Object {
+              "frontendApiOrigins": Object {
+                "additionalProperties": false,
+                "items": Object {
+                  "type": "string",
+                },
+                "type": "array",
+              },
+            },
+            "required": Array [
+              "frontendApiOrigins",
+            ],
+            "type": "object",
+          },
+        },
+        "type": "object",
+      },
       "sortOrderSchema": Object {
         "additionalProperties": Object {
           "type": "number",
@@ -2828,6 +2850,12 @@ Object {
               "type": "boolean",
             },
             "type": "object",
+          },
+          "frontendApiOrigins": Object {
+            "items": Object {
+              "type": "string",
+            },
+            "type": "array",
           },
           "links": Object {
             "items": Object {
@@ -6172,7 +6200,7 @@ If the provided project does not exist, the list of events will be empty.",
     },
     "/api/admin/ui-config": Object {
       "get": Object {
-        "operationId": "getUIConfig",
+        "operationId": "getUiConfig",
         "responses": Object {
           "200": Object {
             "content": Object {
@@ -6183,6 +6211,28 @@ If the provided project does not exist, the list of events will be empty.",
               },
             },
             "description": "uiConfigSchema",
+          },
+        },
+        "tags": Array [
+          "Admin UI",
+        ],
+      },
+      "post": Object {
+        "operationId": "setUiConfig",
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/setUiConfigSchema",
+              },
+            },
+          },
+          "description": "setUiConfigSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "200": Object {
+            "description": "This response has no body.",
           },
         },
         "tags": Array [

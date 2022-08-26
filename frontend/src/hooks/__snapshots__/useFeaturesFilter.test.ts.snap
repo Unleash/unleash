@@ -1,0 +1,197 @@
+// Vitest Snapshot v1
+
+exports[`useFeaturesFilter constraints 1`] = `
+{
+  "filter": {
+    "project": "*",
+    "query": "xyz",
+  },
+  "filtered": [
+    {
+      "createdAt": 2006-01-02T15:04:05.000Z,
+      "description": "1",
+      "enabled": false,
+      "impressionData": false,
+      "lastSeenAt": 2006-01-02T15:04:05.000Z,
+      "name": "1",
+      "project": "a",
+      "stale": false,
+      "strategies": [
+        {
+          "constraints": [],
+          "id": "1",
+          "name": "1",
+          "parameters": {},
+        },
+        {
+          "constraints": [],
+          "id": "1",
+          "name": "1",
+          "parameters": {},
+        },
+        {
+          "constraints": [
+            {
+              "contextName": "",
+              "operator": "IN",
+            },
+            {
+              "contextName": "",
+              "operator": "IN",
+              "value": "xyz",
+            },
+            {
+              "contextName": "",
+              "operator": "IN",
+              "values": [
+                "xyz",
+              ],
+            },
+          ],
+          "id": "1",
+          "name": "1",
+          "parameters": {},
+        },
+      ],
+      "type": "1",
+      "variants": [],
+    },
+  ],
+  "setFilter": [Function],
+}
+`;
+
+exports[`useFeaturesFilter empty 1`] = `
+{
+  "filter": {
+    "project": "*",
+  },
+  "filtered": [],
+  "setFilter": [Function],
+}
+`;
+
+exports[`useFeaturesFilter equal 1`] = `
+{
+  "filter": {
+    "project": "*",
+  },
+  "filtered": [
+    {
+      "createdAt": 2006-01-02T15:04:05.000Z,
+      "description": "1",
+      "enabled": false,
+      "impressionData": false,
+      "lastSeenAt": 2006-01-02T15:04:05.000Z,
+      "name": "1",
+      "project": "1",
+      "stale": false,
+      "strategies": [],
+      "type": "1",
+      "variants": [],
+    },
+    {
+      "createdAt": 2006-01-02T15:04:05.000Z,
+      "description": "1",
+      "enabled": false,
+      "impressionData": false,
+      "lastSeenAt": 2006-01-02T15:04:05.000Z,
+      "name": "1",
+      "project": "1",
+      "stale": false,
+      "strategies": [],
+      "type": "1",
+      "variants": [],
+    },
+    {
+      "createdAt": 2006-01-02T15:04:05.000Z,
+      "description": "1",
+      "enabled": false,
+      "impressionData": false,
+      "lastSeenAt": 2006-01-02T15:04:05.000Z,
+      "name": "1",
+      "project": "1",
+      "stale": false,
+      "strategies": [],
+      "type": "1",
+      "variants": [],
+    },
+  ],
+  "setFilter": [Function],
+}
+`;
+
+exports[`useFeaturesFilter project 1`] = `
+{
+  "filter": {
+    "project": "2",
+  },
+  "filtered": [
+    {
+      "createdAt": 2006-01-02T15:04:05.000Z,
+      "description": "1",
+      "enabled": false,
+      "impressionData": false,
+      "lastSeenAt": 2006-01-02T15:04:05.000Z,
+      "name": "1",
+      "project": "2",
+      "stale": false,
+      "strategies": [],
+      "type": "1",
+      "variants": [],
+    },
+    {
+      "createdAt": 2006-01-02T15:04:05.000Z,
+      "description": "1",
+      "enabled": false,
+      "impressionData": false,
+      "lastSeenAt": 2006-01-02T15:04:05.000Z,
+      "name": "1",
+      "project": "2",
+      "stale": false,
+      "strategies": [],
+      "type": "1",
+      "variants": [],
+    },
+  ],
+  "setFilter": [Function],
+}
+`;
+
+exports[`useFeaturesFilter query 1`] = `
+{
+  "filter": {
+    "project": "*",
+    "query": "bc",
+  },
+  "filtered": [
+    {
+      "createdAt": 2006-01-02T15:04:05.000Z,
+      "description": "1",
+      "enabled": false,
+      "impressionData": false,
+      "lastSeenAt": 2006-01-02T15:04:05.000Z,
+      "name": "1",
+      "project": "abc",
+      "stale": false,
+      "strategies": [],
+      "type": "1",
+      "variants": [],
+    },
+    {
+      "createdAt": 2006-01-02T15:04:05.000Z,
+      "description": "1",
+      "enabled": false,
+      "impressionData": false,
+      "lastSeenAt": 2006-01-02T15:04:05.000Z,
+      "name": "1",
+      "project": "abcd",
+      "stale": false,
+      "strategies": [],
+      "type": "1",
+      "variants": [],
+    },
+  ],
+  "setFilter": [Function],
+}
+`;

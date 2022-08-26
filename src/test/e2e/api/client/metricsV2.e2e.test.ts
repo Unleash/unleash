@@ -11,9 +11,7 @@ let defaultToken;
 
 beforeAll(async () => {
     db = await dbInit('metrics_two_api_client', getLogger);
-    app = await setupAppWithAuth(db.stores, {
-        experimental: { metricsV2: { enabled: true } },
-    });
+    app = await setupAppWithAuth(db.stores, {});
     defaultToken = await app.services.apiTokenService.createApiToken({
         type: ApiTokenType.CLIENT,
         project: 'default',

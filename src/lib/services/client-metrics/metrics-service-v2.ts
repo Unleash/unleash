@@ -10,7 +10,6 @@ import {
 import { clientMetricsSchema } from './schema';
 import { hoursToMilliseconds, secondsToMilliseconds } from 'date-fns';
 import { IFeatureToggleStore } from '../../types/stores/feature-toggle-store';
-import EventEmitter from 'events';
 import { CLIENT_METRICS } from '../../types/events';
 import ApiUser from '../../types/api-user';
 import { ALL } from '../../types/models/api-token';
@@ -18,6 +17,8 @@ import User from '../../types/user';
 import { collapseHourlyMetrics } from '../../util/collapseHourlyMetrics';
 
 export default class ClientMetricsServiceV2 {
+    private config: IUnleashConfig;
+
     private timers: NodeJS.Timeout[] = [];
 
     private unsavedMetrics: IClientMetricsEnv[] = [];
@@ -26,10 +27,6 @@ export default class ClientMetricsServiceV2 {
 
     private featureToggleStore: IFeatureToggleStore;
 
-    private batchMetricsEnabled: boolean;
-
-    private eventBus: EventEmitter;
-
     private logger: Logger;
 
     constructor(
@@ -37,28 +34,21 @@ export default class ClientMetricsServiceV2 {
             featureToggleStore,
             clientMetricsStoreV2,
         }: Pick<IUnleashStores, 'featureToggleStore' | 'clientMetricsStoreV2'>,
-        {
-            experimental,
-            eventBus,
-            getLogger,
-        }: Pick<IUnleashConfig, 'eventBus' | 'getLogger' | 'experimental'>,
+        config: IUnleashConfig,
         bulkInterval = secondsToMilliseconds(5),
     ) {
         this.featureToggleStore = featureToggleStore;
         this.clientMetricsStoreV2 = clientMetricsStoreV2;
-        this.batchMetricsEnabled = experimental.flags.batchMetrics;
-        this.eventBus = eventBus;
-        this.logger = getLogger(
+        this.config = config;
+        this.logger = config.getLogger(
             '/services/client-metrics/client-metrics-service-v2.ts',
         );
 
-        if (this.batchMetricsEnabled) {
-            this.timers.push(
-                setInterval(() => {
-                    this.bulkAdd().catch(console.error);
-                }, bulkInterval).unref(),
-            );
-        }
+        this.timers.push(
+            setInterval(() => {
+                this.bulkAdd().catch(console.error);
+            }, bulkInterval).unref(),
+        );
 
         this.timers.push(
             setInterval(() => {
@@ -90,7 +80,7 @@ export default class ClientMetricsServiceV2 {
             }))
             .filter((item) => !(item.yes === 0 && item.no === 0));
 
-        if (this.batchMetricsEnabled) {
+        if (this.config.flagResolver.isEnabled('batchMetrics')) {
             this.unsavedMetrics = collapseHourlyMetrics([
                 ...this.unsavedMetrics,
                 ...clientMetrics,
@@ -99,11 +89,11 @@ export default class ClientMetricsServiceV2 {
             await this.clientMetricsStoreV2.batchInsertMetrics(clientMetrics);
         }
 
-        this.eventBus.emit(CLIENT_METRICS, value);
+        this.config.eventBus.emit(CLIENT_METRICS, value);
     }
 
     async bulkAdd(): Promise<void> {
-        if (this.batchMetricsEnabled && this.unsavedMetrics.length > 0) {
+        if (this.unsavedMetrics.length > 0) {
             // Make a copy of `unsavedMetrics` in case new metrics
             // arrive while awaiting `batchInsertMetrics`.
             const copy = [...this.unsavedMetrics];

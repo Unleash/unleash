@@ -8,8 +8,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-            echo github.event_name
-            echo github.event.deployment_status.state.url
+            echo ${{ github.event_name }}
+            echo ${{ github.event.deployment_status.state.url }}
       - name: Dump GitHub context
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}

@@ -5,6 +5,9 @@ jobs:
   e2e:
     # only runs this job on successful deploy
     if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success'
+    run: |
+        echo "$github.event_name"
+        echo "$github.event.deployment_status.state.url"
     runs-on: ubuntu-latest
     steps:
       - name: Dump GitHub context

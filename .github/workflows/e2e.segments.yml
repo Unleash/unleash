@@ -21,5 +21,3 @@ jobs:
           config: baseUrl=${{ github.event.deployment_status.target_url }}
           record: true
           spec: cypress/integration/segments/segments.spec.ts
-        env:
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}

@@ -6,6 +6,7 @@ on:
       - main
     paths-ignore:
       - website/**
+      - frontend/**
       - coverage/**
 
 jobs:

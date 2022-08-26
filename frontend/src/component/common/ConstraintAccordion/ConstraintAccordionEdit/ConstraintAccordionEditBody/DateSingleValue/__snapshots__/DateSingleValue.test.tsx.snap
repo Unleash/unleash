@@ -1,0 +1,8 @@
+// Vitest Snapshot v1
+
+exports[`Date component - snapshot matching 1`] = `
+{
+  "midday": "2022-03-15T12:00",
+  "midnight": "2022-03-15T00:00",
+}
+`;

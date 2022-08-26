@@ -89,6 +89,7 @@
     "cookie-parser": "^1.4.5",
     "cookie-session": "^2.0.0-rc.1",
     "cors": "^2.8.5",
+    "cypress": "9.7.0",
     "date-fns": "^2.25.0",
     "db-migrate": "0.11.13",
     "db-migrate-pg": "1.2.2",

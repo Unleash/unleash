@@ -154,7 +154,7 @@ export default async function getApp(
 
     app.get(`${baseUriPath}/*`, (req, res) => {
         if (req.path.startsWith(`${baseUriPath}/api`)) {
-            res.status(404).send({ message: '404 - Not found' });
+            res.status(404).send({ message: 'Not found' });
             return;
         }
 

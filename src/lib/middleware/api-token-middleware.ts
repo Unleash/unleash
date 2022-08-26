@@ -7,7 +7,18 @@ const isClientApi = ({ path }) => {
 };
 
 const isProxyApi = ({ path }) => {
-    return path && path.startsWith('/api/frontend');
+    if (!path) {
+        return;
+    }
+
+    // Handle all our current proxy paths which will redirect to the new
+    // embedded proxy endpoint
+    return (
+        path.startsWith('/api/default/proxy') ||
+        path.startsWith('/api/development/proxy') ||
+        path.startsWith('/api/production/proxy') ||
+        path.startsWith('/api/frontend')
+    );
 };
 
 export const TOKEN_TYPE_ERROR_MESSAGE =

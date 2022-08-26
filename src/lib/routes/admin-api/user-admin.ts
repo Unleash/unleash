@@ -10,7 +10,7 @@ import ResetTokenService from '../../services/reset-token-service';
 import { IAuthRequest } from '../unleash-types';
 import SettingService from '../../services/setting-service';
 import { IUser, SimpleAuthSettings } from '../../server-impl';
-import { simpleAuthKey } from '../../types/settings/simple-auth-settings';
+import { simpleAuthSettingsKey } from '../../types/settings/simple-auth-settings';
 import { anonymise } from '../../util/anonymise';
 import { OpenApiService } from '../../services/openapi-service';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
@@ -369,7 +369,9 @@ export default class UserAdminController extends Controller {
         );
 
         const passwordAuthSettings =
-            await this.settingService.get<SimpleAuthSettings>(simpleAuthKey);
+            await this.settingService.get<SimpleAuthSettings>(
+                simpleAuthSettingsKey,
+            );
 
         let inviteLink: string;
         if (!passwordAuthSettings?.disabled) {

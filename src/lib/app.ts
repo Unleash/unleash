@@ -76,10 +76,7 @@ export default async function getApp(
         // Support CORS preflight requests for the frontend endpoints.
         // Preflight requests should not have Authorization headers,
         // so this must be handled before the API token middleware.
-        app.options(
-            '/api/frontend*',
-            corsOriginMiddleware(config.frontendApiOrigins),
-        );
+        app.options('/api/frontend*', corsOriginMiddleware(services));
     }
 
     switch (config.authentication.type) {

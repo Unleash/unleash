@@ -43,6 +43,7 @@ import {
     DEFAULT_STRATEGY_SEGMENTS_LIMIT,
 } from './util/segments';
 import FlagResolver from './util/flag-resolver';
+import { validateOrigins } from './util/validateOrigin';
 
 const safeToUpper = (s: string) => (s ? s.toUpperCase() : s);
 
@@ -311,6 +312,20 @@ const parseCspEnvironmentVariables = (): ICspDomainConfig => {
     };
 };
 
+const parseFrontendApiOrigins = (options: IUnleashOptions): string[] => {
+    const frontendApiOrigins = parseEnvVarStrings(
+        process.env.UNLEASH_FRONTEND_API_ORIGINS,
+        options.frontendApiOrigins || ['*'],
+    );
+
+    const error = validateOrigins(frontendApiOrigins);
+    if (error) {
+        throw new Error(error);
+    }
+
+    return frontendApiOrigins;
+};
+
 export function createConfig(options: IUnleashOptions): IUnleashConfig {
     let extraDbOptions = {};
 
@@ -420,10 +435,6 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         DEFAULT_STRATEGY_SEGMENTS_LIMIT,
     );
 
-    const frontendApiOrigins =
-        options.frontendApiOrigins ||
-        parseEnvVarStrings(process.env.UNLEASH_FRONTEND_API_ORIGINS, []);
-
     const clientFeatureCaching = loadClientCachingOptions(options);
 
     return {
@@ -449,7 +460,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         eventBus: new EventEmitter(),
         environmentEnableOverrides,
         additionalCspAllowedDomains,
-        frontendApiOrigins,
+        frontendApiOrigins: parseFrontendApiOrigins(options),
         inlineSegmentConstraints,
         segmentValuesLimit,
         strategySegmentsLimit,

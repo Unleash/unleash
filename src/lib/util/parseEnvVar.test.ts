@@ -29,9 +29,11 @@ test('parseEnvVarBoolean', () => {
 });
 
 test('parseEnvVarStringList', () => {
+    expect(parseEnvVarStrings(undefined, [])).toEqual([]);
+    expect(parseEnvVarStrings(undefined, ['a'])).toEqual(['a']);
+    expect(parseEnvVarStrings('', ['a'])).toEqual([]);
     expect(parseEnvVarStrings('', [])).toEqual([]);
     expect(parseEnvVarStrings('  ', [])).toEqual([]);
-    expect(parseEnvVarStrings('', ['*'])).toEqual(['*']);
     expect(parseEnvVarStrings('a', ['*'])).toEqual(['a']);
     expect(parseEnvVarStrings('a,b,c', [])).toEqual(['a', 'b', 'c']);
     expect(parseEnvVarStrings('a,b,c', [])).toEqual(['a', 'b', 'c']);

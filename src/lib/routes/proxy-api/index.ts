@@ -2,9 +2,7 @@ import { Response, Request } from 'express';
 import Controller from '../controller';
 import { IUnleashConfig, IUnleashServices } from '../../types';
 import { Logger } from '../../logger';
-import { OpenApiService } from '../../services/openapi-service';
 import { NONE } from '../../types/permissions';
-import { ProxyService } from '../../services/proxy-service';
 import ApiUser from '../../types/api-user';
 import {
     proxyFeaturesSchema,
@@ -28,29 +26,25 @@ interface ApiUserRequest<
     user: ApiUser;
 }
 
+type Services = Pick<
+    IUnleashServices,
+    'settingService' | 'proxyService' | 'openApiService'
+>;
+
 export default class ProxyController extends Controller {
     private readonly logger: Logger;
 
-    private proxyService: ProxyService;
+    private services: Services;
 
-    private openApiService: OpenApiService;
-
-    constructor(
-        config: IUnleashConfig,
-        {
-            proxyService,
-            openApiService,
-        }: Pick<IUnleashServices, 'proxyService' | 'openApiService'>,
-    ) {
+    constructor(config: IUnleashConfig, services: Services) {
         super(config);
         this.logger = config.getLogger('client-api/feature.js');
-        this.proxyService = proxyService;
-        this.openApiService = openApiService;
+        this.services = services;
 
         if (config.frontendApiOrigins.length > 0) {
             // Support CORS requests for the frontend endpoints.
             // Preflight requests are handled in `app.ts`.
-            this.app.use(corsOriginMiddleware(config.frontendApiOrigins));
+            this.app.use(corsOriginMiddleware(services));
         }
 
         this.route({
@@ -59,7 +53,7 @@ export default class ProxyController extends Controller {
             handler: this.getProxyFeatures,
             permission: NONE,
             middleware: [
-                this.openApiService.validPath({
+                this.services.openApiService.validPath({
                     tags: ['Unstable'],
                     operationId: 'getFrontendFeatures',
                     responses: {
@@ -89,7 +83,7 @@ export default class ProxyController extends Controller {
             handler: this.registerProxyMetrics,
             permission: NONE,
             middleware: [
-                this.openApiService.validPath({
+                this.services.openApiService.validPath({
                     tags: ['Unstable'],
                     operationId: 'registerFrontendMetrics',
                     requestBody: createRequestSchema('proxyMetricsSchema'),
@@ -104,7 +98,7 @@ export default class ProxyController extends Controller {
             handler: ProxyController.registerProxyClient,
             permission: NONE,
             middleware: [
-                this.openApiService.validPath({
+                this.services.openApiService.validPath({
                     tags: ['Unstable'],
                     operationId: 'registerFrontendClient',
                     requestBody: createRequestSchema('proxyClientSchema'),
@@ -141,11 +135,11 @@ export default class ProxyController extends Controller {
         req: ApiUserRequest,
         res: Response<ProxyFeaturesSchema>,
     ) {
-        const toggles = await this.proxyService.getProxyFeatures(
+        const toggles = await this.services.proxyService.getProxyFeatures(
             req.user,
             ProxyController.createContext(req),
         );
-        this.openApiService.respondWithValidation(
+        this.services.openApiService.respondWithValidation(
             200,
             res,
             proxyFeaturesSchema.$id,
@@ -157,7 +151,7 @@ export default class ProxyController extends Controller {
         req: ApiUserRequest<unknown, unknown, ProxyMetricsSchema>,
         res: Response,
     ) {
-        await this.proxyService.registerProxyMetrics(
+        await this.services.proxyService.registerProxyMetrics(
             req.user,
             req.body,
             req.ip,

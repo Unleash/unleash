@@ -7,7 +7,7 @@ jobs:
       echo "$github.event_name"
       echo "$github.event.deployment_status.state.url"
     # only runs this job on successful deploy
-    if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success' && contains(github.event.deployment_status.state.url, 'unleash-monorepo-frontend')
+    if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success' && contains(github.event.deployment_status.url, 'unleash-monorepo-frontend')
     runs-on: ubuntu-latest
     steps:
       - name: Dump GitHub context

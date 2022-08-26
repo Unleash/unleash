@@ -17,7 +17,6 @@ export interface IUiConfig {
     segmentValuesLimit?: number;
     strategySegmentsLimit?: number;
     frontendApiOrigins?: string[];
-    embedProxy?: boolean;
 }
 
 export interface IProclamationToast {
@@ -40,6 +39,7 @@ export interface IFlags {
     UNLEASH_CLOUD?: boolean;
     UG?: boolean;
     ENABLE_DARK_MODE_SUPPORT?: boolean;
+    embedProxyFrontend?: boolean;
 }
 
 export interface IVersionInfo {

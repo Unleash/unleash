@@ -118,7 +118,6 @@ class ConfigController extends Controller {
             frontendApiOrigins: frontendSettings.frontendApiOrigins,
             versionInfo: this.versionService.getVersionInfo(),
             disablePasswordAuth,
-            embedProxy: this.config.experimental.flags.embedProxy,
         };
 
         this.openApiService.respondWithValidation(

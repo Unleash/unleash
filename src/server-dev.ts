@@ -34,6 +34,7 @@ process.nextTick(async () => {
                     // externalResolver: unleash,
                     flags: {
                         embedProxy: true,
+                        embedProxyFrontend: true,
                         batchMetrics: true,
                         anonymiseEventLog: false,
                     },

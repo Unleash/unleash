@@ -37,6 +37,12 @@ export const uiConfigSchema = {
         strategySegmentsLimit: {
             type: 'number',
         },
+        frontendApiOrigins: {
+            type: 'array',
+            items: {
+                type: 'string',
+            },
+        },
         flags: {
             type: 'object',
             additionalProperties: {

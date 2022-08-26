@@ -42,7 +42,8 @@ const apiAccessMiddleware = (
                 if (
                     (apiUser.type === CLIENT && !isClientApi(req)) ||
                     (apiUser.type === FRONTEND && !isProxyApi(req)) ||
-                    (apiUser.type === FRONTEND && !experimental.embedProxy)
+                    (apiUser.type === FRONTEND &&
+                        !experimental.flags.embedProxy)
                 ) {
                     res.status(403).send({ message: TOKEN_TYPE_ERROR_MESSAGE });
                     return;

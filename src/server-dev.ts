@@ -31,11 +31,12 @@ process.nextTick(async () => {
                     enable: false,
                 },
                 experimental: {
-                    metricsV2: { enabled: true },
-                    anonymiseEventLog: false,
-                    userGroups: true,
-                    embedProxy: true,
-                    batchMetrics: true,
+                    // externalResolver: unleash,
+                    flags: {
+                        embedProxy: true,
+                        batchMetrics: true,
+                        anonymiseEventLog: false,
+                    },
                 },
                 authentication: {
                     initApiTokens: [

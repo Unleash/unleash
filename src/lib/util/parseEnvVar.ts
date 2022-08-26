@@ -20,10 +20,10 @@ export function parseEnvVarBoolean(
 }
 
 export function parseEnvVarStrings(
-    envVar: string,
+    envVar: string | undefined,
     defaultVal: string[],
 ): string[] {
-    if (envVar) {
+    if (typeof envVar === 'string') {
         return envVar
             .split(',')
             .map((item) => item.trim())

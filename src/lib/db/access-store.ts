@@ -45,16 +45,8 @@ export class AccessStore implements IAccessStore {
 
     private db: Knex;
 
-    private enableUserGroupPermissions: boolean;
-
-    constructor(
-        db: Knex,
-        eventBus: EventEmitter,
-        getLogger: Function,
-        enableUserGroupPermissions: boolean,
-    ) {
+    constructor(db: Knex, eventBus: EventEmitter, getLogger: Function) {
         this.db = db;
-        this.enableUserGroupPermissions = enableUserGroupPermissions;
         this.logger = getLogger('access-store.ts');
         this.timer = (action: string) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
@@ -133,27 +125,21 @@ export class AccessStore implements IAccessStore {
             .join(`${T.PERMISSIONS} AS p`, 'p.id', 'rp.permission_id')
             .where('ur.user_id', '=', userId);
 
-        if (this.enableUserGroupPermissions) {
-            userPermissionQuery = userPermissionQuery.union((db) => {
-                db.select(
-                    'project',
-                    'permission',
-                    'environment',
-                    'p.type',
-                    'gr.role_id',
-                )
-                    .from<IPermissionRow>(`${T.GROUP_USER} AS gu`)
-                    .join(`${T.GROUPS} AS g`, 'g.id', 'gu.group_id')
-                    .join(`${T.GROUP_ROLE} AS gr`, 'gu.group_id', 'gr.group_id')
-                    .join(
-                        `${T.ROLE_PERMISSION} AS rp`,
-                        'rp.role_id',
-                        'gr.role_id',
-                    )
-                    .join(`${T.PERMISSIONS} AS p`, 'p.id', 'rp.permission_id')
-                    .where('gu.user_id', '=', userId);
-            });
-        }
+        userPermissionQuery = userPermissionQuery.union((db) => {
+            db.select(
+                'project',
+                'permission',
+                'environment',
+                'p.type',
+                'gr.role_id',
+            )
+                .from<IPermissionRow>(`${T.GROUP_USER} AS gu`)
+                .join(`${T.GROUPS} AS g`, 'g.id', 'gu.group_id')
+                .join(`${T.GROUP_ROLE} AS gr`, 'gu.group_id', 'gr.group_id')
+                .join(`${T.ROLE_PERMISSION} AS rp`, 'rp.role_id', 'gr.role_id')
+                .join(`${T.PERMISSIONS} AS p`, 'p.id', 'rp.permission_id')
+                .where('gu.user_id', '=', userId);
+        });
         const rows = await userPermissionQuery;
         stopTimer();
         return rows.map(this.mapUserPermission);

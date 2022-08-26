@@ -28,8 +28,8 @@ const apiAccessMiddleware = (
     {
         getLogger,
         authentication,
-        experimental,
-    }: Pick<IUnleashConfig, 'getLogger' | 'authentication' | 'experimental'>,
+        flagResolver,
+    }: Pick<IUnleashConfig, 'getLogger' | 'authentication' | 'flagResolver'>,
     { apiTokenService }: any,
 ): any => {
     const logger = getLogger('/middleware/api-token.ts');
@@ -54,7 +54,7 @@ const apiAccessMiddleware = (
                     (apiUser.type === CLIENT && !isClientApi(req)) ||
                     (apiUser.type === FRONTEND && !isProxyApi(req)) ||
                     (apiUser.type === FRONTEND &&
-                        !experimental.flags.embedProxy)
+                        !flagResolver.isEnabled('embedProxy'))
                 ) {
                     res.status(403).send({ message: TOKEN_TYPE_ERROR_MESSAGE });
                     return;

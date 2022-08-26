@@ -70,7 +70,7 @@ export default async function getApp(
     }
 
     if (
-        config.experimental.flags.embedProxy &&
+        config.flagResolver.isEnabled('embedProxy') &&
         config.frontendApiOrigins.length > 0
     ) {
         // Support CORS preflight requests for the frontend endpoints.

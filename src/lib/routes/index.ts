@@ -14,6 +14,7 @@ import ProxyController from './proxy-api';
 class IndexRouter extends Controller {
     constructor(config: IUnleashConfig, services: IUnleashServices) {
         super(config);
+
         this.use('/health', new HealthCheckController(config, services).router);
         this.use('/internal-backstage', new BackstageController(config).router);
         this.use('/logout', new LogoutController(config).router);
@@ -28,7 +29,7 @@ class IndexRouter extends Controller {
         this.use('/api/admin', new AdminApi(config, services).router);
         this.use('/api/client', new ClientApi(config, services).router);
 
-        if (config.experimental.flags.embedProxy) {
+        if (config.flagResolver.isEnabled('embedProxy')) {
             this.use(
                 '/api/frontend',
                 new ProxyController(config, services).router,

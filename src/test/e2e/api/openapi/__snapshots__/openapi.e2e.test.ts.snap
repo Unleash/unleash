@@ -33,14 +33,7 @@ exports[`should serve the OpenAPI UI 1`] = `
       <div id=\\"swagger-ui\\"></div>
       <script src=\\"./swagger-ui-bundle.js\\"></script>
       <script src=\\"./swagger-ui-standalone-preset.js\\"></script>
-      <script>
-        window.onload = function () {
-          window.ui = SwaggerUIBundle({
-            url: \\"/docs/openapi.json\\",
-            dom_id: '#swagger-ui'
-          })
-        }
-      </script>
+      <script src=\\"./swagger-ui-init.js\\"></script>
     
   </body>
 </html>

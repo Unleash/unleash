@@ -14,8 +14,6 @@ jobs:
           echo "$GITHUB_CONTEXT"
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Install root dependencies
-        uses: bahmutov/npm-install@v1
       - name: Run Cypress
         uses: cypress-io/github-action@v2
         with:

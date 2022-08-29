@@ -1,6 +1,6 @@
 name: e2e:segments
 # https://docs.github.com/en/actions/reference/events-that-trigger-workflows
-on: [deployment_status]
+on: [ deployment_status ]
 jobs:
   e2e:
     # only runs this job on successful deploy

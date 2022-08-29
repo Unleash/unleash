@@ -7,7 +7,8 @@ jobs:
     if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success'
     runs-on: ubuntu-latest
     steps:
-      - run: |
+      - name: Echo test
+        run: |
             echo ${{ github.event_name }}
             echo ${{ github.event.deployment_status.state.url }}
       - name: Dump GitHub context

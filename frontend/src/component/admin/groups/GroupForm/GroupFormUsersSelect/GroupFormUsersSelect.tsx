@@ -56,6 +56,9 @@ const renderTags = (value: IGroupUser[]) => (
     </StyledTags>
 );
 
+const caseInsensitiveSearch = (search: string, value?: string) =>
+    Boolean(value?.toLowerCase()?.includes(search.toLowerCase()));
+
 interface IGroupFormUsersSelectProps {
     users: IGroupUser[];
     setUsers: React.Dispatch<React.SetStateAction<IGroupUser[]>>;
@@ -94,6 +97,14 @@ export const GroupFormUsersSelect: VFC<IGroupFormUsersSelectProps> = ({
                 })}
                 renderOption={(props, option, { selected }) =>
                     renderOption(props, option as IUser, selected)
+                }
+                filterOptions={(options, { inputValue }) =>
+                    options.filter(
+                        ({ name, username, email }) =>
+                            caseInsensitiveSearch(inputValue, email) ||
+                            caseInsensitiveSearch(inputValue, name) ||
+                            caseInsensitiveSearch(inputValue, username)
+                    )
                 }
                 isOptionEqualToValue={(option, value) => option.id === value.id}
                 getOptionLabel={(option: IUser) =>

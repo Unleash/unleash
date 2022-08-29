@@ -7,6 +7,8 @@ WORKDIR /unleash
 
 COPY . /unleash
 
+RUN yarn config set network-timeout 300000
+
 RUN yarn install --frozen-lockfile && yarn run local:package
 
 WORKDIR /unleash/docker

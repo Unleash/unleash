@@ -1,10 +1,10 @@
 name: e2e:segments
 # https://docs.github.com/en/actions/reference/events-that-trigger-workflows
-on: [deployment_status]
+on: [ deployment_status ]
 jobs:
   e2e:
     # only runs this job on successful deploy
-    if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success'
+    if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success' && contains(github.event.deployment_status.target_url, 'unleash-monorepo-frontend')
     runs-on: ubuntu-latest
     steps:
       - name: Dump GitHub context
@@ -14,12 +14,12 @@ jobs:
           echo "$GITHUB_CONTEXT"
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Install root dependencies
+        uses: bahmutov/npm-install@v1
       - name: Run Cypress
         uses: cypress-io/github-action@v2
         with:
+          working-directory: frontend
           env: AUTH_USER=admin,AUTH_PASSWORD=unleash4all
           config: baseUrl=${{ github.event.deployment_status.target_url }}
-          record: true
           spec: cypress/integration/segments/segments.spec.ts
-        env:
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}

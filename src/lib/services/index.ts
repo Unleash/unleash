@@ -4,7 +4,6 @@ import { IUnleashServices } from '../types/services';
 import FeatureTypeService from './feature-type-service';
 import EventService from './event-service';
 import HealthService from './health-service';
-
 import ProjectService from './project-service';
 import StateService from './state-service';
 import ClientInstanceService from './client-metrics/instance-service';

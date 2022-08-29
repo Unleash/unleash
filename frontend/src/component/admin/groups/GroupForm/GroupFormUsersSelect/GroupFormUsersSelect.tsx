@@ -6,6 +6,7 @@ import { VFC } from 'react';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
 import { IGroupUser } from 'interfaces/group';
 import { UG_USERS_ID } from 'utils/testIds';
+import { caseInsensitiveSearch } from 'utils/search';
 
 const StyledOption = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -55,9 +56,6 @@ const renderTags = (value: IGroupUser[]) => (
             : value[0].name || value[0].username || value[0].email}
     </StyledTags>
 );
-
-const caseInsensitiveSearch = (search: string, value?: string) =>
-    Boolean(value?.toLowerCase()?.includes(search.toLowerCase()));
 
 interface IGroupFormUsersSelectProps {
     users: IGroupUser[];

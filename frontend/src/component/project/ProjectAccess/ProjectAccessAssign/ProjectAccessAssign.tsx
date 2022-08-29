@@ -33,6 +33,7 @@ import {
     PA_USERS_GROUPS_ID,
     PA_USERS_GROUPS_TITLE_ID,
 } from 'utils/testIds';
+import { caseInsensitiveSearch } from 'utils/search';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',
@@ -87,9 +88,6 @@ const StyledRoleOption = styled('div')(({ theme }) => ({
         color: theme.palette.text.secondary,
     },
 }));
-
-const caseInsensitiveSearch = (search: string, value?: string) =>
-    Boolean(value?.toLowerCase()?.includes(search.toLowerCase()));
 
 interface IAccessOption {
     id: number;

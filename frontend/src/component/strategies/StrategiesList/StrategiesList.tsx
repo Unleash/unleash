@@ -288,7 +288,7 @@ export const StrategiesList = () => {
             isLoading={loading}
             header={
                 <PageHeader
-                    title="Strategies"
+                    title="Strategy types"
                     actions={
                         <>
                             <Search

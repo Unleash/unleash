@@ -28,7 +28,7 @@ export const useStrategies = (): IUseStrategiesOutput => {
 
 const fetcher = (): Promise<{ strategies: IStrategy[] }> => {
     return fetch(STRATEGIES_PATH)
-        .then(handleErrorResponses('Strategies'))
+        .then(handleErrorResponses('Strategy types'))
         .then(res => res.json());
 };
 

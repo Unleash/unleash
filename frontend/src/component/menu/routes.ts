@@ -251,7 +251,7 @@ export const routes: IRoute[] = [
     },
     {
         path: '/strategies',
-        title: 'Strategies',
+        title: 'Strategy types',
         component: StrategiesList,
         type: 'protected',
         menu: { mobile: true, advanced: true },

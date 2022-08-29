@@ -205,7 +205,7 @@ exports[`returns all baseRoutes 1`] = `
       "mobile": true,
     },
     "path": "/strategies",
-    "title": "Strategies",
+    "title": "Strategy types",
     "type": "protected",
   },
   {

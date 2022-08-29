@@ -88,6 +88,9 @@ const StyledRoleOption = styled('div')(({ theme }) => ({
     },
 }));
 
+const caseInsensitiveSearch = (search: string, value?: string) =>
+    Boolean(value?.toLowerCase()?.includes(search.toLowerCase()));
+
 interface IAccessOption {
     id: number;
     entity: IUser | IGroup;
@@ -333,6 +336,32 @@ export const ProjectAccessAssign = ({
                                         return option.entity.name;
                                     }
                                 }}
+                                filterOptions={(options, { inputValue }) =>
+                                    options.filter((option: IAccessOption) => {
+                                        if (option.type === ENTITY_TYPE.USER) {
+                                            const optionUser =
+                                                option.entity as IUser;
+                                            return (
+                                                caseInsensitiveSearch(
+                                                    inputValue,
+                                                    optionUser.email
+                                                ) ||
+                                                caseInsensitiveSearch(
+                                                    inputValue,
+                                                    optionUser.name
+                                                ) ||
+                                                caseInsensitiveSearch(
+                                                    inputValue,
+                                                    optionUser.username
+                                                )
+                                            );
+                                        }
+                                        return caseInsensitiveSearch(
+                                            inputValue,
+                                            option.entity.name
+                                        );
+                                    })
+                                }
                                 isOptionEqualToValue={(option, value) =>
                                     option.type === value.type &&
                                     option.entity.id === value.entity.id

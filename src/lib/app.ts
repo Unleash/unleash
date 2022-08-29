@@ -22,6 +22,7 @@ import secureHeaders from './middleware/secure-headers';
 
 import { loadIndexHTML } from './util/load-index-html';
 import { findPublicFolder } from './util/findPublicFolder';
+import { conditionalMiddleware } from './middleware/conditional-middleware';
 
 export default async function getApp(
     config: IUnleashConfig,
@@ -69,15 +70,16 @@ export default async function getApp(
         services.openApiService.useDocs(app);
     }
 
-    if (
-        config.experimental.flags.embedProxy &&
-        config.frontendApiOrigins.length > 0
-    ) {
-        // Support CORS preflight requests for the frontend endpoints.
-        // Preflight requests should not have Authorization headers,
-        // so this must be handled before the API token middleware.
-        app.options('/api/frontend*', corsOriginMiddleware(services));
-    }
+    // Support CORS preflight requests for the frontend endpoints.
+    // Preflight requests should not have Authorization headers,
+    // so this must be handled before the API token middleware.
+    app.options(
+        '/api/frontend*',
+        conditionalMiddleware(
+            () => config.flagResolver.isEnabled('embedProxy'),
+            corsOriginMiddleware(services),
+        ),
+    );
 
     switch (config.authentication.type) {
         case IAuthType.OPEN_SOURCE: {
@@ -152,7 +154,7 @@ export default async function getApp(
 
     app.get(`${baseUriPath}/*`, (req, res) => {
         if (req.path.startsWith(`${baseUriPath}/api`)) {
-            res.status(404).send({ message: '404 - Not found' });
+            res.status(404).send({ message: 'Not found' });
             return;
         }
 

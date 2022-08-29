@@ -449,7 +449,7 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
-    "configFlag": "embedProxy",
+    "flag": "embedProxyFrontend",
     "menu": {
       "adminSettings": true,
     },

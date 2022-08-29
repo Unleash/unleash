@@ -10,6 +10,10 @@ export const defaultExperimentalOptions = {
             process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY,
             false,
         ),
+        embedProxyFrontend: parseEnvVarBoolean(
+            process.env.UNLEASH_EXPERIMENTAL_EMBED_PROXY_FRONTEND,
+            false,
+        ),
         batchMetrics: parseEnvVarBoolean(
             process.env.UNLEASH_EXPERIMENTAL_BATCH_METRICS,
             false,
@@ -23,6 +27,7 @@ export interface IExperimentalOptions {
         [key: string]: boolean;
         ENABLE_DARK_MODE_SUPPORT?: boolean;
         embedProxy?: boolean;
+        embedProxyFrontend?: boolean;
         batchMetrics?: boolean;
         anonymiseEventLog?: boolean;
     };

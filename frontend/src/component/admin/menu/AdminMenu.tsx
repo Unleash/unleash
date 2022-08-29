@@ -85,7 +85,7 @@ function AdminMenu() {
                         </NavLink>
                     }
                 />
-                {uiConfig.embedProxy && (
+                {uiConfig.flags.embedProxyFrontend && (
                     <Tab
                         value="/admin/cors"
                         label={

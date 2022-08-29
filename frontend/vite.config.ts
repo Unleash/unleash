@@ -1,4 +1,8 @@
-import { configDefaults, defineConfig } from 'vitest/config';
+import { defineConfig, mergeConfig } from 'vite';
+import {
+    configDefaults,
+    defineConfig as vitestDefineConfig,
+} from 'vitest/config';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import react from '@vitejs/plugin-react';
 import svgr from 'vite-plugin-svgr';
@@ -12,35 +16,45 @@ if (!UNLEASH_BASE_PATH.startsWith('/') || !UNLEASH_BASE_PATH.endsWith('/')) {
     process.exit(1);
 }
 
-export default defineConfig({
-    base: UNLEASH_BASE_PATH,
-    build: {
-        outDir: 'build',
-        assetsDir: 'static',
-    },
+const vitestConfig = vitestDefineConfig({
     test: {
         globals: true,
         setupFiles: 'src/setupTests.ts',
         environment: 'jsdom',
         exclude: [...configDefaults.exclude, '**/cypress/**'],
     },
-    server: {
-        open: true,
-        host: true,
-        proxy: {
-            [`${UNLEASH_BASE_PATH}api`]: {
-                target: UNLEASH_API,
-                changeOrigin: true,
-            },
-            [`${UNLEASH_BASE_PATH}auth`]: {
-                target: UNLEASH_API,
-                changeOrigin: true,
-            },
-            [`${UNLEASH_BASE_PATH}logout`]: {
-                target: UNLEASH_API,
-                changeOrigin: true,
+});
+
+export default mergeConfig(
+    defineConfig({
+        base: UNLEASH_BASE_PATH,
+        build: {
+            outDir: 'build',
+            assetsDir: 'static',
+        },
+        server: {
+            open: true,
+            host: true,
+            port: 3000,
+            proxy: {
+                [`${UNLEASH_BASE_PATH}api`]: {
+                    target: UNLEASH_API,
+                    changeOrigin: true,
+                },
+                [`${UNLEASH_BASE_PATH}auth`]: {
+                    target: UNLEASH_API,
+                    changeOrigin: true,
+                },
+                [`${UNLEASH_BASE_PATH}logout`]: {
+                    target: UNLEASH_API,
+                    changeOrigin: true,
+                },
             },
         },
-    },
-    plugins: [react(), tsconfigPaths(), svgr(), envCompatible()],
-});
+        plugins: [react(), tsconfigPaths(), svgr(), envCompatible()],
+        esbuild: {
+            logOverride: { 'this-is-undefined-in-esm': 'silent' },
+        },
+    }),
+    vitestConfig
+);

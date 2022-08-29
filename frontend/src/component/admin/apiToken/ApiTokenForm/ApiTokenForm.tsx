@@ -70,7 +70,7 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
         },
     ];
 
-    if (uiConfig.embedProxy) {
+    if (uiConfig.flags.embedProxyFrontend) {
         selectableTypes.splice(1, 0, {
             key: TokenType.FRONTEND,
             label: `Client-side SDK (${TokenType.FRONTEND})`,

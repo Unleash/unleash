@@ -70,6 +70,7 @@ Object {
       "anonymiseEventLog": false,
       "batchMetrics": false,
       "embedProxy": false,
+      "embedProxyFrontend": false,
     },
   },
   "flagResolver": FlagResolver {
@@ -78,6 +79,7 @@ Object {
       "anonymiseEventLog": false,
       "batchMetrics": false,
       "embedProxy": false,
+      "embedProxyFrontend": false,
     },
     "externalResolver": Object {
       "isEnabled": [Function],

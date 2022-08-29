@@ -38,7 +38,9 @@ API endpoint is different when using client-side SDK directly instead of pointin
 
 ### CORS configuration
 
-FIXME: add details on config page (without explaining what CORS is, lol)
+For web and hybrid mobile applications it is necesary to whitelist domain for your applications. In Unleash UI go to `Admin/CORS` and add domains that host applications connecting with `FRONTEND` token. 
+
+![CORS settings in Unleash UI](/img/admin_cors.png)
 
 <br/>
 

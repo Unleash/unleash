@@ -5,7 +5,7 @@ import { LayoutPicker } from 'component/layout/LayoutPicker/LayoutPicker';
 import Loader from 'component/common/Loader/Loader';
 import NotFound from 'component/common/NotFound/NotFound';
 import { ProtectedRoute } from 'component/common/ProtectedRoute/ProtectedRoute';
-import SWRProvider from 'component/providers/SWRProvider/SWRProvider';
+import { SWRProvider } from 'component/providers/SWRProvider/SWRProvider';
 import ToastRenderer from 'component/common/ToastRenderer/ToastRenderer';
 import { routes } from 'component/menu/routes';
 import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
@@ -21,7 +21,6 @@ export const App = () => {
     const { authDetails } = useAuthDetails();
     const { user } = useAuthUser();
     const { isOss } = useUiConfig();
-    const isLoggedIn = Boolean(user?.id);
     const hasFetchedAuth = Boolean(authDetails || user);
     usePlausibleTracker();
 
@@ -30,7 +29,7 @@ export const App = () => {
         : routes;
 
     return (
-        <SWRProvider isUnauthorized={!isLoggedIn}>
+        <SWRProvider>
             <Suspense fallback={<Loader />}>
                 <ConditionallyRender
                     condition={!hasFetchedAuth}

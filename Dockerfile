@@ -14,6 +14,8 @@ WORKDIR /unleash
 
 COPY . /unleash
 
+RUN yarn config set network-timeout 300000
+
 RUN yarn install --frozen-lockfile --ignore-scripts  && yarn run build && yarn run local:package
 
 COPY --from=frontend_builder /frontend/build /unleash/build/frontend/build

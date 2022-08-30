@@ -5,7 +5,7 @@ title: How to create API Tokens
 
 import newTokenImage from '/img/admin_create_token_form.png';
 
-In order to connect to Unleash clients will need an API token to grant access. A client SDK will need to token with "client privileges", which allows them to fetch feature toggle configuration and post usage metrics back.
+In order to connect to Unleash clients will need an API token to grant access. Client SDK will need a token with "client privileges", which allows them to fetch feature toggle configuration and post usage metrics back.
 
 ## Create API Token {#create-api-token}
 
@@ -21,19 +21,19 @@ All users are able to see tokens with CLIENT level access, but only instance adm
 
 ### Step-by-step {#step-by-step}
 
-#### 1. Select `Configure` and `API Access` from the main menu {#step-1}
+#### 1. Select `Configure` and `API access` from the main menu {#step-1}
 
 This page is accessible from `/admin/api` url. ![API access in navigation](/img/admin_configure_api.png)
 
 <br />
 
-#### 2. Click `Add new API key` at the top right of the page {#step-2}
+#### 2. Click `New API token` at the top right of the page {#step-2}
 
-If you already have tokens, you will be able to see keys in the table below. ![Add token](/img/admin_new_api_key_button.png)
+If you already have tokens, you will be able to see them listed in the table below. ![Add token](/img/admin_new_api_key_button.png)
 
 <br />
 
-#### 3. Fill and submit new token form {#step-3}
+#### 3. Fill and submit API token form {#step-3}
 
 <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
 <div><img src={newTokenImage} alt="Form for new token" style={{ maxWidth: '414px' }} /></div>
@@ -41,12 +41,12 @@ If you already have tokens, you will be able to see keys in the table below. ![A
 
 ##### 3.1. Username
 
-Does not have to be unique, but it should be if you need to recognize the key in audit logs.
+Does not have to be unique, but it should be if you need to recognize the token in audit logs.
 
 ##### 3.2. Token type
 
 :::caution Be careful
-Never publish ADMIN or CLIENT key. Embedding it in client-side applications can result in a security breach.
+Never publish ADMIN or CLIENT token. Embedding it in client-side applications can result in a security breach.
 :::
 
 - 3.2.A. **CLIENT**<br/>
@@ -66,7 +66,7 @@ ADMIN token will always grant access to all projects. Other types can be restric
 
 ##### 3.4. Environment
 
-CLIENT and FRONTEND tokens are scoped to one selected environment. If you need to connect many environments, create multiple keys.
+CLIENT and FRONTEND tokens are scoped to one selected environment. If you need to connect many environments, create multiple tokens.
 
 </div>
 </div>
@@ -76,8 +76,8 @@ CLIENT and FRONTEND tokens are scoped to one selected environment. If you need t
 
 You should now have token secret that you can use in authorization header. For CURL that would be `-H "Authorization: <yoursecrethere>"`.
 
-If you are using SDKs, set correct API URL. For CLIENT and ADMIN keys it's `<YOUR-UNLEASH-INSTANCE-URL>/api` but it's `<YOUR-UNLEASH-INSTANCE-URL>/api/frontend` for FRONTEND ("Proxy SDKs") access.
+If you are using SDKs, set correct API URL. For CLIENT and ADMIN tokens it's `<YOUR-UNLEASH-INSTANCE-URL>/api` but it's `<YOUR-UNLEASH-INSTANCE-URL>/api/frontend` for FRONTEND ("Proxy SDKs") access.
 
-With correct permissions you can access secrets for previously generated tokens in tokens table.
+With correct permissions you can access "API access" page and you can copy the previously generated tokens from the table.
 
 ![API access tokens in the table](/img/admin_copy_token.png)

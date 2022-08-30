@@ -3172,10 +3172,10 @@ faker@5.5.3:
   resolved "https://registry.npmjs.org/faker/-/faker-5.5.3.tgz"
   integrity sha512-wLTv2a28wjUyWkbnX7u/ABZBkUkIF2fCd73V6P2oFqEGEktDfzWx4UxrSqtPRw0xPRAcjeAOIiJWqZm3pP4u3g==
 
-fast-check@3.1.1:
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/fast-check/-/fast-check-3.1.1.tgz#72c5ae7022a4e86504762e773adfb8a5b0b01252"
-  integrity sha512-3vtXinVyuUKCKFKYcwXhGE6NtGWkqF8Yh3rvMZNzmwz8EPrgoc/v4pDdLHyLnCyCI5MZpZZkDEwFyXyEONOxpA==
+fast-check@3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/fast-check/-/fast-check-3.1.2.tgz#1b09c3d856d425e06be9d39e9e23d1f6fa4a6d0e"
+  integrity sha512-OZRPFXhZHpIhtG46XtAMzVW1jtuR7Clw13wOcfw1v//tNnPCvVuLLlT1bEqywCQXNXR4qGT3tk7z0MUMSTit3Q==
   dependencies:
     pure-rand "^5.0.1"
 

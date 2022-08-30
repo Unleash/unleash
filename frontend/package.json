@@ -10,13 +10,13 @@
     "node": ">=14"
   },
   "scripts": {
-    "build": "tsc && vite build",
+    "build": "vite build",
     "lint": "eslint src --max-warnings 0",
     "start": "vite",
     "start:heroku": "UNLEASH_API=https://unleash.herokuapp.com yarn run start",
     "start:enterprise": "UNLEASH_API=https://unleash4.herokuapp.com yarn run start",
     "start:demo": "UNLEASH_BASE_PATH=/demo/ yarn start",
-    "test": "vitest run",
+    "test": "tsc && vitest run",
     "test:watch": "vitest watch",
     "fmt": "prettier src --write --loglevel warn",
     "fmt:check": "prettier src --check",

@@ -33,6 +33,7 @@ import {
     PA_USERS_GROUPS_ID,
     PA_USERS_GROUPS_TITLE_ID,
 } from 'utils/testIds';
+import { caseInsensitiveSearch } from 'utils/search';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',
@@ -333,6 +334,32 @@ export const ProjectAccessAssign = ({
                                         return option.entity.name;
                                     }
                                 }}
+                                filterOptions={(options, { inputValue }) =>
+                                    options.filter((option: IAccessOption) => {
+                                        if (option.type === ENTITY_TYPE.USER) {
+                                            const optionUser =
+                                                option.entity as IUser;
+                                            return (
+                                                caseInsensitiveSearch(
+                                                    inputValue,
+                                                    optionUser.email
+                                                ) ||
+                                                caseInsensitiveSearch(
+                                                    inputValue,
+                                                    optionUser.name
+                                                ) ||
+                                                caseInsensitiveSearch(
+                                                    inputValue,
+                                                    optionUser.username
+                                                )
+                                            );
+                                        }
+                                        return caseInsensitiveSearch(
+                                            inputValue,
+                                            option.entity.name
+                                        );
+                                    })
+                                }
                                 isOptionEqualToValue={(option, value) =>
                                     option.type === value.type &&
                                     option.entity.id === value.entity.id

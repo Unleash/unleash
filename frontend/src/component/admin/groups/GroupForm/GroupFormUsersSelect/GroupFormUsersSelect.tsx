@@ -6,6 +6,7 @@ import { VFC } from 'react';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
 import { IGroupUser } from 'interfaces/group';
 import { UG_USERS_ID } from 'utils/testIds';
+import { caseInsensitiveSearch } from 'utils/search';
 
 const StyledOption = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -94,6 +95,14 @@ export const GroupFormUsersSelect: VFC<IGroupFormUsersSelectProps> = ({
                 })}
                 renderOption={(props, option, { selected }) =>
                     renderOption(props, option as IUser, selected)
+                }
+                filterOptions={(options, { inputValue }) =>
+                    options.filter(
+                        ({ name, username, email }) =>
+                            caseInsensitiveSearch(inputValue, email) ||
+                            caseInsensitiveSearch(inputValue, name) ||
+                            caseInsensitiveSearch(inputValue, username)
+                    )
                 }
                 isOptionEqualToValue={(option, value) => option.id === value.id}
                 getOptionLabel={(option: IUser) =>

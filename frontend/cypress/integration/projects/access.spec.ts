@@ -8,7 +8,7 @@ import {
     PA_ROLE_ID,
     PA_USERS_GROUPS_ID,
     PA_USERS_GROUPS_TITLE_ID,
-} from '../../../../src/utils/testIds';
+} from '../../../src/utils/testIds';
 
 export {};
 const baseUrl = Cypress.config().baseUrl;

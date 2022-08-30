@@ -1,5 +1,5 @@
 ARG NODE_VERSION=16-alpine
-FROM --platform=$BUILDPLATFORM node:$NODE_VERSION as builder
+FROM --platform=linux/amd64 node:$NODE_VERSION as builder
 
 RUN echo "Debug - node version: $NODE_VERSION "
 

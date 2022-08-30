@@ -1,5 +1,5 @@
 import classnames from 'classnames';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button, IconButton, Tooltip } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Add } from '@mui/icons-material';
@@ -7,6 +7,9 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { NAVIGATE_TO_CREATE_FEATURE } from 'utils/testIds';
 import { IFeaturesFilter } from 'hooks/useFeaturesFilter';
 import { useCreateFeaturePath } from 'component/feature/CreateFeatureButton/useCreateFeaturePath';
+import PermissionButton from 'component/common/PermissionButton/PermissionButton';
+import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
+import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 
 interface ICreateFeatureButtonProps {
     loading: boolean;
@@ -19,6 +22,7 @@ export const CreateFeatureButton = ({
 }: ICreateFeatureButtonProps) => {
     const smallScreen = useMediaQuery('(max-width:800px)');
     const createFeature = useCreateFeaturePath(filter);
+    const navigate = useNavigate();
 
     if (!createFeature) {
         return null;
@@ -28,30 +32,33 @@ export const CreateFeatureButton = ({
         <ConditionallyRender
             condition={smallScreen}
             show={
-                <Tooltip title="Create feature toggle" arrow>
-                    <IconButton
-                        component={Link}
-                        to={createFeature.path}
-                        data-testid={NAVIGATE_TO_CREATE_FEATURE}
-                        disabled={!createFeature.access}
-                        size="large"
-                    >
-                        <Add />
-                    </IconButton>
-                </Tooltip>
+                <PermissionIconButton
+                    permission={CREATE_FEATURE}
+                    projectId={createFeature.projectId}
+                    component={Link}
+                    to={createFeature.path}
+                    size="large"
+                    tooltipProps={{
+                        title: 'Create feature toggle',
+                    }}
+                >
+                    <Add />
+                </PermissionIconButton>
             }
             elseShow={
-                <Button
-                    to={createFeature.path}
+                <PermissionButton
+                    onClick={() => {
+                        navigate(createFeature.path);
+                    }}
+                    permission={CREATE_FEATURE}
+                    projectId={createFeature.projectId}
                     color="primary"
                     variant="contained"
-                    component={Link}
                     data-testid={NAVIGATE_TO_CREATE_FEATURE}
-                    disabled={!createFeature.access}
                     className={classnames({ skeleton: loading })}
                 >
                     New feature toggle
-                </Button>
+                </PermissionButton>
             }
         />
     );

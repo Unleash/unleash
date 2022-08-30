@@ -2,12 +2,12 @@
 
 exports[`InstanceStatusBar should warn when the trial has churned 1`] = `
 <aside
-  class="mui-jmsogz"
+  class="css-jmsogz"
   data-testid="INSTANCE_STATUS_BAR_ID"
 >
   <svg
     aria-hidden="true"
-    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mui-prk1jy-MuiSvgIcon-root"
+    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-prk1jy-MuiSvgIcon-root"
     data-testid="WarningAmberIcon"
     focusable="false"
     viewBox="0 0 24 24"
@@ -20,7 +20,7 @@ exports[`InstanceStatusBar should warn when the trial has churned 1`] = `
     />
   </svg>
   <p
-    class="MuiTypography-root MuiTypography-body1 mui-rviqjc-MuiTypography-root"
+    class="MuiTypography-root MuiTypography-body1 css-rviqjc-MuiTypography-root"
   >
     <strong>
       Warning!
@@ -42,12 +42,12 @@ exports[`InstanceStatusBar should warn when the trial has churned 1`] = `
 
 exports[`InstanceStatusBar should warn when the trial has expired 1`] = `
 <aside
-  class="mui-jmsogz"
+  class="css-jmsogz"
   data-testid="INSTANCE_STATUS_BAR_ID"
 >
   <svg
     aria-hidden="true"
-    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mui-prk1jy-MuiSvgIcon-root"
+    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-prk1jy-MuiSvgIcon-root"
     data-testid="WarningAmberIcon"
     focusable="false"
     viewBox="0 0 24 24"
@@ -60,7 +60,7 @@ exports[`InstanceStatusBar should warn when the trial has expired 1`] = `
     />
   </svg>
   <p
-    class="MuiTypography-root MuiTypography-body1 mui-rviqjc-MuiTypography-root"
+    class="MuiTypography-root MuiTypography-body1 css-rviqjc-MuiTypography-root"
   >
     <strong>
       Warning!
@@ -82,12 +82,12 @@ exports[`InstanceStatusBar should warn when the trial has expired 1`] = `
 
 exports[`InstanceStatusBar should warn when the trial is about to expire 1`] = `
 <aside
-  class="mui-yx2rkt"
+  class="css-yx2rkt"
   data-testid="INSTANCE_STATUS_BAR_ID"
 >
   <svg
     aria-hidden="true"
-    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mui-cle2im-MuiSvgIcon-root"
+    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-cle2im-MuiSvgIcon-root"
     data-testid="InfoOutlinedIcon"
     focusable="false"
     viewBox="0 0 24 24"
@@ -97,7 +97,7 @@ exports[`InstanceStatusBar should warn when the trial is about to expire 1`] = `
     />
   </svg>
   <p
-    class="MuiTypography-root MuiTypography-body1 mui-rviqjc-MuiTypography-root"
+    class="MuiTypography-root MuiTypography-body1 css-rviqjc-MuiTypography-root"
   >
     <strong>
       Heads up!
@@ -117,12 +117,12 @@ exports[`InstanceStatusBar should warn when the trial is about to expire 1`] = `
 
 exports[`InstanceStatusBar should warn when the trial is far from expired 1`] = `
 <aside
-  class="mui-yx2rkt"
+  class="css-yx2rkt"
   data-testid="INSTANCE_STATUS_BAR_ID"
 >
   <svg
     aria-hidden="true"
-    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mui-cle2im-MuiSvgIcon-root"
+    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-cle2im-MuiSvgIcon-root"
     data-testid="InfoOutlinedIcon"
     focusable="false"
     viewBox="0 0 24 24"
@@ -132,7 +132,7 @@ exports[`InstanceStatusBar should warn when the trial is far from expired 1`] = 
     />
   </svg>
   <p
-    class="MuiTypography-root MuiTypography-body1 mui-rviqjc-MuiTypography-root"
+    class="MuiTypography-root MuiTypography-body1 css-rviqjc-MuiTypography-root"
   >
     <strong>
       Heads up!
@@ -147,12 +147,12 @@ exports[`InstanceStatusBar should warn when the trial is far from expired 1`] = 
 
 exports[`InstanceStatusBar should warn when trialExpiry has passed 1`] = `
 <aside
-  class="mui-jmsogz"
+  class="css-jmsogz"
   data-testid="INSTANCE_STATUS_BAR_ID"
 >
   <svg
     aria-hidden="true"
-    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mui-prk1jy-MuiSvgIcon-root"
+    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-prk1jy-MuiSvgIcon-root"
     data-testid="WarningAmberIcon"
     focusable="false"
     viewBox="0 0 24 24"
@@ -165,7 +165,7 @@ exports[`InstanceStatusBar should warn when trialExpiry has passed 1`] = `
     />
   </svg>
   <p
-    class="MuiTypography-root MuiTypography-body1 mui-rviqjc-MuiTypography-root"
+    class="MuiTypography-root MuiTypography-body1 css-rviqjc-MuiTypography-root"
   >
     <strong>
       Warning!

@@ -110,6 +110,9 @@ export const FeatureStrategyEmpty = ({
         }
     };
 
+    const canCopyFromOtherEnvironment =
+        otherAvailableEnvironments && otherAvailableEnvironments.length > 0;
+
     return (
         <div className={styles.container}>
             <div className={styles.title}>
@@ -136,12 +139,10 @@ export const FeatureStrategyEmpty = ({
                     projectId={projectId}
                     featureId={featureId}
                     environmentId={environmentId}
+                    matchWidth={canCopyFromOtherEnvironment}
                 />
                 <ConditionallyRender
-                    condition={
-                        otherAvailableEnvironments &&
-                        otherAvailableEnvironments.length > 0
-                    }
+                    condition={canCopyFromOtherEnvironment}
                     show={
                         <CopyButton
                             environmentId={environmentId}

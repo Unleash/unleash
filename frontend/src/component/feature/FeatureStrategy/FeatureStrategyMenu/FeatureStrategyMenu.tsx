@@ -12,6 +12,7 @@ interface IFeatureStrategyMenuProps {
     featureId: string;
     environmentId: string;
     variant?: IPermissionButtonProps['variant'];
+    matchWidth?: boolean;
 }
 
 export const FeatureStrategyMenu = ({
@@ -20,6 +21,7 @@ export const FeatureStrategyMenu = ({
     featureId,
     environmentId,
     variant,
+    matchWidth,
 }: IFeatureStrategyMenuProps) => {
     const [anchor, setAnchor] = useState<Element>();
     const isPopoverOpen = Boolean(anchor);
@@ -42,6 +44,7 @@ export const FeatureStrategyMenu = ({
                 onClick={onClick}
                 aria-labelledby={popoverId}
                 variant={variant}
+                sx={{ minWidth: matchWidth ? '282px' : 'auto' }}
             >
                 {label}
             </PermissionButton>

@@ -138,7 +138,6 @@ export default createTheme({
         },
         checkmarkBadge: colors.purple[800],
         inputLabelBackground: colors.white,
-        featureMetricsBackground: colors.grey[100],
         featureStrategySegmentChipBackground: colors.purple[800],
         featureSegmentSearchBackground: colors.purple[800],
         dialogHeaderBackground: colors.purple[800],

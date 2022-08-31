@@ -4,7 +4,6 @@ export const useStyles = makeStyles()(theme => ({
     featureOverviewEnvironment: {
         borderRadius: theme.shape.borderRadiusLarge,
         marginBottom: theme.spacing(2),
-        padding: '0.2rem',
         backgroundColor: theme.palette.background.paper,
     },
     accordion: {

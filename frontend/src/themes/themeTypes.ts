@@ -66,7 +66,6 @@ declare module '@mui/material/styles' {
             from: string;
             to: string;
         };
-        featureMetricsBackground: string;
         constraintAccordion: {
             editBackground: string;
             background: string;

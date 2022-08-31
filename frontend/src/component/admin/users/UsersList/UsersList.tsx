@@ -233,7 +233,7 @@ const UsersList = () => {
             isLoading={loading}
             header={
                 <PageHeader
-                    title="Users"
+                    title={`Users (${rows.length})`}
                     actions={
                         <>
                             <Search

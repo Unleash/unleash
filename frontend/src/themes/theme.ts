@@ -263,16 +263,20 @@ export default createTheme({
         },
         MuiTabs: {
             styleOverrides: {
-                root: {
+                root: ({ theme }) => ({
                     '& .MuiTabs-indicator': {
                         height: '4px',
                     },
                     '& .MuiTabs-flexContainer': {
-                        maxWidth: 'auto',
                         minHeight: '70px',
                         maxHeight: '70px',
                     },
-                },
+                    [theme.breakpoints.down('sm')]: {
+                        '& .MuiTabs-flexContainer': {
+                            overflow: 'auto',
+                        },
+                    },
+                }),
             },
         },
         MuiTab: {
@@ -295,10 +299,7 @@ export default createTheme({
                         color: colors.purple[900],
                     },
                     [theme.breakpoints.down('md')]: {
-                        padding: '12px 8px',
-                    },
-                    [theme.breakpoints.down('sm')]: {
-                        overflow: 'auto',
+                        padding: '12px 0px',
                     },
                 }),
             },

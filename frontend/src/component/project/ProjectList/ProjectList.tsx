@@ -147,12 +147,17 @@ export const ProjectListNew = () => {
         });
     };
 
+    let projectCount =
+        filteredProjects.length < projects.length
+            ? `${filteredProjects.length} of ${projects.length}`
+            : projects.length;
+
     return (
         <div ref={ref}>
             <PageContent
                 header={
                     <PageHeader
-                        title="Projects"
+                        title={`Projects (${projectCount})`}
                         actions={
                             <>
                                 <ConditionallyRender

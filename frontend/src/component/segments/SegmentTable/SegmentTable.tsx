@@ -83,7 +83,7 @@ export const SegmentTable = () => {
         <PageContent
             header={
                 <PageHeader
-                    title="Segments"
+                    title={`Segments (${rows.length})`}
                     actions={
                         <>
                             <Search

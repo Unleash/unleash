@@ -72,8 +72,12 @@ export const ConstraintAccordionEditHeader = ({
             oneOf(dateOperators, operator)
         ) {
             setOperator(IN);
-        } else if (oneOf(stringOperators, operator)) {
+        }
+
+        if (oneOf(stringOperators, operator)) {
             setShowCaseSensitiveButton(true);
+        } else {
+            setShowCaseSensitiveButton(false);
         }
     }, [contextName, setOperator, operator, setLocalConstraint]);
 
@@ -86,6 +90,12 @@ export const ConstraintAccordionEditHeader = ({
     });
 
     const onOperatorChange = (operator: Operator) => {
+        if (oneOf(stringOperators, operator)) {
+            setShowCaseSensitiveButton(true);
+        } else {
+            setShowCaseSensitiveButton(false);
+        }
+
         if (oneOf(dateOperators, operator)) {
             setLocalConstraint(prev => ({
                 ...prev,
@@ -93,9 +103,6 @@ export const ConstraintAccordionEditHeader = ({
                 value: new Date().toISOString(),
             }));
         } else {
-            if (oneOf(stringOperators, operator)) {
-                setShowCaseSensitiveButton(true);
-            }
             setOperator(operator);
         }
     };

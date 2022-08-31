@@ -13,7 +13,7 @@ export interface IVersionInfo {
 
 export interface IVersionHolder {
     current: IVersionInfo;
-    latest: IVersionInfo | {};
+    latest: Partial<IVersionInfo>;
     isLatest: boolean;
     instanceId: string;
 }

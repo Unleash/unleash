@@ -38,7 +38,7 @@ export default class ProxyController extends Controller {
 
     constructor(config: IUnleashConfig, services: Services) {
         super(config);
-        this.logger = config.getLogger('client-api/feature.js');
+        this.logger = config.getLogger('proxy-api/index.ts');
         this.services = services;
 
         // Support CORS requests for the frontend endpoints.

@@ -283,12 +283,14 @@ export const StrategiesList = () => {
         }));
     };
 
+    let strategyTypeCount = rows.length;
+
     return (
         <PageContent
             isLoading={loading}
             header={
                 <PageHeader
-                    title="Strategy types"
+                    title={`Strategy types (${strategyTypeCount})`}
                     actions={
                         <>
                             <Search

@@ -394,7 +394,7 @@ export const FeatureVariantsList = () => {
             isLoading={loading}
             header={
                 <PageHeader
-                    title="Variants"
+                    title={`Variants (${rows.length})`}
                     actions={
                         <>
                             <PermissionButton

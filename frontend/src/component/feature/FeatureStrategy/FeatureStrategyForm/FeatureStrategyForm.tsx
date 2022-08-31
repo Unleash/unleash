@@ -126,7 +126,8 @@ export const FeatureStrategyForm = ({
         <form className={styles.form} onSubmit={onSubmitWithValidation}>
             <div>
                 <FeatureStrategyEnabled
-                    feature={feature}
+                    projectId={feature.project}
+                    featureId={feature.name}
                     environmentId={environmentId}
                 />
             </div>

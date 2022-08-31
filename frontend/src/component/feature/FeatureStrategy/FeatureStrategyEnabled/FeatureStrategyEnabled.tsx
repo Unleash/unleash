@@ -4,17 +4,21 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { Alert } from '@mui/material';
 import { IFeatureToggle } from 'interfaces/featureToggle';
 import { formatFeaturePath } from '../FeatureStrategyEdit/FeatureStrategyEdit';
+import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 
 interface IFeatureStrategyEnabledProps {
-    feature: IFeatureToggle;
+    projectId: string;
+    featureId: string;
     environmentId: string;
 }
 
 export const FeatureStrategyEnabled = ({
-    feature,
+    projectId,
+    featureId,
     environmentId,
 }: IFeatureStrategyEnabledProps) => {
-    const featurePagePath = formatFeaturePath(feature.project, feature.name);
+    const featurePagePath = formatFeaturePath(projectId, featureId);
+    const { feature } = useFeature(projectId, featureId);
 
     const featurePageLink = (
         <Link to={featurePagePath} style={{ color: 'inherit' }}>

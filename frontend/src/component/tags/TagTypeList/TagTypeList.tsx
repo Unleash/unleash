@@ -183,13 +183,12 @@ export const TagTypeList = () => {
             setToastApiError(formatUnknownError(error));
         }
     };
-
     return (
         <PageContent
             isLoading={loading}
             header={
                 <PageHeader
-                    title="Tag types"
+                    title={`Tag types (${rows.length})`}
                     actions={
                         <>
                             <Search

@@ -25,7 +25,7 @@ exports[`renders an empty list correctly 1`] = `
               <h1
                 className="MuiTypography-root MuiTypography-h1 css-ypmm1t-MuiTypography-root-headerTitle"
               >
-                Tag types
+                Tag types (5)
               </h1>
             </div>
             <div
@@ -1096,7 +1096,7 @@ exports[`renders an empty list correctly 1`] = `
     data-testid="ANNOUNCER_ELEMENT_TEST_ID"
     role="status"
   >
-    Navigated to Tag types
+    Navigated to Tag types (5)
   </div>,
 ]
 `;

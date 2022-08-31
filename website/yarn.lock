@@ -6382,7 +6382,35 @@ doctrine@^3.0.0:
   dependencies:
     esutils "^2.0.2"
 
-docusaurus-plugin-openapi-docs@1.1.8, docusaurus-plugin-openapi-docs@^1.1.8:
+docusaurus-plugin-openapi-docs@1.1.9:
+  version "1.1.9"
+  resolved "https://registry.yarnpkg.com/docusaurus-plugin-openapi-docs/-/docusaurus-plugin-openapi-docs-1.1.9.tgz#3b67b90540e1e1774b54985fa44394228762e7c1"
+  integrity sha512-6SM9WNsT2DJdsd4hnbrkwj9tFFl9fjPZ6DZ6RQQGPxrzhUkhPEnhTsCGZGon9z/k6ZkwgE1I5tEBr6ipBDrh5g==
+  dependencies:
+    "@apidevtools/json-schema-ref-parser" "^9.0.9"
+    "@docusaurus/mdx-loader" "2.0.1"
+    "@docusaurus/plugin-content-docs" "2.0.1"
+    "@docusaurus/utils" "2.0.1"
+    "@docusaurus/utils-validation" "2.0.1"
+    "@paloaltonetworks/openapi-to-postmanv2" "3.1.0-hotfix.1"
+    "@paloaltonetworks/postman-collection" "^4.1.0"
+    "@redocly/openapi-core" "^1.0.0-beta.103"
+    chalk "^4.1.2"
+    clsx "^1.1.1"
+    fs-extra "^9.0.1"
+    js-yaml "^4.1.0"
+    json-pointer "^0.6.2"
+    json-refs "^3.0.15"
+    json-schema-merge-allof "^0.8.1"
+    lodash "^4.17.20"
+    mustache "^4.2.0"
+    slugify "^1.6.5"
+    swagger2openapi "^7.0.8"
+    url-template "^3.0.0"
+    webpack "^5.61.0"
+    xml-formatter "^2.6.1"
+
+docusaurus-plugin-openapi-docs@^1.1.8:
   version "1.1.8"
   resolved "https://registry.yarnpkg.com/docusaurus-plugin-openapi-docs/-/docusaurus-plugin-openapi-docs-1.1.8.tgz#94debffd6cd1032acd67bb999d1446971b93f25c"
   integrity sha512-A4xEN0dy9WCZavAvAoucEhlklWp8wI57bTlSytvWJWjsYa1qsxgpzOx9fLyUhzodI8XJmGJVHmrQgTi/TdMPiw==
@@ -14639,12 +14667,24 @@ xdg-basedir@^4.0.0:
   resolved "https://registry.yarnpkg.com/xdg-basedir/-/xdg-basedir-4.0.0.tgz#4bc8d9984403696225ef83a1573cbbcb4e79db13"
   integrity sha512-PSNhEJDejZYV7h50BohL09Er9VaIefr2LMAf3OEmpCkjOi34eYyQYAXUTjEQtZJTKcF0E2UKTh+osDLsgNim9Q==
 
+xml-formatter@^2.6.1:
+  version "2.6.1"
+  resolved "https://registry.yarnpkg.com/xml-formatter/-/xml-formatter-2.6.1.tgz#066ef3a100bd58ee3b943f0c503be63176d3d497"
+  integrity sha512-dOiGwoqm8y22QdTNI7A+N03tyVfBlQ0/oehAzxIZtwnFAHGeSlrfjF73YQvzSsa/Kt6+YZasKsrdu6OIpuBggw==
+  dependencies:
+    xml-parser-xo "^3.2.0"
+
 xml-js@^1.6.11:
   version "1.6.11"
   resolved "https://registry.yarnpkg.com/xml-js/-/xml-js-1.6.11.tgz#927d2f6947f7f1c19a316dd8eea3614e8b18f8e9"
   integrity sha512-7rVi2KMfwfWFl+GpPg6m80IVMWXLRjO+PxTq7V2CDhoGak0wzYzFgUY2m4XJ47OGdXd8eLE8EmwfAmdjw7lC1g==
   dependencies:
     sax "^1.2.4"
+
+xml-parser-xo@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/xml-parser-xo/-/xml-parser-xo-3.2.0.tgz#c633ab55cf1976d6b03ab4a6a85045093ac32b73"
+  integrity sha512-8LRU6cq+d7mVsoDaMhnkkt3CTtAs4153p49fRo+HIB3I1FD1o5CeXRjRH29sQevIfVJIcPjKSsPU/+Ujhq09Rg==
 
 xtend@^4.0.0, xtend@^4.0.1, xtend@~4.0.1:
   version "4.0.2"

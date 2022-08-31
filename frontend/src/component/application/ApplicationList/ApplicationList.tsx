@@ -59,12 +59,17 @@ export const ApplicationList = () => {
         return <CircularProgress variant="indeterminate" />;
     }
 
+    let applicationCount =
+        filteredApplications.length < applications.length
+            ? `${filteredApplications.length} of ${applications.length}`
+            : applications.length;
+
     return (
         <>
             <PageContent
                 header={
                     <PageHeader
-                        title="Applications"
+                        title={`Applications (${applicationCount})`}
                         actions={
                             <Search
                                 initialValue={searchValue}

@@ -267,16 +267,22 @@ export default createTheme({
                     '& .MuiTabs-indicator': {
                         height: '4px',
                     },
+                    '& .MuiTabs-flexContainer': {
+                        maxWidth: 'auto',
+                        minHeight: '70px',
+                        maxHeight: '70px',
+                    },
                 },
             },
         },
         MuiTab: {
             styleOverrides: {
-                root: {
+                root: ({ theme }) => ({
                     color: colors.grey[900],
                     fontSize: '1rem',
                     textTransform: 'none',
                     fontWeight: 400,
+                    lineHeight: '1',
                     minHeight: '62px',
                     '&:hover': {
                         backgroundColor: colors.grey[200],
@@ -288,7 +294,13 @@ export default createTheme({
                     '& > span': {
                         color: colors.purple[900],
                     },
-                },
+                    [theme.breakpoints.down('md')]: {
+                        padding: '12px 8px',
+                    },
+                    [theme.breakpoints.down(768)]: {
+                        overflow: 'auto',
+                    },
+                }),
             },
         },
         MuiAccordion: {

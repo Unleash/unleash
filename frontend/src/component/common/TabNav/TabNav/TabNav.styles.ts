@@ -6,6 +6,7 @@ export const useStyles = makeStyles()(theme => ({
         borderBottom: '1px solid',
         borderBottomColor: theme.palette.grey[300],
         borderRadius: 0,
+        minHeight: '64px',
     },
     tab: {
         [theme.breakpoints.up('lg')]: {

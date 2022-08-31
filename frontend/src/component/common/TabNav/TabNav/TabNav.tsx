@@ -15,7 +15,6 @@ interface ITabData {
     label: string;
     component: ReactNode;
 }
-
 export const TabNav = ({
     tabData,
     className = '',
@@ -24,7 +23,6 @@ export const TabNav = ({
 }: ITabNavProps) => {
     const { classes: styles } = useStyles();
     const [activeTab, setActiveTab] = useState(startingTab);
-
     const renderTabs = () =>
         tabData.map((tab, index) => (
             <Tab
@@ -50,6 +48,7 @@ export const TabNav = ({
                 elevation={0}
             >
                 <Tabs
+                    id="Styled-Tabs"
                     value={activeTab}
                     onChange={(_, tabId) => {
                         setActiveTab(tabId);

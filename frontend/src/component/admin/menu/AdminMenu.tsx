@@ -11,13 +11,13 @@ const navLinkStyle = {
     width: '100%',
     textDecoration: 'none',
     color: 'inherit',
-    padding: '0.8rem 1.5rem',
+    padding: '0.75rem 1.5rem',
 };
 
 const activeNavLinkStyle: React.CSSProperties = {
     fontWeight: 'bold',
     borderRadius: '3px',
-    padding: '0.8rem 1.5rem',
+    padding: '0.75rem 1.5rem',
 };
 
 const createNavLinkStyle = (props: {

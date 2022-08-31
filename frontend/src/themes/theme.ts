@@ -271,11 +271,6 @@ export default createTheme({
                         minHeight: '70px',
                         maxHeight: '70px',
                     },
-                    [theme.breakpoints.down('sm')]: {
-                        '& .MuiTabs-flexContainer': {
-                            overflow: 'auto',
-                        },
-                    },
                 }),
             },
         },

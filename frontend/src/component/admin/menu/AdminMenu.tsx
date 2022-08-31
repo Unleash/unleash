@@ -42,7 +42,13 @@ function AdminMenu() {
                 boxShadow: 'none',
             }}
         >
-            <Tabs centered value={pathname}>
+            <Tabs
+                centered
+                value={pathname}
+                variant="scrollable"
+                scrollButtons="auto"
+                allowScrollButtonsMobile
+            >
                 <Tab
                     value="/admin/users"
                     label={

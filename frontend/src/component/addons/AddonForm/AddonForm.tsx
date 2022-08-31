@@ -179,6 +179,7 @@ export const AddonForm: VFC<IAddonFormProps> = ({
         }
 
         const updatedErrors = cloneDeep(errors);
+        updatedErrors.parameters = {};
         updatedErrors.containsErrors = false;
 
         // Validations

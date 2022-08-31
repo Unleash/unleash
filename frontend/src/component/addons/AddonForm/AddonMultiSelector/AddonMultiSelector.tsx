@@ -153,7 +153,6 @@ export const AddonMultiSelector: VFC<IAddonMultiSelectorProps> = ({
                 condition={selectAllEnabled}
                 show={<DefaultHelpText />}
             />
-            <span className={themeStyles.error}>{error}</span>
             <ConditionallyRender
                 condition={selectAllEnabled}
                 show={<SelectAllFormControl />}

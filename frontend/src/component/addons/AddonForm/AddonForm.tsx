@@ -293,6 +293,7 @@ export const AddonForm: VFC<IAddonFormProps> = ({
                             onChange={setEventValues}
                             entityName={'event'}
                             selectAllEnabled={false}
+                            error={errors.events}
                             description={
                                 'Select what events you want your addon to be notified about'
                             }

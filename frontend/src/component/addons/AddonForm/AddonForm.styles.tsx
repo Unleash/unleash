@@ -27,7 +27,7 @@ export const StyledButtonContainer = styled('div')({
 });
 
 export const StyledButtonSection = styled('section')(({ theme }) => ({
-    'padding-top': '16px',
+    paddingTop: theme.spacing(2),
     '& > *': {
         marginRight: theme.spacing(1),
     },

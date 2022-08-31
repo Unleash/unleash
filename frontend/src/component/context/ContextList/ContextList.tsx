@@ -161,7 +161,7 @@ const ContextList: VFC = () => {
             isLoading={loading}
             header={
                 <PageHeader
-                    title="Context fields"
+                    title={`Context fields (${rows.length})`}
                     actions={
                         <>
                             <Search

@@ -80,8 +80,10 @@ export const EnvironmentTable = () => {
             <CreateEnvironmentButton />
         </>
     );
-
-    const header = <PageHeader title="Environments" actions={headerActions} />;
+    let count = rows.length;
+    const header = (
+        <PageHeader title={`Environments (${count})`} actions={headerActions} />
+    );
 
     return (
         <PageContent header={header}>

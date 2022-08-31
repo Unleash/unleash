@@ -194,6 +194,7 @@ const COLUMNS = [
     {
         Header: 'Status',
         id: 'status',
+        accessor: 'status',
         Cell: ReportStatusCell,
         disableGlobalFilter: true,
         width: 180,

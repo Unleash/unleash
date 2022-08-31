@@ -297,7 +297,7 @@ export default createTheme({
                     [theme.breakpoints.down('md')]: {
                         padding: '12px 8px',
                     },
-                    [theme.breakpoints.down(768)]: {
+                    [theme.breakpoints.down('sm')]: {
                         overflow: 'auto',
                     },
                 }),

@@ -48,7 +48,6 @@ export const TabNav = ({
                 elevation={0}
             >
                 <Tabs
-                    id="Styled-Tabs"
                     value={activeTab}
                     onChange={(_, tabId) => {
                         setActiveTab(tabId);

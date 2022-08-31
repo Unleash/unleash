@@ -1,7 +1,10 @@
-name: PR -> Build & Lint
+name: PR -> Backend Build & Lint
 
 on:
   pull_request:
+    paths:
+      - src/**
+      - '*'
 
 jobs:
   build:

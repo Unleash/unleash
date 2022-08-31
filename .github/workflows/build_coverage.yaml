@@ -4,10 +4,9 @@ on:
   push:
     branches:
       - main
-    paths-ignore:
-      - website/**
-      - frontend/**
-      - coverage/**
+    paths:
+      - src/**
+      - '*'
 
 jobs:
   coverage:

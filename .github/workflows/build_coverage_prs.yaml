@@ -2,6 +2,9 @@ name: PR -> Test & Coverage
 
 on:
   pull_request:
+    paths:
+      - src/**
+      - '*'
 
 jobs:
   build:

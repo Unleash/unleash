@@ -97,22 +97,22 @@ test('should clear "unleash-session" cookie even when disabled clear site data',
         );
 });
 
-test('should remove the req.session during logout', async () => {
+test('should call destroy on session', async () => {
     const baseUriPath = '';
-    const fakeSession = { foo: 'bar' };
+    const fakeSession = {
+        destroy: jest.fn(),
+    };
     const app = express();
     const config = createTestConfig({ server: { baseUriPath } });
-    let reqObject = null;
     app.use((req: IAuthRequest, res, next) => {
         req.session = fakeSession;
-        reqObject = req;
         next();
     });
     app.use('/logout', new LogoutController(config).router);
     const request = supertest(app);
     await request.get(`${baseUriPath}/logout`);
 
-    expect(reqObject.session).toBeNull();
+    expect(fakeSession.destroy.mock.calls.length).toBe(1);
 });
 
 test('should handle req.logout with callback function', async () => {

@@ -41,7 +41,7 @@ class LogoutController extends Controller {
         }
 
         if (req.session) {
-            req.session = null;
+            req.session.destroy();
         }
         res.clearCookie(this.cookieName);
 

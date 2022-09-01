@@ -39,7 +39,7 @@ class IndexRouter extends Controller {
             ),
         );
 
-        this.use('/api/edge', new EdgeController(config, services).router);
+        this.use('/edge', new EdgeController(config, services).router);
     }
 }
 

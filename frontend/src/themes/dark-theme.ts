@@ -139,7 +139,6 @@ export default createTheme({
         formSidebarTextColor: themeColors.textColor,
         checkmarkBadge: themeColors.secondary,
         inputLabelBackground: 'transparent',
-        featureMetricsBackground: themeColors.secondary,
         grey: colors.grey,
         text: {
             primary: themeColors.textColor,

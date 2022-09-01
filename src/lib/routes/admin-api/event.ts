@@ -3,7 +3,7 @@ import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
 import EventService from '../../services/event-service';
 import { ADMIN, NONE } from '../../types/permissions';
-import { IEvent } from '../../types/events';
+import { IEvent, IEventList } from '../../types/events';
 import Controller from '../controller';
 import { anonymise } from '../../util/anonymise';
 import { OpenApiService } from '../../services/openapi-service';
@@ -121,16 +121,17 @@ export default class EventController extends Controller {
         res: Response<EventsSchema>,
     ): Promise<void> {
         const { project } = req.query;
-        let events: IEvent[];
+        let eventList: IEventList;
         if (project) {
-            events = await this.eventService.searchEvents({ project });
+            eventList = await this.eventService.searchEvents({ project });
         } else {
-            events = await this.eventService.getEvents();
+            eventList = await this.eventService.getEvents();
         }
 
         const response: EventsSchema = {
             version,
-            events: serializeDates(this.maybeAnonymiseEvents(events)),
+            events: serializeDates(this.maybeAnonymiseEvents(eventList.events)),
+            totalEvents: eventList.totalEvents,
         };
 
         this.openApiService.respondWithValidation(
@@ -146,12 +147,13 @@ export default class EventController extends Controller {
         res: Response<FeatureEventsSchema>,
     ): Promise<void> {
         const feature = req.params.featureName;
-        const events = await this.eventService.searchEvents({ feature });
+        const eventList = await this.eventService.searchEvents({ feature });
 
         const response = {
             version,
             toggleName: feature,
-            events: serializeDates(this.maybeAnonymiseEvents(events)),
+            events: serializeDates(this.maybeAnonymiseEvents(eventList.events)),
+            totalEvents: eventList.totalEvents,
         };
 
         this.openApiService.respondWithValidation(
@@ -166,11 +168,12 @@ export default class EventController extends Controller {
         req: Request<unknown, unknown, SearchEventsSchema>,
         res: Response<EventsSchema>,
     ): Promise<void> {
-        const events = await this.eventService.searchEvents(req.body);
+        const eventList = await this.eventService.searchEvents(req.body);
 
         const response = {
             version,
-            events: serializeDates(this.maybeAnonymiseEvents(events)),
+            events: serializeDates(this.maybeAnonymiseEvents(eventList.events)),
+            totalEvents: eventList.totalEvents,
         };
 
         this.openApiService.respondWithValidation(

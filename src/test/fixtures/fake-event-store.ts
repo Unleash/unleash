@@ -40,6 +40,14 @@ class FakeEventStore extends AnyEventEmitter implements IEventStore {
         this.events = [];
     }
 
+    async count(): Promise<number> {
+        return Promise.resolve(this.events.length);
+    }
+
+    filteredCount(): Promise<number> {
+        throw new Error('Method not implemented');
+    }
+
     destroy(): void {}
 
     async exists(key: number): Promise<boolean> {

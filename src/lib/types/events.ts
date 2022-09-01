@@ -92,6 +92,11 @@ export interface IEvent extends IBaseEvent {
     createdAt: Date;
 }
 
+export interface IEventList {
+    totalEvents: number;
+    events: IEvent[];
+}
+
 class BaseEvent implements IBaseEvent {
     readonly type: string;
 

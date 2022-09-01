@@ -292,12 +292,11 @@ export const AddonForm: VFC<IAddonFormProps> = ({
                             options={selectableEvents || []}
                             selectedItems={formValues.events}
                             onChange={setEventValues}
-                            entityName={'event'}
+                            entityName="event"
                             selectAllEnabled={false}
                             error={errors.events}
-                            description={
-                                'Select what events you want your addon to be notified about'
-                            }
+                            description="Select what events you want your addon to be notified about."
+                            required
                         />
                     </StyledFormSection>
                     <StyledFormSection>
@@ -305,7 +304,7 @@ export const AddonForm: VFC<IAddonFormProps> = ({
                             options={selectableProjects}
                             selectedItems={formValues.projects || []}
                             onChange={setProjects}
-                            entityName={'project'}
+                            entityName="project"
                             selectAllEnabled={true}
                         />
                     </StyledFormSection>
@@ -314,7 +313,7 @@ export const AddonForm: VFC<IAddonFormProps> = ({
                             options={selectableEnvironments}
                             selectedItems={formValues.environments || []}
                             onChange={setEnvironments}
-                            entityName={'environment'}
+                            entityName="environment"
                             selectAllEnabled={true}
                         />
                     </StyledFormSection>

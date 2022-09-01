@@ -25,6 +25,7 @@ const teamsDefinition: IAddonDefinition = {
         {
             name: 'url',
             displayName: 'Microsoft Teams webhook URL',
+            description: '(Required)',
             type: 'url',
             required: true,
             sensitive: true,

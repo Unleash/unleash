@@ -877,6 +877,10 @@ Object {
             },
             "type": "array",
           },
+          "totalEvents": Object {
+            "minimum": 0,
+            "type": "integer",
+          },
           "version": Object {
             "minimum": 1,
             "type": "integer",

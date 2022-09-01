@@ -55,6 +55,7 @@
     "automock": false,
     "maxWorkers": 4,
     "testTimeout": 10000,
+    "globalSetup": "./scripts/jest-setup.js",
     "transform": {
       "^.+\\.tsx?$": "ts-jest"
     },

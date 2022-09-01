@@ -43,7 +43,6 @@ function AdminMenu() {
             }}
         >
             <Tabs
-                centered
                 value={pathname}
                 variant="scrollable"
                 scrollButtons="auto"

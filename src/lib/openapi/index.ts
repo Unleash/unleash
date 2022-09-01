@@ -111,6 +111,8 @@ import { proxyFeatureSchema } from './spec/proxy-feature-schema';
 import { proxyClientSchema } from './spec/proxy-client-schema';
 import { proxyMetricsSchema } from './spec/proxy-metrics-schema';
 import { setUiConfigSchema } from './spec/set-ui-config-schema';
+import { edgeTokenSchema } from './spec/edge-token-schema';
+import { validateEdgeTokensSchema } from './spec/validate-edge-tokens-schema';
 
 // All schemas in `openapi/spec` should be listed here.
 export const schemas = {
@@ -221,6 +223,8 @@ export const schemas = {
     proxyFeaturesSchema,
     proxyFeatureSchema,
     proxyMetricsSchema,
+    edgeTokenSchema,
+    validateEdgeTokensSchema,
 };
 
 // Schemas must have an $id property on the form "#/components/schemas/mySchema".

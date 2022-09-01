@@ -11,6 +11,7 @@ const Controller = require('./controller');
 import { HealthCheckController } from './health-check';
 import ProxyController from './proxy-api';
 import { conditionalMiddleware } from '../middleware/conditional-middleware';
+import EdgeController from './edge-api';
 
 class IndexRouter extends Controller {
     constructor(config: IUnleashConfig, services: IUnleashServices) {
@@ -37,6 +38,8 @@ class IndexRouter extends Controller {
                 new ProxyController(config, services).router,
             ),
         );
+
+        this.use('/edge', new EdgeController(config, services).router);
     }
 }
 

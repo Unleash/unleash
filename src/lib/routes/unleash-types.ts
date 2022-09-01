@@ -8,7 +8,7 @@ export interface IAuthRequest<
     ReqQuery = any,
 > extends Request<PARAM, ResBody, ReqBody, ReqQuery> {
     user: User;
-    logout: () => void;
+    logout: any;
     session: any;
 }
 

@@ -25,16 +25,30 @@ class LogoutController extends Controller {
                 res.redirect(req.session.logoutUrl);
                 return;
             }
-
-            req.session.destroy();
         }
 
         if (req.logout) {
-            req.logout();
+            if (req.logout.length === 0) {
+                // passport < 0.6.0
+                req.logout();
+                this.afterLogout(req, res);
+            } else {
+                // for passport >= 0.6.0, try to call with a callback function
+                req.logout((err) => {
+                    if (err) {
+                        throw err;
+                    }
+                    this.afterLogout(req, res);
+                });
+            }
         }
+    }
 
+    private afterLogout(req: IAuthRequest, res: Response) {
+        if (req.session) {
+            req.session = null;
+        }
         res.clearCookie(this.cookieName);
-
         if (this.clearSiteDataOnLogout) {
             res.set('Clear-Site-Data', '"cookies", "storage"');
         }

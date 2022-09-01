@@ -182,7 +182,10 @@ const ProjectRoleList = () => {
         setHiddenColumns(hiddenColumns);
     }, [setHiddenColumns, isExtraSmallScreen]);
 
-    let count = data.length < rows.length ? `(${data.length} of ${rows.length})` : `(${rows.length})`;
+    let count =
+        data.length < rows.length
+            ? `(${data.length} of ${rows.length})`
+            : `(${rows.length})`;
     return (
         <PageContent
             isLoading={loading}

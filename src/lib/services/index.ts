@@ -34,6 +34,7 @@ import { ClientSpecService } from './client-spec-service';
 import { PlaygroundService } from './playground-service';
 import { GroupService } from './group-service';
 import { ProxyService } from './proxy-service';
+import EdgeService from './edge-service';
 export const createServices = (
     stores: IUnleashStores,
     config: IUnleashConfig,
@@ -98,6 +99,8 @@ export const createServices = (
         segmentService,
     });
 
+    const edgeService = new EdgeService(stores, config);
+
     return {
         accessService,
         addonService,
@@ -132,6 +135,7 @@ export const createServices = (
         playgroundService,
         groupService,
         proxyService,
+        edgeService,
     };
 };
 

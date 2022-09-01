@@ -2,11 +2,9 @@
 title: How to add strategy constraints
 ---
 
-:::info Availability
-Strategy constraints are available to Unleash Pro and Enterprise users.
-:::
+:::info Availability Strategy constraints are available to Unleash Pro and Enterprise users. :::
 
-This guide shows you how to add [strategy constraints](../advanced/strategy-constraints.md) to your feature toggles via the admin UI. For information on how to interact with strategy constraints from an [Unleash client SDK](../sdks/index.md), visit the specific SDKs documentation or see [the relevant section in the strategy constraints documentation](../advanced/strategy-constraints.md#sdks "strategy constraints documentation, section on interacting with constraints from client SDKs").
+This guide shows you how to add [strategy constraints](../advanced/strategy-constraints.md) to your feature toggles via the admin UI. For information on how to interact with strategy constraints from an [Unleash client SDK](../sdks/index.md), visit the specific SDKs documentation or see [the relevant section in the strategy constraints documentation](../advanced/strategy-constraints.md#sdks 'strategy constraints documentation, section on interacting with constraints from client SDKs').
 
 ## Prerequisites
 
@@ -24,17 +22,18 @@ Refer to [the _constraint structure_ section of the strategy constraints referen
 
 From the "Context Field" dropdown, select the context field you would like to constrain the strategy on.
 
-![A strategy constraint form with a constraint set to "region". The "values" input is a dropdown menu containing the options "Africa", "Asia", "Europe", and "North America", as defined in the preceding paragraph.](/img/constraints_legal_values.png)
+![A strategy constraint form with a constraint set to "region". The "values" input is a dropdown menu containing the options "Africa", "Asia", "Europe", and "North America", as defined in the preceding paragraph.](/img/constraints-add-to-strategy.png)
 
 ## Step 3: Add additional constraints {#step-3}
 
 To add additional constraints:
-1. Repeat [step one](#step-1 "step 1: open the constraints menu") to open the constraints menu.
+
+1. Repeat [step one](#step-1 'step 1: open the constraints menu') to open the constraints menu.
 2. Use the "Add constraint" button to add a new constraint.
 
-    ![The add constraint modal menu with an existing constraint. There is a button labeled "add constraint" that is being highlighted by an arrow.](/img/constraints-add-additional.png)
+   ![The add constraint modal menu with an existing constraint. There is a button labeled "add constraint" that is being highlighted by an arrow.](/img/constraints-add-additional.png)
 
-3. Follow [step two](#step-2 "step 2: configure the constraint") for the new constraint.
+3. Follow [step two](#step-2 'step 2: configure the constraint') for the new constraint.
 
 ## How to update existing constraints
 

@@ -1,5 +1,5 @@
 import { FromSchema } from 'json-schema-to-ts';
-import { edgeTokensSchema } from './edge-token-schema';
+import { edgeTokenSchema } from './edge-token-schema';
 
 export const validateEdgeTokensSchema = {
     $id: '#/components/schemas/validateEdgeTokensSchema',
@@ -10,14 +10,14 @@ export const validateEdgeTokensSchema = {
         tokens: {
             type: 'array',
             anyOf: [
-                { items: { $ref: '#/components/schemas/edgeTokensSchema' } },
+                { items: { $ref: '#/components/schemas/edgeTokenSchema' } },
                 { items: { type: 'string' } },
             ],
         },
     },
     components: {
         schemas: {
-            edgeTokensSchema,
+            edgeTokenSchema,
         },
     },
 } as const;

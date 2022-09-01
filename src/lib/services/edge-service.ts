@@ -1,8 +1,9 @@
 import { IUnleashStores, IUnleashConfig } from '../types';
 import { Logger } from '../logger';
-import { ValidateEdgeTokensSchema } from '../openapi/spec/validate-edge-tokens-schema';
 import { IApiTokenStore } from '../types/stores/api-token-store';
-import { EdgeTokensSchema } from '../openapi/spec/edge-token-schema';
+import { EdgeTokenSchema } from '../openapi/spec/edge-token-schema';
+import { constantTimeCompare } from '../util/constantTimeCompare';
+import { ValidateEdgeTokensSchema } from '../openapi/spec/validate-edge-tokens-schema';
 
 export default class EdgeService {
     private logger: Logger;
@@ -19,22 +20,19 @@ export default class EdgeService {
 
     async getValidTokens(tokens: string[]): Promise<ValidateEdgeTokensSchema> {
         const activeTokens = await this.apiTokenStore.getAllActive();
-        const edgeTokens = tokens.reduce(
-            (result: EdgeTokensSchema[], token) => {
-                const dbToken = activeTokens.find(
-                    (activeToken) => activeToken.secret === token,
-                );
-                if (dbToken) {
-                    result.push({
-                        token: token,
-                        type: dbToken.type,
-                        projects: dbToken.projects,
-                    });
-                }
-                return result;
-            },
-            [],
-        );
+        const edgeTokens = tokens.reduce((result: EdgeTokenSchema[], token) => {
+            const dbToken = activeTokens.find((activeToken) =>
+                constantTimeCompare(activeToken.secret, token),
+            );
+            if (dbToken) {
+                result.push({
+                    token: token,
+                    type: dbToken.type,
+                    projects: dbToken.projects,
+                });
+            }
+            return result;
+        }, []);
         return { tokens: edgeTokens };
     }
 }

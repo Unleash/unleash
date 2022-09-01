@@ -1,8 +1,8 @@
 import { FromSchema } from 'json-schema-to-ts';
 import { ApiTokenType } from '../../types/models/api-token';
 
-export const edgeTokensSchema = {
-    $id: '#/components/schemas/edgeTokensSchema',
+export const edgeTokenSchema = {
+    $id: '#/components/schemas/edgeTokenSchema',
     type: 'object',
     additionalProperties: false,
     required: ['token', 'projects', 'type'],
@@ -24,4 +24,4 @@ export const edgeTokensSchema = {
     components: {},
 } as const;
 
-export type EdgeTokensSchema = FromSchema<typeof edgeTokensSchema>;
+export type EdgeTokenSchema = FromSchema<typeof edgeTokenSchema>;

@@ -758,6 +758,34 @@ Object {
           },
         ],
       },
+      "edgeTokenSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "projects": Object {
+            "items": Object {
+              "type": "string",
+            },
+            "type": "array",
+          },
+          "token": Object {
+            "type": "string",
+          },
+          "type": Object {
+            "enum": Array [
+              "client",
+              "admin",
+              "frontend",
+            ],
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "token",
+          "projects",
+          "type",
+        ],
+        "type": "object",
+      },
       "emailSchema": Object {
         "additionalProperties": false,
         "properties": Object {
@@ -3132,6 +3160,30 @@ Object {
           "$ref": "#/components/schemas/userSchema",
         },
         "type": "array",
+      },
+      "validateEdgeTokensSchema": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "tokens": Object {
+            "anyOf": Array [
+              Object {
+                "items": Object {
+                  "$ref": "#/components/schemas/edgeTokenSchema",
+                },
+              },
+              Object {
+                "items": Object {
+                  "type": "string",
+                },
+              },
+            ],
+            "type": "array",
+          },
+        },
+        "required": Array [
+          "tokens",
+        ],
+        "type": "object",
       },
       "validatePasswordSchema": Object {
         "additionalProperties": false,
@@ -6837,6 +6889,37 @@ If the provided project does not exist, the list of events will be empty.",
         ],
       },
     },
+    "/edge/validate": Object {
+      "post": Object {
+        "operationId": "getValidTokens",
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/validateEdgeTokensSchema",
+              },
+            },
+          },
+          "description": "validateEdgeTokensSchema",
+          "required": true,
+        },
+        "responses": Object {
+          "200": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/validateEdgeTokensSchema",
+                },
+              },
+            },
+            "description": "validateEdgeTokensSchema",
+          },
+        },
+        "tags": Array [
+          "Edge",
+        ],
+      },
+    },
     "/health": Object {
       "get": Object {
         "operationId": "getHealth",
@@ -6906,6 +6989,10 @@ If the provided project does not exist, the list of events will be empty.",
     Object {
       "description": "Create, update, and delete [context fields](https://docs.getunleash.io/user_guide/unleash_context) that Unleash is aware of.",
       "name": "Context",
+    },
+    Object {
+      "description": "Endpoints related to Unleash on the Edge.",
+      "name": "Edge",
     },
     Object {
       "description": "Create, update, delete, enable or disable [environments](https://docs.getunleash.io/user_guide/environments) for this Unleash instance.",

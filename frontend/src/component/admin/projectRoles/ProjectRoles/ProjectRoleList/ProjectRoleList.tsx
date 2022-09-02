@@ -182,12 +182,16 @@ const ProjectRoleList = () => {
         setHiddenColumns(hiddenColumns);
     }, [setHiddenColumns, isExtraSmallScreen]);
 
+    let count =
+        data.length < rows.length
+            ? `(${data.length} of ${rows.length})`
+            : `(${rows.length})`;
     return (
         <PageContent
             isLoading={loading}
             header={
                 <PageHeader
-                    title="Project roles"
+                    title={`Project roles ${count}`}
                     actions={
                         <>
                             <Search

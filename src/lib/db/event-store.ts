@@ -57,6 +57,36 @@ class EventStore extends AnyEventEmitter implements IEventStore {
         }
     }
 
+    async count(): Promise<number> {
+        let count = await this.db(TABLE)
+            .count<Record<string, number>>()
+            .first();
+        if (typeof count.count === 'string') {
+            return parseInt(count.count, 10);
+        } else {
+            return count.count;
+        }
+    }
+
+    async filteredCount(eventSearch: SearchEventsSchema): Promise<number> {
+        let query = this.db(TABLE);
+        if (eventSearch.type) {
+            query = query.andWhere({ type: eventSearch.type });
+        }
+        if (eventSearch.project) {
+            query = query.andWhere({ project: eventSearch.project });
+        }
+        if (eventSearch.feature) {
+            query = query.andWhere({ feature_name: eventSearch.feature });
+        }
+        let count = await query.count().first();
+        if (typeof count.count === 'string') {
+            return parseInt(count.count, 10);
+        } else {
+            return count.count;
+        }
+    }
+
     async batchStore(events: IBaseEvent[]): Promise<void> {
         try {
             const savedRows = await this.db(TABLE)

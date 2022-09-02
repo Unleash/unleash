@@ -10,6 +10,7 @@ export interface IUseEventSearchOutput {
     events?: IEvent[];
     fetchNextPage: () => void;
     loading: boolean;
+    totalEvents?: number;
     error?: Error;
 }
 
@@ -28,6 +29,7 @@ export const useEventSearch = (
     query?: string
 ): IUseEventSearchOutput => {
     const [events, setEvents] = useState<IEvent[]>();
+    const [totalEvents, setTotalEvents] = useState<number>(0);
     const [offset, setOffset] = useState(0);
 
     const search: IEventSearch = useMemo(
@@ -35,14 +37,15 @@ export const useEventSearch = (
         [project, feature, query]
     );
 
-    const { data, error, isValidating } = useSWR<{ events: IEvent[] }>(
-        [PATH, search, offset],
-        () => searchEvents(PATH, { ...search, offset })
-    );
+    const { data, error, isValidating } = useSWR<{
+        events: IEvent[];
+        totalEvents?: number;
+    }>([PATH, search, offset], () => searchEvents(PATH, { ...search, offset }));
 
     // Reset the page when there are new search conditions.
     useEffect(() => {
         setOffset(0);
+        setTotalEvents(0);
         setEvents(undefined);
     }, [search]);
 
@@ -50,6 +53,9 @@ export const useEventSearch = (
     useEffect(() => {
         if (data) {
             setEvents(prev => [...(prev ?? []), ...data.events]);
+            if (data.totalEvents) {
+                setTotalEvents(data.totalEvents);
+            }
         }
     }, [data]);
 
@@ -64,6 +70,7 @@ export const useEventSearch = (
         events,
         loading: !error && !data,
         fetchNextPage,
+        totalEvents,
         error,
     };
 };

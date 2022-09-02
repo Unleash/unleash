@@ -35,7 +35,11 @@ export const EventLog = ({
     displayInline,
 }: IEventLogProps) => {
     const [query, setQuery] = useState('');
-    const { events, fetchNextPage } = useEventSearch(project, feature, query);
+    const { events, totalEvents, fetchNextPage } = useEventSearch(
+        project,
+        feature,
+        query
+    );
     const fetchNextPageRef = useOnVisible<HTMLDivElement>(fetchNextPage);
     const { eventSettings, setEventSettings } = useEventSettings();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -64,13 +68,17 @@ export const EventLog = ({
         />
     );
 
+    let count = events?.length || 0;
+    let totalCount = totalEvents || 0;
+    let countText = `${count} of ${totalCount}`;
+
     return (
         <PageContent
             disablePadding={displayInline}
             disableBorder={displayInline}
             header={
                 <PageHeader
-                    title={title}
+                    title={`${title} (${countText})`}
                     actions={
                         <>
                             {showDataSwitch}

@@ -39,7 +39,7 @@ test('should register client', async () => {
 
 test('should allow client to register multiple times', async () => {
     expect.assertions(2);
-    jest.useFakeTimers('modern');
+    jest.useFakeTimers();
     const { clientInstanceStore, clientApplicationsStore } = db.stores;
 
     const clientRegistration = {

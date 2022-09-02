@@ -1,13 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`meSchema empty 1`] = `
-Object {
-  "errors": Array [
-    Object {
+{
+  "errors": [
+    {
       "instancePath": "",
       "keyword": "required",
       "message": "must have required property 'user'",
-      "params": Object {
+      "params": {
         "missingProperty": "user",
       },
       "schemaPath": "#/required",
@@ -18,13 +18,13 @@ Object {
 `;
 
 exports[`meSchema missing permissions 1`] = `
-Object {
-  "errors": Array [
-    Object {
+{
+  "errors": [
+    {
       "instancePath": "",
       "keyword": "required",
       "message": "must have required property 'permissions'",
-      "params": Object {
+      "params": {
         "missingProperty": "permissions",
       },
       "schemaPath": "#/required",
@@ -35,13 +35,13 @@ Object {
 `;
 
 exports[`meSchema missing splash 1`] = `
-Object {
-  "errors": Array [
-    Object {
+{
+  "errors": [
+    {
       "instancePath": "",
       "keyword": "required",
       "message": "must have required property 'splash'",
-      "params": Object {
+      "params": {
         "missingProperty": "splash",
       },
       "schemaPath": "#/required",

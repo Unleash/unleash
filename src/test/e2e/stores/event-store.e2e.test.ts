@@ -31,7 +31,7 @@ afterAll(async () => {
     }
 });
 test('Should include id and createdAt when saving', async () => {
-    jest.useFakeTimers('modern');
+    jest.useFakeTimers();
     const event1 = {
         type: APPLICATION_CREATED,
         createdBy: '127.0.0.1',
@@ -79,7 +79,7 @@ test('Should include empty tags array for new event', async () => {
 });
 
 test('Should be able to store multiple events at once', async () => {
-    jest.useFakeTimers('modern');
+    jest.useFakeTimers();
     const event1 = {
         type: APPLICATION_CREATED,
         createdBy: '127.0.0.1',

@@ -116,7 +116,7 @@ test('should call destroy on session', async () => {
 });
 
 test('should handle req.logout with callback function', async () => {
-    // passport <0.6.0
+    // passport >=0.6.0
     const baseUriPath = '';
     const logoutFunction = jest.fn((cb: (err?: any) => void) => cb());
     const app = express();
@@ -134,7 +134,7 @@ test('should handle req.logout with callback function', async () => {
 });
 
 test('should handle req.logout without callback function', async () => {
-    // passport >=0.6.0
+    // passport <0.6.0
     const baseUriPath = '';
     const logoutFunction = jest.fn();
     const app = express();

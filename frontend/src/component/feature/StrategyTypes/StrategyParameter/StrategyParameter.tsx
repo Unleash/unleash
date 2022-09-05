@@ -38,12 +38,20 @@ export const StrategyParameter = ({
         updateParameter(name, event.target.value);
     };
 
+    const onChangeString = (event: React.ChangeEvent<HTMLInputElement>) => {
+        updateParameter(name, parseParameterString(event.target.value));
+    };
+
     const onChangePercentage = (event: Event, next: number | number[]) => {
         updateParameter(name, next.toString());
     };
 
     const onChangeBoolean = (event: React.ChangeEvent, checked: boolean) => {
         updateParameter(name, String(checked));
+    };
+
+    const onSetListConfig = (field: string, value: string) => {
+        updateParameter(field, parseParameterStrings(value).join(','));
     };
 
     if (type === 'percentage') {
@@ -69,7 +77,7 @@ export const StrategyParameter = ({
                     name={name}
                     list={parseParameterStrings(parameters[name])}
                     disabled={!editable}
-                    setConfig={updateParameter}
+                    setConfig={onSetListConfig}
                     errors={errors}
                 />
                 <InputCaption text={description} />
@@ -131,7 +139,7 @@ export const StrategyParameter = ({
                 helperText={error}
                 name={name}
                 label={label}
-                onChange={onChange}
+                onChange={onChangeString}
                 value={parseParameterString(parameters[name])}
             />
             <InputCaption text={description} />

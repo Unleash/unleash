@@ -1,4 +1,4 @@
-import { TextField } from '@mui/material';
+import { TextField, Typography } from '@mui/material';
 import { IAddonConfig, IAddonProviderParams } from 'interfaces/addons';
 import { ChangeEventHandler } from 'react';
 import { StyledAddonParameterContainer } from '../../AddonForm.styles';
@@ -40,7 +40,16 @@ export const AddonParameter = ({
                 minRows={definition.type === 'textfield' ? 9 : 0}
                 multiline={definition.type === 'textfield'}
                 type={type}
-                label={definition.displayName}
+                label={
+                    <>
+                        {definition.displayName}
+                        {definition.required ? (
+                            <Typography component="span" color="error">
+                                *
+                            </Typography>
+                        ) : null}
+                    </>
+                }
                 name={definition.name}
                 placeholder={definition.placeholder || ''}
                 InputLabelProps={{

@@ -1,6 +1,5 @@
 import React, { ChangeEvent, Fragment, useState, VFC } from 'react';
 import { IAutocompleteBoxOption } from '../../../common/AutocompleteBox/AutocompleteBox';
-import { styles as themeStyles } from 'component/common';
 import {
     AutocompleteRenderGroupParams,
     AutocompleteRenderInputParams,
@@ -13,6 +12,7 @@ import {
     Paper,
     TextField,
     Autocomplete,
+    Typography,
 } from '@mui/material';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
@@ -33,6 +33,7 @@ export interface IAddonMultiSelectorProps {
     entityName: string;
     selectAllEnabled: boolean;
     description?: string;
+    required?: boolean;
 }
 
 const ALL_OPTIONS = '*';
@@ -52,6 +53,7 @@ export const AddonMultiSelector: VFC<IAddonMultiSelectorProps> = ({
     entityName,
     selectAllEnabled = true,
     description,
+    required,
 }) => {
     const [isWildcardSelected, selectWildcard] = useState(
         selectedItems.includes(ALL_OPTIONS)
@@ -144,7 +146,14 @@ export const AddonMultiSelector: VFC<IAddonMultiSelectorProps> = ({
 
     return (
         <React.Fragment>
-            <StyledTitle>{capitalize(entityName)}s</StyledTitle>
+            <StyledTitle>
+                {capitalize(entityName)}s
+                {required ? (
+                    <Typography component="span" color="error">
+                        *
+                    </Typography>
+                ) : null}
+            </StyledTitle>
             <ConditionallyRender
                 condition={description !== undefined}
                 show={<StyledHelpText>{description}</StyledHelpText>}
@@ -153,7 +162,6 @@ export const AddonMultiSelector: VFC<IAddonMultiSelectorProps> = ({
                 condition={selectAllEnabled}
                 show={<DefaultHelpText />}
             />
-            <span className={themeStyles.error}>{error}</span>
             <ConditionallyRender
                 condition={selectAllEnabled}
                 show={<SelectAllFormControl />}

@@ -25,6 +25,7 @@ const slackDefinition: IAddonDefinition = {
         {
             name: 'url',
             displayName: 'Slack webhook URL',
+            description: '(Required)',
             type: 'url',
             required: true,
             sensitive: true,
@@ -53,7 +54,7 @@ const slackDefinition: IAddonDefinition = {
             name: 'defaultChannel',
             displayName: 'Default channel',
             description:
-                'Default channel to post updates to if not specified in the slack-tag',
+                '(Required) Default channel to post updates to if not specified in the slack-tag',
             type: 'text',
             required: true,
             sensitive: false,

@@ -33,9 +33,9 @@ const dataDogDefinition: IAddonDefinition = {
         },
         {
             name: 'apiKey',
-            displayName: 'DD API KEY',
+            displayName: 'Datadog API key',
             placeholder: 'j96c23b0f12a6b3434a8d710110bd862',
-            description: 'Api key from datadog',
+            description: '(Required) API key from Datadog',
             type: 'text',
             required: true,
             sensitive: true,

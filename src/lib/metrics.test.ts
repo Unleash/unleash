@@ -57,12 +57,13 @@ test('should collect metrics for requests', async () => {
 test('should collect metrics for updated toggles', async () => {
     stores.eventStore.emit(FEATURE_UPDATED, {
         featureName: 'TestToggle',
+        project: 'default',
         data: { name: 'TestToggle' },
     });
 
     const metrics = await prometheusRegister.metrics();
     expect(metrics).toMatch(
-        /feature_toggle_update_total{toggle="TestToggle"} 1/,
+        /feature_toggle_update_total{toggle="TestToggle",project="default",environment="default"} 1/,
     );
 });
 

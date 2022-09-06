@@ -29,7 +29,7 @@ test('all schema $id attributes should have the expected format', () => {
 test('removeJsonSchemaProps', () => {
     expect(removeJsonSchemaProps({ a: 'b', $id: 'c', components: {} }))
         .toMatchInlineSnapshot(`
-        Object {
+        {
           "a": "b",
         }
     `);

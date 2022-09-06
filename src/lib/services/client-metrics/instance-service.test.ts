@@ -39,7 +39,7 @@ function flushPromises() {
 }
 
 test('Multiple registrations of same appname and instanceid within same time period should only cause one registration', async () => {
-    jest.useFakeTimers('modern');
+    jest.useFakeTimers();
     const appStoreSpy = jest.fn();
     const bulkSpy = jest.fn();
     const clientApplicationsStore: any = {
@@ -88,7 +88,7 @@ test('Multiple registrations of same appname and instanceid within same time per
 });
 
 test('Multiple unique clients causes multiple registrations', async () => {
-    jest.useFakeTimers('modern');
+    jest.useFakeTimers();
     const appStoreSpy = jest.fn();
     const bulkSpy = jest.fn();
     const clientApplicationsStore: any = {
@@ -139,7 +139,7 @@ test('Multiple unique clients causes multiple registrations', async () => {
     jest.useRealTimers();
 });
 test('Same client registered outside of dedup interval will be registered twice', async () => {
-    jest.useFakeTimers('modern');
+    jest.useFakeTimers();
     const appStoreSpy = jest.fn();
     const bulkSpy = jest.fn();
     const clientApplicationsStore: any = {
@@ -195,7 +195,7 @@ test('Same client registered outside of dedup interval will be registered twice'
 });
 
 test('No registrations during a time period will not call stores', async () => {
-    jest.useFakeTimers('modern');
+    jest.useFakeTimers();
     const appStoreSpy = jest.fn();
     const bulkSpy = jest.fn();
     const clientApplicationsStore: any = {

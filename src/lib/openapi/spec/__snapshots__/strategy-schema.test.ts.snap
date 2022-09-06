@@ -1,13 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`strategySchema 1`] = `
-Object {
-  "errors": Array [
-    Object {
+{
+  "errors": [
+    {
       "instancePath": "",
       "keyword": "required",
       "message": "must have required property 'name'",
-      "params": Object {
+      "params": {
         "missingProperty": "name",
       },
       "schemaPath": "#/required",

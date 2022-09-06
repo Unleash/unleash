@@ -1,13 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`apiTokenSchema empty 1`] = `
-Object {
-  "errors": Array [
-    Object {
+{
+  "errors": [
+    {
       "instancePath": "",
       "keyword": "required",
       "message": "must have required property 'username'",
-      "params": Object {
+      "params": {
         "missingProperty": "username",
       },
       "schemaPath": "#/required",

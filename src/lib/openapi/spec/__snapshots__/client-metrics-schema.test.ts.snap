@@ -1,13 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`clientMetricsSchema should fail when required field is missing 1`] = `
-Object {
-  "errors": Array [
-    Object {
+{
+  "errors": [
+    {
       "instancePath": "/bucket",
       "keyword": "required",
       "message": "must have required property 'stop'",
-      "params": Object {
+      "params": {
         "missingProperty": "stop",
       },
       "schemaPath": "#/properties/bucket/required",

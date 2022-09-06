@@ -1,13 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`sortOrderSchema invalid value type 1`] = `
-Object {
-  "errors": Array [
-    Object {
+{
+  "errors": [
+    {
       "instancePath": "/a",
       "keyword": "type",
       "message": "must be number",
-      "params": Object {
+      "params": {
         "type": "number",
       },
       "schemaPath": "#/additionalProperties/type",

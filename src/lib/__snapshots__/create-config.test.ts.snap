@@ -1,26 +1,26 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`should create default config 1`] = `
-Object {
-  "additionalCspAllowedDomains": Object {
-    "defaultSrc": Array [],
-    "fontSrc": Array [],
-    "imgSrc": Array [],
-    "scriptSrc": Array [],
-    "styleSrc": Array [],
+{
+  "additionalCspAllowedDomains": {
+    "defaultSrc": [],
+    "fontSrc": [],
+    "imgSrc": [],
+    "scriptSrc": [],
+    "styleSrc": [],
   },
-  "authentication": Object {
+  "authentication": {
     "createAdminUser": true,
     "customAuthHandler": [Function],
     "enableApiToken": true,
-    "initApiTokens": Array [],
+    "initApiTokens": [],
     "type": "open-source",
   },
-  "clientFeatureCaching": Object {
+  "clientFeatureCaching": {
     "enabled": true,
     "maxAge": 600,
   },
-  "db": Object {
+  "db": {
     "acquireConnectionTimeout": 30000,
     "applicationName": "unleash",
     "database": "unleash_db",
@@ -28,7 +28,7 @@ Object {
     "driver": "postgres",
     "host": "localhost",
     "password": "password",
-    "pool": Object {
+    "pool": {
       "idleTimeoutMillis": 30000,
       "max": 4,
       "min": 0,
@@ -36,14 +36,14 @@ Object {
     },
     "port": 4242,
     "schema": "public",
-    "ssl": Object {
+    "ssl": {
       "rejectUnauthorized": false,
     },
     "user": "unleash",
     "version": undefined,
   },
   "disableLegacyFeaturesApi": false,
-  "email": Object {
+  "email": {
     "host": undefined,
     "port": 587,
     "secure": false,
@@ -53,19 +53,19 @@ Object {
   },
   "enableOAS": false,
   "enterpriseVersion": undefined,
-  "environmentEnableOverrides": Array [],
+  "environmentEnableOverrides": [],
   "eventBus": EventEmitter {
-    "_events": Object {},
+    "_events": {},
     "_eventsCount": 0,
     "_maxListeners": undefined,
     Symbol(kCapture): false,
   },
   "eventHook": undefined,
-  "experimental": Object {
-    "externalResolver": Object {
+  "experimental": {
+    "externalResolver": {
       "isEnabled": [Function],
     },
-    "flags": Object {
+    "flags": {
       "ENABLE_DARK_MODE_SUPPORT": false,
       "anonymiseEventLog": false,
       "batchMetrics": false,
@@ -74,28 +74,28 @@ Object {
     },
   },
   "flagResolver": FlagResolver {
-    "experiments": Object {
+    "experiments": {
       "ENABLE_DARK_MODE_SUPPORT": false,
       "anonymiseEventLog": false,
       "batchMetrics": false,
       "embedProxy": false,
       "embedProxyFrontend": false,
     },
-    "externalResolver": Object {
+    "externalResolver": {
       "isEnabled": [Function],
     },
   },
-  "frontendApiOrigins": Array [
+  "frontendApiOrigins": [
     "*",
   ],
   "getLogger": [Function],
-  "import": Object {
+  "import": {
     "dropBeforeImport": false,
     "file": undefined,
     "keepExisting": false,
   },
   "inlineSegmentConstraints": true,
-  "listen": Object {
+  "listen": {
     "host": undefined,
     "port": 4242,
   },
@@ -103,7 +103,7 @@ Object {
   "preRouterHook": undefined,
   "secureHeaders": false,
   "segmentValuesLimit": 100,
-  "server": Object {
+  "server": {
     "baseUriPath": "",
     "cdnPrefix": undefined,
     "enableRequestLogger": false,
@@ -118,20 +118,20 @@ Object {
     "serverMetrics": true,
     "unleashUrl": "http://localhost:4242",
   },
-  "session": Object {
+  "session": {
     "clearSiteDataOnLogout": true,
     "cookieName": "unleash-session",
     "db": true,
     "ttlHours": 48,
   },
   "strategySegmentsLimit": 5,
-  "ui": Object {
-    "flags": Object {
+  "ui": {
+    "flags": {
       "E": true,
       "ENABLE_DARK_MODE_SUPPORT": false,
     },
   },
-  "versionCheck": Object {
+  "versionCheck": {
     "enable": true,
     "url": "https://version.unleash.run",
   },

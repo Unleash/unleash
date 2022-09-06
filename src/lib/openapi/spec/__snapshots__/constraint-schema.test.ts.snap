@@ -1,14 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`constraintSchema invalid operator name 1`] = `
-Object {
-  "errors": Array [
-    Object {
+{
+  "errors": [
+    {
       "instancePath": "/operator",
       "keyword": "enum",
       "message": "must be equal to one of the allowed values",
-      "params": Object {
-        "allowedValues": Array [
+      "params": {
+        "allowedValues": [
           "NOT_IN",
           "IN",
           "STR_ENDS_WITH",
@@ -34,13 +34,13 @@ Object {
 `;
 
 exports[`constraintSchema invalid value type 1`] = `
-Object {
-  "errors": Array [
-    Object {
+{
+  "errors": [
+    {
       "instancePath": "/value",
       "keyword": "type",
       "message": "must be string",
-      "params": Object {
+      "params": {
         "type": "string",
       },
       "schemaPath": "#/properties/value/type",

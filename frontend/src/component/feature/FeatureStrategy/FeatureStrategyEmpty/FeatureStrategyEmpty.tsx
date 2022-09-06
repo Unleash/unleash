@@ -101,7 +101,7 @@ export const FeatureStrategyEmpty = ({
                 parameters: {
                     rollout: '50',
                     stickiness: 'default',
-                    groupId: feature.name
+                    groupId: feature.name,
                 },
                 constraints: [],
             });

@@ -1,28 +1,30 @@
 import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { Paper, Tab, Tabs } from '@mui/material';
+import { Paper, Tab, Tabs, Theme } from '@mui/material';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
-
-const navLinkStyle = {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
-    textDecoration: 'none',
-    color: 'inherit',
-    padding: '0.8rem 1.5rem',
-};
-
-const activeNavLinkStyle: React.CSSProperties = {
-    fontWeight: 'bold',
-    borderRadius: '3px',
-    padding: '0.8rem 1.5rem',
-};
+import { useTheme } from '@mui/material/styles';
 
 const createNavLinkStyle = (props: {
     isActive: boolean;
+    theme: Theme;
 }): React.CSSProperties => {
+    const navLinkStyle = {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
+        textDecoration: 'none',
+        color: 'inherit',
+        padding: props.theme.spacing(1.5, 3),
+    };
+
+    const activeNavLinkStyle: React.CSSProperties = {
+        fontWeight: 'bold',
+        borderRadius: '3px',
+        padding: props.theme.spacing(1.5, 3),
+    };
+
     return props.isActive
         ? { ...navLinkStyle, ...activeNavLinkStyle }
         : navLinkStyle;
@@ -30,6 +32,7 @@ const createNavLinkStyle = (props: {
 
 function AdminMenu() {
     const { uiConfig } = useUiConfig();
+    const theme = useTheme();
     const { pathname } = useLocation();
     const { isBilling } = useInstanceStatus();
     const { flags } = uiConfig;
@@ -42,11 +45,21 @@ function AdminMenu() {
                 boxShadow: 'none',
             }}
         >
-            <Tabs centered value={pathname}>
+            <Tabs
+                value={pathname}
+                variant="scrollable"
+                scrollButtons="auto"
+                allowScrollButtonsMobile
+            >
                 <Tab
                     value="/admin/users"
                     label={
-                        <NavLink to="/admin/users" style={createNavLinkStyle}>
+                        <NavLink
+                            to="/admin/users"
+                            style={({ isActive }) =>
+                                createNavLinkStyle({ isActive, theme })
+                            }
+                        >
                             <span>Users</span>
                         </NavLink>
                     }
@@ -57,7 +70,9 @@ function AdminMenu() {
                         label={
                             <NavLink
                                 to="/admin/groups"
-                                style={createNavLinkStyle}
+                                style={({ isActive }) =>
+                                    createNavLinkStyle({ isActive, theme })
+                                }
                             >
                                 <span>Groups</span>
                             </NavLink>
@@ -70,7 +85,9 @@ function AdminMenu() {
                         label={
                             <NavLink
                                 to="/admin/roles"
-                                style={createNavLinkStyle}
+                                style={({ isActive }) =>
+                                    createNavLinkStyle({ isActive, theme })
+                                }
                             >
                                 <span>Project roles</span>
                             </NavLink>
@@ -80,7 +97,12 @@ function AdminMenu() {
                 <Tab
                     value="/admin/api"
                     label={
-                        <NavLink to="/admin/api" style={createNavLinkStyle}>
+                        <NavLink
+                            to="/admin/api"
+                            style={({ isActive }) =>
+                                createNavLinkStyle({ isActive, theme })
+                            }
+                        >
                             API access
                         </NavLink>
                     }
@@ -91,7 +113,9 @@ function AdminMenu() {
                         label={
                             <NavLink
                                 to="/admin/cors"
-                                style={createNavLinkStyle}
+                                style={({ isActive }) =>
+                                    createNavLinkStyle({ isActive, theme })
+                                }
                             >
                                 CORS origins
                             </NavLink>
@@ -101,7 +125,12 @@ function AdminMenu() {
                 <Tab
                     value="/admin/auth"
                     label={
-                        <NavLink to="/admin/auth" style={createNavLinkStyle}>
+                        <NavLink
+                            to="/admin/auth"
+                            style={({ isActive }) =>
+                                createNavLinkStyle({ isActive, theme })
+                            }
+                        >
                             Single sign-on
                         </NavLink>
                     }
@@ -112,7 +141,9 @@ function AdminMenu() {
                         label={
                             <NavLink
                                 to="/admin/billing"
-                                style={createNavLinkStyle}
+                                style={({ isActive }) =>
+                                    createNavLinkStyle({ isActive, theme })
+                                }
                             >
                                 Billing
                             </NavLink>

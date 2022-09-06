@@ -81,6 +81,13 @@ export default class EnvironmentStore implements IEnvironmentStore {
         await this.db(TABLE).del();
     }
 
+    count(): Promise<number> {
+        return this.db
+            .from(TABLE)
+            .count('*')
+            .then((res) => Number(res[0].count));
+    }
+
     async get(key: string): Promise<IEnvironment> {
         const row = await this.db<IEnvironmentsTable>(TABLE)
             .where({ name: key })

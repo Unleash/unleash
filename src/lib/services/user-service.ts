@@ -22,7 +22,7 @@ import { IUserStore } from '../types/stores/user-store';
 import { RoleName } from '../types/model';
 import SettingService from './setting-service';
 import { SimpleAuthSettings } from '../server-impl';
-import { simpleAuthKey } from '../types/settings/simple-auth-settings';
+import { simpleAuthSettingsKey } from '../types/settings/simple-auth-settings';
 import DisabledError from '../error/disabled-error';
 import PasswordMismatch from '../error/password-mismatch';
 import BadDataError from '../error/bad-data-error';
@@ -276,7 +276,7 @@ class UserService {
 
     async loginUser(usernameOrEmail: string, password: string): Promise<IUser> {
         const settings = await this.settingService.get<SimpleAuthSettings>(
-            simpleAuthKey,
+            simpleAuthSettingsKey,
         );
 
         if (settings?.disabled) {

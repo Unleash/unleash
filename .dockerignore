@@ -9,3 +9,6 @@
 !CHANGELOG.md
 !LICENSE
 !README.md
+!frontend
+frontend/node_modules
+frontend/build

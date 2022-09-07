@@ -13,13 +13,13 @@ enum PayloadType {
 
 type NonEmptyList<T> = [T, ...T[]];
 
-export const mapFeaturesForBootstrap = (
+export const mapFeaturesForClient = (
     features: FeatureConfigurationClient[],
 ): FeatureInterface[] =>
     features.map((feature) => ({
         impressionData: false,
         ...feature,
-        variants: feature.variants.map((variant) => ({
+        variants: (feature.variants || []).map((variant) => ({
             overrides: [],
             ...variant,
             payload: variant.payload && {
@@ -41,7 +41,7 @@ export const mapFeaturesForBootstrap = (
         })),
     }));
 
-export const mapSegmentsForBootstrap = (segments: ISegment[]): Segment[] =>
+export const mapSegmentsForClient = (segments: ISegment[]): Segment[] =>
     serializeDates(segments) as Segment[];
 
 export type ClientInitOptions = {
@@ -61,8 +61,8 @@ export const offlineUnleashClient = async ({
         appName: context.appName,
         storageProvider: new InMemStorageProvider(),
         bootstrap: {
-            data: mapFeaturesForBootstrap(features),
-            segments: mapSegmentsForBootstrap(segments),
+            data: mapFeaturesForClient(features),
+            segments: mapSegmentsForClient(segments),
         },
     });
 

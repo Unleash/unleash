@@ -33,6 +33,8 @@ import { OpenApiService } from './openapi-service';
 import { ClientSpecService } from './client-spec-service';
 import { PlaygroundService } from './playground-service';
 import { GroupService } from './group-service';
+import { ProxyService } from './proxy-service';
+import EdgeService from './edge-service';
 export const createServices = (
     stores: IUnleashStores,
     config: IUnleashConfig,
@@ -91,6 +93,13 @@ export const createServices = (
         featureToggleServiceV2,
         segmentService,
     });
+    const proxyService = new ProxyService(config, stores, {
+        featureToggleServiceV2,
+        clientMetricsServiceV2,
+        segmentService,
+    });
+
+    const edgeService = new EdgeService(stores, config);
 
     return {
         accessService,
@@ -125,6 +134,8 @@ export const createServices = (
         clientSpecService,
         playgroundService,
         groupService,
+        proxyService,
+        edgeService,
     };
 };
 

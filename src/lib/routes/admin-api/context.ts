@@ -60,7 +60,7 @@ export class ContextController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Context'],
                     operationId: 'getContextFields',
                     responses: {
                         200: createResponseSchema('contextFieldsSchema'),
@@ -76,7 +76,7 @@ export class ContextController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Context'],
                     operationId: 'getContextField',
                     responses: {
                         200: createResponseSchema('contextFieldSchema'),
@@ -92,7 +92,7 @@ export class ContextController extends Controller {
             permission: CREATE_CONTEXT_FIELD,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Context'],
                     operationId: 'createContextField',
                     requestBody: createRequestSchema(
                         'upsertContextFieldSchema',
@@ -111,7 +111,7 @@ export class ContextController extends Controller {
             permission: UPDATE_CONTEXT_FIELD,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Context'],
                     operationId: 'updateContextField',
                     requestBody: createRequestSchema(
                         'upsertContextFieldSchema',
@@ -131,7 +131,7 @@ export class ContextController extends Controller {
             permission: DELETE_CONTEXT_FIELD,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Context'],
                     operationId: 'deleteContextField',
                     responses: {
                         200: emptyResponse,
@@ -147,7 +147,7 @@ export class ContextController extends Controller {
             permission: UPDATE_CONTEXT_FIELD,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Context'],
                     operationId: 'validate',
                     requestBody: createRequestSchema('nameSchema'),
                     responses: {

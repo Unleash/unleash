@@ -6,6 +6,7 @@ export const ALL = '*';
 export enum ApiTokenType {
     CLIENT = 'client',
     ADMIN = 'admin',
+    FRONTEND = 'frontend',
 }
 
 export interface ILegacyApiTokenCreate {
@@ -21,6 +22,7 @@ export interface ILegacyApiTokenCreate {
 export interface IApiTokenCreate {
     secret: string;
     username: string;
+    alias?: string;
     type: ApiTokenType;
     environment: string;
     projects: string[];
@@ -32,6 +34,7 @@ export interface IApiToken extends IApiTokenCreate {
     seenAt?: Date;
     environment: string;
     project: string;
+    alias: string | null;
 }
 
 export const isAllProjects = (projects: string[]): boolean => {
@@ -100,6 +103,12 @@ export const validateApiToken = ({
     if (type === ApiTokenType.CLIENT && environment === ALL) {
         throw new BadDataError(
             'Client token cannot be scoped to all environments',
+        );
+    }
+
+    if (type === ApiTokenType.FRONTEND && environment === ALL) {
+        throw new BadDataError(
+            'Frontend token cannot be scoped to all environments',
         );
     }
 };

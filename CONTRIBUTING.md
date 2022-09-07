@@ -112,9 +112,9 @@ You'll need:
    - username: `admin`
    - password: `unleash4all`
 
-### How to run Unleash with Docker
+### How to run Unleash with Docker and Buildx
 
-1. Build a local docker image by running `docker build . -t unleash:local`
+1. Build a local docker image by running `docker buildx build . -t unleash:local`
 2. Create a network by running `docker network create unleash`
 3. Start a Postgres database. Make sure to use the network you created in step 2.
 

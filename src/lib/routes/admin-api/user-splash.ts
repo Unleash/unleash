@@ -37,7 +37,7 @@ class UserSplashController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Admin UI'],
                     operationId: 'updateSplashSettings',
                     responses: { 200: createResponseSchema('splashSchema') },
                 }),

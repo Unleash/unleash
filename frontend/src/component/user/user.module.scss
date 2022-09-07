@@ -1,0 +1,36 @@
+.showUser img {
+    border-radius: 25px;
+    height: 32px;
+    border: 2px solid #ffffff;
+}
+
+.showLocale {
+    display: flex;
+    align-items: center;
+}
+
+.labelFlag,
+.showLocale img {
+    border-radius: 2px;
+    width: 30px;
+    height: 18px;
+    z-index: 6000;
+    margin: 0 10px;
+}
+
+.avatar {
+    width: 30px;
+    height: 30px;
+}
+
+.showUserSettings {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.dropdown {
+    color: #000;
+
+    font-weight: normal;
+}

@@ -1,6 +1,7 @@
 //Special
 export const ADMIN = 'ADMIN';
 export const CLIENT = 'CLIENT';
+export const FRONTEND = 'FRONTEND';
 export const NONE = 'NONE';
 
 export const CREATE_FEATURE = 'CREATE_FEATURE';

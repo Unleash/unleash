@@ -3,7 +3,7 @@ import { IUnleashConfig } from '../../types/option';
 import { IUnleashServices } from '../../types/services';
 import EventService from '../../services/event-service';
 import { ADMIN, NONE } from '../../types/permissions';
-import { IEvent } from '../../types/events';
+import { IEvent, IEventList } from '../../types/events';
 import Controller from '../controller';
 import { anonymise } from '../../util/anonymise';
 import { OpenApiService } from '../../services/openapi-service';
@@ -21,12 +21,13 @@ import {
 import { getStandardResponses } from '../../../lib/openapi/util/standard-responses';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import { SearchEventsSchema } from '../../openapi/spec/search-events-schema';
+import { IFlagResolver } from '../../types/experimental';
 
 const version = 1;
 export default class EventController extends Controller {
     private eventService: EventService;
 
-    private anonymise: boolean = false;
+    private flagResolver: IFlagResolver;
 
     private openApiService: OpenApiService;
 
@@ -39,7 +40,7 @@ export default class EventController extends Controller {
     ) {
         super(config);
         this.eventService = eventService;
-        this.anonymise = config.experimental?.anonymiseEventLog;
+        this.flagResolver = config.flagResolver;
         this.openApiService = openApiService;
 
         this.route({
@@ -50,7 +51,7 @@ export default class EventController extends Controller {
             middleware: [
                 openApiService.validPath({
                     operationId: 'getEvents',
-                    tags: ['admin'],
+                    tags: ['Events'],
                     responses: {
                         ...getStandardResponses(401),
                         200: createResponseSchema('eventsSchema'),
@@ -79,7 +80,7 @@ export default class EventController extends Controller {
             middleware: [
                 openApiService.validPath({
                     operationId: 'getEventsForToggle',
-                    tags: ['admin'],
+                    tags: ['Events'],
                     responses: {
                         ...getStandardResponses(401),
                         200: createResponseSchema('featureEventsSchema'),
@@ -97,7 +98,7 @@ export default class EventController extends Controller {
             middleware: [
                 openApiService.validPath({
                     operationId: 'searchEvents',
-                    tags: ['admin'],
+                    tags: ['Events'],
                     requestBody: createRequestSchema('searchEventsSchema'),
                     responses: { 200: createResponseSchema('eventsSchema') },
                 }),
@@ -106,7 +107,7 @@ export default class EventController extends Controller {
     }
 
     maybeAnonymiseEvents(events: IEvent[]): IEvent[] {
-        if (this.anonymise) {
+        if (this.flagResolver.isEnabled('anonymiseEventLog')) {
             return events.map((e: IEvent) => ({
                 ...e,
                 createdBy: anonymise(e.createdBy),
@@ -120,16 +121,17 @@ export default class EventController extends Controller {
         res: Response<EventsSchema>,
     ): Promise<void> {
         const { project } = req.query;
-        let events: IEvent[];
+        let eventList: IEventList;
         if (project) {
-            events = await this.eventService.searchEvents({ project });
+            eventList = await this.eventService.searchEvents({ project });
         } else {
-            events = await this.eventService.getEvents();
+            eventList = await this.eventService.getEvents();
         }
 
         const response: EventsSchema = {
             version,
-            events: serializeDates(this.maybeAnonymiseEvents(events)),
+            events: serializeDates(this.maybeAnonymiseEvents(eventList.events)),
+            totalEvents: eventList.totalEvents,
         };
 
         this.openApiService.respondWithValidation(
@@ -145,12 +147,13 @@ export default class EventController extends Controller {
         res: Response<FeatureEventsSchema>,
     ): Promise<void> {
         const feature = req.params.featureName;
-        const events = await this.eventService.searchEvents({ feature });
+        const eventList = await this.eventService.searchEvents({ feature });
 
         const response = {
             version,
             toggleName: feature,
-            events: serializeDates(this.maybeAnonymiseEvents(events)),
+            events: serializeDates(this.maybeAnonymiseEvents(eventList.events)),
+            totalEvents: eventList.totalEvents,
         };
 
         this.openApiService.respondWithValidation(
@@ -165,11 +168,12 @@ export default class EventController extends Controller {
         req: Request<unknown, unknown, SearchEventsSchema>,
         res: Response<EventsSchema>,
     ): Promise<void> {
-        const events = await this.eventService.searchEvents(req.body);
+        const eventList = await this.eventService.searchEvents(req.body);
 
         const response = {
             version,
-            events: serializeDates(this.maybeAnonymiseEvents(events)),
+            events: serializeDates(this.maybeAnonymiseEvents(eventList.events)),
+            totalEvents: eventList.totalEvents,
         };
 
         this.openApiService.respondWithValidation(

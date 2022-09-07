@@ -1,13 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`roleSchema 1`] = `
-Object {
-  "errors": Array [
-    Object {
+{
+  "errors": [
+    {
       "instancePath": "",
       "keyword": "required",
       "message": "must have required property 'id'",
-      "params": Object {
+      "params": {
         "missingProperty": "id",
       },
       "schemaPath": "#/required",

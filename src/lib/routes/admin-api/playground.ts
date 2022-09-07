@@ -39,7 +39,7 @@ export default class PlaygroundController extends Controller {
             middleware: [
                 openApiService.validPath({
                     operationId: 'getPlayground',
-                    tags: ['admin'],
+                    tags: ['Playground'],
                     responses: {
                         ...getStandardResponses(400, 401),
                         200: createResponseSchema('playgroundResponseSchema'),

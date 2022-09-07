@@ -4,11 +4,7 @@ import { IUnleashConfig, IUnleashServices } from '../../types';
 import ClientInstanceService from '../../services/client-metrics/instance-service';
 import { Logger } from '../../logger';
 import { IAuthRequest } from '../unleash-types';
-import ApiUser from '../../types/api-user';
-import { ALL } from '../../types/models/api-token';
 import ClientMetricsServiceV2 from '../../services/client-metrics/metrics-service-v2';
-import { User } from '../../server-impl';
-import { IClientApp } from '../../types/model';
 import { NONE } from '../../types/permissions';
 import { OpenApiService } from '../../services/openapi-service';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
@@ -54,7 +50,7 @@ export default class ClientMetricsController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['client'],
+                    tags: ['Client'],
                     operationId: 'registerClientMetrics',
                     requestBody: createRequestSchema('clientMetricsSchema'),
                     responses: {
@@ -66,20 +62,9 @@ export default class ClientMetricsController extends Controller {
         });
     }
 
-    private resolveEnvironment(user: User, data: IClientApp) {
-        if (user instanceof ApiUser) {
-            if (user.environment !== ALL) {
-                return user.environment;
-            } else if (user.environment === ALL && data.environment) {
-                return data.environment;
-            }
-        }
-        return 'default';
-    }
-
     async registerMetrics(req: IAuthRequest, res: Response): Promise<void> {
         const { body: data, ip: clientIp, user } = req;
-        data.environment = this.resolveEnvironment(user, data);
+        data.environment = this.metricsV2.resolveMetricsEnvironment(user, data);
         await this.clientInstanceService.registerInstance(data, clientIp);
 
         try {

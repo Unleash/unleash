@@ -11,3 +11,7 @@ export interface IAuthRequest<
     logout: () => void;
     session: any;
 }
+
+export interface RequestBody<T> extends Express.Request {
+    body: T;
+}

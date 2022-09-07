@@ -1,0 +1,17 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/:match*",
+      "destination": "https://unleash4.herokuapp.com/api/:match*"
+    },
+    {
+      "source": "/logout",
+      "destination": "https://unleash4.herokuapp.com/logout"
+    },
+    {
+      "source": "/auth/:match*",
+      "destination": "https://unleash4.herokuapp.com/auth/:match*"
+    },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}

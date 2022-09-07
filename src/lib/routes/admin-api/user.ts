@@ -59,7 +59,7 @@ class UserController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Users'],
                     operationId: 'getMe',
                     responses: { 200: createResponseSchema('meSchema') },
                 }),
@@ -73,7 +73,7 @@ class UserController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Users'],
                     operationId: 'changeMyPassword',
                     requestBody: createRequestSchema('passwordSchema'),
                     responses: {

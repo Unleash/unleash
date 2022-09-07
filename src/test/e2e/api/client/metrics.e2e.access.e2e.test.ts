@@ -39,6 +39,7 @@ test('should enrich metrics with environment from api-token', async () => {
         .send(metricsExample)
         .expect(202);
 
+    await app.services.clientMetricsServiceV2.bulkAdd();
     const all = await clientMetricsStoreV2.getAll();
     expect(all[0].environment).toBe('some');
 });

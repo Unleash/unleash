@@ -54,7 +54,7 @@ class StrategyController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Strategies'],
                     operationId: 'getAllStrategies',
                     responses: {
                         200: createResponseSchema('strategiesSchema'),
@@ -70,7 +70,7 @@ class StrategyController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Strategies'],
                     operationId: 'getStrategy',
                     responses: { 200: createResponseSchema('strategySchema') },
                 }),
@@ -85,7 +85,7 @@ class StrategyController extends Controller {
             acceptAnyContentType: true,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Strategies'],
                     operationId: 'removeStrategy',
                     responses: { 200: emptyResponse },
                 }),
@@ -99,7 +99,7 @@ class StrategyController extends Controller {
             permission: CREATE_STRATEGY,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Strategies'],
                     operationId: 'createStrategy',
                     requestBody: createRequestSchema('upsertStrategySchema'),
                     responses: { 201: emptyResponse },
@@ -114,7 +114,7 @@ class StrategyController extends Controller {
             permission: UPDATE_STRATEGY,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Strategies'],
                     operationId: 'updateStrategy',
                     requestBody: createRequestSchema('upsertStrategySchema'),
                     responses: { 200: emptyResponse },
@@ -130,7 +130,7 @@ class StrategyController extends Controller {
             acceptAnyContentType: true,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Strategies'],
                     operationId: 'deprecateStrategy',
                     responses: { 200: emptyResponse },
                 }),
@@ -145,7 +145,7 @@ class StrategyController extends Controller {
             acceptAnyContentType: true,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Strategies'],
                     operationId: 'reactivateStrategy',
                     responses: { 200: emptyResponse },
                 }),

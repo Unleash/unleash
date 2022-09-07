@@ -1,13 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`emailSchema 1`] = `
-Object {
-  "errors": Array [
-    Object {
+{
+  "errors": [
+    {
       "instancePath": "",
       "keyword": "required",
       "message": "must have required property 'email'",
-      "params": Object {
+      "params": {
         "missingProperty": "email",
       },
       "schemaPath": "#/required",

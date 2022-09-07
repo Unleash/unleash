@@ -45,6 +45,7 @@ const tokenRowReducer = (acc, tokenRow) => {
             environment: token.environment ? token.environment : ALL,
             expiresAt: token.expires_at,
             createdAt: token.created_at,
+            alias: token.alias,
         };
     }
     const currentToken = acc[tokenRow.secret];
@@ -65,6 +66,7 @@ const toRow = (newToken: IApiTokenCreate) => ({
     environment:
         newToken.environment === ALL ? undefined : newToken.environment,
     expires_at: newToken.expiresAt,
+    alias: newToken.alias || null,
 });
 
 const toTokens = (rows: any[]): IApiToken[] => {
@@ -124,6 +126,7 @@ export class ApiTokenStore implements IApiTokenStore {
                 'type',
                 'expires_at',
                 'created_at',
+                'alias',
                 'seen_at',
                 'environment',
                 'token_project_link.project',
@@ -150,6 +153,7 @@ export class ApiTokenStore implements IApiTokenStore {
             await Promise.all(updateProjectTasks);
             return {
                 ...newToken,
+                alias: newToken.alias || null,
                 project: newToken.projects?.join(',') || '*',
                 createdAt: row.created_at,
             };

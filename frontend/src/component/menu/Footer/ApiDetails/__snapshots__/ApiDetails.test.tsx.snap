@@ -1,0 +1,130 @@
+// Vitest Snapshot v1
+
+exports[`renders correctly with empty version 1`] = `
+<body>
+  <div>
+    <section
+      title="API details"
+    >
+      <h2
+        class="css-cxwipi-title"
+      >
+        Unleash 
+         
+        <small>
+          (
+          test
+          )
+        </small>
+      </h2>
+      <br />
+      <small>
+        We are the best!
+      </small>
+      <br />
+    </section>
+    <div
+      aria-atomic="true"
+      aria-live="polite"
+      class="css-i8rqz1-container"
+      data-testid="ANNOUNCER_ELEMENT_TEST_ID"
+      role="status"
+    />
+  </div>
+</body>
+`;
+
+exports[`renders correctly with ui-config 1`] = `
+<body>
+  <div>
+    <section
+      title="API details"
+    >
+      <h2
+        class="css-cxwipi-title"
+      >
+        Unleash 1.1.0
+         
+        <small>
+          (
+          test
+          )
+        </small>
+      </h2>
+      <br />
+      <small>
+        We are the best!
+      </small>
+      <br />
+    </section>
+    <div
+      aria-atomic="true"
+      aria-live="polite"
+      class="css-i8rqz1-container"
+      data-testid="ANNOUNCER_ELEMENT_TEST_ID"
+      role="status"
+    />
+  </div>
+</body>
+`;
+
+exports[`renders correctly with versionInfo 1`] = `
+<body>
+  <div>
+    <section
+      title="API details"
+    >
+      <h2
+        class="css-cxwipi-title"
+      >
+        Unleash 1.2.3
+         
+      </h2>
+      <small>
+        Upgrade available - Latest Enterprise release: 1.2.4
+        <br />
+      </small>
+      <br />
+      <small />
+      <br />
+      <small>
+        1
+      </small>
+    </section>
+    <div
+      aria-atomic="true"
+      aria-live="polite"
+      class="css-i8rqz1-container"
+      data-testid="ANNOUNCER_ELEMENT_TEST_ID"
+      role="status"
+    />
+  </div>
+</body>
+`;
+
+exports[`renders correctly without uiConfig 1`] = `
+<body>
+  <div>
+    <section
+      title="API details"
+    >
+      <h2
+        class="css-cxwipi-title"
+      >
+        Unleash 1.1.0
+         
+      </h2>
+      <br />
+      <small />
+      <br />
+    </section>
+    <div
+      aria-atomic="true"
+      aria-live="polite"
+      class="css-i8rqz1-container"
+      data-testid="ANNOUNCER_ELEMENT_TEST_ID"
+      role="status"
+    />
+  </div>
+</body>
+`;

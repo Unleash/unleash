@@ -1,0 +1,1102 @@
+// Vitest Snapshot v1
+
+exports[`renders an empty list correctly 1`] = `
+[
+  <div
+    aria-busy={true}
+    aria-live="polite"
+  >
+    <div
+      className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 css-p9j8ie-MuiPaper-root-container"
+    >
+      <div
+        className="header css-1ywhhai-headerContainer"
+      >
+        <div
+          className="css-1ylehva-headerContainer"
+        >
+          <div
+            className="css-1uxyh7x-topContainer"
+          >
+            <div
+              className="css-sd6bs4-header"
+              data-loading={true}
+            >
+              <h1
+                className="MuiTypography-root MuiTypography-h1 css-ypmm1t-MuiTypography-root-headerTitle"
+              >
+                Tag types (5)
+              </h1>
+            </div>
+            <div
+              className="css-u5t8ea-headerActions"
+            >
+              <div
+                className="css-1oozr04-container"
+              >
+                <div
+                  className="css-1xjrf9m-search search-container"
+                >
+                  <svg
+                    aria-hidden={true}
+                    className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium search-icon css-1kyy7n4-MuiSvgIcon-root-searchIcon"
+                    data-testid="SearchIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                    />
+                  </svg>
+                  <div
+                    className="MuiInputBase-root input-container MuiInputBase-colorPrimary css-tubodl-MuiInputBase-root-inputRoot"
+                    onClick={[Function]}
+                  >
+                    <input
+                      aria-label="Search (Ctrl+K)"
+                      className="MuiInputBase-input css-mfsqjb-MuiInputBase-input"
+                      onAnimationStart={[Function]}
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      placeholder="Search (Ctrl+K)"
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                  <div
+                    className="css-llttyo-clearContainer clear-container"
+                  />
+                </div>
+              </div>
+              <hr
+                className="MuiDivider-root MuiDivider-middle MuiDivider-vertical css-1p1j01b-MuiDivider-root"
+              />
+              <span
+                id="useId-0"
+              >
+                <button
+                  aria-labelledby="useId-0"
+                  className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1aw3qf3-MuiButtonBase-root-MuiButton-root"
+                  disabled={false}
+                  onBlur={[Function]}
+                  onClick={[Function]}
+                  onContextMenu={[Function]}
+                  onDragLeave={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={[Function]}
+                  onKeyUp={[Function]}
+                  onMouseDown={[Function]}
+                  onMouseLeave={[Function]}
+                  onMouseUp={[Function]}
+                  onTouchEnd={[Function]}
+                  onTouchMove={[Function]}
+                  onTouchStart={[Function]}
+                  tabIndex={0}
+                  type="button"
+                >
+                  New tag type
+                  <span
+                    className="MuiButton-endIcon MuiButton-iconSizeMedium css-9tj150-MuiButton-endIcon"
+                  />
+                  <span
+                    className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                  />
+                </button>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="body css-54jt3w-bodyContainer"
+      >
+        <table
+          className="MuiTable-root css-1h6dscb-MuiTable-root-table"
+          role="table"
+        >
+          <thead
+            className="MuiTableHead-root css-gitaq1-MuiTableHead-root"
+            role={null}
+          >
+            <tr
+              className="MuiTableRow-root MuiTableRow-head css-1gnoged-MuiTableRow-root-tableHeader"
+              role="row"
+            >
+              <th
+                className="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium css-b9leyc-MuiTableCell-root-header"
+                scope="col"
+                style={
+                  {
+                    "maxWidth": 9007199254740991,
+                    "minWidth": 0,
+                    "width": 150,
+                  }
+                }
+              >
+                <div>
+                   
+                </div>
+              </th>
+              <th
+                aria-sort="ascending"
+                className="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium css-masipn-MuiTableCell-root-header-sortable"
+                scope="col"
+                style={
+                  {
+                    "maxWidth": 9007199254740991,
+                    "minWidth": 0,
+                    "width": "90%",
+                  }
+                }
+              >
+                <button
+                  aria-label=""
+                  aria-labelledby={null}
+                  className="css-14l86a5-sortedButton css-1inbba3-sortButton"
+                  data-mui-internal-clone-element={true}
+                  onBlur={[Function]}
+                  onClick={[Function]}
+                  onFocus={[Function]}
+                  onMouseLeave={[Function]}
+                  onMouseOver={[Function]}
+                  onTouchEnd={[Function]}
+                  onTouchStart={[Function]}
+                  type="button"
+                >
+                  <span
+                    aria-hidden={true}
+                    className="css-r8z9jm-hiddenMeasurementLayer"
+                  >
+                    <span
+                      className="css-1j5tskk-label"
+                      data-text="Name"
+                      tabIndex={-1}
+                    >
+                      Name
+                    </span>
+                    <svg
+                      aria-hidden={true}
+                      className="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit css-1ekkz6x-MuiSvgIcon-root-icon-sorted"
+                      data-testid="KeyboardArrowUpIcon"
+                      focusable="false"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M7.41 15.41 12 10.83l4.59 4.58L18 14l-6-6-6 6z"
+                      />
+                    </svg>
+                  </span>
+                  <span
+                    className="css-bqel7i-visibleAbsoluteLayer"
+                  >
+                    <span
+                      tabIndex={-1}
+                    >
+                      <span>
+                        Name
+                      </span>
+                    </span>
+                    <svg
+                      aria-hidden={true}
+                      className="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit sort-arrow css-1ekkz6x-MuiSvgIcon-root-icon-sorted"
+                      data-testid="KeyboardArrowUpIcon"
+                      focusable="false"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M7.41 15.41 12 10.83l4.59 4.58L18 14l-6-6-6 6z"
+                      />
+                    </svg>
+                  </span>
+                </button>
+              </th>
+              <th
+                className="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium css-b9leyc-MuiTableCell-root-header"
+                scope="col"
+                style={
+                  {
+                    "maxWidth": 9007199254740991,
+                    "minWidth": 0,
+                    "width": 150,
+                  }
+                }
+              >
+                <div
+                  className="css-1x6va6g-alignCenter"
+                >
+                  Actions
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody
+            className="MuiTableBody-root css-apqrd9-MuiTableBody-root"
+            role="rowgroup"
+          >
+            <tr
+              className="MuiTableRow-root MuiTableRow-hover css-cn4v9y-MuiTableRow-root"
+              role="row"
+            >
+              <td
+                aria-sort={null}
+                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-fv4mw1-MuiTableCell-root-tableCell"
+                role="cell"
+              >
+                <div
+                  className="MuiBox-root css-7n01ps"
+                  data-loading={true}
+                >
+                  <svg
+                    aria-hidden={true}
+                    className="MuiSvgIcon-root MuiSvgIcon-colorDisabled MuiSvgIcon-fontSizeMedium css-1db085k-MuiSvgIcon-root"
+                    data-testid="LabelIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M17.63 5.84C17.27 5.33 16.67 5 16 5L5 5.01C3.9 5.01 3 5.9 3 7v10c0 1.1.9 1.99 2 1.99L16 19c.67 0 1.27-.33 1.63-.84L22 12l-4.37-6.16z"
+                    />
+                  </svg>
+                </div>
+              </td>
+              <td
+                aria-sort={null}
+                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-fv4mw1-MuiTableCell-root-tableCell"
+                role="cell"
+              >
+                <span
+                  className="css-g3rrgy-wrapper"
+                >
+                  <div
+                    className="css-1sfnvgj-container"
+                  >
+                    <span
+                      className="css-lcjmxf-title"
+                      data-loading={true}
+                      style={
+                        {
+                          "WebkitLineClamp": 1,
+                          "lineClamp": 1,
+                        }
+                      }
+                    >
+                      Tag type name
+                    </span>
+                    <span
+                      className="MuiTypography-root MuiTypography-body1 css-kyf98y-MuiTypography-root-description"
+                      data-loading={true}
+                    >
+                      Tag type description when loading
+                    </span>
+                  </div>
+                </span>
+              </td>
+              <td
+                aria-sort={null}
+                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-fv4mw1-MuiTableCell-root-tableCell"
+                role="cell"
+              >
+                <div
+                  className="MuiBox-root css-1bvc4cc"
+                  data-loading={true}
+                >
+                  <div
+                    aria-label="Edit tag type"
+                    aria-labelledby={null}
+                    className=""
+                    data-mui-internal-clone-element={true}
+                    id="useId-1"
+                    onBlur={[Function]}
+                    onClick={[Function]}
+                    onFocus={[Function]}
+                    onMouseLeave={[Function]}
+                    onMouseOver={[Function]}
+                    onTouchEnd={[Function]}
+                    onTouchStart={[Function]}
+                  >
+                    <button
+                      aria-labelledby="useId-1"
+                      className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
+                      disabled={false}
+                      onBlur={[Function]}
+                      onClick={[Function]}
+                      onContextMenu={[Function]}
+                      onDragLeave={[Function]}
+                      onFocus={[Function]}
+                      onKeyDown={[Function]}
+                      onKeyUp={[Function]}
+                      onMouseDown={[Function]}
+                      onMouseLeave={[Function]}
+                      onMouseUp={[Function]}
+                      onTouchEnd={[Function]}
+                      onTouchMove={[Function]}
+                      onTouchStart={[Function]}
+                      tabIndex={0}
+                      type="button"
+                    >
+                      <svg
+                        aria-hidden={true}
+                        className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                        data-testid="EditIcon"
+                        focusable="false"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+                        />
+                      </svg>
+                      <span
+                        className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                      />
+                    </button>
+                  </div>
+                  <div
+                    aria-label="Delete tag type"
+                    aria-labelledby={null}
+                    className=""
+                    data-mui-internal-clone-element={true}
+                    id="useId-2"
+                    onBlur={[Function]}
+                    onClick={[Function]}
+                    onFocus={[Function]}
+                    onMouseLeave={[Function]}
+                    onMouseOver={[Function]}
+                    onTouchEnd={[Function]}
+                    onTouchStart={[Function]}
+                  >
+                    <button
+                      aria-labelledby="useId-2"
+                      className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
+                      disabled={false}
+                      onBlur={[Function]}
+                      onClick={[Function]}
+                      onContextMenu={[Function]}
+                      onDragLeave={[Function]}
+                      onFocus={[Function]}
+                      onKeyDown={[Function]}
+                      onKeyUp={[Function]}
+                      onMouseDown={[Function]}
+                      onMouseLeave={[Function]}
+                      onMouseUp={[Function]}
+                      onTouchEnd={[Function]}
+                      onTouchMove={[Function]}
+                      onTouchStart={[Function]}
+                      tabIndex={0}
+                      type="button"
+                    >
+                      <svg
+                        aria-hidden={true}
+                        className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                        data-testid="DeleteIcon"
+                        focusable="false"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"
+                        />
+                      </svg>
+                      <span
+                        className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                      />
+                    </button>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr
+              className="MuiTableRow-root MuiTableRow-hover css-cn4v9y-MuiTableRow-root"
+              role="row"
+            >
+              <td
+                aria-sort={null}
+                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-fv4mw1-MuiTableCell-root-tableCell"
+                role="cell"
+              >
+                <div
+                  className="MuiBox-root css-7n01ps"
+                  data-loading={true}
+                >
+                  <svg
+                    aria-hidden={true}
+                    className="MuiSvgIcon-root MuiSvgIcon-colorDisabled MuiSvgIcon-fontSizeMedium css-1db085k-MuiSvgIcon-root"
+                    data-testid="LabelIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M17.63 5.84C17.27 5.33 16.67 5 16 5L5 5.01C3.9 5.01 3 5.9 3 7v10c0 1.1.9 1.99 2 1.99L16 19c.67 0 1.27-.33 1.63-.84L22 12l-4.37-6.16z"
+                    />
+                  </svg>
+                </div>
+              </td>
+              <td
+                aria-sort={null}
+                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-fv4mw1-MuiTableCell-root-tableCell"
+                role="cell"
+              >
+                <span
+                  className="css-g3rrgy-wrapper"
+                >
+                  <div
+                    className="css-1sfnvgj-container"
+                  >
+                    <span
+                      className="css-lcjmxf-title"
+                      data-loading={true}
+                      style={
+                        {
+                          "WebkitLineClamp": 1,
+                          "lineClamp": 1,
+                        }
+                      }
+                    >
+                      Tag type name
+                    </span>
+                    <span
+                      className="MuiTypography-root MuiTypography-body1 css-kyf98y-MuiTypography-root-description"
+                      data-loading={true}
+                    >
+                      Tag type description when loading
+                    </span>
+                  </div>
+                </span>
+              </td>
+              <td
+                aria-sort={null}
+                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-fv4mw1-MuiTableCell-root-tableCell"
+                role="cell"
+              >
+                <div
+                  className="MuiBox-root css-1bvc4cc"
+                  data-loading={true}
+                >
+                  <div
+                    aria-label="Edit tag type"
+                    aria-labelledby={null}
+                    className=""
+                    data-mui-internal-clone-element={true}
+                    id="useId-3"
+                    onBlur={[Function]}
+                    onClick={[Function]}
+                    onFocus={[Function]}
+                    onMouseLeave={[Function]}
+                    onMouseOver={[Function]}
+                    onTouchEnd={[Function]}
+                    onTouchStart={[Function]}
+                  >
+                    <button
+                      aria-labelledby="useId-3"
+                      className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
+                      disabled={false}
+                      onBlur={[Function]}
+                      onClick={[Function]}
+                      onContextMenu={[Function]}
+                      onDragLeave={[Function]}
+                      onFocus={[Function]}
+                      onKeyDown={[Function]}
+                      onKeyUp={[Function]}
+                      onMouseDown={[Function]}
+                      onMouseLeave={[Function]}
+                      onMouseUp={[Function]}
+                      onTouchEnd={[Function]}
+                      onTouchMove={[Function]}
+                      onTouchStart={[Function]}
+                      tabIndex={0}
+                      type="button"
+                    >
+                      <svg
+                        aria-hidden={true}
+                        className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                        data-testid="EditIcon"
+                        focusable="false"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+                        />
+                      </svg>
+                      <span
+                        className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                      />
+                    </button>
+                  </div>
+                  <div
+                    aria-label="Delete tag type"
+                    aria-labelledby={null}
+                    className=""
+                    data-mui-internal-clone-element={true}
+                    id="useId-4"
+                    onBlur={[Function]}
+                    onClick={[Function]}
+                    onFocus={[Function]}
+                    onMouseLeave={[Function]}
+                    onMouseOver={[Function]}
+                    onTouchEnd={[Function]}
+                    onTouchStart={[Function]}
+                  >
+                    <button
+                      aria-labelledby="useId-4"
+                      className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
+                      disabled={false}
+                      onBlur={[Function]}
+                      onClick={[Function]}
+                      onContextMenu={[Function]}
+                      onDragLeave={[Function]}
+                      onFocus={[Function]}
+                      onKeyDown={[Function]}
+                      onKeyUp={[Function]}
+                      onMouseDown={[Function]}
+                      onMouseLeave={[Function]}
+                      onMouseUp={[Function]}
+                      onTouchEnd={[Function]}
+                      onTouchMove={[Function]}
+                      onTouchStart={[Function]}
+                      tabIndex={0}
+                      type="button"
+                    >
+                      <svg
+                        aria-hidden={true}
+                        className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                        data-testid="DeleteIcon"
+                        focusable="false"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"
+                        />
+                      </svg>
+                      <span
+                        className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                      />
+                    </button>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr
+              className="MuiTableRow-root MuiTableRow-hover css-cn4v9y-MuiTableRow-root"
+              role="row"
+            >
+              <td
+                aria-sort={null}
+                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-fv4mw1-MuiTableCell-root-tableCell"
+                role="cell"
+              >
+                <div
+                  className="MuiBox-root css-7n01ps"
+                  data-loading={true}
+                >
+                  <svg
+                    aria-hidden={true}
+                    className="MuiSvgIcon-root MuiSvgIcon-colorDisabled MuiSvgIcon-fontSizeMedium css-1db085k-MuiSvgIcon-root"
+                    data-testid="LabelIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M17.63 5.84C17.27 5.33 16.67 5 16 5L5 5.01C3.9 5.01 3 5.9 3 7v10c0 1.1.9 1.99 2 1.99L16 19c.67 0 1.27-.33 1.63-.84L22 12l-4.37-6.16z"
+                    />
+                  </svg>
+                </div>
+              </td>
+              <td
+                aria-sort={null}
+                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-fv4mw1-MuiTableCell-root-tableCell"
+                role="cell"
+              >
+                <span
+                  className="css-g3rrgy-wrapper"
+                >
+                  <div
+                    className="css-1sfnvgj-container"
+                  >
+                    <span
+                      className="css-lcjmxf-title"
+                      data-loading={true}
+                      style={
+                        {
+                          "WebkitLineClamp": 1,
+                          "lineClamp": 1,
+                        }
+                      }
+                    >
+                      Tag type name
+                    </span>
+                    <span
+                      className="MuiTypography-root MuiTypography-body1 css-kyf98y-MuiTypography-root-description"
+                      data-loading={true}
+                    >
+                      Tag type description when loading
+                    </span>
+                  </div>
+                </span>
+              </td>
+              <td
+                aria-sort={null}
+                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-fv4mw1-MuiTableCell-root-tableCell"
+                role="cell"
+              >
+                <div
+                  className="MuiBox-root css-1bvc4cc"
+                  data-loading={true}
+                >
+                  <div
+                    aria-label="Edit tag type"
+                    aria-labelledby={null}
+                    className=""
+                    data-mui-internal-clone-element={true}
+                    id="useId-5"
+                    onBlur={[Function]}
+                    onClick={[Function]}
+                    onFocus={[Function]}
+                    onMouseLeave={[Function]}
+                    onMouseOver={[Function]}
+                    onTouchEnd={[Function]}
+                    onTouchStart={[Function]}
+                  >
+                    <button
+                      aria-labelledby="useId-5"
+                      className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
+                      disabled={false}
+                      onBlur={[Function]}
+                      onClick={[Function]}
+                      onContextMenu={[Function]}
+                      onDragLeave={[Function]}
+                      onFocus={[Function]}
+                      onKeyDown={[Function]}
+                      onKeyUp={[Function]}
+                      onMouseDown={[Function]}
+                      onMouseLeave={[Function]}
+                      onMouseUp={[Function]}
+                      onTouchEnd={[Function]}
+                      onTouchMove={[Function]}
+                      onTouchStart={[Function]}
+                      tabIndex={0}
+                      type="button"
+                    >
+                      <svg
+                        aria-hidden={true}
+                        className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                        data-testid="EditIcon"
+                        focusable="false"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+                        />
+                      </svg>
+                      <span
+                        className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                      />
+                    </button>
+                  </div>
+                  <div
+                    aria-label="Delete tag type"
+                    aria-labelledby={null}
+                    className=""
+                    data-mui-internal-clone-element={true}
+                    id="useId-6"
+                    onBlur={[Function]}
+                    onClick={[Function]}
+                    onFocus={[Function]}
+                    onMouseLeave={[Function]}
+                    onMouseOver={[Function]}
+                    onTouchEnd={[Function]}
+                    onTouchStart={[Function]}
+                  >
+                    <button
+                      aria-labelledby="useId-6"
+                      className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
+                      disabled={false}
+                      onBlur={[Function]}
+                      onClick={[Function]}
+                      onContextMenu={[Function]}
+                      onDragLeave={[Function]}
+                      onFocus={[Function]}
+                      onKeyDown={[Function]}
+                      onKeyUp={[Function]}
+                      onMouseDown={[Function]}
+                      onMouseLeave={[Function]}
+                      onMouseUp={[Function]}
+                      onTouchEnd={[Function]}
+                      onTouchMove={[Function]}
+                      onTouchStart={[Function]}
+                      tabIndex={0}
+                      type="button"
+                    >
+                      <svg
+                        aria-hidden={true}
+                        className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                        data-testid="DeleteIcon"
+                        focusable="false"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"
+                        />
+                      </svg>
+                      <span
+                        className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                      />
+                    </button>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr
+              className="MuiTableRow-root MuiTableRow-hover css-cn4v9y-MuiTableRow-root"
+              role="row"
+            >
+              <td
+                aria-sort={null}
+                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-fv4mw1-MuiTableCell-root-tableCell"
+                role="cell"
+              >
+                <div
+                  className="MuiBox-root css-7n01ps"
+                  data-loading={true}
+                >
+                  <svg
+                    aria-hidden={true}
+                    className="MuiSvgIcon-root MuiSvgIcon-colorDisabled MuiSvgIcon-fontSizeMedium css-1db085k-MuiSvgIcon-root"
+                    data-testid="LabelIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M17.63 5.84C17.27 5.33 16.67 5 16 5L5 5.01C3.9 5.01 3 5.9 3 7v10c0 1.1.9 1.99 2 1.99L16 19c.67 0 1.27-.33 1.63-.84L22 12l-4.37-6.16z"
+                    />
+                  </svg>
+                </div>
+              </td>
+              <td
+                aria-sort={null}
+                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-fv4mw1-MuiTableCell-root-tableCell"
+                role="cell"
+              >
+                <span
+                  className="css-g3rrgy-wrapper"
+                >
+                  <div
+                    className="css-1sfnvgj-container"
+                  >
+                    <span
+                      className="css-lcjmxf-title"
+                      data-loading={true}
+                      style={
+                        {
+                          "WebkitLineClamp": 1,
+                          "lineClamp": 1,
+                        }
+                      }
+                    >
+                      Tag type name
+                    </span>
+                    <span
+                      className="MuiTypography-root MuiTypography-body1 css-kyf98y-MuiTypography-root-description"
+                      data-loading={true}
+                    >
+                      Tag type description when loading
+                    </span>
+                  </div>
+                </span>
+              </td>
+              <td
+                aria-sort={null}
+                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-fv4mw1-MuiTableCell-root-tableCell"
+                role="cell"
+              >
+                <div
+                  className="MuiBox-root css-1bvc4cc"
+                  data-loading={true}
+                >
+                  <div
+                    aria-label="Edit tag type"
+                    aria-labelledby={null}
+                    className=""
+                    data-mui-internal-clone-element={true}
+                    id="useId-7"
+                    onBlur={[Function]}
+                    onClick={[Function]}
+                    onFocus={[Function]}
+                    onMouseLeave={[Function]}
+                    onMouseOver={[Function]}
+                    onTouchEnd={[Function]}
+                    onTouchStart={[Function]}
+                  >
+                    <button
+                      aria-labelledby="useId-7"
+                      className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
+                      disabled={false}
+                      onBlur={[Function]}
+                      onClick={[Function]}
+                      onContextMenu={[Function]}
+                      onDragLeave={[Function]}
+                      onFocus={[Function]}
+                      onKeyDown={[Function]}
+                      onKeyUp={[Function]}
+                      onMouseDown={[Function]}
+                      onMouseLeave={[Function]}
+                      onMouseUp={[Function]}
+                      onTouchEnd={[Function]}
+                      onTouchMove={[Function]}
+                      onTouchStart={[Function]}
+                      tabIndex={0}
+                      type="button"
+                    >
+                      <svg
+                        aria-hidden={true}
+                        className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                        data-testid="EditIcon"
+                        focusable="false"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+                        />
+                      </svg>
+                      <span
+                        className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                      />
+                    </button>
+                  </div>
+                  <div
+                    aria-label="Delete tag type"
+                    aria-labelledby={null}
+                    className=""
+                    data-mui-internal-clone-element={true}
+                    id="useId-8"
+                    onBlur={[Function]}
+                    onClick={[Function]}
+                    onFocus={[Function]}
+                    onMouseLeave={[Function]}
+                    onMouseOver={[Function]}
+                    onTouchEnd={[Function]}
+                    onTouchStart={[Function]}
+                  >
+                    <button
+                      aria-labelledby="useId-8"
+                      className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
+                      disabled={false}
+                      onBlur={[Function]}
+                      onClick={[Function]}
+                      onContextMenu={[Function]}
+                      onDragLeave={[Function]}
+                      onFocus={[Function]}
+                      onKeyDown={[Function]}
+                      onKeyUp={[Function]}
+                      onMouseDown={[Function]}
+                      onMouseLeave={[Function]}
+                      onMouseUp={[Function]}
+                      onTouchEnd={[Function]}
+                      onTouchMove={[Function]}
+                      onTouchStart={[Function]}
+                      tabIndex={0}
+                      type="button"
+                    >
+                      <svg
+                        aria-hidden={true}
+                        className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                        data-testid="DeleteIcon"
+                        focusable="false"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"
+                        />
+                      </svg>
+                      <span
+                        className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                      />
+                    </button>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr
+              className="MuiTableRow-root MuiTableRow-hover css-cn4v9y-MuiTableRow-root"
+              role="row"
+            >
+              <td
+                aria-sort={null}
+                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-fv4mw1-MuiTableCell-root-tableCell"
+                role="cell"
+              >
+                <div
+                  className="MuiBox-root css-7n01ps"
+                  data-loading={true}
+                >
+                  <svg
+                    aria-hidden={true}
+                    className="MuiSvgIcon-root MuiSvgIcon-colorDisabled MuiSvgIcon-fontSizeMedium css-1db085k-MuiSvgIcon-root"
+                    data-testid="LabelIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M17.63 5.84C17.27 5.33 16.67 5 16 5L5 5.01C3.9 5.01 3 5.9 3 7v10c0 1.1.9 1.99 2 1.99L16 19c.67 0 1.27-.33 1.63-.84L22 12l-4.37-6.16z"
+                    />
+                  </svg>
+                </div>
+              </td>
+              <td
+                aria-sort={null}
+                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-fv4mw1-MuiTableCell-root-tableCell"
+                role="cell"
+              >
+                <span
+                  className="css-g3rrgy-wrapper"
+                >
+                  <div
+                    className="css-1sfnvgj-container"
+                  >
+                    <span
+                      className="css-lcjmxf-title"
+                      data-loading={true}
+                      style={
+                        {
+                          "WebkitLineClamp": 1,
+                          "lineClamp": 1,
+                        }
+                      }
+                    >
+                      Tag type name
+                    </span>
+                    <span
+                      className="MuiTypography-root MuiTypography-body1 css-kyf98y-MuiTypography-root-description"
+                      data-loading={true}
+                    >
+                      Tag type description when loading
+                    </span>
+                  </div>
+                </span>
+              </td>
+              <td
+                aria-sort={null}
+                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-fv4mw1-MuiTableCell-root-tableCell"
+                role="cell"
+              >
+                <div
+                  className="MuiBox-root css-1bvc4cc"
+                  data-loading={true}
+                >
+                  <div
+                    aria-label="Edit tag type"
+                    aria-labelledby={null}
+                    className=""
+                    data-mui-internal-clone-element={true}
+                    id="useId-9"
+                    onBlur={[Function]}
+                    onClick={[Function]}
+                    onFocus={[Function]}
+                    onMouseLeave={[Function]}
+                    onMouseOver={[Function]}
+                    onTouchEnd={[Function]}
+                    onTouchStart={[Function]}
+                  >
+                    <button
+                      aria-labelledby="useId-9"
+                      className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
+                      disabled={false}
+                      onBlur={[Function]}
+                      onClick={[Function]}
+                      onContextMenu={[Function]}
+                      onDragLeave={[Function]}
+                      onFocus={[Function]}
+                      onKeyDown={[Function]}
+                      onKeyUp={[Function]}
+                      onMouseDown={[Function]}
+                      onMouseLeave={[Function]}
+                      onMouseUp={[Function]}
+                      onTouchEnd={[Function]}
+                      onTouchMove={[Function]}
+                      onTouchStart={[Function]}
+                      tabIndex={0}
+                      type="button"
+                    >
+                      <svg
+                        aria-hidden={true}
+                        className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                        data-testid="EditIcon"
+                        focusable="false"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+                        />
+                      </svg>
+                      <span
+                        className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                      />
+                    </button>
+                  </div>
+                  <div
+                    aria-label="Delete tag type"
+                    aria-labelledby={null}
+                    className=""
+                    data-mui-internal-clone-element={true}
+                    id="useId-10"
+                    onBlur={[Function]}
+                    onClick={[Function]}
+                    onFocus={[Function]}
+                    onMouseLeave={[Function]}
+                    onMouseOver={[Function]}
+                    onTouchEnd={[Function]}
+                    onTouchStart={[Function]}
+                  >
+                    <button
+                      aria-labelledby="useId-10"
+                      className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-mf1cb5-MuiButtonBase-root-MuiIconButton-root"
+                      disabled={false}
+                      onBlur={[Function]}
+                      onClick={[Function]}
+                      onContextMenu={[Function]}
+                      onDragLeave={[Function]}
+                      onFocus={[Function]}
+                      onKeyDown={[Function]}
+                      onKeyUp={[Function]}
+                      onMouseDown={[Function]}
+                      onMouseLeave={[Function]}
+                      onMouseUp={[Function]}
+                      onTouchEnd={[Function]}
+                      onTouchMove={[Function]}
+                      onTouchStart={[Function]}
+                      tabIndex={0}
+                      type="button"
+                    >
+                      <svg
+                        aria-hidden={true}
+                        className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                        data-testid="DeleteIcon"
+                        focusable="false"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"
+                        />
+                      </svg>
+                      <span
+                        className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                      />
+                    </button>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>,
+  <div
+    aria-atomic={true}
+    aria-live="polite"
+    className="css-i8rqz1-container"
+    data-testid="ANNOUNCER_ELEMENT_TEST_ID"
+    role="status"
+  >
+    Navigated to Tag types (5)
+  </div>,
+]
+`;

@@ -44,6 +44,7 @@ async function createApp(
     const destroy = async () => {
         services.versionService.destroy();
         services.clientInstanceService.destroy();
+        services.clientMetricsServiceV2.destroy();
         services.apiTokenService.destroy();
     };
 

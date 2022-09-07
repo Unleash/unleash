@@ -1,0 +1,186 @@
+// Vitest Snapshot v1
+
+exports[`InstanceStatusBar should warn when the trial has churned 1`] = `
+<aside
+  class="css-jmsogz"
+  data-testid="INSTANCE_STATUS_BAR_ID"
+>
+  <svg
+    aria-hidden="true"
+    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-prk1jy-MuiSvgIcon-root"
+    data-testid="WarningAmberIcon"
+    focusable="false"
+    viewBox="0 0 24 24"
+  >
+    <path
+      d="M12 5.99 19.53 19H4.47L12 5.99M12 2 1 21h22L12 2z"
+    />
+    <path
+      d="M13 16h-2v2h2zm0-6h-2v5h2z"
+    />
+  </svg>
+  <p
+    class="MuiTypography-root MuiTypography-body1 css-rviqjc-MuiTypography-root"
+  >
+    <strong>
+      Warning!
+    </strong>
+     Your free 
+    Pro
+     trial has expired. 
+    <strong>
+      Upgrade trial
+    </strong>
+     otherwise your
+     
+    <strong>
+      account will be deleted.
+    </strong>
+  </p>
+</aside>
+`;
+
+exports[`InstanceStatusBar should warn when the trial has expired 1`] = `
+<aside
+  class="css-jmsogz"
+  data-testid="INSTANCE_STATUS_BAR_ID"
+>
+  <svg
+    aria-hidden="true"
+    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-prk1jy-MuiSvgIcon-root"
+    data-testid="WarningAmberIcon"
+    focusable="false"
+    viewBox="0 0 24 24"
+  >
+    <path
+      d="M12 5.99 19.53 19H4.47L12 5.99M12 2 1 21h22L12 2z"
+    />
+    <path
+      d="M13 16h-2v2h2zm0-6h-2v5h2z"
+    />
+  </svg>
+  <p
+    class="MuiTypography-root MuiTypography-body1 css-rviqjc-MuiTypography-root"
+  >
+    <strong>
+      Warning!
+    </strong>
+     Your free 
+    Pro
+     trial has expired. 
+    <strong>
+      Upgrade trial
+    </strong>
+     otherwise your
+     
+    <strong>
+      account will be deleted.
+    </strong>
+  </p>
+</aside>
+`;
+
+exports[`InstanceStatusBar should warn when the trial is about to expire 1`] = `
+<aside
+  class="css-yx2rkt"
+  data-testid="INSTANCE_STATUS_BAR_ID"
+>
+  <svg
+    aria-hidden="true"
+    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-cle2im-MuiSvgIcon-root"
+    data-testid="InfoOutlinedIcon"
+    focusable="false"
+    viewBox="0 0 24 24"
+  >
+    <path
+      d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+    />
+  </svg>
+  <p
+    class="MuiTypography-root MuiTypography-body1 css-rviqjc-MuiTypography-root"
+  >
+    <strong>
+      Heads up!
+    </strong>
+     You have
+     
+    <strong>
+      4 days
+    </strong>
+     left of your free
+     
+    Pro
+     trial.
+  </p>
+</aside>
+`;
+
+exports[`InstanceStatusBar should warn when the trial is far from expired 1`] = `
+<aside
+  class="css-yx2rkt"
+  data-testid="INSTANCE_STATUS_BAR_ID"
+>
+  <svg
+    aria-hidden="true"
+    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-cle2im-MuiSvgIcon-root"
+    data-testid="InfoOutlinedIcon"
+    focusable="false"
+    viewBox="0 0 24 24"
+  >
+    <path
+      d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+    />
+  </svg>
+  <p
+    class="MuiTypography-root MuiTypography-body1 css-rviqjc-MuiTypography-root"
+  >
+    <strong>
+      Heads up!
+    </strong>
+     You're currently on a free
+     
+    Pro
+     trial account.
+  </p>
+</aside>
+`;
+
+exports[`InstanceStatusBar should warn when trialExpiry has passed 1`] = `
+<aside
+  class="css-jmsogz"
+  data-testid="INSTANCE_STATUS_BAR_ID"
+>
+  <svg
+    aria-hidden="true"
+    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-prk1jy-MuiSvgIcon-root"
+    data-testid="WarningAmberIcon"
+    focusable="false"
+    viewBox="0 0 24 24"
+  >
+    <path
+      d="M12 5.99 19.53 19H4.47L12 5.99M12 2 1 21h22L12 2z"
+    />
+    <path
+      d="M13 16h-2v2h2zm0-6h-2v5h2z"
+    />
+  </svg>
+  <p
+    class="MuiTypography-root MuiTypography-body1 css-rviqjc-MuiTypography-root"
+  >
+    <strong>
+      Warning!
+    </strong>
+     Your free 
+    Pro
+     trial has expired. 
+    <strong>
+      Upgrade trial
+    </strong>
+     otherwise your
+     
+    <strong>
+      account will be deleted.
+    </strong>
+  </p>
+</aside>
+`;

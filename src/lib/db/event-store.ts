@@ -1,10 +1,10 @@
-import { EventEmitter } from 'events';
 import { Knex } from 'knex';
 import { IEvent, IBaseEvent } from '../types/events';
 import { LogProvider, Logger } from '../logger';
 import { IEventStore } from '../types/stores/event-store';
 import { ITag } from '../types/model';
 import { SearchEventsSchema } from '../openapi/spec/search-events-schema';
+import { AnyEventEmitter } from '../util/anyEventEmitter';
 
 const EVENT_COLUMNS = [
     'id',
@@ -34,7 +34,7 @@ export interface IEventTable {
 
 const TABLE = 'events';
 
-class EventStore extends EventEmitter implements IEventStore {
+class EventStore extends AnyEventEmitter implements IEventStore {
     private db: Knex;
 
     private logger: Logger;
@@ -54,6 +54,36 @@ class EventStore extends EventEmitter implements IEventStore {
             process.nextTick(() => this.emit(event.type, savedEvent));
         } catch (error: unknown) {
             this.logger.warn(`Failed to store "${event.type}" event: ${error}`);
+        }
+    }
+
+    async count(): Promise<number> {
+        let count = await this.db(TABLE)
+            .count<Record<string, number>>()
+            .first();
+        if (typeof count.count === 'string') {
+            return parseInt(count.count, 10);
+        } else {
+            return count.count;
+        }
+    }
+
+    async filteredCount(eventSearch: SearchEventsSchema): Promise<number> {
+        let query = this.db(TABLE);
+        if (eventSearch.type) {
+            query = query.andWhere({ type: eventSearch.type });
+        }
+        if (eventSearch.project) {
+            query = query.andWhere({ project: eventSearch.project });
+        }
+        if (eventSearch.feature) {
+            query = query.andWhere({ feature_name: eventSearch.feature });
+        }
+        let count = await query.count().first();
+        if (typeof count.count === 'string') {
+            return parseInt(count.count, 10);
+        } else {
+            return count.count;
         }
     }
 

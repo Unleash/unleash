@@ -1,0 +1,28 @@
+name: e2e:frontend
+on: [deployment_status]
+jobs:
+  e2e:
+    if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success' && contains(github.event.deployment_status.target_url, 'unleash-monorepo-frontend')
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        test:
+          - feature/feature.spec.ts
+          - groups/groups.spec.ts
+          - projects/access.spec.ts
+          - segments/segments.spec.ts
+    steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: |
+          echo "$GITHUB_CONTEXT"
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Run Cypress
+        uses: cypress-io/github-action@v2
+        with:
+          working-directory: frontend
+          env: AUTH_USER=admin,AUTH_PASSWORD=unleash4all
+          config: baseUrl=${{ github.event.deployment_status.target_url }}
+          spec: cypress/integration/${{ matrix.test }}

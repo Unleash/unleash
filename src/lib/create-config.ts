@@ -29,12 +29,21 @@ import {
     mapLegacyToken,
     validateApiToken,
 } from './types/models/api-token';
-import { parseEnvVarBoolean, parseEnvVarNumber } from './util/env';
-import { IExperimentalOptions } from './experimental';
+import {
+    parseEnvVarBoolean,
+    parseEnvVarNumber,
+    parseEnvVarStrings,
+} from './util/parseEnvVar';
+import {
+    defaultExperimentalOptions,
+    IExperimentalOptions,
+} from './types/experimental';
 import {
     DEFAULT_SEGMENT_VALUES_LIMIT,
     DEFAULT_STRATEGY_SEGMENTS_LIMIT,
 } from './util/segments';
+import FlagResolver from './util/flag-resolver';
+import { validateOrigins } from './util/validateOrigin';
 
 const safeToUpper = (s: string) => (s ? s.toUpperCase() : s);
 
@@ -50,8 +59,16 @@ function mergeAll<T>(objects: Partial<T>[]): T {
 }
 
 function loadExperimental(options: IUnleashOptions): IExperimentalOptions {
-    return options.experimental || {};
+    return {
+        ...defaultExperimentalOptions,
+        ...options.experimental,
+        flags: {
+            ...defaultExperimentalOptions.flags,
+            ...options.experimental?.flags,
+        },
+    };
 }
+
 const defaultClientCachingOptions: IClientCachingOption = {
     enabled: true,
     maxAge: 600,
@@ -87,6 +104,7 @@ function loadUI(options: IUnleashOptions): IUIConfig {
 
     ui.flags = {
         E: true,
+        ENABLE_DARK_MODE_SUPPORT: false,
     };
     return mergeAll([uiO, ui]);
 }
@@ -294,6 +312,20 @@ const parseCspEnvironmentVariables = (): ICspDomainConfig => {
     };
 };
 
+const parseFrontendApiOrigins = (options: IUnleashOptions): string[] => {
+    const frontendApiOrigins = parseEnvVarStrings(
+        process.env.UNLEASH_FRONTEND_API_ORIGINS,
+        options.frontendApiOrigins || ['*'],
+    );
+
+    const error = validateOrigins(frontendApiOrigins);
+    if (error) {
+        throw new Error(error);
+    }
+
+    return frontendApiOrigins;
+};
+
 export function createConfig(options: IUnleashOptions): IUnleashConfig {
     let extraDbOptions = {};
 
@@ -360,6 +392,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
     ]);
 
     const experimental = loadExperimental(options);
+    const flagResolver = new FlagResolver(experimental);
 
     const ui = loadUI(options);
 
@@ -415,6 +448,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         ui,
         import: importSetting,
         experimental,
+        flagResolver,
         email,
         secureHeaders,
         enableOAS,
@@ -426,6 +460,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         eventBus: new EventEmitter(),
         environmentEnableOverrides,
         additionalCspAllowedDomains,
+        frontendApiOrigins: parseFrontendApiOrigins(options),
         inlineSegmentConstraints,
         segmentValuesLimit,
         strategySegmentsLimit,

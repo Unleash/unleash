@@ -2,7 +2,7 @@ import { IUnleashConfig } from '../types/option';
 import { IUnleashStores } from '../types/stores';
 import { Logger } from '../logger';
 import { IEventStore } from '../types/stores/event-store';
-import { IEvent } from '../types/events';
+import { IEventList } from '../types/events';
 import { SearchEventsSchema } from '../openapi/spec/search-events-schema';
 
 export default class EventService {
@@ -18,12 +18,22 @@ export default class EventService {
         this.eventStore = eventStore;
     }
 
-    async getEvents(): Promise<IEvent[]> {
-        return this.eventStore.getEvents();
+    async getEvents(): Promise<IEventList> {
+        let totalEvents = await this.eventStore.count();
+        let events = await this.eventStore.getEvents();
+        return {
+            events,
+            totalEvents,
+        };
     }
 
-    async searchEvents(search: SearchEventsSchema): Promise<IEvent[]> {
-        return this.eventStore.searchEvents(search);
+    async searchEvents(search: SearchEventsSchema): Promise<IEventList> {
+        let totalEvents = await this.eventStore.filteredCount(search);
+        let events = await this.eventStore.searchEvents(search);
+        return {
+            events,
+            totalEvents,
+        };
     }
 }
 

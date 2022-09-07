@@ -1,4 +1,4 @@
-import User from '../types/user';
+import User, { IUser } from '../types/user';
 import { AccessService } from './access-service';
 import NameExistsError from '../error/name-exists-error';
 import InvalidOperationError from '../error/invalid-operation-error';
@@ -48,7 +48,7 @@ import { arraysHaveSameItems } from '../util/arraysHaveSameItems';
 import { GroupService } from './group-service';
 import { IGroupModelWithProjectRole, IGroupRole } from 'lib/types/group';
 
-const getCreatedBy = (user: User) => user.email || user.username;
+const getCreatedBy = (user: IUser) => user.email || user.username;
 
 export interface AccessWithRoles {
     users: IUserWithRole[];
@@ -130,8 +130,8 @@ export default class ProjectService {
     }
 
     async createProject(
-        newProject: Pick<IProject, 'id'>,
-        user: User,
+        newProject: Pick<IProject, 'id' | 'name'>,
+        user: IUser,
     ): Promise<IProject> {
         const data = await projectSchema.validateAsync(newProject);
         await this.validateUniqueId(data.id);
@@ -294,12 +294,11 @@ export default class ProjectService {
         };
     }
 
-    // TODO: Remove the optional nature of createdBy - this in place to make sure enterprise is compatible
     async addUser(
         projectId: string,
         roleId: number,
         userId: number,
-        createdBy?: string,
+        createdBy: string,
     ): Promise<void> {
         const [roles, users] = await this.accessService.getProjectRoleAccess(
             projectId,
@@ -323,7 +322,7 @@ export default class ProjectService {
         await this.eventStore.store(
             new ProjectUserAddedEvent({
                 project: projectId,
-                createdBy,
+                createdBy: createdBy || 'system-user',
                 data: {
                     roleId,
                     userId,
@@ -334,12 +333,11 @@ export default class ProjectService {
         );
     }
 
-    // TODO: Remove the optional nature of createdBy - this in place to make sure enterprise is compatible
     async removeUser(
         projectId: string,
         roleId: number,
         userId: number,
-        createdBy?: string,
+        createdBy: string,
     ): Promise<void> {
         const role = await this.findProjectRole(projectId, roleId);
 
@@ -367,7 +365,7 @@ export default class ProjectService {
         projectId: string,
         roleId: number,
         groupId: number,
-        modifiedBy?: string,
+        modifiedBy: string,
     ): Promise<void> {
         const role = await this.accessService.getRole(roleId);
         const group = await this.groupService.getGroup(groupId);
@@ -397,7 +395,7 @@ export default class ProjectService {
         projectId: string,
         roleId: number,
         groupId: number,
-        modifiedBy?: string,
+        modifiedBy: string,
     ): Promise<void> {
         const group = await this.groupService.getGroup(groupId);
         const role = await this.accessService.getRole(roleId);
@@ -573,7 +571,7 @@ export default class ProjectService {
     }
 
     async getMembers(projectId: string): Promise<number> {
-        return this.store.getMembers(projectId);
+        return this.store.getMembersCountByProject(projectId);
     }
 
     async getProjectOverview(
@@ -588,7 +586,7 @@ export default class ProjectService {
             projectId,
             archived,
         );
-        const members = await this.store.getMembers(projectId);
+        const members = await this.store.getMembersCountByProject(projectId);
         return {
             name: project.name,
             environments,

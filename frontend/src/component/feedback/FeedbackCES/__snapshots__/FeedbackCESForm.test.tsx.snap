@@ -1,0 +1,191 @@
+// Vitest Snapshot v1
+
+exports[`FeedbackCESForm 1`] = `
+<body>
+  <div>
+    <div
+      class="css-fdcp7c-container"
+    >
+      <h1
+        class="css-iyd7t0-title"
+      >
+        Please help us improve
+      </h1>
+      <form
+        aria-live="polite"
+        class="css-1rgjoiw-form"
+      >
+        <p
+          class="css-mhztvj-subtitle"
+        >
+          a
+        </p>
+        <div
+          class="css-io6e1g-scoreInput"
+        >
+          <span
+            class="css-16omcck-scoreHelp"
+          >
+            Very difficult
+          </span>
+          <label
+            class="css-pq8zjr-scoreValue"
+          >
+            <input
+              name="score"
+              type="radio"
+              value="1"
+            />
+            <span>
+              1
+            </span>
+          </label>
+          <label
+            class="css-pq8zjr-scoreValue"
+          >
+            <input
+              name="score"
+              type="radio"
+              value="2"
+            />
+            <span>
+              2
+            </span>
+          </label>
+          <label
+            class="css-pq8zjr-scoreValue"
+          >
+            <input
+              name="score"
+              type="radio"
+              value="3"
+            />
+            <span>
+              3
+            </span>
+          </label>
+          <label
+            class="css-pq8zjr-scoreValue"
+          >
+            <input
+              name="score"
+              type="radio"
+              value="4"
+            />
+            <span>
+              4
+            </span>
+          </label>
+          <label
+            class="css-pq8zjr-scoreValue"
+          >
+            <input
+              name="score"
+              type="radio"
+              value="5"
+            />
+            <span>
+              5
+            </span>
+          </label>
+          <label
+            class="css-pq8zjr-scoreValue"
+          >
+            <input
+              name="score"
+              type="radio"
+              value="6"
+            />
+            <span>
+              6
+            </span>
+          </label>
+          <label
+            class="css-pq8zjr-scoreValue"
+          >
+            <input
+              name="score"
+              type="radio"
+              value="7"
+            />
+            <span>
+              7
+            </span>
+          </label>
+          <span
+            class="css-16omcck-scoreHelp"
+          >
+            Very easy
+          </span>
+        </div>
+        <div
+          hidden=""
+        >
+          <label
+            class="css-13obo9p-textLabel"
+            for="comment"
+          >
+            b
+          </label>
+          <div
+            class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
+          >
+            <div
+              class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-multiline css-1qvtpcv-MuiInputBase-root-MuiOutlinedInput-root"
+            >
+              <textarea
+                aria-invalid="false"
+                class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMultiline css-1wvz5kg-MuiInputBase-input-MuiOutlinedInput-input"
+                id="mui-1"
+                rows="3"
+                style="height: 0px; overflow: hidden;"
+              />
+              <textarea
+                aria-hidden="true"
+                class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMultiline css-1wvz5kg-MuiInputBase-input-MuiOutlinedInput-input"
+                readonly=""
+                style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); padding: 0px; width: 100%;"
+                tabindex="-1"
+              />
+              <fieldset
+                aria-hidden="true"
+                class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
+              >
+                <legend
+                  class="css-hdw1oc"
+                >
+                  <span
+                    class="notranslate"
+                  >
+                    ​
+                  </span>
+                </legend>
+              </fieldset>
+            </div>
+          </div>
+        </div>
+        <div
+          class="css-n2ggaa-buttons"
+          hidden=""
+        >
+          <button
+            class="MuiButtonBase-root Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-9rpict-MuiButtonBase-root-MuiButton-root-button"
+            disabled=""
+            tabindex="-1"
+            type="submit"
+          >
+            Send feedback
+          </button>
+        </div>
+      </form>
+    </div>
+    <div
+      aria-atomic="true"
+      aria-live="polite"
+      class="css-i8rqz1-container"
+      data-testid="ANNOUNCER_ELEMENT_TEST_ID"
+      role="status"
+    />
+  </div>
+</body>
+`;

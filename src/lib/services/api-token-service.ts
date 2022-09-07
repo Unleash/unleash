@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 import { Logger } from '../logger';
-import { ADMIN, CLIENT } from '../types/permissions';
+import { ADMIN, CLIENT, FRONTEND } from '../types/permissions';
 import { IUnleashStores } from '../types/stores';
 import { IUnleashConfig } from '../types/option';
 import ApiUser from '../types/api-user';
@@ -19,6 +19,23 @@ import { FOREIGN_KEY_VIOLATION } from '../error/db-error';
 import BadDataError from '../error/bad-data-error';
 import { minutesToMilliseconds } from 'date-fns';
 import { IEnvironmentStore } from 'lib/types/stores/environment-store';
+import { constantTimeCompare } from '../util/constantTimeCompare';
+
+const resolveTokenPermissions = (tokenType: string) => {
+    if (tokenType === ApiTokenType.ADMIN) {
+        return [ADMIN];
+    }
+
+    if (tokenType === ApiTokenType.CLIENT) {
+        return [CLIENT];
+    }
+
+    if (tokenType === ApiTokenType.FRONTEND) {
+        return [FRONTEND];
+    }
+
+    return [];
+};
 
 export class ApiTokenService {
     private store: IApiTokenStore;
@@ -53,7 +70,7 @@ export class ApiTokenService {
         }
     }
 
-    private async fetchActiveTokens(): Promise<void> {
+    async fetchActiveTokens(): Promise<void> {
         try {
             this.activeTokens = await this.getAllActiveTokens();
         } finally {
@@ -86,19 +103,37 @@ export class ApiTokenService {
     }
 
     public getUserForToken(secret: string): ApiUser | undefined {
-        const token = this.activeTokens.find((t) => t.secret === secret);
-        if (token) {
-            const permissions =
-                token.type === ApiTokenType.ADMIN ? [ADMIN] : [CLIENT];
+        if (!secret) {
+            return undefined;
+        }
 
+        let token = this.activeTokens.find(
+            (activeToken) =>
+                Boolean(activeToken.secret) &&
+                constantTimeCompare(activeToken.secret, secret),
+        );
+
+        // If the token is not found, try to find it in the legacy format with alias.
+        // This allows us to support the old format of tokens migrating to the embedded proxy.
+        if (!token) {
+            token = this.activeTokens.find(
+                (activeToken) =>
+                    Boolean(activeToken.alias) &&
+                    constantTimeCompare(activeToken.alias, secret),
+            );
+        }
+
+        if (token) {
             return new ApiUser({
                 username: token.username,
-                permissions,
+                permissions: resolveTokenPermissions(token.type),
                 projects: token.projects,
                 environment: token.environment,
                 type: token.type,
+                secret: token.secret,
             });
         }
+
         return undefined;
     }
 

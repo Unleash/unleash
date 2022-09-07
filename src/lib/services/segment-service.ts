@@ -66,11 +66,13 @@ export class SegmentService {
         return this.featureStrategiesStore.getStrategiesBySegment(id);
     }
 
-    async create(data: unknown, user: User): Promise<void> {
+    async create(
+        data: unknown,
+        user: Partial<Pick<User, 'username' | 'email'>>,
+    ): Promise<ISegment> {
         const input = await segmentSchema.validateAsync(data);
         this.validateSegmentValuesLimit(input);
         await this.validateName(input.name);
-
         const segment = await this.segmentStore.create(input, user);
 
         await this.eventStore.store({
@@ -78,9 +80,15 @@ export class SegmentService {
             createdBy: user.email || user.username,
             data: segment,
         });
+
+        return segment;
     }
 
-    async update(id: number, data: unknown, user: User): Promise<void> {
+    async update(
+        id: number,
+        data: unknown,
+        user: Partial<Pick<User, 'username' | 'email'>>,
+    ): Promise<void> {
         const input = await segmentSchema.validateAsync(data);
         this.validateSegmentValuesLimit(input);
         const preData = await this.segmentStore.get(id);

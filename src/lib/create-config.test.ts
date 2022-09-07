@@ -403,3 +403,28 @@ test('Environment variables for client features caching takes priority over opti
     expect(config.clientFeatureCaching.enabled).toBe(true);
     expect(config.clientFeatureCaching.maxAge).toBe(120);
 });
+
+test('Environment variables for frontend CORS origins takes priority over options', async () => {
+    const create = (frontendApiOrigins?): string[] => {
+        return createConfig({
+            frontendApiOrigins,
+        }).frontendApiOrigins;
+    };
+
+    expect(create()).toEqual(['*']);
+    expect(create([])).toEqual([]);
+    expect(create(['*'])).toEqual(['*']);
+    expect(create(['https://example.com'])).toEqual(['https://example.com']);
+    expect(() => create(['a'])).toThrow('Invalid origin: a');
+
+    process.env.UNLEASH_FRONTEND_API_ORIGINS = '';
+    expect(create()).toEqual([]);
+    process.env.UNLEASH_FRONTEND_API_ORIGINS = '*';
+    expect(create()).toEqual(['*']);
+    process.env.UNLEASH_FRONTEND_API_ORIGINS = 'https://example.com, *';
+    expect(create()).toEqual(['https://example.com', '*']);
+    process.env.UNLEASH_FRONTEND_API_ORIGINS = 'b';
+    expect(() => create(['a'])).toThrow('Invalid origin: b');
+    delete process.env.UNLEASH_FRONTEND_API_ORIGINS;
+    expect(create()).toEqual(['*']);
+});

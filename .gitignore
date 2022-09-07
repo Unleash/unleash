@@ -23,10 +23,6 @@ coverage/lcov-report
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 build/Release
 
-# webpack output
-packages/unleash-frontend/public/bundle.js
-packages/unleash-frontend/public/bundle.js.map
-
 # liquibase stuff
 /sql
 unleash-db.jar
@@ -50,10 +46,8 @@ package-lock.json
 /website/build
 /website/backers.json
 /website/node_modules
-/website/yarn.lock
 /website/translated_docs
 /website/i18n/*
 .env
 
 #report.json
-

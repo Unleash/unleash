@@ -49,7 +49,7 @@ export class EnvironmentsController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Environments'],
                     operationId: 'getAllEnvironments',
                     responses: { 200: emptyResponse },
                 }),
@@ -63,7 +63,7 @@ export class EnvironmentsController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Environments'],
                     operationId: 'getEnvironment',
                     responses: {
                         200: createResponseSchema('environmentSchema'),
@@ -79,7 +79,7 @@ export class EnvironmentsController extends Controller {
             permission: ADMIN,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Environments'],
                     operationId: 'updateSortOrder',
                     requestBody: createRequestSchema('sortOrderSchema'),
                     responses: { 200: emptyResponse },
@@ -95,7 +95,7 @@ export class EnvironmentsController extends Controller {
             permission: ADMIN,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Environments'],
                     operationId: 'toggleEnvironmentOn',
                     responses: { 204: emptyResponse },
                 }),
@@ -110,7 +110,7 @@ export class EnvironmentsController extends Controller {
             permission: ADMIN,
             middleware: [
                 openApiService.validPath({
-                    tags: ['admin'],
+                    tags: ['Environments'],
                     operationId: 'toggleEnvironmentOff',
                     responses: { 204: emptyResponse },
                 }),

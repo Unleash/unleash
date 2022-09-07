@@ -1,12 +1,11 @@
-import { publicFolder } from 'unleash-frontend';
 import express, { Application, RequestHandler } from 'express';
-import cors from 'cors';
 import compression from 'compression';
 import favicon from 'serve-favicon';
 import cookieParser from 'cookie-parser';
 import path from 'path';
 import errorHandler from 'errorhandler';
 import { responseTimeMetrics } from './middleware/response-time-metrics';
+import { corsOriginMiddleware } from './middleware/cors-origin-middleware';
 import rbacMiddleware from './middleware/rbac-middleware';
 import apiTokenMiddleware from './middleware/api-token-middleware';
 import { IUnleashServices } from './types/services';
@@ -22,6 +21,8 @@ import noAuthentication from './middleware/no-authentication';
 import secureHeaders from './middleware/secure-headers';
 
 import { loadIndexHTML } from './util/load-index-html';
+import { findPublicFolder } from './util/findPublicFolder';
+import { conditionalMiddleware } from './middleware/conditional-middleware';
 
 export default async function getApp(
     config: IUnleashConfig,
@@ -32,7 +33,7 @@ export default async function getApp(
     const app = express();
 
     const baseUriPath = config.server.baseUriPath || '';
-
+    const publicFolder = findPublicFolder();
     let indexHTML = await loadIndexHTML(config, publicFolder);
 
     app.set('trust proxy', true);
@@ -47,10 +48,6 @@ export default async function getApp(
 
     if (typeof config.preHook === 'function') {
         config.preHook(app, config, services);
-    }
-
-    if (process.env.NODE_ENV === 'development') {
-        app.use(cors());
     }
 
     app.use(compression());
@@ -72,6 +69,17 @@ export default async function getApp(
     if (config.enableOAS && services.openApiService) {
         services.openApiService.useDocs(app);
     }
+
+    // Support CORS preflight requests for the frontend endpoints.
+    // Preflight requests should not have Authorization headers,
+    // so this must be handled before the API token middleware.
+    app.options(
+        '/api/frontend*',
+        conditionalMiddleware(
+            () => config.flagResolver.isEnabled('embedProxy'),
+            corsOriginMiddleware(services),
+        ),
+    );
 
     switch (config.authentication.type) {
         case IAuthType.OPEN_SOURCE: {
@@ -146,7 +154,7 @@ export default async function getApp(
 
     app.get(`${baseUriPath}/*`, (req, res) => {
         if (req.path.startsWith(`${baseUriPath}/api`)) {
-            res.status(404).send({ message: '404 - Not found' });
+            res.status(404).send({ message: 'Not found' });
             return;
         }
 

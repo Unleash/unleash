@@ -11,9 +11,7 @@ let defaultToken;
 
 beforeAll(async () => {
     db = await dbInit('metrics_two_api_client', getLogger);
-    app = await setupAppWithAuth(db.stores, {
-        experimental: { metricsV2: { enabled: true } },
-    });
+    app = await setupAppWithAuth(db.stores, {});
     defaultToken = await app.services.apiTokenService.createApiToken({
         type: ApiTokenType.CLIENT,
         project: 'default',
@@ -94,6 +92,7 @@ test('should pick up environment from token', async () => {
         })
         .expect(202);
 
+    await app.services.clientMetricsServiceV2.bulkAdd();
     const metrics = await db.stores.clientMetricsStoreV2.getAll();
     expect(metrics[0].environment).toBe('test');
     expect(metrics[0].appName).toBe('some-fancy-app');

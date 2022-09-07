@@ -11,9 +11,10 @@ import NotFoundError from '../../../lib/error/notfound-error';
 import { IRole } from '../../../lib/types/stores/access-store';
 import { RoleName } from '../../../lib/types/model';
 import SettingService from '../../../lib/services/setting-service';
-import { simpleAuthKey } from '../../../lib/types/settings/simple-auth-settings';
+import { simpleAuthSettingsKey } from '../../../lib/types/settings/simple-auth-settings';
 import { addDays, minutesToMilliseconds } from 'date-fns';
 import { GroupService } from '../../../lib/services/group-service';
+import { randomId } from '../../../lib/util/random-id';
 
 let db;
 let stores;
@@ -22,6 +23,7 @@ let userStore: UserStore;
 let adminRole: IRole;
 let viewerRole: IRole;
 let sessionService: SessionService;
+let settingService: SettingService;
 
 beforeAll(async () => {
     db = await dbInit('user_service_serial', getLogger);
@@ -32,7 +34,7 @@ beforeAll(async () => {
     const resetTokenService = new ResetTokenService(stores, config);
     const emailService = new EmailService(undefined, config.getLogger);
     sessionService = new SessionService(stores, config);
-    const settingService = new SettingService(stores, config);
+    settingService = new SettingService(stores, config);
 
     userService = new UserService(stores, config, {
         accessService,
@@ -101,7 +103,11 @@ test('should create user with password', async () => {
 });
 
 test('should not login user if simple auth is disabled', async () => {
-    await db.stores.settingStore.insert(simpleAuthKey, { disabled: true });
+    await settingService.insert(
+        simpleAuthSettingsKey,
+        { disabled: true },
+        randomId(),
+    );
 
     await userService.createUser({
         username: 'test_no_pass',

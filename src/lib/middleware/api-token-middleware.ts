@@ -6,14 +6,30 @@ const isClientApi = ({ path }) => {
     return path && path.startsWith('/api/client');
 };
 
+const isProxyApi = ({ path }) => {
+    if (!path) {
+        return;
+    }
+
+    // Handle all our current proxy paths which will redirect to the new
+    // embedded proxy endpoint
+    return (
+        path.startsWith('/api/default/proxy') ||
+        path.startsWith('/api/development/proxy') ||
+        path.startsWith('/api/production/proxy') ||
+        path.startsWith('/api/frontend')
+    );
+};
+
 export const TOKEN_TYPE_ERROR_MESSAGE =
-    'invalid token: expected an admin token but got a client token instead';
+    'invalid token: expected a different token type for this endpoint';
 
 const apiAccessMiddleware = (
     {
         getLogger,
         authentication,
-    }: Pick<IUnleashConfig, 'getLogger' | 'authentication'>,
+        flagResolver,
+    }: Pick<IUnleashConfig, 'getLogger' | 'authentication' | 'flagResolver'>,
     { apiTokenService }: any,
 ): any => {
     const logger = getLogger('/middleware/api-token.ts');
@@ -31,9 +47,15 @@ const apiAccessMiddleware = (
         try {
             const apiToken = req.header('authorization');
             const apiUser = apiTokenService.getUserForToken(apiToken);
+            const { CLIENT, FRONTEND } = ApiTokenType;
 
             if (apiUser) {
-                if (apiUser.type === ApiTokenType.CLIENT && !isClientApi(req)) {
+                if (
+                    (apiUser.type === CLIENT && !isClientApi(req)) ||
+                    (apiUser.type === FRONTEND && !isProxyApi(req)) ||
+                    (apiUser.type === FRONTEND &&
+                        !flagResolver.isEnabled('embedProxy'))
+                ) {
                     res.status(403).send({ message: TOKEN_TYPE_ERROR_MESSAGE });
                     return;
                 }

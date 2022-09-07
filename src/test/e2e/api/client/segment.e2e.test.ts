@@ -40,8 +40,9 @@ const fetchClientFeatures = (): Promise<IFeatureToggleClient[]> => {
 };
 
 const createSegment = (postData: object): Promise<unknown> => {
-    const user = { email: 'test@example.com' } as User;
-    return app.services.segmentService.create(postData, user);
+    return app.services.segmentService.create(postData, {
+        email: 'test@example.com',
+    });
 };
 
 const createFeatureToggle = (

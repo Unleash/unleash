@@ -2,10 +2,10 @@ import { createResponseSchema } from './create-response-schema';
 
 test('createResponseSchema', () => {
     expect(createResponseSchema('schemaName')).toMatchInlineSnapshot(`
-        Object {
-          "content": Object {
-            "application/json": Object {
-              "schema": Object {
+        {
+          "content": {
+            "application/json": {
+              "schema": {
                 "$ref": "#/components/schemas/schemaName",
               },
             },

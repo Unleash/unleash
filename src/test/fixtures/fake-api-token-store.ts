@@ -44,13 +44,16 @@ export default class FakeApiTokenStore
     }
 
     async getAllActive(): Promise<IApiToken[]> {
-        return this.tokens.filter((token) => token.expiresAt > new Date());
+        return this.tokens.filter(
+            (token) => token.expiresAt === null || token.expiresAt > new Date(),
+        );
     }
 
     async insert(newToken: IApiTokenCreate): Promise<IApiToken> {
         const apiToken = {
             createdAt: new Date(),
             project: newToken.projects?.join(',') || '*',
+            alias: null,
             ...newToken,
         };
         this.tokens.push(apiToken);

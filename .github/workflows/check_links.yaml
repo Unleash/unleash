@@ -37,7 +37,7 @@ jobs:
 
       # Permissions (issues: read)
       - name: 'Look for an existing issue'
-        if: ${{ false }}
+        if: ${{ failure() }}
         id: last-issue
         uses: micalevisk/last-issue-action@v2
         # Find the last updated open issue with a `automated-issue` label:
@@ -47,7 +47,7 @@ jobs:
 
       # Permissions (issues: write)
       - name: 'Create a new issue, or update an existing one'
-        if: ${{ false }}
+        if: ${{ failure() }}
         uses: peter-evans/create-issue-from-file@v4
         with:
           title: Link Checker Report

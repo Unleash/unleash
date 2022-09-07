@@ -2,6 +2,8 @@ name: Check links
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '30 12 * * 1-5'
 
 jobs:
   validate:

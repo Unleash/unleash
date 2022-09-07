@@ -90,4 +90,4 @@ unleash
   });
 ```
 
-[client-auth-unleash.js](https://github.com/Unleash/unleash-examples/blob/main/v3/securing-client-auth/index.js)
+[client-auth-unleash.js](https://github.com/Unleash/unleash-examples/blob/7ed25f97a31dfd8f773c00847080b1a4c889fd87/v3/securing-client-auth/index.js)

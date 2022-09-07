@@ -4,7 +4,9 @@ title: Feature Updates To slack
 ---
 
 :::caution
+
 This guide is deprecated. If you're looking for ways to integrate with Slack, you should refer to [the Slack add-on guide](../addons/slack.md) instead.
+
 :::
 
 ## Create a custom Slack WebHook url: {#create-a-custom-slack-webhook-url}
@@ -12,7 +14,7 @@ This guide is deprecated. If you're looking for ways to integrate with Slack, yo
 1. Go to [https://slack.com/apps/manage/custom-integrations](https://slack.com/apps/manage/custom-integrations)
 1. Click Incoming WebHooks
 1. Click “Add Configuration”
-1. This is Slack's help page on how to do this: https://api.slack.com/custom-integrations/incoming-webhooks
+1. This is Slack's help page on how to do this: https://api.slack.com/messaging/webhooks
    - Choose a channel, follow the wizard, get the custom URL.
 
 ## Send data to Slack using an event hook function {#send-data-to-slack-using-an-event-hook-function}
@@ -63,10 +65,10 @@ function onEventHook(event, eventData) {
         text: text,
       },
     )
-    .then(res => {
+    .then((res) => {
       console.log(`Slack post statusCode: ${res.status}. Text: ${text}`);
     })
-    .catch(error => {
+    .catch((error) => {
       console.error(error);
     });
 }
@@ -75,7 +77,7 @@ const options = {
   eventHook: onEventHook,
 };
 
-unleash.start(options).then(server => {
+unleash.start(options).then((server) => {
   console.log(`Unleash started on http://localhost:${server.app.get('port')}`);
 });
 ```

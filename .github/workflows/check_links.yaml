@@ -59,4 +59,4 @@ jobs:
           # and any other relevant labels for the issue itself:
           labels: |
             ${{ env.issue-lookup-label }}
-            report
+            docs

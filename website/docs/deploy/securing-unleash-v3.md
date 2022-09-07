@@ -43,7 +43,7 @@ Additionally, you can trigger the admin interface to prompt the user to sign in 
 
 Examples of custom authentication hooks:
 
-- [google-auth-hook.js](https://github.com/Unleash/unleash-examples/blob/7ed25f97a31dfd8f773c00847080b1a4c889fd87/v3/securing-basic-auth/basic-auth-hook.js)
+- [google-auth-hook.js](https://github.com/Unleash/unleash-examples/blob/7ed25f97a31dfd8f773c00847080b1a4c889fd87/v3/securing-google-auth/google-auth-hook.js)
 - [basic-auth-hook.js](https://github.com/Unleash/unleash-examples/blob/7ed25f97a31dfd8f773c00847080b1a4c889fd87/v3/securing-basic-auth/basic-auth-hook.js)
 - [keycloak-auth-hook.js](https://github.com/Unleash/unleash-examples/blob/7ed25f97a31dfd8f773c00847080b1a4c889fd87/v3/securing-keycloak-auth/keycloak-auth-hook.js)
 

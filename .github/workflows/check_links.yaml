@@ -2,13 +2,6 @@ name: Check links
 
 on:
   workflow_dispatch:
-  push:
-  pull_request:
-    branches: [docs/find-broken-links]
-    paths:
-      - website/**
-      - .github/workflows/build_doc_prs.yaml
-      - .github/workflows/generate-docs.yaml
 
 jobs:
   validate:

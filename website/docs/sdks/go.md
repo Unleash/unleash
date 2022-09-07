@@ -69,7 +69,7 @@ Read more about the strategies in [the activation strategies document](../user_g
 
 ### Unleash context {#unleash-context}
 
-In order to use some of the common activation strategies you must provide a [unleash-context](https://github.com/Unleash/unleash/blob/master/docs/unleash-context.md). This client SDK allows you to send in the unleash context as part of the `isEnabled` call:
+In order to use some of the common activation strategies you must provide an [_Unleash context_](../user_guide/unleash-context.md). This client SDK allows you to send in the unleash context as part of the `isEnabled` call:
 
 ```go
 ctx := context.Context{

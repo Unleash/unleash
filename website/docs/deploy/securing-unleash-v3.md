@@ -25,7 +25,7 @@ unleash
     adminAuthentication: 'custom',
     preRouterHook: myCustomAdminAuth,
   })
-  .then(unleash => {
+  .then((unleash) => {
     console.log(
       `Unleash started on http://localhost:${unleash.app.get('port')}`,
     );
@@ -43,9 +43,9 @@ Additionally, you can trigger the admin interface to prompt the user to sign in 
 
 Examples of custom authentication hooks:
 
-- [google-auth-hook.js](https://github.com/Unleash/unleash/blob/master/examples/google-auth-hook.js)
-- [basic-auth-hook.js](https://github.com/Unleash/unleash/blob/master/examples/basic-auth-hook.js)
-- [keycloak-auth-hook.js](https://github.com/Unleash/unleash/blob/master/examples/keycloak-auth-hook.js)
+- [google-auth-hook.js](https://github.com/Unleash/unleash-examples/blob/7ed25f97a31dfd8f773c00847080b1a4c889fd87/v3/securing-basic-auth/basic-auth-hook.js)
+- [basic-auth-hook.js](https://github.com/Unleash/unleash-examples/blob/7ed25f97a31dfd8f773c00847080b1a4c889fd87/v3/securing-basic-auth/basic-auth-hook.js)
+- [keycloak-auth-hook.js](https://github.com/Unleash/unleash-examples/blob/7ed25f97a31dfd8f773c00847080b1a4c889fd87/v3/securing-keycloak-auth/keycloak-auth-hook.js)
 
 We also have a version of Unleash deployed on Heroku which uses Google OAuth 2.0: https://secure-unleash.herokuapp.com
 
@@ -73,7 +73,7 @@ const sharedSecret = '12312Random';
 unleash
   .start({
     databaseUrl: 'postgres://unleash_user:passord@localhost:5432/unleash',
-    preRouterHook: app => {
+    preRouterHook: (app) => {
       app.use('/api/client', (req, res, next) => {
         if (req.header('authorization') !== sharedSecret) {
           res.sendStatus(401);
@@ -83,11 +83,11 @@ unleash
       });
     },
   })
-  .then(unleash => {
+  .then((unleash) => {
     console.log(
       `Unleash started on http://localhost:${unleash.app.get('port')}`,
     );
   });
 ```
 
-[client-auth-unleash.js](https://github.com/Unleash/unleash/blob/master/examples/client-auth-unleash.js)
+[client-auth-unleash.js](https://github.com/Unleash/unleash-examples/blob/main/v3/securing-client-auth/index.js)

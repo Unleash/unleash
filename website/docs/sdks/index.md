@@ -116,7 +116,7 @@ Here's some of the fantastic work our community has done to make Unleash work in
 - Laravel - PHP ([mikefrancis/laravel-unleash](https://github.com/mikefrancis/laravel-unleash))
 - NestJS - Node.js ([pmb0/nestjs-unleash](https://github.com/pmb0/nestjs-unleash))
 - PHP ([minds/unleash-client-php](https://gitlab.com/minds/unleash-client-php))
-- PHP - Symfony ([Stogon/unleash-bundle](https://git.stogon.io/Stogon/unleash-bundle/))
+- PHP - Symfony ([Stogon/unleash-bundle](https://github.com/Stogon/unleash-bundle))
 - React Native / Expo ([nunogois/proxy-client-react-native](https://github.com/nunogois/proxy-client-react-native))
 - Solid ([nunogois/proxy-client-solid](https://github.com/nunogois/proxy-client-solid))
 - _...your implementation for your favorite language._

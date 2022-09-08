@@ -68,7 +68,7 @@ export default class MetricsMonitor {
         });
         const featureToggleUpdateTotal = new client.Counter({
             name: 'feature_toggle_update_total',
-            help: 'Number of times a toggle has  been updated',
+            help: 'Number of times a toggle has been updated. Environment label would be "n/a" when it is not available, e.g. when a feature toggle is created.',
             labelNames: ['toggle', 'project', 'environment'],
         });
         const featureToggleUsageTotal = new client.Counter({

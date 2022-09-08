@@ -10,6 +10,10 @@ import {
     FEATURE_STRATEGY_ADD,
     FEATURE_STRATEGY_REMOVE,
     FEATURE_STRATEGY_UPDATE,
+    FEATURE_ENVIRONMENT_ENABLED,
+    FEATURE_ENVIRONMENT_DISABLED,
+    FEATURE_VARIANTS_UPDATED,
+    FEATURE_METADATA_UPDATED,
     FEATURE_UPDATED,
     CLIENT_METRICS,
     CLIENT_REGISTER,
@@ -68,8 +72,8 @@ export default class MetricsMonitor {
         });
         const featureToggleUpdateTotal = new client.Counter({
             name: 'feature_toggle_update_total',
-            help: 'Number of times a toggle has  been updated',
-            labelNames: ['toggle'],
+            help: 'Number of times a toggle has been updated. Environment label would be "n/a" when it is not available, e.g. when a feature toggle is created.',
+            labelNames: ['toggle', 'project', 'environment'],
         });
         const featureToggleUsageTotal = new client.Counter({
             name: 'feature_toggle_usage_total',
@@ -148,26 +152,65 @@ export default class MetricsMonitor {
             dbDuration.labels(store, action).observe(time);
         });
 
-        eventStore.on(FEATURE_CREATED, ({ featureName }) => {
-            featureToggleUpdateTotal.labels(featureName).inc();
+        eventStore.on(FEATURE_CREATED, ({ featureName, project }) => {
+            featureToggleUpdateTotal.labels(featureName, project, 'n/a').inc();
         });
-        eventStore.on(FEATURE_UPDATED, ({ featureName }) => {
-            featureToggleUpdateTotal.labels(featureName).inc();
+        eventStore.on(FEATURE_VARIANTS_UPDATED, ({ featureName, project }) => {
+            featureToggleUpdateTotal.labels(featureName, project, 'n/a').inc();
         });
-        eventStore.on(FEATURE_STRATEGY_ADD, ({ featureName }) => {
-            featureToggleUpdateTotal.labels(featureName).inc();
+        eventStore.on(FEATURE_METADATA_UPDATED, ({ featureName, project }) => {
+            featureToggleUpdateTotal.labels(featureName, project, 'n/a').inc();
         });
-        eventStore.on(FEATURE_STRATEGY_REMOVE, ({ featureName }) => {
-            featureToggleUpdateTotal.labels(featureName).inc();
+        eventStore.on(FEATURE_UPDATED, ({ featureName, project }) => {
+            featureToggleUpdateTotal
+                .labels(featureName, project, 'default')
+                .inc();
         });
-        eventStore.on(FEATURE_STRATEGY_UPDATE, ({ featureName }) => {
-            featureToggleUpdateTotal.labels(featureName).inc();
+        eventStore.on(
+            FEATURE_STRATEGY_ADD,
+            ({ featureName, project, environment }) => {
+                featureToggleUpdateTotal
+                    .labels(featureName, project, environment)
+                    .inc();
+            },
+        );
+        eventStore.on(
+            FEATURE_STRATEGY_REMOVE,
+            ({ featureName, project, environment }) => {
+                featureToggleUpdateTotal
+                    .labels(featureName, project, environment)
+                    .inc();
+            },
+        );
+        eventStore.on(
+            FEATURE_STRATEGY_UPDATE,
+            ({ featureName, project, environment }) => {
+                featureToggleUpdateTotal
+                    .labels(featureName, project, environment)
+                    .inc();
+            },
+        );
+        eventStore.on(
+            FEATURE_ENVIRONMENT_DISABLED,
+            ({ featureName, project, environment }) => {
+                featureToggleUpdateTotal
+                    .labels(featureName, project, environment)
+                    .inc();
+            },
+        );
+        eventStore.on(
+            FEATURE_ENVIRONMENT_ENABLED,
+            ({ featureName, project, environment }) => {
+                featureToggleUpdateTotal
+                    .labels(featureName, project, environment)
+                    .inc();
+            },
+        );
+        eventStore.on(FEATURE_ARCHIVED, ({ featureName, project }) => {
+            featureToggleUpdateTotal.labels(featureName, project, 'n/a').inc();
         });
-        eventStore.on(FEATURE_ARCHIVED, ({ featureName }) => {
-            featureToggleUpdateTotal.labels(featureName).inc();
-        });
-        eventStore.on(FEATURE_REVIVED, ({ featureName }) => {
-            featureToggleUpdateTotal.labels(featureName).inc();
+        eventStore.on(FEATURE_REVIVED, ({ featureName, project }) => {
+            featureToggleUpdateTotal.labels(featureName, project, 'n/a').inc();
         });
 
         eventBus.on(CLIENT_METRICS, (m) => {

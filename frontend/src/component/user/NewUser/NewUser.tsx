@@ -1,113 +1,130 @@
-import useLoading from 'hooks/useLoading';
-import { TextField, Typography } from '@mui/material';
-import StandaloneBanner from '../StandaloneBanner/StandaloneBanner';
-import ResetPasswordDetails from '../common/ResetPasswordDetails/ResetPasswordDetails';
-import { useStyles } from './NewUser.styles';
+import { Box, TextField, Typography } from '@mui/material';
 import useResetPassword from 'hooks/api/getters/useResetPassword/useResetPassword';
-import StandaloneLayout from '../common/StandaloneLayout/StandaloneLayout';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import InvalidToken from '../common/InvalidToken/InvalidToken';
 import AuthOptions from '../common/AuthOptions/AuthOptions';
 import DividerText from 'component/common/DividerText/DividerText';
 import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
+import ResetPasswordForm from '../common/ResetPasswordForm/ResetPasswordForm';
+import InvalidToken from '../common/InvalidToken/InvalidToken';
+import { NewUserWrapper } from './NewUserWrapper/NewUserWrapper';
 
 export const NewUser = () => {
     const { authDetails } = useAuthDetails();
     const { token, data, loading, setLoading, invalidToken } =
         useResetPassword();
-    const ref = useLoading(loading);
-    const { classes: styles } = useStyles();
+    const passwordDisabled = authDetails?.defaultHidden === true;
+
+    if (invalidToken) {
+        return (
+            <NewUserWrapper loading={loading}>
+                <InvalidToken />
+            </NewUserWrapper>
+        );
+    }
 
     return (
-        <div ref={ref}>
-            <StandaloneLayout
-                showMenu={false}
-                BannerComponent={<StandaloneBanner title={'Unleash'} />}
-            >
-                <div className={styles.newUser}>
-                    <ConditionallyRender
-                        condition={invalidToken}
-                        show={<InvalidToken />}
-                        elseShow={
-                            <ResetPasswordDetails
-                                token={token}
-                                setLoading={setLoading}
-                            >
-                                <h2 className={styles.title}>
-                                    Enter your personal details and start your
-                                    journey
-                                </h2>
-                                <ConditionallyRender
-                                    condition={data?.createdBy}
-                                    show={
-                                        <Typography
-                                            variant="body1"
-                                            data-loading
-                                            className={styles.inviteText}
-                                        >
-                                            {data?.createdBy}
-                                            <br></br> has invited you to join
-                                            Unleash.
-                                        </Typography>
-                                    }
-                                />
-
+        <NewUserWrapper
+            loading={loading}
+            title={
+                passwordDisabled
+                    ? 'Connect your account and start your journey'
+                    : 'Enter your personal details and start your journey'
+            }
+        >
+            <ConditionallyRender
+                condition={data?.createdBy}
+                show={
+                    <Typography
+                        variant="body1"
+                        data-loading
+                        sx={{ textAlign: 'center', mb: 2 }}
+                    >
+                        {data?.createdBy}
+                        <br /> has invited you to join Unleash.
+                    </Typography>
+                }
+            />
+            <Typography color="text.secondary">
+                We suggest using{' '}
+                <Typography component="strong" fontWeight="bold">
+                    the email you use for work
+                </Typography>
+                .
+            </Typography>
+            <ConditionallyRender
+                condition={Boolean(authDetails?.options?.length)}
+                show={
+                    <Box sx={{ mt: 2 }}>
+                        <AuthOptions options={authDetails?.options} />
+                    </Box>
+                }
+            />
+            <ConditionallyRender
+                condition={
+                    Boolean(authDetails?.options?.length) && !passwordDisabled
+                }
+                show={
+                    <DividerText
+                        text="or sign-up with an email address"
+                        data-loading
+                    />
+                }
+            />
+            <ConditionallyRender
+                condition={!passwordDisabled}
+                show={
+                    <>
+                        <ConditionallyRender
+                            condition={data?.email}
+                            show={() => (
                                 <Typography
                                     data-loading
                                     variant="body1"
-                                    className={styles.subtitle}
+                                    sx={{ my: 1 }}
                                 >
                                     Your username is
                                 </Typography>
-
+                            )}
+                        />
+                        <TextField
+                            data-loading
+                            type="email"
+                            value={data?.email || ''}
+                            id="username"
+                            label="Email"
+                            variant="outlined"
+                            size="small"
+                            sx={{ my: 1 }}
+                            disabled={Boolean(data?.email)}
+                            fullWidth
+                            required
+                        />
+                        <ConditionallyRender
+                            condition={!data?.email}
+                            show={() => (
                                 <TextField
                                     data-loading
-                                    value={data?.email || ''}
+                                    value=""
                                     id="username"
-                                    label="Username"
+                                    label="Full name"
                                     variant="outlined"
                                     size="small"
-                                    className={styles.emailField}
-                                    disabled
+                                    sx={{ my: 1 }}
+                                    fullWidth
+                                    required
                                 />
-                                <div className={styles.roleContainer}>
-                                    <ConditionallyRender
-                                        condition={Boolean(
-                                            authDetails?.options?.length
-                                        )}
-                                        show={
-                                            <>
-                                                <DividerText
-                                                    text="sign in with"
-                                                    data-loading
-                                                />
-
-                                                <AuthOptions
-                                                    options={
-                                                        authDetails?.options
-                                                    }
-                                                />
-                                                <DividerText
-                                                    text="or set a new password for your account"
-                                                    data-loading
-                                                />
-                                            </>
-                                        }
-                                        elseShow={
-                                            <Typography
-                                                variant="body1"
-                                                data-loading
-                                            >
-                                                Set a password for your account.
-                                            </Typography>
-                                        }
-                                    />
-                                </div>
-                            </ResetPasswordDetails>
-                        }
-                    />
-                </div>
-            </StandaloneLayout>
-        </div>
+                            )}
+                        />
+                        <Typography variant="body1" data-loading sx={{ mt: 2 }}>
+                            Set a password for your account.
+                        </Typography>
+                        <ResetPasswordForm
+                            token={token}
+                            setLoading={setLoading}
+                        />
+                    </>
+                }
+            />
+        </NewUserWrapper>
     );
 };

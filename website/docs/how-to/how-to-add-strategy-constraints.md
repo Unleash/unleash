@@ -24,7 +24,7 @@ Every strategy will have button labeled "add constraints" when viewed in the adm
 
 Refer to [the _constraint structure_ section of the strategy constraints reference](../advanced/strategy-constraints.md#constraint-structure) for a thorough explanation of the fields.
 
-From the "Context Field" dropdown, select the context field you would like to constrain the strategy on.
+From the "Context Field" dropdown, select the context field you would like to constrain the strategy on. @Thomas we need to update the text here
 
 ![A strategy constraint form with a constraint set to "region". The "values" input is a dropdown menu containing the options "Africa", "Asia", "Europe", and "North America", as defined in the preceding paragraph.](/img/constraints-add-to-strategy.png)
 

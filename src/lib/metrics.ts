@@ -12,6 +12,8 @@ import {
     FEATURE_STRATEGY_UPDATE,
     FEATURE_ENVIRONMENT_ENABLED,
     FEATURE_ENVIRONMENT_DISABLED,
+    FEATURE_VARIANTS_UPDATED,
+    FEATURE_METADATA_UPDATED,
     FEATURE_UPDATED,
     CLIENT_METRICS,
     CLIENT_REGISTER,
@@ -151,6 +153,12 @@ export default class MetricsMonitor {
         });
 
         eventStore.on(FEATURE_CREATED, ({ featureName, project }) => {
+            featureToggleUpdateTotal.labels(featureName, project, 'n/a').inc();
+        });
+        eventStore.on(FEATURE_VARIANTS_UPDATED, ({ featureName, project }) => {
+            featureToggleUpdateTotal.labels(featureName, project, 'n/a').inc();
+        });
+        eventStore.on(FEATURE_METADATA_UPDATED, ({ featureName, project }) => {
             featureToggleUpdateTotal.labels(featureName, project, 'n/a').inc();
         });
         eventStore.on(FEATURE_UPDATED, ({ featureName, project }) => {

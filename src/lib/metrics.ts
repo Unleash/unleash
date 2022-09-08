@@ -10,6 +10,8 @@ import {
     FEATURE_STRATEGY_ADD,
     FEATURE_STRATEGY_REMOVE,
     FEATURE_STRATEGY_UPDATE,
+    FEATURE_ENVIRONMENT_ENABLED,
+    FEATURE_ENVIRONMENT_DISABLED,
     FEATURE_UPDATED,
     CLIENT_METRICS,
     CLIENT_REGISTER,
@@ -174,6 +176,22 @@ export default class MetricsMonitor {
         );
         eventStore.on(
             FEATURE_STRATEGY_UPDATE,
+            ({ featureName, project, environment }) => {
+                featureToggleUpdateTotal
+                    .labels(featureName, project, environment)
+                    .inc();
+            },
+        );
+        eventStore.on(
+            FEATURE_ENVIRONMENT_DISABLED,
+            ({ featureName, project, environment }) => {
+                featureToggleUpdateTotal
+                    .labels(featureName, project, environment)
+                    .inc();
+            },
+        );
+        eventStore.on(
+            FEATURE_ENVIRONMENT_ENABLED,
             ({ featureName, project, environment }) => {
                 featureToggleUpdateTotal
                     .labels(featureName, project, environment)

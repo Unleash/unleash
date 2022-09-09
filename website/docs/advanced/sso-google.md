@@ -1,9 +1,9 @@
 ---
 id: sso-google
-title: "[Deprecated] How to add SSO with Google"
+title: '[Deprecated] How to add SSO with Google'
 ---
 
-> Single Sign-on via the Google Authenticator provider is deprecated. We recommend using [OpenId Connect](./sso-open-id-connect.md) instead.
+> Single Sign-on via the Google Authenticator provider is deprecated. We recommend using [OpenID Connect](./sso-open-id-connect.md) instead.
 
 ## Introduction {#introduction}
 

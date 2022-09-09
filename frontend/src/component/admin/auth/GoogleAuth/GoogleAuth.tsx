@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import {
+    Box,
     Button,
     FormControlLabel,
     Grid,
@@ -75,23 +76,26 @@ export const GoogleAuth = () => {
 
     return (
         <PageContent>
-            <Grid container style={{ marginBottom: '1rem' }}>
-                <Grid item xs={12}>
-                    <Alert severity="info">
-                        Please read the{' '}
-                        <a
-                            href="https://www.unleash-hosted.com/docs/enterprise-authentication/google"
-                            target="_blank"
-                            rel="noreferrer"
-                        >
-                            documentation
-                        </a>{' '}
-                        to learn how to integrate with Google OAuth 2.0. <br />
-                        Callback URL:{' '}
-                        <code>{uiConfig.unleashUrl}/auth/google/callback</code>
-                    </Alert>
-                </Grid>
-            </Grid>
+            <Box>
+                <Alert severity="error" sx={{ mb: 2 }}>
+                    This integration is deprecated and will be removed in next
+                    major version. Please use <strong>OpenID Connect</strong> to
+                    enable Google SSO.
+                </Alert>
+                <Alert severity="info" sx={{ mb: 3 }}>
+                    Read the{' '}
+                    <a
+                        href="https://www.unleash-hosted.com/docs/enterprise-authentication/google"
+                        target="_blank"
+                        rel="noreferrer"
+                    >
+                        documentation
+                    </a>{' '}
+                    to learn how to integrate with Google OAuth 2.0. <br />
+                    Callback URL:{' '}
+                    <code>{uiConfig.unleashUrl}/auth/google/callback</code>
+                </Alert>
+            </Box>
             <form onSubmit={onSubmit}>
                 <Grid container spacing={3} mb={2}>
                     <Grid item xs={5}>

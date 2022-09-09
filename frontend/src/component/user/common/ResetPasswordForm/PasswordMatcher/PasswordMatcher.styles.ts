@@ -3,6 +3,7 @@ import { makeStyles } from 'tss-react/mui';
 export const useStyles = makeStyles()(theme => ({
     matcherContainer: {
         position: 'relative',
+        paddingTop: theme.spacing(0.5),
     },
     matcherIcon: {
         marginRight: '5px',

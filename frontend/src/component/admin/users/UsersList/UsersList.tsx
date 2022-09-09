@@ -246,7 +246,7 @@ const UsersList = () => {
                                 color="primary"
                                 onClick={() => navigate('/admin/create-user')}
                             >
-                                New user
+                                Add new user
                             </Button>
                         </>
                     }

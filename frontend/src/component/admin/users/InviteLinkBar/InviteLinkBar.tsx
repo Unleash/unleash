@@ -1,13 +1,21 @@
-import { VFC } from 'react';
+import { useEffect, useState, VFC } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Box, Button, Typography } from '@mui/material';
-import UserInviteLink from '../ConfirmUserAdded/ConfirmUserLink/UserInviteLink/UserInviteLink';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import UserInviteLink from '../ConfirmUserAdded/ConfirmUserLink/UserInviteLink/UserInviteLink';
 
 interface IInviteLinkBarProps {}
 
 export const InviteLinkBar: VFC<IInviteLinkBarProps> = () => {
-    const inviteLink =
-        'http://localhost:4242/new-user?invite=$2a$10$Xc0iYrClzE9y2QboSPSXme3UUlGfECYvTc0rwSuKXjkLLmlFtGfRu';
+    const navigate = useNavigate();
+    const [inviteLink, setInviteLink] = useState('');
+
+    useEffect(() => {
+        const link = window.localStorage.getItem('inviteLink');
+        if (link) {
+            setInviteLink(link);
+        }
+    }, []);
 
     return (
         <Box
@@ -19,6 +27,8 @@ export const InviteLinkBar: VFC<IInviteLinkBarProps> = () => {
                 borderRadius: theme => `${theme.shape.borderRadiusLarge}px`,
                 display: 'flex',
                 flexDirection: { xs: 'column', md: 'row' },
+                border: '2px solid',
+                borderColor: 'primary.main',
             }}
         >
             <Box
@@ -34,15 +44,15 @@ export const InviteLinkBar: VFC<IInviteLinkBarProps> = () => {
                     show={
                         <>
                             <Typography variant="body2" sx={{ mb: 1 }}>
-                                You have an invite link created on 24/07/2021
+                                You have an invite link created on 09/09/2021
                                 that will expire{' '}
                                 <Typography
                                     component="span"
                                     variant="body2"
-                                    color="error"
+                                    // color="error"
                                     fontWeight="bold"
                                 >
-                                    in 14 days
+                                    in 7 days
                                 </Typography>
                             </Typography>
                             <UserInviteLink small inviteLink={inviteLink} />
@@ -66,7 +76,10 @@ export const InviteLinkBar: VFC<IInviteLinkBarProps> = () => {
                     flexGrow: 1,
                 }}
             >
-                <Button variant="outlined">
+                <Button
+                    variant="outlined"
+                    onClick={() => navigate('/admin/invite-link')}
+                >
                     {inviteLink ? 'Update' : 'Create'} invite link
                 </Button>
             </Box>

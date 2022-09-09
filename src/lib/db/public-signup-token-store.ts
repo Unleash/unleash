@@ -137,7 +137,7 @@ export class PublicSignupTokenStore implements IPublicSignupTokenStore {
                 users: [],
             };
         });
-        return toTokens(response);
+        return toTokens([response])[0];
     }
 
     destroy(): void {}
@@ -155,7 +155,7 @@ export class PublicSignupTokenStore implements IPublicSignupTokenStore {
         const row = await this.makeTokenUsersQuery()
             .where('secret', key)
             .first();
-        return toTokens(row);
+        return toTokens([row])[0];
     }
 
     async delete(secret: string): Promise<void> {

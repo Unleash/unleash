@@ -4,6 +4,7 @@ import { createServices } from '../../services';
 import getApp from '../../app';
 import supertest from 'supertest';
 import permissions from '../../../test/fixtures/permissions';
+import { RoleName } from '../../types/model';
 
 async function getSetup() {
     const stores = createStores();
@@ -40,26 +41,29 @@ beforeEach(async () => {
 afterEach(() => {
     destroy();
 });
+const expire = () => {
+    let now = new Date();
+    now.setDate(now.getDate() + 7);
+    return now.toISOString();
+};
 
 const createBody = () => ({
     name: 'some-name',
-    expiresAt: () => {
-        let now = new Date();
-        now.setDate(now.getDate() + 7);
-        return now.toISOString();
-    },
+    expiresAt: expire(),
 });
 
-test('should return the provided input arguments as part of the response', async () => {
+test('should create a token', async () => {
     expect.assertions(2);
     const appName = '123!23';
 
     stores.clientApplicationsStore.upsert({ appName });
+    stores.roleStore.create({ name: RoleName.VIEWER });
     const bodyCreate = createBody();
+
     return request
         .post('/api/admin/public-signup/token')
         .send(bodyCreate)
-        .expect(200)
+        .expect(201)
         .expect((res) => {
             const token = res.body;
             expect(token.name).toBe(bodyCreate.name);

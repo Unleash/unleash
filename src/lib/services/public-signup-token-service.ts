@@ -7,6 +7,7 @@ import { PublicSignupTokenSchema } from '../openapi/spec/public-signup-token-sch
 import { IRoleStore } from '../types/stores/role-store';
 import { IPublicSignupTokenCreate } from '../types/models/public-signup-token';
 import { PublicSignupTokenCreateSchema } from '../openapi/spec/public-signup-token-create-schema';
+import { RoleName } from '../types/model';
 
 export class PublicSignupTokenService {
     private store: IPublicSignupTokenStore;
@@ -84,12 +85,12 @@ export class PublicSignupTokenService {
         tokenCreate: PublicSignupTokenCreateSchema,
         createdBy: string,
     ): Promise<PublicSignupTokenSchema> {
-        const viewerRole = await this.roleStore.getRoleByName('Viewer');
+        const viewerRole = await this.roleStore.getRoleByName(RoleName.VIEWER);
         const newApiToken: IPublicSignupTokenCreate = {
             name: tokenCreate.name,
             expiresAt: new Date(tokenCreate.expiresAt),
             secret: this.generateSecretKey(),
-            roleId: viewerRole.id,
+            roleId: viewerRole ? viewerRole.id : -1,
             createdBy: createdBy,
         };
         const token = await this.store.insert(newApiToken);

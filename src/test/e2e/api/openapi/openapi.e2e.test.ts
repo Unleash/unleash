@@ -2,6 +2,7 @@ import { setupApp } from '../../helpers/test-helper';
 import dbInit from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import SwaggerParser from '@apidevtools/swagger-parser';
+import enforcer from 'openapi-enforcer';
 
 let app;
 let db;
@@ -52,4 +53,17 @@ test('the generated OpenAPI spec is valid', async () => {
         console.error(err);
         return false;
     }
+
+    const [openapi, error, warning] = await enforcer(body, {
+        fullResult: true,
+    });
+
+    if (error !== undefined) {
+        console.error(error);
+    }
+    if (warning !== undefined) {
+        // some of these _should_ probably be dealt with at some point.
+        console.warn(warning);
+    }
+    if (openapi !== undefined) console.log('Document is valid');
 });

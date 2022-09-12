@@ -188,7 +188,6 @@ export const schemas = {
     playgroundResponseSchema,
     projectEnvironmentSchema,
     publicSignupTokenCreateSchema,
-    publicSignupTokenUserCreateSchema,
     publicSignupTokenUpdateSchema,
     publicSignupTokensSchema,
     publicSignupTokenSchema,

@@ -60,13 +60,13 @@ export class PublicSignupController extends Controller {
         this.accessService = accessService;
         this.userService = userService;
         this.openApiService = openApiService;
-        this.logger = config.getLogger('api-token-controller.js');
+        this.logger = config.getLogger('public-signup-controller.js');
 
         this.route({
             method: 'get',
-            path: '',
+            path: '/tokens',
             handler: this.getAllPublicSignupTokens,
-            permission: NONE,
+            permission: ADMIN,
             middleware: [
                 openApiService.validPath({
                     tags: ['Public signup tokens'],
@@ -80,7 +80,7 @@ export class PublicSignupController extends Controller {
 
         this.route({
             method: 'post',
-            path: '',
+            path: '/token',
             handler: this.createPublicSignupToken,
             permission: ADMIN,
             middleware: [
@@ -99,7 +99,7 @@ export class PublicSignupController extends Controller {
 
         this.route({
             method: 'post',
-            path: '/:token/signup',
+            path: '/token/:token/signup',
             handler: this.addTokenUser,
             permission: ADMIN,
             middleware: [
@@ -116,7 +116,7 @@ export class PublicSignupController extends Controller {
 
         this.route({
             method: 'get',
-            path: '/:token',
+            path: '/token/:token',
             handler: this.getPublicSignupToken,
             permission: NONE,
             middleware: [
@@ -132,7 +132,7 @@ export class PublicSignupController extends Controller {
 
         this.route({
             method: 'put',
-            path: '/:token',
+            path: '/token/:token',
             handler: this.updatePublicSignupToken,
             permission: ADMIN,
             middleware: [
@@ -151,7 +151,7 @@ export class PublicSignupController extends Controller {
 
         this.route({
             method: 'delete',
-            path: '/:token',
+            path: '/token/:token',
             handler: this.deletePublicSignupToken,
             acceptAnyContentType: true,
             permission: ADMIN,

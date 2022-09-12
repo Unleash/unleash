@@ -24,6 +24,7 @@ import UserSplashController from './user-splash';
 import ProjectApi from './project';
 import { EnvironmentsController } from './environments';
 import ConstraintsController from './constraints';
+import { PublicSignupController } from './public-signup';
 
 class AdminApi extends Controller {
     constructor(config: IUnleashConfig, services: IUnleashServices) {
@@ -100,6 +101,10 @@ class AdminApi extends Controller {
         this.app.use(
             '/constraints',
             new ConstraintsController(config, services).router,
+        );
+        this.app.use(
+            '/public-signup-token',
+            new PublicSignupController(config, services).router,
         );
     }
 }

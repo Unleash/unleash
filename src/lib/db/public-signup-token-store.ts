@@ -17,7 +17,7 @@ interface ITokenInsert {
     name: string;
     expires_at: Date;
     created_at: Date;
-    createdBy?: string;
+    created_by?: string;
     role_id: number;
 }
 
@@ -30,17 +30,22 @@ interface ITokenUserRow {
     user_id: number;
     created_at: Date;
 }
-//TODO: FIXME add users
 const tokenRowReducer = (acc, tokenRow) => {
+    const { userId, name, ...token } = tokenRow;
     if (!acc[tokenRow.secret]) {
         acc[tokenRow.secret] = {
-            secret: tokenRow.secret,
-            name: tokenRow.name,
-            expiresAt: tokenRow.expires_at,
-            createdAt: tokenRow.created_at,
-            createdBy: tokenRow.created_by,
-            roleId: tokenRow.role_id,
+            secret: token.secret,
+            name: token.name,
+            expiresAt: token.expires_at,
+            createdAt: token.created_at,
+            createdBy: token.created_by,
+            roleId: token.role_id,
+            users: [],
         };
+    }
+    const currentToken = acc[tokenRow.secret];
+    if (userId) {
+        currentToken.users.push({ userId, name });
     }
     return acc;
 };
@@ -88,6 +93,7 @@ export class PublicSignupTokenStore implements IPublicSignupTokenStore {
                 'tokens.secret',
                 'token_project_users.secret',
             )
+            .leftJoin(`users`, 'token_project_users.user_id', 'users.id')
             .select(
                 'tokens.secret',
                 'tokens.name',
@@ -96,6 +102,7 @@ export class PublicSignupTokenStore implements IPublicSignupTokenStore {
                 'tokens.created_by',
                 'tokens.role_id',
                 'token_project_users.user_id',
+                'users.name',
             );
     }
 

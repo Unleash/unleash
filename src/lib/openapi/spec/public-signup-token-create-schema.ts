@@ -1,7 +1,7 @@
 import { FromSchema } from 'json-schema-to-ts';
 
 export const publicSignupTokenCreateSchema = {
-    $id: '#/components/schemas/publicSignupTokenSchema',
+    $id: '#/components/schemas/publicSignupTokenCreateSchema',
     type: 'object',
     additionalProperties: false,
     required: ['name', 'expiresAt'],

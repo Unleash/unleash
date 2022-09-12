@@ -175,19 +175,19 @@ module.exports = {
                         },
                         // NOTE: activate this when we're ready to integrate generated OpenAPI docs
                         //
-                        // {
-                        //     label: 'OpenAPI docs',
-                        //     collapsed: true,
-                        //     type: 'category',
-                        //     link: {
-                        //         title: 'Unleash Server APIs',
-                        //         type: 'generated-index',
-                        //         description:
-                        //             'Generated API docs based on the Unleash OpenAPI schema. For the time being, some additional info can also be found in the older API docs.',
-                        //         slug: '/reference/apis/unleash',
-                        //     },
-                        //     items: require('./docs/reference/apis/unleash/sidebar.js'),
-                        // },
+                        {
+                            label: 'OpenAPI docs',
+                            collapsed: true,
+                            type: 'category',
+                            link: {
+                                title: 'Unleash Server APIs',
+                                type: 'generated-index',
+                                description:
+                                    'Generated API docs based on the Unleash OpenAPI schema. For the time being, some additional info can also be found in the older API docs.',
+                                slug: '/reference/apis/unleash',
+                            },
+                            items: require('./docs/reference/apis/unleash/sidebar.js'),
+                        },
                     ],
                 },
                 {

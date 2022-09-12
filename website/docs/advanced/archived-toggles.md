@@ -18,3 +18,5 @@ You can find archived toggles in the toggle archive. The archive is accessible f
 If you want to re-use a feature toggle that you previously archived, you can revive in from the feature toggle archive. Click the "revive icon" to revive the toggle. Revived toggles will be in the disabled state when you re-enable them.
 
 ![A list of archived toggles. Each toggle displays its name and project it belongs to. Each toggle also has a \"revive\" button, as highlighted by a red arrow.](/img/archive-toggle-revive.png 'Reviving a Feature Toggle').
+
+@Thomas, maybe to explain also that now we can delete a feature toggle, and what are the consequences [i can prepare the screens, you can just put some screenshots and i will add the final ones] 

@@ -40,7 +40,7 @@ Note that in order to enable an environment for a feature toggle, you must first
 
 ### Step 1: Enable new environments for your Project
 
-Navigate to the project and choose the “environments” tab.
+Navigate to the project and choose the “Environments” tab.
 
 ![A project view showing the Environments tab. The UI displays three environment toggles: "default", "development", and "production". The "default" environment is enabled.](/img/environments_configure.png 'Configure environment for this project')
 
@@ -51,7 +51,7 @@ From the “feature toggle view” you will now be able to configure activation 
 ![A feature toggle strategies tab showing three different environments, of which one is active. The UI displays data about the currently selected environment, ](/img/environments_strategies.png 'Add strategy configuration per environment')
 
 ### Step 3: Create environment specific API keys
-
+@Thomas - please double-check if the image si ok with the  text bellow
 In order for the SDK to download the feature toggle configuration for the correct environment you will need to create an API token for a defined environment.
 
 ![An API key creation form. The form's fields are "username", "token type", "project", and, crucially, "environment". The development environment is selected.](/img/environments_api_keys.png 'Create Environment specific API Keys')

@@ -22,7 +22,7 @@ Before you can connect your application to Unleash you need a Unleash server. Yo
 ### System Overview {#system-overview}
 
 ![A visual overview of an Unleash system as described in the following paragraph.](/img/unleash-architecture.svg 'System Overview')
-
+@Thomas - we need to review the text here, i updated the image (new: the orange text and one more option/setup)
 - **Unleash API** - The service holding all feature toggles and their configurations. Configurations declare which activation strategies to use and which parameters they should get. [API documentation](/api)
 - **Unleash Admin UI** - The dashboard used to manage feature toggles, define new strategies, look at metrics, etc. [Create your first feature toggle](user_guide/create-feature-toggle.md)
 - **Unleash SDK** - Used by clients to check if a feature is enabled or disabled. The SDK also collects metrics and sends them to the Unleash API. [See all our SDKs](sdks/index.md)

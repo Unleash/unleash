@@ -13,10 +13,10 @@ This guide shows you how to add [strategy constraints](../advanced/strategy-cons
 ## Prerequisites
 
 You'll need to have an existing feature toggle with a defined strategy to add a constraint. The rest of this guide assumes you have a specific strategy that you're working with.
-
+@Thomas you need to review all the text from bellow - maybe we need to add one more image to show how that to get to these screens you need to edit strategy?
 ## Step 1: Open the constraints menu {#step-1}
 
-Every strategy will have button labeled "add constraints" when viewed in the admin UI. Interact with this to open the constraints menu.
+When you edit a strategy you will see the button labeled "Add custom constraint". Pressing the button you will see the options to create a constraint.
 
 ![A feature toggle strategy view showing a button labeled with add constraints.](/img/add-constraint.png)
 
@@ -24,7 +24,9 @@ Every strategy will have button labeled "add constraints" when viewed in the adm
 
 Refer to [the _constraint structure_ section of the strategy constraints reference](../advanced/strategy-constraints.md#constraint-structure) for a thorough explanation of the fields.
 
-From the "Context Field" dropdown, select the context field you would like to constrain the strategy on. @Thomas we need to update the text here
+Step 1: From the "Context Field" dropdown, select the context field you would like to constrain the strategy on and choose the operator you need.
+Step 2: Based on the context field you selected above you can now define the values for this constraint
+Step 3: You need to save this constraint before to save the strategy 
 
 ![A strategy constraint form with a constraint set to "region". The "values" input is a dropdown menu containing the options "Africa", "Asia", "Europe", and "North America", as defined in the preceding paragraph.](/img/constraints-add-to-strategy.png)
 
@@ -32,8 +34,8 @@ From the "Context Field" dropdown, select the context field you would like to co
 
 To add additional constraints:
 
-1. Repeat [step one](#step-1 'step 1: open the constraints menu') to open the constraints menu.
-2. Use the "Add constraint" button to add a new constraint.
+1. Repeat [step one](#step-1 'step 1: open the constraints menu') to edit a strategy and to see the option to add a custom constraint.
+2. Use the "Add custom constraint" button to add a new constraint.
 
    ![The add constraint modal menu with an existing constraint. There is a button labeled "add constraint" that is being highlighted by an arrow.](/img/constraints-add-additional.png)
 
@@ -43,5 +45,4 @@ To add additional constraints:
 
 You can update any existing constraint by doing one of the following:
 
-- Open the "add constraints" menu and modify existing constraints.
-- Using the constraint's "edit" button to bring up the constraints menu.
+- Edit the strategy that has the constraint you want to update and then using the constraint's "edit" button you see all the options availabe to edit that constraint.

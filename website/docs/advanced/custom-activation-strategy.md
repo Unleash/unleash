@@ -26,7 +26,7 @@ The strategy **name** is the only required parameter, but adding a good **descri
 ### Parameters
 
 ![The strategy configuration screen for the custom "TimeStamp" strategy. The "enableAfter" field says "2021-12-25 00:00".](/img/timestamp_use_strategy.png)
-
+@Thomas - maybe this image to have it's own title, how to select the custom strategy that you just created and the text bellow with parameters to be connected with the image from bellow, or to move that image from bellow up here
 Parameters let you provide arguments to your strategy that it can access for evaluation. When creating a strategy, each parameter can be either required or optional. This marking is to help the user understand what they need to fill out; they can still save the strategy without filling out a required field.
 
 Each parameter consists of three parts:

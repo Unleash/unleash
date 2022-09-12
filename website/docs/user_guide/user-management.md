@@ -11,10 +11,10 @@ You can add new users to Unleash in `Admin > Users`.
     ![A visual representation of the current step: the Unleash Admin UI with the steps highlighted.](/img/user_admin_list_button.png)
 
 
-2. To add a new user to your Unleash instance simply click the "Add user" button:
+2. To add a new user to your Unleash instance simply click the "New user" button:
     ![The Unleash users page with the 'add new user' button being pointed to.](/img/user_admin-add-user.jpg)
 
-3. Fill out the required fields about the user in the modal. You need to choose which role the new user should have on the "root level". E.g. giving the user an Editor role will allow the user to create a new project.
+3. Fill out the required fields about the user in the create user page. You need to choose which role the new user should have on the "root level". E.g. giving the user an Editor role will allow the user to create a new project.
 
     ![A form titled "Add team member". It has the fields "full name", "email", and "role". The role field is a radio button set with roles called "admin", "editor", and "viewer".](/img/user_admin_add_user_modal.png)
 

@@ -15,8 +15,8 @@ A toggle being (potentially) stale, does not affect how it performs in your appl
 
 
 ## The technical debt dashboard
-
-In order to assist with removing unused feature toggles, Unleash provides a technical debt dashboard in the management-ui. You can find it by clicking on “Advanced” in the top-line menu then choose _Reporting_ in the  dropdown menu.
+@Thomas - is this technical debt dashboard still the correct naming? (wouldn't make more sens to updat it Health? in the entire page)
+In order to assist with removing unused feature toggles, Unleash provides a technical debt dashboard in the management-ui. In each project navigate to the "Health" tab to see it.
 
 ![Three UI elements describing the health rating of the project. The first card has info on the project, including its name. The second is the \"report card\", containing the project's overall health rating, a toggle report, and potential actions. The last card is a list of all the project's toggles with data on when it was last seen, when it was created, when it expired, its status and a report.](/img/reporting.png)
 

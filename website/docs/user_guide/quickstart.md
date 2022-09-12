@@ -260,6 +260,7 @@ Follow steps outlined in the [Run Unleash with Docker](#run-unleash-with-docker)
    ![The Unleash UI showing a dropdown menu under the Configure menu entry. The dropdown menu's API Access option is highlighted and you're told to navigate there.](/img/api_access_navigation.png 'Navigate to the API access page.')
 
    Next, create an API key with these details
+   @Thomas - token type needs to be updated based on the new screen 
 
    - **name:** proxy-key (this can be whatever you want)
    - **token type:** client

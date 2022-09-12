@@ -3169,18 +3169,16 @@ exports[`should serve the OpenAPI spec 1`] = `
         "additionalProperties": false,
         "properties": {
           "tokens": {
-            "anyOf": [
-              {
-                "items": {
+            "items": {
+              "anyOf": [
+                {
                   "$ref": "#/components/schemas/edgeTokenSchema",
                 },
-              },
-              {
-                "items": {
+                {
                   "type": "string",
                 },
-              },
-            ],
+              ],
+            },
             "type": "array",
           },
         },

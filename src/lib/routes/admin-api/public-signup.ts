@@ -80,7 +80,7 @@ export class PublicSignupController extends Controller {
 
         this.route({
             method: 'post',
-            path: '/token',
+            path: '/tokens',
             handler: this.createPublicSignupToken,
             permission: ADMIN,
             middleware: [
@@ -99,7 +99,7 @@ export class PublicSignupController extends Controller {
 
         this.route({
             method: 'post',
-            path: '/token/:token/signup',
+            path: '/tokens/:token/signup',
             handler: this.addTokenUser,
             permission: NONE,
             middleware: [
@@ -116,7 +116,7 @@ export class PublicSignupController extends Controller {
 
         this.route({
             method: 'get',
-            path: '/token/:token',
+            path: '/tokens/:token',
             handler: this.getPublicSignupToken,
             permission: NONE,
             middleware: [
@@ -132,7 +132,7 @@ export class PublicSignupController extends Controller {
 
         this.route({
             method: 'put',
-            path: '/token/:token',
+            path: '/tokens/:token',
             handler: this.updatePublicSignupToken,
             permission: ADMIN,
             middleware: [
@@ -151,7 +151,7 @@ export class PublicSignupController extends Controller {
 
         this.route({
             method: 'delete',
-            path: '/token/:token',
+            path: '/tokens/:token',
             handler: this.deletePublicSignupToken,
             acceptAnyContentType: true,
             permission: ADMIN,

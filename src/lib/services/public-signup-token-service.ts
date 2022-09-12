@@ -8,11 +8,14 @@ import { IRoleStore } from '../types/stores/role-store';
 import { IPublicSignupTokenCreate } from '../types/models/public-signup-token';
 import { PublicSignupTokenCreateSchema } from '../openapi/spec/public-signup-token-create-schema';
 import { RoleName } from '../types/model';
+import { IEventStore } from '../types/stores/event-store';
 
 export class PublicSignupTokenService {
     private store: IPublicSignupTokenStore;
 
     private roleStore: IRoleStore;
+
+    private eventStore: IEventStore;
 
     private logger: Logger;
 
@@ -24,11 +27,16 @@ export class PublicSignupTokenService {
         {
             publicSignupTokenStore,
             roleStore,
-        }: Pick<IUnleashStores, 'publicSignupTokenStore' | 'roleStore'>,
+            eventStore,
+        }: Pick<
+            IUnleashStores,
+            'publicSignupTokenStore' | 'roleStore' | 'eventStore'
+        >,
         config: Pick<IUnleashConfig, 'getLogger' | 'authentication'>,
     ) {
         this.store = publicSignupTokenStore;
         this.roleStore = roleStore;
+        this.eventStore = eventStore;
         this.logger = config.getLogger(
             '/services/public-signup-token-service.ts',
         );
@@ -40,12 +48,7 @@ export class PublicSignupTokenService {
     }
 
     async fetchActiveTokens(): Promise<void> {
-        try {
-            this.activeTokens = await this.getAllActiveTokens();
-        } finally {
-            // eslint-disable-next-line no-unsafe-finally
-            return;
-        }
+        this.activeTokens = await this.getAllActiveTokens();
     }
 
     public async get(secret: string): Promise<PublicSignupTokenSchema> {

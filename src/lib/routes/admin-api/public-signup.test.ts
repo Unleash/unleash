@@ -73,28 +73,7 @@ describe('Public Signup API', () => {
     });
 
     test('should create a token', async () => {
-        expect.assertions(2);
-        const appName = '123!23';
-
-        stores.clientApplicationsStore.upsert({ appName });
-
-        const bodyCreate = createBody();
-
-        return request
-            .post('/api/admin/public-signup/token')
-            .send(bodyCreate)
-            .expect(201)
-            .expect((res) => {
-                const token = res.body;
-                expect(token.name).toBe(bodyCreate.name);
-                expect(token.expiresAt).toBe(
-                    bodyCreate.expiresAt.toISOString(),
-                );
-            });
-    });
-
-    test('should create a token', async () => {
-        expect.assertions(2);
+        expect.assertions(3);
         const appName = '123!23';
 
         stores.clientApplicationsStore.upsert({ appName });
@@ -102,12 +81,13 @@ describe('Public Signup API', () => {
         const bodyCreate = createBody();
 
         return request
-            .post('/api/admin/public-signup/token')
+            .post('/api/admin/invite-link/tokens')
             .send(bodyCreate)
             .expect(201)
             .expect((res) => {
                 const token = res.body;
                 expect(token.name).toBe(bodyCreate.name);
+                expect(token.secret).not.toBeNull();
                 expect(token.expiresAt).toBe(
                     bodyCreate.expiresAt.toISOString(),
                 );
@@ -125,7 +105,7 @@ describe('Public Signup API', () => {
         });
 
         return request
-            .get('/api/admin/public-signup/tokens')
+            .get('/api/admin/invite-link/tokens')
             .expect(200)
             .expect((res) => {
                 const { tokens } = res.body;
@@ -144,7 +124,7 @@ describe('Public Signup API', () => {
         });
 
         return request
-            .get('/api/admin/public-signup/token/some-secret')
+            .get('/api/admin/invite-link/tokens/some-secret')
             .expect(200)
             .expect((res) => {
                 const token = res.body;
@@ -172,7 +152,7 @@ describe('Public Signup API', () => {
         };
 
         return request
-            .post('/api/admin/public-signup/token/some-secret/signup')
+            .post('/api/admin/invite-link/tokens/some-secret/signup')
             .send(user)
             .expect(200)
             .expect(async () => {

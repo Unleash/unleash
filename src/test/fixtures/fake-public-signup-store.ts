@@ -28,6 +28,12 @@ export default class FakePublicSignupStore implements IPublicSignupTokenStore {
         return Promise.resolve(this.tokens);
     }
 
+    async create(
+        newToken: IPublicSignupTokenCreate,
+    ): Promise<PublicSignupTokenSchema> {
+        return this.insert(newToken);
+    }
+
     async insert(
         newToken: IPublicSignupTokenCreate,
     ): Promise<PublicSignupTokenSchema> {

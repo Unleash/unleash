@@ -13,14 +13,13 @@ Unleash also has a concept of _potentially_ stale toggles. These are toggles tha
 
 A toggle being (potentially) stale, does not affect how it performs in your application; it's only there to make it easier for you to manage your toggles.
 
-
 ## The technical debt dashboard
-@Thomas - is this technical debt dashboard still the correct naming? (wouldn't make more sens to updat it Health? in the entire page)
-In order to assist with removing unused feature toggles, Unleash provides a technical debt dashboard in the management-ui. In each project navigate to the "Health" tab to see it.
 
-![Three UI elements describing the health rating of the project. The first card has info on the project, including its name. The second is the \"report card\", containing the project's overall health rating, a toggle report, and potential actions. The last card is a list of all the project's toggles with data on when it was last seen, when it was created, when it expired, its status and a report.](/img/reporting.png)
+In order to assist with removing unused feature toggles, Unleash provides project health dashboards for each project. The health dashboard is listed as one of a project's tabs.
 
-The dasboard includes a health report card, and a list of toggles that can be filtrated on different parameters.
+![Three UI elements describing the health rating of the project. The first card has info on the project, including its name. The second is the "report card", containing the project's overall health rating, a toggle report, and potential actions. The last card is a list of all the project's toggles with data on when it was last seen, when it was created, when it expired, its status and a report.](/img/reporting.png)
+
+The dashboard includes a health report card, and a list of toggles that can be filtered on different parameters.
 
 ### Report card {#report-card}
 

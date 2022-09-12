@@ -56,8 +56,8 @@ export default class FakeRoleStore implements IRoleStore {
         throw new Error('Method not implemented.');
     }
 
-    getRootRoles(): Promise<IRole[]> {
-        throw new Error('Method not implemented.');
+    async getRootRoles(): Promise<IRole[]> {
+        return this.roles;
     }
 
     getRootRoleForAllUsers(): Promise<IUserRole[]> {

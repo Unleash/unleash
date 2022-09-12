@@ -101,7 +101,7 @@ export class PublicSignupController extends Controller {
             method: 'post',
             path: '/token/:token/signup',
             handler: this.addTokenUser,
-            permission: ADMIN,
+            permission: NONE,
             middleware: [
                 openApiService.validPath({
                     tags: ['Public signup tokens'],

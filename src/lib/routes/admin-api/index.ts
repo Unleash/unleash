@@ -103,7 +103,7 @@ class AdminApi extends Controller {
             new ConstraintsController(config, services).router,
         );
         this.app.use(
-            '/public-signup-token',
+            '/public-signup',
             new PublicSignupController(config, services).router,
         );
     }

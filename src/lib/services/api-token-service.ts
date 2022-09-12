@@ -171,6 +171,18 @@ export class ApiTokenService {
         return this.insertNewApiToken(createNewToken);
     }
 
+    // TODO: Remove this service method after embedded proxy has been released in
+    // 4.16.0
+    public async createMigratedProxyApiToken(
+        newToken: Omit<IApiTokenCreate, 'secret'>,
+    ): Promise<IApiToken> {
+        validateApiToken(newToken);
+
+        const secret = this.generateSecretKey(newToken);
+        const createNewToken = { ...newToken, secret };
+        return this.insertNewApiToken(createNewToken);
+    }
+
     private async insertNewApiToken(
         newApiToken: IApiTokenCreate,
     ): Promise<IApiToken> {

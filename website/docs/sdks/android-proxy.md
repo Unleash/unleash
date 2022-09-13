@@ -7,7 +7,7 @@ In this guide we'll explain how to use feature toggles in an Android application
 
 
 :::note
-The Android proxy SDK requires the Unleash Proxy or _Unleash v4.16 or later_. See [Direct client-side API access](/topics/frontend-api) guide for simple setup. For large-scale deployments refer to the [proxy documentation](/sdks/unleash-proxy) for how to set it up and [how to configure the proxy secrets](/sdks/unleash-proxy#configuration-variables).
+The Android proxy SDK requires the Unleash Proxy or _Unleash v4.16 or later_. Refer to the [direct client-side API access](/reference/frontend-api) guide for simple setup. For large-scale, deployments refer to the [proxy documentation](/sdks/unleash-proxy) for how to set it up and [how to configure the proxy secrets](/sdks/unleash-proxy#configuration-variables).
 :::
 
 ## How to use the Android Proxy SDK

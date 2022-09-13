@@ -3,23 +3,23 @@ id: proxy-javascript
 title: JavaScript Proxy SDK
 ---
 
-In this guide we explain how to use feature toggles in a Single Page App via [Unleash Proxy](/sdks/unleash-proxy) or directly to Unleash (since _v4.16_). You can also checkout the source code for the [JavaScript Proxy SDK](https://github.com/unleash/unleash-proxy-client-js).
+This guide shows you how to use feature toggles in a single-page app with the [Unleash Proxy](/sdks/unleash-proxy) and the [direct access API](../reference/frontend-api). You can also check out the source code for the [JavaScript Proxy SDK](https://github.com/unleash/unleash-proxy-client-js) on GitHub for more details around the SDK.
 
 ## Introduction {#introduction}
 
-For single-page apps we have a tiny proxy-client in JavaScript, without any external dependencies, except from browser APIs. This client will store toggles relevant for the current user in local-storage and synchronize with the Unleash in the background. This means we can bootstrap the toggles for a specific use the next time the user visits the web-page.
+The JavaScript proxy client is a tiny Unleash client written in JavaScript without any external dependencies (except from browser APIs). This client stores toggles relevant for the current user in `localStorage` and synchronizes with Unleash (the proxy _or_ the direct access API) in the background. Because toggles are stored in the user's browser, the client  can use them to bootstrap itself the next time the user visits the same web page.
 
 > We are looking in to also [supporting react-native](https://github.com/Unleash/unleash/issues/785) with this SDK. Reach out if you want to help us validate the implementation.
 
 ## How to use the JavaScript Proxy SDK
 
-### Step 1: Install
+## Step 1: Install
 
 ```shell npm2yarn
 npm install unleash-proxy-client
 ```
 
-### Step 2: Initialize the SDK
+## Step 2: Initialize the SDK
 
 ```js
 import { UnleashClient } from 'unleash-proxy-client';
@@ -30,18 +30,18 @@ const unleash = new UnleashClient({
   appName: 'my-webapp',
 });
 
-// Used to set the context fields, shared with Unleash Proxy
+// Use `updateContext` to set Unleash context fields.
 unleash.updateContext({ userId: '1233' });
 
 // Start the background polling
 unleash.start();
 ```
 
-#### Option A: With Unleash Proxy
+### Option A: Connecting to the Unleash proxy
 
 You need to have an Unleash Proxy server running. Fill `url` and a proxy-specific `clientKey` in order to connect. For more on how to set up client keys, [consult the Unleash Proxy docs](unleash-proxy.md#configuration-variables).
 
-#### Option B: Directly to Unleash (since _Unleash v4.16_)
+### Option B: Connecting directly to Unleash
 
 Use the url to your Unleash instance's direct access API (<unleash-url>/api/frontend) as the `url` parameter. For the `clientKey` parameter, use a `FRONTEND` token generated from your Unleash instance. Refer to the 
 [_how to create API tokens_](/user_guide/api-token) guide for the necessary steps. 

@@ -25,7 +25,7 @@ Server-side clients run on your server and communicate directly with your Unleas
 
 ### Client-side SDKs
 
-Before using frontend SDKs we recommend setting up [Unleash Proxy](unleash-proxy.md) for security, user privacy and performance reasons.
+Before using front-end SDKs, we recommend setting up the [Unleash Proxy](unleash-proxy.md) for security, user privacy, and performance reasons.
 
 :::info Direct connection
 

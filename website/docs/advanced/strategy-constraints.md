@@ -191,6 +191,6 @@ After Unleash 4.9, we updated the [Unleash client specification](https://github.
 
 ## [Deprecated]: Constrain on a specific environment {#constrain-on-a-specific-environment}
 
-Before Unleash 4.3, using strategy constraints was the recommended way to have different toggle configurations per environment. Now that Unleash has environment support built-in, we no longer recommend you use strategy constraints for this. Instead, see the [environments documentation](../user_guide/environments).
+Before Unleash 4.3, using strategy constraints was the recommended way to have different toggle configurations per environment. Now that Unleash has environment support built in, we no longer recommend you use strategy constraints for this. Instead, see the [environments documentation](../user_guide/environments).
 
 [^1]: `userScore` is not a default Unleash field, but can be added as a [custom context field](../user_guide/unleash_context#custom-context-fields).

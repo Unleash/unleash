@@ -3,7 +3,7 @@ id: proxy-javascript
 title: JavaScript Proxy SDK
 ---
 
-This guide shows you how to use feature toggles in a single-page app with the [Unleash Proxy](/sdks/unleash-proxy) and the [Unleash front-end API](../reference/frontend-api). You can also check out the source code for the [JavaScript Proxy SDK](https://github.com/unleash/unleash-proxy-client-js) on GitHub for more details around the SDK.
+This guide shows you how to use feature toggles in a single-page app with the [Unleash Proxy](/sdks/unleash-proxy) and the [Unleash front-end API](../reference/front-end-api). You can also check out the source code for the [JavaScript Proxy SDK](https://github.com/unleash/unleash-proxy-client-js) on GitHub for more details around the SDK.
 
 ## Introduction {#introduction}
 
@@ -51,7 +51,7 @@ Add the proxy's URL and a [proxy client key](../reference/api-tokens-and-client-
 
 Use the url to your Unleash instance's front-end API (`<unleash-url>/api/frontend`) as the `url` parameter. For the `clientKey` parameter, use a `FRONTEND` token generated from your Unleash instance. Refer to the [_how to create API tokens_](/user_guide/api-token) guide for the necessary steps.
 
-You might also need to set up cross-origin resource sharing (CORS) for your instance. Visit the [CORS section of the front-end API guide](../reference/frontend-api.mdx#cors) for more information on setting up CORS.
+You might also need to set up cross-origin resource sharing (CORS) for your instance. Visit the [CORS section of the front-end API guide](../reference/front-end-api.md#cors) for more information on setting up CORS.
 
 ### Step 3: Check if feature toggle is enabled
 

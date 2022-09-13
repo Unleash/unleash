@@ -289,7 +289,7 @@ module.exports = {
                         'reference/feature-toggles',
                         'advanced/feature_toggle_types',
                         'advanced/toggle_variants',
-                        'reference/frontend-api',
+                        'reference/front-end-api',
                         'reference/playground',
                         'user_guide/projects',
                         'user_guide/rbac',

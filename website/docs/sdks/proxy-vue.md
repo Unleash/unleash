@@ -8,7 +8,7 @@ title: Vue Proxy SDK
 </div>
 <br/>
 
-This library can be used with the [Unleash Proxy](https://github.com/Unleash/unleash-proxy) or with the [Unleash front-end API](../reference/frontend-api). It is _not_ compatible with the regular Unleash client API.
+This library can be used with the [Unleash Proxy](https://github.com/Unleash/unleash-proxy) or with the [Unleash front-end API](../reference/front-end-api). It is _not_ compatible with the regular Unleash client API.
 
 For more detailed information, check out the [Vue Proxy SDK on GitHub](https://github.com/Unleash/proxy-client-vue).
 

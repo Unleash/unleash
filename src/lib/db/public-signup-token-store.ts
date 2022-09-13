@@ -10,7 +10,7 @@ import { UserSchema } from '../openapi/spec/user-schema';
 import { IPublicSignupTokenCreate } from '../types/models/public-signup-token';
 
 const TABLE = 'public_signup_tokens';
-const TOKEN_USERS_TABLE = 'public_signup_token_users';
+const TOKEN_USERS_TABLE = 'public_signup_token_user';
 
 interface ITokenInsert {
     secret: string;

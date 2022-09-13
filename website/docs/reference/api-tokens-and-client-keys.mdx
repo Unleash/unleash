@@ -18,12 +18,24 @@ This section describes what API tokens are. For information on how to create the
 
 :::
 
-Use API tokens to connect to the Unleash server API. API tokens come in two distinct types:
+Use API tokens to connect to the Unleash server API. API tokens come in three distinct types:
 
 -   [Admin tokens](#admin-tokens)
 -   [Client tokens](#client-tokens)
+-   [Front-end tokens](#front-end-tokens)
 
-Both types use [the same format](#format) but have different intended uses. API tokens are considered to be _secrets_ and should _not_ be exposed to end users.
+All types use [the same format](#format) but have different intended uses. Admin and client tokens are _secrets_ and should _not_ be exposed to end users. Front-end tokens, on the other hand, are not secret.
+
+### The parts of an API token
+
+An API token contains the following pieces of information:
+
+| Name | Description |
+| --- | --- |
+| Token name (sometimes called "username") | The token's name. Names or **not** required to be unique. |
+| Type | What kind of token it is: admin, client, or front-end. |
+| Projects | What projects a token has access to. |
+| Environment | What environment the token has access to. |
 
 ### Admin tokens
 

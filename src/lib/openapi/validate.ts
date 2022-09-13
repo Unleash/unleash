@@ -14,7 +14,7 @@ const ajv = new Ajv({
     ),
 });
 
-addFormats(ajv, ['date-time']);
+addFormats(ajv, ['date-time', 'uri', 'uri-reference']);
 
 // example was superseded by examples in openapi 3.1, but we're still on 3.0, so
 // let's add it back in!

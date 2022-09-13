@@ -19,7 +19,10 @@ import { createApiToken } from '../../schema/api-token-schema';
 import { OpenApiService } from '../../services/openapi-service';
 import { IUnleashServices } from '../../types';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
-import { createResponseSchema } from '../../openapi/util/create-response-schema';
+import {
+    createResponseSchema,
+    resourceCreatedResponseSchema,
+} from '../../openapi/util/create-response-schema';
 import {
     apiTokensSchema,
     ApiTokensSchema,
@@ -96,7 +99,7 @@ export class ApiTokenController extends Controller {
                     operationId: 'createApiToken',
                     requestBody: createRequestSchema('createApiTokenSchema'),
                     responses: {
-                        201: createResponseSchema('apiTokenSchema'),
+                        201: resourceCreatedResponseSchema('apiTokenSchema'),
                     },
                 }),
             ],

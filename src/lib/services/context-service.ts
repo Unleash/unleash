@@ -55,18 +55,20 @@ class ContextService {
     async createContextField(
         value: IContextFieldDto,
         userName: string,
-    ): Promise<void> {
+    ): Promise<IContextField> {
         // validations
         await this.validateUniqueName(value);
         const contextField = await contextSchema.validateAsync(value);
 
         // creations
-        await this.contextFieldStore.create(value);
+        const createdField = await this.contextFieldStore.create(value);
         await this.eventStore.store({
             type: CONTEXT_FIELD_CREATED,
             createdBy: userName,
             data: contextField,
         });
+
+        return createdField;
     }
 
     async updateContextField(

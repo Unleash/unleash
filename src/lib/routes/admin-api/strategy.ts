@@ -15,7 +15,10 @@ import { IAuthRequest } from '../unleash-types';
 import { OpenApiService } from '../../services/openapi-service';
 import { emptyResponse } from '../../openapi/util/standard-responses';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
-import { createResponseSchema } from '../../openapi/util/create-response-schema';
+import {
+    createResponseSchema,
+    resourceCreatedResponseSchema,
+} from '../../openapi/util/create-response-schema';
 import {
     strategySchema,
     StrategySchema,
@@ -102,7 +105,9 @@ class StrategyController extends Controller {
                     tags: ['Strategies'],
                     operationId: 'createStrategy',
                     requestBody: createRequestSchema('upsertStrategySchema'),
-                    responses: { 201: emptyResponse },
+                    responses: {
+                        201: resourceCreatedResponseSchema('strategySchema'),
+                    },
                 }),
             ],
         });
@@ -193,12 +198,18 @@ class StrategyController extends Controller {
 
     async createStrategy(
         req: IAuthRequest<unknown, UpsertStrategySchema>,
-        res: Response<void>,
+        res: Response<StrategySchema>,
     ): Promise<void> {
         const userName = extractUsername(req);
 
-        await this.strategyService.createStrategy(req.body, userName);
-        res.status(201).end();
+        const strategy = await this.strategyService.createStrategy(
+            req.body,
+            userName,
+        );
+        res.header('location', `strategies/${strategy.name}`)
+            .status(201)
+            .json(strategy)
+            .end();
     }
 
     async updateStrategy(

@@ -52,7 +52,7 @@ export default class TagService {
         return data;
     }
 
-    async createTag(tag: ITag, userName: string): Promise<void> {
+    async createTag(tag: ITag, userName: string): Promise<ITag> {
         const data = await this.validate(tag);
         await this.tagStore.createTag(data);
         await this.eventStore.store({
@@ -60,6 +60,8 @@ export default class TagService {
             createdBy: userName,
             data,
         });
+
+        return data;
     }
 
     async deleteTag(tag: ITag, userName: string): Promise<void> {

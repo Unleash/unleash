@@ -25,7 +25,10 @@ import { TagsSchema } from '../../openapi/spec/tags-schema';
 import { serializeDates } from '../../types/serialize-dates';
 import { OpenApiService } from '../../services/openapi-service';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
-import { createResponseSchema } from '../../openapi/util/create-response-schema';
+import {
+    createResponseSchema,
+    resourceCreatedResponseSchema,
+} from '../../openapi/util/create-response-schema';
 import { emptyResponse } from '../../openapi/util/standard-responses';
 
 const version = 1;
@@ -123,7 +126,9 @@ class FeatureController extends Controller {
                     tags: ['Features'],
                     operationId: 'addTag',
                     requestBody: createRequestSchema('tagSchema'),
-                    responses: { 201: createResponseSchema('tagSchema') },
+                    responses: {
+                        201: resourceCreatedResponseSchema('tagSchema'),
+                    },
                 }),
             ],
         });
@@ -221,7 +226,7 @@ class FeatureController extends Controller {
             req.body,
             userName,
         );
-        res.status(201).json(tag);
+        res.status(201).header('location', `${featureName}/tags`).json(tag);
     }
 
     // TODO

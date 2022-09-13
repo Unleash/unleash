@@ -5,79 +5,35 @@ title: How to create API Tokens
 
 import newTokenImage from '/img/admin_create_token_form.png';
 
-In order to connect to Unleash clients will need an API token to grant access. Client SDK will need a token with "client privileges", which allows them to fetch feature toggle configuration and post usage metrics back.
+::: info Permissions
 
-## Create API Token {#create-api-token}
+Creating API tokens requires you to have the `CREATE_API_TOKEN` permission. This means that, as of now, **only instance admins can create API tokens.**
 
-### Permissions {#permissions}
+All users can see tokens with `CLIENT` level access, but only instance admins can see tokens with `ADMIN` level access.
 
-<!-- TODO: update? -->
-
-To create an API token you'll need the CREATE_API_TOKEN permission level, at the time of writing (v4.0.0), this level is only set for instance admins.
-
-Eventually one should be able to customize which users has access to create tokens.
-
-All users are able to see tokens with CLIENT level access, but only instance admins can see tokens with ADMIN level access.
-
-### Step-by-step {#step-by-step}
-
-#### 1. Select `Configure` and `API access` from the main menu {#step-1}
-
-This page is accessible from `/admin/api` url. ![API access in navigation](/img/admin_configure_api.png)
-
-<br />
-
-#### 2. Click `New API token` at the top right of the page {#step-2}
-
-If you already have tokens, you will be able to see them listed in the table below. ![Add token](/img/admin_new_api_key_button.png)
-
-<br />
-
-#### 3. Fill and submit API token form {#step-3}
-
-<div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-<div><img src={newTokenImage} alt="Form for new token" style={{ maxWidth: '414px' }} /></div>
-<div style={{ flexShrink: 1, flexGrow: 1, flexBasis: 0, minWidth: '320px' }}>
-
-##### 3.1. Username
-
-Does not have to be unique, but it should be if you need to recognize the token in audit logs.
-
-##### 3.2. Token type
-
-:::caution Be careful
-Never publish ADMIN or CLIENT token. Embedding it in client-side applications can result in a security breach.
 :::
 
-- 3.2.A. **CLIENT**<br/>
-This type will work with [Server-side SDKs](/sdks#server-side-sdks) or with [Unleash Proxy](/sdks/unleash-proxy).
+Unleash SDKs use API tokens to authenticate to the Unleash API. Unleash supports different types of API tokens, each with different levels of access and privileges. Refer to the [API tokens and client keys](../reference/api-tokens-and-client-keys.mdx) article for complete overview of the different token types.
 
-- 3.2.B. **FRONTEND**<br/>
-New in _Unleash v14.16_. Select this option if you'd like to connect client-side SDK directly, without setting up Proxy.
-More details in [Direct client-side API](/topics/frontend-api) guide.
 
-- 3.2.C. **ADMIN**<br/>
-Only available to instance administrators. Needed if you're going to be using the admin interface via CURL, or if you intend to write custom integration or automation.
-Everything you see in the UI can be automated with an API requests, see [API documentation](/api).
 
-##### 3.3. Projects
+## Step 1: Navigate to the API token creation form {#step-1}
 
-ADMIN token will always grant access to all projects. Other types can be restricted to one or multiple projects.
+Navigate to the _API access_ page in the admin UI (available at the URL `/admin/api`). Use the navigation menu item "Configure" and select "API access".
 
-##### 3.4. Environment
+![The admin UI navigation "Configure" submenu with the API access item highlighted.](/img/admin_configure_api.png)
 
-CLIENT and FRONTEND tokens are scoped to one selected environment. If you need to connect many environments, create multiple tokens.
+On the API access page, use the "New API token" button to navigate to the token creation form.
 
-</div>
-</div>
-<br/>
+![The API access page with the "New API token" button highlighted.](/img/admin_new_api_key_button.png)
+## Step 2: Fill in the API token form {#step-2}
 
-#### 4. Copy token secret and start using API access
+![API token creation form. ](/img/admin_create_token_form.png)
 
-You should now have token secret that you can use in authorization header. For CURL that would be `-H "Authorization: <yoursecrethere>"`.
+Fill in the form with the desired values for the token you want to create. Refer to the [API tokens and client keys](../reference/api-tokens-and-client-keys.mdx) article for a detailed explanation of what all the fields mean.
 
-If you are using SDKs, set correct API URL. For CLIENT and ADMIN tokens it's `<YOUR-UNLEASH-INSTANCE-URL>/api` but it's `<YOUR-UNLEASH-INSTANCE-URL>/api/frontend` for FRONTEND ("Proxy SDKs") access.
+## Using API tokens
 
-With correct permissions you can access "API access" page and you can copy the previously generated tokens from the table.
+When you have created the API token, it will be listed on the API access page. If you have the required permissions to see the token, you can copy it for easy use in your applications.
 
-![API access tokens in the table](/img/admin_copy_token.png)
+![API access token table with a "copy token" button highlighted.](/img/admin_copy_token.png)

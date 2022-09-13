@@ -97,14 +97,14 @@ const ApiTokenForm: React.FC<IApiTokenFormProps> = ({
         <form onSubmit={handleSubmit} className={styles.form}>
             <div className={styles.container}>
                 <p className={styles.inputDescription}>
-                    Who are you generating the token for?
+                    What would you like to call this token?
                 </p>
                 <Input
                     className={styles.input}
                     value={username}
                     name="username"
                     onChange={e => setUsername(e.target.value)}
-                    label="Username"
+                    label="Token name"
                     error={errors.username !== undefined}
                     errorText={errors.username}
                     onFocus={() => clearErrors('username')}

@@ -192,7 +192,7 @@ module.exports = {
                 },
                 {
                     type: 'category',
-                    label: 'SDKs (integrations)',
+                    label: 'Application SDKs',
                     link: { type: 'doc', id: 'sdks/index' },
                     items: [
                         {
@@ -289,6 +289,7 @@ module.exports = {
                         'reference/feature-toggles',
                         'advanced/feature_toggle_types',
                         'advanced/toggle_variants',
+                        'reference/frontend-api',
                         'reference/playground',
                         'user_guide/projects',
                         'user_guide/rbac',
@@ -315,7 +316,7 @@ module.exports = {
                     'Discussions, explanations, and explorations regarding topics related to Unleash.',
                 slug: '/topics',
             },
-            items: ['topics/a-b-testing', 'topics/frontend-api', 'topics/proxy-hosting'],
+            items: ['topics/a-b-testing', 'topics/proxy-hosting'],
         },
     ],
 };

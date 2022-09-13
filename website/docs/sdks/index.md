@@ -25,13 +25,7 @@ Server-side clients run on your server and communicate directly with your Unleas
 
 ### Client-side SDKs
 
-Before using front-end SDKs, we recommend setting up the [Unleash Proxy](unleash-proxy.md) for security, user privacy, and performance reasons.
-
-:::info Direct connection
-
-You need at least _Unleash v4.16_ to be able to connect client-side SDK directly to your Unleash instance, without Proxy.<br/> Learn more about [client-side API access](/topics/frontend-api) in our topic guide.
-
-:::
+Client-side SDKs can connect to the [Unleash Proxy](unleash-proxy.md) or to the [direct access API](../reference/frontend-api.mdx), but _not_ to the regular Unleash client API.
 
 - [Android SDK](/sdks/android_proxy_sdk)
 - [iOS Proxy SDK](/sdks/proxy-ios)

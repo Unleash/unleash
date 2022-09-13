@@ -1,10 +1,16 @@
 # Direct client-side API access
 
-**This is a simplified workflow for connecting a client-side application ("frontend") to Unleash. It is a quick and easy way to add Unleash to SPAs and mobile apps.** This feature was also called _Embedded Proxy_, after it's roadmap item [#1875](https://github.com/Unleash/unleash/issues/1875).
+**Direct client-side API access** offers a simplified workflow for connecting a client-side (front-end) applications to Unleash. It provides the exact same API as the [Unleash proxy](../sdks/unleash-proxy.md). Direct API access is a quick and easy way to add Unleash to single-page applications and mobile apps.
 
-:::info Check your version
+::: note
 
-This API is available since _Unleash **v4.16**_ (released in September 2022).
+This feature was previously called _embedded proxy_, after the [_embedded proxy_ roadmap item (#1875)](https://github.com/Unleash/unleash/issues/1875)
+
+:::
+
+:::info Availability
+
+The direct client-side API was released in _Unleash **v4.16**_.
 
 <!-- TODO: link blog post with release notes -->
 
@@ -12,38 +18,37 @@ This API is available since _Unleash **v4.16**_ (released in September 2022).
 
 <!-- TODO: image illustrating connection -->
 
-Let's go through the pros and cons of this approach.
+Compared to using the Unleash proxy, using direct API access has both benefits and drawbacks. The benefits are:
 
-- ✔️ It’s easy to create and manage API tokens<br/> This can be done from UI or with admin API, using tokens that have more access.
-- ✔️ It doesn't require you to set up Unleash Proxy<br/> API interface is the same, and all existing “proxy-client” code and SDKs will work. Suffix _proxy-sdk_ for client-side SDKs is there because connecting with Unleash Proxy was the only way of using client-side API in previous versions.
+- **Managing client-side API tokens is easier.** With the Unleash proxy, you need to create and manage client keys manually; with the direct access API, you manage client-side API tokens in the exact same manner as other API tokens.
+- **You don't need to configure and run an Unleash proxy.** The direct access API is part of Unleash itself and not an external process. All proxy clients will work exactly the same as they would with the Proxy.
 
-* ⚠️ It can't handle large number of requests<br/> Direct access does not allow for horizontal scaling that Unleash Proxy does.
-* ⚠️ It sends client details to Unleash instance<br/> Unleash doesn't save this to the database, only in short-term runtime cache, but for some use cases this can be a privacy issue.
+On the other hand, direct API access has the following drawbacks compared to the proxy:
 
-This makes direct access best suitable for development purposes and applications that don’t receive a lot of traffic, for example internal dashboards. **This choice does not have to be final.** Since both options use the same SDKs, so you can always switch by changing just 2 lines in the configuration. We recommend you to start with direct client-side approach, and upgrade to Unleash Proxy as needed.
+- **It can't handle a large number of requests per second.** Because the direct access API is part of Unleash, you can't scale it horizontally the way you can scale the proxy. 
+-  **It sends client details to your Unleash instance.** Unleash only stores these details in its short-term runtime cache, but this can be a privacy issue for some use cases.
 
-## Using client-sides SDKs
+These points make the direct access API best suited for development purposes and applications that don’t receive a lot of traffic, such as internal dashboards. However, because the API is identical to the Unleash proxy API, you can go from one to the other at any time. As such, you can start out by using the direct access API and switch to using the proxy when you need it.
 
-Before adding client-side integration to your application, consider if it is the best option. Maybe integration with the backend of your application will lead to a more smooth and consistent user experience? If on the other hand you expect the app to change immediately after the feature flag was enabled or modified, all and any Unleash [client-side SDKs](sdks#client-side-sdks) can work directly to your instance.
+## Using the direct access API
+
+When using the direct access API in an SDK, there's three things you to configure.
+
+### Front-end API tokens
+
+As a client-side API, you should use a [front-end API token](../reference/api-tokens-and-client-keys.mdx#front-end-api-tokens) to interact with it. Refer to the [how to create API tokens](/user_guide/api-token.md) guide for steps on how to create API tokens.
+
+### Cross-origin resource sharing (CORS) configuration {#cors)
+
+You need to allow traffic from your application domains to use the direct access API with web and hybrid mobile applications. You can update the direct access API CORS settings from the Unleash UI under _admin \> CORS_ or by using the API (@tymek: what's the API for this?).
+
+### API URL
+
+The client needs to point to the correct API endpoint. The direct access API is available at `<your-unleash-instance>/api/frontend`. 
+
+<!-- Point to the API docs when they're published -->
 
 ### API token
 
 You can create appropriate token, with type `FRONTEND` on `<YOUR_UNLEASH_URL>/admin/api/create-token` page or with a request to `/api/admin/api-tokens`. See our guide on [how to create API tokens](/user_guide/api-token) for more details.
 
-Client-side tokens have limited access to the API. This includes getting state of the feature toggles from provided context and sending metrics. This type of token is always scoped to one environment.
-
-### ❕ Correct URL
-
-API endpoint is different when using client-side SDK directly instead of pointing to Proxy. Set it to `https://<YOUR_UNLEASH_INSTANCE>/api/frontend`
-
-### CORS configuration
-
-For web and hybrid mobile applications it is necesary to whitelist domain for your applications. In Unleash UI go to `Admin/CORS` and add domains that host applications connecting with `FRONTEND` token. 
-
-![CORS settings in Unleash UI](/img/admin_cors.png)
-
-<br/>
-
-## What's next?
-
-With this configuration you should be able to quickly start developing your application with Unleash.

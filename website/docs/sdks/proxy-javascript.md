@@ -43,7 +43,10 @@ You need to have an Unleash Proxy server running. Fill `url` and a proxy-specifi
 
 #### Option B: Directly to Unleash (since _Unleash v4.16_)
 
-In this case `url` will be `https://<YOUR_INSTANCE_URL>/api/frontend` and you can generate `FRONTEND` token in the UI - see [How to create API token](/user_guide/api-token). You might also need to set up CORS for your instance.
+Use the url to your Unleash instance's direct access API (<unleash-url>/api/frontend) as the `url` parameter. For the `clientKey` parameter, use a `FRONTEND` token generated from your Unleash instance. Refer to the 
+[_how to create API tokens_](/user_guide/api-token) guide for the necessary steps. 
+
+You might also need to set up cross-origin resource sharing (CORS) for your instance. Visit the [CORS section of the direct access API guide](../reference/frontend-api.mdx#cors) for more information on setting up CORS.
 
 ### Step 3: Check if feature toggle is enabled
 
@@ -60,7 +63,7 @@ if (variant.name === 'blue') {
 }
 ```
 
-### Listen for updates via the EventEmitter
+## Listen for updates via the EventEmitter
 
 The client is also an event emitter. This means that your code can subscribe to updates from the client. This is a neat way to update a single page app when toggle state updates.
 

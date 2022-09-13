@@ -25,7 +25,7 @@ Server-side clients run on your server and communicate directly with your Unleas
 
 ### Client-side SDKs
 
-Client-side SDKs can connect to the [Unleash Proxy](unleash-proxy.md) or to the [direct access API](../reference/frontend-api.mdx), but _not_ to the regular Unleash client API.
+Client-side SDKs can connect to the [Unleash Proxy](unleash-proxy.md) or to the [Unleash front-end API](../reference/frontend-api.mdx), but _not_ to the regular Unleash client API.
 
 - [Android SDK](/sdks/android_proxy_sdk)
 - [iOS Proxy SDK](/sdks/proxy-ios)

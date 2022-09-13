@@ -56,6 +56,11 @@ test('the generated OpenAPI spec is valid', async () => {
 
     const [openapi, error, warning] = await enforcer(body, {
         fullResult: true,
+        componentOptions: {
+            exceptionSkipCodes: [
+                'WSCH001', // allow non-standard formats for strings (including 'uri')
+            ],
+        },
     });
 
     if (error !== undefined) {

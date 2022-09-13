@@ -162,6 +162,10 @@ export class PublicSignupTokenStore implements IPublicSignupTokenStore {
         const row = await this.makeTokenUsersQuery()
             .where('secret', key)
             .first();
+
+        if (!row)
+            throw new NotFoundError('Could not find a token with that key');
+
         return toTokens([row])[0];
     }
 

@@ -39,7 +39,14 @@ unleash.start();
 
 ### Option A: Connecting to the Unleash proxy
 
-You need to have an Unleash Proxy server running. Fill `url` and a proxy-specific `clientKey` in order to connect. For more on how to set up client keys, [consult the Unleash Proxy docs](unleash-proxy.md#configuration-variables).
+:::tip Prerequisites
+
+To connect to an Unleash proxy, you need to have an instance of the proxy running. 
+
+:::
+
+Add the proxy's URL and a [proxy client key](../reference/api-tokens-and-client-keys.mdx#proxy-client-keys). 
+The [_configuration_ section of the Unleash proxy docs](unleash-proxy.md#configuration-variables) contain more info on how to configure client keys for your proxy.
 
 ### Option B: Connecting directly to Unleash
 

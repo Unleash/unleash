@@ -73,7 +73,7 @@ describe('Public Signup API', () => {
     });
 
     test('should create a token', async () => {
-        expect.assertions(3);
+        expect.assertions(4);
         const appName = '123!23';
 
         stores.clientApplicationsStore.upsert({ appName });
@@ -84,13 +84,15 @@ describe('Public Signup API', () => {
             .post('/api/admin/invite-link/tokens')
             .send(bodyCreate)
             .expect(201)
-            .expect((res) => {
+            .expect(async (res) => {
                 const token = res.body;
                 expect(token.name).toBe(bodyCreate.name);
                 expect(token.secret).not.toBeNull();
                 expect(token.expiresAt).toBe(
                     bodyCreate.expiresAt.toISOString(),
                 );
+                const eventCount = await stores.eventStore.count();
+                expect(eventCount).toBe(1); //PUBLIC_SIGNUP_TOKEN_CREATED
             });
     });
 
@@ -132,8 +134,27 @@ describe('Public Signup API', () => {
             });
     });
 
-    test('should create user and add to token', async () => {
+    test('should expire token', async () => {
         expect.assertions(1);
+        const appName = '123!23';
+
+        stores.clientApplicationsStore.upsert({ appName });
+        stores.publicSignupTokenStore.create({
+            name: 'some-name',
+            expiresAt: expireAt(),
+        });
+
+        return request
+            .delete('/api/admin/invite-link/tokens/some-secret')
+            .expect(200)
+            .expect(async () => {
+                const eventCount = await stores.eventStore.count();
+                expect(eventCount).toBe(1); // PUBLIC_SIGNUP_TOKEN_MANUALLY_EXPIRED
+            });
+    });
+
+    test('should create user and add to token', async () => {
+        expect.assertions(2);
         const appName = '123!23';
 
         stores.clientApplicationsStore.upsert({ appName });
@@ -158,6 +179,8 @@ describe('Public Signup API', () => {
             .expect(async () => {
                 const count = await stores.userStore.count();
                 expect(count).toBe(1);
+                const eventCount = await stores.eventStore.count();
+                expect(eventCount).toBe(2); //USER_CREATED && PUBLIC_SIGNUP_TOKEN_USER_ADDED
             });
     });
 });

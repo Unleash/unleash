@@ -246,7 +246,7 @@ export class PublicSignupController extends Controller {
     ): Promise<void> {
         const { token } = req.params;
 
-        await this.publicSignupTokenService.delete(token);
+        await this.publicSignupTokenService.delete(token, req.user.name);
         res.status(200).end();
     }
 }

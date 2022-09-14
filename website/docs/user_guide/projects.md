@@ -37,7 +37,7 @@ From the top-line menu – click on “Projects”
 
 ![The Unleash admin UI with the "Projects" nav link in the top bar highlighted.](/img/projects_button.png)
 
-The available projects will now be listed. To create a new Project – choose the “Add new project”
+The UI shows the currently available projects. To create a new project, use the “new project” button.
 
 ![A list of projects. There is a button saying "Add new project".](/img/projects_new_project.png)
 
@@ -71,11 +71,11 @@ From the UI top navigation menu, choose "Feature toggles".
 
 ![The Unleash Admin UI navigation menu with the "Feature toggles" option highlighted by a red arrow.](/img/projects_menu.png)
 
-The list of features toggles can be filtered on the project of your choice. By default, all feature toggles are listed in the view.
+The list of features toggles can be filtered on the project of your choice. By default, all feature toggles are listed in the view. You can use the search to filter to a specific project or even for multiple projects in the same time if you need.
 
 ![The feature toggle list with toggles scoped to the "fintech" project. The filter is activated by using a form control.](/img/project_select.png)
 
-From the drop-down, chose the project to filter on.
+In the search you can type "project:specific-name" to filter that project only.
 
 ![The feature toggle list with an overlay listing all the projects available. You can select a project and the list will update with the toggles belonging to that project.](/img/projects_select_dropdown.png)
 

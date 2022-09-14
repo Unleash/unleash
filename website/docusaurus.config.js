@@ -133,6 +133,11 @@ module.exports = {
     ],
     plugins: [
         [
+            // heads up to anyone making redirects:
+            //
+            // remember that redirects only work in production and not in
+            // development, as mentioned in the docs
+            // https://docusaurus.io/docs/api/plugins/@docusaurus/plugin-client-redirects/
             '@docusaurus/plugin-client-redirects',
             {
                 fromExtensions: ['html', 'htm'],
@@ -169,6 +174,10 @@ module.exports = {
                     {
                         from: '/advanced/impression_data',
                         to: '/advanced/impression-data',
+                    },
+                    {
+                        from: '/advanced/audit_log',
+                        to: '/reference/event-log',
                     },
                 ],
                 createRedirects: function (toPath) {

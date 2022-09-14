@@ -282,7 +282,7 @@ module.exports = {
                         'user_guide/activation_strategy',
                         'reference/api-tokens-and-client-keys',
                         'advanced/archived_toggles',
-                        'advanced/audit_log',
+                        'reference/event-log',
                         'advanced/impression-data',
                         'advanced/custom_activation_strategy',
                         'user_guide/environments',

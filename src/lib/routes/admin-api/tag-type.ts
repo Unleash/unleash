@@ -169,7 +169,9 @@ class TagTypeController extends Controller {
             req.body,
             userName,
         );
-        res.status(201).json(tagType);
+        res.status(201)
+            .header('location', `tag-types/${tagType.name}`)
+            .json(tagType);
     }
 
     async updateTagType(

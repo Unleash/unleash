@@ -165,6 +165,7 @@ export class ApiTokenController extends Controller {
             res,
             apiTokenSchema.$id,
             serializeDates(token),
+            { location: `api-tokens` },
         );
     }
 

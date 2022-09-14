@@ -1,6 +1,5 @@
 import Controller from '../controller';
-import { IUnleashServices } from '../../types/services';
-import { IUnleashConfig } from '../../types/option';
+import { IUnleashServices, IUnleashConfig } from '../../types';
 import FeatureController from './feature';
 import { FeatureTypeController } from './feature-type';
 import ArchiveController from './archive';
@@ -24,6 +23,8 @@ import UserSplashController from './user-splash';
 import ProjectApi from './project';
 import { EnvironmentsController } from './environments';
 import ConstraintsController from './constraints';
+import { PublicSignupController } from './public-signup';
+import { conditionalMiddleware } from '../../middleware/conditional-middleware';
 
 class AdminApi extends Controller {
     constructor(config: IUnleashConfig, services: IUnleashServices) {
@@ -100,6 +101,13 @@ class AdminApi extends Controller {
         this.app.use(
             '/constraints',
             new ConstraintsController(config, services).router,
+        );
+        this.app.use(
+            '/invite-link',
+            conditionalMiddleware(
+                () => config.flagResolver.isEnabled('publicSignup'),
+                new PublicSignupController(config, services).router,
+            ),
         );
     }
 }

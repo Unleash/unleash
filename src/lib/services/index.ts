@@ -35,6 +35,7 @@ import { PlaygroundService } from './playground-service';
 import { GroupService } from './group-service';
 import { ProxyService } from './proxy-service';
 import EdgeService from './edge-service';
+import { PublicSignupTokenService } from './public-signup-token-service';
 export const createServices = (
     stores: IUnleashStores,
     config: IUnleashConfig,
@@ -101,6 +102,12 @@ export const createServices = (
 
     const edgeService = new EdgeService(stores, config);
 
+    const publicSignupTokenService = new PublicSignupTokenService(
+        stores,
+        config,
+        userService,
+    );
+
     return {
         accessService,
         addonService,
@@ -136,6 +143,7 @@ export const createServices = (
         groupService,
         proxyService,
         edgeService,
+        publicSignupTokenService,
     };
 };
 

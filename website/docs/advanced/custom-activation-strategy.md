@@ -3,7 +3,11 @@ id: custom_activation_strategy
 title: Custom Activation Strategies
 ---
 
-:::tip This document is a reference for custom activation strategies. If you're looking for a guide on how to use them, see the [_how to use custom strategies_ guide](../how-to/how-to-use-custom-strategies.md). :::
+:::tip
+
+This document is a reference for custom activation strategies. If you're looking for a guide on how to use them, see the [_how to use custom strategies_ guide](../how-to/how-to-use-custom-strategies.md).
+
+:::
 
 **Custom activation strategies** let you define your own activation strategies to use with Unleash. When the [built-in activation strategies](../user_guide/activation-strategies.md) aren't enough, custom activation strategies are there to provide you with the flexibility you need.
 
@@ -51,7 +55,11 @@ All values have an **empty string (`""`) as the default value**. As such, if you
 
 ## Implementation
 
-:::note If you have not implemented the strategy in your client SDK, the check will always return `false` because the client doesn't recognize the strategy. :::
+:::note
+
+If you have not implemented the strategy in your client SDK, the check will always return `false` because the client doesn't recognize the strategy.
+
+:::
 
 While custom strategies are _defined_ on the Unleash server, they must be _implemented_ on the client. All official Unleash client SDKs provide a way for you to implement custom strategies. You should refer to the individual SDK's documentation for specifics, but for an example, you can have a look at the [_Node.js client implementation_ section in the _how to use custom strategies_ guide](../how-to/how-to-use-custom-strategies.md#step-3-a).
 

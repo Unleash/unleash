@@ -127,5 +127,8 @@
     "ignorePatterns": [
       "cypress"
     ]
+  },
+  "dependencies": {
+    "dequal": "^2.0.3"
   }
 }

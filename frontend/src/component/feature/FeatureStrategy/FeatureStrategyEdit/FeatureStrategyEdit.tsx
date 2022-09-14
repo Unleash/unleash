@@ -22,6 +22,9 @@ import { useFeatureImmutable } from 'hooks/api/getters/useFeature/useFeatureImmu
 import { useFormErrors } from 'hooks/useFormErrors';
 import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
 import { sortStrategyParameters } from 'utils/sortStrategyParameters';
+import useCollaborateData from 'hooks/useCollaborateData';
+import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
+import { IFeatureToggle } from 'interfaces/featureToggle';
 
 export const FeatureStrategyEdit = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -45,17 +48,28 @@ export const FeatureStrategyEdit = () => {
         featureId
     );
 
+    const { data, Notification } = useCollaborateData(
+        {
+            unleashGetter: useFeature,
+            params: [projectId, featureId],
+            dataKey: 'feature',
+            refetchFunctionKey: 'refetchFeature',
+            options: {},
+        },
+        feature
+    );
+
     const {
         segments: savedStrategySegments,
         refetchSegments: refetchSavedStrategySegments,
     } = useSegments(strategyId);
 
     useEffect(() => {
-        const savedStrategy = feature.environments
+        const savedStrategy = data.environments
             .flatMap(environment => environment.strategies)
             .find(strategy => strategy.id === strategyId);
         setStrategy(prev => ({ ...prev, ...savedStrategy }));
-    }, [strategyId, feature]);
+    }, [strategyId, data]);
 
     useEffect(() => {
         // Fill in the selected segments once they've been fetched.
@@ -115,7 +129,7 @@ export const FeatureStrategyEdit = () => {
             }
         >
             <FeatureStrategyForm
-                feature={feature}
+                feature={data as IFeatureToggle}
                 strategy={strategy}
                 setStrategy={setStrategy}
                 segments={segments}
@@ -126,6 +140,7 @@ export const FeatureStrategyEdit = () => {
                 permission={UPDATE_FEATURE_STRATEGY}
                 errors={errors}
             />
+            {Notification}
         </FormTemplate>
     );
 };

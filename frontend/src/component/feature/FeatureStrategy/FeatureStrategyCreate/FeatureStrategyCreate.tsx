@@ -24,6 +24,9 @@ import { useFeatureImmutable } from 'hooks/api/getters/useFeature/useFeatureImmu
 import { useFormErrors } from 'hooks/useFormErrors';
 import { createFeatureStrategy } from 'utils/createFeatureStrategy';
 import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
+import useCollaborateData from 'hooks/useCollaborateData';
+import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
+import { IFeatureToggle } from 'interfaces/featureToggle';
 
 export const FeatureStrategyCreate = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -45,6 +48,17 @@ export const FeatureStrategyCreate = () => {
     const { feature, refetchFeature } = useFeatureImmutable(
         projectId,
         featureId
+    );
+
+    const { data, Notification } = useCollaborateData(
+        {
+            unleashGetter: useFeature,
+            params: [projectId, featureId],
+            dataKey: 'feature',
+            refetchFunctionKey: 'refetchFeature',
+            options: {},
+        },
+        feature
     );
 
     useEffect(() => {
@@ -99,7 +113,7 @@ export const FeatureStrategyCreate = () => {
             }
         >
             <FeatureStrategyForm
-                feature={feature}
+                feature={data as IFeatureToggle}
                 strategy={strategy}
                 setStrategy={setStrategy}
                 segments={segments}
@@ -110,6 +124,7 @@ export const FeatureStrategyCreate = () => {
                 permission={CREATE_FEATURE_STRATEGY}
                 errors={errors}
             />
+            {Notification}
         </FormTemplate>
     );
 };

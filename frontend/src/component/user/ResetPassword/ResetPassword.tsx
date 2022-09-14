@@ -1,13 +1,11 @@
 import useLoading from 'hooks/useLoading';
-
-import ResetPasswordDetails from '../common/ResetPasswordDetails/ResetPasswordDetails';
-
 import { useStyles } from './ResetPassword.styles';
 import { Typography } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import InvalidToken from '../common/InvalidToken/InvalidToken';
 import useResetPassword from 'hooks/api/getters/useResetPassword/useResetPassword';
 import StandaloneLayout from '../common/StandaloneLayout/StandaloneLayout';
+import ResetPasswordForm from '../common/ResetPasswordForm/ResetPasswordForm';
 
 const ResetPassword = () => {
     const { classes: styles } = useStyles();
@@ -22,10 +20,7 @@ const ResetPassword = () => {
                         condition={invalidToken}
                         show={<InvalidToken />}
                         elseShow={
-                            <ResetPasswordDetails
-                                token={token}
-                                setLoading={setLoading}
-                            >
+                            <>
                                 <Typography
                                     variant="h2"
                                     className={styles.title}
@@ -33,7 +28,12 @@ const ResetPassword = () => {
                                 >
                                     Reset password
                                 </Typography>
-                            </ResetPasswordDetails>
+
+                                <ResetPasswordForm
+                                    token={token}
+                                    setLoading={setLoading}
+                                />
+                            </>
                         }
                     />
                 </div>

@@ -1,6 +1,6 @@
 ---
 id: sso-open-id-connect
-title: How to add SSO with OpenId Connect
+title: How to add SSO with OpenID Connect
 ---
 
 > The **Single-Sign-On capability** is only available for customers on the Enterprise subscription. Check out the [Unleash plans](https://www.getunleash.io/plans) for details.

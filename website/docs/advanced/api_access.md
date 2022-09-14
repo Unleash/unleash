@@ -11,7 +11,11 @@ Please refer to [_how to create API tokens_](../user_guide/api-token) on how to 
 
 Please note that it may take up to 60 seconds for the new key to propagate to all Unleash instances due to eager caching.
 
-:::note If you need an API token to use in a client SDK you should create a "client token" as these have fewer access rights. :::
+:::note
+
+If you need an API token to use in a client SDK you should create a "client token" as these have fewer access rights.
+
+:::
 
 ## Step 2: Use Admin API {#step-2-use-admin-api}
 

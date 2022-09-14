@@ -4435,6 +4435,205 @@ If the provided project does not exist, the list of events will be empty.",
         ],
       },
     },
+    "/api/admin/invite-link/tokens": {
+      "get": {
+        "operationId": "getAllPublicSignupTokens",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/publicSignupTokenSchema",
+                },
+              },
+            },
+            "description": "publicSignupTokenSchema",
+          },
+        },
+        "tags": [
+          "Public signup tokens",
+        ],
+      },
+      "post": {
+        "operationId": "createApiToken",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/publicSignupTokenCreateSchema",
+              },
+            },
+          },
+          "description": "publicSignupTokenCreateSchema",
+          "required": true,
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/publicSignupTokenSchema",
+                },
+              },
+            },
+            "description": "publicSignupTokenSchema",
+          },
+        },
+        "tags": [
+          "Public signup tokens",
+        ],
+      },
+    },
+    "/api/admin/invite-link/tokens/{token}": {
+      "delete": {
+        "operationId": "deletePublicSignupToken",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "token",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": {
+          "200": {
+            "description": "This response has no body.",
+          },
+        },
+        "tags": [
+          "API tokens",
+        ],
+      },
+      "get": {
+        "operationId": "getPublicSignupToken",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "token",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/publicSignupTokenSchema",
+                },
+              },
+            },
+            "description": "publicSignupTokenSchema",
+          },
+        },
+        "tags": [
+          "Public signup tokens",
+        ],
+      },
+      "put": {
+        "operationId": "updatePublicSignupToken",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "token",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/publicSignupTokenUpdateSchema",
+              },
+            },
+          },
+          "description": "publicSignupTokenUpdateSchema",
+          "required": true,
+        },
+        "responses": {
+          "200": {
+            "description": "This response has no body.",
+          },
+        },
+        "tags": [
+          "Public signup tokens",
+        ],
+      },
+    },
+    "/api/admin/invite-link/tokens/{token}/signup": {
+      "post": {
+        "operationId": "addPublicSignupTokenUser",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "token",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/createUserSchema",
+              },
+            },
+          },
+          "description": "createUserSchema",
+          "required": true,
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/userSchema",
+                },
+              },
+            },
+            "description": "userSchema",
+          },
+        },
+        "tags": [
+          "Public signup tokens",
+        ],
+      },
+    },
+    "/api/admin/invite-link/tokens/{token}/validate": {
+      "post": {
+        "operationId": "validateSignupToken",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "token",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": {
+          "200": {
+            "description": "This response has no body.",
+          },
+          "404": {
+            "description": "This response has no body.",
+          },
+        },
+        "tags": [
+          "API tokens",
+        ],
+      },
+    },
     "/api/admin/metrics/applications": {
       "get": {
         "operationId": "getApplications",
@@ -5644,174 +5843,6 @@ If the provided project does not exist, the list of events will be empty.",
         },
         "tags": [
           "Projects",
-        ],
-      },
-    },
-    "/api/admin/public-signup/token": {
-      "post": {
-        "operationId": "createApiToken",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/publicSignupTokenCreateSchema",
-              },
-            },
-          },
-          "description": "publicSignupTokenCreateSchema",
-          "required": true,
-        },
-        "responses": {
-          "201": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/publicSignupTokenSchema",
-                },
-              },
-            },
-            "description": "publicSignupTokenSchema",
-          },
-        },
-        "tags": [
-          "Public signup tokens",
-        ],
-      },
-    },
-    "/api/admin/public-signup/token/{token}": {
-      "delete": {
-        "operationId": "deletePublicSignupToken",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "token",
-            "required": true,
-            "schema": {
-              "type": "string",
-            },
-          },
-        ],
-        "responses": {
-          "200": {
-            "description": "This response has no body.",
-          },
-        },
-        "tags": [
-          "API tokens",
-        ],
-      },
-      "get": {
-        "operationId": "getPublicSignupToken",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "token",
-            "required": true,
-            "schema": {
-              "type": "string",
-            },
-          },
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/publicSignupTokenSchema",
-                },
-              },
-            },
-            "description": "publicSignupTokenSchema",
-          },
-        },
-        "tags": [
-          "Public signup tokens",
-        ],
-      },
-      "put": {
-        "operationId": "updatePublicSignupToken",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "token",
-            "required": true,
-            "schema": {
-              "type": "string",
-            },
-          },
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/publicSignupTokenUpdateSchema",
-              },
-            },
-          },
-          "description": "publicSignupTokenUpdateSchema",
-          "required": true,
-        },
-        "responses": {
-          "200": {
-            "description": "This response has no body.",
-          },
-        },
-        "tags": [
-          "Public signup tokens",
-        ],
-      },
-    },
-    "/api/admin/public-signup/token/{token}/signup": {
-      "post": {
-        "operationId": "addPublicSignupTokenUser",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "token",
-            "required": true,
-            "schema": {
-              "type": "string",
-            },
-          },
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/createUserSchema",
-              },
-            },
-          },
-          "description": "createUserSchema",
-          "required": true,
-        },
-        "responses": {
-          "200": {
-            "description": "This response has no body.",
-          },
-        },
-        "tags": [
-          "Public signup tokens",
-        ],
-      },
-    },
-    "/api/admin/public-signup/tokens": {
-      "get": {
-        "operationId": "getAllPublicSignupTokens",
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/publicSignupTokenSchema",
-                },
-              },
-            },
-            "description": "publicSignupTokenSchema",
-          },
-        },
-        "tags": [
-          "Public signup tokens",
         ],
       },
     },

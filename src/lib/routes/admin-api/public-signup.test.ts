@@ -184,4 +184,28 @@ describe('Public Signup API', () => {
                 expect(res.body.username).toBe(user.username);
             });
     });
+
+    test('should return 200 if token is valid', async () => {
+        const appName = '123!23';
+
+        stores.clientApplicationsStore.upsert({ appName });
+        stores.publicSignupTokenStore.create({
+            name: 'some-name',
+            expiresAt: expireAt(),
+        });
+
+        return request
+            .post('/api/admin/invite-link/tokens/some-secret/validate')
+            .expect(200);
+    });
+
+    test('should return 404 if token is invalid', async () => {
+        const appName = '123!23';
+
+        stores.clientApplicationsStore.upsert({ appName });
+
+        return request
+            .post('/api/admin/invite-link/tokens/some-invalid-secret/validate')
+            .expect(404);
+    });
 });

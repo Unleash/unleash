@@ -42,7 +42,7 @@ describe('Public Signup API', () => {
             destroy: () => {
                 services.versionService.destroy();
                 services.clientInstanceService.destroy();
-                services.apiTokenService.destroy();
+                services.publicSignupTokenService.destroy();
             },
         };
     }

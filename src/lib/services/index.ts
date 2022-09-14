@@ -105,6 +105,7 @@ export const createServices = (
     const publicSignupTokenService = new PublicSignupTokenService(
         stores,
         config,
+        userService,
     );
 
     return {

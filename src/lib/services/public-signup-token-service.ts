@@ -14,6 +14,8 @@ import {
     PublicSignupTokenManuallyExpiredEvent,
     PublicSignupTokenUserAddedEvent,
 } from '../types/events';
+import UserService, { ICreateUser } from './user-service';
+import { IUser } from '../types/user';
 
 export class PublicSignupTokenService {
     private store: IPublicSignupTokenStore;
@@ -21,6 +23,8 @@ export class PublicSignupTokenService {
     private roleStore: IRoleStore;
 
     private eventStore: IEventStore;
+
+    private userService: UserService;
 
     private logger: Logger;
 
@@ -38,8 +42,10 @@ export class PublicSignupTokenService {
             'publicSignupTokenStore' | 'roleStore' | 'eventStore'
         >,
         config: Pick<IUnleashConfig, 'getLogger' | 'authentication'>,
+        userService: UserService,
     ) {
         this.store = publicSignupTokenStore;
+        this.userService = userService;
         this.roleStore = roleStore;
         this.eventStore = eventStore;
         this.logger = config.getLogger(
@@ -79,14 +85,19 @@ export class PublicSignupTokenService {
         return this.store.setExpiry(secret, expireAt);
     }
 
-    public async addTokenUser(secret: string, userId: number): Promise<void> {
-        await this.store.addTokenUser(secret, userId);
+    public async addTokenUser(
+        secret: string,
+        createUser: ICreateUser,
+    ): Promise<IUser> {
+        const user = await this.userService.createUser(createUser);
+        await this.store.addTokenUser(secret, user.id);
         await this.eventStore.store(
             new PublicSignupTokenUserAddedEvent({
                 createdBy: 'userId',
-                data: { secret, userId },
+                data: { secret, userId: user.id },
             }),
         );
+        return user;
     }
 
     public async delete(secret: string, expiredBy: string): Promise<void> {

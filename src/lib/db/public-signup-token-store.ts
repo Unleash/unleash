@@ -50,13 +50,16 @@ const tokenRowReducer = (acc, tokenRow) => {
     return acc;
 };
 
-const toRow = (newToken: IPublicSignupTokenCreate) => ({
-    secret: newToken.secret,
-    name: newToken.name,
-    expires_at: newToken.expiresAt,
-    created_by: newToken.createdBy || null,
-    role_id: newToken.roleId,
-});
+const toRow = (newToken: IPublicSignupTokenCreate) => {
+    if (!newToken) return;
+    return {
+        secret: newToken.secret,
+        name: newToken.name,
+        expires_at: newToken.expiresAt,
+        created_by: newToken.createdBy || null,
+        role_id: newToken.roleId,
+    };
+};
 
 const toTokens = (rows: any[]): PublicSignupTokenSchema[] => {
     const tokens = rows.reduce(tokenRowReducer, {});

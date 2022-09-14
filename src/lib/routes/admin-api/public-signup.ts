@@ -228,8 +228,11 @@ export class PublicSignupController extends Controller {
         res: Response<UserSchema>,
     ): Promise<void> {
         const { token } = req.params;
-        const user = await this.userService.createUser(req.body);
-        await this.publicSignupTokenService.addTokenUser(token, user.id);
+        const user = await this.publicSignupTokenService.addTokenUser(
+            token,
+            req.body,
+        );
+
         this.openApiService.respondWithValidation(
             201,
             res,

@@ -31,6 +31,7 @@ import { PlaygroundService } from 'lib/services/playground-service';
 import { GroupService } from '../services/group-service';
 import { ProxyService } from '../services/proxy-service';
 import EdgeService from '../services/edge-service';
+import { PublicSignupTokenService } from '../services/public-signup-token-service';
 
 export interface IUnleashServices {
     accessService: AccessService;
@@ -42,6 +43,7 @@ export interface IUnleashServices {
     emailService: EmailService;
     environmentService: EnvironmentService;
     eventService: EventService;
+    edgeService: EdgeService;
     featureTagService: FeatureTagService;
     featureToggleService: FeatureToggleService;
     featureToggleServiceV2: FeatureToggleService; // deprecated
@@ -50,6 +52,9 @@ export interface IUnleashServices {
     healthService: HealthService;
     projectHealthService: ProjectHealthService;
     projectService: ProjectService;
+    playgroundService: PlaygroundService;
+    proxyService: ProxyService;
+    publicSignupTokenService: PublicSignupTokenService;
     resetTokenService: ResetTokenService;
     sessionService: SessionService;
     settingService: SettingService;
@@ -64,7 +69,4 @@ export interface IUnleashServices {
     segmentService: SegmentService;
     openApiService: OpenApiService;
     clientSpecService: ClientSpecService;
-    playgroundService: PlaygroundService;
-    proxyService: ProxyService;
-    edgeService: EdgeService;
 }

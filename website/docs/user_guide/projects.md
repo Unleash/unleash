@@ -37,7 +37,7 @@ From the top-line menu – click on “Projects”
 
 ![The Unleash admin UI with the "Projects" nav link in the top bar highlighted.](/img/projects_button.png)
 
-The available projects will now be listed. To create a new Project – choose the “New project”
+The UI shows the currently available projects. To create a new project, use the “new project” button.
 
 ![A list of projects. There is a button saying "Add new project".](/img/projects_new_project.png)
 

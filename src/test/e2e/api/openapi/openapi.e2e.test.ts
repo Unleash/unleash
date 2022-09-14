@@ -54,7 +54,7 @@ test('the generated OpenAPI spec is valid', async () => {
         return false;
     }
 
-    const [openapi, error, warning] = await enforcer(body, {
+    const [, error, warning] = await enforcer(body, {
         fullResult: true,
         componentOptions: {
             exceptionSkipCodes: [
@@ -63,12 +63,12 @@ test('the generated OpenAPI spec is valid', async () => {
         },
     });
 
+    if (warning !== undefined) {
+        console.warn(warning);
+    }
     if (error !== undefined) {
         console.error(error);
     }
-    if (warning !== undefined) {
-        // some of these _should_ probably be dealt with at some point.
-        console.warn(warning);
-    }
-    if (openapi !== undefined) console.log('Document is valid');
+
+    expect(warning ?? error).toBe(undefined);
 });

@@ -113,6 +113,7 @@ import { proxyMetricsSchema } from './spec/proxy-metrics-schema';
 import { setUiConfigSchema } from './spec/set-ui-config-schema';
 import { edgeTokenSchema } from './spec/edge-token-schema';
 import { validateEdgeTokensSchema } from './spec/validate-edge-tokens-schema';
+import version from '../util/version';
 
 // All schemas in `openapi/spec` should be listed here.
 export const schemas = {
@@ -273,7 +274,7 @@ export const createOpenApiSchema = ({
         servers: url ? [{ url }] : [],
         info: {
             title: 'Unleash API',
-            version: process.env.npm_package_version!,
+            version: version,
         },
         security: [{ apiKey: [] }],
         components: {

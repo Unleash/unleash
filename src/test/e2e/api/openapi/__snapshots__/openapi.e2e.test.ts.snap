@@ -227,7 +227,11 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "string",
           },
           "type": {
-            "description": "client, admin, frontend.",
+            "enum": [
+              "client",
+              "admin",
+              "frontend",
+            ],
             "type": "string",
           },
           "username": {
@@ -664,7 +668,11 @@ exports[`should serve the OpenAPI spec 1`] = `
             "type": "string",
           },
           "type": {
-            "description": "client, admin, frontend.",
+            "enum": [
+              "client",
+              "admin",
+              "frontend",
+            ],
             "type": "string",
           },
           "username": {
@@ -1667,7 +1675,19 @@ exports[`should serve the OpenAPI spec 1`] = `
           "path": {
             "type": "string",
           },
-          "value": {},
+          "value": {
+            "oneOf": [
+              {
+                "type": "object",
+              },
+              {
+                "items": {
+                  "type": "object",
+                },
+                "type": "array",
+              },
+            ],
+          },
         },
         "required": [
           "path",
@@ -2530,7 +2550,6 @@ exports[`should serve the OpenAPI spec 1`] = `
             "additionalProperties": false,
             "properties": {
               "frontendApiOrigins": {
-                "additionalProperties": false,
                 "items": {
                   "type": "string",
                 },
@@ -3499,7 +3518,16 @@ exports[`should serve the OpenAPI spec 1`] = `
                 },
               },
             },
-            "description": "apiTokenSchema",
+            "description": "The resource was successfully created.",
+            "headers": {
+              "location": {
+                "description": "The location of the newly created resource.",
+                "schema": {
+                  "format": "uri",
+                  "type": "string",
+                },
+              },
+            },
           },
         },
         "tags": [
@@ -3781,7 +3809,23 @@ exports[`should serve the OpenAPI spec 1`] = `
         },
         "responses": {
           "201": {
-            "description": "This response has no body.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/contextFieldSchema",
+                },
+              },
+            },
+            "description": "The resource was successfully created.",
+            "headers": {
+              "location": {
+                "description": "The location of the newly created resource.",
+                "schema": {
+                  "format": "uri",
+                  "type": "string",
+                },
+              },
+            },
           },
         },
         "tags": [
@@ -4227,7 +4271,16 @@ If the provided project does not exist, the list of events will be empty.",
                 },
               },
             },
-            "description": "tagSchema",
+            "description": "The resource was successfully created.",
+            "headers": {
+              "location": {
+                "description": "The location of the newly created resource.",
+                "schema": {
+                  "format": "uri",
+                  "type": "string",
+                },
+              },
+            },
           },
         },
         "tags": [
@@ -5606,7 +5659,7 @@ If the provided project does not exist, the list of events will be empty.",
             },
           },
           {
-            "description": "Whether exported data should be downloaded as a file.",
+            "description": "Whether exported data should be downloaded as a file. Defaults to \`false\`.",
             "in": "query",
             "name": "download",
             "schema": {
@@ -5622,11 +5675,10 @@ If the provided project does not exist, the list of events will be empty.",
                   "type": "number",
                 },
               ],
-              "default": false,
             },
           },
           {
-            "description": "Whether strategies should be included in the exported data.",
+            "description": "Whether strategies should be included in the exported data. Defaults to \`true\`.",
             "in": "query",
             "name": "strategies",
             "schema": {
@@ -5642,11 +5694,10 @@ If the provided project does not exist, the list of events will be empty.",
                   "type": "number",
                 },
               ],
-              "default": true,
             },
           },
           {
-            "description": "Whether feature toggles should be included in the exported data.",
+            "description": "Whether feature toggles should be included in the exported data. Defaults to \`true\`.",
             "in": "query",
             "name": "featureToggles",
             "schema": {
@@ -5662,11 +5713,10 @@ If the provided project does not exist, the list of events will be empty.",
                   "type": "number",
                 },
               ],
-              "default": true,
             },
           },
           {
-            "description": "Whether projects should be included in the exported data.",
+            "description": "Whether projects should be included in the exported data. Defaults to \`true\`.",
             "in": "query",
             "name": "projects",
             "schema": {
@@ -5682,11 +5732,10 @@ If the provided project does not exist, the list of events will be empty.",
                   "type": "number",
                 },
               ],
-              "default": true,
             },
           },
           {
-            "description": "Whether tag types, tags, and feature_tags should be included in the exported data.",
+            "description": "Whether tag types, tags, and feature_tags should be included in the exported data. Defaults to \`true\`.",
             "in": "query",
             "name": "tags",
             "schema": {
@@ -5702,11 +5751,10 @@ If the provided project does not exist, the list of events will be empty.",
                   "type": "number",
                 },
               ],
-              "default": true,
             },
           },
           {
-            "description": "Whether environments should be included in the exported data.",
+            "description": "Whether environments should be included in the exported data. Defaults to \`true\`.",
             "in": "query",
             "name": "environments",
             "schema": {
@@ -5722,7 +5770,6 @@ If the provided project does not exist, the list of events will be empty.",
                   "type": "number",
                 },
               ],
-              "default": true,
             },
           },
         ],
@@ -5801,7 +5848,23 @@ If the provided project does not exist, the list of events will be empty.",
         },
         "responses": {
           "201": {
-            "description": "This response has no body.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/strategySchema",
+                },
+              },
+            },
+            "description": "The resource was successfully created.",
+            "headers": {
+              "location": {
+                "description": "The location of the newly created resource.",
+                "schema": {
+                  "format": "uri",
+                  "type": "string",
+                },
+              },
+            },
           },
         },
         "tags": [
@@ -5981,7 +6044,16 @@ If the provided project does not exist, the list of events will be empty.",
                 },
               },
             },
-            "description": "tagTypeSchema",
+            "description": "The resource was successfully created.",
+            "headers": {
+              "location": {
+                "description": "The location of the newly created resource.",
+                "schema": {
+                  "format": "uri",
+                  "type": "string",
+                },
+              },
+            },
           },
         },
         "tags": [
@@ -6137,7 +6209,23 @@ If the provided project does not exist, the list of events will be empty.",
         },
         "responses": {
           "201": {
-            "description": "This response has no body.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/tagWithVersionSchema",
+                },
+              },
+            },
+            "description": "The resource was successfully created.",
+            "headers": {
+              "location": {
+                "description": "The location of the newly created resource.",
+                "schema": {
+                  "format": "uri",
+                  "type": "string",
+                },
+              },
+            },
           },
         },
         "tags": [

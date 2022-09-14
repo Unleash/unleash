@@ -15,7 +15,14 @@ export const patchSchema = {
         from: {
             type: 'string',
         },
-        value: {},
+        value: {
+            oneOf: [
+                {
+                    type: 'object',
+                },
+                { type: 'array', items: { type: 'object' } },
+            ],
+        },
     },
     components: {},
 } as const;

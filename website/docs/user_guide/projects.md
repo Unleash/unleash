@@ -93,6 +93,6 @@ All available projects are available from the drop-down menu.
 
 ## Change project for an existing feature toggle {#change-project-for-an-existing-feature-toggle}
 
-If you want to change which project a feature toggle belongs to, you can change that from the feature toggle's configuration page. Under the "Settings" tab, choose the _project_ option and choose the new project from the dropdown menu.
+If you want to change which project a feature toggle belongs to, you can change that from the feature toggle's configuration page. Under the _settings_ tab, choose the _project_ option and choose the new project from the dropdown menu.
 
 ![A feature toggle's settings tab. The project setting shows a dropdown to change projects.](/img/projects_existing_toggle_dropdown.png)

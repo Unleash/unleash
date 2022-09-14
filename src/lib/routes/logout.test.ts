@@ -115,6 +115,42 @@ test('should call destroy on session', async () => {
     expect(fakeSession.destroy.mock.calls.length).toBe(1);
 });
 
+test('should handle req.logout with callback function', async () => {
+    // passport >=0.6.0
+    const baseUriPath = '';
+    const logoutFunction = jest.fn((cb: (err?: any) => void) => cb());
+    const app = express();
+    const config = createTestConfig({ server: { baseUriPath } });
+    app.use((req: IAuthRequest, res, next) => {
+        req.logout = logoutFunction;
+        next();
+    });
+    app.use('/logout', new LogoutController(config).router);
+    const request = supertest(app);
+    await request.get(`${baseUriPath}/logout`);
+
+    expect(logoutFunction).toHaveBeenCalledTimes(1);
+    expect(logoutFunction).toHaveBeenCalledWith(expect.anything());
+});
+
+test('should handle req.logout without callback function', async () => {
+    // passport <0.6.0
+    const baseUriPath = '';
+    const logoutFunction = jest.fn();
+    const app = express();
+    const config = createTestConfig({ server: { baseUriPath } });
+    app.use((req: IAuthRequest, res, next) => {
+        req.logout = logoutFunction;
+        next();
+    });
+    app.use('/logout', new LogoutController(config).router);
+    const request = supertest(app);
+    await request.get(`${baseUriPath}/logout`);
+
+    expect(logoutFunction).toHaveBeenCalledTimes(1);
+    expect(logoutFunction).toHaveBeenCalledWith();
+});
+
 test('should redirect to alternative logoutUrl', async () => {
     const fakeSession = {
         destroy: jest.fn(),

@@ -4,19 +4,26 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import AuthOptions from '../common/AuthOptions/AuthOptions';
 import DividerText from 'component/common/DividerText/DividerText';
 import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
+import { useInviteUserToken } from 'hooks/api/getters/useInviteUserToken/useInviteUserToken';
 import ResetPasswordForm from '../common/ResetPasswordForm/ResetPasswordForm';
 import InvalidToken from '../common/InvalidToken/InvalidToken';
 import { NewUserWrapper } from './NewUserWrapper/NewUserWrapper';
 
 export const NewUser = () => {
     const { authDetails } = useAuthDetails();
-    const { token, data, loading, setLoading, invalidToken } =
-        useResetPassword();
+    const {
+        token,
+        data,
+        loading: resetLoading,
+        setLoading,
+        invalidToken,
+    } = useResetPassword();
+    const { invite, loading: inviteLoading } = useInviteUserToken();
     const passwordDisabled = authDetails?.defaultHidden === true;
 
-    if (invalidToken) {
+    if (invalidToken && !invite) {
         return (
-            <NewUserWrapper loading={loading}>
+            <NewUserWrapper loading={resetLoading || inviteLoading}>
                 <InvalidToken />
             </NewUserWrapper>
         );
@@ -24,7 +31,7 @@ export const NewUser = () => {
 
     return (
         <NewUserWrapper
-            loading={loading}
+            loading={resetLoading || inviteLoading}
             title={
                 passwordDisabled
                     ? 'Connect your account and start your journey'
@@ -100,7 +107,7 @@ export const NewUser = () => {
                             required
                         />
                         <ConditionallyRender
-                            condition={!data?.email}
+                            condition={Boolean(invite)}
                             show={() => (
                                 <TextField
                                     data-loading

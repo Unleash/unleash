@@ -2353,6 +2353,93 @@ exports[`should serve the OpenAPI spec 1`] = `
         ],
         "type": "object",
       },
+      "publicSignupTokenCreateSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "expiresAt": {
+            "format": "date-time",
+            "type": "string",
+          },
+          "name": {
+            "type": "string",
+          },
+        },
+        "required": [
+          "name",
+          "expiresAt",
+        ],
+        "type": "object",
+      },
+      "publicSignupTokenSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+          },
+          "createdBy": {
+            "nullable": true,
+            "type": "string",
+          },
+          "expiresAt": {
+            "format": "date-time",
+            "type": "string",
+          },
+          "name": {
+            "type": "string",
+          },
+          "role": {
+            "$ref": "#/components/schemas/roleSchema",
+          },
+          "secret": {
+            "type": "string",
+          },
+          "users": {
+            "items": {
+              "$ref": "#/components/schemas/userSchema",
+            },
+            "nullable": true,
+            "type": "array",
+          },
+        },
+        "required": [
+          "secret",
+          "name",
+          "expiresAt",
+          "createdAt",
+          "createdBy",
+          "role",
+        ],
+        "type": "object",
+      },
+      "publicSignupTokenUpdateSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "expiresAt": {
+            "format": "date-time",
+            "type": "string",
+          },
+        },
+        "required": [
+          "expiresAt",
+        ],
+        "type": "object",
+      },
+      "publicSignupTokensSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "tokens": {
+            "items": {
+              "$ref": "#/components/schemas/publicSignupTokenSchema",
+            },
+            "type": "array",
+          },
+        },
+        "required": [
+          "tokens",
+        ],
+        "type": "object",
+      },
       "resetPasswordSchema": {
         "additionalProperties": false,
         "properties": {
@@ -4344,6 +4431,205 @@ If the provided project does not exist, the list of events will be empty.",
         },
         "tags": [
           "Admin UI",
+        ],
+      },
+    },
+    "/api/admin/invite-link/tokens": {
+      "get": {
+        "operationId": "getAllPublicSignupTokens",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/publicSignupTokenSchema",
+                },
+              },
+            },
+            "description": "publicSignupTokenSchema",
+          },
+        },
+        "tags": [
+          "Public signup tokens",
+        ],
+      },
+      "post": {
+        "operationId": "createApiToken",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/publicSignupTokenCreateSchema",
+              },
+            },
+          },
+          "description": "publicSignupTokenCreateSchema",
+          "required": true,
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/publicSignupTokenSchema",
+                },
+              },
+            },
+            "description": "publicSignupTokenSchema",
+          },
+        },
+        "tags": [
+          "Public signup tokens",
+        ],
+      },
+    },
+    "/api/admin/invite-link/tokens/{token}": {
+      "delete": {
+        "operationId": "deletePublicSignupToken",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "token",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": {
+          "200": {
+            "description": "This response has no body.",
+          },
+        },
+        "tags": [
+          "API tokens",
+        ],
+      },
+      "get": {
+        "operationId": "getPublicSignupToken",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "token",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/publicSignupTokenSchema",
+                },
+              },
+            },
+            "description": "publicSignupTokenSchema",
+          },
+        },
+        "tags": [
+          "Public signup tokens",
+        ],
+      },
+      "put": {
+        "operationId": "updatePublicSignupToken",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "token",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/publicSignupTokenUpdateSchema",
+              },
+            },
+          },
+          "description": "publicSignupTokenUpdateSchema",
+          "required": true,
+        },
+        "responses": {
+          "200": {
+            "description": "This response has no body.",
+          },
+        },
+        "tags": [
+          "Public signup tokens",
+        ],
+      },
+    },
+    "/api/admin/invite-link/tokens/{token}/signup": {
+      "post": {
+        "operationId": "addPublicSignupTokenUser",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "token",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/createUserSchema",
+              },
+            },
+          },
+          "description": "createUserSchema",
+          "required": true,
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/userSchema",
+                },
+              },
+            },
+            "description": "userSchema",
+          },
+        },
+        "tags": [
+          "Public signup tokens",
+        ],
+      },
+    },
+    "/api/admin/invite-link/tokens/{token}/validate": {
+      "post": {
+        "operationId": "validateSignupToken",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "token",
+            "required": true,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": {
+          "200": {
+            "description": "This response has no body.",
+          },
+          "404": {
+            "description": "This response has no body.",
+          },
+        },
+        "tags": [
+          "API tokens",
         ],
       },
     },
@@ -7028,6 +7314,10 @@ If the provided project does not exist, the list of events will be empty.",
     {
       "description": "Create, update, and delete [Unleash projects](https://docs.getunleash.io/user_guide/projects).",
       "name": "Projects",
+    },
+    {
+      "description": "Create, update, and delete [Unleash Public Signup tokens](https://docs.getunleash.io/reference/public-signup-tokens).",
+      "name": "Public signup tokens",
     },
     {
       "description": "Create, update, delete, manage [custom strategies](https://docs.getunleash.io/advanced/custom_activation_strategy).",

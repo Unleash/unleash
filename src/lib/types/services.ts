@@ -31,6 +31,7 @@ import { PlaygroundService } from 'lib/services/playground-service';
 import { GroupService } from '../services/group-service';
 import { ProxyService } from '../services/proxy-service';
 import EdgeService from '../services/edge-service';
+import PatService from '../services/pat-service';
 
 export interface IUnleashServices {
     accessService: AccessService;
@@ -67,4 +68,5 @@ export interface IUnleashServices {
     playgroundService: PlaygroundService;
     proxyService: ProxyService;
     edgeService: EdgeService;
+    patService: PatService;
 }

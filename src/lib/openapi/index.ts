@@ -113,6 +113,8 @@ import { proxyMetricsSchema } from './spec/proxy-metrics-schema';
 import { setUiConfigSchema } from './spec/set-ui-config-schema';
 import { edgeTokenSchema } from './spec/edge-token-schema';
 import { validateEdgeTokensSchema } from './spec/validate-edge-tokens-schema';
+import { patsSchema } from './spec/pats-schema';
+import { patSchema } from './spec/pat-schema';
 
 // All schemas in `openapi/spec` should be listed here.
 export const schemas = {
@@ -172,6 +174,8 @@ export const schemas = {
     overrideSchema,
     parametersSchema,
     passwordSchema,
+    patSchema,
+    patsSchema,
     patchesSchema,
     patchSchema,
     permissionSchema,

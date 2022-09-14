@@ -76,6 +76,9 @@ export const SETTING_DELETED = 'setting-deleted';
 export const CLIENT_METRICS = 'client-metrics';
 export const CLIENT_REGISTER = 'client-register';
 
+export const PAT_CREATED = 'pat-created';
+export const PAT_DELETED = 'pat-deleted';
+
 export interface IBaseEvent {
     type: string;
     createdBy: string;

@@ -35,6 +35,7 @@ import { PlaygroundService } from './playground-service';
 import { GroupService } from './group-service';
 import { ProxyService } from './proxy-service';
 import EdgeService from './edge-service';
+import PatService from './pat-service';
 export const createServices = (
     stores: IUnleashStores,
     config: IUnleashConfig,
@@ -101,6 +102,8 @@ export const createServices = (
 
     const edgeService = new EdgeService(stores, config);
 
+    const patService = new PatService(stores, config);
+
     return {
         accessService,
         addonService,
@@ -136,6 +139,7 @@ export const createServices = (
         groupService,
         proxyService,
         edgeService,
+        patService,
     };
 };
 

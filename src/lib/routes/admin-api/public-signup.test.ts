@@ -199,13 +199,13 @@ describe('Public Signup API', () => {
             .expect(200);
     });
 
-    test('should return 404 if token is invalid', async () => {
+    test('should return 401 if token is invalid', async () => {
         const appName = '123!23';
 
         stores.clientApplicationsStore.upsert({ appName });
 
         return request
             .post('/api/admin/invite-link/tokens/some-invalid-secret/validate')
-            .expect(404);
+            .expect(401);
     });
 });

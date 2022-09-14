@@ -179,7 +179,7 @@ export class PublicSignupController extends Controller {
                     operationId: 'validateSignupToken',
                     responses: {
                         200: emptyResponse,
-                        404: emptyResponse,
+                        401: emptyResponse,
                     },
                 }),
             ],
@@ -220,7 +220,7 @@ export class PublicSignupController extends Controller {
         const { token } = req.params;
         const valid = await this.publicSignupTokenService.validate(token);
         if (valid) return res.status(200).end();
-        else return res.status(404).end();
+        else return res.status(401).end();
     }
 
     async addTokenUser(

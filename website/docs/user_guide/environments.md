@@ -40,7 +40,7 @@ Note that in order to enable an environment for a feature toggle, you must first
 
 ### Step 1: Enable new environments for your Project
 
-Navigate to the project and choose the “Environments” tab.
+Navigate to the project and choose the “environments” tab.
 
 ![A project view showing the Environments tab. The UI displays three environment toggles: "default", "development", and "production". The "default" environment is enabled.](/img/environments_configure.png 'Configure environment for this project')
 

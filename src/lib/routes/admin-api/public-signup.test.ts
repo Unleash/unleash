@@ -154,7 +154,7 @@ describe('Public Signup API', () => {
     });
 
     test('should create user and add to token', async () => {
-        expect.assertions(2);
+        expect.assertions(3);
         const appName = '123!23';
 
         stores.clientApplicationsStore.upsert({ appName });
@@ -175,12 +175,13 @@ describe('Public Signup API', () => {
         return request
             .post('/api/admin/invite-link/tokens/some-secret/signup')
             .send(user)
-            .expect(200)
-            .expect(async () => {
+            .expect(201)
+            .expect(async (res) => {
                 const count = await stores.userStore.count();
                 expect(count).toBe(1);
                 const eventCount = await stores.eventStore.count();
                 expect(eventCount).toBe(2); //USER_CREATED && PUBLIC_SIGNUP_TOKEN_USER_ADDED
+                expect(res.body.username).toBe(user.username);
             });
     });
 });

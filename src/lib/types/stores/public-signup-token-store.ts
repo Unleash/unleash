@@ -9,6 +9,7 @@ export interface IPublicSignupTokenStore
         newToken: IPublicSignupTokenCreate,
     ): Promise<PublicSignupTokenSchema>;
     addTokenUser(secret: string, userId: number): Promise<void>;
+    isValid(secret): Promise<boolean>;
     setExpiry(
         secret: string,
         expiresAt: Date,

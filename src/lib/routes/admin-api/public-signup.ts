@@ -24,6 +24,7 @@ import {
 import { PublicSignupTokenCreateSchema } from '../../openapi/spec/public-signup-token-create-schema';
 import { PublicSignupTokenUpdateSchema } from '../../openapi/spec/public-signup-token-update-schema';
 import { CreateUserSchema } from '../../openapi/spec/create-user-schema';
+import { UserSchema, userSchema } from '../../openapi/spec/user-schema';
 
 interface TokenParam {
     token: string;
@@ -108,7 +109,7 @@ export class PublicSignupController extends Controller {
                     operationId: 'addPublicSignupTokenUser',
                     requestBody: createRequestSchema('createUserSchema'),
                     responses: {
-                        200: emptyResponse,
+                        200: createResponseSchema('userSchema'),
                     },
                 }),
             ],
@@ -165,6 +166,24 @@ export class PublicSignupController extends Controller {
                 }),
             ],
         });
+
+        this.route({
+            method: 'post',
+            path: '/tokens/:token/validate',
+            handler: this.validate,
+            acceptAnyContentType: true,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['API tokens'],
+                    operationId: 'validateSignupToken',
+                    responses: {
+                        200: emptyResponse,
+                        404: emptyResponse,
+                    },
+                }),
+            ],
+        });
     }
 
     async getAllPublicSignupTokens(
@@ -194,14 +213,29 @@ export class PublicSignupController extends Controller {
         );
     }
 
-    async addTokenUser(
+    async validate(
         req: IAuthRequest<TokenParam, void, CreateUserSchema>,
         res: Response,
     ): Promise<void> {
         const { token } = req.params;
+        const valid = await this.publicSignupTokenService.validate(token);
+        if (valid) return res.status(200).end();
+        else return res.status(404).end();
+    }
+
+    async addTokenUser(
+        req: IAuthRequest<TokenParam, void, CreateUserSchema>,
+        res: Response<UserSchema>,
+    ): Promise<void> {
+        const { token } = req.params;
         const user = await this.userService.createUser(req.body);
         await this.publicSignupTokenService.addTokenUser(token, user.id);
-        return res.status(200).end();
+        this.openApiService.respondWithValidation(
+            201,
+            res,
+            userSchema.$id,
+            serializeDates(user),
+        );
     }
 
     async createPublicSignupToken(

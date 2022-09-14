@@ -15,6 +15,11 @@ export default class FakePublicSignupStore implements IPublicSignupTokenStore {
         return Promise.resolve(token);
     }
 
+    async isValid(secret: string): Promise<boolean> {
+        const token = this.tokens.find((t) => t.secret === secret);
+        return Promise.resolve(new Date(token.expiresAt) > new Date());
+    }
+
     async count(): Promise<number> {
         return Promise.resolve(0);
     }

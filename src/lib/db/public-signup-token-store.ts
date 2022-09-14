@@ -10,7 +10,7 @@ import { UserSchema } from '../openapi/spec/user-schema';
 import { IPublicSignupTokenCreate } from '../types/models/public-signup-token';
 
 const TABLE = 'public_signup_tokens';
-const TOKEN_USERS_TABLE = 'public_signup_token_user';
+const TOKEN_USERS_TABLE = 'public_signup_tokens_user';
 
 interface ITokenInsert {
     secret: string;
@@ -123,28 +123,29 @@ export class PublicSignupTokenStore implements IPublicSignupTokenStore {
     }
 
     async addTokenUser(secret: string, userId: number): Promise<void> {
-        await this.db.transaction(async (tx) => {
-            await tx<ITokenUserRow>(TOKEN_USERS_TABLE).insert(
-                { user_id: userId, secret },
-                ['created_at'],
-            );
-        });
+        await this.db<ITokenUserRow>(TOKEN_USERS_TABLE).insert(
+            { user_id: userId, secret },
+            ['created_at'],
+        );
     }
 
     async insert(
         newToken: IPublicSignupTokenCreate,
     ): Promise<PublicSignupTokenSchema> {
-        const response = await this.db.transaction(async (tx) => {
-            const [row] = await tx<ITokenRow>(TABLE).insert(toRow(newToken), [
-                'created_at',
-            ]);
-            return {
-                ...newToken,
-                createdAt: row.created_at,
-                users: [],
-            };
-        });
+        const response = await this.db<ITokenRow>(TABLE).insert(
+            toRow(newToken),
+            ['created_at'],
+        );
         return toTokens([response])[0];
+    }
+
+    async isValid(secret: string): Promise<boolean> {
+        const result = await this.db.raw(
+            `SELECT EXISTS (SELECT 1 FROM ${TABLE} WHERE secret = ? AND expires_at::date > ?) AS valid`,
+            [secret, new Date()],
+        );
+        const { valid } = result.rows[0];
+        return valid;
     }
 
     destroy(): void {}

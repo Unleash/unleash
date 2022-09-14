@@ -68,6 +68,10 @@ export class PublicSignupTokenService {
         return this.store.getAllActive();
     }
 
+    public async validate(secret: string): Promise<boolean> {
+        return this.store.isValid(secret);
+    }
+
     public async setExpiry(
         secret: string,
         expireAt: Date,

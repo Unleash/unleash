@@ -51,10 +51,10 @@ test('the generated OpenAPI spec is valid', async () => {
         await SwaggerParser.validate(body);
     } catch (err) {
         console.error(err);
-        return false;
+        throw err;
     }
 
-    const [, error, warning] = await enforcer(body, {
+    const [, enforcerError, enforcerWarning] = await enforcer(body, {
         fullResult: true,
         componentOptions: {
             exceptionSkipCodes: [
@@ -63,12 +63,12 @@ test('the generated OpenAPI spec is valid', async () => {
         },
     });
 
-    if (warning !== undefined) {
-        console.warn(warning);
+    if (enforcerWarning !== undefined) {
+        console.warn(enforcerWarning);
     }
-    if (error !== undefined) {
-        console.error(error);
+    if (enforcerError !== undefined) {
+        console.error(enforcerError);
     }
 
-    expect(warning ?? error).toBe(undefined);
+    expect(enforcerWarning ?? enforcerError).toBe(undefined);
 });

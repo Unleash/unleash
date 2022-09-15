@@ -98,7 +98,7 @@ If you see an item marked with a ❌ that you would find useful, feel free to re
 | Can disable metrics | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Client registration | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Basic usage metrics (yes/no) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| [Impression data](../advanced/impression-data.md) | ⭕ | ⭕ | ⭕ | ⭕ | ⭕ | ⭕ | ✅ | ⭕ | N/A |
+| [Impression data](../advanced/impression-data.md) | ⭕ | ✅ | ⭕ | ⭕ | ⭕ | ⭕ | ✅ | ⭕ | N/A |
 | **Category: Bootstrap (beta)** |  |  |  |  |  |  |  |  |  |
 | Bootstrap from file | ✅ | ✅ | ✅ | ⭕ | ✅ | ✅ | ✅ | ⭕ | ✅ |
 | Custom Bootstrap implementation | ✅ | ✅ | ✅ | ⭕ | ✅ | ✅ | ✅ | ⭕ | ✅ |

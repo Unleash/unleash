@@ -2,7 +2,7 @@ import { Typography } from '@mui/material';
 import { Alert } from '@mui/material';
 import { useThemeStyles } from 'themes/themeStyles';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import UserInviteLink from './UserInviteLink/UserInviteLink';
+import { LinkField } from '../../LinkField/LinkField';
 
 interface IConfirmUserLink {
     open: boolean;
@@ -28,7 +28,7 @@ const ConfirmUserLink = ({
                     A new team member has been added. Please provide them with
                     the following link to get started:
                 </Typography>
-                <UserInviteLink inviteLink={inviteLink} />
+                <LinkField inviteLink={inviteLink} />
 
                 <Typography variant="body1">
                     Copy the link and send it to the user. This will allow them

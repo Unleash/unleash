@@ -2,12 +2,12 @@ import { Box, IconButton, Tooltip } from '@mui/material';
 import CopyIcon from '@mui/icons-material/FileCopy';
 import useToast from 'hooks/useToast';
 
-interface IInviteLinkProps {
+interface ILinkFieldProps {
     inviteLink: string;
     small?: boolean;
 }
 
-const UserInviteLink = ({ inviteLink, small }: IInviteLinkProps) => {
+export const LinkField = ({ inviteLink, small }: ILinkFieldProps) => {
     const { setToastData } = useToast();
 
     const handleCopy = () => {
@@ -70,5 +70,3 @@ const UserInviteLink = ({ inviteLink, small }: IInviteLinkProps) => {
         </Box>
     );
 };
-
-export default UserInviteLink;

@@ -4,7 +4,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import AuthOptions from '../common/AuthOptions/AuthOptions';
 import DividerText from 'component/common/DividerText/DividerText';
 import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
-import { useInviteUserToken } from 'hooks/api/getters/useInviteUserToken/useInviteUserToken';
+import { useInviteTokens } from 'hooks/api/getters/useInviteTokens/useInviteTokens';
 import ResetPasswordForm from '../common/ResetPasswordForm/ResetPasswordForm';
 import InvalidToken from '../common/InvalidToken/InvalidToken';
 import { NewUserWrapper } from './NewUserWrapper/NewUserWrapper';
@@ -18,7 +18,7 @@ export const NewUser = () => {
         setLoading,
         invalidToken,
     } = useResetPassword();
-    const { invite, loading: inviteLoading } = useInviteUserToken();
+    const { invite, loading: inviteLoading } = useInviteTokens();
     const passwordDisabled = authDetails?.defaultHidden === true;
 
     if (invalidToken && !invite) {

@@ -2,7 +2,7 @@ import { useEffect, useState, VFC } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Button, Typography } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import UserInviteLink from '../ConfirmUserAdded/ConfirmUserLink/UserInviteLink/UserInviteLink';
+import { LinkField } from '../LinkField/LinkField';
 
 interface IInviteLinkBarProps {}
 
@@ -55,7 +55,7 @@ export const InviteLinkBar: VFC<IInviteLinkBarProps> = () => {
                                     in 7 days
                                 </Typography>
                             </Typography>
-                            <UserInviteLink small inviteLink={inviteLink} />
+                            <LinkField small inviteLink={inviteLink} />
                         </>
                     }
                     elseShow={

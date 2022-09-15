@@ -4,17 +4,17 @@ import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { ReactComponent as EmailIcon } from 'assets/icons/email.svg';
 import { LinkField } from '../../LinkField/LinkField';
 
-interface IConfirmUserEmailProps {
+interface IConfirmInviteLinkProps {
     open: boolean;
     closeConfirm: () => void;
     inviteLink: string;
 }
 
-const ConfirmUserEmail = ({
+export const ConfirmInviteLink = ({
     open,
     closeConfirm,
     inviteLink,
-}: IConfirmUserEmailProps) => (
+}: IConfirmInviteLinkProps) => (
     <Dialogue
         open={open}
         title="Team member added"
@@ -38,5 +38,3 @@ const ConfirmUserEmail = ({
         <LinkField inviteLink={inviteLink} />
     </Dialogue>
 );
-
-export default ConfirmUserEmail;

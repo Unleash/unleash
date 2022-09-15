@@ -117,6 +117,7 @@ import { publicSignupTokenCreateSchema } from './spec/public-signup-token-create
 import { publicSignupTokenSchema } from './spec/public-signup-token-schema';
 import { publicSignupTokensSchema } from './spec/public-signup-tokens-schema';
 import { publicSignupTokenUpdateSchema } from './spec/public-signup-token-update-schema';
+import apiVersion from '../util/version';
 
 // All schemas in `openapi/spec` should be listed here.
 export const schemas = {
@@ -281,7 +282,7 @@ export const createOpenApiSchema = ({
         servers: url ? [{ url }] : [],
         info: {
             title: 'Unleash API',
-            version: process.env.npm_package_version!,
+            version: apiVersion,
         },
         security: [{ apiKey: [] }],
         components: {
